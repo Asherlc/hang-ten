@@ -3,9 +3,10 @@
 ## Goal
 
 Ensure every shipped 3D hangboard whose exact product revision includes an
-integral or supplied cord is represented with that cord in the app. Do not add
-decorative ropes for products that merely can be used with a user-provided rope,
-elastic, sling, or anchor.
+integral or supplied cord, or whose manufacturer documents a suspended
+presentation, is represented with source-backed transient cord geometry in the
+app. Do not add decorative ropes when the reviewed evidence does not document
+suspended use.
 
 The cord is display-only: it communicates the real product configuration while
 remaining outside the selectable hangboard model and never claiming load,
@@ -19,17 +20,17 @@ The audit begins with every model-media package, not a hand-maintained list:
 | --- | --- | --- |
 | Already represented | Tension Flash Board | Existing source packet establishes paired end passages and its supplied portable cord. |
 | Known supplied cord candidate | Lattice MXEdge Lift Small and Large | Lattice's [product page](https://latticetraining.com/product/mxedge-lift/) and [warnings](https://latticetraining.com/warnings/mxedge-lift/) describe the cord arrangement and supplied cord. |
-| Requires a primary-evidence decision | Nature Stone Hanger | The current product listing establishes a portable hanger, but the retained record must establish whether the cord is supplied/integral before promotion. |
-| Explicitly not enough evidence today | YY Vertical Baguette Evo | YY says it can be used with rope or bungee, but does not establish that either is supplied or integral. |
-| Expected excluded | Beastmaker 1000/2000, Captain Fingerfood DUAL/POCKET/UNLEVEL, Lattice Triple Rung, Metolius Prime Rib/Project/Wood Grips Compact II | Fixed or non-cord product configurations; the audit records primary-source evidence and the exclusion rationale. |
+| Source-reviewed transient presentation | Nature Stone Hanger | Current product and gallery evidence establishes the two exterior support leads; the hidden route remains unproven. |
+| Documented suspended presentation | Captain Fingerfood DUAL/POCKET/UNLEVEL; YY Vertical Baguette Evo | Current manufacturer pages and retained product images document external cord holes or suspended rope/bungee use; optional accessories are not claimed supplied. |
+| Expected excluded | Beastmaker 1000/2000, Lattice Triple Rung, Metolius Prime Rib/Project/Wood Grips Compact II | Fixed or non-cord product configurations; the audit records primary-source evidence and the exclusion rationale. |
 
 Each decision is recorded in a source audit with exact revision, primary URLs,
-retained visual snapshots, source tier, and a yes/no eligibility ruling. A
-candidate must have two materially distinct exact-revision views, including an
-attachment-region view where available, before geometry or package metadata is
-authored. A human approves each candidate's exact evidence set. Cords only
-qualify when supplied or an integral physical component; optional ropes,
-bands, slings, and mounting environments are excluded.
+retained visual snapshots, source tier, and an independent `sourceFact` ruling.
+A candidate must have two materially distinct exact-revision views, including
+an attachment-region view where available, before geometry or package metadata
+is authored. A human approves each candidate's exact evidence set. Optional
+ropes or bungees may support a transient display, but are never described as
+supplied or integral. Records with either decision require retained evidence.
 
 ## Design
 

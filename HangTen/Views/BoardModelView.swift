@@ -482,6 +482,8 @@ struct BoardModelUnavailableView: View {
 final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
+    static let modelVisibleCategory = 4
+    static let renderedCategory = modelPickCategory | cordCategory | modelVisibleCategory
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
 
     private struct PreparedCameraState {
@@ -532,7 +534,6 @@ final class BoardModelScene {
         allowedPositionIDs: Set<String>? = nil,
         resourceLease: BoardModelResourceLease? = nil
     ) {
-        guard suspension == nil || orientation == nil else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -592,7 +593,7 @@ final class BoardModelScene {
             switch binding.role {
             case .body:
                 guard binding.contactID == nil else { return nil }
-                node.categoryBitMask = 0
+                node.categoryBitMask = Self.modelVisibleCategory
             case .contact:
                 guard let contactID = binding.contactID, !contactID.isEmpty else { return nil }
                 boundContactNodes[contactID, default: []].append(node)
@@ -601,7 +602,7 @@ final class BoardModelScene {
                 node.categoryBitMask = Self.modelPickCategory
             case .attachment:
                 guard binding.contactID == nil else { return nil }
-                node.categoryBitMask = 0
+                node.categoryBitMask = Self.modelVisibleCategory
             }
         }
 
@@ -1102,6 +1103,22 @@ final class BoardModelScene {
             clearanceRadius = pairedLead.requiredClearance
             guard case .some(.pairedLeadCord(let pairedLeadSuspension)) = suspension,
                   pairedLeadSuspension.attachments.count == pairedLead.leads.count else { return false }
+            for (index, attachment) in pairedLeadSuspension.attachments.enumerated() {
+                let lead = pairedLead.leads[index]
+                let firstRoutedSegment = SuspendedCordSolver.sampleCount - 1
+                guard lead.centerlineSamples.count >= SuspendedCordSolver.sampleCount else { return false }
+                // The solver has already resolved pose.cordContactPoints over
+                // the attachment default. Samples after the fixed-size free
+                // span are therefore the actual authored surface route for
+                // this pose, even when the default route is empty.
+                guard lead.centerlineSamples.count > SuspendedCordSolver.sampleCount else { continue }
+                bearingIntervals.append((
+                    index,
+                    firstRoutedSegment..<(lead.centerlineSamples.count - 1),
+                    [attachment.nodeID],
+                    pairedLead.tubeRadius
+                ))
+            }
             intentionalContacts = zip(pairedLead.leads, pairedLeadSuspension.attachments).enumerated().map {
                 index, pair in
                 IntentionalContact(
@@ -1768,11 +1785,13 @@ final class BoardModelScene {
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
         ambient.light?.intensity = 250
+        ambient.light?.categoryBitMask = Self.renderedCategory
         scene.rootNode.addChildNode(ambient)
         let key = SCNNode()
         key.light = SCNLight()
         key.light?.type = .directional
         key.light?.intensity = 850
+        key.light?.categoryBitMask = Self.renderedCategory
         key.light?.castsShadow = true
         key.light?.shadowColor = UIColor.black.withAlphaComponent(0.45)
         key.light?.shadowRadius = 3

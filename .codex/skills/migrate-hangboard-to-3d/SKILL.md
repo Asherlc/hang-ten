@@ -11,6 +11,13 @@ highlighting, hit testing, and resolved spatial geometry. Do not retain raster
 media, canonical paths, cached frames, or fallback geometry in a model package.
 Preserve contact identity and source-backed factual metadata exactly.
 
+**REQUIRED SUB-SKILL:** Use `audit-3d-hangboard-suspension` when a portable
+model has, needs, or is suspected to be missing a cord. Read
+[`3D suspension and ODR`](../../../docs/3D_SUSPENSION_AND_ODR.md) before
+changing suspension metadata or diagnosing Apple offline/On-Demand Resource
+caching. The USDZ is the only ODR asset; cords are metadata-driven transient
+geometry.
+
 ## Evidence and scope
 
 Identify the exact product revision and read the package source audit. Reuse

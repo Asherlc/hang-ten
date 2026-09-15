@@ -6,7 +6,7 @@
   "subtitle": "Over-door training board with six edge depths, round and flat slopers, and jugs.",
   "productURL": "https://www.metoliusclimbing.com/products/climbers-edge-board",
   "dimensions": "23.6 × 6.3 in",
-  "aspectRatio": 1.8744541484716157,
+  "aspectRatio": 3.75,
   "equipmentObjects": [
     {
       "id": "primary"
@@ -16,7 +16,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.8744541484716157,
+      "aspectRatio": 3.75,
       "isDefault": true,
       "derivation": {
         "type": "original"

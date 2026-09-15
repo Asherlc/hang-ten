@@ -25,6 +25,7 @@ from .board_catalog import (
 
 _DECISIONS = frozenset({"represented", "excluded"})
 _TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
+_SOURCE_FACTS = frozenset({"documentedSuspension", "noDocumentedSuspension"})
 _SOURCE_TIERS = frozenset({"manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 _SNAPSHOT_ROOT = Path("docs/source-audits/2026-09-13-model-cord-snapshots")
@@ -57,6 +58,7 @@ class CordAuditHumanApproval:
 class CordAuditRecord:
     package_id: str
     decision: str
+    source_fact: str
     topology: str | None
     ruling: str
     evidence: tuple[CordAuditEvidence, ...]
@@ -262,12 +264,25 @@ def _load_record(value: Any, source: str) -> CordAuditRecord:
     payload = _mapping(value, source)
     _closed(
         payload,
-        {"packageID", "decision", "topology", "ruling", "evidence", "humanApproval"},
+        {
+            "packageID",
+            "decision",
+            "sourceFact",
+            "topology",
+            "ruling",
+            "evidence",
+            "humanApproval",
+        },
         source,
     )
     decision = _nonempty_string(payload["decision"], f"{source}.decision")
     if decision not in _DECISIONS:
         raise CordAuditError(f"{source}.decision must be one of {sorted(_DECISIONS)}")
+    source_fact = _nonempty_string(payload["sourceFact"], f"{source}.sourceFact")
+    if source_fact not in _SOURCE_FACTS:
+        raise CordAuditError(
+            f"{source}.sourceFact must be one of {sorted(_SOURCE_FACTS)}"
+        )
     topology_value = payload["topology"]
     if topology_value is not None and (
         not isinstance(topology_value, str) or topology_value not in _TOPOLOGIES
@@ -277,16 +292,30 @@ def _load_record(value: Any, source: str) -> CordAuditRecord:
         raise CordAuditError(f"{source}.topology is required for represented records")
     if decision == "excluded" and topology_value is not None:
         raise CordAuditError(f"{source}.topology must be null for excluded records")
+    if decision == "represented" and source_fact != "documentedSuspension":
+        raise CordAuditError(
+            f"{source}.sourceFact must document suspended presentation for represented records"
+        )
+    if decision == "excluded" and source_fact != "noDocumentedSuspension":
+        raise CordAuditError(
+            f"{source} source fact documents suspended presentation and cannot be excluded"
+        )
+    evidence = _load_evidence(
+        payload["evidence"],
+        f"{source}.evidence",
+        allow_empty=True,
+    )
+    if not evidence:
+        raise CordAuditError(
+            f"{source} requires retained source evidence for {decision} records"
+        )
     return CordAuditRecord(
         package_id=_package_id(payload["packageID"], f"{source}.packageID"),
         decision=decision,
+        source_fact=source_fact,
         topology=topology_value,
         ruling=_nonempty_string(payload["ruling"], f"{source}.ruling"),
-        evidence=_load_evidence(
-            payload["evidence"],
-            f"{source}.evidence",
-            allow_empty=decision == "excluded",
-        ),
+        evidence=evidence,
         human_approval=_load_human_approval(payload["humanApproval"], f"{source}.humanApproval"),
     )
 

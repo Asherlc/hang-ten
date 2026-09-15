@@ -61,6 +61,15 @@ workflows. Do not reintroduce tooling or guidance for those approaches. The
 accepted process is direct path authoring, package validation, and human visual
 review in Workbench and the app.
 
+## 3D suspension and On-Demand Resources
+
+For missing or changed cords on model-media boards, use the repository-local
+`audit-3d-hangboard-suspension` skill and read
+[`docs/3D_SUSPENSION_AND_ODR.md`](docs/3D_SUSPENSION_AND_ODR.md). The USDZ is
+the only Apple On-Demand Resource; suspension is bundled package metadata and
+renders as transient, non-pickable geometry. Current retained source facts and
+evidence govern representation decisions, not superseded design assumptions.
+
 ## CodeGraph
 
 When `.codegraph/` exists, use CodeGraph before grep/find to understand or

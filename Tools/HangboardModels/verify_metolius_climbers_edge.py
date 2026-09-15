@@ -18,7 +18,7 @@ _TOOLS = Path(__file__).resolve().parent
 if str(_TOOLS) not in sys.path:
     sys.path.insert(0, str(_TOOLS))
 
-from contact_model_descriptor import ModelDescriptorV1
+from contact_model_descriptor import ModelDescriptorV1, compile_descriptor
 
 
 BORE_CENTERS_METERS = (
@@ -51,6 +51,7 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
     """Import the hash-bound package USDZ from an empty Blender scene."""
     try:
         import bpy
+        import contact_model_package as compiler
         from mathutils import Vector
     except ImportError as error:
         raise RuntimeError("USDZ verification must run inside Blender") from error
@@ -59,17 +60,27 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
     model_path = package / "assets" / "primary.usdz"
     descriptor_path = package / "assets" / "primary.model.json"
     model_bytes = model_path.read_bytes()
-    descriptor = ModelDescriptorV1.from_json(
-        json.loads(descriptor_path.read_text(encoding="utf-8"))
-    )
+    descriptor_value = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    descriptor = ModelDescriptorV1.from_json(descriptor_value)
+    contact_ids = compiler.load_logical_contact_ids(package / "board.json")
     model_hash = hashlib.sha256(model_bytes).hexdigest()
     if descriptor.model_sha256 != model_hash:
         raise ValueError("descriptor model hash does not match the shipped USDZ")
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
-    if bpy.context.scene.objects:
+    if bpy.context.scene.objects or bpy.data.materials or bpy.data.images:
         raise ValueError("scene is not empty before shipped USDZ import")
-    bpy.ops.wm.usd_import(filepath=str(model_path))
+    scene = compiler._import_usdz_into_empty_scene(model_path)
+    nodes = compiler.validate_tagged_scene(scene, contact_ids, imported=True)
+    snapshot = compiler._snapshot_scene(
+        scene, nodes, transform_to_board_frame=True,
+        require_imported_materials=True, require_triangles=True,
+    )
+    rebuilt = compile_descriptor(
+        model_bytes, snapshot.nodes, snapshot.vertices_by_node_id, contact_ids,
+    )
+    if rebuilt.to_json() != descriptor_value:
+        raise ValueError("descriptor does not match actual shipped USDZ triangles")
     depsgraph = bpy.context.evaluated_depsgraph_get()
     results: list[dict[str, object]] = []
     for x, z in BORE_CENTERS_METERS:
@@ -82,6 +93,10 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
         "package": str(package),
         "modelSHA256": model_hash,
         "descriptorModelSHA256": descriptor.model_sha256,
+        "descriptorSHA256": hashlib.sha256(descriptor_path.read_bytes()).hexdigest(),
+        "descriptorMatchesActualUSDZ": True,
+        "nodeCount": len(nodes),
+        "contactCount": len(contact_ids),
         "boreCenterResults": results,
     }
 

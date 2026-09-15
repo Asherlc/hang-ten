@@ -1,22 +1,23 @@
 # 3D model hangboard cord audit
 
-Initial audit: 2026-09-13; coverage addendum: 2026-09-15  
+Initial audit: 2026-09-13; coverage addendum: 2026-09-15
 Scope: every model-media package discovered under `Hangboards/`  
 Decision: approved for package promotion after human review of the retained
 exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 20 discovered model packages. Four have a source-backed
-supplied/integral cord and render a transient cord presentation; 16 are
-excluded because their reviewed product evidence does not establish a supplied
-or integral cord. Baguette Evo is excluded: YY Vertical's primary evidence
-establishes optional rope or bungee use, not an included or integral cord.
+The audit covers all 20 discovered model packages. Eight have documented
+suspended presentation evidence and render transient cord geometry; twelve remain
+excluded because their reviewed product evidence does not establish a
+suspended presentation. Optional user-provided rope or bungee is sufficient
+for documented suspended presentation, but it is never described as supplied
+or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 4 | `tension.flash-board`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger` |
-| `excluded` | 16 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Climber's Edge/Contact/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II; So iLL Training Tiles; The Hangboard; Trango Rock Prodigy Training Center; YY Vertical Baguette Evo |
+| `represented` | 8 | `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `excluded` | 12 | Beastmaker 1000/2000; Lattice Triple Rung; Metolius Climber's Edge/Contact/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II; So iLL Training Tiles; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -27,8 +28,14 @@ was available. Every retained evidence entry records its exact revision ID,
 source tier, source URL, and the SHA-256/path of its own downloaded artifact.
 The validator rejects reuse of one artifact for two distinct represented views
 and rejects markdown audit ledgers as source snapshots. When a cited source
-could not be retained, the record has an empty evidence array and the board is
-conservatively excluded; no suspension metadata is promoted on that basis.
+cannot be retained, the record remains blocked from representation until the
+evidence is retained; it is not silently treated as proof that a documented
+optional suspension does not exist. A package with documented suspension
+metadata cannot receive an `excluded` decision. Each record also carries the
+independent `sourceFact` (`documentedSuspension` or
+`noDocumentedSuspension`); both decisions require retained evidence, and the
+validator rejects a documented-suspension source fact classified as excluded
+even after rendering metadata is removed.
 Every record also carries an explicit `humanApproval` object; the validator
 rejects missing or incomplete provenance and approvals.
 
@@ -38,7 +45,8 @@ The six packages promoted to model-only media after the initial audit have no
 `media.suspension` metadata. Each retains a distinct manufacturer artifact in
 the snapshot directory and an approved exclusion record. The artifacts
 establish product identity and visible board arrangement only; none establishes
-a supplied or integral cord. Accordingly, this addendum adds no cord,
+a suspended presentation. Each exclusion records `noDocumentedSuspension`;
+it does not infer a cord from mounting openings. Accordingly, this addendum adds no cord,
 attachment, topology, or hidden-route claim.
 
 | Package | Retained manufacturer artifact |
@@ -57,18 +65,60 @@ attachment, topology, or hidden-route claim.
 - The Backcountry and Amazon responses were unavailable as usable source artifacts at audit time, so they are not represented as evidence.
 - The retained packet establishes the supplied portable cord, two ordered
   passage pairs, and four canonical positions. Existing suspension metadata and
-  descriptor hashes were preserved byte-for-byte.
+  descriptor bytes were unchanged by the suspension audit at that stage. The
+  later contact-first integration migrated the descriptor schema; the current
+  post-integration hash boundary is recorded below.
 
-### YY Vertical Baguette Evo — excluded
+### Captain Fingerfood DUAL, POCKET Lines, and UNLEVEL — `pairedLeadCord`
+
+- Current DUAL, POCKET Lines, and UNLEVEL manufacturer product pages publish
+  total rope length (1 m for DUAL and UNLEVEL; 1 m for POCKET Lines). The
+  renderer's `restLength` is per lead. After the 2026-09-14 user visual review,
+  DUAL, POCKET, and UNLEVEL use compact 0.275 m, 0.27 m, and 0.28 m display
+  estimates respectively. These are conservative compact capacities that
+  cover every canonical routed pose; they do not revise the published 1 m
+  total or claim measured individual lead lengths.
+- The retained title images show two ropes descending over the upper lip into
+  the recessed channel for each exact revision. They do not establish a
+  through-hole or complete hidden interior route.
+- Each package therefore binds two distinct recess terminals on its existing
+  importer-visible body node and preserves the visible upper-lip path with two
+  default ordered `contactPointsInModel` per lead. Selected inverted and end
+  poses use `attachmentPoints` and `cordContactPoints` to delimit the visible
+  cord in that pose's upper channel, avoiding a loop across the face and white
+  floor apertures. These are explicitly display estimates of the visible
+  portion, not newly asserted physical mouths or hidden interior routes.
+  All free spans and contact surfaces retain the production clearance gate.
+- The shared anchor offset is the user-approved compact 0.15 m display
+  estimate, 50% below the prior presentation value.
+- Attachment coordinates, anchor offsets, cord radius, and pose camera values
+  are explicitly display estimates. The suspension edit left contact IDs,
+  positions, model bytes, descriptor bytes, and orientation values unchanged
+  at that stage; the later contact-first integration migrated contact-related
+  board and descriptor fields.
+
+### YY Vertical Baguette Evo — `twoBranchCord`
 
 - Exact-revision manufacturer view: [manufacturer English listing](https://www.yyvertical.com/en/products/baguette-evo), retained as `yy-baguette.html`.
-- The EU and fragment-only variants were not retained as separate artifacts. Primary evidence establishes only optional use with rope or bungee; it does not establish that either accessory is supplied or integral.
+- Exact-revision manufacturer product image: [Baguette Evo product image](https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp?v=1751469206), retained as `yy-baguette-evo-image.webp`.
 - The current **Baguette Evo, Turn & Pull version**, SKU `YY BAGUETTE EVO`,
-  EAN `3760305271822`, is the retained revision. Primary evidence establishes
-  only optional use with rope or bungee; it does not establish that either is
-  supplied or integral.
-- The package retains its model, holds, positions, orientation, and descriptor
-  unchanged, but has no `media.suspension` and renders no cord.
+  EAN `3760305271822`, is the retained revision. Primary evidence explicitly
+  supports suspended use with rope or bungee; this is represented as a
+  documented presentation and does not claim either accessory is supplied.
+- The prior source-reviewed `twoBranchCord` metadata is restored with its
+  four ordered through-bores, two branches, invisible anchor, and all five
+  canonical poses. The 0.2 m anchor offset makes the visible suspension 50%
+  shorter than the prior presentation. The source-marker Z-up coordinates are
+  converted into importer Y-up coordinates as `(x,z,-y)`, aligning all four
+  existing bores with the actual USDZ openings. Pose-specific exterior
+  `cordContactPoints` clear the cylinder while retaining the same four bores
+  and ordered pairs. Its 0.945 m per-branch display estimate covers the longest
+  0.944143 m route. This capacity does not set visible hanging height.
+  The `paired-12-8-6` and `rounded-tray` cameras are 30° oblique display
+  estimates, retaining the selected face while exposing the hanging V instead
+  of looking along the cord toward the board.
+  All route, anchor, radius, and pose values marked `displayEstimate` remain
+  presentation estimates.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 
@@ -150,31 +200,42 @@ remained unavailable. Parser preservation and pose-mouth solving passed (five
 focused tests). The full suspension solver class plus existing Flash/native
 and synthetic paired-lead regressions passed (43 tests). The shared malformed
 parser matrix passed after registering the four new fixture names. Python
-model/parser/audit suites passed 147 tests, with 63 packages valid and the cord
-audit retaining 4 represented / 10 excluded.
+model/parser/audit validation was rerun after this correction: all 63 packages
+remain valid and the cord audit now retains 8 represented / 6 excluded. A
+subsequent branch verification used the tracked workspace virtual environment
+to run the complete HangboardPackages pytest suite successfully. That Python
+result does not establish iOS app or Simulator validation.
 
 Actual DEBUG app detail screens were launched with
 `HANGTEN_REVIEW_BOARD_DETAIL=1` and each `HANGTEN_REVIEW_BOARD_ID`. The four
 workspace captures `gorgeous-dugong-lattice-large-cords.png`,
 `gorgeous-dugong-lattice-small-cords.png`, `gorgeous-dugong-nature-cords.png`,
 and `gorgeous-dugong-flash-cords.png` were visually inspected: all show a loaded
-3D board, visible hanging leads, and an active highlighted hold. These are
+3D board, visible hanging leads, and an active highlighted contact. These are
 simulator app-integration evidence, not physical-device PBR parity proof.
 
 ## Package changes
 
-All promoted package edits are limited to `board.json` suspension metadata.
-Holds, logical positions, media paths, orientation blocks, USDZ files, and
-descriptor files were preserved. No cord, hardware, anchor, or raster fallback
-was baked into a USDZ.
+The promoted suspension edits were limited to `board.json` metadata. Physical
+contacts, logical positions, media paths, orientation blocks, USDZ files, and
+descriptor files were unchanged by those suspension edits. The subsequent
+contact-first integration migrated board and descriptor schemas and was then
+merged into this branch. At the current post-integration boundary, comparison
+against `origin/main` commit
+`d7ca9c5c95953e296adaf763c89dd892d8c40cf9` shows no branch diff for any USDZ
+or `.model.json` file. No cord, hardware, anchor, or raster fallback was baked
+into a USDZ.
 
 | Package | Topology | Attachment/passage binding | USDZ `modelSHA256` | Descriptor file SHA-256 |
 |---|---|---|---|---|
-| `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524` | `fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c` |
-| `yy.baguette-evo` (excluded) | none | No cord metadata; optional rope/bungee is not promoted | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
-| `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
-| `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |
-| `nature.stone-hanger` | `pairedLeadCord` | Two distinct upper-corner mouths on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `a35adb07928a69ea7a39d5756f1cbbeebcbd2964b4ae613f3cd088552c7432d9` |
+| `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524` | `f00bb82da1c5b9389c492dc78770e94f497367cc6cd6dc1e1d721b52ad3b56c0` |
+| `captain-fingerfood.dual` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `DUAL_skin_body_001`; through-hole/interior route omitted | `d7fbadb80de6eceee7617e12515a79acbf4347a0aebaa139bf2f5a4fc669da0e` | `1320ccae333047e2ffcdea0ac747923ec7e90c4cd16780df43cfb4aa81b6929e` |
+| `captain-fingerfood.pocket` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `body_skin_001`; through-hole/interior route omitted | `3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f` | `376e58a9dce8cae876c14ac286429e02780daf6c5c02a244e58703fd81cd4bc3` |
+| `captain-fingerfood.unlevel` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `Body_EditableSkin_001`; through-hole/interior route omitted | `ab52e45b9cdc1c011cfc8a3a6a75cf7c06d19b76f74dab5f53972a9a734b867b` | `e03da79d95fe6d2259d1ca15e4e709544742d67e6d6e874fdac11e13d15784ab` |
+| `yy.baguette-evo` | `twoBranchCord` | Four ordered through-bores on `body_mesh_001` | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47` |
+| `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `831885d16fcd234ef7f7cbd224d931c18700d9fff64b569590d0b6e6a0bda4cb` |
+| `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `0a029569bf3c9d232a335196a0fe77c41d27d34647318e005600a75aa8d5c2a4` |
+| `nature.stone-hanger` | `pairedLeadCord` | Two distinct upper-corner mouths on `body_oak_mesh_001` | `177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1` | `569fdaaf067ace45b36c5954f23b4b226b4adc3740d249a14cf6b5383c68e97b` |
 
 Every new attachment, passage, branch, anchor, cord, and canonical-pose
 provenance includes `displayEstimate` where the source does not publish a
@@ -192,7 +253,7 @@ PYTHONPATH=Tools/HangboardPackages/src Tools/HangboardPackages/.venv/bin/python 
 Result:
 
 ```json
-{"decisions":{"excluded":16,"represented":4},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.climbers-edge","metolius.contact","metolius.prime-rib","metolius.project","metolius.simulator-3d","metolius.wood-grips-compact-ii","nature.stone-hanger","soill.training-tiles","tension.flash-board","the-hangboard.the-hangboard","trango.rock-prodigy-training-center","yy.baguette-evo"]}
+{"decisions":{"excluded":12,"represented":8},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.climbers-edge","metolius.contact","metolius.prime-rib","metolius.project","metolius.simulator-3d","metolius.wood-grips-compact-ii","nature.stone-hanger","soill.training-tiles","tension.flash-board","the-hangboard.the-hangboard","trango.rock-prodigy-training-center","yy.baguette-evo"]}
 ```
 
 `python3 -m json.tool` passed for all four edited board packages and
@@ -207,8 +268,8 @@ environment.
 
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli validate --root Hangboards --final-inventory` passed: 63 complete boards, zero drafts.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli status --root Hangboards` passed with the same complete inventory.
-- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed after the 2026-09-15 coverage addendum: 20 model packages, 4 represented, 16 excluded.
+- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed after the 2026-09-15 coverage addendum: 20 model packages, 8 represented, 12 excluded.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m compileall -q Tools/HangboardPackages/src` passed, and `git diff --check` passed.
-- `python3 -m pytest Tools/HangboardPackages/tests -q` was unavailable because pytest is not installed. The repository wrapper could not bootstrap its virtual environment because restricted networking could not resolve the package index (`setuptools>=84.0.0`).
+- At the time of Task 5, the system Python lacked `pytest` and restricted networking prevented a new environment from being bootstrapped. This historical environment limitation is superseded for the branch: the existing tracked workspace virtual environment subsequently ran the complete HangboardPackages pytest suite successfully.
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.
 - Temporary Xcode output was created under `.context/gorgeous-dugong-task5-xcode/`, then removed and verified absent.

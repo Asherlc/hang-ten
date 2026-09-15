@@ -48,7 +48,7 @@ def test_workbench_has_no_older_schema_adapter_or_hold_wire_contract() -> None:
         assert prohibited not in sources
 
 
-def test_only_contact_native_model_tools_remain() -> None:
+def test_only_contact_native_model_and_suspension_clearance_tools_remain() -> None:
     model_tools = REPOSITORY_ROOT / "Tools" / "HangboardModels"
     assert {path.name for path in model_tools.iterdir() if path.is_file()} == {
         "contact_model_descriptor.py",
@@ -65,6 +65,8 @@ def test_only_contact_native_model_tools_remain() -> None:
         "test_verify_the_hangboard.py",
         "test_verify_trango_rock_prodigy_training_center.py",
         "test_verify_yy_baguette_evo.py",
+        "check_production_cord_clearance.rb",
+        "production_cord_clearance.swift",
     }
 
 

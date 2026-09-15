@@ -124,8 +124,12 @@ struct BoardModelCanonicalPose: Hashable {
     let rotation: [Double]
     let translation: [Double]
     let camera: BoardModelCanonicalCamera
-    // External mouths used in this pose; never an inferred interior route.
+    // Visible exterior endpoints in this pose; clipped display endpoints do
+    // not establish additional physical mouths or an inferred interior route.
     var attachmentPoints: [String: [Double]]? = nil
+    // Ordered exterior contact points keyed by paired-lead attachment ID or
+    // two-branch passage ID. Passage overrides never change the actual bore.
+    var cordContactPoints: [String: [[Double]]]? = nil
 }
 
 struct BoardModelSingleCordSuspension: Hashable {
@@ -140,6 +144,9 @@ struct BoardModelPairedLeadAttachment: Hashable {
     let nodeID: String
     let pointInModel: [Double]
     let provenance: String
+    /// Ordered surface contacts from the free hanging span to the terminal
+    /// attachment. Empty preserves the direct exterior-lead presentation.
+    var contactPointsInModel: [[Double]] = []
 }
 
 struct BoardModelPairedLeadCord: Hashable {

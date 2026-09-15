@@ -52,12 +52,13 @@ def _single_grip_type(contact: dict[str, object]) -> str | None:
 
 
 def _assert_model_descriptor(
-    root: Path, board: dict[str, object], body_node_id: str
+    root: Path, board: dict[str, object], body_node_ids: str | set[str]
 ) -> dict[str, object]:
     presentations = board["presentations"]
     assert isinstance(presentations, list)
     media = presentations[0]["media"]
     assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
     assert {
@@ -76,8 +77,9 @@ def _assert_model_descriptor(
     contacts = board["contacts"]
     assert isinstance(contacts, list)
     assert set(descriptor["contacts"]) == {contact["id"] for contact in contacts}
+    expected_body_ids = {body_node_ids} if isinstance(body_node_ids, str) else body_node_ids
     assert [node for node in descriptor["nodes"] if node["role"] == "body"] == [
-        {"nodeID": body_node_id, "role": "body"},
+        {"nodeID": node_id, "role": "body"} for node_id in sorted(expected_body_ids)
     ]
     for contact_id, contact in descriptor["contacts"].items():
         assert contact["nodeIDs"] == [
@@ -90,28 +92,16 @@ def _assert_model_descriptor(
 
 def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
     board = json.loads((CLIMBERS_EDGE_ROOT / "board.json").read_text(encoding="utf-8"))
-    presentations = board["presentations"]
-    assert isinstance(presentations, list) and len(presentations) == 1
-    media = presentations[0]["media"]
-    assert media["type"] == "model"
-    assert media["assetPath"] == "assets/primary.usdz"
-    assert media["descriptorPath"] == "assets/primary.model.json"
-    assert "contactGeometry" not in media
-    assert {
-        path.relative_to(CLIMBERS_EDGE_ROOT).as_posix()
-        for path in CLIMBERS_EDGE_ROOT.rglob("*")
-        if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
-    descriptor = json.loads(
-        (CLIMBERS_EDGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    assert len(board["presentations"]) == 1
+    descriptor = _assert_model_descriptor(
+        CLIMBERS_EDGE_ROOT, board, {"body_001", "bore_free_body_caps_001"}
     )
-    assert descriptor["modelSHA256"] == hashlib.sha256(
-        (CLIMBERS_EDGE_ROOT / media["assetPath"]).read_bytes()
-    ).hexdigest()
-    assert set(descriptor["contacts"]) == {contact["id"] for contact in board["contacts"]}
-    assert {node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"} == {
-        "body_001", "bore_free_body_caps_001"
-    }
+    bounds = descriptor["modelBounds"]
+    front_aspect = (bounds["max"][0] - bounds["min"][0]) / (
+        bounds["max"][1] - bounds["min"][1]
+    )
+    assert board["aspectRatio"] == pytest.approx(front_aspect)
+    assert board["presentations"][0]["aspectRatio"] == pytest.approx(front_aspect)
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
@@ -1278,8 +1268,15 @@ def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> Non
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert media["descriptorPath"] == "assets/primary.model.json"
+    suspension = media["suspension"]
+    assert suspension["type"] == "twoBranchCord"
+    assert len(suspension["passages"]["left"]) == 2
+    assert len(suspension["passages"]["right"]) == 2
+    assert [branch["id"] for branch in suspension["branches"]] == [
+        "left-branch",
+        "right-branch",
+    ]
     assert "contactGeometry" not in media
-    assert "suspension" not in media
     assert "holdGeometry" not in media
     assert {path.relative_to(YY_BAGUETTE_EVO_ROOT).as_posix()
             for path in YY_BAGUETTE_EVO_ROOT.rglob("*") if path.is_file()} == {

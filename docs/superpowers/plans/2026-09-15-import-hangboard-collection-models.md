@@ -42,11 +42,11 @@
 - Delete: declared raster media from `Hangboards/metolius-climbers-edge/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/metolius-climbers-edge/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Record the exact source GLB hash, the downloaded source register, and two reviewed visual sources for this revision; stop if the evidence gate is not met.
-- [ ] Compare the GLB node inventory with the existing 15-contact inventory and author a reviewed explicit mapping; classify every unbound source node as body or attachment.
-- [ ] Run `Tools/HangboardModels/import_contact_model_source.py` with the explicit mapping, reimport the resulting USDZ from an empty scene, and compile the descriptor.
-- [ ] Replace the raster presentation only after descriptor contact keys exactly equal the existing contact IDs; remove obsolete raster assets and run focused package/model tests.
-- [ ] Commit and push the completed board migration.
+- [x] Record the exact source GLB hash, the downloaded source register, and two reviewed visual sources for this revision; stop if the evidence gate is not met.
+- [x] Compare the GLB node inventory with the existing 15-contact inventory and author a reviewed explicit mapping; classify every unbound source node as body or attachment.
+- [x] Run `Tools/HangboardModels/import_contact_model_source.py` with the explicit mapping, reimport the resulting USDZ from an empty scene, and compile the descriptor.
+- [x] Replace the raster presentation only after descriptor contact keys exactly equal the existing contact IDs; remove obsolete raster assets and run focused package/model tests.
+- [x] Commit and push the completed board migration.
 
 **Review gate:** A fresh reviewer verifies evidence traceability, exact contact-ID preservation, complete descriptor bindings, and absence of a raster fallback.
 
@@ -58,11 +58,11 @@
 - Delete: declared raster media from `Hangboards/metolius-contact/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/metolius-contact/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Audit and retain the exact-revision evidence and source GLB hash.
-- [ ] Explicitly map all 33 existing logical contacts to reviewed importer-visible nodes; keep bore/body nodes nonselectable.
-- [ ] Import, export, reimport, and descriptor-validate the USDZ without source materials present.
-- [ ] Promote only if descriptor inventory and model hash match, then run focused package/model tests.
-- [ ] Commit and push the completed board migration.
+- [x] Audit and retain the exact-revision evidence and source GLB hash.
+- [x] Explicitly map all 33 existing logical contacts to reviewed importer-visible nodes; keep bore/body nodes nonselectable.
+- [x] Import, export, reimport, and descriptor-validate the USDZ without source materials present.
+- [x] Promote only if descriptor inventory and model hash match, then run focused package/model tests.
+- [x] Commit and push the completed board migration.
 
 **Review gate:** A fresh reviewer verifies the 33-contact mapping, stable metadata, and no fabricated depth/bore facts.
 
@@ -74,10 +74,10 @@
 - Delete: declared raster media from `Hangboards/metolius-simulator-3d/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/metolius-simulator-3d/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Audit evidence and map the 29 existing contacts to exact source nodes, documenting intentional multi-piece mappings if present.
-- [ ] Compile/reimport/verify the actual USDZ and descriptor, including material and body-node validation.
-- [ ] Promote the model-only presentation only when every existing contact has a binding and the descriptor hash is exact.
-- [ ] Run package/model tests and commit/push the completed board migration.
+- [x] Audit evidence and map the 29 existing contacts to exact source nodes, documenting intentional multi-piece mappings if present.
+- [x] Compile/reimport/verify the actual USDZ and descriptor, including material and body-node validation.
+- [x] Promote the model-only presentation only when every existing contact has a binding and the descriptor hash is exact.
+- [x] Run package/model tests and commit/push the completed board migration.
 
 **Review gate:** A fresh reviewer checks node/contact cardinality decisions and saved-contact identity preservation.
 
@@ -89,10 +89,10 @@
 - Delete: declared raster media from `Hangboards/soill-training-tiles/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/soill-training-tiles/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Audit exact board evidence and source hash, including the paired-board arrangement and any model caveats.
-- [ ] Map all 20 existing contacts explicitly; ensure left/right counterparts and multi-part upper pockets/jugs bind correctly without adding IDs.
-- [ ] Import and verify the USDZ/descriptor from actual importer-visible triangles.
-- [ ] Promote the model-only package, remove raster assets, run focused tests, and commit/push.
+- [x] Audit exact board evidence and source hash, including the paired-board arrangement and any model caveats.
+- [x] Map all 20 existing contacts explicitly; ensure left/right counterparts and multi-part upper pockets/jugs bind correctly without adding IDs.
+- [x] Import and verify the USDZ/descriptor from actual importer-visible triangles.
+- [x] Promote the model-only package, remove raster assets, run focused tests, and commit/push.
 
 **Review gate:** A fresh reviewer verifies bilateral mapping and the exclusion of unverified logos, hardware, and inferred geometry.
 
@@ -104,10 +104,10 @@
 - Delete: declared raster media from `Hangboards/the-hangboard/`
 - Create/modify: `.context/lumpy-liger-hangboard-collection/the-hangboard/*`, `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 
-- [ ] Audit evidence and source hash; preserve the 15 existing contacts and all supported dimensions/facts.
-- [ ] Author the direct source-node mapping, classify unselectable model elements, and compile/reimport the package.
-- [ ] Validate exact descriptor inventory/hash, replace raster declarations/assets, and run focused tests.
-- [ ] Commit and push the completed board migration.
+- [x] Audit evidence and source hash; preserve the 15 existing contacts and all supported dimensions/facts.
+- [x] Author the direct source-node mapping, classify unselectable model elements, and compile/reimport the package.
+- [x] Validate exact descriptor inventory/hash, replace raster declarations/assets, and run focused tests.
+- [x] Commit and push the completed board migration.
 
 **Review gate:** A fresh reviewer verifies central sloper and bilateral edge identities are neither merged nor invented.
 
@@ -132,9 +132,14 @@
 - Modify: `docs/source-audits/2026-09-15-hangboard-collection-model-imports.md`
 - Create: `.context/lumpy-liger-hangboard-collection/final-validation.json` and temporary review screenshots
 
-- [ ] Run `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, `rtk scripts/hangboard-packages.sh status --root Hangboards`, retained model-tool pytest collection, and focused Swift model/package tests.
-- [ ] Build and validate with the isolated-simulator workflow in `docs/IOS_SIMULATOR_VALIDATION.md`; inspect all six normal and selected-contact states, model-unavailable behavior, and picking alignment.
-- [ ] Record commands, results, model/descriptor hashes, screenshots reviewed, omissions, and cleanup verification in the audit; clean all owned resources/artifacts.
+- [x] Run `rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, `rtk scripts/hangboard-packages.sh status --root Hangboards`, retained model-tool pytest collection, and focused Swift model/package tests.
+- [x] Build and validate with the isolated-simulator workflow in `docs/IOS_SIMULATOR_VALIDATION.md`; inspect all six normal and selected-contact states, model-unavailable behavior, and picking alignment.
+- [x] Record commands, results, model/descriptor hashes, screenshots reviewed, omissions, and cleanup verification in the audit; clean all owned resources/artifacts.
 - [ ] Run `rtk git diff --check`, request the final broad review against this plan/spec, resolve all critical or important findings, then commit and push validation adjustments.
 
 **Review gate:** Final reviewer must confirm the six-package scope, descriptor integrity, source boundaries, runtime behavior, test evidence, and exact owned-resource cleanup.
+
+Completion evidence for Tasks 1–6 and the first three Task 7 steps is retained in
+[`2026-09-15-hangboard-collection-model-imports.md`](../../source-audits/2026-09-15-hangboard-collection-model-imports.md),
+including the resumed ODR validation and final direct-picking review. The last
+Task 7 checkbox remains open until the current PR review findings are resolved.

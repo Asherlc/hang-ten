@@ -304,8 +304,15 @@ has no raster media, canonical path, or fallback geometry.
 P1 follow-up: `Tools/HangboardModels/verify_metolius_climbers_edge.py` is the
 committed reproducible shipped-asset verifier. It starts from an empty Blender
 scene, hash-checks the descriptor-bound shipped USDZ, imports that exact asset,
-and requires all eight rays to hit exactly `bore_free_body_caps_001`. Its
+rebuilds the descriptor from the imported material-bearing triangles, and
+requires exact equality with the shipped descriptor plus all eight rays to
+hit exactly `bore_free_body_caps_001`. Its
 Blender-free contract test is `test_verify_metolius_climbers_edge.py`.
+
+The fixed front presentation uses a 3.75 display aspect ratio from its imported
+0.600000024 × 0.159999996 m front bounds, replacing the former raster ratio.
+The runtime fits both projected dimensions within that viewport; this layout
+estimate does not change the model geometry or source-backed dimensions.
 
 ## The Hangboard (`the-hangboard.the-hangboard`)
 
@@ -441,7 +448,7 @@ incompatible with Xcode. No app-code correction was made.
 | `rtk Tools/HangboardPackages/.venv/bin/python -m pytest Tools/HangboardModels/test_contact_model_descriptor.py Tools/HangboardModels/test_contact_model_package.py Tools/HangboardModels/test_import_contact_model_source.py Tools/HangboardModels/test_verify_metolius_climbers_edge.py Tools/HangboardModels/test_verify_the_hangboard.py Tools/HangboardModels/test_verify_trango_rock_prodigy_training_center.py -q` | 12 passed. |
 | `rtk Tools/HangboardPackages/.venv/bin/python -m pytest Tools/HangboardPackages/tests/test_model_first_packages.py Tools/HangboardPackages/tests/test_trango_rock_prodigy_training_center_board_package.py -q` | 119 passed. |
 
-Fresh SHA-256 reads are retained in
+Current SHA-256 reads, including the final Training Center pinch correction, are retained in
 `.context/lumpy-liger-hangboard-collection/final-validation.json`; the passing
 model-first/package suites check that each USDZ is descriptor-bound.
 
@@ -452,7 +459,7 @@ model-first/package suites check that each USDZ is descriptor-bound.
 | `metolius.simulator-3d` | `3372f4d2b42a967d3ca65c2d1a0f56bd7762b32f9c1a80f79897841b020fbc94` | `783e0a0e808a31d8f4d11c69c15477e6ef70c93eed2da9c195639ef014b302ee` |
 | `soill.training-tiles` | `4cb007105f5c70d57e739c884964d130f6ccf524d4c4adb974892bda4f670ebf` | `fa3e18d155a9ba3f808fef2ce9c1c4e6a076cd141f1d842440cf6dcb192395b8` |
 | `the-hangboard.the-hangboard` | `212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f` | `a106a3710d354244a73664fc95faac0db5fe9700b0b46482a4d49c2c328b36a8` |
-| `trango.rock-prodigy-training-center` | `bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d` | `026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6` |
+| `trango.rock-prodigy-training-center` | `f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1` | `45b51d0390a71c0f21540dd6e682e5aa2afa15bc6e234c67edc2ffdd7c931073` |
 
 ### Simulator/XCTest blocker and omissions
 

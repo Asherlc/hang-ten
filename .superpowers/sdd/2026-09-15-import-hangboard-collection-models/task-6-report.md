@@ -5,8 +5,10 @@ Completed 2026-09-15.
 ## Delivered package
 
 - Replaced the raster presentation with the sole hash-bound model pair:
-  `assets/primary.usdz` (`bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d`)
-  and `assets/primary.model.json` (`026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6`).
+  `assets/primary.usdz` (`f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1`)
+  and `assets/primary.model.json` (`45b51d0390a71c0f21540dd6e682e5aa2afa15bc6e234c67edc2ffdd7c931073`).
+  These are the final corrected model bytes (matching the Git LFS object OID)
+  and descriptor bytes, not the LFS pointer text.
 - Removed `assets/primary.png`, all raster contact geometry, canonical paths,
   cached frames, and fallback media. The package inventory is exactly
   `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`.
@@ -21,12 +23,14 @@ instructions, plus the supplied GLB. The review uses no Forge, Natural, or
 Pivot facts. The supplied GLB SHA-256 is
 `59bb4bc1d1930b2fa14266d5f17e67859815912e2decab15dd1861c07f452c57`.
 
-It has two body meshes and 20 named contact meshes. Its two
-`pinch-combination-*` meshes each represent two existing overlapping pinch
-selection identities. The only source correction is therefore contract-only:
-two linked source nodes per side bind the existing medium/wide pinch IDs while
-sharing the untouched supplied mesh data. The corrected transport source SHA
-is `44f578442c2b80e05e4c790d81b99790defdf147ea7e5a1b3ab13f7faedf5ac5`.
+It has two body meshes and 22 named contact meshes. Final review rejected the
+initial duplicate-node pinch export because coincident triangles cannot be
+picked independently. The corrected source partitions each original
+`pinch-combination-*` mesh into 3,613 lower and 5,087 upper triangles, with no
+duplicates or geometry changes. The lower/medium and upper/wide assignment is
+an authored display binding estimate, not a manufacturer positional fact.
+The corrected native source SHA is
+`a07855a4d81dd05e9dd849b7001e12c6b059acbac3e93320b7b3e24679c2055e`.
 Every other supplied contact mesh maps explicitly and one-to-one to its
 existing ID; both body meshes remain nonselectable.
 
@@ -35,10 +39,14 @@ existing ID; both body meshes remain nonselectable.
 `Tools/HangboardModels/verify_trango_rock_prodigy_training_center.py` checks
 the exact shipped file hash, imports the USDZ into an empty Blender scene,
 rebuilds the descriptor from the actual imported triangles, and requires its
-24-contact keyset and distinct left/right medium/wide pinch node bindings. The
+24-contact keyset, distinct left/right medium/wide pinch node bindings, and
+disjoint pinch triangles. The
 retained result reports 26 nodes (two body and 24 contact), and descriptor
 equality with the imported USDZ. Its Blender-free companion test locks the
-ordered 24 IDs and four independent pinch bindings.
+ordered 24 IDs and every source-node-to-contact mapping individually. The final
+native tests prove a reachable nearest triangle and projected screen hit for
+each contact mesh, and four simulator coordinate taps selected the separate
+pinch regions; see the source audit's final review evidence.
 
 All generated source, mapping, evidence, and verification artifacts are under
 the workspace-owned ignored `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/` directory. No HTTP server or external runtime
