@@ -514,6 +514,7 @@ final class BoardModelScene {
         allowedPositionIDs: Set<String>? = nil,
         resourceLease: BoardModelResourceLease? = nil
     ) {
+        guard suspension == nil || orientation == nil else { return nil }
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
