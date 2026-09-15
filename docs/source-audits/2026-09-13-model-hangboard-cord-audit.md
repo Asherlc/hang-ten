@@ -52,15 +52,21 @@ rejects missing or incomplete provenance and approvals.
 
 - Current DUAL, POCKET Lines, and UNLEVEL manufacturer product pages publish
   total rope length (1 m for DUAL and UNLEVEL; 1 m for POCKET Lines). The
-  renderer's `restLength` is per lead, so each package uses an explicitly
-  labeled 0.5 m display estimate derived from the shared 1 m total; this does
-  not claim that either individual lead is measured at 0.5 m.
-- The retained title images show the two external cord holes for each exact
-  revision. The source pages and images establish the external mouths but do
-  not establish the complete hidden interior route.
-- Each package therefore binds two distinct points on its existing importer
-  visible body node and renders two independent leads from one invisible
-  anchor. No internal rope route, knot, hardware, or safety claim is made.
+  renderer's `restLength` is per lead. After the 2026-09-14 user visual review,
+  DUAL, POCKET, and UNLEVEL use compact 0.275 m, 0.27 m, and 0.28 m display
+  estimates respectively. These are conservative compact capacities that
+  cover every canonical routed pose; they do not revise the published 1 m
+  total or claim measured individual lead lengths.
+- The retained title images show two ropes descending over the upper lip into
+  the recessed channel for each exact revision. They do not establish a
+  through-hole or complete hidden interior route.
+- Each package therefore binds two distinct recess terminals on its existing
+  importer-visible body node and preserves the visible upper-lip path with two
+  ordered `contactPointsInModel` per lead. The renderer draws the free span and
+  the authored exterior route without inventing a through-bore, knot, hardware,
+  or safety claim.
+- The shared anchor offset is the user-approved compact 0.15 m display
+  estimate, 50% below the prior presentation value.
 - Attachment coordinates, anchor offsets, cord radius, and pose camera values
   are explicitly display estimates. Existing hold IDs, positions, model bytes,
   descriptor bytes, and orientation values are unchanged.
@@ -75,8 +81,12 @@ rejects missing or incomplete provenance and approvals.
   documented presentation and does not claim either accessory is supplied.
 - The prior source-reviewed `twoBranchCord` metadata is restored with its
   four ordered through-bores, two branches, invisible anchor, and all five
-  canonical poses. All route, anchor, radius, and pose values marked
-  `displayEstimate` remain presentation estimates.
+  canonical poses. The 0.2 m anchor offset makes the visible suspension 50%
+  shorter than the prior presentation. Its 0.885 m per-branch display estimate
+  is the minimum rounded capacity that keeps every fixed route solvable; the
+  originally proposed exact-half 0.7 m value is shorter than the directed
+  route. All route, anchor, radius, and pose values marked `displayEstimate`
+  remain presentation estimates.
 
 ### Lattice MXEdge Lift Large and Small — `pairedLeadCord`
 
@@ -182,9 +192,9 @@ was baked into a USDZ.
 | Package | Topology | Attachment/passage binding | USDZ `modelSHA256` | Descriptor file SHA-256 |
 |---|---|---|---|---|
 | `tension.flash-board` | `twoBranchCord` (existing) | Existing four ordered passages on `flash_board_body_008` | `4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524` | `fd2c3e057c9feee1d6da57448bd9e4d58510ae8a6c60120282e51b13c228019c` |
-| `captain-fingerfood.dual` | `pairedLeadCord` | Two distinct external cord holes on `DUAL_skin_body_001`; interior route omitted | unchanged | unchanged |
-| `captain-fingerfood.pocket` | `pairedLeadCord` | Two distinct external cord holes on `body_skin_001`; interior route omitted | unchanged | unchanged |
-| `captain-fingerfood.unlevel` | `pairedLeadCord` | Two distinct external cord holes on `Body_EditableSkin_001`; interior route omitted | unchanged | unchanged |
+| `captain-fingerfood.dual` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `DUAL_skin_body_001`; through-hole/interior route omitted | unchanged | unchanged |
+| `captain-fingerfood.pocket` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `body_skin_001`; through-hole/interior route omitted | unchanged | unchanged |
+| `captain-fingerfood.unlevel` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `Body_EditableSkin_001`; through-hole/interior route omitted | unchanged | unchanged |
 | `yy.baguette-evo` | `twoBranchCord` | Four ordered through-bores on `body_mesh_001` | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `6eb4159f02b4dd35a4a2a7708faf94286d21cfab41f93cab68e28e0b20fb8c` |
 | `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `ed755fce098c3471e8ad8070c58f1fa8092954c560f7b0ecc38a084749e3b16` |
 | `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `f619520ff5493ad4df26154e69cb1cac2998b7ae0bfb1332551d6199fd991419` |

@@ -1479,6 +1479,19 @@ struct BoardPackageStore {
                   zip(attachment.pointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "paired lead attachment point must be finite and inside model bounds")
             }
+            guard attachment.contactPointsInModel.allSatisfy({ point in
+                      point.count == 3 && point.allSatisfy(\.isFinite)
+                  }),
+                  zip(
+                      attachment.contactPointsInModel + [attachment.pointInModel],
+                      (attachment.contactPointsInModel + [attachment.pointInModel]).dropFirst()
+                  ).allSatisfy({ points in
+                      zip(points.0, points.1).reduce(0) { partial, pair in
+                          partial + (pair.0 - pair.1) * (pair.0 - pair.1)
+                      }.squareRoot() > 1e-7
+                  }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "paired lead route contact points must be finite and distinct")
+            }
         }
         guard document.anchor.offsetFromBoardBounds.count == 3,
               document.anchor.offsetFromBoardBounds.allSatisfy(\.isFinite),
@@ -1533,20 +1546,25 @@ struct BoardPackageStore {
             for attachment in document.attachments {
                 let p = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
                 let qx = pose.rotation[0], qy = pose.rotation[1], qz = pose.rotation[2], qw = pose.rotation[3]
-                let tx = 2 * (qy * p[2] - qz * p[1])
-                let ty = 2 * (qz * p[0] - qx * p[2])
-                let tz = 2 * (qx * p[1] - qy * p[0])
-                let transformed = [
-                    p[0] + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
-                    p[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
-                    p[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
-                ]
-                let endpointDistance = zip(transformed, anchorPosition).reduce(0) { partial, pair in
-                    partial + (pair.0 - pair.1) * (pair.0 - pair.1)
-                }.squareRoot()
-                guard endpointDistance.isFinite,
-                      document.cord.restLength >= endpointDistance - 1e-5 else {
-                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord pose \(positionID) restLength is shorter than endpoint distance")
+                let transformedRoute = (attachment.contactPointsInModel + [p]).map { point in
+                    let tx = 2 * (qy * point[2] - qz * point[1])
+                    let ty = 2 * (qz * point[0] - qx * point[2])
+                    let tz = 2 * (qx * point[1] - qy * point[0])
+                    return [
+                        point[0] + qw * tx + (qy * tz - qz * ty) + pose.translation[0],
+                        point[1] + qw * ty + (qz * tx - qx * tz) + pose.translation[1],
+                        point[2] + qw * tz + (qx * ty - qy * tx) + pose.translation[2]
+                    ]
+                }
+                let route = [anchorPosition] + transformedRoute
+                let routeLength = zip(route, route.dropFirst()).reduce(0) { partial, points in
+                    partial + zip(points.0, points.1).reduce(0) { squared, pair in
+                        squared + (pair.0 - pair.1) * (pair.0 - pair.1)
+                    }.squareRoot()
+                }
+                guard routeLength.isFinite,
+                      document.cord.restLength >= routeLength - 1e-5 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord pose \(positionID) restLength is shorter than routed lead")
                 }
             }
             poses[positionID] = BoardModelCanonicalPose(
@@ -1565,7 +1583,8 @@ struct BoardPackageStore {
                     id: $0.id,
                     nodeID: $0.nodeID,
                     pointInModel: $0.pointInModel,
-                    provenance: $0.provenance
+                    provenance: $0.provenance,
+                    contactPointsInModel: $0.contactPointsInModel
                 )
             },
             anchor: BoardModelInvisibleAnchor(
@@ -2434,15 +2453,19 @@ private struct BoardPackagePairedLeadAttachmentDocument: Decodable {
     let id: String
     let nodeID: String
     let pointInModel: [Double]
+    let contactPointsInModel: [[Double]]
     let provenance: String
 
-    private enum CodingKeys: String, CodingKey { case id, nodeID, pointInModel, provenance }
+    private enum CodingKeys: String, CodingKey { case id, nodeID, pointInModel, contactPointsInModel, provenance }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["id", "nodeID", "pointInModel", "provenance"])
+        try decoder.rejectUnknownKeys(["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         nodeID = try container.decode(String.self, forKey: .nodeID)
         pointInModel = try container.decode([Double].self, forKey: .pointInModel)
+        contactPointsInModel = container.contains(.contactPointsInModel)
+            ? try container.decode([[Double]].self, forKey: .contactPointsInModel)
+            : []
         provenance = try container.decode(String.self, forKey: .provenance)
     }
 }

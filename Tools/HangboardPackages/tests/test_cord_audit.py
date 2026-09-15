@@ -22,7 +22,7 @@ from hangboard_packages.cord_audit import (
 )
 
 
-def test_current_four_documented_suspension_packages_are_represented() -> None:
+def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
         repository_root / "Hangboards", require_complete_inventory=True
@@ -52,18 +52,41 @@ def test_current_four_documented_suspension_packages_are_represented() -> None:
     )
     assert report.decisions == {"excluded": 6, "represented": 8}
 
-    for package_id in (
-        "captain-fingerfood.dual",
-        "captain-fingerfood.pocket",
-        "captain-fingerfood.unlevel",
-    ):
+    captain_rest_lengths = {
+        "captain-fingerfood.dual": 0.275,
+        "captain-fingerfood.pocket": 0.27,
+        "captain-fingerfood.unlevel": 0.28,
+    }
+    captain_recess_terminals = {
+        "captain-fingerfood.dual": ((-0.026, 0.024, 0.012), (0.026, 0.024, 0.012)),
+        "captain-fingerfood.pocket": ((-0.022, 0.022, 0.0115), (0.022, 0.022, 0.0115)),
+        "captain-fingerfood.unlevel": ((-0.029, 0.024, 0.012), (0.029, 0.024, 0.012)),
+    }
+    for package_id, rest_length in captain_rest_lengths.items():
         board = next(
             package.board
             for package in inventory.packages
             if package.board.id == package_id
         )
         media = board.presentations[0].media
-        assert media.suspension.cord.rest_length == 0.5
+        assert media.suspension.anchor.offset_from_board_bounds == (0.0, 0.15, 0.0)
+        assert media.suspension.cord.rest_length == rest_length
+        assert all(
+            len(attachment.contact_points_in_model) == 2
+            for attachment in media.suspension.attachments
+        )
+        assert tuple(
+            attachment.point_in_model for attachment in media.suspension.attachments
+        ) == captain_recess_terminals[package_id]
+
+    baguette = next(
+        package.board
+        for package in inventory.packages
+        if package.board.id == "yy.baguette-evo"
+    )
+    baguette_suspension = baguette.presentations[0].media.suspension
+    assert baguette_suspension.anchor.offset_from_board_bounds == (0.0, 0.2, 0.0)
+    assert [branch.rest_length for branch in baguette_suspension.branches] == [0.885, 0.885]
 
 
 def _model_package(package_id: str, *, suspension: object | None = None) -> BoardPackage:

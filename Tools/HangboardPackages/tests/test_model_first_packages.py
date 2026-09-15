@@ -548,6 +548,23 @@ def test_v2_model_accepts_valid_paired_lead_cord_suspension(tmp_path: Path) -> N
     assert set(suspension.canonical_poses) == {"primary"}
 
 
+def test_v2_paired_leads_preserve_ordered_route_contacts(tmp_path: Path) -> None:
+    """Catches collapsing an over-lip route back through the board body."""
+
+    package_root = _write_shared_model_parser_parity_package(
+        tmp_path / "routed-paired-lead",
+        {"base": "pairedLeadCordModel", "mutations": []},
+    )
+
+    suspension = load_board_catalog_module().load_board_package(
+        package_root
+    ).board.presentations[0].media.suspension
+    assert [attachment.contact_points_in_model for attachment in suspension.attachments] == [
+        ((0.2, 0.5, 0.05), (0.2, 0.45, 0.05)),
+        ((0.8, 0.5, 0.05), (0.8, 0.45, 0.05)),
+    ]
+
+
 def test_v2_paired_leads_preserve_distinct_points_when_sharing_node(tmp_path: Path) -> None:
     package_root = _write_shared_model_parser_parity_package(
         tmp_path / "shared-paired-lead-node",

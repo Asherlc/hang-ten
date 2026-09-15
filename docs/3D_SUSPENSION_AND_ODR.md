@@ -97,7 +97,7 @@ otherwise.
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
 | `singleCord` | One attachment and one branch to a shared invisible display anchor | Use only when one physical attachment is established. The attachment binds to an importer-visible body/attachment node, never a hold. |
-| `pairedLeadCord` | Two independent exterior leads from two distinct attachment points to one invisible anchor | Represents visible leads without inventing a lead-to-lead or hidden interior route. Per-pose attachment-point overrides must retain both lead IDs and remain distinct and in bounds. |
+| `pairedLeadCord` | Two independent exterior leads from two distinct attachment points to one invisible anchor | Represents visible leads without inventing a lead-to-lead or hidden interior route. Optional ordered `contactPointsInModel` may preserve an evidenced exterior over-lip route before the terminal attachment; per-pose attachment-point overrides must retain both lead IDs and remain distinct and in bounds. |
 | `twoBranchCord` | Two branch routes through four uniquely identified passages arranged as two ordered pairs | Use directed entry/exit bore routes only when the complete through-route is evidenced. Never fabricate a hidden bore from a visible mouth. |
 
 Attachments and passages bind against importer-visible IDs in the hash-bound
@@ -120,9 +120,10 @@ offset and the corresponding per-lead/per-branch rest length coherently;
 halving `restLength` alone changes slack without moving the hanging geometry's
 support point and can make the route unsolvable. For every canonical pose,
 `restLength` must remain at least the required solved route length: endpoint
-separation for a direct lead, or the full fixed exterior passage route plus its
-free span for a routed branch. Re-run all-pose clearance and framing after any
-such display adjustment.
+separation for a direct lead, the free span plus ordered contact route for a
+routed paired lead, or the full fixed exterior passage route plus its free
+spans for a routed branch. Re-run all-pose clearance and framing after any such
+display adjustment.
 
 Suspension is a deterministic transient layer above the validated USDZ. Keep
 the anchor invisible, cord geometry non-pickable and absent from accessibility,

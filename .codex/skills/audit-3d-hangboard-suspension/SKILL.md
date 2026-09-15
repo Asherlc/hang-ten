@@ -42,6 +42,11 @@ cord remains a display estimate: adjust its anchor geometry and rest length
 coherently, and keep `restLength` at least as long as every required solved
 route. Never shorten `restLength` alone to force less visible slack.
 
+For the current Captain Fingerfood DUAL, POCKET, and UNLEVEL revisions, retain
+the evidenced upper-lip-to-recess path as ordered paired-lead
+`contactPointsInModel`; do not collapse it into a front-floor hole or upgrade it
+to an unevidenced through-bore.
+
 ## Prove the result
 
 Start with a failing parser/audit/runtime regression. Validate the closed cord

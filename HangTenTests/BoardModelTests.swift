@@ -392,7 +392,10 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
-                XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "\(boardID)/\(position.id)")
+                let expectedSegmentCount = suspension.attachments.reduce(0) {
+                    $0 + SuspendedCordSolver.sampleCount - 1 + $1.contactPointsInModel.count
+                }
+                XCTAssertEqual(cord.childNodes.count, expectedSegmentCount, "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
                     node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil

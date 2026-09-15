@@ -463,6 +463,7 @@ class BoardModelPairedLeadAttachment:
     node_id: str
     point_in_model: tuple[float, float, float]
     provenance: str
+    contact_points_in_model: tuple[tuple[float, float, float], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -783,19 +784,47 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         for index, raw_attachment in enumerate(attachments_value):
             attachment_source = f"{attachments_source}[{index}]"
             attachment_payload = _mapping(raw_attachment, attachment_source)
-            _closed(attachment_payload, {"id", "nodeID", "pointInModel", "provenance"}, attachment_source)
+            _closed(
+                attachment_payload,
+                {"id", "nodeID", "pointInModel", "provenance"},
+                attachment_source,
+                optional={"contactPointsInModel"},
+            )
             _canonical_member_order(
-                attachment_payload, ("id", "nodeID", "pointInModel", "provenance"), attachment_source
+                attachment_payload,
+                (
+                    "id",
+                    "nodeID",
+                    "pointInModel",
+                    "contactPointsInModel",
+                    "provenance",
+                )
+                if "contactPointsInModel" in attachment_payload
+                else ("id", "nodeID", "pointInModel", "provenance"),
+                attachment_source,
             )
             attachment_id = _identifier(attachment_payload["id"], f"{attachment_source}.id")
             if attachment_id in attachment_ids:
                 raise ValueError(f"duplicate paired lead attachment ID: {attachment_id}")
             attachment_ids.add(attachment_id)
+            raw_contact_points = attachment_payload.get("contactPointsInModel", [])
+            if not isinstance(raw_contact_points, list):
+                raise ValueError(
+                    f"{attachment_source}.contactPointsInModel must be an array"
+                )
+            contact_points = tuple(
+                _finite_vector3(
+                    point,
+                    f"{attachment_source}.contactPointsInModel[{point_index}]",
+                )
+                for point_index, point in enumerate(raw_contact_points)
+            )
             attachments.append(BoardModelPairedLeadAttachment(
                 attachment_id,
                 _string(attachment_payload["nodeID"], f"{attachment_source}.nodeID"),
                 _finite_vector3(attachment_payload["pointInModel"], f"{attachment_source}.pointInModel"),
                 _string(attachment_payload["provenance"], f"{attachment_source}.provenance"),
+                contact_points,
             ))
         anchor_source = f"{source}.anchor"
         anchor_payload = _mapping(payload["anchor"], anchor_source)
@@ -1724,6 +1753,9 @@ def _validate_model_suspension(
                 for index, coordinate in enumerate(attachment.point_in_model)
             ):
                 raise ValueError("paired lead attachment point must be inside model bounds")
+            route = (*attachment.contact_points_in_model, attachment.point_in_model)
+            if any(math.dist(start, end) <= 1e-7 for start, end in zip(route, route[1:])):
+                raise ValueError("paired lead route points must be distinct")
     for position_id, pose in suspension.canonical_poses.items():
         if pose.attachment_points is not None:
             if not isinstance(suspension, BoardModelPairedLeadCord) or set(pose.attachment_points) != {a.id for a in suspension.attachments} or len(set(pose.attachment_points.values())) != 2:
@@ -1746,7 +1778,18 @@ def _validate_model_suspension(
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
             if isinstance(branch_data, BoardModelCord):
-                endpoints = tuple(pose.attachment_points[endpoint.id] if pose.attachment_points is not None else endpoint.point_in_model for endpoint in branch_endpoints)
+                endpoint = branch_endpoints[0]
+                terminal = (
+                    pose.attachment_points[endpoint.id]
+                    if pose.attachment_points is not None
+                    else endpoint.point_in_model
+                )
+                contact_points = (
+                    endpoint.contact_points_in_model
+                    if isinstance(suspension, BoardModelPairedLeadCord)
+                    else ()
+                )
+                endpoints = (*contact_points, terminal)
                 rest_length = branch_data.rest_length
                 rigid_route_length = 0.0
             else:
@@ -1784,7 +1827,16 @@ def _validate_model_suspension(
                     raise ValueError(f"suspension pose {position_id} endpoint distance must be finite")
                 if rest_length < distance - 1e-5:
                     raise ValueError(f"suspension pose {position_id} restLength is shorter than endpoint distance")
-            if len(transformed_endpoints) > 1:
+            if isinstance(branch_data, BoardModelCord) and len(transformed_endpoints) > 1:
+                minimum_route_length = math.dist(anchor, transformed_endpoints[0]) + sum(
+                    math.dist(start, end)
+                    for start, end in zip(transformed_endpoints, transformed_endpoints[1:])
+                )
+                if rest_length < minimum_route_length - 1e-5:
+                    raise ValueError(
+                        f"suspension pose {position_id} restLength is shorter than routed lead"
+                    )
+            if not isinstance(branch_data, BoardModelCord) and len(transformed_endpoints) > 1:
                 first_distance = math.dist(anchor, transformed_endpoints[0])
                 second_distance = math.dist(anchor, transformed_endpoints[-1])
                 if not math.isfinite(rigid_route_length):

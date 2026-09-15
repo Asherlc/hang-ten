@@ -23,10 +23,12 @@ in the package metadata and are not manufacturer specifications.
 The 2026-09-14 correction retained current exact-revision artifacts for the
 four previously excluded packages. Captain Fingerfood DUAL, POCKET Lines, and
 UNLEVEL retain their current product pages plus title images; each page
-publishes a 1 m rope length and each title image shows two external cord holes.
+publishes a 1 m rope length and each title image shows two ropes descending
+over the upper lip into the recessed channel.
 YY Vertical Baguette Evo retains the current manufacturer page plus product
 image; its source explicitly supports suspended use with rope or bungee. These
 facts authorize documented transient presentation, not a claim that optional
-accessories are supplied. The Captain packages use `pairedLeadCord` and omit
-the unproven interior route; Baguette Evo restores the reviewed
+accessories are supplied. The Captain packages use `pairedLeadCord` with an
+ordered, visible over-lip route and omit any unproven through-hole or hidden
+interior route; Baguette Evo restores the reviewed
 `twoBranchCord` route metadata.

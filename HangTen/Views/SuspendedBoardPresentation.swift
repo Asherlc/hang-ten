@@ -94,6 +94,9 @@ enum SuspendedBoardPresentation {
                       && $0.pointInModel.allSatisfy(\.isFinite)
                       && zip($0.pointInModel, bounds.minimum).allSatisfy({ $0 >= $1 })
                       && zip($0.pointInModel, bounds.maximum).allSatisfy({ $0 <= $1 })
+                      && $0.contactPointsInModel.allSatisfy({ point in
+                          point.count == 3 && point.allSatisfy(\.isFinite)
+                      })
               }),
               suspension.anchor.visibility == "invisible",
               suspension.anchor.position.count == 3,
@@ -115,35 +118,68 @@ enum SuspendedBoardPresentation {
         guard fixedAnchor.allFinite else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        let transformedAttachments = suspension.attachments.map { attachment in
-            let point = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
-            return transformPoint(
-                transform,
-                SIMD3<Float>(
-                    Float(point[0]),
-                    Float(point[1]),
-                    Float(point[2])
+        let transformedRoutes = suspension.attachments.map { attachment in
+            let terminal = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
+            return (attachment.contactPointsInModel + [terminal]).map { point in
+                transformPoint(
+                    transform,
+                    SIMD3<Float>(Float(point[0]), Float(point[1]), Float(point[2]))
                 )
-            )
+            }
         }
-        guard transformedAttachments.allSatisfy(\.allFinite) else {
+        guard transformedRoutes.allSatisfy({ route in
+                  !route.isEmpty
+                      && route.allSatisfy(\.allFinite)
+                      && zip(route, route.dropFirst()).allSatisfy({
+                          simd_length($0.1 - $0.0) > 1e-7
+                      })
+              }) else {
             throw SuspendedPresentationError.invalidPose
         }
-        let leads = try transformedAttachments.map {
-            try SuspendedCordSolver.solve(
+        let leads = try transformedRoutes.map { route in
+            let rigidLength = zip(route, route.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            let freeLength = Float(suspension.cord.restLength) - rigidLength
+            guard rigidLength.isFinite, freeLength.isFinite, freeLength > 0 else {
+                throw SuspendedPresentationError.cordTooShort
+            }
+            let freeSpan = try SuspendedCordSolver.solve(
                 start: fixedAnchor,
-                end: $0,
-                restLength: Float(suspension.cord.restLength)
+                end: route[0],
+                restLength: freeLength
+            )
+            let samples = freeSpan.samples + Array(route.dropFirst())
+            let tangents = tangentSamples(for: samples)
+            let polylineLength = zip(samples, samples.dropFirst()).reduce(Float.zero) {
+                $0 + simd_length($1.1 - $1.0)
+            }
+            let arcLength = freeSpan.arcLength + rigidLength
+            guard samples.count == tangents.count,
+                  samples.allSatisfy(\.allFinite),
+                  tangents.allSatisfy(\.allFinite),
+                  polylineLength.isFinite,
+                  arcLength.isFinite,
+                  arcLength <= Float(suspension.cord.restLength) + SuspendedCordSolver.tautTolerance else {
+                throw SuspendedPresentationError.nonFiniteCurve
+            }
+            try SuspendedCordSolver.validateNoSelfIntersection(samples)
+            return SolvedCordBranch(
+                samples: samples,
+                tangents: tangents,
+                arcLength: arcLength,
+                polylineArcLength: polylineLength,
+                isTaut: true
             )
         }
         guard leads.count == 2,
               leads.allSatisfy({
-                  $0.samples.count == SuspendedCordSolver.sampleCount
+                  $0.samples.count >= SuspendedCordSolver.sampleCount
                       && $0.samples.first == fixedAnchor
                       && $0.samples.allSatisfy(\.allFinite)
                       && $0.tangents.allSatisfy(\.allFinite)
               }),
-              zip(leads, transformedAttachments).allSatisfy({ $0.0.samples.last == $0.1 }) else {
+              zip(leads, transformedRoutes).allSatisfy({ $0.0.samples.last == $0.1.last }) else {
             throw SuspendedPresentationError.nonFiniteCurve
         }
         let tubeRadius = Float(suspension.cord.radius)
@@ -158,7 +194,7 @@ enum SuspendedBoardPresentation {
             minimumFitPadding: pairedLeadMinimumCameraFitPadding,
             points: transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform)
                 + [fixedAnchor]
-                + transformedAttachments
+                + transformedRoutes.flatMap { $0 }
                 + leads.flatMap(\.samples)
         )
         return SuspendedPairedLeadSolvedPresentation(
@@ -492,6 +528,24 @@ enum SuspendedBoardPresentation {
         }) else {
             throw SuspendedPresentationError.selfIntersection
         }
+        let firstInitialRaySegmentCount = initialStraightRaySegmentCount(
+            in: firstPath,
+            sharedAnchor: sharedAnchor
+        )
+        let secondInitialRaySegmentCount = initialStraightRaySegmentCount(
+            in: secondPath,
+            sharedAnchor: sharedAnchor
+        )
+        let hasDistinctInitialRays: Bool
+        if let firstInitialDirection = normalized(firstPath[1] - sharedAnchor),
+           let secondInitialDirection = normalized(secondPath[1] - sharedAnchor) {
+            hasDistinctInitialRays = simd_length_squared(simd_cross(
+                firstInitialDirection,
+                secondInitialDirection
+            )) > 1e-10
+        } else {
+            hasDistinctInitialRays = false
+        }
         for (firstIndex, firstSegment) in zip(firstPath, firstPath.dropFirst()).enumerated() {
             for (secondIndex, secondSegment) in zip(secondPath, secondPath.dropFirst()).enumerated() {
                 let approach = segmentClosestApproach(
@@ -527,6 +581,15 @@ enum SuspendedBoardPresentation {
                 // two-tube clearance.
                 let isWithinInitialCommonTrunk = firstIndex < forkIndex
                     && secondIndex < forkIndex
+                // The solver emits each free lead as a straight ray from the
+                // shared anchor. Unequal lead lengths mean equal sample
+                // indices are not equal physical distances, so the initial
+                // two-tube knot can include non-adjacent segment indices.
+                // Distinct straight rays can only diverge; accepting their
+                // near-anchor overlap cannot mask a downstream reapproach.
+                let isWithinDistinctInitialRays = hasDistinctInitialRays
+                    && firstIndex < firstInitialRaySegmentCount
+                    && secondIndex < secondInitialRaySegmentCount
                 // Sampled leads that leave the same anchor can yield their
                 // closest approach on different early segments. That contact
                 // is part of the anchor knot only while both segments are in
@@ -550,11 +613,32 @@ enum SuspendedBoardPresentation {
                     )
                 if !isSharedAnchorContact
                     && !isWithinInitialCommonTrunk
+                    && !isWithinDistinctInitialRays
                     && !isCrossSegmentInsideInitialAnchorKnot {
                     throw SuspendedPresentationError.selfIntersection
                 }
             }
         }
+    }
+
+    private static func initialStraightRaySegmentCount(
+        in path: [SIMD3<Float>],
+        sharedAnchor: SIMD3<Float>
+    ) -> Int {
+        guard path.count >= 2,
+              let direction = normalized(path[1] - sharedAnchor) else {
+            return 0
+        }
+        var segmentCount = 0
+        for endpoint in path.dropFirst() {
+            let displacement = endpoint - sharedAnchor
+            guard let endpointDirection = normalized(displacement),
+                  simd_dot(endpointDirection, direction) >= 1 - 1e-5 else {
+                break
+            }
+            segmentCount += 1
+        }
+        return segmentCount
     }
 
     /// Returns whether a segment enters from the leading anchor knot. Every

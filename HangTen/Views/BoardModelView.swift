@@ -1091,6 +1091,18 @@ final class BoardModelScene {
             clearanceRadius = pairedLead.requiredClearance
             guard case .some(.pairedLeadCord(let pairedLeadSuspension)) = suspension,
                   pairedLeadSuspension.attachments.count == pairedLead.leads.count else { return false }
+            for (index, attachment) in pairedLeadSuspension.attachments.enumerated()
+                where !attachment.contactPointsInModel.isEmpty {
+                let lead = pairedLead.leads[index]
+                let firstRoutedSegment = SuspendedCordSolver.sampleCount - 1
+                guard lead.centerlineSamples.count - 1 > firstRoutedSegment else { return false }
+                bearingIntervals.append((
+                    index,
+                    firstRoutedSegment..<(lead.centerlineSamples.count - 1),
+                    [attachment.nodeID],
+                    pairedLead.tubeRadius
+                ))
+            }
             intentionalContacts = zip(pairedLead.leads, pairedLeadSuspension.attachments).enumerated().map {
                 index, pair in
                 IntentionalContact(

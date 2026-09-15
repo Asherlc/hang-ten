@@ -45,11 +45,11 @@
         "suspension": {
           "type": "pairedLeadCord",
           "attachments": [
-            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0075], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"},
-            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0075], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate aligned to the source-visible recess floor mouth; interior route omitted"}
+            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0.024, 0.012], "contactPointsInModel": [[-0.029, 0.038, 0.018], [-0.029, 0.028, 0.018]], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate follows the source-visible cord over the upper lip and tucks its visible terminal into the upper recessed channel, away from the front-floor apertures; no through-hole or hidden interior route claimed"},
+            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0.024, 0.012], "contactPointsInModel": [[0.029, 0.038, 0.018], [0.029, 0.028, 0.018]], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate follows the source-visible cord over the upper lip and tucks its visible terminal into the upper recessed channel, away from the front-floor apertures; no through-hole or hidden interior route claimed"}
           ],
-          "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
-          "cord": {"restLength": 0.5, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; per-lead restLength is a displayEstimate derived from that shared total; radius is displayEstimate"},
+          "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
+          "cord": {"restLength": 0.28, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; compact 0.28 m per-lead restLength is a user-approved displayEstimate, shortened approximately 50% while retaining enough route capacity for every canonical pose, and is not a measured physical split; radius is displayEstimate"},
           "canonicalPoses": {
             "edge20-front": {"rotation": [0.207911694, 0.0, 0.0, 0.9781476], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "edge25-inverted": {"rotation": [9e-09, 0.207911694, -0.9781476, 4.3e-08], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},

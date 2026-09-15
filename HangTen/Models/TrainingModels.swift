@@ -140,6 +140,9 @@ struct BoardModelPairedLeadAttachment: Hashable {
     let nodeID: String
     let pointInModel: [Double]
     let provenance: String
+    /// Ordered surface contacts from the free hanging span to the terminal
+    /// attachment. Empty preserves the direct exterior-lead presentation.
+    var contactPointsInModel: [[Double]] = []
 }
 
 struct BoardModelPairedLeadCord: Hashable {

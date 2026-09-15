@@ -980,6 +980,8 @@ final class BoardPackageStoreTests: XCTestCase {
                 "paired-lead-three-attachments", "paired-lead-duplicate-id",
                 "paired-lead-hold-node", "paired-lead-visible-anchor",
                 "paired-lead-unknown-pose", "paired-lead-short-lead",
+                "paired-lead-contact-points-null", "paired-lead-contact-point-nonfinite",
+                "paired-lead-contact-points-coincident", "paired-lead-routed-lead-too-short",
                 "paired-lead-suspension-member-order",
                 "paired-lead-anchor-member-order", "paired-lead-cord-member-order",
                 "paired-lead-empty-attachment-provenance", "paired-lead-empty-anchor-provenance",
@@ -1064,6 +1066,10 @@ final class BoardPackageStoreTests: XCTestCase {
             return XCTFail("expected pairedLeadCord model suspension")
         }
         XCTAssertEqual(suspension.attachments.map(\.id), ["left-lead", "right-lead"])
+        XCTAssertEqual(suspension.attachments.map(\.contactPointsInModel), [
+            [[0.2, 0.5, 0.05], [0.2, 0.45, 0.05]],
+            [[0.8, 0.5, 0.05], [0.8, 0.45, 0.05]],
+        ])
         XCTAssertEqual(suspension.cord.restLength, 0.8)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), ["primary"])
     }
@@ -4739,9 +4745,12 @@ final class BoardPackageStoreTests: XCTestCase {
             keys: memberOrder,
             serializedValues: [
                 "attachments": try serializedJSONArray(attachments.map {
-                    try orderedJSONObjectData(
-                        try XCTUnwrap($0 as? [String: Any]),
-                        keys: ["id", "nodeID", "pointInModel", "provenance"]
+                    let attachment = try XCTUnwrap($0 as? [String: Any])
+                    return try orderedJSONObjectData(
+                        attachment,
+                        keys: attachment["contactPointsInModel"] == nil
+                            ? ["id", "nodeID", "pointInModel", "provenance"]
+                            : ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
                     )
                 }),
                 "anchor": try orderedJSONObjectData(
