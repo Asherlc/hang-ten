@@ -7,6 +7,13 @@ description: Use when migrating an existing Hang Ten hangboard to an interactive
 
 Deliver a faithful, 3D-only display model with selectable physical contacts. Migration replaces the target board's raster presentation and canonical 2D hold geometry; the 3D model and its package metadata become the sole source of truth for rendering, highlighting, and hit-testing. Preserve logical hold IDs, saved identities, and source-backed metadata. This is not manufacturing CAD or a source for training prescriptions.
 
+**REQUIRED SUB-SKILL:** Use `audit-3d-hangboard-suspension` when a portable
+model has, needs, or is suspected to be missing a cord. Read
+[`3D suspension and ODR`](../../../docs/3D_SUSPENSION_AND_ODR.md) before
+changing suspension metadata or diagnosing Apple offline/On-Demand Resource
+caching. The USDZ is the only ODR asset; cords are metadata-driven transient
+geometry.
+
 ## Establish the contract once
 
 Identify the exact board revision and read its existing package and source audit. Reuse verified manufacturer references; research only missing evidence. Record sourced dimensions separately from estimated positions, thickness, radii, and sections. Derive physical contact IDs from the package: Compact II's 19 contacts are an example, not a universal count. Remove the migrated target's raster asset and canonical 2D hold paths from product resources; retain its stable IDs and source-backed metadata in the 3D-only package representation. When an already-migrated board that still carries legacy raster assets or paths is included in scope, bring it to this same contract. Omit all screw holes, mounting holes, and mounting hardware from every hangboard display model. Document each omission as a deliberate display simplification; never imply that the physical product lacks those features.

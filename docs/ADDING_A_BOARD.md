@@ -6,6 +6,13 @@ and visually review it. Physical identity, hold metadata, and exact selectable
 geometry live in one `board.json`; research and training-plan semantics stay
 outside board packages.
 
+This document describes direct raster-board authoring. For model-media
+migration or refinement, use `migrate-hangboard-to-3d`. For a portable 3D
+board's cord, attachment, suspension audit, or suspected Apple offline/ODR
+cache issue, use `audit-3d-hangboard-suspension` and read
+[`3D_SUSPENSION_AND_ODR.md`](3D_SUSPENSION_AND_ODR.md); that model-specific
+contract supersedes the raster-only package examples below.
+
 ## 1. Establish the physical source of truth
 
 Collect primary manufacturer evidence before naming or classifying holds:
