@@ -388,9 +388,32 @@ The existing Trango product page and audit establish the Training Center's two-p
 
 ### Source decision and explicit mapping
 
-The user-provided source delivery is retained at `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/source-delivery/trango-rock-prodigy-training-center.glb`, SHA-256 `59bb4bc1d1930b2fa14266d5f17e67859815912e2decab15dd1861c07f452c57`. It has two nonselectable body meshes and 20 named selectable meshes. Every source node is explicitly recorded in `contact-mapping.json`; its ordered logical IDs exactly equal the catalog’s current ordered 24 IDs.
+The user-provided source delivery is retained at `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/source-delivery/trango-rock-prodigy-training-center.glb`, SHA-256 `59bb4bc1d1930b2fa14266d5f17e67859815912e2decab15dd1861c07f452c57`. It has two nonselectable body meshes and 22 named selectable meshes. Every corrected source node is explicitly recorded in `contact-mapping.json`; its ordered logical IDs exactly equal the catalog’s current ordered 24 IDs.
 
-The only correction is contract-only. Each supplied `pinch-combination-*` mesh is represented by two linked transport nodes, `pinch-medium-*` and `pinch-wide-*`, preserving source mesh data and triangles without a geometry edit. This retains the two existing overlapping pinch selection identities on each side as separately bindable contacts. The native transport source SHA-256 is `44f578442c2b80e05e4c790d81b99790defdf147ea7e5a1b3ab13f7faedf5ac5`. No bore, hardware, logo, rear, pocket, or rail geometry was added, removed, or used as a factual catalog claim.
+The initial transport correction duplicated each `pinch-combination-*` mesh
+under two linked nodes. Final review rejected that export: separate node names
+over identical surfaces do not provide independent nearest-hit selection.
+That source (`44f578442c2b80e05e4c790d81b99790defdf147ea7e5a1b3ab13f7faedf5ac5`)
+is superseded by the disjoint source below.
+
+The corrected source assigns every original pinch triangle exactly once. On
+each side the lower ledge binds `pinch-medium-*` and the upper projecting block
+binds `pinch-wide-*`. RPTC-FRONT supports the visible two-tier shape; RPTC-GUIDE
+supports the pinch family. Neither source locates the legacy medium/wide names.
+Consequently this assignment is explicitly an authored **display binding
+estimate**, not a manufacturer positional mapping or width measurement. The
+existing names, IDs, kinds, and empty optional factual fields remain unchanged.
+
+`prepare_native_source.py` retains all original triangles, coordinates, UVs,
+materials, and their combined shape. An operator-selected source-coordinate
+boundary through the recessed step riser uses
+`0.3564 * abs(x) + 0.93434 * z < 0.137` for the lower region; the remainder
+binds the upper region. The coefficients and boundary are display selection
+parameters, not measured product facts. The mirrored assignments contain
+3,613 lower and 5,087 upper triangles per side, partitioning the original 8,700
+without duplication. No tracing, generated contour, geometry simplification,
+or compiler repair is involved. The corrected native source SHA-256 is
+`a07855a4d81dd05e9dd849b7001e12c6b059acbac3e93320b7b3e24679c2055e`.
 
 The explicit mapping preserves two independent body nodes; two jugs; each bilateral variable rail and thin crimp; all ten bilateral pocket identities; both bilateral slopers; and all four bilateral pinch identities. In particular, `pinch-medium-left`, `pinch-wide-left`, `pinch-medium-right`, and `pinch-wide-right` are never merged. Delivery source names are transport labels only; the pre-existing catalog IDs and facts remain the factual identity source.
 
@@ -398,8 +421,8 @@ The explicit mapping preserves two independent body nodes; two jugs; each bilate
 
 | Artifact | SHA-256 | Disposition |
 | --- | --- | --- |
-| Promoted `assets/primary.usdz` | `bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d` | Exact shipped model generated through the explicit importer/compiler and reopened from an empty Blender scene. |
-| Promoted descriptor | `026573be4eb702f64d8a807e7a2685356949e381ddab73ff3e49aa486d90bda6` | Generated from importer-visible USDZ triangles and hash-binds the shipped model. |
+| Promoted `assets/primary.usdz` | `f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1` | Exact shipped model generated through the explicit importer/compiler and reopened from an empty Blender scene. |
+| Promoted descriptor | `45b51d0390a71c0f21540dd6e682e5aa2afa15bc6e234c67edc2ffdd7c931073` | Generated from importer-visible USDZ triangles and hash-binds the shipped model. |
 
 `Tools/HangboardModels/verify_trango_rock_prodigy_training_center.py` checks the exact shipped package inventory and model hash, starts with an empty Blender scene, imports the shipped USDZ, validates 26 tagged nodes (two body, 24 contact), rebuilds the descriptor from material-bearing triangulated meshes, and requires the exact 24-contact keyset plus four distinct bilateral-pinch bindings. Its retained report is `.context/lumpy-liger-hangboard-collection/trango-rock-prodigy-training-center/shipped-usdz-verification.json`. The package contains only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; the raster asset, canonical paths, cached frames, and fallback geometry are removed.
 
@@ -502,7 +525,7 @@ Archive cleanup removed the exact UUID; the emptied owned/pending manifests,
 workspace Derived Data, and all temporary screenshots were removed and the
 UUID no longer appears in `simctl list devices`.
 
-### ODR-fix retry — six-board model rendering and picking passed
+### ODR-fix retry — six-board rendering and selection states passed
 
 After `9342db1cc` corrected the ODR provisioning, an independently owned
 `Hang Ten Paseo lumpy-liger Review` simulator
@@ -547,3 +570,77 @@ The registered archive trap then deleted only UUID
 records the no-match UUID query, an absent pending manifest, a zero-byte owned
 manifest, and an absent workspace-local DerivedData path. The retained review
 evidence is the only output left by this retry.
+
+### Final review corrections and direct picking evidence
+
+The final review replaces the Training Center's coincident pinch meshes with
+the disjoint original-triangle partition documented above. Its shipped USDZ
+verifier now rejects shared medium/wide triangles even when node IDs differ;
+the four imported meshes contain 3,613/5,087 lower/upper triangles per side.
+Only the four pinch bounds/bindings and the model hash changed in its
+descriptor. All non-media catalog fields and all other contacts are unchanged.
+
+`testCollectionModelsNativeNearestTrianglePickingCoversEveryContactPiece`
+loads each actual shipped model through the normal loader. For every one of
+the six boards' 136 logical contacts / 138 mesh pieces, it finds at least one
+native triangle-center sample, across nine bounded camera angles, whose
+nearest SceneKit segment hit and projected `SCNView.hitTest` both return that
+**exact mesh node** and contact ID. The same helper also strengthens the
+existing Baguette test. This demonstrates a reachable pick for each piece,
+not correctness at every pixel or every camera angle. Body and attachment
+nodes retain the production non-pickable category.
+
+Simulator `Hang Ten Paseo lumpy-liger Review`
+(`F6161489-348C-442B-A3B1-629AFB45FF08`, iPhone 16 / iOS 26.5) built and ran
+the corrected asset. Direct coordinate taps in its 393 × 852 point portrait
+screen selected the four separate pinch regions:
+
+| Tap point | Observed selected ID | Reviewed PNG SHA-256 |
+| --- | --- | --- |
+| `(62, 311)` | `pinch-wide-left` | `d1c2d7db8e18ca446b719f97857f1676c6c8ccd4169941d81c5d7e0b6669a1e8` |
+| `(66, 329)` | `pinch-medium-left` | `1e1c95742f4cd09b9c62755aceee6f91eaac30d61eeac869cfdd8f7b733b2419` |
+| `(333, 308)` | `pinch-wide-right` | `d45ba8280eaab8875cd280e6e11c38503a6db197b08aa4f18382ef6de282c46f` |
+| `(329, 329)` | `pinch-medium-right` | `06af9089ea191dbe3a43bd74c0a8e80f952d38046090960f19a04da680d40aca` |
+
+Each screenshot shows only its corresponding upper block or lower ledge
+highlighted red, with the selected-hold label matching the tapped region.
+The initial left-jug state was also reviewed (PNG SHA-256
+`54a3d67c89e0e061656c22642d09ef6bb93ad3183944dccf82e5012b4e6aad9f`).
+PNGs and accessibility trees are retained under
+`.context/lumpy-liger-hangboard-collection/final-review/`. These are actual
+screen-coordinate taps, with the XCTest hits independently covering all six
+models. No physical-device material or HealthKit claim is made.
+
+Migration-specific stale tests now use the twenty-package model inventory,
+model descriptor bounds and node ownership for converted mirrored pairs, the
+retained verifier inventory, and Training Tiles' model-only fixture. The
+Simulator source mesh has submillimeter bilateral tessellation differences:
+its maximum mirrored X-bound difference is approximately 0.43 mm, so that
+model uses an explicit 0.5 mm bounds tolerance; raster paths retain their
+exact-mirror assertions. The other converted model pair uses a normalized
+`1e-6` tolerance. The final package/model Python suite passes all 609 tests;
+focused iOS model/package validation passes all 178 tests.
+
+The complete iOS unit suite then passed: 1,136 tests executed, two existing
+skips, zero failures. Exact command:
+
+```sh
+rtk proxy xcodebuild -project HangTen.xcodeproj -scheme HangTen \
+  -configuration Debug \
+  -destination 'platform=iOS Simulator,id=F6161489-348C-442B-A3B1-629AFB45FF08' \
+  -derivedDataPath .context/DerivedData test -only-testing:HangTenTests
+```
+
+Its log is `final-review/full-ios-final.log`. The initial full run identified
+the same old model inventory in `BoardSourceBoundaryTests`; adding the six
+migrated IDs fixed all six assertions. The complete final suite includes the
+exact-node picking assertions. Package final-inventory validation and status
+both pass with no drafts, and `git diff --check d7ca9c5c9` passes.
+
+The ownership trap deleted the exact simulator UUID and consumed its pending
+record; the owned manifest is empty. The earlier failed full-test process
+remained alive after reporting its results, so its exact verified PID was
+terminated before removing its late-created test-log manifest. Final checks
+confirm no owned simulator, pending record, DerivedData, or temporary raw/
+landscape screenshots remain. Only the workspace-owned review evidence is
+retained. No shared simulator or global build cache was touched.

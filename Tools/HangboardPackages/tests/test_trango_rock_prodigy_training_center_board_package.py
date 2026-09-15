@@ -48,10 +48,14 @@ def test_training_center_is_a_hash_bound_model_only_package() -> None:
     assert {
         node["nodeID"]: node["contactID"]
         for node in descriptor["nodes"]
-        if node["nodeID"].startswith("pinch_combination_")
+        if node["nodeID"].startswith("pinch_")
     } == {
-        "pinch_combination_left_001": "pinch-medium-left",
-        "pinch_combination_left_002": "pinch-wide-left",
-        "pinch_combination_right_001": "pinch-medium-right",
-        "pinch_combination_right_002": "pinch-wide-right",
+        "pinch_medium_left_001": "pinch-medium-left",
+        "pinch_wide_left_001": "pinch-wide-left",
+        "pinch_medium_right_001": "pinch-medium-right",
+        "pinch_wide_right_001": "pinch-wide-right",
     }
+    for side in ("left", "right"):
+        assert descriptor["contacts"][f"pinch-medium-{side}"]["facePlaneAABB"] != (
+            descriptor["contacts"][f"pinch-wide-{side}"]["facePlaneAABB"]
+        )

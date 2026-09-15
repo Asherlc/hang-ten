@@ -62,6 +62,21 @@ def _load_object(path: Path, label: str) -> Mapping[str, object]:
     return value
 
 
+def require_disjoint_pinch_triangles(triangles_by_contact: Mapping[str, set[tuple]]) -> dict[str, int]:
+    """Reject duplicate/co-located surfaces even when importer node IDs differ."""
+    counts = {}
+    for side in ("left", "right"):
+        medium = triangles_by_contact[f"pinch-medium-{side}"]
+        wide = triangles_by_contact[f"pinch-wide-{side}"]
+        if not medium or not wide:
+            raise ValueError(f"{side} pinch surface is empty")
+        if medium & wide:
+            raise ValueError(f"{side} medium/wide pinch surfaces share triangles")
+        counts[f"pinch-medium-{side}"] = len(medium)
+        counts[f"pinch-wide-{side}"] = len(wide)
+    return counts
+
+
 def verify_shipped_package(package_root: Path) -> dict[str, object]:
     """Hash-check, empty-scene reimport, and descriptor-rebuild the shipped USDZ."""
     try:
@@ -94,10 +109,10 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
     if set(contact_bindings.values()) != set(EXPECTED_CONTACT_IDS) or len(contact_bindings) != 24:
         raise ValueError("shipped USDZ does not bind all 24 distinct contacts")
     required_pinch_nodes = {
-        "pinch_combination_left_001": "pinch-medium-left",
-        "pinch_combination_left_002": "pinch-wide-left",
-        "pinch_combination_right_001": "pinch-medium-right",
-        "pinch_combination_right_002": "pinch-wide-right",
+        "pinch_medium_left_001": "pinch-medium-left",
+        "pinch_wide_left_001": "pinch-wide-left",
+        "pinch_medium_right_001": "pinch-medium-right",
+        "pinch_wide_right_001": "pinch-wide-right",
     }
     if {node_id: contact_bindings.get(node_id) for node_id in required_pinch_nodes} != required_pinch_nodes:
         raise ValueError("shipped USDZ does not retain distinct bilateral pinch bindings")
@@ -111,6 +126,17 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
     )
     if rebuilt.to_json() != descriptor_value:
         raise ValueError("descriptor does not match actual shipped USDZ triangles")
+    pinch_triangles = {}
+    for node_id, contact_id in required_pinch_nodes.items():
+        obj = scene.objects[node_id]
+        pinch_triangles[contact_id] = {
+            tuple(sorted(
+                tuple(round(value, 9) for value in (obj.matrix_world @ obj.data.vertices[index].co))
+                for index in polygon.vertices
+            ))
+            for polygon in obj.data.polygons
+        }
+    disjoint_counts = require_disjoint_pinch_triangles(pinch_triangles)
     return {
         "status": "verified",
         "cleanReimport": True,
@@ -121,6 +147,7 @@ def verify_shipped_package(package_root: Path) -> dict[str, object]:
         "bodyNodeCount": sum(node.role == "body" for node in nodes),
         "contactCount": len(descriptor.contacts),
         "distinctBilateralPinchBindings": required_pinch_nodes,
+        "disjointPinchTriangleCounts": disjoint_counts,
     }
 
 

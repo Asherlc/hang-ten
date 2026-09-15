@@ -9,6 +9,21 @@ from pathlib import Path
 
 
 class VerifyTrangoRockProdigyTrainingCenterTests(unittest.TestCase):
+    def test_duplicate_pinch_triangles_are_rejected_even_with_distinct_ids(self) -> None:
+        verifier = importlib.import_module("verify_trango_rock_prodigy_training_center")
+        triangle = ((0, 0, 0), (1, 0, 0), (0, 1, 0))
+        triangles = {f"pinch-{kind}-{side}": {triangle} for side in ("left", "right") for kind in ("medium", "wide")}
+        with self.assertRaisesRegex(ValueError, "share triangles"):
+            verifier.require_disjoint_pinch_triangles(triangles)
+
+    def test_distinct_pinch_triangles_can_share_boundary_vertices(self) -> None:
+        verifier = importlib.import_module("verify_trango_rock_prodigy_training_center")
+        triangles = {}
+        for side in ("left", "right"):
+            triangles[f"pinch-medium-{side}"] = {((0, 0, 0), (1, 0, 0), (0, 1, 0))}
+            triangles[f"pinch-wide-{side}"] = {((1, 0, 0), (0, 1, 0), (1, 1, 0))}
+        self.assertEqual(set(verifier.require_disjoint_pinch_triangles(triangles).values()), {1})
+
     def test_expected_contact_inventory_is_the_existing_ordered_catalog_inventory(self) -> None:
         verifier = importlib.import_module("verify_trango_rock_prodigy_training_center")
         root = Path(__file__).resolve().parents[2]

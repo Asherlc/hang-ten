@@ -154,32 +154,32 @@
     },
     "pinch-medium-left": {
       "center": [
-        0.076885025,
-        0.664429531
+        0.088883136,
+        0.56876882
       ],
       "facePlaneAABB": {
         "max": [
           0.153770051,
-          0.898239782
+          0.706918358
         ],
         "min": [
-          0.0,
+          0.023996221,
           0.430619281
         ]
       },
       "nodeIDs": [
-        "pinch_combination_left_001"
+        "pinch_medium_left_001"
       ]
     },
     "pinch-medium-right": {
       "center": [
-        0.923114975,
-        0.664429531
+        0.911116864,
+        0.56876882
       ],
       "facePlaneAABB": {
         "max": [
-          1.0,
-          0.898239782
+          0.976003779,
+          0.706918358
         ],
         "min": [
           0.846229949,
@@ -187,32 +187,32 @@
         ]
       },
       "nodeIDs": [
-        "pinch_combination_right_001"
+        "pinch_medium_right_001"
       ]
     },
     "pinch-wide-left": {
       "center": [
-        0.076885025,
-        0.664429531
+        0.068118434,
+        0.733492741
       ],
       "facePlaneAABB": {
         "max": [
-          0.153770051,
+          0.136236867,
           0.898239782
         ],
         "min": [
           0.0,
-          0.430619281
+          0.5687457
         ]
       },
       "nodeIDs": [
-        "pinch_combination_left_002"
+        "pinch_wide_left_001"
       ]
     },
     "pinch-wide-right": {
       "center": [
-        0.923114975,
-        0.664429531
+        0.931881566,
+        0.733492741
       ],
       "facePlaneAABB": {
         "max": [
@@ -220,12 +220,12 @@
           0.898239782
         ],
         "min": [
-          0.846229949,
-          0.430619281
+          0.863763133,
+          0.5687457
         ]
       },
       "nodeIDs": [
-        "pinch_combination_right_002"
+        "pinch_wide_right_001"
       ]
     },
     "pocket-index-middle-deep-left": {
@@ -470,7 +470,7 @@
       0.0
     ]
   },
-  "modelSHA256": "bdb9c3867d6adefe2f356612d49597b8e9c528f556f1f5b9bc12c97fc05aba1d",
+  "modelSHA256": "f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1",
   "nodes": [
     {
       "nodeID": "body_left_001",
@@ -522,22 +522,22 @@
     },
     {
       "contactID": "pinch-medium-left",
-      "nodeID": "pinch_combination_left_001",
-      "role": "contact"
-    },
-    {
-      "contactID": "pinch-wide-left",
-      "nodeID": "pinch_combination_left_002",
+      "nodeID": "pinch_medium_left_001",
       "role": "contact"
     },
     {
       "contactID": "pinch-medium-right",
-      "nodeID": "pinch_combination_right_001",
+      "nodeID": "pinch_medium_right_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pinch-wide-left",
+      "nodeID": "pinch_wide_left_001",
       "role": "contact"
     },
     {
       "contactID": "pinch-wide-right",
-      "nodeID": "pinch_combination_right_002",
+      "nodeID": "pinch_wide_right_001",
       "role": "contact"
     },
     {

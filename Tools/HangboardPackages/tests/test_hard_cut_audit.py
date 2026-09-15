@@ -55,11 +55,15 @@ def test_only_contact_native_model_tools_remain() -> None:
         "contact_model_package.py",
         "import_contact_model_source.py",
         "verify_metolius_climbers_edge.py",
+        "verify_the_hangboard.py",
+        "verify_trango_rock_prodigy_training_center.py",
         "verify_yy_baguette_evo.py",
         "test_contact_model_descriptor.py",
         "test_contact_model_package.py",
         "test_import_contact_model_source.py",
         "test_verify_metolius_climbers_edge.py",
+        "test_verify_the_hangboard.py",
+        "test_verify_trango_rock_prodigy_training_center.py",
         "test_verify_yy_baguette_evo.py",
     }
 

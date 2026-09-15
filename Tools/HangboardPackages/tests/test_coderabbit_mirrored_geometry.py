@@ -92,10 +92,32 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
 
 
 @pytest.mark.parametrize("board_id", MIRRORED_PAIRS)
-def test_coderabbit_flagged_pairs_are_exact_mirrors(board_id: str) -> None:
+def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> None:
     board = json.loads(
         (REPO_ROOT / "Hangboards" / board_id / "board.json").read_text(encoding="utf-8")
     )
+    media = board["presentations"][0]["media"]
+    if media["type"] == "model":
+        descriptor = json.loads(
+            (REPO_ROOT / "Hangboards" / board_id / media["descriptorPath"]).read_text(encoding="utf-8")
+        )
+        contacts = descriptor["contacts"]
+        for left_id, right_id in MIRRORED_PAIRS[board_id]:
+            left = contacts[left_id]
+            right = contacts[right_id]
+            assert not set(left["nodeIDs"]) & set(right["nodeIDs"])
+            left_bounds = left["facePlaneAABB"]
+            right_bounds = right["facePlaneAABB"]
+            # The supplied Simulator meshes have submillimeter bilateral
+            # tessellation differences; model AABBs are not authored raster paths.
+            bounds = descriptor["modelBounds"]
+            for axis in (0, 1):
+                span = bounds["max"][axis] - bounds["min"][axis]
+                tolerance = 0.0005 / span if board_id == "metolius-simulator-3d" else 1e-6
+                for bound, opposite in (("min", "max"), ("max", "min")):
+                    expected = 1 - left_bounds[opposite][axis] if axis == 0 else left_bounds[bound][axis]
+                    assert right_bounds[bound][axis] == pytest.approx(expected, abs=tolerance)
+        return
     geometry = document_contact_geometry(board)
     for left_id, right_id in MIRRORED_PAIRS[board_id]:
         left_geometry = geometry[left_id]
