@@ -718,12 +718,6 @@ struct BoardPackageStore {
                 declaredAssetPaths.insert(assetPath)
             case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation):
                 hasModel = true
-                guard !(suspension != nil && orientation != nil) else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id,
-                        reason: "orientation and suspension are mutually exclusive"
-                    )
-                }
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
@@ -1887,7 +1881,10 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                 }
                 for attachment in attachments {
                     guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
-                    try members.requireCanonicalOrder(["id", "nodeID", "pointInModel", "provenance"])
+                    try members.requireCanonicalOrder(
+                        ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
+                            .filter { members.value(named: $0) != nil }
+                    )
                 }
                 try anchorMembers.requireCanonicalOrder(["offsetFromBoardBounds", "visibility", "provenance"])
                 try cordMembers.requireCanonicalOrder(["restLength", "radius", "material", "provenance"])

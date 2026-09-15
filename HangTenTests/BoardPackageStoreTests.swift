@@ -4,6 +4,35 @@ import XCTest
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage() throws {
+        let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
+        let expected: [(id: String, slug: String)] = [
+            ("captain-fingerfood.dual", "captain-fingerfood-dual"),
+            ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
+            ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
+            ("yy.baguette-evo", "yy-baguette-evo"),
+        ]
+
+        for item in expected {
+            let board = try XCTUnwrap(store.board(id: item.id), item.id)
+            let presentation = board.defaultPresentation
+            guard case .model(let media) = presentation.media else {
+                return XCTFail("\(item.id) must load as model media")
+            }
+            XCTAssertNotNil(media.suspension, item.id)
+            XCTAssertNotNil(media.orientation, item.id)
+            XCTAssertEqual(
+                store.modelResource(for: board, presentationID: presentation.id),
+                BoardModelResource(packageSlug: item.slug, assetPath: "assets/primary.usdz"),
+                item.id
+            )
+            XCTAssertNil(
+                store.presentationAssetURL(for: board, presentationID: presentation.id),
+                "on-demand USDZ must not be treated as an ordinary bundled asset"
+            )
+        }
+    }
+
     func testStoreRejectsV2AndLoadsV3ContactsWithMultipleBodies() throws {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixtureBundle(schemaVersion: 2)).boards)
         let board = try XCTUnwrap(BoardPackageStore(bundle: v3TwoBodyFixtureBundle()).boards.first)
@@ -3409,23 +3438,48 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreRejectsOrientationAndSuspensionTogether() throws {
-        let fixtures = try validationFixtures()
-        let singleCordModel = try XCTUnwrap(fixtures["singleCordModel"] as? [String: Any])
-        let singleCordBoard = try XCTUnwrap(singleCordModel["board"] as? [String: Any])
-        let singleCordPresentations = try XCTUnwrap(singleCordBoard["presentations"] as? [[String: Any]])
-        let singleCordMedia = try XCTUnwrap(singleCordPresentations[0]["media"] as? [String: Any])
-        let validSuspension = try XCTUnwrap(singleCordMedia["suspension"] as? [String: Any])
+    func testStoreParsesOrientationAndSuspensionIndependently() throws {
         let fixture = try makeOrientableModelFixtureBundle { board in
             var presentations = board["presentations"] as! [[String: Any]]
             var media = presentations[0]["media"] as! [String: Any]
-            media["suspension"] = validSuspension
+            media["suspension"] = [
+                "type": "singleCord",
+                "attachment": [
+                    "nodeID": "Body", "pointInModel": [0.5, 1.0, 0.05],
+                    "provenance": "test",
+                ],
+                "anchor": [
+                    "offsetFromBoardBounds": [0.0, 0.4, 0.0],
+                    "visibility": "invisible", "provenance": "test",
+                ],
+                "cord": [
+                    "restLength": 2.0, "radius": 0.002,
+                    "material": "matteCord", "provenance": "test",
+                ],
+                "canonicalPoses": [
+                    "front": [
+                        "rotation": [0.0, 0.0, 0.0, 1.0],
+                        "translation": [0.0, 0.0, 0.0],
+                        "camera": ["viewDirection": [0.0, 0.0, -1.0], "fitPadding": 0.1],
+                    ],
+                    "reverse": [
+                        "rotation": [0.0, 1.0, 0.0, 0.0],
+                        "translation": [0.0, 0.0, 0.0],
+                        "camera": ["viewDirection": [0.0, 0.0, -1.0], "fitPadding": 0.1],
+                    ],
+                ],
+            ]
             presentations[0]["media"] = media
             board["presentations"] = presentations
         }
         defer { fixture.remove() }
 
-        assertStoreRejects(fixture.bundle, reasonContaining: "orientation and suspension")
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected model media")
+        }
+        XCTAssertNotNil(media.orientation)
+        XCTAssertNotNil(media.suspension)
     }
 
     func testStoreRejectsInvalidPositionsAndTransitions() throws {

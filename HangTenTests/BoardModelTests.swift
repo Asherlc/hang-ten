@@ -200,7 +200,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(framing.height, 6, accuracy: 0.000_001)
     }
 
-    func testOrientationSelectionResetsOrbitAndRejectsSuspensionAtRuntime() throws {
+    func testOrientationSelectionResetsOrbitAndAllowsSuspensionAtRuntime() throws {
         let descriptor = modelDescriptor(
             nodes: [
                 .init(nodeID: "Board/Body", role: .body, contactID: nil),
@@ -235,7 +235,7 @@ final class BoardModelTests: XCTestCase {
 
         let suspension = BoardModelSuspension(
             attachment: .init(nodeID: "Board/Body", pointInModel: [1, 2, 3], provenance: "test"),
-            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "hidden", provenance: "test", position: [1, 10, 3]),
+            anchor: .init(offsetFromBoardBounds: [0, 1, 0], visibility: "invisible", provenance: "test", position: [1, 10, 3]),
             cord: .init(restLength: 10, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: [
                 "reverse": .init(
@@ -245,7 +245,7 @@ final class BoardModelTests: XCTestCase {
                 )
             ]
         )
-        XCTAssertNil(BoardModelScene(
+        let suspendedModel = try XCTUnwrap(BoardModelScene(
             source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
             descriptor: descriptor,
             display: display(),
@@ -253,6 +253,9 @@ final class BoardModelTests: XCTestCase {
             orientation: orientation,
             allowedPositionIDs: ["reverse"]
         ))
+        XCTAssertTrue(suspendedModel.select(positionID: "reverse"))
+        XCTAssertNotNil(suspendedModel.transientCordNode)
+        XCTAssertEqual(suspendedModel.transformedAttachment, SIMD3<Float>(1, 2, 3))
     }
 
     func testOrientationFramingProjectsTrueRotatedCornersInsteadOfAABBPhantoms() throws {
