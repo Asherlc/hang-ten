@@ -266,6 +266,109 @@ func hasVisibleHangingBranches(_ solved: BoardModelSolvedSuspension, bounds: Boa
     }
 }
 
+// Exercise the production gate itself, not a parallel clearance approximation.
+// The package-level regression below covers the real boards; this focused case
+// protects the distinction between a pose-resolved surface route and its free
+// hanging span when the attachment's default route is intentionally empty.
+func runPoseOnlyRouteClearanceRegression() throws {
+    let bounds = BoardModelBounds(
+        minimum: [-0.5, -0.1, -0.5],
+        maximum: [0.5, 0.5, 0.5]
+    )
+    let pose = BoardModelCanonicalPose(
+        rotation: [0, 0, 0, 1],
+        translation: [0, 0, 0],
+        camera: BoardModelCanonicalCamera(viewDirection: [0, 0, 1], fitPadding: 0.2),
+        attachmentPoints: [
+            "left": [0.1, 0.005, -0.1],
+            "right": [0.1, 0.05, 0.1],
+        ],
+        cordContactPoints: [
+            "left": [[-0.1, 0.005, -0.1]],
+            "right": [[-0.1, 0.05, 0.1]],
+        ]
+    )
+    let suspension = BoardModelPairedLeadCord(
+        attachments: [
+            BoardModelPairedLeadAttachment(
+                id: "left",
+                nodeID: "board.body",
+                pointInModel: [0.1, 0.005, -0.1],
+                provenance: "test",
+                contactPointsInModel: []
+            ),
+            BoardModelPairedLeadAttachment(
+                id: "right",
+                nodeID: "board.body",
+                pointInModel: [0.1, 0.05, 0.1],
+                provenance: "test",
+                contactPointsInModel: []
+            ),
+        ],
+        anchor: BoardModelInvisibleAnchor(
+            offsetFromBoardBounds: [0, 0, 0],
+            visibility: "invisible",
+            provenance: "test",
+            position: [-0.1, 0.45, 0]
+        ),
+        cord: BoardModelCord(
+            restLength: 0.7,
+            radius: 0.005,
+            material: "black",
+            provenance: "test"
+        ),
+        canonicalPoses: ["pose-only-route": pose]
+    )
+    let solved = try SuspendedBoardPresentation.solve(
+        pose: pose,
+        suspension: suspension,
+        bounds: bounds
+    )
+
+    func review(with node: SCNNode) -> ProductionClearanceCheck {
+        node.name = "board.body"
+        let review = ProductionClearanceCheck()
+        review.suspension = .pairedLeadCord(suspension)
+        review.boardContainer.addChildNode(node)
+        review.geometryByNodeID["board.body"] = node
+        return review
+    }
+
+    func horizontalQuad(center: SIMD3<Float>, halfWidth: Float, halfDepth: Float) -> SCNNode {
+        let vertices = [
+            SCNVector3(center.x - halfWidth, center.y, center.z - halfDepth),
+            SCNVector3(center.x + halfWidth, center.y, center.z - halfDepth),
+            SCNVector3(center.x + halfWidth, center.y, center.z + halfDepth),
+            SCNVector3(center.x - halfWidth, center.y, center.z + halfDepth),
+        ]
+        let indices: [Int32] = [0, 1, 2, 0, 2, 3]
+        return SCNNode(geometry: SCNGeometry(
+            sources: [SCNGeometrySource(vertices: vertices)],
+            elements: [SCNGeometryElement(indices: indices, primitiveType: .triangles)]
+        ))
+    }
+
+    let bearing = horizontalQuad(
+        center: SIMD3<Float>(0.025, -0.0005, -0.1),
+        halfWidth: 0.075,
+        halfDepth: 0.025
+    )
+    precondition(
+        review(with: bearing).hasClearance(for: .pairedLead(solved)),
+        "Pose-only cordContactPoints must establish the authored surface-bearing interval"
+    )
+
+    let freeSpanPoint = solved.leads[0].centerlineSamples[SuspendedCordSolver.sampleCount / 2]
+    let blocker = horizontalQuad(center: freeSpanPoint, halfWidth: 0.01, halfDepth: 0.01)
+    precondition(
+        !review(with: blocker).hasClearance(for: .pairedLead(solved)),
+        "A pose-only surface route must not exempt collisions on the free hanging span"
+    )
+    print("PASS pose-only routed bearing and free-span clearance regression")
+}
+
+try runPoseOnlyRouteClearanceRegression()
+
 var failures: [String] = []
 var count = 0
 for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fingerfood-unlevel", "yy-baguette-evo"] {

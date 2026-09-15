@@ -1091,11 +1091,15 @@ final class BoardModelScene {
             clearanceRadius = pairedLead.requiredClearance
             guard case .some(.pairedLeadCord(let pairedLeadSuspension)) = suspension,
                   pairedLeadSuspension.attachments.count == pairedLead.leads.count else { return false }
-            for (index, attachment) in pairedLeadSuspension.attachments.enumerated()
-                where !attachment.contactPointsInModel.isEmpty {
+            for (index, attachment) in pairedLeadSuspension.attachments.enumerated() {
                 let lead = pairedLead.leads[index]
                 let firstRoutedSegment = SuspendedCordSolver.sampleCount - 1
-                guard lead.centerlineSamples.count - 1 > firstRoutedSegment else { return false }
+                guard lead.centerlineSamples.count >= SuspendedCordSolver.sampleCount else { return false }
+                // The solver has already resolved pose.cordContactPoints over
+                // the attachment default. Samples after the fixed-size free
+                // span are therefore the actual authored surface route for
+                // this pose, even when the default route is empty.
+                guard lead.centerlineSamples.count > SuspendedCordSolver.sampleCount else { continue }
                 bearingIntervals.append((
                     index,
                     firstRoutedSegment..<(lead.centerlineSamples.count - 1),

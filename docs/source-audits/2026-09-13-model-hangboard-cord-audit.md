@@ -178,10 +178,10 @@ focused tests). The full suspension solver class plus existing Flash/native
 and synthetic paired-lead regressions passed (43 tests). The shared malformed
 parser matrix passed after registering the four new fixture names. Python
 model/parser/audit validation was rerun after this correction: all 63 packages
-remain valid and the cord audit now retains 8 represented / 6 excluded. The
-focused Python test command remains unavailable in this checkout because the
-`pytest` module is not installed; the equivalent package validation, JSON
-parsing, audit, and bytecode checks passed.
+remain valid and the cord audit now retains 8 represented / 6 excluded. A
+subsequent branch verification used the tracked workspace virtual environment
+to run the complete HangboardPackages pytest suite successfully. That Python
+result does not establish iOS app or Simulator validation.
 
 Actual DEBUG app detail screens were launched with
 `HANGTEN_REVIEW_BOARD_DETAIL=1` and each `HANGTEN_REVIEW_BOARD_ID`. The four
@@ -242,6 +242,6 @@ environment.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli status --root Hangboards` passed with the same complete inventory.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed: 14 model packages, 8 represented, 6 excluded.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m compileall -q Tools/HangboardPackages/src` passed, and `git diff --check` passed.
-- `python3 -m pytest Tools/HangboardPackages/tests -q` was unavailable because pytest is not installed. The repository wrapper could not bootstrap its virtual environment because restricted networking could not resolve the package index (`setuptools>=84.0.0`).
+- At the time of Task 5, the system Python lacked `pytest` and restricted networking prevented a new environment from being bootstrapped. This historical environment limitation is superseded for the branch: the existing tracked workspace virtual environment subsequently ran the complete HangboardPackages pytest suite successfully.
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.
 - Temporary Xcode output was created under `.context/gorgeous-dugong-task5-xcode/`, then removed and verified absent.
