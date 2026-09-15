@@ -483,6 +483,7 @@ final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
     static let modelVisibleCategory = 4
+    static let renderedCategory = modelPickCategory | cordCategory | modelVisibleCategory
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
 
     private struct PreparedCameraState {
@@ -1769,11 +1770,13 @@ final class BoardModelScene {
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
         ambient.light?.intensity = 250
+        ambient.light?.categoryBitMask = Self.renderedCategory
         scene.rootNode.addChildNode(ambient)
         let key = SCNNode()
         key.light = SCNLight()
         key.light?.type = .directional
         key.light?.intensity = 850
+        key.light?.categoryBitMask = Self.renderedCategory
         key.light?.castsShadow = true
         key.light?.shadowColor = UIColor.black.withAlphaComponent(0.45)
         key.light?.shadowRadius = 3

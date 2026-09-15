@@ -1464,6 +1464,57 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testModelLightsIlluminateEveryRenderedBoardCategory() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "body", role: .body, contactID: nil),
+            .init(nodeID: "hold", role: .contact, contactID: "hold"),
+            .init(nodeID: "attachment", role: .attachment, contactID: nil)
+        ])
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                .init(id: "left", nodeID: "body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
+                .init(id: "right", nodeID: "body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
+            ],
+            anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
+            canonicalPoses: ["primary": BoardModelCanonicalPose(
+                rotation: [0, 0, 0, 1], translation: [0, 0, 0],
+                camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1)
+            )]
+        )
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["body", "hold", "attachment"]),
+            descriptor: descriptor,
+            display: display(),
+            suspension: .pairedLeadCord(suspension)
+        ))
+        XCTAssertTrue(model.select(positionID: "primary"))
+
+        var lights: [SCNLight] = []
+        model.scene.rootNode.enumerateChildNodes { node, _ in
+            if let light = node.light { lights.append(light) }
+        }
+        XCTAssertFalse(lights.isEmpty)
+        let body = try XCTUnwrap(model.geometryNodes.first { $0.name == "body" })
+        let contact = try XCTUnwrap(model.geometryNodes.first { $0.name == "hold" })
+        let attachment = try XCTUnwrap(model.geometryNodes.first { $0.name == "attachment" })
+        let cord = try XCTUnwrap(model.transientCordNode?.childNodes.first)
+        XCTAssertEqual(contact.categoryBitMask, 1)
+        XCTAssertEqual(cord.categoryBitMask, 2)
+        XCTAssertEqual(body.categoryBitMask, 4)
+        XCTAssertEqual(attachment.categoryBitMask, 4)
+        XCTAssertNotEqual(contact.categoryBitMask, cord.categoryBitMask)
+        XCTAssertNotEqual(contact.categoryBitMask, body.categoryBitMask)
+        XCTAssertNotEqual(cord.categoryBitMask, body.categoryBitMask)
+        let renderedNodes = [contact, cord, body, attachment]
+        for light in lights {
+            for node in renderedNodes {
+                XCTAssertNotEqual(light.categoryBitMask & node.categoryBitMask, 0,
+                                  "Every model light must illuminate every rendered board category")
+            }
+        }
+    }
+
     // This catches a renderer that accepts names by suffix, normalization, or
     // descriptor subsets instead of binding the importer-visible node paths.
     func testGenericModelBindingUsesExactDescriptorNodeIDs() throws {
