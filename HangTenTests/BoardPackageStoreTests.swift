@@ -3669,6 +3669,35 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    /// Validation fixtures contain placeholder bytes; loader tests require a
+    /// real packaged model while retaining the production contact inventory.
+    private func makeSceneModelFixtureBundle(boardID: String) throws -> FixtureBundle {
+        let sourcePackageURL = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()
+            .deletingLastPathComponent()
+            .appendingPathComponent("Hangboards/metolius-prime-rib", isDirectory: true)
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
+            for path in ["board.json", "assets/primary.model.json", "assets/primary.usdz"] {
+                try Data(contentsOf: sourcePackageURL.appendingPathComponent(path))
+                    .write(to: packageURL.appendingPathComponent(path))
+            }
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) {
+                $0["id"] = boardID
+            }
+        }
+        do {
+            let store = try BoardPackageStore(bundle: fixture.bundle)
+            XCTAssertEqual(store.boards.map(\.id), [boardID])
+            return fixture
+        } catch {
+            fixture.remove()
+            throw error
+        }
+    }
+
     private func fixtureBundle(schemaVersion: Int) throws -> Bundle {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -4564,5 +4593,24 @@ private struct FixtureBundle {
 
     func remove() {
         try? FileManager.default.removeItem(at: rootURL)
+    }
+}
+
+private final class TestBoardModelResourceRequest: BoardModelResourceRequesting {
+    let progress = Progress(totalUnitCount: 1)
+    private let beginAction: () throws -> Void
+    private let endAction: () -> Void
+
+    init(begin: @escaping () throws -> Void, end: @escaping () -> Void) {
+        self.beginAction = begin
+        self.endAction = end
+    }
+
+    func beginAccessingResources() async throws {
+        try beginAction()
+    }
+
+    func endAccessingResources() {
+        endAction()
     }
 }

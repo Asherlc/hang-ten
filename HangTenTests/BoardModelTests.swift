@@ -303,7 +303,7 @@ final class BoardModelTests: XCTestCase {
         let (_, media, model) = try await loadMigratedModel("tension.flash-board")
 
         XCTAssertEqual(media.descriptor.modelSHA256, "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524")
-        XCTAssertEqual(media.descriptor.holds.count, 7)
+        XCTAssertEqual(media.descriptor.contacts.count, 7)
         guard case .twoBranchCord(let suspension) = media.suspension else {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
         }
@@ -352,7 +352,7 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(Set(suspension.attachments.map(\.id)).count, 2, boardID)
             for attachment in suspension.attachments {
                 let binding = try XCTUnwrap(media.descriptor.nodes.first { $0.nodeID == attachment.nodeID })
-                XCTAssertNotEqual(binding.role, .hold, boardID)
+                XCTAssertNotEqual(binding.role, .contact, boardID)
             }
             XCTAssertNotEqual(suspension.attachments[0].pointInModel, suspension.attachments[1].pointInModel, boardID)
 
@@ -364,7 +364,7 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertEqual(cord.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1), "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
-                    node.categoryBitMask == BoardModelScene.cordCategory && model.holdID(for: node) == nil
+                    node.categoryBitMask == BoardModelScene.cordCategory && model.contactID(for: node) == nil
                 }, "\(boardID)/\(position.id)")
             }
         }
@@ -436,10 +436,10 @@ final class BoardModelTests: XCTestCase {
         }
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Body", role: .body, holdID: nil),
-                .init(nodeID: "Hold", role: .hold, holdID: "hold"),
-                .init(nodeID: "Lead/Left", role: .attachment, holdID: nil),
-                .init(nodeID: "Lead/Right", role: .attachment, holdID: nil),
+                .init(nodeID: "Body", role: .body, contactID: nil),
+                .init(nodeID: "Hold", role: .contact, contactID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, contactID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, contactID: nil),
             ],
             minimum: [-1, -0.5, -0.2],
             maximum: [1, 0.5, 0.2]
@@ -469,7 +469,7 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(segments.count, SuspendedCordSolver.sampleCount - 1)
             XCTAssertTrue(segments.allSatisfy {
                 !$0.isHidden && $0.geometry is SCNCylinder && $0.categoryBitMask == BoardModelScene.cordCategory
-                    && validModel.holdID(for: $0) == nil
+                    && validModel.contactID(for: $0) == nil
             })
         }
 
@@ -607,6 +607,82 @@ final class BoardModelTests: XCTestCase {
         Int(node.name?.split(separator: ".").last ?? "") ?? -1
     }
 
+    private func assertStraightSamples(_ samples: [SIMD3<Float>], label: String) {
+        guard let start = samples.first, let end = samples.last else {
+            return XCTFail("\(label) must contain samples")
+        }
+        let displacement = end - start
+        let length = simd_length(displacement)
+        XCTAssertGreaterThan(length, 1e-7, "\(label) endpoints must differ")
+        guard length > 1e-7 else { return }
+        let direction = displacement / length
+        for (index, sample) in samples.enumerated() {
+            XCTAssertLessThan(
+                simd_length(simd_cross(sample - start, direction)),
+                1e-5,
+                "\(label) sample \(index) must remain on its direct span"
+            )
+        }
+    }
+
+    private func assertCameraBasis(
+        _ camera: SCNNode,
+        expectedFront: SIMD3<Float>,
+        expectedUp: SIMD3<Float>,
+        expectedRight: SIMD3<Float>,
+        label: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let front = camera.simdWorldFront
+        let up = camera.simdWorldUp
+        let right = camera.simdWorldRight
+        let vectors = [front, up, right]
+        XCTAssertTrue(vectors.allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }, "\(label) camera basis must be finite", file: file, line: line)
+        XCTAssertEqual(simd_length(front), 1, accuracy: 0.000_1, "\(label) front", file: file, line: line)
+        XCTAssertEqual(simd_length(up), 1, accuracy: 0.000_1, "\(label) up", file: file, line: line)
+        XCTAssertEqual(simd_length(right), 1, accuracy: 0.000_1, "\(label) right", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, up), 0, accuracy: 0.000_1, "\(label) front/up", file: file, line: line)
+        XCTAssertEqual(simd_dot(front, right), 0, accuracy: 0.000_1, "\(label) front/right", file: file, line: line)
+        XCTAssertEqual(simd_dot(up, right), 0, accuracy: 0.000_1, "\(label) up/right", file: file, line: line)
+        assertVectorEqual(simd_cross(front, up), right, "\(label) right-handed", file: file, line: line)
+        assertVectorEqual(front, expectedFront, "\(label) expected front", file: file, line: line)
+        assertVectorEqual(up, expectedUp, "\(label) expected up", file: file, line: line)
+        assertVectorEqual(right, expectedRight, "\(label) expected right", file: file, line: line)
+    }
+
+    private func assertVectorEqual(
+        _ actual: SIMD3<Float>,
+        _ expected: SIMD3<Float>,
+        _ message: String,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        XCTAssertEqual(actual.x, expected.x, accuracy: 0.000_1, "\(message) x", file: file, line: line)
+        XCTAssertEqual(actual.y, expected.y, accuracy: 0.000_1, "\(message) y", file: file, line: line)
+        XCTAssertEqual(actual.z, expected.z, accuracy: 0.000_1, "\(message) z", file: file, line: line)
+    }
+
+    private func hasNonBackgroundPixels(_ image: CGImage) -> Bool {
+        let width = image.width
+        let height = image.height
+        guard width > 0, height > 0 else { return false }
+        var rgba = [UInt8](repeating: 0, count: width * height * 4)
+        return rgba.withUnsafeMutableBytes { bytes -> Bool in
+            guard let baseAddress = bytes.baseAddress,
+                  let context = CGContext(data: baseAddress, width: width, height: height, bitsPerComponent: 8, bytesPerRow: width * 4, space: CGColorSpaceCreateDeviceRGB(), bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else {
+                return false
+            }
+            context.setFillColor(UIColor.white.cgColor)
+            context.fill(CGRect(x: 0, y: 0, width: width, height: height))
+            context.draw(image, in: CGRect(x: 0, y: 0, width: width, height: height))
+            return (0..<(width * height)).contains { index in
+                let offset = index * 4
+                return bytes[offset] < 245 || bytes[offset + 1] < 245 || bytes[offset + 2] < 245
+            }
+        }
+    }
+
     func testFlashBoardCanonicalCameraFacesSelectedSurfaceAcrossEveryPose() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.flash-board"))
         guard case .model(let media) = board.defaultPresentation.media,
@@ -702,8 +778,8 @@ final class BoardModelTests: XCTestCase {
     func testFrameRejectsInvalidSizesWithoutChangingCameraOrCanonicalSelection() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ],
             minimum: [0, 0, 0],
             maximum: [4, 2, 1]
@@ -764,8 +840,8 @@ final class BoardModelTests: XCTestCase {
     func testOrbitRejectsInvalidInputsWithoutChangingCameraOrNextValidOrbit() throws {
         let descriptor = modelDescriptor(
             nodes: [
-                .init(nodeID: "Board/Body", role: .body, holdID: nil),
-                .init(nodeID: "Board/Hold/Left", role: .hold, holdID: "left")
+                .init(nodeID: "Board/Body", role: .body, contactID: nil),
+                .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
             ]
         )
         let orientation = BoardModelOrientation(
@@ -1413,8 +1489,8 @@ final class BoardModelTests: XCTestCase {
 
     func testPairedLeadSceneBindingAllowsDistinctPointsOnOneBodyNode() throws {
         let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Body", role: .body, holdID: nil),
-            .init(nodeID: "Hold", role: .hold, holdID: "hold")
+            .init(nodeID: "Body", role: .body, contactID: nil),
+            .init(nodeID: "Hold", role: .contact, contactID: "hold")
         ])
         let suspension = BoardModelPairedLeadCord(
             attachments: [
