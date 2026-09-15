@@ -1,14 +1,14 @@
 # 3D model hangboard cord audit
 
-Date: 2026-09-13  
+Initial audit: 2026-09-13; coverage addendum: 2026-09-15  
 Scope: every model-media package discovered under `Hangboards/`  
 Decision: approved for package promotion after human review of the retained
 exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 14 discovered model packages. Four have a source-backed
-supplied/integral cord and render a transient cord presentation; ten are
+The audit covers all 20 discovered model packages. Four have a source-backed
+supplied/integral cord and render a transient cord presentation; 16 are
 excluded because their reviewed product evidence does not establish a supplied
 or integral cord. Baguette Evo is excluded: YY Vertical's primary evidence
 establishes optional rope or bungee use, not an included or integral cord.
@@ -16,7 +16,7 @@ establishes optional rope or bungee use, not an included or integral cord.
 | Decision | Count | Packages |
 |---|---:|---|
 | `represented` | 4 | `tension.flash-board`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger` |
-| `excluded` | 10 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Prime Rib/Project/Wood Grips Compact II; YY Vertical Baguette Evo |
+| `excluded` | 16 | Beastmaker 1000/2000; Captain Fingerfood DUAL/POCKET/UNLEVEL; Lattice Triple Rung; Metolius Climber's Edge/Contact/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II; So iLL Training Tiles; The Hangboard; Trango Rock Prodigy Training Center; YY Vertical Baguette Evo |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -31,6 +31,24 @@ could not be retained, the record has an empty evidence array and the board is
 conservatively excluded; no suspension metadata is promoted on that basis.
 Every record also carries an explicit `humanApproval` object; the validator
 rejects missing or incomplete provenance and approvals.
+
+### 2026-09-15 model-only coverage addendum — excluded
+
+The six packages promoted to model-only media after the initial audit have no
+`media.suspension` metadata. Each retains a distinct manufacturer artifact in
+the snapshot directory and an approved exclusion record. The artifacts
+establish product identity and visible board arrangement only; none establishes
+a supplied or integral cord. Accordingly, this addendum adds no cord,
+attachment, topology, or hidden-route claim.
+
+| Package | Retained manufacturer artifact |
+|---|---|
+| `metolius.climbers-edge` | [Climber's Edge product image](https://www.metoliusclimbing.com/cdn/shop/files/The-Climber_s-Edge-Training-Board_67ebe212-d205-4f2c-9ca9-048b1792351d.jpg?v=1765309719), `metolius-climbers-edge-product.jpg` |
+| `metolius.contact` | [Contact product image](https://www.metoliusclimbing.com/cdn/shop/files/Contact-Hangboard-black-white.jpg?v=1759459002), `metolius-contact-product.jpg` |
+| `metolius.simulator-3d` | [Simulator 3-D product image](https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469), `metolius-simulator-product.jpg` |
+| `soill.training-tiles` | [Training Tiles product image](https://soillholds.com/cdn/shop/products/training-tiles-so-ill-x-meagan-martin-so-ill-white-12-01-so-ill-670960_2048x.jpg?v=1677258630), `soill-training-tiles-front.jpg` |
+| `the-hangboard.the-hangboard` | [The Hangboard product image](https://cdn.shopify.com/s/files/1/0764/5210/2426/files/hangboard-straight-2.png), `the-hangboard-straight.png` |
+| `trango.rock-prodigy-training-center` | [Rock Prodigy Training Center product image](https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946), `trango-rock-prodigy-training-center-main.jpg` |
 
 ### Tension Flash Board — `twoBranchCord`
 
@@ -174,7 +192,7 @@ PYTHONPATH=Tools/HangboardPackages/src Tools/HangboardPackages/.venv/bin/python 
 Result:
 
 ```json
-{"decisions":{"excluded":10,"represented":4},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.prime-rib","metolius.project","metolius.wood-grips-compact-ii","nature.stone-hanger","tension.flash-board","yy.baguette-evo"]}
+{"decisions":{"excluded":16,"represented":4},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.climbers-edge","metolius.contact","metolius.prime-rib","metolius.project","metolius.simulator-3d","metolius.wood-grips-compact-ii","nature.stone-hanger","soill.training-tiles","tension.flash-board","the-hangboard.the-hangboard","trango.rock-prodigy-training-center","yy.baguette-evo"]}
 ```
 
 `python3 -m json.tool` passed for all four edited board packages and
@@ -189,7 +207,7 @@ environment.
 
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli validate --root Hangboards --final-inventory` passed: 63 complete boards, zero drafts.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli status --root Hangboards` passed with the same complete inventory.
-- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed: 14 model packages, 4 represented, 10 excluded.
+- `PYTHONPATH=Tools/HangboardPackages/src python3 -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json` passed after the 2026-09-15 coverage addendum: 20 model packages, 4 represented, 16 excluded.
 - `PYTHONPATH=Tools/HangboardPackages/src python3 -m compileall -q Tools/HangboardPackages/src` passed, and `git diff --check` passed.
 - `python3 -m pytest Tools/HangboardPackages/tests -q` was unavailable because pytest is not installed. The repository wrapper could not bootstrap its virtual environment because restricted networking could not resolve the package index (`setuptools>=84.0.0`).
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.
