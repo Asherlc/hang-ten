@@ -630,13 +630,23 @@ enum SuspendedBoardPresentation {
             return 0
         }
         var segmentCount = 0
+        var previousProjection: Float = 0
         for endpoint in path.dropFirst() {
             let displacement = endpoint - sharedAnchor
-            guard let endpointDirection = normalized(displacement),
-                  simd_dot(endpointDirection, direction) >= 1 - 1e-5 else {
+            let projection = simd_dot(displacement, direction)
+            let distanceFromRay = simd_length(displacement - direction * projection)
+            let distanceTolerance = max(
+                SuspendedCordSolver.tautTolerance,
+                abs(projection) * 1e-6
+            )
+            guard projection.isFinite,
+                  distanceFromRay.isFinite,
+                  projection > previousProjection,
+                  distanceFromRay <= distanceTolerance else {
                 break
             }
             segmentCount += 1
+            previousProjection = projection
         }
         return segmentCount
     }
