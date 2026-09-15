@@ -983,7 +983,7 @@
   "pairedLeadCordModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "id": "fixture.paired-lead",
       "manufacturer": "Fixture Maker",
       "name": "Paired lead fixture",
@@ -1001,15 +1001,17 @@
         }
       }],
       "positions": [{ "id": "primary", "presentationID": "primary" }],
-      "holds": [{ "id": "hold-left", "name": "Left hold", "kind": "jug" }]
+      "contacts": [{ "id": "hold-left", "name": "Left hold", "kind": "jug", "equipmentObjectID": "primary", "features": [], "gripTypes": [] }],
+      "revisionID": "2026-09-contact-first",
+      "equipmentObjects": [{ "id": "primary" }]
     },
     "descriptor": {
       "schemaVersion": 1,
       "coordinateFrame": "hang-ten-board-v1",
       "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
       "modelBounds": { "min": [0, 0, 0], "max": [1, 0.5, 0.1] },
-      "nodes": [{ "nodeID": "Body", "role": "body" }, { "nodeID": "Left", "role": "hold", "holdID": "hold-left" }],
-      "holds": { "hold-left": { "nodeIDs": ["Left"], "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] }, "center": [0.25, 0.4] } }
+      "nodes": [{ "nodeID": "Body", "role": "body" }, { "nodeID": "Left", "role": "contact", "contactID": "hold-left" }],
+      "contacts": { "hold-left": { "nodeIDs": ["Left"], "facePlaneAABB": { "min": [0.1, 0.2], "max": [0.4, 0.6] }, "center": [0.25, 0.4] } }
     }
   },
   "modelParserParity": [

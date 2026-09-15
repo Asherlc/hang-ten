@@ -2423,7 +2423,7 @@ struct BoardPackageSingleCordSuspensionDocument: Decodable, Equatable {
     }
 }
 
-private struct BoardPackagePairedLeadAttachmentDocument: Decodable {
+struct BoardPackagePairedLeadAttachmentDocument: Decodable, Equatable {
     let id: String
     let nodeID: String
     let pointInModel: [Double]
@@ -2440,7 +2440,7 @@ private struct BoardPackagePairedLeadAttachmentDocument: Decodable {
     }
 }
 
-private struct BoardPackagePairedLeadCordSuspensionDocument: Decodable {
+struct BoardPackagePairedLeadCordSuspensionDocument: Decodable, Equatable {
     let attachments: [BoardPackagePairedLeadAttachmentDocument]
     let anchor: BoardPackageAnchorDocument
     let cord: BoardPackageCordDocument
