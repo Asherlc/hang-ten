@@ -148,3 +148,9 @@ intersecting the nonselectable `bore_free_body_caps_001` node. It does not
 inspect an intermediate source or staging asset. The promoted package contains
 only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`; it
 has no raster media, canonical path, or fallback geometry.
+
+P1 follow-up: `Tools/HangboardModels/verify_metolius_climbers_edge.py` is the
+committed reproducible shipped-asset verifier. It starts from an empty Blender
+scene, hash-checks the descriptor-bound shipped USDZ, imports that exact asset,
+and requires all eight rays to hit exactly `bore_free_body_caps_001`. Its
+Blender-free contract test is `test_verify_metolius_climbers_edge.py`.
