@@ -3382,8 +3382,8 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(media.orientation?.rotations["reverse"], SIMD4(0, 1, 0, 0))
     }
 
-    // This catches permissive orientation parsing, partial inventories, and
-    // accidental coexistence with the mutually-exclusive suspension metadata.
+    // This catches permissive orientation parsing and partial inventories.
+    // Orientation may coexist with suspension; suspension canonical poses govern rendering.
     func testStoreRejectsInvalidModelOrientationAndPositionInventory() throws {
         let mutations: [(String, (inout [String: Any]) throws -> Void, String)] = [
             ("wrong pivot", { board in
