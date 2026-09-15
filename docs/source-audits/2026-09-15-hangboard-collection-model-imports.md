@@ -306,3 +306,69 @@ committed reproducible shipped-asset verifier. It starts from an empty Blender
 scene, hash-checks the descriptor-bound shipped USDZ, imports that exact asset,
 and requires all eight rays to hit exactly `bore_free_body_caps_001`. Its
 Blender-free contract test is `test_verify_metolius_climbers_edge.py`.
+
+## The Hangboard (`the-hangboard.the-hangboard`)
+
+Reviewed 2026-09-15. `Hangboards/the-hangboard/board.json` remains the source
+of truth for the current The Hangboard revision and for every existing contact
+ID, name, kind, depth, capacity, grip type, product fact, and presentation
+identity. The conversion makes no contact or factual catalog edit.
+
+### Retained visual evidence
+
+| ID | Publisher and URL | Retained local copy and SHA-256 | Supports | Does not support |
+| --- | --- | --- | --- | --- |
+| TH-FRONT | The Hangboard — [official straight-on product image](https://cdn.shopify.com/s/files/1/0764/5210/2426/files/hangboard-straight-2.png) | `.context/lumpy-liger-hangboard-collection/the-hangboard/retained-evidence/hangboard-straight.png` — `4db9e95721bd43cf6df3ee5974865948c9353f2f366c4f2957b08206442122d3` | Exact front layout: two outer deep jugs, one continuous center sloper, four routed edge channels, and three separate edge contacts in each channel. | Hidden geometry, local section measurements, or mounting-hole measurements. |
+| TH-OBLIQUE | The Hangboard — [official right oblique gallery image](https://thehangboard.com/cdn/shop/files/half-right-hangboard.png?v=1747623739) | `.context/lumpy-liger-hangboard-collection/the-hangboard/retained-evidence/hangboard-oblique-right.png` — `128efa32244f2d0a20a70c468f483c135baec8797e88e8cc3732f88111eaf147` | Routed edge-floor relief, separation between adjacent edges, top relief, and the existence of mounting hardware. | A scan, exact hardware geometry, rear geometry, or unsourced contact dimensions. |
+
+The manufacturer [product page](https://thehangboard.com/products/hangboard)
+and [landing page](https://thehangboard.com/) were retained as the existing
+catalog authority for the exact product name, six labeled edge depths, deep
+jugs, 40-degree sloper, and 23.5 × 6.25 × 2 in envelope. The retained visuals
+were reviewed only to confirm the exact physical revision and existing
+inventory; no pixels were traced, registered, segmented, or used to infer a
+contact binding or product fact.
+
+### Audited source and narrow corrective ruling
+
+The user-provided source is
+`~/Downloads/hangboard-collection/models/the-hangboard/the-hangboard.glb`,
+retained under `.context/lumpy-liger-hangboard-collection/the-hangboard/`,
+SHA-256 `dadfa6978129e01f57384deb606fb654c8787045dedf292f4a3daaa8a48d8c31`.
+It has one `body` mesh and 15 source-named contact meshes. Its rendered front
+review exposes two rows of four visible mounting-hardware recesses. Mounting
+hardware is excluded by the display-model contract, so the approved correction
+adds eight direct-authored, nonselectable plain body caps at reviewed source
+frame display estimates. The cap locations and 4.1 mm radius are not physical
+product facts or contact measurements. All 15 contact-mesh triangle counts are
+unchanged.
+
+| Artifact | SHA-256 | Disposition |
+| --- | --- | --- |
+| Supplied GLB | `dadfa6978129e01f57384deb606fb654c8787045dedf292f4a3daaa8a48d8c31` | User-provided source delivery; not promoted because visible mounting hardware is outside the model contract. |
+| Corrected native source | `ed5ca990784e8afc47dd6ecaeea08dc93b99d05a1da49ea74e5d541407efdf1d` | Adds only eight nonselectable `mounting-hardware-omission-caps` body faces over the reviewed recesses. |
+| Promoted `assets/primary.usdz` | `212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f` | Deterministic transport/export and clean USDZ reimport. |
+| Promoted descriptor | `a106a3710d354244a73664fc95faac0db5fe9700b0b46482a4d49c2c328b36a8` | Generated from importer-visible USDZ triangles and hash-binds the shipped model. |
+
+### Explicit contact binding and exact-shipped validation
+
+`contact-mapping.json` lists the catalog contact inventory in its original
+order. Each supplied source contact is one-to-one with the same stable contact
+ID: `jug-left`, `jug-right`, `sloper-40-center`, each upper 40/30/25 mm left
+and right edge, and each lower 20/15/10 mm left and right edge. `body` and
+`mounting-hardware-omission-caps` are the only nonselectable body nodes. The
+center sloper is exactly one source mesh bound only to `sloper-40-center`; no
+left/right sloper was invented. Likewise, every bilateral edge remains a
+separate source mesh and separate existing logical ID.
+
+`Tools/HangboardModels/verify_the_hangboard.py` hash-checks the actual shipped
+asset, imports it from an empty Blender scene, rebuilds the descriptor from
+importer-visible triangulated material-bearing meshes, requires the exact
+15-contact keyset and 17-node descriptor, and confirms all eight reviewed
+hardware-cover rays hit only `mounting_hardware_omission_caps_001`. Its report
+is `.context/lumpy-liger-hangboard-collection/the-hangboard/shipped-usdz-verification.json`.
+The model-only package contains only `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; its raster media, canonical paths, and fallback
+geometry are removed. `test_verify_the_hangboard.py` locks the ordered
+15-contact inventory and rejects a hardware-cover ray that resolves to the
+body rather than the cap node.
