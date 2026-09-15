@@ -1036,6 +1036,11 @@
       "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [-10, 0.45, 0.1], "right-lead": [0.8, 0.45, 0.1]}}]
     },
     {
+      "name": "paired-pose-mouth-coincident-with-default-contact", "base": "pairedLeadCordModel",
+      "pythonException": "ValueError", "pythonError": "cordContactPoints resolved route points must be distinct", "swiftError": "invalidPackage",
+      "mutations": [{"target": "board", "op": "replace", "path": ["presentations", 0, "media", "suspension", "canonicalPoses", "primary", "attachmentPoints"], "value": {"left-lead": [0.2, 0.45, 0.05], "right-lead": [0.8, 0.45, 0.1]}}]
+    },
+    {
       "name": "wrong-schema-version",
       "pythonException": "ValueError",
       "pythonError": "schemaVersion",

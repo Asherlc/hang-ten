@@ -250,6 +250,7 @@ final class BoardPackageStoreTests: XCTestCase {
             [
                 "paired-pose-mouths-null", "paired-pose-mouths-missing-lead",
                 "paired-pose-mouths-coincident", "paired-pose-mouths-outside-bounds",
+                "paired-pose-mouth-coincident-with-default-contact",
                 "wrong-schema-version", "unknown-media-type", "escaped-typed-path",
                 "extra-asset", "stale-sha", "omitted-node", "extra-node",
                 "body-with-hold-id", "unbound-geometry", "invalid-camera",

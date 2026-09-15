@@ -1821,9 +1821,11 @@ def _validate_model_suspension(
                 rigid_route_length = sum(
                     math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
                 ) + math.dist(endpoints[0], endpoints[1])
-            if pose.cord_contact_points is not None and any(
+            if any(
                 math.dist(start, end) <= 1e-7 for start, end in zip(endpoints, endpoints[1:])
             ):
+                if not isinstance(branch_data, BoardModelCord) and rigid_route_length <= 1e-7:
+                    raise ValueError(f"suspension pose {position_id} must have distinct passage endpoints")
                 raise ValueError("cordContactPoints resolved route points must be distinct")
             transformed_endpoints: list[tuple[float, float, float]] = []
             for endpoint in endpoints:
