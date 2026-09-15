@@ -1,5 +1,65 @@
 # Hangboard Collection model imports
 
+## Metolius Simulator 3-D (`metolius.simulator-3d`)
+
+Reviewed 2026-09-15. `Hangboards/metolius-simulator-3d/board.json` remains
+the authority for this revision's existing 29 `contacts[].id` values and every
+existing name, kind, feature, finger-capacity, depth, and product fact. This
+conversion makes no factual catalog edit.
+
+### Retained visual evidence
+
+| ID | Publisher and URL | Retained local copy and SHA-256 | Supports | Does not support |
+| --- | --- | --- | --- | --- |
+| MS-PHOTO | Metolius — [product photograph](https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469) | `.context/lumpy-liger-hangboard-collection/metolius-simulator-3d/retained-evidence/metolius-simulator-product.jpg` — `5ac1677d6280dc90242cb1dcef47691647fd3f5a9adc3c465838e930075f58a9` | Exact Simulator 3-D silhouette, molded contact arrangement, broad arc, and mounting-opening existence. | Measured hole centers, radii, countersinks, rear geometry, or unsourced contact dimensions. |
+| MS-DIAGRAM | Metolius — [numbered hold diagram](https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085) | `.context/lumpy-liger-hangboard-collection/metolius-simulator-3d/retained-evidence/metolius-simulator-numbered-hold-diagram.jpg` — `e9561ab3fb6d3a85014097dcbdb0bc3d9c4079f9cb0954bd87965d180329932a` | Numbered positions 1–18, pocket capacities/depths, edge depths, and the shared #2/#3 sloper labeling. | Local profiles, recess depths, hidden geometry, or mounting dimensions. |
+
+The Metolius [product page](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board)
+was also reviewed for exact identity, 28 × 8.75 in (711 × 222 mm) envelope,
+and the documented CAD/CAM symmetry. These two manufacturer visuals are
+materially distinct exact-revision sources. They are evidence only: source
+pixels were not traced, registered, segmented, or used to infer a contact map.
+
+### Source, correction, and explicit mapping
+
+The user-provided source GLB is retained at
+`.context/lumpy-liger-hangboard-collection/metolius-simulator-3d/source-delivery/Metolius-Simulator-3D.glb`,
+SHA-256 `1f71e8673d0682f27398d260a8320ae054b75a3d023436aa896549eeed22297a`.
+Its explicit scene inventory is one `board_body` mesh and 31 contact meshes.
+Every mesh has the supplied usable `Simulator_Clay_Image` image material.
+
+The rendered source review identified eight visible mounting-hardware openings.
+The display-model contract excludes mounting hardware, so a directly authored
+native correction adds eight nonselectable body caps. The importer and compiler
+remain transport-only: they do not create, repair, or infer this geometry.
+
+| Artifact | SHA-256 | Disposition |
+| --- | --- | --- |
+| Native transport source before correction | `732be4c9ce2c58162ad40484268217db61ce97db2959256395119565ab982a49` | Preserves supplied topology; not promoted because the visible hardware openings violate the model-only display contract. |
+| Corrected native source | `ab2d71965fc851bca6c1678dbac7d02d4bda73eba482690eae6e75ced6247b45` | Adds a second nonselectable body mesh, `mounting-hardware-omission-caps`, with eight direct display-only caps. Their reviewed source-frame locations/radius are recorded in `author_hardware_free_source.py` as display estimates, not physical mounting facts. |
+| Promoted `assets/primary.usdz` | `3372f4d2b42a967d3ca65c2d1a0f56bd7762b32f9c1a80f79897841b020fbc94` | Exact shipped USDZ, cleanly reimported from an empty scene. |
+| Promoted descriptor | `783e0a0e808a31d8f4d11c69c15477e6ef70c93eed2da9c195639ef014b302ee` | Hash-binds the shipped USDZ and is compiled from imported triangles. |
+
+`contact-mapping.json` preserves catalog contact order exactly. Source
+`hold_01_left/right`, `hold_04`–`hold_13_left/right`, and
+`hold_14`–`hold_18_center` bind one-to-one to their identically numbered
+stable contacts. `hold_02_left` and `hold_03_left` intentionally both bind
+`round-sloper-3-left`; their right counterparts likewise share
+`round-sloper-3-right`, because the manufacturer diagram documents #2 and #3
+as one uninterrupted physical contact on each side. Thus 31 selectable mesh
+pieces bind exactly the existing 29 logical IDs. `board_body` and
+`mounting-hardware-omission-caps` are the only two body nodes and never carry a
+contact identity.
+
+The exact shipped asset verifier starts with an empty Blender scene and checks
+the descriptor's USDZ hash, importer-visible triangulated image materials,
+all 33 node bindings, two body nodes, 31 contact mesh bindings, and the exact
+29-contact descriptor keyset. Its retained report is
+`.context/lumpy-liger-hangboard-collection/metolius-simulator-3d/shipped-usdz-verification.json`.
+The package root contains only `board.json`, `assets/primary.usdz`, and
+`assets/primary.model.json`; its prior raster asset and canonical paths are
+removed.
+
 ## Metolius Contact (`metolius.contact`)
 
 Reviewed 2026-09-15. The catalog `Hangboards/metolius-contact/board.json` is
