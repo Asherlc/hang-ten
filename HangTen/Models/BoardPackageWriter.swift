@@ -388,7 +388,7 @@ struct BoardEditableContact: Equatable, Decodable {
     var gripTypes: [GripType]
     var fingerCapacity: Int?
     var handCapacity: Int?
-    var features: [HoldFeature]
+    var shape: HoldShape?
     var side: ContactSide?
     var pairedContactID: String?
     var declaresPairedContactID: Bool
@@ -402,7 +402,7 @@ struct BoardEditableContact: Equatable, Decodable {
         case gripTypes
         case fingerCapacity
         case handCapacity
-        case features
+        case shape
         case side
         case pairedContactID
         case equipmentObjectID
@@ -416,7 +416,7 @@ struct BoardEditableContact: Equatable, Decodable {
         gripTypes: [GripType] = [],
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        features: [HoldFeature] = [],
+        shape: HoldShape? = nil,
         side: ContactSide? = nil,
         pairedContactID: String? = nil,
         equipmentObjectID: String = "primary"
@@ -428,7 +428,7 @@ struct BoardEditableContact: Equatable, Decodable {
         self.gripTypes = gripTypes
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
-        self.features = features
+        self.shape = shape
         self.side = side
         self.pairedContactID = pairedContactID
         declaresPairedContactID = pairedContactID != nil
@@ -437,7 +437,7 @@ struct BoardEditableContact: Equatable, Decodable {
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
-            "id", "equipmentObjectID", "name", "kind", "features",
+            "id", "equipmentObjectID", "name", "kind", "shape",
             "depthRangeMillimeters", "gripTypes", "fingerCapacity", "handCapacity",
             "side", "pairedContactID"
         ])
@@ -454,7 +454,7 @@ struct BoardEditableContact: Equatable, Decodable {
         gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
-        features = try container.decode([HoldFeature].self, forKey: .features)
+        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
         side = try container.decodeIfPresent(ContactSide.self, forKey: .side)
         declaresPairedContactID = container.contains(.pairedContactID)
         pairedContactID = declaresPairedContactID
@@ -769,9 +769,6 @@ enum BoardPackageWriter {
                depthRange.lowerBound > depthRange.upperBound {
                 throw invalid("contact \(contact.id) has an invalid depth range", document)
             }
-            if Set(contact.features).count != contact.features.count {
-                throw invalid("contact \(contact.id) has duplicate features", document)
-            }
             if Set(contact.gripTypes).count != contact.gripTypes.count {
                 throw invalid("contact \(contact.id) has duplicate gripTypes", document)
             }
@@ -962,7 +959,9 @@ enum BoardPackageWriter {
         if let kind = contact.kind {
             entries.append(("kind", .string(kind.rawValue)))
         }
-        entries.append(("features", .array(contact.features.map { .string($0.rawValue) })))
+        if let shape = contact.shape {
+            entries.append(("shape", .string(shape.rawValue)))
+        }
         if let fingerCapacity = contact.fingerCapacity {
             entries.append(("fingerCapacity", .int(fingerCapacity)))
         }

@@ -1817,21 +1817,21 @@ enum BundledPlanContactRequirements {
         fileprivate var requirement: ContactRequirement {
             switch self {
             case .anyHold:
-                ContactRequirement(selection: .allMatching)
+                ContactRequirement(selection: .single)
             case .outerJugs:
-                .kind(.jug, selection: .allMatching)
+                .kind(.jug, selection: .single)
             case .pinches:
-                .kind(.pinch, selection: .allMatching)
+                .kind(.pinch, selection: .single)
             case .flatSloper:
-                .feature(.flatSloper, selection: .single)
+                ContactRequirement(kind: .sloper, shape: .flat, selection: .single)
             case .roundSlopers:
-                .feature(.roundSloper, selection: .allMatching)
+                ContactRequirement(kind: .sloper, shape: .round, selection: .single)
             case .edge16:
-                .edge(depthRangeMillimeters: .init(minimum: 15, maximum: 15), selection: .single)
+                .edge(depth: .range(.init(minimum: 15, maximum: 15)), selection: .single)
             case .edge17:
-                .edge(depthRangeMillimeters: .init(minimum: 35, maximum: 35), selection: .single)
+                .edge(depth: .range(.init(minimum: 35, maximum: 35)), selection: .single)
             case .edge18:
-                .edge(depthRangeMillimeters: .init(minimum: 28, maximum: 28), selection: .single)
+                .edge(depth: .range(.init(minimum: 28, maximum: 28)), selection: .single)
             case .pocket4:
                 pocket(fingers: 4, depth: 30)
             case .pocket6:
@@ -1852,9 +1852,9 @@ enum BundledPlanContactRequirements {
         private func pocket(fingers: Int, depth: Double) -> ContactRequirement {
             ContactRequirement(
                 kind: .pocket,
-                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
+                depth: .range(.init(minimum: depth, maximum: depth)),
                 fingerCapacity: fingers,
-                selection: .allMatching
+                selection: .single
             )
         }
     }
@@ -1879,13 +1879,13 @@ enum BundledPlanContactRequirements {
         fileprivate var requirement: ContactRequirement? {
             switch self {
             case .anyHold:
-                ContactRequirement(selection: .allMatching)
+                ContactRequirement(selection: .single)
             case .outerJugs:
-                .feature(.outerJug, selection: .allMatching)
+                .kind(.jug, selection: .single)
             case .centerJug:
                 nil
             case .roundSlopers:
-                .kind(.sloper, selection: .allMatching)
+                ContactRequirement(kind: .sloper, shape: .round, selection: .single)
             case .edge5:
                 edge(depth: 25)
             case .edge6:
@@ -1895,13 +1895,13 @@ enum BundledPlanContactRequirements {
             case .edge11:
                 edge(depth: 14)
             case .pocket4:
-                pocket(fingers: 3, depth: 30, selection: .allMatching)
+                pocket(fingers: 3, depth: 30, selection: .single)
             case .pocket8:
-                pocket(fingers: 3, depth: 15, selection: .allMatching)
+                pocket(fingers: 3, depth: 15, selection: .single)
             case .pocket9:
-                pocket(fingers: 3, depth: 35, selection: .allMatching)
+                pocket(fingers: 3, depth: 35, selection: .single)
             case .pocket12:
-                pocket(fingers: 2, depth: 30, selection: .allMatching)
+                pocket(fingers: 2, depth: 30, selection: .single)
             case .pocket15:
                 pocket(fingers: 3, depth: 50, selection: .single)
             case .pocket17:
@@ -1913,8 +1913,8 @@ enum BundledPlanContactRequirements {
 
         private func edge(depth: Double) -> ContactRequirement {
             .edge(
-                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
-                selection: .allMatching
+                depth: .range(.init(minimum: depth, maximum: depth)),
+                selection: .single
             )
         }
 
@@ -1925,7 +1925,7 @@ enum BundledPlanContactRequirements {
         ) -> ContactRequirement {
             ContactRequirement(
                 kind: .pocket,
-                depthRangeMillimeters: .init(minimum: depth, maximum: depth),
+                depth: .range(.init(minimum: depth, maximum: depth)),
                 fingerCapacity: fingers,
                 selection: selection
             )

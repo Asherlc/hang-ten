@@ -624,12 +624,6 @@ struct BoardPackageStore {
                     reason: "contact \(contact.id) has an invalid hand capacity"
                 )
             }
-            if Set(contact.features).count != contact.features.count {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "contact \(contact.id) has duplicate features"
-                )
-            }
             if Set(contact.gripTypes).count != contact.gripTypes.count {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
@@ -655,7 +649,7 @@ struct BoardPackageStore {
                     equipmentObjectID: contact.equipmentObjectID,
                     name: contact.name,
                     kind: contact.kind,
-                    features: Set(contact.features),
+                    shape: contact.shape,
                     fingerCapacity: contact.fingerCapacity,
                     handCapacity: contact.handCapacity,
                     depthRangeMillimeters: contact.depthRangeMillimeters.map {
@@ -2710,7 +2704,7 @@ private struct BoardPackageContactDocument: Decodable {
     let equipmentObjectID: String
     let name: String
     let kind: HoldKind
-    let features: [HoldFeature]
+    let shape: HoldShape?
     let fingerCapacity: Int?
     let handCapacity: Int?
     let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
@@ -2720,13 +2714,13 @@ private struct BoardPackageContactDocument: Decodable {
     let declaresPairedContactID: Bool
 
     private enum CodingKeys: String, CodingKey {
-        case id, equipmentObjectID, name, kind, features, fingerCapacity, handCapacity
+        case id, equipmentObjectID, name, kind, shape, fingerCapacity, handCapacity
         case depthRangeMillimeters, gripTypes, side, pairedContactID
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
-            "id", "equipmentObjectID", "name", "kind", "features", "fingerCapacity",
+            "id", "equipmentObjectID", "name", "kind", "shape", "fingerCapacity",
             "handCapacity", "depthRangeMillimeters", "gripTypes", "side",
             "pairedContactID"
         ])
@@ -2735,7 +2729,7 @@ private struct BoardPackageContactDocument: Decodable {
         equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        features = try container.decode([HoldFeature].self, forKey: .features)
+        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
         fingerCapacity = container.contains(.fingerCapacity)
             ? try container.decode(Int.self, forKey: .fingerCapacity)
             : nil
