@@ -4,8 +4,8 @@ import XCTest
 final class ContactResolverTests: XCTestCase {
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
         XCTAssertEqual(
-            ContactResolutionError.ambiguousSingle(candidateCount: 0).errorDescription,
-            "Hang Ten could not select a physical contact for the workout requirement."
+            ContactResolutionError.noMatches.errorDescription,
+            "No physical contact satisfies the workout requirement."
         )
         XCTAssertEqual(
             ContactResolutionError.invalidBilateralPair(candidateCount: 2).errorDescription,
@@ -198,7 +198,7 @@ final class ContactResolverTests: XCTestCase {
         let step = fixtureStep(target: requirement, gripType: .openHand)
 
         XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 0))
+            XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
         }
     }
 
