@@ -485,6 +485,7 @@ enum ContactResolver {
         _ requirement: ContactRequirement,
         contact: PhysicalContact
     ) -> Bool {
+        if let contactID = requirement.contactID, contact.id != contactID { return false }
         if let kind = requirement.kind, contact.kind != kind { return false }
         if !requirement.requiredFeatures.isSubset(of: contact.features) { return false }
         if let fingerCapacity = requirement.fingerCapacity,

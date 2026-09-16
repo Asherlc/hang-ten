@@ -82,19 +82,11 @@ enum CustomRoutineBoardPreview {
         in step: inout CustomRoutineStepDraft,
         on board: BoardRevision
     ) {
-        var holdIDs = contactIDs(for: step, on: board)
-        if !holdIDs.insert(hold.id).inserted {
-            holdIDs.remove(hold.id)
-        }
-        guard !holdIDs.isEmpty else {
+        if contactIDs(for: step, on: board).contains(hold.id) {
             step.targets = []
             return
         }
-        guard let contact = board.contacts.first(where: { holdIDs.contains($0.id) }) else {
-            step.targets = []
-            return
-        }
-        step.targets = [requirement(for: contact, handUse: step.handUse)]
+        step.targets = [requirement(for: hold, handUse: step.handUse)]
     }
 
     private static func resolvedStep(
@@ -131,6 +123,7 @@ enum CustomRoutineBoardPreview {
         handUse: WorkoutHandUse
     ) -> ContactRequirement {
         ContactRequirement(
+            contactID: handUse == .double ? nil : contact.id,
             kind: contact.kind,
             requiredFeatures: contact.features,
             depthRangeMillimeters: contact.depthRangeMillimeters.map {

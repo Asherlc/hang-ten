@@ -40,6 +40,52 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
     }
 
+    func testEitherHandBoardPreviewKeepsAndRemovesRightMirroredAlternative() throws {
+        let board = BoardRevision(
+            id: "mirrored", revisionID: "test", manufacturer: "Fixture", name: "Mirrored",
+            subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [
+                PhysicalContact(
+                    id: "left", name: "Left edge", kind: .edge, side: .left,
+                    pairedContactID: "right"
+                ),
+                PhysicalContact(
+                    id: "right", name: "Right edge", kind: .edge, side: .right,
+                    pairedContactID: "left"
+                )
+            ],
+            productURL: URL(string: "https://example.com/mirrored")!, photoAssetName: nil
+        )
+        var step = CustomRoutineStepDraft(
+            id: "either", title: "Either", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [.kind(.edge, selection: .single)], timing: .fixed,
+            handUse: .either, side: .both
+        )
+
+        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+
+        XCTAssertEqual(step.targets.first?.contactID, "right")
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["right"])
+        )
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
+        draft.steps = [step]
+        let persisted = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        XCTAssertEqual(persisted.steps[0].targets.first?.contactID, "right")
+
+        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+
+        XCTAssertTrue(step.targets.isEmpty)
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            []
+        )
+    }
+
     func testNewDraftStartsEmptyAndAddStepAddsOneStableEditableRow() {
         var draft = CustomRoutineDraft(createWith: .generic)
 

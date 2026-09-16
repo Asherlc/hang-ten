@@ -70,3 +70,13 @@ Focused XCTest and visual simulator validation require a healthy CoreSimulator
 service. The changed SwiftUI/editor code compiled successfully, and source/
 generated parity passed, but the focused tests and live visual L/R-picker
 exercise should be rerun after CoreSimulator and `simdiskimaged` are restored.
+
+## Amendment — mirrored custom-contact preservation
+
+Board-specific custom targets now persist an optional exact `contactID` in
+their `ContactRequirement`. This prevents a right-side tap on a symmetric
+board from being re-resolved to its otherwise identical left-side alternative.
+The constraint is written only for single/either custom picks; double-hand
+targets retain their documented bilateral-pair resolution. The added
+`CustomRoutineDraftTests` regression covers left removal, right selection,
+JSON persistence, right preview, and right removal.

@@ -214,6 +214,10 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
 }
 
 struct ContactRequirement: Codable, Hashable {
+    /// An exact board contact selected by an athlete in a board-specific
+    /// custom routine. Catalog requirements intentionally leave this nil so
+    /// they can resolve against compatible boards.
+    let contactID: String?
     let kind: HoldKind?
     let requiredFeatures: Set<HoldFeature>
     let depthRangeMillimeters: MillimeterRange?
@@ -223,6 +227,7 @@ struct ContactRequirement: Codable, Hashable {
     let selection: ContactSelectionPolicy
 
     init(
+        contactID: String? = nil,
         kind: HoldKind? = nil,
         requiredFeatures: Set<HoldFeature> = [],
         depthRangeMillimeters: MillimeterRange? = nil,
@@ -237,6 +242,7 @@ struct ContactRequirement: Codable, Hashable {
         if let handCapacity {
             precondition(PhysicalContact.validHandCapacityRange.contains(handCapacity))
         }
+        self.contactID = contactID
         self.kind = kind
         self.requiredFeatures = requiredFeatures
         self.depthRangeMillimeters = depthRangeMillimeters
@@ -275,6 +281,7 @@ struct ContactRequirement: Codable, Hashable {
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
+        case contactID
         case kind
         case requiredFeatures
         case depthRangeMillimeters
@@ -296,6 +303,7 @@ struct ContactRequirement: Codable, Hashable {
         }
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        contactID = try container.decodeIfPresent(String.self, forKey: .contactID)
         kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
         requiredFeatures = Set(
             try container.decodeIfPresent([HoldFeature].self, forKey: .requiredFeatures) ?? []
@@ -331,6 +339,7 @@ struct ContactRequirement: Codable, Hashable {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(contactID, forKey: .contactID)
         try container.encodeIfPresent(kind, forKey: .kind)
         if !requiredFeatures.isEmpty {
             try container.encode(
