@@ -559,7 +559,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"segments":[{"durationSeconds":7,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}}],"version":2}"#
+            #"{"segments":[{"durationSeconds":7,"handUse":"double","kind":"work","side":"both","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}}],"version":3}"#
         )
         let decoded = try JSONDecoder().decode(
             WorkoutActivityMetadata.self,
@@ -753,7 +753,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0], records[1])
     }
 
-    func testVersionTwoJSONRoundTripsAndOmitsNilOptionalFields() throws {
+    func testVersionThreeJSONRoundTripsAndOmitsNilOptionalFields() throws {
         let metadata = WorkoutActivityMetadata(
             segments: [
                 RecordedActivitySegment(
@@ -770,16 +770,30 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(
             json,
-            #"{"segments":[{"kind":"rest","stepID":"step","stepNumber":1}],"version":2}"#
+            #"{"segments":[{"kind":"rest","stepID":"step","stepNumber":1}],"version":3}"#
         )
         let decoded = try JSONDecoder().decode(
             WorkoutActivityMetadata.self,
             from: Data(json.utf8)
         )
         XCTAssertEqual(decoded, metadata)
-        XCTAssertEqual(decoded.version, 2)
+        XCTAssertEqual(decoded.version, 3)
         XCTAssertFalse(json.contains("durationSeconds"))
         XCTAssertFalse(json.contains("target"))
+    }
+
+    func testLiteralVersionTwoPayloadDecodesWithoutHandMetadata() throws {
+        let json = #"{"segments":[{"durationSeconds":7,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}},{"kind":"rest","stepID":"rest","stepNumber":2}],"version":2}"#
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutActivityMetadata.self,
+            from: Data(json.utf8)
+        )
+
+        XCTAssertEqual(decoded.version, 2)
+        XCTAssertEqual(decoded.segments.map(\.handUse), [nil, nil])
+        XCTAssertEqual(decoded.segments.map(\.side), [nil, nil])
+        XCTAssertEqual(decoded.segments.map(\.kind), [.work, .rest])
     }
 
     func testWorkSegmentWithoutExplicitTargetCannotBeEncoded() {
@@ -1027,13 +1041,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             )
         }
 
-        let record = try XCTUnwrap(
-            recorder.segments(
-                for: workout,
-                on: board,
-                selectedHandSide: .right
-            ).only
+        let records = try recorder.segments(
+            for: workout,
+            on: board,
+            selectedHandSide: .right
         )
+        let record = try XCTUnwrap(records.first)
         XCTAssertEqual(record.handUse, .single)
         XCTAssertEqual(record.side, .right)
         XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["left-b"])
@@ -1041,7 +1054,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             try JSONDecoder().decode(
                 WorkoutActivityMetadata.self,
                 from: JSONEncoder().encode(WorkoutActivityMetadata(segments: [record]))
-            ).segments.only?.side,
+            ).segments.first?.side,
             .right
         )
     }
@@ -1070,13 +1083,12 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
 
         for side in [WorkoutSide.left, .right] {
-            let record = try XCTUnwrap(
-                WorkoutActivityRecorder().segments(
-                    for: workout,
-                    on: board,
-                    selectedHandSide: side
-                ).only
+            let records = try WorkoutActivityRecorder().segments(
+                for: workout,
+                on: board,
+                selectedHandSide: side
             )
+            let record = try XCTUnwrap(records.first)
             XCTAssertEqual(record.side, side)
             XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["edge-8"])
         }
@@ -1086,7 +1098,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let board = portableBoard(handCapacity: 1)
         let workout = portablePlan(handUse: .double, side: .both)
 
-        let record = try XCTUnwrap(WorkoutActivityRecorder().segments(for: workout, on: board).only)
+        let record = try XCTUnwrap(
+            WorkoutActivityRecorder().segments(for: workout, on: board).first
+        )
         XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["left-a", "left-b"])
         XCTAssertEqual(record.handUse, .double)
         XCTAssertEqual(record.side, .both)
@@ -1436,7 +1450,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"kind":"edge","requiredFeatures":["mediumEdge"],"selection":"allMatching"},"revisionID":"test-fixture"}}}],"version":2}"#
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"kind":"edge","requiredFeatures":["mediumEdge"],"selection":"allMatching"},"revisionID":"test-fixture"}}}],"version":3}"#
         )
         XCTAssertEqual(
             decoded,

@@ -1311,7 +1311,11 @@ enum WorkoutStepSemantics {
         phase: WorkoutPhase,
         action: WorkoutAction
     ) -> Bool {
-        handUse != .either || (phase != .pull && action != .isometricPull)
+        handUse != .either || (
+            phase != .rest &&
+                phase != .pull &&
+                action != .isometricPull
+        )
     }
 
     static func hasValidActionAndRepetitions(_ action: WorkoutAction, _ repetitions: Int?) -> Bool {

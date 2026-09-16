@@ -2670,6 +2670,27 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testPlanValidationRejectsEitherHandRestStep() {
+        let step = WorkoutStepDefinition(
+            id: "either-rest",
+            title: "Either rest",
+            instruction: "Rest.",
+            accessory: "",
+            duration: 10,
+            phase: .rest,
+            targets: [],
+            handUse: .either,
+            side: .both
+        )
+
+        XCTAssertTrue(
+            PlanLibraryValidator.issues(
+                for: unilateralTestLibrary(step: step),
+                availableBoards: BoardCatalog.all
+            ).contains { $0.path.hasSuffix(".side") }
+        )
+    }
+
     func testPlanValidationRejectsInvalidUnilateralStepSemantics() {
         let step = WorkoutStepDefinition(id: "invalid", title: "Invalid", instruction: "", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .both, action: .loadedLift, repetitions: 0)
 
