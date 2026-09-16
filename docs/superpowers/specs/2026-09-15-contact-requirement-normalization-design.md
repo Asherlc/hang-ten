@@ -146,6 +146,18 @@ The custom routine editor (`CustomRoutineEditorView`) currently exposes `Generic
 
 The `strippingUnsupportedCustomCueFields()` function would no longer need to strip `gripType` and `fingerConfiguration` from custom steps — those fields would not exist on `ContactRequirement`.
 
+### Shape validity per kind
+
+Not all shapes apply to all kinds. The schema does not enforce this at the type level — invalid combinations (e.g., `kind: .pocket, shape: .incut`) are simply unmatched by any board contact. The resolver treats shape as an optional filter; if no contact on the board has that shape for the given kind, the requirement fails to resolve.
+
+Practical shape-kind pairings:
+- **edge**: flat, incut, slot
+- **sloper**: flat, round
+- **pinch**: flat, round
+- **jug**: flat, round
+- **pocket**: (no shape — distinguished by finger capacity and depth)
+- **gaston**: (no shape)
+
 ### Out of scope
 
 - **`WorkoutStep` vs `WorkoutStepDefinition` duplication**: These are near-identical runtime vs persistence models. A separate pass could unify them, but that's structural deduplication, not semantic overlap.
