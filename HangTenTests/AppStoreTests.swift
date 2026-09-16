@@ -302,14 +302,14 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: historyStore,
             defaults: defaults
         )
-        let requirement = ContactRequirement.feature(.mediumEdge)
+        let requirement = ContactRequirement.edge(depth: .category(.medium))
         let plan = activityPlan(requirement: requirement)
         let board = modelActivityBoard(
             contact: PhysicalContact(
                 id: "medium-edge",
                 name: "Medium edge",
                 kind: .edge,
-                features: [.mediumEdge]
+                depth: .category(.medium)
             )
         )
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
@@ -947,7 +947,7 @@ final class AppStoreTests: XCTestCase {
 
     private func validCustomRoutineDefinition() throws -> CustomRoutineDefinition {
         let plan = activityPlan(
-            requirement: .kind(.jug, selection: .allMatching)
+            requirement: .kind(.jug)
         )
         return try CustomRoutineStore.definition(
             from: plan,

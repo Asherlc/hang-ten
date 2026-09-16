@@ -33,21 +33,18 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 id: "edge-left",
                 name: "Left medium edge",
                 kind: .edge,
-                features: [.mediumEdge],
                 depth: .range(.init(minimum: 21, maximum: 21))
             ),
             PhysicalContact(
                 id: "edge-right",
                 name: "Right medium edge",
                 kind: .edge,
-                features: [.mediumEdge],
                 depth: .range(.init(minimum: 21, maximum: 21))
             ),
             PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
                 kind: .edge,
-                features: [.largeEdge],
                 depth: .range(.init(minimum: 35, maximum: 35))
             ),
             PhysicalContact(
@@ -324,13 +321,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             id: "left-edge",
             name: "Left edge",
             kind: .edge,
-            features: [.mediumEdge]
+            depth: .category(.medium)
         )
         let right = PhysicalContact(
             id: "right-edge",
             name: "Right edge",
             kind: .edge,
-            features: [.mediumEdge]
+            depth: .category(.medium)
         )
         let modelBoard = BoardRevision(
             id: "fixture.snapshot-board",
@@ -350,7 +347,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 ])
             ]
         )
-        let requirement = ContactRequirement.feature(.mediumEdge)
+        let requirement = ContactRequirement.edge(depth: .category(.medium))
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
@@ -491,7 +488,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge),
+                    target: .edge(depth: .category(.medium)),
                     timing: .fixed,
                     duration: 12
                 )
@@ -501,7 +498,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
 
         XCTAssertEqual(records.count, 1)
-        XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.requirement, .feature(.mediumEdge))
+        XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.requirement, .edge(depth: .category(.medium)))
         XCTAssertEqual(records[0].target?.resolvedContactSnapshot?.contactIDs, ["edge-left", "edge-right"])
         XCTAssertNil(records[0].target?.resolvedContactSnapshot?.modelSHA256)
         XCTAssertEqual(records[0].durationSeconds, 12)
@@ -510,7 +507,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testMultiRequirementWorkRecordsOneAuditableSnapshotPerRequirement() throws {
         let segment = WorkoutSegment(
             kind: .work,
-            targets: [.feature(.mediumEdge), .kind(.jug)],
+            targets: [.edge(depth: .category(.medium)), .kind(.jug)],
             timing: .fixed,
             duration: 10
         )
@@ -523,7 +520,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records.count, 2)
         XCTAssertEqual(
             records.map { $0.target?.resolvedContactSnapshot?.requirement },
-            [.feature(.mediumEdge), .kind(.jug)]
+            [.edge(depth: .category(.medium)), .kind(.jug)]
         )
         XCTAssertEqual(records.map { $0.target?.resolvedContactSnapshot?.contactIDs }, [
             ["edge-left", "edge-right"],
@@ -536,7 +533,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.mediumEdge),
+                target: .edge(depth: .category(.medium)),
                 timing: .fixed,
                 duration: 20
             ),
@@ -681,7 +678,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.mediumEdge),
+                target: .edge(depth: .category(.medium)),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -701,7 +698,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(selection: .allMatching),
+                target: ContactRequirement(),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -716,7 +713,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.mediumEdge),
+                target: .edge(depth: .category(.medium)),
                 timing: .undefined,
                 duration: 30
             )
@@ -731,7 +728,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.mediumEdge),
+                target: .edge(depth: .category(.medium)),
                 timing: .fixed,
                 duration: 10
             )
@@ -750,7 +747,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(selection: .allMatching),
+                target: ContactRequirement(),
                 timing: .fixed,
                 duration: 10
             )
@@ -768,7 +765,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testRepeatedSourceSegmentsRemainDistinct() throws {
         let repeated = WorkoutSegment(
             kind: .work,
-            target: .feature(.mediumEdge),
+            target: .edge(depth: .category(.medium)),
             timing: .fixed,
             duration: 5
         )
@@ -900,8 +897,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 kind: .work,
                 target: ContactRequirement(
                     kind: .edge,
-                    requiredFeatures: [.roundSloper],
-                    selection: .allMatching
+                    shape: .round
                 ),
                 timing: .fixed,
                 duration: 1
@@ -926,8 +922,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     .kind(.jug),
                     ContactRequirement(
                         kind: .edge,
-                        requiredFeatures: [.roundSloper],
-                        selection: .allMatching
+                        shape: .round
                     )
                 ],
                 timing: .fixed,
@@ -1133,7 +1128,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .feature(.mediumEdge),
+                target: .edge(depth: .category(.medium)),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1322,8 +1317,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 kind: .work,
                 target: ContactRequirement(
                     kind: .edge,
-                    requiredFeatures: [.roundSloper],
-                    selection: .allMatching
+                    shape: .round
                 ),
                 timing: .fixed,
                 duration: 10
@@ -1351,7 +1345,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testHealthKitMetadataContainsBoardAndVersionedActivityPayload() throws {
-        let requirement = ContactRequirement.feature(.mediumEdge)
+        let requirement = ContactRequirement.edge(depth: .category(.medium))
         let activitySegments = [
             RecordedActivitySegment(
                 stepID: "step",
@@ -1397,7 +1391,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"kind":"edge","requiredFeatures":["mediumEdge"],"selection":"allMatching"},"revisionID":"test-fixture"}}}],"version":2}"#
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"depth":{"category":"medium"},"kind":"edge","selection":"single"},"revisionID":"test-fixture"}}}],"version":2}"#
         )
         XCTAssertEqual(
             decoded,
@@ -1452,7 +1446,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testVersionTwoPayloadRejectsLegacyFieldNestedInContactSnapshot() {
-        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"selection":"allMatching"},"contactIDs":["edge"],"holdID":"edge"}}}],"version":2}"#
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"selection":"single"},"contactIDs":["edge"],"holdID":"edge"}}}],"version":2}"#
 
         XCTAssertThrowsError(
             try JSONDecoder().decode(
@@ -1468,7 +1462,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testVersionTwoPayloadRejectsUnknownFieldNestedInRequirementDepthRange() {
-        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"unexpected":true},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depth":{"range":{"maximum":22,"minimum":18,"unexpected":true}},"selection":"single"},"contactIDs":["edge"]}}}],"version":2}"#
 
         XCTAssertThrowsError(
             try JSONDecoder().decode(
@@ -1491,7 +1485,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     .key("target"),
                     .key("resolution"),
                     .key("requirement"),
-                    .key("depthRangeMillimeters"),
+                    .key("depth"),
+                    .key("range"),
                     .key("unexpected")
                 ]
             )
@@ -1499,7 +1494,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testVersionTwoPayloadRejectsLegacySizeFieldNestedInRequirementDepthRange() {
-        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"sizeMillimeters":20},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depth":{"range":{"maximum":22,"minimum":18,"sizeMillimeters":20}},"selection":"single"},"contactIDs":["edge"]}}}],"version":2}"#
 
         XCTAssertThrowsError(
             try JSONDecoder().decode(
@@ -1522,7 +1517,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     .key("target"),
                     .key("resolution"),
                     .key("requirement"),
-                    .key("depthRangeMillimeters"),
+                    .key("depth"),
+                    .key("range"),
                     .key("sizeMillimeters")
                 ]
             )
@@ -1530,7 +1526,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testVersionTwoPayloadRejectsAlphabeticallyFirstUnknownDepthRangeField() {
-        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depthRangeMillimeters":{"maximum":22,"minimum":18,"zetaUnknown":true,"alphaUnknown":true},"selection":"allMatching"},"contactIDs":["edge"]}}}],"version":2}"#
+        let json = #"{"segments":[{"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","revisionID":"fixture","requirement":{"depth":{"range":{"maximum":22,"minimum":18,"zetaUnknown":true,"alphaUnknown":true}},"selection":"single"},"contactIDs":["edge"]}}}],"version":2}"#
 
         XCTAssertThrowsError(
             try JSONDecoder().decode(
@@ -1553,7 +1549,8 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     .key("target"),
                     .key("resolution"),
                     .key("requirement"),
-                    .key("depthRangeMillimeters"),
+                    .key("depth"),
+                    .key("range"),
                     .key("alphaUnknown")
                 ]
             )

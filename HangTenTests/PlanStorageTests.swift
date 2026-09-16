@@ -83,7 +83,7 @@ final class PlanStorageTests: XCTestCase {
         for formerKey in formerKeys {
             let data = try JSONSerialization.data(withJSONObject: [
                 formerKey: [],
-                "selection": "allMatching"
+                "selection": "single"
             ])
             XCTAssertThrowsError(
                 try JSONDecoder().decode(ContactRequirement.self, from: data),
@@ -665,7 +665,7 @@ final class PlanStorageTests: XCTestCase {
     func testUnversionedDefinitionsResolveOrderedSegmentTimingModes() throws {
         let fixedWork = WorkoutSegmentDefinition(
             kind: .work,
-            targets: [.feature(.mediumEdge)],
+            targets: [.edge(depth: .category(.medium))],
             timing: .fixed,
             duration: 20
         )
@@ -679,17 +679,17 @@ final class PlanStorageTests: XCTestCase {
             makeStep(
                 id: "fixed",
                 duration: 60,
-                targets: [.feature(.mediumEdge)],
+                targets: [.edge(depth: .category(.medium))],
                 segments: [fixedWork, fixedRest]
             ),
             makeStep(
                 id: "stopwatch",
                 duration: 60,
-                targets: [.feature(.roundSloper)],
+                targets: [ContactRequirement(kind: .sloper, shape: .round)],
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.roundSloper)],
+                        targets: [ContactRequirement(kind: .sloper, shape: .round)],
                         timing: .stopwatch,
                         duration: nil
                     )
@@ -720,7 +720,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolvedSteps.map(\.number), [1, 2, 3, 4])
         XCTAssertEqual(
             resolvedSteps[0].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.mediumEdge), timing: .fixed, duration: 20)]
+            [WorkoutSegment(kind: .work, target: .edge(depth: .category(.medium)), timing: .fixed, duration: 20)]
         )
         XCTAssertEqual(
             resolvedSteps[1].segments,
@@ -728,7 +728,7 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             resolvedSteps[2].segments,
-            [WorkoutSegment(kind: .work, target: .feature(.roundSloper), timing: .stopwatch, duration: nil)]
+            [WorkoutSegment(kind: .work, target: ContactRequirement(kind: .sloper, shape: .round), timing: .stopwatch, duration: nil)]
         )
         XCTAssertEqual(
             resolvedSteps[3].segments,
@@ -756,17 +756,17 @@ final class PlanStorageTests: XCTestCase {
                   "accessory": "10s",
                   "duration": 20,
                   "phase": "hang",
-                  "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }, { "kind": "jug", "selection": "allMatching" }],
+                  "targets": [{ "kind": "edge", "depth": { "category": "medium" }, "selection": "single" }, { "kind": "jug", "selection": "single" }],
                   "segments": [
                     {
                       "kind": "work",
-                      "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }, { "kind": "jug", "selection": "allMatching" }],
+                      "targets": [{ "kind": "edge", "depth": { "category": "medium" }, "selection": "single" }, { "kind": "jug", "selection": "single" }],
                       "timing": "fixed",
                       "duration": 10
                     },
                     {
                       "kind": "work",
-                      "targets": [{ "kind": "edge", "requiredFeatures": ["mediumEdge"], "selection": "allMatching" }],
+                      "targets": [{ "kind": "edge", "depth": { "category": "medium" }, "selection": "single" }],
                       "timing": "fixed",
                       "duration": 10
                     }
@@ -811,16 +811,16 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(encodedSegments[1]["target"])
         XCTAssertEqual(
             resolvedSegments[0].targets,
-            [.feature(.mediumEdge), .kind(.jug)]
+            [.edge(depth: .category(.medium)), .kind(.jug)]
         )
-        XCTAssertEqual(resolvedSegments[0].target, .feature(.mediumEdge))
-        XCTAssertEqual(resolvedSegments[1].targets, [.feature(.mediumEdge)])
-        XCTAssertEqual(resolvedSegments[1].target, .feature(.mediumEdge))
+        XCTAssertEqual(resolvedSegments[0].target, .edge(depth: .category(.medium)))
+        XCTAssertEqual(resolvedSegments[1].targets, [.edge(depth: .category(.medium))])
+        XCTAssertEqual(resolvedSegments[1].target, .edge(depth: .category(.medium)))
         XCTAssertEqual(
             persistedSegments[0].targets,
-            [.feature(.mediumEdge), .kind(.jug)]
+            [.edge(depth: .category(.medium)), .kind(.jug)]
         )
-        XCTAssertEqual(persistedSegments[1].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(persistedSegments[1].targets, [.edge(depth: .category(.medium))])
     }
 
     func testPlanLibraryStoreRejectsFormerSingularSegmentTarget() {
@@ -896,11 +896,11 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "10s",
                     "duration": 30,
                     "phase": "hang",
-                    "targets": [{ "kind": "edge", "selection": "allMatching" }],
+                    "targets": [{ "kind": "edge", "selection": "single" }],
                     "segments": [
                       {
                         "kind": "work",
-                        "targets": [{ "kind": "edge", "selection": "allMatching" }],
+                        "targets": [{ "kind": "edge", "selection": "single" }],
                         "timing": "fixed",
                         "duration": 10
                       },
@@ -919,10 +919,10 @@ final class PlanStorageTests: XCTestCase {
                     "accessory": "Repetitions",
                     "duration": 60,
                     "phase": "pull",
-                    "targets": [{ "kind": "jug", "selection": "allMatching" }],
+                    "targets": [{ "kind": "jug", "selection": "single" }],
                     "segments": [{
                       "kind": "work",
-                        "targets": [{ "kind": "jug", "selection": "allMatching" }],
+                        "targets": [{ "kind": "jug", "selection": "single" }],
                       "timing": "undefined"
                     }]
                   }
@@ -1691,7 +1691,38 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testSimulator3DPlansUseContactFirstOuterJugsWhileCenterJugRemainsOmitted() throws {
+    func testMetoliusGenericTermsUseOnlyTheirSourceBackedSemanticDescriptors() throws {
+        let entry = LegacyPlanSeedCatalog.metoliusEntry
+        let intermediate = LegacyPlanSeedCatalog.metoliusIntermediate
+        let advanced = LegacyPlanSeedCatalog.metoliusAdvanced
+
+        XCTAssertEqual(
+            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-2.task-1" }).targets,
+            [ContactRequirement(kind: .sloper, shape: .round)]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-3.task-1" }).targets,
+            [.edge(depth: .category(.medium))]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(intermediate.steps.first { $0.id == "intermediate.minute-3.task-1" }).targets,
+            [.edge(depth: .category(.small))]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-1" }).targets,
+            [ContactRequirement(kind: .sloper, depth: .category(.large))]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-2" }).targets,
+            [ContactRequirement(kind: .edge, shape: .flat, fingerCapacity: 4)]
+        )
+        XCTAssertEqual(
+            try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-7.task-1" }).targets,
+            [ContactRequirement(kind: .edge, shape: .incut, fingerCapacity: 4)]
+        )
+    }
+
+    func testSimulator3DPlansUseSemanticFlatAndRoundSloperTargets() throws {
         let simulatorPlans = LegacyPlanSeedCatalog.all.filter {
             $0.id.hasPrefix("metolius.simulator-3d.")
         }
@@ -1700,15 +1731,17 @@ final class PlanStorageTests: XCTestCase {
         let entry = try XCTUnwrap(
             simulatorPlans.first { $0.id == "metolius.simulator-3d.entry" }
         )
-        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
-        let outerJugs = ContactRequirement.feature(
-            outerJug,
-            selection: .allMatching
+        let outerJugs = ContactRequirement.kind(.jug, selection: .bilateralPair)
+        let centerJug = ContactRequirement.kind(.jug)
+        let flatSlopers = ContactRequirement(
+            kind: .sloper,
+            shape: .flat,
+            selection: .bilateralPair
         )
 
         XCTAssertEqual(entry.steps[1].targets, [outerJugs])
-        XCTAssertEqual(entry.steps[2].targets.count, 1)
-        XCTAssertEqual(entry.steps[2].targets[0].kind, .pocket)
+        XCTAssertEqual(entry.steps[2].targets, [centerJug, .kind(.pocket, fingerCapacity: 3)])
+        XCTAssertEqual(entry.steps[4].targets, [flatSlopers, outerJugs])
         XCTAssertEqual(entry.steps[6].targets, [outerJugs])
     }
 
@@ -1721,11 +1754,7 @@ final class PlanStorageTests: XCTestCase {
                 $0.id == "metolius.simulator-3d.entry.minute-2"
             }
         )
-        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
-        let requirement = ContactRequirement.feature(
-            outerJug,
-            selection: .allMatching
-        )
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
 
         XCTAssertEqual(
             Set(try ContactResolver.resolve(requirement, step: sourceStep, board: board).map(\.id)),
@@ -1733,25 +1762,70 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
+    func testSimulator3DCenterJugResolvesToTheSingleCenteredJug() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let sourceStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+                $0.id == "metolius.simulator-3d.entry.minute-3"
+            }
+        )
+        let requirement = ContactRequirement.kind(.jug)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: sourceStep, board: board).map(\.id),
+            ["jug-14-center"]
+        )
+    }
+
+    func testSimulator3DFlatAndRoundSloperTargetsResolveToTheirFactualZones() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
+        )
+        let entryStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusSimulator3DEntry.steps.first {
+                $0.id == "metolius.simulator-3d.entry.minute-5"
+            }
+        )
+        let intermediateStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusSimulator3DIntermediate.steps.first {
+                $0.id == "metolius.simulator-3d.intermediate.minute-2"
+            }
+        )
+
+        XCTAssertTrue(entryStep.instruction.contains("flat slopers (2)"))
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(entryStep.targets[0], step: entryStep, board: board).map(\.id)),
+            ["flat-sloper-2-left", "flat-sloper-2-right"]
+        )
+        XCTAssertTrue(intermediateStep.instruction.contains("flat slopers (2)"))
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(intermediateStep.targets[0], step: intermediateStep, board: board).map(\.id)),
+            ["flat-sloper-2-left", "flat-sloper-2-right"]
+        )
+        let roundRequirement = ContactRequirement(kind: .sloper, shape: .round)
+        XCTAssertEqual(
+            try ContactResolver.resolve(roundRequirement, step: intermediateStep, board: board).map(\.id),
+            ["round-sloper-3-center"]
+        )
+    }
+
     func testSimulator3DManufacturerPrescribedOuterJugStepsAreContactFirst() throws {
         let expectedSteps: [(id: String, targetCount: Int, resolvedContactIDs: Set<String>)] = [
             ("metolius.simulator-3d.entry.minute-2", 1, ["jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.entry.minute-5", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.entry.minute-5", 1, ["jug-1-left", "jug-1-right"]),
             ("metolius.simulator-3d.entry.minute-7", 1, ["jug-1-left", "jug-1-right"]),
             ("metolius.simulator-3d.intermediate.minute-3", 2, ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
             ("metolius.simulator-3d.intermediate.minute-5", 2, ["jug-1-left", "jug-1-right", "pocket-17-center"]),
             ("metolius.simulator-3d.intermediate.minute-9", 1, ["jug-1-left", "jug-1-right"]),
             ("metolius.simulator-3d.advanced.minute-7", 2, ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
-            ("metolius.simulator-3d.advanced.minute-10", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.advanced.minute-10", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-center"]),
         ]
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
         )
-        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
-        let requirement = ContactRequirement.feature(
-            outerJug,
-            selection: .allMatching
-        )
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
 
         for expected in expectedSteps {
             let step = try XCTUnwrap(
@@ -1999,16 +2073,16 @@ final class PlanStorageTests: XCTestCase {
             ("metolius.contact.advanced.minute-5", ["pocket-13-left", "pocket-13-right", "pocket-9-left", "pocket-9-right", "jug-left", "jug-right"]),
             ("metolius.contact.advanced.minute-9", ["pocket-7-left", "pocket-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
             ("metolius.contact.advanced.minute-10", ["round-sloper-3-left", "round-sloper-3-right"]),
-            ("metolius.simulator-3d.intermediate.minute-10", ["edge-7-left", "edge-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
-            ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.intermediate.minute-10", ["edge-7-left", "edge-7-right", "round-sloper-3-center"]),
+            ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "flat-sloper-2-left", "flat-sloper-2-right"]),
             ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
         ]
         let expectedExactTargets: [(String, Set<String>)] = [
-            ("metolius.simulator-3d.entry.minute-5", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"]),
+            ("metolius.simulator-3d.entry.minute-5", ["jug-1-left", "jug-1-right", "flat-sloper-2-left", "flat-sloper-2-right"]),
             ("metolius.simulator-3d.intermediate.minute-3", ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
             ("metolius.simulator-3d.intermediate.minute-5", ["jug-1-left", "jug-1-right", "pocket-17-center"]),
             ("metolius.simulator-3d.advanced.minute-7", ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
-            ("metolius.simulator-3d.advanced.minute-10", ["jug-1-left", "jug-1-right", "round-sloper-3-left", "round-sloper-3-right"])
+            ("metolius.simulator-3d.advanced.minute-10", ["jug-1-left", "jug-1-right", "round-sloper-3-center"])
         ]
         let anyHoldCycles = [
             "metolius.contact.entry.minute-4",
@@ -2358,11 +2432,11 @@ final class PlanStorageTests: XCTestCase {
             productURL: URL(string: "https://example.com/untagged-edge")!,
             photoAssetName: nil
         )
-        let target = ContactRequirement.feature(.mediumEdge)
+        let target = ContactRequirement.edge(depth: .category(.medium))
         let step = makeStep(
             id: "feature-target",
             duration: 10,
-            targets: [.feature(.mediumEdge)],
+            targets: [.edge(depth: .category(.medium))],
             segments: []
         )
 
@@ -2409,7 +2483,7 @@ final class PlanStorageTests: XCTestCase {
         let step = makeStep(
             id: "feature-target",
             duration: 10,
-            targets: [.feature(.mediumEdge)],
+            targets: [.edge(depth: .category(.medium))],
             segments: []
         )
 

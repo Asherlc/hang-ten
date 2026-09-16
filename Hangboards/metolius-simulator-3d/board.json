@@ -44,7 +44,7 @@
       }
     }
   ],
-  "revisionID": "2026-09-outer-jug-contact-first",
+  "revisionID": "2026-09-split-sloper-contacts",
   "contacts": [
     {
       "id": "jug-1-left",
@@ -54,10 +54,21 @@
       "gripTypes": []
     },
     {
-      "id": "round-sloper-3-left",
+      "id": "flat-sloper-2-left",
       "equipmentObjectID": "primary",
-      "name": "Left #3 65 mm round sloper",
+      "name": "Left #2 55 mm flat sloper",
       "kind": "sloper",
+      "shape": "flat",
+      "handCapacity": 1,
+      "gripTypes": []
+    },
+    {
+      "id": "round-sloper-3-center",
+      "equipmentObjectID": "primary",
+      "name": "Center #3 65 mm round sloper",
+      "kind": "sloper",
+      "shape": "round",
+      "handCapacity": 2,
       "gripTypes": []
     },
     {
@@ -68,10 +79,12 @@
       "gripTypes": []
     },
     {
-      "id": "round-sloper-3-right",
+      "id": "flat-sloper-2-right",
       "equipmentObjectID": "primary",
-      "name": "Right #3 65 mm round sloper",
+      "name": "Right #2 55 mm flat sloper",
       "kind": "sloper",
+      "shape": "flat",
+      "handCapacity": 1,
       "gripTypes": []
     },
     {

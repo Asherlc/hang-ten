@@ -67,7 +67,7 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertEqual(
             segments[0]["targets"] as? [[String: String]],
-            [["kind": "edge", "selection": "allMatching"]]
+            [["kind": "edge", "selection": "single"]]
         )
         XCTAssertNil(segments[0]["target"])
     }
@@ -230,7 +230,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.feature(.mediumEdge)],
+                    targets: [.edge(depth: .category(.medium))],
                     activeDuration: 10
                 )
             ]
@@ -416,7 +416,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.flatEdge)])
+        let definition = genericDefinition(targets: [ContactRequirement(kind: .edge, shape: .flat)])
         let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
             revisionID: "test-fixture",
@@ -574,7 +574,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.mediumEdge)],
+                        targets: [.edge(depth: .category(.medium))],
                         timing: .fixed,
                         duration: 10
                     )

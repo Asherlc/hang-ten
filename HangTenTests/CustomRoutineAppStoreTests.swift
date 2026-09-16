@@ -30,7 +30,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 duration: 10,
                 phase: .hang,
                 targets: mode == .generic
-                    ? [.feature(.mediumEdge)]
+                    ? [.edge(depth: .category(.medium))]
                     : [.kind(.edge)],
                 gripType: .halfCrimp,
                 activeDuration: 10

@@ -52,7 +52,7 @@
       "boardID": "metolius.climbers-edge",
       "field": "kind",
       "outcome": "verified",
-      "reviewedAt": "2026-08-25",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/Climber_s-Edge-Spec.jpg?v=1765309719",
@@ -6015,92 +6015,112 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
       },
       "value": "sloper",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "round-sloper-3-center",
+        "flat-sloper-2-right"
       ]
     },
     {
       "boardID": "metolius.simulator-3d",
       "field": "depth",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
       },
-      "reason": "Each continuous contact has multiple non-depth sloper measurements, not one scalar contact depth.",
+      "reason": "The published sloper labels do not establish scalar contact depth.",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "round-sloper-3-center",
+        "flat-sloper-2-right"
       ]
     },
     {
       "boardID": "metolius.simulator-3d",
       "field": "fingerCapacity",
       "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "round-sloper-3-center",
+        "flat-sloper-2-right"
       ]
     },
     {
       "boardID": "metolius.simulator-3d",
       "field": "handCapacity",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "round-sloper-3-center",
+        "flat-sloper-2-right"
       ]
     },
     {
       "boardID": "metolius.simulator-3d",
       "field": "gripType",
       "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "round-sloper-3-center",
+        "flat-sloper-2-right"
       ]
     },
     {
       "boardID": "metolius.simulator-3d",
       "field": "shape",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers plus 3 — 65 mm round slopers; one continuous contact per side"
+        "label": "2 — 55 mm flat slopers"
       },
-      "reason": "The normalized contact schema intentionally omits this legacy feature label.",
+      "value": "flat",
       "contactIDs": [
-        "round-sloper-3-left",
-        "round-sloper-3-right"
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ]
+    },
+    {
+      "boardID": "metolius.simulator-3d",
+      "field": "shape",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-16",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
+        "label": "3 — 65 mm round slopers"
+      },
+      "value": "round",
+      "contactIDs": [
+        "round-sloper-3-center"
       ]
     },
     {
