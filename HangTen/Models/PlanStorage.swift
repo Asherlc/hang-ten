@@ -207,6 +207,24 @@ struct MillimeterRange: Codable, Hashable {
     }
 }
 
+enum TargetDepth: Codable, Hashable {
+    case category(HoldSize)
+    case range(MillimeterRange)
+
+    /// True when this target depth overlaps with the given physical depth range.
+    func overlaps(_ contactDepth: ClosedRange<Double>?) -> Bool {
+        switch self {
+        case let .category(size):
+            guard let contactDepth else { return true }
+            return size.depthRange.overlaps(contactDepth)
+        case let .range(targetRange):
+            guard let contactDepth else { return true }
+            return targetRange.minimum <= contactDepth.upperBound
+                && targetRange.maximum >= contactDepth.lowerBound
+        }
+    }
+}
+
 enum ContactSelectionPolicy: String, Codable, Hashable {
     case allMatching
     case single

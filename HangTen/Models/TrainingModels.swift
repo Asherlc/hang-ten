@@ -518,6 +518,52 @@ enum HoldKind: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
+enum HoldShape: String, Codable, Hashable, CaseIterable, Identifiable {
+    case flat
+    case round
+    case incut
+    case slot
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .flat: "Flat"
+        case .round: "Round"
+        case .incut: "Incut"
+        case .slot: "Slot"
+        }
+    }
+}
+
+enum HoldSize: String, Codable, Hashable, CaseIterable, Identifiable {
+    case tiny
+    case small
+    case medium
+    case large
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .tiny: "Tiny"
+        case .small: "Small"
+        case .medium: "Medium"
+        case .large: "Large"
+        }
+    }
+
+    /// Community-convention depth range in millimeters for this size category.
+    var depthRange: ClosedRange<Double> {
+        switch self {
+        case .tiny: 0...8
+        case .small: 8...15
+        case .medium: 15...25
+        case .large: 25...50
+        }
+    }
+}
+
 enum ContactSide: String, Codable, Hashable {
     case left
     case right
