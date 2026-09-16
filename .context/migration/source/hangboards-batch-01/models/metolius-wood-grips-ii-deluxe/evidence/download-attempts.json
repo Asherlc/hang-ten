@@ -1,8 +1,0 @@
-[
-  {
-    "sourceId": "I1",
-    "url": "https://www.backcountry.com/images/items/1200/MET/MET007G/ONECOL_D3.jpg",
-    "success": false,
-    "error": "URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
-  }
-]

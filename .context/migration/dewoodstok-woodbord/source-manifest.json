@@ -11,8 +11,8 @@
   "auditedModelSource": {
     "provenanceType": "user-provided",
     "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
-    "retainedPath": ".context/migration/dewoodstok-woodbord/dewoodstok-woodbord.glb",
-    "sha256": "8ef554950a9d4078f39b122df8e570b691853e257ea9e8066220d22681e44085"
+    "retainedPath": ".context/migration/dewoodstok-woodbord/source.blend",
+    "sha256": "da071218a42ed69377dced2433b88d294b39fc48fb84bda2a91585472d64ef24"
   },
   "supersessionRuling": "Replaces raster presentation with model-first 3D package"
 }

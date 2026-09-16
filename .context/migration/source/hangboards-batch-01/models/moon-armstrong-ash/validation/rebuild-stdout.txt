@@ -1,6 +1,0 @@
-{
-  "bytes": 4992632,
-  "sha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
-  "triangles": 46000,
-  "objects": 22
-}

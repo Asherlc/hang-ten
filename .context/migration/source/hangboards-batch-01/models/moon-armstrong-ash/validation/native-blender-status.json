@@ -1,8 +1,0 @@
-{
-  "blenderExecutableAvailable": false,
-  "bpyImportAvailable": false,
-  "installationAttempt": "Official download / pip blocked by DNS/network restrictions",
-  "nativeBlendFile": null,
-  "outlinerScreenshot": null,
-  "fallback": "Actual GLB, standard editable PLY, face-labelled NPZ, reproducible Python source, actual VTK reimport renders"
-}

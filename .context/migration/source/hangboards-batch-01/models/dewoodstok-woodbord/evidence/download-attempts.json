@@ -1,8 +1,0 @@
-[
-  {
-    "sourceId": "I1",
-    "url": "https://ecimg.cafe24img.com/pg902b04204861070/climblight/web/product/big/shop1_318797c874273f8325555199abe70184.jpg",
-    "success": false,
-    "error": "URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
-  }
-]
