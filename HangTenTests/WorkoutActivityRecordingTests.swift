@@ -1015,15 +1015,81 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testEitherHandActivityRequiresAChoiceAndRecordsTheSelectedRightHand() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+        let recorder = WorkoutActivityRecorder()
+
+        XCTAssertThrowsError(try recorder.segments(for: workout, on: board)) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .handSideRequired(stepID: "portable-step")
+            )
+        }
+
+        let record = try XCTUnwrap(
+            recorder.segments(
+                for: workout,
+                on: board,
+                selectedHandSide: .right
+            ).only
+        )
+        XCTAssertEqual(record.handUse, .single)
+        XCTAssertEqual(record.side, .right)
+        XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["left-b"])
+        XCTAssertEqual(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: JSONEncoder().encode(WorkoutActivityMetadata(segments: [record]))
+            ).segments.only?.side,
+            .right
+        )
+    }
+
+    func testEitherHandActivityResolvesOnANeutralSingleHandBoard() throws {
+        let board = BoardCatalog.board(for: "lattice-mxedge-lift-small")
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: MillimeterRange(minimum: 8, maximum: 8),
+            selection: .single
+        )
+        let workout = TrainingPlan(
+            id: "neutral-single-hand",
+            title: "Neutral single hand",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: nil,
+            provenance: .custom,
+            boardID: board.id,
+            steps: [WorkoutStep(
+                id: "neutral-step", number: 1, title: "Neutral", instruction: "",
+                accessory: "", duration: 10, phase: .hang, targets: [requirement],
+                segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                handUse: .either, side: .both
+            )]
+        )
+
+        for side in [WorkoutSide.left, .right] {
+            let record = try XCTUnwrap(
+                WorkoutActivityRecorder().segments(
+                    for: workout,
+                    on: board,
+                    selectedHandSide: side
+                ).only
+            )
+            XCTAssertEqual(record.side, side)
+            XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["edge-8"])
+        }
+    }
+
     func testActivityRecordingDoubleHandStepUsesExactFactualPairOnOneObject() throws {
         let board = portableBoard(handCapacity: 1)
         let workout = portablePlan(handUse: .double, side: .both)
 
-        XCTAssertEqual(
-            try WorkoutActivityRecorder().segments(for: workout, on: board)
-                .first?.target?.resolvedContactSnapshot?.contactIDs,
-            ["left-a", "left-b"]
-        )
+        let record = try XCTUnwrap(WorkoutActivityRecorder().segments(for: workout, on: board).only)
+        XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["left-a", "left-b"])
+        XCTAssertEqual(record.handUse, .double)
+        XCTAssertEqual(record.side, .both)
     }
 
     func testActivityRecordingDoubleHandStepUsesPairWithoutInventingCapacity() throws {
@@ -1711,7 +1777,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     ) -> TrainingPlan {
         let requirement = ContactRequirement.kind(
             .pocket,
-            selection: handUse == .single ? .single : .bilateralPair
+            selection: handUse == .single || handUse == .either ? .single : .bilateralPair
         )
         return TrainingPlan(
             id: "portable-plan",

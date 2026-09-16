@@ -2629,6 +2629,47 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
     }
 
+    func testPlanValidationRequiresEitherHandStepsToResolveForBothSides() {
+        let step = WorkoutStepDefinition(
+            id: "either-hand",
+            title: "Either hand",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.edge, selection: .single)],
+            handUse: .either,
+            side: .both
+        )
+        let library = unilateralTestLibrary(step: step)
+
+        XCTAssertFalse(
+            PlanLibraryValidator.issues(for: library, availableBoards: BoardCatalog.all)
+                .contains { $0.path.hasSuffix(".side") }
+        )
+    }
+
+    func testPlanValidationRejectsEitherHandPullWork() {
+        let step = WorkoutStepDefinition(
+            id: "either-pull",
+            title: "Either pull",
+            instruction: "Pull.",
+            accessory: "",
+            duration: 10,
+            phase: .pull,
+            targets: [.kind(.jug, selection: .single)],
+            handUse: .either,
+            side: .both
+        )
+
+        XCTAssertTrue(
+            PlanLibraryValidator.issues(
+                for: unilateralTestLibrary(step: step),
+                availableBoards: BoardCatalog.all
+            ).contains { $0.path.hasSuffix(".side") }
+        )
+    }
+
     func testPlanValidationRejectsInvalidUnilateralStepSemantics() {
         let step = WorkoutStepDefinition(id: "invalid", title: "Invalid", instruction: "", accessory: "", duration: 10, phase: .pull, targets: [.kind(.jug)], handUse: .single, side: .both, action: .loadedLift, repetitions: 0)
 

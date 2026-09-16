@@ -1274,6 +1274,10 @@ enum WorkoutPhase: String, CaseIterable, Codable, Hashable, Identifiable {
 }
 
 enum WorkoutHandUse: String, Codable, CaseIterable, Hashable {
+    /// The prescription can be performed with one hand, selected when the
+    /// session begins. Definitions retain `.both` until that selection is
+    /// resolved for recording.
+    case either
     case single
     case double
 }
@@ -1297,7 +1301,17 @@ enum WorkoutStepSemantics {
             side == .left || side == .right
         case .double:
             side == .both
+        case .either:
+            side == .both
         }
+    }
+
+    static func hasValidHandUse(
+        _ handUse: WorkoutHandUse,
+        phase: WorkoutPhase,
+        action: WorkoutAction
+    ) -> Bool {
+        handUse != .either || (phase != .pull && action != .isometricPull)
     }
 
     static func hasValidActionAndRepetitions(_ action: WorkoutAction, _ repetitions: Int?) -> Bool {
@@ -1424,6 +1438,23 @@ struct WorkoutStep: Identifiable, Hashable {
             repetitions: repetitions,
             externalLoadKGF: externalLoadKGF,
             timedWorkDuration: timedWorkDuration
+        )
+    }
+
+    /// Materializes an athlete's start-of-session hand choice for downstream
+    /// board resolution, highlighting, and activity recording.
+    func resolvingEitherHand(selectedHandSide: WorkoutSide?) -> WorkoutStep? {
+        guard handUse == .either else { return self }
+        guard selectedHandSide == .left || selectedHandSide == .right else {
+            return nil
+        }
+        return WorkoutStep(
+            id: id, number: number, title: title, instruction: instruction,
+            accessory: accessory, duration: duration, phase: phase, targets: targets,
+            segments: segments, gripType: gripType,
+            fingerConfiguration: fingerConfiguration, handUse: .single,
+            side: selectedHandSide!, action: action, repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration
         )
     }
 }

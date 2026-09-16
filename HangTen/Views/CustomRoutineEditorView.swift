@@ -311,6 +311,9 @@ private struct CustomRoutineStepEditor: View {
                     step.action = .hang
                     step.repetitions = nil
                     step.externalLoadKGF = nil
+                } else if phase == .pull && step.handUse == .either {
+                    step.handUse = .double
+                    step.side = .both
                 }
             }
 
@@ -340,11 +343,18 @@ private struct CustomRoutineStepEditor: View {
                 }
                 .onChange(of: step.action) { _, action in
                     step.repetitions = action == .loadedLift ? max(step.repetitions ?? 1, 1) : nil
+                    if action == .isometricPull && step.handUse == .either {
+                        step.handUse = .double
+                        step.side = .both
+                    }
                 }
                 .accessibilityIdentifier("customRoutine.stepAction")
 
                 Picker("Hand use", selection: $step.handUse) {
                     Text("Single hand").tag(WorkoutHandUse.single)
+                    if step.phase != .pull && step.action != .isometricPull {
+                        Text("Either hand (choose at start)").tag(WorkoutHandUse.either)
+                    }
                     Text("Both hands").tag(WorkoutHandUse.double)
                 }
                 .onChange(of: step.handUse) { _, handUse in

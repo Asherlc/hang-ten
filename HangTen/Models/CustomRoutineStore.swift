@@ -199,7 +199,12 @@ enum CustomRoutineValidator {
                !activeDuration.isFinite || activeDuration <= 0 || activeDuration > step.duration {
                 issues.append(.invalidActiveDuration(stepIndex: stepIndex))
             }
-            if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+            if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) ||
+                !WorkoutStepSemantics.hasValidHandUse(
+                    step.handUse,
+                    phase: step.phase,
+                    action: step.action
+                ) {
                 issues.append(.invalidHandUseSide(stepIndex: stepIndex))
             }
             if !WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions) {
@@ -404,6 +409,11 @@ enum CustomRoutineValidator {
         side: WorkoutSide,
         on board: BoardRevision
     ) -> Bool {
+        if handUse == .either {
+            return [WorkoutSide.left, .right].allSatisfy { selectedSide in
+                targetResolves(target, handUse: .single, side: selectedSide, on: board)
+            }
+        }
         let step = WorkoutStep(
             id: "custom-validation",
             number: 0,

@@ -828,11 +828,16 @@ enum PlanLibraryValidator {
         if !step.duration.isFinite || step.duration <= 0 {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
-        if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+        if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) ||
+            !WorkoutStepSemantics.hasValidHandUse(
+                step.handUse,
+                phase: step.phase,
+                action: step.action
+            ) {
             issues.append(
                 PlanValidationIssue(
                     path: "\(path).side",
-                    message: "Single-hand steps require a left or right side, while double-hand steps require both sides."
+                    message: "Single-hand steps require a left or right side; either-hand steps require both until session start and cannot be pull work; double-hand steps require both sides."
                 )
             )
         }
@@ -1184,21 +1189,20 @@ enum PlanLibraryValidator {
 
         for (index, target) in targets.enumerated() {
             let targetPath = "\(stepPath).targets[\(index)]"
-            let step = WorkoutStep(
-                id: "validation",
-                number: 0,
-                title: "Validation",
-                instruction: "",
-                accessory: "",
-                duration: 1,
-                phase: .hang,
-                targets: [target],
-                gripType: gripType,
-                handUse: handUse,
-                side: side
-            )
-            let resolvableBoards = boards.filter {
-                (try? ContactResolver.resolve(target, step: step, board: $0)) != nil
+            let resolvedHandAssignments: [(WorkoutHandUse, WorkoutSide)] = handUse == .either
+                ? [(.single, .left), (.single, .right)]
+                : [(handUse, side)]
+            let resolvableBoards = boards.filter { board in
+                resolvedHandAssignments.allSatisfy { assignment in
+                    let (assignmentHandUse, assignmentSide) = assignment
+                    let step = WorkoutStep(
+                        id: "validation", number: 0, title: "Validation",
+                        instruction: "", accessory: "", duration: 1, phase: .hang,
+                        targets: [target], gripType: gripType,
+                        handUse: assignmentHandUse, side: assignmentSide
+                    )
+                    return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
+                }
             }
             let isValid = !boards.isEmpty && resolvableBoards.count == boards.count
             if !isValid {
