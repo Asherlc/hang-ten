@@ -333,19 +333,23 @@ def test_sloper_only_scope_requires_exactly_one_record_per_hold(tmp_path: Path) 
         "populated": 0,
         "verified": 0,
         "adapted": 0,
-        "unavailable": 1,
-        "notApplicable": 1,
+        "unavailable": 2,
+        "notApplicable": 0,
         "unaccountedFields": 0,
     }
 
 
 def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "full", board_id="fixture.board")
+    package = tmp_path / "boards" / "supplemental"
     _supplemental_sloper_package(tmp_path)
+    document = json.loads((package / "board.json").read_text(encoding="utf-8"))
+    document["contacts"][0]["shape"] = "flat"
+    (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     records = [
         *_complete_records("fixture.board", "hold-left"),
-        not_applicable("supplemental.board", "sloper-left", "sloper"),
-        unavailable("supplemental.board", "edge-right", "sloper"),
+        not_applicable("supplemental.board", "sloper-left", "shape"),
+        unavailable("supplemental.board", "edge-right", "shape"),
     ]
     ledger_path = _write_ledger(
         tmp_path,
@@ -355,7 +359,7 @@ def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> No
 
     with pytest.raises(
         MetadataAuditError,
-        match="non-sloper supplemental.board/edge-right must be notApplicable",
+        match="shape must be absent for supplemental.board/sloper-left",
     ):
         validate_metadata_ledger(
             load_metadata_ledger(ledger_path),
@@ -363,33 +367,18 @@ def test_sloper_only_scope_rejects_swapped_sloper_outcomes(tmp_path: Path) -> No
         )
 
 
-@pytest.mark.parametrize(
-    ("sloper_outcome", "edge_outcome", "message"),
-    [
-        (
-            "notApplicable",
-            "notApplicable",
-            "sloper fixture.board/sloper-left must be verified, adapted, or unavailable",
-        ),
-        (
-            "unavailable",
-            "unavailable",
-            "non-sloper fixture.board/edge-right must be notApplicable",
-        ),
-    ],
-)
-def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
+def test_reviewed_scope_rejects_shape_outcome_that_omits_a_populated_shape(
     tmp_path: Path,
-    sloper_outcome: str,
-    edge_outcome: str,
-    message: str,
 ) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["contacts"][0].update({"id": "sloper-left", "kind": "sloper"})
+    document["contacts"][0].update(
+        {"id": "sloper-left", "kind": "sloper", "shape": "flat"}
+    )
     pieces = _rename_fixture_geometry(document, "sloper-left")
     edge = dict(document["contacts"][0])
     edge.update({"id": "edge-right", "kind": "edge"})
+    edge.pop("shape")
     document["contacts"].append(edge)
     _copy_fixture_geometry(document, "edge-right", pieces)
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
@@ -403,15 +392,15 @@ def test_reviewed_scope_rejects_sloper_outcomes_swapped_with_hold_kind(
         ),
     ]
     for record in records:
-        if record["field"] != "sloper":
-            continue
-        contact_id = record["contactIDs"][0]
-        outcome = sloper_outcome if contact_id == "sloper-left" else edge_outcome
-        record.clear()
-        record.update(_record("fixture.board", contact_id, "sloper", outcome))
+        if record["field"] == "shape" and record["contactIDs"] == ["sloper-left"]:
+            record.clear()
+            record.update(_record("fixture.board", "sloper-left", "shape", "notApplicable"))
     ledger_path = _write_ledger(tmp_path, records)
 
-    with pytest.raises(MetadataAuditError, match=message):
+    with pytest.raises(
+        MetadataAuditError,
+        match="shape must be absent for fixture.board/sloper-left",
+    ):
         validate_metadata_ledger(
             load_metadata_ledger(ledger_path),
             discover_board_packages(tmp_path / "boards"),
@@ -423,7 +412,7 @@ def test_sloper_only_scope_rejects_missing_record(tmp_path: Path) -> None:
     _supplemental_sloper_package(tmp_path)
     records = [
         *_complete_records("fixture.board", "hold-left"),
-        unavailable("supplemental.board", "sloper-left", "sloper"),
+        unavailable("supplemental.board", "sloper-left", "shape"),
     ]
     ledger_path = _write_ledger(
         tmp_path,
@@ -433,7 +422,7 @@ def test_sloper_only_scope_rejects_missing_record(tmp_path: Path) -> None:
 
     with pytest.raises(
         MetadataAuditError,
-        match="missing record for supplemental.board/edge-right/sloper",
+        match="missing record for supplemental.board/edge-right/shape",
     ):
         validate_metadata_ledger(
             load_metadata_ledger(ledger_path),
@@ -447,7 +436,7 @@ def test_sloper_only_scope_rejects_duplicate_record(tmp_path: Path) -> None:
     records = [
         *_complete_records("fixture.board", "hold-left"),
         *_supplemental_sloper_records(),
-        unavailable("supplemental.board", "sloper-left", "sloper"),
+        unavailable("supplemental.board", "sloper-left", "shape"),
     ]
     ledger_path = _write_ledger(
         tmp_path,
@@ -457,7 +446,7 @@ def test_sloper_only_scope_rejects_duplicate_record(tmp_path: Path) -> None:
 
     with pytest.raises(
         MetadataAuditError,
-        match="duplicate record for supplemental.board/sloper-left/sloper",
+        match="duplicate record for supplemental.board/sloper-left/shape",
     ):
         validate_metadata_ledger(
             load_metadata_ledger(ledger_path),
@@ -1210,6 +1199,38 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
     assert next(
         board for board in report.boards if board.board_id == "soill.training-tiles"
     ).adapted == 20
+
+
+def test_simulator_flat_sloper_hand_capacity_is_explicitly_audited() -> None:
+    repository_root = Path(__file__).resolve().parents[3]
+    ledger_path = (
+        repository_root
+        / "docs/source-audits/2026-08-25-hangboard-metadata-ledger.json"
+    )
+    inventory = discover_board_packages(repository_root / "Hangboards")
+    ledger = load_metadata_ledger(ledger_path)
+    validate_metadata_ledger(ledger, inventory)
+
+    simulator = next(
+        package.board
+        for package in inventory.packages
+        if package.board.id == "metolius.simulator-3d"
+    )
+    contacts = {contact.id: contact for contact in simulator.contacts}
+    assert contacts["flat-sloper-2-left"].hand_capacity == 1
+    assert contacts["flat-sloper-2-right"].hand_capacity == 1
+    assert contacts["round-sloper-3-center"].hand_capacity is None
+
+    hand_capacity_records = [
+        record
+        for record in ledger.records
+        if record.board_id == "metolius.simulator-3d" and record.field == "handCapacity"
+    ]
+    assert [
+        (record.contact_ids, record.outcome, record.value)
+        for record in hand_capacity_records
+        if set(record.contact_ids) == {"flat-sloper-2-left", "flat-sloper-2-right"}
+    ] == [(("flat-sloper-2-left", "flat-sloper-2-right"), "adapted", 1)]
 
 
 def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:

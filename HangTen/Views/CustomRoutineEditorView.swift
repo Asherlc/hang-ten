@@ -398,6 +398,7 @@ private struct CustomRoutineStepEditor: View {
                 )
             }
         } else {
+            Group {
             Picker("Hold kind", selection: genericKindBinding) {
                 Text("Choose target").tag(HoldKind?.none)
                 ForEach(HoldKind.allCases) { kind in
@@ -450,8 +451,9 @@ private struct CustomRoutineStepEditor: View {
                         .onChange(of: exactDepthMaximum) { _, _ in updateExactDepthFromFields() }
                 }
             }
+            }
+            .onAppear(perform: configureGenericDepthSelection)
         }
-        .onAppear(perform: configureGenericDepthSelection)
     }
 
     private var genericKind: HoldKind? {

@@ -6061,18 +6061,33 @@
     {
       "boardID": "metolius.simulator-3d",
       "field": "handCapacity",
+      "outcome": "adapted",
+      "reviewedAt": "2026-09-16",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
+        "label": "2 — 55 mm flat slopers"
+      },
+      "value": 1,
+      "reason": "The official numbered guide identifies separate left and right #2 flat-sloper zones. Hang Ten represents each source-backed zone as a one-hand contact.",
+      "contactIDs": [
+        "flat-sloper-2-left",
+        "flat-sloper-2-right"
+      ]
+    },
+    {
+      "boardID": "metolius.simulator-3d",
+      "field": "handCapacity",
       "outcome": "unavailable",
       "reviewedAt": "2026-09-16",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085",
-        "label": "2 — 55 mm flat slopers; 3 — 65 mm round slopers"
+        "label": "3 — 65 mm round slopers"
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "flat-sloper-2-left",
-        "round-sloper-3-center",
-        "flat-sloper-2-right"
+        "round-sloper-3-center"
       ]
     },
     {
