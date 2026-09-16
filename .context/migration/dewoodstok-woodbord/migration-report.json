@@ -37,8 +37,8 @@
   "nodeCount": 18,
   "packageID": "dewoodstok-woodbord",
   "sourceGeometryChanged": false,
-  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/infamous-sheep/.context/migration/dewoodstok-woodbord/source.blend",
-  "sourceModelSHA256": "da071218a42ed69377dced2433b88d294b39fc48fb84bda2a91585472d64ef24",
+  "sourceModelPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/dewoodstok-woodbord.glb",
+  "sourceModelSHA256": "8ef554950a9d4078f39b122df8e570b691853e257ea9e8066220d22681e44085",
   "sourceObjectIDs": [
     "body",
     "hold-lower-inner-left",

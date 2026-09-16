@@ -27,8 +27,8 @@
   "nodeCount": 8,
   "packageID": "escape-unlimited-board",
   "sourceGeometryChanged": false,
-  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/infamous-sheep/.context/migration/escape-unlimited-board/source.blend",
-  "sourceModelSHA256": "23c9748ca8b6b452dd5345cad8cbc2ed05077a3764ba282c53952cc466358446",
+  "sourceModelPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/escape-unlimited-board.glb",
+  "sourceModelSHA256": "44fb78ca449ba6c739f180d78bc91a42040fc109aa17f6c16c3892015ff3a4a9",
   "sourceObjectIDs": [
     "body",
     "hold-lower-left",
