@@ -1871,7 +1871,7 @@ def test_save_round_trips_optional_tagged_depth_for_all_pieces_of_a_contact(
         ),
         (
             {"depth": {"range": {"minimum": 12.5, "maximum": 7.5}}},
-            "must not exceed",
+            "must be non-negative and not exceed maximum",
         ),
     ],
 )
