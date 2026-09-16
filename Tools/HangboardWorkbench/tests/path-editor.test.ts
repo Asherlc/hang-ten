@@ -51,7 +51,6 @@ function documentWithContactPath(displayPath: string): EditorDocument {
       equipmentObjectID: "primary",
       name: "Contact 1",
       kind: "jug",
-      features: [],
       gripTypes: [],
     }],
     canvas: { width: 200, height: 150 },

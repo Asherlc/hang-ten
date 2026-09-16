@@ -19,7 +19,7 @@ function document(): EditorDocument {
       equipmentObjectID: "primary",
       name: "Left edge",
       kind: "edge",
-      features: ["largeEdge"],
+      shape: "flat",
       gripTypes: ["openHand"],
       depth: { range: { minimum: 18, maximum: 20 } },
       fingerCapacity: 4,
@@ -108,9 +108,9 @@ test("contact facts are closed and gaston pairs are strict at save", () => {
 test("cloning does not alias factual arrays or geometry metadata", () => {
   const source = document();
   const copy = cloneEditorDocument(source);
-  copy.contacts[0]!.features.push("smallEdge");
+  copy.contacts[0]!.gripTypes.push("halfCrimp");
   copy.regions[0]!.treatment!.type = "recess";
-  assert.deepEqual(source.contacts[0]!.features, ["largeEdge"]);
+  assert.deepEqual(source.contacts[0]!.gripTypes, ["openHand"]);
   assert.deepEqual(source.regions[0]!.treatment, { type: "surface" });
 });
 

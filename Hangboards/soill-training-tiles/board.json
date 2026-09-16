@@ -51,7 +51,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer left upper sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -59,7 +58,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer right upper sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -67,7 +65,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner left upper sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -75,7 +72,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner right upper sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -83,7 +79,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer left middle edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -91,7 +86,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer right middle edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -99,7 +93,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner left middle edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -107,7 +100,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner right middle edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -115,7 +107,6 @@
       "equipmentObjectID": "primary",
       "name": "Center left bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -123,7 +114,6 @@
       "equipmentObjectID": "primary",
       "name": "Center right bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -131,7 +121,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer left top pocket",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -139,7 +128,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer right top pocket",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -147,7 +135,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner left bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -155,7 +142,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner right bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -163,7 +149,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer left bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -171,7 +156,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer right bottom edge",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -179,7 +163,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner left top pocket",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -187,7 +170,6 @@
       "equipmentObjectID": "primary",
       "name": "Inner right top pocket",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -195,7 +177,6 @@
       "equipmentObjectID": "primary",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -203,7 +184,6 @@
       "equipmentObjectID": "primary",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     }
   ]

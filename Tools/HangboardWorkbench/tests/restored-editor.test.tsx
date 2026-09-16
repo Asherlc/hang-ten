@@ -43,7 +43,6 @@ function contactFixture(id: string, overrides: Partial<Omit<PhysicalContact, "id
     equipmentObjectID: "primary",
     name: id,
     kind: "jug",
-    features: [],
     gripTypes: [],
     ...overrides,
   };

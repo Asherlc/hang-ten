@@ -24,7 +24,6 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
     presentationID: document.presentationID,
     contacts: document.contacts.map((contact) => ({
       ...contact,
-      features: [...contact.features],
       gripTypes: [...contact.gripTypes],
       ...(contact.depth
         ? { depth: "category" in contact.depth

@@ -123,12 +123,13 @@
       "equipmentObjectID": "primary",
       "name": "20 mm mono edge",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     }

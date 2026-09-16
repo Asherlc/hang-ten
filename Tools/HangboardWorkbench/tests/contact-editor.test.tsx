@@ -21,7 +21,7 @@ function documentFixture(constrained = false): EditorDocument {
       equipmentObjectID: "primary",
       name: "Left edge",
       kind: "edge",
-      features: ["largeEdge"],
+      shape: "flat",
       gripTypes: ["openHand"],
       depth: { range: { minimum: 18, maximum: 20 } },
       fingerCapacity: 4,

@@ -25,6 +25,36 @@ from _board_package_helpers import board_contact_geometry, board_positions_docum
 _PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 
 
+def test_real_canonical_package_and_forge_category_only_contact_decode() -> None:
+    module = load_board_catalog_module()
+    root = Path(__file__).resolve().parents[3] / "Hangboards"
+
+    inventory = module.discover_board_packages(root, require_complete_inventory=True)
+    forge = next(package.board for package in inventory.packages if package.board.id == "trango.rock-prodigy-forge")
+    left = next(contact for contact in forge.contacts if contact.id == "large-flat-edge-left")
+
+    assert left.shape == "flat"
+    assert left.depth == module.HoldDepth(category="large")
+    assert left.depth.range is None
+
+
+def test_board_schema_decodes_category_and_range_depths_without_legacy_members() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    contact = document["contacts"][0]
+    contact["shape"] = "flat"
+    contact["depth"] = {"category": "large"}
+
+    board = module._load_board(document)
+
+    assert board.contacts[0].shape == "flat"
+    assert board.contacts[0].depth == module.HoldDepth(category="large")
+    contact["depth"] = {"range": {"minimum": 7.5, "maximum": 12.5}}
+    assert module._load_board(document).contacts[0].depth == module.HoldDepth(
+        range=module.MillimeterRange(7.5, 12.5)
+    )
+
+
 def _png_chunk(chunk_type: bytes, body: bytes = b"") -> bytes:
     return (
         struct.pack(">I", len(body))

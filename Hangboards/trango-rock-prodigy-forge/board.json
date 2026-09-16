@@ -1718,7 +1718,6 @@
       "equipmentObjectID": "primary",
       "name": "Left 30-degree sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": [
         "sloper"
       ]
@@ -1728,7 +1727,6 @@
       "equipmentObjectID": "primary",
       "name": "Right 30-degree sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": [
         "sloper"
       ]
@@ -1738,7 +1736,6 @@
       "equipmentObjectID": "primary",
       "name": "Left 40-degree sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": [
         "sloper"
       ]
@@ -1748,7 +1745,6 @@
       "equipmentObjectID": "primary",
       "name": "Right 40-degree sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": [
         "sloper"
       ]
@@ -1758,10 +1754,10 @@
       "equipmentObjectID": "primary",
       "name": "Left large flat edge",
       "kind": "edge",
-      "features": [
-        "largeEdge",
-        "flatEdge"
-      ],
+      "shape": "flat",
+      "depth": {
+        "category": "large"
+      },
       "gripTypes": []
     },
     {
@@ -1769,10 +1765,10 @@
       "equipmentObjectID": "primary",
       "name": "Right large flat edge",
       "kind": "edge",
-      "features": [
-        "largeEdge",
-        "flatEdge"
-      ],
+      "shape": "flat",
+      "depth": {
+        "category": "large"
+      },
       "gripTypes": []
     },
     {
@@ -1780,7 +1776,6 @@
       "equipmentObjectID": "primary",
       "name": "Left slopey crimper",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1788,7 +1783,6 @@
       "equipmentObjectID": "primary",
       "name": "Right slopey crimper",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1796,10 +1790,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 7–20 mm variable-depth edge rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1808,10 +1803,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 7–20 mm variable-depth edge rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1820,10 +1816,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 7.5 mm closed crimp with thumb support",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7.5,
-        "upperBound": 7.5
+      "depth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
       },
       "gripTypes": [
         "fullCrimp"
@@ -1834,10 +1831,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 7.5 mm closed crimp with thumb support",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7.5,
-        "upperBound": 7.5
+      "depth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
       },
       "gripTypes": [
         "fullCrimp"
@@ -1848,11 +1846,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 25 mm MR deep pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -1863,11 +1862,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 25 mm MR deep pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -1878,11 +1878,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 15 mm MR shallow pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -1893,11 +1894,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 15 mm MR shallow pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -1908,7 +1910,6 @@
       "equipmentObjectID": "primary",
       "name": "Left IM deep pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1919,7 +1920,6 @@
       "equipmentObjectID": "primary",
       "name": "Right IM deep pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1930,7 +1930,6 @@
       "equipmentObjectID": "primary",
       "name": "Left IM shallow pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1941,7 +1940,6 @@
       "equipmentObjectID": "primary",
       "name": "Right IM shallow pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"

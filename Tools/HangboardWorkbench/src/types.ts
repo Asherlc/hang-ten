@@ -54,6 +54,7 @@ export interface MillimeterRange {
 }
 
 export type HoldSize = "tiny" | "small" | "medium" | "large";
+export type HoldShape = "flat" | "round" | "incut" | "slot";
 
 export type HoldDepth =
   | { category: HoldSize }
@@ -104,8 +105,8 @@ export interface PhysicalContact {
   equipmentObjectID: string;
   name: string;
   kind: string;
-  features: string[];
   gripTypes: string[];
+  shape?: HoldShape;
   depth?: HoldDepth;
   fingerCapacity?: number;
   handCapacity?: number;

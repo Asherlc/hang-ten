@@ -48,14 +48,16 @@ function isHoldDepth(value: unknown): boolean {
 function isPhysicalContact(value: unknown): value is PhysicalContact {
   if (!isRecord(value) || !exactKeys(
     value,
-    ["id", "equipmentObjectID", "name", "kind", "features", "gripTypes"],
-    ["depth", "fingerCapacity", "handCapacity", "side", "pairedContactID"],
+    ["id", "equipmentObjectID", "name", "kind", "gripTypes"],
+    ["shape", "depth", "fingerCapacity", "handCapacity", "side", "pairedContactID"],
   )) return false;
   if (!isIdentifier(value.id) || !isIdentifier(value.equipmentObjectID)
     || typeof value.name !== "string" || value.name.length === 0
     || typeof value.kind !== "string" || !CONTACT_KINDS.has(value.kind)
-    || !isStringArray(value.features) || new Set(value.features).size !== value.features.length
     || !isStringArray(value.gripTypes) || new Set(value.gripTypes).size !== value.gripTypes.length) return false;
+  if (value.shape !== undefined
+    && value.shape !== "flat" && value.shape !== "round"
+    && value.shape !== "incut" && value.shape !== "slot") return false;
   if (value.depth !== undefined && !isHoldDepth(value.depth)) return false;
   if (value.fingerCapacity !== undefined
     && (typeof value.fingerCapacity !== "number" || !Number.isInteger(value.fingerCapacity)

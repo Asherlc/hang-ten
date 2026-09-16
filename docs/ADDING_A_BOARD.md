@@ -36,9 +36,13 @@ explicitly documented reciprocal relationship; never infer pairing or symmetry.
 Each contact owns facts only:
 
 - required `id`, `equipmentObjectID`, `name`, and `kind`;
-- optional `side`, `pairedContactID`,
-  `depthRangeMillimeters`, `fingerCapacity`, `handCapacity`, `gripTypes`, and
-  `features`, only when directly supported.
+- optional `side`, `pairedContactID`, `shape`, `depth`, `fingerCapacity`,
+  `handCapacity`, and `gripTypes`, only when directly supported. `shape` is
+  one of `flat`, `round`, `incut`, or `slot`. `depth` is exactly one factual
+  representation: either `{ "range": { "minimum": ..., "maximum": ... } }`
+  for a published measurement or `{ "category": "large" }` (and the other
+  supported size categories) when the source gives only a relative size. Never
+  convert a source category into an estimated measurement.
 
 Contacts never contain paths, frames, presentation IDs, model nodes, or cached
 bounds.

@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ContactRegion, HoldDepth, HoldSize, PhysicalContact } from "../types.ts";
+import type { ContactRegion, HoldDepth, HoldShape, HoldSize, PhysicalContact } from "../types.ts";
 
 const CONTACT_KINDS = ["jug", "sloper", "edge", "pocket", "pinch", "gaston"] as const;
 const OUTLINE_SHAPES = [
@@ -9,6 +9,7 @@ const OUTLINE_SHAPES = [
   ["rectangle", "Rectangle"],
 ] as const;
 const HOLD_SIZES: readonly HoldSize[] = ["tiny", "small", "medium", "large"];
+const HOLD_SHAPES: readonly HoldShape[] = ["flat", "round", "incut", "slot"];
 
 function rangeDepth(depth: HoldDepth | undefined) {
   return depth && "range" in depth ? depth.range : undefined;
@@ -125,7 +126,17 @@ export function ContactInspector({
             </output>
           </label>
         )}
-        <label>Features <input id="contact-features-input" type="text" disabled={busy} value={contact?.features.join(", ") ?? ""} onChange={(event) => update({ features: commaSeparated(event.currentTarget.value) })} /></label>
+        <label>Shape
+          <select id="contact-shape-select" disabled={busy} value={contact?.shape ?? ""} onChange={(event) => {
+            if (!contact) return;
+            const next = { ...contact };
+            if (event.currentTarget.value) next.shape = event.currentTarget.value as HoldShape;
+            else delete next.shape;
+            onContactChange(next);
+          }}>
+            <option value="">Unset</option>{HOLD_SHAPES.map((shape) => <option key={shape} value={shape}>{shape}</option>)}
+          </select>
+        </label>
         <label>Grip types <input id="contact-grip-types-input" type="text" disabled={busy} value={contact?.gripTypes.join(", ") ?? ""} onChange={(event) => update({ gripTypes: commaSeparated(event.currentTarget.value) })} /></label>
         <label>Finger capacity
           <select id="contact-finger-capacity-select" disabled={busy} value={contact?.fingerCapacity?.toString() ?? ""} onChange={(event) => {

@@ -1100,7 +1100,6 @@
       "equipmentObjectID": "primary",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1108,7 +1107,6 @@
       "equipmentObjectID": "primary",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1116,9 +1114,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 30-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -1128,9 +1124,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 30-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -1140,9 +1134,7 @@
       "equipmentObjectID": "primary",
       "name": "Center 20-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -1152,10 +1144,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1164,10 +1157,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1176,10 +1170,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 45 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 45,
-        "upperBound": 45
+      "depth": {
+        "range": {
+          "minimum": 45,
+          "maximum": 45
+        }
       },
       "gripTypes": []
     },
@@ -1188,10 +1183,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 45 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 45,
-        "upperBound": 45
+      "depth": {
+        "range": {
+          "minimum": 45,
+          "maximum": 45
+        }
       },
       "gripTypes": []
     },
@@ -1200,10 +1196,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1212,10 +1209,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1224,10 +1222,11 @@
       "equipmentObjectID": "primary",
       "name": "Center 40 mm edge and elastic notch",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     }

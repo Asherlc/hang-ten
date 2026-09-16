@@ -1363,7 +1363,6 @@
       "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1371,7 +1370,6 @@
       "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1379,7 +1377,6 @@
       "equipmentObjectID": "primary",
       "name": "Left large sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1387,7 +1384,6 @@
       "equipmentObjectID": "primary",
       "name": "Right large sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1395,7 +1391,6 @@
       "equipmentObjectID": "primary",
       "name": "Left small sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1403,7 +1398,6 @@
       "equipmentObjectID": "primary",
       "name": "Right small sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1411,10 +1405,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 38.1 mm sloping rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 38.1,
-        "upperBound": 38.1
+      "depth": {
+        "range": {
+          "minimum": 38.1,
+          "maximum": 38.1
+        }
       },
       "gripTypes": []
     },
@@ -1423,10 +1418,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 38.1 mm sloping rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 38.1,
-        "upperBound": 38.1
+      "depth": {
+        "range": {
+          "minimum": 38.1,
+          "maximum": 38.1
+        }
       },
       "gripTypes": []
     },
@@ -1435,10 +1431,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 25.4 mm flat rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25.4,
-        "upperBound": 25.4
+      "depth": {
+        "range": {
+          "minimum": 25.4,
+          "maximum": 25.4
+        }
       },
       "gripTypes": []
     },
@@ -1447,10 +1444,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 25.4 mm flat rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25.4,
-        "upperBound": 25.4
+      "depth": {
+        "range": {
+          "minimum": 25.4,
+          "maximum": 25.4
+        }
       },
       "gripTypes": []
     },
@@ -1459,10 +1457,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 12.7 mm outer crimp",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.7,
-        "upperBound": 12.7
+      "depth": {
+        "range": {
+          "minimum": 12.7,
+          "maximum": 12.7
+        }
       },
       "gripTypes": []
     },
@@ -1471,10 +1470,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 12.7 mm outer crimp",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.7,
-        "upperBound": 12.7
+      "depth": {
+        "range": {
+          "minimum": 12.7,
+          "maximum": 12.7
+        }
       },
       "gripTypes": []
     },
@@ -1483,10 +1483,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 12.7 mm bottom sloping crimp",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.7,
-        "upperBound": 12.7
+      "depth": {
+        "range": {
+          "minimum": 12.7,
+          "maximum": 12.7
+        }
       },
       "gripTypes": []
     },
@@ -1495,10 +1496,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 12.7 mm bottom sloping crimp",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.7,
-        "upperBound": 12.7
+      "depth": {
+        "range": {
+          "minimum": 12.7,
+          "maximum": 12.7
+        }
       },
       "gripTypes": []
     },
@@ -1507,7 +1509,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower pinch",
       "kind": "pinch",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1515,7 +1516,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower pinch",
       "kind": "pinch",
-      "features": [],
       "gripTypes": []
     }
   ]

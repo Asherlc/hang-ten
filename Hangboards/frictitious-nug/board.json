@@ -566,11 +566,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -579,11 +580,12 @@
       "equipmentObjectID": "primary",
       "name": "25 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -592,11 +594,12 @@
       "equipmentObjectID": "primary",
       "name": "8 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 8,
-        "upperBound": 8
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
       },
       "gripTypes": []
     },
@@ -605,11 +608,12 @@
       "equipmentObjectID": "primary",
       "name": "13 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 13,
-        "upperBound": 13
+      "depth": {
+        "range": {
+          "minimum": 13,
+          "maximum": 13
+        }
       },
       "gripTypes": []
     },
@@ -618,11 +622,12 @@
       "equipmentObjectID": "primary",
       "name": "40 mm jug",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -631,11 +636,12 @@
       "equipmentObjectID": "primary",
       "name": "60 mm pinch",
       "kind": "pinch",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 60,
-        "upperBound": 60
+      "depth": {
+        "range": {
+          "minimum": 60,
+          "maximum": 60
+        }
       },
       "gripTypes": []
     }
