@@ -115,9 +115,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertTrue(oneFingerPocket.features.isEmpty)
+        XCTAssertNil(oneFingerPocket.shape)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertTrue(fourFingerPocket.features.isEmpty)
+        XCTAssertNil(fourFingerPocket.shape)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {

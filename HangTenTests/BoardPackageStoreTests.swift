@@ -1350,9 +1350,9 @@ final class BoardPackageStoreTests: XCTestCase {
                 holds[0]["sizeMillimeters"] = NSNull()
                 board["contacts"] = holds
             }),
-            ("depth range", { board in
+            ("depth", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["depthRangeMillimeters"] = NSNull()
+                holds[0]["depth"] = NSNull()
                 board["contacts"] = holds
             }),
             ("grip type", { board in
@@ -1370,9 +1370,9 @@ final class BoardPackageStoreTests: XCTestCase {
                 holds[0]["handCapacity"] = NSNull()
                 board["contacts"] = holds
             }),
-            ("features", { board in
+            ("shape", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["features"] = NSNull()
+                holds[0]["shape"] = NSNull()
                 board["contacts"] = holds
             }),
             ("equipment object ID", { board in
@@ -1483,7 +1483,6 @@ final class BoardPackageStoreTests: XCTestCase {
                 ) { board in
                     var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                     holds[0]["kind"] = "sloper"
-                    holds[0].removeValue(forKey: "features")
                     if let shape = variant.shape { holds[0]["shape"] = shape.rawValue }
                     board["contacts"] = holds
                 }
@@ -1744,7 +1743,6 @@ final class BoardPackageStoreTests: XCTestCase {
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0].removeValue(forKey: "features")
                 holds[0]["kind"] = "edge"
                 holds[0]["shape"] = "flat"
                 holds[0]["depth"] = ["category": "large"]
@@ -1768,6 +1766,26 @@ final class BoardPackageStoreTests: XCTestCase {
                     "lowerBound": 7.5,
                     "upperBound": 12.5,
                 ]
+                board["contacts"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsLegacyContactFeaturesKey() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                holds[0]["features"] = []
                 board["contacts"] = holds
             }
         }
@@ -3811,12 +3829,12 @@ final class BoardPackageStoreTests: XCTestCase {
                     [
                         "id": "left-edge", "equipmentObjectID": "primary",
                         "name": "Left Edge", "kind": "edge",
-                        "features": [], "gripTypes": [],
+                        "gripTypes": [],
                     ],
                     [
                         "id": "right-edge", "equipmentObjectID": "primary",
                         "name": "Right Edge", "kind": "edge",
-                        "features": [], "gripTypes": [],
+                        "gripTypes": [],
                     ],
                 ]
                 board.removeValue(forKey: "holds")
@@ -4459,7 +4477,6 @@ final class BoardPackageStoreTests: XCTestCase {
                     "equipmentObjectID": "primary",
                     "name": "Left hold",
                     "kind": "jug",
-                    "features": [],
                     "gripTypes": []
                 ]]
             ],
