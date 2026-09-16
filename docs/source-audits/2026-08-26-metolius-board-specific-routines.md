@@ -31,16 +31,26 @@ against the Contact package. Target key: `1` pinch L/R; `2` outer jug L/R;
 | 2 | 1 pull-up deep four finger edge (4), **stay on**; 10 s bent-arm hang (90°), **stay on**; 1 more pull-up → `pocket-4-left/right` | 10 s bent-arm (elbows at 90°) hang round sloper (2), **stay on**; 2 pull-ups, **stay on**; 10 s bent-arm hang (elbows at 110°) → `jug-left/right` | 15 s bent-arm hang (elbows at 90°) round sloper (2), **stay on**; 4 pull-ups, **stay on**; 15 s bent-arm hang (elbows at 110°) → `jug-left/right` |
 | 3 | 2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6) → `jug-left/right`; `pocket-6-left/right` | 4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6) → `jug-left/right`; `pocket-6-left/right` | 6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s dead hang medium edge (18) → `jug-left/right`; `pocket-4-left/right`; `edge-18-center` |
 | 4 | 6 s L-hang on any holds (bend knees if needed); 5 s dead hang pinches (11) → any Contact hold; `pocket-11-left/right` | 10 s L-hang on any holds; 10 s dead hang on pinches (11) → any Contact hold; `pocket-11-left/right` | 15 s L-hang any holds (**hold good form**); 15 s dead hang on pinches (11) → any Contact hold; `pocket-11-left/right` |
-| 5 | 10 s dead hang flat sloper (15); 5 knee raises outer jug (2) → `flat-sloper-center`; `jug-left/right` | 10 s offset hang deep center edge (17) & med three finger edge (8), **reverse holds — repeat** → `edge-17-center`; `pocket-8-left/right` | 10 s dead hang extra shallow three finger pockets (13), **stay on**; campus to med three finger pocket (9); campus to round slopers (2); hold 15 s → `pocket-13-left/right`; `pocket-9-left/right`; `jug-left/right` |
+| 5 | 10 s dead hang flat sloper (15); 5 knee raises outer jug (2) → semantic flat sloper; semantic outer-jug pair | 10 s offset hang deep center edge (17) & med three finger edge (8), **reverse holds — repeat** → `edge-17-center`; `pocket-8-left/right` | 10 s dead hang extra shallow three finger pockets (13), **stay on**; campus to med three finger pocket (9); campus to round slopers (2); hold 15 s → `pocket-13-left/right`; `pocket-9-left/right`; `jug-left/right` |
 | 6 | 16 s offset hang (8 s per side) deep edge (17) & med pocket (7) → `edge-17-center`; `pocket-7-left/right` | 15 s offset hang pockets (4) & (13), **reverse holds — repeat** → `pocket-4-left/right`; `pocket-13-left/right` | 15 s one-arm hang center edge (17); rest 20 s; **repeat other arm** → `edge-17-center` |
 | 7 | 3 pull-ups any hold → any Contact hold | 4 pull-ups deep center edge (17); 10 knee raises any holds → `edge-17-center`; any Contact hold | 5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s bent-arm hang (elbows at 90°), deep two finger pockets (4) → `pinch-left/right`; `pocket-4-left/right` |
 | 8 | 10 s bent-arm hang (elbows 90°) deep four finger (3) → `round-sloper-3-left/right` | 15 s dead hang two finger pockets (7); rest 10 s; 10 s hang three finger pockets (9) → `pocket-7-left/right`; `pocket-9-left/right` | 10 s hang center edges (16, 17), **reverse holds — repeat**; 3 power pull-ups (**use weights or helper for resistance; should just be able to complete final rep**) → `edge-16-center`; `edge-17-center` |
 | 9 | 1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s dead hang deep four finger pockets (3) → `pinch-left/right`; `pocket-11-left/right`; `round-sloper-3-left/right` | 10 s one-arm hang jugs (3), **repeat other arm**; 4 pull-ups center edge (17) → `round-sloper-3-left/right`; `edge-17-center` | 20 s slight bent-arm hang two finger pockets (7), **stay on**; bump to round slopers (3); 20 s dead hang → `pocket-7-left/right`; `round-sloper-3-left/right` |
-| 10 | 2 pull-ups any hold; dead hang center edge (17) **till failure**; “Fight hard & don't let go!!” → any Contact hold; `edge-17-center` | 4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang **to failure**; “Fight hard!!” → `flat-sloper-center`; `round-sloper-3-left/right` | 8 pull-ups flat sloper (3); bump out to round sloper (3); dead hang **to failure**; “Fight hard!!” → `round-sloper-3-left/right` |
+| 10 | 2 pull-ups any hold; dead hang center edge (17) **till failure**; “Fight hard & don't let go!!” → any Contact hold; `edge-17-center` | 4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang **to failure**; “Fight hard!!” → semantic flat sloper; semantic round sloper | 8 pull-ups flat sloper (3); bump out to round sloper (3); dead hang **to failure**; “Fight hard!!” → semantic flat sloper; semantic round sloper (explicit adaptation; see below) |
 
 Published totals retained for audit: Entry 12 pull-ups and 1:17 hang time plus
 final hang; Intermediate 25 pull-ups and 2:35 plus final hang; Advanced 32
 pull-ups and 3:35 plus final hang.
+
+### Contact Minute 10 target-resolution adaptation
+
+The Advanced guide text is preserved verbatim: it says both “flat sloper (3)”
+and “round sloper (3).” This conflicts with the documented Contact inventory,
+which identifies #3 as a round sloper and #15 as a flat sloper. The routine
+therefore resolves the physical adjectives as semantic targets—one flat sloper,
+then one round sloper—rather than treating the repeated parenthetical number as
+a direct contact reference. This is an explicit target-resolution adaptation,
+not a claim that either phrase identifies a different numbered Contact hold.
 
 ## Simulator 3D
 
