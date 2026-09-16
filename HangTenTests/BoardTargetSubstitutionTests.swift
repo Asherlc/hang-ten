@@ -170,7 +170,10 @@ final class ContactResolverTests: XCTestCase {
     }
 
     func testCompactSingleHandBoardAllowsNeutralContactForEitherAthleteSide() throws {
-        let board = compactSingleHandBoard(id: "lattice.mxedge-lift-small")
+        let board = compactSingleHandBoard(
+            id: "lattice.mxedge-lift-small",
+            unilateralHandResolution: .athleteRelative
+        )
         let requirement = ContactRequirement.edge(
             depthRangeMillimeters: .init(minimum: 29, maximum: 31),
             selection: .single
@@ -309,7 +312,10 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    private func compactSingleHandBoard(id: String) -> BoardRevision {
+    private func compactSingleHandBoard(
+        id: String,
+        unilateralHandResolution: UnilateralHandResolution? = nil
+    ) -> BoardRevision {
         let contacts = [
             PhysicalContact(
                 id: "lower", name: "Lower edge", kind: .edge, handCapacity: 1,
@@ -341,7 +347,9 @@ final class ContactResolverTests: XCTestCase {
         )
         return BoardRevision(
             id: id, revisionID: "fixture", manufacturer: "Fixture", name: "Compact",
-            subtitle: "", dimensions: nil, aspectRatio: 1, contacts: contacts,
+            subtitle: "", dimensions: nil, aspectRatio: 1,
+            unilateralHandResolution: unilateralHandResolution,
+            contacts: contacts,
             productURL: URL(string: "https://example.com/compact")!, photoAssetName: nil,
             presentations: [presentation],
             positions: [

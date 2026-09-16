@@ -1028,6 +1028,7 @@ struct BoardPackageStore {
             subtitle: document.subtitle,
             dimensions: document.dimensions,
             aspectRatio: document.aspectRatio,
+            unilateralHandResolution: document.unilateralHandResolution,
             equipmentObjects: document.equipmentObjects.map(\.equipmentObject),
             contacts: contacts,
             productURL: document.productURL,
@@ -2242,6 +2243,7 @@ private struct BoardPackageBoardDocument: Decodable {
     let productURL: URL
     let dimensions: String?
     let aspectRatio: Double
+    let unilateralHandResolution: UnilateralHandResolution?
     let equipmentObjects: [BoardPackageEquipmentObjectDocument]
     let presentations: [BoardPackagePresentationDocument]
     let positions: [BoardPackagePositionDocument]?
@@ -2250,14 +2252,15 @@ private struct BoardPackageBoardDocument: Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, id, revisionID, manufacturer, name, subtitle, productURL, dimensions
-        case aspectRatio, equipmentObjects, presentations, positions, positionTransitions, contacts
+        case aspectRatio, unilateralHandResolution, equipmentObjects, presentations, positions
+        case positionTransitions, contacts
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "equipmentObjects", "presentations", "positions",
-            "positionTransitions", "contacts"
+            "dimensions", "aspectRatio", "unilateralHandResolution", "equipmentObjects",
+            "presentations", "positions", "positionTransitions", "contacts"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
@@ -2271,6 +2274,10 @@ private struct BoardPackageBoardDocument: Decodable {
             ? try container.decode(String.self, forKey: .dimensions)
             : nil
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        unilateralHandResolution = try container.decodeIfPresent(
+            UnilateralHandResolution.self,
+            forKey: .unilateralHandResolution
+        )
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode([BoardPackageEquipmentObjectDocument].self, forKey: .equipmentObjects)
             : [.init(id: "primary")]

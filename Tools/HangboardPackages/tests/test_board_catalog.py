@@ -61,6 +61,26 @@ def test_board_schema_loads_positions_and_directed_transitions() -> None:
     assert board.transition_kind("flipped", "front") == "setupRequired"
 
 
+def test_board_schema_loads_optional_unilateral_hand_resolution() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["unilateralHandResolution"] = "athleteRelative"
+
+    board = module._load_board(document)
+
+    assert board.unilateral_hand_resolution == module.UnilateralHandResolution.ATHLETE_RELATIVE
+
+
+@pytest.mark.parametrize("value", [None, "boardRelative", 1])
+def test_board_schema_rejects_invalid_unilateral_hand_resolution(value: object) -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["unilateralHandResolution"] = value
+
+    with pytest.raises(ValueError, match="unilateralHandResolution"):
+        module._load_board(document)
+
+
 @pytest.mark.parametrize("field", ["positions", "positionTransitions"])
 def test_board_schema_rejects_explicit_null_position_fields(field: str) -> None:
     module = load_board_catalog_module()

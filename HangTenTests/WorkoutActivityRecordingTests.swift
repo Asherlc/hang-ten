@@ -1060,7 +1060,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testEitherHandActivityResolvesOnANeutralSingleHandBoard() throws {
-        let board = BoardCatalog.board(for: "lattice-mxedge-lift-small")
+        let board = BoardCatalog.board(for: "lattice.mxedge-lift-small")
         let requirement = ContactRequirement.edge(
             depthRangeMillimeters: MillimeterRange(minimum: 14, maximum: 14),
             selection: .single
@@ -1091,6 +1091,41 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             let record = try XCTUnwrap(records.first)
             XCTAssertEqual(record.side, side)
             XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["edge-14"])
+        }
+    }
+
+    func testEitherHandActivityRejectsANeutralSingleHandBoardWithoutOptIn() throws {
+        let board = BoardCatalog.board(for: "lattice.mxedge-lift-large")
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: MillimeterRange(minimum: 16, maximum: 16),
+            selection: .single
+        )
+        let workout = TrainingPlan(
+            id: "neutral-single-hand-without-opt-in",
+            title: "Neutral single hand without opt-in",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: nil,
+            provenance: .custom,
+            boardID: board.id,
+            steps: [WorkoutStep(
+                id: "neutral-step", number: 1, title: "Neutral", instruction: "",
+                accessory: "", duration: 10, phase: .hang, targets: [requirement],
+                segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                handUse: .either, side: .both
+            )]
+        )
+
+        for side in [WorkoutSide.left, .right] {
+            XCTAssertThrowsError(
+                try WorkoutActivityRecorder().segments(
+                    for: workout,
+                    on: board,
+                    selectedHandSide: side
+                ),
+                "non-opted-in board must reject \(side)"
+            )
         }
     }
 

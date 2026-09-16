@@ -1029,6 +1029,10 @@ class BoardPositionTransitionKind(StrEnum):
     UNSUPPORTED = "unsupported"
 
 
+class UnilateralHandResolution(StrEnum):
+    ATHLETE_RELATIVE = "athleteRelative"
+
+
 class ContactSide(StrEnum):
     LEFT = "left"
     RIGHT = "right"
@@ -1081,6 +1085,7 @@ class BoardRevision:
     presentations: tuple[BoardPresentation, ...]
     positions: tuple[BoardPosition, ...]
     position_transitions: tuple[BoardPositionTransition, ...]
+    unilateral_hand_resolution: UnilateralHandResolution | None
     model_contact_frames: Mapping[tuple[str, str], NormalizedFrame] = field(
         default_factory=lambda: MappingProxyType({}), repr=False
     )
@@ -1450,7 +1455,13 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         value,
         required,
         "board.json",
-        optional={"dimensions", "equipmentObjects", "positions", "positionTransitions"},
+        optional={
+            "dimensions",
+            "unilateralHandResolution",
+            "equipmentObjects",
+            "positions",
+            "positionTransitions",
+        },
     )
     facts: dict[str, Any] = {}
     for key in ("manufacturer", "name", "subtitle", "productURL"):
@@ -1460,6 +1471,18 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
+    unilateral_hand_resolution = None
+    if "unilateralHandResolution" in value:
+        raw_resolution = _string(
+            value["unilateralHandResolution"],
+            "board.json.unilateralHandResolution",
+        )
+        try:
+            unilateral_hand_resolution = UnilateralHandResolution(raw_resolution)
+        except ValueError as error:
+            raise ValueError(
+                "board.json.unilateralHandResolution is unsupported"
+            ) from error
     raw_equipment_objects = value.get("equipmentObjects", [{"id": "primary"}])
     if not isinstance(raw_equipment_objects, list) or not raw_equipment_objects:
         raise ValueError("board.json.equipmentObjects must be a non-empty array")
@@ -1618,6 +1641,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         presentations,
         positions,
         position_transitions,
+        unilateral_hand_resolution,
     )
 
 

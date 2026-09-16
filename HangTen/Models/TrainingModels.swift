@@ -1039,6 +1039,12 @@ struct BoardPositionTransition: Codable, Hashable {
     let kind: BoardPositionTransitionKind
 }
 
+/// Package-owned policy for mapping athlete hand choice onto neutral contacts.
+/// This controls app resolution only and does not describe a physical board fact.
+enum UnilateralHandResolution: String, Codable, Hashable {
+    case athleteRelative
+}
+
 struct BoardRevision: Identifiable, Hashable {
     let id: String
     let revisionID: String
@@ -1047,6 +1053,7 @@ struct BoardRevision: Identifiable, Hashable {
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
+    let unilateralHandResolution: UnilateralHandResolution?
     let equipmentObjects: [EquipmentObject]
     let contacts: [PhysicalContact]
     let presentations: [BoardPresentation]
@@ -1065,6 +1072,7 @@ struct BoardRevision: Identifiable, Hashable {
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
+        unilateralHandResolution: UnilateralHandResolution? = nil,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [PhysicalContact],
         productURL: URL,
@@ -1080,6 +1088,7 @@ struct BoardRevision: Identifiable, Hashable {
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.unilateralHandResolution = unilateralHandResolution
         self.equipmentObjects = equipmentObjects
         self.contacts = contacts
         let resolvedPresentations = presentations.isEmpty

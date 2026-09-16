@@ -27,6 +27,23 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertNotNil(geometry["hold-one"])
     }
 
+    func testEditorRoundTripPreservesOptionalUnilateralHandResolution() throws {
+        var payload = try jsonObject(for: makeDocument())
+        payload["unilateralHandResolution"] = "athleteRelative"
+
+        let decoded = try decode(payload)
+        XCTAssertEqual(decoded.unilateralHandResolution, .athleteRelative)
+
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+        let roundTripped = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        XCTAssertEqual(redecoded.unilateralHandResolution, .athleteRelative)
+        XCTAssertEqual(roundTripped["unilateralHandResolution"] as? String, "athleteRelative")
+    }
+
     func testEditorDecoderRejectsLegacyRootHolds() throws {
         var payload = try jsonObject(for: makeDocument())
         payload["holds"] = payload.removeValue(forKey: "contacts")

@@ -10,6 +10,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     var productURL: URL
     var dimensions: String?
     var aspectRatio: Double
+    var unilateralHandResolution: UnilateralHandResolution?
     var equipmentObjects: [EquipmentObject]
     var contacts: [BoardEditableContact]
     var presentations: [BoardEditablePresentation]
@@ -26,6 +27,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         case productURL
         case dimensions
         case aspectRatio
+        case unilateralHandResolution
         case equipmentObjects
         case contacts
         case presentations
@@ -43,6 +45,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL: URL,
         dimensions: String?,
         aspectRatio: Double,
+        unilateralHandResolution: UnilateralHandResolution? = nil,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [BoardEditableContact],
         presentations: [BoardEditablePresentation],
@@ -58,6 +61,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.productURL = productURL
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.unilateralHandResolution = unilateralHandResolution
         self.equipmentObjects = equipmentObjects
         self.contacts = contacts
         self.presentations = presentations
@@ -68,8 +72,8 @@ struct BoardEditableDocument: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "equipmentObjects", "contacts", "presentations",
-            "positions", "positionTransitions"
+            "dimensions", "aspectRatio", "unilateralHandResolution", "equipmentObjects", "contacts",
+            "presentations", "positions", "positionTransitions"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
@@ -88,6 +92,10 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        unilateralHandResolution = try container.decodeIfPresent(
+            UnilateralHandResolution.self,
+            forKey: .unilateralHandResolution
+        )
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode(
                 [BoardEditableEquipmentObjectDocument].self,
@@ -947,6 +955,12 @@ enum BoardPackageWriter {
         }
         if let dimensions = document.dimensions {
             entries.insert(("dimensions", .string(dimensions)), at: 6)
+        }
+        if let unilateralHandResolution = document.unilateralHandResolution {
+            entries.insert((
+                "unilateralHandResolution",
+                .string(unilateralHandResolution.rawValue)
+            ), at: document.dimensions == nil ? 7 : 8)
         }
         entries.append(("revisionID", .string(document.revisionID)))
         entries.append(("contacts", .array(document.contacts.map(canonicalContactValue))))

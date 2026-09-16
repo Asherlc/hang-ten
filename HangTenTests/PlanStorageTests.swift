@@ -472,9 +472,11 @@ final class PlanStorageTests: XCTestCase {
             .filter { !$0.isRestStep && $0.handUse == .either }
             .map(\.id)
         XCTAssertEqual(eitherStepIDs, [
-            "max-hangs-1", "max-hangs-2", "max-hangs-3", "max-hangs-4", "max-hangs-5",
-            "abrahangs-grip-1", "abrahangs-grip-2", "abrahangs-grip-3", "abrahangs-grip-4",
-            "abrahangs-grip-5", "abrahangs-grip-6"
+            "max-hangs-1.segment-1", "max-hangs-2.segment-1", "max-hangs-3.segment-1",
+            "max-hangs-4.segment-1", "max-hangs-5",
+            "abrahangs-grip-1.segment-1", "abrahangs-grip-2.segment-1",
+            "abrahangs-grip-3.segment-1", "abrahangs-grip-4.segment-1",
+            "abrahangs-grip-5.segment-1", "abrahangs-grip-6"
         ])
 
         XCTAssertTrue(

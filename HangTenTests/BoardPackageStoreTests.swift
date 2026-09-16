@@ -40,6 +40,20 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.contacts.map(\.id), ["left-edge", "right-edge"])
     }
 
+    func testMXEdgeLiftPackagesLoadTypedUnilateralResolutionPolicy() throws {
+        let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
+
+        XCTAssertEqual(
+            try XCTUnwrap(store.board(id: "lattice.mxedge-lift-small"))
+                .unilateralHandResolution,
+            .athleteRelative
+        )
+        XCTAssertNil(
+            try XCTUnwrap(store.board(id: "lattice.mxedge-lift-large"))
+                .unilateralHandResolution
+        )
+    }
+
     func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
         let resource = BoardModelResource(
             packageSlug: "metolius-wood-grips-compact-ii",

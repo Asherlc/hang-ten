@@ -555,9 +555,7 @@ enum ContactResolver {
         let contactsByPosition = positionContactInventories.map { inventory in
             board.contacts.filter { inventory.contains($0.id) }
         }
-        // Neutral athlete-hand mapping is source-backed only for this compact
-        // MXEdge Small package; similar model topology does not imply it.
-        guard board.id == "lattice.mxedge-lift-small",
+        guard board.unilateralHandResolution == .athleteRelative,
               case .model = board.defaultPresentation.media,
               positions.count >= 2,
               positions.allSatisfy(\.contactIDsWereExplicitlyAuthored),
