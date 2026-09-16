@@ -11,8 +11,8 @@
   "auditedModelSource": {
     "provenanceType": "user-provided",
     "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
-    "retainedPath": ".context/migration/target10a-linebreaker-base/source.blend",
-    "sha256": "73f7412b56713bb0626ba2f3b1a6e06a5e3a46f3724f89e3559735e855c99821"
+    "retainedPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/target10a-linebreaker-base.glb",
+    "sha256": "0ba7ffbdf52579194429b47bbc997954102ef952e425d76ce12dcb10e5a1e9f3"
   },
   "supersessionRuling": "Replaces raster presentation with model-first 3D package"
 }

@@ -11,8 +11,8 @@
   "auditedModelSource": {
     "provenanceType": "user-provided",
     "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
-    "retainedPath": ".context/migration/metolius-wood-grips-ii-deluxe/source.blend",
-    "sha256": "5f0d27944596fe6bd17aa48c26b1c20a034de53de1084b954b47ffe6faae6ac1"
+    "retainedPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/metolius-wood-grips-ii-deluxe.glb",
+    "sha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a"
   },
   "supersessionRuling": "Replaces raster presentation with model-first 3D package"
 }
