@@ -274,6 +274,14 @@ def _ordered_board_contact_ids(board_json: Path) -> tuple[str, ...]:
     return result  # type: ignore[return-value]
 
 
+def _load_source_model(bpy: object, source_model: Path) -> None:
+    if source_model.suffix.lower() == ".glb":
+        bpy.ops.wm.read_factory_settings(use_empty=True)
+        bpy.ops.import_scene.gltf(filepath=str(source_model))
+        return
+    bpy.ops.wm.open_mainfile(filepath=str(source_model))
+
+
 def import_package(
     manifest_path: Path,
     mapping_path: Path,
@@ -297,7 +305,7 @@ def import_package(
     output.parent.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix=f".{package_id}.contact-import-", dir=output.parent))
     try:
-        bpy.ops.wm.open_mainfile(filepath=str(source_model))
+        _load_source_model(bpy, source_model)
         scene = bpy.context.scene
         source_objects = {item.name: item.type for item in scene.objects}
         validated = validate_mapping(mapping, source_objects)
