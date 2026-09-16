@@ -2,21 +2,21 @@
   "contacts": {
     "edge-10": {
       "center": [
-        0.499992569,
-        0.070540195
+        0.500002924,
+        0.480837719
       ],
       "facePlaneAABB": {
         "max": [
-          0.999844387,
-          0.140678451
+          0.999800589,
+          0.515820985
         ],
         "min": [
-          0.00014075,
-          0.000401939
+          0.000205259,
+          0.445854454
         ]
       },
       "nodeIDs": [
-        "hold_edge_lower_001"
+        "hold_edge_upper_001"
       ]
     },
     "edge-15": {
@@ -40,21 +40,21 @@
     },
     "edge-20": {
       "center": [
-        0.500002924,
-        0.480837719
+        0.499992569,
+        0.070540195
       ],
       "facePlaneAABB": {
         "max": [
-          0.999800589,
-          0.515820985
+          0.999844387,
+          0.140678451
         ],
         "min": [
-          0.000205259,
-          0.445854454
+          0.00014075,
+          0.000401939
         ]
       },
       "nodeIDs": [
-        "hold_edge_upper_001"
+        "hold_edge_lower_001"
       ]
     },
     "jug-rounded": {
@@ -97,7 +97,7 @@
       "role": "body"
     },
     {
-      "contactID": "edge-10",
+      "contactID": "edge-20",
       "nodeID": "hold_edge_lower_001",
       "role": "contact"
     },
@@ -107,7 +107,7 @@
       "role": "contact"
     },
     {
-      "contactID": "edge-20",
+      "contactID": "edge-10",
       "nodeID": "hold_edge_upper_001",
       "role": "contact"
     },

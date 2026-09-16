@@ -653,7 +653,7 @@ the model.
 
 ### Verification (September 15 collection extension)
 
-- `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` now contains 20
+- `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` now contains 26
   current model packages, including the six fixed packages in the collection
   extension table above.
 

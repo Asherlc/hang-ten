@@ -54,52 +54,52 @@
     {
       "sourceNodeID": "hold-upper-four-finger-left",
       "role": "contact",
-      "contactID": "pocket-28-left"
+      "contactID": "pocket-37-left"
     },
     {
       "sourceNodeID": "hold-upper-four-finger-right",
       "role": "contact",
-      "contactID": "pocket-28-right"
+      "contactID": "pocket-37-right"
     },
     {
       "sourceNodeID": "hold-upper-three-finger-left",
       "role": "contact",
-      "contactID": "edge-16-left"
+      "contactID": "pocket-45-left"
     },
     {
       "sourceNodeID": "hold-upper-three-finger-right",
       "role": "contact",
-      "contactID": "edge-16-right"
+      "contactID": "pocket-45-right"
     },
     {
       "sourceNodeID": "hold-middle-four-finger-left",
       "role": "contact",
-      "contactID": "pocket-37-left"
+      "contactID": "edge-20-left"
     },
     {
       "sourceNodeID": "hold-middle-four-finger-right",
       "role": "contact",
-      "contactID": "pocket-37-right"
+      "contactID": "edge-20-right"
     },
     {
       "sourceNodeID": "hold-middle-three-finger-left",
       "role": "contact",
-      "contactID": "pocket-45-left"
+      "contactID": "pocket-28-left"
     },
     {
       "sourceNodeID": "hold-middle-three-finger-right",
       "role": "contact",
-      "contactID": "pocket-45-right"
+      "contactID": "pocket-28-right"
     },
     {
       "sourceNodeID": "hold-middle-two-finger-left",
       "role": "contact",
-      "contactID": "pocket-50-left"
+      "contactID": "pocket-30-left"
     },
     {
       "sourceNodeID": "hold-middle-two-finger-right",
       "role": "contact",
-      "contactID": "pocket-50-right"
+      "contactID": "pocket-30-right"
     },
     {
       "sourceNodeID": "hold-central-35deg-sloper-bar",
@@ -109,32 +109,32 @@
     {
       "sourceNodeID": "hold-lower-outer-two-finger-left",
       "role": "contact",
-      "contactID": "pocket-30-left"
+      "contactID": "pocket-24-left"
     },
     {
       "sourceNodeID": "hold-lower-outer-two-finger-right",
       "role": "contact",
-      "contactID": "pocket-30-right"
+      "contactID": "pocket-24-right"
     },
     {
       "sourceNodeID": "hold-lower-inner-two-finger-left",
       "role": "contact",
-      "contactID": "pocket-24-left"
+      "contactID": "pocket-50-left"
     },
     {
       "sourceNodeID": "hold-lower-inner-two-finger-right",
       "role": "contact",
-      "contactID": "pocket-24-right"
+      "contactID": "pocket-50-right"
     },
     {
       "sourceNodeID": "hold-lower-four-finger-left",
       "role": "contact",
-      "contactID": "edge-20-left"
+      "contactID": "edge-16-left"
     },
     {
       "sourceNodeID": "hold-lower-four-finger-right",
       "role": "contact",
-      "contactID": "edge-20-right"
+      "contactID": "edge-16-right"
     },
     {
       "sourceNodeID": "hold-lower-three-finger-left",

@@ -2,12 +2,12 @@
   "attachmentNodeIDs": [],
   "contactCount": 4,
   "contactMappings": {
-    "hold-edge-lower": "edge-10",
+    "hold-edge-lower": "edge-20",
     "hold-edge-middle": "edge-15",
-    "hold-edge-upper": "edge-20",
+    "hold-edge-upper": "edge-10",
     "hold-jug": "jug-rounded"
   },
-  "descriptorSHA256": "d6125860807cca1a625a99b27267807fc1686bedc4b7f4413feee040a8b4d4d8",
+  "descriptorSHA256": "181074283e3a79e693a5cc974c68dea034f9c077d6e2d6779cf49404b8f099d3",
   "modelBounds": {
     "max": [
       0.395000011,

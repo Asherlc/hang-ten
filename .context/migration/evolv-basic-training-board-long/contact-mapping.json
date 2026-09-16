@@ -20,7 +20,7 @@
     {
       "sourceNodeID": "hold-edge-upper",
       "role": "contact",
-      "contactID": "edge-20"
+      "contactID": "edge-10"
     },
     {
       "sourceNodeID": "hold-edge-middle",
@@ -30,7 +30,7 @@
     {
       "sourceNodeID": "hold-edge-lower",
       "role": "contact",
-      "contactID": "edge-10"
+      "contactID": "edge-20"
     }
   ]
 }
