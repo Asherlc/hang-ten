@@ -467,10 +467,15 @@ final class PlanStorageTests: XCTestCase {
             packageStore: BoardCatalog.packageStore
         )
 
-        for id in ["research.max-hangs", "research.abrahangs"] {
-            let plan = try XCTUnwrap(store.plan(id: id))
-            XCTAssertTrue(plan.steps.filter { !$0.isRestStep }.allSatisfy { $0.handUse == .either })
-        }
+        let eitherStepIDs = store.plans
+            .flatMap(\.steps)
+            .filter { !$0.isRestStep && $0.handUse == .either }
+            .map(\.id)
+        XCTAssertEqual(eitherStepIDs, [
+            "max-hangs-1", "max-hangs-2", "max-hangs-3", "max-hangs-4", "max-hangs-5",
+            "abrahangs-grip-1", "abrahangs-grip-2", "abrahangs-grip-3", "abrahangs-grip-4",
+            "abrahangs-grip-5", "abrahangs-grip-6"
+        ])
 
         XCTAssertTrue(
             (try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))).steps
@@ -2794,10 +2799,23 @@ final class PlanStorageTests: XCTestCase {
     }
 
     private func handSideBoard(id: String, contacts: [PhysicalContact]) -> BoardRevision {
-        BoardRevision(
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece",
+                contactID: contact.id,
+                frame: CGRect(x: 0, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardRevision(
             id: id, revisionID: "test-fixture", manufacturer: "Fixture", name: "Hand-side board",
             subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
-            productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil
+            productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
         )
     }
 

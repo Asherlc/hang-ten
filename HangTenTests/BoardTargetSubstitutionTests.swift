@@ -153,7 +153,7 @@ final class ContactResolverTests: XCTestCase {
     }
 
     func testUnilateralSideRejectsUnknownContactSideMetadata() {
-        let board = fixtureBoard()
+        let board = fixtureBoard(positionContactIDs: ["edge-deep"], handCapacity: 1)
         let requirement = ContactRequirement.edge(
             depthRangeMillimeters: .init(minimum: 29, maximum: 31),
             selection: .single
@@ -163,6 +163,35 @@ final class ContactResolverTests: XCTestCase {
             handUse: .single,
             side: .left
         )
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 0))
+        }
+    }
+
+    func testCompactSingleHandBoardAllowsNeutralContactForEitherAthleteSide() throws {
+        let board = compactSingleHandBoard(id: "lattice.mxedge-lift-small")
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
+            selection: .single
+        )
+
+        for side in [WorkoutSide.left, .right] {
+            let step = fixtureStep(target: requirement, handUse: .single, side: side)
+            XCTAssertEqual(
+                try ContactResolver.resolve(requirement, step: step, board: board).map(\.id),
+                ["lower"]
+            )
+        }
+    }
+
+    func testTopologyMatchingBoardWithoutMXEdgeSmallEligibilityRejectsNeutralContact() {
+        let board = compactSingleHandBoard(id: "lattice.mxedge-lift-large")
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
+            selection: .single
+        )
+        let step = fixtureStep(target: requirement, handUse: .single, side: .left)
 
         XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
             XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 0))
@@ -211,13 +240,15 @@ final class ContactResolverTests: XCTestCase {
         positionContactIDs: [String]? = nil,
         gripTypes: Set<GripType> = [.openHand],
         documentsPair: Bool = false,
-        documentsSides: Bool = false
+        documentsSides: Bool = false,
+        handCapacity: Int? = nil
     ) -> BoardRevision {
         let contacts = [
             PhysicalContact(
                 id: "edge-right",
                 name: "Right edge",
                 kind: .edge,
+                handCapacity: handCapacity,
                 depthRangeMillimeters: rightDepth,
                 gripTypes: gripTypes,
                 side: documentsSides ? .right : nil,
@@ -227,6 +258,7 @@ final class ContactResolverTests: XCTestCase {
                 id: "edge-left",
                 name: "Left edge",
                 kind: .edge,
+                handCapacity: handCapacity,
                 depthRangeMillimeters: 20...20,
                 gripTypes: gripTypes,
                 side: documentsSides ? .left : nil,
@@ -236,6 +268,7 @@ final class ContactResolverTests: XCTestCase {
                 id: "edge-deep",
                 name: "Deep edge",
                 kind: .edge,
+                handCapacity: handCapacity,
                 depthRangeMillimeters: 30...30,
                 gripTypes: gripTypes
             )
@@ -269,11 +302,51 @@ final class ContactResolverTests: XCTestCase {
             photoAssetName: nil,
             presentations: [presentation],
             positions: [
-                BoardPosition(
-                    id: "front",
-                    presentationID: "front",
-                    contactIDs: positionContactIDs ?? contacts.map(\.id)
-                )
+                positionContactIDs.map {
+                    BoardPosition(id: "front", presentationID: "front", contactIDs: $0)
+                } ?? BoardPosition(id: "front", presentationID: "front")
+            ]
+        )
+    }
+
+    private func compactSingleHandBoard(id: String) -> BoardRevision {
+        let contacts = [
+            PhysicalContact(
+                id: "lower", name: "Lower edge", kind: .edge, handCapacity: 1,
+                depthRangeMillimeters: 30...30
+            ),
+            PhysicalContact(
+                id: "inverted", name: "Inverted edge", kind: .edge, handCapacity: 1,
+                depthRangeMillimeters: 8...8
+            )
+        ]
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: 1,
+            coordinateFrame: "board-face-normalized-v1",
+            modelSHA256: "compact-fixture",
+            modelBounds: BoardModelBounds(minimum: [0, 0, 0], maximum: [1, 1, 0.1]),
+            nodes: [],
+            contacts: [:]
+        )
+        let presentation = BoardPresentation(
+            id: "model", name: "Model", aspectRatio: 1, isDefault: true,
+            media: .model(BoardModelMedia(
+                assetPath: "assets/model.usdz",
+                descriptorPath: "assets/model.model.json",
+                descriptor: descriptor,
+                display: BoardModelDisplay(camera: BoardModelCamera(
+                    type: "orthographic", viewDirection: [0, 0, -1], up: [0, 1, 0], fitPadding: 0
+                ))
+            ))
+        )
+        return BoardRevision(
+            id: id, revisionID: "fixture", manufacturer: "Fixture", name: "Compact",
+            subtitle: "", dimensions: nil, aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/compact")!, photoAssetName: nil,
+            presentations: [presentation],
+            positions: [
+                BoardPosition(id: "lower", presentationID: "model", contactIDs: ["lower"]),
+                BoardPosition(id: "inverted", presentationID: "model", contactIDs: ["inverted"])
             ]
         )
     }

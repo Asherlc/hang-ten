@@ -65,16 +65,13 @@ enum CustomRoutineBoardPreview {
         for step: CustomRoutineStepDraft,
         on board: BoardRevision
     ) -> Set<String> {
-        guard !step.targets.isEmpty,
-              let resolvedStep = resolvedStep(for: step, on: board),
-              let contacts = try? ContactResolver.resolve(
-                step.targets,
-                step: resolvedStep,
-                board: board
-              ) else {
+        guard !step.targets.isEmpty else {
             return []
         }
-        return Set(contacts.map(\.id))
+        let resolvedSteps = resolvedSteps(for: step)
+        return Set(resolvedSteps.flatMap {
+            (try? ContactResolver.resolve(step.targets, step: $0, board: board).map(\.id)) ?? []
+        })
     }
 
     static func toggle(
@@ -89,10 +86,7 @@ enum CustomRoutineBoardPreview {
         step.targets = [requirement(for: hold, handUse: step.handUse)]
     }
 
-    private static func resolvedStep(
-        for draft: CustomRoutineStepDraft,
-        on board: BoardRevision
-    ) -> WorkoutStep? {
+    private static func resolvedSteps(for draft: CustomRoutineStepDraft) -> [WorkoutStep] {
         let step = WorkoutStep(
             id: draft.id,
             number: 0,
@@ -113,9 +107,7 @@ enum CustomRoutineBoardPreview {
                 step.resolvingEitherHand(selectedHandSide: $0)
             }
             : [step]
-        return candidates.first {
-            (try? ContactResolver.resolve(draft.targets, step: $0, board: board)) != nil
-        }
+        return candidates
     }
 
     private static func requirement(
@@ -123,7 +115,7 @@ enum CustomRoutineBoardPreview {
         handUse: WorkoutHandUse
     ) -> ContactRequirement {
         ContactRequirement(
-            contactID: handUse == .double ? nil : contact.id,
+            contactID: handUse == .single ? contact.id : nil,
             kind: contact.kind,
             requiredFeatures: contact.features,
             depthRangeMillimeters: contact.depthRangeMillimeters.map {

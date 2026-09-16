@@ -639,6 +639,36 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(store.routines[0].steps[0].targets[0].kind, .edge)
     }
 
+    func testSaveAcceptsGenericEitherHandTarget() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depthRangeMillimeters: .init(minimum: 14, maximum: 14),
+            handCapacity: 1,
+            selection: .single
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.generic-either",
+            title: "Generic either",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "either", title: "Either", instruction: "Hang.", accessory: "",
+                duration: 10, phase: .hang, targets: [requirement], handUse: .either, side: .both
+            )]
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+
+        XCTAssertNil(store.routines.first?.steps.first?.targets.first?.contactID)
+    }
+
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))

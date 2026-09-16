@@ -444,6 +444,7 @@ final class AppStore: ObservableObject {
         _ plan: TrainingPlan,
         startDate: Date,
         endDate: Date,
+        selectedHandSide: WorkoutSide? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         markSessionComplete(
@@ -452,6 +453,7 @@ final class AppStore: ObservableObject {
             stopwatchDurations: [:],
             startDate: startDate,
             endDate: endDate,
+            selectedHandSide: selectedHandSide,
             session: session
         )
     }

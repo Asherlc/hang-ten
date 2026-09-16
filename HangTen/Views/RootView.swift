@@ -2183,6 +2183,7 @@ struct WorkoutView: View {
 			HStack(spacing: 12) {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
+					step: step,
 					countdown: countdown,
 					isResting: isResting,
 					isComplete: isComplete,
@@ -2208,6 +2209,7 @@ struct WorkoutView: View {
 
 				landscapeHandCueSlot(
 					holdCue: holdCue,
+					step: step,
 					countdown: countdown,
 					isResting: isResting,
 					isComplete: isComplete,
@@ -2259,6 +2261,7 @@ struct WorkoutView: View {
 
 	private func landscapeHandCueSlot(
 		holdCue: WorkoutHoldCue?,
+		step: WorkoutStep,
 		countdown: Int,
 		isResting: Bool,
 		isComplete: Bool,
@@ -2273,6 +2276,9 @@ struct WorkoutView: View {
 				countdown: countdown,
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown
+			), WorkoutHoldCueVisibilityPolicy.showsCue(
+				for: side == .left ? .left : .right,
+				step: step
 			) {
 				GripHandCueCard(
 					posture: holdCue.gripType,

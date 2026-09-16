@@ -96,6 +96,21 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHandCuePolicyHidesOppositeCueAfterEitherHandMaterializes() {
+        let eitherHand = WorkoutStep(
+            id: "either", number: 1, title: "Either hand", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .either,
+            side: .both
+        )
+        let resolved = WorkoutLiveStepResolver.materialized(
+            eitherHand,
+            selectedHandSide: .right
+        )
+
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: resolved))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: resolved))
+    }
+
     private func loadedLiftStep(
         id: String = "loaded-lift",
         repetitions: Int,

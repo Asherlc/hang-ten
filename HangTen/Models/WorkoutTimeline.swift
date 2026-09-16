@@ -109,6 +109,14 @@ enum WorkoutHoldCueVisibilityPolicy {
             && !isComplete
             && (countdown == 0 || (countdown > 0 && isSkipCountdown))
     }
+
+    static func showsCue(
+        for cueSide: WorkoutSide,
+        step: WorkoutStep?
+    ) -> Bool {
+        guard let step, step.handUse == .single else { return true }
+        return step.side == cueSide
+    }
 }
 
 enum WorkoutHoldCuePolicy {

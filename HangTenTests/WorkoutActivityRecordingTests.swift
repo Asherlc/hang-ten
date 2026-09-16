@@ -1062,7 +1062,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testEitherHandActivityResolvesOnANeutralSingleHandBoard() throws {
         let board = BoardCatalog.board(for: "lattice-mxedge-lift-small")
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: MillimeterRange(minimum: 8, maximum: 8),
+            depthRangeMillimeters: MillimeterRange(minimum: 14, maximum: 14),
             selection: .single
         )
         let workout = TrainingPlan(
@@ -1090,7 +1090,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             )
             let record = try XCTUnwrap(records.first)
             XCTAssertEqual(record.side, side)
-            XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["edge-8"])
+            XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["edge-14"])
         }
     }
 
@@ -1484,7 +1484,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             guard case let DecodingError.dataCorrupted(context) = error else {
                 return XCTFail("Expected strict segment-field rejection, got \(error)")
             }
-            XCTAssertTrue(context.debugDescription.contains("Unsupported recorded activity field"))
+            XCTAssertTrue(context.debugDescription.contains("Unsupported legacy recorded activity field"))
         }
     }
 

@@ -437,7 +437,12 @@ enum ContactResolver {
                 && matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
-        candidates = applying(step.side, to: candidates)
+        candidates = applying(
+            step.side,
+            to: candidates,
+            on: board,
+            defaultPositionContactIDs: positionContactIDs
+        )
 
         switch requirement.selection {
         case .allMatching:
@@ -516,14 +521,63 @@ enum ContactResolver {
 
     private static func applying(
         _ side: WorkoutSide,
-        to candidates: [PhysicalContact]
+        to candidates: [PhysicalContact],
+        on board: BoardRevision,
+        defaultPositionContactIDs: Set<String>
     ) -> [PhysicalContact] {
         guard side != .both else { return candidates }
         let requiredSide: ContactSide = side == .left ? .left : .right
-        // Compact one-hand boards have no left/right physical orientation. A
-        // neutral contact is therefore valid for either athlete hand, while a
-        // sided contact remains constrained to its documented side.
-        return candidates.filter { $0.side == requiredSide || $0.side == nil }
+        let allowsNeutralContactForEitherHand = isCompactSingleHandBoard(
+            board,
+            defaultPositionContactIDs: defaultPositionContactIDs
+        )
+        return candidates.filter {
+            $0.side == requiredSide || (allowsNeutralContactForEitherHand && $0.side == nil)
+        }
+    }
+
+    /// A compact, single-object board has no board-relative left/right hand.
+    /// This structural contract permits its neutral default-position contacts
+    /// for either athlete hand without weakening sided resolution elsewhere.
+    private static func isCompactSingleHandBoard(
+        _ board: BoardRevision,
+        defaultPositionContactIDs: Set<String>
+    ) -> Bool {
+        let defaultPositionContacts = board.contacts.filter {
+            defaultPositionContactIDs.contains($0.id)
+        }
+        let positions = board.positions.filter {
+            $0.presentationID == board.defaultPresentation.id
+        }
+        let positionContactInventories = positions.map { position in
+            Set(position.contactIDs)
+        }
+        let contactsByPosition = positionContactInventories.map { inventory in
+            board.contacts.filter { inventory.contains($0.id) }
+        }
+        // Neutral athlete-hand mapping is source-backed only for this compact
+        // MXEdge Small package; similar model topology does not imply it.
+        guard board.id == "lattice.mxedge-lift-small",
+              case .model = board.defaultPresentation.media,
+              positions.count >= 2,
+              positions.allSatisfy(\.contactIDsWereExplicitlyAuthored),
+              board.equipmentObjects.count == 1,
+              !defaultPositionContacts.isEmpty,
+              contactsByPosition.allSatisfy({ contacts in
+                  !contacts.isEmpty && contacts.allSatisfy {
+                      $0.equipmentObjectID == board.equipmentObjects[0].id
+                          && $0.handCapacity == 1
+                          && $0.side == nil
+                  }
+              }),
+              positionContactInventories.enumerated().allSatisfy({ index, inventory in
+                  positionContactInventories.dropFirst(index + 1).allSatisfy {
+                      inventory.isDisjoint(with: $0)
+                  }
+              }) else {
+            return false
+        }
+        return true
     }
 
     private static func isDocumentedPair(
