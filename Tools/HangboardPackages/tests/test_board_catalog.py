@@ -302,11 +302,13 @@ def test_board_schema_accepts_equal_bound_fractional_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()
     hold = document["contacts"][0]
-    hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 7.5}
+    hold["depth"] = {"range": {"minimum": 7.5, "maximum": 7.5}}
 
     board = module._load_board(document)
 
-    assert board.contacts[0].depth_range_millimeters == module.MillimeterRange(7.5, 7.5)
+    assert board.contacts[0].depth == module.HoldDepth(
+        range=module.MillimeterRange(7.5, 7.5)
+    )
 
 
 def test_board_schema_rejects_hold_with_unknown_equipment_object_id() -> None:
@@ -335,11 +337,24 @@ def test_board_schema_accepts_fractional_continuous_depth_range() -> None:
     module = load_board_catalog_module()
     document = board_document()
     hold = document["contacts"][0]
-    hold["depthRangeMillimeters"] = {"lowerBound": 7.5, "upperBound": 12.5}
+    hold["depth"] = {"range": {"minimum": 7.5, "maximum": 12.5}}
 
     board = module._load_board(document)
 
-    assert board.contacts[0].depth_range_millimeters == module.MillimeterRange(7.5, 12.5)
+    assert board.contacts[0].depth == module.HoldDepth(
+        range=module.MillimeterRange(7.5, 12.5)
+    )
+
+
+def test_board_schema_accepts_category_only_depth_without_inventing_a_measurement() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    hold = document["contacts"][0]
+    hold["depth"] = {"category": "large"}
+
+    board = module._load_board(document)
+
+    assert board.contacts[0].depth == module.HoldDepth(category="large")
 
 
 def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
@@ -401,39 +416,27 @@ def test_board_schema_rejects_invalid_gaston_pair_metadata(mutate) -> None:
         module._load_board(document)
 
 
-@pytest.mark.parametrize("feature", ["flatSloper", "roundSloper"])
-def test_board_schema_exposes_sloper_shape_as_a_contact_feature(feature: str) -> None:
+@pytest.mark.parametrize("shape", ["flat", "round"])
+def test_board_schema_exposes_sloper_shape_as_a_contact_shape(shape: str) -> None:
     module = load_board_catalog_module()
     document = board_document()
     hold = document["contacts"][0]
     hold["kind"] = "sloper"
-    hold["features"] = [feature]
+    hold["shape"] = shape
 
     board = module._load_board(document)
 
-    assert board.contacts[0].features == frozenset({feature})
+    assert board.contacts[0].shape == shape
 
 
-def test_board_schema_exposes_outer_jug_as_a_contact_feature() -> None:
-    module = load_board_catalog_module()
-    document = board_document()
-    hold = document["contacts"][0]
-    hold["kind"] = "jug"
-    hold["features"] = ["outerJug"]
-
-    board = module._load_board(document)
-
-    assert board.contacts[0].features == frozenset({"outerJug"})
-
-
-def test_board_schema_allows_sloper_without_shape_feature() -> None:
+def test_board_schema_allows_sloper_without_shape() -> None:
     module = load_board_catalog_module()
     document = board_document()
     document["contacts"][0]["kind"] = "sloper"
 
     board = module._load_board(document)
 
-    assert board.contacts[0].features == frozenset()
+    assert board.contacts[0].shape is None
 
 
 def test_board_schema_rejects_legacy_sloper_metadata() -> None:
@@ -447,13 +450,13 @@ def test_board_schema_rejects_legacy_sloper_metadata() -> None:
         module._load_board(document)
 
 
-def test_board_schema_rejects_legacy_fixed_depth_member() -> None:
+def test_board_schema_rejects_unsupported_depth_category() -> None:
     module = load_board_catalog_module()
     document = board_document()
     hold = document["contacts"][0]
-    hold["sizeMillimeters"] = 7.5
+    hold["depth"] = {"category": "huge"}
 
-    with pytest.raises(ValueError, match=r"board\.json\.contacts\[0\] has unknown keys"):
+    with pytest.raises(ValueError, match=r"depth\.category is unsupported"):
         module._load_board(document)
 
 

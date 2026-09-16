@@ -34,10 +34,13 @@ PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
-    depth = contact.get("depthRangeMillimeters")
-    if not isinstance(depth, dict) or depth.get("lowerBound") != depth.get("upperBound"):
+    depth = contact.get("depth")
+    if not isinstance(depth, dict):
         return None
-    value = depth["lowerBound"]
+    range_value = depth.get("range")
+    if not isinstance(range_value, dict) or range_value.get("minimum") != range_value.get("maximum"):
+        return None
+    value = range_value["minimum"]
     assert isinstance(value, (int, float)) and not isinstance(value, bool)
     return value
 
@@ -233,14 +236,14 @@ COMPACT_HOLDS = (
 )
 
 # Each value is (source-backed kind, scalar depth, capacity, structural pocket
-# grip, feature set). Sloper descriptors are not scalar depths, non-pocket
-# capacities are not published, and the manufacturer publishes no package
-# feature tags.
+# grip, shape). Sloper descriptors are not scalar depths, non-pocket
+# capacities are not published, and the manufacturer publishes no additional
+# shape metadata for edges or pockets.
 COMPACT_HOLD_SOURCE_FACTS = {
     "jug-left": ("jug", None, None, None, ()),
-    "sloper-flat-left": ("sloper", None, None, None, ("flatSloper",)),
-    "sloper-round-center": ("sloper", None, None, None, ("roundSloper",)),
-    "sloper-flat-right": ("sloper", None, None, None, ("flatSloper",)),
+    "sloper-flat-left": ("sloper", None, None, None, "flat"),
+    "sloper-round-center": ("sloper", None, None, None, "round"),
+    "sloper-flat-right": ("sloper", None, None, None, "flat"),
     "jug-right": ("jug", None, None, None, ()),
     "edge-29-left": ("edge", 29, None, None, ()),
     "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ()),
@@ -589,7 +592,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("small-crimp-left", "Left small crimp", "edge"),
         ("small-crimp-right", "Right small crimp", "edge"),
     ]
-    assert all("sizeMillimeters" not in contact for contact in board["contacts"])
+    assert all("depth" not in contact for contact in board["contacts"])
     # Four positions over the shared model: upright/inverted for each usable face.
     # The small-crimp contacts are independently modeled on the suspended asset.
     assert board["positions"] == [
@@ -1036,12 +1039,12 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
         "id",
         "name",
         "kind",
-        "depthRangeMillimeters",
+        "depth",
+        "shape",
         "fingerCapacity",
         "handCapacity",
         "equipmentObjectID",
         "gripTypes",
-        "features",
         "side",
         "pairedContactID",
     }
@@ -1052,9 +1055,10 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     assert all(set(contact) <= supported_fields for contact in contacts)
     assert {contact.get("equipmentObjectID") for contact in contacts} == {"primary"}
     assert all(
-        "depthRangeMillimeters" not in contact
-        or contact["depthRangeMillimeters"]["lowerBound"]
-        == contact["depthRangeMillimeters"]["upperBound"]
+        "depth" not in contact
+        or "category" in contact["depth"]
+        or contact["depth"]["range"]["minimum"]
+        == contact["depth"]["range"]["maximum"]
         for contact in contacts
     )
     expected_pocket_grips = {
@@ -1078,7 +1082,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
             _scalar_depth(contact),
             contact.get("fingerCapacity"),
             _single_grip_type(contact),
-            tuple(contact.get("features", ())),
+            contact.get("shape"),
         )
         for contact in contacts
     } == COMPACT_HOLD_SOURCE_FACTS

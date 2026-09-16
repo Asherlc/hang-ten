@@ -17,21 +17,19 @@ from hangboard_packages.metadata_audit import (
 
 _FIELDS = (
     "kind",
-    "sizeMillimeters",
-    "depthRangeMillimeters",
+    "depth",
     "fingerCapacity",
     "handCapacity",
     "gripType",
-    "features",
-    "sloper",
+    "shape",
 )
 
 
 def _scalar_depth(contact: object) -> int | float | None:
-    depth = contact.depth_range_millimeters
-    if depth is None or depth.lower_bound != depth.upper_bound:
+    depth = contact.depth
+    if depth is None or depth.range is None or depth.range.minimum != depth.range.maximum:
         return None
-    return depth.lower_bound
+    return depth.range.minimum
 
 
 def _single_grip_type(contact: object) -> str | None:
@@ -204,8 +202,6 @@ def _complete_records(
     for field in _FIELDS:
         if field in values:
             records.append(verified(board_id, contact_id, field, values[field]))
-        elif field == "sloper" and values["kind"] != "sloper":
-            records.append(not_applicable(board_id, contact_id, field))
         else:
             records.append(unavailable(board_id, contact_id, field))
     return records
@@ -253,15 +249,15 @@ def _supplemental_sloper_package(tmp_path: Path) -> None:
 
 def _supplemental_sloper_records() -> list[dict[str, object]]:
     return [
-        unavailable("supplemental.board", "sloper-left", "sloper"),
-        not_applicable("supplemental.board", "edge-right", "sloper"),
+        unavailable("supplemental.board", "sloper-left", "shape"),
+        unavailable("supplemental.board", "edge-right", "shape"),
     ]
 
 
 def test_parser_declares_a_disjoint_sloper_only_board_scope(tmp_path: Path) -> None:
     ledger_path = _write_ledger(
         tmp_path,
-        [unavailable("supplemental.board", "sloper-left", "sloper")],
+        [unavailable("supplemental.board", "sloper-left", "shape")],
         reviewed_board_ids=["fixture.board"],
         sloper_only_board_ids=["supplemental.board"],
     )
@@ -300,13 +296,13 @@ def test_parser_rejects_board_in_full_and_sloper_only_scopes(tmp_path: Path) -> 
 def test_parser_rejects_unrelated_field_for_sloper_only_board(tmp_path: Path) -> None:
     ledger_path = _write_ledger(
         tmp_path,
-        [unavailable("supplemental.board", "sloper-left", "features")],
+        [unavailable("supplemental.board", "sloper-left", "depth")],
         sloper_only_board_ids=["supplemental.board"],
     )
 
     with pytest.raises(
         MetadataAuditError,
-        match="sloper-only board supplemental.board must use field sloper",
+        match="sloper-only board supplemental.board must use field shape",
     ):
         load_metadata_ledger(ledger_path)
 
@@ -474,11 +470,11 @@ def _package_with_metadata(tmp_path: Path) -> Path:
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
     document["contacts"][0].update(
         {
-            "depthRangeMillimeters": {"lowerBound": 18, "upperBound": 18},
+            "depth": {"range": {"minimum": 18, "maximum": 18}},
             "fingerCapacity": 2,
             "handCapacity": 1,
             "gripTypes": ["halfCrimp"],
-            "features": ["smallEdge", "incutEdge"],
+            "shape": "incut",
         }
     )
     range_hold = dict(document["contacts"][0])
@@ -486,7 +482,7 @@ def _package_with_metadata(tmp_path: Path) -> Path:
         {
             "id": "hold-range",
             "name": "Range hold",
-            "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
+            "depth": {"range": {"minimum": 10, "maximum": 14.5}},
         }
     )
     document["contacts"].append(range_hold)
@@ -506,7 +502,7 @@ def _package_with_flat_sloper(tmp_path: Path, sloper: dict[str, object] | None =
     document["contacts"][0].update(
         {
             "kind": "sloper",
-            "features": ["flatSloper" if sloper_type == "flat" else "roundSloper"],
+            "shape": sloper_type,
         }
     )
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
@@ -541,7 +537,7 @@ def _sloper_ledger_records(
         {
             "boardID": "fixture.board",
             "contactIDs": ["hold-left"],
-            "field": "sloper",
+            "field": "shape",
             "outcome": "verified",
             "reviewedAt": "2026-08-25",
             "source": source
@@ -550,13 +546,13 @@ def _sloper_ledger_records(
                 "url": "https://example.com/fixture-source",
                 "label": "Fixture manufacturer source",
             },
-            "value": value,
+            "value": value["type"],
         },
     ]
     records.extend(
         unavailable("fixture.board", "hold-left", field)
         for field in _FIELDS
-        if field not in {"kind", "sloper"}
+        if field not in {"kind", "shape"}
     )
     return records
 
@@ -572,7 +568,7 @@ def test_sloper_ledger_verified_value_matches_flat_hold(tmp_path: Path) -> None:
         load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
     )
 
-    assert report.fields["sloper"].to_json() == {
+    assert report.fields["shape"].to_json() == {
         "populated": 1,
         "verified": 1,
         "adapted": 0,
@@ -594,7 +590,7 @@ def test_sloper_ledger_verified_value_matches_round_hold(
         load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
     )
 
-    assert report.fields["sloper"].to_json()["verified"] == 1
+    assert report.fields["shape"].to_json()["verified"] == 1
 
 
 def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
@@ -629,7 +625,7 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
         load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
     )
 
-    assert report.fields["sloper"].to_json() == {
+    assert report.fields["shape"].to_json() == {
         "populated": 0,
         "verified": 0,
         "adapted": 0,
@@ -638,17 +634,15 @@ def test_sloper_ledger_allows_unavailable_record_for_omitted_metadata(
     }
 
 
-def test_sloper_ledger_rejects_legacy_angle_absent_from_contact_features(tmp_path: Path) -> None:
+def test_shape_ledger_rejects_unsupported_shape(tmp_path: Path) -> None:
     _package_with_flat_sloper(tmp_path)
     ledger_path = _write_ledger(
         tmp_path,
-        _sloper_ledger_records({"type": "flat", "angleDegrees": 25}),
+        _sloper_ledger_records({"type": "oval"}),
     )
 
-    with pytest.raises(MetadataAuditError, match="sloper does not match"):
-        validate_metadata_ledger(
-            load_metadata_ledger(ledger_path), discover_board_packages(tmp_path / "boards")
-        )
+    with pytest.raises(MetadataAuditError, match="unsupported"):
+        load_metadata_ledger(ledger_path)
 
 
 @pytest.mark.parametrize(
@@ -684,11 +678,11 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
         "fixture.board",
         "hold-left",
         verified_values={
-            "sizeMillimeters": 18,
+            "depth": {"range": {"minimum": 18, "maximum": 18}},
             "fingerCapacity": 2,
             "handCapacity": 1,
             "gripType": "halfCrimp",
-            "features": ["smallEdge", "incutEdge"],
+            "shape": "incut",
         },
     )
     records.extend(
@@ -696,11 +690,11 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
             "fixture.board",
             "hold-range",
             verified_values={
-                "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 14.5},
+                "depth": {"range": {"minimum": 10, "maximum": 14.5}},
                 "fingerCapacity": 2,
                 "handCapacity": 1,
                 "gripType": "halfCrimp",
-                "features": ["smallEdge", "incutEdge"],
+                "shape": "incut",
             },
         )
     )
@@ -712,24 +706,20 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
     )
 
     assert report.reviewed_board_ids == ("fixture.board",)
-    assert report.fields["sizeMillimeters"].populated == 1
-    assert report.fields["sizeMillimeters"].verified == 1
-    assert report.fields["depthRangeMillimeters"].populated == 1
-    assert report.fields["depthRangeMillimeters"].verified == 1
-    assert report.fields["features"].populated == 2
+    assert report.fields["depth"].populated == 2
+    assert report.fields["depth"].verified == 2
+    assert report.fields["shape"].populated == 2
     assert report.boards[0].unaccounted_fields == 0
     assert report.to_json() == {
         "reviewedBoardIDs": ["fixture.board"],
         "sloperOnlyBoardIDs": [],
         "fields": {
-            "kind": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
-            "sizeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
-            "depthRangeMillimeters": {"populated": 1, "verified": 1, "adapted": 0, "unavailable": 1, "notApplicable": 0},
+            "depth": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
             "fingerCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
-            "handCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
             "gripType": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
-            "features": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
-            "sloper": {"populated": 0, "verified": 0, "adapted": 0, "unavailable": 0, "notApplicable": 2},
+            "handCapacity": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "kind": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
+            "shape": {"populated": 2, "verified": 2, "adapted": 0, "unavailable": 0, "notApplicable": 0},
         },
         "boards": [
             {
@@ -737,8 +727,8 @@ def test_validates_exact_scalar_range_and_unavailable_metadata(tmp_path: Path) -
                 "populated": 12,
                 "verified": 12,
                 "adapted": 0,
-                "unavailable": 2,
-                "notApplicable": 2,
+                "unavailable": 0,
+                "notApplicable": 0,
                 "unaccountedFields": 0,
             }
         ],
@@ -836,8 +826,8 @@ def test_reviewed_catalog_ledger_has_complete_eight_field_coverage() -> None:
         "populated": 65,
         "verified": 65,
         "adapted": 0,
-        "unavailable": 118,
-        "notApplicable": 33,
+        "unavailable": 86,
+        "notApplicable": 11,
         "unaccountedFields": 0,
     }
 
@@ -911,15 +901,16 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     assert adapted_kind_ids == expected_adaptations
     assert len(adapted_kind_ids) == 26
 
-    training_tile_pocket_sloper = next(
+    training_tile_pocket_shape = next(
         record
         for record in records
         if record["boardID"] == "soill.training-tiles"
-        and record["field"] == "sloper"
+        and record["field"] == "shape"
         and "top-pocket-outer-left" in record["contactIDs"]
     )
-    assert "non-pocket" not in training_tile_pocket_sloper["reason"]
-    assert "adapted pocket contact role" in training_tile_pocket_sloper["reason"]
+    assert training_tile_pocket_shape["reason"] == (
+        "The normalized contact schema intentionally omits this legacy feature label."
+    )
 
 
 def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> None:
@@ -961,14 +952,14 @@ def test_beastmaker_1000_keeps_source_backed_kinds_and_positioned_options() -> N
         "20 Degree Center Sloper"
     )
     assert all(
-        hold.depth_range_millimeters is None
-        or hold.depth_range_millimeters.lower_bound
-        == hold.depth_range_millimeters.upper_bound
+        hold.depth is None
+        or hold.depth.range is None
+        or hold.depth.range.minimum == hold.depth.range.maximum
         for hold in board.contacts
     )
     assert all(hold.hand_capacity is None for hold in board.contacts)
     assert all(_single_grip_type(hold) is None for hold in board.contacts)
-    assert all(hold.features == frozenset() for hold in board.contacts)
+    assert all(hold.shape is None for hold in board.contacts)
 
 
 def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
@@ -989,24 +980,24 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
         "mono-right": (22, 1, None),
     }
     assert {
-        hold.id: hold.features for hold in moon.contacts if hold.features
+        hold.id: hold.shape for hold in moon.contacts if hold.shape
     } == {
-        "edge-25-left": frozenset({"slot"}),
-        "edge-25-right": frozenset({"slot"}),
-        "edge-20-left": frozenset({"slot"}),
-        "edge-20-right": frozenset({"slot"}),
-        "edge-15-left": frozenset({"slot"}),
-        "edge-15-right": frozenset({"slot"}),
-        "edge-10-left": frozenset({"slot"}),
-        "edge-10-right": frozenset({"slot"}),
-        "edge-8-left": frozenset({"slot"}),
-        "edge-8-right": frozenset({"slot"}),
+        "edge-25-left": "slot",
+        "edge-25-right": "slot",
+        "edge-20-left": "slot",
+        "edge-20-right": "slot",
+        "edge-15-left": "slot",
+        "edge-15-right": "slot",
+        "edge-10-left": "slot",
+        "edge-10-right": "slot",
+        "edge-8-left": "slot",
+        "edge-8-right": "slot",
     }
     assert all(
         (
-            hold.depth_range_millimeters is None
-            or hold.depth_range_millimeters.lower_bound
-            == hold.depth_range_millimeters.upper_bound
+            hold.depth is None
+            or hold.depth.range is None
+            or hold.depth.range.minimum == hold.depth.range.maximum
         )
         and hold.hand_capacity is None
         for hold in moon.contacts
@@ -1015,26 +1006,24 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     beta = packages["escape-beta-22"]
     assert len(beta.contacts) == 22
     assert {
-        hold.id: hold.features
+        hold.id: hold.shape
         for hold in beta.contacts
-        if hold.features
+        if hold.shape
     } == {
-        "hold-02-left": frozenset({"widePinch"}),
-        "hold-02-right": frozenset({"widePinch"}),
-        "hold-05-left": frozenset({"incutEdge"}),
-        "hold-05-right": frozenset({"incutEdge"}),
-        "hold-06-left": frozenset({"flatEdge"}),
-        "hold-06-right": frozenset({"flatEdge"}),
-        "hold-07-left": frozenset({"flatEdge"}),
-        "hold-07-right": frozenset({"flatEdge"}),
-        "hold-08-left": frozenset({"flatEdge"}),
-        "hold-08-right": frozenset({"flatEdge"}),
+        "hold-05-left": "incut",
+        "hold-05-right": "incut",
+        "hold-06-left": "flat",
+        "hold-06-right": "flat",
+        "hold-07-left": "flat",
+        "hold-07-right": "flat",
+        "hold-08-left": "flat",
+        "hold-08-right": "flat",
     }
     assert all(
         (
-            hold.depth_range_millimeters is None
-            or hold.depth_range_millimeters.lower_bound
-            == hold.depth_range_millimeters.upper_bound
+            hold.depth is None
+            or hold.depth.range is None
+            or hold.depth.range.minimum == hold.depth.range.maximum
         )
         and hold.finger_capacity is None
         and hold.hand_capacity is None
@@ -1045,16 +1034,16 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     megalith = packages["frictitious.megalith"]
     assert len(megalith.contacts) == 18
     assert {
-        hold.id: (hold.hand_capacity, hold.features)
+        hold.id: (hold.hand_capacity, hold.shape)
         for hold in megalith.contacts
-        if hold.hand_capacity is not None or hold.features
+        if hold.hand_capacity is not None or hold.shape
     } == {
-        "center-edge-25": (1, frozenset({"incutEdge"})),
+        "center-edge-25": (1, "incut"),
     }
     assert all(
-        hold.depth_range_millimeters is None
-        or hold.depth_range_millimeters.lower_bound
-        == hold.depth_range_millimeters.upper_bound
+        hold.depth is None
+        or hold.depth.range is None
+        or hold.depth.range.minimum == hold.depth.range.maximum
         for hold in megalith.contacts
     )
     assert all(_single_grip_type(hold) is None for hold in megalith.contacts)
@@ -1118,13 +1107,13 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
     assert _single_grip_type(top_jug) is None
     assert {
         hold.id: (
-            hold.depth_range_millimeters.lower_bound,
-            hold.depth_range_millimeters.upper_bound,
+            hold.depth.range.minimum,
+            hold.depth.range.maximum,
         )
         for hold in nature.contacts
-        if hold.depth_range_millimeters is not None
-        and hold.depth_range_millimeters.lower_bound
-        != hold.depth_range_millimeters.upper_bound
+        if hold.depth is not None
+        and hold.depth.range is not None
+        and hold.depth.range.minimum != hold.depth.range.maximum
     } == {
         "gradient-edge-left": (10, 25),
         "gradient-edge-right": (10, 25),
@@ -1179,18 +1168,18 @@ def test_yy_and_zlag_keep_exact_source_terms_without_type_inference() -> None:
         )
         assert sloper_jug.kind == "sloper"
         assert _single_grip_type(sloper_jug) == "sloper"
-        assert sloper_jug.features == frozenset({"jug"})
+        assert sloper_jug.shape is None
 
     assert {
-        hold.id: hold.features
+        hold.id: hold.shape
         for hold in packages["zlagboard.pro"].contacts
         if hold.id.startswith("edge-incut-")
     } == {
-        "edge-incut-15-left": frozenset({"incutEdge"}),
-        "edge-incut-30-left": frozenset({"incutEdge"}),
-        "edge-incut-10-center": frozenset({"incutEdge"}),
-        "edge-incut-30-right": frozenset({"incutEdge"}),
-        "edge-incut-15-right": frozenset({"incutEdge"}),
+        "edge-incut-15-left": "incut",
+        "edge-incut-30-left": "incut",
+        "edge-incut-10-center": "incut",
+        "edge-incut-30-right": "incut",
+        "edge-incut-15-right": "incut",
     }
 
 
@@ -1210,11 +1199,11 @@ def test_training_tiles_contacts_keep_unsupported_measurements_absent() -> None:
 
     assert all(
         _scalar_depth(hold) is None
-        and hold.depth_range_millimeters is None
+        and hold.depth is None
         and hold.finger_capacity is None
         and hold.hand_capacity is None
         and _single_grip_type(hold) is None
-        and hold.features == frozenset()
+        and hold.shape is None
         for hold in package.board.contacts
     )
     assert len(package.board.contacts) == 20
@@ -1250,7 +1239,10 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
     }
     assert next(
         hold for hold in forge.contacts if hold.id == "large-flat-edge-left"
-    ).features == frozenset({"largeEdge", "flatEdge"})
+    ).shape == "flat"
+    assert next(
+        hold for hold in forge.contacts if hold.id == "large-flat-edge-left"
+    ).depth.category == "large"
 
     natural = packages["trango.rock-prodigy-natural"]
     assert all(hold.finger_capacity == 4 for hold in natural.contacts[:8])
@@ -1308,34 +1300,33 @@ def test_trango_metadata_matches_exact_manufacturer_hold_guides() -> None:
     assert all(
         hold.finger_capacity is None
         and _single_grip_type(hold) is None
-        and hold.features == frozenset()
+        and hold.shape is None
         for hold in training_center.contacts
         if hold.kind == "pocket"
     )
     assert next(
         hold for hold in training_center.contacts if hold.id == "pinch-medium-left"
-    ).features == frozenset()
+    ).shape is None
     large_edge = next(
         hold for hold in training_center.contacts if hold.id == "edge-large-vder-left"
     )
     assert _single_grip_type(large_edge) is None
-    assert large_edge.features == frozenset()
+    assert large_edge.shape is None
     assert next(
         hold for hold in training_center.contacts if hold.id == "pinch-wide-left"
-    ).features == frozenset()
+    ).shape is None
 
 
 def test_unavailable_value_must_be_absent_from_package(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 18,
-        "upperBound": 18,
+    document["contacts"][0]["depth"] = {
+        "range": {"minimum": 18, "maximum": 18},
     }
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     ledger = _write_ledger(tmp_path, _complete_records("fixture.board", "hold-left"))
 
-    with pytest.raises(MetadataAuditError, match="sizeMillimeters must be absent"):
+    with pytest.raises(MetadataAuditError, match="depth must be absent"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )
@@ -1354,10 +1345,10 @@ def test_rejects_an_unknown_contact_id(tmp_path: Path) -> None:
 def test_rejects_duplicate_expanded_record_keys(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "fixture")
     records = _complete_records("fixture.board", "hold-left")
-    records.append(unavailable("fixture.board", "hold-left", "sizeMillimeters"))
+    records.append(unavailable("fixture.board", "hold-left", "depth"))
     ledger = _write_ledger(tmp_path, records)
 
-    with pytest.raises(MetadataAuditError, match="duplicate record for fixture.board/hold-left/sizeMillimeters"):
+    with pytest.raises(MetadataAuditError, match="duplicate record for fixture.board/hold-left/depth"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )
@@ -1366,19 +1357,20 @@ def test_rejects_duplicate_expanded_record_keys(tmp_path: Path) -> None:
 def test_verified_scalar_must_equal_the_package_value(tmp_path: Path) -> None:
     package = write_board_package(tmp_path / "boards" / "fixture", board_id="fixture.board")
     document = json.loads((package / "board.json").read_text(encoding="utf-8"))
-    document["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 20,
-        "upperBound": 20,
+    document["contacts"][0]["depth"] = {
+        "range": {"minimum": 20, "maximum": 20},
     }
     (package / "board.json").write_text(json.dumps(document), encoding="utf-8")
     ledger = _write_ledger(
         tmp_path,
         _complete_records(
-            "fixture.board", "hold-left", verified_values={"sizeMillimeters": 18}
+            "fixture.board",
+            "hold-left",
+            verified_values={"depth": {"range": {"minimum": 18, "maximum": 18}}},
         ),
     )
 
-    with pytest.raises(MetadataAuditError, match="sizeMillimeters does not match"):
+    with pytest.raises(MetadataAuditError, match="depth does not match"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )
@@ -1388,10 +1380,10 @@ def test_rejects_incomplete_reviewed_board(tmp_path: Path) -> None:
     write_board_package(tmp_path / "boards" / "fixture")
     ledger = _write_ledger(
         tmp_path,
-        [unavailable("fixture.board", "hold-left", "sizeMillimeters")],
+        [unavailable("fixture.board", "hold-left", "depth")],
     )
 
-    with pytest.raises(MetadataAuditError, match="missing record for fixture.board/hold-left/depthRangeMillimeters"):
+    with pytest.raises(MetadataAuditError, match="missing record for fixture.board/hold-left/fingerCapacity"):
         validate_metadata_ledger(
             load_metadata_ledger(ledger), discover_board_packages(tmp_path / "boards")
         )

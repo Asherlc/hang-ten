@@ -70,12 +70,11 @@ test("contacts accept exactly one tagged depth representation", () => {
   invalid.contacts[0]!.depth = { category: "large", range: { minimum: 25, maximum: 30 } };
   assert.throws(() => validateEditorDocument(invalid), /valid factual contacts/);
 
-  const legacy = document() as unknown as {
+  const malformed = document() as unknown as {
     contacts: Array<Record<string, unknown>>;
   };
-  delete legacy.contacts[0]!.depth;
-  legacy.contacts[0]!.depthRangeMillimeters = { lowerBound: 25, upperBound: 30 };
-  assert.throws(() => validateEditorDocument(legacy), /valid factual contacts/);
+  malformed.contacts[0]!.depth = { range: { minimum: 30, maximum: 25 } };
+  assert.throws(() => validateEditorDocument(malformed), /valid factual contacts/);
 });
 
 test("legacy IDs and factual fields inside regions are rejected", () => {

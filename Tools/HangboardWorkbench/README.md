@@ -9,7 +9,7 @@ for catalog review but are deliberately read-only.
 
 `board.json.contacts[]` owns sourced physical facts: contact identity, name,
 kind, equipment object, side and pairing, measured dimensions or depth,
-capacities, grip types, and documented features. Workbench edits those facts in
+capacities, grip types, documented shape, and tagged depth. Workbench edits those facts in
 the contact inspector and writes each change only to the matching contact.
 
 A raster presentation owns its authored media geometry at

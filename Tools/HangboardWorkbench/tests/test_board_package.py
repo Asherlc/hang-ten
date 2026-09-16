@@ -1244,7 +1244,7 @@ def test_preserves_optional_metadata_and_derives_a_multipiece_union_frame(
     contact = package.board["contacts"][0]
 
     assert set(contact) == {
-        "id", "equipmentObjectID", "name", "kind", "features", "gripTypes"
+        "id", "equipmentObjectID", "name", "kind", "gripTypes"
     }
     assert package.contact_frame("contact-left").to_json() == {
         "x": 0.05,
@@ -1840,7 +1840,7 @@ def test_save_round_trips_optional_finger_capacity_for_all_pieces_of_a_contact(
     assert board_package.editor_document(saved)["contacts"][0]["fingerCapacity"] == 3
 
 
-def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_contact(
+def test_save_round_trips_optional_tagged_depth_for_all_pieces_of_a_contact(
     tmp_path: Path,
 ) -> None:
     library = _library(tmp_path)
@@ -1848,31 +1848,29 @@ def test_save_round_trips_optional_depth_range_for_all_pieces_of_a_contact(
     package = board_package.load_board_package(package_root)
     document = board_package.editor_document(package)
 
-    document["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 12,
-        "upperBound": 16,
+    document["contacts"][0]["depth"] = {
+        "range": {"minimum": 12, "maximum": 16},
     }
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
-    assert _read_board(package_root)["contacts"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 12,
-        "upperBound": 16,
+    assert _read_board(package_root)["contacts"][0]["depth"] == {
+        "range": {"minimum": 12, "maximum": 16},
     }
     assert board_package.editor_document(saved)["contacts"][0][
-        "depthRangeMillimeters"
-    ] == {"lowerBound": 12, "upperBound": 16}
+        "depth"
+    ] == {"range": {"minimum": 12, "maximum": 16}}
 
 
 @pytest.mark.parametrize(
     ("measurement", "message"),
     [
         (
-            {"depthRangeMillimeters": {"lowerBound": 0, "upperBound": 7.5}},
-            "positive number",
+            {"depth": {"range": {"minimum": -0.1, "maximum": 7.5}}},
+            "must be non-negative",
         ),
         (
-            {"depthRangeMillimeters": {"lowerBound": 12.5, "upperBound": 7.5}},
+            {"depth": {"range": {"minimum": 12.5, "maximum": 7.5}}},
             "must not exceed",
         ),
     ],
@@ -1888,7 +1886,7 @@ def test_opening_rejects_invalid_fractional_contact_measurements(
         board_package.open_package(library, "fixture.board")
 
 
-def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(
+def test_save_round_trips_hand_capacity_and_tagged_depth_for_all_pieces(
     tmp_path: Path,
 ) -> None:
     """Removing either metadata field from persistence breaks this contract."""
@@ -1897,19 +1895,18 @@ def test_save_round_trips_hand_capacity_and_depth_range_for_all_pieces(
     document = board_package.editor_document(board_package.load_board_package(package_root))
 
     document["contacts"][0]["handCapacity"] = 2
-    document["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 12,
-        "upperBound": 16,
+    document["contacts"][0]["depth"] = {
+        "category": "large",
     }
 
     saved = board_package.save_editor_document(library, "fixture-board", document)
 
     stored = _read_board(package_root)["contacts"][0]
     assert stored["handCapacity"] == 2
-    assert stored["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
+    assert stored["depth"] == {"category": "large"}
     edited = board_package.editor_document(saved)["contacts"][0]
     assert edited["handCapacity"] == 2
-    assert edited["depthRangeMillimeters"] == {"lowerBound": 12, "upperBound": 16}
+    assert edited["depth"] == {"category": "large"}
 
 
 def test_save_rejects_an_explicit_null_finger_capacity(tmp_path: Path) -> None:
@@ -1958,7 +1955,6 @@ def test_save_adds_a_new_contact(tmp_path: Path) -> None:
             "equipmentObjectID": "primary",
             "name": "Right contact",
             "kind": "pinch",
-            "features": [],
             "gripTypes": [],
         }
     )

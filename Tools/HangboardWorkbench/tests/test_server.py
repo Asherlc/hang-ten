@@ -489,16 +489,15 @@ def test_model_only_package_is_listed_as_unavailable_without_reading_model_blobs
         }
 
 
-def test_opening_a_board_exposes_factual_depth_range_on_the_contact(
+def test_opening_a_board_exposes_tagged_range_depth_on_the_contact(
     tmp_path: Path,
 ) -> None:
     """Dropping fixed depth from the GET payload makes the inspector show Unset."""
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    board["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 7.5,
-        "upperBound": 12.5,
+    board["contacts"][0]["depth"] = {
+        "range": {"minimum": 7.5, "maximum": 12.5},
     }
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
@@ -507,8 +506,8 @@ def test_opening_a_board_exposes_factual_depth_range_on_the_contact(
 
     assert status == 200
     assert opened["board"]["document"]["contacts"][0][
-        "depthRangeMillimeters"
-    ] == {"lowerBound": 7.5, "upperBound": 12.5}
+        "depth"
+    ] == {"range": {"minimum": 7.5, "maximum": 12.5}}
 
 
 def test_server_opens_and_saves_contact_facts_without_geometry_duplication(
@@ -571,7 +570,7 @@ def test_put_rejects_removed_sloper_metadata_with_bad_request(
     assert "unknown keys" in result["error"]
 
 
-def test_saving_and_clearing_depth_range_round_trips_through_the_server(
+def test_saving_and_clearing_tagged_depth_round_trips_through_the_server(
     tmp_path: Path,
 ) -> None:
     """A fixed-depth edit must persist, reopen, and clear through the HTTP API."""
@@ -581,9 +580,8 @@ def test_saving_and_clearing_depth_range_round_trips_through_the_server(
     with running_server(library) as base:
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
-        document["contacts"][0]["depthRangeMillimeters"] = {
-            "lowerBound": 7.25,
-            "upperBound": 9.5,
+        document["contacts"][0]["depth"] = {
+            "range": {"minimum": 7.25, "maximum": 9.5},
         }
 
         status, saved = request_json(
@@ -591,43 +589,39 @@ def test_saving_and_clearing_depth_range_round_trips_through_the_server(
         )
         assert status == 200
         assert saved["board"]["document"]["contacts"][0][
-            "depthRangeMillimeters"
-        ] == {"lowerBound": 7.25, "upperBound": 9.5}
+            "depth"
+        ] == {"range": {"minimum": 7.25, "maximum": 9.5}}
 
         cleared_document = saved["board"]["document"]
-        del cleared_document["contacts"][0]["depthRangeMillimeters"]
+        del cleared_document["contacts"][0]["depth"]
         status, cleared = request_json(
             base, "PUT", "/api/boards/fixture.board", cleared_document
         )
 
     assert status == 200
-    assert "depthRangeMillimeters" not in cleared["board"]["document"]["contacts"][0]
+    assert "depth" not in cleared["board"]["document"]["contacts"][0]
     stored_contact = json.loads(
         (package / "board.json").read_text(encoding="utf-8")
     )["contacts"][0]
-    assert "depthRangeMillimeters" not in stored_contact
+    assert "depth" not in stored_contact
 
 
-def test_saving_replaces_a_depth_range_atomically(
+def test_saving_replaces_a_tagged_depth_atomically(
     tmp_path: Path,
 ) -> None:
     """Switching modes must remove the opposite canonical depth representation."""
     library = _write_library(tmp_path)
     package = library / "fixture-board"
     board = board_document("fixture.board")
-    board["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 7.5,
-        "upperBound": 12.5,
+    board["contacts"][0]["depth"] = {
+        "range": {"minimum": 7.5, "maximum": 12.5},
     }
     (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
 
     with running_server(library) as base:
         _status, opened = request_json(base, "GET", "/api/boards/fixture.board")
         document = opened["board"]["document"]
-        document["contacts"][0]["depthRangeMillimeters"] = {
-            "lowerBound": 8.75,
-            "upperBound": 8.75,
-        }
+        document["contacts"][0]["depth"] = {"category": "small"}
 
         status, first = request_json(
             base, "PUT", "/api/boards/fixture.board", document
@@ -636,15 +630,11 @@ def test_saving_replaces_a_depth_range_atomically(
         stored_fixed = json.loads(
             (package / "board.json").read_text(encoding="utf-8")
         )["contacts"][0]
-        assert stored_fixed["depthRangeMillimeters"] == {
-            "lowerBound": 8.75,
-            "upperBound": 8.75,
-        }
+        assert stored_fixed["depth"] == {"category": "small"}
 
         variable_document = first["board"]["document"]
-        variable_document["contacts"][0]["depthRangeMillimeters"] = {
-            "lowerBound": 9.5,
-            "upperBound": 14.25,
+        variable_document["contacts"][0]["depth"] = {
+            "range": {"minimum": 9.5, "maximum": 14.25},
         }
         status, variable = request_json(
             base, "PUT", "/api/boards/fixture.board", variable_document
@@ -654,13 +644,12 @@ def test_saving_replaces_a_depth_range_atomically(
     stored_variable = json.loads(
         (package / "board.json").read_text(encoding="utf-8")
     )["contacts"][0]
-    assert stored_variable["depthRangeMillimeters"] == {
-        "lowerBound": 9.5,
-        "upperBound": 14.25,
+    assert stored_variable["depth"] == {
+        "range": {"minimum": 9.5, "maximum": 14.25},
     }
     assert variable["board"]["document"]["contacts"][0][
-        "depthRangeMillimeters"
-    ] == {"lowerBound": 9.5, "upperBound": 14.25}
+        "depth"
+    ] == {"range": {"minimum": 9.5, "maximum": 14.25}}
 
 
 def test_board_list_marks_only_edge_and_pocket_contacts_without_depth_for_attention(
@@ -700,12 +689,12 @@ def test_board_list_marks_only_edge_and_pocket_contacts_without_depth_for_attent
             contact(
                 "edge",
                 "edge",
-                depthRangeMillimeters={"lowerBound": 20, "upperBound": 20},
+                depth={"range": {"minimum": 20, "maximum": 20}},
             ),
             contact(
                 "pocket",
                 "pocket",
-                depthRangeMillimeters={"lowerBound": 10, "upperBound": 15},
+                depth={"range": {"minimum": 10, "maximum": 15}},
             ),
         ]
         (package / "board.json").write_text(json.dumps(board), encoding="utf-8")
@@ -2100,9 +2089,8 @@ def test_hosted_save_round_trips_depth_range() -> None:
             base, session, "GET", "/api/boards/fixture.board"
         )
         document = opened["board"]["document"]
-        document["contacts"][0]["depthRangeMillimeters"] = {
-            "lowerBound": 7.25,
-            "upperBound": 9.5,
+        document["contacts"][0]["depth"] = {
+            "range": {"minimum": 7.25, "maximum": 9.5},
         }
 
         status, saved, _headers = hosted_request_json(
@@ -2111,14 +2099,13 @@ def test_hosted_save_round_trips_depth_range() -> None:
 
     assert status == 200
     assert saved["board"]["document"]["contacts"][0][
-        "depthRangeMillimeters"
-    ] == {"lowerBound": 7.25, "upperBound": 9.5}
+        "depth"
+    ] == {"range": {"minimum": 7.25, "maximum": 9.5}}
     stored = json.loads(
         client.file_bytes(HOSTED_BRANCH, "Hangboards/fixture-board/board.json")
     )
-    assert stored["contacts"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 7.25,
-        "upperBound": 9.5,
+    assert stored["contacts"][0]["depth"] == {
+        "range": {"minimum": 7.25, "maximum": 9.5},
     }
 
 
