@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import json
 import math
 from pathlib import Path
 
@@ -48,6 +49,15 @@ MODEL_PACKAGE_IDS = {
     "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
 }
+
+FIXED_FRONT_MODEL_PACKAGE_SLUGS = (
+    "dewoodstok-woodbord",
+    "escape-unlimited",
+    "evolv-kilter-basic-long",
+    "metolius-wood-grips-deluxe-ii",
+    "moon-armstrong",
+    "target10a-linebreaker-base",
+)
 
 
 @functools.cache
@@ -302,6 +312,24 @@ def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
 def test_discovered_model_inventory_matches_current_packages() -> None:
     model_packages = _discovered_model_packages()
     assert set(model_packages) == MODEL_PACKAGE_IDS
+
+
+def test_fixed_front_model_presentation_ratios_match_descriptor_bounds() -> None:
+    for slug in FIXED_FRONT_MODEL_PACKAGE_SLUGS:
+        package_path = HANGBOARDS_ROOT / slug
+        board = json.loads((package_path / "board.json").read_text())
+        presentations = [item for item in board["presentations"] if item["media"]["type"] == "model"]
+        assert len(presentations) == 1, slug
+        presentation = presentations[0]
+        descriptor_path = package_path / presentation["media"]["descriptorPath"]
+        descriptor = json.loads(descriptor_path.read_text())
+        bounds = descriptor["modelBounds"]
+        expected = (bounds["max"][0] - bounds["min"][0]) / (
+            bounds["max"][1] - bounds["min"][1]
+        )
+        assert presentation["aspectRatio"] == pytest.approx(
+            expected, rel=1e-9, abs=1e-9
+        ), slug
 
 
 def test_flash_board_uses_suspension_with_corrected_small_crimp_contacts() -> None:

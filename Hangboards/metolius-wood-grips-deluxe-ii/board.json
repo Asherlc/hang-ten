@@ -16,7 +16,7 @@
     {
       "id": "front",
       "name": "Front",
-      "aspectRatio": 2.0,
+      "aspectRatio": 2.8347345959048824,
       "isDefault": true,
       "derivation": {
         "type": "original"

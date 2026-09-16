@@ -16,7 +16,7 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.3333333333333333,
+      "aspectRatio": 3.885558901066122,
       "isDefault": true,
       "derivation": {
         "type": "original"
