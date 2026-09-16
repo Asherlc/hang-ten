@@ -357,6 +357,18 @@ def test_board_schema_accepts_category_only_depth_without_inventing_a_measuremen
     assert board.contacts[0].depth == module.HoldDepth(category="large")
 
 
+def test_board_schema_rejects_legacy_depth_range_member() -> None:
+    module = load_board_catalog_module()
+    document = board_document()
+    document["contacts"][0]["depthRangeMillimeters"] = {
+        "lowerBound": 7.5,
+        "upperBound": 12.5,
+    }
+
+    with pytest.raises(ValueError, match=r"board\.json\.contacts\[0\] has unknown keys"):
+        module._load_board(document)
+
+
 def test_board_schema_accepts_reciprocal_gaston_pairs() -> None:
     module = load_board_catalog_module()
     document = board_document()
