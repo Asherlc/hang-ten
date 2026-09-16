@@ -41,6 +41,7 @@ def test_moon_armstrong_model_descriptor_is_complete_with_reviewed_right_side_se
         (root / media["assetPath"]).read_bytes()
     ).hexdigest()
 
+    assert len(board["contacts"]) == 21
     contact_ids = {contact["id"] for contact in board["contacts"]}
     contact_nodes = [
         node for node in descriptor["nodes"] if node["role"] == "contact"
@@ -58,6 +59,8 @@ def test_moon_armstrong_model_descriptor_is_complete_with_reviewed_right_side_se
         ]
         assert len(descriptor["contacts"][contact_id]["nodeIDs"]) == 1
         bounds = descriptor["contacts"][contact_id]["facePlaneAABB"]
+        assert len(bounds["min"]) == 2
+        assert len(bounds["max"]) == 2
         assert all(0 <= value <= 1 for value in bounds["min"] + bounds["max"])
         assert all(low <= high for low, high in zip(bounds["min"], bounds["max"]))
 
