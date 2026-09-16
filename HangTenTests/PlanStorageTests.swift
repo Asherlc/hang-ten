@@ -1691,34 +1691,34 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testMetoliusGenericTermsUseOnlyTheirSourceBackedSemanticDescriptors() throws {
+    func testMetoliusGenericTermsRemainSelfSelected() throws {
         let entry = LegacyPlanSeedCatalog.metoliusEntry
         let intermediate = LegacyPlanSeedCatalog.metoliusIntermediate
         let advanced = LegacyPlanSeedCatalog.metoliusAdvanced
 
         XCTAssertEqual(
             try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-2.task-1" }).targets,
-            [ContactRequirement(kind: .sloper, shape: .round)]
+            []
         )
         XCTAssertEqual(
             try XCTUnwrap(entry.steps.first { $0.id == "entry.minute-3.task-1" }).targets,
-            [.edge(depth: .category(.medium))]
+            []
         )
         XCTAssertEqual(
             try XCTUnwrap(intermediate.steps.first { $0.id == "intermediate.minute-3.task-1" }).targets,
-            [.edge(depth: .category(.small))]
+            []
         )
         XCTAssertEqual(
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-1" }).targets,
-            [ContactRequirement(kind: .sloper, depth: .category(.large))]
+            []
         )
         XCTAssertEqual(
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-2" }).targets,
-            [ContactRequirement(kind: .edge, shape: .flat, fingerCapacity: 4)]
+            []
         )
         XCTAssertEqual(
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-7.task-1" }).targets,
-            [ContactRequirement(kind: .edge, shape: .incut, fingerCapacity: 4)]
+            []
         )
     }
 
@@ -1740,7 +1740,17 @@ final class PlanStorageTests: XCTestCase {
         )
 
         XCTAssertEqual(entry.steps[1].targets, [outerJugs])
-        XCTAssertEqual(entry.steps[2].targets, [centerJug, .kind(.pocket, fingerCapacity: 3)])
+        XCTAssertEqual(
+            entry.steps[2].targets,
+            [
+                centerJug,
+                ContactRequirement(
+                    kind: .pocket,
+                    depth: .range(.init(minimum: 30, maximum: 30)),
+                    fingerCapacity: 3
+                )
+            ]
+        )
         XCTAssertEqual(entry.steps[4].targets, [flatSlopers, outerJugs])
         XCTAssertEqual(entry.steps[6].targets, [outerJugs])
     }

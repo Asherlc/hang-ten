@@ -109,7 +109,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 step: bilateralStep,
                 board: board
             ).map(\.id),
-            ["edge-left"]
+            ["edge-deep"]
         )
     }
 
@@ -344,7 +344,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             presentations: [
                 modelPresentation(bounds: [
                     left.id: HoldFrame(x: 0.1, y: 0.2, width: 0.2, height: 0.1),
-                    right.id: HoldFrame(x: 0.7, y: 0.2, width: 0.2, height: 0.1)
+                    right.id: HoldFrame(x: 0.75, y: 0.2, width: 0.2, height: 0.1)
                 ])
             ]
         )
