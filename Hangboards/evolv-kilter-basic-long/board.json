@@ -43,7 +43,6 @@
       "equipmentObjectID": "primary",
       "name": "Rounded jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -51,10 +50,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -63,10 +63,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -75,10 +76,11 @@
       "equipmentObjectID": "primary",
       "name": "10 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     }

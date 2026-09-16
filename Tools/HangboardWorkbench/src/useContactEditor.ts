@@ -805,8 +805,6 @@ export function useContactEditor(options: UseContactEditorOptions): ContactEdito
     if (!equipmentObjectID) return;
     const kind = dialogs.prompt("Enter the factual kind: jug, edge, pocket, pinch, sloper, or gaston.", "")?.trim();
     if (!kind) return;
-    const features = dialogs.prompt("Enter source-backed features as comma-separated values; leave blank when none are stated.", "");
-    if (features === null) return;
     const gripTypes = dialogs.prompt("Enter source-backed grip types as comma-separated values; leave blank when none are stated.", "");
     if (gripTypes === null) return;
     const { width, height } = document.canvas;
@@ -820,7 +818,6 @@ export function useContactEditor(options: UseContactEditorOptions): ContactEdito
         equipmentObjectID,
         name,
         kind,
-        features: [...new Set(features.split(",").map((value) => value.trim()).filter(Boolean))],
         gripTypes: [...new Set(gripTypes.split(",").map((value) => value.trim()).filter(Boolean))],
       });
       candidate.regions.push({

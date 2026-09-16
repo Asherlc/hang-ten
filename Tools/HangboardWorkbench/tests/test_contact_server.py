@@ -45,7 +45,7 @@ def test_attention_is_computed_from_factual_contacts_not_media_geometry() -> Non
     assert server._contact_needs_attention({"kind": "edge"}) is True
     assert server._contact_needs_attention({
         "kind": "edge",
-        "depthRangeMillimeters": {"lowerBound": 10, "upperBound": 12},
+        "depth": {"range": {"minimum": 10, "maximum": 12}},
     }) is False
     assert server._contact_needs_attention({"kind": "sloper"}) is False
 

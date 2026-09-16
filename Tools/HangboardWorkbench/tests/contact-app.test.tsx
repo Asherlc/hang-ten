@@ -27,9 +27,9 @@ function documentFixture(): EditorDocument {
       equipmentObjectID: "primary",
       name: "Left edge",
       kind: "edge",
-      features: ["largeEdge"],
+      shape: "flat",
       gripTypes: ["openHand"],
-      depthRangeMillimeters: { lowerBound: 18, upperBound: 20 },
+      depth: { range: { minimum: 18, maximum: 20 } },
     }],
     canvas: { width: 100, height: 60 },
     regions: [{

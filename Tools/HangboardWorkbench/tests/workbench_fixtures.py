@@ -52,7 +52,6 @@ def _contact(contact_id: str, name: str, *, kind: str = "jug") -> dict[str, obje
         "equipmentObjectID": "primary",
         "name": name,
         "kind": kind,
-        "features": [],
         "gripTypes": [],
     }
 

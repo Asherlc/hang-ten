@@ -19,9 +19,9 @@ function document(): EditorDocument {
       equipmentObjectID: "primary",
       name: "Left edge",
       kind: "edge",
-      features: ["largeEdge"],
+      shape: "flat",
       gripTypes: ["openHand"],
-      depthRangeMillimeters: { lowerBound: 18, upperBound: 20 },
+      depth: { range: { minimum: 18, maximum: 20 } },
       fingerCapacity: 4,
       handCapacity: 1,
       side: "left",
@@ -49,6 +49,38 @@ test("contact facts and media geometry validate in distinct owners", () => {
   geometric.regions[0]!.displayPath = "M 12 12 L 32 12 L 32 32 L 12 32 Z";
   geometric.regions[0]!.treatment = { type: "shelf", rimInsetFraction: 0.2 };
   assert.equal(validateEditorDocumentForSave(geometric), geometric);
+});
+
+test("contacts accept exactly one tagged depth representation", () => {
+  const category = document() as unknown as {
+    contacts: Array<Record<string, unknown>>;
+  };
+  category.contacts[0]!.depth = { category: "large" };
+  assert.equal(validateEditorDocument(category), category);
+
+  const range = document() as unknown as {
+    contacts: Array<Record<string, unknown>>;
+  };
+  range.contacts[0]!.depth = { range: { minimum: 25, maximum: 30 } };
+  assert.equal(validateEditorDocument(range), range);
+
+  const invalid = document() as unknown as {
+    contacts: Array<Record<string, unknown>>;
+  };
+  invalid.contacts[0]!.depth = { category: "large", range: { minimum: 25, maximum: 30 } };
+  assert.throws(() => validateEditorDocument(invalid), /valid factual contacts/);
+
+  const malformed = document() as unknown as {
+    contacts: Array<Record<string, unknown>>;
+  };
+  malformed.contacts[0]!.depth = { range: { minimum: 30, maximum: 25 } };
+  assert.throws(() => validateEditorDocument(malformed), /valid factual contacts/);
+
+  const legacy = document() as unknown as {
+    contacts: Array<Record<string, unknown>>;
+  };
+  legacy.contacts[0]!.depthRangeMillimeters = { lowerBound: 25, upperBound: 30 };
+  assert.throws(() => validateEditorDocument(legacy), /valid factual contacts/);
 });
 
 test("legacy IDs and factual fields inside regions are rejected", () => {
@@ -81,9 +113,9 @@ test("contact facts are closed and gaston pairs are strict at save", () => {
 test("cloning does not alias factual arrays or geometry metadata", () => {
   const source = document();
   const copy = cloneEditorDocument(source);
-  copy.contacts[0]!.features.push("smallEdge");
+  copy.contacts[0]!.gripTypes.push("halfCrimp");
   copy.regions[0]!.treatment!.type = "recess";
-  assert.deepEqual(source.contacts[0]!.features, ["largeEdge"]);
+  assert.deepEqual(source.contacts[0]!.gripTypes, ["openHand"]);
   assert.deepEqual(source.regions[0]!.treatment, { type: "surface" });
 });
 

@@ -1350,11 +1350,6 @@ final class BoardPackageStoreTests: XCTestCase {
                 holds[0]["sizeMillimeters"] = NSNull()
                 board["contacts"] = holds
             }),
-            ("depth range", { board in
-                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["depthRangeMillimeters"] = NSNull()
-                board["contacts"] = holds
-            }),
             ("grip type", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                 holds[0]["gripType"] = NSNull()
@@ -1368,11 +1363,6 @@ final class BoardPackageStoreTests: XCTestCase {
             ("hand capacity", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                 holds[0]["handCapacity"] = NSNull()
-                board["contacts"] = holds
-            }),
-            ("features", { board in
-                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["features"] = NSNull()
                 board["contacts"] = holds
             }),
             ("equipment object ID", { board in
@@ -1395,6 +1385,42 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreAcceptsOmittedAndRejectsExplicitNullForOptionalContactShapeAndDepth() throws {
+        for field in ["shape", "depth"] {
+            let omittedFixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                    holds[0].removeValue(forKey: field)
+                    board["contacts"] = holds
+                }
+            }
+            defer { omittedFixture.remove() }
+
+            let omittedBoard = try XCTUnwrap(BoardPackageStore(bundle: omittedFixture.bundle).boards.first)
+            let omittedContact = try XCTUnwrap(omittedBoard.contacts.first)
+            if field == "shape" {
+                XCTAssertNil(omittedContact.shape)
+            } else {
+                XCTAssertNil(omittedContact.depth)
+            }
+
+            let nullFixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                    holds[0][field] = NSNull()
+                    board["contacts"] = holds
+                }
+            }
+            defer { nullFixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: nullFixture.bundle), "explicit null \(field) must be rejected")
+        }
+    }
+
     func testStoreAcceptsOmittedOptionalV3Metadata() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
@@ -1408,11 +1434,11 @@ final class BoardPackageStoreTests: XCTestCase {
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
         let hold = try XCTUnwrap(board.contacts.first)
         XCTAssertNil(board.dimensions)
-        XCTAssertNil(hold.depthRangeMillimeters)
+        XCTAssertNil(hold.depth)
         XCTAssertTrue(hold.gripTypes.isEmpty)
         XCTAssertNil(hold.fingerCapacity)
         XCTAssertNil(hold.handCapacity)
-        XCTAssertTrue(hold.features.isEmpty)
+        XCTAssertNil(hold.shape)
         XCTAssertEqual(hold.equipmentObjectID, "primary")
     }
 
@@ -1469,11 +1495,11 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testStoreDecodesContactSloperFeatures() throws {
-        let variants: [(feature: HoldFeature?, expected: Set<HoldFeature>)] = [
-            (.flatSloper, [.flatSloper]),
-            (.roundSloper, [.roundSloper]),
-            (nil, []),
+    func testStoreDecodesContactSloperShapes() throws {
+        let variants: [(shape: HoldShape?, expected: HoldShape?)] = [
+            (.flat, .flat),
+            (.round, .round),
+            (nil, nil),
         ]
 
         for variant in variants {
@@ -1483,9 +1509,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 ) { board in
                     var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                     holds[0]["kind"] = "sloper"
-                    if let feature = variant.feature {
-                        holds[0]["features"] = [feature.rawValue]
-                    }
+                    if let shape = variant.shape { holds[0]["shape"] = shape.rawValue }
                     board["contacts"] = holds
                 }
             }
@@ -1494,31 +1518,8 @@ final class BoardPackageStoreTests: XCTestCase {
             let hold = try XCTUnwrap(
                 BoardPackageStore(bundle: fixture.bundle).boards.first?.contacts.first
             )
-            XCTAssertEqual(hold.features, variant.expected)
+            XCTAssertEqual(hold.shape, variant.expected)
         }
-    }
-
-    func testStoreDecodesOuterJugFeatureWithJugPhysicality() throws {
-        let fixture = try makeFixtureBundle { hangboardsURL in
-            try self.mutateBoard(
-                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
-            ) { board in
-                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["kind"] = "jug"
-                holds[0]["features"] = ["outerJug"]
-                board["contacts"] = holds
-            }
-        }
-        defer { fixture.remove() }
-
-        let hold = try XCTUnwrap(
-            BoardPackageStore(bundle: fixture.bundle).boards.first?.contacts.first
-        )
-        let outerJug = try XCTUnwrap(HoldFeature(rawValue: "outerJug"))
-
-        XCTAssertEqual(hold.features, [outerJug])
-        XCTAssertEqual(outerJug.label, "Outer jug")
-        XCTAssertEqual(outerJug.holdKind, .jug)
     }
 
     func testStoreRejectsInvalidSloperMetadataCombinations() throws {
@@ -1619,7 +1620,7 @@ final class BoardPackageStoreTests: XCTestCase {
         let rangedHold = boardDetailHold(
             id: "ranged",
             kind: .edge,
-            depthRangeMillimeters: 12.5...20
+            depth: .range(.init(minimum: 12.5, maximum: 20))
         )
         let unspecifiedHold = boardDetailHold(id: "unspecified", kind: .sloper)
 
@@ -1651,9 +1652,8 @@ final class BoardPackageStoreTests: XCTestCase {
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["depthRangeMillimeters"] = [
-                    "lowerBound": 12.5,
-                    "upperBound": 7.5,
+                holds[0]["depth"] = [
+                    "range": ["minimum": 12.5, "maximum": 7.5],
                 ]
                 board["contacts"] = holds
             }
@@ -1663,27 +1663,22 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
             XCTAssertEqual(
                 error as? BoardPackageStoreError,
-                .invalidPackage(
-                    boardID: "fixture.board",
-                    reason: "contact hold-left has an invalid depth range"
-                )
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
             )
         }
     }
 
-    func testStoreRejectsNonPositiveFractionalMillimeterMeasurements() throws {
-        let invalidMeasurements: [(name: String, field: String, value: Any, reason: String)] = [
+    func testStoreRejectsInvalidTaggedDepthPayloads() throws {
+        let invalidMeasurements: [(name: String, field: String, value: Any)] = [
             (
                 "zero depth",
-                "depthRangeMillimeters",
-                ["lowerBound": 0.0, "upperBound": 7.5],
-                "contact hold-left has an invalid depth range"
+                "depth",
+                ["range": ["minimum": -7.5, "maximum": 7.5]]
             ),
             (
-                "negative depth",
-                "depthRangeMillimeters",
-                ["lowerBound": -7.5, "upperBound": 7.5],
-                "contact hold-left has an invalid depth range"
+                "mixed depth representations",
+                "depth",
+                ["category": "large", "range": ["minimum": 25, "maximum": 30]]
             ),
         ]
 
@@ -1702,7 +1697,7 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
                 XCTAssertEqual(
                     error as? BoardPackageStoreError,
-                    .invalidPackage(boardID: "fixture.board", reason: measurement.reason)
+                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
                 )
             }
         }
@@ -1713,19 +1708,14 @@ final class BoardPackageStoreTests: XCTestCase {
             (name: String, finiteValue: String, nonFiniteValue: String)
         ] = [
             (
-                "size",
-                "\"sizeMillimeters\":7.5",
-                "\"sizeMillimeters\":1e999"
+                "depth minimum",
+                "\"minimum\":7.5",
+                "\"minimum\":1e999"
             ),
             (
-                "depth lower bound",
-                "\"lowerBound\":7.5",
-                "\"lowerBound\":1e999"
-            ),
-            (
-                "depth upper bound",
-                "\"upperBound\":12.5",
-                "\"upperBound\":1e999"
+                "depth maximum",
+                "\"maximum\":12.5",
+                "\"maximum\":1e999"
             ),
         ]
 
@@ -1734,11 +1724,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 let boardURL = hangboardsURL.appendingPathComponent("fixture-model/board.json")
                 try self.mutateBoard(at: boardURL) { board in
                     var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                    holds[0]["sizeMillimeters"] = 7.5
-                    holds[0]["depthRangeMillimeters"] = [
-                        "lowerBound": 7.5,
-                        "upperBound": 12.5,
-                    ]
+                    holds[0]["depth"] = ["range": ["minimum": 7.5, "maximum": 12.5]]
                     board["contacts"] = holds
                 }
                 let finiteJSON = try XCTUnwrap(String(data: Data(contentsOf: boardURL), encoding: .utf8))
@@ -1766,10 +1752,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["depthRangeMillimeters"] = [
-                    "lowerBound": 7.5,
-                    "upperBound": 7.5,
-                ]
+                holds[0]["depth"] = ["range": ["minimum": 7.5, "maximum": 7.5]]
                 board["contacts"] = holds
             }
         }
@@ -1777,16 +1760,34 @@ final class BoardPackageStoreTests: XCTestCase {
 
         let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
         let hold = try XCTUnwrap(board.contacts.first)
-        XCTAssertEqual(hold.depthRangeMillimeters, 7.5...7.5)
+        XCTAssertEqual(hold.depth, .range(.init(minimum: 7.5, maximum: 7.5)))
     }
 
-    func testStoreRejectsHoldWithFixedAndVariableDepths() throws {
+    func testStoreDecodesForgeStyleCategoricalDepth() throws {
         let fixture = try makeFixtureBundle { hangboardsURL in
             try self.mutateBoard(
                 at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
             ) { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["sizeMillimeters"] = 7.5
+                holds[0]["kind"] = "edge"
+                holds[0]["shape"] = "flat"
+                holds[0]["depth"] = ["category": "large"]
+                board["contacts"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        let hold = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first?.contacts.first)
+        XCTAssertEqual(hold.shape, .flat)
+        XCTAssertEqual(hold.depth, .category(.large))
+    }
+
+    func testStoreRejectsLegacyContactDepthRangeKey() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                 holds[0]["depthRangeMillimeters"] = [
                     "lowerBound": 7.5,
                     "upperBound": 12.5,
@@ -1796,7 +1797,32 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         defer { fixture.remove() }
 
-        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
+    }
+
+    func testStoreRejectsLegacyContactFeaturesKey() throws {
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                holds[0]["features"] = []
+                board["contacts"] = holds
+            }
+        }
+        defer { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
+            )
+        }
     }
 
     func testStoreDiscoversDirectChildPackagesWithoutCatalogAndSortsThem() throws {
@@ -1830,11 +1856,11 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(frame.rect.origin.y, expectedFrame.origin.y, accuracy: 1e-12)
         XCTAssertEqual(frame.rect.size.width, expectedFrame.size.width, accuracy: 1e-12)
         XCTAssertEqual(frame.rect.size.height, expectedFrame.size.height, accuracy: 1e-12)
-        XCTAssertNil(firstHold.depthRangeMillimeters)
+        XCTAssertNil(firstHold.depth)
         XCTAssertTrue(firstHold.gripTypes.isEmpty)
         XCTAssertNil(firstHold.fingerCapacity)
         XCTAssertNil(firstHold.handCapacity)
-        XCTAssertTrue(firstHold.features.isEmpty)
+        XCTAssertNil(firstHold.shape)
         XCTAssertEqual(board.presentations.count, 1)
         XCTAssertEqual(presentation.id, "primary")
         XCTAssertEqual(presentation.name, "Primary")
@@ -3829,12 +3855,12 @@ final class BoardPackageStoreTests: XCTestCase {
                     [
                         "id": "left-edge", "equipmentObjectID": "primary",
                         "name": "Left Edge", "kind": "edge",
-                        "features": [], "gripTypes": [],
+                        "gripTypes": [],
                     ],
                     [
                         "id": "right-edge", "equipmentObjectID": "primary",
                         "name": "Right Edge", "kind": "edge",
-                        "features": [], "gripTypes": [],
+                        "gripTypes": [],
                     ],
                 ]
                 board.removeValue(forKey: "holds")
@@ -4477,7 +4503,6 @@ final class BoardPackageStoreTests: XCTestCase {
                     "equipmentObjectID": "primary",
                     "name": "Left hold",
                     "kind": "jug",
-                    "features": [],
                     "gripTypes": []
                 ]]
             ],
@@ -4635,17 +4660,16 @@ final class BoardPackageStoreTests: XCTestCase {
         gripType: GripType? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Double>? = nil,
+        depth: HoldDepth? = nil,
         presentationID _: String = BoardPresentation.primaryID
     ) -> PhysicalContact {
         PhysicalContact(
             id: id,
             name: id,
             kind: kind,
-            features: [],
             fingerCapacity: fingerCapacity,
             handCapacity: handCapacity,
-            depthRangeMillimeters: depthRangeMillimeters ?? sizeMillimeters.map { $0...$0 },
+            depth: depth ?? sizeMillimeters.map { .range(.init(minimum: $0, maximum: $0)) },
             gripTypes: Set(gripType.map { [$0] } ?? [])
         )
     }

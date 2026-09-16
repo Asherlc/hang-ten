@@ -1434,9 +1434,8 @@ def test_noop_save_uses_the_live_sha_without_writing_to_github() -> None:
 
 def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None:
     board = board_document("fixture.board")
-    board["contacts"][0]["depthRangeMillimeters"] = {
-        "lowerBound": 20,
-        "upperBound": 20,
+    board["contacts"][0]["depth"] = {
+        "range": {"minimum": 20, "maximum": 20},
     }
     client = _client(("fixture-board", board))
     document = board_package.editor_document(
@@ -1454,9 +1453,8 @@ def test_changed_save_merges_editor_changes_and_returns_the_commit_sha() -> None
     )
     assert saved.board["contacts"][0]["kind"] == "edge"
     assert stored["contacts"][0]["name"] == "Left contact"
-    assert stored["contacts"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 20,
-        "upperBound": 20,
+    assert stored["contacts"][0]["depth"] == {
+        "range": {"minimum": 20, "maximum": 20},
     }
     assert commit_sha != saved.board_json_sha
     assert (
@@ -1682,7 +1680,7 @@ def test_changed_hosted_save_persists_optional_contact_metadata() -> None:
     )
     document["contacts"][0].update(
         fingerCapacity=3,
-        depthRangeMillimeters={"lowerBound": 12, "upperBound": 16},
+        depth={"category": "large"},
         handCapacity=2,
     )
 
@@ -1695,14 +1693,8 @@ def test_changed_hosted_save_persists_optional_contact_metadata() -> None:
     )
     assert saved.board["contacts"][0]["fingerCapacity"] == 3
     assert stored["contacts"][0]["fingerCapacity"] == 3
-    assert saved.board["contacts"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 12,
-        "upperBound": 16,
-    }
-    assert stored["contacts"][0]["depthRangeMillimeters"] == {
-        "lowerBound": 12,
-        "upperBound": 16,
-    }
+    assert saved.board["contacts"][0]["depth"] == {"category": "large"}
+    assert stored["contacts"][0]["depth"] == {"category": "large"}
     assert saved.board["contacts"][0]["handCapacity"] == 2
     assert stored["contacts"][0]["handCapacity"] == 2
 

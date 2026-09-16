@@ -86,27 +86,13 @@ def _write_audit_ledger(
                             "reason": "The manufacturer source does not establish this value.",
                         }
                         for field in (
-                            "sizeMillimeters",
-                            "depthRangeMillimeters",
+                            "depth",
                             "fingerCapacity",
                             "handCapacity",
                             "gripType",
-                            "features",
+                            "shape",
                         )
                     ],
-                    {
-                        "boardID": "fixture.board",
-                        "contactIDs": [contact_id],
-                        "field": "sloper",
-                        "outcome": "notApplicable",
-                        "reviewedAt": "2026-08-25",
-                        "source": {
-                            "kind": "manufacturer",
-                            "url": "https://example.com/fixture-source",
-                            "label": "Fixture manufacturer source",
-                        },
-                        "reason": "The contact is not a sloper.",
-                    },
                 ],
             }
         ),
@@ -174,20 +160,12 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                     "notApplicable": 0,
                 }
                 for field in (
-                    "sizeMillimeters",
-                    "depthRangeMillimeters",
+                    "depth",
                     "fingerCapacity",
                     "handCapacity",
                     "gripType",
-                    "features",
+                    "shape",
                 )
-            },
-            "sloper": {
-                "populated": 0,
-                "verified": 0,
-                "adapted": 0,
-                "unavailable": 0,
-                "notApplicable": 1,
             },
         },
         "boards": [
@@ -196,8 +174,8 @@ def test_package_cli_audit_metadata_reports_coverage(tmp_path: Path) -> None:
                 "populated": 1,
                 "verified": 1,
                 "adapted": 0,
-                "unavailable": 6,
-                "notApplicable": 1,
+                "unavailable": 5,
+                "notApplicable": 0,
                 "unaccountedFields": 0,
             }
         ],
@@ -224,8 +202,8 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
             "populated": 1,
             "verified": 0,
             "adapted": 1,
-            "unavailable": 6,
-            "notApplicable": 1,
+            "unavailable": 5,
+            "notApplicable": 0,
             "unaccountedFields": 0,
         }
     ]

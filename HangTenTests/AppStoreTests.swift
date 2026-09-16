@@ -302,14 +302,14 @@ final class AppStoreTests: XCTestCase {
             workoutHistoryStore: historyStore,
             defaults: defaults
         )
-        let requirement = ContactRequirement.feature(.mediumEdge)
+        let requirement = ContactRequirement.edge(depth: .category(.medium))
         let plan = activityPlan(requirement: requirement)
         let board = modelActivityBoard(
             contact: PhysicalContact(
                 id: "medium-edge",
                 name: "Medium edge",
                 kind: .edge,
-                features: [.mediumEdge]
+                depth: .category(.medium)
             )
         )
         let startDate = Date(timeIntervalSinceReferenceDate: 1_000)
@@ -815,15 +815,31 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testCompletionFailsClosedWhenUnilateralSideMetadataIsUnknown() {
+    func testCompletionRecordsSingleSemanticTargetWithoutSideMetadata() throws {
         let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
-        assertCompletionFailsForUnresolvedTarget(
-            plan: activityPlan(
+        let defaults = makeDefaults()
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(healthKitService: healthStore, defaults: defaults)
+
+        appStore.markSessionComplete(
+            activityPlan(
                 requirement: .kind(.edge, selection: .single),
                 handUse: .single,
                 side: .left
             ),
-            board: activityBoard(contacts: [contact])
+            board: activityBoard(contacts: [contact]),
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010)
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertNil(appStore.healthAuthorizationError)
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(
+            context.activitySegments.first?.target?.resolvedContactSnapshot?.contactIDs,
+            ["edge"]
         )
     }
 
@@ -947,7 +963,7 @@ final class AppStoreTests: XCTestCase {
 
     private func validCustomRoutineDefinition() throws -> CustomRoutineDefinition {
         let plan = activityPlan(
-            requirement: .kind(.jug, selection: .allMatching)
+            requirement: .kind(.jug)
         )
         return try CustomRoutineStore.definition(
             from: plan,

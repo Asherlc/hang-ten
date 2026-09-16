@@ -24,7 +24,7 @@ MIRRORED_PAIRS = {
     ),
     "metolius-simulator-3d": (
         ("jug-1-left", "jug-1-right"),
-        ("round-sloper-3-left", "round-sloper-3-right"),
+        ("flat-sloper-2-left", "flat-sloper-2-right"),
         ("pocket-4-left", "pocket-4-right"),
         ("edge-5-left", "edge-5-right"),
         ("edge-6-left", "edge-6-right"),

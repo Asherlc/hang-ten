@@ -460,7 +460,6 @@
       "equipmentObjectID": "primary",
       "name": "Ergonomic jug",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     },
@@ -469,11 +468,12 @@
       "equipmentObjectID": "primary",
       "name": "10 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -482,11 +482,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -495,7 +496,6 @@
       "equipmentObjectID": "primary",
       "name": "Mini pinch",
       "kind": "pinch",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     }

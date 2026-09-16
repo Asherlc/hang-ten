@@ -53,16 +53,21 @@ enum BoardHoldSpecifications {
     static func entries(for hold: PhysicalContact) -> [BoardHoldSpecification] {
         var entries = [BoardHoldSpecification(label: "Kind", value: hold.kind.detailLabel)]
 
-        if let range = hold.depthRangeMillimeters {
-            if range.lowerBound == range.upperBound {
-                entries.append(.init(label: "Depth", value: millimeters(range.lowerBound)))
-            } else {
-                entries.append(
-                    .init(
-                        label: "Depth range",
-                        value: "\(millimeters(range.lowerBound))–\(millimeters(range.upperBound))"
+        if let depth = hold.depth {
+            switch depth {
+            case let .category(size):
+                entries.append(.init(label: "Depth", value: size.label))
+            case let .range(range):
+                if range.minimum == range.maximum {
+                    entries.append(.init(label: "Depth", value: millimeters(range.minimum)))
+                } else {
+                    entries.append(
+                        .init(
+                            label: "Depth range",
+                            value: "\(millimeters(range.minimum))–\(millimeters(range.maximum))"
+                        )
                     )
-                )
+                }
             }
         }
         if !hold.gripTypes.isEmpty {

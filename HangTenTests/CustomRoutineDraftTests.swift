@@ -307,10 +307,10 @@ final class CustomRoutineDraftTests: XCTestCase {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
             .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
-            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)], timing: .fixed)
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.edge(depth: .category(.medium))], timing: .fixed)
         ]
 
-        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge)]])
+        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
     }
 
     func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
@@ -544,10 +544,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "Up to 60s",
                 duration: 60,
                 phase: .hang,
-                targets: [.feature(.roundSloper)],
+                targets: [ContactRequirement(kind: .sloper, shape: .round)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.feature(.roundSloper)],
+                    targets: [ContactRequirement(kind: .sloper, shape: .round)],
                     timing: .stopwatch,
                     duration: nil
                 )]

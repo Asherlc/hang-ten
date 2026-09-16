@@ -51,7 +51,6 @@
       "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -59,9 +58,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 20-degree flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -69,9 +66,7 @@
       "equipmentObjectID": "primary",
       "name": "Center 40 mm-radius round sloper",
       "kind": "sloper",
-      "features": [
-        "roundSloper"
-      ],
+      "shape": "round",
       "gripTypes": []
     },
     {
@@ -79,9 +74,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 20-degree flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -89,7 +82,6 @@
       "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -97,10 +89,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -109,10 +102,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -121,10 +115,11 @@
       "equipmentObjectID": "primary",
       "name": "Center 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -133,10 +128,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -145,10 +141,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -157,10 +154,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 17.5 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 17.5,
-        "upperBound": 17.5
+      "depth": {
+        "range": {
+          "minimum": 17.5,
+          "maximum": 17.5
+        }
       },
       "gripTypes": []
     },
@@ -169,10 +167,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 12.5 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -181,10 +180,11 @@
       "equipmentObjectID": "primary",
       "name": "Center 7.5 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7.5,
-        "upperBound": 7.5
+      "depth": {
+        "range": {
+          "minimum": 7.5,
+          "maximum": 7.5
+        }
       },
       "gripTypes": []
     },
@@ -193,10 +193,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 12.5 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -205,10 +206,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 17.5 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 17.5,
-        "upperBound": 17.5
+      "depth": {
+        "range": {
+          "minimum": 17.5,
+          "maximum": 17.5
+        }
       },
       "gripTypes": []
     }

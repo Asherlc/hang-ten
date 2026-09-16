@@ -107,7 +107,7 @@ final class BoardEditorSession: ObservableObject {
 
     private func hasMissingRequiredDepth(_ hold: BoardEditableContact) -> Bool {
         guard hold.kind == .edge || hold.kind == .pocket else { return false }
-        return hold.depthRangeMillimeters == nil
+        return hold.depth == nil
     }
 
     var metadataWarningText: String? {

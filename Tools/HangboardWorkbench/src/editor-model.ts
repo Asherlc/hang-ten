@@ -24,10 +24,11 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
     presentationID: document.presentationID,
     contacts: document.contacts.map((contact) => ({
       ...contact,
-      features: [...contact.features],
       gripTypes: [...contact.gripTypes],
-      ...(contact.depthRangeMillimeters
-        ? { depthRangeMillimeters: { ...contact.depthRangeMillimeters } }
+      ...(contact.depth
+        ? { depth: "category" in contact.depth
+          ? { category: contact.depth.category }
+          : { range: { ...contact.depth.range } } }
         : {}),
     })),
     canvas: { ...document.canvas },

@@ -412,7 +412,6 @@
       "equipmentObjectID": "primary",
       "name": "Left edge on three-edge surface",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -420,7 +419,6 @@
       "equipmentObjectID": "primary",
       "name": "Center edge on three-edge surface",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -428,7 +426,6 @@
       "equipmentObjectID": "primary",
       "name": "Right edge on three-edge surface",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -436,7 +433,6 @@
       "equipmentObjectID": "primary",
       "name": "Left edge on two-edge surface",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -444,7 +440,6 @@
       "equipmentObjectID": "primary",
       "name": "Right edge on two-edge surface",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -452,7 +447,6 @@
       "equipmentObjectID": "primary",
       "name": "Left small crimp",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -460,7 +454,6 @@
       "equipmentObjectID": "primary",
       "name": "Right small crimp",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     }
   ]

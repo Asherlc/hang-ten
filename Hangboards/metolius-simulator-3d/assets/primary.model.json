@@ -152,6 +152,44 @@
         "hold_07_right_001"
       ]
     },
+    "flat-sloper-2-left": {
+      "center": [
+        0.217444996,
+        0.774137441
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.288286492,
+          0.840580783
+        ],
+        "min": [
+          0.1466035,
+          0.7076941
+        ]
+      },
+      "nodeIDs": [
+        "hold_02_left_001"
+      ]
+    },
+    "flat-sloper-2-right": {
+      "center": [
+        0.78286441,
+        0.773905
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.853699218,
+          0.840675156
+        ],
+        "min": [
+          0.712029602,
+          0.707134844
+        ]
+      },
+      "nodeIDs": [
+        "hold_02_right_001"
+      ]
+    },
     "jug-1-left": {
       "center": [
         0.079553815,
@@ -513,43 +551,23 @@
         "hold_09_right_001"
       ]
     },
-    "round-sloper-3-left": {
+    "round-sloper-3-center": {
       "center": [
-        0.287690717,
-        0.792955184
+        0.500198639,
+        0.831205136
       ],
       "facePlaneAABB": {
         "max": [
-          0.428777934,
-          0.878216268
+          0.706020769,
+          0.878230853
         ],
         "min": [
-          0.146603501,
-          0.7076941
+          0.294376508,
+          0.78417942
         ]
       },
       "nodeIDs": [
-        "hold_02_left_001",
-        "hold_03_left_001"
-      ]
-    },
-    "round-sloper-3-right": {
-      "center": [
-        0.712345252,
-        0.792682824
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.85369922,
-          0.878230834
-        ],
-        "min": [
-          0.570991284,
-          0.707134815
-        ]
-      },
-      "nodeIDs": [
-        "hold_02_right_001",
+        "hold_03_left_001",
         "hold_03_right_001"
       ]
     }
@@ -584,22 +602,22 @@
       "role": "contact"
     },
     {
-      "contactID": "round-sloper-3-left",
+      "contactID": "flat-sloper-2-left",
       "nodeID": "hold_02_left_001",
       "role": "contact"
     },
     {
-      "contactID": "round-sloper-3-right",
+      "contactID": "flat-sloper-2-right",
       "nodeID": "hold_02_right_001",
       "role": "contact"
     },
     {
-      "contactID": "round-sloper-3-left",
+      "contactID": "round-sloper-3-center",
       "nodeID": "hold_03_left_001",
       "role": "contact"
     },
     {
-      "contactID": "round-sloper-3-right",
+      "contactID": "round-sloper-3-center",
       "nodeID": "hold_03_right_001",
       "role": "contact"
     },

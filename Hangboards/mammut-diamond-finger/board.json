@@ -756,7 +756,6 @@
       "equipmentObjectID": "primary",
       "name": "Left jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -764,9 +763,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 45 mm flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -774,11 +771,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 30 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -789,11 +787,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 16 mm 2-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 16
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 16
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -804,11 +803,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 16 mm 3-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 16
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 16
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -819,11 +819,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm 8-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -834,11 +835,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -849,11 +851,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 10 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -864,9 +867,7 @@
       "equipmentObjectID": "primary",
       "name": "Center 48 mm flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -874,11 +875,12 @@
       "equipmentObjectID": "primary",
       "name": "Center 30 mm 8-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -889,11 +891,12 @@
       "equipmentObjectID": "primary",
       "name": "Center 18 mm 8-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 18,
-        "upperBound": 18
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -904,11 +907,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 10 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -919,11 +923,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -934,11 +939,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm 8-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -949,11 +955,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 16 mm 3-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 16
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 16
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -964,11 +971,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 16 mm 2-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 16
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 16
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -979,11 +987,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 30 mm 4-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -994,9 +1003,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 45 mm flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -1004,7 +1011,6 @@
       "equipmentObjectID": "primary",
       "name": "Right jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1012,9 +1018,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 30 mm flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     },
     {
@@ -1022,9 +1026,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 30 mm flat sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": []
     }
   ]

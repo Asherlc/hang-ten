@@ -789,7 +789,6 @@
       "equipmentObjectID": "left-ring",
       "name": "Left unit jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -797,11 +796,12 @@
       "equipmentObjectID": "left-ring",
       "name": "Left unit 40 mm four-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -812,11 +812,12 @@
       "equipmentObjectID": "left-ring",
       "name": "Left unit 32 mm three-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 32,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 32,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -827,11 +828,12 @@
       "equipmentObjectID": "left-ring",
       "name": "Left unit 25 mm two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -842,7 +844,6 @@
       "equipmentObjectID": "right-ring",
       "name": "Right unit jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -850,11 +851,12 @@
       "equipmentObjectID": "right-ring",
       "name": "Right unit 40 mm four-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": [
         "fourFingerPocket"
@@ -865,11 +867,12 @@
       "equipmentObjectID": "right-ring",
       "name": "Right unit 32 mm three-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 32,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 32,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -880,11 +883,12 @@
       "equipmentObjectID": "right-ring",
       "name": "Right unit 25 mm two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
