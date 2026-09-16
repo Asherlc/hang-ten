@@ -13,7 +13,7 @@ Promotion record. This document does not itself change package or model bytes.
 
 ## September 15 collection extension
 
-The model inventory now contains twenty packages. The six added fixed boards
+The model inventory now contains twenty-six packages. The six added fixed boards
 below each retain one canonical `primary` position covering their entire
 ordered contact inventory, with no orientation quaternion, pivot override,
 or suspension. Their current model bounds are compiled from their USDZ
@@ -485,7 +485,7 @@ remains one logical ID over two mesh pieces. No new contacts were inferred.
 
 ## Batch-01 / batch-02 promotion record (2026-09-11/12, Muse Spark)
 
-Discovery now finds twenty complete model packages: the original four
+Discovery now finds fourteen complete model packages: the original four
 (Beastmaker 1000, Compact II, Nature, and Baguette) plus
 `beastmaker-2000`, `lattice-triple-rung`, `metolius.prime-rib`,
 `metolius.project`, `tension.flash-board`, `captain-fingerfood.dual`,
