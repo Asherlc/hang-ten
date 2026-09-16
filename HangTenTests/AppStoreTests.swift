@@ -815,15 +815,31 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testCompletionFailsClosedWhenUnilateralSideMetadataIsUnknown() {
+    func testCompletionRecordsSingleSemanticTargetWithoutSideMetadata() throws {
         let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
-        assertCompletionFailsForUnresolvedTarget(
-            plan: activityPlan(
+        let defaults = makeDefaults()
+        defaults.set(true, forKey: Self.healthAuthorizationRequestedKey)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(healthKitService: healthStore, defaults: defaults)
+
+        appStore.markSessionComplete(
+            activityPlan(
                 requirement: .kind(.edge, selection: .single),
                 handUse: .single,
                 side: .left
             ),
-            board: activityBoard(contacts: [contact])
+            board: activityBoard(contacts: [contact]),
+            stopwatchDurations: [:],
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010)
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        XCTAssertNil(appStore.healthAuthorizationError)
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(
+            context.activitySegments.first?.target?.resolvedContactSnapshot?.contactIDs,
+            ["edge"]
         )
     }
 

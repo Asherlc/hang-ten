@@ -50,9 +50,15 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertTrue(store.plans.contains { $0.id == PlanCatalog.all[0].id })
         let custom = try XCTUnwrap(store.plans.first { $0.id == "custom.edge" })
         XCTAssertEqual(store.board(for: custom).id, BoardCatalog.defaultBoard.id)
+        let resolvedIDs = store.contactIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard)
+        XCTAssertEqual(resolvedIDs.count, 1)
         XCTAssertEqual(
-            store.contactIDs(for: custom.steps[0], on: BoardCatalog.defaultBoard),
-            ["edge-19-left", "edge-19-right", "edge-29-left", "edge-29-right"] as Set
+            resolvedIDs,
+            Set(try ContactResolver.resolve(
+                custom.steps[0].targets,
+                step: custom.steps[0],
+                board: BoardCatalog.defaultBoard
+            ).map(\.id))
         )
     }
 

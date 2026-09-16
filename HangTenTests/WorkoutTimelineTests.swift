@@ -155,7 +155,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
 
-    func testHighlightResolverUsesFactualSideMetadataForPortableBoard() {
+    func testHighlightResolverUsesCenterNearestSemanticTargetForSingleHandSteps() {
         let board = BoardRevision(
             id: "portable",
             revisionID: "test-fixture",
@@ -234,7 +234,7 @@ final class WorkoutTimelineTests: XCTestCase {
         )
         XCTAssertEqual(
             WorkoutHighlightResolver.contactIDs(for: rightStep, on: board),
-            ["right-pocket"]
+            ["left-pocket"]
         )
     }
 

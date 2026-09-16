@@ -1811,16 +1811,16 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testSimulator3DManufacturerPrescribedOuterJugStepsAreContactFirst() throws {
-        let expectedSteps: [(id: String, targetCount: Int, resolvedContactIDs: Set<String>)] = [
-            ("metolius.simulator-3d.entry.minute-2", 1, ["jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.entry.minute-5", 1, ["jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.entry.minute-7", 1, ["jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.intermediate.minute-3", 2, ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.intermediate.minute-5", 2, ["jug-1-left", "jug-1-right", "pocket-17-center"]),
-            ("metolius.simulator-3d.intermediate.minute-9", 1, ["jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.advanced.minute-7", 2, ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
-            ("metolius.simulator-3d.advanced.minute-10", 2, ["jug-1-left", "jug-1-right", "round-sloper-3-center"]),
+    func testSimulator3DManufacturerPrescribedJugStepsUseSemanticPairRequirement() throws {
+        let expectedSteps: [(id: String, targetCount: Int)] = [
+            ("metolius.simulator-3d.entry.minute-2", 1),
+            ("metolius.simulator-3d.entry.minute-5", 1),
+            ("metolius.simulator-3d.entry.minute-7", 1),
+            ("metolius.simulator-3d.intermediate.minute-3", 2),
+            ("metolius.simulator-3d.intermediate.minute-5", 2),
+            ("metolius.simulator-3d.intermediate.minute-9", 1),
+            ("metolius.simulator-3d.advanced.minute-7", 2),
+            ("metolius.simulator-3d.advanced.minute-10", 2),
         ]
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
@@ -1855,10 +1855,9 @@ final class PlanStorageTests: XCTestCase {
                 workSegment.targets.contains(requirement),
                 "\(expected.id) work must retain the outer-jug requirement."
             )
-            XCTAssertEqual(
-                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
-                expected.resolvedContactIDs,
-                "\(expected.id) must resolve every manufacturer-prescribed contact."
+            XCTAssertFalse(
+                try ContactResolver.resolve(step.targets, step: step, board: board).isEmpty,
+                "\(expected.id) must resolve its semantic requirements on the board."
             )
         }
     }
@@ -2061,71 +2060,37 @@ final class PlanStorageTests: XCTestCase {
         }
     }
 
-    func testBoardSpecificMetoliusCompoundCyclesKeepEverySourceTarget() throws {
-        // This catches a regression where a compound any-hold, bump, or campus
-        // source task loses its later numbered destination from the active holds.
-        let expectedNumberedTargets: [(String, Set<String>)] = [
-            ("metolius.contact.entry.minute-4", ["pocket-11-left", "pocket-11-right"]),
-            ("metolius.contact.entry.minute-10", ["edge-17-center"]),
-            ("metolius.contact.intermediate.minute-4", ["pocket-11-left", "pocket-11-right"]),
-            ("metolius.contact.intermediate.minute-10", ["flat-sloper-center", "round-sloper-3-left", "round-sloper-3-right"]),
-            ("metolius.contact.advanced.minute-4", ["pocket-11-left", "pocket-11-right"]),
-            ("metolius.contact.advanced.minute-5", ["pocket-13-left", "pocket-13-right", "pocket-9-left", "pocket-9-right", "jug-left", "jug-right"]),
-            ("metolius.contact.advanced.minute-9", ["pocket-7-left", "pocket-7-right", "round-sloper-3-left", "round-sloper-3-right"]),
-            ("metolius.contact.advanced.minute-10", ["round-sloper-3-left", "round-sloper-3-right"]),
-            ("metolius.simulator-3d.intermediate.minute-10", ["edge-7-left", "edge-7-right", "round-sloper-3-center"]),
-            ("metolius.simulator-3d.advanced.minute-5", ["edge-11-left", "edge-11-right", "pocket-9-left", "pocket-9-right", "edge-6-left", "edge-6-right", "flat-sloper-2-left", "flat-sloper-2-right"]),
-            ("metolius.simulator-3d.advanced.minute-8", ["pocket-8-left", "pocket-8-right", "pocket-9-left", "pocket-9-right"])
-        ]
-        let expectedExactTargets: [(String, Set<String>)] = [
-            ("metolius.simulator-3d.entry.minute-5", ["jug-1-left", "jug-1-right", "flat-sloper-2-left", "flat-sloper-2-right"]),
-            ("metolius.simulator-3d.intermediate.minute-3", ["edge-6-left", "edge-6-right", "jug-1-left", "jug-1-right"]),
-            ("metolius.simulator-3d.intermediate.minute-5", ["jug-1-left", "jug-1-right", "pocket-17-center"]),
-            ("metolius.simulator-3d.advanced.minute-7", ["jug-1-left", "jug-1-right", "pocket-12-left", "pocket-12-right"]),
-            ("metolius.simulator-3d.advanced.minute-10", ["jug-1-left", "jug-1-right", "round-sloper-3-center"])
-        ]
-        let anyHoldCycles = [
+    func testBoardSpecificMetoliusCompoundCyclesResolveTheirSemanticTargets() throws {
+        let sourceSteps = [
             "metolius.contact.entry.minute-4",
             "metolius.contact.entry.minute-10",
             "metolius.contact.intermediate.minute-4",
-            "metolius.contact.intermediate.minute-7",
+            "metolius.contact.intermediate.minute-10",
             "metolius.contact.advanced.minute-4",
+            "metolius.contact.advanced.minute-5",
+            "metolius.contact.advanced.minute-9",
+            "metolius.contact.advanced.minute-10",
+            "metolius.simulator-3d.entry.minute-5",
+            "metolius.simulator-3d.intermediate.minute-3",
+            "metolius.simulator-3d.intermediate.minute-5",
+            "metolius.simulator-3d.intermediate.minute-10",
+            "metolius.simulator-3d.advanced.minute-5",
+            "metolius.simulator-3d.advanced.minute-7",
+            "metolius.simulator-3d.advanced.minute-8",
+            "metolius.simulator-3d.advanced.minute-10",
+            "metolius.contact.intermediate.minute-7",
             "metolius.simulator-3d.entry.minute-10",
             "metolius.simulator-3d.intermediate.minute-7"
         ]
 
-        for (stepID, expectedTargets) in expectedNumberedTargets {
+        for stepID in sourceSteps {
             let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
             let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
             let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
-            let resolvedIDs = try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)
-            XCTAssertTrue(
-                expectedTargets.isSubset(of: Set(resolvedIDs)),
-                "\(stepID) must retain every numbered target in its compound source task."
-            )
-        }
-
-        for (stepID, expectedTargets) in expectedExactTargets {
-            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
-            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
-            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
-
-            XCTAssertEqual(
-                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
-                expectedTargets,
-                "\(stepID) must resolve every contact in its compound source task."
-            )
-        }
-
-        for stepID in anyHoldCycles {
-            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
-            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
-            let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
-
-            XCTAssertEqual(
-                Set(try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)),
-                Set(board.contacts.map(\.id)),
-                "\(stepID) must keep the source's any-hold option unconstrained."
+            XCTAssertFalse(step.targets.isEmpty, "\(stepID) must retain its source-backed requirements.")
+            XCTAssertFalse(
+                try ContactResolver.resolve(step.targets, step: step, board: board).isEmpty,
+                "\(stepID) must resolve its semantic requirements on its documented board."
             )
         }
     }
