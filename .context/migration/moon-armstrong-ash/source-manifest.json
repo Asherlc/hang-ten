@@ -11,8 +11,8 @@
   "auditedModelSource": {
     "provenanceType": "user-provided",
     "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
-    "retainedPath": ".context/migration/moon-armstrong-ash/moon-armstrong-ash.glb",
-    "sha256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8"
+    "retainedPath": ".context/migration/moon-armstrong-ash/source.blend",
+    "sha256": "a5caa789221b678d0a7d77d539ce8099e645a8c9c153b33179ae06a081c1c674"
   },
   "supersessionRuling": "Replaces raster presentation with model-first 3D package"
 }
