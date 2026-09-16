@@ -10621,11 +10621,12 @@
       "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -10634,11 +10635,12 @@
       "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -10647,11 +10649,12 @@
       "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -10660,11 +10663,12 @@
       "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -10673,11 +10677,12 @@
       "equipmentObjectID": "primary",
       "name": "Left variable-depth edge",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -10686,11 +10691,12 @@
       "equipmentObjectID": "primary",
       "name": "Right variable-depth edge",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -10699,11 +10705,12 @@
       "equipmentObjectID": "primary",
       "name": "Left medium crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -10712,11 +10719,12 @@
       "equipmentObjectID": "primary",
       "name": "Right medium crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -10725,11 +10733,12 @@
       "equipmentObjectID": "primary",
       "name": "Left large crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -10738,11 +10747,12 @@
       "equipmentObjectID": "primary",
       "name": "Right large crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -10751,11 +10761,12 @@
       "equipmentObjectID": "primary",
       "name": "Left two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -10766,11 +10777,12 @@
       "equipmentObjectID": "primary",
       "name": "Right two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -10781,11 +10793,12 @@
       "equipmentObjectID": "primary",
       "name": "Left three-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -10796,11 +10809,12 @@
       "equipmentObjectID": "primary",
       "name": "Right three-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -10811,7 +10825,6 @@
       "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -10820,7 +10833,6 @@
       "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -10829,7 +10841,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -10840,7 +10851,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -10851,11 +10861,12 @@
       "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -10864,11 +10875,12 @@
       "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -10877,11 +10889,12 @@
       "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -10890,11 +10903,12 @@
       "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -10903,11 +10917,12 @@
       "equipmentObjectID": "primary",
       "name": "Left variable-depth edge — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -10916,11 +10931,12 @@
       "equipmentObjectID": "primary",
       "name": "Right variable-depth edge — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -10929,11 +10945,12 @@
       "equipmentObjectID": "primary",
       "name": "Left medium crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -10942,11 +10959,12 @@
       "equipmentObjectID": "primary",
       "name": "Right medium crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -10955,11 +10973,12 @@
       "equipmentObjectID": "primary",
       "name": "Left large crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -10968,11 +10987,12 @@
       "equipmentObjectID": "primary",
       "name": "Right large crimp — Orientation 2",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -10981,11 +11001,12 @@
       "equipmentObjectID": "primary",
       "name": "Left two-finger pocket — Orientation 2",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -10996,11 +11017,12 @@
       "equipmentObjectID": "primary",
       "name": "Right two-finger pocket — Orientation 2",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -11011,11 +11033,12 @@
       "equipmentObjectID": "primary",
       "name": "Left three-finger pocket — Orientation 2",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11026,11 +11049,12 @@
       "equipmentObjectID": "primary",
       "name": "Right three-finger pocket — Orientation 2",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11041,7 +11065,6 @@
       "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface — Orientation 2",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11050,7 +11073,6 @@
       "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface — Orientation 2",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11059,7 +11081,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper — Orientation 2",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -11070,7 +11091,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper — Orientation 2",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -11081,11 +11101,12 @@
       "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -11094,11 +11115,12 @@
       "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -11107,11 +11129,12 @@
       "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -11120,11 +11143,12 @@
       "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -11133,11 +11157,12 @@
       "equipmentObjectID": "primary",
       "name": "Left variable-depth edge — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -11146,11 +11171,12 @@
       "equipmentObjectID": "primary",
       "name": "Right variable-depth edge — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -11159,11 +11185,12 @@
       "equipmentObjectID": "primary",
       "name": "Left medium crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -11172,11 +11199,12 @@
       "equipmentObjectID": "primary",
       "name": "Right medium crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -11185,11 +11213,12 @@
       "equipmentObjectID": "primary",
       "name": "Left large crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -11198,11 +11227,12 @@
       "equipmentObjectID": "primary",
       "name": "Right large crimp — Orientation 3",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -11211,11 +11241,12 @@
       "equipmentObjectID": "primary",
       "name": "Left two-finger pocket — Orientation 3",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -11226,11 +11257,12 @@
       "equipmentObjectID": "primary",
       "name": "Right two-finger pocket — Orientation 3",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -11241,11 +11273,12 @@
       "equipmentObjectID": "primary",
       "name": "Left three-finger pocket — Orientation 3",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11256,11 +11289,12 @@
       "equipmentObjectID": "primary",
       "name": "Right three-finger pocket — Orientation 3",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11271,7 +11305,6 @@
       "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface — Orientation 3",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11280,7 +11313,6 @@
       "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface — Orientation 3",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11289,7 +11321,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper — Orientation 3",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -11300,7 +11331,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper — Orientation 3",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -11311,11 +11341,12 @@
       "equipmentObjectID": "primary",
       "name": "Left upper sloped crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -11324,11 +11355,12 @@
       "equipmentObjectID": "primary",
       "name": "Right upper sloped crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 12.5,
-        "upperBound": 12.5
+      "depth": {
+        "range": {
+          "minimum": 12.5,
+          "maximum": 12.5
+        }
       },
       "gripTypes": []
     },
@@ -11337,11 +11369,12 @@
       "equipmentObjectID": "primary",
       "name": "Left outer sloped crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -11350,11 +11383,12 @@
       "equipmentObjectID": "primary",
       "name": "Right outer sloped crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11.5,
-        "upperBound": 11.5
+      "depth": {
+        "range": {
+          "minimum": 11.5,
+          "maximum": 11.5
+        }
       },
       "gripTypes": []
     },
@@ -11363,11 +11397,12 @@
       "equipmentObjectID": "primary",
       "name": "Left variable-depth edge — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -11376,11 +11411,12 @@
       "equipmentObjectID": "primary",
       "name": "Right variable-depth edge — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 31
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 31
+        }
       },
       "gripTypes": []
     },
@@ -11389,11 +11425,12 @@
       "equipmentObjectID": "primary",
       "name": "Left medium crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -11402,11 +11439,12 @@
       "equipmentObjectID": "primary",
       "name": "Right medium crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 9,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 9,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -11415,11 +11453,12 @@
       "equipmentObjectID": "primary",
       "name": "Left large crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -11428,11 +11467,12 @@
       "equipmentObjectID": "primary",
       "name": "Right large crimp — Orientation 4",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 11,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 11,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -11441,11 +11481,12 @@
       "equipmentObjectID": "primary",
       "name": "Left two-finger pocket — Orientation 4",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -11456,11 +11497,12 @@
       "equipmentObjectID": "primary",
       "name": "Right two-finger pocket — Orientation 4",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 32
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 32
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -11471,11 +11513,12 @@
       "equipmentObjectID": "primary",
       "name": "Left three-finger pocket — Orientation 4",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11486,11 +11529,12 @@
       "equipmentObjectID": "primary",
       "name": "Right three-finger pocket — Orientation 4",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 17,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 17,
+          "maximum": 28
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -11501,7 +11545,6 @@
       "equipmentObjectID": "primary",
       "name": "Left outer wedge jug and pinch surface — Orientation 4",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11510,7 +11553,6 @@
       "equipmentObjectID": "primary",
       "name": "Right outer wedge jug and pinch surface — Orientation 4",
       "kind": "pinch",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": []
     },
@@ -11519,7 +11561,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower rotation sloper — Orientation 4",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"
@@ -11530,7 +11571,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower rotation sloper — Orientation 4",
       "kind": "sloper",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "sloper"

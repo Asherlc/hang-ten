@@ -503,7 +503,7 @@ final class WorkoutHistoryServiceTests: XCTestCase {
                             revisionID: "2026-09-contact-first",
                             modelSHA256: nil,
                             requirement: .edge(
-                                depthRangeMillimeters: .init(minimum: 20, maximum: 20),
+                                depth: .range(.init(minimum: 20, maximum: 20)),
                                 selection: .bilateralPair
                             ),
                             contactIDs: ["a1", "a2"]

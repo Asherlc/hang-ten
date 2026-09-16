@@ -2284,7 +2284,6 @@
       "equipmentObjectID": "primary",
       "name": "Left top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -2292,7 +2291,6 @@
       "equipmentObjectID": "primary",
       "name": "Right top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -2300,9 +2298,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 43-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -2312,9 +2308,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 43-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -2324,9 +2318,7 @@
       "equipmentObjectID": "primary",
       "name": "Left 38-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -2336,9 +2328,7 @@
       "equipmentObjectID": "primary",
       "name": "Right 38-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -2348,9 +2338,7 @@
       "equipmentObjectID": "primary",
       "name": "Center 30-degree sloper",
       "kind": "sloper",
-      "features": [
-        "flatSloper"
-      ],
+      "shape": "flat",
       "gripTypes": [
         "sloper"
       ]
@@ -2360,10 +2348,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -2372,10 +2361,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -2384,10 +2374,11 @@
       "equipmentObjectID": "primary",
       "name": "Left outer 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -2396,10 +2387,11 @@
       "equipmentObjectID": "primary",
       "name": "Right outer 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -2408,11 +2400,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 25 mm inclined two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -2423,11 +2416,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 25 mm inclined two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -2438,7 +2432,6 @@
       "equipmentObjectID": "primary",
       "name": "Left upper mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -2447,7 +2440,6 @@
       "equipmentObjectID": "primary",
       "name": "Right upper mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -2456,11 +2448,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -2471,11 +2464,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": [
         "twoFingerPocket"
@@ -2486,10 +2480,11 @@
       "equipmentObjectID": "primary",
       "name": "Center 40 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -2498,7 +2493,6 @@
       "equipmentObjectID": "primary",
       "name": "Center one-arm handle",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -2506,10 +2500,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 30 mm inclined edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -2518,10 +2513,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 30 mm inclined edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -2530,7 +2526,6 @@
       "equipmentObjectID": "primary",
       "name": "Left lower mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -2539,7 +2534,6 @@
       "equipmentObjectID": "primary",
       "name": "Right lower mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -2548,10 +2542,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 18 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 18,
-        "upperBound": 18
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
       },
       "gripTypes": []
     },
@@ -2560,10 +2555,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 18 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 18,
-        "upperBound": 18
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
       },
       "gripTypes": []
     }

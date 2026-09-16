@@ -125,11 +125,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm straight edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -138,7 +139,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer jug",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     },
@@ -147,11 +147,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm curved edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -160,11 +161,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm Pocket — short end-wall",
       "kind": "pocket",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     }

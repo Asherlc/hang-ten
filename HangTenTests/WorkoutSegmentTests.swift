@@ -7,10 +7,10 @@ final class WorkoutSegmentTests: XCTestCase {
             id: "edge-21",
             name: "Left 21 mm edge",
             kind: .edge,
-            depthRangeMillimeters: 21...21
+            depth: .range(.init(minimum: 21, maximum: 21))
         )
 
-        XCTAssertEqual(hold.depthRangeMillimeters, 21...21)
+        XCTAssertEqual(hold.depth, .range(.init(minimum: 21, maximum: 21)))
         XCTAssertEqual(hold.kind, .edge)
     }
 

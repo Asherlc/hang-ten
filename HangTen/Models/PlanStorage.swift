@@ -162,74 +162,26 @@ struct PlanMetadata: Codable, Hashable {
     }
 }
 
-struct MillimeterRange: Codable, Hashable {
-    let minimum: Double
-    let maximum: Double
-
-    private enum CodingKeys: String, CodingKey, CaseIterable {
-        case minimum, maximum
-    }
-
-    init(minimum: Double, maximum: Double) {
-        precondition(Self.isValid(minimum: minimum, maximum: maximum))
-        self.minimum = minimum
-        self.maximum = maximum
-    }
-
-    init(from decoder: Decoder) throws {
-        let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
-        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
-        let unsupportedKeys = rawContainer.allKeys
-            .filter { !allowedKeys.contains($0.stringValue) }
-            .sorted { $0.stringValue < $1.stringValue }
-        if let unknownKey = unsupportedKeys.first {
-            throw DecodingError.dataCorruptedError(
-                forKey: unknownKey,
-                in: rawContainer,
-                debugDescription: "Unsupported millimeter range field \(unknownKey.stringValue)."
-            )
-        }
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        minimum = try container.decode(Double.self, forKey: .minimum)
-        maximum = try container.decode(Double.self, forKey: .maximum)
-        guard Self.isValid(minimum: minimum, maximum: maximum) else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .maximum,
-                in: container,
-                debugDescription: "A millimeter range must be finite, non-negative, and ordered."
-            )
-        }
-    }
-
-    private static func isValid(minimum: Double, maximum: Double) -> Bool {
-        minimum.isFinite && maximum.isFinite && minimum >= 0 && minimum <= maximum
-    }
-}
-
 enum ContactSelectionPolicy: String, Codable, Hashable {
-    case allMatching
     case single
     case bilateralPair
 }
 
 struct ContactRequirement: Codable, Hashable {
     let kind: HoldKind?
-    let requiredFeatures: Set<HoldFeature>
-    let depthRangeMillimeters: MillimeterRange?
+    let shape: HoldShape?
+    let depth: HoldDepth?
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let compatibleGripTypes: Set<GripType>
     let selection: ContactSelectionPolicy
 
     init(
         kind: HoldKind? = nil,
-        requiredFeatures: Set<HoldFeature> = [],
-        depthRangeMillimeters: MillimeterRange? = nil,
+        shape: HoldShape? = nil,
+        depth: HoldDepth? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        compatibleGripTypes: Set<GripType> = [],
-        selection: ContactSelectionPolicy
+        selection: ContactSelectionPolicy = .single
     ) {
         if let fingerCapacity {
             precondition(PhysicalContact.validFingerCapacityRange.contains(fingerCapacity))
@@ -238,50 +190,30 @@ struct ContactRequirement: Codable, Hashable {
             precondition(PhysicalContact.validHandCapacityRange.contains(handCapacity))
         }
         self.kind = kind
-        self.requiredFeatures = requiredFeatures
-        self.depthRangeMillimeters = depthRangeMillimeters
+        self.shape = shape
+        self.depth = depth
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
-        self.compatibleGripTypes = compatibleGripTypes
         self.selection = selection
-    }
-
-    static func edge(
-        depthRangeMillimeters: MillimeterRange? = nil,
-        selection: ContactSelectionPolicy
-    ) -> ContactRequirement {
-        .init(kind: .edge, depthRangeMillimeters: depthRangeMillimeters, selection: selection)
     }
 
     static func kind(
         _ kind: HoldKind,
         fingerCapacity: Int? = nil,
-        selection: ContactSelectionPolicy = .allMatching
+        selection: ContactSelectionPolicy = .single
     ) -> ContactRequirement {
         .init(kind: kind, fingerCapacity: fingerCapacity, selection: selection)
     }
 
-    static func feature(
-        _ feature: HoldFeature,
-        fingerCapacity: Int? = nil,
-        selection: ContactSelectionPolicy = .allMatching
+    static func edge(
+        depth: HoldDepth? = nil,
+        selection: ContactSelectionPolicy = .single
     ) -> ContactRequirement {
-        .init(
-            kind: feature.holdKind,
-            requiredFeatures: [feature],
-            fingerCapacity: fingerCapacity,
-            selection: selection
-        )
+        .init(kind: .edge, depth: depth, selection: selection)
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case kind
-        case requiredFeatures
-        case depthRangeMillimeters
-        case fingerCapacity
-        case handCapacity
-        case compatibleGripTypes
-        case selection
+        case kind, shape, depth, fingerCapacity, handCapacity, selection
     }
 
     init(from decoder: Decoder) throws {
@@ -297,18 +229,10 @@ struct ContactRequirement: Codable, Hashable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
-        requiredFeatures = Set(
-            try container.decodeIfPresent([HoldFeature].self, forKey: .requiredFeatures) ?? []
-        )
-        depthRangeMillimeters = try container.decodeIfPresent(
-            MillimeterRange.self,
-            forKey: .depthRangeMillimeters
-        )
+        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
+        depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
-        compatibleGripTypes = Set(
-            try container.decodeIfPresent([GripType].self, forKey: .compatibleGripTypes) ?? []
-        )
         selection = try container.decode(ContactSelectionPolicy.self, forKey: .selection)
 
         if let fingerCapacity,
@@ -332,21 +256,10 @@ struct ContactRequirement: Codable, Hashable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(kind, forKey: .kind)
-        if !requiredFeatures.isEmpty {
-            try container.encode(
-                HoldFeature.allCases.filter(requiredFeatures.contains),
-                forKey: .requiredFeatures
-            )
-        }
-        try container.encodeIfPresent(depthRangeMillimeters, forKey: .depthRangeMillimeters)
+        try container.encodeIfPresent(shape, forKey: .shape)
+        try container.encodeIfPresent(depth, forKey: .depth)
         try container.encodeIfPresent(fingerCapacity, forKey: .fingerCapacity)
         try container.encodeIfPresent(handCapacity, forKey: .handCapacity)
-        if !compatibleGripTypes.isEmpty {
-            try container.encode(
-                GripType.allCases.filter(compatibleGripTypes.contains),
-                forKey: .compatibleGripTypes
-            )
-        }
         try container.encode(selection, forKey: .selection)
     }
 }

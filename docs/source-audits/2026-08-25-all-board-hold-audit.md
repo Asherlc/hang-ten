@@ -127,7 +127,7 @@ round slopers, pockets `4`–`14`, center flat sloper `15`, and center edges
 | --- | --- | --- | ---: | --- |
 | 1 | `pinch-left`, `pinch-right` | pinch | — | omitted |
 | 2 | `jug-left`, `jug-right` | jug | — | omitted |
-| 3 | `round-sloper-3-left`, `round-sloper-3-right` | sloper | — | 63 mm describes a round sloper, not a published edge/pocket depth |
+| 3 | `round-sloper-3-left`, `round-sloper-3-right` | sloper | — | 63 mm describes round slopers, not a published edge/pocket depth |
 | 4–14 | `pocket-4-*` through `pocket-14-*` | pocket | source-labelled 2, 3, or 4 | `sizeMillimeters` maps the published pocket depth |
 | 15 | `flat-sloper-center` | sloper | — | 53 mm remains a source-backed sloper label, not a structured edge/pocket depth |
 | 16–19 | `edge-16-center` through `edge-19-center` | edge | — | 15, 35, 28, and 23 mm in `sizeMillimeters` |
