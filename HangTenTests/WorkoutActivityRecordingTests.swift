@@ -396,6 +396,33 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testResolverReportsNoMatchesBeforeApplyingBilateralSelection() {
+        let requirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
+
+        XCTAssertThrowsError(
+            try ContactResolver.resolve(requirement, step: step(targets: [requirement]), board: board)
+        ) { error in
+            XCTAssertEqual(error as? ContactResolutionError, .noMatches)
+        }
+    }
+
+    func testResolverRejectsBilateralPairWhenAnExtremeIsOnThePresentationMidpoint() {
+        let center = PhysicalContact(id: "center", name: "Center edge", kind: .edge)
+        let right = PhysicalContact(id: "right", name: "Right edge", kind: .edge)
+        let presentation = rasterPresentation(bounds: [
+            center.id: HoldFrame(x: 0.4, y: 0.2, width: 0.2, height: 0.2),
+            right.id: HoldFrame(x: 0.7, y: 0.2, width: 0.2, height: 0.2)
+        ])
+        let board = board(holds: [center, right], presentations: [presentation])
+        let requirement = ContactRequirement.kind(.edge, selection: .bilateralPair)
+
+        XCTAssertThrowsError(
+            try ContactResolver.resolve(requirement, step: step(targets: [requirement]), board: board)
+        ) { error in
+            XCTAssertEqual(error as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+        }
+    }
+
     func testWorkoutMatchingRejectsUnknownSideAndUndocumentedPairInDefaultPresentation() throws {
         let left = PhysicalContact(
             id: "pocket-left",

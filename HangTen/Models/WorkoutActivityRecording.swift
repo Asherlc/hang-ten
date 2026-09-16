@@ -360,6 +360,10 @@ enum ContactResolver {
                 && matches(stepGripType: step.gripType, contact: contact)
         }
 
+        guard !candidates.isEmpty else {
+            throw ContactResolutionError.noMatches
+        }
+
         switch requirement.selection {
         case .single:
             candidates = try singleCandidate(from: candidates, on: board)
