@@ -2,7 +2,7 @@
 
 ## Scope
 
-Acceptance ran against current source `f68cbbd7f6b31ac09e67622bd0d1f74ebe920db0` (`chore: finalize hangboard migration audit records`). This report retains already collected evidence for six migrated hangboards. No new build or validation run was initiated to write this report. The report commit is documentation only; it does not change production packages, source records, tests, or runtime behavior.
+Acceptance ran against current source `5a43cecfb0824ee3ff6faebb37475f42818c80c6` (`Fix landscape board detail framing`). This commit changes only `HangTen/Views/TrainView.swift` and `HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift`. For compact-height BoardDetailView, it hides the root tab bar and tightens vertical chrome and padding; regular-height and portrait layouts use automatic defaults. This report retains already collected evidence for six migrated hangboards alongside the current landscape recapture and targeted regression results.
 
 ## Environment/build
 
@@ -10,16 +10,17 @@ Acceptance ran against current source `f68cbbd7f6b31ac09e67622bd0d1f74ebe920db0`
 | --- | --- |
 | Acceptance date | 2026-09-16 |
 | Dedicated simulator | iPhone 17 Pro, iOS 26.5 |
-| UUID | `24871C34-8ACA-443F-A22E-EF4C5708D044` |
-| Simulator name | `Hang Ten Paseo infamous-sheep Review` |
+| UUID | `C4594683-B0AA-49B1-A7BE-43291D519A59` |
+| Simulator name | `Hang Ten Paseo infamous-sheep Review Landscape Recapture` |
 | Bundle | `com.hangten.training` |
 | Owner record | `.context/infamous-sheep-native-acceptance/OWNER` |
 | Build/run tool | XcodeBuildMCP |
 | Project / scheme | `HangTen.xcodeproj` / `HangTen` |
 | Configuration / destination | Debug / iOS Simulator |
 | Derived data | `.context/DerivedData` |
-| Build setting | `CODE_SIGNING_ALLOWED=NO` |
-| Result | Build succeeded; app ran on the dedicated simulator |
+| Build invocation | `XcodeBuildMCP build_run_sim({extraArgs:["CODE_SIGNING_ALLOWED=NO"]})` |
+| Result | Build and run succeeded for the bundle on the workspace-owned simulator |
+| Workspace ownership / cleanup | After acceptance, the recorded simulator UUID was removed; both workspace simulator manifest directories are empty, and `.context/DerivedData` is absent |
 
 No physical-device run was performed.
 
@@ -38,9 +39,9 @@ All screenshot filenames in this report are relative to `.context/infamous-sheep
 
 ## UI/picking observations
 
-Every board route used `HANGTEN_REVIEW_BOARD_ID` set to its app ID and `HANGTEN_REVIEW_BOARD_DETAIL=1`. The UI snapshot exposed `boardModel.map` and the relevant `boardModel.contact.<id>`. An actual tap selected each contact listed above, and the selected contact card appeared.
+Every board route used `HANGTEN_REVIEW_BOARD_ID=<app id>` and `HANGTEN_REVIEW_BOARD_DETAIL=1`. The UI snapshot exposed `boardModel.map` and the relevant `boardModel.contact.<id>`. An actual tap selected each contact listed above, and the selected contact card appeared. The six new landscape active recapture launches used `HANGTEN_REVIEW_LANDSCAPE=1`.
 
-Portrait and landscape active captures show the loaded 3D model and its framing. Separate package/descriptor checks enforce model-only production packages; screenshots alone do not establish that property. The selected contacts and native tests demonstrate the documented picking cases, without a claim of global collision freedom.
+Portrait and landscape active captures show the loaded 3D model and its framing. On the six current landscape captures, all complete board shapes, including lower rows, fit within the landscape map area with no root tab bar obstruction. The selected-hold card starts below the map and may scroll; the whole detail page is not claimed to fit. Separate package/descriptor checks enforce model-only production packages; screenshots alone do not establish that property. The selected contacts and native tests demonstrate the documented picking cases, without a claim of global collision freedom.
 
 ## Behavior matrix
 
@@ -48,6 +49,7 @@ Portrait and landscape active captures show the loaded 3D model and its framing.
 | --- | --- | --- |
 | Six-board detail routing | Review environment and UI snapshots | All six app IDs loaded their board detail route |
 | Portrait/landscape framing | Twelve active captures in the board table | Loaded 3D model visible in both orientations for every board |
+| Compact-height landscape detail framing | `testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport` and six recaptured landscape screenshots | Root tab bar hidden; full board shapes, including lower rows, fit within the map area; selected-hold card may scroll below the map |
 | Contact picking on each board | Six portrait picked captures and actual taps | Listed contact selected and selected contact card shown for each board |
 | Orbit and orientation reset | Two targeted orbit/orientation tests | Complete azimuth rotation; orientation selection resets orbit and permits suspension at runtime |
 | Highlight clear/restore | Targeted cloned-material test and workout rest captures | Materials restore across generic views; rest clears highlight while the model remains present |
@@ -56,19 +58,39 @@ Portrait and landscape active captures show the loaded 3D model and its framing.
 
 ## Native tests
 
-On 2026-09-16, XcodeBuildMCP `test_sim` reran these exact `BoardModelTests` against current source `f68cbbd7f6b31ac09e67622bd0d1f74ebe920db0`, using `CODE_SIGNING_ALLOWED=NO`:
+On 2026-09-16, XcodeBuildMCP ran the following exact targeted test invocation against source `5a43cecfb0824ee3ff6faebb37475f42818c80c6`:
+
+```text
+XcodeBuildMCP test_sim({
+ extraArgs:[
+  "CODE_SIGNING_ALLOWED=NO",
+  "-only-testing:HangTenUITests/OwlClimbPokerBoardMapInteractionUITests/testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport",
+  "-only-testing:HangTenTests/BoardModelTests/testOrientationSelectionResetsOrbitAndAllowsSuspensionAtRuntime",
+  "-only-testing:HangTenTests/BoardModelTests/testOrbitAllowsACompleteAzimuthRotation",
+  "-only-testing:HangTenTests/BoardModelTests/testHighlightsRestoreClonedMaterialsAcrossGenericViews",
+  "-only-testing:HangTenTests/BoardModelTests/testClosestNativeHitResolvesOnlyTheFrontDescriptorBoundContact",
+  "-only-testing:HangTenTests/BoardModelTests/testModelAccessibilityEnumeratesOnlyDescriptorBoundContacts"
+ ],
+ progress:true
+})
+```
+
+The six selected tests were:
 
 | Test | Behavior covered |
 | --- | --- |
+| `testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport` | Compact-height landscape hides root tab bar and keeps the map in the viewport |
 | `testOrientationSelectionResetsOrbitAndAllowsSuspensionAtRuntime` | Orientation selection resets orbit and allows suspension at runtime |
 | `testOrbitAllowsACompleteAzimuthRotation` | Orbit permits a complete azimuth rotation |
 | `testHighlightsRestoreClonedMaterialsAcrossGenericViews` | Highlight clearing restores cloned materials across generic views |
 | `testClosestNativeHitResolvesOnlyTheFrontDescriptorBoundContact` | Front-most native picking resolves only the front descriptor-bound contact |
 | `testModelAccessibilityEnumeratesOnlyDescriptorBoundContacts` | Accessibility exposes only descriptor-bound contacts |
 
-Result: **5 passed, 0 failed, 0 skipped**.
+Result: **6 passed, 0 failed, 0 skipped** on source `5a43cecf`.
 
-Previously collected full native `xcodebuild test` evidence recorded **1,145 HangTenTests with 2 skipped and 0 failures**, **24 HangTenUITests with 0 failures**, and **TEST SUCCEEDED**. The targeted tests above were rerun on `f68`; the full native suite was not rerun for this report.
+An earlier red run on the pre-fix production revision failed only the root tab-bar visibility assertion; route/map and map-frame assertions passed. The targeted regression test now covers tab-bar visibility and map viewport framing.
+
+Previously collected full native `xcodebuild test` evidence recorded **1,145 HangTenTests with 2 skipped and 0 failures**, **24 HangTenUITests with 0 failures**, and **TEST SUCCEEDED**. The six targeted tests above were run on `5a43cecf`; the full native suite was not rerun for this report.
 
 ## Workout evidence
 
@@ -99,25 +121,25 @@ The following verified SHA-256 values identify every referenced screenshot. Scre
 | Screenshot | SHA-256 | Dimensions |
 | --- | --- | --- |
 | `dewoodstok-portrait-active.png` | `7190068dabb4cc08dabea238e3ce180e92f90d13d694f3ceb46a762e6ce1c4fd` | 1206x2622 |
-| `dewoodstok-landscape-active.png` | `9cee3dff9df01884e9831bc97f579639b25d9bf736dd9298af390b69504e0929` | 2622x1206 |
+| `dewoodstok-landscape-active.png` | `ec052de11daf9dce082c4c5164958f10b729419ec5209dfa4f80be6877190554` | 2622x1206 |
 | `dewoodstok-woodbord-portrait-picked-front-upper-2.png` | `384107265b70bfb63e47547d8cddc6ed055b23e638fc907670396bb2b0b71b84` | 1206x2622 |
 | `escape-unlimited-portrait-active.png` | `775a92fdd97777edeb4d6028bafe5d6fece45b64f58ded60acb41f9b7efc20b3` | 1206x2622 |
-| `escape-unlimited-landscape-active.png` | `f9d248551379c2554d0b55a044d33907292eccac554ad82cd32f1141f97cc39b` | 2622x1206 |
+| `escape-unlimited-landscape-active.png` | `14faaa1fc3ff2a96e0450292fc153ed4ec18546e2230ea366224b612efa5071e` | 2622x1206 |
 | `escape-unlimited-portrait-picked-edge-45-right.png` | `824099ff18fb73c25fa29b4d34d62aa31db3c953f59fe0a7cc9b102195841eab` | 1206x2622 |
 | `evolv-kilter-basic-long-portrait-active.png` | `b1ed5862f938c273de0ffe0323d775fea3eb23fbc3c7eb1117d9c77a7dc89ec2` | 1206x2622 |
-| `evolv-kilter-basic-long-landscape-active.png` | `da22842fa95f8d1ae1732e24c99540e7d84f278e4bdb822bfa77bcd9c396013c` | 2622x1206 |
+| `evolv-kilter-basic-long-landscape-active.png` | `bc70a74edad08c12ffc1e19d0a184340c52a436a9201259db836c5b4794a9beb` | 2622x1206 |
 | `evolv-kilter-basic-long-portrait-picked-edge-15.png` | `118e7242047cc3606e16485739803fab32aea701414858f6218d36c1fbd9086f` | 1206x2622 |
 | `evolv-kilter-basic-long-workout-step-1.png` | `b3459775d6d85108fec1c8e1bf7a1b1c61b06c708c01df590c00b83342821e62` | 2622x1206 |
 | `evolv-kilter-basic-long-workout-step-1-active.png` | `63f4b9edd8c5b84d4dfd14e86307b249f65fb62f733adba0b38f3dc62007a96e` | 2622x1206 |
 | `evolv-kilter-basic-long-workout-step-1-hang.png` | `1dd157a4bace471fd0bda08748762c924125106c318ad47d1f5b4729ae38cce6` | 2622x1206 |
 | `metolius-wood-grips-deluxe-ii-portrait-active.png` | `761d1c7d65f88994fb5ee9612fd491c0873ad89bec33979dbe60e77dc6bf7ec7` | 1206x2622 |
-| `metolius-wood-grips-deluxe-ii-landscape-active.png` | `8bb439ddd1c477ec424598181db10e13ba6d0258ae119f232d7be760582b6b8f` | 2622x1206 |
+| `metolius-wood-grips-deluxe-ii-landscape-active.png` | `e05a5e5b2c00db8f2499346ed14de61ad679fd40da61c1a4af5f6dc6f23b6cd2` | 2622x1206 |
 | `metolius-wood-grips-deluxe-ii-portrait-picked-sloper-12-round-center.png` | `8de5ed5d069f052deee84a201706710db535df28ecf8afdd3693d91b50321cd7` | 1206x2622 |
 | `moon-armstrong-portrait-active.png` | `64433f93d5c0de10809730fdde6afede7bb21ee7be338bf30e621b9e4fbe4cde` | 1206x2622 |
-| `moon-armstrong-landscape-active.png` | `14c2fc8ab6f9eb9aaa05e086e46eb985233de7c1805cd138b55c6bb2e7a83355` | 2622x1206 |
+| `moon-armstrong-landscape-active.png` | `9635774d163040f44de219a41a3ae7064f44bd575ede858a25d7816e14218d03` | 2622x1206 |
 | `moon-armstrong-portrait-picked-sloper-right.png` | `5c5259d3eeecb7da40d5bc2d3e2bfb2fea54c6e55336f32cb66c9de97e3a76a5` | 1206x2622 |
 | `target10a-linebreaker-base-portrait-active.png` | `17ced4e1129bce8fbe46d4cee0302c26d2f9f49d22d2bda98f3b60c0335e054b` | 1206x2622 |
-| `target10a-linebreaker-base-landscape-active.png` | `16a86d6b656660b662e9ca12bcddc8b4adc36857e58ccbf237264f780bfc16c8` | 2622x1206 |
+| `target10a-linebreaker-base-landscape-active.png` | `611b73707396be1b6bce53606ba9c53254d07ccb5dab8471b9e6a5b5d5b24af1` | 2622x1206 |
 | `target10a-linebreaker-base-portrait-picked-sloper-32-right.png` | `daafd97b227e7d7ba6987ba915d7912843c70f464463c3ca36a16bf10e87d522` | 1206x2622 |
 
 ## Prior validation
@@ -138,4 +160,4 @@ The following evidence was previously collected; these checks were not all rerun
 
 Evidence is simulator-only; no physical-device run was performed. Escape's retained GLB has a documented AABB symmetry exception. Evolv retains a source/CDN byte provenance limitation. All six boards are `noDocumentedSuspension` per the cord audit.
 
-Acceptance supports the six-board routes, orientation framing, documented contact selections, targeted native behaviors, and workout preview/rest transition at the stated source revision. It makes no global collision-free claim: coverage is limited to documented selected pairwise/native checks. The full suite and prior package validation remain previously collected evidence, with only the five targeted native tests identified here as rerun on `f68`.
+Acceptance supports the six-board routes, orientation framing, documented contact selections, targeted native behaviors, and workout preview/rest transition at the stated source revision. It makes no global collision-free claim: coverage is limited to documented selected pairwise/native checks. The full suite and prior package validation remain previously collected evidence, with the six targeted tests identified here run on `5a43cecf`.
