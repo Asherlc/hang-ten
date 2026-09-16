@@ -1,0 +1,37 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 4,
+  "contactMappings": {
+    "hold-edge-lower": "edge-20",
+    "hold-edge-middle": "edge-15",
+    "hold-edge-upper": "edge-10",
+    "hold-jug": "jug-rounded"
+  },
+  "descriptorSHA256": "181074283e3a79e693a5cc974c68dea034f9c077d6e2d6779cf49404b8f099d3",
+  "modelBounds": {
+    "max": [
+      0.395000011,
+      0.159939215,
+      0.059999999
+    ],
+    "min": [
+      -0.395000011,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "82a20c9772978184369799408c716232a96cbaa3e05781c5cb54f40de8430b41",
+  "nodeCount": 5,
+  "packageID": "evolv-basic-training-board-long",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/evolv-basic-training-board-long.glb",
+  "sourceModelSHA256": "3fe7b9faba447f89936ff6a8e4d367276046e974b96e839aaeab5afb3c7c6e2b",
+  "sourceObjectIDs": [
+    "body",
+    "hold-edge-lower",
+    "hold-edge-middle",
+    "hold-edge-upper",
+    "hold-jug"
+  ],
+  "status": "converted"
+}

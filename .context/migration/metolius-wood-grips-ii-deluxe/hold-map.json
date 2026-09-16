@@ -1,0 +1,882 @@
+{
+  "schemaVersion": 2,
+  "asset": "metolius-wood-grips-ii-deluxe.glb",
+  "assetSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "sourceCoordinates": "metres; X right, Y rear, Z up",
+  "nonselectableObjects": [
+    "body"
+  ],
+  "holds": [
+    {
+      "holdId": "01-jug-left",
+      "objectName": "hold-01-jug-left",
+      "nodeIndex": 1,
+      "kind": "Diagram 1: outer jug, left",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": null,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "id": "01-jug-left",
+        "label": "Diagram 1: outer jug, left",
+        "xRange": [
+          -306,
+          -240
+        ],
+        "yRange": [
+          -71,
+          0.1
+        ],
+        "zRange": [
+          186,
+          217
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ]
+      }
+    },
+    {
+      "holdId": "01-jug-right",
+      "objectName": "hold-01-jug-right",
+      "nodeIndex": 2,
+      "kind": "Diagram 1: outer jug, right",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": null,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "id": "01-jug-right",
+        "label": "Diagram 1: outer jug, right",
+        "xRange": [
+          240,
+          306
+        ],
+        "yRange": [
+          -71,
+          0.1
+        ],
+        "zRange": [
+          186,
+          217
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ]
+      }
+    },
+    {
+      "holdId": "02-flat-stopper-left",
+      "objectName": "hold-02-flat-stopper-left",
+      "nodeIndex": 3,
+      "kind": "Diagram 2: 55 mm flat stopper, left",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": null,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": 55,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "id": "02-flat-stopper-left",
+        "label": "Diagram 2: 55 mm flat stopper, left",
+        "xRange": [
+          -238,
+          -80
+        ],
+        "yRange": [
+          -71,
+          0.1
+        ],
+        "zRange": [
+          194,
+          217
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "publishedGripLengthMm": 55
+      }
+    },
+    {
+      "holdId": "02-flat-stopper-right",
+      "objectName": "hold-02-flat-stopper-right",
+      "nodeIndex": 4,
+      "kind": "Diagram 2: 55 mm flat stopper, right",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": null,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": 55,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "id": "02-flat-stopper-right",
+        "label": "Diagram 2: 55 mm flat stopper, right",
+        "xRange": [
+          80,
+          238
+        ],
+        "yRange": [
+          -71,
+          0.1
+        ],
+        "zRange": [
+          194,
+          217
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "publishedGripLengthMm": 55
+      }
+    },
+    {
+      "holdId": "12-round-stopper-centre",
+      "objectName": "hold-12-round-stopper-centre",
+      "nodeIndex": 5,
+      "kind": "Diagram 12: 58 mm central round stopper",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": null,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": 58,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "id": "12-round-stopper-centre",
+        "label": "Diagram 12: 58 mm central round stopper",
+        "xRange": [
+          -79,
+          79
+        ],
+        "yRange": [
+          -71,
+          0.1
+        ],
+        "zRange": [
+          192,
+          217
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "publishedGripLengthMm": 58
+      }
+    },
+    {
+      "holdId": "03-edge-left",
+      "objectName": "hold-03-edge-left",
+      "nodeIndex": 6,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 31,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "03-edge-left",
+        "x": -275,
+        "z": 161,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -39,
+        "displayDepthMm": 31,
+        "publishedDepthMm": 31,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "04-three-finger-left",
+      "objectName": "hold-04-three-finger-left",
+      "nodeIndex": 7,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 32,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "04-three-finger-left",
+        "x": -170,
+        "z": 161,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -38,
+        "displayDepthMm": 32,
+        "publishedDepthMm": 32,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "05-two-finger-left",
+      "objectName": "hold-05-two-finger-left",
+      "nodeIndex": 8,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 38,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "05-two-finger-left",
+        "x": -95,
+        "z": 161,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -32,
+        "displayDepthMm": 38,
+        "publishedDepthMm": 38,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "03-edge-right",
+      "objectName": "hold-03-edge-right",
+      "nodeIndex": 9,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 31,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "03-edge-right",
+        "x": 275,
+        "z": 161,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -39,
+        "displayDepthMm": 31,
+        "publishedDepthMm": 31,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "04-three-finger-right",
+      "objectName": "hold-04-three-finger-right",
+      "nodeIndex": 10,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 32,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "04-three-finger-right",
+        "x": 170,
+        "z": 161,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -38,
+        "displayDepthMm": 32,
+        "publishedDepthMm": 32,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "05-two-finger-right",
+      "objectName": "hold-05-two-finger-right",
+      "nodeIndex": 11,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 38,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "05-two-finger-right",
+        "x": 95,
+        "z": 161,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -32,
+        "displayDepthMm": 38,
+        "publishedDepthMm": 38,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "13-four-finger-centre",
+      "objectName": "hold-13-four-finger-centre",
+      "nodeIndex": 12,
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 32,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "13-four-finger-centre",
+        "x": 0,
+        "z": 161,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -38,
+        "displayDepthMm": 32,
+        "publishedDepthMm": 32,
+        "depthClassification": "published nominal",
+        "kind": "four-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "06-edge-left",
+      "objectName": "hold-06-edge-left",
+      "nodeIndex": 13,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 25,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "06-edge-left",
+        "x": -275,
+        "z": 96,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -30,
+        "displayDepthMm": 25,
+        "publishedDepthMm": 25,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "07-three-finger-left",
+      "objectName": "hold-07-three-finger-left",
+      "nodeIndex": 14,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 25,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "07-three-finger-left",
+        "x": -170,
+        "z": 96,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -30,
+        "displayDepthMm": 25,
+        "publishedDepthMm": 25,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "08-two-finger-left",
+      "objectName": "hold-08-two-finger-left",
+      "nodeIndex": 15,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 28,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "08-two-finger-left",
+        "x": -95,
+        "z": 96,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -27,
+        "displayDepthMm": 28,
+        "publishedDepthMm": 28,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "06-edge-right",
+      "objectName": "hold-06-edge-right",
+      "nodeIndex": 16,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 25,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "06-edge-right",
+        "x": 275,
+        "z": 96,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -30,
+        "displayDepthMm": 25,
+        "publishedDepthMm": 25,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "07-three-finger-right",
+      "objectName": "hold-07-three-finger-right",
+      "nodeIndex": 17,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 25,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "07-three-finger-right",
+        "x": 170,
+        "z": 96,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -30,
+        "displayDepthMm": 25,
+        "publishedDepthMm": 25,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "08-two-finger-right",
+      "objectName": "hold-08-two-finger-right",
+      "nodeIndex": 18,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 28,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "08-two-finger-right",
+        "x": 95,
+        "z": 96,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -27,
+        "displayDepthMm": 28,
+        "publishedDepthMm": 28,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "14-four-finger-centre",
+      "objectName": "hold-14-four-finger-centre",
+      "nodeIndex": 19,
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 25,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "14-four-finger-centre",
+        "x": 0,
+        "z": 96,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -30,
+        "displayDepthMm": 25,
+        "publishedDepthMm": 25,
+        "depthClassification": "published nominal",
+        "kind": "four-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "09-edge-left",
+      "objectName": "hold-09-edge-left",
+      "nodeIndex": 20,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "09-edge-left",
+        "x": -275,
+        "z": 31,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "10-three-finger-left",
+      "objectName": "hold-10-three-finger-left",
+      "nodeIndex": 21,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "10-three-finger-left",
+        "x": -170,
+        "z": 31,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "11-two-finger-left",
+      "objectName": "hold-11-two-finger-left",
+      "nodeIndex": 22,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "11-two-finger-left",
+        "x": -95,
+        "z": 31,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "09-edge-right",
+      "objectName": "hold-09-edge-right",
+      "nodeIndex": 23,
+      "kind": "open-ended edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "09-edge-right",
+        "x": 275,
+        "z": 31,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "open-ended edge",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "10-three-finger-right",
+      "objectName": "hold-10-three-finger-right",
+      "nodeIndex": 24,
+      "kind": "three-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "10-three-finger-right",
+        "x": 170,
+        "z": 31,
+        "width": 78,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "three-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "11-two-finger-right",
+      "objectName": "hold-11-two-finger-right",
+      "nodeIndex": 25,
+      "kind": "two-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "11-two-finger-right",
+        "x": 95,
+        "z": 31,
+        "width": 48,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "two-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    },
+    {
+      "holdId": "15-four-finger-centre",
+      "objectName": "hold-15-four-finger-centre",
+      "nodeIndex": 26,
+      "kind": "four-finger pocket",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "M-DIAGRAM-V2"
+      ],
+      "publishedDepthMm": 19,
+      "publishedAngleDegrees": null,
+      "publishedGripLengthMm": null,
+      "geometryClassification": "source contact identity; manually authored approximate local curvature; see sourceSelector",
+      "sourceSelector": {
+        "holdId": "15-four-finger-centre",
+        "x": 0,
+        "z": 31,
+        "width": 110,
+        "height": 25,
+        "radius": 12.5,
+        "floorY": -24,
+        "displayDepthMm": 19,
+        "publishedDepthMm": 19,
+        "depthClassification": "published nominal",
+        "kind": "four-finger pocket",
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "lipRound": 2
+      }
+    }
+  ]
+}

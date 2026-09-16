@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "packageID": "evolv-basic-training-board-long",
+  "logicalContactIDs": [
+    "jug-rounded",
+    "edge-20",
+    "edge-15",
+    "edge-10"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold-jug",
+      "role": "contact",
+      "contactID": "jug-rounded"
+    },
+    {
+      "sourceNodeID": "hold-edge-upper",
+      "role": "contact",
+      "contactID": "edge-10"
+    },
+    {
+      "sourceNodeID": "hold-edge-middle",
+      "role": "contact",
+      "contactID": "edge-15"
+    },
+    {
+      "sourceNodeID": "hold-edge-lower",
+      "role": "contact",
+      "contactID": "edge-20"
+    }
+  ]
+}

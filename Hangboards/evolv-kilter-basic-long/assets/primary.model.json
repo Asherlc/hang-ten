@@ -1,0 +1,121 @@
+{
+  "contacts": {
+    "edge-10": {
+      "center": [
+        0.500002924,
+        0.480837719
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.999800589,
+          0.515820985
+        ],
+        "min": [
+          0.000205259,
+          0.445854454
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_upper_001"
+      ]
+    },
+    "edge-15": {
+      "center": [
+        0.499979157,
+        0.295051684
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.999803456,
+          0.332938986
+        ],
+        "min": [
+          0.000154859,
+          0.257164383
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_middle_001"
+      ]
+    },
+    "edge-20": {
+      "center": [
+        0.499992569,
+        0.070540195
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.999844387,
+          0.140678451
+        ],
+        "min": [
+          0.00014075,
+          0.000401939
+        ]
+      },
+      "nodeIDs": [
+        "hold_edge_lower_001"
+      ]
+    },
+    "jug-rounded": {
+      "center": [
+        0.499994078,
+        0.813610052
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.999877773,
+          1.0
+        ],
+        "min": [
+          0.000110382,
+          0.627220104
+        ]
+      },
+      "nodeIDs": [
+        "hold_jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.395000011,
+      0.159939215,
+      0.059999999
+    ],
+    "min": [
+      -0.395000011,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "82a20c9772978184369799408c716232a96cbaa3e05781c5cb54f40de8430b41",
+  "nodes": [
+    {
+      "nodeID": "body_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-20",
+      "nodeID": "hold_edge_lower_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15",
+      "nodeID": "hold_edge_middle_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-10",
+      "nodeID": "hold_edge_upper_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-rounded",
+      "nodeID": "hold_jug_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

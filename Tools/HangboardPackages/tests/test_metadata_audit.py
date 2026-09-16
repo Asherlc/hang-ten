@@ -1068,7 +1068,7 @@ def test_resolved_independent_boards_keep_only_exact_source_mapped_metadata() ->
     ).grip_types == frozenset({"openHand"})
 
     target = packages["target10a.linebreaker-base"]
-    assert len(target.contacts) == 24
+    assert len(target.contacts) == 23
     assert {
         hold.id: _single_grip_type(hold)
         for hold in target.contacts

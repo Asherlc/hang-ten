@@ -55,6 +55,12 @@ MIRRORED_PAIRS = {
     ),
 }
 
+ESCAPE_UNLIMITED_SOURCE_PAIRS = {
+    ("edge-45-left", "edge-45-right"): ("upper-left", "upper-right"),
+    ("edge-20-left", "edge-20-right"): ("middle-left", "middle-right"),
+    ("edge-15-left", "edge-15-right"): ("lower-left", "lower-right"),
+}
+
 
 def _mirrored_point(point: list[float]) -> tuple[float, float]:
     return (1 - point[0], point[1])
@@ -102,10 +108,49 @@ def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> N
             (REPO_ROOT / "Hangboards" / board_id / media["descriptorPath"]).read_text(encoding="utf-8")
         )
         contacts = descriptor["contacts"]
+        escape_unlimited_holds = None
+        if board_id == "escape-unlimited":
+            hold_map = json.loads(
+                (
+                    REPO_ROOT
+                    / ".context"
+                    / "migration"
+                    / "escape-unlimited-board"
+                    / "hold-map.json"
+                ).read_text(encoding="utf-8")
+            )
+            escape_unlimited_holds = {hold["holdId"]: hold for hold in hold_map["holds"]}
         for left_id, right_id in MIRRORED_PAIRS[board_id]:
             left = contacts[left_id]
             right = contacts[right_id]
             assert not set(left["nodeIDs"]) & set(right["nodeIDs"])
+            if board_id == "escape-unlimited":
+                left_source_id, right_source_id = ESCAPE_UNLIMITED_SOURCE_PAIRS[(left_id, right_id)]
+                assert escape_unlimited_holds is not None
+                left_source_center = escape_unlimited_holds[left_source_id]["sourceCentreM"]
+                right_source_center = escape_unlimited_holds[right_source_id]["sourceCentreM"]
+                assert right_source_center[0] == pytest.approx(-left_source_center[0])
+                assert right_source_center[1:] == pytest.approx(left_source_center[1:])
+                bounds = descriptor["modelBounds"]
+                for contact, source_center in ((left, left_source_center), (right, right_source_center)):
+                    center = contact["center"]
+                    contact_bounds = contact["facePlaneAABB"]
+                    for bound in ("min", "max"):
+                        assert isinstance(contact_bounds[bound], list)
+                        assert len(contact_bounds[bound]) == 2
+                    assert len(center) == 2
+                    # Source X/Z become descriptor X/Y (horizontal/board-vertical).
+                    for axis, source_axis in enumerate((0, 2)):
+                        span = bounds["max"][axis] - bounds["min"][axis]
+                        expected = (source_center[source_axis] - bounds["min"][axis]) / span
+                        # Retained mesh centers differ by up to ~0.014 normalized units.
+                        assert center[axis] == pytest.approx(expected, abs=0.015)
+                        minimum = contact_bounds["min"][axis]
+                        maximum = contact_bounds["max"][axis]
+                        assert minimum <= maximum
+                        assert minimum - 1e-6 <= center[axis] <= maximum + 1e-6
+                # Retained GLB surface bounds are not exact AABB mirrors despite symmetric source centers.
+                continue
             left_bounds = left["facePlaneAABB"]
             right_bounds = right["facePlaneAABB"]
             # The supplied Simulator meshes have submillimeter bilateral

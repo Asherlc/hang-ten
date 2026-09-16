@@ -8,6 +8,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 
 
 class ImportContactModelSourceTests(unittest.TestCase):
@@ -84,6 +85,34 @@ class ImportContactModelSourceTests(unittest.TestCase):
             manifest.write_text(json.dumps(document))
             with self.assertRaisesRegex(importer.SourceManifestError, "hash mismatch"):
                 importer.verify_source_manifest(manifest, "fixture")
+
+    def test_source_loader_dispatches_by_extension_after_empty_scene_reset(self) -> None:
+        importer = self.module()
+        calls: list[tuple[str, str | None]] = []
+
+        bpy = SimpleNamespace(
+            ops=SimpleNamespace(
+                wm=SimpleNamespace(
+                    read_factory_settings=lambda *, use_empty: calls.append(
+                        ("reset", str(use_empty))
+                    ),
+                    open_mainfile=lambda *, filepath: calls.append(("blend", filepath)),
+                ),
+                import_scene=SimpleNamespace(
+                    gltf=lambda *, filepath: calls.append(("gltf", filepath)),
+                ),
+            )
+        )
+
+        importer._load_source_model(bpy, Path("Retained.GLB"))
+        self.assertEqual(
+            calls,
+            [("reset", "True"), ("gltf", "Retained.GLB")],
+        )
+
+        calls.clear()
+        importer._load_source_model(bpy, Path("Retained.blend"))
+        self.assertEqual(calls, [("blend", "Retained.blend")])
 
 
 if __name__ == "__main__":

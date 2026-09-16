@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "metolius-wood-grips-ii-deluxe",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Metolius",
+    "evidencePacket": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
+    "retainedPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/metolius-wood-grips-ii-deluxe.glb",
+    "sha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package"
+}

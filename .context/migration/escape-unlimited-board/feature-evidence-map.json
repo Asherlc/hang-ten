@@ -1,0 +1,157 @@
+{
+  "assetSha256": "ca06ebc019bab52c0f576064b8893c7dbc5b44d2ada34927234db3892f5936e6",
+  "features": [
+    {
+      "holdId": "top-roll",
+      "objectName": "hold-top-roll",
+      "kind": "Continuous 60 mm nominal sloper / rounded top roll",
+      "evidenceRefs": [
+        "P1",
+        "I1"
+      ],
+      "publishedGripLengthMm": 60,
+      "publishedAngleDegrees": null,
+      "geometryClassification": "physical contact supported; local section and selectable boundary authored",
+      "sourceSelector": {
+        "id": "top-roll",
+        "label": "Continuous 60 mm nominal sloper / rounded top roll",
+        "xRange": [
+          -302,
+          302
+        ],
+        "yRange": [
+          -48,
+          0.1
+        ],
+        "zRange": [
+          150,
+          185
+        ],
+        "evidenceRefs": [
+          "P1",
+          "I1"
+        ],
+        "publishedGripLengthMm": 60
+      }
+    },
+    {
+      "holdId": "upper-left",
+      "objectName": "hold-upper-left",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 45,
+      "displayDepthMm": 45,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        -0.148,
+        -0.002625,
+        0.123
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    },
+    {
+      "holdId": "upper-right",
+      "objectName": "hold-upper-right",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 45,
+      "displayDepthMm": 45,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        0.148,
+        -0.002625,
+        0.123
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    },
+    {
+      "holdId": "middle-left",
+      "objectName": "hold-middle-left",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 20,
+      "displayDepthMm": 20,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        -0.148,
+        -0.02,
+        0.07
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    },
+    {
+      "holdId": "middle-right",
+      "objectName": "hold-middle-right",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 20,
+      "displayDepthMm": 20,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        0.148,
+        -0.02,
+        0.07
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    },
+    {
+      "holdId": "lower-left",
+      "objectName": "hold-lower-left",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 15,
+      "displayDepthMm": 15,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        -0.148,
+        -0.0135,
+        0.022
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    },
+    {
+      "holdId": "lower-right",
+      "objectName": "hold-lower-right",
+      "kind": "edge",
+      "evidenceRefs": [
+        "P1",
+        "I1",
+        "I4"
+      ],
+      "publishedDepthMm": 15,
+      "displayDepthMm": 15,
+      "depthClassification": "published nominal",
+      "sourceCentreM": [
+        0.148,
+        -0.0135,
+        0.022
+      ],
+      "geometryClassification": "actual cavity surface partition, not highlight shell"
+    }
+  ],
+  "notes": [
+    "The product-page text says 23.5 × 6 inches, but manufacturer dimensioned images say 23.75 × 7.25 × 1.875 inches. This asset explicitly follows the dimensioned-photo revision, not an asserted reconciliation.",
+    "The 60 mm top label is a grip surface length, not a 60 mm perpendicular pocket depth; its exact curved arc length is not certified.",
+    "Tier heights, step fillets, slot widths/heights and mounting centres are photo-derived estimates; rear is an unconfirmed planar approximation."
+  ]
+}

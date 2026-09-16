@@ -282,12 +282,17 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "captain-fingerfood.dual",
             "captain-fingerfood.pocket",
             "captain-fingerfood.unlevel",
+            "dewoodstok-woodbord",
+            "escape.unlimited",
+            "evolv-kilter-basic-long",
             "lattice-triple-rung",
             "lattice.mxedge-lift-large",
             "lattice.mxedge-lift-small",
             "metolius.prime-rib",
             "metolius.project",
             "metolius.wood-grips-compact-ii",
+            "metolius.wood-grips-deluxe-ii",
+            "moon.armstrong",
             "nature.stone-hanger",
             "tension.flash-board",
             "metolius.climbers-edge",
@@ -296,6 +301,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "soill.training-tiles",
             "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
+            "target10a.linebreaker-base",
             "yy.baguette-evo"
         ]
 

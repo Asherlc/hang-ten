@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "packageID": "target10a-linebreaker-base",
+  "logicalContactIDs": [
+    "jug-left",
+    "jug-right",
+    "sloper-32-left",
+    "sloper-32-right",
+    "pocket-28-left",
+    "pocket-28-right",
+    "edge-16-left",
+    "edge-16-right",
+    "pocket-37-left",
+    "pocket-37-right",
+    "pocket-45-left",
+    "pocket-45-right",
+    "pocket-50-left",
+    "pocket-50-right",
+    "sloper-bar-35-center",
+    "pocket-30-left",
+    "pocket-30-right",
+    "pocket-24-left",
+    "pocket-24-right",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-18-left",
+    "edge-18-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold-top-jug-left",
+      "role": "contact",
+      "contactID": "jug-left"
+    },
+    {
+      "sourceNodeID": "hold-top-jug-right",
+      "role": "contact",
+      "contactID": "jug-right"
+    },
+    {
+      "sourceNodeID": "hold-top-sloper-left",
+      "role": "contact",
+      "contactID": "sloper-32-left"
+    },
+    {
+      "sourceNodeID": "hold-top-sloper-right",
+      "role": "contact",
+      "contactID": "sloper-32-right"
+    },
+    {
+      "sourceNodeID": "hold-upper-four-finger-left",
+      "role": "contact",
+      "contactID": "pocket-37-left"
+    },
+    {
+      "sourceNodeID": "hold-upper-four-finger-right",
+      "role": "contact",
+      "contactID": "pocket-37-right"
+    },
+    {
+      "sourceNodeID": "hold-upper-three-finger-left",
+      "role": "contact",
+      "contactID": "pocket-45-left"
+    },
+    {
+      "sourceNodeID": "hold-upper-three-finger-right",
+      "role": "contact",
+      "contactID": "pocket-45-right"
+    },
+    {
+      "sourceNodeID": "hold-middle-four-finger-left",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "sourceNodeID": "hold-middle-four-finger-right",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "sourceNodeID": "hold-middle-three-finger-left",
+      "role": "contact",
+      "contactID": "pocket-28-left"
+    },
+    {
+      "sourceNodeID": "hold-middle-three-finger-right",
+      "role": "contact",
+      "contactID": "pocket-28-right"
+    },
+    {
+      "sourceNodeID": "hold-middle-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-30-left"
+    },
+    {
+      "sourceNodeID": "hold-middle-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-30-right"
+    },
+    {
+      "sourceNodeID": "hold-central-35deg-sloper-bar",
+      "role": "contact",
+      "contactID": "sloper-bar-35-center"
+    },
+    {
+      "sourceNodeID": "hold-lower-outer-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-24-left"
+    },
+    {
+      "sourceNodeID": "hold-lower-outer-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-24-right"
+    },
+    {
+      "sourceNodeID": "hold-lower-inner-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-50-left"
+    },
+    {
+      "sourceNodeID": "hold-lower-inner-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-50-right"
+    },
+    {
+      "sourceNodeID": "hold-lower-four-finger-left",
+      "role": "contact",
+      "contactID": "edge-16-left"
+    },
+    {
+      "sourceNodeID": "hold-lower-four-finger-right",
+      "role": "contact",
+      "contactID": "edge-16-right"
+    },
+    {
+      "sourceNodeID": "hold-lower-three-finger-left",
+      "role": "contact",
+      "contactID": "edge-18-left"
+    },
+    {
+      "sourceNodeID": "hold-lower-three-finger-right",
+      "role": "contact",
+      "contactID": "edge-18-right"
+    }
+  ]
+}

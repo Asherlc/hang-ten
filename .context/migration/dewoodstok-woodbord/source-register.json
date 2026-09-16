@@ -1,0 +1,64 @@
+[
+  {
+    "id": "P1",
+    "url": "https://www.bergfreunde.eu/dewoodstok-woodbord-training-board/",
+    "publisher": "Bergfreunde",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "590 \u00d7 148 \u00d7 40 mm, bamboo, 1.9 kg; four-finger depth families 13/16/20/25/30/35 mm; two-finger depths 20/35 mm; declining top rim.",
+    "doesNotEstablish": "Exact per-position depth mapping, fillet radii, rear geometry and tolerances.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P2",
+    "url": "https://chalkr.de/dewoodstock-woodboard-trainingsboard.html",
+    "publisher": "Chalkr",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "EAN 7426870707987; bamboo; four 5 mm mounting screws; 590 mm length and 148/40 mm cross-section dimensions.",
+    "doesNotEstablish": "Height and depth labels differ from physical orientation; dimensions do not measure every contact.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I1",
+    "url": "https://ecimg.cafe24img.com/pg902b04204861070/climblight/web/product/big/shop1_318797c874273f8325555199abe70184.jpg",
+    "publisher": "Climblight",
+    "evidenceTier": "retailer product photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Six/four/six pocket arrangement; two-finger apertures in upper/lower rows; continuous upper rim; four mounting apertures.",
+    "doesNotEstablish": "A photograph does not establish every depth, radius or hidden feature.",
+    "review": "Historical authoring observation preserved. Re-fetch failed during revision 2; not newly corroborated.",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json",
+    "previousReview": "actual image visually inspected"
+  },
+  {
+    "id": "I2",
+    "url": "https://www.holdsmarket.com/5327-thickbox_default/dewoodstok-hangboard.jpg",
+    "publisher": "Holdsmarket",
+    "evidenceTier": "retailer product photograph",
+    "accessDate": "2026-09-15",
+    "supports": "Woodbord identity and bamboo slab construction; visible slot layout.",
+    "doesNotEstablish": "No metrology or original image bytes retained.",
+    "review": "Historical authoring observation preserved. Re-fetch failed during revision 2; not newly corroborated.",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json",
+    "previousReview": "actual image visually inspected"
+  },
+  {
+    "id": "P3",
+    "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+    "publisher": "deWoodstok",
+    "evidenceTier": "manufacturer product text",
+    "accessDate": "2026-09-15",
+    "supports": "SKU DWS-07; bamboo; 590 x 148 x 40 mm; 1900 g; four mounting screws 5 x 90 mm; declining upper rim; four-finger depth families 13/16/20/25/30/35 mm; two-finger families 20/35 mm.",
+    "doesNotEstablish": "No per-position pocket-depth map, exact pocket outlines or rim angle. Text does not independently establish the sixteen-position layout.",
+    "review": "Manufacturer text actually read; image gallery did not yield readable originals.",
+    "localOriginal": null,
+    "retentionStatus": "Text observations recorded. Original page/image bytes not downloaded."
+  }
+]

@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "packageID": "moon-armstrong-ash",
+  "logicalContactIDs": [
+    "sloper-left",
+    "sloper-right",
+    "jug-left",
+    "jug-right",
+    "center-jug",
+    "edge-25-left",
+    "edge-25-right",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-15-left",
+    "edge-15-right",
+    "edge-10-left",
+    "edge-10-right",
+    "edge-8-left",
+    "edge-8-right",
+    "two-finger-pocket-left",
+    "two-finger-pocket-right",
+    "mono-left",
+    "mono-right",
+    "center-edge-22",
+    "center-edge-18"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold-top-35deg-left",
+      "role": "contact",
+      "contactID": "sloper-left"
+    },
+    {
+      "sourceNodeID": "hold-top-35deg-right",
+      "role": "contact",
+      "contactID": "sloper-right"
+    },
+    {
+      "sourceNodeID": "hold-jug-left",
+      "role": "contact",
+      "contactID": "jug-left"
+    },
+    {
+      "sourceNodeID": "hold-jug-right",
+      "role": "contact",
+      "contactID": "jug-right"
+    },
+    {
+      "sourceNodeID": "hold-jug-centre",
+      "role": "contact",
+      "contactID": "center-jug"
+    },
+    {
+      "sourceNodeID": "hold-edge-25mm-left",
+      "role": "contact",
+      "contactID": "edge-25-left"
+    },
+    {
+      "sourceNodeID": "hold-edge-25mm-right",
+      "role": "contact",
+      "contactID": "edge-25-right"
+    },
+    {
+      "sourceNodeID": "hold-edge-20mm-left",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "sourceNodeID": "hold-edge-20mm-right",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "sourceNodeID": "hold-edge-15mm-left",
+      "role": "contact",
+      "contactID": "edge-15-left"
+    },
+    {
+      "sourceNodeID": "hold-edge-15mm-right",
+      "role": "contact",
+      "contactID": "edge-15-right"
+    },
+    {
+      "sourceNodeID": "hold-edge-10mm-left",
+      "role": "contact",
+      "contactID": "edge-10-left"
+    },
+    {
+      "sourceNodeID": "hold-edge-10mm-right",
+      "role": "contact",
+      "contactID": "edge-10-right"
+    },
+    {
+      "sourceNodeID": "hold-edge-08mm-left",
+      "role": "contact",
+      "contactID": "edge-8-left"
+    },
+    {
+      "sourceNodeID": "hold-edge-08mm-right",
+      "role": "contact",
+      "contactID": "edge-8-right"
+    },
+    {
+      "sourceNodeID": "hold-two-finger-22mm-left",
+      "role": "contact",
+      "contactID": "two-finger-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold-two-finger-22mm-right",
+      "role": "contact",
+      "contactID": "two-finger-pocket-right"
+    },
+    {
+      "sourceNodeID": "hold-one-finger-22mm-left",
+      "role": "contact",
+      "contactID": "mono-left"
+    },
+    {
+      "sourceNodeID": "hold-one-finger-22mm-right",
+      "role": "contact",
+      "contactID": "mono-right"
+    },
+    {
+      "sourceNodeID": "hold-edge-22mm-centre",
+      "role": "contact",
+      "contactID": "center-edge-22"
+    },
+    {
+      "sourceNodeID": "hold-edge-18mm-centre",
+      "role": "contact",
+      "contactID": "center-edge-18"
+    }
+  ]
+}

@@ -495,6 +495,144 @@
       }
     },
     {
+      "packageID": "dewoodstok-woodbord",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained deWoodstok Woodbord manufacturer product response and the reviewed source packet identify a fixed bamboo training board with supplied mounting screws; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+          "exactRevisionID": "dewoodstok-woodbord-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d5943951b72683ec0cdde126e86c6c4834db78b71f03dbd8d19cc1ffc4236ef7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/dewoodstok-woodbord-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-mounting fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "escape.unlimited",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Escape Unlimited manufacturer product response and reviewed source packet support a fixed Baltic-birch board with mounting holes; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://escapeclimbing.com/products/ec72000",
+          "exactRevisionID": "escape-unlimited-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1a72a7b98971ee6b14816ab2e933180d7289dae1444918b69d422ad004192cc3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-unlimited-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-board fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "evolv-kilter-basic-long",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Evolv Basic Training Board Long manufacturer product response and reviewed source packet describe the fixed long board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+          "exactRevisionID": "evolv-basic-training-board-long-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "9bdfd3691762591ba86e145d57ba49c0d9c86c3211b39f2706718ec561b53163",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/evolv-kilter-basic-long-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and extracted manufacturer specification record; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "metolius.wood-grips-deluxe-ii",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Metolius Wood Grips II manufacturer product response and reviewed source packet identify the Deluxe as a wall-fixed wooden training board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+          "exactRevisionID": "metolius-wood-grips-deluxe-ii-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "0bd3c297deb023356fafa181a48a193c93723e779321d054a3d0f3cc82c9ad82",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-wood-grips-deluxe-ii-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register wall-fixed fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "moon.armstrong",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Moon Armstrong Fingerboard Ash manufacturer product response and reviewed source packet describe the fixed ash board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://moonclimbing.com/moon-armstrong-fingerboard-ash.html",
+          "exactRevisionID": "moon-armstrong-ash-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7ef4629d7164f3c62469db4a65ab303636fb82eae5d690bc7d131b1d3b5e639d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/moon-armstrong-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed-board fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "target10a.linebreaker-base",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained target10a Linebreaker BASE manufacturer product response and reviewed source packet identify the fixed BASE with supplied mounting screws; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.target10a.com/magazin/2017/01/01/linebreaker-base/",
+          "exactRevisionID": "target10a-linebreaker-base-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "65afde30db091cc985306c2b2b9cb077c4fde392d45b7ee8c64ab4385180757d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/target10a-linebreaker-base-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed BASE fact; no suspension is documented."
+      }
+    },
+    {
       "packageID": "yy.baguette-evo",
       "decision": "represented",
       "sourceFact": "documentedSuspension",
