@@ -57,6 +57,59 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
+    func testBilateralPairRequiresReciprocalPairMetadata() {
+        let board = fixtureBoard(
+            documentsPair: true,
+            reciprocalPair: false,
+            documentsSides: true
+        )
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+        }
+    }
+
+    func testBilateralPairRejectsDifferentFingerCapacity() {
+        let board = fixtureBoard(
+            rightFingerCapacity: 3,
+            leftFingerCapacity: 4,
+            documentsPair: true,
+            documentsSides: true
+        )
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+        }
+    }
+
+    func testBilateralPairRejectsDifferentHandCapacity() {
+        let board = fixtureBoard(
+            rightHandCapacity: 1,
+            leftHandCapacity: 2,
+            documentsPair: true,
+            documentsSides: true
+        )
+        let requirement = ContactRequirement.edge(
+            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            selection: .bilateralPair
+        )
+        let step = fixtureStep(target: requirement)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+        }
+    }
+
     func testBilateralPairRejectsTwoUnsidedContactsWithoutPairMetadata() {
         let board = fixtureBoard()
         let requirement = ContactRequirement.edge(
@@ -208,9 +261,14 @@ final class ContactResolverTests: XCTestCase {
 
     private func fixtureBoard(
         rightDepth: ClosedRange<Double> = 20...20,
+        rightFingerCapacity: Int? = nil,
+        leftFingerCapacity: Int? = nil,
+        rightHandCapacity: Int? = nil,
+        leftHandCapacity: Int? = nil,
         positionContactIDs: [String]? = nil,
         gripTypes: Set<GripType> = [.openHand],
         documentsPair: Bool = false,
+        reciprocalPair: Bool = true,
         documentsSides: Bool = false
     ) -> BoardRevision {
         let contacts = [
@@ -218,6 +276,8 @@ final class ContactResolverTests: XCTestCase {
                 id: "edge-right",
                 name: "Right edge",
                 kind: .edge,
+                fingerCapacity: rightFingerCapacity,
+                handCapacity: rightHandCapacity,
                 depthRangeMillimeters: rightDepth,
                 gripTypes: gripTypes,
                 side: documentsSides ? .right : nil,
@@ -227,10 +287,12 @@ final class ContactResolverTests: XCTestCase {
                 id: "edge-left",
                 name: "Left edge",
                 kind: .edge,
+                fingerCapacity: leftFingerCapacity,
+                handCapacity: leftHandCapacity,
                 depthRangeMillimeters: 20...20,
                 gripTypes: gripTypes,
                 side: documentsSides ? .left : nil,
-                pairedContactID: documentsPair ? "edge-right" : nil
+                pairedContactID: documentsPair && reciprocalPair ? "edge-right" : nil
             ),
             PhysicalContact(
                 id: "edge-deep",

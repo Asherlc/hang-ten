@@ -436,10 +436,17 @@ enum ContactResolver {
         _ first: PhysicalContact,
         _ second: PhysicalContact
     ) -> Bool {
-        guard let pairedID = first.pairedContactID, pairedID == second.id else { return false }
+        guard first.pairedContactID == second.id,
+              second.pairedContactID == first.id,
+              (first.side == .left && second.side == .right)
+                || (first.side == .right && second.side == .left) else {
+            return false
+        }
         return first.kind == second.kind
             && first.shape == second.shape
             && first.depthRangeMillimeters == second.depthRangeMillimeters
+            && first.fingerCapacity == second.fingerCapacity
+            && first.handCapacity == second.handCapacity
     }
 }
 
