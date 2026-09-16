@@ -26,7 +26,7 @@ The `HoldFeature` enum mixes four orthogonal concerns: size (large/medium/small)
 struct ContactRequirement: Codable, Hashable {
     let kind: HoldKind?
     let shape: HoldShape?
-    let depth: TargetDepth?
+    let depth: HoldDepth?
     let fingerCapacity: Int?
     let handCapacity: Int?
     let selection: ContactSelectionPolicy
@@ -43,7 +43,9 @@ enum HoldShape: String, Codable, Hashable {
     case slot
 }
 
-enum TargetDepth: Codable, Hashable {
+/// The one representation for a hold's usable depth. A source either gives a
+/// measured range or only a relative category; never manufacture the other.
+enum HoldDepth: Codable, Hashable {
     case category(HoldSize)
     case range(MillimeterRange)
 }
@@ -67,7 +69,7 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
 |-------|----------|---------|
 | `kind` | `kind` (unchanged) | Coarse hold type: edge, sloper, pocket, pinch, jug, gaston |
 | `shape` | shape subset of `requiredFeatures` | Geometry: flat, round, incut, slot |
-| `depth` | `depthRangeMillimeters` + size features | Coarse category OR exact mm range |
+| `depth` | `depthRangeMillimeters` + size features | Coarse category OR exact mm range; mutually exclusive formats |
 | `fingerCapacity` | `fingerCapacity` (unchanged) | For pockets: 2, 3, or 4 fingers |
 | `handCapacity` | `handCapacity` (unchanged) | Single or double hand |
 | `selection` | `selection` (reduced) | `.single` or `.bilateralPair` |
@@ -118,11 +120,41 @@ Before: kind: .edge, requiredFeatures: [.mediumEdge], selection: .bilateralPair
 After:  kind: .edge, depth: .category(.medium), selection: .bilateralPair
 ```
 
+### Shared depth representation
+
+`HoldDepth` is used by both `PhysicalContact` and `ContactRequirement`.
+Board data and routine data therefore express the same fact in the same field:
+
+```swift
+struct PhysicalContact {
+    // ...
+    let depth: HoldDepth?
+}
+```
+
+- A documented measurement is `.range(MillimeterRange)`.
+- A source that only supplies a relative label is `.category(HoldSize)`.
+- Missing depth remains `nil`; it is not treated as evidence that every depth
+  matches.
+
+Resolution is deliberately asymmetric when the evidence is not equally
+specific:
+
+- category requirement + measured contact: match when the ranges overlap;
+- category requirement + category contact: match only when categories match;
+- measured requirement + category-only contact: do not match, because a
+  category cannot prove an exact measurement;
+- constrained requirement + contact with no depth: do not match.
+
+This preserves the source fact for Trango's Rock Prodigy Forge large flat edge:
+the manufacturer identifies it as large but does not publish a millimeter
+depth. It is recorded as `.category(.large)`, not an invented numeric range.
+
 ### Impact on board JSON
 
 Board `contacts` would replace `features: Set<HoldFeature>` with:
 - `shape: HoldShape?` (when applicable)
-- Depth remains as `depthRangeMillimeters` (already present)
+- `depth: HoldDepth?` (a category or a measured range)
 
 The `HoldFeature` enum and the `features` field on `PhysicalContact` would be removed. Board packages that currently declare `"features": ["flatSloper"]` would declare `"shape": "flat"` instead.
 
@@ -131,7 +163,7 @@ The `HoldFeature` enum and the `features` field on `PhysicalContact` would be re
 The resolver (`ContactResolver.matches`) would check:
 1. `kind` matches (unchanged)
 2. `shape` matches contact's shape (new)
-3. `depth` overlaps with contact's depth range (new — replaces feature-based matching)
+3. `depth` matches contact depth under the shared-evidence rules above
 4. `fingerCapacity` matches (unchanged)
 5. `handCapacity` matches (unchanged)
 

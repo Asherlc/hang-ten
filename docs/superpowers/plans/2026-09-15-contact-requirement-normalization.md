@@ -4,9 +4,73 @@
 
 **Goal:** Remove overlapping fields from `ContactRequirement` and `PhysicalContact`, replacing `requiredFeatures`/`compatibleGripTypes`/`allMatching` with clean `shape`/`depth`/`selection` fields.
 
-**Architecture:** Define new enums (`HoldShape`, `TargetDepth`, `HoldSize`), rewrite `ContactRequirement` to use them, remove `HoldFeature` entirely, update `ContactResolver` matching logic, migrate all JSON data, and update the custom routine editor UI.
+**Architecture:** Define shared `HoldDepth` alongside `HoldShape` and `HoldSize`. Both physical contacts and requirements carry the same optional `depth`, encoded either as a source-provided category or a measured range. Remove `HoldFeature` entirely, update matching and presentation-geometry selection logic, migrate all JSON data, and update the custom routine editor UI. Never convert a category into a fabricated measurement.
+
+> **Amendment (2026-09-15):** The earlier draft left board contacts on `depthRangeMillimeters` while requirements used `TargetDepth`. That still represented one concept in two fields. Replace `TargetDepth` with `HoldDepth`, and use it on both models. The Rock Prodigy Forge's “large flat edge” is the governing case: it has an official relative label but no published depth, so its contact must encode `.category(.large)`.
 
 **Tech Stack:** Swift, Codable, SwiftUI, JSON board packages
+
+---
+
+## Superseding depth migration (approved 2026-09-15)
+
+Tasks 1–5 below record the original execution order; parts have already landed.
+The following replaces their depth-specific instructions before further code or
+data migration. It is necessary to honor the approved single-field model.
+
+### Contract
+
+Move `MillimeterRange` and a renamed `HoldDepth` into the shared physical
+model layer (`TrainingModels.swift`):
+
+```swift
+enum HoldDepth: Codable, Hashable {
+    case category(HoldSize)
+    case range(MillimeterRange)
+}
+```
+
+Use `HoldDepth?` as `depth` on both `PhysicalContact` and
+`ContactRequirement`; remove `PhysicalContact.depthRangeMillimeters` and the
+temporary `TargetDepth` name. A contact or requirement carries exactly one
+format when it constrains depth. `nil` means no documented depth information.
+
+`HoldDepth` matching must use these evidence rules:
+
+| Requirement | Contact | Result |
+|---|---|---|
+| category | category | Equal categories only |
+| category | range | Match if category's documented convention range overlaps the measured range |
+| range | range | Match if the ranges overlap |
+| range | category or nil | No match — a fuzzy or absent measurement cannot prove an exact request |
+| any constrained depth | nil | No match |
+
+### Remaining implementation tasks
+
+- [ ] **Task A — Establish the shared model.** Move `MillimeterRange` to the
+  physical model layer, replace `TargetDepth` with `HoldDepth`, and update the
+  two model properties. Add focused unit tests for all five rows above,
+  including the no-depth rejection cases.
+- [ ] **Task B — Update package boundaries and resolver.** Change Swift
+  package decoding/writing, the Workbench TypeScript contract, and the resolver
+  to use `depth`. Preserve its tagged Codable form in JSON:
+  `{"category":"large"}` or
+  `{"range":{"minimum":25,"maximum":30}}`. Keep the current
+  presentation-geometry selection rules unchanged.
+- [ ] **Task C — Migrate board facts without inference.** Convert every
+  existing numeric board depth to `.range`. Convert a legacy relative-size
+  feature to `.category` only when that category is source-backed and no
+  numeric value is published. Specifically preserve the Rock Prodigy Forge
+  large flat edge as `shape: .flat, depth: .category(.large)`; do not derive a
+  numeric depth from a related Trango board. Omit depth when neither fact is
+  evidenced.
+- [ ] **Task D — Migrate routine targets and fixtures.** Convert exact source
+  measurements to ranges and source-relative labels to categories. Update the
+  generated plan library, custom-routine serialization fixtures, and all
+  resolver tests. No legacy `depthRangeMillimeters` key may remain.
+- [ ] **Task E — Verify boundaries.** Run Swift build/tests, Workbench tests,
+  JSON validation, and a targeted decode/encode round-trip covering the Forge
+  category-only contact. Commit and push each independently reviewed task.
 
 ---
 
@@ -14,14 +78,14 @@
 
 | File | Change |
 |------|--------|
-| `HangTen/Models/TrainingModels.swift` | Add `HoldShape`, `HoldSize`; remove `HoldFeature` enum (~100 lines); remove `features` from `PhysicalContact`; remove `matches(anyOf:)`; update `BundledPlanContactRequirements` |
-| `HangTen/Models/PlanStorage.swift` | Add `TargetDepth`; rewrite `ContactRequirement` (remove `requiredFeatures`, `compatibleGripTypes`, `depthRangeMillimeters`; add `shape`, `depth`); remove `.feature()` factory; remove `allMatching` from `ContactSelectionPolicy`; update Codable |
+| `HangTen/Models/TrainingModels.swift` | Add `HoldShape`, `HoldSize`, `HoldDepth`; remove `HoldFeature` enum (~100 lines); replace physical-contact `features` and `depthRangeMillimeters` with `shape` and `depth`; update `BundledPlanContactRequirements` |
+| `HangTen/Models/PlanStorage.swift` | Rewrite `ContactRequirement` to use `HoldDepth` (remove `requiredFeatures`, `compatibleGripTypes`, `depthRangeMillimeters`; add `shape`, `depth`); remove `.feature()` factory; remove `allMatching` from `ContactSelectionPolicy`; update Codable |
 | `HangTen/Models/WorkoutActivityRecording.swift` | Rewrite `ContactResolver.matches(_:contact:)` and `isDocumentedPair`; remove `.allMatching` case |
 | `HangTen/Models/BoardPackageStore.swift` | Update `BoardPackageContactDocument` — remove `features`, add `shape` |
 | `HangTen/Models/BoardPackageWriter.swift` | Update `BoardEditableContact` — remove `features`, add `shape`; remove feature validation |
 | `HangTen/Views/CustomRoutineEditorView.swift` | Replace `GenericTargetChoice.feature(HoldFeature)` with shape-based picker |
 | `HangTen/Resources/PlanLibrary.json` | Re-export after model changes |
-| `Hangboards/*/board.json` | Migrate contacts: remove `features`, add `shape` where applicable |
+| `Hangboards/*/board.json` | Migrate contacts: remove `features`, replace `depthRangeMillimeters` with `depth`, add `shape` where applicable |
 | `Tools/HangboardWorkbench/src/types.ts` | Update `PhysicalContact` interface |
 | `Tools/HangboardWorkbench/src/components/ContactInspector.tsx` | Replace features input with shape picker |
 | 12 test files | Update fixtures and assertions |
