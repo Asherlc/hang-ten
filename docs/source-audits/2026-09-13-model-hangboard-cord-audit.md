@@ -273,3 +273,31 @@ environment.
 - At the time of Task 5, the system Python lacked `pytest` and restricted networking prevented a new environment from being bootstrapped. This historical environment limitation is superseded for the branch: the existing tracked workspace virtual environment subsequently ran the complete HangboardPackages pytest suite successfully.
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.
 - Temporary Xcode output was created under `.context/gorgeous-dugong-task5-xcode/`, then removed and verified absent.
+
+### 2026-09-15 Batch 01 fixed-board exclusion addendum
+
+The closed manifest now covers the six Batch 01 model packages below. Each
+reviewed source packet supports a fixed/wall-mounted presentation and does not
+document a supplied or integral suspension system. Mounting information is not
+treated as evidence of a cord.
+
+| Catalog package ID | Retained manufacturer artifact | Exact revision ID | SHA-256 |
+| --- | --- | --- | --- |
+| `dewoodstok-woodbord` | `dewoodstok-woodbord-manufacturer-product-2026-09-15.html` | `dewoodstok-woodbord-current-2026-09-15` | `d5943951b72683ec0cdde126e86c6c4834db78b71f03dbd8d19cc1ffc4236ef7` |
+| `escape.unlimited` | `escape-unlimited-manufacturer-product-2026-09-15.html` | `escape-unlimited-current-2026-09-15` | `1a72a7b98971ee6b14816ab2e933180d7289dae1444918b69d422ad004192cc3` |
+| `evolv-kilter-basic-long` | `evolv-kilter-basic-long-manufacturer-product-2026-09-15.html` | `evolv-basic-training-board-long-current-2026-09-15` | `9bdfd3691762591ba86e145d57ba49c0d9c86c3211b39f2706718ec561b53163` |
+| `metolius.wood-grips-deluxe-ii` | `metolius-wood-grips-deluxe-ii-manufacturer-product-2026-09-15.html` | `metolius-wood-grips-deluxe-ii-current-2026-09-15` | `0bd3c297deb023356fafa181a48a193c93723e779321d054a3d0f3cc82c9ad82` |
+| `moon.armstrong` | `moon-armstrong-manufacturer-product-2026-09-15.html` | `moon-armstrong-ash-current-2026-09-15` | `7ef4629d7164f3c62469db4a65ab303636fb82eae5d690bc7d131b1d3b5e639d` |
+| `target10a.linebreaker-base` | `target10a-linebreaker-base-manufacturer-product-2026-09-15.html` | `target10a-linebreaker-base-current-2026-09-15` | `65afde30db091cc985306c2b2b9cb077c4fde392d45b7ee8c64ab4385180757d` |
+
+The retained artifacts are literal 2026-09-15 HTTPS manufacturer responses;
+they supersede the packets' earlier unavailable-download limitation. The
+source-register observations remain the basis for the fixed/wall-mounted fact.
+`target10a-linebreaker-base` is the package-directory/artifact slug; the
+catalog and manifest use its canonical `target10a.linebreaker-base` ID.
+
+Current inventory validation after all six packages became model-backed:
+
+```json
+{"decisions":{"excluded":18,"represented":8}}
+```
