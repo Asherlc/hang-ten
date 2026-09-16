@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "target10a-linebreaker-base",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "target10a",
+    "evidencePacket": "https://target10a.com/products/linebreaker-base"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
+    "retainedPath": ".context/migration/target10a-linebreaker-base/source.blend",
+    "sha256": "73f7412b56713bb0626ba2f3b1a6e06a5e3a46f3724f89e3559735e855c99821"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package"
+}

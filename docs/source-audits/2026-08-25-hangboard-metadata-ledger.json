@@ -19325,111 +19325,6 @@
     {
       "boardID": "target10a.linebreaker-base",
       "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "kind",
-      "outcome": "verified",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
-        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
-      },
-      "value": "sloper"
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "sizeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
-        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
-      },
-      "reason": "The published sloper value is an angle, not a scalar contact depth."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "depthRangeMillimeters",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
-        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
-      },
-      "reason": "The manufacturer source publishes no lower and upper depth bounds for this contact."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "fingerCapacity",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
-        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
-      },
-      "reason": "The manufacturer identifies this as a non-pocket contact, so fixed pocket finger capacity is not applicable."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "handCapacity",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
-        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
-      },
-      "reason": "The manufacturer source does not state simultaneous hand capacity for this exact contact."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "gripType",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
-        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
-      },
-      "reason": "The manufacturer source does not prescribe one exact supported grip posture for this contact."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "features",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/en/linebreaker-boards/432-linebreaker-base-trainingsboard-b-stock.html",
-        "label": "Manufacturer inventory and exact map: Center 22.5-degree sloper"
-      },
-      "reason": "The manufacturer source does not publish an exact supported feature-tag array for this contact."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
         "pocket-28-left"
       ],
       "field": "kind",
@@ -41291,21 +41186,6 @@
         "kind": "manufacturer",
         "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
         "label": "Official Linebreaker BASE position map: Right 32.5-degree sloper"
-      },
-      "outcome": "unavailable",
-      "reason": "The manufacturer publishes sloper angles and general rounded-edge construction but does not identify this contact as a flat or round sloper."
-    },
-    {
-      "boardID": "target10a.linebreaker-base",
-      "contactIDs": [
-        "sloper-22-center"
-      ],
-      "field": "sloper",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://www.target10a.com/935-thickbox_default/linebreaker-base-trainingsboard.jpg",
-        "label": "Official Linebreaker BASE position map: Center 22.5-degree sloper"
       },
       "outcome": "unavailable",
       "reason": "The manufacturer publishes sloper angles and general rounded-edge construction but does not identify this contact as a flat or round sloper."
