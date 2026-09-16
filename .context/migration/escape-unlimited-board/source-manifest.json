@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "escape-unlimited-board",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Escape Climbing",
+    "evidencePacket": "https://escapeclimbing.com/products/ec72000"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
+    "retainedPath": ".context/migration/escape-unlimited-board/source.blend",
+    "sha256": "23c9748ca8b6b452dd5345cad8cbc2ed05077a3764ba282c53952cc466358446"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package"
+}

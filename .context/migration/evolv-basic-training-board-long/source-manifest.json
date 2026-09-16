@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "evolv-basic-training-board-long",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Evolv",
+    "evidencePacket": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
+    "retainedPath": ".context/migration/evolv-basic-training-board-long/source.blend",
+    "sha256": "da3613e7552a2bbc15213d5a936a7438d176acbb95250c42468584b73f89c222"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package"
+}
