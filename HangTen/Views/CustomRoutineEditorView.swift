@@ -129,7 +129,7 @@ struct CustomRoutineEditorView: View {
                     step: binding(for: step),
                     targetMode: draft.targetMode,
                     board: selectedBoard,
-                    onAddPair: { draft.addLeftAndRightPair(from: $0) }
+                    onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) }
                 )
             }
             .onMove { offsets, destination in
@@ -275,21 +275,7 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private var selectedHoldIDs: Set<String> {
-        let workoutStep = WorkoutStep(
-            id: step.id,
-            number: 0,
-            title: step.title,
-            instruction: step.instruction,
-            accessory: step.accessory,
-            duration: step.duration,
-            phase: step.phase,
-            targets: step.targets,
-            handUse: step.handUse,
-            side: step.side
-        )
-        return Set(
-            (try? ContactResolver.resolve(step.targets, step: workoutStep, board: board).map(\.id)) ?? []
-        )
+        CustomRoutineBoardPreview.contactIDs(for: step, on: board)
     }
 
     var body: some View {
@@ -314,6 +300,8 @@ private struct CustomRoutineStepEditor: View {
                     step.action = .hang
                     step.repetitions = nil
                     step.externalLoadKGF = nil
+                } else if phase == .pull && step.handUse == .either {
+                    step.transitionHandUse(to: .double)
                 }
             }
 
@@ -343,15 +331,21 @@ private struct CustomRoutineStepEditor: View {
                 }
                 .onChange(of: step.action) { _, action in
                     step.repetitions = action == .loadedLift ? max(step.repetitions ?? 1, 1) : nil
+                    if action == .isometricPull && step.handUse == .either {
+                        step.transitionHandUse(to: .double)
+                    }
                 }
                 .accessibilityIdentifier("customRoutine.stepAction")
 
                 Picker("Hand use", selection: $step.handUse) {
                     Text("Single hand").tag(WorkoutHandUse.single)
+                    if step.phase != .pull && step.action != .isometricPull {
+                        Text("Either hand (choose at start)").tag(WorkoutHandUse.either)
+                    }
                     Text("Both hands").tag(WorkoutHandUse.double)
                 }
                 .onChange(of: step.handUse) { _, handUse in
-                    step.side = handUse == .single ? .left : .both
+                    step.transitionHandUse(to: handUse)
                 }
                 .accessibilityIdentifier("customRoutine.stepHandUse")
 
@@ -587,6 +581,7 @@ private struct CustomRoutineStepEditor: View {
             : .single
         step.targets = [
             ContactRequirement(
+                contactID: step.handUse == .single ? contact.id : nil,
                 kind: contact.kind,
                 shape: contact.shape,
                 depth: contact.depth,

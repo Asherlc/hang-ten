@@ -1710,9 +1710,15 @@ struct WorkoutView: View {
 	    @State private var liftCompletion = WorkoutLiftCompletion()
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
+	    @State private var selectedHandSide: WorkoutSide?
+	    @State private var showsHandSidePicker = false
 
     private var board: BoardRevision {
         store.board(for: plan)
+    }
+
+    private var planNeedsHandChoice: Bool {
+        plan.steps.contains { $0.handUse == .either }
     }
 
 	private let timeline: WorkoutTimeline
@@ -1723,6 +1729,10 @@ struct WorkoutView: View {
 				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: monotonicTime)
 				let step = step(at: elapsed)
+				let presentedStep = WorkoutLiveStepResolver.materialized(
+					step,
+					selectedHandSide: selectedHandSide
+				)
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: monotonicTime)
 				let canNavigate = canNavigate(at: monotonicTime)
@@ -1737,12 +1747,15 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let previewHoldIDs = highlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+				let resolvedHighlightedStep = highlightedStep.map {
+					WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide)
+				}
+				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
-				let holdCue = WorkoutHoldCuePolicy.resolve(step: highlightedStep, hold: activeHold, on: board)
+				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,
@@ -1763,7 +1776,7 @@ struct WorkoutView: View {
 				Group {
 					if isLandscape {
 						landscapeSession(
-							step: step,
+							step: presentedStep,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
 							monotonicTime: monotonicTime,
@@ -1775,11 +1788,12 @@ struct WorkoutView: View {
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					} else {
 						portraitSession(
-							step: step,
+							step: presentedStep,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
 							monotonicTime: monotonicTime,
@@ -1791,6 +1805,7 @@ struct WorkoutView: View {
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					}
@@ -1839,7 +1854,11 @@ struct WorkoutView: View {
 					finalizeCurrentStopwatch(at: monotonicTime)
 				}
 				.sheet(isPresented: $showsStepPicker) {
-					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
+					WorkoutStepPickerView(
+						plan: plan,
+						currentStepID: step.id,
+						selectedHandSide: selectedHandSide
+					) { selectedStep in
 						jump(to: selectedStep)
 					}
 				}
@@ -1905,6 +1924,62 @@ struct WorkoutView: View {
 				}
 			)
 		}
+		.sheet(isPresented: $showsHandSidePicker) {
+			NavigationStack {
+				VStack(alignment: .leading, spacing: 20) {
+					SectionLabel(title: "Hand choice")
+					Text("Which hand will you use for this routine?")
+						.font(.system(size: 16, weight: .medium, design: .rounded))
+						.foregroundStyle(Color.hangMuted)
+					
+					VStack(spacing: 12) {
+						Button {
+							selectedHandSide = .left
+							showsHandSidePicker = false
+							toggleRunning()
+						} label: {
+							HStack {
+								Image(systemName: "hand.left")
+								Text("Left hand")
+								Spacer()
+							}
+							.font(.system(size: 16, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+							.padding(.horizontal, 17)
+							.padding(.vertical, 15)
+							.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+						}
+						.buttonStyle(.plain)
+						.accessibilityIdentifier("handSide.left")
+						
+						Button {
+							selectedHandSide = .right
+							showsHandSidePicker = false
+							toggleRunning()
+						} label: {
+							HStack {
+								Image(systemName: "hand.right")
+								Text("Right hand")
+								Spacer()
+							}
+							.font(.system(size: 16, weight: .bold, design: .rounded))
+							.foregroundStyle(Color.hangInk)
+							.padding(.horizontal, 17)
+							.padding(.vertical, 15)
+							.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+						}
+						.buttonStyle(.plain)
+						.accessibilityIdentifier("handSide.right")
+					}
+				}
+				.padding(24)
+				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+				.background(Color.hangBackground)
+				.navigationTitle("Choose hand")
+				.navigationBarTitleDisplayMode(.inline)
+			}
+			.interactiveDismissDisabled()
+		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
 			if !didLoadInitialLoadAdjustment {
@@ -1937,7 +2012,11 @@ struct WorkoutView: View {
 				routineStartedAt: sessionState.routineStartedAt
 			) {
 				didAutoStart = true
-				toggleRunning()
+				if planNeedsHandChoice {
+					showsHandSidePicker = true
+				} else {
+					toggleRunning()
+				}
 			}
 			initializeStopwatches()
 		}
@@ -1998,6 +2077,7 @@ struct WorkoutView: View {
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
 		isSkipCountdown: Bool
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -2036,14 +2116,14 @@ struct WorkoutView: View {
 						)
 					} else {
 						HStack(spacing: 12) {
-							if step.side != .right {
+							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep) {
 								GripHandCueCard(
 									posture: holdCue.gripType,
 									fingerConfiguration: holdCue.fingerConfiguration,
 									side: .left
 								)
 							}
-							if step.side != .left {
+							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep) {
 								GripHandCueCard(
 									posture: holdCue.gripType,
 									fingerConfiguration: holdCue.fingerConfiguration,
@@ -2088,6 +2168,7 @@ struct WorkoutView: View {
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
 		isSkipCountdown: Bool
 	) -> some View {
 		VStack(spacing: 9) {
@@ -2106,8 +2187,8 @@ struct WorkoutView: View {
 			HStack(spacing: 12) {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
+					cueStep: cueStep,
 					countdown: countdown,
-					isResting: isResting,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
 					side: .left
@@ -2131,8 +2212,8 @@ struct WorkoutView: View {
 
 				landscapeHandCueSlot(
 					holdCue: holdCue,
+					cueStep: cueStep,
 					countdown: countdown,
-					isResting: isResting,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
 					side: .right
@@ -2182,8 +2263,8 @@ struct WorkoutView: View {
 
 	private func landscapeHandCueSlot(
 		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
 		countdown: Int,
-		isResting: Bool,
 		isComplete: Bool,
 		isSkipCountdown: Bool,
 		side: GripCueSide
@@ -2191,8 +2272,10 @@ struct WorkoutView: View {
 		ZStack {
 			Color.clear
 				.accessibilityHidden(true)
-			if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+			if let holdCue, WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: side == .left ? .left : .right,
 				holdCue: holdCue,
+				cueStep: cueStep,
 				countdown: countdown,
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown
@@ -2756,6 +2839,13 @@ struct WorkoutView: View {
 	}
 
     private func toggleRunning() {
+		if sessionState.activeStartUptime == nil,
+		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+		   planNeedsHandChoice,
+		   selectedHandSide == nil {
+			showsHandSidePicker = true
+			return
+		}
 		let monotonicTime = WorkoutClock.monotonicTime
 		if pendingCountdownStart != nil || countdownArmTask != nil {
 			countdownArmTask?.cancel()
@@ -2972,6 +3062,8 @@ struct WorkoutView: View {
 				sampleCount: 0,
 				status: .unmeasured
 			)
+			let resolvedHandUse: WorkoutHandUse = step.handUse == .either ? .single : step.handUse
+			let resolvedSide: WorkoutSide = step.handUse == .either ? (selectedHandSide ?? .both) : step.side
 			return WorkoutStepMeasurement(
 				stepID: measurement.stepID,
 				plannedActiveDuration: measurement.plannedActiveDuration,
@@ -2979,8 +3071,8 @@ struct WorkoutView: View {
 				peakLoadKGF: measurement.peakLoadKGF,
 				sampleCount: measurement.sampleCount,
 				status: measurement.status,
-				handUse: step.handUse,
-				side: step.side,
+				handUse: resolvedHandUse,
+				side: resolvedSide,
 				action: step.action,
 				repetitions: step.repetitions,
 				completedRepetitions: step.action == .loadedLift
@@ -3045,6 +3137,7 @@ struct WorkoutView: View {
 			stopwatchDurations: completedStopwatchDurations,
 			startDate: session.startDate,
 			endDate: session.endDate,
+			selectedHandSide: planNeedsHandChoice ? selectedHandSide : nil,
 			session: session
 		)
 		summarySession = nil

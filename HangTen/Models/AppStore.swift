@@ -319,13 +319,28 @@ final class AppStore: ObservableObject {
     }
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
-        Set((try? ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)) ?? [])
+        if step.handUse == .either {
+            return Set([WorkoutSide.left, .right].flatMap { side in
+                step.resolvingEitherHand(selectedHandSide: side).flatMap {
+                    try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)
+                } ?? []
+            })
+        }
+        return Set((try? ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)) ?? [])
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
             return step.targets.contains { target in
-                (try? ContactResolver.resolve(target, step: step, board: board)) == nil
+                if step.handUse == .either {
+                    return [WorkoutSide.left, .right].contains { side in
+                        guard let resolved = step.resolvingEitherHand(selectedHandSide: side) else {
+                            return true
+                        }
+                        return (try? ContactResolver.resolve(target, step: resolved, board: board)) == nil
+                    }
+                }
+                return (try? ContactResolver.resolve(target, step: step, board: board)) == nil
             }
         }
     }
@@ -364,6 +379,7 @@ final class AppStore: ObservableObject {
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval],
         startDate: Date,
         endDate: Date,
+        selectedHandSide: WorkoutSide? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         if let session {
@@ -389,6 +405,7 @@ final class AppStore: ObservableObject {
                 for: plan,
                 on: board,
                 stopwatchDurations: stopwatchDurations,
+                selectedHandSide: selectedHandSide,
                 stepMeasurements: session?.steps ?? []
             )
             activityContext = PendingWorkoutActivityContext(
@@ -427,6 +444,7 @@ final class AppStore: ObservableObject {
         _ plan: TrainingPlan,
         startDate: Date,
         endDate: Date,
+        selectedHandSide: WorkoutSide? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         markSessionComplete(
@@ -435,6 +453,7 @@ final class AppStore: ObservableObject {
             stopwatchDurations: [:],
             startDate: startDate,
             endDate: endDate,
+            selectedHandSide: selectedHandSide,
             session: session
         )
     }

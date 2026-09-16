@@ -348,6 +348,44 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
+    func testCompletionConvenienceOverloadForwardsSelectedEitherHand() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set("lattice.mxedge-lift-small", forKey: "HangTen.selectedBoardID.v1")
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(
+            requirement: ContactRequirement(
+                kind: .edge,
+                depth: .range(.init(minimum: 14, maximum: 14)),
+                handCapacity: 1,
+                selection: .single
+            ),
+            handUse: .either,
+            side: .both
+        )
+
+        appStore.markSessionComplete(
+            plan,
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010),
+            selectedHandSide: .right
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        let segment = try XCTUnwrap(context.activitySegments.first)
+        XCTAssertEqual(segment.handUse, .single)
+        XCTAssertEqual(segment.side, .right)
+    }
+
     func testWriteOnlyHealthStoreUsesLocalFallbackWhenHistoryReadIsUnsupported() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!

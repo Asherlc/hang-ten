@@ -4972,7 +4972,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-1",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -5020,7 +5020,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-2",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -5062,7 +5062,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-3",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -5104,7 +5104,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-4",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -5146,7 +5146,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-5",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -12729,7 +12729,7 @@
           "activeDuration" : 10,
           "duration" : 60,
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-1",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12776,7 +12776,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-2",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12816,7 +12816,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-3",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12856,7 +12856,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12897,7 +12897,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-5",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12938,7 +12938,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-6",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",

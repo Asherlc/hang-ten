@@ -1098,6 +1098,12 @@ struct BoardPositionTransition: Codable, Hashable {
     let kind: BoardPositionTransitionKind
 }
 
+/// Package-owned policy for mapping athlete hand choice onto neutral contacts.
+/// This controls app resolution only and does not describe a physical board fact.
+enum UnilateralHandResolution: String, Codable, Hashable {
+    case athleteRelative
+}
+
 struct BoardRevision: Identifiable, Hashable {
     let id: String
     let revisionID: String
@@ -1106,6 +1112,7 @@ struct BoardRevision: Identifiable, Hashable {
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
+    let unilateralHandResolution: UnilateralHandResolution?
     let equipmentObjects: [EquipmentObject]
     let contacts: [PhysicalContact]
     let presentations: [BoardPresentation]
@@ -1124,6 +1131,7 @@ struct BoardRevision: Identifiable, Hashable {
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
+        unilateralHandResolution: UnilateralHandResolution? = nil,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [PhysicalContact],
         productURL: URL,
@@ -1139,6 +1147,7 @@ struct BoardRevision: Identifiable, Hashable {
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.unilateralHandResolution = unilateralHandResolution
         self.equipmentObjects = equipmentObjects
         self.contacts = contacts
         let resolvedPresentations = presentations.isEmpty
@@ -1333,6 +1342,10 @@ enum WorkoutPhase: String, CaseIterable, Codable, Hashable, Identifiable {
 }
 
 enum WorkoutHandUse: String, Codable, CaseIterable, Hashable {
+    /// The prescription can be performed with one hand, selected when the
+    /// session begins. Definitions retain `.both` until that selection is
+    /// resolved for recording.
+    case either
     case single
     case double
 }
@@ -1356,7 +1369,21 @@ enum WorkoutStepSemantics {
             side == .left || side == .right
         case .double:
             side == .both
+        case .either:
+            side == .both
         }
+    }
+
+    static func hasValidHandUse(
+        _ handUse: WorkoutHandUse,
+        phase: WorkoutPhase,
+        action: WorkoutAction
+    ) -> Bool {
+        handUse != .either || (
+            phase != .rest &&
+                phase != .pull &&
+                action != .isometricPull
+        )
     }
 
     static func hasValidActionAndRepetitions(_ action: WorkoutAction, _ repetitions: Int?) -> Bool {
@@ -1483,6 +1510,23 @@ struct WorkoutStep: Identifiable, Hashable {
             repetitions: repetitions,
             externalLoadKGF: externalLoadKGF,
             timedWorkDuration: timedWorkDuration
+        )
+    }
+
+    /// Materializes an athlete's start-of-session hand choice for downstream
+    /// board resolution, highlighting, and activity recording.
+    func resolvingEitherHand(selectedHandSide: WorkoutSide?) -> WorkoutStep? {
+        guard handUse == .either else { return self }
+        guard selectedHandSide == .left || selectedHandSide == .right else {
+            return nil
+        }
+        return WorkoutStep(
+            id: id, number: number, title: title, instruction: instruction,
+            accessory: accessory, duration: duration, phase: phase, targets: targets,
+            segments: segments, gripType: gripType,
+            fingerConfiguration: fingerConfiguration, handUse: .single,
+            side: selectedHandSide!, action: action, repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration
         )
     }
 }
@@ -2475,7 +2519,8 @@ enum LegacyPlanSeedCatalog {
         rest: TimeInterval,
         targets: [ContactRequirement],
         gripType: GripType? = nil,
-        fingerConfiguration: FingerConfiguration? = nil
+        fingerConfiguration: FingerConfiguration? = nil,
+        handUse: WorkoutHandUse = .double
     ) -> WorkoutStep {
         WorkoutStep(
             id: id,
@@ -2496,6 +2541,7 @@ enum LegacyPlanSeedCatalog {
             ] + (rest > 0 ? [fixedRest(rest)] : []),
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
             timedWorkDuration: active
         )
     }
@@ -2539,7 +2585,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-2",
@@ -2550,7 +2597,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-3",
@@ -2561,7 +2609,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-4",
@@ -2572,7 +2621,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-5",
@@ -2583,7 +2633,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 0,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
         ])
     )
@@ -2921,7 +2972,8 @@ enum LegacyPlanSeedCatalog {
                         rest: index < grips.count - 1 ? 50 : 0,
                         targets: grip.targets,
                         gripType: grip.grip,
-                        fingerConfiguration: grip.fingerConfiguration
+                        fingerConfiguration: grip.fingerConfiguration,
+                        handUse: .either
                     )
                 )
             }

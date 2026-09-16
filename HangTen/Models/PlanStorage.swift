@@ -168,6 +168,10 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
 }
 
 struct ContactRequirement: Codable, Hashable {
+    /// An exact board contact selected by an athlete in a board-specific
+    /// custom routine. Catalog requirements intentionally leave this nil so
+    /// they can resolve against compatible boards.
+    let contactID: String?
     let kind: HoldKind?
     let shape: HoldShape?
     let depth: HoldDepth?
@@ -176,6 +180,7 @@ struct ContactRequirement: Codable, Hashable {
     let selection: ContactSelectionPolicy
 
     init(
+        contactID: String? = nil,
         kind: HoldKind? = nil,
         shape: HoldShape? = nil,
         depth: HoldDepth? = nil,
@@ -189,6 +194,7 @@ struct ContactRequirement: Codable, Hashable {
         if let handCapacity {
             precondition(PhysicalContact.validHandCapacityRange.contains(handCapacity))
         }
+        self.contactID = contactID
         self.kind = kind
         self.shape = shape
         self.depth = depth
@@ -212,8 +218,19 @@ struct ContactRequirement: Codable, Hashable {
         .init(kind: .edge, depth: depth, selection: selection)
     }
 
+    func strippingExactContactID() -> ContactRequirement {
+        ContactRequirement(
+            kind: kind,
+            shape: shape,
+            depth: depth,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            selection: selection
+        )
+    }
+
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case kind, shape, depth, fingerCapacity, handCapacity, selection
+        case contactID, kind, shape, depth, fingerCapacity, handCapacity, selection
     }
 
     init(from decoder: Decoder) throws {
@@ -228,6 +245,7 @@ struct ContactRequirement: Codable, Hashable {
         }
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        contactID = try container.decodeIfPresent(String.self, forKey: .contactID)
         kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
         shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
         depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
@@ -255,6 +273,7 @@ struct ContactRequirement: Codable, Hashable {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encodeIfPresent(contactID, forKey: .contactID)
         try container.encodeIfPresent(kind, forKey: .kind)
         try container.encodeIfPresent(shape, forKey: .shape)
         try container.encodeIfPresent(depth, forKey: .depth)
@@ -473,6 +492,34 @@ extension WorkoutStepDefinition {
             phase: phase,
             targets: targets,
             segments: segments,
+            activeDuration: activeDuration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF
+        )
+    }
+
+    func strippingExactContactIDs() -> WorkoutStepDefinition {
+        WorkoutStepDefinition(
+            id: id,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets.map { $0.strippingExactContactID() },
+            segments: segments.map {
+                WorkoutSegmentDefinition(
+                    kind: $0.kind,
+                    targets: $0.targets.map { $0.strippingExactContactID() },
+                    timing: $0.timing,
+                    duration: $0.duration
+                )
+            },
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             activeDuration: activeDuration,
             handUse: handUse,
             side: side,
@@ -741,11 +788,16 @@ enum PlanLibraryValidator {
         if !step.duration.isFinite || step.duration <= 0 {
             issues.append(PlanValidationIssue(path: "\(path).duration", message: "Duration must be finite and greater than zero."))
         }
-        if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
+        if !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) ||
+            !WorkoutStepSemantics.hasValidHandUse(
+                step.handUse,
+                phase: step.phase,
+                action: step.action
+            ) {
             issues.append(
                 PlanValidationIssue(
                     path: "\(path).side",
-                    message: "Single-hand steps require a left or right side, while double-hand steps require both sides."
+                    message: "Single-hand steps require a left or right side; either-hand steps require both until session start and cannot be pull work; double-hand steps require both sides."
                 )
             )
         }
@@ -1097,21 +1149,20 @@ enum PlanLibraryValidator {
 
         for (index, target) in targets.enumerated() {
             let targetPath = "\(stepPath).targets[\(index)]"
-            let step = WorkoutStep(
-                id: "validation",
-                number: 0,
-                title: "Validation",
-                instruction: "",
-                accessory: "",
-                duration: 1,
-                phase: .hang,
-                targets: [target],
-                gripType: gripType,
-                handUse: handUse,
-                side: side
-            )
-            let resolvableBoards = boards.filter {
-                (try? ContactResolver.resolve(target, step: step, board: $0)) != nil
+            let resolvedHandAssignments: [(WorkoutHandUse, WorkoutSide)] = handUse == .either
+                ? [(.single, .left), (.single, .right)]
+                : [(handUse, side)]
+            let resolvableBoards = boards.filter { board in
+                resolvedHandAssignments.allSatisfy { assignment in
+                    let (assignmentHandUse, assignmentSide) = assignment
+                    let step = WorkoutStep(
+                        id: "validation", number: 0, title: "Validation",
+                        instruction: "", accessory: "", duration: 1, phase: .hang,
+                        targets: [target], gripType: gripType,
+                        handUse: assignmentHandUse, side: assignmentSide
+                    )
+                    return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
+                }
             }
             let isValid = !boards.isEmpty && resolvableBoards.count == boards.count
             if !isValid {

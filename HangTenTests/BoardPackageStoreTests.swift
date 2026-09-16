@@ -40,6 +40,45 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.contacts.map(\.id), ["left-edge", "right-edge"])
     }
 
+    func testMXEdgeLiftPackagesLoadTypedUnilateralResolutionPolicy() throws {
+        let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
+
+        XCTAssertEqual(
+            try XCTUnwrap(store.board(id: "lattice.mxedge-lift-small"))
+                .unilateralHandResolution,
+            .athleteRelative
+        )
+        XCTAssertNil(
+            try XCTUnwrap(store.board(id: "lattice.mxedge-lift-large"))
+                .unilateralHandResolution
+        )
+    }
+
+    func testStoreRejectsNullAndUnsupportedUnilateralHandResolution() throws {
+        for value: Any in [NSNull(), "unsupported"] {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                    board["unilateralHandResolution"] = value
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), "must reject value \(value)")
+        }
+    }
+
+    func testStoreLeavesOmittedUnilateralHandResolutionNil() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                board.removeValue(forKey: "unilateralHandResolution")
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        XCTAssertNil(board.unilateralHandResolution)
+    }
+
     func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
         let resource = BoardModelResource(
             packageSlug: "metolius-wood-grips-compact-ii",

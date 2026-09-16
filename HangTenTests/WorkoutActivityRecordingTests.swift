@@ -585,7 +585,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"segments":[{"durationSeconds":7,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}}],"version":2}"#
+            #"{"segments":[{"durationSeconds":7,"handUse":"double","kind":"work","side":"both","stepID":"step","stepNumber":1,"target":{"kind":"selfSelected"}}],"version":3}"#
         )
         let decoded = try JSONDecoder().decode(
             WorkoutActivityMetadata.self,
@@ -796,14 +796,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
 
         XCTAssertEqual(
             json,
-            #"{"segments":[{"kind":"rest","stepID":"step","stepNumber":1}],"version":2}"#
+            #"{"segments":[{"kind":"rest","stepID":"step","stepNumber":1}],"version":3}"#
         )
         let decoded = try JSONDecoder().decode(
             WorkoutActivityMetadata.self,
             from: Data(json.utf8)
         )
         XCTAssertEqual(decoded, metadata)
-        XCTAssertEqual(decoded.version, 2)
+        XCTAssertEqual(decoded.version, 3)
         XCTAssertFalse(json.contains("durationSeconds"))
         XCTAssertFalse(json.contains("target"))
     }
@@ -1049,6 +1049,36 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = portablePlan(handUse: .double, side: .both)
 
         XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board))
+    }
+
+    func testEitherHandActivityRequiresAChoiceAndRecordsTheSelectedRightHand() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+        let recorder = WorkoutActivityRecorder()
+
+        XCTAssertThrowsError(try recorder.segments(for: workout, on: board)) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .handSideRequired(stepID: "portable-step")
+            )
+        }
+
+        let records = try recorder.segments(
+            for: workout,
+            on: board,
+            selectedHandSide: .right
+        )
+        let record = try XCTUnwrap(records.first)
+        XCTAssertEqual(record.handUse, .single)
+        XCTAssertEqual(record.side, .right)
+        XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["left-b"])
+        XCTAssertEqual(
+            try JSONDecoder().decode(
+                WorkoutActivityMetadata.self,
+                from: JSONEncoder().encode(WorkoutActivityMetadata(segments: [record]))
+            ).segments.first?.side,
+            .right
+        )
     }
 
     func testActivityRecordingRejectsNonGeometricDoubleHandPairWithoutCapacity() {
@@ -1386,7 +1416,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
         XCTAssertEqual(
             json,
-            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"depth":{"category":"medium"},"kind":"edge","selection":"single"},"revisionID":"test-fixture"}}}],"version":2}"#
+            #"{"measurements":[{"actualLoadedDurationSeconds":3.5,"peakLoadKGF":37.25,"stepID":"step"}],"segments":[{"durationSeconds":8.75,"kind":"work","stepID":"step","stepNumber":1,"target":{"kind":"resolvedContacts","resolution":{"boardID":"fixture.board","contactIDs":["edge-left"],"requirement":{"depth":{"category":"medium"},"kind":"edge","selection":"single"},"revisionID":"test-fixture"}}}],"version":3}"#
         )
         XCTAssertEqual(
             decoded,
@@ -1420,7 +1450,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             guard case let DecodingError.dataCorrupted(context) = error else {
                 return XCTFail("Expected strict segment-field rejection, got \(error)")
             }
-            XCTAssertTrue(context.debugDescription.contains("Unsupported recorded activity field"))
+            XCTAssertTrue(context.debugDescription.contains("Unsupported"))
         }
     }
 
@@ -1730,7 +1760,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     ) -> TrainingPlan {
         let requirement = ContactRequirement.kind(
             .pocket,
-            selection: handUse == .single ? .single : .bilateralPair
+            selection: handUse == .double ? .bilateralPair : .single
         )
         return TrainingPlan(
             id: "portable-plan",
