@@ -202,8 +202,8 @@ def test_package_cli_audit_metadata_reports_nonzero_adapted_coverage(
             "populated": 1,
             "verified": 0,
             "adapted": 1,
-            "unavailable": 6,
-            "notApplicable": 1,
+            "unavailable": 5,
+            "notApplicable": 0,
             "unaccountedFields": 0,
         }
     ]
