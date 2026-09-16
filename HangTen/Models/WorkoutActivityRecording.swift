@@ -362,8 +362,6 @@ enum ContactResolver {
         candidates = applying(step.side, to: candidates)
 
         switch requirement.selection {
-        case .allMatching:
-            guard !candidates.isEmpty else { throw ContactResolutionError.noMatches }
         case .single:
             guard candidates.count == 1 else {
                 throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
@@ -408,22 +406,12 @@ enum ContactResolver {
         contact: PhysicalContact
     ) -> Bool {
         if let kind = requirement.kind, contact.kind != kind { return false }
-        if !requirement.requiredFeatures.isSubset(of: contact.features) { return false }
+        if let shape = requirement.shape, contact.shape != shape { return false }
+        if let depth = requirement.depth, !depth.overlaps(contact.depthRangeMillimeters) { return false }
         if let fingerCapacity = requirement.fingerCapacity,
            contact.fingerCapacity != fingerCapacity { return false }
         if let handCapacity = requirement.handCapacity,
            contact.handCapacity != handCapacity { return false }
-        if !requirement.compatibleGripTypes.isEmpty,
-           requirement.compatibleGripTypes.isDisjoint(with: contact.gripTypes) {
-            return false
-        }
-        if let requiredDepth = requirement.depthRangeMillimeters {
-            guard let contactDepth = contact.depthRangeMillimeters,
-                  contactDepth.upperBound >= requiredDepth.minimum,
-                  contactDepth.lowerBound <= requiredDepth.maximum else {
-                return false
-            }
-        }
         return true
     }
 
@@ -448,15 +436,10 @@ enum ContactResolver {
         _ first: PhysicalContact,
         _ second: PhysicalContact
     ) -> Bool {
-        first.pairedContactID == second.id
-            && second.pairedContactID == first.id
-            && Set([first.side, second.side]) == Set([.left, .right])
-            && first.kind == second.kind
-            && first.features == second.features
-            && first.fingerCapacity == second.fingerCapacity
-            && first.handCapacity == second.handCapacity
+        guard let pairedID = first.pairedContactID, pairedID == second.id else { return false }
+        return first.kind == second.kind
+            && first.shape == second.shape
             && first.depthRangeMillimeters == second.depthRangeMillimeters
-            && first.gripTypes == second.gripTypes
     }
 }
 
