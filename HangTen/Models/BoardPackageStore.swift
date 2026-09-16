@@ -652,8 +652,8 @@ struct BoardPackageStore {
                     shape: contact.shape,
                     fingerCapacity: contact.fingerCapacity,
                     handCapacity: contact.handCapacity,
-                    depthRangeMillimeters: contact.depthRangeMillimeters.map {
-                        $0.lowerBound...$0.upperBound
+                    depth: contact.depthRangeMillimeters.map {
+                        .range(MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound))
                     },
                     gripTypes: Set(contact.gripTypes),
                     side: contact.side,

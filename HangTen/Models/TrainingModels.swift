@@ -564,6 +564,131 @@ enum HoldSize: String, Codable, Hashable, CaseIterable, Identifiable {
     }
 }
 
+struct MillimeterRange: Codable, Hashable {
+    let minimum: Double
+    let maximum: Double
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case minimum, maximum
+    }
+
+    init(minimum: Double, maximum: Double) {
+        precondition(Self.isValid(minimum: minimum, maximum: maximum))
+        self.minimum = minimum
+        self.maximum = maximum
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: HoldDepthCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        let unsupportedKeys = rawContainer.allKeys
+            .filter { !allowedKeys.contains($0.stringValue) }
+            .sorted { $0.stringValue < $1.stringValue }
+        if let unknownKey = unsupportedKeys.first {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported millimeter range field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        minimum = try container.decode(Double.self, forKey: .minimum)
+        maximum = try container.decode(Double.self, forKey: .maximum)
+        guard Self.isValid(minimum: minimum, maximum: maximum) else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .maximum,
+                in: container,
+                debugDescription: "A millimeter range must be finite, non-negative, and ordered."
+            )
+        }
+    }
+
+    private static func isValid(minimum: Double, maximum: Double) -> Bool {
+        minimum.isFinite && maximum.isFinite && minimum >= 0 && minimum <= maximum
+    }
+}
+
+enum HoldDepth: Codable, Hashable {
+    case category(HoldSize)
+    case range(MillimeterRange)
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case category, range
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: HoldDepthCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        let unsupportedKeys = rawContainer.allKeys
+            .filter { !allowedKeys.contains($0.stringValue) }
+            .sorted { $0.stringValue < $1.stringValue }
+        if let unknownKey = unsupportedKeys.first {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported hold depth field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let hasCategory = container.contains(.category)
+        let hasRange = container.contains(.range)
+        guard hasCategory != hasRange else {
+            throw DecodingError.dataCorruptedError(
+                forKey: hasCategory ? .range : .category,
+                in: container,
+                debugDescription: "A hold depth must contain exactly one of category or range."
+            )
+        }
+        if hasCategory {
+            self = .category(try container.decode(HoldSize.self, forKey: .category))
+        } else {
+            self = .range(try container.decode(MillimeterRange.self, forKey: .range))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case let .category(size):
+            try container.encode(size, forKey: .category)
+        case let .range(range):
+            try container.encode(range, forKey: .range)
+        }
+    }
+
+    /// Whether a requirement represented by this depth has enough evidence to match a contact depth.
+    func matches(_ contactDepth: HoldDepth?) -> Bool {
+        guard let contactDepth else { return false }
+        switch (self, contactDepth) {
+        case let (.category(required), .category(actual)):
+            required == actual
+        case let (.category(required), .range(actual)):
+            required.depthRange.overlaps(actual.minimum...actual.maximum)
+        case let (.range(required), .range(actual)):
+            required.minimum <= actual.maximum && required.maximum >= actual.minimum
+        case (.range, .category):
+            false
+        }
+    }
+}
+
+private struct HoldDepthCodingKey: CodingKey {
+    let stringValue: String
+    let intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+        intValue = nil
+    }
+
+    init?(intValue: Int) {
+        stringValue = String(intValue)
+        self.intValue = intValue
+    }
+}
+
 enum ContactSide: String, Codable, Hashable {
     case left
     case right
@@ -903,7 +1028,7 @@ struct PhysicalContact: Identifiable, Hashable {
     let shape: HoldShape?
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let depthRangeMillimeters: ClosedRange<Double>?
+    let depth: HoldDepth?
     let gripTypes: Set<GripType>
     let side: ContactSide?
     let pairedContactID: String?
@@ -919,7 +1044,7 @@ struct PhysicalContact: Identifiable, Hashable {
         shape: HoldShape? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
-        depthRangeMillimeters: ClosedRange<Double>? = nil,
+        depth: HoldDepth? = nil,
         gripTypes: Set<GripType> = [],
         side: ContactSide? = nil,
         pairedContactID: String? = nil
@@ -944,7 +1069,7 @@ struct PhysicalContact: Identifiable, Hashable {
         self.shape = shape
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
-        self.depthRangeMillimeters = depthRangeMillimeters
+        self.depth = depth
         self.gripTypes = gripTypes
         self.side = side
         self.pairedContactID = pairedContactID

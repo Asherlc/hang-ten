@@ -505,7 +505,7 @@ private struct CustomRoutineStepEditor: View {
         ]
     }
 
-    private func replaceGenericTarget(depth: TargetDepth?) {
+    private func replaceGenericTarget(depth: HoldDepth?) {
         guard let current = step.targets.first else { return }
         step.targets = [
             ContactRequirement(
@@ -587,9 +587,7 @@ private struct CustomRoutineStepEditor: View {
             ContactRequirement(
                 kind: contact.kind,
                 shape: contact.shape,
-                depth: contact.depthRangeMillimeters.map {
-                    .range(MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound))
-                },
+                depth: contact.depth,
                 fingerCapacity: contact.fingerCapacity,
                 handCapacity: contact.handCapacity,
                 selection: selection

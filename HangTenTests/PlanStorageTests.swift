@@ -3,18 +3,69 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testHoldDepthMatchesOnlySupportedEvidencePairs() {
+        let large = HoldDepth.category(.large)
+        let medium = HoldDepth.category(.medium)
+        let twentyToThirty = HoldDepth.range(MillimeterRange(minimum: 20, maximum: 30))
+        let thirtyToForty = HoldDepth.range(MillimeterRange(minimum: 30, maximum: 40))
+
+        XCTAssertTrue(large.matches(.category(.large)))
+        XCTAssertFalse(large.matches(medium))
+        XCTAssertTrue(large.matches(twentyToThirty))
+        XCTAssertTrue(twentyToThirty.matches(thirtyToForty))
+        XCTAssertFalse(twentyToThirty.matches(.category(.large)))
+        XCTAssertFalse(large.matches(nil))
+        XCTAssertFalse(twentyToThirty.matches(nil))
+    }
+
+    func testHoldDepthEncodesAndDecodesTaggedCategoryAndRange() throws {
+        let categoryData = try JSONEncoder().encode(HoldDepth.category(.large))
+        XCTAssertEqual(
+            try JSONSerialization.jsonObject(with: categoryData) as? [String: String],
+            ["category": "large"]
+        )
+        XCTAssertEqual(
+            try JSONDecoder().decode(HoldDepth.self, from: categoryData),
+            .category(.large)
+        )
+
+        let rangeData = try JSONEncoder().encode(
+            HoldDepth.range(MillimeterRange(minimum: 25, maximum: 30))
+        )
+        XCTAssertEqual(
+            try JSONSerialization.jsonObject(with: rangeData) as? [String: [String: Double]],
+            ["range": ["minimum": 25, "maximum": 30]]
+        )
+        XCTAssertEqual(
+            try JSONDecoder().decode(HoldDepth.self, from: rangeData),
+            .range(MillimeterRange(minimum: 25, maximum: 30))
+        )
+    }
+
+    func testPhysicalContactCanRecordForgeStyleCategoricalDepth() {
+        let contact = PhysicalContact(
+            id: "forge-large-flat-edge",
+            name: "Large flat edge",
+            kind: .edge,
+            shape: .flat,
+            depth: .category(.large)
+        )
+
+        XCTAssertEqual(contact.depth, .category(.large))
+    }
+
     func testPlanDecodesRequirementWithoutContactIDs() throws {
         let target = try JSONDecoder().decode(
             ContactRequirement.self,
             from: Data(
-                #"{"kind":"edge","depthRangeMillimeters":{"minimum":18,"maximum":22},"selection":"bilateralPair"}"#.utf8
+                #"{"kind":"edge","depth":{"range":{"minimum":18,"maximum":22}},"selection":"bilateralPair"}"#.utf8
             )
         )
 
         XCTAssertEqual(target.kind, .edge)
         XCTAssertEqual(
-            target.depthRangeMillimeters,
-            MillimeterRange(minimum: 18, maximum: 22)
+            target.depth,
+            .range(MillimeterRange(minimum: 18, maximum: 22))
         )
         XCTAssertEqual(target.selection, .bilateralPair)
     }

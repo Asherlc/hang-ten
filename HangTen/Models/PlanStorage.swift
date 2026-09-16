@@ -162,69 +162,6 @@ struct PlanMetadata: Codable, Hashable {
     }
 }
 
-struct MillimeterRange: Codable, Hashable {
-    let minimum: Double
-    let maximum: Double
-
-    private enum CodingKeys: String, CodingKey, CaseIterable {
-        case minimum, maximum
-    }
-
-    init(minimum: Double, maximum: Double) {
-        precondition(Self.isValid(minimum: minimum, maximum: maximum))
-        self.minimum = minimum
-        self.maximum = maximum
-    }
-
-    init(from decoder: Decoder) throws {
-        let rawContainer = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
-        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
-        let unsupportedKeys = rawContainer.allKeys
-            .filter { !allowedKeys.contains($0.stringValue) }
-            .sorted { $0.stringValue < $1.stringValue }
-        if let unknownKey = unsupportedKeys.first {
-            throw DecodingError.dataCorruptedError(
-                forKey: unknownKey,
-                in: rawContainer,
-                debugDescription: "Unsupported millimeter range field \(unknownKey.stringValue)."
-            )
-        }
-
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        minimum = try container.decode(Double.self, forKey: .minimum)
-        maximum = try container.decode(Double.self, forKey: .maximum)
-        guard Self.isValid(minimum: minimum, maximum: maximum) else {
-            throw DecodingError.dataCorruptedError(
-                forKey: .maximum,
-                in: container,
-                debugDescription: "A millimeter range must be finite, non-negative, and ordered."
-            )
-        }
-    }
-
-    private static func isValid(minimum: Double, maximum: Double) -> Bool {
-        minimum.isFinite && maximum.isFinite && minimum >= 0 && minimum <= maximum
-    }
-}
-
-enum TargetDepth: Codable, Hashable {
-    case category(HoldSize)
-    case range(MillimeterRange)
-
-    /// True when this target depth overlaps with the given physical depth range.
-    func overlaps(_ contactDepth: ClosedRange<Double>?) -> Bool {
-        switch self {
-        case let .category(size):
-            guard let contactDepth else { return true }
-            return size.depthRange.overlaps(contactDepth)
-        case let .range(targetRange):
-            guard let contactDepth else { return true }
-            return targetRange.minimum <= contactDepth.upperBound
-                && targetRange.maximum >= contactDepth.lowerBound
-        }
-    }
-}
-
 enum ContactSelectionPolicy: String, Codable, Hashable {
     case single
     case bilateralPair
@@ -233,7 +170,7 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
 struct ContactRequirement: Codable, Hashable {
     let kind: HoldKind?
     let shape: HoldShape?
-    let depth: TargetDepth?
+    let depth: HoldDepth?
     let fingerCapacity: Int?
     let handCapacity: Int?
     let selection: ContactSelectionPolicy
@@ -241,7 +178,7 @@ struct ContactRequirement: Codable, Hashable {
     init(
         kind: HoldKind? = nil,
         shape: HoldShape? = nil,
-        depth: TargetDepth? = nil,
+        depth: HoldDepth? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         selection: ContactSelectionPolicy = .single
@@ -269,7 +206,7 @@ struct ContactRequirement: Codable, Hashable {
     }
 
     static func edge(
-        depth: TargetDepth? = nil,
+        depth: HoldDepth? = nil,
         selection: ContactSelectionPolicy = .single
     ) -> ContactRequirement {
         .init(kind: .edge, depth: depth, selection: selection)
@@ -293,7 +230,7 @@ struct ContactRequirement: Codable, Hashable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
         shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
-        depth = try container.decodeIfPresent(TargetDepth.self, forKey: .depth)
+        depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
         selection = try container.decode(ContactSelectionPolicy.self, forKey: .selection)

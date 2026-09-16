@@ -411,7 +411,7 @@ enum ContactResolver {
     ) -> Bool {
         if let kind = requirement.kind, contact.kind != kind { return false }
         if let shape = requirement.shape, contact.shape != shape { return false }
-        if let depth = requirement.depth, !depth.overlaps(contact.depthRangeMillimeters) { return false }
+        if let depth = requirement.depth, !depth.matches(contact.depth) { return false }
         if let fingerCapacity = requirement.fingerCapacity,
            contact.fingerCapacity != fingerCapacity { return false }
         if let handCapacity = requirement.handCapacity,
@@ -490,7 +490,7 @@ enum ContactResolver {
               rightmost.frame.rect.midX > horizontalMidpoint,
               leftmost.contact.kind == rightmost.contact.kind,
               leftmost.contact.shape == rightmost.contact.shape,
-              leftmost.contact.depthRangeMillimeters == rightmost.contact.depthRangeMillimeters,
+              leftmost.contact.depth == rightmost.contact.depth,
               leftmost.contact.fingerCapacity == rightmost.contact.fingerCapacity,
               leftmost.contact.handCapacity == rightmost.contact.handCapacity else {
             return nil
