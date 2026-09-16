@@ -23,7 +23,7 @@ function documentFixture(constrained = false): EditorDocument {
       kind: "edge",
       features: ["largeEdge"],
       gripTypes: ["openHand"],
-      depthRangeMillimeters: { lowerBound: 18, upperBound: 20 },
+      depth: { range: { minimum: 18, maximum: 20 } },
       fingerCapacity: 4,
       handCapacity: 1,
       side: "left",

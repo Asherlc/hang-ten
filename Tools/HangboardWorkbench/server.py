@@ -167,7 +167,7 @@ def _presentation_image_url(board_id: str, presentation_id: str) -> str:
 def _contact_needs_attention(contact: dict[str, object]) -> bool:
     return (
         contact["kind"] in {"edge", "pocket"}
-        and "depthRangeMillimeters" not in contact
+        and "depth" not in contact
     )
 
 

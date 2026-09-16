@@ -34,21 +34,21 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                 name: "Left medium edge",
                 kind: .edge,
                 features: [.mediumEdge],
-                depthRangeMillimeters: 21...21
+                depth: .range(.init(minimum: 21, maximum: 21))
             ),
             PhysicalContact(
                 id: "edge-right",
                 name: "Right medium edge",
                 kind: .edge,
                 features: [.mediumEdge],
-                depthRangeMillimeters: 21...21
+                depth: .range(.init(minimum: 21, maximum: 21))
             ),
             PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
                 kind: .edge,
                 features: [.largeEdge],
-                depthRangeMillimeters: 35...35
+                depth: .range(.init(minimum: 35, maximum: 35))
             ),
             PhysicalContact(
                 id: "jug-center",
@@ -984,7 +984,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             store.contactIDs(
                 for: step(targets: [ContactRequirement(
                     kind: .pocket,
-                    depthRangeMillimeters: .init(minimum: 29, maximum: 29),
+                    depth: .range(.init(minimum: 29, maximum: 29)),
                     fingerCapacity: 3,
                     selection: .bilateralPair
                 )]),

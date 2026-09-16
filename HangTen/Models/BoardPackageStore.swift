@@ -601,15 +601,6 @@ struct BoardPackageStore {
                     reason: "contact \(contact.id) references unknown equipment object \(contact.equipmentObjectID)"
                 )
             }
-            if let range = contact.depthRangeMillimeters,
-               !range.lowerBound.isFinite || !range.upperBound.isFinite ||
-               range.lowerBound <= 0 || range.upperBound <= 0 ||
-               range.lowerBound > range.upperBound {
-                throw BoardPackageStoreError.invalidPackage(
-                    boardID: document.id,
-                    reason: "contact \(contact.id) has an invalid depth range"
-                )
-            }
             if let capacity = contact.fingerCapacity,
                !PhysicalContact.validFingerCapacityRange.contains(capacity) {
                 throw BoardPackageStoreError.invalidPackage(
@@ -652,9 +643,7 @@ struct BoardPackageStore {
                     shape: contact.shape,
                     fingerCapacity: contact.fingerCapacity,
                     handCapacity: contact.handCapacity,
-                    depth: contact.depthRangeMillimeters.map {
-                        .range(MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound))
-                    },
+                    depth: contact.depth,
                     gripTypes: Set(contact.gripTypes),
                     side: contact.side,
                     pairedContactID: contact.pairedContactID
@@ -2707,7 +2696,7 @@ private struct BoardPackageContactDocument: Decodable {
     let shape: HoldShape?
     let fingerCapacity: Int?
     let handCapacity: Int?
-    let depthRangeMillimeters: BoardPackageMillimeterRangeDocument?
+    let depth: HoldDepth?
     let gripTypes: [GripType]
     let side: ContactSide?
     let pairedContactID: String?
@@ -2715,13 +2704,13 @@ private struct BoardPackageContactDocument: Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case id, equipmentObjectID, name, kind, shape, fingerCapacity, handCapacity
-        case depthRangeMillimeters, gripTypes, side, pairedContactID
+        case depth, gripTypes, side, pairedContactID
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "id", "equipmentObjectID", "name", "kind", "shape", "fingerCapacity",
-            "handCapacity", "depthRangeMillimeters", "gripTypes", "side",
+            "handCapacity", "depth", "gripTypes", "side",
             "pairedContactID"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -2736,12 +2725,7 @@ private struct BoardPackageContactDocument: Decodable {
         handCapacity = container.contains(.handCapacity)
             ? try container.decode(Int.self, forKey: .handCapacity)
             : nil
-        depthRangeMillimeters = container.contains(.depthRangeMillimeters)
-            ? try container.decode(
-                BoardPackageMillimeterRangeDocument.self,
-                forKey: .depthRangeMillimeters
-            )
-            : nil
+        depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
         gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
         side = container.contains(.side)
             ? try container.decode(ContactSide.self, forKey: .side)
@@ -2975,22 +2959,6 @@ private struct BoardPackageShapeConstraintDocument: Decodable {
 
 }
 
-private struct BoardPackageMillimeterRangeDocument: Decodable {
-    let lowerBound: Double
-    let upperBound: Double
-
-    private enum CodingKeys: String, CodingKey {
-        case lowerBound
-        case upperBound
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["lowerBound", "upperBound"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        lowerBound = try container.decode(Double.self, forKey: .lowerBound)
-        upperBound = try container.decode(Double.self, forKey: .upperBound)
-    }
-}
 
 struct BoardPackageFrameDocument: Codable, Hashable {
     let x: Double

@@ -29,7 +29,7 @@ function documentFixture(): EditorDocument {
       kind: "edge",
       features: ["largeEdge"],
       gripTypes: ["openHand"],
-      depthRangeMillimeters: { lowerBound: 18, upperBound: 20 },
+      depth: { range: { minimum: 18, maximum: 20 } },
     }],
     canvas: { width: 100, height: 60 },
     regions: [{

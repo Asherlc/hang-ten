@@ -6,11 +6,13 @@ final class PlanStorageTests: XCTestCase {
     func testHoldDepthMatchesOnlySupportedEvidencePairs() {
         let large = HoldDepth.category(.large)
         let medium = HoldDepth.category(.medium)
+        let tenToTwenty = HoldDepth.range(MillimeterRange(minimum: 10, maximum: 20))
         let twentyToThirty = HoldDepth.range(MillimeterRange(minimum: 20, maximum: 30))
         let thirtyToForty = HoldDepth.range(MillimeterRange(minimum: 30, maximum: 40))
 
         XCTAssertTrue(large.matches(.category(.large)))
         XCTAssertFalse(large.matches(medium))
+        XCTAssertFalse(large.matches(tenToTwenty))
         XCTAssertTrue(large.matches(twentyToThirty))
         XCTAssertTrue(twentyToThirty.matches(thirtyToForty))
         XCTAssertFalse(twentyToThirty.matches(.category(.large)))

@@ -26,8 +26,10 @@ export function cloneEditorDocument(document: EditorDocument): EditorDocument {
       ...contact,
       features: [...contact.features],
       gripTypes: [...contact.gripTypes],
-      ...(contact.depthRangeMillimeters
-        ? { depthRangeMillimeters: { ...contact.depthRangeMillimeters } }
+      ...(contact.depth
+        ? { depth: "category" in contact.depth
+          ? { category: contact.depth.category }
+          : { range: { ...contact.depth.range } } }
         : {}),
     })),
     canvas: { ...document.canvas },

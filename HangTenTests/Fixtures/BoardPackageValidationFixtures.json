@@ -53,7 +53,6 @@
           "name": "Left hold",
           "kind": "jug",
           "equipmentObjectID": "primary",
-          "features": [],
           "gripTypes": []
         }
       ],
@@ -421,7 +420,6 @@
           "name": "Left hold",
           "kind": "jug",
           "equipmentObjectID": "primary",
-          "features": [],
           "gripTypes": []
         }
       ],
@@ -603,7 +601,6 @@
           "name": "Left hold",
           "kind": "jug",
           "equipmentObjectID": "primary",
-          "features": [],
           "gripTypes": []
         }
       ],
@@ -903,7 +900,6 @@
           "name": "Left hold",
           "kind": "jug",
           "equipmentObjectID": "primary",
-          "features": [],
           "gripTypes": []
         }
       ],
@@ -1001,7 +997,7 @@
         }
       }],
       "positions": [{ "id": "primary", "presentationID": "primary" }],
-      "contacts": [{ "id": "hold-left", "name": "Left hold", "kind": "jug", "equipmentObjectID": "primary", "features": [], "gripTypes": [] }],
+      "contacts": [{ "id": "hold-left", "name": "Left hold", "kind": "jug", "equipmentObjectID": "primary", "gripTypes": [] }],
       "revisionID": "2026-09-contact-first",
       "equipmentObjects": [{ "id": "primary" }]
     },

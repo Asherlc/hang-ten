@@ -384,7 +384,7 @@ struct BoardEditableContact: Equatable, Decodable {
     /// Editor packages may omit `kind` while metadata is being completed.
     /// Training-board decoding remains strict in `BoardPackageStore`.
     var kind: HoldKind?
-    var depthRangeMillimeters: BoardEditableMillimeterRange?
+    var depth: HoldDepth?
     var gripTypes: [GripType]
     var fingerCapacity: Int?
     var handCapacity: Int?
@@ -398,7 +398,7 @@ struct BoardEditableContact: Equatable, Decodable {
         case id
         case name
         case kind
-        case depthRangeMillimeters
+        case depth
         case gripTypes
         case fingerCapacity
         case handCapacity
@@ -412,7 +412,7 @@ struct BoardEditableContact: Equatable, Decodable {
         id: String,
         name: String,
         kind: HoldKind?,
-        depthRangeMillimeters: BoardEditableMillimeterRange? = nil,
+        depth: HoldDepth? = nil,
         gripTypes: [GripType] = [],
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
@@ -424,7 +424,7 @@ struct BoardEditableContact: Equatable, Decodable {
         self.id = id
         self.name = name
         self.kind = kind
-        self.depthRangeMillimeters = depthRangeMillimeters
+        self.depth = depth
         self.gripTypes = gripTypes
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
@@ -438,7 +438,7 @@ struct BoardEditableContact: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "id", "equipmentObjectID", "name", "kind", "shape",
-            "depthRangeMillimeters", "gripTypes", "fingerCapacity", "handCapacity",
+            "depth", "gripTypes", "fingerCapacity", "handCapacity",
             "side", "pairedContactID"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -447,10 +447,7 @@ struct BoardEditableContact: Equatable, Decodable {
         kind = container.contains(.kind)
             ? try container.decode(HoldKind.self, forKey: .kind)
             : nil
-        depthRangeMillimeters = try container.decodeIfPresent(
-            BoardEditableMillimeterRange.self,
-            forKey: .depthRangeMillimeters
-        )
+        depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
         gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
         fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
         handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity)
@@ -461,28 +458,6 @@ struct BoardEditableContact: Equatable, Decodable {
             ? try container.decode(String.self, forKey: .pairedContactID)
             : nil
         equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
-    }
-}
-
-struct BoardEditableMillimeterRange: Equatable, Decodable {
-    var lowerBound: Double
-    var upperBound: Double
-
-    private enum CodingKeys: String, CodingKey {
-        case lowerBound
-        case upperBound
-    }
-
-    init(lowerBound: Double, upperBound: Double) {
-        self.lowerBound = lowerBound
-        self.upperBound = upperBound
-    }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownEditorKeys(["lowerBound", "upperBound"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        lowerBound = try container.decode(Double.self, forKey: .lowerBound)
-        upperBound = try container.decode(Double.self, forKey: .upperBound)
     }
 }
 
@@ -761,14 +736,6 @@ enum BoardPackageWriter {
                !PhysicalContact.validHandCapacityRange.contains(handCapacity) {
                 throw invalid("contact \(contact.id) has an invalid hand capacity", document)
             }
-            if let depthRange = contact.depthRangeMillimeters,
-               !depthRange.lowerBound.isFinite ||
-               !depthRange.upperBound.isFinite ||
-               depthRange.lowerBound <= 0 ||
-               depthRange.upperBound <= 0 ||
-               depthRange.lowerBound > depthRange.upperBound {
-                throw invalid("contact \(contact.id) has an invalid depth range", document)
-            }
             if Set(contact.gripTypes).count != contact.gripTypes.count {
                 throw invalid("contact \(contact.id) has duplicate gripTypes", document)
             }
@@ -968,11 +935,8 @@ enum BoardPackageWriter {
         if let handCapacity = contact.handCapacity {
             entries.append(("handCapacity", .int(handCapacity)))
         }
-        if let depthRange = contact.depthRangeMillimeters {
-            entries.append(("depthRangeMillimeters", .object([
-                ("lowerBound", .double(depthRange.lowerBound)),
-                ("upperBound", .double(depthRange.upperBound)),
-            ])))
+        if let depth = contact.depth {
+            entries.append(("depth", canonicalHoldDepthValue(depth)))
         }
         entries.append(("gripTypes", .array(contact.gripTypes.map { .string($0.rawValue) })))
         if let side = contact.side {
@@ -982,6 +946,18 @@ enum BoardPackageWriter {
             entries.append(("pairedContactID", .string(pairedContactID)))
         }
         return .object(entries)
+    }
+
+    private static func canonicalHoldDepthValue(_ depth: HoldDepth) -> CanonicalJSONValue {
+        switch depth {
+        case let .category(size):
+            .object([("category", .string(size.rawValue))])
+        case let .range(range):
+            .object([("range", .object([
+                ("minimum", .double(range.minimum)),
+                ("maximum", .double(range.maximum)),
+            ]))])
+        }
     }
 
     private static func canonicalPresentationValue(

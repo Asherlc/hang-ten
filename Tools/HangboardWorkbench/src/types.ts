@@ -49,9 +49,15 @@ export interface ShapeConstraint {
 }
 
 export interface MillimeterRange {
-  lowerBound: number;
-  upperBound: number;
+  minimum: number;
+  maximum: number;
 }
+
+export type HoldSize = "tiny" | "small" | "medium" | "large";
+
+export type HoldDepth =
+  | { category: HoldSize }
+  | { range: MillimeterRange };
 
 export type OutlinePreset = Exclude<ShapeConstraintShape, "roundedRectangle"> | "rounded-rectangle";
 export type ConstrainedHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
@@ -100,7 +106,7 @@ export interface PhysicalContact {
   kind: string;
   features: string[];
   gripTypes: string[];
-  depthRangeMillimeters?: MillimeterRange;
+  depth?: HoldDepth;
   fingerCapacity?: number;
   handCapacity?: number;
   side?: "left" | "right";

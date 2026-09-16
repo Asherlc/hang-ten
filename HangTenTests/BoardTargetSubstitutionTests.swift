@@ -287,7 +287,7 @@ final class ContactResolverTests: XCTestCase {
                 kind: .edge,
                 fingerCapacity: rightFingerCapacity,
                 handCapacity: rightHandCapacity,
-                depthRangeMillimeters: rightDepth,
+                depth: .range(.init(minimum: rightDepth.lowerBound, maximum: rightDepth.upperBound)),
                 gripTypes: gripTypes
             ),
             PhysicalContact(
@@ -296,14 +296,14 @@ final class ContactResolverTests: XCTestCase {
                 kind: .edge,
                 fingerCapacity: leftFingerCapacity,
                 handCapacity: leftHandCapacity,
-                depthRangeMillimeters: 20...20,
+                depth: .range(.init(minimum: 20, maximum: 20)),
                 gripTypes: gripTypes
             ),
             PhysicalContact(
                 id: "edge-deep",
                 name: "Deep edge",
                 kind: .edge,
-                depthRangeMillimeters: 30...30,
+                depth: .range(.init(minimum: 30, maximum: 30)),
                 gripTypes: gripTypes
             )
         ]
@@ -376,7 +376,12 @@ final class ContactResolverTests: XCTestCase {
         missingGeometryContactIDs: Set<String> = []
     ) -> BoardRevision {
         let contacts = fixtures.map {
-            PhysicalContact(id: $0.id, name: $0.id, kind: .jug, depthRangeMillimeters: $0.depth)
+            PhysicalContact(
+                id: $0.id,
+                name: $0.id,
+                kind: .jug,
+                depth: $0.depth.map { .range(.init(minimum: $0.lowerBound, maximum: $0.upperBound)) }
+            )
         }
         let geometry = Dictionary(uniqueKeysWithValues: fixtures.filter {
             !missingGeometryContactIDs.contains($0.id)
