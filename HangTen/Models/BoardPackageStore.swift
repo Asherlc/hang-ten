@@ -2718,14 +2718,18 @@ private struct BoardPackageContactDocument: Decodable {
         equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
         name = try container.decode(String.self, forKey: .name)
         kind = try container.decode(HoldKind.self, forKey: .kind)
-        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
+        shape = container.contains(.shape)
+            ? try container.decode(HoldShape.self, forKey: .shape)
+            : nil
         fingerCapacity = container.contains(.fingerCapacity)
             ? try container.decode(Int.self, forKey: .fingerCapacity)
             : nil
         handCapacity = container.contains(.handCapacity)
             ? try container.decode(Int.self, forKey: .handCapacity)
             : nil
-        depth = try container.decodeIfPresent(HoldDepth.self, forKey: .depth)
+        depth = container.contains(.depth)
+            ? try container.decode(HoldDepth.self, forKey: .depth)
+            : nil
         gripTypes = try container.decode([GripType].self, forKey: .gripTypes)
         side = container.contains(.side)
             ? try container.decode(ContactSide.self, forKey: .side)

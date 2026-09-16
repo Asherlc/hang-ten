@@ -1350,11 +1350,6 @@ final class BoardPackageStoreTests: XCTestCase {
                 holds[0]["sizeMillimeters"] = NSNull()
                 board["contacts"] = holds
             }),
-            ("depth", { board in
-                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["depth"] = NSNull()
-                board["contacts"] = holds
-            }),
             ("grip type", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                 holds[0]["gripType"] = NSNull()
@@ -1368,11 +1363,6 @@ final class BoardPackageStoreTests: XCTestCase {
             ("hand capacity", { board in
                 var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
                 holds[0]["handCapacity"] = NSNull()
-                board["contacts"] = holds
-            }),
-            ("shape", { board in
-                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
-                holds[0]["shape"] = NSNull()
                 board["contacts"] = holds
             }),
             ("equipment object ID", { board in
@@ -1392,6 +1382,42 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name)
+        }
+    }
+
+    func testStoreAcceptsOmittedAndRejectsExplicitNullForOptionalContactShapeAndDepth() throws {
+        for field in ["shape", "depth"] {
+            let omittedFixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                    holds[0].removeValue(forKey: field)
+                    board["contacts"] = holds
+                }
+            }
+            defer { omittedFixture.remove() }
+
+            let omittedBoard = try XCTUnwrap(BoardPackageStore(bundle: omittedFixture.bundle).boards.first)
+            let omittedContact = try XCTUnwrap(omittedBoard.contacts.first)
+            if field == "shape" {
+                XCTAssertNil(omittedContact.shape)
+            } else {
+                XCTAssertNil(omittedContact.depth)
+            }
+
+            let nullFixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                    holds[0][field] = NSNull()
+                    board["contacts"] = holds
+                }
+            }
+            defer { nullFixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: nullFixture.bundle), "explicit null \(field) must be rejected")
         }
     }
 
