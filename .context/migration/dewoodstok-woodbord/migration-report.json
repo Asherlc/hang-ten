@@ -1,0 +1,63 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 17,
+  "contactMappings": {
+    "hold-lower-inner-left": "front-lower-3",
+    "hold-lower-inner-right": "front-lower-4",
+    "hold-lower-outer-left": "front-lower-1",
+    "hold-lower-outer-right": "front-lower-6",
+    "hold-lower-two-finger-left": "front-lower-2",
+    "hold-lower-two-finger-right": "front-lower-5",
+    "hold-middle-inner-left": "front-middle-2",
+    "hold-middle-inner-right": "front-middle-3",
+    "hold-middle-outer-left": "front-middle-1",
+    "hold-middle-outer-right": "front-middle-4",
+    "hold-top-rim": "top-rim",
+    "hold-upper-inner-left": "front-upper-3",
+    "hold-upper-inner-right": "front-upper-4",
+    "hold-upper-outer-left": "front-upper-1",
+    "hold-upper-outer-right": "front-upper-6",
+    "hold-upper-two-finger-left": "front-upper-2",
+    "hold-upper-two-finger-right": "front-upper-5"
+  },
+  "descriptorSHA256": "9d5369b4115f2dcae7392a3a305b96d42dc84fc743db08c25f77b4590fc1596a",
+  "modelBounds": {
+    "max": [
+      0.295009047,
+      0.147083506,
+      0.039999995
+    ],
+    "min": [
+      -0.294999927,
+      2e-09,
+      -3.8e-08
+    ]
+  },
+  "modelSHA256": "b8ffc338baa9c5bc4d961ad727d1c87dde5d0539c13fc78a848c579b3cda3186",
+  "nodeCount": 18,
+  "packageID": "dewoodstok-woodbord",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/infamous-sheep/.context/migration/dewoodstok-woodbord/source.blend",
+  "sourceModelSHA256": "da071218a42ed69377dced2433b88d294b39fc48fb84bda2a91585472d64ef24",
+  "sourceObjectIDs": [
+    "body",
+    "hold-lower-inner-left",
+    "hold-lower-inner-right",
+    "hold-lower-outer-left",
+    "hold-lower-outer-right",
+    "hold-lower-two-finger-left",
+    "hold-lower-two-finger-right",
+    "hold-middle-inner-left",
+    "hold-middle-inner-right",
+    "hold-middle-outer-left",
+    "hold-middle-outer-right",
+    "hold-top-rim",
+    "hold-upper-inner-left",
+    "hold-upper-inner-right",
+    "hold-upper-outer-left",
+    "hold-upper-outer-right",
+    "hold-upper-two-finger-left",
+    "hold-upper-two-finger-right"
+  ],
+  "status": "converted"
+}

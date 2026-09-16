@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "packageID": "escape-unlimited-board",
+  "logicalContactIDs": [
+    "top-sloper-60",
+    "edge-45-left",
+    "edge-45-right",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-15-left",
+    "edge-15-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold-top-roll",
+      "role": "contact",
+      "contactID": "top-sloper-60"
+    },
+    {
+      "sourceNodeID": "hold-upper-left",
+      "role": "contact",
+      "contactID": "edge-45-left"
+    },
+    {
+      "sourceNodeID": "hold-upper-right",
+      "role": "contact",
+      "contactID": "edge-45-right"
+    },
+    {
+      "sourceNodeID": "hold-middle-left",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "sourceNodeID": "hold-middle-right",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "sourceNodeID": "hold-lower-left",
+      "role": "contact",
+      "contactID": "edge-15-left"
+    },
+    {
+      "sourceNodeID": "hold-lower-right",
+      "role": "contact",
+      "contactID": "edge-15-right"
+    }
+  ]
+}

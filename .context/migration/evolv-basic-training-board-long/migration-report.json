@@ -1,0 +1,37 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 4,
+  "contactMappings": {
+    "hold-edge-lower": "edge-10",
+    "hold-edge-middle": "edge-15",
+    "hold-edge-upper": "edge-20",
+    "hold-jug": "jug-rounded"
+  },
+  "descriptorSHA256": "d6125860807cca1a625a99b27267807fc1686bedc4b7f4413feee040a8b4d4d8",
+  "modelBounds": {
+    "max": [
+      0.395000011,
+      0.159939215,
+      0.059999999
+    ],
+    "min": [
+      -0.395000011,
+      0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "82a20c9772978184369799408c716232a96cbaa3e05781c5cb54f40de8430b41",
+  "nodeCount": 5,
+  "packageID": "evolv-basic-training-board-long",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/infamous-sheep/.context/migration/evolv-basic-training-board-long/source.blend",
+  "sourceModelSHA256": "da3613e7552a2bbc15213d5a936a7438d176acbb95250c42468584b73f89c222",
+  "sourceObjectIDs": [
+    "body",
+    "hold-edge-lower",
+    "hold-edge-middle",
+    "hold-edge-upper",
+    "hold-jug"
+  ],
+  "status": "converted"
+}
