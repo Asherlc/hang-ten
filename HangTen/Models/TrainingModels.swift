@@ -661,7 +661,7 @@ enum HoldDepth: Codable, Hashable {
     /// Whether a requirement represented by this depth has enough evidence to match a contact depth.
     func matches(_ contactDepth: HoldDepth?) -> Bool {
         guard let contactDepth else { return false }
-        switch (self, contactDepth) {
+        return switch (self, contactDepth) {
         case let (.category(required), .category(actual)):
             required == actual
         case let (.category(required), .range(actual)):
