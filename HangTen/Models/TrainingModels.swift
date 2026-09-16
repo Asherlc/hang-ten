@@ -900,7 +900,7 @@ struct PhysicalContact: Identifiable, Hashable {
     let equipmentObjectID: String
     let name: String
     let kind: HoldKind
-    let features: Set<HoldFeature>
+    let shape: HoldShape?
     let fingerCapacity: Int?
     let handCapacity: Int?
     let depthRangeMillimeters: ClosedRange<Double>?
@@ -916,7 +916,7 @@ struct PhysicalContact: Identifiable, Hashable {
         equipmentObjectID: String = "primary",
         name: String,
         kind: HoldKind,
-        features: Set<HoldFeature> = [],
+        shape: HoldShape? = nil,
         fingerCapacity: Int? = nil,
         handCapacity: Int? = nil,
         depthRangeMillimeters: ClosedRange<Double>? = nil,
@@ -941,22 +941,13 @@ struct PhysicalContact: Identifiable, Hashable {
         self.equipmentObjectID = equipmentObjectID
         self.name = name
         self.kind = kind
-        self.features = features
+        self.shape = shape
         self.fingerCapacity = fingerCapacity
         self.handCapacity = handCapacity
         self.depthRangeMillimeters = depthRangeMillimeters
         self.gripTypes = gripTypes
         self.side = side
         self.pairedContactID = pairedContactID
-    }
-
-    /// True when this contact declares any of `features`, and (when specified)
-    /// also has the exact `fingerCapacity`. Shared by plan and custom-routine
-    /// validation so their matching rules can't drift apart.
-    func matches(anyOf features: some Collection<HoldFeature>, fingerCapacity: Int?) -> Bool {
-        guard self.features.contains(where: features.contains) else { return false }
-        guard let fingerCapacity else { return true }
-        return self.fingerCapacity == fingerCapacity
     }
 
     func resolvedFrame(in presentation: BoardPresentation) -> HoldFrame? {
