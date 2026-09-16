@@ -44,6 +44,21 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertEqual(roundTripped["unilateralHandResolution"] as? String, "athleteRelative")
     }
 
+    func testEditorDecoderRejectsNullAndUnsupportedUnilateralHandResolution() throws {
+        for value: Any in [NSNull(), "unsupported"] {
+            var payload = try jsonObject(for: makeDocument())
+            payload["unilateralHandResolution"] = value
+
+            XCTAssertThrowsError(try decode(payload), "must reject value \(value)")
+        }
+    }
+
+    func testEditorDecoderLeavesOmittedUnilateralHandResolutionNil() throws {
+        let document = try decode(jsonObject(for: makeDocument()))
+
+        XCTAssertNil(document.unilateralHandResolution)
+    }
+
     func testEditorDecoderRejectsLegacyRootHolds() throws {
         var payload = try jsonObject(for: makeDocument())
         payload["holds"] = payload.removeValue(forKey: "contacts")

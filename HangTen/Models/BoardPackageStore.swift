@@ -2274,10 +2274,9 @@ private struct BoardPackageBoardDocument: Decodable {
             ? try container.decode(String.self, forKey: .dimensions)
             : nil
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        unilateralHandResolution = try container.decodeIfPresent(
-            UnilateralHandResolution.self,
-            forKey: .unilateralHandResolution
-        )
+        unilateralHandResolution = container.contains(.unilateralHandResolution)
+            ? try container.decode(UnilateralHandResolution.self, forKey: .unilateralHandResolution)
+            : nil
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode([BoardPackageEquipmentObjectDocument].self, forKey: .equipmentObjects)
             : [.init(id: "primary")]

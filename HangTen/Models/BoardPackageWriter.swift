@@ -92,10 +92,9 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
-        unilateralHandResolution = try container.decodeIfPresent(
-            UnilateralHandResolution.self,
-            forKey: .unilateralHandResolution
-        )
+        unilateralHandResolution = container.contains(.unilateralHandResolution)
+            ? try container.decode(UnilateralHandResolution.self, forKey: .unilateralHandResolution)
+            : nil
         equipmentObjects = container.contains(.equipmentObjects)
             ? try container.decode(
                 [BoardEditableEquipmentObjectDocument].self,

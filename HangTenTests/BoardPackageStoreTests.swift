@@ -54,6 +54,31 @@ final class BoardPackageStoreTests: XCTestCase {
         )
     }
 
+    func testStoreRejectsNullAndUnsupportedUnilateralHandResolution() throws {
+        for value: Any in [NSNull(), "unsupported"] {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                    board["unilateralHandResolution"] = value
+                }
+            }
+            defer { fixture.remove() }
+
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), "must reject value \(value)")
+        }
+    }
+
+    func testStoreLeavesOmittedUnilateralHandResolutionNil() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                board.removeValue(forKey: "unilateralHandResolution")
+            }
+        }
+        defer { fixture.remove() }
+
+        let board = try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+        XCTAssertNil(board.unilateralHandResolution)
+    }
+
     func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
         let resource = BoardModelResource(
             packageSlug: "metolius-wood-grips-compact-ii",
