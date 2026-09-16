@@ -2,6 +2,17 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
+        XCTAssertEqual(
+            ContactResolutionError.ambiguousSingle(candidateCount: 0).errorDescription,
+            "Hang Ten could not select a physical contact for the workout requirement."
+        )
+        XCTAssertEqual(
+            ContactResolutionError.invalidBilateralPair(candidateCount: 2).errorDescription,
+            "Hang Ten could not form a geometrically valid bilateral pair for the workout requirement."
+        )
+    }
+
     func testSingleSelectsTheCandidateNearestTheDefaultPresentationMidpoint() throws {
         let board = jugBoard([
             .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
@@ -68,10 +79,10 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    func testSingleRequiresExactlyOneCandidate() throws {
+    func testSingleSelectsTheOnlyCandidateMatchingAnExactDepth() throws {
         let board = fixtureBoard()
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
+            depth: .range(.init(minimum: 29, maximum: 31)),
             selection: .single
         )
         let step = fixtureStep(target: requirement)
@@ -120,13 +131,9 @@ final class ContactResolverTests: XCTestCase {
     }
 
     func testBilateralPairRejectsContactsWithDifferentFactualDescriptors() {
-        let board = fixtureBoard(
-            rightDepth: 19...19,
-            documentsPair: true,
-            documentsSides: true
-        )
+        let board = fixtureBoard(rightDepth: 19...19)
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            depth: .range(.init(minimum: 19, maximum: 21)),
             selection: .bilateralPair
         )
         let step = fixtureStep(target: requirement)
@@ -139,12 +146,10 @@ final class ContactResolverTests: XCTestCase {
     func testBilateralPairRejectsDifferentFingerCapacity() {
         let board = fixtureBoard(
             rightFingerCapacity: 3,
-            leftFingerCapacity: 4,
-            documentsPair: true,
-            documentsSides: true
+            leftFingerCapacity: 4
         )
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            depth: .range(.init(minimum: 19, maximum: 21)),
             selection: .bilateralPair
         )
         let step = fixtureStep(target: requirement)
@@ -157,12 +162,10 @@ final class ContactResolverTests: XCTestCase {
     func testBilateralPairRejectsDifferentHandCapacity() {
         let board = fixtureBoard(
             rightHandCapacity: 1,
-            leftHandCapacity: 2,
-            documentsPair: true,
-            documentsSides: true
+            leftHandCapacity: 2
         )
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            depth: .range(.init(minimum: 19, maximum: 21)),
             selection: .bilateralPair
         )
         let step = fixtureStep(target: requirement)
@@ -175,7 +178,7 @@ final class ContactResolverTests: XCTestCase {
     func testResolutionRequiresDefaultPositionMembership() throws {
         let board = fixtureBoard(positionContactIDs: ["edge-left"])
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 19, maximum: 21),
+            depth: .range(.init(minimum: 19, maximum: 21)),
             selection: .single
         )
         let step = fixtureStep(target: requirement)
@@ -186,39 +189,10 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    func testResolutionRequiresFactualGripCompatibility() {
-        let board = fixtureBoard()
-        let requirement = ContactRequirement(
-            kind: .edge,
-            compatibleGripTypes: [.fullCrimp],
-            selection: .allMatching
-        )
-        let step = fixtureStep(target: requirement)
-
-        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
-        }
-    }
-
-    func testRequirementGripConstraintRejectsUnknownContactGripMetadata() {
-        let board = fixtureBoard(gripTypes: [])
-        let requirement = ContactRequirement(
-            kind: .edge,
-            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
-            compatibleGripTypes: [.openHand],
-            selection: .single
-        )
-        let step = fixtureStep(target: requirement)
-
-        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 0))
-        }
-    }
-
     func testStepGripConstraintRejectsUnknownContactGripMetadata() {
         let board = fixtureBoard(gripTypes: [])
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
+            depth: .range(.init(minimum: 29, maximum: 31)),
             selection: .single
         )
         let step = fixtureStep(target: requirement, gripType: .openHand)
@@ -228,10 +202,10 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
-    func testUnilateralSideRejectsUnknownContactSideMetadata() {
+    func testSingleSelectionIgnoresUnilateralWorkoutSide() throws {
         let board = fixtureBoard()
         let requirement = ContactRequirement.edge(
-            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
+            depth: .range(.init(minimum: 29, maximum: 31)),
             selection: .single
         )
         let step = fixtureStep(
@@ -240,25 +214,40 @@ final class ContactResolverTests: XCTestCase {
             side: .left
         )
 
-        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 0))
-        }
-    }
-
-    func testRequirementGripTypesAreAlternatives() throws {
-        let board = fixtureBoard()
-        let requirement = ContactRequirement(
-            kind: .edge,
-            depthRangeMillimeters: .init(minimum: 29, maximum: 31),
-            compatibleGripTypes: [.openHand, .halfCrimp],
-            selection: .single
-        )
-        let step = fixtureStep(target: requirement)
-
         XCTAssertEqual(
             try ContactResolver.resolve(requirement, step: step, board: board).map(\.id),
             ["edge-deep"]
         )
+    }
+
+    func testSingleDoesNotGuessAmongMultipleCandidatesWithoutEveryDefaultPresentationFrame() {
+        let board = jugBoard(
+            [
+                .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
+                .init(id: "jug-center", frame: CGRect(x: 0.45, y: 0.4, width: 0.1, height: 0.1))
+            ],
+            missingGeometryContactIDs: ["jug-center"]
+        )
+        let requirement = ContactRequirement.kind(.jug, selection: .single)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 2))
+        }
+    }
+
+    func testBilateralPairDoesNotGuessAmongCandidatesWithoutEveryDefaultPresentationFrame() {
+        let board = jugBoard(
+            [
+                .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
+                .init(id: "jug-right", frame: CGRect(x: 0.8, y: 0.4, width: 0.1, height: 0.1))
+            ],
+            missingGeometryContactIDs: ["jug-right"]
+        )
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+        }
     }
 
     private func fixtureStep(
@@ -289,10 +278,7 @@ final class ContactResolverTests: XCTestCase {
         rightHandCapacity: Int? = nil,
         leftHandCapacity: Int? = nil,
         positionContactIDs: [String]? = nil,
-        gripTypes: Set<GripType> = [.openHand],
-        documentsPair: Bool = false,
-        reciprocalPair: Bool = true,
-        documentsSides: Bool = false
+        gripTypes: Set<GripType> = [.openHand]
     ) -> BoardRevision {
         let contacts = [
             PhysicalContact(
@@ -302,9 +288,7 @@ final class ContactResolverTests: XCTestCase {
                 fingerCapacity: rightFingerCapacity,
                 handCapacity: rightHandCapacity,
                 depthRangeMillimeters: rightDepth,
-                gripTypes: gripTypes,
-                side: documentsSides ? .right : nil,
-                pairedContactID: documentsPair ? "edge-left" : nil
+                gripTypes: gripTypes
             ),
             PhysicalContact(
                 id: "edge-left",
@@ -313,9 +297,7 @@ final class ContactResolverTests: XCTestCase {
                 fingerCapacity: leftFingerCapacity,
                 handCapacity: leftHandCapacity,
                 depthRangeMillimeters: 20...20,
-                gripTypes: gripTypes,
-                side: documentsSides ? .left : nil,
-                pairedContactID: documentsPair && reciprocalPair ? "edge-right" : nil
+                gripTypes: gripTypes
             ),
             PhysicalContact(
                 id: "edge-deep",
@@ -389,11 +371,16 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
-    private func jugBoard(_ fixtures: [JugFixture]) -> BoardRevision {
+    private func jugBoard(
+        _ fixtures: [JugFixture],
+        missingGeometryContactIDs: Set<String> = []
+    ) -> BoardRevision {
         let contacts = fixtures.map {
             PhysicalContact(id: $0.id, name: $0.id, kind: .jug, depthRangeMillimeters: $0.depth)
         }
-        let geometry = Dictionary(uniqueKeysWithValues: fixtures.map {
+        let geometry = Dictionary(uniqueKeysWithValues: fixtures.filter {
+            !missingGeometryContactIDs.contains($0.id)
+        }.map {
             ($0.id, [BoardContactPiece(
                 id: "\($0.id)-piece",
                 contactID: $0.id,

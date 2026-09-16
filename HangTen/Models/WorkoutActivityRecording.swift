@@ -340,9 +340,9 @@ enum ContactResolutionError: LocalizedError, Equatable {
         case .noMatches:
             "No physical contact satisfies the workout requirement."
         case .ambiguousSingle:
-            "The workout requirement does not identify exactly one physical contact."
+            "Hang Ten could not select a physical contact for the workout requirement."
         case .invalidBilateralPair:
-            "The workout requirement does not identify exactly one documented bilateral pair."
+            "Hang Ten could not form a geometrically valid bilateral pair for the workout requirement."
         }
     }
 }
