@@ -26,6 +26,9 @@ MODEL_PACKAGE_IDS = {
     "captain-fingerfood.dual",
     "captain-fingerfood.pocket",
     "captain-fingerfood.unlevel",
+    "dewoodstok-woodbord",
+    "escape.unlimited",
+    "evolv-kilter-basic-long",
     "lattice-triple-rung",
     "lattice.mxedge-lift-large",
     "lattice.mxedge-lift-small",
@@ -35,7 +38,10 @@ MODEL_PACKAGE_IDS = {
     "metolius.contact",
     "metolius.simulator-3d",
     "metolius.wood-grips-compact-ii",
+    "metolius.wood-grips-deluxe-ii",
+    "moon.armstrong",
     "nature.stone-hanger",
+    "target10a.linebreaker-base",
     "tension.flash-board",
     "soill.training-tiles",
     "the-hangboard.the-hangboard",
@@ -325,18 +331,24 @@ def test_flash_board_uses_suspension_with_corrected_small_crimp_contacts() -> No
 
 
 @pytest.mark.parametrize(
-    "board_id",
+    ("board_id", "position_id"),
     [
-        "beastmaker-1000",
-        "beastmaker-2000",
-        "lattice-triple-rung",
-        "metolius.prime-rib",
-        "metolius.project",
-        "metolius.wood-grips-compact-ii",
+        ("beastmaker-1000", "primary"),
+        ("beastmaker-2000", "primary"),
+        ("lattice-triple-rung", "primary"),
+        ("metolius.prime-rib", "primary"),
+        ("metolius.project", "primary"),
+        ("metolius.wood-grips-compact-ii", "primary"),
+        ("dewoodstok-woodbord", "primary"),
+        ("escape.unlimited", "primary"),
+        ("evolv-kilter-basic-long", "primary"),
+        ("metolius.wood-grips-deluxe-ii", "front"),
+        ("moon.armstrong", "primary"),
+        ("target10a.linebreaker-base", "primary"),
     ],
 )
 def test_fixed_model_packages_keep_one_canonical_position_without_orientation(
-    board_id: str,
+    board_id: str, position_id: str,
 ) -> None:
     package = _discovered_model_packages()[board_id]
     board = package.board
@@ -345,13 +357,13 @@ def test_fixed_model_packages_keep_one_canonical_position_without_orientation(
         for presentation in board.presentations
         if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
     )
-    assert presentation.id == "primary"
+    assert presentation.id == position_id
     assert presentation.media.orientation is None
     assert presentation.media.suspension is None
     assert len(board.positions) == 1
     position = board.positions[0]
-    assert position.id == "primary"
-    assert position.presentation_id == "primary"
+    assert position.id == position_id
+    assert position.presentation_id == position_id
     assert position.contact_ids == tuple(hold.id for hold in board.contacts)
 
 
