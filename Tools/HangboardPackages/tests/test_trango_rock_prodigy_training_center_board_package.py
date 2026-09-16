@@ -4,47 +4,58 @@ import hashlib
 import json
 from pathlib import Path
 
-from _board_package_helpers import document_contact_geometry
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-BOARD_PATH = (
-    REPO_ROOT
-    / "Hangboards"
-    / "trango-rock-prodigy-training-center"
-    / "board.json"
-)
-
-# These digests freeze the exact manually authored two-piece geometry that was
-# visually reconciled in the source audit. Keeping the expected values outside
-# board.json makes a dropped or substituted piece observable.
-EXPECTED_WIDE_GEOMETRY_SHA256 = {
-    "pinch-wide-left": "b9d0056a1634332609ddb3209506ac3039b3bdd74b232bce0a64f410cbeadf58",
-    "pinch-wide-right": "5215928dcca54dd880353fa7f6199b92896292518278a567afd61d01b31b945d",
-}
+PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "trango-rock-prodigy-training-center"
 
 
-def _geometry_digest(geometry: object) -> str:
-    canonical = json.dumps(geometry, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode()).hexdigest()
-
-
-def test_training_center_preserves_audited_compound_contact_geometry() -> None:
-    board = json.loads(BOARD_PATH.read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
-
-    assert len(board["contacts"]) == 24
-    assert sum(len(pieces) for pieces in geometry.values()) == 28
+def test_training_center_is_a_hash_bound_model_only_package() -> None:
+    board = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
+    presentations = board["presentations"]
+    assert isinstance(presentations, list) and len(presentations) == 1
+    media = presentations[0]["media"]
+    assert media["type"] == "model"
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in media
     assert {
-        hold_id: len(pieces)
-        for hold_id, pieces in geometry.items()
-        if len(pieces) > 1
+        path.relative_to(PACKAGE_ROOT).as_posix()
+        for path in PACKAGE_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+
+    descriptor = json.loads(
+        (PACKAGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
+    )
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (PACKAGE_ROOT / media["assetPath"]).read_bytes()
+    ).hexdigest()
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert len(contact_ids) == 24
+    assert set(descriptor["contacts"]) == contact_ids
+    assert [node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"] == [
+        "body_left_001", "body_right_001",
+    ]
+    for contact_id, contact in descriptor["contacts"].items():
+        assert contact["nodeIDs"] == [
+            node["nodeID"]
+            for node in descriptor["nodes"]
+            if node.get("contactID") == contact_id
+        ]
+
+    assert {
+        node["nodeID"]: node["contactID"]
+        for node in descriptor["nodes"]
+        if node["nodeID"].startswith("pinch_")
     } == {
-        "pinch-medium-left": 2,
-        "pinch-medium-right": 2,
-        "pinch-wide-left": 2,
-        "pinch-wide-right": 2,
+        "pinch_medium_left_001": "pinch-medium-left",
+        "pinch_wide_left_001": "pinch-wide-left",
+        "pinch_medium_right_001": "pinch-medium-right",
+        "pinch_wide_right_001": "pinch-wide-right",
     }
-    assert {
-        hold_id: _geometry_digest(geometry[hold_id])
-        for hold_id in EXPECTED_WIDE_GEOMETRY_SHA256
-    } == EXPECTED_WIDE_GEOMETRY_SHA256
+    for side in ("left", "right"):
+        assert descriptor["contacts"][f"pinch-medium-{side}"]["facePlaneAABB"] != (
+            descriptor["contacts"][f"pinch-wide-{side}"]["facePlaneAABB"]
+        )

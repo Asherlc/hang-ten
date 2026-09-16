@@ -290,6 +290,12 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "metolius.wood-grips-compact-ii",
             "nature.stone-hanger",
             "tension.flash-board",
+            "metolius.climbers-edge",
+            "metolius.contact",
+            "metolius.simulator-3d",
+            "soill.training-tiles",
+            "the-hangboard.the-hangboard",
+            "trango.rock-prodigy-training-center",
             "yy.baguette-evo"
         ]
 

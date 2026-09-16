@@ -797,7 +797,6 @@
       "equipmentObjectID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -805,10 +804,11 @@
       "equipmentObjectID": "primary",
       "name": "Center 22 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 22,
-        "upperBound": 22
+      "depth": {
+        "range": {
+          "minimum": 22,
+          "maximum": 22
+        }
       },
       "gripTypes": []
     },
@@ -817,10 +817,11 @@
       "equipmentObjectID": "primary",
       "name": "Left gradient 10–25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -829,10 +830,11 @@
       "equipmentObjectID": "primary",
       "name": "Right gradient 10–25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -841,10 +843,11 @@
       "equipmentObjectID": "primary",
       "name": "Left continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -853,10 +856,11 @@
       "equipmentObjectID": "primary",
       "name": "Right continuous 30 mm wood / 20 mm granite contact",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -865,10 +869,11 @@
       "equipmentObjectID": "primary",
       "name": "Center continuous 30 mm granite / ergonomic wood contact",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     }

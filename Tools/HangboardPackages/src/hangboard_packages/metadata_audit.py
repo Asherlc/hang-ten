@@ -16,13 +16,11 @@ from .board_catalog import PhysicalContact, BoardInventory, is_board_identifier
 _FIELDS = frozenset(
     {
         "kind",
-        "sizeMillimeters",
-        "depthRangeMillimeters",
+        "depth",
         "fingerCapacity",
         "handCapacity",
         "gripType",
-        "features",
-        "sloper",
+        "shape",
     }
 )
 _OUTCOMES = frozenset({"verified", "adapted", "unavailable", "notApplicable"})
@@ -199,39 +197,31 @@ def _load_contact_ids(value: Any, source: str) -> tuple[str, ...]:
 def _load_verified_value(value: Any, field: str, source: str) -> object:
     if field == "kind":
         return _nonempty_string(value, source)
-    if field in {"sizeMillimeters", "fingerCapacity", "handCapacity"}:
+    if field in {"fingerCapacity", "handCapacity"}:
         return _number(value, source)
-    if field == "depthRangeMillimeters":
+    if field == "depth":
         payload = _mapping(value, source)
-        _closed(payload, {"lowerBound", "upperBound"}, source)
-        lower = _number(payload["lowerBound"], f"{source}.lowerBound")
-        upper = _number(payload["upperBound"], f"{source}.upperBound")
-        return {"lowerBound": lower, "upperBound": upper}
+        if set(payload) == {"category"}:
+            category = _nonempty_string(payload["category"], f"{source}.category")
+            if category not in {"tiny", "small", "medium", "large"}:
+                raise MetadataAuditError(f"{source}.category is unsupported")
+            return {"category": category}
+        if set(payload) == {"range"}:
+            range_payload = _mapping(payload["range"], f"{source}.range")
+            _closed(range_payload, {"minimum", "maximum"}, f"{source}.range")
+            minimum = _number(range_payload["minimum"], f"{source}.range.minimum")
+            maximum = _number(range_payload["maximum"], f"{source}.range.maximum")
+            if minimum < 0 or minimum > maximum:
+                raise MetadataAuditError(f"{source}.range must be non-negative and ordered")
+            return {"range": {"minimum": minimum, "maximum": maximum}}
+        raise MetadataAuditError(f"{source} must contain exactly one depth representation")
     if field == "gripType":
         return _nonempty_string(value, source)
-    if field == "sloper":
-        payload = _mapping(value, source)
-        sloper_type = _nonempty_string(payload.get("type"), f"{source}.type")
-        if sloper_type == "flat":
-            _closed(payload, {"type", "angleDegrees"} & set(payload), source)
-            verified: dict[str, object] = {"type": "flat"}
-            if "angleDegrees" in payload:
-                angle_degrees = _number(payload["angleDegrees"], f"{source}.angleDegrees")
-                if not 0 <= angle_degrees <= 90:
-                    raise MetadataAuditError(f"{source}.angleDegrees must be in 0...90")
-                verified["angleDegrees"] = angle_degrees
-            return verified
-        if sloper_type == "round":
-            _closed(payload, {"type"}, source)
-            return {"type": "round"}
-        raise MetadataAuditError(f"{source}.type must be flat or round")
-    assert field == "features"
-    if not isinstance(value, list):
-        raise MetadataAuditError(f"{source} must be an array")
-    return [
-        _nonempty_string(feature, f"{source}[{index}]")
-        for index, feature in enumerate(value)
-    ]
+    assert field == "shape"
+    shape = _nonempty_string(value, source)
+    if shape not in {"flat", "round", "incut", "slot"}:
+        raise MetadataAuditError(f"{source} is unsupported")
+    return shape
 
 
 def _load_record(value: Any, source: str) -> MetadataRecord:
@@ -346,9 +336,9 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
             f"metadata ledger has records for unreviewed board IDs: {unreviewed}"
         )
     for record in records:
-        if record.board_id in sloper_only_board_ids and record.field != "sloper":
+        if record.board_id in sloper_only_board_ids and record.field != "shape":
             raise MetadataAuditError(
-                f"sloper-only board {record.board_id} must use field sloper"
+                f"sloper-only board {record.board_id} must use field shape"
             )
     return MetadataLedger(
         schema_version=1,
@@ -361,20 +351,17 @@ def load_metadata_ledger(path: Path) -> MetadataLedger:
 def _contact_value(contact: PhysicalContact, field: str) -> object | None:
     if field == "kind":
         return contact.kind
-    if field == "sizeMillimeters":
-        depth = contact.depth_range_millimeters
-        if depth is None or depth.lower_bound != depth.upper_bound:
+    if field == "depth":
+        if contact.depth is None:
             return None
-        return depth.lower_bound
-    if field == "depthRangeMillimeters":
-        if contact.depth_range_millimeters is None or (
-            contact.depth_range_millimeters.lower_bound
-            == contact.depth_range_millimeters.upper_bound
-        ):
-            return None
+        if contact.depth.category is not None:
+            return {"category": contact.depth.category}
+        assert contact.depth.range is not None
         return {
-            "lowerBound": contact.depth_range_millimeters.lower_bound,
-            "upperBound": contact.depth_range_millimeters.upper_bound,
+            "range": {
+                "minimum": contact.depth.range.minimum,
+                "maximum": contact.depth.range.maximum,
+            }
         }
     if field == "fingerCapacity":
         return contact.finger_capacity
@@ -382,17 +369,8 @@ def _contact_value(contact: PhysicalContact, field: str) -> object | None:
         return contact.hand_capacity
     if field == "gripType":
         return next(iter(contact.grip_types)) if len(contact.grip_types) == 1 else None
-    if field == "sloper":
-        if "flatSloper" in contact.features:
-            return {"type": "flat"}
-        if "roundSloper" in contact.features:
-            return {"type": "round"}
-        if contact.kind != "sloper":
-            return None
-        return None
-    assert field == "features"
-    source_features = contact.features - {"flatSloper", "roundSloper"}
-    return sorted(source_features) if source_features else None
+    assert field == "shape"
+    return contact.shape
 
 
 def _values_match(expected: object, actual: object) -> bool:
@@ -449,7 +427,7 @@ def validate_metadata_ledger(
     fields_by_board = {
         **{board_id: _FIELDS for board_id in ledger.reviewed_board_ids},
         **{
-            board_id: frozenset({"sloper"})
+            board_id: frozenset({"shape"})
             for board_id in ledger.sloper_only_board_ids
         },
     }
@@ -468,20 +446,6 @@ def validate_metadata_ledger(
                 record = records_by_key.get(key)
                 if record is None:
                     raise MetadataAuditError(f"missing record for {'/'.join(key)}")
-                if field == "sloper":
-                    if contact.kind == "sloper":
-                        if record.outcome not in {
-                            "verified",
-                            "adapted",
-                            "unavailable",
-                        }:
-                            raise MetadataAuditError(
-                                f"sloper {board_id}/{contact_id} must be verified, adapted, or unavailable"
-                            )
-                    elif record.outcome != "notApplicable":
-                        raise MetadataAuditError(
-                            f"non-sloper {board_id}/{contact_id} must be notApplicable"
-                        )
                 actual = _contact_value(contact, field)
                 if record.outcome in {"verified", "adapted"}:
                     if actual is None:

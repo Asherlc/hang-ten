@@ -12,7 +12,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left", "right"])
+            Set(["left"])
         )
 
         CustomRoutineBoardPreview.toggle(
@@ -26,7 +26,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
     }
 
-    func testEitherHandBoardPreviewKeepsAndRemovesRightMirroredAlternative() throws {
+    func testEitherHandBoardPreviewKeepsAndRemovesItsResolvedAlternative() throws {
         let board = mirroredBoard()
         var step = CustomRoutineStepDraft(
             id: "either", title: "Either", instruction: "", accessory: "", duration: 10,
@@ -39,7 +39,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNil(step.targets.first?.contactID)
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left", "right"])
+            Set(["left"])
         )
         var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
         draft.steps = [step]
@@ -49,7 +49,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
         XCTAssertNil(persisted.steps[0].targets.first?.contactID)
 
-        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+        CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
 
         XCTAssertTrue(step.targets.isEmpty)
         XCTAssertEqual(
@@ -90,7 +90,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .single)])
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left", "right"])
+            Set(["left"])
         )
     }
 
@@ -497,10 +497,10 @@ final class CustomRoutineDraftTests: XCTestCase {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
             .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
-            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)], timing: .fixed)
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.edge(depth: .category(.medium))], timing: .fixed)
         ]
 
-        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge)]])
+        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
     }
 
     func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
@@ -734,10 +734,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "Up to 60s",
                 duration: 60,
                 phase: .hang,
-                targets: [.feature(.roundSloper)],
+                targets: [ContactRequirement(kind: .sloper, shape: .round)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.feature(.roundSloper)],
+                    targets: [ContactRequirement(kind: .sloper, shape: .round)],
                     timing: .stopwatch,
                     duration: nil
                 )]
@@ -864,22 +864,22 @@ final class CustomRoutineDraftTests: XCTestCase {
         let contacts = [
             PhysicalContact(
                 id: "left", name: "Left edge", kind: .edge,
-                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
-                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .left,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .left,
                 pairedContactID: "right"
             ),
             PhysicalContact(
                 id: "right", name: "Right edge", kind: .edge,
-                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
-                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .right,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .right,
                 pairedContactID: "left"
             )
         ]
-        let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
             (contact.id, [BoardContactPiece(
                 id: "\(contact.id)-piece",
                 contactID: contact.id,
-                frame: CGRect(x: 0, y: 0, width: 0.1, height: 0.1),
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
                 shape: .roundedRect(cornerRadiusFraction: 0),
                 treatment: .surface
             )])
@@ -902,11 +902,10 @@ final class CustomRoutineDraftTests: XCTestCase {
         ContactRequirement(
             contactID: contactID,
             kind: .edge,
-            requiredFeatures: [.mediumEdge],
-            depthRangeMillimeters: MillimeterRange(minimum: 18, maximum: 22),
+            shape: .flat,
+            depth: .range(MillimeterRange(minimum: 18, maximum: 22)),
             fingerCapacity: 2,
             handCapacity: 1,
-            compatibleGripTypes: [.halfCrimp],
             selection: selection
         )
     }

@@ -223,11 +223,12 @@ none of the removed art or geometry was restored as a starting point.
 
 - **Sources:** [Metolius Simulator Training Board](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board);
   [Simulator 3-D Training Guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide).
-- **Current JSON holds:** 31.
-- **Source-backed expected physical count:** 31.
+- **Current JSON holds:** 30.
+- **Source-backed expected physical count:** 30.
 - **Verified facts:** Metolius Simulator 3-D; `28” × 8.75”`; material is not
   established here.
-- **Discrepancy:** resolved by mapping every distinct visible contact; the 18
+- **Discrepancy:** resolved by mapping the #2 flat left/right zones and #3
+  central round zone to their separately authored model nodes; the 18
   training-guide positions remain usage positions rather than a physical count.
 - **Action:** directly authored and visually reviewed; retain as complete.
 

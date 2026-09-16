@@ -68,7 +68,6 @@ function contactFixture(id: string, overrides: Partial<Omit<PhysicalContact, "id
     equipmentObjectID: "primary",
     name: id,
     kind: "jug",
-    features: [],
     gripTypes: [],
     ...overrides,
   };
@@ -316,7 +315,7 @@ test("the browser client rejects invalid optional contact-region fields", async 
 
 test("the browser client preserves an equal-bound factual depth range", async () => {
   const document = editorDocument({
-    contacts: [contactFixture("hold-1", { depthRangeMillimeters: { lowerBound: 7.25, upperBound: 7.25 } })],
+    contacts: [contactFixture("hold-1", { depth: { range: { minimum: 7.25, maximum: 7.25 } } })],
     regions: [regionFixture(1, "hold-1-piece-0", "M 1 1 L 20 1 L 20 20 Z", "hold-1")],
   });
   const { runtime } = runtimeFixture(async () => response({
@@ -326,9 +325,8 @@ test("the browser client preserves an equal-bound factual depth range", async ()
 
   const board = await createWorkbenchClient(runtime).getBoard("compact");
 
-  assert.deepEqual(board.document.contacts[0]?.depthRangeMillimeters, {
-    lowerBound: 7.25,
-    upperBound: 7.25,
+  assert.deepEqual(board.document.contacts[0]?.depth, {
+    range: { minimum: 7.25, maximum: 7.25 },
   });
 });
 
@@ -373,19 +371,19 @@ test("the browser client rejects invalid raster treatment metadata", async (cont
   }
 });
 
-test("the browser client rejects invalid contact depth-range payloads", async (context) => {
+test("the browser client rejects invalid tagged contact depth payloads", async (context) => {
   const invalidRanges: Array<{ name: string; value: unknown }> = [
-    { name: "zero lower bound", value: { lowerBound: 0, upperBound: 8 } },
-    { name: "non-finite upper bound", value: { lowerBound: 8, upperBound: Number.POSITIVE_INFINITY } },
-    { name: "unordered range", value: { lowerBound: 12, upperBound: 8 } },
-    { name: "unknown range member", value: { lowerBound: 8, upperBound: 12, fixed: true } },
-    { name: "string bounds", value: { lowerBound: "8", upperBound: 12 } },
+    { name: "non-finite maximum", value: { range: { minimum: 8, maximum: Number.POSITIVE_INFINITY } } },
+    { name: "unordered range", value: { range: { minimum: 12, maximum: 8 } } },
+    { name: "unknown range member", value: { range: { minimum: 8, maximum: 12, fixed: true } } },
+    { name: "string bounds", value: { range: { minimum: "8", maximum: 12 } } },
+    { name: "mixed representations", value: { category: "large", range: { minimum: 25, maximum: 30 } } },
   ];
 
   for (const fixture of invalidRanges) {
     await context.test(fixture.name, async () => {
       const document = editorDocument();
-      (document.contacts[0] as unknown as { depthRangeMillimeters: unknown }).depthRangeMillimeters = fixture.value;
+      (document.contacts[0] as unknown as { depth: unknown }).depth = fixture.value;
       const { runtime } = runtimeFixture(async () => response({
         ok: true,
         board: boardFixture({ contactCount: 1, document }),
@@ -784,40 +782,43 @@ test("the direct editor model rejects invalid factual finger capacities", () => 
   }
 });
 
-test("the direct editor model accepts positive finite fractional depth ranges", () => {
+test("the direct editor model accepts finite fractional measured depths", () => {
   const document = editorDocument();
-  document.contacts[0]!.depthRangeMillimeters = { lowerBound: 7.5, upperBound: 12.5 };
+  document.contacts[0]!.depth = { range: { minimum: 7.5, maximum: 12.5 } };
   assert.doesNotThrow(() => validateEditorDocument(document));
 });
 
 test("the direct editor model accepts equal bounds for source-backed fixed depth", () => {
   const document = editorDocument();
-  document.contacts[0]!.depthRangeMillimeters = { lowerBound: 7.25, upperBound: 7.25 };
+  document.contacts[0]!.depth = { range: { minimum: 7.25, maximum: 7.25 } };
   assert.doesNotThrow(() => validateEditorDocument(document));
 });
 
-test("the direct editor model rejects nonpositive contact depth-range values", () => {
-  for (const depthRangeMillimeters of [
-    { lowerBound: 0, upperBound: 8 },
-    { lowerBound: -1, upperBound: 8 },
+test("the direct editor model accepts zero but rejects negative measured contact depth", () => {
+  const zero = editorDocument();
+  zero.contacts[0]!.depth = { range: { minimum: 0, maximum: 8 } };
+  assert.doesNotThrow(() => validateEditorDocument(zero));
+  for (const depth of [
+    { range: { minimum: -1, maximum: 8 } },
   ] as unknown[]) {
     const document = editorDocument();
-    (document.contacts[0] as unknown as { depthRangeMillimeters: unknown }).depthRangeMillimeters = depthRangeMillimeters;
+    (document.contacts[0] as unknown as { depth: unknown }).depth = depth;
     assert.throws(() => validateEditorDocument(document), /valid factual contacts/i);
   }
 });
 
-test("the direct editor model rejects malformed, non-finite, missing, and reversed contact depth ranges", () => {
-  for (const depthRangeMillimeters of [
+test("the direct editor model rejects malformed, non-finite, missing, and reversed tagged depths", () => {
+  for (const depth of [
     {},
-    { lowerBound: 8 },
-    { upperBound: 8 },
-    { lowerBound: Number.NaN, upperBound: 8 },
-    { lowerBound: 8, upperBound: Number.POSITIVE_INFINITY },
-    { lowerBound: 12, upperBound: 8 },
+    { range: { minimum: 8 } },
+    { range: { maximum: 8 } },
+    { range: { minimum: Number.NaN, maximum: 8 } },
+    { range: { minimum: 8, maximum: Number.POSITIVE_INFINITY } },
+    { range: { minimum: 12, maximum: 8 } },
+    { category: "unexpected" },
   ] as unknown[]) {
     const document = editorDocument();
-    (document.contacts[0] as unknown as { depthRangeMillimeters: unknown }).depthRangeMillimeters = depthRangeMillimeters;
+    (document.contacts[0] as unknown as { depth: unknown }).depth = depth;
     assert.throws(() => validateEditorDocument(document), /valid factual contacts/i);
   }
 });

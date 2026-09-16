@@ -1194,10 +1194,11 @@
       "equipmentObjectID": "primary",
       "name": "Left unit 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1206,10 +1207,11 @@
       "equipmentObjectID": "primary",
       "name": "Left unit 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1218,7 +1220,6 @@
       "equipmentObjectID": "primary",
       "name": "Left unit mono",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -1227,7 +1228,6 @@
       "equipmentObjectID": "primary",
       "name": "Left unit duo",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1238,10 +1238,11 @@
       "equipmentObjectID": "primary",
       "name": "Left unit 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -1250,10 +1251,11 @@
       "equipmentObjectID": "primary",
       "name": "Left unit 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1262,7 +1264,6 @@
       "equipmentObjectID": "primary",
       "name": "Left unit tray",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1270,10 +1271,11 @@
       "equipmentObjectID": "primary",
       "name": "Right unit 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1282,10 +1284,11 @@
       "equipmentObjectID": "primary",
       "name": "Right unit 25 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1294,10 +1297,11 @@
       "equipmentObjectID": "primary",
       "name": "Right unit 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1306,10 +1310,11 @@
       "equipmentObjectID": "primary",
       "name": "Right unit 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -1318,7 +1323,6 @@
       "equipmentObjectID": "primary",
       "name": "Right unit mono",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -1327,7 +1331,6 @@
       "equipmentObjectID": "primary",
       "name": "Right unit duo",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1338,7 +1341,6 @@
       "equipmentObjectID": "primary",
       "name": "Right unit tray",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     }
   ]

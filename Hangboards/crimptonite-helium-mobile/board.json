@@ -1727,11 +1727,12 @@
       "equipmentObjectID": "primary",
       "name": "14 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 14,
-        "upperBound": 14
+      "depth": {
+        "range": {
+          "minimum": 14,
+          "maximum": 14
+        }
       },
       "gripTypes": []
     },
@@ -1740,11 +1741,12 @@
       "equipmentObjectID": "primary",
       "name": "18 mm center edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 18,
-        "upperBound": 18
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
       },
       "gripTypes": []
     },
@@ -1753,11 +1755,12 @@
       "equipmentObjectID": "primary",
       "name": "22 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 22,
-        "upperBound": 22
+      "depth": {
+        "range": {
+          "minimum": 22,
+          "maximum": 22
+        }
       },
       "gripTypes": []
     },
@@ -1766,11 +1769,12 @@
       "equipmentObjectID": "primary",
       "name": "10 mm center edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1779,7 +1783,6 @@
       "equipmentObjectID": "primary",
       "name": "Back jug / sloper surface",
       "kind": "sloper",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     },
@@ -1788,7 +1791,6 @@
       "equipmentObjectID": "primary",
       "name": "Top jug",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     }

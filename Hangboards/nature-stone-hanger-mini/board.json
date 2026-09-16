@@ -452,7 +452,6 @@
       "equipmentObjectID": "primary",
       "name": "Smooth pull-up jug",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     },
@@ -461,11 +460,12 @@
       "equipmentObjectID": "primary",
       "name": "15 mm incut wood edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -474,11 +474,12 @@
       "equipmentObjectID": "primary",
       "name": "15 mm granite edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -487,11 +488,12 @@
       "equipmentObjectID": "primary",
       "name": "60 mm pinch",
       "kind": "pinch",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 60,
-        "upperBound": 60
+      "depth": {
+        "range": {
+          "minimum": 60,
+          "maximum": 60
+        }
       },
       "gripTypes": []
     }

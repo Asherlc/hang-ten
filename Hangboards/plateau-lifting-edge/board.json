@@ -367,11 +367,12 @@
       "equipmentObjectID": "primary",
       "name": "18 mm wood edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 18,
-        "upperBound": 18
+      "depth": {
+        "range": {
+          "minimum": 18,
+          "maximum": 18
+        }
       },
       "gripTypes": []
     },
@@ -380,11 +381,12 @@
       "equipmentObjectID": "primary",
       "name": "15 mm blocker edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -393,11 +395,12 @@
       "equipmentObjectID": "primary",
       "name": "10 mm blocker edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     }

@@ -14,12 +14,25 @@ from hangboard_packages.board_catalog import (
     BoardPackage,
     PresentationMediaModel,
     PresentationMediaRaster,
+    discover_board_packages,
 )
 from hangboard_packages.cord_audit import (
     CordAuditError,
     load_cord_audit_manifest,
     validate_cord_audit_manifest,
 )
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+PRODUCTION_MANIFEST = REPO_ROOT / "docs/source-audits/2026-09-13-model-hangboard-cord-audit.json"
+NEWLY_MODEL_ONLY_EXCLUSIONS = {
+    "metolius.climbers-edge",
+    "metolius.contact",
+    "metolius.simulator-3d",
+    "soill.training-tiles",
+    "the-hangboard.the-hangboard",
+    "trango.rock-prodigy-training-center",
+}
 
 
 def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
@@ -50,7 +63,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 6, "represented": 8}
+    assert report.decisions == {"excluded": 12, "represented": 8}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.275,
@@ -631,3 +644,17 @@ def test_cli_audit_cords_reports_model_coverage(
         "modelPackageIDs": ["fixture.board"],
         "decisions": {"excluded": 1},
     }
+
+
+def test_production_manifest_excludes_new_model_only_packages_without_suspension() -> None:
+    inventory = discover_board_packages(REPO_ROOT / "Hangboards", require_complete_inventory=True)
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+
+    validate_cord_audit_manifest(manifest, inventory)
+
+    records = {record.package_id: record for record in manifest.records}
+    assert NEWLY_MODEL_ONLY_EXCLUSIONS <= set(records)
+    for package_id in NEWLY_MODEL_ONLY_EXCLUSIONS:
+        assert records[package_id].decision == "excluded"
+        assert records[package_id].source_fact == "noDocumentedSuspension"
+        assert records[package_id].topology is None

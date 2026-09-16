@@ -778,7 +778,9 @@ final class BoardModelScene {
         guard let framing = canonicalFraming,
               azimuth.isFinite, elevation.isFinite,
               zoomScale.isFinite, zoomScale > 0 else { return }
-        let nextAzimuth = min(max(orbitAzimuth + azimuth, -0.9), 0.9)
+        let fullAzimuthRotation: Float = .pi * 2
+        let nextAzimuth = (orbitAzimuth + azimuth)
+            .truncatingRemainder(dividingBy: fullAzimuthRotation)
         let nextElevation = min(max(orbitElevation + elevation, -0.55), 0.55)
         let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
         let baseOffset = -framing.direction * framing.distance

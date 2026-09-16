@@ -142,11 +142,11 @@ def make_v3_model_package(root: Path) -> Path:
         "contacts": [
             {
                 "id": "hold-left", "equipmentObjectID": "primary",
-                "name": "Left hold", "kind": "jug", "features": [], "gripTypes": []
+                "name": "Left hold", "kind": "jug", "gripTypes": []
             },
             {
                 "id": "hold-right", "equipmentObjectID": "primary",
-                "name": "Right hold", "kind": "jug", "features": [], "gripTypes": []
+                "name": "Right hold", "kind": "jug", "gripTypes": []
             },
         ],
     }
@@ -595,3 +595,21 @@ def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
         "CC0000000000000000000003 /* Resources */"
     )
     assert '"${DERIVED_FILE_DIR}/HangTenModelODR",' in project
+
+
+def test_xcode_provisions_odr_packs_for_recently_migrated_model_boards() -> None:
+    project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
+        encoding="utf-8"
+    )
+    migrated_slugs = {
+        "metolius-climbers-edge",
+        "metolius-contact",
+        "metolius-simulator-3d",
+        "soill-training-tiles",
+        "the-hangboard",
+        "trango-rock-prodigy-training-center",
+    }
+
+    for slug in migrated_slugs:
+        assert f"HangTenModelODR/{slug}/Hangboards" in project
+        assert f'ASSET_TAGS = ("hang-ten-model-{slug}", );' in project

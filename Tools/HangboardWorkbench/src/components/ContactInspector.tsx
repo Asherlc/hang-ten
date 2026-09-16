@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ContactRegion, PhysicalContact } from "../types.ts";
+import type { ContactRegion, HoldDepth, HoldShape, HoldSize, PhysicalContact } from "../types.ts";
 
 const CONTACT_KINDS = ["jug", "sloper", "edge", "pocket", "pinch", "gaston"] as const;
 const OUTLINE_SHAPES = [
@@ -8,6 +8,16 @@ const OUTLINE_SHAPES = [
   ["pill", "Pill"], ["roundedRectangle", "Rounded rectangle"],
   ["rectangle", "Rectangle"],
 ] as const;
+const HOLD_SIZES: readonly HoldSize[] = ["tiny", "small", "medium", "large"];
+const HOLD_SHAPES: readonly HoldShape[] = ["flat", "round", "incut", "slot"];
+
+function rangeDepth(depth: HoldDepth | undefined) {
+  return depth && "range" in depth ? depth.range : undefined;
+}
+
+function categoryDepth(depth: HoldDepth | undefined) {
+  return depth && "category" in depth ? depth.category : undefined;
+}
 
 export interface ContactInspectorProps {
   region: ContactRegion | null;
@@ -57,20 +67,20 @@ export function ContactInspector({
   const lowerDepthInputRef = React.useRef<HTMLInputElement>(null);
   const upperDepthInputRef = React.useRef<HTMLInputElement>(null);
   const [lowerDepthDraft, setLowerDepthDraft] = React.useState(
-    contact?.depthRangeMillimeters?.lowerBound.toString() ?? "",
+    rangeDepth(contact?.depth)?.minimum.toString() ?? "",
   );
   const [upperDepthDraft, setUpperDepthDraft] = React.useState(
-    contact?.depthRangeMillimeters?.upperBound.toString() ?? "",
+    rangeDepth(contact?.depth)?.maximum.toString() ?? "",
   );
   React.useEffect(() => {
-    setLowerDepthDraft(contact?.depthRangeMillimeters?.lowerBound.toString() ?? "");
-    setUpperDepthDraft(contact?.depthRangeMillimeters?.upperBound.toString() ?? "");
+    setLowerDepthDraft(rangeDepth(contact?.depth)?.minimum.toString() ?? "");
+    setUpperDepthDraft(rangeDepth(contact?.depth)?.maximum.toString() ?? "");
     lowerDepthInputRef.current?.setCustomValidity("");
     upperDepthInputRef.current?.setCustomValidity("");
   }, [
     contact?.id,
-    contact?.depthRangeMillimeters?.lowerBound,
-    contact?.depthRangeMillimeters?.upperBound,
+    contact?.depth && "range" in contact.depth ? contact.depth.range.minimum : undefined,
+    contact?.depth && "range" in contact.depth ? contact.depth.range.maximum : undefined,
   ]);
   const update = (patch: Partial<PhysicalContact>): void => {
     if (contact) onContactChange({ ...contact, ...patch });
@@ -116,7 +126,17 @@ export function ContactInspector({
             </output>
           </label>
         )}
-        <label>Features <input id="contact-features-input" type="text" disabled={busy} value={contact?.features.join(", ") ?? ""} onChange={(event) => update({ features: commaSeparated(event.currentTarget.value) })} /></label>
+        <label>Shape
+          <select id="contact-shape-select" disabled={busy} value={contact?.shape ?? ""} onChange={(event) => {
+            if (!contact) return;
+            const next = { ...contact };
+            if (event.currentTarget.value) next.shape = event.currentTarget.value as HoldShape;
+            else delete next.shape;
+            onContactChange(next);
+          }}>
+            <option value="">Unset</option>{HOLD_SHAPES.map((shape) => <option key={shape} value={shape}>{shape}</option>)}
+          </select>
+        </label>
         <label>Grip types <input id="contact-grip-types-input" type="text" disabled={busy} value={contact?.gripTypes.join(", ") ?? ""} onChange={(event) => update({ gripTypes: commaSeparated(event.currentTarget.value) })} /></label>
         <label>Finger capacity
           <select id="contact-finger-capacity-select" disabled={busy} value={contact?.fingerCapacity?.toString() ?? ""} onChange={(event) => {
@@ -145,49 +165,66 @@ export function ContactInspector({
             onContactChange(next);
           }}><option value="">Unset</option><option value="left">left</option><option value="right">right</option></select>
         </label>
-        <fieldset className="depth-range-inputs">
+        <label>Depth evidence
+          <select id="contact-depth-mode-select" disabled={busy} value={contact?.depth ? ("category" in contact.depth ? "category" : "range") : ""} onChange={(event) => {
+            if (!contact) return;
+            const next = { ...contact };
+            if (!event.currentTarget.value) delete next.depth;
+            if (event.currentTarget.value === "category") next.depth = { category: categoryDepth(contact.depth) ?? "medium" };
+            if (event.currentTarget.value === "range") next.depth = { range: rangeDepth(contact.depth) ?? { minimum: 1, maximum: 1 } };
+            onContactChange(next);
+          }}>
+            <option value="">Unset</option><option value="category">Size category</option><option value="range">Measured range</option>
+          </select>
+        </label>
+        {categoryDepth(contact?.depth) && <label>Depth category
+          <select id="contact-depth-category-select" disabled={busy} value={categoryDepth(contact?.depth)} onChange={(event) => update({ depth: { category: event.currentTarget.value as HoldSize } })}>
+            {HOLD_SIZES.map((size) => <option key={size} value={size}>{size}</option>)}
+          </select>
+        </label>}
+        {rangeDepth(contact?.depth) && <fieldset className="depth-range-inputs">
           <legend>Depth range (mm)</legend>
-          <label>Minimum <input id="contact-depth-lower-input" type="number" min={Number.MIN_VALUE} step="any" disabled={busy} ref={lowerDepthInputRef} value={lowerDepthDraft} onChange={(event) => {
+          <label>Minimum <input id="contact-depth-lower-input" type="number" min="0" step="any" disabled={busy} ref={lowerDepthInputRef} value={lowerDepthDraft} onChange={(event) => {
             if (!contact) return;
             const value = event.currentTarget.value;
             setLowerDepthDraft(value);
             if (!value) {
               event.currentTarget.setCustomValidity("");
               const next = { ...contact };
-              delete next.depthRangeMillimeters;
+              delete next.depth;
               onContactChange(next);
               return;
             }
-            const lowerBound = Number(value);
-            if (!Number.isFinite(lowerBound) || lowerBound <= 0) {
-              event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+            const minimum = Number(value);
+            if (!Number.isFinite(minimum) || minimum < 0) {
+              event.currentTarget.setCustomValidity("Depth must be 0 mm or greater.");
               event.currentTarget.reportValidity();
               return;
             }
             event.currentTarget.setCustomValidity("");
-            update({ depthRangeMillimeters: { lowerBound, upperBound: Math.max(lowerBound, contact.depthRangeMillimeters?.upperBound ?? lowerBound) } });
+            update({ depth: { range: { minimum, maximum: Math.max(minimum, rangeDepth(contact.depth)?.maximum ?? minimum) } } });
           }} /></label>
-          <label>Maximum <input id="contact-depth-upper-input" type="number" min={Number.MIN_VALUE} step="any" disabled={busy} ref={upperDepthInputRef} value={upperDepthDraft} onChange={(event) => {
+          <label>Maximum <input id="contact-depth-upper-input" type="number" min="0" step="any" disabled={busy} ref={upperDepthInputRef} value={upperDepthDraft} onChange={(event) => {
             if (!contact) return;
             const value = event.currentTarget.value;
             setUpperDepthDraft(value);
             if (!value) {
               event.currentTarget.setCustomValidity("");
               const next = { ...contact };
-              delete next.depthRangeMillimeters;
+              delete next.depth;
               onContactChange(next);
               return;
             }
-            const upperBound = Number(value);
-            if (!Number.isFinite(upperBound) || upperBound <= 0) {
-              event.currentTarget.setCustomValidity("Depth must be greater than 0 mm.");
+            const maximum = Number(value);
+            if (!Number.isFinite(maximum) || maximum < 0) {
+              event.currentTarget.setCustomValidity("Depth must be 0 mm or greater.");
               event.currentTarget.reportValidity();
               return;
             }
             event.currentTarget.setCustomValidity("");
-            update({ depthRangeMillimeters: { lowerBound: Math.min(upperBound, contact.depthRangeMillimeters?.lowerBound ?? upperBound), upperBound } });
+            update({ depth: { range: { minimum: Math.min(maximum, rangeDepth(contact.depth)?.minimum ?? maximum), maximum } } });
           }} /></label>
-        </fieldset>
+        </fieldset>}
         <label>Outline shape
           <select id="contact-outline-shape-select" disabled={busy} value={region?.shapeConstraint?.shape ?? "custom"} onChange={(event) => onOutlineShapeChange(event.currentTarget.value)}>
             {OUTLINE_SHAPES.map(([value, label]) => <option key={value} value={value}>{label}</option>)}

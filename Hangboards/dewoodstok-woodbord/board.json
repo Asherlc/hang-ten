@@ -1749,7 +1749,6 @@
       "equipmentObjectID": "primary",
       "name": "Top rim",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1757,7 +1756,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 1",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1765,7 +1763,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 2",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1773,7 +1770,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 3",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1781,7 +1777,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 4",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1789,7 +1784,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 5",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1797,7 +1791,6 @@
       "equipmentObjectID": "primary",
       "name": "Upper pocket 6",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1805,7 +1798,6 @@
       "equipmentObjectID": "primary",
       "name": "Middle pocket 1",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1813,7 +1805,6 @@
       "equipmentObjectID": "primary",
       "name": "Middle pocket 2",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1821,7 +1812,6 @@
       "equipmentObjectID": "primary",
       "name": "Middle pocket 3",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1829,7 +1819,6 @@
       "equipmentObjectID": "primary",
       "name": "Middle pocket 4",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1837,7 +1826,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 1",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1845,7 +1833,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 2",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1853,7 +1840,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 3",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1861,7 +1847,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 4",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1869,7 +1854,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 5",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1877,7 +1861,6 @@
       "equipmentObjectID": "primary",
       "name": "Lower pocket 6",
       "kind": "pocket",
-      "features": [],
       "gripTypes": []
     }
   ]

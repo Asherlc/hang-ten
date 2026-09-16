@@ -1567,7 +1567,6 @@
       "equipmentObjectID": "primary",
       "name": "Full-width top jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1575,13 +1574,13 @@
       "equipmentObjectID": "primary",
       "name": "Center 25 mm edge",
       "kind": "edge",
-      "features": [
-        "incutEdge"
-      ],
+      "shape": "incut",
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1590,7 +1589,6 @@
       "equipmentObjectID": "primary",
       "name": "Left mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -1599,7 +1597,6 @@
       "equipmentObjectID": "primary",
       "name": "Right mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "gripTypes": []
     },
@@ -1608,10 +1605,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 8,
-        "upperBound": 8
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
       },
       "gripTypes": []
     },
@@ -1620,10 +1618,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1632,10 +1631,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 12 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -1644,10 +1644,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 12 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 12,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -1656,10 +1657,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1668,10 +1670,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 8,
-        "upperBound": 8
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
       },
       "gripTypes": []
     },
@@ -1680,10 +1683,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 30 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -1692,10 +1696,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 40 mm edge with integrated two-finger pocket",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -1704,10 +1709,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 40 mm edge with integrated two-finger pocket",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -1716,10 +1722,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 30 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -1728,10 +1735,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -1740,10 +1748,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1752,10 +1761,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1764,10 +1774,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     }

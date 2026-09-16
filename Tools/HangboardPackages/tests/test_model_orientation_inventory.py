@@ -31,9 +31,15 @@ MODEL_PACKAGE_IDS = {
     "lattice.mxedge-lift-small",
     "metolius.prime-rib",
     "metolius.project",
+    "metolius.climbers-edge",
+    "metolius.contact",
+    "metolius.simulator-3d",
     "metolius.wood-grips-compact-ii",
     "nature.stone-hanger",
     "tension.flash-board",
+    "soill.training-tiles",
+    "the-hangboard.the-hangboard",
+    "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
 }
 
@@ -287,7 +293,7 @@ def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
         )
 
 
-def test_discovered_model_inventory_is_exactly_the_fourteen_current_packages() -> None:
+def test_discovered_model_inventory_matches_current_packages() -> None:
     model_packages = _discovered_model_packages()
     assert set(model_packages) == MODEL_PACKAGE_IDS
 

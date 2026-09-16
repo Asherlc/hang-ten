@@ -418,9 +418,9 @@ enum ContactResolutionError: LocalizedError, Equatable {
         case .noMatches:
             "No physical contact satisfies the workout requirement."
         case .ambiguousSingle:
-            "The workout requirement does not identify exactly one physical contact."
+            "Hang Ten could not select a physical contact for the workout requirement."
         case .invalidBilateralPair:
-            "The workout requirement does not identify exactly one documented bilateral pair."
+            "Hang Ten could not form a geometrically valid bilateral pair for the workout requirement."
         }
     }
 }
@@ -437,27 +437,24 @@ enum ContactResolver {
                 && matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
-        candidates = applying(
-            step.side,
-            to: candidates,
-            on: board,
-            defaultPositionContactIDs: positionContactIDs
-        )
+
+        guard !candidates.isEmpty else {
+            throw ContactResolutionError.noMatches
+        }
 
         switch requirement.selection {
-        case .allMatching:
-            guard !candidates.isEmpty else { throw ContactResolutionError.noMatches }
         case .single:
-            guard candidates.count == 1 else {
-                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
-            }
+            candidates = try singleCandidate(from: candidates, on: board)
         case .bilateralPair:
             guard step.handUse == .double,
-                  step.side == .both,
-                  candidates.count == 2,
-                  isDocumentedPair(candidates[0], candidates[1]) else {
+                  step.side == .both else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
+            guard candidates.count >= 2,
+                  let pair = outermostPair(from: candidates, on: board) else {
+                throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
+            }
+            candidates = pair
         }
 
         return candidates
@@ -492,22 +489,12 @@ enum ContactResolver {
     ) -> Bool {
         if let contactID = requirement.contactID, contact.id != contactID { return false }
         if let kind = requirement.kind, contact.kind != kind { return false }
-        if !requirement.requiredFeatures.isSubset(of: contact.features) { return false }
+        if let shape = requirement.shape, contact.shape != shape { return false }
+        if let depth = requirement.depth, !depth.matches(contact.depth) { return false }
         if let fingerCapacity = requirement.fingerCapacity,
            contact.fingerCapacity != fingerCapacity { return false }
         if let handCapacity = requirement.handCapacity,
            contact.handCapacity != handCapacity { return false }
-        if !requirement.compatibleGripTypes.isEmpty,
-           requirement.compatibleGripTypes.isDisjoint(with: contact.gripTypes) {
-            return false
-        }
-        if let requiredDepth = requirement.depthRangeMillimeters {
-            guard let contactDepth = contact.depthRangeMillimeters,
-                  contactDepth.upperBound >= requiredDepth.minimum,
-                  contactDepth.lowerBound <= requiredDepth.maximum else {
-                return false
-            }
-        }
         return true
     }
 
@@ -519,78 +506,75 @@ enum ContactResolver {
         return contact.gripTypes.contains(stepGripType)
     }
 
-    private static func applying(
-        _ side: WorkoutSide,
-        to candidates: [PhysicalContact],
-        on board: BoardRevision,
-        defaultPositionContactIDs: Set<String>
-    ) -> [PhysicalContact] {
-        guard side != .both else { return candidates }
-        let requiredSide: ContactSide = side == .left ? .left : .right
-        let allowsNeutralContactForEitherHand = isCompactSingleHandBoard(
-            board,
-            defaultPositionContactIDs: defaultPositionContactIDs
-        )
-        return candidates.filter {
-            $0.side == requiredSide || (allowsNeutralContactForEitherHand && $0.side == nil)
+    private static func singleCandidate(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        guard candidates.count > 1 else {
+            guard candidates.count == 1 else {
+                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
+            }
+            return candidates
         }
-    }
 
-    /// A compact, single-object board has no board-relative left/right hand.
-    /// This structural contract permits its neutral default-position contacts
-    /// for either athlete hand without weakening sided resolution elsewhere.
-    private static func isCompactSingleHandBoard(
-        _ board: BoardRevision,
-        defaultPositionContactIDs: Set<String>
-    ) -> Bool {
-        let defaultPositionContacts = board.contacts.filter {
-            defaultPositionContactIDs.contains($0.id)
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
         }
-        let positions = board.positions.filter {
-            $0.presentationID == board.defaultPresentation.id
-        }
-        let positionContactInventories = positions.map { position in
-            Set(position.contactIDs)
-        }
-        let contactsByPosition = positionContactInventories.map { inventory in
-            board.contacts.filter { inventory.contains($0.id) }
-        }
-        guard board.unilateralHandResolution == .athleteRelative,
-              case .model = board.defaultPresentation.media,
-              positions.count >= 2,
-              positions.allSatisfy(\.contactIDsWereExplicitlyAuthored),
-              board.equipmentObjects.count == 1,
-              !defaultPositionContacts.isEmpty,
-              contactsByPosition.allSatisfy({ contacts in
-                  !contacts.isEmpty && contacts.allSatisfy {
-                      $0.equipmentObjectID == board.equipmentObjects[0].id
-                          && $0.handCapacity == 1
-                          && $0.side == nil
+        guard framedCandidates.count == candidates.count,
+              let selected = framedCandidates.min(by: { lhs, rhs in
+                  let lhsDistance = abs(lhs.frame.rect.midX - 0.5)
+                  let rhsDistance = abs(rhs.frame.rect.midX - 0.5)
+                  if lhsDistance == rhsDistance {
+                      return lhs.contact.id < rhs.contact.id
                   }
-              }),
-              positionContactInventories.enumerated().allSatisfy({ index, inventory in
-                  positionContactInventories.dropFirst(index + 1).allSatisfy {
-                      inventory.isDisjoint(with: $0)
-                  }
+                  return lhsDistance < rhsDistance
               }) else {
-            return false
+            throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
         }
-        return true
+        return [selected.contact]
     }
 
-    private static func isDocumentedPair(
-        _ first: PhysicalContact,
-        _ second: PhysicalContact
-    ) -> Bool {
-        first.pairedContactID == second.id
-            && second.pairedContactID == first.id
-            && Set([first.side, second.side]) == Set([.left, .right])
-            && first.kind == second.kind
-            && first.features == second.features
-            && first.fingerCapacity == second.fingerCapacity
-            && first.handCapacity == second.handCapacity
-            && first.depthRangeMillimeters == second.depthRangeMillimeters
-            && first.gripTypes == second.gripTypes
+    private static func outermostPair(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) -> [PhysicalContact]? {
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
+        }
+        guard framedCandidates.count == candidates.count else { return nil }
+
+        let leftmost = framedCandidates.min { lhs, rhs in
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
+        }
+        let rightmost = framedCandidates.max { lhs, rhs in
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
+        }
+        let horizontalMidpoint: CGFloat = 0.5
+        guard let leftmost,
+              let rightmost,
+              leftmost.contact.id != rightmost.contact.id,
+              leftmost.frame.rect.midX < horizontalMidpoint,
+              rightmost.frame.rect.midX > horizontalMidpoint,
+              leftmost.contact.kind == rightmost.contact.kind,
+              leftmost.contact.shape == rightmost.contact.shape,
+              leftmost.contact.depth == rightmost.contact.depth,
+              leftmost.contact.fingerCapacity == rightmost.contact.fingerCapacity,
+              leftmost.contact.handCapacity == rightmost.contact.handCapacity else {
+            return nil
+        }
+        return [leftmost.contact, rightmost.contact]
     }
 }
 

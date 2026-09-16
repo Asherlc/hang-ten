@@ -18,8 +18,8 @@ separate semantic-resolution layer.
    order, switch, stay-on, maximum/failure, and rest instruction.
 4. Add `TrainingPlan` and `WorkoutStep` data without inventing segments or
    exercises. Mark provenance honestly.
-5. Target exact board IDs for numbered routines and the narrowest truthful
-   `HoldFeature` for board-flexible routines.
+5. Target the narrowest truthful semantic `ContactRequirement` predicate;
+   never embed board contact IDs or visual references in a routine.
 6. Regenerate `HangTen/Resources/PlanLibrary.json` with
    `scripts/export-plan-library.sh`, then run the script again with `--check`.
 7. Verify every target resolves on every board where the plan appears.

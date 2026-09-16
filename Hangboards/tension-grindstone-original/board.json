@@ -288,10 +288,11 @@
       "equipmentObjectID": "primary",
       "name": "35 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 35,
-        "upperBound": 35
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
       },
       "gripTypes": []
     },
@@ -300,10 +301,11 @@
       "equipmentObjectID": "primary",
       "name": "35 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 35,
-        "upperBound": 35
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
       },
       "gripTypes": []
     },
@@ -312,10 +314,11 @@
       "equipmentObjectID": "primary",
       "name": "30 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -324,10 +327,11 @@
       "equipmentObjectID": "primary",
       "name": "25 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -336,10 +340,11 @@
       "equipmentObjectID": "primary",
       "name": "50 mm center edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 50,
-        "upperBound": 50
+      "depth": {
+        "range": {
+          "minimum": 50,
+          "maximum": 50
+        }
       },
       "gripTypes": []
     },
@@ -348,10 +353,11 @@
       "equipmentObjectID": "primary",
       "name": "30 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -360,10 +366,11 @@
       "equipmentObjectID": "primary",
       "name": "25 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -372,10 +379,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -384,10 +392,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -396,10 +405,11 @@
       "equipmentObjectID": "primary",
       "name": "22 mm center edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 22,
-        "upperBound": 22
+      "depth": {
+        "range": {
+          "minimum": 22,
+          "maximum": 22
+        }
       },
       "gripTypes": []
     },
@@ -408,10 +418,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -420,10 +431,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     }

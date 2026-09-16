@@ -25,11 +25,10 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
             ContactRequirement(
                 contactID: handUse == .single ? target.contactID : nil,
                 kind: target.kind,
-                requiredFeatures: target.requiredFeatures,
-                depthRangeMillimeters: target.depthRangeMillimeters,
+                shape: target.shape,
+                depth: target.depth,
                 fingerCapacity: target.fingerCapacity,
                 handCapacity: target.handCapacity,
-                compatibleGripTypes: target.compatibleGripTypes,
                 selection: selection
             )
         }
@@ -136,13 +135,10 @@ enum CustomRoutineBoardPreview {
         ContactRequirement(
             contactID: handUse == .single ? contact.id : nil,
             kind: contact.kind,
-            requiredFeatures: contact.features,
-            depthRangeMillimeters: contact.depthRangeMillimeters.map {
-                MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound)
-            },
+            shape: contact.shape,
+            depth: contact.depth,
             fingerCapacity: contact.fingerCapacity,
             handCapacity: contact.handCapacity,
-            compatibleGripTypes: contact.gripTypes,
             selection: handUse == .double ? .bilateralPair : .single
         )
     }

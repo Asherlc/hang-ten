@@ -125,11 +125,12 @@
       "equipmentObjectID": "primary",
       "name": "15 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -138,11 +139,12 @@
       "equipmentObjectID": "primary",
       "name": "20 mm edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -151,7 +153,6 @@
       "equipmentObjectID": "primary",
       "name": "Outer jug rim",
       "kind": "jug",
-      "features": [],
       "handCapacity": 1,
       "gripTypes": []
     },
@@ -160,12 +161,13 @@
       "equipmentObjectID": "primary",
       "name": "15/20 mm Pocket — short end-wall",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     }

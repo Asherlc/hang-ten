@@ -67,7 +67,7 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertEqual(
             segments[0]["targets"] as? [[String: String]],
-            [["kind": "edge", "selection": "allMatching"]]
+            [["kind": "edge", "selection": "single"]]
         )
         XCTAssertNil(segments[0]["target"])
     }
@@ -115,9 +115,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertTrue(oneFingerPocket.features.isEmpty)
+        XCTAssertNil(oneFingerPocket.shape)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertTrue(fourFingerPocket.features.isEmpty)
+        XCTAssertNil(fourFingerPocket.shape)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {
@@ -230,7 +230,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.feature(.mediumEdge)],
+                    targets: [.edge(depth: .category(.medium))],
                     activeDuration: 10
                 )
             ]
@@ -416,7 +416,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.flatEdge)])
+        let definition = genericDefinition(targets: [ContactRequirement(kind: .edge, shape: .flat)])
         let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
             revisionID: "test-fixture",
@@ -574,7 +574,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.mediumEdge)],
+                        targets: [.edge(depth: .category(.medium))],
                         timing: .fixed,
                         duration: 10
                     )
@@ -626,7 +626,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
         defer { defaults.removePersistentDomain(forName: suite) }
         let storedDefinition = genericDefinition(
-            targets: [ContactRequirement(contactID: "old-board-edge", kind: .edge, selection: .allMatching)]
+            targets: [ContactRequirement(contactID: "old-board-edge", kind: .edge, selection: .single)]
         )
         defaults.set(
             try JSONEncoder().encode(CustomRoutineLibrary(routines: [storedDefinition])),
@@ -645,7 +645,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         defer { defaults.removePersistentDomain(forName: suite) }
         let requirement = ContactRequirement(
             kind: .edge,
-            depthRangeMillimeters: .init(minimum: 14, maximum: 14),
+            depth: .range(.init(minimum: 14, maximum: 14)),
             handCapacity: 1,
             selection: .single
         )
@@ -688,7 +688,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(step.targets, [expectedTarget])
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left", "right"])
+            Set(["left"])
         )
         let definition = CustomRoutineDefinition(
             id: "custom.board-specific-either-after-tap",
@@ -1061,11 +1061,10 @@ final class CustomRoutineStoreTests: XCTestCase {
         ContactRequirement(
             contactID: contactID,
             kind: .edge,
-            requiredFeatures: [.mediumEdge],
-            depthRangeMillimeters: MillimeterRange(minimum: 18, maximum: 22),
+            shape: .flat,
+            depth: .range(MillimeterRange(minimum: 18, maximum: 22)),
             fingerCapacity: 2,
             handCapacity: 1,
-            compatibleGripTypes: [.halfCrimp],
             selection: selection
         )
     }
@@ -1074,22 +1073,22 @@ final class CustomRoutineStoreTests: XCTestCase {
         let contacts = [
             PhysicalContact(
                 id: "left", name: "Left edge", kind: .edge,
-                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
-                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .left,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .left,
                 pairedContactID: "right"
             ),
             PhysicalContact(
                 id: "right", name: "Right edge", kind: .edge,
-                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
-                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .right,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .right,
                 pairedContactID: "left"
             )
         ]
-        let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
             (contact.id, [BoardContactPiece(
                 id: "\(contact.id)-piece",
                 contactID: contact.id,
-                frame: CGRect(x: 0, y: 0, width: 0.1, height: 0.1),
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
                 shape: .roundedRect(cornerRadiusFraction: 0),
                 treatment: .surface
             )])

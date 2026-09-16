@@ -107,24 +107,24 @@ manufacturer—not the app—defines when the task is complete.
 
 ## 5. Resolve holds semantically
 
-Choose the narrowest truthful target:
+Choose the narrowest truthful `ContactRequirement` predicate. Routines never
+contain board contact IDs or visual-frame references:
 
-- `HoldTarget.ids(...)` for board-specific numbered or uniquely identified
-  holds;
-- `HoldTarget.feature(...)` for manufacturer terms such as `roundSloper`,
-  `largeEdge`, or `threeFingerPocket`;
-- `HoldTarget.kind(...)` only when the source genuinely allows any hold of that
-  broad kind.
+- `kind` for a source term such as “jug,” “edge,” or “pocket”;
+- `shape` only for a documented physical qualifier such as “flat,” “round,”
+  “incut,” or “slot”;
+- `depth: .category(...)` for a source size word (for example “medium edge”)
+  when the source gives no measurement, or `depth: .range(...)` for a stated
+  measurement;
+- `fingerCapacity` or `handCapacity` only when the source specifies it;
+- `.bilateralPair` only when the source prescribes the pair; otherwise
+  `.single` resolves one stable geometry-selected contact.
 
-`AppStore.holdIDs(for:on:)` resolves targets against the selected
-`TrainingBoard`. Add or correct `HoldFeature` metadata in the board catalog;
-never hard-code a visual frame into a routine.
-
-If the source names a more specific surface than the manufacturer documents
-for a board, keep that source feature as the primary target and declare an
-explicit factual fallback in the routine, such as
-`.feature(.fourFingerIncutEdge, fallback: .largeEdge)`. Do not tag a generic
-edge as both flat and incut merely to make compatibility pass.
+The resolver matches those predicates against factual board metadata. Do not
+hard-code a contact ID or visual frame into a routine. If the source names a
+surface that the board inventory cannot represent, retain the source wording in
+the instruction and omit that target; document the unresolved fact rather than
+substituting another hold.
 
 For a board-flexible source, semantic resolution may select the closest factual
 size available—for example both “Medium Edge” and “Small Edge” can resolve to a

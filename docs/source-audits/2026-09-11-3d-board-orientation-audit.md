@@ -6,10 +6,29 @@ and extended on origin/main for a fifth model package. The initial sections
 retain that five-package snapshot, including the historical Flash Board
 single-cord suspension disposition. They do not describe the complete current
 catalog. The Batch-01 / batch-02 promotion record below covers the current
-fourteen model packages and supersedes the Flash snapshot with five contacts,
+fourteen model packages at that promotion and supersedes the Flash snapshot with five contacts,
 four authored orientation positions, and no suspension block. The Nature and
 YY Vertical Baguette Evo groupings and quaternions are recorded in the
 Promotion record. This document does not itself change package or model bytes.
+
+## September 15 collection extension
+
+The model inventory now contains twenty packages. The six added fixed boards
+below each retain one canonical `primary` position covering their entire
+ordered contact inventory, with no orientation quaternion, pivot override,
+or suspension. Their current model bounds are compiled from their USDZ
+triangles into each package's descriptor. Author and evidence decisions,
+source URLs, geometry limitations, and promoted hashes are recorded in the
+[collection import audit](2026-09-15-hangboard-collection-model-imports.md).
+
+| Package ID | Contact count | Position |
+| --- | ---: | --- |
+| `metolius.climbers-edge` | 15 | `primary` |
+| `metolius.contact` | 33 | `primary` |
+| `metolius.simulator-3d` | 29 | `primary` |
+| `soill.training-tiles` | 20 | `primary` |
+| `the-hangboard.the-hangboard` | 15 | `primary` |
+| `trango.rock-prodigy-training-center` | 24 | `primary` |
 
 ## Decision and review gate (initial five-package snapshot)
 

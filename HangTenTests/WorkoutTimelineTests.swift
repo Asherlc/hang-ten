@@ -203,7 +203,7 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
 
-    func testHighlightResolverUsesFactualSideMetadataForPortableBoard() {
+    func testHighlightResolverUsesCenterNearestSemanticTargetForSingleHandSteps() {
         let board = BoardRevision(
             id: "portable",
             revisionID: "test-fixture",
@@ -282,7 +282,7 @@ final class WorkoutTimelineTests: XCTestCase {
         )
         XCTAssertEqual(
             WorkoutHighlightResolver.contactIDs(for: rightStep, on: board),
-            ["right-pocket"]
+            ["left-pocket"]
         )
     }
 
@@ -327,7 +327,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .pull,
-            targets: [.feature(.smallEdge)],
+            targets: [.edge(depth: .category(.small))],
             action: .loadedLift,
             repetitions: 1
         )
@@ -392,7 +392,7 @@ final class WorkoutTimelineTests: XCTestCase {
             id: "fallback-edge",
             name: "Fallback edge",
             kind: .edge,
-            features: [.largeEdge],
+            depth: .category(.large),
             gripTypes: [.halfCrimp]
         )
         let step = WorkoutStep(
@@ -403,7 +403,7 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.feature(.largeEdge)],
+            targets: [.edge(depth: .category(.large))],
             gripType: .halfCrimp
         )
 
@@ -2772,7 +2772,7 @@ final class MetoliusTaskExpansionTests: XCTestCase {
             instruction: "Hang for 15 seconds.",
             duration: 15,
             phase: .hang,
-            targets: [.feature(.largeEdge)]
+            targets: [.edge(depth: .category(.large))]
         )
         let second = MetoliusCycleBuilder.pullUps(
             count: 2,
@@ -2797,7 +2797,7 @@ final class MetoliusTaskExpansionTests: XCTestCase {
             accessory: "",
             duration: 61,
             phase: .hang,
-            targets: [.feature(.largeEdge)],
+            targets: [.edge(depth: .category(.large))],
             gripType: nil
         )
 

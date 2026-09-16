@@ -47,27 +47,8 @@ _GRIP_TYPES = frozenset(
         "sloper",
     }
 )
-_HOLD_FEATURES = frozenset(
-    {
-        "jug",
-        "outerJug",
-        "flatSloper",
-        "roundSloper",
-        "largeSlope",
-        "largeEdge",
-        "mediumEdge",
-        "smallEdge",
-        "pocket",
-        "flatEdge",
-        "incutEdge",
-        "largeOpenHandRail",
-        "thinCrimp",
-        "slot",
-        "widePinch",
-        "mediumPinch",
-        "smallPinch",
-    }
-)
+_HOLD_SHAPES = frozenset({"flat", "round", "incut", "slot"})
+_HOLD_SIZES = frozenset({"tiny", "small", "medium", "large"})
 _TREATMENTS = frozenset({"surface", "shelf", "recess"})
 _DEPTHS = frozenset({"deep", "shallow"})
 _SHAPE_CONSTRAINTS = frozenset(
@@ -213,18 +194,36 @@ def _require_no_symlinks(root: Path) -> None:
 
 @dataclass(frozen=True)
 class MillimeterRange:
-    lower_bound: float
-    upper_bound: float
+    minimum: float
+    maximum: float
 
     @classmethod
     def from_json(cls, value: Any, source: str) -> "MillimeterRange":
         payload = _mapping(value, source)
-        _closed(payload, {"lowerBound", "upperBound"}, source)
-        lower = _positive_number(payload["lowerBound"], f"{source}.lowerBound")
-        upper = _positive_number(payload["upperBound"], f"{source}.upperBound")
-        if lower > upper:
-            raise ValueError(f"{source}.lowerBound must not exceed upperBound")
+        _closed(payload, {"minimum", "maximum"}, source)
+        lower = _number(payload["minimum"], f"{source}.minimum")
+        upper = _number(payload["maximum"], f"{source}.maximum")
+        if lower < 0 or lower > upper:
+            raise ValueError(f"{source}.minimum must be non-negative and not exceed maximum")
         return cls(lower, upper)
+
+
+@dataclass(frozen=True)
+class HoldDepth:
+    category: str | None = None
+    range: MillimeterRange | None = None
+
+    @classmethod
+    def from_json(cls, value: Any, source: str) -> "HoldDepth":
+        payload = _mapping(value, source)
+        if set(payload) == {"category"}:
+            category = _string(payload["category"], f"{source}.category")
+            if category not in _HOLD_SIZES:
+                raise ValueError(f"{source}.category is unsupported")
+            return cls(category=category)
+        if set(payload) == {"range"}:
+            return cls(range=MillimeterRange.from_json(payload["range"], f"{source}.range"))
+        raise ValueError(f"{source} must contain exactly one of category or range")
 
 
 @dataclass(frozen=True)
@@ -1066,10 +1065,10 @@ class PhysicalContact:
     equipment_object_id: str
     name: str
     kind: str
-    features: frozenset[str]
+    shape: str | None
     finger_capacity: int | None
     hand_capacity: int | None
-    depth_range_millimeters: MillimeterRange | None
+    depth: HoldDepth | None
     grip_types: frozenset[str]
     side: ContactSide | None
     paired_contact_id: str | None
@@ -1215,10 +1214,11 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
     payload = _mapping(value, source)
     _closed(
         payload,
-        {"id", "equipmentObjectID", "name", "kind", "features", "gripTypes"},
+        {"id", "equipmentObjectID", "name", "kind", "gripTypes"},
         source,
         optional={
-            "depthRangeMillimeters",
+            "depth",
+            "shape",
             "fingerCapacity",
             "handCapacity",
             "side",
@@ -1238,11 +1238,14 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
                 f"{source}.pairedContactID is only allowed for gaston contacts"
             )
         paired_contact_id = None
-    depth_range = None
-    if "depthRangeMillimeters" in payload:
-        depth_range = MillimeterRange.from_json(
-            payload["depthRangeMillimeters"], f"{source}.depthRangeMillimeters"
-        )
+    depth = None
+    if "depth" in payload:
+        depth = HoldDepth.from_json(payload["depth"], f"{source}.depth")
+    shape = None
+    if "shape" in payload:
+        shape = _string(payload["shape"], f"{source}.shape")
+        if shape not in _HOLD_SHAPES:
+            raise ValueError(f"{source}.shape is unsupported")
     raw_grip_types = payload["gripTypes"]
     if not isinstance(raw_grip_types, list):
         raise ValueError(f"{source}.gripTypes must be an array")
@@ -1268,17 +1271,6 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
         )
         if hand_capacity not in range(1, 3):
             raise ValueError(f"{source}.handCapacity must be in 1...2")
-    raw_features = payload["features"]
-    if not isinstance(raw_features, list):
-        raise ValueError(f"{source}.features must be an array")
-    features = tuple(
-        _string(feature, f"{source}.features[{index}]")
-        for index, feature in enumerate(raw_features)
-    )
-    if any(feature not in _HOLD_FEATURES for feature in features):
-        raise ValueError(f"{source}.features contains an unsupported feature")
-    if len(features) != len(set(features)):
-        raise ValueError(f"{source}.features must be unique")
     side = None
     if "side" in payload:
         try:
@@ -1293,10 +1285,10 @@ def _load_contact(value: Any, source: str) -> PhysicalContact:
         ),
         "name": _string(payload["name"], f"{source}.name"),
         "kind": kind,
-        "features": frozenset(features),
+        "shape": shape,
         "finger_capacity": finger_capacity,
         "hand_capacity": hand_capacity,
-        "depth_range_millimeters": depth_range,
+        "depth": depth,
         "grip_types": frozenset(grip_types),
         "side": side,
         "paired_contact_id": paired_contact_id,
