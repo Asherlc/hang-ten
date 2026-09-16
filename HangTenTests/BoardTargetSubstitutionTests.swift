@@ -51,6 +51,46 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
+    func testBilateralPairRejectsThreeMatchingContactsOnOneSideOfPresentationMidpoint() {
+        let board = jugBoard([
+            .init(id: "jug-near", frame: CGRect(x: 0.55, y: 0.4, width: 0.1, height: 0.1)),
+            .init(id: "jug-middle", frame: CGRect(x: 0.7, y: 0.4, width: 0.1, height: 0.1)),
+            .init(id: "jug-far", frame: CGRect(x: 0.85, y: 0.4, width: 0.1, height: 0.1))
+        ])
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 3))
+        }
+    }
+
+    func testBilateralPairDerivesExtremaFromFrameEdgesRatherThanFrameOrigins() throws {
+        let board = jugBoard([
+            .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
+            .init(id: "jug-wide-right", frame: CGRect(x: 0.6, y: 0.4, width: 0.3, height: 0.1)),
+            .init(id: "jug-narrow-right", frame: CGRect(x: 0.8, y: 0.4, width: 0.05, height: 0.1))
+        ])
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board).map(\.id),
+            ["jug-left", "jug-wide-right"]
+        )
+    }
+
+    func testDerivedBilateralPairRejectsDifferentFactualDescriptors() {
+        let board = jugBoard([
+            .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1), depth: 20...20),
+            .init(id: "jug-center", frame: CGRect(x: 0.45, y: 0.4, width: 0.1, height: 0.1), depth: 20...20),
+            .init(id: "jug-right", frame: CGRect(x: 0.8, y: 0.4, width: 0.1, height: 0.1), depth: 25...25)
+        ])
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
+
+        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 3))
+        }
+    }
+
     func testBilateralPairRejectsContactsWithDifferentFactualDescriptors() {
         let board = fixtureBoard(
             rightDepth: 19...19,
@@ -352,16 +392,38 @@ final class ContactResolverTests: XCTestCase {
     }
 
     private func threeJugBoard() -> BoardRevision {
-        let contacts = [
-            PhysicalContact(id: "jug-left", name: "Left jug", kind: .jug),
-            PhysicalContact(id: "jug-center", name: "Center jug", kind: .jug),
-            PhysicalContact(id: "jug-right", name: "Right jug", kind: .jug)
-        ]
-        let geometry: [String: [BoardContactPiece]] = [
-            "jug-left": [piece(contactID: "jug-left", x: 0.1)],
-            "jug-center": [piece(contactID: "jug-center", x: 0.45)],
-            "jug-right": [piece(contactID: "jug-right", x: 0.8)]
-        ]
+        jugBoard([
+            .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
+            .init(id: "jug-center", frame: CGRect(x: 0.45, y: 0.4, width: 0.1, height: 0.1)),
+            .init(id: "jug-right", frame: CGRect(x: 0.8, y: 0.4, width: 0.1, height: 0.1))
+        ])
+    }
+
+    private struct JugFixture {
+        let id: String
+        let frame: CGRect
+        let depth: ClosedRange<Double>?
+
+        init(id: String, frame: CGRect, depth: ClosedRange<Double>? = nil) {
+            self.id = id
+            self.frame = frame
+            self.depth = depth
+        }
+    }
+
+    private func jugBoard(_ fixtures: [JugFixture]) -> BoardRevision {
+        let contacts = fixtures.map {
+            PhysicalContact(id: $0.id, name: $0.id, kind: .jug, depthRangeMillimeters: $0.depth)
+        }
+        let geometry = Dictionary(uniqueKeysWithValues: fixtures.map {
+            ($0.id, [BoardContactPiece(
+                id: "\($0.id)-piece",
+                contactID: $0.id,
+                frame: $0.frame,
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
         let presentation = BoardPresentation(
             id: "front",
             name: "Front",
@@ -385,13 +447,4 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    private func piece(contactID: String, x: CGFloat) -> BoardContactPiece {
-        BoardContactPiece(
-            id: "\(contactID)-piece",
-            contactID: contactID,
-            frame: CGRect(x: x, y: 0.4, width: 0.1, height: 0.1),
-            shape: .roundedRect(cornerRadiusFraction: 0),
-            treatment: .surface
-        )
-    }
 }

@@ -469,15 +469,31 @@ enum ContactResolver {
         }
         guard framedCandidates.count == candidates.count else { return nil }
 
-        let sorted = framedCandidates.sorted { lhs, rhs in
-            if lhs.frame.x == rhs.frame.x {
+        let leftmost = framedCandidates.min { lhs, rhs in
+            if lhs.frame.rect.minX == rhs.frame.rect.minX {
                 return lhs.contact.id < rhs.contact.id
             }
-            return lhs.frame.x < rhs.frame.x
+            return lhs.frame.rect.minX < rhs.frame.rect.minX
         }
-        guard let leftmost = sorted.first,
-              let rightmost = sorted.last,
-              leftmost.frame.x < rightmost.frame.x else {
+        let rightmost = framedCandidates.max { lhs, rhs in
+            if lhs.frame.rect.maxX == rhs.frame.rect.maxX {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.rect.maxX < rhs.frame.rect.maxX
+        }
+        let horizontalMidpoint: CGFloat = 0.5
+        guard let leftmost,
+              let rightmost,
+              leftmost.contact.id != rightmost.contact.id,
+              leftmost.frame.rect.maxX < horizontalMidpoint,
+              leftmost.frame.rect.midX < horizontalMidpoint,
+              rightmost.frame.rect.minX > horizontalMidpoint,
+              rightmost.frame.rect.midX > horizontalMidpoint,
+              leftmost.contact.kind == rightmost.contact.kind,
+              leftmost.contact.shape == rightmost.contact.shape,
+              leftmost.contact.depthRangeMillimeters == rightmost.contact.depthRangeMillimeters,
+              leftmost.contact.fingerCapacity == rightmost.contact.fingerCapacity,
+              leftmost.contact.handCapacity == rightmost.contact.handCapacity else {
             return nil
         }
         return [leftmost.contact, rightmost.contact]
