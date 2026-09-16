@@ -119,6 +119,27 @@ enum WorkoutHoldCueVisibilityPolicy {
     }
 }
 
+/// Landscape lays the two hand cues out as fixed left/right slots beside the
+/// board, so each slot has to follow the step the cue actually describes. That
+/// is the upcoming work step while the athlete rests, not the resting step.
+enum WorkoutLandscapeHandCuePolicy {
+    static func showsHandCue(
+        for cueSide: WorkoutSide,
+        holdCue: WorkoutHoldCue?,
+        cueStep: WorkoutStep?,
+        countdown: Int,
+        isComplete: Bool,
+        isSkipCountdown: Bool
+    ) -> Bool {
+        WorkoutHoldCueVisibilityPolicy.showsCue(
+            holdCue: holdCue,
+            countdown: countdown,
+            isComplete: isComplete,
+            isSkipCountdown: isSkipCountdown
+        ) && WorkoutHoldCueVisibilityPolicy.showsCue(for: cueSide, step: cueStep)
+    }
+}
+
 enum WorkoutHoldCuePolicy {
     static func resolve(
         step: WorkoutStep?,

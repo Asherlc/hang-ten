@@ -1788,6 +1788,7 @@ struct WorkoutView: View {
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					} else {
@@ -1804,6 +1805,7 @@ struct WorkoutView: View {
 							highlightMode: highlightMode,
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
+							cueStep: resolvedHighlightedStep,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					}
@@ -2075,6 +2077,7 @@ struct WorkoutView: View {
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
 		isSkipCountdown: Bool
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -2113,14 +2116,14 @@ struct WorkoutView: View {
 						)
 					} else {
 						HStack(spacing: 12) {
-							if step.side != .right {
+							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep) {
 								GripHandCueCard(
 									posture: holdCue.gripType,
 									fingerConfiguration: holdCue.fingerConfiguration,
 									side: .left
 								)
 							}
-							if step.side != .left {
+							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep) {
 								GripHandCueCard(
 									posture: holdCue.gripType,
 									fingerConfiguration: holdCue.fingerConfiguration,
@@ -2165,6 +2168,7 @@ struct WorkoutView: View {
 		highlightMode: BoardHighlightMode,
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
+		cueStep: WorkoutStep?,
 		isSkipCountdown: Bool
 	) -> some View {
 		VStack(spacing: 9) {
@@ -2183,9 +2187,8 @@ struct WorkoutView: View {
 			HStack(spacing: 12) {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
-					step: step,
+					cueStep: cueStep,
 					countdown: countdown,
-					isResting: isResting,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
 					side: .left
@@ -2209,9 +2212,8 @@ struct WorkoutView: View {
 
 				landscapeHandCueSlot(
 					holdCue: holdCue,
-					step: step,
+					cueStep: cueStep,
 					countdown: countdown,
-					isResting: isResting,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
 					side: .right
@@ -2261,9 +2263,8 @@ struct WorkoutView: View {
 
 	private func landscapeHandCueSlot(
 		holdCue: WorkoutHoldCue?,
-		step: WorkoutStep,
+		cueStep: WorkoutStep?,
 		countdown: Int,
-		isResting: Bool,
 		isComplete: Bool,
 		isSkipCountdown: Bool,
 		side: GripCueSide
@@ -2271,14 +2272,13 @@ struct WorkoutView: View {
 		ZStack {
 			Color.clear
 				.accessibilityHidden(true)
-			if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
+			if let holdCue, WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: side == .left ? .left : .right,
 				holdCue: holdCue,
+				cueStep: cueStep,
 				countdown: countdown,
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown
-			), WorkoutHoldCueVisibilityPolicy.showsCue(
-				for: side == .left ? .left : .right,
-				step: step
 			) {
 				GripHandCueCard(
 					posture: holdCue.gripType,

@@ -129,7 +129,7 @@ struct CustomRoutineEditorView: View {
                     step: binding(for: step),
                     targetMode: draft.targetMode,
                     board: selectedBoard,
-                    onAddPair: { draft.addLeftAndRightPair(from: $0) }
+                    onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) }
                 )
             }
             .onMove { offsets, destination in

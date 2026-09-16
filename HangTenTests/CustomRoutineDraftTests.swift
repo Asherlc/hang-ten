@@ -843,6 +843,96 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNotEqual(draft.steps[0].id, draft.steps[1].id)
     }
 
+    func testAddLeftAndRightPairRemapsExactContactToTheOppositeSidePair() throws {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        let source = CustomRoutineStepDraft(
+            id: "hang",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+
+        draft.addLeftAndRightPair(from: source, board: mirroredBoard())
+
+        XCTAssertEqual(draft.steps.map(\.side), [.left, .right])
+        let leftTarget = try XCTUnwrap(draft.steps[0].targets.first)
+        let rightTarget = try XCTUnwrap(draft.steps[1].targets.first)
+        XCTAssertEqual(leftTarget.contactID, "left")
+        XCTAssertEqual(rightTarget.contactID, "right")
+        for target in [leftTarget, rightTarget] {
+            XCTAssertEqual(target.kind, .edge)
+            XCTAssertEqual(target.shape, .flat)
+            XCTAssertEqual(target.depth, .range(MillimeterRange(minimum: 18, maximum: 22)))
+            XCTAssertEqual(target.fingerCapacity, 2)
+            XCTAssertEqual(target.handCapacity, 1)
+            XCTAssertEqual(target.selection, .single)
+        }
+    }
+
+    func testAddLeftAndRightPairRemapsARightHandSourceContactToTheLeftStep() throws {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        let source = CustomRoutineStepDraft(
+            id: "hang",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "right", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .right
+        )
+
+        draft.addLeftAndRightPair(from: source, board: mirroredBoard())
+
+        XCTAssertEqual(try XCTUnwrap(draft.steps[0].targets.first).contactID, "left")
+        XCTAssertEqual(try XCTUnwrap(draft.steps[1].targets.first).contactID, "right")
+    }
+
+    func testAddLeftAndRightPairLeavesGenericAndUnpairableTargetsUnchanged() throws {
+        let generic = CustomRoutineStepDraft(
+            id: "generic",
+            title: "Jug hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.jug)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+        var genericDraft = CustomRoutineDraft(createWith: .generic)
+        genericDraft.addLeftAndRightPair(from: generic, board: nil)
+        XCTAssertEqual(genericDraft.steps.map { $0.targets }, [[.kind(.jug)], [.kind(.jug)]])
+
+        let unknown = CustomRoutineStepDraft(
+            id: "unknown",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "not-on-board", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+        var unknownDraft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        unknownDraft.addLeftAndRightPair(from: unknown, board: mirroredBoard())
+        XCTAssertEqual(
+            unknownDraft.steps.compactMap { $0.targets.first?.contactID },
+            ["not-on-board", "not-on-board"]
+        )
+    }
+
     private func makeStep(
         id: String,
         title: String,

@@ -111,6 +111,150 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: resolved))
     }
 
+    /// Portrait renders its two cue cards from a bare per-side check rather than
+    /// the landscape slot policy, so pin the shared rule both orientations call:
+    /// a cue step derived from a resting current step still hides the idle hand.
+    func testPerSideCueRuleHidesTheIdleHandForACueStepDerivedFromRest() throws {
+        let rest = WorkoutStep(
+            id: "rest", number: 1, title: "Rest", instruction: "Rest.",
+            accessory: "", duration: 30, phase: .rest, targets: []
+        )
+        let singleRight = WorkoutStep(
+            id: "work-right", number: 2, title: "Right hang", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [],
+            gripType: .halfCrimp, handUse: .single, side: .right
+        )
+        let timeline = WorkoutTimeline(steps: [rest, singleRight])
+        let cueStep = try XCTUnwrap(
+            timeline.boardCue(at: 15, countdown: 0, isComplete: false).step
+        )
+
+        XCTAssertEqual(cueStep.id, singleRight.id)
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep))
+        // The resting current step is bilateral, which is what made both cards render.
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: rest))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: rest))
+    }
+
+    func testLandscapeHandCueFollowsCueStepWhileCurrentStepIsResting() throws {
+        let leftWork = WorkoutStep(
+            id: "work-left", number: 1, title: "Left hang", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [],
+            gripType: .halfCrimp, handUse: .single, side: .left
+        )
+        let rest = WorkoutStep(
+            id: "rest", number: 2, title: "Rest", instruction: "Rest.",
+            accessory: "", duration: 30, phase: .rest, targets: []
+        )
+        let eitherWork = WorkoutStep(
+            id: "work-either", number: 3, title: "Either hang", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [],
+            gripType: .halfCrimp, handUse: .either, side: .both
+        )
+        let timeline = WorkoutTimeline(steps: [leftWork, rest, eitherWork])
+        let elapsed: TimeInterval = 15
+        let boardCue = timeline.boardCue(at: elapsed, countdown: 0, isComplete: false)
+        let currentStep = try XCTUnwrap(timeline.step(at: elapsed))
+        let cueStep = WorkoutLiveStepResolver.materialized(
+            try XCTUnwrap(boardCue.step),
+            selectedHandSide: .right
+        )
+        let holdCue = WorkoutHoldCue(gripType: .halfCrimp)
+
+        XCTAssertTrue(boardCue.isResting)
+        XCTAssertEqual(currentStep.id, rest.id)
+        XCTAssertEqual(cueStep.id, eitherWork.id)
+        // The resting current step is bilateral, so keying the per-side slot off
+        // it would light up both cards for a single-hand cue.
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: currentStep))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: currentStep))
+
+        XCTAssertFalse(
+            WorkoutLandscapeHandCuePolicy.showsHandCue(
+                for: .left,
+                holdCue: holdCue,
+                cueStep: cueStep,
+                countdown: 0,
+                isComplete: false,
+                isSkipCountdown: false
+            )
+        )
+        XCTAssertTrue(
+            WorkoutLandscapeHandCuePolicy.showsHandCue(
+                for: .right,
+                holdCue: holdCue,
+                cueStep: cueStep,
+                countdown: 0,
+                isComplete: false,
+                isSkipCountdown: false
+            )
+        )
+    }
+
+    func testLandscapeHandCueShowsBothSlotsForBilateralCueStep() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [],
+            gripType: .halfCrimp, handUse: .double, side: .both
+        )
+        let holdCue = WorkoutHoldCue(gripType: .halfCrimp)
+
+        for side in [WorkoutSide.left, .right] {
+            XCTAssertTrue(
+                WorkoutLandscapeHandCuePolicy.showsHandCue(
+                    for: side,
+                    holdCue: holdCue,
+                    cueStep: bilateral,
+                    countdown: 0,
+                    isComplete: false,
+                    isSkipCountdown: false
+                ),
+                "\(side) slot should show for a bilateral cue step"
+            )
+        }
+    }
+
+    func testLandscapeHandCueStillHonoursTheCountdownAndCompletionGate() {
+        let rightWork = WorkoutStep(
+            id: "work-right", number: 1, title: "Right hang", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [],
+            gripType: .halfCrimp, handUse: .single, side: .right
+        )
+        let holdCue = WorkoutHoldCue(gripType: .halfCrimp)
+
+        XCTAssertFalse(
+            WorkoutLandscapeHandCuePolicy.showsHandCue(
+                for: .right,
+                holdCue: holdCue,
+                cueStep: rightWork,
+                countdown: 3,
+                isComplete: false,
+                isSkipCountdown: false
+            )
+        )
+        XCTAssertTrue(
+            WorkoutLandscapeHandCuePolicy.showsHandCue(
+                for: .right,
+                holdCue: holdCue,
+                cueStep: rightWork,
+                countdown: 3,
+                isComplete: false,
+                isSkipCountdown: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutLandscapeHandCuePolicy.showsHandCue(
+                for: .right,
+                holdCue: nil,
+                cueStep: rightWork,
+                countdown: 0,
+                isComplete: false,
+                isSkipCountdown: false
+            )
+        )
+    }
+
     private func loadedLiftStep(
         id: String = "loaded-lift",
         repetitions: Int,

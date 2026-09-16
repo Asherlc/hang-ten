@@ -222,18 +222,56 @@ struct CustomRoutineDraft: Equatable {
         )
     }
 
-    mutating func addLeftAndRightPair(from step: CustomRoutineStepDraft) {
+    mutating func addLeftAndRightPair(
+        from step: CustomRoutineStepDraft,
+        board: BoardRevision? = nil
+    ) {
         var left = step
         left.id = UUID().uuidString
         left.handUse = .single
         left.side = .left
+        left.targets = Self.targets(step.targets, mirroredOnto: .left, of: board)
 
         var right = step
         right.id = UUID().uuidString
         right.handUse = .single
         right.side = .right
+        right.targets = Self.targets(step.targets, mirroredOnto: .right, of: board)
 
         steps.append(contentsOf: [left, right])
+    }
+
+    /// An exact contact belongs to one physical side of the board, so copying it
+    /// verbatim would point both generated steps at the same hold. Swap in the
+    /// board's paired contact when it exists and sits on the side being
+    /// generated; otherwise keep the athlete's target untouched rather than
+    /// inventing a pair.
+    private static func targets(
+        _ targets: [ContactRequirement],
+        mirroredOnto side: ContactSide,
+        of board: BoardRevision?
+    ) -> [ContactRequirement] {
+        guard let board else { return targets }
+        return targets.map { target in
+            guard let contactID = target.contactID,
+                  let contact = board.contacts.first(where: { $0.id == contactID }),
+                  contact.side != side,
+                  let pairedContactID = contact.pairedContactID,
+                  let paired = board.contacts.first(where: { $0.id == pairedContactID }),
+                  paired.side == side
+            else {
+                return target
+            }
+            return ContactRequirement(
+                contactID: paired.id,
+                kind: target.kind,
+                shape: target.shape,
+                depth: target.depth,
+                fingerCapacity: target.fingerCapacity,
+                handCapacity: target.handCapacity,
+                selection: target.selection
+            )
+        }
     }
 
     mutating func updateStep(_ step: CustomRoutineStepDraft) {
