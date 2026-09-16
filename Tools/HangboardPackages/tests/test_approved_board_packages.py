@@ -881,13 +881,13 @@ def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
         assert right.get("shapeConstraint") == left.get("shapeConstraint")
 
 
-def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
+def test_deluxe_model_package_freezes_the_independent_official_inventory() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.png", 2.0, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.0, True, None, False)
     ]
     assert {
         (
@@ -927,45 +927,35 @@ def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
         ("pocket-15-19-four-center", "pocket", 19, 4, "fourFingerPocket"),
     }
     assert len(board["contacts"]) == 26
-    geometry = document_contact_geometry(board)
-    assert _original_contact_owners(board) == {
-        contact["id"]: "front" for contact in board["contacts"]
-    }
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shape"]["type"] == "path"
-        for contact in board["contacts"]
-    )
+    _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
 
     compact = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     assert board["dimensions"] != compact["dimensions"]
     assert len(board["contacts"]) != len(compact["contacts"])
 
 
-def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
+def test_deluxe_descriptor_completely_and_consistently_owns_every_contact() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
-    pairs = (
-        ("jug-1-left", "jug-1-right"),
-        ("sloper-2-flat-left", "sloper-2-flat-right"),
-        ("edge-3-31-left", "edge-3-31-right"),
-        ("pocket-4-32-three-left", "pocket-4-32-three-right"),
-        ("pocket-5-38-two-left", "pocket-5-38-two-right"),
-        ("edge-6-25-left", "edge-6-25-right"),
-        ("pocket-7-25-three-left", "pocket-7-25-three-right"),
-        ("pocket-8-28-two-left", "pocket-8-28-two-right"),
-        ("edge-9-19-left", "edge-9-19-right"),
-        ("pocket-10-19-three-left", "pocket-10-19-three-right"),
-        ("pocket-11-19-two-left", "pocket-11-19-two-right"),
-    )
+    descriptor = _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    descriptor_contacts = descriptor["contacts"]
+    contact_nodes = [
+        node for node in descriptor["nodes"] if node["role"] == "contact"
+    ]
 
-    for left_id, right_id in pairs:
-        left = geometry[left_id][0]["frame"]
-        right = geometry[right_id][0]["frame"]
-        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
-        assert right["y"] == left["y"]
-        assert right["width"] == left["width"]
-        assert right["height"] == left["height"]
+    assert set(descriptor_contacts) == contact_ids
+    assert {node["contactID"] for node in contact_nodes} == contact_ids
+    assert len(contact_nodes) == len(contact_ids) == 26
+    assert len({node["nodeID"] for node in contact_nodes}) == len(contact_nodes)
+    assert all(
+        descriptor_contacts[contact_id]["nodeIDs"]
+        == [
+            node["nodeID"]
+            for node in contact_nodes
+            if node["contactID"] == contact_id
+        ]
+        for contact_id in contact_ids
+    )
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() -> None:
