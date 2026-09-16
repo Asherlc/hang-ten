@@ -1881,7 +1881,7 @@ enum BundledPlanContactRequirements {
             case .anyHold:
                 ContactRequirement(selection: .single)
             case .outerJugs:
-                .kind(.jug, selection: .single)
+                .kind(.jug, selection: .bilateralPair)
             case .centerJug:
                 nil
             case .roundSlopers:

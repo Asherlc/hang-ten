@@ -368,9 +368,17 @@ enum ContactResolver {
             }
         case .bilateralPair:
             guard step.handUse == .double,
-                  step.side == .both,
-                  candidates.count == 2,
-                  isDocumentedPair(candidates[0], candidates[1]) else {
+                  step.side == .both else {
+                throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
+            }
+            if candidates.count == 2 {
+                guard isDocumentedPair(candidates[0], candidates[1]) else {
+                    throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
+                }
+            } else if candidates.count > 2,
+                      let outerPair = outermostPair(from: candidates, on: board) {
+                candidates = outerPair
+            } else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
         }
@@ -447,6 +455,32 @@ enum ContactResolver {
             && first.depthRangeMillimeters == second.depthRangeMillimeters
             && first.fingerCapacity == second.fingerCapacity
             && first.handCapacity == second.handCapacity
+    }
+
+    private static func outermostPair(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) -> [PhysicalContact]? {
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
+        }
+        guard framedCandidates.count == candidates.count else { return nil }
+
+        let sorted = framedCandidates.sorted { lhs, rhs in
+            if lhs.frame.x == rhs.frame.x {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.x < rhs.frame.x
+        }
+        guard let leftmost = sorted.first,
+              let rightmost = sorted.last,
+              leftmost.frame.x < rightmost.frame.x else {
+            return nil
+        }
+        return [leftmost.contact, rightmost.contact]
     }
 }
 

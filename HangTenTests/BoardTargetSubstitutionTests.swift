@@ -40,6 +40,17 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
+    func testBilateralPairSelectsOuterContactsFromDefaultPresentationWhenThreeJugsMatch() throws {
+        let board = threeJugBoard()
+        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
+        let step = fixtureStep(target: requirement)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: step, board: board).map(\.id),
+            ["jug-left", "jug-right"]
+        )
+    }
+
     func testBilateralPairRejectsContactsWithDifferentFactualDescriptors() {
         let board = fixtureBoard(
             rightDepth: 19...19,
@@ -337,6 +348,50 @@ final class ContactResolverTests: XCTestCase {
                     contactIDs: positionContactIDs ?? contacts.map(\.id)
                 )
             ]
+        )
+    }
+
+    private func threeJugBoard() -> BoardRevision {
+        let contacts = [
+            PhysicalContact(id: "jug-left", name: "Left jug", kind: .jug),
+            PhysicalContact(id: "jug-center", name: "Center jug", kind: .jug),
+            PhysicalContact(id: "jug-right", name: "Right jug", kind: .jug)
+        ]
+        let geometry: [String: [BoardContactPiece]] = [
+            "jug-left": [piece(contactID: "jug-left", x: 0.1)],
+            "jug-center": [piece(contactID: "jug-center", x: 0.45)],
+            "jug-right": [piece(contactID: "jug-right", x: 0.8)]
+        ]
+        let presentation = BoardPresentation(
+            id: "front",
+            name: "Front",
+            aspectRatio: 2,
+            isDefault: true,
+            media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+        )
+        return BoardRevision(
+            id: "fixture.three-jug-board",
+            revisionID: "fixture-revision",
+            manufacturer: "Fixture",
+            name: "Three jugs",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 2,
+            contacts: contacts,
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil,
+            presentations: [presentation],
+            positions: [BoardPosition(id: "front", presentationID: "front", contactIDs: contacts.map(\.id))]
+        )
+    }
+
+    private func piece(contactID: String, x: CGFloat) -> BoardContactPiece {
+        BoardContactPiece(
+            id: "\(contactID)-piece",
+            contactID: contactID,
+            frame: CGRect(x: x, y: 0.4, width: 0.1, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
         )
     }
 }
