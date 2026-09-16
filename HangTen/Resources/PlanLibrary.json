@@ -3066,8 +3066,9 @@
                   "selection" : "single"
                 },
                 {
-                  "kind" : "jug",
-                  "selection" : "bilateralPair"
+                  "kind" : "sloper",
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3098,8 +3099,9 @@
               "selection" : "single"
             },
             {
-              "kind" : "jug",
-              "selection" : "bilateralPair"
+              "kind" : "sloper",
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 5"
@@ -3325,6 +3327,11 @@
                 {
                   "kind" : "sloper",
                   "selection" : "single",
+                  "shape" : "flat"
+                },
+                {
+                  "kind" : "sloper",
+                  "selection" : "single",
                   "shape" : "round"
                 }
               ],
@@ -3333,6 +3340,11 @@
           ],
           "side" : "both",
           "targets" : [
+            {
+              "kind" : "sloper",
+              "selection" : "single",
+              "shape" : "flat"
+            },
             {
               "kind" : "sloper",
               "selection" : "single",

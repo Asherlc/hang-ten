@@ -2144,12 +2144,12 @@ enum LegacyPlanSeedCatalog {
             ("15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
             ("6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4, .edge18), .pull),
             ("15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
-            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", BundledPlanContactRequirements.contactTargets(.pocket13, .pocket9, .outerJugs), .hang),
+            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", BundledPlanContactRequirements.contactTargets(.pocket13, .pocket9, .roundSlopers), .hang),
             ("15 s. one arm hang center edge (17); rest 20 s.; repeat other arm.", BundledPlanContactRequirements.contactTargets(.edge17), .hang),
             ("5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket4), .pull),
             ("10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep).", BundledPlanContactRequirements.contactTargets(.edge16, .edge17), .hang),
             ("20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang.", BundledPlanContactRequirements.contactTargets(.pocket7, .roundSlopers), .hang),
-            ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.roundSlopers), .hang)
+            ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.flatSloper, .roundSlopers), .hang)
         ]
     )
 
