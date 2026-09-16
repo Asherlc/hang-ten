@@ -257,6 +257,62 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(retargeted.steps.map(\.targets), [[.kind(.edge)], []])
     }
 
+    func testRetargetingBoardSpecificRightHoldToGenericStripsExactContactID() throws {
+        let board = BoardRevision(
+            id: "mirrored", revisionID: "test", manufacturer: "Fixture", name: "Mirrored",
+            subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [
+                PhysicalContact(id: "left", name: "Left edge", kind: .edge, side: .left, pairedContactID: "right"),
+                PhysicalContact(id: "right", name: "Right edge", kind: .edge, side: .right, pairedContactID: "left")
+            ],
+            productURL: try XCTUnwrap(URL(string: "https://example.com/mirrored")), photoAssetName: nil
+        )
+        var step = CustomRoutineStepDraft(
+            id: "hang", title: "Right edge", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed, handUse: .single, side: .right
+        )
+        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
+        draft.steps = [step]
+
+        let savedGenericDefinition = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.retargeted(to: .generic).definition())
+        )
+
+        let target = try XCTUnwrap(savedGenericDefinition.steps.first?.targets.first)
+        XCTAssertEqual(savedGenericDefinition.targetMode, .generic)
+        XCTAssertNil(target.contactID)
+        XCTAssertEqual(target.kind, .edge)
+        XCTAssertEqual(target.selection, .single)
+    }
+
+    func testRetargetingBoardSpecificDraftToAnotherBoardStripsExactContactID() {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "first-board"))
+        draft.steps = [
+            .init(
+                id: "hang", title: "Exact edge", instruction: "", accessory: "", duration: 10,
+                phase: .hang,
+                targets: [ContactRequirement(contactID: "first-board-edge", kind: .edge, selection: .single)],
+                timing: .fixed, handUse: .single, side: .right
+            )
+        ]
+        let replacementBoard = BoardRevision(
+            id: "second-board", revisionID: "test", manufacturer: "Fixture", name: "Second",
+            subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [PhysicalContact(id: "second-board-edge", name: "Edge", kind: .edge)],
+            productURL: URL(string: "https://example.com/second")!, photoAssetName: nil
+        )
+
+        let retargeted = draft.retargeted(
+            to: .boardSpecific(boardID: replacementBoard.id),
+            availableBoards: [replacementBoard]
+        )
+
+        XCTAssertNil(retargeted.steps[0].targets[0].contactID)
+        XCTAssertEqual(retargeted.steps[0].targets[0].kind, .edge)
+    }
+
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
         let retainedHold = try XCTUnwrap(BoardCatalog.defaultBoard.contacts.first)
         let replacementBoard = BoardRevision(

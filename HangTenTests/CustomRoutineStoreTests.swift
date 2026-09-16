@@ -608,6 +608,37 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
     }
 
+    func testGenericModeRejectsExactContactIDsBeforePersistenceNormalization() {
+        let definition = genericDefinition(
+            targets: [ContactRequirement(contactID: "board-only-edge", kind: .edge, selection: .single)]
+        )
+
+        let issues = CustomRoutineValidator.issues(
+            for: definition,
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+    }
+
+    func testStoreNormalizesOlderGenericExactContactIDsOnLoad() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let storedDefinition = genericDefinition(
+            targets: [ContactRequirement(contactID: "old-board-edge", kind: .edge, selection: .allMatching)]
+        )
+        defaults.set(
+            try JSONEncoder().encode(CustomRoutineLibrary(routines: [storedDefinition])),
+            forKey: CustomRoutineStore.defaultKey
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+
+        XCTAssertNil(store.routines[0].steps[0].targets[0].contactID)
+        XCTAssertEqual(store.routines[0].steps[0].targets[0].kind, .edge)
+    }
+
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))

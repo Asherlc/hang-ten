@@ -280,6 +280,18 @@ struct ContactRequirement: Codable, Hashable {
         )
     }
 
+    func strippingExactContactID() -> ContactRequirement {
+        ContactRequirement(
+            kind: kind,
+            requiredFeatures: requiredFeatures,
+            depthRangeMillimeters: depthRangeMillimeters,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            compatibleGripTypes: compatibleGripTypes,
+            selection: selection
+        )
+    }
+
     private enum CodingKeys: String, CodingKey, CaseIterable {
         case contactID
         case kind
@@ -569,6 +581,34 @@ extension WorkoutStepDefinition {
             phase: phase,
             targets: targets,
             segments: segments,
+            activeDuration: activeDuration,
+            handUse: handUse,
+            side: side,
+            action: action,
+            repetitions: repetitions,
+            externalLoadKGF: externalLoadKGF
+        )
+    }
+
+    func strippingExactContactIDs() -> WorkoutStepDefinition {
+        WorkoutStepDefinition(
+            id: id,
+            title: title,
+            instruction: instruction,
+            accessory: accessory,
+            duration: duration,
+            phase: phase,
+            targets: targets.map { $0.strippingExactContactID() },
+            segments: segments.map {
+                WorkoutSegmentDefinition(
+                    kind: $0.kind,
+                    targets: $0.targets.map { $0.strippingExactContactID() },
+                    timing: $0.timing,
+                    duration: $0.duration
+                )
+            },
+            gripType: gripType,
+            fingerConfiguration: fingerConfiguration,
             activeDuration: activeDuration,
             handUse: handUse,
             side: side,

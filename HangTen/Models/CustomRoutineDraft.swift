@@ -284,6 +284,7 @@ struct CustomRoutineDraft: Equatable {
             step.targets = Self.compatibleTargets(
                 step.targets,
                 for: targetMode,
+                from: self.targetMode,
                 availableBoards: availableBoards
             )
             return step
@@ -358,13 +359,21 @@ struct CustomRoutineDraft: Equatable {
     private static func compatibleTargets(
         _ targets: [ContactRequirement],
         for targetMode: CustomRoutineTargetMode,
+        from sourceTargetMode: CustomRoutineTargetMode,
         availableBoards: [BoardRevision]
     ) -> [ContactRequirement] {
         switch targetMode {
         case let .boardSpecific(boardID):
-            return availableBoards.contains(where: { $0.id == boardID }) ? targets : []
-        case .generic:
+            guard availableBoards.contains(where: { $0.id == boardID }) else {
+                return []
+            }
+            if case let .boardSpecific(sourceBoardID) = sourceTargetMode,
+               sourceBoardID != boardID {
+                return targets.map { $0.strippingExactContactID() }
+            }
             return targets
+        case .generic:
+            return targets.map { $0.strippingExactContactID() }
         }
     }
 

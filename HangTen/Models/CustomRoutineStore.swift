@@ -376,9 +376,12 @@ enum CustomRoutineValidator {
         _ target: ContactRequirement,
         targetMode: CustomRoutineTargetMode
     ) -> Bool {
-        _ = target
-        _ = targetMode
-        return true
+        switch targetMode {
+        case .boardSpecific:
+            return true
+        case .generic:
+            return target.contactID == nil
+        }
     }
 
     private static func targetsResolve(
@@ -637,7 +640,10 @@ final class CustomRoutineStore: CustomRoutineStoring {
             category: normalizedOptional(definition.category),
             tags: normalizedTags(definition.tags),
             targetMode: definition.targetMode,
-            steps: definition.steps.map { $0.strippingUnsupportedCustomCueFields() }
+            steps: definition.steps.map {
+                let step = $0.strippingUnsupportedCustomCueFields()
+                return definition.targetMode.isBoardSpecific ? step : step.strippingExactContactIDs()
+            }
         )
     }
 

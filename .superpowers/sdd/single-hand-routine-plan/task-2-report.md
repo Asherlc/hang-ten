@@ -80,3 +80,19 @@ The constraint is written only for single/either custom picks; double-hand
 targets retain their documented bilateral-pair resolution. The added
 `CustomRoutineDraftTests` regression covers left removal, right selection,
 JSON persistence, right preview, and right removal.
+
+## Amendment — generic custom-target scope
+
+Exact custom contact IDs are now scoped to board-specific routines. Retargeting
+a new board-specific draft to generic mode removes the exact ID while retaining
+the selected contact's factual kind/features/capacities and selection policy;
+switching an unsaved board-specific draft to a different board also removes the
+old board identity. Store normalization applies the same migration to older
+generic persisted definitions, while validation rejects any unnormalized
+generic exact ID. This keeps right-side mirror picks exact on their selected
+board and leaves bilateral-pair behavior unchanged.
+
+Focused `CustomRoutineDraftTests` and `CustomRoutineStoreTests` pass with the
+new right-to-generic, board-switch, validator, and persisted-definition
+regressions. The compile-only simulator build also passes; no bundled catalog
+or source-plan semantics changed.
