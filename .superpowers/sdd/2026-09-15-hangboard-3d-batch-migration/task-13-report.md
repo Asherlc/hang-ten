@@ -50,6 +50,10 @@ object names, material name, and assignments. The source blend then has a
 usable packed `CompilerCompatibleImage` node. Its bytes changed, so the only
 manifest field updated was `auditedModelSource.sha256`.
 
+The target source manifest was absent from `e8ab04d96`'s parent, so Git's
+historical diff cannot show this as a one-field manifest edit; that statement
+describes the retained prerequisite-state comparison.
+
 - Regenerated source blend SHA-256:
   `73f7412b56713bb0626ba2f3b1a6e06a5e3a46f3724f89e3559735e855c99821`
 - Previous manifest SHA-256:
