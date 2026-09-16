@@ -16,6 +16,25 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var repetitions: Int?
     var externalLoadKGF: Double?
 
+    mutating func transitionHandUse(to handUse: WorkoutHandUse) {
+        self.handUse = handUse
+        side = handUse == .single ? .left : .both
+
+        let selection: ContactSelectionPolicy = handUse == .double ? .bilateralPair : .single
+        targets = targets.map { target in
+            ContactRequirement(
+                contactID: handUse == .single ? target.contactID : nil,
+                kind: target.kind,
+                requiredFeatures: target.requiredFeatures,
+                depthRangeMillimeters: target.depthRangeMillimeters,
+                fingerCapacity: target.fingerCapacity,
+                handCapacity: target.handCapacity,
+                compatibleGripTypes: target.compatibleGripTypes,
+                selection: selection
+            )
+        }
+    }
+
     init(
         id: String,
         title: String,

@@ -669,6 +669,54 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertNil(store.routines.first?.steps.first?.targets.first?.contactID)
     }
 
+    func testBoardSpecificEitherHandSidedTapRemainsSaveableForBothSides() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either-after-tap", title: "Either edge", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed, handUse: .single, side: .left
+        )
+
+        CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
+        XCTAssertEqual(step.targets.first?.contactID, "left")
+
+        step.transitionHandUse(to: .either)
+
+        let expectedTarget = factualRequirement(contactID: nil, selection: .single)
+        XCTAssertEqual(step.targets, [expectedTarget])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.board-specific-either-after-tap",
+            title: "Board-specific either edge",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: board.id),
+            steps: [WorkoutStepDefinition(
+                id: step.id,
+                title: step.title,
+                instruction: step.instruction,
+                accessory: step.accessory,
+                duration: step.duration,
+                phase: step.phase,
+                targets: step.targets,
+                handUse: step.handUse,
+                side: step.side
+            )]
+        )
+
+        XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: [board]).isEmpty)
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        XCTAssertNoThrow(try store.save(definition))
+        XCTAssertEqual(store.routines.first?.steps.first?.targets, [expectedTarget])
+    }
+
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
         let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
         let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
@@ -1003,6 +1051,58 @@ final class CustomRoutineStoreTests: XCTestCase {
             targets: targets,
             segments: segments,
             activeDuration: 10
+        )
+    }
+
+    private func factualRequirement(
+        contactID: String?,
+        selection: ContactSelectionPolicy
+    ) -> ContactRequirement {
+        ContactRequirement(
+            contactID: contactID,
+            kind: .edge,
+            requiredFeatures: [.mediumEdge],
+            depthRangeMillimeters: MillimeterRange(minimum: 18, maximum: 22),
+            fingerCapacity: 2,
+            handCapacity: 1,
+            compatibleGripTypes: [.halfCrimp],
+            selection: selection
+        )
+    }
+
+    private func mirroredBoard() -> BoardRevision {
+        let contacts = [
+            PhysicalContact(
+                id: "left", name: "Left edge", kind: .edge,
+                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
+                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .left,
+                pairedContactID: "right"
+            ),
+            PhysicalContact(
+                id: "right", name: "Right edge", kind: .edge,
+                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
+                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .right,
+                pairedContactID: "left"
+            )
+        ]
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.map { contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece",
+                contactID: contact.id,
+                frame: CGRect(x: 0, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardRevision(
+            id: "custom-store-mirrored", revisionID: "test", manufacturer: "Fixture",
+            name: "Mirrored", subtitle: "", dimensions: nil, aspectRatio: 1,
+            contacts: contacts, productURL: URL(string: "https://example.com/mirrored")!,
+            photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
         )
     }
 

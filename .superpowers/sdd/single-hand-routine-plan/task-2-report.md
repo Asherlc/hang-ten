@@ -71,15 +71,15 @@ service. The changed SwiftUI/editor code compiled successfully, and source/
 generated parity passed, but the focused tests and live visual L/R-picker
 exercise should be rerun after CoreSimulator and `simdiskimaged` are restored.
 
-## Amendment — mirrored custom-contact preservation
+## Amendment — custom either-hand target semantics
 
-Board-specific custom targets now persist an optional exact `contactID` in
-their `ContactRequirement`. This prevents a right-side tap on a symmetric
-board from being re-resolved to its otherwise identical left-side alternative.
-The constraint is written only for single/either custom picks; double-hand
-targets retain their documented bilateral-pair resolution. The added
-`CustomRoutineDraftTests` regression covers left removal, right selection,
-JSON persistence, right preview, and right removal.
+Board-specific custom targets persist an exact `contactID` only for explicit
+single-hand picks. Either-hand picks retain generic factual requirements, so
+their preview resolves and displays both valid left/right alternatives before a
+session-side choice materializes one of them. Double-hand targets retain their
+documented bilateral-pair resolution. `CustomRoutineDraftTests` cover generic
+either persistence, both-alternative preview, removal, and exact single-pick
+behavior separately.
 
 ## Amendment — generic custom-target scope
 
@@ -92,7 +92,122 @@ generic persisted definitions, while validation rejects any unnormalized
 generic exact ID. This keeps right-side mirror picks exact on their selected
 board and leaves bilateral-pair behavior unchanged.
 
-Focused `CustomRoutineDraftTests` and `CustomRoutineStoreTests` pass with the
-new right-to-generic, board-switch, validator, and persisted-definition
-regressions. The compile-only simulator build also passes; no bundled catalog
-or source-plan semantics changed.
+The final follow-up `xcodebuild build-for-testing` compilation of `HangTenTests`
+passed after the resolver, preview, persistence, and fixture corrections.
+Focused runtime execution remains unavailable because CoreSimulator does not
+provide the requested `iPhone 16 Pro` destination; no shared simulator was
+repurposed. No bundled catalog or source-plan semantics changed.
+
+## Fix-round amendment — explicit-null decoder handling
+
+Updated `BoardPackageStore` and `BoardPackageWriter` decoders to distinguish
+omitted unilateral-hand-resolution metadata from an explicit JSON `null`:
+omitted metadata remains backward-compatible as `nil`, while explicit JSON
+`null` and unsupported strings are rejected by both decoders.
+
+Focused tests:
+
+- `BoardPackageStoreTests.testStoreRejectsNullAndUnsupportedUnilateralHandResolution`
+- `BoardPackageStoreTests.testStoreLeavesOmittedUnilateralHandResolutionNil`
+- `BoardPackageWriterTests.testEditorDecoderRejectsNullAndUnsupportedUnilateralHandResolution`
+- `BoardPackageWriterTests.testEditorDecoderLeavesOmittedUnilateralHandResolutionNil`
+
+Exact focused test command:
+
+```sh
+xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=CC149757-8C65-413B-9960-EDF9D6E96994' -derivedDataPath .context/derived-single-hand-task-2 -disableAutomaticPackageResolution -only-testing:HangTenTests/BoardPackageStoreTests -only-testing:HangTenTests/BoardPackageWriterTests CODE_SIGNING_ALLOWED=NO
+```
+
+The xcresult summary reported `Test - HangTen` on iPhone 17 / iOS 26.3.1:
+153 passed, 0 failed, 0 skipped. `build-for-testing` exited 0, and
+`git diff --check` passed. These focused checks cover the two named decoder
+test suites only; they do not establish coverage of other areas.
+
+## Fix-round amendment — BoardRevision positional compatibility
+
+Addressed the CodeRabbit finding that required positional
+`unilateral_hand_resolution` shifted the existing positional
+`model_contact_frames` argument. Changed `board_catalog.py` to make
+`unilateral_hand_resolution` keyword-only with a `None` default, and updated
+`_load_board` to pass it by keyword. Added a regression in
+`test_board_catalog.py`; no other source files were changed.
+
+TDD evidence: the regression first failed as expected because
+`model_contact_frames` remained empty and the positional mapping landed in
+`unilateral_hand_resolution`; after the implementation change it passed.
+
+Exact focused command:
+
+```sh
+rtk .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardPackages/tests/test_board_catalog.py::test_board_revision_preserves_positional_model_contact_frames_argument -q
+```
+
+Result: 1 passed. Exact full package test command:
+
+```sh
+rtk .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardPackages/tests -q
+```
+
+Result: 609 passed in 120.84s.
+
+## Fix-round amendment — custom editor hand-use transitions
+
+The custom step editor now routes explicit hand-use changes, the forced
+either-to-double transition when changing a step to pull, and the forced
+either-to-double transition for isometric pull through
+`CustomRoutineStepDraft.transitionHandUse(to:)`. The transition sets the
+compatible side, removes exact contact identity for either/double, selects
+`.bilateralPair` for double-hand requirements, and preserves factual kind,
+features, depth, capacity, and grip constraints. Rest-phase target clearing is
+unchanged.
+
+Regression tests cover single-to-either resolution of both mirrored sides,
+single-to-double and stale-either-to-double bilateral pairing, and saving a
+board-specific routine after an actual left-hold tap followed by either-hand
+selection. The save case checks the identity-neutral factual requirement,
+left/right preview resolution, validator acceptance, and persisted store value.
+
+TDD red evidence before the transition helper:
+
+```sh
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=CC149757-8C65-413B-9960-EDF9D6E96994' -derivedDataPath .context/derived-pr422-editor-handuse -disableAutomaticPackageResolution -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingSingleHandToEitherClearsExactContactAndResolvesBothHands -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingSingleHandToDoubleUsesBilateralPairAndPreservesRequirementFacts -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingEitherHandWithStaleExactTargetToDoubleUsesBilateralPair CODE_SIGNING_ALLOWED=NO
+```
+
+Result: 3 tests, 6 expected assertion failures. The exact `left` ID remained,
+either-hand preview returned only `left`, and double-hand requirements remained
+`.single` instead of `.bilateralPair`.
+
+```sh
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=CC149757-8C65-413B-9960-EDF9D6E96994' -derivedDataPath .context/derived-pr422-editor-handuse -disableAutomaticPackageResolution -only-testing:HangTenTests/CustomRoutineStoreTests/testBoardSpecificEitherHandSidedTapRemainsSaveableForBothSides CODE_SIGNING_ALLOWED=NO
+```
+
+Result: 1 test, 5 expected assertion failures; the sided exact-ID target did
+not resolve for both sides, validation reported `unresolvableTargets`, and
+`CustomRoutineStore.save` threw `validationFailed`.
+
+Four-case green command after wiring both implicit editor paths through the
+helper:
+
+```sh
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=CC149757-8C65-413B-9960-EDF9D6E96994' -derivedDataPath .context/derived-pr422-editor-handuse -disableAutomaticPackageResolution -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingSingleHandToEitherClearsExactContactAndResolvesBothHands -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingSingleHandToDoubleUsesBilateralPairAndPreservesRequirementFacts -only-testing:HangTenTests/CustomRoutineDraftTests/testChangingEitherHandWithStaleExactTargetToDoubleUsesBilateralPair -only-testing:HangTenTests/CustomRoutineStoreTests/testBoardSpecificEitherHandSidedTapRemainsSaveableForBothSides CODE_SIGNING_ALLOWED=NO
+```
+
+Result: all 4 tests passed, 0 failures.
+
+Final focused suite command:
+
+```sh
+rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=CC149757-8C65-413B-9960-EDF9D6E96994' -derivedDataPath .context/derived-pr422-editor-handuse -disableAutomaticPackageResolution -only-testing:HangTenTests/CustomRoutineDraftTests -only-testing:HangTenTests/CustomRoutineStoreTests CODE_SIGNING_ALLOWED=NO
+```
+
+Result: 71 tests passed, 0 failures, after wiring the phase and action
+transitions through the same model helper.
+
+Compile-only test build:
+
+```sh
+rtk xcodebuild build-for-testing -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath .context/derived-pr422-editor-handuse -disableAutomaticPackageResolution CODE_SIGNING_ALLOWED=NO
+```
+
+Result: exit 0. `rtk git diff --check` passed. No catalog or source-plan files
+were changed.

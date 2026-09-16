@@ -298,8 +298,7 @@ private struct CustomRoutineStepEditor: View {
                     step.repetitions = nil
                     step.externalLoadKGF = nil
                 } else if phase == .pull && step.handUse == .either {
-                    step.handUse = .double
-                    step.side = .both
+                    step.transitionHandUse(to: .double)
                 }
             }
 
@@ -330,8 +329,7 @@ private struct CustomRoutineStepEditor: View {
                 .onChange(of: step.action) { _, action in
                     step.repetitions = action == .loadedLift ? max(step.repetitions ?? 1, 1) : nil
                     if action == .isometricPull && step.handUse == .either {
-                        step.handUse = .double
-                        step.side = .both
+                        step.transitionHandUse(to: .double)
                     }
                 }
                 .accessibilityIdentifier("customRoutine.stepAction")
@@ -344,7 +342,7 @@ private struct CustomRoutineStepEditor: View {
                     Text("Both hands").tag(WorkoutHandUse.double)
                 }
                 .onChange(of: step.handUse) { _, handUse in
-                    step.side = handUse == .single ? .left : .both
+                    step.transitionHandUse(to: handUse)
                 }
                 .accessibilityIdentifier("customRoutine.stepHandUse")
 

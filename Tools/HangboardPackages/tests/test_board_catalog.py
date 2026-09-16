@@ -71,6 +71,26 @@ def test_board_schema_loads_optional_unilateral_hand_resolution() -> None:
     assert board.unilateral_hand_resolution == module.UnilateralHandResolution.ATHLETE_RELATIVE
 
 
+def test_board_revision_preserves_positional_model_contact_frames_argument() -> None:
+    module = load_board_catalog_module()
+    model_contact_frames = {("primary", "hold-a"): object()}
+
+    board = module.BoardRevision(
+        "board",
+        "revision",
+        {},
+        (),
+        (),
+        (),
+        (),
+        (),
+        model_contact_frames,
+    )
+
+    assert board.model_contact_frames is model_contact_frames
+    assert board.unilateral_hand_resolution is None
+
+
 @pytest.mark.parametrize("value", [None, "boardRelative", 1])
 def test_board_schema_rejects_invalid_unilateral_hand_resolution(value: object) -> None:
     module = load_board_catalog_module()

@@ -1085,7 +1085,9 @@ class BoardRevision:
     presentations: tuple[BoardPresentation, ...]
     positions: tuple[BoardPosition, ...]
     position_transitions: tuple[BoardPositionTransition, ...]
-    unilateral_hand_resolution: UnilateralHandResolution | None
+    unilateral_hand_resolution: UnilateralHandResolution | None = field(
+        default=None, kw_only=True
+    )
     model_contact_frames: Mapping[tuple[str, str], NormalizedFrame] = field(
         default_factory=lambda: MappingProxyType({}), repr=False
     )
@@ -1641,7 +1643,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         presentations,
         positions,
         position_transitions,
-        unilateral_hand_resolution,
+        unilateral_hand_resolution=unilateral_hand_resolution,
     )
 
 

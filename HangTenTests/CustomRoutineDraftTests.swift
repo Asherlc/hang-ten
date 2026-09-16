@@ -74,6 +74,68 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(draft.definition().steps.first?.targets.first?.contactID, "left")
     }
 
+    func testChangingSingleHandToEitherClearsExactContactAndResolvesBothHands() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "single-to-either", title: "Either", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .single, side: .left
+        )
+
+        step.transitionHandUse(to: .either)
+
+        XCTAssertEqual(step.handUse, .either)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .single)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+    }
+
+    func testChangingSingleHandToDoubleUsesBilateralPairAndPreservesRequirementFacts() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "single-to-double", title: "Both", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .single, side: .left
+        )
+
+        step.transitionHandUse(to: .double)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .bilateralPair)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+    }
+
+    func testChangingEitherHandWithStaleExactTargetToDoubleUsesBilateralPair() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either-to-double", title: "Both", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .either, side: .both
+        )
+
+        // Older drafts can contain an exact ID because the editor previously
+        // retained it when changing from single hand to either hand.
+        step.transitionHandUse(to: .double)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .bilateralPair)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+    }
+
     func testNewDraftStartsEmptyAndAddStepAddsOneStableEditableRow() {
         var draft = CustomRoutineDraft(createWith: .generic)
 
@@ -801,11 +863,15 @@ final class CustomRoutineDraftTests: XCTestCase {
     private func mirroredBoard() -> BoardRevision {
         let contacts = [
             PhysicalContact(
-                id: "left", name: "Left edge", kind: .edge, side: .left,
+                id: "left", name: "Left edge", kind: .edge,
+                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
+                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .left,
                 pairedContactID: "right"
             ),
             PhysicalContact(
-                id: "right", name: "Right edge", kind: .edge, side: .right,
+                id: "right", name: "Right edge", kind: .edge,
+                features: [.mediumEdge], fingerCapacity: 2, handCapacity: 1,
+                depthRangeMillimeters: 18...22, gripTypes: [.halfCrimp], side: .right,
                 pairedContactID: "left"
             )
         ]
@@ -826,6 +892,22 @@ final class CustomRoutineDraftTests: XCTestCase {
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,
                 media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
             )]
+        )
+    }
+
+    private func factualRequirement(
+        contactID: String?,
+        selection: ContactSelectionPolicy
+    ) -> ContactRequirement {
+        ContactRequirement(
+            contactID: contactID,
+            kind: .edge,
+            requiredFeatures: [.mediumEdge],
+            depthRangeMillimeters: MillimeterRange(minimum: 18, maximum: 22),
+            fingerCapacity: 2,
+            handCapacity: 1,
+            compatibleGripTypes: [.halfCrimp],
+            selection: selection
         )
     }
 
