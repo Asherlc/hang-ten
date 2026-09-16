@@ -1812,20 +1812,37 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testSimulator3DManufacturerPrescribedJugStepsUseSemanticPairRequirement() throws {
-        let expectedSteps: [(id: String, targetCount: Int)] = [
-            ("metolius.simulator-3d.entry.minute-2", 1),
-            ("metolius.simulator-3d.entry.minute-5", 1),
-            ("metolius.simulator-3d.entry.minute-7", 1),
-            ("metolius.simulator-3d.intermediate.minute-3", 2),
-            ("metolius.simulator-3d.intermediate.minute-5", 2),
-            ("metolius.simulator-3d.intermediate.minute-9", 1),
-            ("metolius.simulator-3d.advanced.minute-7", 2),
-            ("metolius.simulator-3d.advanced.minute-10", 2),
+        let outerJugs = ContactRequirement.kind(.jug, selection: .bilateralPair)
+        let edge19 = ContactRequirement.edge(depth: .range(.init(minimum: 19, maximum: 19)))
+        let pocket17 = ContactRequirement(
+            kind: .pocket,
+            depth: .range(.init(minimum: 28, maximum: 28)),
+            fingerCapacity: 2
+        )
+        let pocket12 = ContactRequirement(
+            kind: .pocket,
+            depth: .range(.init(minimum: 30, maximum: 30)),
+            fingerCapacity: 2
+        )
+        let roundSlopers = ContactRequirement(kind: .sloper, shape: .round)
+        let flatSlopers = ContactRequirement(
+            kind: .sloper,
+            shape: .flat,
+            selection: .bilateralPair
+        )
+        let expectedSteps: [(id: String, targets: [ContactRequirement])] = [
+            ("metolius.simulator-3d.entry.minute-2", [outerJugs]),
+            ("metolius.simulator-3d.entry.minute-5", [flatSlopers, outerJugs]),
+            ("metolius.simulator-3d.entry.minute-7", [outerJugs]),
+            ("metolius.simulator-3d.intermediate.minute-3", [edge19, outerJugs]),
+            ("metolius.simulator-3d.intermediate.minute-5", [outerJugs, pocket17]),
+            ("metolius.simulator-3d.intermediate.minute-9", [outerJugs]),
+            ("metolius.simulator-3d.advanced.minute-7", [outerJugs, pocket12]),
+            ("metolius.simulator-3d.advanced.minute-10", [outerJugs, roundSlopers]),
         ]
         let board = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "metolius.simulator-3d" }
         )
-        let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
 
         for expected in expectedSteps {
             let step = try XCTUnwrap(
@@ -1833,13 +1850,9 @@ final class PlanStorageTests: XCTestCase {
             )
 
             XCTAssertEqual(
-                step.targets.count,
-                expected.targetCount,
-                "\(expected.id) must retain every manufacturer-prescribed target."
-            )
-            XCTAssertTrue(
-                step.targets.contains(requirement),
-                "\(expected.id) must target outer jugs."
+                step.targets,
+                expected.targets,
+                "\(expected.id) must retain every manufacturer-prescribed semantic target."
             )
             let workSegments = step.segments.filter { $0.kind == .work }
             let workSegment = try XCTUnwrap(
@@ -1847,13 +1860,9 @@ final class PlanStorageTests: XCTestCase {
                 "\(expected.id) must retain exactly one work segment."
             )
             XCTAssertEqual(
-                workSegment.targets.count,
-                expected.targetCount,
-                "\(expected.id) work must retain every manufacturer-prescribed target."
-            )
-            XCTAssertTrue(
-                workSegment.targets.contains(requirement),
-                "\(expected.id) work must retain the outer-jug requirement."
+                workSegment.targets,
+                expected.targets,
+                "\(expected.id) work must retain every manufacturer-prescribed semantic target."
             )
             XCTAssertFalse(
                 try ContactResolver.resolve(step.targets, step: step, board: board).isEmpty,
@@ -2061,36 +2070,68 @@ final class PlanStorageTests: XCTestCase {
     }
 
     func testBoardSpecificMetoliusCompoundCyclesResolveTheirSemanticTargets() throws {
-        let sourceSteps = [
-            "metolius.contact.entry.minute-4",
-            "metolius.contact.entry.minute-10",
-            "metolius.contact.intermediate.minute-4",
-            "metolius.contact.intermediate.minute-10",
-            "metolius.contact.advanced.minute-4",
-            "metolius.contact.advanced.minute-5",
-            "metolius.contact.advanced.minute-9",
-            "metolius.contact.advanced.minute-10",
-            "metolius.simulator-3d.entry.minute-5",
-            "metolius.simulator-3d.intermediate.minute-3",
-            "metolius.simulator-3d.intermediate.minute-5",
-            "metolius.simulator-3d.intermediate.minute-10",
-            "metolius.simulator-3d.advanced.minute-5",
-            "metolius.simulator-3d.advanced.minute-7",
-            "metolius.simulator-3d.advanced.minute-8",
-            "metolius.simulator-3d.advanced.minute-10",
-            "metolius.contact.intermediate.minute-7",
-            "metolius.simulator-3d.entry.minute-10",
-            "metolius.simulator-3d.intermediate.minute-7"
+        let anyHold = ContactRequirement(selection: .single)
+        let outerJugs = ContactRequirement.kind(.jug, selection: .bilateralPair)
+        let flatSloper = ContactRequirement(kind: .sloper, shape: .flat)
+        let flatSloperPair = ContactRequirement(
+            kind: .sloper,
+            shape: .flat,
+            selection: .bilateralPair
+        )
+        let roundSloper = ContactRequirement(kind: .sloper, shape: .round)
+        func edge(_ depth: Double) -> ContactRequirement {
+            .edge(depth: .range(.init(minimum: depth, maximum: depth)))
+        }
+        func pocket(_ fingers: Int, _ depth: Double) -> ContactRequirement {
+            ContactRequirement(
+                kind: .pocket,
+                depth: .range(.init(minimum: depth, maximum: depth)),
+                fingerCapacity: fingers
+            )
+        }
+        let expectedSteps: [(id: String, targets: [ContactRequirement])] = [
+            ("metolius.contact.entry.minute-4", [anyHold, pocket(2, 25)]),
+            ("metolius.contact.entry.minute-10", [anyHold, edge(35)]),
+            ("metolius.contact.intermediate.minute-4", [anyHold, pocket(2, 25)]),
+            ("metolius.contact.intermediate.minute-10", [flatSloper, roundSloper]),
+            ("metolius.contact.advanced.minute-4", [anyHold, pocket(2, 25)]),
+            ("metolius.contact.advanced.minute-5", [pocket(3, 17), pocket(4, 20), outerJugs]),
+            ("metolius.contact.advanced.minute-9", [pocket(3, 30), roundSloper]),
+            ("metolius.contact.advanced.minute-10", [roundSloper]),
+            ("metolius.simulator-3d.entry.minute-5", [flatSloperPair, outerJugs]),
+            ("metolius.simulator-3d.intermediate.minute-3", [edge(19), outerJugs]),
+            ("metolius.simulator-3d.intermediate.minute-5", [outerJugs, pocket(2, 28)]),
+            ("metolius.simulator-3d.intermediate.minute-10", [edge(36), roundSloper]),
+            ("metolius.simulator-3d.advanced.minute-5", [edge(14), pocket(3, 35), edge(19), flatSloperPair]),
+            ("metolius.simulator-3d.advanced.minute-7", [outerJugs, pocket(2, 30)]),
+            ("metolius.simulator-3d.advanced.minute-8", [pocket(3, 15), pocket(3, 35)]),
+            ("metolius.simulator-3d.advanced.minute-10", [outerJugs, roundSloper]),
+            ("metolius.contact.intermediate.minute-7", [edge(35), anyHold]),
+            ("metolius.simulator-3d.entry.minute-10", [anyHold]),
+            ("metolius.simulator-3d.intermediate.minute-7", [edge(25), anyHold]),
         ]
 
-        for stepID in sourceSteps {
-            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == stepID })
-            let plan = try XCTUnwrap(PlanCatalog.all.first { stepID.hasPrefix($0.id) })
+        for expected in expectedSteps {
+            let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == expected.id })
+            let plan = try XCTUnwrap(PlanCatalog.all.first { expected.id.hasPrefix($0.id) })
             let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
-            XCTAssertFalse(step.targets.isEmpty, "\(stepID) must retain its source-backed requirements.")
+            XCTAssertEqual(
+                step.targets,
+                expected.targets,
+                "\(expected.id) must retain every source-prescribed semantic target."
+            )
+            let workSegment = try XCTUnwrap(
+                step.segments.filter { $0.kind == .work }.only,
+                "\(expected.id) must retain exactly one work segment."
+            )
+            XCTAssertEqual(
+                workSegment.targets,
+                expected.targets,
+                "\(expected.id) work must retain every source-prescribed semantic target."
+            )
             XCTAssertFalse(
                 try ContactResolver.resolve(step.targets, step: step, board: board).isEmpty,
-                "\(stepID) must resolve its semantic requirements on its documented board."
+                "\(expected.id) must resolve its semantic requirements on its documented board."
             )
         }
     }
