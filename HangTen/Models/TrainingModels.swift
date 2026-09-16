@@ -2417,7 +2417,8 @@ enum LegacyPlanSeedCatalog {
         rest: TimeInterval,
         targets: [ContactRequirement],
         gripType: GripType? = nil,
-        fingerConfiguration: FingerConfiguration? = nil
+        fingerConfiguration: FingerConfiguration? = nil,
+        handUse: WorkoutHandUse = .double
     ) -> WorkoutStep {
         WorkoutStep(
             id: id,
@@ -2438,6 +2439,7 @@ enum LegacyPlanSeedCatalog {
             ] + (rest > 0 ? [fixedRest(rest)] : []),
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
+            handUse: handUse,
             timedWorkDuration: active
         )
     }
@@ -2481,7 +2483,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-2",
@@ -2492,7 +2495,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-3",
@@ -2503,7 +2507,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-4",
@@ -2514,7 +2519,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 180,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
             hangStep(
                 id: "max-hangs-5",
@@ -2525,7 +2531,8 @@ enum LegacyPlanSeedCatalog {
                 rest: 0,
                 targets: [],
                 gripType: .halfCrimp,
-                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])
+                fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
+                handUse: .either
             ),
         ])
     )
@@ -2863,7 +2870,8 @@ enum LegacyPlanSeedCatalog {
                         rest: index < grips.count - 1 ? 50 : 0,
                         targets: grip.targets,
                         gripType: grip.grip,
-                        fingerConfiguration: grip.fingerConfiguration
+                        fingerConfiguration: grip.fingerConfiguration,
+                        handUse: .either
                     )
                 )
             }

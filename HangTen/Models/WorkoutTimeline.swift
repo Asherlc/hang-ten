@@ -1,5 +1,16 @@
 import Foundation
 
+/// Resolves an athlete's pre-start hand choice at the presentation boundary.
+/// The original definition remains visible until a valid side has been chosen.
+enum WorkoutLiveStepResolver {
+    static func materialized(
+        _ step: WorkoutStep,
+        selectedHandSide: WorkoutSide?
+    ) -> WorkoutStep {
+        step.resolvingEitherHand(selectedHandSide: selectedHandSide) ?? step
+    }
+}
+
 struct WorkoutClock {
     static var monotonicTime: TimeInterval {
         ProcessInfo.processInfo.systemUptime

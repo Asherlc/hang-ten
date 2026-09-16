@@ -461,6 +461,32 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertTrue(hangSteps.allSatisfy { $0.instruction.contains("instrumented 12 mm edge") })
     }
 
+    func testBundledEligibilityAuditOptsInOnlyAdaptableLatticeHangs() throws {
+        let store = try PlanLibraryStore(
+            builtInData: bundledPlanLibraryData(),
+            packageStore: BoardCatalog.packageStore
+        )
+
+        for id in ["research.max-hangs", "research.abrahangs"] {
+            let plan = try XCTUnwrap(store.plan(id: id))
+            XCTAssertTrue(plan.steps.filter { !$0.isRestStep }.allSatisfy { $0.handUse == .either })
+        }
+
+        XCTAssertTrue(
+            (try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))).steps
+                .allSatisfy { $0.handUse == .double && $0.side == .both }
+        )
+        XCTAssertTrue(
+            (try XCTUnwrap(store.plan(id: "rptc.seven-three-repeaters"))).steps
+                .allSatisfy { $0.handUse == .double && $0.side == .both }
+        )
+        XCTAssertTrue(
+            (try XCTUnwrap(store.plan(id: "research.megos-one-arm-7-3"))).steps
+                .filter { !$0.isRestStep }
+                .allSatisfy { $0.handUse == .single && $0.side != .both }
+        )
+    }
+
     func testWorkoutCueCardShowsSourceInstructionDuringCountdown() {
         let step = WorkoutStep(id: "step", number: 1, title: "Source title", instruction: "Source instruction", accessory: "Source accessory", duration: 10, phase: .hang, targets: [])
 
@@ -2629,7 +2655,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(resolved.steps[0].externalLoadKGF, -8)
     }
 
-    func testPlanValidationRequiresEitherHandStepsToResolveForBothSides() {
+    func testPlanValidationRequiresEitherHandStepsToResolveForBothSidesOnDeclaredBoard() {
         let step = WorkoutStepDefinition(
             id: "either-hand",
             title: "Either hand",
@@ -2641,11 +2667,37 @@ final class PlanStorageTests: XCTestCase {
             handUse: .either,
             side: .both
         )
-        let library = unilateralTestLibrary(step: step)
+        let mirroredBoard = handSideBoard(
+            id: "fixture.mirrored",
+            contacts: [
+                PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left),
+                PhysicalContact(id: "right-edge", name: "Right edge", kind: .edge, side: .right)
+            ]
+        )
+        let library = unilateralTestLibrary(step: step, boardID: mirroredBoard.id)
 
         XCTAssertFalse(
-            PlanLibraryValidator.issues(for: library, availableBoards: BoardCatalog.all)
-                .contains { $0.path.hasSuffix(".side") }
+            PlanLibraryValidator.issues(for: library, availableBoards: [mirroredBoard])
+                .contains { $0.path.hasSuffix(".targets[0]") }
+        )
+    }
+
+    func testPlanValidationRejectsEitherHandStepWhenDeclaredBoardLacksOneSide() {
+        let step = WorkoutStepDefinition(
+            id: "either-hand", title: "Either hand", instruction: "Hang.", accessory: "",
+            duration: 10, phase: .hang, targets: [.kind(.edge, selection: .single)],
+            handUse: .either, side: .both
+        )
+        let asymmetricBoard = handSideBoard(
+            id: "fixture.left-only",
+            contacts: [PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left)]
+        )
+
+        XCTAssertTrue(
+            PlanLibraryValidator.issues(
+                for: unilateralTestLibrary(step: step, boardID: asymmetricBoard.id),
+                availableBoards: [asymmetricBoard]
+            ).contains { $0.path.hasSuffix(".targets[0]") }
         )
     }
 
@@ -2725,16 +2777,27 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(decoded, step)
     }
 
-    private func unilateralTestLibrary(step: WorkoutStepDefinition) -> PlanLibraryDefinition {
+    private func unilateralTestLibrary(
+        step: WorkoutStepDefinition,
+        boardID: String? = nil
+    ) -> PlanLibraryDefinition {
         PlanLibraryDefinition(
             metadata: PlanLibraryMetadata(id: "test", title: "Test", generatedAt: "local"),
             blocks: [WorkoutBlockDefinition(id: "block", steps: [step])],
             plans: [PlanDefinition(
                 id: "plan",
                 metadata: PlanMetadata(title: "Test", subtitle: "", level: "Test", sourceLabel: "Created in Hang Ten", sourceURL: nil, provenance: .custom),
-                boardID: nil,
+                boardID: boardID,
                 blocks: [WorkoutBlockReference(blockID: "block")]
             )]
+        )
+    }
+
+    private func handSideBoard(id: String, contacts: [PhysicalContact]) -> BoardRevision {
+        BoardRevision(
+            id: id, revisionID: "test-fixture", manufacturer: "Fixture", name: "Hand-side board",
+            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/\(id)")!, photoAssetName: nil
         )
     }
 

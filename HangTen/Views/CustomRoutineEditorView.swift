@@ -272,21 +272,7 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private var selectedHoldIDs: Set<String> {
-        let workoutStep = WorkoutStep(
-            id: step.id,
-            number: 0,
-            title: step.title,
-            instruction: step.instruction,
-            accessory: step.accessory,
-            duration: step.duration,
-            phase: step.phase,
-            targets: step.targets,
-            handUse: step.handUse,
-            side: step.side
-        )
-        return Set(
-            (try? ContactResolver.resolve(step.targets, step: workoutStep, board: board).map(\.id)) ?? []
-        )
+        CustomRoutineBoardPreview.contactIDs(for: step, on: board)
     }
 
     var body: some View {
@@ -446,35 +432,7 @@ private struct CustomRoutineStepEditor: View {
 
     private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
-        var holdIDs = selectedHoldIDs
-        if !holdIDs.insert(hold.id).inserted {
-            holdIDs.remove(hold.id)
-        }
-        guard !holdIDs.isEmpty else {
-            step.targets = []
-            return
-        }
-        let selectedContacts = board.contacts.filter { holdIDs.contains($0.id) }
-        guard let contact = selectedContacts.first else {
-            step.targets = []
-            return
-        }
-        let selection: ContactSelectionPolicy = step.handUse == .double
-            ? .bilateralPair
-            : .single
-        step.targets = [
-            ContactRequirement(
-                kind: contact.kind,
-                requiredFeatures: contact.features,
-                depthRangeMillimeters: contact.depthRangeMillimeters.map {
-                    MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound)
-                },
-                fingerCapacity: contact.fingerCapacity,
-                handCapacity: contact.handCapacity,
-                compatibleGripTypes: contact.gripTypes,
-                selection: selection
-            )
-        ]
+        CustomRoutineBoardPreview.toggle(hold, in: &step, on: board)
     }
 }
 

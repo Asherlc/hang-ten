@@ -57,6 +57,93 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     }
 }
 
+/// Resolves the editor preview through a valid athlete-hand alternative. An
+/// either-hand definition deliberately retains `.both` until a session starts,
+/// which is not a contact-resolver input for a single-contact requirement.
+enum CustomRoutineBoardPreview {
+    static func contactIDs(
+        for step: CustomRoutineStepDraft,
+        on board: BoardRevision
+    ) -> Set<String> {
+        guard !step.targets.isEmpty,
+              let resolvedStep = resolvedStep(for: step, on: board),
+              let contacts = try? ContactResolver.resolve(
+                step.targets,
+                step: resolvedStep,
+                board: board
+              ) else {
+            return []
+        }
+        return Set(contacts.map(\.id))
+    }
+
+    static func toggle(
+        _ hold: PhysicalContact,
+        in step: inout CustomRoutineStepDraft,
+        on board: BoardRevision
+    ) {
+        var holdIDs = contactIDs(for: step, on: board)
+        if !holdIDs.insert(hold.id).inserted {
+            holdIDs.remove(hold.id)
+        }
+        guard !holdIDs.isEmpty else {
+            step.targets = []
+            return
+        }
+        guard let contact = board.contacts.first(where: { holdIDs.contains($0.id) }) else {
+            step.targets = []
+            return
+        }
+        step.targets = [requirement(for: contact, handUse: step.handUse)]
+    }
+
+    private static func resolvedStep(
+        for draft: CustomRoutineStepDraft,
+        on board: BoardRevision
+    ) -> WorkoutStep? {
+        let step = WorkoutStep(
+            id: draft.id,
+            number: 0,
+            title: draft.title,
+            instruction: draft.instruction,
+            accessory: draft.accessory,
+            duration: draft.duration,
+            phase: draft.phase,
+            targets: draft.targets,
+            handUse: draft.handUse,
+            side: draft.side,
+            action: draft.action,
+            repetitions: draft.repetitions,
+            externalLoadKGF: draft.externalLoadKGF
+        )
+        let candidates = step.handUse == .either
+            ? [WorkoutSide.left, .right].compactMap {
+                step.resolvingEitherHand(selectedHandSide: $0)
+            }
+            : [step]
+        return candidates.first {
+            (try? ContactResolver.resolve(draft.targets, step: $0, board: board)) != nil
+        }
+    }
+
+    private static func requirement(
+        for contact: PhysicalContact,
+        handUse: WorkoutHandUse
+    ) -> ContactRequirement {
+        ContactRequirement(
+            kind: contact.kind,
+            requiredFeatures: contact.features,
+            depthRangeMillimeters: contact.depthRangeMillimeters.map {
+                MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound)
+            },
+            fingerCapacity: contact.fingerCapacity,
+            handCapacity: contact.handCapacity,
+            compatibleGripTypes: contact.gripTypes,
+            selection: handUse == .double ? .bilateralPair : .single
+        )
+    }
+}
+
 struct CustomRoutineDraft: Equatable {
     let id: String?
     private let generatedID: String

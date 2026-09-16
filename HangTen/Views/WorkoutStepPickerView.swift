@@ -45,13 +45,16 @@ struct WorkoutStepPickerView: View {
 
     let plan: TrainingPlan
     let currentStepID: WorkoutStep.ID
+    let selectedHandSide: WorkoutSide?
     let onSelect: (WorkoutStep) -> Void
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 10) {
-                    ForEach(plan.steps) { step in
+                    ForEach(plan.steps.map {
+                        WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide)
+                    }) { step in
                         stepRow(step)
                     }
                 }

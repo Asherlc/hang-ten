@@ -1729,6 +1729,10 @@ struct WorkoutView: View {
 				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: monotonicTime)
 				let step = step(at: elapsed)
+				let presentedStep = WorkoutLiveStepResolver.materialized(
+					step,
+					selectedHandSide: selectedHandSide
+				)
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: monotonicTime)
 				let canNavigate = canNavigate(at: monotonicTime)
@@ -1743,8 +1747,8 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let resolvedHighlightedStep = highlightedStep.flatMap {
-					$0.resolvingEitherHand(selectedHandSide: selectedHandSide)
+				let resolvedHighlightedStep = highlightedStep.map {
+					WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide)
 				}
 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
@@ -1772,7 +1776,7 @@ struct WorkoutView: View {
 				Group {
 					if isLandscape {
 						landscapeSession(
-							step: step,
+							step: presentedStep,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
 							monotonicTime: monotonicTime,
@@ -1788,7 +1792,7 @@ struct WorkoutView: View {
 						)
 					} else {
 						portraitSession(
-							step: step,
+							step: presentedStep,
 							stepElapsed: stepElapsed,
 							elapsed: elapsed,
 							monotonicTime: monotonicTime,
@@ -1848,7 +1852,11 @@ struct WorkoutView: View {
 					finalizeCurrentStopwatch(at: monotonicTime)
 				}
 				.sheet(isPresented: $showsStepPicker) {
-					WorkoutStepPickerView(plan: plan, currentStepID: step.id) { selectedStep in
+					WorkoutStepPickerView(
+						plan: plan,
+						currentStepID: step.id,
+						selectedHandSide: selectedHandSide
+					) { selectedStep in
 						jump(to: selectedStep)
 					}
 				}

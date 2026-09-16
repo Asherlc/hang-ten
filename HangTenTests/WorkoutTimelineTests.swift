@@ -63,6 +63,39 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testLivePresentationMaterializesEitherHandForLabelsAndPreservesUnresolvedStep() {
+        let eitherHand = WorkoutStep(
+            id: "either", number: 1, title: "Either hand", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .either,
+            side: .both
+        )
+
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(eitherHand, selectedHandSide: .right).side,
+            .right
+        )
+        XCTAssertEqual(
+            WorkoutTimeline.labels(
+                for: WorkoutLiveStepResolver.materialized(eitherHand, selectedHandSide: .right)
+            ),
+            ["Hang", "Right hand"]
+        )
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(eitherHand, selectedHandSide: nil),
+            eitherHand
+        )
+
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 2, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang, targets: [], handUse: .double,
+            side: .both
+        )
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(bilateral, selectedHandSide: .right),
+            bilateral
+        )
+    }
+
     private func loadedLiftStep(
         id: String = "loaded-lift",
         repetitions: Int,
