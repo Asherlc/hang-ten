@@ -192,7 +192,12 @@ struct TrainView: View {
 
 struct BoardDetailView: View {
     let board: BoardRevision
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedHoldID: String?
+
+    private var isCompactHeight: Bool {
+        verticalSizeClass == .compact
+    }
 
     init(board: BoardRevision) {
         self.board = board
@@ -215,11 +220,11 @@ struct BoardDetailView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: 20) {
-                VStack(alignment: .leading, spacing: 5) {
+            VStack(alignment: .leading, spacing: isCompactHeight ? 10 : 20) {
+                VStack(alignment: .leading, spacing: isCompactHeight ? 2 : 5) {
                     SectionLabel(title: board.manufacturer)
                     Text(board.name)
-                        .font(.system(size: 28, weight: .bold, design: .rounded))
+                        .font(.system(size: isCompactHeight ? 22 : 28, weight: .bold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
                     if let dimensions = board.dimensions {
                         Text(dimensions)
@@ -233,14 +238,15 @@ struct BoardDetailView: View {
                     selectedHoldID: $selectedHoldID,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
-                .hangCard(padding: 14)
+                .hangCard(padding: isCompactHeight ? 8 : 14)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 18)
+            .padding(.horizontal, isCompactHeight ? 12 : 20)
+            .padding(.vertical, isCompactHeight ? 8 : 18)
         }
         .background(Color.hangBackground)
         .navigationTitle("Hold specs")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar(isCompactHeight ? .hidden : .automatic, for: .tabBar)
         .accessibilityIdentifier("boardDetail.screen")
     }
 
