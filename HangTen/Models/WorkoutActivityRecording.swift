@@ -359,28 +359,20 @@ enum ContactResolver {
                 && matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
-        candidates = applying(step.side, to: candidates)
 
         switch requirement.selection {
         case .single:
-            guard candidates.count == 1 else {
-                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
-            }
+            candidates = try singleCandidate(from: candidates, on: board)
         case .bilateralPair:
             guard step.handUse == .double,
                   step.side == .both else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
-            if candidates.count == 2 {
-                guard isDocumentedPair(candidates[0], candidates[1]) else {
-                    throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
-                }
-            } else if candidates.count > 2,
-                      let outerPair = outermostPair(from: candidates, on: board) {
-                candidates = outerPair
-            } else {
+            guard candidates.count >= 2,
+                  let pair = outermostPair(from: candidates, on: board) else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
+            candidates = pair
         }
 
         return candidates
@@ -431,30 +423,35 @@ enum ContactResolver {
         return contact.gripTypes.contains(stepGripType)
     }
 
-    private static func applying(
-        _ side: WorkoutSide,
-        to candidates: [PhysicalContact]
-    ) -> [PhysicalContact] {
-        guard side != .both else { return candidates }
-        let requiredSide: ContactSide = side == .left ? .left : .right
-        return candidates.filter { $0.side == requiredSide }
-    }
-
-    private static func isDocumentedPair(
-        _ first: PhysicalContact,
-        _ second: PhysicalContact
-    ) -> Bool {
-        guard first.pairedContactID == second.id,
-              second.pairedContactID == first.id,
-              (first.side == .left && second.side == .right)
-                || (first.side == .right && second.side == .left) else {
-            return false
+    private static func singleCandidate(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        guard candidates.count > 1 else {
+            guard candidates.count == 1 else {
+                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
+            }
+            return candidates
         }
-        return first.kind == second.kind
-            && first.shape == second.shape
-            && first.depthRangeMillimeters == second.depthRangeMillimeters
-            && first.fingerCapacity == second.fingerCapacity
-            && first.handCapacity == second.handCapacity
+
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
+        }
+        guard framedCandidates.count == candidates.count,
+              let selected = framedCandidates.min(by: { lhs, rhs in
+                  let lhsDistance = abs(lhs.frame.rect.midX - 0.5)
+                  let rhsDistance = abs(rhs.frame.rect.midX - 0.5)
+                  if lhsDistance == rhsDistance {
+                      return lhs.contact.id < rhs.contact.id
+                  }
+                  return lhsDistance < rhsDistance
+              }) else {
+            throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
+        }
+        return [selected.contact]
     }
 
     private static func outermostPair(
@@ -470,24 +467,22 @@ enum ContactResolver {
         guard framedCandidates.count == candidates.count else { return nil }
 
         let leftmost = framedCandidates.min { lhs, rhs in
-            if lhs.frame.rect.minX == rhs.frame.rect.minX {
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
                 return lhs.contact.id < rhs.contact.id
             }
-            return lhs.frame.rect.minX < rhs.frame.rect.minX
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
         }
         let rightmost = framedCandidates.max { lhs, rhs in
-            if lhs.frame.rect.maxX == rhs.frame.rect.maxX {
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
                 return lhs.contact.id < rhs.contact.id
             }
-            return lhs.frame.rect.maxX < rhs.frame.rect.maxX
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
         }
         let horizontalMidpoint: CGFloat = 0.5
         guard let leftmost,
               let rightmost,
               leftmost.contact.id != rightmost.contact.id,
-              leftmost.frame.rect.maxX < horizontalMidpoint,
               leftmost.frame.rect.midX < horizontalMidpoint,
-              rightmost.frame.rect.minX > horizontalMidpoint,
               rightmost.frame.rect.midX > horizontalMidpoint,
               leftmost.contact.kind == rightmost.contact.kind,
               leftmost.contact.shape == rightmost.contact.shape,
