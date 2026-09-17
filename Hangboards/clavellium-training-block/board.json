@@ -30,15 +30,15 @@
   }],
   "revisionID": "2026-09-contact-first",
   "contacts": [
-    { "id": "cd-crimp-20mm", "equipmentObjectID": "primary", "name": "20 mm Crimp", "kind": "edge", "features": [], "fingerCapacity": 4, "depthRangeMillimeters": { "lowerBound": 20, "upperBound": 20 }, "gripTypes": [] },
-    { "id": "cd-crimp-15mm", "equipmentObjectID": "primary", "name": "15 mm Crimp", "kind": "edge", "features": [], "fingerCapacity": 4, "depthRangeMillimeters": { "lowerBound": 15, "upperBound": 15 }, "gripTypes": [] },
-    { "id": "cd-crimp-10mm", "equipmentObjectID": "primary", "name": "10 mm Crimp", "kind": "edge", "features": [], "fingerCapacity": 4, "depthRangeMillimeters": { "lowerBound": 10, "upperBound": 10 }, "gripTypes": [] },
-    { "id": "cd-crimp-8mm", "equipmentObjectID": "primary", "name": "8 mm Crimp", "kind": "edge", "features": [], "fingerCapacity": 4, "depthRangeMillimeters": { "lowerBound": 8, "upperBound": 8 }, "gripTypes": [] },
-    { "id": "cd-pinch-80mm-negative-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Left", "kind": "pinch", "features": [], "gripTypes": [] },
-    { "id": "cd-pinch-80mm-positive-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Right", "kind": "pinch", "features": [], "gripTypes": [] },
-    { "id": "cd-pinch-90mm-front", "equipmentObjectID": "primary", "name": "90 mm Pinch Front", "kind": "pinch", "features": [], "gripTypes": [] },
-    { "id": "cd-pinch-90mm-back", "equipmentObjectID": "primary", "name": "90 mm Pinch Back", "kind": "pinch", "features": [], "gripTypes": [] },
-    { "id": "cd-pinch-100mm-top", "equipmentObjectID": "primary", "name": "100 mm Pinch Top", "kind": "pinch", "features": [], "gripTypes": [] },
-    { "id": "cd-pinch-100mm-bottom", "equipmentObjectID": "primary", "name": "100 mm Pinch Bottom", "kind": "pinch", "features": [], "gripTypes": [] }
+    { "id": "cd-crimp-20mm", "equipmentObjectID": "primary", "name": "20 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 20, "maximum": 20 } }, "gripTypes": [] },
+    { "id": "cd-crimp-15mm", "equipmentObjectID": "primary", "name": "15 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 15, "maximum": 15 } }, "gripTypes": [] },
+    { "id": "cd-crimp-10mm", "equipmentObjectID": "primary", "name": "10 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 10, "maximum": 10 } }, "gripTypes": [] },
+    { "id": "cd-crimp-8mm", "equipmentObjectID": "primary", "name": "8 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 8, "maximum": 8 } }, "gripTypes": [] },
+    { "id": "cd-pinch-80mm-negative-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Left", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-80mm-positive-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Right", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-90mm-front", "equipmentObjectID": "primary", "name": "90 mm Pinch Front", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-90mm-back", "equipmentObjectID": "primary", "name": "90 mm Pinch Back", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-100mm-top", "equipmentObjectID": "primary", "name": "100 mm Pinch Top", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-100mm-bottom", "equipmentObjectID": "primary", "name": "100 mm Pinch Bottom", "kind": "pinch", "gripTypes": [] }
   ]
 }
