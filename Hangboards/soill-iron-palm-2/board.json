@@ -640,7 +640,6 @@
       "equipmentObjectID": "primary",
       "name": "Left sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -648,7 +647,6 @@
       "equipmentObjectID": "primary",
       "name": "Right sloper",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -656,7 +654,6 @@
       "equipmentObjectID": "primary",
       "name": "Left 3-inch pinch",
       "kind": "pinch",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -664,7 +661,6 @@
       "equipmentObjectID": "primary",
       "name": "Incut top jug rail",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -672,10 +668,11 @@
       "equipmentObjectID": "primary",
       "name": "40 mm rounded rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -684,10 +681,11 @@
       "equipmentObjectID": "primary",
       "name": "25 mm flat rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -696,10 +694,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm flat rail",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -708,7 +707,6 @@
       "equipmentObjectID": "primary",
       "name": "Right 3-inch pinch",
       "kind": "pinch",
-      "features": [],
       "gripTypes": []
     }
   ]

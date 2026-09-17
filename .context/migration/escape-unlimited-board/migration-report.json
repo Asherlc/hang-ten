@@ -1,0 +1,43 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 7,
+  "contactMappings": {
+    "hold-lower-left": "edge-15-left",
+    "hold-lower-right": "edge-15-right",
+    "hold-middle-left": "edge-20-left",
+    "hold-middle-right": "edge-20-right",
+    "hold-top-roll": "top-sloper-60",
+    "hold-upper-left": "edge-45-left",
+    "hold-upper-right": "edge-45-right"
+  },
+  "descriptorSHA256": "f0c5bca3225da27f455c842dabcbfded9b8ebec35904911e44651c7dabde78c8",
+  "modelBounds": {
+    "max": [
+      0.30112499,
+      0.183643445,
+      0.047625002
+    ],
+    "min": [
+      -0.30112499,
+      0.0005,
+      0.0
+    ]
+  },
+  "modelSHA256": "16469223be2e2609d7a9ebc05db704f4376c824fd5fb704e6d7ba851e25eedb8",
+  "nodeCount": 8,
+  "packageID": "escape-unlimited-board",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/escape-unlimited-board.glb",
+  "sourceModelSHA256": "44fb78ca449ba6c739f180d78bc91a42040fc109aa17f6c16c3892015ff3a4a9",
+  "sourceObjectIDs": [
+    "body",
+    "hold-lower-left",
+    "hold-lower-right",
+    "hold-middle-left",
+    "hold-middle-right",
+    "hold-top-roll",
+    "hold-upper-left",
+    "hold-upper-right"
+  ],
+  "status": "converted"
+}

@@ -129,7 +129,7 @@ struct CustomRoutineEditorView: View {
                     step: binding(for: step),
                     targetMode: draft.targetMode,
                     board: selectedBoard,
-                    onAddPair: { draft.addLeftAndRightPair(from: $0) }
+                    onAddPair: { draft.addLeftAndRightPair(from: $0, board: selectedBoard) }
                 )
             }
             .onMove { offsets, destination in
@@ -263,6 +263,9 @@ private struct CustomRoutineStepEditor: View {
     let onAddPair: (CustomRoutineStepDraft) -> Void
 
     @State private var activeHoldID: String?
+    @State private var genericDepthSelection: GenericDepthSelection = .none
+    @State private var exactDepthMinimum = ""
+    @State private var exactDepthMaximum = ""
 
     private var isBoardSpecific: Bool {
         if case .boardSpecific = targetMode {
@@ -272,21 +275,7 @@ private struct CustomRoutineStepEditor: View {
     }
 
     private var selectedHoldIDs: Set<String> {
-        let workoutStep = WorkoutStep(
-            id: step.id,
-            number: 0,
-            title: step.title,
-            instruction: step.instruction,
-            accessory: step.accessory,
-            duration: step.duration,
-            phase: step.phase,
-            targets: step.targets,
-            handUse: step.handUse,
-            side: step.side
-        )
-        return Set(
-            (try? ContactResolver.resolve(step.targets, step: workoutStep, board: board).map(\.id)) ?? []
-        )
+        CustomRoutineBoardPreview.contactIDs(for: step, on: board)
     }
 
     var body: some View {
@@ -311,6 +300,8 @@ private struct CustomRoutineStepEditor: View {
                     step.action = .hang
                     step.repetitions = nil
                     step.externalLoadKGF = nil
+                } else if phase == .pull && step.handUse == .either {
+                    step.transitionHandUse(to: .double)
                 }
             }
 
@@ -340,15 +331,21 @@ private struct CustomRoutineStepEditor: View {
                 }
                 .onChange(of: step.action) { _, action in
                     step.repetitions = action == .loadedLift ? max(step.repetitions ?? 1, 1) : nil
+                    if action == .isometricPull && step.handUse == .either {
+                        step.transitionHandUse(to: .double)
+                    }
                 }
                 .accessibilityIdentifier("customRoutine.stepAction")
 
                 Picker("Hand use", selection: $step.handUse) {
                     Text("Single hand").tag(WorkoutHandUse.single)
+                    if step.phase != .pull && step.action != .isometricPull {
+                        Text("Either hand (choose at start)").tag(WorkoutHandUse.either)
+                    }
                     Text("Both hands").tag(WorkoutHandUse.double)
                 }
                 .onChange(of: step.handUse) { _, handUse in
-                    step.side = handUse == .single ? .left : .both
+                    step.transitionHandUse(to: handUse)
                 }
                 .accessibilityIdentifier("customRoutine.stepHandUse")
 
@@ -395,43 +392,173 @@ private struct CustomRoutineStepEditor: View {
                 )
             }
         } else {
-            Picker("Target", selection: genericTargetBinding) {
-                Text("Choose target").tag(GenericTargetChoice?.none)
-                Section("Hold kind") {
-                    ForEach(HoldKind.allCases) { kind in
-                        Text(kind.label).tag(Optional(GenericTargetChoice.kind(kind)))
-                    }
-                }
-                Section("Hold feature") {
-                    ForEach(HoldFeature.allCases.filter { $0 != .jug }) { feature in
-                        Text(feature.label).tag(Optional(GenericTargetChoice.feature(feature)))
-                    }
+            Group {
+            Picker("Hold kind", selection: genericKindBinding) {
+                Text("Choose target").tag(HoldKind?.none)
+                ForEach(HoldKind.allCases) { kind in
+                    Text(kind.label).tag(Optional(kind))
                 }
             }
             .accessibilityIdentifier("customRoutine.stepTarget")
+
+            if let kind = genericKind, !Self.supportedShapes(for: kind).isEmpty {
+                Picker("Hold shape", selection: genericShapeBinding) {
+                    Text("Any shape").tag(HoldShape?.none)
+                    ForEach(Self.supportedShapes(for: kind)) { shape in
+                        Text(shape.label).tag(Optional(shape))
+                    }
+                }
+                .accessibilityIdentifier("customRoutine.stepShape")
+            }
+
+            if genericKind != nil {
+                Picker("Hold depth", selection: $genericDepthSelection) {
+                    Text("Any depth").tag(GenericDepthSelection.none)
+                    Section("Size") {
+                        ForEach(HoldSize.allCases) { size in
+                            Text(size.label).tag(GenericDepthSelection.category(size))
+                        }
+                    }
+                    Text("Exact range (mm)").tag(GenericDepthSelection.exactRange)
+                }
+                .accessibilityIdentifier("customRoutine.stepDepth")
+                .onChange(of: genericDepthSelection) { _, selection in
+                    switch selection {
+                    case .none:
+                        replaceGenericTarget(depth: nil)
+                    case let .category(size):
+                        replaceGenericTarget(depth: .category(size))
+                    case .exactRange:
+                        loadExactDepthFields()
+                        updateExactDepthFromFields()
+                    }
+                }
+
+                if genericDepthSelection == .exactRange {
+                    TextField("Minimum depth (mm)", text: $exactDepthMinimum)
+                        .keyboardType(.decimalPad)
+                        .accessibilityIdentifier("customRoutine.stepDepthMinimum")
+                        .onChange(of: exactDepthMinimum) { _, _ in updateExactDepthFromFields() }
+                    TextField("Maximum depth (mm)", text: $exactDepthMaximum)
+                        .keyboardType(.decimalPad)
+                        .accessibilityIdentifier("customRoutine.stepDepthMaximum")
+                        .onChange(of: exactDepthMaximum) { _, _ in updateExactDepthFromFields() }
+                }
+            }
+            }
+            .onAppear(perform: configureGenericDepthSelection)
         }
     }
 
-    private var genericTargetBinding: Binding<GenericTargetChoice?> {
+    private var genericKind: HoldKind? {
+        step.targets.first?.kind
+    }
+
+    private var genericKindBinding: Binding<HoldKind?> {
         Binding(
-            get: {
-                guard let target = step.targets.first else { return nil }
-                if target.requiredFeatures.isEmpty, let kind = target.kind {
-                    return .kind(kind)
+            get: { genericKind },
+            set: { kind in
+                guard let kind else {
+                    step.targets = []
+                    genericDepthSelection = .none
+                    return
                 }
-                if target.requiredFeatures.count == 1,
-                   let feature = target.requiredFeatures.first {
-                    return .feature(feature)
-                }
-                return nil
-            },
-            set: { choice in
-                let selection: ContactSelectionPolicy = step.handUse == .double
-                    ? .allMatching
-                    : .single
-                step.targets = choice.map { [$0.target(selection: selection)] } ?? []
+                let current = step.targets.first
+                let shape = current?.shape.flatMap { Self.supportedShapes(for: kind).contains($0) ? $0 : nil }
+                step.targets = [
+                    ContactRequirement(
+                        kind: kind,
+                        shape: shape,
+                        depth: current?.depth,
+                        fingerCapacity: current?.fingerCapacity,
+                        handCapacity: current?.handCapacity,
+                        selection: .single
+                    )
+                ]
+                configureGenericDepthSelection()
             }
         )
+    }
+
+    private var genericShapeBinding: Binding<HoldShape?> {
+        Binding(
+            get: { step.targets.first?.shape },
+            set: { replaceGenericTarget(shape: $0) }
+        )
+    }
+
+    private func replaceGenericTarget(shape: HoldShape?) {
+        guard let current = step.targets.first else { return }
+        step.targets = [
+            ContactRequirement(
+                kind: current.kind,
+                shape: shape,
+                depth: current.depth,
+                fingerCapacity: current.fingerCapacity,
+                handCapacity: current.handCapacity,
+                selection: .single
+            )
+        ]
+    }
+
+    private func replaceGenericTarget(depth: HoldDepth?) {
+        guard let current = step.targets.first else { return }
+        step.targets = [
+            ContactRequirement(
+                kind: current.kind,
+                shape: current.shape,
+                depth: depth,
+                fingerCapacity: current.fingerCapacity,
+                handCapacity: current.handCapacity,
+                selection: .single
+            )
+        ]
+    }
+
+    private func configureGenericDepthSelection() {
+        guard let depth = step.targets.first?.depth else {
+            genericDepthSelection = .none
+            exactDepthMinimum = ""
+            exactDepthMaximum = ""
+            return
+        }
+        switch depth {
+        case let .category(size):
+            genericDepthSelection = .category(size)
+        case let .range(range):
+            genericDepthSelection = .exactRange
+            exactDepthMinimum = range.minimum.formatted()
+            exactDepthMaximum = range.maximum.formatted()
+        }
+    }
+
+    private func loadExactDepthFields() {
+        if case let .range(range)? = step.targets.first?.depth {
+            exactDepthMinimum = range.minimum.formatted()
+            exactDepthMaximum = range.maximum.formatted()
+        }
+    }
+
+    private func updateExactDepthFromFields() {
+        guard let minimum = Double(exactDepthMinimum),
+              let maximum = Double(exactDepthMaximum),
+              minimum > 0,
+              maximum >= minimum else {
+            replaceGenericTarget(depth: nil)
+            return
+        }
+        replaceGenericTarget(depth: .range(.init(minimum: minimum, maximum: maximum)))
+    }
+
+    private static func supportedShapes(for kind: HoldKind) -> [HoldShape] {
+        switch kind {
+        case .edge:
+            [.flat, .incut, .slot]
+        case .sloper, .pinch, .jug:
+            [.flat, .round]
+        case .pocket, .gaston:
+            []
+        }
     }
 
     private func toggleHold(_ hold: PhysicalContact) {
@@ -454,30 +581,20 @@ private struct CustomRoutineStepEditor: View {
             : .single
         step.targets = [
             ContactRequirement(
+                contactID: step.handUse == .single ? contact.id : nil,
                 kind: contact.kind,
-                requiredFeatures: contact.features,
-                depthRangeMillimeters: contact.depthRangeMillimeters.map {
-                    MillimeterRange(minimum: $0.lowerBound, maximum: $0.upperBound)
-                },
+                shape: contact.shape,
+                depth: contact.depth,
                 fingerCapacity: contact.fingerCapacity,
                 handCapacity: contact.handCapacity,
-                compatibleGripTypes: contact.gripTypes,
                 selection: selection
             )
         ]
     }
 }
 
-private enum GenericTargetChoice: Hashable {
-    case kind(HoldKind)
-    case feature(HoldFeature)
-
-    func target(selection: ContactSelectionPolicy) -> ContactRequirement {
-        switch self {
-        case let .kind(kind):
-            .kind(kind, selection: selection)
-        case let .feature(feature):
-            .feature(feature, selection: selection)
-        }
-    }
+private enum GenericDepthSelection: Hashable {
+    case none
+    case category(HoldSize)
+    case exactRange
 }

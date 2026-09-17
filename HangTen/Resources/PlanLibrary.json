@@ -1843,12 +1843,14 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -1861,12 +1863,14 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -1893,13 +1897,15 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -1908,13 +1914,15 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 2"
@@ -1933,16 +1941,18 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 20,
-                    "minimum" : 20
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 20,
+                      "minimum" : 20
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -1952,16 +1962,18 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 20,
-                "minimum" : 20
+              "depth" : {
+                "range" : {
+                  "maximum" : 20,
+                  "minimum" : 20
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 3"
@@ -1979,16 +1991,18 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -1997,16 +2011,18 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 4"
@@ -2025,14 +2041,12 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "flatSloper"
-                  ],
-                  "selection" : "single"
+                  "selection" : "single",
+                  "shape" : "flat"
                 },
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -2042,14 +2056,12 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "flatSloper"
-              ],
-              "selection" : "single"
+              "selection" : "single",
+              "shape" : "flat"
             },
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 5"
@@ -2067,21 +2079,25 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2090,21 +2106,25 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 6"
@@ -2122,7 +2142,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2131,7 +2151,7 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 7"
@@ -2150,10 +2170,8 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -2163,10 +2181,8 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 8"
@@ -2185,23 +2201,23 @@
               "targets" : [
                 {
                   "kind" : "pinch",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -2211,23 +2227,23 @@
           "targets" : [
             {
               "kind" : "pinch",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 9"
@@ -2245,12 +2261,14 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -2262,12 +2280,14 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -2295,16 +2315,18 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 20,
-                    "minimum" : 20
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 20,
+                      "minimum" : 20
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2314,16 +2336,18 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 20,
-                "minimum" : 20
+              "depth" : {
+                "range" : {
+                  "maximum" : 20,
+                  "minimum" : 20
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 1"
@@ -2348,7 +2372,7 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -2358,7 +2382,7 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 2"
@@ -2377,16 +2401,18 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 20,
-                    "minimum" : 20
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 20,
+                      "minimum" : 20
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2396,16 +2422,18 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 20,
-                "minimum" : 20
+              "depth" : {
+                "range" : {
+                  "maximum" : 20,
+                  "minimum" : 20
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 3"
@@ -2423,16 +2451,18 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2441,16 +2471,18 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 4"
@@ -2468,21 +2500,25 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 32,
-                    "minimum" : 32
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 32,
+                      "minimum" : 32
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2491,21 +2527,25 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 32,
-                "minimum" : 32
+              "depth" : {
+                "range" : {
+                  "maximum" : 32,
+                  "minimum" : 32
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 5"
@@ -2523,22 +2563,26 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 17,
-                    "minimum" : 17
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 17,
+                      "minimum" : 17
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2547,22 +2591,26 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 17,
-                "minimum" : 17
+              "depth" : {
+                "range" : {
+                  "maximum" : 17,
+                  "minimum" : 17
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 6"
@@ -2580,15 +2628,17 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
                 },
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2597,15 +2647,17 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
             },
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 7"
@@ -2623,22 +2675,26 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 20,
-                    "minimum" : 20
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 20,
+                      "minimum" : 20
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2647,22 +2703,26 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 20,
-                "minimum" : 20
+              "depth" : {
+                "range" : {
+                  "maximum" : 20,
+                  "minimum" : 20
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 8"
@@ -2681,15 +2741,15 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -2702,15 +2762,15 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -2732,17 +2792,13 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "flatSloper"
-                  ],
-                  "selection" : "single"
+                  "selection" : "single",
+                  "shape" : "flat"
                 },
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -2752,17 +2808,13 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "flatSloper"
-              ],
-              "selection" : "single"
+              "selection" : "single",
+              "shape" : "flat"
             },
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 10"
@@ -2787,16 +2839,18 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2806,16 +2860,18 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 1"
@@ -2840,7 +2896,7 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -2850,7 +2906,7 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 2"
@@ -2869,21 +2925,25 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 28,
-                    "minimum" : 28
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 28,
+                      "minimum" : 28
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -2896,21 +2956,25 @@
           "targets" : [
             {
               "kind" : "jug",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 28,
-                "minimum" : 28
+              "depth" : {
+                "range" : {
+                  "maximum" : 28,
+                  "minimum" : 28
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -2931,16 +2995,18 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -2949,16 +3015,18 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 4"
@@ -2976,26 +3044,31 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 17,
-                    "minimum" : 17
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 17,
+                      "minimum" : 17
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 20,
-                    "minimum" : 20
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 20,
+                      "minimum" : 20
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "kind" : "jug",
-                  "selection" : "allMatching"
+                  "kind" : "sloper",
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3004,26 +3077,31 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 17,
-                "minimum" : 17
+              "depth" : {
+                "range" : {
+                  "maximum" : 17,
+                  "minimum" : 17
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 20,
-                "minimum" : 20
+              "depth" : {
+                "range" : {
+                  "maximum" : 20,
+                  "minimum" : 20
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "kind" : "jug",
-              "selection" : "allMatching"
+              "kind" : "sloper",
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 5"
@@ -3041,9 +3119,11 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -3055,9 +3135,11 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -3079,16 +3161,18 @@
               "targets" : [
                 {
                   "kind" : "pinch",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 4,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3098,16 +3182,18 @@
           "targets" : [
             {
               "kind" : "pinch",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 4,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 7"
@@ -3125,17 +3211,21 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 15,
-                    "minimum" : 15
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 15,
+                      "minimum" : 15
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "kind" : "edge",
                   "selection" : "single"
@@ -3147,17 +3237,21 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 15,
-                "minimum" : 15
+              "depth" : {
+                "range" : {
+                  "maximum" : 15,
+                  "minimum" : 15
+                }
               },
               "kind" : "edge",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "kind" : "edge",
               "selection" : "single"
@@ -3178,20 +3272,20 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3200,20 +3294,20 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 9"
@@ -3232,10 +3326,13 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "requiredFeatures" : [
-                    "roundSloper"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "flat"
+                },
+                {
+                  "kind" : "sloper",
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3245,10 +3342,13 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "requiredFeatures" : [
-                "roundSloper"
-              ],
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "flat"
+            },
+            {
+              "kind" : "sloper",
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 10"
@@ -3272,12 +3372,14 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 36,
-                    "minimum" : 36
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 36,
+                      "minimum" : 36
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3286,12 +3388,14 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 36,
-                "minimum" : 36
+              "depth" : {
+                "range" : {
+                  "maximum" : 36,
+                  "minimum" : 36
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 1"
@@ -3316,10 +3420,7 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -3329,10 +3430,7 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 2"
@@ -3350,13 +3448,19 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "kind" : "jug",
+                  "selection" : "single"
+                },
+                {
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3365,13 +3469,19 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "kind" : "jug",
+              "selection" : "single"
+            },
+            {
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 3"
@@ -3389,13 +3499,15 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3404,13 +3516,15 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 4"
@@ -3429,14 +3543,12 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair",
+                  "shape" : "flat"
                 },
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -3446,14 +3558,12 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair",
+              "shape" : "flat"
             },
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 5"
@@ -3471,21 +3581,25 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 50,
-                    "minimum" : 50
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 50,
+                      "minimum" : 50
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3494,21 +3608,25 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 50,
-                "minimum" : 50
+              "depth" : {
+                "range" : {
+                  "maximum" : 50,
+                  "minimum" : 50
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 6"
@@ -3527,10 +3645,7 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -3540,10 +3655,7 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 7"
@@ -3562,7 +3674,8 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3572,7 +3685,8 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 8"
@@ -3590,13 +3704,15 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3605,13 +3721,15 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 9"
@@ -3629,7 +3747,7 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3638,7 +3756,7 @@
           "side" : "both",
           "targets" : [
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 10"
@@ -3662,12 +3780,14 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3676,12 +3796,14 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 1"
@@ -3706,7 +3828,8 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair",
+                  "shape" : "flat"
                 }
               ],
               "timing" : "undefined"
@@ -3716,7 +3839,8 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair",
+              "shape" : "flat"
             }
           ],
           "title" : "Minute 2"
@@ -3734,19 +3858,18 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 19,
-                    "minimum" : 19
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 19,
+                      "minimum" : 19
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -3755,19 +3878,18 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 19,
-                "minimum" : 19
+              "depth" : {
+                "range" : {
+                  "maximum" : 19,
+                  "minimum" : 19
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 3"
@@ -3786,7 +3908,13 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair",
+                  "shape" : "flat"
+                },
+                {
+                  "kind" : "sloper",
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -3796,7 +3924,13 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair",
+              "shape" : "flat"
+            },
+            {
+              "kind" : "sloper",
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 4"
@@ -3815,15 +3949,14 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 28,
-                    "minimum" : 28
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 28,
+                      "minimum" : 28
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
@@ -3837,15 +3970,14 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 28,
-                "minimum" : 28
+              "depth" : {
+                "range" : {
+                  "maximum" : 28,
+                  "minimum" : 28
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
@@ -3867,22 +3999,26 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3891,22 +4027,26 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 6"
@@ -3924,15 +4064,17 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 25,
-                    "minimum" : 25
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 25,
+                      "minimum" : 25
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3941,15 +4083,17 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 25,
-                "minimum" : 25
+              "depth" : {
+                "range" : {
+                  "maximum" : 25,
+                  "minimum" : 25
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 7"
@@ -3967,12 +4111,14 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 36,
-                    "minimum" : 36
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 36,
+                      "minimum" : 36
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -3981,12 +4127,14 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 36,
-                "minimum" : 36
+              "depth" : {
+                "range" : {
+                  "maximum" : 36,
+                  "minimum" : 36
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 8"
@@ -4005,10 +4153,7 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 }
               ],
               "timing" : "undefined"
@@ -4018,10 +4163,7 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             }
           ],
           "title" : "Minute 9"
@@ -4039,16 +4181,19 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 36,
-                    "minimum" : 36
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 36,
+                      "minimum" : 36
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -4057,16 +4202,19 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 36,
-                "minimum" : 36
+              "depth" : {
+                "range" : {
+                  "maximum" : 36,
+                  "minimum" : 36
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 10"
@@ -4090,21 +4238,25 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 19,
-                    "minimum" : 19
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 19,
+                      "minimum" : 19
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4113,21 +4265,25 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 19,
-                "minimum" : 19
+              "depth" : {
+                "range" : {
+                  "maximum" : 19,
+                  "minimum" : 19
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 1"
@@ -4151,22 +4307,26 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 50,
-                    "minimum" : 50
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 50,
+                      "minimum" : 50
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4175,22 +4335,26 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 50,
-                "minimum" : 50
+              "depth" : {
+                "range" : {
+                  "maximum" : 50,
+                  "minimum" : 50
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 2"
@@ -4208,12 +4372,14 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 14,
-                    "minimum" : 14
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 14,
+                      "minimum" : 14
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4222,12 +4388,14 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 14,
-                "minimum" : 14
+              "depth" : {
+                "range" : {
+                  "maximum" : 14,
+                  "minimum" : 14
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 3"
@@ -4246,16 +4414,19 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4265,16 +4436,19 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 4"
@@ -4292,33 +4466,40 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 14,
-                    "minimum" : 14
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 14,
+                      "minimum" : 14
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 19,
-                    "minimum" : 19
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 19,
+                      "minimum" : 19
+                    }
                   },
                   "kind" : "edge",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair",
+                  "shape" : "flat"
                 }
               ],
               "timing" : "undefined"
@@ -4327,33 +4508,40 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 14,
-                "minimum" : 14
+              "depth" : {
+                "range" : {
+                  "maximum" : 14,
+                  "minimum" : 14
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 19,
-                "minimum" : 19
+              "depth" : {
+                "range" : {
+                  "maximum" : 19,
+                  "minimum" : 19
+                }
               },
               "kind" : "edge",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "bilateralPair",
+              "shape" : "flat"
             }
           ],
           "title" : "Minute 5"
@@ -4372,7 +4560,8 @@
               "targets" : [
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -4382,7 +4571,8 @@
           "targets" : [
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 6"
@@ -4401,19 +4591,18 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 30,
-                    "minimum" : 30
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 30,
+                      "minimum" : 30
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4423,19 +4612,18 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 30,
-                "minimum" : 30
+              "depth" : {
+                "range" : {
+                  "maximum" : 30,
+                  "minimum" : 30
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 7"
@@ -4453,22 +4641,26 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 15,
-                    "minimum" : 15
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 15,
+                      "minimum" : 15
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 35,
-                    "minimum" : 35
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 35,
+                      "minimum" : 35
+                    }
                   },
                   "fingerCapacity" : 3,
                   "kind" : "pocket",
-                  "selection" : "allMatching"
+                  "selection" : "single"
                 }
               ],
               "timing" : "undefined"
@@ -4477,22 +4669,26 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 15,
-                "minimum" : 15
+              "depth" : {
+                "range" : {
+                  "maximum" : 15,
+                  "minimum" : 15
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 35,
-                "minimum" : 35
+              "depth" : {
+                "range" : {
+                  "maximum" : 35,
+                  "minimum" : 35
+                }
               },
               "fingerCapacity" : 3,
               "kind" : "pocket",
-              "selection" : "allMatching"
+              "selection" : "single"
             }
           ],
           "title" : "Minute 8"
@@ -4510,18 +4706,22 @@
               "kind" : "work",
               "targets" : [
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 32,
-                    "minimum" : 32
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 32,
+                      "minimum" : 32
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
                   "selection" : "single"
                 },
                 {
-                  "depthRangeMillimeters" : {
-                    "maximum" : 28,
-                    "minimum" : 28
+                  "depth" : {
+                    "range" : {
+                      "maximum" : 28,
+                      "minimum" : 28
+                    }
                   },
                   "fingerCapacity" : 2,
                   "kind" : "pocket",
@@ -4534,18 +4734,22 @@
           "side" : "both",
           "targets" : [
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 32,
-                "minimum" : 32
+              "depth" : {
+                "range" : {
+                  "maximum" : 32,
+                  "minimum" : 32
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
               "selection" : "single"
             },
             {
-              "depthRangeMillimeters" : {
-                "maximum" : 28,
-                "minimum" : 28
+              "depth" : {
+                "range" : {
+                  "maximum" : 28,
+                  "minimum" : 28
+                }
               },
               "fingerCapacity" : 2,
               "kind" : "pocket",
@@ -4568,14 +4772,12 @@
               "targets" : [
                 {
                   "kind" : "jug",
-                  "requiredFeatures" : [
-                    "outerJug"
-                  ],
-                  "selection" : "allMatching"
+                  "selection" : "bilateralPair"
                 },
                 {
                   "kind" : "sloper",
-                  "selection" : "allMatching"
+                  "selection" : "single",
+                  "shape" : "round"
                 }
               ],
               "timing" : "undefined"
@@ -4585,14 +4787,12 @@
           "targets" : [
             {
               "kind" : "jug",
-              "requiredFeatures" : [
-                "outerJug"
-              ],
-              "selection" : "allMatching"
+              "selection" : "bilateralPair"
             },
             {
               "kind" : "sloper",
-              "selection" : "allMatching"
+              "selection" : "single",
+              "shape" : "round"
             }
           ],
           "title" : "Minute 10"
@@ -4772,7 +4972,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-1",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4820,7 +5020,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-2",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4862,7 +5062,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-3",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4904,7 +5104,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-4",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4946,7 +5146,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "max-hangs-5",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -12529,7 +12729,7 @@
           "activeDuration" : 10,
           "duration" : 60,
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-1",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12576,7 +12776,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-2",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12616,7 +12816,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-3",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12656,7 +12856,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12697,7 +12897,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-5",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -12738,7 +12938,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "double",
+          "handUse" : "either",
           "id" : "abrahangs-grip-6",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",

@@ -1,0 +1,8 @@
+[
+  {
+    "sourceId": "I1",
+    "url": "https://moonclimbing.com/media/catalog/product/cache/d6cc8bf5bd96a83606fc1c516f2f9600/6/0/60-112-ash_moon_armstrong_fingerboard_ash_01.jpg",
+    "success": false,
+    "error": "URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+]

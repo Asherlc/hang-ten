@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "dewoodstok-woodbord",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "deWoodstok",
+    "evidencePacket": "https://www.dewoodstok.nl/product/hangboard-woodbord/"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "GLB exported from verified manufacturer geometry; no-screwholes variant",
+    "retainedPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/dewoodstok-woodbord.glb",
+    "sha256": "8ef554950a9d4078f39b122df8e570b691853e257ea9e8066220d22681e44085"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package"
+}

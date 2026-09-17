@@ -1,5 +1,16 @@
 import Foundation
 
+/// Resolves an athlete's pre-start hand choice at the presentation boundary.
+/// The original definition remains visible until a valid side has been chosen.
+enum WorkoutLiveStepResolver {
+    static func materialized(
+        _ step: WorkoutStep,
+        selectedHandSide: WorkoutSide?
+    ) -> WorkoutStep {
+        step.resolvingEitherHand(selectedHandSide: selectedHandSide) ?? step
+    }
+}
+
 struct WorkoutClock {
     static var monotonicTime: TimeInterval {
         ProcessInfo.processInfo.systemUptime
@@ -97,6 +108,35 @@ enum WorkoutHoldCueVisibilityPolicy {
         holdCue != nil
             && !isComplete
             && (countdown == 0 || (countdown > 0 && isSkipCountdown))
+    }
+
+    static func showsCue(
+        for cueSide: WorkoutSide,
+        step: WorkoutStep?
+    ) -> Bool {
+        guard let step, step.handUse == .single else { return true }
+        return step.side == cueSide
+    }
+}
+
+/// Landscape lays the two hand cues out as fixed left/right slots beside the
+/// board, so each slot has to follow the step the cue actually describes. That
+/// is the upcoming work step while the athlete rests, not the resting step.
+enum WorkoutLandscapeHandCuePolicy {
+    static func showsHandCue(
+        for cueSide: WorkoutSide,
+        holdCue: WorkoutHoldCue?,
+        cueStep: WorkoutStep?,
+        countdown: Int,
+        isComplete: Bool,
+        isSkipCountdown: Bool
+    ) -> Bool {
+        WorkoutHoldCueVisibilityPolicy.showsCue(
+            holdCue: holdCue,
+            countdown: countdown,
+            isComplete: isComplete,
+            isSkipCountdown: isSkipCountdown
+        ) && WorkoutHoldCueVisibilityPolicy.showsCue(for: cueSide, step: cueStep)
     }
 }
 

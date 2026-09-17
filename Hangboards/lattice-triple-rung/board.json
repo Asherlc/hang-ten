@@ -51,10 +51,11 @@
       "equipmentObjectID": "primary",
       "name": "45 mm upper edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 45,
-        "upperBound": 45
+      "depth": {
+        "range": {
+          "minimum": 45,
+          "maximum": 45
+        }
       },
       "gripTypes": []
     },
@@ -63,10 +64,11 @@
       "equipmentObjectID": "primary",
       "name": "10 mm middle edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -75,10 +77,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm lower edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     }

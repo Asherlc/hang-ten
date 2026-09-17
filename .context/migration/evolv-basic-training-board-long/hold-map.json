@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 3,
+  "assetSha256": "bc094af7b276749438852b79066fdda4f9f1a937ac32f22ab07c0432d17f81ab",
+  "asset": "evolv-basic-training-board-long.glb",
+  "sourceCoordinateSystem": {
+    "units": "metres",
+    "right": [
+      1,
+      0,
+      0
+    ],
+    "rear": [
+      0,
+      1,
+      0
+    ],
+    "up": [
+      0,
+      0,
+      1
+    ],
+    "physicalFront": [
+      0,
+      -1,
+      0
+    ],
+    "canonicalCameraLookingDirection": [
+      0,
+      1,
+      0
+    ]
+  },
+  "nonselectableObjects": [
+    "body"
+  ],
+  "holds": [
+    {
+      "holdId": "jug",
+      "objectName": "hold-jug",
+      "kind": "rounded jug",
+      "evidenceRefs": [
+        "P1",
+        "U1",
+        "U3",
+        "U4"
+      ],
+      "publishedDepthMm": null,
+      "publishedDepthFamilyMm": null,
+      "displayDepthMm": null,
+      "depthClassification": "No published numeric jug depth",
+      "sourceCentreM": [
+        0,
+        -0.06,
+        0.126
+      ],
+      "geometryClassification": "Actual continuous external contact surface, partitioned from the assembled shell; no overlapping selector mesh",
+      "selectionSpan": "one full-width physical contact, not left/right copies"
+    },
+    {
+      "holdId": "edge-upper",
+      "objectName": "hold-edge-upper",
+      "kind": "rounded edge",
+      "evidenceRefs": [
+        "P1",
+        "U1",
+        "U3",
+        "U4"
+      ],
+      "publishedDepthMm": null,
+      "publishedDepthFamilyMm": [
+        10,
+        15,
+        20
+      ],
+      "displayDepthMm": 10,
+      "depthClassification": "Photo-inferred assignment of published family; exact gauge convention not independently established",
+      "sourceCentreM": [
+        0,
+        -0.048,
+        0.082
+      ],
+      "geometryClassification": "Actual continuous external contact surface, partitioned from the assembled shell; no overlapping selector mesh",
+      "selectionSpan": "one full-width physical contact, not left/right copies"
+    },
+    {
+      "holdId": "edge-middle",
+      "objectName": "hold-edge-middle",
+      "kind": "rounded edge",
+      "evidenceRefs": [
+        "P1",
+        "U1",
+        "U3",
+        "U4"
+      ],
+      "publishedDepthMm": null,
+      "publishedDepthFamilyMm": [
+        10,
+        15,
+        20
+      ],
+      "displayDepthMm": 15,
+      "depthClassification": "Photo-inferred assignment of published family; exact gauge convention not independently established",
+      "sourceCentreM": [
+        0,
+        -0.04,
+        0.053
+      ],
+      "geometryClassification": "Actual continuous external contact surface, partitioned from the assembled shell; no overlapping selector mesh",
+      "selectionSpan": "one full-width physical contact, not left/right copies"
+    },
+    {
+      "holdId": "edge-lower",
+      "objectName": "hold-edge-lower",
+      "kind": "rounded edge",
+      "evidenceRefs": [
+        "P1",
+        "U1",
+        "U3",
+        "U4"
+      ],
+      "publishedDepthMm": null,
+      "publishedDepthFamilyMm": [
+        10,
+        15,
+        20
+      ],
+      "displayDepthMm": 20,
+      "depthClassification": "Photo-inferred assignment of published family; exact gauge convention not independently established",
+      "sourceCentreM": [
+        0,
+        -0.03,
+        0.022
+      ],
+      "geometryClassification": "Actual continuous external contact surface, partitioned from the assembled shell; no overlapping selector mesh",
+      "selectionSpan": "one full-width physical contact, not left/right copies"
+    }
+  ]
+}

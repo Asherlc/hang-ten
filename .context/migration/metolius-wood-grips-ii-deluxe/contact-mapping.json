@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "packageID": "metolius-wood-grips-ii-deluxe",
+  "logicalContactIDs": [
+    "jug-1-left",
+    "sloper-2-flat-left",
+    "sloper-12-round-center",
+    "sloper-2-flat-right",
+    "jug-1-right",
+    "edge-3-31-left",
+    "pocket-4-32-three-left",
+    "pocket-5-38-two-left",
+    "pocket-13-32-four-center",
+    "pocket-5-38-two-right",
+    "pocket-4-32-three-right",
+    "edge-3-31-right",
+    "edge-6-25-left",
+    "pocket-7-25-three-left",
+    "pocket-8-28-two-left",
+    "pocket-14-25-four-center",
+    "pocket-8-28-two-right",
+    "pocket-7-25-three-right",
+    "edge-6-25-right",
+    "edge-9-19-left",
+    "pocket-10-19-three-left",
+    "pocket-11-19-two-left",
+    "pocket-15-19-four-center",
+    "pocket-11-19-two-right",
+    "pocket-10-19-three-right",
+    "edge-9-19-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold-01-jug-left",
+      "role": "contact",
+      "contactID": "jug-1-left"
+    },
+    {
+      "sourceNodeID": "hold-02-flat-stopper-left",
+      "role": "contact",
+      "contactID": "sloper-2-flat-left"
+    },
+    {
+      "sourceNodeID": "hold-12-round-stopper-centre",
+      "role": "contact",
+      "contactID": "sloper-12-round-center"
+    },
+    {
+      "sourceNodeID": "hold-02-flat-stopper-right",
+      "role": "contact",
+      "contactID": "sloper-2-flat-right"
+    },
+    {
+      "sourceNodeID": "hold-01-jug-right",
+      "role": "contact",
+      "contactID": "jug-1-right"
+    },
+    {
+      "sourceNodeID": "hold-03-edge-left",
+      "role": "contact",
+      "contactID": "edge-3-31-left"
+    },
+    {
+      "sourceNodeID": "hold-04-three-finger-left",
+      "role": "contact",
+      "contactID": "pocket-4-32-three-left"
+    },
+    {
+      "sourceNodeID": "hold-05-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-5-38-two-left"
+    },
+    {
+      "sourceNodeID": "hold-13-four-finger-centre",
+      "role": "contact",
+      "contactID": "pocket-13-32-four-center"
+    },
+    {
+      "sourceNodeID": "hold-05-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-5-38-two-right"
+    },
+    {
+      "sourceNodeID": "hold-04-three-finger-right",
+      "role": "contact",
+      "contactID": "pocket-4-32-three-right"
+    },
+    {
+      "sourceNodeID": "hold-03-edge-right",
+      "role": "contact",
+      "contactID": "edge-3-31-right"
+    },
+    {
+      "sourceNodeID": "hold-06-edge-left",
+      "role": "contact",
+      "contactID": "edge-6-25-left"
+    },
+    {
+      "sourceNodeID": "hold-07-three-finger-left",
+      "role": "contact",
+      "contactID": "pocket-7-25-three-left"
+    },
+    {
+      "sourceNodeID": "hold-08-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-8-28-two-left"
+    },
+    {
+      "sourceNodeID": "hold-14-four-finger-centre",
+      "role": "contact",
+      "contactID": "pocket-14-25-four-center"
+    },
+    {
+      "sourceNodeID": "hold-08-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-8-28-two-right"
+    },
+    {
+      "sourceNodeID": "hold-07-three-finger-right",
+      "role": "contact",
+      "contactID": "pocket-7-25-three-right"
+    },
+    {
+      "sourceNodeID": "hold-06-edge-right",
+      "role": "contact",
+      "contactID": "edge-6-25-right"
+    },
+    {
+      "sourceNodeID": "hold-09-edge-left",
+      "role": "contact",
+      "contactID": "edge-9-19-left"
+    },
+    {
+      "sourceNodeID": "hold-10-three-finger-left",
+      "role": "contact",
+      "contactID": "pocket-10-19-three-left"
+    },
+    {
+      "sourceNodeID": "hold-11-two-finger-left",
+      "role": "contact",
+      "contactID": "pocket-11-19-two-left"
+    },
+    {
+      "sourceNodeID": "hold-15-four-finger-centre",
+      "role": "contact",
+      "contactID": "pocket-15-19-four-center"
+    },
+    {
+      "sourceNodeID": "hold-11-two-finger-right",
+      "role": "contact",
+      "contactID": "pocket-11-19-two-right"
+    },
+    {
+      "sourceNodeID": "hold-10-three-finger-right",
+      "role": "contact",
+      "contactID": "pocket-10-19-three-right"
+    },
+    {
+      "sourceNodeID": "hold-09-edge-right",
+      "role": "contact",
+      "contactID": "edge-9-19-right"
+    }
+  ]
+}

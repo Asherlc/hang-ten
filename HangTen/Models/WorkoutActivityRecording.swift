@@ -114,23 +114,31 @@ struct RecordedActivitySegment: Codable, Hashable {
     let kind: WorkoutSegmentKind
     let target: RecordedActivityTarget?
     let durationSeconds: TimeInterval?
+    /// The actual hand assignment for work. This is separate from a plan's
+    /// capability metadata so completed activity can be tracked by side.
+    let handUse: WorkoutHandUse?
+    let side: WorkoutSide?
 
     init(
         stepID: String,
         stepNumber: Int,
         kind: WorkoutSegmentKind,
         target: RecordedActivityTarget?,
-        durationSeconds: TimeInterval?
+        durationSeconds: TimeInterval?,
+        handUse: WorkoutHandUse? = nil,
+        side: WorkoutSide? = nil
     ) {
         self.stepID = stepID
         self.stepNumber = stepNumber
         self.kind = kind
         self.target = target
         self.durationSeconds = durationSeconds
+        self.handUse = handUse
+        self.side = side
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case stepID, stepNumber, kind, target, durationSeconds
+        case stepID, stepNumber, kind, target, durationSeconds, handUse, side
     }
 
     init(from decoder: Decoder) throws {
@@ -155,6 +163,8 @@ struct RecordedActivitySegment: Codable, Hashable {
             TimeInterval.self,
             forKey: .durationSeconds
         )
+        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse)
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
         switch kind {
         case .work where target == nil:
             throw DecodingError.dataCorruptedError(
@@ -167,6 +177,12 @@ struct RecordedActivitySegment: Codable, Hashable {
                 forKey: .target,
                 in: container,
                 debugDescription: "Recorded rest activity cannot contain a target."
+            )
+        case .rest where handUse != nil || side != nil:
+            throw DecodingError.dataCorruptedError(
+                forKey: .handUse,
+                in: container,
+                debugDescription: "Recorded rest activity cannot contain hand-use metadata."
             )
         default:
             break
@@ -191,6 +207,14 @@ struct RecordedActivitySegment: Codable, Hashable {
                     debugDescription: "Recorded rest activity cannot contain a target."
                 )
             )
+        case .rest where handUse != nil || side != nil:
+            throw EncodingError.invalidValue(
+                self,
+                EncodingError.Context(
+                    codingPath: encoder.codingPath,
+                    debugDescription: "Recorded rest activity cannot contain hand-use metadata."
+                )
+            )
         default:
             break
         }
@@ -201,6 +225,8 @@ struct RecordedActivitySegment: Codable, Hashable {
         try container.encode(kind, forKey: .kind)
         try container.encodeIfPresent(target, forKey: .target)
         try container.encodeIfPresent(durationSeconds, forKey: .durationSeconds)
+        try container.encodeIfPresent(handUse, forKey: .handUse)
+        try container.encodeIfPresent(side, forKey: .side)
     }
 }
 
@@ -247,7 +273,7 @@ struct RecordedActivityStepMeasurement: Codable, Hashable {
 }
 
 struct WorkoutActivityMetadata: Codable, Hashable {
-    static let currentVersion = 2
+    static let currentVersion = 3
 
     let version: Int
     let segments: [RecordedActivitySegment]
@@ -281,17 +307,66 @@ struct WorkoutActivityMetadata: Codable, Hashable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
         version = try container.decode(Int.self, forKey: .version)
-        guard version == Self.currentVersion else {
+        guard version == 2 || version == Self.currentVersion else {
             throw DecodingError.dataCorruptedError(
                 forKey: .version,
                 in: container,
                 debugDescription: "Unsupported workout activity version \(version)."
             )
         }
-        segments = try container.decode([RecordedActivitySegment].self, forKey: .segments)
+        if version == 2 {
+            segments = try container.decode([LegacyRecordedActivitySegment].self, forKey: .segments)
+                .map(RecordedActivitySegment.init(legacy:))
+        } else {
+            segments = try container.decode([RecordedActivitySegment].self, forKey: .segments)
+        }
         measurements = try container.decodeIfPresent(
             [RecordedActivityStepMeasurement].self,
             forKey: .measurements
+        )
+    }
+}
+
+private struct LegacyRecordedActivitySegment: Codable {
+    let stepID: String
+    let stepNumber: Int
+    let kind: WorkoutSegmentKind
+    let target: RecordedActivityTarget?
+    let durationSeconds: TimeInterval?
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case stepID, stepNumber, kind, target, durationSeconds
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: ActivityCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported legacy recorded activity field \(unknownKey.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        stepID = try container.decode(String.self, forKey: .stepID)
+        stepNumber = try container.decode(Int.self, forKey: .stepNumber)
+        kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
+        target = try container.decodeIfPresent(RecordedActivityTarget.self, forKey: .target)
+        durationSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .durationSeconds)
+    }
+}
+
+private extension RecordedActivitySegment {
+    init(legacy: LegacyRecordedActivitySegment) {
+        self.init(
+            stepID: legacy.stepID,
+            stepNumber: legacy.stepNumber,
+            kind: legacy.kind,
+            target: legacy.target,
+            durationSeconds: legacy.durationSeconds
         )
     }
 }
@@ -318,12 +393,15 @@ struct WorkoutActivitySegmentKey: Hashable {
 
 enum WorkoutActivityRecordingError: LocalizedError, Equatable {
     case unresolvedTarget(stepID: String, segmentIndex: Int)
+    case handSideRequired(stepID: String)
     case invalidObservedDuration(WorkoutActivitySegmentKey)
 
     var errorDescription: String? {
         switch self {
         case .unresolvedTarget:
             "Hang Ten could not match a workout activity to the selected board."
+        case .handSideRequired:
+            "Choose a left or right hand before starting this routine."
         case .invalidObservedDuration:
             "Hang Ten could not use the recorded workout duration."
         }
@@ -340,9 +418,9 @@ enum ContactResolutionError: LocalizedError, Equatable {
         case .noMatches:
             "No physical contact satisfies the workout requirement."
         case .ambiguousSingle:
-            "The workout requirement does not identify exactly one physical contact."
+            "Hang Ten could not select a physical contact for the workout requirement."
         case .invalidBilateralPair:
-            "The workout requirement does not identify exactly one documented bilateral pair."
+            "Hang Ten could not form a geometrically valid bilateral pair for the workout requirement."
         }
     }
 }
@@ -359,22 +437,24 @@ enum ContactResolver {
                 && matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
-        candidates = applying(step.side, to: candidates)
+
+        guard !candidates.isEmpty else {
+            throw ContactResolutionError.noMatches
+        }
 
         switch requirement.selection {
-        case .allMatching:
-            guard !candidates.isEmpty else { throw ContactResolutionError.noMatches }
         case .single:
-            guard candidates.count == 1 else {
-                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
-            }
+            candidates = try singleCandidate(from: candidates, on: board)
         case .bilateralPair:
             guard step.handUse == .double,
-                  step.side == .both,
-                  candidates.count == 2,
-                  isDocumentedPair(candidates[0], candidates[1]) else {
+                  step.side == .both else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
+            guard candidates.count >= 2,
+                  let pair = outermostPair(from: candidates, on: board) else {
+                throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
+            }
+            candidates = pair
         }
 
         return candidates
@@ -407,23 +487,14 @@ enum ContactResolver {
         _ requirement: ContactRequirement,
         contact: PhysicalContact
     ) -> Bool {
+        if let contactID = requirement.contactID, contact.id != contactID { return false }
         if let kind = requirement.kind, contact.kind != kind { return false }
-        if !requirement.requiredFeatures.isSubset(of: contact.features) { return false }
+        if let shape = requirement.shape, contact.shape != shape { return false }
+        if let depth = requirement.depth, !depth.matches(contact.depth) { return false }
         if let fingerCapacity = requirement.fingerCapacity,
            contact.fingerCapacity != fingerCapacity { return false }
         if let handCapacity = requirement.handCapacity,
            contact.handCapacity != handCapacity { return false }
-        if !requirement.compatibleGripTypes.isEmpty,
-           requirement.compatibleGripTypes.isDisjoint(with: contact.gripTypes) {
-            return false
-        }
-        if let requiredDepth = requirement.depthRangeMillimeters {
-            guard let contactDepth = contact.depthRangeMillimeters,
-                  contactDepth.upperBound >= requiredDepth.minimum,
-                  contactDepth.lowerBound <= requiredDepth.maximum else {
-                return false
-            }
-        }
         return true
     }
 
@@ -435,28 +506,75 @@ enum ContactResolver {
         return contact.gripTypes.contains(stepGripType)
     }
 
-    private static func applying(
-        _ side: WorkoutSide,
-        to candidates: [PhysicalContact]
-    ) -> [PhysicalContact] {
-        guard side != .both else { return candidates }
-        let requiredSide: ContactSide = side == .left ? .left : .right
-        return candidates.filter { $0.side == requiredSide }
+    private static func singleCandidate(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        guard candidates.count > 1 else {
+            guard candidates.count == 1 else {
+                throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
+            }
+            return candidates
+        }
+
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
+        }
+        guard framedCandidates.count == candidates.count,
+              let selected = framedCandidates.min(by: { lhs, rhs in
+                  let lhsDistance = abs(lhs.frame.rect.midX - 0.5)
+                  let rhsDistance = abs(rhs.frame.rect.midX - 0.5)
+                  if lhsDistance == rhsDistance {
+                      return lhs.contact.id < rhs.contact.id
+                  }
+                  return lhsDistance < rhsDistance
+              }) else {
+            throw ContactResolutionError.ambiguousSingle(candidateCount: candidates.count)
+        }
+        return [selected.contact]
     }
 
-    private static func isDocumentedPair(
-        _ first: PhysicalContact,
-        _ second: PhysicalContact
-    ) -> Bool {
-        first.pairedContactID == second.id
-            && second.pairedContactID == first.id
-            && Set([first.side, second.side]) == Set([.left, .right])
-            && first.kind == second.kind
-            && first.features == second.features
-            && first.fingerCapacity == second.fingerCapacity
-            && first.handCapacity == second.handCapacity
-            && first.depthRangeMillimeters == second.depthRangeMillimeters
-            && first.gripTypes == second.gripTypes
+    private static func outermostPair(
+        from candidates: [PhysicalContact],
+        on board: BoardRevision
+    ) -> [PhysicalContact]? {
+        let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
+            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+                return nil
+            }
+            return (contact, frame)
+        }
+        guard framedCandidates.count == candidates.count else { return nil }
+
+        let leftmost = framedCandidates.min { lhs, rhs in
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
+        }
+        let rightmost = framedCandidates.max { lhs, rhs in
+            if lhs.frame.rect.midX == rhs.frame.rect.midX {
+                return lhs.contact.id < rhs.contact.id
+            }
+            return lhs.frame.rect.midX < rhs.frame.rect.midX
+        }
+        let horizontalMidpoint: CGFloat = 0.5
+        guard let leftmost,
+              let rightmost,
+              leftmost.contact.id != rightmost.contact.id,
+              leftmost.frame.rect.midX < horizontalMidpoint,
+              rightmost.frame.rect.midX > horizontalMidpoint,
+              leftmost.contact.kind == rightmost.contact.kind,
+              leftmost.contact.shape == rightmost.contact.shape,
+              leftmost.contact.depth == rightmost.contact.depth,
+              leftmost.contact.fingerCapacity == rightmost.contact.fingerCapacity,
+              leftmost.contact.handCapacity == rightmost.contact.handCapacity else {
+            return nil
+        }
+        return [leftmost.contact, rightmost.contact]
     }
 }
 
@@ -464,10 +582,12 @@ struct WorkoutActivityRecorder {
     func segments(
         for plan: TrainingPlan,
         on board: BoardRevision,
-        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
+        stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
+        selectedHandSide: WorkoutSide? = nil
     ) throws -> [RecordedActivitySegment] {
         var result: [RecordedActivitySegment] = []
         for step in plan.steps {
+            let recordedStep = try resolvedHandStep(step, selectedHandSide: selectedHandSide)
             for (index, segment) in step.segments.enumerated() {
                 let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
                 let duration: TimeInterval?
@@ -514,7 +634,9 @@ struct WorkoutActivityRecorder {
                             stepNumber: step.number,
                             kind: .work,
                             target: .selfSelected,
-                            durationSeconds: duration
+                            durationSeconds: duration,
+                            handUse: recordedStep.handUse,
+                            side: recordedStep.side
                         )
                     )
                     continue
@@ -525,7 +647,7 @@ struct WorkoutActivityRecorder {
                     do {
                         contacts = try ContactResolver.resolve(
                             requirement,
-                            step: step,
+                            step: recordedStep,
                             board: board
                         )
                     } catch {
@@ -548,13 +670,26 @@ struct WorkoutActivityRecorder {
                                     contactIDs: contacts.map(\.id)
                                 )
                             ),
-                            durationSeconds: duration
+                            durationSeconds: duration,
+                            handUse: recordedStep.handUse,
+                            side: recordedStep.side
                         )
                     )
                 }
             }
         }
         return result
+    }
+
+    private func resolvedHandStep(
+        _ step: WorkoutStep,
+        selectedHandSide: WorkoutSide?
+    ) throws -> WorkoutStep {
+        guard step.handUse == .either else { return step }
+        guard selectedHandSide == .left || selectedHandSide == .right else {
+            throw WorkoutActivityRecordingError.handSideRequired(stepID: step.id)
+        }
+        return step.resolvingEitherHand(selectedHandSide: selectedHandSide)!
     }
 
     private func modelSHA256(for presentation: BoardPresentation) -> String? {
@@ -580,13 +715,15 @@ struct WorkoutActivityRecorder {
         for plan: TrainingPlan,
         on board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
+        selectedHandSide: WorkoutSide? = nil,
         stepMeasurements: [WorkoutStepMeasurement] = []
     ) throws -> WorkoutActivityMetadata {
         WorkoutActivityMetadata(
             segments: try segments(
                 for: plan,
                 on: board,
-                stopwatchDurations: stopwatchDurations
+                stopwatchDurations: stopwatchDurations,
+                selectedHandSide: selectedHandSide
             ),
             measurements: measuredSteps(from: stepMeasurements)
         )

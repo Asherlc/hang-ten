@@ -37,13 +37,13 @@ def test_schema_v3_raster_edit_keeps_facts_and_geometry_in_native_owners(
     assert set(first["metadata"]) == {"contactID", "pieceIndex", "presentationID"}
     assert not {
         "kind",
-        "features",
         "gripTypes",
         "pairedContactID",
         "equipmentObjectID",
         "fingerCapacity",
         "handCapacity",
-        "depthRangeMillimeters",
+        "shape",
+        "depth",
     }.intersection(first)
 
     edited_contact_id = first["metadata"]["contactID"]

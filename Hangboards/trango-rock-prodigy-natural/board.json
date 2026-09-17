@@ -1476,11 +1476,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 40 mm top jug",
       "kind": "jug",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -1489,11 +1490,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 40 mm top jug",
       "kind": "jug",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 40,
-        "upperBound": 40
+      "depth": {
+        "range": {
+          "minimum": 40,
+          "maximum": 40
+        }
       },
       "gripTypes": []
     },
@@ -1502,11 +1504,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 20–33 mm top variable-depth rail",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 33
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 33
+        }
       },
       "gripTypes": []
     },
@@ -1515,11 +1518,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 20–33 mm top variable-depth rail",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 33
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 33
+        }
       },
       "gripTypes": []
     },
@@ -1528,11 +1532,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 10–24 mm bottom variable-depth rail",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 24
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 24
+        }
       },
       "gripTypes": []
     },
@@ -1541,11 +1546,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 10–24 mm bottom variable-depth rail",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 24
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 24
+        }
       },
       "gripTypes": []
     },
@@ -1554,7 +1560,6 @@
       "equipmentObjectID": "primary",
       "name": "Left closed crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "fullCrimp"
@@ -1565,7 +1570,6 @@
       "equipmentObjectID": "primary",
       "name": "Right closed crimp",
       "kind": "edge",
-      "features": [],
       "fingerCapacity": 4,
       "gripTypes": [
         "fullCrimp"
@@ -1576,11 +1580,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 38 mm upper pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 38,
-        "upperBound": 38
+      "depth": {
+        "range": {
+          "minimum": 38,
+          "maximum": 38
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -1591,11 +1596,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 38 mm upper pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
-      "depthRangeMillimeters": {
-        "lowerBound": 38,
-        "upperBound": 38
+      "depth": {
+        "range": {
+          "minimum": 38,
+          "maximum": 38
+        }
       },
       "gripTypes": [
         "threeFingerPocket"
@@ -1606,7 +1612,6 @@
       "equipmentObjectID": "primary",
       "name": "Left center lower pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1617,7 +1622,6 @@
       "equipmentObjectID": "primary",
       "name": "Right center lower pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
       "gripTypes": [
         "twoFingerPocket"
@@ -1628,7 +1632,6 @@
       "equipmentObjectID": "primary",
       "name": "Left outer supported pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
       "gripTypes": [
         "threeFingerPocket"
@@ -1639,7 +1642,6 @@
       "equipmentObjectID": "primary",
       "name": "Right outer supported pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 3,
       "gripTypes": [
         "threeFingerPocket"

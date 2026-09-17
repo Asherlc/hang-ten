@@ -324,7 +324,6 @@
       "equipmentObjectID": "primary",
       "name": "Top phone slot",
       "kind": "edge",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -332,10 +331,11 @@
       "equipmentObjectID": "primary",
       "name": "35 mm left warm-up edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 35,
-        "upperBound": 35
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
       },
       "gripTypes": []
     },
@@ -344,10 +344,11 @@
       "equipmentObjectID": "primary",
       "name": "35 mm right warm-up edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 35,
-        "upperBound": 35
+      "depth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
       },
       "gripTypes": []
     },
@@ -356,10 +357,11 @@
       "equipmentObjectID": "primary",
       "name": "7 mm incut edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 7,
-        "upperBound": 7
+      "depth": {
+        "range": {
+          "minimum": 7,
+          "maximum": 7
+        }
       },
       "gripTypes": []
     },
@@ -368,10 +370,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -380,11 +383,12 @@
       "equipmentObjectID": "primary",
       "name": "45 mm left mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 45,
-        "upperBound": 45
+      "depth": {
+        "range": {
+          "minimum": 45,
+          "maximum": 45
+        }
       },
       "gripTypes": []
     },
@@ -393,11 +397,12 @@
       "equipmentObjectID": "primary",
       "name": "25 mm left two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -406,10 +411,11 @@
       "equipmentObjectID": "primary",
       "name": "30 mm center edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 30,
-        "upperBound": 30
+      "depth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
       },
       "gripTypes": []
     },
@@ -418,11 +424,12 @@
       "equipmentObjectID": "primary",
       "name": "45 mm right mono pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 45,
-        "upperBound": 45
+      "depth": {
+        "range": {
+          "minimum": 45,
+          "maximum": 45
+        }
       },
       "gripTypes": []
     },
@@ -431,11 +438,12 @@
       "equipmentObjectID": "primary",
       "name": "25 mm right two-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 2,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -444,10 +452,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -456,10 +465,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -468,10 +478,11 @@
       "equipmentObjectID": "primary",
       "name": "10 mm left edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -480,10 +491,11 @@
       "equipmentObjectID": "primary",
       "name": "22 mm center edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 22,
-        "upperBound": 22
+      "depth": {
+        "range": {
+          "minimum": 22,
+          "maximum": 22
+        }
       },
       "gripTypes": []
     },
@@ -492,10 +504,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -504,10 +517,11 @@
       "equipmentObjectID": "primary",
       "name": "10 mm right edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     }

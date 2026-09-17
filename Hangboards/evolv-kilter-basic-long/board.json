@@ -16,215 +16,22 @@
     {
       "id": "primary",
       "name": "Primary",
-      "aspectRatio": 1.5024437927663734,
+      "aspectRatio": 4.9393766375557115,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "contactGeometry": {
-          "jug-rounded": [
-            {
-              "frame": {
-                "x": 0.057709642811,
-                "y": 0.39,
-                "width": 0.882290357189,
-                "height": 0.045
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "edge-20": [
-            {
-              "frame": {
-                "x": 0.060234439818,
-                "y": 0.500722533724,
-                "width": 0.882236279766,
-                "height": 0.038172128055
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "edge-15": [
-            {
-              "frame": {
-                "x": 0.062885482759,
-                "y": 0.560874478006,
-                "width": 0.879224551074,
-                "height": 0.035852546432
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "edge-10": [
-            {
-              "frame": {
-                "x": 0.062037866623,
-                "y": 0.617774965787,
-                "width": 0.881154223162,
-                "height": 0.037203515152
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ]
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [0, 0, -1],
+            "up": [0, 1, 0],
+            "fitPadding": 0.08
+          }
         }
       }
     }
@@ -236,7 +43,6 @@
       "equipmentObjectID": "primary",
       "name": "Rounded jug",
       "kind": "jug",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -244,10 +50,11 @@
       "equipmentObjectID": "primary",
       "name": "20 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -256,10 +63,11 @@
       "equipmentObjectID": "primary",
       "name": "15 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -268,10 +76,11 @@
       "equipmentObjectID": "primary",
       "name": "10 mm rounded edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     }

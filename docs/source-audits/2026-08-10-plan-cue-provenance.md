@@ -20,21 +20,41 @@ and F100 retains its alternating right/left instruction without inventing a
 board target or side mapping.
 
 The three generic Metolius 10 Minute Sequences are source-generic rather than
-board-specific. The linked manufacturer guide supplies the visible hold
-wording retained in each task's instruction, but it supplies no Hang Ten
-contact fact or contact ID. Their work steps therefore emit no factual target;
-when recorded against any selected board, including Compact II, that explicit
-absence persists as `selfSelected`. This is a representation of the source's
-generic choice, not a semantic mapping, a board-specific fallback, or invented
-training content.
+board-specific. Their source hold terms are retained as semantic predicates,
+not board contact IDs: round sloper → `sloper` + `round`; medium, small, and
+large edge → `edge` + the corresponding categorical `HoldDepth`; large slope
+→ `sloper` + categorical large depth; and four-finger flat/incut edge →
+`edge` + documented shape + `fingerCapacity: 4`. These predicates preserve the
+manufacturer's terms while leaving each board's factual resolver to choose one
+stable contact. No routine embeds a board-specific fallback or contact ID.
+
+## Single-hand capability amendment — 2026-09-15
+
+`WorkoutHandUse.either` is an app capability, not a source-prescription field:
+it preserves the source task's grip, duration, intensity, ordering, and rest
+while materializing one athlete-selected hand for session presentation and
+recording. The following are the only new opt-ins. Both sources prescribe
+individual hand/finger positions and do not prescribe a bilateral pair or an
+alternating left/right sequence.
+
+| Plan ID | Source URL | Newly enabled capability | Adaptation rationale |
+| --- | --- | --- | --- |
+| `research.max-hangs` | [Lattice Half 4 — Hang — Max](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | Every five work steps uses `either`; recovery remains `.double` / `.both`. | The source describes a 20 mm four-finger half-crimp hang and intensity/load adjustment, but supplies no bilateral or alternating-hand requirement. Hang Ten therefore lets the athlete select one hand without changing the five 7-second tasks or their recoveries. |
+| `research.abrahangs` | [Lattice Abrahangs Protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | Every six work steps uses `either`; the source's low-intensity feet-supported prescription is retained. | The source lists the six individual finger-position exercises and requires low supported loading, but supplies neither a bilateral-pair nor an alternating-side instruction. Hang Ten records the athlete's selected hand while retaining each grip, the 10/50 app timing adaptation, and feet-supported cue. |
+
+No capability was inferred merely because a step has `.hang` phase. F80 stays
+explicitly both-handed; RPTC stays two-handed; F100 and all source-written
+left/right or "repeat other arm" sequences stay side-specific; offset,
+pull, and isometric-pull work stays bilateral or otherwise source-specified;
+and every rest step remains `.double` / `.both`.
 
 ## Field decisions for all built-in plans
 
 | Plan ID | Source type | Source | Keep | Adapt | Remove |
 | --- | --- | --- | --- | --- | --- |
-| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration |
-| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, including source finger-count phrases, switches, stay-on transitions, choices, and failure/max qualifiers | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | target: generic hold wording remains instruction-only because the source authorizes no Hang Ten contact fact or ID; warmUp, cooldown, gripType, fingerConfiguration; finger phrases remain in source-backed instructions rather than inferred structured cues |
+| `metolius.generic-ten-minute.entry` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, semantic target terms | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.intermediate` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, semantic target terms | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration |
+| `metolius.generic-ten-minute.advanced` | manufacturer | [Metolius 10 Minute Sequences — Hangboard Training Guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) | title, instruction, count, including source finger-count phrases, switches, stay-on transitions, choices, failure/max qualifiers, and semantic target terms | subtitle, accessory, duration, interval: source tasks expanded into app-guided task/rest steps | warmUp, cooldown, gripType, fingerConfiguration; unsupported finger posture remains unstructured |
 | `research.max-hangs` | research | [Lattice max hang protocol](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | title, instruction, gripType, fingerConfiguration: 7-second, near-maximal, 20 mm, half-crimp, four-finger hangs | subtitle, accessory, count, duration, interval: five-set/three-minute app timer structure | target, warmUp, cooldown |
 | `research.megos-one-arm-7-3` | research | [Alex Megos finger-training power-endurance protocol, reported by Eric Hörst](https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/) | title, instruction, accessory, count, duration, interval, gripType: four 7/3 cycles per arm, left then right, two-minute recovery, six sets, 20–24 mm edge, and half-crimp | subtitle: source sequence expanded into side-specific timer steps | target, warmUp, cooldown, fingerConfiguration |
 | `research.force-feedback-f80` | research | [Frontiers force-feedback hangboard study](https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2022.862782/full) | title, subtitle, instruction, accessory, count, duration, interval: 80% MFSi, 10/6 between repetitions, up to 12 repetitions, three sets, eight-minute recovery, real-time force measurement/feedback, instrumented 12 mm study hold, and stopping a set below 70% MFSi | the final post-routine 6-second rest is omitted by Hang Ten's terminal-work policy | target, warmUp, cooldown, gripType, fingerConfiguration |
@@ -61,19 +81,17 @@ and availability ladders in Hörst and Density Hangs. Source wording remains in
 the instruction where audited, but it is not converted into a board
 requirement unless the ledger classifies the target itself as prescribed.
 
-### Simulator 3D jug-target omission
+### Simulator 3D geometry-selected jug targets
 
 The Simulator 3D source distinguishes outer jugs (1) from the center jug (14).
-The approved factual requirement fields do not include a contact name, number,
-or position selector. A broad `kind: jug` requirement would change either
-source target into all jugs, so these jug requirements are omitted while other
-source-backed targets in the same minute remain:
-
-| Plan | Source minutes | Emitted target treatment |
-| --- | --- | --- |
-| Entry | 2, 3, 5, 7 | omit outer/center jug; retain pocket/sloper requirements in compound minutes 3 and 5 |
-| Intermediate | 3, 5, 9 | omit outer jug; retain edge/pocket requirements in compound minutes 3 and 5 |
-| Advanced | 7, 10 | omit outer jug; retain pocket/sloper requirements |
+The normalized schema represents the former as `kind: jug` plus
+`.bilateralPair`, which chooses the factual outer left/right pair from default
+presentation geometry, and the latter as `kind: jug` plus `.single`, which
+chooses the centered factual jug. Neither target embeds a board contact ID or a
+position selector. The Simulator package now models #2 as two factual flat
+zones and #3 as the factual central round zone, so their source terms resolve
+through `shape: flat` and `shape: round` rather than numbered contact
+references.
 
 ## Removed catalog content
 
@@ -125,15 +143,15 @@ grip/finger cue.
     {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"}
   ],
   "planFieldRules": [
-    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","count","target"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.entry","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.entry","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["title","instruction","count","target"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.intermediate","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.intermediate","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","count"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.generic-ten-minute.intermediate","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["title","instruction","count","target"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.generic-ten-minute.advanced","fields":["subtitle","accessory","duration","interval"],"decision":"adapt","sourcePrescription":false,"adaptationType":"timer"},
-    {"planID":"metolius.generic-ten-minute.advanced","fields":["target","warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.generic-ten-minute.advanced","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
 
     {"planID":"metolius.contact.entry","fields":["title","subtitle","instruction","accessory","target","count","duration","interval"],"decision":"keep","sourcePrescription":true},
     {"planID":"metolius.contact.entry","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},

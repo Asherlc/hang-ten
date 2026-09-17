@@ -43,7 +43,6 @@ function contactFixture(id: string, overrides: Partial<Omit<PhysicalContact, "id
     equipmentObjectID: "primary",
     name: id,
     kind: "jug",
-    features: [],
     gripTypes: [],
     ...overrides,
   };
@@ -294,8 +293,8 @@ test("depth is optional for every contact kind and remains fact-owned", () => {
       contactFixture("jug", { fingerCapacity: 1, handCapacity: 1 }),
       contactFixture("sloper", { kind: "sloper", fingerCapacity: 1, handCapacity: 1 }),
       contactFixture("pinch", { kind: "pinch", fingerCapacity: 1, handCapacity: 1 }),
-      contactFixture("fixed-edge", { kind: "edge", fingerCapacity: 1, handCapacity: 1, depthRangeMillimeters: { lowerBound: 12, upperBound: 12 } }),
-      contactFixture("ranged-pocket", { kind: "pocket", fingerCapacity: 1, handCapacity: 1, depthRangeMillimeters: { lowerBound: 10, upperBound: 12 } }),
+      contactFixture("fixed-edge", { kind: "edge", fingerCapacity: 1, handCapacity: 1, depth: { range: { minimum: 12, maximum: 12 } } }),
+      contactFixture("ranged-pocket", { kind: "pocket", fingerCapacity: 1, handCapacity: 1, depth: { range: { minimum: 10, maximum: 12 } } }),
       contactFixture("missing-edge", { kind: "edge", fingerCapacity: 1, handCapacity: 1 }),
       contactFixture("missing-pocket", { kind: "pocket", fingerCapacity: 1, handCapacity: 1 }),
     ],
@@ -311,8 +310,8 @@ test("depth is optional for every contact kind and remains fact-owned", () => {
   });
 
   assert.doesNotThrow(() => controller.validateEditorDocument(document));
-  assert.equal(document.regions.some((region) => Object.hasOwn(region, "depthRangeMillimeters")), false);
-  assert.deepEqual(document.contacts.filter((contact) => contact.depthRangeMillimeters).map((contact) => contact.id), [
+  assert.equal(document.regions.some((region) => Object.hasOwn(region, "depth")), false);
+  assert.deepEqual(document.contacts.filter((contact) => contact.depth).map((contact) => contact.id), [
     "fixed-edge",
     "ranged-pocket",
   ]);
@@ -320,7 +319,7 @@ test("depth is optional for every contact kind and remains fact-owned", () => {
 
 test("editing a contact fact updates its single owner without duplicating it across media pieces", async () => {
   const document = documentFixture({
-    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 12 }, handCapacity: 1 })],
+    contacts: [contactFixture("a", { depth: { range: { minimum: 10, maximum: 12 } }, handCapacity: 1 })],
     regions: [
       regionFixture(1, "a-piece-0", FIRST_PATH, "a", 0),
       regionFixture(2, "a-piece-1", SECOND_PATH, "a", 1),
@@ -1662,7 +1661,7 @@ test("finger capacity loads in the inspector, applies to every physical piece, a
 test("contact depth ranges load, update atomically, and save on factual contacts", async () => {
   const board = boardFixture(documentFixture({
     contacts: [
-      contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } }),
+      contactFixture("a", { depth: { range: { minimum: 7.5, maximum: 10 } } }),
       contactFixture("b", { kind: "edge" }),
     ],
     regions: DEFAULT_REGIONS,
@@ -1687,23 +1686,21 @@ test("contact depth ranges load, update atomically, and save on factual contacts
     assert.ok(savedDocument);
     const editedContact = savedDocument.contacts.find((contact) => contact.id === "a");
     assert.ok(editedContact);
-    assert.deepEqual(editedContact.depthRangeMillimeters, {
-      lowerBound: 12.5,
-      upperBound: 12.5,
+    assert.deepEqual(editedContact.depth, {
+      range: { minimum: 12.5, maximum: 12.5 },
     });
     const untouchedContact = savedDocument.contacts.find((contact) => contact.id === "b");
     assert.ok(untouchedContact);
-    assert.equal(Object.hasOwn(untouchedContact, "depthRangeMillimeters"), false);
+    assert.equal(Object.hasOwn(untouchedContact, "depth"), false);
 
     await app.click("#add-contact-button");
-    assert.equal(app.documentValue("#contact-depth-lower-input"), "");
-    assert.equal(app.documentValue("#contact-depth-upper-input"), "");
+    assert.equal(app.documentValue("#contact-depth-mode-select"), "");
   }, dependenciesFixture(board, { client }));
 });
 
 test("equal contact depth bounds reopen and can become a range or be cleared", async () => {
   const board = boardFixture(documentFixture({
-    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 10 } })],
+    contacts: [contactFixture("a", { depth: { range: { minimum: 10, maximum: 10 } } })],
     regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
   }));
   const saved: EditorDocument[] = [];
@@ -1728,7 +1725,7 @@ test("equal contact depth bounds reopen and can become a range or be cleared", a
     assert.ok(rangedDocument);
     const rangedContact = rangedDocument.contacts[0];
     assert.ok(rangedContact);
-    assert.deepEqual(rangedContact.depthRangeMillimeters, { lowerBound: 7.5, upperBound: 12.5 });
+    assert.deepEqual(rangedContact.depth, { range: { minimum: 7.5, maximum: 12.5 } });
 
     await app.change("#contact-depth-lower-input", "");
     await app.click("#save-button");
@@ -1737,13 +1734,13 @@ test("equal contact depth bounds reopen and can become a range or be cleared", a
     assert.ok(clearedDocument);
     const clearedContact = clearedDocument.contacts[0];
     assert.ok(clearedContact);
-    assert.equal(Object.hasOwn(clearedContact, "depthRangeMillimeters"), false);
+    assert.equal(Object.hasOwn(clearedContact, "depth"), false);
   }, dependenciesFixture(board, { client }));
 });
 
-test("zero ranged-contact depth stays visibly invalid without replacing the valid factual range", async () => {
+test("zero ranged-contact depth saves as tagged measured evidence", async () => {
   const board = boardFixture(documentFixture({
-    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } })],
+    contacts: [contactFixture("a", { depth: { range: { minimum: 7.5, maximum: 10 } } })],
     regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
   }));
   const client = clientFixture([board]);
@@ -1756,9 +1753,8 @@ test("zero ranged-contact depth stays visibly invalid without replacing the vali
     const input = app.document.querySelector<HTMLInputElement>("#contact-depth-lower-input");
     assert.ok(input);
     assert.equal(input.value, "0");
-    assert.equal(input.min, Number.MIN_VALUE.toString());
-    assert.equal(input.checkValidity(), false);
-    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+    assert.equal(input.min, "0");
+    assert.equal(input.checkValidity(), true);
 
     await app.click("#save-button");
     assert.equal(client.saveCalls.length, 1);
@@ -1766,17 +1762,16 @@ test("zero ranged-contact depth stays visibly invalid without replacing the vali
     assert.ok(savedDocument);
     const savedContact = savedDocument.contacts[0];
     assert.ok(savedContact);
-    assert.deepEqual(savedContact.depthRangeMillimeters, {
-      lowerBound: 7.5,
-      upperBound: 10,
+    assert.deepEqual(savedContact.depth, {
+      range: { minimum: 0, maximum: 10 },
     });
     assert.doesNotThrow(() => controller.validateEditorDocument(savedDocument));
   }, dependenciesFixture(board, { client }));
 });
 
-test("zero equal-bound contact depth stays visibly invalid without replacing the valid fixed-depth fact", async () => {
+test("zero equal-bound contact depth saves as tagged measured evidence", async () => {
   const board = boardFixture(documentFixture({
-    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 10, upperBound: 10 } })],
+    contacts: [contactFixture("a", { depth: { range: { minimum: 10, maximum: 10 } } })],
     regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
   }));
   const client = clientFixture([board]);
@@ -1789,9 +1784,8 @@ test("zero equal-bound contact depth stays visibly invalid without replacing the
     const input = app.document.querySelector<HTMLInputElement>("#contact-depth-upper-input");
     assert.ok(input);
     assert.equal(input.value, "0");
-    assert.equal(input.min, Number.MIN_VALUE.toString());
-    assert.equal(input.checkValidity(), false);
-    assert.equal(input.validationMessage, "Depth must be greater than 0 mm.");
+    assert.equal(input.min, "0");
+    assert.equal(input.checkValidity(), true);
 
     await app.click("#save-button");
     assert.equal(client.saveCalls.length, 1);
@@ -1799,9 +1793,8 @@ test("zero equal-bound contact depth stays visibly invalid without replacing the
     assert.ok(savedDocument);
     const savedContact = savedDocument.contacts[0];
     assert.ok(savedContact);
-    assert.deepEqual(savedContact.depthRangeMillimeters, {
-      lowerBound: 10,
-      upperBound: 10,
+    assert.deepEqual(savedContact.depth, {
+      range: { minimum: 0, maximum: 0 },
     });
     assert.doesNotThrow(() => controller.validateEditorDocument(savedDocument));
   }, dependenciesFixture(board, { client }));
@@ -1809,7 +1802,7 @@ test("zero equal-bound contact depth stays visibly invalid without replacing the
 
 test("clearing an optional depth saves without a factual range", async () => {
   const board = boardFixture(documentFixture({
-    contacts: [contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } })],
+    contacts: [contactFixture("a", { depth: { range: { minimum: 7.5, maximum: 10 } } })],
     regions: [regionFixture(1, "a-piece-0", FIRST_PATH, "a")],
   }));
   const saved: EditorDocument[] = [];
@@ -1825,24 +1818,22 @@ test("clearing an optional depth saves without a factual range", async () => {
     await app.click('[data-contact-key="a-piece-0"]');
     await app.change("#contact-depth-lower-input", "0");
     await app.change("#contact-depth-lower-input", "");
-    const input = app.document.querySelector<HTMLInputElement>("#contact-depth-lower-input");
-    assert.ok(input);
-    assert.equal(input.checkValidity(), true);
+    assert.equal(app.documentValue("#contact-depth-mode-select"), "");
     await app.click("#save-button");
     assert.equal(saved.length, 1);
     const savedDocument = saved[0];
     assert.ok(savedDocument);
     const savedContact = savedDocument.contacts[0];
     assert.ok(savedContact);
-    assert.equal(Object.hasOwn(savedContact, "depthRangeMillimeters"), false);
+    assert.equal(Object.hasOwn(savedContact, "depth"), false);
   }, dependenciesFixture(board, { client }));
 });
 
 test("changing the selected contact replaces the visible factual depth range", async () => {
   const board = boardFixture(documentFixture({
     contacts: [
-      contactFixture("a", { depthRangeMillimeters: { lowerBound: 7.5, upperBound: 10 } }),
-      contactFixture("b", { kind: "edge", depthRangeMillimeters: { lowerBound: 12.5, upperBound: 15 } }),
+      contactFixture("a", { depth: { range: { minimum: 7.5, maximum: 10 } } }),
+      contactFixture("b", { kind: "edge", depth: { range: { minimum: 12.5, maximum: 15 } } }),
     ],
     regions: [
       regionFixture(1, "a-piece-0", FIRST_PATH, "a"),

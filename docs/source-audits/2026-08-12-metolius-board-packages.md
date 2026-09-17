@@ -19,7 +19,7 @@ and were not used for any conclusion here.
 | `metolius-climbers-edge` | [product](https://www.metoliusclimbing.com/products/climbers-edge-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/The-Climber_s-Edge-Training-Board_67ebe212-d205-4f2c-9ca9-048b1792351d.jpg?v=1765309719); [official specification/depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/Climber_s-Edge-Spec.jpg?v=1765309719); [shared training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826) | Identity, dimensions, visible boundaries, exact symmetric 15-contact inventory, six edge depths, one 40 mm-radius round sloper, two 20-degree flat slopers, and two jugs. | No optional grip posture or capacity facts were added. |
 | `metolius-contact` | [product](https://www.metoliusclimbing.com/products/contact-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Contact-Hangboard-black-white.jpg?v=1759459002); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/con-num-dep_341f2901-a11e-4256-a4c3-0531110c730e.jpg?v=1762201170); [training guide](https://www.metoliusclimbing.com/pages/contact-training-guide) | Identity, dimensions, perfect symmetry, visible boundaries, two pinches, two jugs, two round slopers, 22 mirrored pockets, one center flat sloper, and four center edges: 33 contacts. | No app-specific cue or feature values were added. |
 | `metolius-project` | [product](https://www.metoliusclimbing.com/products/project-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Project-Board-black-white-swirl.jpg?v=1759459896); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/project-depth.jpg?v=1762201307) | Identity, dimensions, perfect symmetry, visible boundaries, mirrored labels 1 through 7, and center labels 8 through 10, mapped to 15 continuous contacts because the two position-2 labels and center position 8 share one uninterrupted top contact. | No app-specific cue or feature values were added. |
-| `metolius-simulator-3d` | [product](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085); [training guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | Identity, dimensions, symmetric visible boundaries, mirrored labels 1 through 13, and center labels 14 through 18, mapped to 29 continuous contacts because each side's position-2/position-3 labels share one uninterrupted contact. | No app-specific cue or feature values were added. |
+| `metolius-simulator-3d` | [product](https://www.metoliusclimbing.com/collections/training-boards/products/simulator-training-board); [official front](https://www.metoliusclimbing.com/cdn/shop/files/Simulator-black-white.jpg?v=1759460469); [official numbered depth diagram](https://www.metoliusclimbing.com/cdn/shop/files/sim-num-dep_c543622d-e670-4601-8d4d-792cc8e46dea.jpg?v=1762201085); [training guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) | Identity, dimensions, symmetric visible boundaries, mirrored labels 1 through 13, and center labels 14 through 18, mapped to 30 contacts: #2's two flat zones and #3's central round zone use their separate model nodes. | No app-specific cue or feature values were added. |
 
 ## Frozen inventories and field mappings
 
@@ -64,16 +64,16 @@ field is omitted.
   continuous `round-sloper-8-center` stable ID. Center positions `9` and `10`
   are separate 39 mm and 16 mm edges.
 
-### Simulator 3-D — 29 continuous contacts
+### Simulator 3-D — 30 continuous contacts
 
 - Mirrored positions `1` and `4` through `13`: outer jug; 30 mm 3-finger
   pocket; 25 mm edge; 19 mm edge; 36 mm edge; 15 mm 3-finger pocket; 35 mm
   3-finger pocket; 17 mm 3-finger pocket; 14 mm edge; 30 mm 2-finger pocket;
   and 14 mm 2-finger pocket.
-- On each side, the diagram's position `2` flat-sloper and position `3`
-  round-sloper labels occupy one uninterrupted top contact with no separator.
-  Each label pair maps to one continuous stable ID,
-  `round-sloper-3-left` or `round-sloper-3-right`.
+- The official diagram distinguishes left/right position `2` flat slopers from
+  the central position `3` round sloper. The model binds `hold_02_left` and
+  `hold_02_right` to the two flat contacts, and the two `hold_03` nodes to the
+  one central round contact.
 - Center positions `14` through `18`: jug; 50 mm 3-finger pocket; 37 mm
   3-finger pocket; 28 mm 2-finger pocket; 32 mm 2-finger pocket.
 
@@ -162,7 +162,8 @@ maps to these visible stable IDs on presentation `front`:
 | Exact manufacturer label | Stable hold ID(s) | Verified kind |
 | --- | --- | --- |
 | `1 — outer jugs` | `jug-1-left`, `jug-1-right` | `jug` |
-| `2 — 55 mm flat slopers`; `3 — 65 mm round slopers` | `round-sloper-3-left`, `round-sloper-3-right` (one continuous contact per side) | `sloper` |
+| `2 — 55 mm flat slopers` | `flat-sloper-2-left`, `flat-sloper-2-right` | `sloper` |
+| `3 — 65 mm round slopers` | `round-sloper-3-center` | `sloper` |
 | `4 — 30 mm 3-finger pockets` | `pocket-4-left`, `pocket-4-right` | `pocket` |
 | `5 — 25 mm edges` | `edge-5-left`, `edge-5-right` | `edge` |
 | `6 — 19 mm edges` | `edge-6-left`, `edge-6-right` | `edge` |

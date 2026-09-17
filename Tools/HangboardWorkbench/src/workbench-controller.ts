@@ -30,24 +30,35 @@ function isStringArray(value: unknown): value is string[] {
 }
 
 function isMillimeterRange(value: unknown): boolean {
-  if (!isRecord(value) || !exactKeys(value, ["lowerBound", "upperBound"])) return false;
-  return typeof value.lowerBound === "number" && Number.isFinite(value.lowerBound)
-    && typeof value.upperBound === "number" && Number.isFinite(value.upperBound)
-    && value.lowerBound > 0 && value.upperBound >= value.lowerBound;
+  if (!isRecord(value) || !exactKeys(value, ["minimum", "maximum"])) return false;
+  return typeof value.minimum === "number" && Number.isFinite(value.minimum)
+    && typeof value.maximum === "number" && Number.isFinite(value.maximum)
+    && value.minimum >= 0 && value.maximum >= value.minimum;
+}
+
+function isHoldDepth(value: unknown): boolean {
+  if (!isRecord(value)) return false;
+  if (exactKeys(value, ["category"])) {
+    return value.category === "tiny" || value.category === "small"
+      || value.category === "medium" || value.category === "large";
+  }
+  return exactKeys(value, ["range"]) && isMillimeterRange(value.range);
 }
 
 function isPhysicalContact(value: unknown): value is PhysicalContact {
   if (!isRecord(value) || !exactKeys(
     value,
-    ["id", "equipmentObjectID", "name", "kind", "features", "gripTypes"],
-    ["depthRangeMillimeters", "fingerCapacity", "handCapacity", "side", "pairedContactID"],
+    ["id", "equipmentObjectID", "name", "kind", "gripTypes"],
+    ["shape", "depth", "fingerCapacity", "handCapacity", "side", "pairedContactID"],
   )) return false;
   if (!isIdentifier(value.id) || !isIdentifier(value.equipmentObjectID)
     || typeof value.name !== "string" || value.name.length === 0
     || typeof value.kind !== "string" || !CONTACT_KINDS.has(value.kind)
-    || !isStringArray(value.features) || new Set(value.features).size !== value.features.length
     || !isStringArray(value.gripTypes) || new Set(value.gripTypes).size !== value.gripTypes.length) return false;
-  if (value.depthRangeMillimeters !== undefined && !isMillimeterRange(value.depthRangeMillimeters)) return false;
+  if (value.shape !== undefined
+    && value.shape !== "flat" && value.shape !== "round"
+    && value.shape !== "incut" && value.shape !== "slot") return false;
+  if (value.depth !== undefined && !isHoldDepth(value.depth)) return false;
   if (value.fingerCapacity !== undefined
     && (typeof value.fingerCapacity !== "number" || !Number.isInteger(value.fingerCapacity)
       || value.fingerCapacity < 1 || value.fingerCapacity > 4)) return false;

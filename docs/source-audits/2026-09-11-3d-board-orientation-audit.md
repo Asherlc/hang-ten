@@ -13,7 +13,7 @@ Promotion record. This document does not itself change package or model bytes.
 
 ## September 15 collection extension
 
-The model inventory now contains twenty packages. The six added fixed boards
+The model inventory now contains twenty-six packages. The six added fixed boards
 below each retain one canonical `primary` position covering their entire
 ordered contact inventory, with no orientation quaternion, pivot override,
 or suspension. Their current model bounds are compiled from their USDZ
@@ -29,6 +29,19 @@ source URLs, geometry limitations, and promoted hashes are recorded in the
 | `soill.training-tiles` | 20 | `primary` |
 | `the-hangboard.the-hangboard` | 15 | `primary` |
 | `trango.rock-prodigy-training-center` | 24 | `primary` |
+| `dewoodstok-woodbord` | 17 | `primary` |
+| `escape.unlimited` | 7 | `primary` |
+| `evolv-kilter-basic-long` | 4 | `primary` |
+| `metolius.wood-grips-deluxe-ii` | 26 | `front` |
+| `moon.armstrong` | 21 | `primary` |
+| `target10a.linebreaker-base` | 23 | `primary` |
+
+These six fixed single-position packages have no orientation quaternion or
+pivot override. Counts and position/presentation names are taken from the
+shipped `board.json` and `primary.model.json` descriptors/package metadata;
+source/evidence facts and limitations come from the retained source-audit
+records and migration evidence. No additional rotation, contact grouping,
+bound, dimension, or physical claim is implied.
 
 ## Decision and review gate (initial five-package snapshot)
 
@@ -622,7 +635,7 @@ the model.
 | `lower-lips-and-mono` | `edge-18`, `edge-14`, `mono-25` | `[0.156434415, 0.0, 0.0, 0.987688349]` | authored display estimate: +18° about X onto the lower lips and mono |
 | `inverted-upper-lip` | `edge-8` | `[7e-09, 0.156434415, -0.987688349, 4.3e-08]` | authored display estimate: half-turn exposing the inverted MX8 upper lip |
 
-### Verification (this pass)
+### Verification (batch-01 / batch-02 historical pass)
 
 - `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` grows 4 → 14;
   `test_discovered_model_inventory_is_exactly_the_fourteen_current_packages`
@@ -637,6 +650,12 @@ the model.
   depth diagram.
 - `scripts/hangboard-packages.sh validate --root Hangboards
   --final-inventory`: exit 0, 0 drafts (rerun in this pass).
+
+### Verification (September 15 collection extension)
+
+- `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` now contains 26
+  current model packages, including the six fixed packages in the collection
+  extension table above.
 
 ## Task 7 visual validation (2026-09-11, Muse Spark)
 

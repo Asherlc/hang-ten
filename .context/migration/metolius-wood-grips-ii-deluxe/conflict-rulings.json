@@ -1,0 +1,12 @@
+{
+  "assetSha256": "cc8dd4f09dda2685672445e974c698ac5c704bcbc805b87e1bcb6fa3726ad67a",
+  "rulings": [
+    "The readable numbered Deluxe diagram supports the original NONUNIFORM depths. The prior audit's review-based uniform-row interpretation is not adopted. Six depicted mounting bores supersede the four-hole reconstruction. Their placement is estimated in the gap columns; it is not a drill template. The 610 x 216 mm dimensions come from the manufacturer; 70 mm projection remains a rounded retailer approximation. No claim is made that every historical sample has identical dimensions."
+  ],
+  "changedFeatures": [
+    "Replaced the incorrect four-bore arrangement with six board apertures in three left/right pairs.",
+    "Retained 31/32/38 mm and 25/25/28 mm nonuniform rows because the readable numbered diagram corroborates them.",
+    "Resolved the earlier uniform-row audit allegation in favour of the numbered Deluxe diagram, with explicit provenance and limits.",
+    "Regenerated geometry, exact mappings, source, validation, fresh renders and checksums."
+  ]
+}

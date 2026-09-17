@@ -27,6 +27,58 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertNotNil(geometry["hold-one"])
     }
 
+    func testEditorRoundTripPreservesOptionalUnilateralHandResolution() throws {
+        var payload = try jsonObject(for: makeDocument())
+        payload["unilateralHandResolution"] = "athleteRelative"
+
+        let decoded = try decode(payload)
+        XCTAssertEqual(decoded.unilateralHandResolution, .athleteRelative)
+
+        let encoded = try BoardPackageWriter.data(for: decoded)
+        let redecoded = try BoardEditableDocument(data: encoded)
+        let roundTripped = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+
+        XCTAssertEqual(redecoded.unilateralHandResolution, .athleteRelative)
+        XCTAssertEqual(roundTripped["unilateralHandResolution"] as? String, "athleteRelative")
+    }
+
+    func testEditorDecoderRejectsNullAndUnsupportedUnilateralHandResolution() throws {
+        for value: Any in [NSNull(), "unsupported"] {
+            var payload = try jsonObject(for: makeDocument())
+            payload["unilateralHandResolution"] = value
+
+            XCTAssertThrowsError(try decode(payload), "must reject value \(value)")
+        }
+    }
+
+    func testEditorDecoderLeavesOmittedUnilateralHandResolutionNil() throws {
+        let document = try decode(jsonObject(for: makeDocument()))
+
+        XCTAssertNil(document.unilateralHandResolution)
+    }
+
+    func testWriterRoundTripsForgeStyleCategoricalContactDepth() throws {
+        var document = makeDocument()
+        document.contacts[0].kind = .edge
+        document.contacts[0].shape = .flat
+        document.contacts[0].depth = .category(.large)
+
+        let encoded = try BoardPackageWriter.data(for: document)
+        let payload = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any]
+        )
+        let contact = try XCTUnwrap((payload["contacts"] as? [[String: Any]])?.first)
+
+        XCTAssertEqual(contact["depth"] as? [String: String], ["category": "large"])
+        XCTAssertNil(contact["depthRangeMillimeters"])
+        XCTAssertEqual(
+            try decode(payload).contacts[0].depth,
+            .category(.large)
+        )
+    }
+
     func testEditorDecoderRejectsLegacyRootHolds() throws {
         var payload = try jsonObject(for: makeDocument())
         payload["holds"] = payload.removeValue(forKey: "contacts")

@@ -1,0 +1,75 @@
+[
+  {
+    "id": "P1",
+    "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+    "publisher": "Metolius",
+    "evidenceTier": "manufacturer",
+    "accessDate": "2026-09-15",
+    "supports": "WOOD005 Deluxe, 610 \u00d7 216 mm; wall-fixed wooden training board. Compact is a separate 610 \u00d7 157 mm variant.",
+    "doesNotEstablish": "Overall projection and detailed radii are not dimensioned.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "I1",
+    "url": "https://www.backcountry.com/images/items/1200/MET/MET007G/ONECOL_D3.jpg",
+    "publisher": "Metolius diagram redistributed by Backcountry",
+    "evidenceTier": "manufacturer-attributed grip diagram",
+    "accessDate": "2026-09-15",
+    "supports": "Numbers 1\u201311 occur as left/right pairs; 12\u201315 are single centre contacts. Diagram maps 26 physical contacts and nominal grip dimensions.",
+    "doesNotEstablish": "Not a CAD section or manufacturing drawing. Original diagram bytes unavailable.",
+    "review": "actual image visually inspected via image result",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P2",
+    "url": "https://gripstrength.com/en-ca/products/metolius-wood-grips-deluxe-ii",
+    "publisher": "GripStrength",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "Deluxe 610 \u00d7 216 mm, mounting instructions/hardware; reproduces the Deluxe grip guide.",
+    "doesNotEstablish": "Marketing fifteen types are not fifteen individual contacts; no projection dimension.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "P3",
+    "url": "https://8a.pl/chwytotablica-metolius-wood-grips-ii-deluxe",
+    "publisher": "8a",
+    "evidenceTier": "retailer",
+    "accessDate": "2026-09-15",
+    "supports": "Rounded dimensions approximately 60 \u00d7 22 \u00d7 7 cm.",
+    "doesNotEstablish": "Does not overrule manufacturer width/height. 70 mm projection remains a display estimate.",
+    "review": "text",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "M1",
+    "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826",
+    "publisher": "Metolius",
+    "evidenceTier": "manufacturer manual",
+    "accessDate": "2026-09-15",
+    "supports": "General training-board mounting document located.",
+    "doesNotEstablish": "No local copy; not relied on for geometric measurements.",
+    "review": "located; not used as geometric evidence",
+    "localOriginal": null,
+    "retentionStatus": "original bytes unavailable; see download-attempts.json"
+  },
+  {
+    "id": "M-DIAGRAM-V2",
+    "url": "https://www.backcountry.com/images/items/1200/MET/MET007G/ONECOL_D3.jpg",
+    "page": "https://www.backcountry.com/metolius-wood-grips-deluxe-training-board",
+    "publisher": "Metolius-labelled depth diagram hosted by Backcountry",
+    "evidenceTier": "product numbered diagram, retailer-hosted indexed preview",
+    "accessDate": "2026-09-15",
+    "supports": "Deluxe arrangement; six small mounting holes; numbered depths 3=31,4=32,5=38,6=25,7=25,8=28,9=19,10=19,11=19,13=32,14=25,15=19 mm; top 2=55 and12=58 mm grip dimensions.",
+    "doesNotEstablish": "Diagram does not dimension bore centres, bore diameters, 70 mm projection or exact section radii. Date/revision of the test sample that claimed uniform rows is unknown.",
+    "review": "Readable 512 x 512 indexed original-product diagram visually inspected; direct original URL fetch failed.",
+    "localOriginal": null,
+    "retentionStatus": "Original bytes unavailable; diagram observation and explicit numerical transcription retained, not a fabricated image."
+  }
+]

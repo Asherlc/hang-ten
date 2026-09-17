@@ -2,6 +2,140 @@ import XCTest
 @testable import HangTen
 
 final class CustomRoutineDraftTests: XCTestCase {
+    func testEitherHandBoardPreviewAllowsRemovingItsSelectedAlternative() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either", title: "Either", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [.kind(.edge, selection: .single)], timing: .fixed,
+            handUse: .either, side: .both
+        )
+
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left"])
+        )
+
+        CustomRoutineBoardPreview.toggle(
+            board.contacts[0], in: &step, on: board
+        )
+
+        XCTAssertTrue(step.targets.isEmpty)
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            []
+        )
+    }
+
+    func testEitherHandBoardPreviewKeepsAndRemovesItsResolvedAlternative() throws {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either", title: "Either", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed,
+            handUse: .either, side: .both
+        )
+
+        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+
+        XCTAssertNil(step.targets.first?.contactID)
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left"])
+        )
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
+        draft.steps = [step]
+        let persisted = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.definition())
+        )
+        XCTAssertNil(persisted.steps[0].targets.first?.contactID)
+
+        CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
+
+        XCTAssertTrue(step.targets.isEmpty)
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            []
+        )
+    }
+
+    func testSingleHandBoardPreviewPersistsItsExactSelectedContactID() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "left", title: "Left", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed, handUse: .single, side: .left
+        )
+
+        CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
+
+        XCTAssertEqual(step.targets.first?.contactID, "left")
+        XCTAssertEqual(CustomRoutineBoardPreview.contactIDs(for: step, on: board), ["left"])
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
+        draft.steps = [step]
+        XCTAssertEqual(draft.definition().steps.first?.targets.first?.contactID, "left")
+    }
+
+    func testChangingSingleHandToEitherClearsExactContactAndResolvesBothHands() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "single-to-either", title: "Either", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .single, side: .left
+        )
+
+        step.transitionHandUse(to: .either)
+
+        XCTAssertEqual(step.handUse, .either)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .single)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left"])
+        )
+    }
+
+    func testChangingSingleHandToDoubleUsesBilateralPairAndPreservesRequirementFacts() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "single-to-double", title: "Both", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .single, side: .left
+        )
+
+        step.transitionHandUse(to: .double)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .bilateralPair)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+    }
+
+    func testChangingEitherHandWithStaleExactTargetToDoubleUsesBilateralPair() {
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either-to-double", title: "Both", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed, handUse: .either, side: .both
+        )
+
+        // Older drafts can contain an exact ID because the editor previously
+        // retained it when changing from single hand to either hand.
+        step.transitionHandUse(to: .double)
+
+        XCTAssertEqual(step.handUse, .double)
+        XCTAssertEqual(step.side, .both)
+        XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .bilateralPair)])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left", "right"])
+        )
+    }
+
     func testNewDraftStartsEmptyAndAddStepAddsOneStableEditableRow() {
         var draft = CustomRoutineDraft(createWith: .generic)
 
@@ -173,6 +307,62 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(retargeted.steps.map(\.targets), [[.kind(.edge)], []])
     }
 
+    func testRetargetingBoardSpecificRightHoldToGenericStripsExactContactID() throws {
+        let board = BoardRevision(
+            id: "mirrored", revisionID: "test", manufacturer: "Fixture", name: "Mirrored",
+            subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [
+                PhysicalContact(id: "left", name: "Left edge", kind: .edge, side: .left, pairedContactID: "right"),
+                PhysicalContact(id: "right", name: "Right edge", kind: .edge, side: .right, pairedContactID: "left")
+            ],
+            productURL: try XCTUnwrap(URL(string: "https://example.com/mirrored")), photoAssetName: nil
+        )
+        var step = CustomRoutineStepDraft(
+            id: "hang", title: "Right edge", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed, handUse: .single, side: .right
+        )
+        CustomRoutineBoardPreview.toggle(board.contacts[1], in: &step, on: board)
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
+        draft.steps = [step]
+
+        let savedGenericDefinition = try JSONDecoder().decode(
+            CustomRoutineDefinition.self,
+            from: JSONEncoder().encode(draft.retargeted(to: .generic).definition())
+        )
+
+        let target = try XCTUnwrap(savedGenericDefinition.steps.first?.targets.first)
+        XCTAssertEqual(savedGenericDefinition.targetMode, .generic)
+        XCTAssertNil(target.contactID)
+        XCTAssertEqual(target.kind, .edge)
+        XCTAssertEqual(target.selection, .single)
+    }
+
+    func testRetargetingBoardSpecificDraftToAnotherBoardStripsExactContactID() {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "first-board"))
+        draft.steps = [
+            .init(
+                id: "hang", title: "Exact edge", instruction: "", accessory: "", duration: 10,
+                phase: .hang,
+                targets: [ContactRequirement(contactID: "first-board-edge", kind: .edge, selection: .single)],
+                timing: .fixed, handUse: .single, side: .right
+            )
+        ]
+        let replacementBoard = BoardRevision(
+            id: "second-board", revisionID: "test", manufacturer: "Fixture", name: "Second",
+            subtitle: "", dimensions: "", aspectRatio: 1,
+            contacts: [PhysicalContact(id: "second-board-edge", name: "Edge", kind: .edge)],
+            productURL: URL(string: "https://example.com/second")!, photoAssetName: nil
+        )
+
+        let retargeted = draft.retargeted(
+            to: .boardSpecific(boardID: replacementBoard.id),
+            availableBoards: [replacementBoard]
+        )
+
+        XCTAssertNil(retargeted.steps[0].targets[0].contactID)
+        XCTAssertEqual(retargeted.steps[0].targets[0].kind, .edge)
+    }
+
     func testRetargetingBoardKeepsOnlyExactHoldsAvailableOnTheNewBoard() throws {
         let retainedHold = try XCTUnwrap(BoardCatalog.defaultBoard.contacts.first)
         let replacementBoard = BoardRevision(
@@ -307,10 +497,10 @@ final class CustomRoutineDraftTests: XCTestCase {
         var draft = CustomRoutineDraft(createWith: .generic)
         draft.steps = [
             .init(id: "kind", title: "Jugs", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.kind(.jug)], timing: .fixed),
-            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.feature(.mediumEdge)], timing: .fixed)
+            .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.edge(depth: .category(.medium))], timing: .fixed)
         ]
 
-        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.feature(.mediumEdge)]])
+        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
     }
 
     func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
@@ -544,10 +734,10 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "Up to 60s",
                 duration: 60,
                 phase: .hang,
-                targets: [.feature(.roundSloper)],
+                targets: [ContactRequirement(kind: .sloper, shape: .round)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.feature(.roundSloper)],
+                    targets: [ContactRequirement(kind: .sloper, shape: .round)],
                     timing: .stopwatch,
                     duration: nil
                 )]
@@ -653,6 +843,96 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNotEqual(draft.steps[0].id, draft.steps[1].id)
     }
 
+    func testAddLeftAndRightPairRemapsExactContactToTheOppositeSidePair() throws {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        let source = CustomRoutineStepDraft(
+            id: "hang",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "left", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+
+        draft.addLeftAndRightPair(from: source, board: mirroredBoard())
+
+        XCTAssertEqual(draft.steps.map(\.side), [.left, .right])
+        let leftTarget = try XCTUnwrap(draft.steps[0].targets.first)
+        let rightTarget = try XCTUnwrap(draft.steps[1].targets.first)
+        XCTAssertEqual(leftTarget.contactID, "left")
+        XCTAssertEqual(rightTarget.contactID, "right")
+        for target in [leftTarget, rightTarget] {
+            XCTAssertEqual(target.kind, .edge)
+            XCTAssertEqual(target.shape, .flat)
+            XCTAssertEqual(target.depth, .range(MillimeterRange(minimum: 18, maximum: 22)))
+            XCTAssertEqual(target.fingerCapacity, 2)
+            XCTAssertEqual(target.handCapacity, 1)
+            XCTAssertEqual(target.selection, .single)
+        }
+    }
+
+    func testAddLeftAndRightPairRemapsARightHandSourceContactToTheLeftStep() throws {
+        var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        let source = CustomRoutineStepDraft(
+            id: "hang",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "right", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .right
+        )
+
+        draft.addLeftAndRightPair(from: source, board: mirroredBoard())
+
+        XCTAssertEqual(try XCTUnwrap(draft.steps[0].targets.first).contactID, "left")
+        XCTAssertEqual(try XCTUnwrap(draft.steps[1].targets.first).contactID, "right")
+    }
+
+    func testAddLeftAndRightPairLeavesGenericAndUnpairableTargetsUnchanged() throws {
+        let generic = CustomRoutineStepDraft(
+            id: "generic",
+            title: "Jug hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [.kind(.jug)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+        var genericDraft = CustomRoutineDraft(createWith: .generic)
+        genericDraft.addLeftAndRightPair(from: generic, board: nil)
+        XCTAssertEqual(genericDraft.steps.map { $0.targets }, [[.kind(.jug)], [.kind(.jug)]])
+
+        let unknown = CustomRoutineStepDraft(
+            id: "unknown",
+            title: "Edge hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            targets: [factualRequirement(contactID: "not-on-board", selection: .single)],
+            timing: .fixed,
+            handUse: .single,
+            side: .left
+        )
+        var unknownDraft = CustomRoutineDraft(createWith: .boardSpecific(boardID: "mirrored"))
+        unknownDraft.addLeftAndRightPair(from: unknown, board: mirroredBoard())
+        XCTAssertEqual(
+            unknownDraft.steps.compactMap { $0.targets.first?.contactID },
+            ["not-on-board", "not-on-board"]
+        )
+    }
+
     private func makeStep(
         id: String,
         title: String,
@@ -667,6 +947,56 @@ final class CustomRoutineDraftTests: XCTestCase {
             phase: .hang,
             targets: [.kind(.jug)],
             timing: .fixed
+        )
+    }
+
+    private func mirroredBoard() -> BoardRevision {
+        let contacts = [
+            PhysicalContact(
+                id: "left", name: "Left edge", kind: .edge,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .left,
+                pairedContactID: "right"
+            ),
+            PhysicalContact(
+                id: "right", name: "Right edge", kind: .edge,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .right,
+                pairedContactID: "left"
+            )
+        ]
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece",
+                contactID: contact.id,
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardRevision(
+            id: "mirrored", revisionID: "test", manufacturer: "Fixture", name: "Mirrored",
+            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/mirrored")!, photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
+        )
+    }
+
+    private func factualRequirement(
+        contactID: String?,
+        selection: ContactSelectionPolicy
+    ) -> ContactRequirement {
+        ContactRequirement(
+            contactID: contactID,
+            kind: .edge,
+            shape: .flat,
+            depth: .range(MillimeterRange(minimum: 18, maximum: 22)),
+            fingerCapacity: 2,
+            handCapacity: 1,
+            selection: selection
         )
     }
 

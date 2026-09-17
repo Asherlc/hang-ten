@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "images": [
+    {
+      "id": "U1",
+      "view": "front",
+      "localPath": "evidence/originals/front.png",
+      "sha256": "192d8289e3990915df3edb773ce198603825af9809e080c691f844e3733886f6",
+      "bytes": 543969,
+      "resolution": [
+        2048,
+        1361
+      ],
+      "attachmentFileId": "file_00000000d7b081fd97239759f44b632a",
+      "retention": "unaltered user-uploaded bytes",
+      "provenance": "Uploaded by user in response to the exact Evolv Long gallery request; not independently byte-matched to the inaccessible CDN assets."
+    },
+    {
+      "id": "U2",
+      "view": "rear",
+      "localPath": "evidence/originals/rear.png",
+      "sha256": "87c955912c840ef8f37c130bb274bfd71d72b72e403b00298f2d046210ae2c23",
+      "bytes": 95153,
+      "resolution": [
+        800,
+        532
+      ],
+      "attachmentFileId": "file_00000000d65481fdb0741ed7d8a9d0cb",
+      "retention": "unaltered user-uploaded bytes",
+      "provenance": "Uploaded by user in response to the exact Evolv Long gallery request; not independently byte-matched to the inaccessible CDN assets."
+    },
+    {
+      "id": "U3",
+      "view": "oblique",
+      "localPath": "evidence/originals/oblique.png",
+      "sha256": "6f5c3de8c4115f6ef3aad96d01c742122311529c439f68290ff3aec2cae22831",
+      "bytes": 88026,
+      "resolution": [
+        800,
+        532
+      ],
+      "attachmentFileId": "file_00000000623881fdaa5c13121d2fe95d",
+      "retention": "unaltered user-uploaded bytes",
+      "provenance": "Uploaded by user in response to the exact Evolv Long gallery request; not independently byte-matched to the inaccessible CDN assets."
+    },
+    {
+      "id": "U4",
+      "view": "side",
+      "localPath": "evidence/originals/side.png",
+      "sha256": "a6b1b22a9d2b15b3f7f5436ebe8ea2140367d77598ac11f01aefa8ff646ab025",
+      "bytes": 48705,
+      "resolution": [
+        800,
+        532
+      ],
+      "attachmentFileId": "file_00000000e0b881fdbfdc1678f452a8e7",
+      "retention": "unaltered user-uploaded bytes",
+      "provenance": "Uploaded by user in response to the exact Evolv Long gallery request; not independently byte-matched to the inaccessible CDN assets."
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 21,
+  "contactMappings": {
+    "hold-edge-08mm-left": "edge-8-left",
+    "hold-edge-08mm-right": "edge-8-right",
+    "hold-edge-10mm-left": "edge-10-left",
+    "hold-edge-10mm-right": "edge-10-right",
+    "hold-edge-15mm-left": "edge-15-left",
+    "hold-edge-15mm-right": "edge-15-right",
+    "hold-edge-18mm-centre": "center-edge-18",
+    "hold-edge-20mm-left": "edge-20-left",
+    "hold-edge-20mm-right": "edge-20-right",
+    "hold-edge-22mm-centre": "center-edge-22",
+    "hold-edge-25mm-left": "edge-25-left",
+    "hold-edge-25mm-right": "edge-25-right",
+    "hold-jug-centre": "center-jug",
+    "hold-jug-left": "jug-left",
+    "hold-jug-right": "jug-right",
+    "hold-one-finger-22mm-left": "mono-left",
+    "hold-one-finger-22mm-right": "mono-right",
+    "hold-top-35deg-left": "sloper-left",
+    "hold-top-35deg-right": "sloper-right",
+    "hold-two-finger-22mm-left": "two-finger-pocket-left",
+    "hold-two-finger-22mm-right": "two-finger-pocket-right"
+  },
+  "descriptorSHA256": "ef214a337dce42dc5ea987132557cd07099aebcae8adaba590637bd66572c464",
+  "modelBounds": {
+    "max": [
+      0.324509948,
+      0.164500013,
+      0.054999996
+    ],
+    "min": [
+      -0.324499935,
+      0.000500001,
+      -5.3e-08
+    ]
+  },
+  "modelSHA256": "3a25155c7e708f593a8588c9ab3c434437ab65591c9c2f0a73c198fad86f04b9",
+  "nodeCount": 22,
+  "packageID": "moon-armstrong-ash",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "docs/source-audits/2026-09-15-hangboard-3d-batch-migration/source-delivery/moon-armstrong-ash.glb",
+  "sourceModelSHA256": "80d796c3d5ab126cb9abd501e16621dd044e555f08e54b82179bcabf3735bbf8",
+  "sourceObjectIDs": [
+    "body",
+    "hold-edge-08mm-left",
+    "hold-edge-08mm-right",
+    "hold-edge-10mm-left",
+    "hold-edge-10mm-right",
+    "hold-edge-15mm-left",
+    "hold-edge-15mm-right",
+    "hold-edge-18mm-centre",
+    "hold-edge-20mm-left",
+    "hold-edge-20mm-right",
+    "hold-edge-22mm-centre",
+    "hold-edge-25mm-left",
+    "hold-edge-25mm-right",
+    "hold-jug-centre",
+    "hold-jug-left",
+    "hold-jug-right",
+    "hold-one-finger-22mm-left",
+    "hold-one-finger-22mm-right",
+    "hold-top-35deg-left",
+    "hold-top-35deg-right",
+    "hold-two-finger-22mm-left",
+    "hold-two-finger-22mm-right"
+  ],
+  "status": "converted"
+}

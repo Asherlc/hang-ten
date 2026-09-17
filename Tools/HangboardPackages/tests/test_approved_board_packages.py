@@ -31,13 +31,17 @@ YY_PENTA_EVO_ROOT = HANGBOARDS_ROOT / "yy-penta-evo"
 TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
+SIMULATOR_3D_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
-    depth = contact.get("depthRangeMillimeters")
-    if not isinstance(depth, dict) or depth.get("lowerBound") != depth.get("upperBound"):
+    depth = contact.get("depth")
+    if not isinstance(depth, dict):
         return None
-    value = depth["lowerBound"]
+    range_value = depth.get("range")
+    if not isinstance(range_value, dict) or range_value.get("minimum") != range_value.get("maximum"):
+        return None
+    value = range_value["minimum"]
     assert isinstance(value, (int, float)) and not isinstance(value, bool)
     return value
 
@@ -102,6 +106,26 @@ def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
     )
     assert board["aspectRatio"] == pytest.approx(front_aspect)
     assert board["presentations"][0]["aspectRatio"] == pytest.approx(front_aspect)
+
+
+def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
+    board = json.loads((SIMULATOR_3D_ROOT / "board.json").read_text(encoding="utf-8"))
+    descriptor = _assert_model_descriptor(
+        SIMULATOR_3D_ROOT, board, {"board_body_001", "mounting_hardware_omission_caps_001"}
+    )
+    contacts = {contact["id"]: contact for contact in board["contacts"]}
+
+    assert {"flat-sloper-2-left", "round-sloper-3-center", "flat-sloper-2-right"} <= set(contacts)
+    assert "round-sloper-3-left" not in contacts
+    assert "round-sloper-3-right" not in contacts
+    assert contacts["flat-sloper-2-left"]["shape"] == "flat"
+    assert contacts["round-sloper-3-center"]["shape"] == "round"
+    assert contacts["flat-sloper-2-right"]["shape"] == "flat"
+    assert descriptor["contacts"]["flat-sloper-2-left"]["nodeIDs"] == ["hold_02_left_001"]
+    assert descriptor["contacts"]["round-sloper-3-center"]["nodeIDs"] == [
+        "hold_03_left_001", "hold_03_right_001"
+    ]
+    assert descriptor["contacts"]["flat-sloper-2-right"]["nodeIDs"] == ["hold_02_right_001"]
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
@@ -233,29 +257,29 @@ COMPACT_HOLDS = (
 )
 
 # Each value is (source-backed kind, scalar depth, capacity, structural pocket
-# grip, feature set). Sloper descriptors are not scalar depths, non-pocket
-# capacities are not published, and the manufacturer publishes no package
-# feature tags.
+# grip, shape). Sloper descriptors are not scalar depths, non-pocket
+# capacities are not published, and the manufacturer publishes no additional
+# shape metadata for edges or pockets.
 COMPACT_HOLD_SOURCE_FACTS = {
-    "jug-left": ("jug", None, None, None, ()),
-    "sloper-flat-left": ("sloper", None, None, None, ("flatSloper",)),
-    "sloper-round-center": ("sloper", None, None, None, ("roundSloper",)),
-    "sloper-flat-right": ("sloper", None, None, None, ("flatSloper",)),
-    "jug-right": ("jug", None, None, None, ()),
-    "edge-29-left": ("edge", 29, None, None, ()),
-    "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", ()),
-    "pocket-29-two-left": ("pocket", 29, 2, "twoFingerPocket", ()),
-    "pocket-29-four-center": ("pocket", 29, 4, "fourFingerPocket", ()),
-    "pocket-29-two-right": ("pocket", 29, 2, "twoFingerPocket", ()),
-    "pocket-29-three-right": ("pocket", 29, 3, "threeFingerPocket", ()),
-    "edge-29-right": ("edge", 29, None, None, ()),
-    "edge-19-left": ("edge", 19, None, None, ()),
-    "pocket-19-three-left": ("pocket", 19, 3, "threeFingerPocket", ()),
-    "pocket-19-three-right": ("pocket", 19, 3, "threeFingerPocket", ()),
-    "pocket-19-two-left": ("pocket", 19, 2, "twoFingerPocket", ()),
-    "pocket-19-two-right": ("pocket", 19, 2, "twoFingerPocket", ()),
-    "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", ()),
-    "edge-19-right": ("edge", 19, None, None, ()),
+    "jug-left": ("jug", None, None, None, None),
+    "sloper-flat-left": ("sloper", None, None, None, "flat"),
+    "sloper-round-center": ("sloper", None, None, None, "round"),
+    "sloper-flat-right": ("sloper", None, None, None, "flat"),
+    "jug-right": ("jug", None, None, None, None),
+    "edge-29-left": ("edge", 29, None, None, None),
+    "pocket-29-three-left": ("pocket", 29, 3, "threeFingerPocket", None),
+    "pocket-29-two-left": ("pocket", 29, 2, "twoFingerPocket", None),
+    "pocket-29-four-center": ("pocket", 29, 4, "fourFingerPocket", None),
+    "pocket-29-two-right": ("pocket", 29, 2, "twoFingerPocket", None),
+    "pocket-29-three-right": ("pocket", 29, 3, "threeFingerPocket", None),
+    "edge-29-right": ("edge", 29, None, None, None),
+    "edge-19-left": ("edge", 19, None, None, None),
+    "pocket-19-three-left": ("pocket", 19, 3, "threeFingerPocket", None),
+    "pocket-19-three-right": ("pocket", 19, 3, "threeFingerPocket", None),
+    "pocket-19-two-left": ("pocket", 19, 2, "twoFingerPocket", None),
+    "pocket-19-two-right": ("pocket", 19, 2, "twoFingerPocket", None),
+    "pocket-19-four-center": ("pocket", 19, 4, "fourFingerPocket", None),
+    "edge-19-right": ("edge", 19, None, None, None),
 }
 
 def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() -> None:
@@ -589,7 +613,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
         ("small-crimp-left", "Left small crimp", "edge"),
         ("small-crimp-right", "Right small crimp", "edge"),
     ]
-    assert all("sizeMillimeters" not in contact for contact in board["contacts"])
+    assert all("depth" not in contact for contact in board["contacts"])
     # Four positions over the shared model: upright/inverted for each usable face.
     # The small-crimp contacts are independently modeled on the suspended asset.
     assert board["positions"] == [
@@ -881,13 +905,13 @@ def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
         assert right.get("shapeConstraint") == left.get("shapeConstraint")
 
 
-def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
+def test_deluxe_model_package_freezes_the_independent_official_inventory() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.png", 2.0, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.8347345959048824, True, None, False)
     ]
     assert {
         (
@@ -927,45 +951,35 @@ def test_deluxe_package_freezes_the_independent_official_inventory() -> None:
         ("pocket-15-19-four-center", "pocket", 19, 4, "fourFingerPocket"),
     }
     assert len(board["contacts"]) == 26
-    geometry = document_contact_geometry(board)
-    assert _original_contact_owners(board) == {
-        contact["id"]: "front" for contact in board["contacts"]
-    }
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shape"]["type"] == "path"
-        for contact in board["contacts"]
-    )
+    _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
 
     compact = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
     assert board["dimensions"] != compact["dimensions"]
     assert len(board["contacts"]) != len(compact["contacts"])
 
 
-def test_deluxe_paired_contacts_use_exact_horizontal_frame_mirrors() -> None:
+def test_deluxe_descriptor_completely_and_consistently_owns_every_contact() -> None:
     board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
-    pairs = (
-        ("jug-1-left", "jug-1-right"),
-        ("sloper-2-flat-left", "sloper-2-flat-right"),
-        ("edge-3-31-left", "edge-3-31-right"),
-        ("pocket-4-32-three-left", "pocket-4-32-three-right"),
-        ("pocket-5-38-two-left", "pocket-5-38-two-right"),
-        ("edge-6-25-left", "edge-6-25-right"),
-        ("pocket-7-25-three-left", "pocket-7-25-three-right"),
-        ("pocket-8-28-two-left", "pocket-8-28-two-right"),
-        ("edge-9-19-left", "edge-9-19-right"),
-        ("pocket-10-19-three-left", "pocket-10-19-three-right"),
-        ("pocket-11-19-two-left", "pocket-11-19-two-right"),
-    )
+    descriptor = _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    descriptor_contacts = descriptor["contacts"]
+    contact_nodes = [
+        node for node in descriptor["nodes"] if node["role"] == "contact"
+    ]
 
-    for left_id, right_id in pairs:
-        left = geometry[left_id][0]["frame"]
-        right = geometry[right_id][0]["frame"]
-        assert right["x"] == pytest.approx(1 - left["x"] - left["width"])
-        assert right["y"] == left["y"]
-        assert right["width"] == left["width"]
-        assert right["height"] == left["height"]
+    assert set(descriptor_contacts) == contact_ids
+    assert {node["contactID"] for node in contact_nodes} == contact_ids
+    assert len(contact_nodes) == len(contact_ids) == 26
+    assert len({node["nodeID"] for node in contact_nodes}) == len(contact_nodes)
+    assert all(
+        descriptor_contacts[contact_id]["nodeIDs"]
+        == [
+            node["nodeID"]
+            for node in contact_nodes
+            if node["contactID"] == contact_id
+        ]
+        for contact_id in contact_ids
+    )
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() -> None:
@@ -1036,12 +1050,12 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
         "id",
         "name",
         "kind",
-        "depthRangeMillimeters",
+        "depth",
+        "shape",
         "fingerCapacity",
         "handCapacity",
         "equipmentObjectID",
         "gripTypes",
-        "features",
         "side",
         "pairedContactID",
     }
@@ -1052,9 +1066,10 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
     assert all(set(contact) <= supported_fields for contact in contacts)
     assert {contact.get("equipmentObjectID") for contact in contacts} == {"primary"}
     assert all(
-        "depthRangeMillimeters" not in contact
-        or contact["depthRangeMillimeters"]["lowerBound"]
-        == contact["depthRangeMillimeters"]["upperBound"]
+        "depth" not in contact
+        or "category" in contact["depth"]
+        or contact["depth"]["range"]["minimum"]
+        == contact["depth"]["range"]["maximum"]
         for contact in contacts
     )
     expected_pocket_grips = {
@@ -1078,7 +1093,7 @@ def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
             _scalar_depth(contact),
             contact.get("fingerCapacity"),
             _single_grip_type(contact),
-            tuple(contact.get("features", ())),
+            contact.get("shape"),
         )
         for contact in contacts
     } == COMPACT_HOLD_SOURCE_FACTS

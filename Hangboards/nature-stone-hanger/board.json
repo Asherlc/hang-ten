@@ -72,10 +72,11 @@
       "equipmentObjectID": "primary",
       "name": "Front 15 mm incut edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -84,10 +85,11 @@
       "equipmentObjectID": "primary",
       "name": "Front 15 mm flat edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -96,10 +98,11 @@
       "equipmentObjectID": "primary",
       "name": "Front 20 mm wood flat edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -108,10 +111,11 @@
       "equipmentObjectID": "primary",
       "name": "Front 20 mm granite edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -120,10 +124,11 @@
       "equipmentObjectID": "primary",
       "name": "Reverse 10 mm incut edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -132,10 +137,11 @@
       "equipmentObjectID": "primary",
       "name": "Reverse 10 mm flat edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -144,10 +150,11 @@
       "equipmentObjectID": "primary",
       "name": "Reverse 6 mm flat edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 6,
-        "upperBound": 6
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
       },
       "gripTypes": []
     },
@@ -156,10 +163,11 @@
       "equipmentObjectID": "primary",
       "name": "Reverse 6 mm incut edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 6,
-        "upperBound": 6
+      "depth": {
+        "range": {
+          "minimum": 6,
+          "maximum": 6
+        }
       },
       "gripTypes": []
     }

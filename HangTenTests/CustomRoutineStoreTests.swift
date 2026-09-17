@@ -67,7 +67,7 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         XCTAssertEqual(
             segments[0]["targets"] as? [[String: String]],
-            [["kind": "edge", "selection": "allMatching"]]
+            [["kind": "edge", "selection": "single"]]
         )
         XCTAssertNil(segments[0]["target"])
     }
@@ -115,9 +115,9 @@ final class CustomRoutineStoreTests: XCTestCase {
         )
 
         XCTAssertEqual(oneFingerPocket.fingerCapacity, 1)
-        XCTAssertTrue(oneFingerPocket.features.isEmpty)
+        XCTAssertNil(oneFingerPocket.shape)
         XCTAssertEqual(fourFingerPocket.fingerCapacity, 4)
-        XCTAssertTrue(fourFingerPocket.features.isEmpty)
+        XCTAssertNil(fourFingerPocket.shape)
     }
 
     func testPlanResolutionRetainsExactFingerConfiguration() throws {
@@ -230,7 +230,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: [.feature(.mediumEdge)],
+                    targets: [.edge(depth: .category(.medium))],
                     activeDuration: 10
                 )
             ]
@@ -416,7 +416,7 @@ final class CustomRoutineStoreTests: XCTestCase {
     }
 
     func testValidationRejectsGenericTargetsThatCannotResolve() {
-        let definition = genericDefinition(targets: [.feature(.flatEdge)])
+        let definition = genericDefinition(targets: [ContactRequirement(kind: .edge, shape: .flat)])
         let jugOnlyBoard = BoardRevision(
             id: "fixture.jug-only",
             revisionID: "test-fixture",
@@ -574,7 +574,7 @@ final class CustomRoutineStoreTests: XCTestCase {
                 segments: [
                     WorkoutSegmentDefinition(
                         kind: .work,
-                        targets: [.feature(.mediumEdge)],
+                        targets: [.edge(depth: .category(.medium))],
                         timing: .fixed,
                         duration: 10
                     )
@@ -606,6 +606,115 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertFalse(boardIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
         XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
         XCTAssertFalse(genericIssues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
+    }
+
+    func testGenericModeRejectsExactContactIDsBeforePersistenceNormalization() {
+        let definition = genericDefinition(
+            targets: [ContactRequirement(contactID: "board-only-edge", kind: .edge, selection: .single)]
+        )
+
+        let issues = CustomRoutineValidator.issues(
+            for: definition,
+            availableBoards: BoardCatalog.all
+        )
+
+        XCTAssertTrue(issues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+    }
+
+    func testStoreNormalizesOlderGenericExactContactIDsOnLoad() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let storedDefinition = genericDefinition(
+            targets: [ContactRequirement(contactID: "old-board-edge", kind: .edge, selection: .single)]
+        )
+        defaults.set(
+            try JSONEncoder().encode(CustomRoutineLibrary(routines: [storedDefinition])),
+            forKey: CustomRoutineStore.defaultKey
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+
+        XCTAssertNil(store.routines[0].steps[0].targets[0].contactID)
+        XCTAssertEqual(store.routines[0].steps[0].targets[0].kind, .edge)
+    }
+
+    func testSaveAcceptsGenericEitherHandTarget() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let requirement = ContactRequirement(
+            kind: .edge,
+            depth: .range(.init(minimum: 14, maximum: 14)),
+            handCapacity: 1,
+            selection: .single
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.generic-either",
+            title: "Generic either",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .generic,
+            steps: [WorkoutStepDefinition(
+                id: "either", title: "Either", instruction: "Hang.", accessory: "",
+                duration: 10, phase: .hang, targets: [requirement], handUse: .either, side: .both
+            )]
+        )
+
+        let store = CustomRoutineStore(defaults: defaults)
+        try store.save(definition)
+
+        XCTAssertNil(store.routines.first?.steps.first?.targets.first?.contactID)
+    }
+
+    func testBoardSpecificEitherHandSidedTapRemainsSaveableForBothSides() throws {
+        let suite = "CustomRoutineStoreTests.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suite))
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let board = mirroredBoard()
+        var step = CustomRoutineStepDraft(
+            id: "either-after-tap", title: "Either edge", instruction: "", accessory: "", duration: 10,
+            phase: .hang, targets: [], timing: .fixed, handUse: .single, side: .left
+        )
+
+        CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
+        XCTAssertEqual(step.targets.first?.contactID, "left")
+
+        step.transitionHandUse(to: .either)
+
+        let expectedTarget = factualRequirement(contactID: nil, selection: .single)
+        XCTAssertEqual(step.targets, [expectedTarget])
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["left"])
+        )
+        let definition = CustomRoutineDefinition(
+            id: "custom.board-specific-either-after-tap",
+            title: "Board-specific either edge",
+            subtitle: "",
+            difficulty: nil,
+            category: nil,
+            tags: [],
+            targetMode: .boardSpecific(boardID: board.id),
+            steps: [WorkoutStepDefinition(
+                id: step.id,
+                title: step.title,
+                instruction: step.instruction,
+                accessory: step.accessory,
+                duration: step.duration,
+                phase: step.phase,
+                targets: step.targets,
+                handUse: step.handUse,
+                side: step.side
+            )]
+        )
+
+        XCTAssertTrue(CustomRoutineValidator.issues(for: definition, availableBoards: [board]).isEmpty)
+        let store = CustomRoutineStore(defaults: defaults, availableBoards: [board])
+        XCTAssertNoThrow(try store.save(definition))
+        XCTAssertEqual(store.routines.first?.steps.first?.targets, [expectedTarget])
     }
 
     func testSavePersistsOnlyLiteralRowsThroughSharedNormalization() throws {
@@ -942,6 +1051,57 @@ final class CustomRoutineStoreTests: XCTestCase {
             targets: targets,
             segments: segments,
             activeDuration: 10
+        )
+    }
+
+    private func factualRequirement(
+        contactID: String?,
+        selection: ContactSelectionPolicy
+    ) -> ContactRequirement {
+        ContactRequirement(
+            contactID: contactID,
+            kind: .edge,
+            shape: .flat,
+            depth: .range(MillimeterRange(minimum: 18, maximum: 22)),
+            fingerCapacity: 2,
+            handCapacity: 1,
+            selection: selection
+        )
+    }
+
+    private func mirroredBoard() -> BoardRevision {
+        let contacts = [
+            PhysicalContact(
+                id: "left", name: "Left edge", kind: .edge,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .left,
+                pairedContactID: "right"
+            ),
+            PhysicalContact(
+                id: "right", name: "Right edge", kind: .edge,
+                shape: .flat, fingerCapacity: 2, handCapacity: 1,
+                depth: .range(.init(minimum: 18, maximum: 22)), gripTypes: [.halfCrimp], side: .right,
+                pairedContactID: "left"
+            )
+        ]
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece",
+                contactID: contact.id,
+                frame: CGRect(x: index == 0 ? 0.1 : 0.8, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0),
+                treatment: .surface
+            )])
+        })
+        return BoardRevision(
+            id: "custom-store-mirrored", revisionID: "test", manufacturer: "Fixture",
+            name: "Mirrored", subtitle: "", dimensions: nil, aspectRatio: 1,
+            contacts: contacts, productURL: URL(string: "https://example.com/mirrored")!,
+            photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
         )
     }
 

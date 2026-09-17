@@ -8,8 +8,8 @@ for catalog review but are deliberately read-only.
 ## Contact-first boundary
 
 `board.json.contacts[]` owns sourced physical facts: contact identity, name,
-kind, equipment object, side and pairing, measured dimensions or depth,
-capacities, grip types, and documented features. Workbench edits those facts in
+kind, equipment object, side and pairing, tagged depth, capacities, grip types,
+and documented shape. Workbench edits those facts in
 the contact inspector and writes each change only to the matching contact.
 
 A raster presentation owns its authored media geometry at

@@ -1357,7 +1357,6 @@
       "equipmentObjectID": "primary",
       "name": "Left macro sloper region",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1365,11 +1364,12 @@
       "equipmentObjectID": "primary",
       "name": "Left 25 mm one-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1378,11 +1378,12 @@
       "equipmentObjectID": "primary",
       "name": "Right 25 mm one-finger pocket",
       "kind": "pocket",
-      "features": [],
       "fingerCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1391,10 +1392,11 @@
       "equipmentObjectID": "primary",
       "name": "25 mm center incut edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 25,
-        "upperBound": 25
+      "depth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
       },
       "gripTypes": []
     },
@@ -1403,10 +1405,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1415,10 +1418,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -1427,10 +1431,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 15 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 15,
-        "upperBound": 15
+      "depth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
       },
       "gripTypes": []
     },
@@ -1439,10 +1444,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 20 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 20,
-        "upperBound": 20
+      "depth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
       },
       "gripTypes": []
     },
@@ -1451,10 +1457,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1463,10 +1470,11 @@
       "equipmentObjectID": "primary",
       "name": "Left 8 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 8,
-        "upperBound": 8
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
       },
       "gripTypes": []
     },
@@ -1475,10 +1483,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 8 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 8,
-        "upperBound": 8
+      "depth": {
+        "range": {
+          "minimum": 8,
+          "maximum": 8
+        }
       },
       "gripTypes": []
     },
@@ -1487,10 +1496,11 @@
       "equipmentObjectID": "primary",
       "name": "Right 10 mm edge",
       "kind": "edge",
-      "features": [],
-      "depthRangeMillimeters": {
-        "lowerBound": 10,
-        "upperBound": 10
+      "depth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
       },
       "gripTypes": []
     },
@@ -1499,7 +1509,6 @@
       "equipmentObjectID": "primary",
       "name": "Right-center macro sloper region",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1507,7 +1516,6 @@
       "equipmentObjectID": "primary",
       "name": "Left-center macro sloper region",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     },
     {
@@ -1515,7 +1523,6 @@
       "equipmentObjectID": "primary",
       "name": "Right macro sloper region",
       "kind": "sloper",
-      "features": [],
       "gripTypes": []
     }
   ]

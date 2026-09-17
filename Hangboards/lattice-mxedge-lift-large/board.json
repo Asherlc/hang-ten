@@ -82,11 +82,12 @@
       "equipmentObjectID": "primary",
       "name": "MX22 edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 22,
-        "upperBound": 22
+      "depth": {
+        "range": {
+          "minimum": 22,
+          "maximum": 22
+        }
       },
       "gripTypes": []
     },
@@ -95,11 +96,12 @@
       "equipmentObjectID": "primary",
       "name": "MX16 edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 16,
-        "upperBound": 16
+      "depth": {
+        "range": {
+          "minimum": 16,
+          "maximum": 16
+        }
       },
       "gripTypes": []
     },
@@ -108,11 +110,12 @@
       "equipmentObjectID": "primary",
       "name": "MX12 edge",
       "kind": "edge",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 12,
-        "upperBound": 12
+      "depth": {
+        "range": {
+          "minimum": 12,
+          "maximum": 12
+        }
       },
       "gripTypes": []
     },
@@ -121,11 +124,12 @@
       "equipmentObjectID": "primary",
       "name": "28 mm mono",
       "kind": "pocket",
-      "features": [],
       "handCapacity": 1,
-      "depthRangeMillimeters": {
-        "lowerBound": 28,
-        "upperBound": 28
+      "depth": {
+        "range": {
+          "minimum": 28,
+          "maximum": 28
+        }
       },
       "gripTypes": []
     }

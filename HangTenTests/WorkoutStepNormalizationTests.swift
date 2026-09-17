@@ -65,7 +65,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    target: .feature(.mediumEdge),
+                    target: .edge(depth: .category(.medium)),
                     timing: .fixed,
                     duration: 8
                 ),
@@ -76,7 +76,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
 
         let result = try WorkoutStepNormalizer.expand(source)
 
-        XCTAssertEqual(result[0].targets, [.feature(.mediumEdge)])
+        XCTAssertEqual(result[0].targets, [.edge(depth: .category(.medium))])
         XCTAssertEqual(result[0].segments, [source.segments[0]])
         XCTAssertEqual(result[0].phase, .hang)
         XCTAssertEqual(result[0].gripType, .halfCrimp)
@@ -122,10 +122,10 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "Up to 60s",
             duration: 60,
             phase: .hang,
-            targets: [.feature(.roundSloper)],
+            targets: [ContactRequirement(kind: .sloper, shape: .round)],
             segments: [WorkoutSegment(
                 kind: .work,
-                target: .feature(.roundSloper),
+                target: ContactRequirement(kind: .sloper, shape: .round),
                 timing: .stopwatch,
                 duration: nil
             )],

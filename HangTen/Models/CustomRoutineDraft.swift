@@ -16,6 +16,24 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
     var repetitions: Int?
     var externalLoadKGF: Double?
 
+    mutating func transitionHandUse(to handUse: WorkoutHandUse) {
+        self.handUse = handUse
+        side = handUse == .single ? .left : .both
+
+        let selection: ContactSelectionPolicy = handUse == .double ? .bilateralPair : .single
+        targets = targets.map { target in
+            ContactRequirement(
+                contactID: handUse == .single ? target.contactID : nil,
+                kind: target.kind,
+                shape: target.shape,
+                depth: target.depth,
+                fingerCapacity: target.fingerCapacity,
+                handCapacity: target.handCapacity,
+                selection: selection
+            )
+        }
+    }
+
     init(
         id: String,
         title: String,
@@ -54,6 +72,75 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 
     var isStopwatch: Bool {
         timing == .stopwatch
+    }
+}
+
+/// Resolves the editor preview through a valid athlete-hand alternative. An
+/// either-hand definition deliberately retains `.both` until a session starts,
+/// which is not a contact-resolver input for a single-contact requirement.
+enum CustomRoutineBoardPreview {
+    static func contactIDs(
+        for step: CustomRoutineStepDraft,
+        on board: BoardRevision
+    ) -> Set<String> {
+        guard !step.targets.isEmpty else {
+            return []
+        }
+        let resolvedSteps = resolvedSteps(for: step)
+        return Set(resolvedSteps.flatMap {
+            (try? ContactResolver.resolve(step.targets, step: $0, board: board).map(\.id)) ?? []
+        })
+    }
+
+    static func toggle(
+        _ hold: PhysicalContact,
+        in step: inout CustomRoutineStepDraft,
+        on board: BoardRevision
+    ) {
+        if contactIDs(for: step, on: board).contains(hold.id) {
+            step.targets = []
+            return
+        }
+        step.targets = [requirement(for: hold, handUse: step.handUse)]
+    }
+
+    private static func resolvedSteps(for draft: CustomRoutineStepDraft) -> [WorkoutStep] {
+        let step = WorkoutStep(
+            id: draft.id,
+            number: 0,
+            title: draft.title,
+            instruction: draft.instruction,
+            accessory: draft.accessory,
+            duration: draft.duration,
+            phase: draft.phase,
+            targets: draft.targets,
+            handUse: draft.handUse,
+            side: draft.side,
+            action: draft.action,
+            repetitions: draft.repetitions,
+            externalLoadKGF: draft.externalLoadKGF
+        )
+        let candidates = step.handUse == .either
+            ? [WorkoutSide.left, .right].compactMap {
+                step.resolvingEitherHand(selectedHandSide: $0)
+            }
+            : [step]
+        return candidates
+    }
+
+    private static func requirement(
+        for contact: PhysicalContact,
+        handUse: WorkoutHandUse
+    ) -> ContactRequirement {
+        ContactRequirement(
+            contactID: handUse == .single ? contact.id : nil,
+            kind: contact.kind,
+            shape: contact.shape,
+            depth: contact.depth,
+            fingerCapacity: contact.fingerCapacity,
+            handCapacity: contact.handCapacity,
+            selection: handUse == .double ? .bilateralPair : .single
+        )
     }
 }
 
@@ -135,18 +222,56 @@ struct CustomRoutineDraft: Equatable {
         )
     }
 
-    mutating func addLeftAndRightPair(from step: CustomRoutineStepDraft) {
+    mutating func addLeftAndRightPair(
+        from step: CustomRoutineStepDraft,
+        board: BoardRevision? = nil
+    ) {
         var left = step
         left.id = UUID().uuidString
         left.handUse = .single
         left.side = .left
+        left.targets = Self.targets(step.targets, mirroredOnto: .left, of: board)
 
         var right = step
         right.id = UUID().uuidString
         right.handUse = .single
         right.side = .right
+        right.targets = Self.targets(step.targets, mirroredOnto: .right, of: board)
 
         steps.append(contentsOf: [left, right])
+    }
+
+    /// An exact contact belongs to one physical side of the board, so copying it
+    /// verbatim would point both generated steps at the same hold. Swap in the
+    /// board's paired contact when it exists and sits on the side being
+    /// generated; otherwise keep the athlete's target untouched rather than
+    /// inventing a pair.
+    private static func targets(
+        _ targets: [ContactRequirement],
+        mirroredOnto side: ContactSide,
+        of board: BoardRevision?
+    ) -> [ContactRequirement] {
+        guard let board else { return targets }
+        return targets.map { target in
+            guard let contactID = target.contactID,
+                  let contact = board.contacts.first(where: { $0.id == contactID }),
+                  contact.side != side,
+                  let pairedContactID = contact.pairedContactID,
+                  let paired = board.contacts.first(where: { $0.id == pairedContactID }),
+                  paired.side == side
+            else {
+                return target
+            }
+            return ContactRequirement(
+                contactID: paired.id,
+                kind: target.kind,
+                shape: target.shape,
+                depth: target.depth,
+                fingerCapacity: target.fingerCapacity,
+                handCapacity: target.handCapacity,
+                selection: target.selection
+            )
+        }
     }
 
     mutating func updateStep(_ step: CustomRoutineStepDraft) {
@@ -204,6 +329,7 @@ struct CustomRoutineDraft: Equatable {
             step.targets = Self.compatibleTargets(
                 step.targets,
                 for: targetMode,
+                from: self.targetMode,
                 availableBoards: availableBoards
             )
             return step
@@ -278,13 +404,21 @@ struct CustomRoutineDraft: Equatable {
     private static func compatibleTargets(
         _ targets: [ContactRequirement],
         for targetMode: CustomRoutineTargetMode,
+        from sourceTargetMode: CustomRoutineTargetMode,
         availableBoards: [BoardRevision]
     ) -> [ContactRequirement] {
         switch targetMode {
         case let .boardSpecific(boardID):
-            return availableBoards.contains(where: { $0.id == boardID }) ? targets : []
-        case .generic:
+            guard availableBoards.contains(where: { $0.id == boardID }) else {
+                return []
+            }
+            if case let .boardSpecific(sourceBoardID) = sourceTargetMode,
+               sourceBoardID != boardID {
+                return targets.map { $0.strippingExactContactID() }
+            }
             return targets
+        case .generic:
+            return targets.map { $0.strippingExactContactID() }
         }
     }
 

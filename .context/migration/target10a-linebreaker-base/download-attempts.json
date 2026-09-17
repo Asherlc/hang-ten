@@ -1,0 +1,8 @@
+[
+  {
+    "sourceId": "I1",
+    "url": "https://www.camp4.de/media/image/70/52/fd/linebreaker-base-front-1-big_600x600.jpg",
+    "success": false,
+    "error": "URLError: <urlopen error [Errno -3] Temporary failure in name resolution>"
+  }
+]
