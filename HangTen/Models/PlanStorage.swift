@@ -16,17 +16,14 @@ private struct PlanLibraryCodingKey: CodingKey {
 }
 
 private extension Decoder {
-    func rejectFormerPlanLibraryKeys(_ keys: Set<String>) throws {
-        let container = try self.container(keyedBy: PlanLibraryCodingKey.self)
-        guard let key = container.allKeys.first(where: { keys.contains($0.stringValue) }) else {
-            return
-        }
-
-        throw DecodingError.dataCorruptedError(
-            forKey: key,
-            in: container,
-            debugDescription: "Former plan-library field \(key.stringValue) is not supported."
-        )
+    /// Silently ignores deprecated plan-library keys so that old JSON files
+    /// (which included `schemaVersion`, `version`, or `boardMappings`) can
+    /// still be loaded.  Individual plan/block definitions will still reject
+    /// structurally incompatible data via their own strict decoders.
+    func ignoreFormerPlanLibraryKeys(_ keys: Set<String>) throws {
+        // Intentionally a no-op.  The keys are present but unused, so
+        // `container(keyedBy:)` simply skips them.
+        _ = try self.container(keyedBy: PlanLibraryCodingKey.self)
     }
 }
 
@@ -60,7 +57,7 @@ struct PlanLibraryMetadata: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectFormerPlanLibraryKeys(["version"])
+        try decoder.ignoreFormerPlanLibraryKeys(["version"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
         title = try container.decode(String.self, forKey: .title)
@@ -86,6 +83,11 @@ struct PlanMetadata: Codable, Hashable {
     let workoutLabels: [String]
     let tags: [String]
     let notes: [String]
+    /// Deprecated fields preserved for round-trip fidelity with old plan
+    /// libraries.  Not used by the app; decoded so they survive a
+    /// load→save cycle without data loss.
+    let equipment: [String]?
+    let disclaimer: String?
 
     init(
         title: String,
@@ -97,7 +99,9 @@ struct PlanMetadata: Codable, Hashable {
         category: String = "general",
         workoutLabels: [String] = [],
         tags: [String] = [],
-        notes: [String] = []
+        notes: [String] = [],
+        equipment: [String]? = nil,
+        disclaimer: String? = nil
     ) {
         self.title = title
         self.subtitle = subtitle
@@ -109,6 +113,8 @@ struct PlanMetadata: Codable, Hashable {
         self.workoutLabels = workoutLabels
         self.tags = tags
         self.notes = notes
+        self.equipment = equipment
+        self.disclaimer = disclaimer
     }
 
     var athleteFacingLabels: [String] {
@@ -129,6 +135,8 @@ struct PlanMetadata: Codable, Hashable {
         case workoutLabels
         case tags
         case notes
+        case equipment
+        case disclaimer
     }
 
     init(from decoder: Decoder) throws {
@@ -143,6 +151,8 @@ struct PlanMetadata: Codable, Hashable {
         workoutLabels = try container.decodeIfPresent([String].self, forKey: .workoutLabels) ?? []
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         notes = try container.decodeIfPresent([String].self, forKey: .notes) ?? []
+        equipment = try container.decodeIfPresent([String].self, forKey: .equipment)
+        disclaimer = try container.decodeIfPresent(String.self, forKey: .disclaimer)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -159,6 +169,8 @@ struct PlanMetadata: Codable, Hashable {
         }
         try container.encode(tags, forKey: .tags)
         try container.encode(notes, forKey: .notes)
+        try container.encodeIfPresent(equipment, forKey: .equipment)
+        try container.encodeIfPresent(disclaimer, forKey: .disclaimer)
     }
 }
 
@@ -624,7 +636,7 @@ struct PlanLibraryDefinition: Codable, Hashable {
     }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectFormerPlanLibraryKeys([
+        try decoder.ignoreFormerPlanLibraryKeys([
             "schemaVersion",
             "board" + "Mappings"
         ])

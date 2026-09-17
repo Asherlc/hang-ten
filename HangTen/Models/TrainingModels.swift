@@ -253,14 +253,19 @@ enum BoardModelSuspension: Hashable {
         switch self {
         case .singleCord(let suspension): return suspension.attachment
         case .pairedLeadCord(let suspension):
-            let attachment = suspension.attachments[0]
+            guard let attachment = suspension.attachments.first else {
+                preconditionFailure("pairedLeadCord must have at least one attachment")
+            }
             return BoardModelAttachment(
                 nodeID: attachment.nodeID,
                 pointInModel: attachment.pointInModel,
                 provenance: attachment.provenance
             )
         case .twoBranchCord(let suspension):
-            return suspension.passages.left[0].asAttachment
+            guard let passage = suspension.passages.left.first else {
+                preconditionFailure("twoBranchCord must have at least one left passage")
+            }
+            return passage.asAttachment
         }
     }
 
@@ -277,7 +282,9 @@ enum BoardModelSuspension: Hashable {
         case .singleCord(let suspension): return suspension.cord
         case .pairedLeadCord(let suspension): return suspension.cord
         case .twoBranchCord(let suspension):
-            let branch = suspension.branches[0]
+            guard let branch = suspension.branches.first else {
+                preconditionFailure("twoBranchCord must have at least one branch")
+            }
             return BoardModelCord(
                 restLength: branch.restLength,
                 radius: branch.radius,
@@ -1517,7 +1524,7 @@ struct WorkoutStep: Identifiable, Hashable {
     /// board resolution, highlighting, and activity recording.
     func resolvingEitherHand(selectedHandSide: WorkoutSide?) -> WorkoutStep? {
         guard handUse == .either else { return self }
-        guard selectedHandSide == .left || selectedHandSide == .right else {
+        guard let side = selectedHandSide, side == .left || side == .right else {
             return nil
         }
         return WorkoutStep(
@@ -1525,7 +1532,7 @@ struct WorkoutStep: Identifiable, Hashable {
             accessory: accessory, duration: duration, phase: phase, targets: targets,
             segments: segments, gripType: gripType,
             fingerConfiguration: fingerConfiguration, handUse: .single,
-            side: selectedHandSide!, action: action, repetitions: repetitions,
+            side: side, action: action, repetitions: repetitions,
             externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration
         )
     }
@@ -2145,12 +2152,12 @@ enum LegacyPlanSeedCatalog {
             ("1 pull-up outer jugs (2); 10 second hang center edge (17).", BundledPlanContactRequirements.contactTargets(.outerJugs, .edge17), .pull),
             ("1 pull-up deep four finger edge (4), stay on — 10 s bent arm hang (90°), stay on — 1 more pull-up.", BundledPlanContactRequirements.contactTargets(.pocket4), .pull),
             ("2 offset pull-ups (1 arm each) outer jug (2) & deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
-            ("6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang two finger pockets (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
             ("10 s. dead hang flat sloper (15); 5 knee raises outer jug (2).", BundledPlanContactRequirements.contactTargets(.flatSloper, .outerJugs), .hang),
             ("16 s. offset hang (8 s. per side) deep edge (17) & med pocket (7).", BundledPlanContactRequirements.contactTargets(.edge17, .pocket7), .hang),
             ("3 pull-ups any hold.", BundledPlanContactRequirements.contactTargets(.anyHold), .pull),
-            ("10 s. bent arm hang (elbows 90°) deep four finger (3).", BundledPlanContactRequirements.contactTargets(.roundSlopers), .hang),
-            ("1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket11, .roundSlopers), .pull),
+            ("10 s. bent arm hang (elbows 90°) round sloper (3).", BundledPlanContactRequirements.contactTargets(.roundSlopers), .hang),
+            ("1 offset pull-up, pinch & pocket (1 & 11), change hands & repeat; 10 s. dead hang round sloper (3).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket11, .roundSlopers), .pull),
             ("2 pull-ups any hold; dead hang center edge (17) till failure. Fight hard & don't let go!!", BundledPlanContactRequirements.contactTargets(.anyHold, .edge17), .hang)
         ]
     )
@@ -2164,14 +2171,14 @@ enum LegacyPlanSeedCatalog {
         boardID: BundledPlanContactRequirements.metoliusContactBoardID,
         minutes: [
             ("3 pull-ups outer jugs (2); 20 second dead hang deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
-            ("10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
+            ("10 s. bent arm (elbows at 90°) hang outer jug (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
             ("4 offset pull-ups (each arm) outer jugs (2) & deep three finger pockets (6).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket6), .pull),
-            ("10 s. L-hang on any holds; 10 s. dead hang on pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("10 s. L-hang on any holds; 10 s. dead hang on two finger pockets (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
             ("10 s. offset hang, deep center edge (17) & med three finger edge (8), reverse holds — repeat.", BundledPlanContactRequirements.contactTargets(.edge17, .pocket8), .hang),
             ("15 s. offset hang pockets (4) & (13), reverse holds — repeat.", BundledPlanContactRequirements.contactTargets(.pocket4, .pocket13), .hang),
             ("4 pull-ups deep center edge (17); 10 knee raises any holds.", BundledPlanContactRequirements.contactTargets(.edge17, .anyHold), .pull),
             ("15 s. dead hang, two finger pockets (7); rest 10 s.; 10 s. hang three finger pockets (9).", BundledPlanContactRequirements.contactTargets(.pocket7, .pocket9), .hang),
-            ("10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17).", BundledPlanContactRequirements.contactTargets(.roundSlopers, .edge17), .hang),
+            ("10 s. one arm hang round sloper (3), repeat other arm; 4 pull-ups center edge (17).", BundledPlanContactRequirements.contactTargets(.roundSlopers, .edge17), .hang),
             ("4 pull-ups flat sloper (15); bump out to round sloper (3) & dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.flatSloper, .roundSlopers), .hang)
         ]
     )
@@ -2184,13 +2191,13 @@ enum LegacyPlanSeedCatalog {
         sourceURL: contactSourceURL,
         boardID: BundledPlanContactRequirements.metoliusContactBoardID,
         minutes: [
-            ("6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4), .pull),
-            ("15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
-            ("6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4, .edge18), .pull),
-            ("15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
-            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s.", BundledPlanContactRequirements.contactTargets(.pocket13, .pocket9, .roundSlopers), .hang),
+            ("6 pull-ups outer jugs (2); 20 s. dead hang deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4), .pull),
+            ("15 s. bent arm hang (elbows at 90°) outer jug (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°).", BundledPlanContactRequirements.contactTargets(.outerJugs), .hang),
+            ("6 offset pull-ups (3 each arm) outer jug (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18).", BundledPlanContactRequirements.contactTargets(.outerJugs, .pocket4, .edge18), .pull),
+            ("15 s. L-hang any holds (hold good form); 15 s. dead hang on two finger pockets (11).", BundledPlanContactRequirements.contactTargets(.anyHold, .pocket11), .hang),
+            ("10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med four finger pocket (9), campus to round slopers (3), hold 15 s.", BundledPlanContactRequirements.contactTargets(.pocket13, .pocket9, .roundSlopers), .hang),
             ("15 s. one arm hang center edge (17); rest 20 s.; repeat other arm.", BundledPlanContactRequirements.contactTargets(.edge17), .hang),
-            ("5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket4), .pull),
+            ("5 L-sit pull-ups (bend knees if you have to), pinches (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4).", BundledPlanContactRequirements.contactTargets(.pinches, .pocket4), .pull),
             ("10 s. hang center edges (16, 17), reverse holds — repeat; 3 power pull-ups (use weights or helper for resistance, should just be able to complete final rep).", BundledPlanContactRequirements.contactTargets(.edge16, .edge17), .hang),
             ("20 s. slight bent arm hang, two finger pockets (7), stay on; bump to round slopers (3), 20 s. dead hang.", BundledPlanContactRequirements.contactTargets(.pocket7, .roundSlopers), .hang),
             ("8 pull-ups flat sloper (3), bump out to round sloper (3), and dead hang to failure. Fight hard!!", BundledPlanContactRequirements.contactTargets(.flatSloper, .roundSlopers), .hang)

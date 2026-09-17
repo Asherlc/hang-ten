@@ -233,7 +233,13 @@ private final class SystemCountdownAudioLifecycleLogger: CountdownAudioLifecycle
 final class CountdownAudioScheduler: CountdownAudioScheduling {
     private let backend: any CountdownAudioSchedulingBackend
     private let lifecycleLogger: any CountdownAudioLifecycleLogging
-    private var hasActiveSchedule = false
+    private let lock = NSLock()
+    private var _hasActiveSchedule = false
+
+    private var hasActiveSchedule: Bool {
+        get { lock.withLock { _hasActiveSchedule } }
+        set { lock.withLock { _hasActiveSchedule = newValue } }
+    }
 
     init(backend: any CountdownAudioSchedulingBackend) {
         self.backend = backend
