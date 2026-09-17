@@ -451,7 +451,7 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
     }
 
 
-def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
+def test_mammut_diamond_freezes_the_documented_16_contact_inventory() -> None:
     board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "mammut.diamond-finger"
