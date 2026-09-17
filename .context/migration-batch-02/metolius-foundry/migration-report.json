@@ -1,0 +1,65 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 18,
+  "contactMappings": {
+    "centre-edge-16": "edge-9-center",
+    "centre-edge-23": "edge-11-center",
+    "centre-edge-30": "edge-10-center",
+    "centre-sloper-53": "sloper-8-center",
+    "left-jug": "jug-2-left",
+    "left-pinch": "pinch-1-left",
+    "left-pocket-15": "pocket-6-left",
+    "left-pocket-21": "pocket-7-left",
+    "left-pocket-22": "pocket-4-left",
+    "left-pocket-30": "pocket-5-left",
+    "left-pocket-32": "pocket-3-left",
+    "right-jug": "jug-2-right",
+    "right-pinch": "pinch-1-right",
+    "right-pocket-15": "pocket-6-right",
+    "right-pocket-21": "pocket-7-right",
+    "right-pocket-22": "pocket-4-right",
+    "right-pocket-30": "pocket-5-right",
+    "right-pocket-32": "pocket-3-right"
+  },
+  "descriptorSHA256": "93610c3973af91e559fd4a8f5fc84b7adbc0a121584624e23a0bdf5b0cc7165e",
+  "modelBounds": {
+    "max": [
+      0.287404448,
+      0.108194754,
+      0.079179034
+    ],
+    "min": [
+      -0.287410527,
+      -0.107997023,
+      0.00014987
+    ]
+  },
+  "modelSHA256": "87dfb3cd42eee1649e6555abaad59438ffdf2fe7df521623e3936d4053b5e0ba",
+  "nodeCount": 19,
+  "packageID": "metolius.foundry",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/metolius-foundry/metolius-foundry.normalized.glb",
+  "sourceModelSHA256": "894b247972f0de4400ee5952d4ce1d2b36676848073094b1579a26caf408e474",
+  "sourceObjectIDs": [
+    "body-board",
+    "centre-edge-16",
+    "centre-edge-23",
+    "centre-edge-30",
+    "centre-sloper-53",
+    "left-jug",
+    "left-pinch",
+    "left-pocket-15",
+    "left-pocket-21",
+    "left-pocket-22",
+    "left-pocket-30",
+    "left-pocket-32",
+    "right-jug",
+    "right-pinch",
+    "right-pocket-15",
+    "right-pocket-21",
+    "right-pocket-22",
+    "right-pocket-30",
+    "right-pocket-32"
+  ],
+  "status": "converted"
+}

@@ -64,7 +64,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 19, "represented": 8}
+    assert report.decisions == {"excluded": 25, "represented": 8}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.275,

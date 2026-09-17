@@ -1693,7 +1693,8 @@ def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
         record
         for record in document["records"]
         if f'{record["packageID"]}/{record["presentationID"]}'
-        == "soill.iron-palm-2/primary"
+        != probe["representativeRecordKey"]
+        and (REPO_ROOT / record["assetPath"]).is_file()
     )
     unrelated_path = REPO_ROOT / unrelated["assetPath"]
     probe["sourceInputs"].append(

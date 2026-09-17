@@ -685,6 +685,144 @@
         "reviewedAt": "2026-09-14",
         "notes": "Reviewed current exact-revision manufacturer evidence and approved documented suspended presentation; optional rope/bungee remains explicitly non-supplied metadata."
       }
+    },
+    {
+      "packageID": "escape-beta-22",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Escape Climbing Beta Board (ec72100) manufacturer product page specifies a wall-mounted 6 x 26 x 2 inch board with installation hardware and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://escapeclimbing.com/products/ec72100",
+          "exactRevisionID": "escape-beta-22-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "9e9f3c9264e6796efc4781d35cfb4514b27f7829c790fa9b575697f56920259a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-beta-22-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; only installation hardware is documented, no cord or rope suspension."
+      }
+    },
+    {
+      "packageID": "mammut.diamond-finger",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Mammut Diamond Finger Hangboard installation instructions document a wall-mounted plate fixed with adequate mounting solutions and document no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer installation instructions",
+          "url": "https://chalkr.de/m/100015/111170/media/Mammut/mammut-diamond-finger-hangboard-bedienungsanleitung.pdf",
+          "exactRevisionID": "mammut-diamond-finger-current-2026-09-16",
+          "sourceTier": "manufacturer-instruction",
+          "snapshotSHA256": "6a0fbe07d2c1ac5a05f09bebc1f13e5e0c9274dfbaca8312940e12d98f1d66bd",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/mammut.diamond-finger-manufacturer-product-2026-09-16.pdf"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer installation instructions; the wall mount plate is the only mounting provision and no cord or rope suspension is documented."
+      }
+    },
+    {
+      "packageID": "metolius.foundry",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Metolius Foundry Training Board manufacturer product page describes a wall-mounted training board shipped with a training guide, instructions, and mounting hardware, and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/products/foundry-training-board",
+          "exactRevisionID": "metolius-foundry-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "6ddfa5354734b7226b3ecd1fb3db359a90cf5e487178b4f4add02f336daf1f6c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius.foundry-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it lists mounting hardware only and does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "nature.stoak-board-iii",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Nature Climbing Stoak Board III manufacturer product page describes a wall-mounted oak or beech board with bolt and screw mounting and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://natureclimbing.com/products/stoak-board-iii",
+          "exactRevisionID": "nature-stoak-board-iii-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5f7864d6e548a0746bcd35c977510a3a17e3d84a1032eaa796d82addc54617f7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/nature.stoak-board-iii-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; mounting is bolt/screw only and no cord or rope suspension is documented."
+      }
+    },
+    {
+      "packageID": "soill.iron-palm-2",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current So iLL Iron Palm 2.0 manufacturer product page describes a wall-mounted training board and its grip features and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://soillholds.com/products/iron-palm-2-0",
+          "exactRevisionID": "soill-iron-palm-2-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "a93b40ba465cc6a8d5d1469f4454bb7773aec0ed398b63c1a04c31209d00cab3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.iron-palm-2-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "soill.split-palm",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current So iLL Split Palm manufacturer product page describes a two-piece wall-mounted training board and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://soillholds.com/products/split-palm",
+          "exactRevisionID": "soill-split-palm-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ed060fc31589d53c9474a93e57036f5ad0b1caeca31cd651fba0a13481c48b9e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.split-palm-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
+      }
     }
   ]
 }

@@ -452,66 +452,56 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
     }
 
 
-def test_mammut_diamond_freezes_the_documented_21_contact_inventory() -> None:
+def test_mammut_diamond_freezes_the_documented_16_contact_inventory() -> None:
     board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
 
     assert board["id"] == "mammut.diamond-finger"
     assert [(contact["id"], contact["kind"], _scalar_depth(contact), contact.get("fingerCapacity"), _single_grip_type(contact)) for contact in board["contacts"]] == [
-        ("jug-left", "jug", None, None, None),
-        ("sloper-45-left", "sloper", None, None, None),
-        ("pocket-30-four-left", "pocket", 30, 4, "fourFingerPocket"),
-        ("pocket-16-two-left", "pocket", 16, 2, "twoFingerPocket"),
-        ("pocket-16-three-left", "pocket", 16, 3, "threeFingerPocket"),
-        ("pocket-20-eight-left", "pocket", 20, 4, "fourFingerPocket"),
-        ("pocket-20-four-left", "pocket", 20, 4, "fourFingerPocket"),
-        ("pocket-10-four-left", "pocket", 10, 4, "fourFingerPocket"),
-        ("sloper-48-center", "sloper", None, None, None),
-        ("pocket-30-eight-center", "pocket", 30, 4, "fourFingerPocket"),
-        ("pocket-18-eight-center", "pocket", 18, 4, "fourFingerPocket"),
-        ("pocket-10-four-right", "pocket", 10, 4, "fourFingerPocket"),
-        ("pocket-20-four-right", "pocket", 20, 4, "fourFingerPocket"),
-        ("pocket-20-eight-right", "pocket", 20, 4, "fourFingerPocket"),
-        ("pocket-16-three-right", "pocket", 16, 3, "threeFingerPocket"),
-        ("pocket-16-two-right", "pocket", 16, 2, "twoFingerPocket"),
-        ("pocket-30-four-right", "pocket", 30, 4, "fourFingerPocket"),
-        ("sloper-45-right", "sloper", None, None, None),
-        ("jug-right", "jug", None, None, None),
-        ("sloper-30-left", "sloper", None, None, None),
-        ("sloper-30-right", "sloper", None, None, None),
+        ("mam-jug-l", "jug", None, None, None),
+        ("mam-jug-r", "jug", None, None, None),
+        ("mam-sloper-c", "sloper", None, None, None),
+        ("mam-mid-edge-c", "edge", None, None, None),
+        ("mam-mono-l", "pocket", None, None, None),
+        ("mam-mono-r", "pocket", None, None, None),
+        ("mam-upper-pocket-l", "pocket", None, None, None),
+        ("mam-upper-pocket-r", "pocket", None, None, None),
+        ("mam-lateral-ledge-l", "edge", None, None, None),
+        ("mam-lateral-ledge-r", "edge", None, None, None),
+        ("mam-upper-pocket-c", "pocket", None, None, None),
+        ("mam-lower-edge-c", "edge", None, None, None),
+        ("mam-upper-open-bay-l", "edge", None, None, None),
+        ("mam-upper-open-bay-r", "edge", None, None, None),
+        ("mam-upper-inset-l", "pocket", None, None, None),
+        ("mam-upper-inset-r", "pocket", None, None, None),
     ]
 
-    geometry = document_contact_geometry(board)
-    assert all(
-        "treatment" not in piece
-        for pieces in geometry.values()
-        for piece in pieces
+    descriptor = json.loads(
+        (
+            MAMMUT_DIAMOND_ROOT / board["presentations"][0]["media"]["descriptorPath"]
+        ).read_text(encoding="utf-8")
     )
     for left_id, right_id in (
-        ("jug-left", "jug-right"),
-        ("sloper-45-left", "sloper-45-right"),
-        ("sloper-30-left", "sloper-30-right"),
-        ("pocket-30-four-left", "pocket-30-four-right"),
-        ("pocket-16-two-left", "pocket-16-two-right"),
-        ("pocket-16-three-left", "pocket-16-three-right"),
-        ("pocket-20-eight-left", "pocket-20-eight-right"),
-        ("pocket-20-four-left", "pocket-20-four-right"),
-        ("pocket-10-four-left", "pocket-10-four-right"),
+        ("mam-jug-l", "mam-jug-r"),
+        ("mam-mono-l", "mam-mono-r"),
+        ("mam-upper-pocket-l", "mam-upper-pocket-r"),
+        ("mam-lateral-ledge-l", "mam-lateral-ledge-r"),
+        ("mam-upper-open-bay-l", "mam-upper-open-bay-r"),
+        ("mam-upper-inset-l", "mam-upper-inset-r"),
     ):
-        left_piece = geometry[left_id][0]
-        right_piece = geometry[right_id][0]
-        left_frame = left_piece["frame"]
-        right_frame = right_piece["frame"]
-        assert right_frame["x"] == pytest.approx(
-            1 - left_frame["x"] - left_frame["width"], abs=1e-12
+        left = descriptor["contacts"][left_id]
+        right = descriptor["contacts"][right_id]
+        assert not set(left["nodeIDs"]) & set(right["nodeIDs"])
+        # Imported float32 coordinates retain symmetry within export precision.
+        assert right["center"] == pytest.approx(
+            [1 - left["center"][0], left["center"][1]], abs=1e-4
         )
-        assert right_frame["y"] == left_frame["y"]
-        assert right_frame["width"] == left_frame["width"]
-        assert right_frame["height"] == left_frame["height"]
-        assert right_piece.get("shapeConstraint") == left_piece.get("shapeConstraint")
-
-    _assert_global_paths_are_horizontal_mirrors(
-        geometry["jug-left"][0], geometry["jug-right"][0]
-    )
+        left_bounds, right_bounds = left["facePlaneAABB"], right["facePlaneAABB"]
+        assert right_bounds["min"] == pytest.approx(
+            [1 - left_bounds["max"][0], left_bounds["min"][1]], abs=1e-4
+        )
+        assert right_bounds["max"] == pytest.approx(
+            [1 - left_bounds["min"][0], left_bounds["max"][1]], abs=1e-4
+        )
 
 
 def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
@@ -519,7 +509,7 @@ def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
 
     assert board["id"] == "metolius.foundry"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.png", 2.0, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.6588197894316767, True, None, False)
     ]
     assert tuple(
         (
@@ -531,50 +521,30 @@ def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
         )
         for contact in board["contacts"]
     ) == FOUNDRY_HOLDS
-    geometry = document_contact_geometry(board)
-    assert _original_contact_owners(board) == {
-        contact["id"]: "front" for contact in board["contacts"]
-    }
-    assert all(geometry[contact["id"]] for contact in board["contacts"])
+    _assert_model_descriptor(FOUNDRY_ROOT, board, "body_board_001")
 
 
 def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
     board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
+    descriptor = json.loads(
+        (
+            FOUNDRY_ROOT / board["presentations"][0]["media"]["descriptorPath"]
+        ).read_text(encoding="utf-8")
+    )
 
     for position in range(1, 8):
         prefix = "pinch" if position == 1 else "jug" if position == 2 else "pocket"
-        left = geometry[f"{prefix}-{position}-left"][0]
-        right = geometry[f"{prefix}-{position}-right"][0]
-        left_frame = left["frame"]
-        right_frame = right["frame"]
-
-        assert right_frame["x"] == pytest.approx(
-            1 - left_frame["x"] - left_frame["width"]
+        left = descriptor["contacts"][f"{prefix}-{position}-left"]
+        right = descriptor["contacts"][f"{prefix}-{position}-right"]
+        assert not set(left["nodeIDs"]) & set(right["nodeIDs"])
+        left_bounds, right_bounds = left["facePlaneAABB"], right["facePlaneAABB"]
+        # Imported float32 coordinates retain symmetry within export precision.
+        assert right_bounds["min"] == pytest.approx(
+            [1 - left_bounds["max"][0], left_bounds["min"][1]], abs=1e-4
         )
-        assert right_frame["y"] == left_frame["y"]
-        assert right_frame["width"] == left_frame["width"]
-        assert right_frame["height"] == left_frame["height"]
-        assert right.get("shapeConstraint") == left.get("shapeConstraint")
-
-        left_commands = left["shape"]["commands"]
-        right_commands = right["shape"]["commands"]
-        if position >= 3:
-            # These regular paths are themselves horizontally symmetric.
-            assert right_commands == left_commands
-            continue
-
-        assert len(right_commands) == len(left_commands)
-        for left_command, right_command in zip(left_commands, right_commands, strict=True):
-            assert right_command["command"] == left_command["command"]
-            for point_key in ("to", "control", "control1", "control2"):
-                if point_key not in left_command:
-                    assert point_key not in right_command
-                    continue
-                assert right_command[point_key][0] == pytest.approx(
-                    1 - left_command[point_key][0]
-                )
-                assert right_command[point_key][1] == left_command[point_key][1]
+        assert right_bounds["max"] == pytest.approx(
+            [1 - left_bounds["min"][0], left_bounds["max"][1]], abs=1e-4
+        )
 
 
 def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:

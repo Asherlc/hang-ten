@@ -1,0 +1,43 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 7,
+  "contactMappings": {
+    "centre-granite-edge": "edge-22-center",
+    "left-granite-edge": "lower-composite-left",
+    "left-tapered-wood-edge": "gradient-edge-left",
+    "right-granite-edge": "lower-composite-right",
+    "right-tapered-wood-edge": "gradient-edge-right",
+    "top-jug": "top-jug",
+    "upper-centre-wood-edge": "lower-composite-center"
+  },
+  "descriptorSHA256": "ed45385ecff66f3ce7778a4dc4b46a7d3f02c61ccb2183a333fcaecb79ab6ec7",
+  "modelBounds": {
+    "max": [
+      0.285745531,
+      0.060360264,
+      0.05499981
+    ],
+    "min": [
+      -0.285752952,
+      -0.060745612,
+      0.000149985
+    ]
+  },
+  "modelSHA256": "99bf34b6fdf6c57d485d0c1eb55d425345fd5dcc07d787cd430c1616e1e3df79",
+  "nodeCount": 8,
+  "packageID": "nature.stoak-board-iii",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/nature-climbing-stoak-board-iii/nature-climbing-stoak-board-iii.normalized.glb",
+  "sourceModelSHA256": "eef76fa7b705347aef47e90108ea87d499381702cb4c59631dc63ac6f8f69d7e",
+  "sourceObjectIDs": [
+    "body-board",
+    "centre-granite-edge",
+    "left-granite-edge",
+    "left-tapered-wood-edge",
+    "right-granite-edge",
+    "right-tapered-wood-edge",
+    "top-jug",
+    "upper-centre-wood-edge"
+  ],
+  "status": "converted"
+}

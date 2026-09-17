@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "soill.split-palm",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "So iLL",
+    "evidencePacket": "https://soillholds.com/products/split-palm"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB eeef48565392a447d53acbd65061c36fc505b6389b929062386bfe7f9a190f0f; coordinate-wrapper empties baked and removed and neutral solid-color material images added for compiler import (71454915996cb0b9770096a5a64842d29106604e0ba576f54172a0b247d427f9)",
+    "retainedPath": ".context/migration-batch-02/so-ill-split-palm/so-ill-split-palm.normalized.glb",
+    "sha256": "71454915996cb0b9770096a5a64842d29106604e0ba576f54172a0b247d427f9"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}
