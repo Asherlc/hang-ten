@@ -1717,8 +1717,13 @@ struct WorkoutView: View {
         store.board(for: plan)
     }
 
+    private var boardIsOneHanded: Bool {
+        !board.contacts.isEmpty &&
+        board.contacts.allSatisfy { $0.handCapacity == 1 }
+    }
+
     private var planNeedsHandChoice: Bool {
-        plan.steps.contains { $0.handUse == .either }
+        plan.steps.contains { $0.handUse == .either } || boardIsOneHanded
     }
 
 	private let timeline: WorkoutTimeline
@@ -2112,7 +2117,8 @@ struct WorkoutView: View {
 						GripDiagramView(
 							hold: hold,
 							gripType: holdCue.gripType,
-							fingerConfiguration: holdCue.fingerConfiguration
+							fingerConfiguration: holdCue.fingerConfiguration,
+							resolvedHandSide: selectedHandSide
 						)
 					} else {
 						HStack(spacing: 12) {

@@ -7,6 +7,23 @@ final class GripHandCueCardTests: XCTestCase {
         XCTAssertEqual(GripCueSide.right.handArtworkMirrorScale, 1)
     }
 
+    func testSingleSideReturnsNilForTwoHandedOrUnspecifiedCapacity() {
+        XCTAssertNil(GripDiagramView.singleSide(handCapacity: 2, resolvedSide: .left))
+        XCTAssertNil(GripDiagramView.singleSide(handCapacity: 2, resolvedSide: .right))
+        XCTAssertNil(GripDiagramView.singleSide(handCapacity: 2, resolvedSide: nil))
+        XCTAssertNil(GripDiagramView.singleSide(handCapacity: nil, resolvedSide: .left))
+        XCTAssertNil(GripDiagramView.singleSide(handCapacity: nil, resolvedSide: nil))
+    }
+
+    func testSingleSideUsesResolvedSideForOneHandedCapacity() {
+        XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: .left), .left)
+        XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: .right), .right)
+    }
+
+    func testSingleSideFallsBackToRightWhenNoSideIsResolvedYet() {
+        XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: nil), .right)
+    }
+
     func testPocketCountDoesNotInventExactFingerHighlights() {
         for grip in GripType.allCases {
             let pose = GripHandPose(posture: grip, fingerConfiguration: nil)
