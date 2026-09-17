@@ -28,7 +28,7 @@
 		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
 		D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* clavellium-training-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-clavellium-training-block", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
-		D10000000000000000000015 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
+		D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000021 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
 		D10000000000000000000016 /* escape-unlimited Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000016 /* escape-unlimited Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-unlimited", ); }; };
 		D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-evolv-kilter-basic-long", ); }; };
 		D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-deluxe-ii", ); }; };
@@ -196,7 +196,7 @@
 		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000015 /* clavellium-training-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "clavellium-training-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/clavellium-training-block/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000015 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000021 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000016 /* escape-unlimited Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-unlimited Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-unlimited/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "evolv-kilter-basic-long Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/evolv-kilter-basic-long/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-deluxe-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-deluxe-ii/Hangboards"; sourceTree = "<absolute>"; };
@@ -769,7 +769,7 @@
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
 				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
-				D10000000000000000000015 /* dewoodstok-woodbord Hangboards in Resources */,
+				D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */,
 				D10000000000000000000016 /* escape-unlimited Hangboards in Resources */,
 				D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */,
 				D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */,
