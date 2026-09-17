@@ -160,7 +160,7 @@
       ],
       "publishedDepthMm": null,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2348,
+      "triangleCount": 2210,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -174,7 +174,7 @@
       ],
       "publishedDepthMm": null,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 3824,
+      "triangleCount": 3754,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -188,7 +188,7 @@
       ],
       "publishedDepthMm": 38,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 3577,
+      "triangleCount": 3525,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -202,7 +202,7 @@
       ],
       "publishedDepthMm": 38,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2312,
+      "triangleCount": 2354,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -216,7 +216,7 @@
       ],
       "publishedDepthMm": 29,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2994,
+      "triangleCount": 3047,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -230,7 +230,7 @@
       ],
       "publishedDepthMm": 29,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2926,
+      "triangleCount": 2893,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -244,7 +244,7 @@
       ],
       "publishedDepthMm": 12,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 4671,
+      "triangleCount": 4591,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -258,7 +258,7 @@
       ],
       "publishedDepthMm": 12,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 3683,
+      "triangleCount": 3725,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -272,7 +272,7 @@
       ],
       "publishedDepthMm": 12,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 1928,
+      "triangleCount": 1919,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -286,7 +286,7 @@
       ],
       "publishedDepthMm": 50,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 1142,
+      "triangleCount": 1144,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -300,7 +300,7 @@
       ],
       "publishedDepthMm": 50,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 1103,
+      "triangleCount": 1144,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -314,7 +314,7 @@
       ],
       "publishedDepthMm": 31,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2713,
+      "triangleCount": 2712,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     },
     {
@@ -328,7 +328,7 @@
       ],
       "publishedDepthMm": 31,
       "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
-      "triangleCount": 2645,
+      "triangleCount": 2712,
       "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
     }
   ],
@@ -349,43 +349,59 @@
           1.0
         ],
         "upper": "left-thin-pinch",
-        "lower": "left-wide-pinch"
+        "lower": "left-wide-pinch",
+        "sharedAcross": [
+          "left-pinch",
+          "right-pinch"
+        ]
       },
       "right-pinch": {
         "axis": "z",
-        "planeCoordinateMeters": -0.015428172424435616,
+        "planeCoordinateMeters": -0.015421699732542038,
         "planeNormal": [
           0.0,
           0.0,
           1.0
         ],
         "upper": "right-thin-pinch",
-        "lower": "right-wide-pinch"
+        "lower": "right-wide-pinch",
+        "sharedAcross": [
+          "left-pinch",
+          "right-pinch"
+        ]
       },
       "centre-sloper-50": {
         "axis": "x",
-        "planeCoordinateMeters": -7.40736722946167e-05,
+        "planeCoordinateMeters": 0.0,
         "planeNormal": [
           1.0,
           0.0,
           0.0
         ],
         "right": "right-sloper-50",
-        "left": "left-sloper-50"
+        "left": "left-sloper-50",
+        "sharedAcross": [
+          "centre-sloper-50",
+          "centre-sloper-31"
+        ]
       },
       "centre-sloper-31": {
         "axis": "x",
-        "planeCoordinateMeters": -7.40736722946167e-05,
+        "planeCoordinateMeters": 0.0,
         "planeNormal": [
           1.0,
           0.0,
           0.0
         ],
         "right": "right-sloper-31",
-        "left": "left-sloper-31"
+        "left": "left-sloper-31",
+        "sharedAcross": [
+          "centre-sloper-50",
+          "centre-sloper-31"
+        ]
       }
     },
     "sourceHoldMapContacts": 18,
-    "note": "Thin/wide pinch and left/right sloper halves inherit their source region's metadata; thin pinch is the upper (positive vertical) half, wide pinch the lower half; sloper halves are split at the board width centre with left = negative width direction."
+    "note": "Thin/wide pinch and left/right sloper halves inherit their source region's metadata; thin pinch is the upper (positive vertical) half, wide pinch the lower half; both pinch wings share one vertical split plane (the union midpoint) and both sloper rails share the exact width symmetry plane; every right contact is rebuilt as the exact mirror of its left counterpart so the shared contact face-plane AABBs are exact mirrors."
   }
 }

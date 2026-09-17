@@ -874,8 +874,6 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
     expected_adaptations = {
         ("soill.training-tiles", contact_id) for contact_id in expected_training_tile_ids
     } | {
-        ("soill.split-palm", "lower-pinch-left"),
-        ("soill.split-palm", "lower-pinch-right"),
         ("tension.honestone", "macro-sloper-left"),
         ("tension.honestone", "macro-sloper-left-center"),
         ("tension.honestone", "macro-sloper-right-center"),
@@ -888,7 +886,7 @@ def test_reconciled_kind_adaptations_remain_explicit_and_source_linked() -> None
         for contact_id in record["contactIDs"]
     }
     assert adapted_kind_ids == expected_adaptations
-    assert len(adapted_kind_ids) == 26
+    assert len(adapted_kind_ids) == 24
 
     training_tile_pocket_shape = next(
         record

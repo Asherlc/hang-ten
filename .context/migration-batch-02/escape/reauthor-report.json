@@ -14,6 +14,8 @@
     "vertical": "z",
     "width": "x"
   },
+  "bilateralSymmetryEnforced": true,
+  "boardBodyMidpointWidthMeters": -7.40736722946167e-05,
   "boardBoundsMeters": {
     "x": [
       -0.3292553126811981,
@@ -28,6 +30,7 @@
       0.07606535404920578
     ]
   },
+  "boardSymmetryWidthMeters": 0.0,
   "contactCount": 22,
   "emptyObjects": [],
   "holdMapPath": ".context/migration-batch-02/escape/hold-map.json",
@@ -49,20 +52,20 @@
     "left-jug-38": 3525,
     "left-sloper-12": 1919,
     "left-sloper-31": 2677,
-    "left-sloper-50": 1125,
+    "left-sloper-50": 1126,
     "left-thin-pinch": 2186,
     "left-wide-pinch": 3726,
-    "right-flat-12": 3683,
-    "right-flat-29": 2926,
-    "right-flat-38": 2312,
-    "right-incut-12": 4671,
-    "right-incut-29": 2994,
-    "right-jug-38": 3577,
-    "right-sloper-12": 1928,
-    "right-sloper-31": 2602,
-    "right-sloper-50": 1089,
-    "right-thin-pinch": 2328,
-    "right-wide-pinch": 3793
+    "right-flat-12": 3725,
+    "right-flat-29": 2893,
+    "right-flat-38": 2354,
+    "right-incut-12": 4591,
+    "right-incut-29": 3047,
+    "right-jug-38": 3525,
+    "right-sloper-12": 1919,
+    "right-sloper-31": 2677,
+    "right-sloper-50": 1126,
+    "right-thin-pinch": 2186,
+    "right-wide-pinch": 3726
   },
   "objectTriangleCounts": {
     "body-board": 48808,
@@ -73,24 +76,24 @@
     "left-incut-29": 3047,
     "left-jug-38": 3525,
     "left-sloper-12": 1919,
-    "left-sloper-31": 2713,
-    "left-sloper-50": 1142,
+    "left-sloper-31": 2712,
+    "left-sloper-50": 1144,
     "left-thin-pinch": 2210,
     "left-wide-pinch": 3754,
-    "right-flat-12": 3683,
-    "right-flat-29": 2926,
-    "right-flat-38": 2312,
-    "right-incut-12": 4671,
-    "right-incut-29": 2994,
-    "right-jug-38": 3577,
-    "right-sloper-12": 1928,
-    "right-sloper-31": 2645,
-    "right-sloper-50": 1103,
-    "right-thin-pinch": 2348,
-    "right-wide-pinch": 3824
+    "right-flat-12": 3725,
+    "right-flat-29": 2893,
+    "right-flat-38": 2354,
+    "right-incut-12": 4591,
+    "right-incut-29": 3047,
+    "right-jug-38": 3525,
+    "right-sloper-12": 1919,
+    "right-sloper-31": 2712,
+    "right-sloper-50": 1144,
+    "right-thin-pinch": 2210,
+    "right-wide-pinch": 3754
   },
   "outputPath": ".context/migration-batch-02/escape/escape-beta-board-22.glb",
-  "outputSHA256": "6d3641c3c57e455f3bc19658ae1d3f762b8c4c9248a7a8f4ae5f18a9e26af533",
+  "outputSHA256": "8c18ea208807e54d0c9687b64c8b038497c574ee6b4c9d743a322eb658097e9a",
   "renders": [
     {
       "name": "front",
@@ -109,7 +112,7 @@
     },
     {
       "name": "closeup-right-pinch",
-      "orthoScale": 0.18051367811858654,
+      "orthoScale": 0.1805516928434372,
       "path": ".context/migration-batch-02/escape/review/closeup-right-pinch.png"
     },
     {
@@ -128,24 +131,32 @@
     "centre-sloper-31": {
       "axis": "x",
       "left": "left-sloper-31",
-      "planeCoordinateMeters": -7.40736722946167e-05,
+      "planeCoordinateMeters": 0.0,
       "planeNormal": [
         1.0,
         0.0,
         0.0
       ],
-      "right": "right-sloper-31"
+      "right": "right-sloper-31",
+      "sharedAcross": [
+        "centre-sloper-50",
+        "centre-sloper-31"
+      ]
     },
     "centre-sloper-50": {
       "axis": "x",
       "left": "left-sloper-50",
-      "planeCoordinateMeters": -7.40736722946167e-05,
+      "planeCoordinateMeters": 0.0,
       "planeNormal": [
         1.0,
         0.0,
         0.0
       ],
-      "right": "right-sloper-50"
+      "right": "right-sloper-50",
+      "sharedAcross": [
+        "centre-sloper-50",
+        "centre-sloper-31"
+      ]
     },
     "left-pinch": {
       "axis": "z",
@@ -156,16 +167,24 @@
         0.0,
         1.0
       ],
+      "sharedAcross": [
+        "left-pinch",
+        "right-pinch"
+      ],
       "upper": "left-thin-pinch"
     },
     "right-pinch": {
       "axis": "z",
       "lower": "right-wide-pinch",
-      "planeCoordinateMeters": -0.015428172424435616,
+      "planeCoordinateMeters": -0.015421699732542038,
       "planeNormal": [
         0.0,
         0.0,
         1.0
+      ],
+      "sharedAcross": [
+        "left-pinch",
+        "right-pinch"
       ],
       "upper": "right-thin-pinch"
     }

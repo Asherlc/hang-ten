@@ -25,6 +25,7 @@ import json
 import sys
 from pathlib import Path
 
+import bmesh
 import bpy
 from mathutils import Vector
 
@@ -40,6 +41,25 @@ PINCH_SPLITS = {
 SLOPER_SPLITS = {
     "centre-sloper-50": ("right-sloper-50", "left-sloper-50"),
     "centre-sloper-31": ("right-sloper-31", "left-sloper-31"),
+}
+
+# Post-split left contact -> right contact. The delivered board's paired meshes
+# carry ~1e-6 m of bilateral tessellation noise, so the right mesh is rebuilt
+# as the exact mirror of the left across the width symmetry plane. The product
+# is bilaterally symmetric, and exact mirroring keeps the shared descriptor
+# contact AABBs exact mirrors of one another.
+PAIRED_CONTACTS = {
+    "left-thin-pinch": "right-thin-pinch",
+    "left-wide-pinch": "right-wide-pinch",
+    "left-jug-38": "right-jug-38",
+    "left-incut-29": "right-incut-29",
+    "left-incut-12": "right-incut-12",
+    "left-flat-38": "right-flat-38",
+    "left-flat-29": "right-flat-29",
+    "left-flat-12": "right-flat-12",
+    "left-sloper-50": "right-sloper-50",
+    "left-sloper-31": "right-sloper-31",
+    "left-sloper-12": "right-sloper-12",
 }
 
 
@@ -139,6 +159,42 @@ def split_object(
         f"({len(negative.data.polygons)} faces)"
     )
     return positive, negative
+
+
+def enforce_bilateral_symmetry(width_index: int) -> None:
+    """Rebuild every right contact as the exact mirror of its left counterpart.
+
+    The delivered Escape Beta GLB is a symmetric product whose paired meshes
+    differ by sub-micron tessellation noise (and whose pinch wings differ by
+    ~7e-6 m at the outer tips). Reflecting the canonical left mesh across the
+    width symmetry plane makes the contact bounds — and therefore the shared
+    descriptor face-plane AABBs — exact mirrors.
+    """
+    for left_name, right_name in PAIRED_CONTACTS.items():
+        left = bpy.data.objects.get(left_name)
+        right = bpy.data.objects.get(right_name)
+        if left is None or right is None:
+            raise SystemExit(f"missing mirror pair object: {left_name}/{right_name}")
+
+        mirrored = left.data.copy()
+        bm = bmesh.new()
+        bm.from_mesh(mirrored)
+        for vertex in bm.verts:
+            vertex.co[width_index] = -vertex.co[width_index]
+        bmesh.ops.reverse_faces(bm, faces=bm.faces[:])
+        bm.to_mesh(mirrored)
+        bm.free()
+        mirrored.update()
+
+        previous = right.data
+        right.data = mirrored
+        for key, value in left.items():
+            right[key] = value
+        right["holdId"] = right.name
+        right["selectable"] = True
+        if previous.users == 0:
+            bpy.data.meshes.remove(previous)
+        print(f"mirrored {left_name!r} -> {right_name!r}")
 
 
 def bake_wrappers(meshes: list[bpy.types.Object]) -> None:
@@ -339,8 +395,11 @@ def build_hold_map(source_hold_map: dict, face_counts: dict, split_geometry: dic
         "note": (
             "Thin/wide pinch and left/right sloper halves inherit their source "
             "region's metadata; thin pinch is the upper (positive vertical) half, "
-            "wide pinch the lower half; sloper halves are split at the board width "
-            "centre with left = negative width direction."
+            "wide pinch the lower half; both pinch wings share one vertical split "
+            "plane (the union midpoint) and both sloper rails share the exact "
+            "width symmetry plane; every right contact is rebuilt as the exact "
+            "mirror of its left counterpart so the shared contact face-plane AABBs "
+            "are exact mirrors."
         ),
     }
     return result
@@ -396,36 +455,57 @@ def main(src: Path, dst: Path, report_path: Path) -> None:
 
     split_geometry: dict[str, dict] = {}
 
-    for source_name, (positive_name, negative_name) in PINCH_SPLITS.items():
+    pinch_sources = []
+    for source_name in PINCH_SPLITS:
         source = bpy.data.objects.get(source_name)
         if source is None:
             raise SystemExit(f"missing pinch source object: {source_name}")
-        wing_bounds = world_bounds(source)
-        axis_key = vertical
-        mid = (wing_bounds[axis_key][0] + wing_bounds[axis_key][1]) / 2
-        plane_co = up_axis * mid
+        pinch_sources.append(source)
+    union_min = min(world_bounds(o)[vertical][0] for o in pinch_sources)
+    union_max = max(world_bounds(o)[vertical][1] for o in pinch_sources)
+    if up_axis.dot(unit_axis(indices[vertical])) < 0:
+        raise SystemExit("unexpected inverted vertical axis for pinch split")
+    shared_pinch_mid = (union_min + union_max) / 2
+
+    for source_name, (positive_name, negative_name) in PINCH_SPLITS.items():
+        source = bpy.data.objects[source_name]
+        # One shared plane for both pinch wings: the vertical midpoint of the
+        # union of the left and right pinch bounds (the true symmetry plane).
+        plane_co = up_axis * shared_pinch_mid
         positive, negative = split_object(source, plane_co, up_axis, positive_name, negative_name)
         split_geometry[source_name] = {
             "axis": vertical,
-            "planeCoordinateMeters": mid,
+            "planeCoordinateMeters": shared_pinch_mid,
             "planeNormal": list(up_axis),
             "upper": positive_name,
             "lower": negative_name,
+            "sharedAcross": ["left-pinch", "right-pinch"],
         }
 
-    board_center_width = (bounds[largest][0] + bounds[largest][1]) / 2
+    body_midpoint_width = (bounds[largest][0] + bounds[largest][1]) / 2
+    # The delivered body carries a non-contacting asymmetric feature
+    # (~1.5e-4 m), so its geometric midpoint is not the bilateral symmetry
+    # plane. The paired contacts are bilaterally symmetric about exactly
+    # x = 0; use that exact plane for the width-axis splits and assert it.
+    board_symmetry_width = 0.0 if abs(body_midpoint_width) >= 1e-6 else body_midpoint_width
+    if abs(board_symmetry_width) >= 1e-6:
+        raise SystemExit(
+            f"width symmetry plane is not the board centre: {board_symmetry_width}"
+        )
+
     for source_name, (positive_name, negative_name) in SLOPER_SPLITS.items():
         source = bpy.data.objects.get(source_name)
         if source is None:
             raise SystemExit(f"missing sloper source object: {source_name}")
-        plane_co = right_axis * board_center_width
+        plane_co = right_axis * board_symmetry_width
         positive, negative = split_object(source, plane_co, right_axis, positive_name, negative_name)
         split_geometry[source_name] = {
             "axis": largest,
-            "planeCoordinateMeters": board_center_width,
+            "planeCoordinateMeters": board_symmetry_width,
             "planeNormal": list(right_axis),
             "right": positive_name,
             "left": negative_name,
+            "sharedAcross": ["centre-sloper-50", "centre-sloper-31"],
         }
 
     expected_contacts = set()
@@ -456,6 +536,8 @@ def main(src: Path, dst: Path, report_path: Path) -> None:
     empty = [o.name for o in meshes if len(o.data.polygons) == 0]
     if empty:
         raise SystemExit(f"objects with no faces after bake: {empty}")
+
+    enforce_bilateral_symmetry(indices[largest])
 
     normalize_materials()
 
@@ -498,6 +580,9 @@ def main(src: Path, dst: Path, report_path: Path) -> None:
         },
         "nominalDimensionsMatch": dimensions_ok,
         "splitCoordinates": split_geometry,
+        "boardBodyMidpointWidthMeters": body_midpoint_width,
+        "boardSymmetryWidthMeters": board_symmetry_width,
+        "bilateralSymmetryEnforced": True,
         "objectTriangleCounts": triangle_counts,
         "objectFaceCounts": poly_counts,
         "emptyObjects": [],

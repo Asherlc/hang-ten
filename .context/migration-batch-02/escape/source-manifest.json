@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "escape-beta-22",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Escape Climbing",
+    "evidencePacket": "https://escapeclimbing.com/products/ec72100"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB 6aed6863cf66d758d94158a99eafa4730c16637a8b0f949bd91964283ebd8425 re-authored in Blender to split each pinch wing into thin/wide and each centre sloper rail into left/right, giving the manufacturer's 22 numbered positions with exact bilateral mirroring of every left/right contact (8c18ea208807e54d0c9687b64c8b038497c574ee6b4c9d743a322eb658097e9a)",
+    "retainedPath": ".context/migration-batch-02/escape/escape-beta-board-22.glb",
+    "sha256": "8c18ea208807e54d0c9687b64c8b038497c574ee6b4c9d743a322eb658097e9a"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}
