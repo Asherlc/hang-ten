@@ -13,7 +13,7 @@ Promotion record. This document does not itself change package or model bytes.
 
 ## September 15 collection extension
 
-The model inventory now contains twenty-six packages. The six added fixed boards
+The model inventory now contains twenty-seven packages. The seven added fixed boards
 below each retain one canonical `primary` position covering their entire
 ordered contact inventory, with no orientation quaternion, pivot override,
 or suspension. Their current model bounds are compiled from their USDZ
@@ -27,6 +27,7 @@ source URLs, geometry limitations, and promoted hashes are recorded in the
 | `metolius.contact` | 33 | `primary` |
 | `metolius.simulator-3d` | 29 | `primary` |
 | `soill.training-tiles` | 20 | `primary` |
+| `clavellium-training-block` | 10 | `primary` |
 | `the-hangboard.the-hangboard` | 15 | `primary` |
 | `trango.rock-prodigy-training-center` | 24 | `primary` |
 | `dewoodstok-woodbord` | 17 | `primary` |

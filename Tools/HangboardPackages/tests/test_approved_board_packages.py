@@ -353,6 +353,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("nature.stone-hanger-mini", "nature-stone-hanger-mini"),
         ("nature.stone-hanger-mini-karma8a", "nature-stone-hanger-mini-karma8a"),
         ("plateau.lifting-edge", "plateau-lifting-edge"),
+        ("clavellium-training-block", "clavellium-training-block"),
     }
     assert discovered == expected_packages
     assert inventory.drafts == ()

@@ -1276,7 +1276,7 @@ final class BoardModelTests: XCTestCase {
 
     func testCollectionModelsNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
         for boardID in [
-            "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
+            "clavellium-training-block", "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
             "soill.training-tiles", "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
         ] {
