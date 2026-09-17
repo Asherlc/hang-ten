@@ -14,6 +14,7 @@ HangTen/Models/ClimbroProtocol.swift
 HangTen/Models/CountdownAudioScheduler.swift
 HangTen/Models/CustomRoutineDraft.swift
 HangTen/Models/CustomRoutineStore.swift
+HangTen/Models/DeepLinkManager.swift
 HangTen/Models/EntralpiProtocol.swift
 HangTen/Models/ForceSensorModels.swift
 HangTen/Models/GitHubBoardSyncService.swift
