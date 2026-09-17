@@ -26,6 +26,7 @@
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
 		D10000000000000000000013 /* the-hangboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000013 /* the-hangboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-the-hangboard", ); }; };
 		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
+		D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* clavellium-training-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-clavellium-training-block", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
@@ -181,6 +182,7 @@
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000013 /* the-hangboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "the-hangboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/the-hangboard/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000015 /* clavellium-training-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "clavellium-training-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/clavellium-training-block/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
+				D20000000000000000000015 /* clavellium-training-block Hangboards */,
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
 			);
 			name = "On-Demand Model Resources";
@@ -740,6 +743,7 @@
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
+				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
