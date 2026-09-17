@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 3,
+  "id": "clavellium-training-block",
+  "manufacturer": "Clavellium Designs",
+  "name": "Training Block",
+  "subtitle": "Compact PETG training block with 8, 10, 15, and 20 mm crimps and 80, 90, and 100 mm pinch configurations.",
+  "productURL": "https://www.etsy.com/listing/1740404071",
+  "dimensions": "80 × 90 × 100 mm",
+  "aspectRatio": 0.8,
+  "equipmentObjects": [{ "id": "primary" }],
+  "presentations": [{
+    "id": "front",
+    "name": "Front",
+    "aspectRatio": 0.8,
+    "isDefault": true,
+    "derivation": { "type": "original" },
+    "media": {
+      "type": "model",
+      "assetPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "display": {
+        "camera": {
+          "type": "orthographic",
+          "viewDirection": [0, 0, -1],
+          "up": [0, 1, 0],
+          "fitPadding": 0.08
+        }
+      }
+    }
+  }],
+  "revisionID": "2026-09-contact-first",
+  "contacts": [
+    { "id": "cd-crimp-20mm", "equipmentObjectID": "primary", "name": "20 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 20, "maximum": 20 } }, "gripTypes": [] },
+    { "id": "cd-crimp-15mm", "equipmentObjectID": "primary", "name": "15 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 15, "maximum": 15 } }, "gripTypes": [] },
+    { "id": "cd-crimp-10mm", "equipmentObjectID": "primary", "name": "10 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 10, "maximum": 10 } }, "gripTypes": [] },
+    { "id": "cd-crimp-8mm", "equipmentObjectID": "primary", "name": "8 mm Crimp", "kind": "edge", "fingerCapacity": 4, "depth": { "range": { "minimum": 8, "maximum": 8 } }, "gripTypes": [] },
+    { "id": "cd-pinch-80mm-negative-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Left", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-80mm-positive-x", "equipmentObjectID": "primary", "name": "80 mm Pinch Right", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-90mm-front", "equipmentObjectID": "primary", "name": "90 mm Pinch Front", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-90mm-back", "equipmentObjectID": "primary", "name": "90 mm Pinch Back", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-100mm-top", "equipmentObjectID": "primary", "name": "100 mm Pinch Top", "kind": "pinch", "gripTypes": [] },
+    { "id": "cd-pinch-100mm-bottom", "equipmentObjectID": "primary", "name": "100 mm Pinch Bottom", "kind": "pinch", "gripTypes": [] }
+  ]
+}
