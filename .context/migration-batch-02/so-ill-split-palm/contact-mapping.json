@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "packageID": "soill.split-palm",
+  "logicalContactIDs": [
+    "left-top-jug",
+    "left-large-sloper",
+    "left-small-sloper-pinch",
+    "left-outer-crimp",
+    "left-sloping-rail",
+    "left-flat-rail",
+    "left-bottom-crimp",
+    "right-top-jug",
+    "right-large-sloper",
+    "right-small-sloper-pinch",
+    "right-outer-crimp",
+    "right-sloping-rail",
+    "right-flat-rail",
+    "right-bottom-crimp"
+  ],
+  "objects": [
+    { "sourceNodeID": "body-left", "role": "body" },
+    { "sourceNodeID": "body-right", "role": "body" },
+    { "sourceNodeID": "left-top-jug", "role": "contact", "contactID": "left-top-jug" },
+    { "sourceNodeID": "left-large-sloper", "role": "contact", "contactID": "left-large-sloper" },
+    { "sourceNodeID": "left-small-sloper-pinch", "role": "contact", "contactID": "left-small-sloper-pinch" },
+    { "sourceNodeID": "left-outer-crimp", "role": "contact", "contactID": "left-outer-crimp" },
+    { "sourceNodeID": "left-sloping-rail", "role": "contact", "contactID": "left-sloping-rail" },
+    { "sourceNodeID": "left-flat-rail", "role": "contact", "contactID": "left-flat-rail" },
+    { "sourceNodeID": "left-bottom-crimp", "role": "contact", "contactID": "left-bottom-crimp" },
+    { "sourceNodeID": "right-top-jug", "role": "contact", "contactID": "right-top-jug" },
+    { "sourceNodeID": "right-large-sloper", "role": "contact", "contactID": "right-large-sloper" },
+    { "sourceNodeID": "right-small-sloper-pinch", "role": "contact", "contactID": "right-small-sloper-pinch" },
+    { "sourceNodeID": "right-outer-crimp", "role": "contact", "contactID": "right-outer-crimp" },
+    { "sourceNodeID": "right-sloping-rail", "role": "contact", "contactID": "right-sloping-rail" },
+    { "sourceNodeID": "right-flat-rail", "role": "contact", "contactID": "right-flat-rail" },
+    { "sourceNodeID": "right-bottom-crimp", "role": "contact", "contactID": "right-bottom-crimp" }
+  ]
+}

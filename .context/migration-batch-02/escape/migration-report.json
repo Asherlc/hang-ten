@@ -1,0 +1,73 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 22,
+  "contactMappings": {
+    "left-flat-12": "hold-08-left",
+    "left-flat-29": "hold-07-left",
+    "left-flat-38": "hold-06-left",
+    "left-incut-12": "hold-05-left",
+    "left-incut-29": "hold-04-left",
+    "left-jug-38": "hold-03-left",
+    "left-sloper-12": "hold-11-left",
+    "left-sloper-31": "hold-10-left",
+    "left-sloper-50": "hold-09-left",
+    "left-thin-pinch": "hold-01-left",
+    "left-wide-pinch": "hold-02-left",
+    "right-flat-12": "hold-08-right",
+    "right-flat-29": "hold-07-right",
+    "right-flat-38": "hold-06-right",
+    "right-incut-12": "hold-05-right",
+    "right-incut-29": "hold-04-right",
+    "right-jug-38": "hold-03-right",
+    "right-sloper-12": "hold-11-right",
+    "right-sloper-31": "hold-10-right",
+    "right-sloper-50": "hold-09-right",
+    "right-thin-pinch": "hold-01-right",
+    "right-wide-pinch": "hold-02-right"
+  },
+  "descriptorSHA256": "5e83922698a7e13f02531542739290dfed33ab919f96b120d5def626e57d2fe7",
+  "modelBounds": {
+    "max": [
+      0.330259442,
+      0.076272979,
+      0.050613005
+    ],
+    "min": [
+      -0.330259442,
+      -0.075605594,
+      0.000149759
+    ]
+  },
+  "modelSHA256": "b266345aa9ebc9029d89d1980d3719fe8d44166712470c1b9b5542435d806687",
+  "nodeCount": 23,
+  "packageID": "escape-beta-22",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/escape/escape-beta-board-22.glb",
+  "sourceModelSHA256": "8c18ea208807e54d0c9687b64c8b038497c574ee6b4c9d743a322eb658097e9a",
+  "sourceObjectIDs": [
+    "body-board",
+    "left-flat-12",
+    "left-flat-29",
+    "left-flat-38",
+    "left-incut-12",
+    "left-incut-29",
+    "left-jug-38",
+    "left-sloper-12",
+    "left-sloper-31",
+    "left-sloper-50",
+    "left-thin-pinch",
+    "left-wide-pinch",
+    "right-flat-12",
+    "right-flat-29",
+    "right-flat-38",
+    "right-incut-12",
+    "right-incut-29",
+    "right-jug-38",
+    "right-sloper-12",
+    "right-sloper-31",
+    "right-sloper-50",
+    "right-thin-pinch",
+    "right-wide-pinch"
+  ],
+  "status": "converted"
+}

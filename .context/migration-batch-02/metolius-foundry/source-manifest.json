@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "metolius.foundry",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Metolius",
+    "evidencePacket": "https://www.metoliusclimbing.com/products/foundry-training-board"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB 2ebce8d47ac3d8ce630d9310265581c77aae875ae8731b16a5a02613d1a13526; coordinate-wrapper empties baked and removed and neutral solid-color material images added for compiler import (894b247972f0de4400ee5952d4ce1d2b36676848073094b1579a26caf408e474)",
+    "retainedPath": ".context/migration-batch-02/metolius-foundry/metolius-foundry.normalized.glb",
+    "sha256": "894b247972f0de4400ee5952d4ce1d2b36676848073094b1579a26caf408e474"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}

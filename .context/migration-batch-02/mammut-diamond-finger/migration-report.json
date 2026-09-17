@@ -1,0 +1,65 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 16,
+  "contactMappings": {
+    "mam-jug-L": "mam-jug-l",
+    "mam-jug-R": "mam-jug-r",
+    "mam-lateral-ledge-L": "mam-lateral-ledge-l",
+    "mam-lateral-ledge-R": "mam-lateral-ledge-r",
+    "mam-lower-edge-C": "mam-lower-edge-c",
+    "mam-mid-edge-C": "mam-mid-edge-c",
+    "mam-mono-L": "mam-mono-l",
+    "mam-mono-R": "mam-mono-r",
+    "mam-sloper-C": "mam-sloper-c",
+    "mam-upper-inset-L": "mam-upper-inset-l",
+    "mam-upper-inset-R": "mam-upper-inset-r",
+    "mam-upper-open-bay-L": "mam-upper-open-bay-l",
+    "mam-upper-open-bay-R": "mam-upper-open-bay-r",
+    "mam-upper-pocket-C": "mam-upper-pocket-c",
+    "mam-upper-pocket-L": "mam-upper-pocket-l",
+    "mam-upper-pocket-R": "mam-upper-pocket-r"
+  },
+  "descriptorSHA256": "c24f3e51aa4c45db65b79e67ef880a5ff125968b382419bf84b33fed71ecd4e9",
+  "modelBounds": {
+    "max": [
+      0.424777955,
+      0.100000001,
+      0.078951314
+    ],
+    "min": [
+      -0.424777955,
+      -0.096000001,
+      0.00074997
+    ]
+  },
+  "modelSHA256": "10ad0cfe885c091d043b043dc5b070452756e2b9859016ab034cdcb58a6df70d",
+  "nodeCount": 21,
+  "packageID": "mammut.diamond-finger",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/mammut-diamond-finger/mammut-diamond-finger.normalized.glb",
+  "sourceModelSHA256": "576e1c724133acbeb7ceef3b6deea88f8f6621fcac0cd255229c0b6191480faf",
+  "sourceObjectIDs": [
+    "body-board",
+    "mam-jug-L",
+    "mam-jug-R",
+    "mam-lateral-ledge-L",
+    "mam-lateral-ledge-R",
+    "mam-lower-edge-C",
+    "mam-mid-edge-C",
+    "mam-mono-L",
+    "mam-mono-R",
+    "mam-sloper-C",
+    "mam-upper-inset-L",
+    "mam-upper-inset-R",
+    "mam-upper-open-bay-L",
+    "mam-upper-open-bay-R",
+    "mam-upper-pocket-C",
+    "mam-upper-pocket-L",
+    "mam-upper-pocket-R",
+    "unresolved-lower-recess-L",
+    "unresolved-lower-recess-R",
+    "unresolved-red-detail-L",
+    "unresolved-red-detail-R"
+  ],
+  "status": "converted"
+}
