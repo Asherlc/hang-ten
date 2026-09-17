@@ -29,7 +29,7 @@ def clean_contact_meshes(board_id: str, usdz_path: str, output_usdz: str, output
         raise RuntimeError(f"USDZ import failed: {result}")
     
     # Process each object
-    for obj in bpy.context.scene.objects:
+    for obj in list(bpy.context.scene.objects):
         if obj.type != 'MESH':
             # Remove non-mesh objects (like _materials empty from USD import)
             bpy.data.objects.remove(obj, do_unlink=True)
@@ -44,8 +44,8 @@ def clean_contact_meshes(board_id: str, usdz_path: str, output_usdz: str, output
         
         if role == 'body':
             # Keep body as-is, just ensure clean normals
-            bpy.context.view_layer.objects.active = obj
-            bpy.ops.object.shade_smooth()
+            for poly in obj.data.polygons:
+                poly.use_smooth = True
             continue
             
         if role in ('hold', 'contact') and hold_id in logical_contact_ids:
@@ -75,7 +75,10 @@ def clean_contact_meshes(board_id: str, usdz_path: str, output_usdz: str, output
         if obj.type == 'MESH':
             obj.select_set(True)
     
-    bpy.context.view_layer.objects.active = bpy.context.selected_objects[0]
+    selected = bpy.context.selected_objects
+    if not selected:
+        raise RuntimeError(f"No mesh objects selected for export: {usdz_path}")
+    bpy.context.view_layer.objects.active = selected[0]
     
     result = bpy.ops.wm.usd_export(
         filepath=output_usdz,
@@ -192,10 +195,9 @@ def clean_hold_mesh(obj: bpy.types.Object, hold_id: str, kind: str | None):
 
     # 5. Ensure smooth shading for organic shapes (jugs, slopers, pockets)
     # Flat holds (edges) should stay flat
-    if not is_edge_hold:
-        bpy.ops.object.shade_smooth()
-    else:
-        bpy.ops.object.shade_flat()
+    use_smooth = not is_edge_hold
+    for poly in obj.data.polygons:
+        poly.use_smooth = use_smooth
 
     # 6. Recalculate normals
     bpy.context.view_layer.objects.active = obj

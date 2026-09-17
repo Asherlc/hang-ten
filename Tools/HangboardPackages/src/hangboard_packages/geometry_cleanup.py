@@ -10,8 +10,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
 
-# Add parent directories to path using absolute paths
-REPO_ROOT = Path("/Users/asherlc/.paseo/worktrees/0h78jp9r/green-spider")
+# Add parent directories to path using repository root relative to this file
+REPO_ROOT = Path(__file__).resolve().parents[4]
 WORKBENCH_ROOT = REPO_ROOT / "Tools" / "HangboardWorkbench"
 PACKAGES_ROOT = REPO_ROOT / "Tools" / "HangboardPackages" / "src"
 sys.path.insert(0, str(WORKBENCH_ROOT))
@@ -352,7 +352,9 @@ def clean_board_geometry(board_path: Path, dry_run: bool = False) -> dict[str, A
                             if match.constraint_type in ("pill", "circle"):
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.5}
                             elif match.constraint_type == "oval":
-                                piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+                                # Keep oval as a path — roundedRect cannot
+                                # represent continuous ellipse curvature.
+                                pass
                             elif match.constraint_type == "rectangle":
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.0}
                             else:
@@ -380,19 +382,12 @@ def clean_board_geometry(board_path: Path, dry_run: bool = False) -> dict[str, A
                             print(f"  {contact_id}[{piece_index}]: Applied {match.constraint_type} constraint (confidence: {match.confidence:.2f})")
                             continue
 
-                        # Normalize path to fill the local frame
-                        normalized_commands = normalize_path_to_frame(shape["commands"])
-                        if normalized_commands != shape["commands"]:
-                            piece["shape"]["commands"] = normalized_commands
-                            print(f"  {contact_id}[{piece_index}]: Normalized path to fill frame")
-
-                        # Recompute frame for the normalized path
+                        # Convert canonical display path into tight frame and local shape
                         try:
-                            new_path = display_path_for_shape(
-                                frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
-                            )
-                            new_frame = normalized_frame_for_path(new_path, width, height)
+                            new_frame, new_shape = shape_for_path(path, width, height)
                             piece["frame"] = new_frame.to_json()
+                            piece["shape"] = new_shape
+                            print(f"  {contact_id}[{piece_index}]: Normalized path to fill frame")
                         except GeometryError as e:
                             print(f"  {contact_id}[{piece_index}]: Frame recomputation failed - {e}")
 
@@ -406,7 +401,7 @@ def clean_board_geometry(board_path: Path, dry_run: bool = False) -> dict[str, A
                         print(f"  {contact_id}[{piece_index}]: Geometry error - {e}")
 
     if not dry_run:
-        board_path.write_text(json.dumps(board, indent=2) + "\n", encoding="utf-8")
+        board_path.write_text(json.dumps(board, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"Saved cleaned board to {board_path}")
 
     return board

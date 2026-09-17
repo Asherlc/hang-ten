@@ -11,7 +11,12 @@ final class DeepLinkManager: ObservableObject {
     func handle(url: URL) {
         guard url.scheme == "hangten" else { return }
 
-        let components = url.pathComponents.filter { $0 != "/" }
+        // For hangten://board/<id>, url.host is "board" and pathComponents
+        // contains ["/", "<id>"]. For hangten:///board/<id>, host is nil and
+        // pathComponents contains ["/", "board", "<id>"]. Handle both.
+        let host = url.host
+        let pathComponents = url.pathComponents.filter { $0 != "/" }
+        let components = (host.map { [$0] } ?? []) + pathComponents
         guard components.count >= 2, components[0] == "board" else { return }
 
         let boardID = components[1]
@@ -20,12 +25,9 @@ final class DeepLinkManager: ObservableObject {
         // If there's a hold component
         if components.count >= 4, components[2] == "hold" {
             let holdID = components[3]
-            // Validate the hold exists on this board
-            if let board = BoardCatalog.all.first(where: { $0.id == boardID }),
-               board.contacts.contains(where: { $0.id == holdID }) {
-                pendingBoardID = boardID
-                pendingHoldID = holdID
-            }
+            let board = BoardCatalog.all.first(where: { $0.id == boardID })
+            pendingBoardID = boardID
+            pendingHoldID = board?.contacts.contains(where: { $0.id == holdID }) == true ? holdID : nil
         } else {
             pendingBoardID = boardID
             pendingHoldID = nil

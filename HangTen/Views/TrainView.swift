@@ -99,7 +99,7 @@ struct TrainView: View {
                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
                     .onAppear { deepLinkManager.clearPending() }
             }
-            .onChange(of: deepLinkManager.pendingBoardID) { _, boardID in
+            .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
                 guard boardID != nil else { return }
                 showsDeepLinkedBoardDetail = true
             }

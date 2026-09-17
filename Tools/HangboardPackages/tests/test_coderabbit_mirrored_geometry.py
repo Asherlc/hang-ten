@@ -108,7 +108,9 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
     else:
         # Asymmetric case: one side may be a path, the other a constraint.
         # Just verify the frames are mirrored and both represent the same hold type.
-        # The constraint shapes should match if both have constraints.
+        # When both sides are constraint shapes, their dictionaries must match.
+        if left_shape.get("type") == right_shape.get("type") == "roundedRect":
+            assert left_shape == right_shape
         left_constraint_shape = left.get("shapeConstraint", {}).get("shape")
         right_constraint_shape = right.get("shapeConstraint", {}).get("shape")
         if left_constraint_shape and right_constraint_shape:
