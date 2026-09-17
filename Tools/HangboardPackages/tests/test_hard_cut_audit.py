@@ -54,6 +54,7 @@ def test_only_contact_native_model_and_suspension_clearance_tools_remain() -> No
         "contact_model_descriptor.py",
         "contact_model_package.py",
         "import_contact_model_source.py",
+        "clean_model_meshes.py",
         "verify_metolius_climbers_edge.py",
         "verify_the_hangboard.py",
         "verify_trango_rock_prodigy_training_center.py",

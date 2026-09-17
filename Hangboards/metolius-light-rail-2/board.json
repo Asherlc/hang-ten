@@ -5,7 +5,7 @@
   "name": "Light Rail 2.0",
   "subtitle": "Portable reversible training rail with four holds.",
   "productURL": "https://www.metoliusclimbing.com/products/light-rail",
-  "dimensions": "18 × 3 × 1.5 in",
+  "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
   "aspectRatio": 1.0,
   "equipmentObjects": [
     {
@@ -29,112 +29,13 @@
             {
               "frame": {
                 "x": 0.041,
-                "y": 0.4206507177033493,
+                "y": 0.420650717703,
                 "width": 0.916,
                 "height": 0.041
               },
               "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.007965421464,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.992034578536,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.996433759594,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.089543042023
-                    ],
-                    "to": [
-                      1.0,
-                      0.199999996559
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.800000003441
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.91045694077
-                    ],
-                    "control2": [
-                      0.996433759594,
-                      1.0
-                    ],
-                    "to": [
-                      0.992034578536,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.007965421464,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.003566240406,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.91045694077
-                    ],
-                    "to": [
-                      0.0,
-                      0.800000003441
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.199999996559
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.089543042023
-                    ],
-                    "control2": [
-                      0.003566240406,
-                      0.0
-                    ],
-                    "to": [
-                      0.007965421464,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
               },
               "shapeConstraint": {
                 "shape": "roundedRectangle",
@@ -149,116 +50,20 @@
             {
               "frame": {
                 "x": 0.079,
-                "y": 0.4706507177033493,
+                "y": 0.470650717703,
                 "width": 0.842,
-                "height": 0.07
+                "height": 0.070000000002
               },
               "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.013537665096,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.986462334904,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.993938980591,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.089543052299
-                    ],
-                    "to": [
-                      1.0,
-                      0.199999995354
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.800000004646
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.910456947701
-                    ],
-                    "control2": [
-                      0.993938980591,
-                      1.0
-                    ],
-                    "to": [
-                      0.986462334904,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.013537665096,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.006061019409,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.910456947701
-                    ],
-                    "to": [
-                      0.0,
-                      0.800000004646
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.199999995354
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.089543052299
-                    ],
-                    "control2": [
-                      0.006061019409,
-                      0.0
-                    ],
-                    "to": [
-                      0.013537665096,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
               },
               "shapeConstraint": {
                 "shape": "roundedRectangle",
                 "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
               }
             }
           ]
@@ -281,116 +86,17 @@
             {
               "frame": {
                 "x": 0.041,
-                "y": 0.4230430622009569,
+                "y": 0.423043062201,
                 "width": 0.916,
                 "height": 0.041
               },
               "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.019,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.981,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.992,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.16
-                    ],
-                    "to": [
-                      1.0,
-                      0.36
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.64
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.84
-                    ],
-                    "control2": [
-                      0.992,
-                      1.0
-                    ],
-                    "to": [
-                      0.981,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.019,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.008,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.84
-                    ],
-                    "to": [
-                      0.0,
-                      0.64
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.36
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.16
-                    ],
-                    "control2": [
-                      0.008,
-                      0.0
-                    ],
-                    "to": [
-                      0.019,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
               },
               "shapeConstraint": {
                 "shape": "roundedRectangle",
-                "rotationDegrees": 0
+                "rotationDegrees": 0.0
               },
               "treatment": {
                 "type": "surface"
@@ -401,116 +107,20 @@
             {
               "frame": {
                 "x": 0.079,
-                "y": 0.4730430622009569,
+                "y": 0.473043062201,
                 "width": 0.842,
-                "height": 0.067
+                "height": 0.066999999999
               },
               "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.013,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.987,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.995,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.17
-                    ],
-                    "to": [
-                      1.0,
-                      0.39
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.61
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.83
-                    ],
-                    "control2": [
-                      0.995,
-                      1.0
-                    ],
-                    "to": [
-                      0.987,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.013,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.005,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.83
-                    ],
-                    "to": [
-                      0.0,
-                      0.61
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.39
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.17
-                    ],
-                    "control2": [
-                      0.005,
-                      0.0
-                    ],
-                    "to": [
-                      0.013,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
+                "type": "roundedRect",
+                "cornerRadiusFraction": 0.05
               },
               "shapeConstraint": {
                 "shape": "roundedRectangle",
-                "rotationDegrees": 0
+                "rotationDegrees": 0.0
+              },
+              "treatment": {
+                "type": "surface"
               }
             }
           ]
