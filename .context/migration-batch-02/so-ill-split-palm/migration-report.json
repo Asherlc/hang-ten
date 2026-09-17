@@ -1,0 +1,58 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 14,
+  "contactMappings": {
+    "left-bottom-crimp": "left-bottom-crimp",
+    "left-flat-rail": "left-flat-rail",
+    "left-large-sloper": "left-large-sloper",
+    "left-outer-crimp": "left-outer-crimp",
+    "left-sloping-rail": "left-sloping-rail",
+    "left-small-sloper-pinch": "left-small-sloper-pinch",
+    "left-top-jug": "left-top-jug",
+    "right-bottom-crimp": "right-bottom-crimp",
+    "right-flat-rail": "right-flat-rail",
+    "right-large-sloper": "right-large-sloper",
+    "right-outer-crimp": "right-outer-crimp",
+    "right-sloping-rail": "right-sloping-rail",
+    "right-small-sloper-pinch": "right-small-sloper-pinch",
+    "right-top-jug": "right-top-jug"
+  },
+  "descriptorSHA256": "05218b58f322818d4026f326c0109926de1213310a939a6fd310f473196e671d",
+  "modelBounds": {
+    "max": [
+      0.463499993,
+      0.139699996,
+      0.098405465
+    ],
+    "min": [
+      -0.463499993,
+      -0.139699996,
+      -1.864e-06
+    ]
+  },
+  "modelSHA256": "e16c60e7808ecc2d537e859e2668d4d95a431e55fb5202ea2a4c1d8452664de1",
+  "nodeCount": 16,
+  "packageID": "soill.split-palm",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/so-ill-split-palm/so-ill-split-palm.normalized.glb",
+  "sourceModelSHA256": "71454915996cb0b9770096a5a64842d29106604e0ba576f54172a0b247d427f9",
+  "sourceObjectIDs": [
+    "body-left",
+    "body-right",
+    "left-bottom-crimp",
+    "left-flat-rail",
+    "left-large-sloper",
+    "left-outer-crimp",
+    "left-sloping-rail",
+    "left-small-sloper-pinch",
+    "left-top-jug",
+    "right-bottom-crimp",
+    "right-flat-rail",
+    "right-large-sloper",
+    "right-outer-crimp",
+    "right-sloping-rail",
+    "right-small-sloper-pinch",
+    "right-top-jug"
+  ],
+  "status": "converted"
+}

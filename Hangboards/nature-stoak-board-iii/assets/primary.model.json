@@ -1,0 +1,193 @@
+{
+  "contacts": {
+    "edge-22-center": {
+      "center": [
+        0.500006493,
+        0.216716385
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.590995362,
+          0.27864567
+        ],
+        "min": [
+          0.409017623,
+          0.1547871
+        ]
+      },
+      "nodeIDs": [
+        "centre_granite_edge_001"
+      ]
+    },
+    "gradient-edge-left": {
+      "center": [
+        0.274284101,
+        0.175430174
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.363523188,
+          0.270388415
+        ],
+        "min": [
+          0.185045014,
+          0.080471933
+        ]
+      },
+      "nodeIDs": [
+        "left_tapered_wood_edge_001"
+      ]
+    },
+    "gradient-edge-right": {
+      "center": [
+        0.725728884,
+        0.175430174
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.814967971,
+          0.270388415
+        ],
+        "min": [
+          0.636489797,
+          0.080471933
+        ]
+      },
+      "nodeIDs": [
+        "right_tapered_wood_edge_001"
+      ]
+    },
+    "lower-composite-center": {
+      "center": [
+        0.500006528,
+        0.687378913
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.587495861,
+          0.749308186
+        ],
+        "min": [
+          0.412517195,
+          0.625449639
+        ]
+      },
+      "nodeIDs": [
+        "upper_centre_wood_edge_001"
+      ]
+    },
+    "lower-composite-left": {
+      "center": [
+        0.111554013,
+        0.154787084
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.185045014,
+          0.229102235
+        ],
+        "min": [
+          0.038063012,
+          0.080471933
+        ]
+      },
+      "nodeIDs": [
+        "left_granite_edge_001"
+      ]
+    },
+    "lower-composite-right": {
+      "center": [
+        0.888458972,
+        0.154787084
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.961949973,
+          0.229102235
+        ],
+        "min": [
+          0.814967971,
+          0.080471933
+        ]
+      },
+      "nodeIDs": [
+        "right_granite_edge_001"
+      ]
+    },
+    "top-jug": {
+      "center": [
+        0.499999556,
+        0.845753749
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.998916058,
+          1.0
+        ],
+        "min": [
+          0.001083055,
+          0.691507498
+        ]
+      },
+      "nodeIDs": [
+        "top_jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.285745531,
+      0.060360264,
+      0.05499981
+    ],
+    "min": [
+      -0.285752952,
+      -0.060745612,
+      0.000149985
+    ]
+  },
+  "modelSHA256": "99bf34b6fdf6c57d485d0c1eb55d425345fd5dcc07d787cd430c1616e1e3df79",
+  "nodes": [
+    {
+      "nodeID": "body_board_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-22-center",
+      "nodeID": "centre_granite_edge_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "lower-composite-left",
+      "nodeID": "left_granite_edge_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "gradient-edge-left",
+      "nodeID": "left_tapered_wood_edge_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "lower-composite-right",
+      "nodeID": "right_granite_edge_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "gradient-edge-right",
+      "nodeID": "right_tapered_wood_edge_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-jug",
+      "nodeID": "top_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "lower-composite-center",
+      "nodeID": "upper_centre_wood_edge_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "mammut.diamond-finger",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Mammut",
+    "evidencePacket": "https://www.mammut.com/us/en/products/2060-00020/diamond-finger-hangboard"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB ccdf3b70415c62212ed8226d3e4db455ff30ce882a5359342c121d2b4daaadf7; coordinate-wrapper empties baked and removed and neutral solid-color material images added for compiler import (576e1c724133acbeb7ceef3b6deea88f8f6621fcac0cd255229c0b6191480faf)",
+    "retainedPath": ".context/migration-batch-02/mammut-diamond-finger/mammut-diamond-finger.normalized.glb",
+    "sha256": "576e1c724133acbeb7ceef3b6deea88f8f6621fcac0cd255229c0b6191480faf"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}

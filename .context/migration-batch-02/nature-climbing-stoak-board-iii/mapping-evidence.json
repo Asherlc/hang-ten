@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "packageID": "nature.stoak-board-iii",
+  "sourceModelSHA256": "eef76fa7b705347aef47e90108ea87d499381702cb4c59631dc63ac6f8f69d7e",
+  "reviewImages": [
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/all-holds-review.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/top-jug.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/upper-centre-wood-edge.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/centre-granite-edge.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/left-granite-edge.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/left-tapered-wood-edge.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/right-granite-edge.png",
+    ".context/migration-batch-02/source/nature-climbing-stoak-board-iii/selection-review/right-tapered-wood-edge.png"
+  ],
+  "coordinateNote": "Bounds are Blender world space after GLB import (Z up = board vertical, X = left/right, front surface faces -Y). Body front plane is y=-0.052997 on body-board.",
+  "meshBounds": [
+    { "name": "body-board", "worldMin": [-0.285753, -0.052997, -0.060746], "worldMax": [0.285746, -0.00015, 0.057845], "worldCenter": [-0.000004, -0.026574, -0.00145] },
+    { "name": "top-jug", "worldMin": [-0.285134, -0.055, 0.023], "worldMax": [0.285126, -0.0005, 0.06036], "worldCenter": [-0.000004, -0.02775, 0.04168] },
+    { "name": "upper-centre-wood-edge", "worldMin": [-0.05, -0.049324, 0.015], "worldMax": [0.05, -0.035, 0.03], "worldCenter": [0.0, -0.042162, 0.0225] },
+    { "name": "centre-granite-edge", "worldMin": [-0.052, -0.052596, -0.042], "worldMax": [0.052, -0.03001, -0.027], "worldCenter": [0.0, -0.041303, -0.0345] },
+    { "name": "left-granite-edge", "worldMin": [-0.264, -0.05169, -0.051], "worldMax": [-0.18, -0.035, -0.033], "worldCenter": [-0.222, -0.043345, -0.042] },
+    { "name": "left-tapered-wood-edge", "worldMin": [-0.18, -0.051712, -0.051], "worldMax": [-0.078, -0.034, -0.028], "worldCenter": [-0.129, -0.042856, -0.0395] },
+    { "name": "right-granite-edge", "worldMin": [0.18, -0.051713, -0.051], "worldMax": [0.264, -0.035, -0.033], "worldCenter": [0.222, -0.043357, -0.042] },
+    { "name": "right-tapered-wood-edge", "worldMin": [0.078, -0.051689, -0.051], "worldMax": [0.18, -0.034, -0.028], "worldCenter": [0.129, -0.042845, -0.0395] }
+  ],
+  "sourceHoldIdsRendered": [
+    "top-jug",
+    "upper-centre-wood-edge",
+    "centre-granite-edge",
+    "left-granite-edge",
+    "left-tapered-wood-edge",
+    "right-granite-edge",
+    "right-tapered-wood-edge"
+  ],
+  "mappings": [
+    {
+      "sourceNodeID": "top-jug",
+      "contactID": "top-jug",
+      "evidence": "Full-width mesh spanning x -0.285..0.285 at the top of the board (z 0.023..0.060); matches app contact 'Full-width top jug'. Confirmed in selection-review/top-jug.png and the top blue band of all-holds-review.png."
+    },
+    {
+      "sourceNodeID": "centre-granite-edge",
+      "contactID": "edge-22-center",
+      "evidence": "Central granite mesh, ~104 mm wide (x -0.052..0.052), seated in the lower board band (z -0.042..-0.027); front face y=-0.0526 is essentially flush with the body front (y=-0.052997), the shallowest center feature. Matches app contact 'Center 22 mm edge'. Confirmed in selection-review/centre-granite-edge.png and all-holds-review.png."
+    },
+    {
+      "sourceNodeID": "left-tapered-wood-edge",
+      "contactID": "gradient-edge-left",
+      "evidence": "Inner-left tapered wooden mesh (x -0.18..-0.078), z-span 0.023 m (-0.051..-0.028) larger than the neighbouring granite edge, consistent with a tapering depth gradient. Matches app contact 'Left gradient 10-25 mm edge'. Confirmed in selection-review/left-tapered-wood-edge.png."
+    },
+    {
+      "sourceNodeID": "right-tapered-wood-edge",
+      "contactID": "gradient-edge-right",
+      "evidence": "Mirror of left-tapered-wood-edge about x=0 (center +0.129 vs -0.129). Matches app contact 'Right gradient 10-25 mm edge'. Confirmed in selection-review/right-tapered-wood-edge.png."
+    },
+    {
+      "sourceNodeID": "left-granite-edge",
+      "contactID": "lower-composite-left",
+      "evidence": "Outer-left granite mesh (x -0.264..-0.18) in the lower board band, contiguous with the inner tapered wood edge; matches the app composite contact on the left lower wing. Confirmed in selection-review/left-granite-edge.png."
+    },
+    {
+      "sourceNodeID": "right-granite-edge",
+      "contactID": "lower-composite-right",
+      "evidence": "Mirror of left-granite-edge about x=0 (center +0.222 vs -0.222). Matches the app composite contact on the right lower wing. Confirmed in selection-review/right-granite-edge.png."
+    },
+    {
+      "sourceNodeID": "upper-centre-wood-edge",
+      "contactID": "lower-composite-center",
+      "evidence": "Central recessed wooden mesh (x -0.05..0.05) set above the centre granite edge (z 0.015..0.03 vs z -0.042..-0.027); the only remaining center feature, matched to the remaining center app contact 'Center continuous 30 mm granite / ergonomic wood contact'. Confirmed in selection-review/upper-centre-wood-edge.png."
+    }
+  ]
+}

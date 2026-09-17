@@ -33,6 +33,12 @@
 		D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-deluxe-ii", ); }; };
 		D10000000000000000000019 /* moon-armstrong Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000019 /* moon-armstrong Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-moon-armstrong", ); }; };
 		D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001A /* target10a-linebreaker-base Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-target10a-linebreaker-base", ); }; };
+		D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001B /* escape-beta-22 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-beta-22", ); }; };
+		D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001C /* mammut-diamond-finger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-mammut-diamond-finger", ); }; };
+		D1000000000000000000001D /* metolius-foundry Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001D /* metolius-foundry Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-foundry", ); }; };
+		D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001E /* nature-stoak-board-iii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stoak-board-iii", ); }; };
+		D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001F /* soill-iron-palm-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-iron-palm-2", ); }; };
+		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
@@ -195,6 +201,12 @@
 		D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-deluxe-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-deluxe-ii/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000019 /* moon-armstrong Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "moon-armstrong Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/moon-armstrong/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000001A /* target10a-linebreaker-base Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "target10a-linebreaker-base Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/target10a-linebreaker-base/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001B /* escape-beta-22 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-beta-22 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-beta-22/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001C /* mammut-diamond-finger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mammut-diamond-finger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/mammut-diamond-finger/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001D /* metolius-foundry Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-foundry Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-foundry/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001E /* nature-stoak-board-iii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stoak-board-iii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stoak-board-iii/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001F /* soill-iron-palm-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-iron-palm-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-iron-palm-2/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
@@ -761,6 +773,12 @@
 				D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */,
 				D10000000000000000000019 /* moon-armstrong Hangboards in Resources */,
 				D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */,
+				D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */,
+				D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */,
+				D1000000000000000000001D /* metolius-foundry Hangboards in Resources */,
+				D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */,
+				D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */,
+				D10000000000000000000020 /* soill-split-palm Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,

@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "packageID": "soill.iron-palm-2",
+  "logicalContactIDs": [
+    "sloper-left",
+    "sloper-right",
+    "pinch-left",
+    "top-incut-jug",
+    "rounded-edge-40",
+    "flat-edge-35",
+    "flat-edge-15",
+    "pinch-right"
+  ],
+  "objects": [
+    { "sourceNodeID": "body-board", "role": "body" },
+    { "sourceNodeID": "left-large-sloper", "role": "contact", "contactID": "sloper-left" },
+    { "sourceNodeID": "right-large-sloper", "role": "contact", "contactID": "sloper-right" },
+    { "sourceNodeID": "left-pinch", "role": "contact", "contactID": "pinch-left" },
+    { "sourceNodeID": "top-jug", "role": "contact", "contactID": "top-incut-jug" },
+    { "sourceNodeID": "rail-40", "role": "contact", "contactID": "rounded-edge-40" },
+    { "sourceNodeID": "rail-35", "role": "contact", "contactID": "flat-edge-35" },
+    { "sourceNodeID": "rail-15", "role": "contact", "contactID": "flat-edge-15" },
+    { "sourceNodeID": "right-pinch", "role": "contact", "contactID": "pinch-right" }
+  ]
+}
