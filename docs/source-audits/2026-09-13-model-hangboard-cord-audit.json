@@ -141,6 +141,29 @@
       }
     },
     {
+      "packageID": "clavellium-training-block",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The Clavellium Designs Training Block product evidence describes a fixed block with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://www.etsy.com/listing/1740404071",
+          "exactRevisionID": "clavellium-training-block-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "6746f2d4794375b771d852152ccb299fe0bf5838a8de66079da87ff97c5789ea",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/clavellium-training-block.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-17",
+        "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
       "packageID": "lattice.mxedge-lift-large",
       "decision": "represented",
       "sourceFact": "documentedSuspension",

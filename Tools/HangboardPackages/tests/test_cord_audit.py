@@ -26,6 +26,7 @@ from hangboard_packages.cord_audit import (
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PRODUCTION_MANIFEST = REPO_ROOT / "docs/source-audits/2026-09-13-model-hangboard-cord-audit.json"
 NEWLY_MODEL_ONLY_EXCLUSIONS = {
+    "clavellium-training-block",
     "dewoodstok-woodbord",
     "escape.unlimited",
     "evolv-kilter-basic-long",
@@ -63,7 +64,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 24, "represented": 8}
+    assert report.decisions == {"excluded": 25, "represented": 8}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.275,

@@ -54,6 +54,7 @@ MODEL_PACKAGE_IDS = {
     "the-hangboard.the-hangboard",
     "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
+    "clavellium-training-block",
 }
 
 FIXED_FRONT_MODEL_PACKAGE_SLUGS = (
