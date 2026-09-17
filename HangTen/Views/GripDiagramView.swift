@@ -9,15 +9,18 @@ struct GripDiagramView: View {
     let hold: PhysicalContact
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
+    let resolvedHandSide: WorkoutSide?
 
     init(
         hold: PhysicalContact,
         gripType: GripType?,
-        fingerConfiguration: FingerConfiguration? = nil
+        fingerConfiguration: FingerConfiguration? = nil,
+        resolvedHandSide: WorkoutSide? = nil
     ) {
         self.hold = hold
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
+        self.resolvedHandSide = resolvedHandSide
     }
 
     var body: some View {
@@ -38,23 +41,56 @@ struct GripDiagramView: View {
             }
 
             HStack(spacing: 10) {
-                GripHandCueCard(
-                    posture: gripType,
-                    fingerConfiguration: fingerConfiguration,
-                    side: .left
-                )
-                GripHandCueCard(
-                    posture: gripType,
-                    fingerConfiguration: fingerConfiguration,
-                    side: .right
-                )
+                if let singleSide = Self.singleSide(
+                    handCapacity: hold.handCapacity,
+                    resolvedSide: resolvedHandSide
+                ) {
+                    GripHandCueCard(
+                        posture: gripType,
+                        fingerConfiguration: fingerConfiguration,
+                        side: singleSide
+                    )
+                } else {
+                    GripHandCueCard(
+                        posture: gripType,
+                        fingerConfiguration: fingerConfiguration,
+                        side: .left
+                    )
+                    GripHandCueCard(
+                        posture: gripType,
+                        fingerConfiguration: fingerConfiguration,
+                        side: .right
+                    )
+                }
             }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 10)
         .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .contain)
-        .accessibilityLabel("\(cueLabel), \(accessibilityCueLabel), both hands")
+        .accessibilityLabel(accessibilitySummary)
+    }
+
+    /// Resolves which hand an illustration should render for a hold that only
+    /// physically fits one hand. Returns `nil` for two-handed or unspecified
+    /// capacity so the caller renders both hands.
+    static func singleSide(handCapacity: Int?, resolvedSide: WorkoutSide?) -> GripCueSide? {
+        guard handCapacity == 1 else { return nil }
+        switch resolvedSide {
+        case .left: return .left
+        case .right: return .right
+        case .both, .none: return .right
+        }
+    }
+
+    private var accessibilitySummary: String {
+        if let singleSide = Self.singleSide(
+            handCapacity: hold.handCapacity,
+            resolvedSide: resolvedHandSide
+        ) {
+            return "\(cueLabel), \(accessibilityCueLabel), \(singleSide.accessibilityIdentifier) hand"
+        }
+        return "\(cueLabel), \(accessibilityCueLabel), both hands"
     }
 
     private var cueLabel: String {
