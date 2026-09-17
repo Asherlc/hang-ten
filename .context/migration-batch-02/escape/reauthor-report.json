@@ -1,0 +1,173 @@
+{
+  "axes": {
+    "depth": "y",
+    "rightDirection": [
+      1.0,
+      0.0,
+      0.0
+    ],
+    "upDirection": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "vertical": "z",
+    "width": "x"
+  },
+  "boardBoundsMeters": {
+    "x": [
+      -0.3292553126811981,
+      0.3291071653366089
+    ],
+    "y": [
+      -0.049960821866989136,
+      -0.00014974820078350604
+    ],
+    "z": [
+      -0.07448325306177139,
+      0.07606535404920578
+    ]
+  },
+  "contactCount": 22,
+  "emptyObjects": [],
+  "holdMapPath": ".context/migration-batch-02/escape/hold-map.json",
+  "inputPath": ".context/migration-batch-02/source/escape-beta-board/escape-beta-board.glb",
+  "inputSHA256": "6aed6863cf66d758d94158a99eafa4730c16637a8b0f949bd91964283ebd8425",
+  "materials": [
+    "resin-red-polished",
+    "resin-red-rough"
+  ],
+  "meshObjectCount": 23,
+  "nominalDimensionsMatch": true,
+  "objectFaceCounts": {
+    "body-board": 48808,
+    "left-flat-12": 3725,
+    "left-flat-29": 2893,
+    "left-flat-38": 2354,
+    "left-incut-12": 4591,
+    "left-incut-29": 3047,
+    "left-jug-38": 3525,
+    "left-sloper-12": 1919,
+    "left-sloper-31": 2677,
+    "left-sloper-50": 1125,
+    "left-thin-pinch": 2186,
+    "left-wide-pinch": 3726,
+    "right-flat-12": 3683,
+    "right-flat-29": 2926,
+    "right-flat-38": 2312,
+    "right-incut-12": 4671,
+    "right-incut-29": 2994,
+    "right-jug-38": 3577,
+    "right-sloper-12": 1928,
+    "right-sloper-31": 2602,
+    "right-sloper-50": 1089,
+    "right-thin-pinch": 2328,
+    "right-wide-pinch": 3793
+  },
+  "objectTriangleCounts": {
+    "body-board": 48808,
+    "left-flat-12": 3725,
+    "left-flat-29": 2893,
+    "left-flat-38": 2354,
+    "left-incut-12": 4591,
+    "left-incut-29": 3047,
+    "left-jug-38": 3525,
+    "left-sloper-12": 1919,
+    "left-sloper-31": 2713,
+    "left-sloper-50": 1142,
+    "left-thin-pinch": 2210,
+    "left-wide-pinch": 3754,
+    "right-flat-12": 3683,
+    "right-flat-29": 2926,
+    "right-flat-38": 2312,
+    "right-incut-12": 4671,
+    "right-incut-29": 2994,
+    "right-jug-38": 3577,
+    "right-sloper-12": 1928,
+    "right-sloper-31": 2645,
+    "right-sloper-50": 1103,
+    "right-thin-pinch": 2348,
+    "right-wide-pinch": 3824
+  },
+  "outputPath": ".context/migration-batch-02/escape/escape-beta-board-22.glb",
+  "outputSHA256": "6d3641c3c57e455f3bc19658ae1d3f762b8c4c9248a7a8f4ae5f18a9e26af533",
+  "renders": [
+    {
+      "name": "front",
+      "orthoScale": 0.757116849720478,
+      "path": ".context/migration-batch-02/escape/review/front.png"
+    },
+    {
+      "name": "oblique",
+      "orthoScale": 0.7949726922065019,
+      "path": ".context/migration-batch-02/escape/review/oblique.png"
+    },
+    {
+      "name": "closeup-left-pinch",
+      "orthoScale": 0.1805516928434372,
+      "path": ".context/migration-batch-02/escape/review/closeup-left-pinch.png"
+    },
+    {
+      "name": "closeup-right-pinch",
+      "orthoScale": 0.18051367811858654,
+      "path": ".context/migration-batch-02/escape/review/closeup-right-pinch.png"
+    },
+    {
+      "name": "closeup-centre-sloper-50",
+      "orthoScale": 0.26099999248981476,
+      "path": ".context/migration-batch-02/escape/review/closeup-centre-sloper-50.png"
+    },
+    {
+      "name": "closeup-centre-sloper-31",
+      "orthoScale": 0.27000001072883606,
+      "path": ".context/migration-batch-02/escape/review/closeup-centre-sloper-31.png"
+    }
+  ],
+  "schemaVersion": 1,
+  "splitCoordinates": {
+    "centre-sloper-31": {
+      "axis": "x",
+      "left": "left-sloper-31",
+      "planeCoordinateMeters": -7.40736722946167e-05,
+      "planeNormal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "right": "right-sloper-31"
+    },
+    "centre-sloper-50": {
+      "axis": "x",
+      "left": "left-sloper-50",
+      "planeCoordinateMeters": -7.40736722946167e-05,
+      "planeNormal": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "right": "right-sloper-50"
+    },
+    "left-pinch": {
+      "axis": "z",
+      "lower": "left-wide-pinch",
+      "planeCoordinateMeters": -0.015421699732542038,
+      "planeNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "upper": "left-thin-pinch"
+    },
+    "right-pinch": {
+      "axis": "z",
+      "lower": "right-wide-pinch",
+      "planeCoordinateMeters": -0.015428172424435616,
+      "planeNormal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "upper": "right-thin-pinch"
+    }
+  }
+}

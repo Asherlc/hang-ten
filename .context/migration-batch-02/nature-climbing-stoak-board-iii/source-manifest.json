@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "nature.stoak-board-iii",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Nature Climbing",
+    "evidencePacket": "https://natureclimbing.com/products/stoak-board-iii"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB 86b37b79170059028721531058603d4339be094f1f1b39226c5c9d06988a95cb; coordinate-wrapper empties baked and removed and neutral solid-color material images added for compiler import (eef76fa7b705347aef47e90108ea87d499381702cb4c59631dc63ac6f8f69d7e)",
+    "retainedPath": ".context/migration-batch-02/nature-climbing-stoak-board-iii/nature-climbing-stoak-board-iii.normalized.glb",
+    "sha256": "eef76fa7b705347aef47e90108ea87d499381702cb4c59631dc63ac6f8f69d7e"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}

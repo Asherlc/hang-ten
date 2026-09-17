@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 1,
+  "sourceCoordinates": {
+    "units": "metres",
+    "up": "+Z",
+    "frontSurfaceNormal": "-Y",
+    "cameraLookingDirection": "+Y",
+    "cameraUp": "+Z",
+    "origin": "Rear plane, horizontal and vertical authored board centre; see unit offsets"
+  },
+  "integrationCoordinates": {
+    "units": "metres",
+    "up": "+Y",
+    "frontSurfaceNormal": "+Z",
+    "cameraLookingDirection": "-Z",
+    "cameraUp": "+Y",
+    "conversionRoot": "z-up-to-gltf-y-up",
+    "conversionQuaternionXYZW": [
+      -0.7071067811865476,
+      0,
+      0,
+      0.7071067811865476
+    ]
+  },
+  "contacts": [
+    {
+      "holdId": "left-thin-pinch",
+      "nodeName": "left-thin-pinch",
+      "unit": "board",
+      "name": "Thin Continuous tapered pinch wing — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": null,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2210,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-wide-pinch",
+      "nodeName": "left-wide-pinch",
+      "unit": "board",
+      "name": "Wide Continuous tapered pinch wing — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": null,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3754,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-jug-38",
+      "nodeName": "left-jug-38",
+      "unit": "board",
+      "name": "Upper mini-jug — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 38,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3525,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-flat-38",
+      "nodeName": "left-flat-38",
+      "unit": "board",
+      "name": "Upper flat edge — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 38,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2354,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-incut-29",
+      "nodeName": "left-incut-29",
+      "unit": "board",
+      "name": "Middle incut jug — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 29,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3047,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-flat-29",
+      "nodeName": "left-flat-29",
+      "unit": "board",
+      "name": "Middle flat edge — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 29,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2893,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-incut-12",
+      "nodeName": "left-incut-12",
+      "unit": "board",
+      "name": "Lower incut edge — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 4591,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-flat-12",
+      "nodeName": "left-flat-12",
+      "unit": "board",
+      "name": "Lower flat edge — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3725,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-sloper-12",
+      "nodeName": "left-sloper-12",
+      "unit": "board",
+      "name": "Lower sloping edge — left",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 1919,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-thin-pinch",
+      "nodeName": "right-thin-pinch",
+      "unit": "board",
+      "name": "Thin Continuous tapered pinch wing — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": null,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2348,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-wide-pinch",
+      "nodeName": "right-wide-pinch",
+      "unit": "board",
+      "name": "Wide Continuous tapered pinch wing — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": null,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3824,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-jug-38",
+      "nodeName": "right-jug-38",
+      "unit": "board",
+      "name": "Upper mini-jug — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 38,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3577,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-flat-38",
+      "nodeName": "right-flat-38",
+      "unit": "board",
+      "name": "Upper flat edge — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 38,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2312,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-incut-29",
+      "nodeName": "right-incut-29",
+      "unit": "board",
+      "name": "Middle incut jug — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 29,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2994,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-flat-29",
+      "nodeName": "right-flat-29",
+      "unit": "board",
+      "name": "Middle flat edge — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 29,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2926,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-incut-12",
+      "nodeName": "right-incut-12",
+      "unit": "board",
+      "name": "Lower incut edge — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 4671,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-flat-12",
+      "nodeName": "right-flat-12",
+      "unit": "board",
+      "name": "Lower flat edge — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 3683,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-sloper-12",
+      "nodeName": "right-sloper-12",
+      "unit": "board",
+      "name": "Lower sloping edge — right",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 12,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 1928,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-sloper-50",
+      "nodeName": "left-sloper-50",
+      "unit": "board",
+      "name": "Left Continuous upper sloping rail",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 50,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 1142,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-sloper-50",
+      "nodeName": "right-sloper-50",
+      "unit": "board",
+      "name": "Right Continuous upper sloping rail",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 50,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 1103,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "left-sloper-31",
+      "nodeName": "left-sloper-31",
+      "unit": "board",
+      "name": "Left Continuous middle sloping rail",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 31,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2713,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    },
+    {
+      "holdId": "right-sloper-31",
+      "nodeName": "right-sloper-31",
+      "unit": "board",
+      "name": "Right Continuous middle sloping rail",
+      "sourceRefs": [
+        "BETA-02",
+        "BETA-03"
+      ],
+      "publishedDepthMm": 31,
+      "geometryBasis": "Photo-derived placement and curvature; published dimension used where stated.",
+      "triangleCount": 2645,
+      "selectionBoundaryConstruction": "Conforming surface-only contour cuts, not face-centroid selection or overlapping highlight shells."
+    }
+  ],
+  "nonselectableNodes": [
+    "body-board"
+  ],
+  "materialPrimitivePolicy": "One stable selectable node may contain multiple physical-material primitives. Resolve holdId from node/ancestor and highlight all descendants. Primitive count is not contact count.",
+  "reauthoring": {
+    "agent": "reauthor_escape.py",
+    "manufacturerPositions": 22,
+    "splitCoordinates": {
+      "left-pinch": {
+        "axis": "z",
+        "planeCoordinateMeters": -0.015421699732542038,
+        "planeNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "upper": "left-thin-pinch",
+        "lower": "left-wide-pinch"
+      },
+      "right-pinch": {
+        "axis": "z",
+        "planeCoordinateMeters": -0.015428172424435616,
+        "planeNormal": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "upper": "right-thin-pinch",
+        "lower": "right-wide-pinch"
+      },
+      "centre-sloper-50": {
+        "axis": "x",
+        "planeCoordinateMeters": -7.40736722946167e-05,
+        "planeNormal": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "right": "right-sloper-50",
+        "left": "left-sloper-50"
+      },
+      "centre-sloper-31": {
+        "axis": "x",
+        "planeCoordinateMeters": -7.40736722946167e-05,
+        "planeNormal": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "right": "right-sloper-31",
+        "left": "left-sloper-31"
+      }
+    },
+    "sourceHoldMapContacts": 18,
+    "note": "Thin/wide pinch and left/right sloper halves inherit their source region's metadata; thin pinch is the upper (positive vertical) half, wide pinch the lower half; sloper halves are split at the board width centre with left = negative width direction."
+  }
+}

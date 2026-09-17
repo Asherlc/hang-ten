@@ -1,0 +1,45 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 8,
+  "contactMappings": {
+    "left-large-sloper": "sloper-left",
+    "left-pinch": "pinch-left",
+    "rail-15": "flat-edge-15",
+    "rail-35": "flat-edge-35",
+    "rail-40": "rounded-edge-40",
+    "right-large-sloper": "sloper-right",
+    "right-pinch": "pinch-right",
+    "top-jug": "top-incut-jug"
+  },
+  "descriptorSHA256": "db57d23302e831cfa3cf75a29be89feb39127147c9f63317d807b84211b32289",
+  "modelBounds": {
+    "max": [
+      0.34199962,
+      0.148078084,
+      0.101599321
+    ],
+    "min": [
+      -0.341992676,
+      -0.146408975,
+      -2.47e-06
+    ]
+  },
+  "modelSHA256": "f4ff71fd010bbf7f43c6a61bdc85ebea2321dbfcd454ca52dd3df6b179c59495",
+  "nodeCount": 9,
+  "packageID": "soill.iron-palm-2",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/legit-puma/.context/migration-batch-02/so-ill-iron-palm-2-0/so-ill-iron-palm-2-0.normalized.glb",
+  "sourceModelSHA256": "326a1b9c23ccd361fa58af3f84640b81b80890de39523386de9c802079ffeb56",
+  "sourceObjectIDs": [
+    "body-board",
+    "left-large-sloper",
+    "left-pinch",
+    "rail-15",
+    "rail-35",
+    "rail-40",
+    "right-large-sloper",
+    "right-pinch",
+    "top-jug"
+  ],
+  "status": "converted"
+}

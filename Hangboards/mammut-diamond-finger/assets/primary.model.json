@@ -1,0 +1,425 @@
+{
+  "contacts": {
+    "mam-jug-l": {
+      "center": [
+        0.12576453,
+        0.941326317
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.23162449,
+          1.0
+        ],
+        "min": [
+          0.019904571,
+          0.882652635
+        ]
+      },
+      "nodeIDs": [
+        "mam_jug_L_001"
+      ]
+    },
+    "mam-jug-r": {
+      "center": [
+        0.874235698,
+        0.941326526
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.980095885,
+          1.0
+        ],
+        "min": [
+          0.76837551,
+          0.882653053
+        ]
+      },
+      "nodeIDs": [
+        "mam_jug_R_001"
+      ]
+    },
+    "mam-lateral-ledge-l": {
+      "center": [
+        0.176952667,
+        0.461734812
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.292744961,
+          0.599489911
+        ],
+        "min": [
+          0.061160374,
+          0.323979712
+        ]
+      },
+      "nodeIDs": [
+        "mam_lateral_ledge_L_001"
+      ]
+    },
+    "mam-lateral-ledge-r": {
+      "center": [
+        0.823047333,
+        0.461734812
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.938840468,
+          0.599489911
+        ],
+        "min": [
+          0.707254197,
+          0.323979712
+        ]
+      },
+      "nodeIDs": [
+        "mam_lateral_ledge_R_001"
+      ]
+    },
+    "mam-lower-edge-c": {
+      "center": [
+        0.499999456,
+        0.302996399
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.711242359,
+          0.465686582
+        ],
+        "min": [
+          0.288756554,
+          0.140306215
+        ]
+      },
+      "nodeIDs": [
+        "mam_lower_edge_C_001"
+      ]
+    },
+    "mam-mid-edge-c": {
+      "center": [
+        0.5,
+        0.515306229
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.722469167,
+          0.571428677
+        ],
+        "min": [
+          0.277530833,
+          0.459183781
+        ]
+      },
+      "nodeIDs": [
+        "mam_mid_edge_C_001"
+      ]
+    },
+    "mam-mono-l": {
+      "center": [
+        0.193957755,
+        0.679598614
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.222796357,
+          0.762755194
+        ],
+        "min": [
+          0.165119153,
+          0.596442034
+        ]
+      },
+      "nodeIDs": [
+        "mam_mono_L_001"
+      ]
+    },
+    "mam-mono-r": {
+      "center": [
+        0.806042245,
+        0.679599013
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.834880847,
+          0.762755194
+        ],
+        "min": [
+          0.777203643,
+          0.596442832
+        ]
+      },
+      "nodeIDs": [
+        "mam_mono_R_001"
+      ]
+    },
+    "mam-sloper-c": {
+      "center": [
+        0.5,
+        0.883694509
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.721292079,
+          0.961266485
+        ],
+        "min": [
+          0.278707921,
+          0.806122534
+        ]
+      },
+      "nodeIDs": [
+        "mam_sloper_C_001"
+      ]
+    },
+    "mam-upper-inset-l": {
+      "center": [
+        0.295643954,
+        0.61607151
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.315864814,
+          0.645408228
+        ],
+        "min": [
+          0.275423093,
+          0.586734793
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_inset_L_001"
+      ]
+    },
+    "mam-upper-inset-r": {
+      "center": [
+        0.704347294,
+        0.61607151
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.724561016,
+          0.645408228
+        ],
+        "min": [
+          0.684133572,
+          0.586734793
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_inset_R_001"
+      ]
+    },
+    "mam-upper-open-bay-l": {
+      "center": [
+        0.132055924,
+        0.729591891
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.254927584,
+          0.872449065
+        ],
+        "min": [
+          0.009184264,
+          0.586734717
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_open_bay_L_001"
+      ]
+    },
+    "mam-upper-open-bay-r": {
+      "center": [
+        0.867936508,
+        0.729591891
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.990801072,
+          0.872449065
+        ],
+        "min": [
+          0.745071943,
+          0.586734717
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_open_bay_R_001"
+      ]
+    },
+    "mam-upper-pocket-c": {
+      "center": [
+        0.50003083,
+        0.6505103
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.588964575,
+          0.742347028
+        ],
+        "min": [
+          0.411097086,
+          0.558673573
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_pocket_C_001"
+      ]
+    },
+    "mam-upper-pocket-l": {
+      "center": [
+        0.30699023,
+        0.665816423
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.355917473,
+          0.752551111
+        ],
+        "min": [
+          0.258062988,
+          0.579081735
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_pocket_L_001"
+      ]
+    },
+    "mam-upper-pocket-r": {
+      "center": [
+        0.69301048,
+        0.665816423
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.741938678,
+          0.752551111
+        ],
+        "min": [
+          0.644082281,
+          0.579081735
+        ]
+      },
+      "nodeIDs": [
+        "mam_upper_pocket_R_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.424777955,
+      0.100000001,
+      0.078951314
+    ],
+    "min": [
+      -0.424777955,
+      -0.096000001,
+      0.00074997
+    ]
+  },
+  "modelSHA256": "10ad0cfe885c091d043b043dc5b070452756e2b9859016ab034cdcb58a6df70d",
+  "nodes": [
+    {
+      "nodeID": "body_board_001",
+      "role": "body"
+    },
+    {
+      "contactID": "mam-jug-l",
+      "nodeID": "mam_jug_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-jug-r",
+      "nodeID": "mam_jug_R_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-lateral-ledge-l",
+      "nodeID": "mam_lateral_ledge_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-lateral-ledge-r",
+      "nodeID": "mam_lateral_ledge_R_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-lower-edge-c",
+      "nodeID": "mam_lower_edge_C_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-mid-edge-c",
+      "nodeID": "mam_mid_edge_C_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-mono-l",
+      "nodeID": "mam_mono_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-mono-r",
+      "nodeID": "mam_mono_R_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-sloper-c",
+      "nodeID": "mam_sloper_C_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-inset-l",
+      "nodeID": "mam_upper_inset_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-inset-r",
+      "nodeID": "mam_upper_inset_R_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-open-bay-l",
+      "nodeID": "mam_upper_open_bay_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-open-bay-r",
+      "nodeID": "mam_upper_open_bay_R_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-pocket-c",
+      "nodeID": "mam_upper_pocket_C_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-pocket-l",
+      "nodeID": "mam_upper_pocket_L_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mam-upper-pocket-r",
+      "nodeID": "mam_upper_pocket_R_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "unresolved_lower_recess_L_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "unresolved_lower_recess_R_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "unresolved_red_detail_L_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "unresolved_red_detail_R_001",
+      "role": "body"
+    }
+  ],
+  "schemaVersion": 1
+}

@@ -1,0 +1,365 @@
+{
+  "contacts": {
+    "left-bottom-crimp": {
+      "center": [
+        0.300396315,
+        0.104630448
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.376963007,
+          0.209260896
+        ],
+        "min": [
+          0.223829622,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "left_bottom_crimp_001"
+      ]
+    },
+    "left-flat-rail": {
+      "center": [
+        0.356085395,
+        0.353403909
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.428031731,
+          0.421075403
+        ],
+        "min": [
+          0.284139059,
+          0.285732415
+        ]
+      },
+      "nodeIDs": [
+        "left_flat_rail_001"
+      ]
+    },
+    "left-large-sloper": {
+      "center": [
+        0.201306919,
+        0.615655387
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.312616674,
+          0.851764961
+        ],
+        "min": [
+          0.089997164,
+          0.379545814
+        ]
+      },
+      "nodeIDs": [
+        "left_large_sloper_001"
+      ]
+    },
+    "left-outer-crimp": {
+      "center": [
+        0.043896732,
+        0.580384254
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.082049524,
+          0.644376603
+        ],
+        "min": [
+          0.00574394,
+          0.516391904
+        ]
+      },
+      "nodeIDs": [
+        "left_outer_crimp_001"
+      ]
+    },
+    "left-sloping-rail": {
+      "center": [
+        0.366837837,
+        0.615238703
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.427317327,
+          0.689373805
+        ],
+        "min": [
+          0.306358346,
+          0.5411036
+        ]
+      },
+      "nodeIDs": [
+        "left_sloping_rail_001"
+      ]
+    },
+    "left-small-sloper-pinch": {
+      "center": [
+        0.131781628,
+        0.213230424
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.200552304,
+          0.417545217
+        ],
+        "min": [
+          0.063010952,
+          0.008915631
+        ]
+      },
+      "nodeIDs": [
+        "left_small_sloper_pinch_001"
+      ]
+    },
+    "left-top-jug": {
+      "center": [
+        0.226003044,
+        0.881754415
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.451427177,
+          1.0
+        ],
+        "min": [
+          0.000578911,
+          0.763508831
+        ]
+      },
+      "nodeIDs": [
+        "left_top_jug_001"
+      ]
+    },
+    "right-bottom-crimp": {
+      "center": [
+        0.699603673,
+        0.104626408
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.776170346,
+          0.209252816
+        ],
+        "min": [
+          0.623037001,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "right_bottom_crimp_001"
+      ]
+    },
+    "right-flat-rail": {
+      "center": [
+        0.643914035,
+        0.353390415
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.715860925,
+          0.421060989
+        ],
+        "min": [
+          0.571967144,
+          0.285719842
+        ]
+      },
+      "nodeIDs": [
+        "right_flat_rail_001"
+      ]
+    },
+    "right-large-sloper": {
+      "center": [
+        0.798693194,
+        0.615637795
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.910003383,
+          0.851737628
+        ],
+        "min": [
+          0.687383005,
+          0.379537961
+        ]
+      },
+      "nodeIDs": [
+        "right_large_sloper_001"
+      ]
+    },
+    "right-outer-crimp": {
+      "center": [
+        0.956103252,
+        0.580365771
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.99425606,
+          0.64435691
+        ],
+        "min": [
+          0.917950444,
+          0.516374633
+        ]
+      },
+      "nodeIDs": [
+        "right_outer_crimp_001"
+      ]
+    },
+    "right-sloping-rail": {
+      "center": [
+        0.633162143,
+        0.615218463
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.693641654,
+          0.689351339
+        ],
+        "min": [
+          0.572682633,
+          0.541085587
+        ]
+      },
+      "nodeIDs": [
+        "right_sloping_rail_001"
+      ]
+    },
+    "right-small-sloper-pinch": {
+      "center": [
+        0.868218356,
+        0.21322412
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.936989048,
+          0.417530903
+        ],
+        "min": [
+          0.799447664,
+          0.008917337
+        ]
+      },
+      "nodeIDs": [
+        "right_small_sloper_pinch_001"
+      ]
+    },
+    "right-top-jug": {
+      "center": [
+        0.77399694,
+        0.881742082
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.999421057,
+          1.0
+        ],
+        "min": [
+          0.548572823,
+          0.763484165
+        ]
+      },
+      "nodeIDs": [
+        "right_top_jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.463499993,
+      0.139699996,
+      0.098405465
+    ],
+    "min": [
+      -0.463499993,
+      -0.139699996,
+      -1.864e-06
+    ]
+  },
+  "modelSHA256": "e16c60e7808ecc2d537e859e2668d4d95a431e55fb5202ea2a4c1d8452664de1",
+  "nodes": [
+    {
+      "nodeID": "body_left_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "body_right_001",
+      "role": "body"
+    },
+    {
+      "contactID": "left-bottom-crimp",
+      "nodeID": "left_bottom_crimp_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-flat-rail",
+      "nodeID": "left_flat_rail_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-large-sloper",
+      "nodeID": "left_large_sloper_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-outer-crimp",
+      "nodeID": "left_outer_crimp_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-sloping-rail",
+      "nodeID": "left_sloping_rail_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-small-sloper-pinch",
+      "nodeID": "left_small_sloper_pinch_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "left-top-jug",
+      "nodeID": "left_top_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-bottom-crimp",
+      "nodeID": "right_bottom_crimp_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-flat-rail",
+      "nodeID": "right_flat_rail_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-large-sloper",
+      "nodeID": "right_large_sloper_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-outer-crimp",
+      "nodeID": "right_outer_crimp_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-sloping-rail",
+      "nodeID": "right_sloping_rail_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-small-sloper-pinch",
+      "nodeID": "right_small_sloper_pinch_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "right-top-jug",
+      "nodeID": "right_top_jug_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}
