@@ -136,6 +136,23 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
     }
 
+    func testDoubleHandPreviewOnOneHandedBoardResolvesThroughCandidateTargets() {
+        let board = oneHandedBoard()
+        let step = CustomRoutineStepDraft(
+            id: "double", title: "Both", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            timing: .fixed,
+            handUse: .double,
+            side: .both
+        )
+
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["jug"])
+        )
+    }
+
     func testNewDraftStartsEmptyAndAddStepAddsOneStableEditableRow() {
         var draft = CustomRoutineDraft(createWith: .generic)
 
@@ -978,6 +995,28 @@ final class CustomRoutineDraftTests: XCTestCase {
             id: "mirrored", revisionID: "test", manufacturer: "Fixture", name: "Mirrored",
             subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
             productURL: URL(string: "https://example.com/mirrored")!, photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
+        )
+    }
+
+    private func oneHandedBoard() -> BoardRevision {
+        let contacts = [
+            PhysicalContact(id: "jug", name: "Jug", kind: .jug, handCapacity: 1)
+        ]
+        let geometry = ["jug": [BoardContactPiece(
+            id: "jug-piece",
+            contactID: "jug",
+            frame: CGRect(x: 0.5, y: 0, width: 0.1, height: 0.1),
+            shape: .roundedRect(cornerRadiusFraction: 0),
+            treatment: .surface
+        )]]
+        return BoardRevision(
+            id: "one-handed", revisionID: "test", manufacturer: "Fixture", name: "One-handed",
+            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/one-handed")!, photoAssetName: nil,
             presentations: [BoardPresentation(
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,
                 media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))

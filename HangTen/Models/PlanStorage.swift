@@ -241,6 +241,23 @@ struct ContactRequirement: Codable, Hashable {
         )
     }
 
+    /// A copy of this requirement narrowed to a single-hand selection. A
+    /// bilateral prescription resolving down to one hand must drop its
+    /// `.bilateralPair` policy so `ContactResolver` accepts the requirement
+    /// against the single-hand step.
+    var singleHandSelection: ContactRequirement {
+        guard selection != .single else { return self }
+        return ContactRequirement(
+            contactID: contactID,
+            kind: kind,
+            shape: shape,
+            depth: depth,
+            fingerCapacity: fingerCapacity,
+            handCapacity: handCapacity,
+            selection: .single
+        )
+    }
+
     private enum CodingKeys: String, CodingKey, CaseIterable {
         case contactID, kind, shape, depth, fingerCapacity, handCapacity, selection
     }

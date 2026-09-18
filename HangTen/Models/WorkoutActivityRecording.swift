@@ -587,8 +587,8 @@ struct WorkoutActivityRecorder {
     ) throws -> [RecordedActivitySegment] {
         var result: [RecordedActivitySegment] = []
         for step in plan.steps {
-            let recordedStep = try resolvedHandStep(step, selectedHandSide: selectedHandSide)
-            for (index, segment) in step.segments.enumerated() {
+            let recordedStep = try resolvedHandStep(step, selectedHandSide: selectedHandSide, board: board)
+            for (index, segment) in recordedStep.segments.enumerated() {
                 let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
                 let duration: TimeInterval?
                 switch segment.kind {
@@ -683,13 +683,15 @@ struct WorkoutActivityRecorder {
 
     private func resolvedHandStep(
         _ step: WorkoutStep,
-        selectedHandSide: WorkoutSide?
+        selectedHandSide: WorkoutSide?,
+        board: BoardRevision
     ) throws -> WorkoutStep {
-        guard step.handUse == .either else { return step }
+        let boardIsOneHanded = board.isOneHanded
+        guard step.handUse == .either || (step.handUse == .double && boardIsOneHanded) else { return step }
         guard selectedHandSide == .left || selectedHandSide == .right else {
             throw WorkoutActivityRecordingError.handSideRequired(stepID: step.id)
         }
-        return step.resolvingEitherHand(selectedHandSide: selectedHandSide)!
+        return step.resolvingEitherHand(selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded)!
     }
 
     private func modelSHA256(for presentation: BoardPresentation) -> String? {

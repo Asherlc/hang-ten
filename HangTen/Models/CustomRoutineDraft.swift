@@ -86,9 +86,9 @@ enum CustomRoutineBoardPreview {
         guard !step.targets.isEmpty else {
             return []
         }
-        let resolvedSteps = resolvedSteps(for: step)
+        let resolvedSteps = resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded)
         return Set(resolvedSteps.flatMap {
-            (try? ContactResolver.resolve(step.targets, step: $0, board: board).map(\.id)) ?? []
+            (try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)) ?? []
         })
     }
 
@@ -104,7 +104,7 @@ enum CustomRoutineBoardPreview {
         step.targets = [requirement(for: hold, handUse: step.handUse)]
     }
 
-    private static func resolvedSteps(for draft: CustomRoutineStepDraft) -> [WorkoutStep] {
+    private static func resolvedSteps(for draft: CustomRoutineStepDraft, boardIsOneHanded: Bool) -> [WorkoutStep] {
         let step = WorkoutStep(
             id: draft.id,
             number: 0,
@@ -120,9 +120,10 @@ enum CustomRoutineBoardPreview {
             repetitions: draft.repetitions,
             externalLoadKGF: draft.externalLoadKGF
         )
-        let candidates = step.handUse == .either
+        let needsHandChoice = step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
+        let candidates = needsHandChoice
             ? [WorkoutSide.left, .right].compactMap {
-                step.resolvingEitherHand(selectedHandSide: $0)
+                step.resolvingEitherHand(selectedHandSide: $0, boardIsOneHanded: boardIsOneHanded)
             }
             : [step]
         return candidates

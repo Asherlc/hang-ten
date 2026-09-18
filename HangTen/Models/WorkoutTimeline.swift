@@ -5,9 +5,10 @@ import Foundation
 enum WorkoutLiveStepResolver {
     static func materialized(
         _ step: WorkoutStep,
-        selectedHandSide: WorkoutSide?
+        selectedHandSide: WorkoutSide?,
+        boardIsOneHanded: Bool = false
     ) -> WorkoutStep {
-        step.resolvingEitherHand(selectedHandSide: selectedHandSide) ?? step
+        step.resolvingEitherHand(selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded) ?? step
     }
 }
 

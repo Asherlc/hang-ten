@@ -96,6 +96,54 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testLivePresentationResolvesBilateralStepsOnAOneHandedBoard() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang, targets: [], handUse: .double,
+            side: .both
+        )
+
+        let resolved = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .right,
+            boardIsOneHanded: true
+        )
+        XCTAssertEqual(resolved.handUse, .single)
+        XCTAssertEqual(resolved.side, .right)
+
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(bilateral, selectedHandSide: nil, boardIsOneHanded: true),
+            bilateral
+        )
+    }
+
+    func testOneHandedBoardResolutionNormalizesBilateralTargetsToSingleSelection() throws {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: ContactRequirement(kind: .jug, selection: .bilateralPair),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .double, side: .both
+        )
+
+        let resolved = try XCTUnwrap(
+            bilateral.resolvingEitherHand(selectedHandSide: .left, boardIsOneHanded: true)
+        )
+
+        XCTAssertEqual(resolved.handUse, .single)
+        XCTAssertEqual(resolved.side, .left)
+        XCTAssertEqual(resolved.targets, [ContactRequirement(kind: .jug, selection: .single)])
+        XCTAssertEqual(
+            resolved.segments.first?.targets,
+            [ContactRequirement(kind: .jug, selection: .single)]
+        )
+    }
+
     func testHandCuePolicyHidesOppositeCueAfterEitherHandMaterializes() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",
