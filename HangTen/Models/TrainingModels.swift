@@ -1193,23 +1193,23 @@ struct BoardRevision: Identifiable, Hashable {
         guard !contacts.isEmpty, contacts.allSatisfy({ $0.handCapacity == 1 }) else {
             return false
         }
-        let contactsWithFrames = contacts.compactMap { contact -> (PhysicalContact, CGFloat)? in
+        let framedContacts = contacts.compactMap { contact -> (PhysicalContact, CGFloat)? in
             guard let frame = contact.resolvedFrame(in: self.defaultPresentation) else { return nil }
             return (contact, frame.rect.midX)
         }
-        guard contactsWithFrames.count >= 2 else { return true }
-        let sorted = contactsWithFrames.sorted { lhs, rhs in lhs.1 < rhs.1 }
-        let leftmost = sorted.first!
-        let rightmost = sorted.last!
-        guard leftmost.0.id != rightmost.0.id,
-              leftmost.1 < 0.5,
-              rightmost.1 > 0.5,
-              leftmost.0.kind == rightmost.0.kind,
-              leftmost.0.shape == rightmost.0.shape,
-              leftmost.0.depth == rightmost.0.depth,
-              leftmost.0.fingerCapacity == rightmost.0.fingerCapacity,
-              leftmost.0.handCapacity == rightmost.0.handCapacity else { return true }
-        return false
+        let hasBilateralPair = framedContacts.contains { left in
+            guard left.1 < 0.5 else { return false }
+            return framedContacts.contains { right in
+                guard right.1 > 0.5 else { return false }
+                return right.0.id != left.0.id
+                    && right.0.kind == left.0.kind
+                    && right.0.shape == left.0.shape
+                    && right.0.depth == left.0.depth
+                    && right.0.fingerCapacity == left.0.fingerCapacity
+                    && right.0.handCapacity == left.0.handCapacity
+            }
+        }
+        return !hasBilateralPair
     }
 
     func presentation(id: String?) -> BoardPresentation? {
