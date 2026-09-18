@@ -1081,6 +1081,51 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testDoubleHandWorkOnOneHandedBoardRecordsThroughNormalizedSegmentTargets() throws {
+        let board = oneHandedRecordingBoard()
+        let requirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
+        let workout = TrainingPlan(
+            id: "one-handed-plan",
+            title: "One-handed plan",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/one-handed-plan")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [
+                WorkoutStep(
+                    id: "one-handed-step",
+                    number: 1,
+                    title: "One-handed step",
+                    instruction: "",
+                    accessory: "",
+                    duration: 10,
+                    phase: .hang,
+                    targets: [requirement],
+                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                    handUse: .double,
+                    side: .both
+                )
+            ]
+        )
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            selectedHandSide: .left
+        )
+
+        let record = try XCTUnwrap(records.first)
+        XCTAssertEqual(record.handUse, .single)
+        XCTAssertEqual(record.side, .left)
+        XCTAssertEqual(record.target?.resolvedContactSnapshot?.contactIDs, ["one-handed-pocket"])
+        XCTAssertEqual(
+            record.target?.resolvedContactSnapshot?.requirement.selection,
+            .single
+        )
+    }
+
     func testActivityRecordingRejectsNonGeometricDoubleHandPairWithoutCapacity() {
         let board = portableBoard(
             id: "new-single-object-board",
@@ -1736,6 +1781,42 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                         contactGeometry: [
                             "left-a": [testPiece(id: "left-a", x: 0)],
                             "left-b": [testPiece(id: "left-b", x: 0.2)]
+                        ]
+                    ))
+                )
+            ]
+        )
+    }
+
+    private func oneHandedRecordingBoard() -> BoardRevision {
+        let contact = PhysicalContact(
+            id: "one-handed-pocket",
+            name: "One-handed pocket",
+            kind: .pocket,
+            handCapacity: 1,
+            side: .left
+        )
+        return BoardRevision(
+            id: "one-handed-recording-board",
+            revisionID: "test-fixture",
+            manufacturer: "Fixture",
+            name: "One-handed board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            contacts: [contact],
+            productURL: URL(string: "https://example.com/one-handed-recording")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(
+                        assetPath: "",
+                        contactGeometry: [
+                            contact.id: [testPiece(id: contact.id, x: 0.5)]
                         ]
                     ))
                 )

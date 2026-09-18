@@ -588,7 +588,7 @@ struct WorkoutActivityRecorder {
         var result: [RecordedActivitySegment] = []
         for step in plan.steps {
             let recordedStep = try resolvedHandStep(step, selectedHandSide: selectedHandSide, board: board)
-            for (index, segment) in step.segments.enumerated() {
+            for (index, segment) in recordedStep.segments.enumerated() {
                 let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
                 let duration: TimeInterval?
                 switch segment.kind {
