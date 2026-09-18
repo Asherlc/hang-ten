@@ -97,6 +97,10 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 BoardModelPairedLeadAttachment(id: "left", nodeID: "left-attachment", pointInModel: left, provenance: "test", contactPointsInModel: leftContacts),
                 BoardModelPairedLeadAttachment(id: "right", nodeID: "right-attachment", pointInModel: right, provenance: "test", contactPointsInModel: rightContacts),
             ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "left-attachment", pointInModel: left, provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "right-attachment", pointInModel: right, provenance: "test")]
+            ),
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
             cord: BoardModelCord(restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
             canonicalPoses: canonicalPoses

@@ -4055,7 +4055,7 @@ final class BoardPackageStoreTests: XCTestCase {
         }
         if specification["reorderPairedLeadSuspensionMembers"] as? Bool == true {
             let suspension = try XCTUnwrap(media["suspension"] as? [String: Any])
-            let orderedKeys = ["type", "attachments", "anchor", "cord", "canonicalPoses"]
+            let orderedKeys = ["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"]
             guard Set(suspension.keys) == Set(orderedKeys) else {
                 throw NSError(
                     domain: "BoardPackageStoreTests",
@@ -4068,7 +4068,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 matching: try serializedPairedLeadSuspension(suspension),
                 with: try serializedPairedLeadSuspension(
                     suspension,
-                    memberOrder: ["anchor", "attachments", "canonicalPoses", "cord", "type"]
+                    memberOrder: ["anchor", "attachments", "canonicalPoses", "cord", "passages", "type"]
                 )
             )
         }
@@ -4206,37 +4206,42 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func serializedPairedLeadSuspension(
         _ suspension: [String: Any],
-        memberOrder: [String] = ["type", "attachments", "anchor", "cord", "canonicalPoses"],
+        memberOrder: [String] = ["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"],
         anchorMemberOrder: [String] = ["offsetFromBoardBounds", "visibility", "provenance"],
         cordMemberOrder: [String] = ["restLength", "radius", "material", "provenance"]
     ) throws -> Data {
         let attachments = try XCTUnwrap(suspension["attachments"] as? [Any])
+        let passages = suspension["passages"] as? [String: Any]
         let anchor = try XCTUnwrap(suspension["anchor"] as? [String: Any])
         let cord = try XCTUnwrap(suspension["cord"] as? [String: Any])
         let poses = try XCTUnwrap(suspension["canonicalPoses"] as? [String: Any])
+        var serializedValues: [String: Data] = [
+            "attachments": try serializedJSONArray(attachments.map {
+                let attachment = try XCTUnwrap($0 as? [String: Any])
+                return try orderedJSONObjectData(
+                    attachment,
+                    keys: attachment["contactPointsInModel"] == nil
+                        ? ["id", "nodeID", "pointInModel", "provenance"]
+                        : ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
+                )
+            }),
+            "anchor": try orderedJSONObjectData(
+                anchor,
+                keys: anchorMemberOrder
+            ),
+            "cord": try orderedJSONObjectData(
+                cord,
+                keys: cordMemberOrder
+            ),
+            "canonicalPoses": try serializedTwoBranchCanonicalPoses(poses),
+        ]
+        if let passages {
+            serializedValues["passages"] = try serializedTwoBranchPassages(passages)
+        }
         return try orderedJSONObjectData(
             suspension,
             keys: memberOrder,
-            serializedValues: [
-                "attachments": try serializedJSONArray(attachments.map {
-                    let attachment = try XCTUnwrap($0 as? [String: Any])
-                    return try orderedJSONObjectData(
-                        attachment,
-                        keys: attachment["contactPointsInModel"] == nil
-                            ? ["id", "nodeID", "pointInModel", "provenance"]
-                            : ["id", "nodeID", "pointInModel", "contactPointsInModel", "provenance"]
-                    )
-                }),
-                "anchor": try orderedJSONObjectData(
-                    anchor,
-                    keys: anchorMemberOrder
-                ),
-                "cord": try orderedJSONObjectData(
-                    cord,
-                    keys: cordMemberOrder
-                ),
-                "canonicalPoses": try serializedTwoBranchCanonicalPoses(poses),
-            ]
+            serializedValues: serializedValues
         )
     }
 

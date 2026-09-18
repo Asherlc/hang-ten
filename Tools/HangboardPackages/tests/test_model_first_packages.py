@@ -111,7 +111,7 @@ def _write_shared_model_parser_parity_package(
         canonical = json.dumps(suspension, separators=(",", ":"))
         reordered = {
             key: suspension[key]
-            for key in ("anchor", "attachments", "canonicalPoses", "cord", "type")
+            for key in ("anchor", "attachments", "passages", "canonicalPoses", "cord", "type")
         }
         board_json = board_json.replace(
             '"suspension":' + canonical,

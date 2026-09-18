@@ -44,16 +44,24 @@
         "suspension": {
           "type": "pairedLeadCord",
           "attachments": [
-            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0.013, -0.01], "contactPointsInModel": [[-0.029, 0.038, 0.02], [-0.029, 0.017, 0.02]], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate follows the source-visible cord over the upper lip and tucks its visible terminal into the upper recessed channel, away from the front-floor apertures; no through-hole or hidden interior route claimed; pose cordContactPoints are displayEstimate exterior bends around the selected upper perimeter, ending at the pose-specific upper-channel visible terminal; these clipped visible endpoints do not establish additional physical mouths or an interior route"},
-            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0.013, -0.01], "contactPointsInModel": [[0.029, 0.038, 0.02], [0.029, 0.017, 0.02]], "provenance": "Captain Fingerfood UNLEVEL title image; displayEstimate follows the source-visible cord over the upper lip and tucks its visible terminal into the upper recessed channel, away from the front-floor apertures; no through-hole or hidden interior route claimed; pose cordContactPoints are displayEstimate exterior bends around the selected upper perimeter, ending at the pose-specific upper-channel visible terminal; these clipped visible endpoints do not establish additional physical mouths or an interior route"}
+            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0067], "contactPointsInModel": [[-0.029, 0.038, 0.02], [-0.029, 0, 0.02]], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"},
+            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0067], "contactPointsInModel": [[0.029, 0.038, 0.02], [0.029, 0, 0.02]], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
           ],
+          "passages": {
+            "left": [
+              {"id": "left-lip-mouth", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0067], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+            ],
+            "right": [
+              {"id": "right-lip-mouth", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0067], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+            ]
+          },
           "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
-          "cord": {"restLength": 0.28, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; 0.28 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
+          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; 0.28 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
           "canonicalPoses": {
             "edge20-front": {"rotation": [0.207911694, 0, 0, 0.9781476], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "edge25-inverted": {"rotation": [9e-9, 0.207911694, -0.9781476, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [-0.029, -0.013, -0.005], "right-lead": [0.029, -0.013, -0.005]}, "cordContactPoints": {"left-lead": [[-0.029, -0.038, 0.02], [-0.029, -0.017, 0.02]], "right-lead": [[0.029, -0.038, 0.02], [0.029, -0.017, 0.02]]}},
+            "edge25-inverted": {"rotation": [9e-9, 0.207911694, -0.9781476, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "jug-reverse": {"rotation": [9e-9, 0.9781476, 0.207911694, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "pocket-right-end": {"rotation": [0.147015774, 0.147015759, -0.691654772, 0.691654831], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [-0.036, -0.009, -0.005], "right-lead": [-0.036, 0.009, -0.01]}, "cordContactPoints": {"left-lead": [[-0.065, -0.009, 0.02], [-0.048, -0.009, 0.02], [-0.036, -0.009, 0.02]], "right-lead": [[-0.065, 0.009, 0.02], [-0.048, 0.009, 0.02], [-0.036, 0.009, 0.02]]}}
+            "pocket-right-end": {"rotation": [0.147015774, 0.147015759, -0.691654772, 0.691654831], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
           }
         },
         "orientation": {

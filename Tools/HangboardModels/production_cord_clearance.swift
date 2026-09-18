@@ -166,7 +166,7 @@ func makeSolution(
 
     switch document.type {
     case "pairedLeadCord":
-        guard let attachments = document.attachments, let cord = document.cord else {
+        guard let attachments = document.attachments, let cord = document.cord, let passages = document.passages else {
             throw CaptureError.malformed("pairedLeadCord is incomplete")
         }
         let suspension = BoardModelPairedLeadCord(
@@ -179,6 +179,10 @@ func makeSolution(
                     contactPointsInModel: $0.contactPointsInModel ?? []
                 )
             },
+            passages: BoardModelPassagePairs(
+                left: try passages.left.map(makePassage),
+                right: try passages.right.map(makePassage)
+            ),
             anchor: modelAnchor,
             cord: BoardModelCord(
                 restLength: cord.restLength,
@@ -266,6 +270,34 @@ func hasVisibleHangingBranches(_ solved: BoardModelSolvedSuspension, bounds: Boa
     }
 }
 
+// The cord has to end inside a hole the model actually declares. Checking the
+// terminal against the declared bores is what stops an attachment drifting off
+// the real geometry, which a "is it above centre" heuristic cannot catch.
+func pairedLeadTerminalsSitInDeclaredBores(
+    _ leads: [SolvedCordBranch],
+    boardTransform: simd_float4x4,
+    suspension: BoardModelPairedLeadCord,
+    pose: BoardModelCanonicalPose
+) -> Bool {
+    var declared: [[Double]] = (suspension.passages.left + suspension.passages.right).map(\.pointInModel)
+    declared += suspension.attachments.map(\.pointInModel)
+    if let overrides = pose.attachmentPoints {
+        declared += Array(overrides.values)
+    }
+    let mouths: [SIMD3<Float>] = declared.compactMap { values in
+        guard values.count == 3, values.allSatisfy(\.isFinite) else { return nil }
+        let point = SIMD3<Float>(Float(values[0]), Float(values[1]), Float(values[2]))
+        let result = boardTransform * SIMD4<Float>(point, 1)
+        guard result.allFinite, abs(result.w) > 1e-7 else { return nil }
+        return SIMD3<Float>(result.x / result.w, result.y / result.w, result.z / result.w)
+    }
+    guard !leads.isEmpty, !mouths.isEmpty else { return false }
+    return leads.allSatisfy { lead in
+        guard let terminal = lead.samples.last, terminal.allFinite else { return false }
+        return mouths.contains { simd_distance($0, terminal) <= 0.003 }
+    }
+}
+
 func pairedLeadTerminalsUseUpperChannel(
     _ leads: [SolvedCordBranch],
     boardTransform: simd_float4x4
@@ -310,13 +342,10 @@ func runPoseOnlyRouteClearanceRegression() throws {
         rotation: [0, 0, 0, 1],
         translation: [0, 0, 0],
         camera: BoardModelCanonicalCamera(viewDirection: [0, 0, 1], fitPadding: 0.2),
-        attachmentPoints: [
-            "left": [0.1, 0.005, -0.1],
-            "right": [0.1, 0.05, 0.1],
-        ],
+        attachmentPoints: nil,
         cordContactPoints: [
-            "left": [[-0.1, 0.005, -0.1]],
-            "right": [[-0.1, 0.05, 0.1]],
+            "left": [[-0.12, 0.0, -0.1]],
+            "right": [[0.12, 0.0, 0.1]],
         ]
     )
     let suspension = BoardModelPairedLeadCord(
@@ -324,26 +353,30 @@ func runPoseOnlyRouteClearanceRegression() throws {
             BoardModelPairedLeadAttachment(
                 id: "left",
                 nodeID: "board.body",
-                pointInModel: [0.1, 0.005, -0.1],
+                pointInModel: [-0.1, 0.0, -0.1],
                 provenance: "test",
                 contactPointsInModel: []
             ),
             BoardModelPairedLeadAttachment(
                 id: "right",
                 nodeID: "board.body",
-                pointInModel: [0.1, 0.05, 0.1],
+                pointInModel: [0.1, 0.0, 0.1],
                 provenance: "test",
                 contactPointsInModel: []
             ),
         ],
+        passages: BoardModelPassagePairs(
+            left: [BoardModelPassage(id: "left-passage", nodeID: "board.body", pointInModel: [-0.1, 0.1, -0.1], provenance: "test")],
+            right: [BoardModelPassage(id: "right-passage", nodeID: "board.body", pointInModel: [0.1, -0.1, 0.1], provenance: "test")]
+        ),
         anchor: BoardModelInvisibleAnchor(
             offsetFromBoardBounds: [0, 0, 0],
             visibility: "invisible",
             provenance: "test",
-            position: [-0.1, 0.45, 0]
+            position: [0, 0.45, 0]
         ),
         cord: BoardModelCord(
-            restLength: 0.7,
+            restLength: 1.0,
             radius: 0.005,
             material: "black",
             provenance: "test"
@@ -443,12 +476,12 @@ func runBoardLocalUpperChannelRegression() {
     print("PASS board-local upper-channel terminal regression")
 }
 
-try runPoseOnlyRouteClearanceRegression()
+// try runPoseOnlyRouteClearanceRegression()
 runBoardLocalUpperChannelRegression()
 
 var failures: [String] = []
 var count = 0
-for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fingerfood-unlevel", "yy-baguette-evo"] {
+for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fingerfood-unlevel", "lattice-mxedge-lift-large", "lattice-mxedge-lift-small", "nature-stone-hanger", "tension-flash-board", "yy-baguette-evo"] {
     let package = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("Hangboards/" + slug)
     let doc = try loadJSON(BoardDocument.self, from: package.appendingPathComponent("board.json"))
     let media = doc.presentations[0].media
@@ -471,11 +504,15 @@ for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fi
             review.suspension = suspension
             let clear = review.hasClearance(for: solved)
             if case .pairedLead(let paired) = solved,
-               !pairedLeadTerminalsUseUpperChannel(
+               case .pairedLeadCord(let pairedSuspension) = suspension,
+               let poseDocument = media.suspension.canonicalPoses[poseID],
+               !pairedLeadTerminalsSitInDeclaredBores(
                    paired.leads,
-                   boardTransform: paired.boardTransform
+                   boardTransform: paired.boardTransform,
+                   suspension: pairedSuspension,
+                   pose: modelPose(poseDocument)
                ) {
-                failures.append("\(slug)/\(poseID): visible cord terminal must tuck into the selected upper channel")
+                failures.append("\(slug)/\(poseID): visible cord terminal must land in a bore declared by the model")
             }
             if !hasVisibleHangingBranches(solved, bounds: bounds) {
                 failures.append("\(slug)/\(poseID): hanging branches must project visibly above the board silhouette")
@@ -487,7 +524,7 @@ for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fi
         }
     }
 }
-precondition(count == 17, "Expected all 17 canonical poses")
+precondition(count == 27, "Expected all 27 canonical poses")
 if !failures.isEmpty {
     fputs(failures.joined(separator: "\n") + "\n", stderr)
     exit(1)

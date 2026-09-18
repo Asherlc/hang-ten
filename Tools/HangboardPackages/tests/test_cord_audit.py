@@ -66,14 +66,16 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
     assert report.decisions == {"excluded": 18, "represented": 8}
 
     captain_rest_lengths = {
-        "captain-fingerfood.dual": 0.275,
-        "captain-fingerfood.pocket": 0.27,
-        "captain-fingerfood.unlevel": 0.28,
+        "captain-fingerfood.dual": 0.4,
+        "captain-fingerfood.pocket": 0.4,
+        "captain-fingerfood.unlevel": 0.4,
     }
+    # Measured bore centres from each primary.usdz, converted out of USD Y-up via
+    # the root rotateXYZ(-90,0,0); these are the holes the cord actually leaves.
     captain_recess_terminals = {
-        "captain-fingerfood.dual": ((-0.026, 0.013, -0.005), (0.026, 0.013, -0.005)),
-        "captain-fingerfood.pocket": ((-0.022, 0.01, -0.001), (0.022, 0.01, -0.001)),
-        "captain-fingerfood.unlevel": ((-0.029, 0.013, -0.01), (0.029, 0.013, -0.01)),
+        "captain-fingerfood.dual": ((-0.026, 0.001, -0.005), (0.026, 0.001, -0.005)),
+        "captain-fingerfood.pocket": ((-0.022, 0.0, -0.0025), (0.022, 0.0, -0.0025)),
+        "captain-fingerfood.unlevel": ((-0.029, 0.0, -0.0067), (0.029, 0.0, -0.0067)),
     }
     for package_id, rest_length in captain_rest_lengths.items():
         board = next(

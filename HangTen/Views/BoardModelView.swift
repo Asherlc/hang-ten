@@ -524,6 +524,9 @@ final class BoardModelScene {
     private(set) var isTransientCordAccessible = false
     private let allowedPositionIDs: Set<String>
     private let resourceLease: BoardModelResourceLease?
+    #if DEBUG
+    private let holePositions: [String: SIMD3<Float>] = [:]
+    #endif
 
     init?(
         source: SCNScene,
@@ -626,6 +629,8 @@ final class BoardModelScene {
             ?? orientation.map { Set($0.rotations.keys) }
             ?? []
         self.resourceLease = resourceLease
+
+        // holePositions is already initialized to empty
         self.geometryByNodeID = geometryByNodeID
         contactNodes = boundContactNodes
         contactIDsByNode = boundContactIDsByNode
@@ -719,6 +724,9 @@ final class BoardModelScene {
                     return false
                 }
                 cord = makeCordNode(for: solved)
+                #if DEBUG
+                addDebugMarkerSpheres(to: cord, suspension: suspension, pose: pose, bounds: descriptor.modelBounds)
+                #endif
                 verifiedPresentations[positionID] = (solved, cord)
             }
             guard transitionToCanonicalPresentation(solved, cord: cord) else { return false }
@@ -1072,6 +1080,89 @@ final class BoardModelScene {
         }
         return root
     }
+
+    #if DEBUG
+    private static func extractHolePositions(from rootNode: SCNNode) -> [String: SIMD3<Float>] {
+        var positions: [String: SIMD3<Float>] = [:]
+
+        rootNode.enumerateChildNodes { node, _ in
+            guard let name = node.name else { return }
+
+            // Look for hole objects named "cord-hole-left" or "cord-hole-right"
+            if name == "cord-hole-left" {
+                positions["left"] = SIMD3<Float>(
+                    Float(node.simdPosition.x),
+                    Float(node.simdPosition.y),
+                    Float(node.simdPosition.z)
+                )
+            } else if name == "cord-hole-right" {
+                positions["right"] = SIMD3<Float>(
+                    Float(node.simdPosition.x),
+                    Float(node.simdPosition.y),
+                    Float(node.simdPosition.z)
+                )
+            }
+        }
+
+        return positions
+    }
+
+    private func addDebugMarkerSpheres(
+        to cordNode: SCNNode,
+        suspension: BoardModelSuspension,
+        pose: BoardModelCanonicalPose,
+        bounds: BoardModelBounds
+    ) {
+        let markerRadius: CGFloat = 0.008
+        let markerColor = UIColor(red: 1.0, green: 0.0, blue: 0.0, alpha: 1.0)
+
+        func addSphere(at point: SIMD3<Float>, name: String) {
+            let geometry = SCNSphere(radius: markerRadius)
+            let material = SCNMaterial()
+            material.diffuse.contents = markerColor
+            material.emission.contents = UIColor(red: 0.5, green: 0.0, blue: 0.0, alpha: 1.0)
+            geometry.firstMaterial = material
+            let node = SCNNode(geometry: geometry)
+            node.name = name
+            node.position = SCNVector3(point)
+            node.categoryBitMask = 0xFFFFFFFF  // Always visible
+            cordNode.addChildNode(node)
+        }
+
+        switch suspension {
+        case .singleCord(let single):
+            let point = SIMD3<Float>(
+                Float(single.attachment.pointInModel[0]),
+                Float(single.attachment.pointInModel[1]),
+                Float(single.attachment.pointInModel[2])
+            )
+            addSphere(at: point, name: "debug.marker.single")
+
+        case .pairedLeadCord(let pairedLead):
+            for attachment in pairedLead.attachments {
+                let rawPoint = pose.attachmentPoints?[attachment.id]
+                    ?? attachment.pointInModel
+                let point = SIMD3<Float>(
+                    Float(rawPoint[0]),
+                    Float(rawPoint[1]),
+                    Float(rawPoint[2])
+                )
+                addSphere(at: point, name: "debug.marker.\(attachment.id)")
+            }
+
+        case .twoBranchCord(let twoBranch):
+            let allPassages = twoBranch.passages.left + twoBranch.passages.right
+            for passage in allPassages {
+                let point = SIMD3<Float>(
+                    Float(passage.entryPointInModel[0]),
+                    Float(passage.entryPointInModel[1]),
+                    Float(passage.entryPointInModel[2])
+                )
+                addSphere(at: point, name: "debug.marker.\(passage.id)")
+            }
+        }
+    }
+    #endif
 
     private func hasClearance(for solved: BoardModelSolvedSuspension) -> Bool {
         struct IntentionalContact {

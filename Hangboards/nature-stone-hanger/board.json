@@ -31,9 +31,17 @@
       "suspension": {
         "type": "pairedLeadCord",
         "attachments": [
-          {"id": "left-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [-0.048, 0.052499997, 0], "provenance": "Nature Stone_Hanger_Granite_1.jpg; displayEstimate; upper left external cord mouth; side hardware is not the hanging lead"},
-          {"id": "right-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [0.048, 0.052499997, 0], "provenance": "Nature Stone_Hanger_Granite_1.jpg; displayEstimate; upper right external cord mouth; side hardware is not the hanging lead"}
+          {"id": "left-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [-0.0524, -0.0024, 0], "contactPointsInModel": [[-0.07, 0.056, 0], [-0.07, -0.0024, 0]], "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"},
+          {"id": "right-lead", "nodeID": "body_oak_mesh_001", "pointInModel": [0.0524, -0.0024, 0], "contactPointsInModel": [[0.07, 0.056, 0], [0.07, -0.0024, 0]], "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
         ],
+        "passages": {
+          "left": [
+            {"id": "left-lip-mouth", "nodeID": "body_oak_mesh_001", "pointInModel": [-0.0524, -0.0024, 0], "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+          ],
+          "right": [
+            {"id": "right-lip-mouth", "nodeID": "body_oak_mesh_001", "pointInModel": [0.0524, -0.0024, 0], "provenance": "Measured from primary.usdz: 4 mm lateral cord port in body_oak_mesh_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+          ]
+        },
         "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
         "cord": {"restLength": 0.55, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate; supplied cord diameter"},
         "canonicalPoses": {
