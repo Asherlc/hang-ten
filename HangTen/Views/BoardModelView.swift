@@ -1862,7 +1862,9 @@ private struct BoardModelView: UIViewRepresentable {
         view.onUnavailable = onUnavailable
         view.positionID = positionID
         view.delegate = view
-        view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:))))
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:)))
+        tapGesture.delegate = view
+        view.addGestureRecognizer(tapGesture)
         let orbitPan = UIPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:)))
         orbitPan.delegate = view.orbitGestureDelegate
         view.addGestureRecognizer(orbitPan)
@@ -1905,7 +1907,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
     }
 }
 
-class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
+class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
     var contacts: [PhysicalContact] = []
@@ -1917,6 +1919,11 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     let orbitGestureDelegate = OrbitPanGestureDelegate()
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
+
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer is UITapGestureRecognizer else { return true }
+        return onContactTap != nil
+    }
 
     private func requestPausedRedraw() {
         guard !rendersContinuously, !isPlaying else { return }
