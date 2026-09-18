@@ -46,7 +46,14 @@ def read_usda_text(usdz_path: Path) -> str:
         )
         if text_name is not None:
             return archive.read(text_name).decode("utf-8", errors="replace")
-        crate_name = next(name for name in names if name.endswith(".usdc"))
+        crate_name = next(
+            (name for name in names if name.endswith(".usdc")),
+            None,
+        )
+        if crate_name is None:
+            raise ValueError(
+                f"{usdz_path} contains no .usda, .usd, or .usdc layer"
+            )
         usdcat = shutil.which("usdcat")
         if usdcat is None:
             raise UsdcatUnavailable(
@@ -72,7 +79,7 @@ _ROT = re.compile(r"xformOp:rotateXYZ\s*=\s*\(([^)]*)\)")
 _TRA = re.compile(r"xformOp:translate\s*=\s*\(([^)]*)\)")
 _SCA = re.compile(r"xformOp:scale\s*=\s*\(([^)]*)\)")
 _ORD = re.compile(r"xformOpOrder\s*=\s*\[(.*?)\]")
-_EXT = re.compile(r"float3\[\] extent = \[(.*?)\]")
+_EXT = re.compile(r"float3\[\] extent = \[(.*?)\]", re.DOTALL)
 
 Vec3 = tuple[float, float, float]
 Mat4 = list[list[float]]
@@ -121,7 +128,7 @@ def _op_matrix(name: str, link: dict) -> Mat4:
         mat_z[0][1] = -math.sin(rz)
         mat_z[1][0] = math.sin(rz)
         mat_z[1][1] = math.cos(rz)
-        return _matmul(_matmul(mat_x, mat_y), mat_z)
+        return _matmul(_matmul(mat_z, mat_y), mat_x)
     raise ValueError(name)
 
 

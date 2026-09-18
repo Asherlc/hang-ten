@@ -116,6 +116,7 @@ def test_suspended_canonical_poses_face_the_camera() -> None:
     inventory = module.discover_board_packages(HANGBOARDS_ROOT, require_complete_inventory=True)
 
     failures: list[str] = []
+    skip_reason: str | None = None
     checked = 0
     for package in inventory.packages:
         for presentation, suspension in _iter_suspended_presentations(module, package):
@@ -127,7 +128,8 @@ def test_suspended_canonical_poses_face_the_camera() -> None:
             try:
                 centroids = _contact_centroids(package.root, descriptor)
             except UsdcatUnavailable as error:
-                pytest.skip(str(error))
+                skip_reason = str(error)
+                continue
 
             for pose_id, pose in suspension.canonical_poses.items():
                 contact_ids = package.board.contact_ids_for_position(pose_id)
@@ -165,5 +167,9 @@ def test_suspended_canonical_poses_face_the_camera() -> None:
                         f"back of the selected face, not the front"
                     )
 
-    assert checked > 0, "expected at least one suspended canonical pose to check"
+    assert checked > 0 or skip_reason is not None, (
+        "expected at least one suspended canonical pose to check"
+    )
+    if checked == 0 and skip_reason is not None:
+        pytest.skip(skip_reason)
     assert not failures, "pose-camera-facing regressions:\n" + "\n".join(failures)
