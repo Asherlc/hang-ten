@@ -172,7 +172,8 @@
 		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
-/* End PBXBuildFile section */
+
+		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023; settings = {ATTRIBUTES = (); }; };/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D20000000000000000000001 /* beastmaker-1000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-1000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-1000/Hangboards"; sourceTree = "<absolute>"; };
@@ -342,7 +343,8 @@
 		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+
+		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HangTen/Models/DeepLinkManager.swift"; sourceTree = "<group>"; };/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CC0000000000000000000001 /* Frameworks */ = {
@@ -841,7 +843,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
+AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
@@ -904,8 +906,8 @@
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
-				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,
-			);
+			00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
+				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CC0000000000000000000005 /* Sources */ = {

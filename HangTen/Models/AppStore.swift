@@ -48,7 +48,10 @@ final class AppStore: ObservableObject {
         telemetry: TelemetryDependencies = .noOp()
     ) {
         self.defaults = defaults
-        CustomRoutineStore.removeLegacyPersistence(from: defaults)
+        CustomRoutineStore.removeLegacyPersistence(
+            from: defaults,
+            newKey: CustomRoutineStore.defaultKey
+        )
         self.workoutAccessStore = workoutAccessStore ?? WorkoutAccessStore(defaults: defaults)
         self.purchaseManager = purchaseManager ?? PurchaseManager()
         let persistedBoardID = defaults.string(forKey: Self.selectedBoardIDKey)

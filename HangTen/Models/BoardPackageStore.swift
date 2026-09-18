@@ -129,7 +129,7 @@ struct BoardModelResource: Equatable {
 
 enum BoardPackageStoreError: Error, Equatable, LocalizedError {
     case missingLibrary
-    case malformedJSON(resource: String)
+    case malformedJSON(resource: String, detail: String? = nil)
     case missingBoardDocument(slug: String)
     case packagePathEscape(boardID: String, path: String)
     case presentationAssetPathEscape(boardID: String, path: String)
@@ -143,8 +143,9 @@ enum BoardPackageStoreError: Error, Equatable, LocalizedError {
         switch self {
         case .missingLibrary:
             "The bundled Hangboards resource directory is missing."
-        case .malformedJSON(let resource):
+        case .malformedJSON(let resource, let detail):
             "The bundled board resource is malformed: \(resource)."
+                + (detail.map { " \($0)" } ?? "")
         case .missingBoardDocument(let slug):
             "Board package \(slug) is missing board.json."
         case let .packagePathEscape(boardID, path):
@@ -276,7 +277,10 @@ struct BoardPackageStore {
             let data = try Data(contentsOf: url)
             return try JSONDecoder().decode(Value.self, from: data)
         } catch {
-            throw BoardPackageStoreError.malformedJSON(resource: resource)
+            throw BoardPackageStoreError.malformedJSON(
+                resource: resource,
+                detail: error.localizedDescription
+            )
         }
     }
 
@@ -295,6 +299,7 @@ struct BoardPackageStore {
         )
         var directories: [URL] = []
         for child in children {
+            if child.lastPathComponent.hasPrefix(".") { continue }
             let values = try child.resourceValues(forKeys: [.isDirectoryKey, .isSymbolicLinkKey])
             if values.isSymbolicLink == true {
                 throw BoardPackageStoreError.packagePathEscape(
@@ -480,7 +485,7 @@ struct BoardPackageStore {
                 at: directoryURL,
                 includingPropertiesForKeys: nil,
                 options: []
-            ).map(\.lastPathComponent)
+            ).map(\.lastPathComponent).filter { !$0.hasPrefix(".") }
         )
     }
 
@@ -520,7 +525,10 @@ struct BoardPackageStore {
             let data = try Data(contentsOf: boardURL)
             document = try JSONDecoder().decode(BoardPackageBoardDocument.self, from: data)
         } catch {
-            throw BoardPackageStoreError.malformedJSON(resource: resource)
+            throw BoardPackageStoreError.malformedJSON(
+                resource: resource,
+                detail: error.localizedDescription
+            )
         }
         do {
             let data = try Data(contentsOf: boardURL)
@@ -533,7 +541,10 @@ struct BoardPackageStore {
         } catch BoardPackageRawJSONError.orientation(let reason) {
             throw BoardPackageStoreError.invalidPackage(boardID: document.id, reason: reason)
         } catch {
-            throw BoardPackageStoreError.malformedJSON(resource: resource)
+            throw BoardPackageStoreError.malformedJSON(
+                resource: resource,
+                detail: error.localizedDescription
+            )
         }
         guard document.schemaVersion == 3 else {
             throw BoardPackageStoreError.invalidPackage(

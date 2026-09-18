@@ -2,6 +2,17 @@ import SceneKit
 import XCTest
 @testable import HangTen
 
+private func XCTAssertMalformedJSON(
+    _ error: Error,
+    resource: String,
+    file: StaticString = #file,
+    line: UInt = #line
+) {
+    guard case .malformedJSON(let r, _) = error as? BoardPackageStoreError, r == resource else {
+        return XCTFail("Expected .malformedJSON(resource: \(resource)), got \(error)", file: file, line: line)
+    }
+}
+
 final class BoardPackageStoreTests: XCTestCase {
 
     func testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage() throws {
@@ -1336,10 +1347,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1365,10 +1373,7 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), name) { error in
-                XCTAssertEqual(
-                    error as? BoardPackageStoreError,
-                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-                )
+                XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
             }
         }
     }
@@ -1492,10 +1497,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1700,10 +1702,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1734,10 +1733,7 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
-                XCTAssertEqual(
-                    error as? BoardPackageStoreError,
-                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-                )
+                XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
             }
         }
     }
@@ -1777,10 +1773,7 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), measurement.name) { error in
-                XCTAssertEqual(
-                    error as? BoardPackageStoreError,
-                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-                )
+                XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
             }
         }
     }
@@ -1837,10 +1830,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1857,10 +1847,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1923,10 +1910,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1941,10 +1925,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -1961,10 +1942,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -2621,10 +2599,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -2715,10 +2690,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -2733,10 +2705,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -2841,10 +2810,7 @@ final class BoardPackageStoreTests: XCTestCase {
         defer { fixture.remove() }
 
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-            XCTAssertEqual(
-                error as? BoardPackageStoreError,
-                .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-            )
+            XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
         }
     }
 
@@ -3382,10 +3348,7 @@ final class BoardPackageStoreTests: XCTestCase {
             defer { fixture.remove() }
 
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
-                XCTAssertEqual(
-                    error as? BoardPackageStoreError,
-                    .malformedJSON(resource: "Hangboards/fixture-model/board.json")
-                )
+                XCTAssertMalformedJSON(error, resource: "Hangboards/fixture-model/board.json")
             }
         }
     }

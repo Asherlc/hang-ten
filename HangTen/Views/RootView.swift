@@ -206,7 +206,8 @@ struct WorkoutLandscapePreStartPresentation: Equatable {
 
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
-	@StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+    @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+    @StateObject private var deepLinkManager = DeepLinkManager()
     @State private var selectedTab = RootTab.initial(
         environment: ProcessInfo.processInfo.environment
     )
@@ -245,6 +246,7 @@ struct RootView: View {
 			}
 		}
 		.environmentObject(workoutAudioCoach)
+		.environmentObject(deepLinkManager)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
 			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
 		}
@@ -272,6 +274,14 @@ struct RootView: View {
                 .iOS(interfaceOrientations: orientationMask)
             )
             #endif
+        }
+        .onOpenURL { url in
+            deepLinkManager.handle(url: url)
+            if let boardID = deepLinkManager.pendingBoardID,
+               let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+                store.selectBoard(board)
+                selectedTab = .train
+            }
         }
     }
 }
