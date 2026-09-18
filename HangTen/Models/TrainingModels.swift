@@ -1193,16 +1193,18 @@ struct BoardRevision: Identifiable, Hashable {
         guard !contacts.isEmpty, contacts.allSatisfy({ $0.handCapacity == 1 }) else {
             return false
         }
-        return !contacts.contains { contact in
-            contacts.contains { other in
-                other.id != contact.id
-                    && other.kind == contact.kind
-                    && other.shape == contact.shape
-                    && other.depth == contact.depth
-                    && other.fingerCapacity == contact.fingerCapacity
-                    && other.handCapacity == contact.handCapacity
-            }
+        let contactsWithFrames = contacts.compactMap { contact -> (PhysicalContact, CGFloat)? in
+            guard let frame = contact.resolvedFrame(in: self.defaultPresentation) else { return nil }
+            return (contact, frame.rect.midX)
         }
+        guard contactsWithFrames.count >= 2 else { return true }
+        let sorted = contactsWithFrames.sorted { lhs, rhs in lhs.1 < rhs.1 }
+        let leftmost = sorted.first!
+        let rightmost = sorted.last!
+        guard leftmost.0.id != rightmost.0.id,
+              leftmost.1 < 0.5,
+              rightmost.1 > 0.5 else { return true }
+        return false
     }
 
     func presentation(id: String?) -> BoardPresentation? {
