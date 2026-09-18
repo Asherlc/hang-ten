@@ -9,8 +9,13 @@ final class OrbitPanGestureDelegate: NSObject, UIGestureRecognizerDelegate {
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer, let view = pan.view else { return true }
         let velocity = pan.velocity(in: view)
+        let translation = pan.translation(in: view)
+        // If there is no significant motion yet, prevent the pan from beginning
+        // to allow other gestures (e.g. tap) to process the touch first.
+        if abs(velocity.x) <= 1 && abs(velocity.y) <= 1 && translation == .zero {
+            return false
+        }
         guard abs(velocity.x) > 0 || abs(velocity.y) > 0 else {
-            let translation = pan.translation(in: view)
             return abs(translation.x) >= abs(translation.y)
         }
         return abs(velocity.x) >= abs(velocity.y)
