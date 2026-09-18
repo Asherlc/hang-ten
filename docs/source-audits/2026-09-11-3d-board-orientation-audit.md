@@ -13,7 +13,7 @@ Promotion record. This document does not itself change package or model bytes.
 
 ## September 15 collection extension
 
-The model inventory now contains twenty-six packages. The six added fixed boards
+The model inventory now contains twenty-seven packages. The seven added fixed boards
 below each retain one canonical `primary` position covering their entire
 ordered contact inventory, with no orientation quaternion, pivot override,
 or suspension. Their current model bounds are compiled from their USDZ
@@ -27,6 +27,7 @@ source URLs, geometry limitations, and promoted hashes are recorded in the
 | `metolius.contact` | 33 | `primary` |
 | `metolius.simulator-3d` | 29 | `primary` |
 | `soill.training-tiles` | 20 | `primary` |
+| `clavellium-training-block` | 10 | `primary` |
 | `the-hangboard.the-hangboard` | 15 | `primary` |
 | `trango.rock-prodigy-training-center` | 24 | `primary` |
 | `dewoodstok-woodbord` | 17 | `primary` |
@@ -42,6 +43,33 @@ shipped `board.json` and `primary.model.json` descriptors/package metadata;
 source/evidence facts and limitations come from the retained source-audit
 records and migration evidence. No additional rotation, contact grouping,
 bound, dimension, or physical claim is implied.
+
+## Batch-02 collection extension (2026-09-16)
+
+The model inventory now contains thirty-two packages. The six batch-02
+additions below each retain one loader-materialized position covering their
+entire ordered contact inventory, with no orientation quaternion, pivot
+override, or suspension block. `metolius.foundry` keeps the `front`
+presentation/position name carried by its migrated package; the other five
+materialize the legacy `primary` position. Their current model bounds are
+compiled from their USDZ triangles into each package's descriptor. Author and
+evidence decisions, source URLs, geometry limitations, and promoted hashes are
+recorded in the retained batch-02 migration evidence.
+
+| Package ID | Contact count | Position |
+| --- | ---: | --- |
+| `escape-beta-22` | 22 | `primary` |
+| `mammut.diamond-finger` | 16 | `primary` |
+| `metolius.foundry` | 18 | `front` |
+| `nature.stoak-board-iii` | 7 | `primary` |
+| `soill.iron-palm-2` | 8 | `primary` |
+| `soill.split-palm` | 14 | `primary` |
+
+These six fixed single-position packages have no orientation quaternion or
+pivot override. Counts and position/presentation names are taken from the
+shipped `board.json` and package descriptors; source/evidence facts and
+limitations come from the retained batch-02 migration records. No additional
+rotation, contact grouping, bound, dimension, or physical claim is implied.
 
 ## Decision and review gate (initial five-package snapshot)
 
@@ -656,6 +684,12 @@ the model.
 - `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` now contains 26
   current model packages, including the six fixed packages in the collection
   extension table above.
+
+### Verification (batch-02 collection extension)
+
+- `test_model_orientation_inventory.py`: `MODEL_PACKAGE_IDS` now contains 32
+  current model packages, including the six batch-02 fixed packages in the
+  batch-02 collection extension table above.
 
 ## Task 7 visual validation (2026-09-11, Muse Spark)
 

@@ -26,13 +26,20 @@
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
 		D10000000000000000000013 /* the-hangboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000013 /* the-hangboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-the-hangboard", ); }; };
 		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
+		D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* clavellium-training-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-clavellium-training-block", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
-		D10000000000000000000015 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
+		D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000021 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
 		D10000000000000000000016 /* escape-unlimited Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000016 /* escape-unlimited Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-unlimited", ); }; };
 		D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-evolv-kilter-basic-long", ); }; };
 		D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-deluxe-ii", ); }; };
 		D10000000000000000000019 /* moon-armstrong Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000019 /* moon-armstrong Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-moon-armstrong", ); }; };
 		D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001A /* target10a-linebreaker-base Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-target10a-linebreaker-base", ); }; };
+		D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001B /* escape-beta-22 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-beta-22", ); }; };
+		D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001C /* mammut-diamond-finger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-mammut-diamond-finger", ); }; };
+		D1000000000000000000001D /* metolius-foundry Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001D /* metolius-foundry Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-foundry", ); }; };
+		D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001E /* nature-stoak-board-iii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stoak-board-iii", ); }; };
+		D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001F /* soill-iron-palm-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-iron-palm-2", ); }; };
+		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
@@ -165,7 +172,8 @@
 		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
-/* End PBXBuildFile section */
+
+		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023; settings = {ATTRIBUTES = (); }; };/* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D20000000000000000000001 /* beastmaker-1000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-1000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-1000/Hangboards"; sourceTree = "<absolute>"; };
@@ -187,13 +195,20 @@
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000013 /* the-hangboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "the-hangboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/the-hangboard/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000015 /* clavellium-training-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "clavellium-training-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/clavellium-training-block/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000015 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000021 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000016 /* escape-unlimited Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-unlimited Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-unlimited/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "evolv-kilter-basic-long Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/evolv-kilter-basic-long/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-deluxe-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-deluxe-ii/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000019 /* moon-armstrong Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "moon-armstrong Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/moon-armstrong/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000001A /* target10a-linebreaker-base Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "target10a-linebreaker-base Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/target10a-linebreaker-base/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001B /* escape-beta-22 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-beta-22 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-beta-22/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001C /* mammut-diamond-finger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mammut-diamond-finger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/mammut-diamond-finger/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001D /* metolius-foundry Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-foundry Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-foundry/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001E /* nature-stoak-board-iii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stoak-board-iii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stoak-board-iii/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001F /* soill-iron-palm-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-iron-palm-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-iron-palm-2/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
@@ -328,7 +343,8 @@
 		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
-/* End PBXFileReference section */
+
+		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HangTen/Models/DeepLinkManager.swift"; sourceTree = "<group>"; };/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CC0000000000000000000001 /* Frameworks */ = {
@@ -394,6 +410,7 @@
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
+				D20000000000000000000015 /* clavellium-training-block Hangboards */,
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
 			);
 			name = "On-Demand Model Resources";
@@ -752,13 +769,20 @@
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
+				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
-				D10000000000000000000015 /* dewoodstok-woodbord Hangboards in Resources */,
+				D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */,
 				D10000000000000000000016 /* escape-unlimited Hangboards in Resources */,
 				D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */,
 				D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */,
 				D10000000000000000000019 /* moon-armstrong Hangboards in Resources */,
 				D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */,
+				D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */,
+				D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */,
+				D1000000000000000000001D /* metolius-foundry Hangboards in Resources */,
+				D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */,
+				D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */,
+				D10000000000000000000020 /* soill-split-palm Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,
@@ -819,7 +843,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
+AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
@@ -882,8 +906,8 @@
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
-				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,
-			);
+			00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
+				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CC0000000000000000000005 /* Sources */ = {

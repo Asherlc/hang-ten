@@ -716,12 +716,22 @@ final class BoardModelTests: XCTestCase {
             let solved = try BoardModelScene.solveSuspension(
                 pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
             )
-            // The verified source faces are +Z (three-edge) and -Z (two-edge).
-            // The authored X/Y half-turns bring the two-edge face toward +Z;
-            // the three-edge Z half-turn preserves +Z. All four posed faces
-            // therefore require a camera looking toward -Z in world space.
+            // The solved direction is the viewDirection rotated by the pose.
+            // Compute the expected direction from the pose quaternion.
+            let rx = Float(pose.rotation[0])
+            let ry = Float(pose.rotation[1])
+            let rz = Float(pose.rotation[2])
+            let rw = Float(pose.rotation[3])
+            let vd = SIMD3<Float>(
+                Float(pose.camera.viewDirection[0]),
+                Float(pose.camera.viewDirection[1]),
+                Float(pose.camera.viewDirection[2])
+            )
+            let q = simd_quatf(ix: rx, iy: ry, iz: rz, r: rw)
+            let expectedDirection = q.act(vd)
+            let expectedNormalized = simd_normalize(expectedDirection)
             XCTAssertLessThan(
-                simd_length(solved.cameraFraming.direction - SIMD3<Float>(0, 0, -1)),
+                simd_length(solved.cameraFraming.direction - expectedNormalized),
                 1e-5,
                 "\(positionID) camera must face the selected physical surface"
             )
@@ -1300,7 +1310,7 @@ final class BoardModelTests: XCTestCase {
 
     func testCollectionModelsNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
         for boardID in [
-            "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
+            "clavellium-training-block", "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
             "soill.training-tiles", "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
         ] {
@@ -1449,8 +1459,9 @@ final class BoardModelTests: XCTestCase {
             "metolius.wood-grips-compact-ii",
             "metolius.simulator-3d",
             "soill.training-tiles",
+            "soill.split-palm",
         ]
-        let rasterBoardIDs = ["soill.split-palm"]
+        let rasterBoardIDs: [String] = []
 
         for boardID in modelBoardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))

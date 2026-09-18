@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "packageID": "nature.stoak-board-iii",
+  "logicalContactIDs": [
+    "top-jug",
+    "edge-22-center",
+    "gradient-edge-left",
+    "gradient-edge-right",
+    "lower-composite-left",
+    "lower-composite-right",
+    "lower-composite-center"
+  ],
+  "objects": [
+    { "sourceNodeID": "body-board", "role": "body" },
+    { "sourceNodeID": "top-jug", "role": "contact", "contactID": "top-jug" },
+    { "sourceNodeID": "centre-granite-edge", "role": "contact", "contactID": "edge-22-center" },
+    { "sourceNodeID": "left-tapered-wood-edge", "role": "contact", "contactID": "gradient-edge-left" },
+    { "sourceNodeID": "right-tapered-wood-edge", "role": "contact", "contactID": "gradient-edge-right" },
+    { "sourceNodeID": "left-granite-edge", "role": "contact", "contactID": "lower-composite-left" },
+    { "sourceNodeID": "right-granite-edge", "role": "contact", "contactID": "lower-composite-right" },
+    { "sourceNodeID": "upper-centre-wood-edge", "role": "contact", "contactID": "lower-composite-center" }
+  ]
+}

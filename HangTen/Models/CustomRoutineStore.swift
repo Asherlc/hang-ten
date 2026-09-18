@@ -125,9 +125,16 @@ struct CustomRoutineLibrary: Codable, Hashable {
 protocol CustomRoutineStoring: AnyObject {
     var routines: [CustomRoutineDefinition] { get }
     var persistenceError: String? { get }
+    var hasUnclearedLegacyMigrationNotice: Bool { get }
     func save(_ routine: CustomRoutineDefinition) throws
     func delete(id: String) throws
     func plan(for definition: CustomRoutineDefinition) throws -> TrainingPlan
+    func dismissLegacyMigrationNotice()
+}
+
+extension CustomRoutineStoring {
+    var hasUnclearedLegacyMigrationNotice: Bool { false }
+    func dismissLegacyMigrationNotice() {}
 }
 
 enum CustomRoutineValidationIssue: Error, Equatable {
@@ -447,6 +454,8 @@ enum CustomRoutineStoreError: LocalizedError {
 final class CustomRoutineStore: CustomRoutineStoring {
     static let defaultKey = "HangTen.customRoutines.v2"
     static let legacyKeys = ["HangTen.customRoutines", "HangTen.customRoutines.v1"]
+    static let legacyDetectedKey = "HangTen.customRoutines.legacyDetected"
+    static let legacyDetectedDismissedKey = "HangTen.customRoutines.legacyDetected.dismissed"
 
     private let defaults: UserDefaults
     private let key: String
@@ -454,6 +463,17 @@ final class CustomRoutineStore: CustomRoutineStoring {
 
     private(set) var routines: [CustomRoutineDefinition]
     private(set) var persistenceError: String?
+
+    /// True when legacy custom routines were detected but could not be migrated
+    /// due to the v1→v2 schema change. The UI should show a one-time banner.
+    var hasUnclearedLegacyMigrationNotice: Bool {
+        defaults.bool(forKey: Self.legacyDetectedKey) &&
+            !defaults.bool(forKey: Self.legacyDetectedDismissedKey)
+    }
+
+    func dismissLegacyMigrationNotice() {
+        defaults.set(true, forKey: Self.legacyDetectedDismissedKey)
+    }
 
     init(
         defaults: UserDefaults = .standard,
@@ -465,11 +485,18 @@ final class CustomRoutineStore: CustomRoutineStoring {
         self.availableBoards = availableBoards
         routines = []
         persistenceError = nil
-        Self.removeLegacyPersistence(from: defaults)
+        Self.removeLegacyPersistence(from: defaults, newKey: key)
         load()
     }
 
-    static func removeLegacyPersistence(from defaults: UserDefaults) {
+    static func removeLegacyPersistence(from defaults: UserDefaults, newKey: String) {
+        let hasNewData = defaults.data(forKey: newKey) != nil
+        if !hasNewData {
+            let hadLegacyData = legacyKeys.contains { defaults.data(forKey: $0) != nil }
+            if hadLegacyData && !defaults.bool(forKey: legacyDetectedDismissedKey) {
+                defaults.set(true, forKey: legacyDetectedKey)
+            }
+        }
         legacyKeys.forEach(defaults.removeObject(forKey:))
     }
 

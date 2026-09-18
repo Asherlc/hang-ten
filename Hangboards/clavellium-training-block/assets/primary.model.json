@@ -1,0 +1,265 @@
+{
+  "contacts": {
+    "cd-crimp-10mm": {
+      "center": [
+        0.0625,
+        0.777
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.125,
+          0.799
+        ],
+        "min": [
+          0.0,
+          0.755
+        ]
+      },
+      "nodeIDs": [
+        "hold_crimp_10mm_001"
+      ]
+    },
+    "cd-crimp-15mm": {
+      "center": [
+        0.90625,
+        0.537
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.559
+        ],
+        "min": [
+          0.8125,
+          0.515
+        ]
+      },
+      "nodeIDs": [
+        "hold_crimp_15mm_001"
+      ]
+    },
+    "cd-crimp-20mm": {
+      "center": [
+        0.125,
+        0.534483
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.25,
+          0.559
+        ],
+        "min": [
+          0.0,
+          0.509966
+        ]
+      },
+      "nodeIDs": [
+        "hold_crimp_20mm_001"
+      ]
+    },
+    "cd-crimp-8mm": {
+      "center": [
+        0.95,
+        0.777
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.799
+        ],
+        "min": [
+          0.9,
+          0.755
+        ]
+      },
+      "nodeIDs": [
+        "hold_crimp_8mm_001"
+      ]
+    },
+    "cd-pinch-100mm-bottom": {
+      "center": [
+        0.5,
+        0.0
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.825,
+          0.0
+        ],
+        "min": [
+          0.175,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_100mm_bottom_001"
+      ]
+    },
+    "cd-pinch-100mm-top": {
+      "center": [
+        0.5,
+        1.0
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.825,
+          1.0
+        ],
+        "min": [
+          0.175,
+          1.0
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_100mm_top_001"
+      ]
+    },
+    "cd-pinch-80mm-negative-x": {
+      "center": [
+        0.0,
+        0.25
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.0,
+          0.41
+        ],
+        "min": [
+          0.0,
+          0.09
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_80mm_negative_x_001"
+      ]
+    },
+    "cd-pinch-80mm-positive-x": {
+      "center": [
+        1.0,
+        0.25
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          0.41
+        ],
+        "min": [
+          1.0,
+          0.09
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_80mm_positive_x_001"
+      ]
+    },
+    "cd-pinch-90mm-back": {
+      "center": [
+        0.5,
+        0.82
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.8375,
+          0.92
+        ],
+        "min": [
+          0.1625,
+          0.72
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_90mm_back_001"
+      ]
+    },
+    "cd-pinch-90mm-front": {
+      "center": [
+        0.5,
+        0.82
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.8375,
+          0.92
+        ],
+        "min": [
+          0.1625,
+          0.72
+        ]
+      },
+      "nodeIDs": [
+        "hold_pinch_90mm_front_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.04,
+      0.05,
+      0.045
+    ],
+    "min": [
+      -0.04,
+      -0.05,
+      -0.045
+    ]
+  },
+  "modelSHA256": "6ba4bcd291d6e782943b5e1574328190c13cd8ba5d69574a43c5430d13b6db08",
+  "nodes": [
+    {
+      "nodeID": "body_training_block_001",
+      "role": "body"
+    },
+    {
+      "contactID": "cd-crimp-10mm",
+      "nodeID": "hold_crimp_10mm_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-crimp-15mm",
+      "nodeID": "hold_crimp_15mm_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-crimp-20mm",
+      "nodeID": "hold_crimp_20mm_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-crimp-8mm",
+      "nodeID": "hold_crimp_8mm_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-100mm-bottom",
+      "nodeID": "hold_pinch_100mm_bottom_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-100mm-top",
+      "nodeID": "hold_pinch_100mm_top_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-80mm-negative-x",
+      "nodeID": "hold_pinch_80mm_negative_x_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-80mm-positive-x",
+      "nodeID": "hold_pinch_80mm_positive_x_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-90mm-back",
+      "nodeID": "hold_pinch_90mm_back_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "cd-pinch-90mm-front",
+      "nodeID": "hold_pinch_90mm_front_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

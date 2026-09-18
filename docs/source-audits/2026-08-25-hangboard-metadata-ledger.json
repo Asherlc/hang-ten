@@ -12551,11 +12551,11 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "value": "edge",
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12566,16 +12566,16 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "value": {
         "range": {
-          "minimum": 25,
-          "maximum": 25
+          "minimum": 35,
+          "maximum": 35
         }
       },
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12586,11 +12586,11 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12601,11 +12601,11 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12616,11 +12616,11 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12631,11 +12631,11 @@
       "source": {
         "kind": "manufacturer",
         "url": "https://soillholds.com/products/iron-palm-2-0",
-        "label": "Edges; Second Crimp Rail (flat): 25 mm"
+        "label": "Edges; Second Crimp Rail (flat): 35 mm"
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "flat-edge-25"
+        "flat-edge-35"
       ]
     },
     {
@@ -12745,8 +12745,8 @@
       },
       "value": "jug",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12761,8 +12761,8 @@
       },
       "reason": "The official source does not publish a scalar depth for this contact.",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12777,8 +12777,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12793,8 +12793,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12809,8 +12809,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12825,8 +12825,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "jug-left",
-        "jug-right"
+        "left-top-jug",
+        "right-top-jug"
       ]
     },
     {
@@ -12841,8 +12841,8 @@
       },
       "value": "sloper",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12857,8 +12857,8 @@
       },
       "reason": "The official source does not publish a scalar depth for this contact.",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12873,8 +12873,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12889,8 +12889,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12905,8 +12905,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12921,8 +12921,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "large-sloper-left",
-        "large-sloper-right"
+        "left-large-sloper",
+        "right-large-sloper"
       ]
     },
     {
@@ -12937,8 +12937,8 @@
       },
       "value": "sloper",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -12953,8 +12953,8 @@
       },
       "reason": "The official source does not publish a scalar depth for this contact.",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -12969,8 +12969,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -12985,8 +12985,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -13001,8 +13001,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -13017,8 +13017,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "small-sloper-left",
-        "small-sloper-right"
+        "left-small-sloper-pinch",
+        "right-small-sloper-pinch"
       ]
     },
     {
@@ -13033,8 +13033,8 @@
       },
       "value": "edge",
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13054,8 +13054,8 @@
         }
       },
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13070,8 +13070,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13086,8 +13086,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13102,8 +13102,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13118,8 +13118,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "sloping-rail-38-left",
-        "sloping-rail-38-right"
+        "left-sloping-rail",
+        "right-sloping-rail"
       ]
     },
     {
@@ -13134,8 +13134,8 @@
       },
       "value": "edge",
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13155,8 +13155,8 @@
         }
       },
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13171,8 +13171,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13187,8 +13187,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13203,8 +13203,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13219,8 +13219,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "flat-edge-25-left",
-        "flat-edge-25-right"
+        "left-flat-rail",
+        "right-flat-rail"
       ]
     },
     {
@@ -13235,8 +13235,8 @@
       },
       "value": "edge",
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13256,8 +13256,8 @@
         }
       },
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13272,8 +13272,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13288,8 +13288,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13304,8 +13304,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13320,8 +13320,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "outer-crimp-12-left",
-        "outer-crimp-12-right"
+        "left-outer-crimp",
+        "right-outer-crimp"
       ]
     },
     {
@@ -13336,8 +13336,8 @@
       },
       "value": "edge",
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {
@@ -13357,8 +13357,8 @@
         }
       },
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {
@@ -13373,8 +13373,8 @@
       },
       "reason": "The official source identifies this as a non-pocket contact, so finger capacity is not applicable.",
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {
@@ -13389,8 +13389,8 @@
       },
       "reason": "The official source does not state simultaneous hand capacity for this contact.",
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {
@@ -13405,8 +13405,8 @@
       },
       "reason": "The official source does not prescribe an exact per-contact grip posture or package grip enum.",
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {
@@ -13421,105 +13421,8 @@
       },
       "reason": "The normalized contact schema intentionally omits this legacy feature label.",
       "contactIDs": [
-        "bottom-sloping-crimp-12-left",
-        "bottom-sloping-crimp-12-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "kind",
-      "outcome": "adapted",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "value": "pinch",
-      "reason": "The manufacturer listing confirms pinches as a product category but does not locate these two lower regions; Hang Ten names them as positional app adaptations.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "depth",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "fingerCapacity",
-      "outcome": "notApplicable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "reason": "This field is not applicable to the adapted pinch contact role.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "handCapacity",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "gripType",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "reason": "The current manufacturer listing does not establish this optional field for the positional app adaptation.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
-      ]
-    },
-    {
-      "boardID": "soill.split-palm",
-      "field": "shape",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-26",
-      "source": {
-        "kind": "manufacturer",
-        "url": "https://soill.ca/products/split-palm",
-        "label": "Current Split Palm listing identifies pinches as a product category but does not locate the two lower regions."
-      },
-      "reason": "The normalized contact schema intentionally omits this legacy feature label.",
-      "contactIDs": [
-        "lower-pinch-left",
-        "lower-pinch-right"
+        "left-bottom-crimp",
+        "right-bottom-crimp"
       ]
     },
     {

@@ -206,7 +206,8 @@ struct WorkoutLandscapePreStartPresentation: Equatable {
 
 struct RootView: View {
     @EnvironmentObject private var store: AppStore
-	@StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+    @StateObject private var workoutAudioCoach = WorkoutAudioCoach()
+    @StateObject private var deepLinkManager = DeepLinkManager()
     @State private var selectedTab = RootTab.initial(
         environment: ProcessInfo.processInfo.environment
     )
@@ -245,6 +246,7 @@ struct RootView: View {
 			}
 		}
 		.environmentObject(workoutAudioCoach)
+		.environmentObject(deepLinkManager)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
 			RootViewSessionPersistenceCoordinator(application: UIApplication.shared).flush(store: store)
 		}
@@ -272,6 +274,14 @@ struct RootView: View {
                 .iOS(interfaceOrientations: orientationMask)
             )
             #endif
+        }
+        .onOpenURL { url in
+            deepLinkManager.handle(url: url)
+            if let boardID = deepLinkManager.pendingBoardID,
+               let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+                store.selectBoard(board)
+                selectedTab = .train
+            }
         }
     }
 }
@@ -1717,8 +1727,13 @@ struct WorkoutView: View {
         store.board(for: plan)
     }
 
+    private var boardIsOneHanded: Bool {
+        !board.contacts.isEmpty &&
+        board.contacts.allSatisfy { $0.handCapacity == 1 }
+    }
+
     private var planNeedsHandChoice: Bool {
-        plan.steps.contains { $0.handUse == .either }
+        plan.steps.contains { $0.handUse == .either } || boardIsOneHanded
     }
 
 	private let timeline: WorkoutTimeline
@@ -2112,7 +2127,8 @@ struct WorkoutView: View {
 						GripDiagramView(
 							hold: hold,
 							gripType: holdCue.gripType,
-							fingerConfiguration: holdCue.fingerConfiguration
+							fingerConfiguration: holdCue.fingerConfiguration,
+							resolvedHandSide: selectedHandSide
 						)
 					} else {
 						HStack(spacing: 12) {

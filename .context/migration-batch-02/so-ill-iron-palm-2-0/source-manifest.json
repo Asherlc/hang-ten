@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "packageID": "soill.iron-palm-2",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "So iLL",
+    "evidencePacket": "https://soillholds.com/products/iron-palm-2-0"
+  },
+  "historicalSource": {
+    "status": "missing"
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "Batch-02 delivered GLB 368736e341b5401d37b1f9cd144d860d38afbcf260ee515406ed32071144cc68; coordinate-wrapper empties baked and removed and neutral solid-color material images added for compiler import (326a1b9c23ccd361fa58af3f84640b81b80890de39523386de9c802079ffeb56)",
+    "retainedPath": ".context/migration-batch-02/so-ill-iron-palm-2-0/so-ill-iron-palm-2-0.normalized.glb",
+    "sha256": "326a1b9c23ccd361fa58af3f84640b81b80890de39523386de9c802079ffeb56"
+  },
+  "supersessionRuling": "Replaces raster presentation with model-first 3D package."
+}
