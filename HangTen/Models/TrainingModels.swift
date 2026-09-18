@@ -1556,10 +1556,19 @@ struct WorkoutStep: Identifiable, Hashable {
         guard let side = selectedHandSide, side == .left || side == .right else {
             return nil
         }
+        let singleHandedTargets = targets.map(\.singleHandSelection)
+        let singleHandedSegments = segments.map { segment in
+            WorkoutSegment(
+                kind: segment.kind,
+                targets: segment.targets.map(\.singleHandSelection),
+                timing: segment.timing,
+                duration: segment.duration
+            )
+        }
         return WorkoutStep(
             id: id, number: number, title: title, instruction: instruction,
-            accessory: accessory, duration: duration, phase: phase, targets: targets,
-            segments: segments, gripType: gripType,
+            accessory: accessory, duration: duration, phase: phase, targets: singleHandedTargets,
+            segments: singleHandedSegments, gripType: gripType,
             fingerConfiguration: fingerConfiguration, handUse: .single,
             side: side, action: action, repetitions: repetitions,
             externalLoadKGF: externalLoadKGF, timedWorkDuration: timedWorkDuration

@@ -88,7 +88,7 @@ enum CustomRoutineBoardPreview {
         }
         let resolvedSteps = resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded)
         return Set(resolvedSteps.flatMap {
-            (try? ContactResolver.resolve(step.targets, step: $0, board: board).map(\.id)) ?? []
+            (try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)) ?? []
         })
     }
 
