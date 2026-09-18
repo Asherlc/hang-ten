@@ -210,17 +210,17 @@ def clean_hold_mesh(obj: bpy.types.Object, hold_id: str, kind: str | None):
 
 
 def main():
-    if len(sys.argv) < 6:
-        print("Usage: blender --background --python clean_model_meshes.py -- <board_id> <usdz_path> <output_usdz> <output_blend> <board_json>")
-        sys.exit(1)
-    
     # Parse args after '--'
     argv = sys.argv
     if '--' in argv:
         argv = argv[argv.index('--') + 1:]
     else:
         argv = argv[1:]
-    
+
+    if len(argv) < 5:
+        print("Usage: blender --background --python clean_model_meshes.py -- <board_id> <usdz_path> <output_usdz> <output_blend> <board_json>")
+        sys.exit(1)
+
     board_id, usdz_path, output_usdz, output_blend, board_json = argv[:5]
     
     print(f"Cleaning {board_id}")

@@ -2831,7 +2831,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-1",
-          "instruction" : "6 pull-ups outer jugs (2); 20 s. dead hang deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "instruction" : "6 pull-ups outer jugs (2); 20 s. dead hang deep four finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
@@ -2917,7 +2917,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-3",
-          "instruction" : "6 offset pull-ups (3 each arm) outer jug (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
+          "instruction" : "6 offset pull-ups (3 each arm) outer jug (2) & deep four finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
@@ -3153,7 +3153,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-7",
-          "instruction" : "5 L-sit pull-ups (bend knees if you have to), pinches (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "instruction" : "5 L-sit pull-ups (bend knees if you have to), pinches (1); 20 s. bent arm hang (elbows at 90°), deep four finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {

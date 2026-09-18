@@ -236,11 +236,6 @@ final class CountdownAudioScheduler: CountdownAudioScheduling {
     private let lock = NSLock()
     private var _hasActiveSchedule = false
 
-    private var hasActiveSchedule: Bool {
-        get { lock.withLock { _hasActiveSchedule } }
-        set { lock.withLock { _hasActiveSchedule = newValue } }
-    }
-
     init(backend: any CountdownAudioSchedulingBackend) {
         self.backend = backend
         self.lifecycleLogger = SystemCountdownAudioLifecycleLogger()
@@ -279,24 +274,32 @@ final class CountdownAudioScheduler: CountdownAudioScheduling {
 
     @discardableResult
     func schedule(_ schedule: CountdownAudioSchedule, startHostTime: UInt64) -> Bool {
-        guard !hasActiveSchedule else {
+        // Atomically reserve admission so concurrent callers cannot both pass
+        // the guard and start overlapping schedules.
+        let alreadyActive: Bool = lock.withLock {
+            if _hasActiveSchedule { return true }
+            _hasActiveSchedule = true
+            return false
+        }
+        guard !alreadyActive else {
             lifecycleLogger.scheduleRejected(schedule, startHostTime: startHostTime)
             return false
         }
 
         guard !schedule.cues.isEmpty,
               backend.schedule(schedule, startHostTime: startHostTime) else {
+            // Backend refused — release the reservation.
+            lock.withLock { _hasActiveSchedule = false }
             lifecycleLogger.scheduleRejected(schedule, startHostTime: startHostTime)
             return false
         }
 
-        hasActiveSchedule = true
         lifecycleLogger.scheduleAccepted(schedule, startHostTime: startHostTime)
         return true
     }
 
     func stop() {
-        hasActiveSchedule = false
+        lock.withLock { _hasActiveSchedule = false }
         backend.stop()
     }
 }

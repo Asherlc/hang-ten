@@ -67,15 +67,37 @@ def analyze_path_for_shape_constraint(path: ClosedPath, frame: NormalizedFrame) 
             return corner_dx * corner_dx + corner_dy * corner_dy <= r * r
         return dx <= width / 2 and dy <= height / 2
 
-    # Test roundedRect: find best corner radius
+    # Test roundedRect: find best corner radius using boundary fidelity
+    def _rounded_rect_boundary_score(r_frac: float) -> float:
+        r = min(width, height) * r_frac
+        if r <= 0:
+            return 0.0
+        band = 0.02 * min(width, height)
+        on_boundary = 0
+        for p in contour:
+            inside = point_in_rounded_rect(p[0], p[1], min_x, min_y, r)
+            if not inside:
+                continue
+            # Check if point is near the boundary (not deep inside)
+            dx = max(abs(p[0] - (min_x + max_x) / 2) - width / 2, 0)
+            dy = max(abs(p[1] - (min_y + max_y) / 2) - height / 2, 0)
+            dist_to_edge = math.hypot(dx, dy)
+            if r > 0:
+                # For rounded corners, also check distance to corner arc
+                corner_cx = min_x + r if p[0] < (min_x + max_x) / 2 else max_x - r
+                corner_cy = min_y + r if p[1] < (min_y + max_y) / 2 else max_y - r
+                corner_dx = abs(p[0] - corner_cx)
+                corner_dy = abs(p[1] - corner_cy)
+                if corner_dx > (width / 2 - r) and corner_dy > (height / 2 - r):
+                    dist_to_edge = abs(math.hypot(corner_dx, corner_dy) - r)
+            if dist_to_edge <= band:
+                on_boundary += 1
+        return on_boundary / len(contour)
+
     best_rounded_rect_score = 0.0
     best_radius = 0.0
     for r_frac in [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]:
-        r = min(width, height) * r_frac
-        if r <= 0:
-            continue
-        inside = sum(1 for p in contour if point_in_rounded_rect(p[0], p[1], min_x, min_y, r))
-        score = inside / len(contour)
+        score = _rounded_rect_boundary_score(r_frac)
         if score > best_rounded_rect_score:
             best_rounded_rect_score = score
             best_radius = r_frac
@@ -129,23 +151,28 @@ def analyze_path_for_shape_constraint(path: ClosedPath, frame: NormalizedFrame) 
 
     # Test rectangle (sharp corners) - check if corners are actually sharp
     rect_score = 0.0
-    # Sample points near corners to detect rounding
-    corner_margin = 0.02  # 2% from edges
+    corner_tolerance = 0.01 * min(width, height)
+    edge_slack = 0.005 * min(width, height)
     corner_points = [
-        (min_x + corner_margin * width, min_y + corner_margin * height),  # top-left
-        (max_x - corner_margin * width, min_y + corner_margin * height),  # top-right
-        (min_x + corner_margin * width, max_y - corner_margin * height),  # bottom-left
-        (max_x - corner_margin * width, max_y - corner_margin * height),  # bottom-right
+        (min_x, min_y),  # top-left
+        (max_x, min_y),  # top-right
+        (min_x, max_y),  # bottom-left
+        (max_x, max_y),  # bottom-right
     ]
     # Check if contour actually goes into corners (sharp) or curves away (rounded)
     sharp_corners = 0
     for cx, cy in corner_points:
         # Find closest contour point to this corner
         closest_dist = min(math.hypot(p[0] - cx, p[1] - cy) for p in contour)
-        if closest_dist < 0.01:  # Very close to corner = sharp
+        if closest_dist < corner_tolerance:  # Very close to corner = sharp
             sharp_corners += 1
     if sharp_corners >= 3:  # At least 3 sharp corners
-        inside = sum(1 for p in contour if min_x - 0.005 <= p[0] <= max_x + 0.005 and min_y - 0.005 <= p[1] <= max_y + 0.005)
+        inside = sum(
+            1
+            for p in contour
+            if min_x - edge_slack <= p[0] <= max_x + edge_slack
+            and min_y - edge_slack <= p[1] <= max_y + edge_slack
+        )
         rect_score = inside / len(contour)
 
     # Pick best match with threshold
@@ -351,27 +378,38 @@ def clean_board_geometry(board_path: Path, dry_run: bool = False) -> dict[str, A
                             constraint_shape = match.constraint_type
                             if match.constraint_type in ("pill", "circle"):
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.5}
+                                new_path = display_path_for_shape(
+                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
+                                )
+                                new_frame = normalized_frame_for_path(new_path, width, height)
+                                piece["frame"] = new_frame.to_json()
                             elif match.constraint_type == "oval":
                                 # Keep oval as a path — roundedRect cannot
                                 # represent continuous ellipse curvature.
-                                pass
+                                # Derive tight frame from the original path.
+                                new_frame, new_shape = shape_for_path(path, width, height)
+                                piece["frame"] = new_frame.to_json()
+                                piece["shape"] = new_shape
                             elif match.constraint_type == "rectangle":
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.0}
+                                new_path = display_path_for_shape(
+                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
+                                )
+                                new_frame = normalized_frame_for_path(new_path, width, height)
+                                piece["frame"] = new_frame.to_json()
                             else:
                                 piece["shape"] = {"type": match.constraint_type}
                                 if match.corner_radius_fraction is not None:
                                     piece["shape"]["cornerRadiusFraction"] = round(match.corner_radius_fraction, 3)
+                                new_path = display_path_for_shape(
+                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
+                                )
+                                new_frame = normalized_frame_for_path(new_path, width, height)
+                                piece["frame"] = new_frame.to_json()
 
                             # Map shape type to constraint shape name
                             if match.constraint_type == "roundedRect":
                                 constraint_shape = "roundedRectangle"
-
-                            # Create a display path for the new shape to compute tight frame
-                            new_path = display_path_for_shape(
-                                frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
-                            )
-                            new_frame = normalized_frame_for_path(new_path, width, height)
-                            piece["frame"] = new_frame.to_json()
 
                             piece["shapeConstraint"] = {
                                 "shape": constraint_shape,
