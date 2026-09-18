@@ -6,12 +6,13 @@ import UIKit
 /// scroll view still scrolls — the same arbitration a horizontal carousel
 /// needs when it sits inside a vertical feed.
 final class OrbitPanGestureDelegate: NSObject, UIGestureRecognizerDelegate {
-    private static let minimumTranslation: CGFloat = 5
-
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer, let view = pan.view else { return true }
-        let translation = pan.translation(in: view)
-        guard abs(translation.x) >= Self.minimumTranslation || abs(translation.y) >= Self.minimumTranslation else { return false }
-        return abs(translation.x) >= abs(translation.y)
+        let velocity = pan.velocity(in: view)
+        guard abs(velocity.x) > 0 || abs(velocity.y) > 0 else {
+            let translation = pan.translation(in: view)
+            return abs(translation.x) >= abs(translation.y)
+        }
+        return abs(velocity.x) >= abs(velocity.y)
     }
 }
