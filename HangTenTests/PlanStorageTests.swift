@@ -332,7 +332,7 @@ final class PlanStorageTests: XCTestCase {
         )
     }
 
-    func testPlanLibraryStoreRejectsFormerSchemaVersionField() throws {
+    func testPlanLibraryStoreIgnoresFormerSchemaVersionField() throws {
         let data = Data(
             #"""
             {
@@ -349,10 +349,10 @@ final class PlanStorageTests: XCTestCase {
             """#.utf8
         )
 
-        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+        XCTAssertNoThrow(try PlanLibraryStore(data: data))
     }
 
-    func testPlanLibraryStoreRejectsFormerMetadataVersionField() throws {
+    func testPlanLibraryStoreIgnoresFormerMetadataVersionField() throws {
         let data = Data(
             #"""
             {
@@ -369,7 +369,7 @@ final class PlanStorageTests: XCTestCase {
             """#.utf8
         )
 
-        XCTAssertThrowsError(try PlanLibraryStore(data: data))
+        XCTAssertNoThrow(try PlanLibraryStore(data: data))
     }
 
     func testPlanLibraryStoreEncodingOmitsFormerVersionFields() throws {

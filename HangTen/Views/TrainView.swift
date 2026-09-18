@@ -2,6 +2,8 @@ import SwiftUI
 
 struct TrainView: View {
     @EnvironmentObject private var store: AppStore
+    @EnvironmentObject private var deepLinkManager: DeepLinkManager
+    @State private var showsDeepLinkedBoardDetail = false
     private let onBrowsePlans: () -> Void
     @State private var showsPlanReview: Bool = {
         #if DEBUG
@@ -92,6 +94,14 @@ struct TrainView: View {
             }
             .navigationDestination(isPresented: $showsBoardPickerReview) {
                 BoardPickerView()
+            }
+            .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
+                BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
+                    .onAppear { deepLinkManager.clearPending() }
+            }
+            .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
+                guard boardID != nil else { return }
+                showsDeepLinkedBoardDetail = true
             }
         }
     }
@@ -199,18 +209,21 @@ struct BoardDetailView: View {
         verticalSizeClass == .compact
     }
 
-    init(board: BoardRevision) {
+    init(board: BoardRevision, initialHoldID: String? = nil) {
         self.board = board
-        var initialHoldID = board.contacts.first(where: {
+        var resolvedHoldID = board.contacts.first(where: {
             board.defaultPresentation.containsContact(id: $0.id)
         })?.id
         #if DEBUG
         if let reviewHoldID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOLD_ID"],
            board.contacts.contains(where: { $0.id == reviewHoldID }) {
-            initialHoldID = reviewHoldID
+            resolvedHoldID = reviewHoldID
         }
         #endif
-        _selectedHoldID = State(initialValue: initialHoldID)
+        if let initialHoldID, board.contacts.contains(where: { $0.id == initialHoldID }) {
+            resolvedHoldID = initialHoldID
+        }
+        _selectedHoldID = State(initialValue: resolvedHoldID)
     }
 
     private var selectedHold: PhysicalContact? {

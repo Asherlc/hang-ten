@@ -5,7 +5,7 @@
   "name": "MXEdge Lift Large",
   "subtitle": "Ergonomic single-hand lifting edge with three edge sizes and a mono.",
   "productURL": "https://latticetraining.com/app/uploads/2026/01/Lattice_Catalogue_25_Web_161225.pdf",
-  "dimensions": "20 × 11 × 5 cm",
+  "dimensions": "20 \u00d7 11 \u00d7 5 cm",
   "aspectRatio": 1.7142857142857142,
   "equipmentObjects": [
     {
@@ -44,14 +44,97 @@
         "suspension": {
           "type": "pairedLeadCord",
           "attachments": [
-            {"id": "left-lead", "nodeID": "MXL_body_editable_skin_001", "pointInModel": [-0.068, 0.048999998, 0], "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper left external mouth, opposite lower mouth when inverted; interior omitted"},
-            {"id": "right-lead", "nodeID": "MXL_body_editable_skin_001", "pointInModel": [0.068, 0.048999998, 0], "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper right external mouth, opposite lower mouth when inverted; interior omitted"}
+            {
+              "id": "left-lead",
+              "nodeID": "MXL_body_editable_skin_001",
+              "pointInModel": [
+                -0.068,
+                0.048999998,
+                0
+              ],
+              "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper left external mouth, opposite lower mouth when inverted; interior omitted"
+            },
+            {
+              "id": "right-lead",
+              "nodeID": "MXL_body_editable_skin_001",
+              "pointInModel": [
+                0.068,
+                0.048999998,
+                0
+              ],
+              "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper right external mouth, opposite lower mouth when inverted; interior omitted"
+            }
           ],
-          "anchor": {"offsetFromBoardBounds": [0, 0.3, 0], "visibility": "invisible", "provenance": "displayEstimate; shared overhead convergence"},
-          "cord": {"restLength": 0.6, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate; supplied blue/yellow cord diameter"},
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.3,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "displayEstimate; shared overhead convergence"
+          },
+          "cord": {
+            "restLength": 0.6,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "displayEstimate; supplied blue/yellow cord diameter"
+          },
           "canonicalPoses": {
-            "lower-lips-front": {"rotation": [0.190808995, 0.0, 0.0, 0.981627183], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "upper-lip-inverted": {"rotation": [0.0, 0.190808995, -0.981627183, 0.0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [-0.068, -0.048999998, 0], "right-lead": [0.068, -0.048999998, 0]}}
+            "lower-lips-front": {
+              "rotation": [
+                0.190808995,
+                0.0,
+                0.0,
+                0.981627183
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              }
+            },
+            "upper-lip-inverted": {
+              "rotation": [
+                0.0,
+                0.190808995,
+                -0.981627183,
+                0.0
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "attachmentPoints": {
+                "left-lead": [
+                  -0.068,
+                  -0.048999998,
+                  0
+                ],
+                "right-lead": [
+                  0.068,
+                  -0.048999998,
+                  0
+                ]
+              }
+            }
           }
         }
       }
