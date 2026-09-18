@@ -595,6 +595,18 @@ def test_v2_rejects_incomplete_or_degenerate_pose_contact_routes(tmp_path: Path,
         load_board_catalog_module().load_board_package(package)
 
 
+def test_v2_paired_leads_reject_duplicate_passage_ids(tmp_path: Path) -> None:
+    package = _write_shared_model_parser_parity_package(tmp_path, {
+        "base": "pairedLeadCordModel", "mutations": [{
+            "target": "board", "op": "replace",
+            "path": ["presentations", 0, "media", "suspension", "passages", "right", 0, "id"],
+            "value": "left-lip",
+        }],
+    })
+    with pytest.raises(ValueError, match="passage IDs must be distinct"):
+        load_board_catalog_module().load_board_package(package)
+
+
 def test_two_branch_order_and_segment_regressions_are_specific(tmp_path: Path) -> None:
     fixtures = {
         fixture["name"]: fixture

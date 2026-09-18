@@ -854,6 +854,8 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
         left_passages = load_passage_list("left", "left")
         right_passages = load_passage_list("right", "right")
+        if left_passages[0].id == right_passages[0].id:
+            raise ValueError(f"{passages_source} left and right passage IDs must be distinct")
 
         cord_source = f"{source}.cord"
         cord_payload = _mapping(payload["cord"], cord_source)

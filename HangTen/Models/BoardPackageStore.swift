@@ -1460,8 +1460,10 @@ struct BoardPackageStore {
               zip(document.passages.left[0].entryPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
               zip(document.passages.left[0].entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
               zip(document.passages.right[0].entryPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
-              zip(document.passages.right[0].entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }) else {
-            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord requires exactly one passage per side with distinct IDs and finite in-bounds points")
+              zip(document.passages.right[0].entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
+              !document.passages.left[0].isThroughBore,
+              !document.passages.right[0].isThroughBore else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord requires exactly one non-through-bore passage per side with distinct IDs and finite in-bounds points")
         }
         let nodesByID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         for attachment in document.attachments {

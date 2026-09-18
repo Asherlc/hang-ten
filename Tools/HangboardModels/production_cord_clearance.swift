@@ -476,7 +476,7 @@ func runBoardLocalUpperChannelRegression() {
     print("PASS board-local upper-channel terminal regression")
 }
 
-// try runPoseOnlyRouteClearanceRegression()
+try runPoseOnlyRouteClearanceRegression()
 runBoardLocalUpperChannelRegression()
 
 var failures: [String] = []

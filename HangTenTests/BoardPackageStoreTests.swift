@@ -500,6 +500,25 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testStoreRejectsThroughBorePassagesForPairedLeadCord() throws {
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "pairedLeadCordModel",
+            "mutations": [["target": "board", "op": "replace",
+                "path": ["presentations", 0, "media", "suspension", "passages", "left", 0],
+                "value": ["id": "left-lip", "nodeID": "Body",
+                    "entryPointInModel": [0.2, 0.5, 0.1],
+                    "exitPointInModel": [0.2, 0.35, 0.1],
+                    "provenance": "displayEstimate"]]]
+        ])
+        defer { fixture.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(boardID: "fixture.paired-lead", reason: "pairedLeadCord requires exactly one non-through-bore passage per side with distinct IDs and finite in-bounds points")
+            )
+        }
+    }
+
     func testStoreLoadsValidDirectedTwoBranchSuspensionFixture() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "directedTwoBranchModel",

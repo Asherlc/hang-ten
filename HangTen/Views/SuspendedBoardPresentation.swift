@@ -31,7 +31,6 @@ struct SuspendedPairedLeadSolvedPresentation {
     let cameraFraming: SuspendedCameraFraming
     let tubeRadius: Float
     let requiredClearance: Float
-    let terminalPassageID: String
 }
 
 
@@ -294,8 +293,7 @@ enum SuspendedBoardPresentation {
             leads: leads,
             cameraFraming: framing,
             tubeRadius: tubeRadius,
-            requiredClearance: tubeRadius + additionalClearance,
-            terminalPassageID: ""
+            requiredClearance: tubeRadius + additionalClearance
         )
 }
 
@@ -595,7 +593,7 @@ enum SuspendedBoardPresentation {
         var exit: Float = 1
         for axis in 0..<3 {
             if abs(delta[axis]) < 1e-9 {
-                if start[axis] < minimum[axis] || start[axis] > maximum[axis] { return false }
+                if start[axis] <= minimum[axis] || start[axis] >= maximum[axis] { return false }
                 continue
             }
             var near = (minimum[axis] - start[axis]) / delta[axis]
