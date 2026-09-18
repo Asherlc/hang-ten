@@ -1984,7 +1984,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.entry.minute-4",
-          "instruction" : "6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang pinches (11). Use the remaining time to rest until the next minute.",
+          "instruction" : "6 s. L-hang on any holds (bend knees if needed); 5 s. dead hang two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2162,7 +2162,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.entry.minute-8",
-          "instruction" : "10 s. bent arm hang (elbows 90°) deep four finger (3). Use the remaining time to rest until the next minute.",
+          "instruction" : "10 s. bent arm hang (elbows 90°) round sloper (3). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2193,7 +2193,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.entry.minute-9",
-          "instruction" : "1 offset pull-up, jug & pinch (1 & 11), change hands & repeat; 10 s. dead hang deep four finger pockets (3). Use the remaining time to rest until the next minute.",
+          "instruction" : "1 offset pull-up, pinch & pocket (1 & 11), change hands & repeat; 10 s. dead hang round sloper (3). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
@@ -2364,7 +2364,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.intermediate.minute-2",
-          "instruction" : "10 s. bent arm (elbows at 90°) hang round sloper (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
+          "instruction" : "10 s. bent arm (elbows at 90°) hang outer jug (2) — stay on — 2 pull-ups — stay on 10 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2444,7 +2444,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.intermediate.minute-4",
-          "instruction" : "10 s. L-hang on any holds; 10 s. dead hang on pinches (11). Use the remaining time to rest until the next minute.",
+          "instruction" : "10 s. L-hang on any holds; 10 s. dead hang on two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2733,7 +2733,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.intermediate.minute-9",
-          "instruction" : "10 s. one arm hang jugs (3), repeat other arm; 4 pull-ups center edge (17). Use the remaining time to rest until the next minute.",
+          "instruction" : "10 s. one arm hang round sloper (3), repeat other arm; 4 pull-ups center edge (17). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2831,7 +2831,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-1",
-          "instruction" : "6 pull-ups round slopers (2); 20 s. dead hang deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "instruction" : "6 pull-ups outer jugs (2); 20 s. dead hang deep two finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
@@ -2888,7 +2888,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-2",
-          "instruction" : "15 s. bent arm hang (elbows at 90°) round sloper (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
+          "instruction" : "15 s. bent arm hang (elbows at 90°) outer jug (2) — stay on — 4 pull-ups — stay on — 15 s. bent arm hang (elbows at 110°). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -2917,7 +2917,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-3",
-          "instruction" : "6 offset pull-ups (3 each arm) round sloper (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
+          "instruction" : "6 offset pull-ups (3 each arm) outer jug (2) & deep two finger pockets (4); 10 s. dead hang medium edge (18). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
@@ -2988,7 +2988,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-4",
-          "instruction" : "15 s. L-hang any holds (hold good form); 15 s. dead hang on pinches (11). Use the remaining time to rest until the next minute.",
+          "instruction" : "15 s. L-hang any holds (hold good form); 15 s. dead hang on two finger pockets (11). Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3037,7 +3037,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-5",
-          "instruction" : "10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med three finger pocket (9), campus to round slopers (2), hold 15 s. Use the remaining time to rest until the next minute.",
+          "instruction" : "10 s. dead hang extra shallow three finger pockets (13), stay on; campus to med four finger pocket (9), campus to round slopers (3), hold 15 s. Use the remaining time to rest until the next minute.",
           "phase" : "hang",
           "segments" : [
             {
@@ -3153,7 +3153,7 @@
           "duration" : 60,
           "handUse" : "double",
           "id" : "metolius.contact.advanced.minute-7",
-          "instruction" : "5 L-sit pull-ups (bend knees if you have to), jugs (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4). Use the remaining time to rest until the next minute.",
+          "instruction" : "5 L-sit pull-ups (bend knees if you have to), pinches (1); 20 s. bent arm hang (elbows at 90°), deep two finger pockets (4). Use the remaining time to rest until the next minute.",
           "phase" : "pull",
           "segments" : [
             {
