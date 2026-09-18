@@ -1446,6 +1446,25 @@ struct BoardPackageStore {
               Set(document.attachments.map(\.id)).count == document.attachments.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord requires exactly two distinct identifier-shaped attachment IDs")
         }
+        guard document.passages.left.count == 1,
+              document.passages.right.count == 1,
+              document.passages.left[0].id.isBoardPackageIdentifier,
+              document.passages.right[0].id.isBoardPackageIdentifier,
+              document.passages.left[0].id != document.passages.right[0].id,
+              !document.passages.left[0].provenance.isEmpty,
+              !document.passages.right[0].provenance.isEmpty,
+              document.passages.left[0].entryPointInModel.count == 3,
+              document.passages.right[0].entryPointInModel.count == 3,
+              document.passages.left[0].entryPointInModel.allSatisfy(\.isFinite),
+              document.passages.right[0].entryPointInModel.allSatisfy(\.isFinite),
+              zip(document.passages.left[0].entryPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+              zip(document.passages.left[0].entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
+              zip(document.passages.right[0].entryPointInModel, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 }),
+              zip(document.passages.right[0].entryPointInModel, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
+              !document.passages.left[0].isThroughBore,
+              !document.passages.right[0].isThroughBore else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "pairedLeadCord requires exactly one non-through-bore passage per side with distinct IDs and finite in-bounds points")
+        }
         let nodesByID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map { ($0.nodeID, $0) })
         for attachment in document.attachments {
             guard let node = nodesByID[attachment.nodeID], node.role == .body || node.role == .attachment else {
@@ -1469,6 +1488,11 @@ struct BoardPackageStore {
                       }.squareRoot() > 1e-7
                   }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "paired lead route contact points must be finite and distinct")
+            }
+        }
+        for passage in [document.passages.left[0], document.passages.right[0]] {
+            guard let node = nodesByID[passage.nodeID], node.role == .body || node.role == .attachment else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "paired lead passage node must be a body or attachment node")
             }
         }
         guard document.anchor.offsetFromBoardBounds.count == 3,
@@ -1562,6 +1586,8 @@ struct BoardPackageStore {
                 cordContactPoints: pose.cordContactPoints
             )
         }
+        let leftPassage = document.passages.left[0]
+        let rightPassage = document.passages.right[0]
         return .pairedLeadCord(BoardModelPairedLeadCord(
             attachments: document.attachments.map {
                 BoardModelPairedLeadAttachment(
@@ -1572,6 +1598,10 @@ struct BoardPackageStore {
                     contactPointsInModel: $0.contactPointsInModel
                 )
             },
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: leftPassage.id, nodeID: leftPassage.nodeID, pointInModel: leftPassage.entryPointInModel, provenance: leftPassage.provenance)],
+                right: [BoardModelPassage(id: rightPassage.id, nodeID: rightPassage.nodeID, pointInModel: rightPassage.entryPointInModel, provenance: rightPassage.provenance)]
+            ),
             anchor: BoardModelInvisibleAnchor(
                 offsetFromBoardBounds: document.anchor.offsetFromBoardBounds,
                 visibility: document.anchor.visibility,
@@ -1867,12 +1897,22 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                 continue
             }
             if suspensionType == "pairedLeadCord" {
-                try suspensionMembers.requireCanonicalOrder(["type", "attachments", "anchor", "cord", "canonicalPoses"])
+                try suspensionMembers.requireCanonicalOrder(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
                 guard case .array(let attachments)? = suspensionMembers.value(named: "attachments"),
+                      case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
+                      case .array(let leftPassages)? = passagesMembers.value(named: "left"),
+                      case .array(let rightPassages)? = passagesMembers.value(named: "right"),
                       case .object(let anchorMembers)? = suspensionMembers.value(named: "anchor"),
                       case .object(let cordMembers)? = suspensionMembers.value(named: "cord"),
                       case .object(let poseMembers)? = suspensionMembers.value(named: "canonicalPoses") else {
                     throw BoardPackageRawJSONError.invalid
+                }
+                try passagesMembers.requireCanonicalOrder(["left", "right"])
+                for passage in leftPassages + rightPassages {
+                    guard case .object(let members) = passage else { throw BoardPackageRawJSONError.invalid }
+                    let pointKeys = members.contains(where: { $0.name == "pointInModel" })
+                        ? ["pointInModel"] : ["entryPointInModel", "exitPointInModel"]
+                    try members.requireCanonicalOrder(["id", "nodeID"] + pointKeys + ["provenance"])
                 }
                 for attachment in attachments {
                     guard case .object(let members) = attachment else { throw BoardPackageRawJSONError.invalid }
@@ -2423,7 +2463,7 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
             }
         case "pairedLeadCord":
             if container.allKeys.contains(where: {
-                ["attachment", "passages", "branches"].contains($0.stringValue)
+                ["attachment", "branches"].contains($0.stringValue)
             }) {
                 self = .shapeMismatch(type)
             } else {
@@ -2492,16 +2532,18 @@ struct BoardPackagePairedLeadAttachmentDocument: Decodable, Equatable {
 
 struct BoardPackagePairedLeadCordSuspensionDocument: Decodable, Equatable {
     let attachments: [BoardPackagePairedLeadAttachmentDocument]
+    let passages: BoardPackagePassagePairsDocument
     let anchor: BoardPackageAnchorDocument
     let cord: BoardPackageCordDocument
     let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
 
-    private enum CodingKeys: String, CodingKey { case type, attachments, anchor, cord, canonicalPoses }
+    private enum CodingKeys: String, CodingKey { case type, attachments, passages, anchor, cord, canonicalPoses }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["type", "attachments", "anchor", "cord", "canonicalPoses"])
+        try decoder.rejectUnknownKeys(["type", "attachments", "passages", "anchor", "cord", "canonicalPoses"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         _ = try container.decode(String.self, forKey: .type)
         attachments = try container.decode([BoardPackagePairedLeadAttachmentDocument].self, forKey: .attachments)
+        passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
         anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
         cord = try container.decode(BoardPackageCordDocument.self, forKey: .cord)
         canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)

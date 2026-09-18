@@ -151,6 +151,7 @@ struct BoardModelPairedLeadAttachment: Hashable {
 
 struct BoardModelPairedLeadCord: Hashable {
     let attachments: [BoardModelPairedLeadAttachment]
+    let passages: BoardModelPassagePairs
     let anchor: BoardModelInvisibleAnchor
     let cord: BoardModelCord
     let canonicalPoses: [String: BoardModelCanonicalPose]

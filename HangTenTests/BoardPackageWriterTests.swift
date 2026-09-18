@@ -185,7 +185,7 @@ final class BoardPackageWriterTests: XCTestCase {
             return XCTFail("expected typed pairedLeadCord suspension")
         }
         XCTAssertEqual(pairedLeadCord.attachments.map(\.id), ["left-lead", "right-lead"])
-        XCTAssertEqual(pairedLeadCord.cord.restLength, 0.27)
+        XCTAssertEqual(pairedLeadCord.cord.restLength, 0.4)
         XCTAssertEqual(orientation?.pivot, "modelBoundsCenter")
         XCTAssertEqual(
             orientation?.rotations["edge-20-front"],

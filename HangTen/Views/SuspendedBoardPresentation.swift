@@ -108,6 +108,8 @@ enum SuspendedBoardPresentation {
                           point.count == 3 && point.allSatisfy(\.isFinite)
                       })
               }),
+              suspension.passages.left.count == 1,
+              suspension.passages.right.count == 1,
               suspension.anchor.visibility == "invisible",
               suspension.anchor.position.count == 3,
               suspension.anchor.position.allSatisfy(\.isFinite) else {
@@ -120,7 +122,7 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidCord
         }
 
-        let fixedAnchor = SIMD3<Float>(
+        var fixedAnchor = SIMD3<Float>(
             Float(suspension.anchor.position[0]),
             Float(suspension.anchor.position[1]),
             Float(suspension.anchor.position[2])
@@ -128,22 +130,100 @@ enum SuspendedBoardPresentation {
         guard fixedAnchor.allFinite else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        let transformedRoutes = suspension.attachments.map { attachment in
-            let terminal = pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel
-            let contacts = pose.cordContactPoints?[attachment.id] ?? attachment.contactPointsInModel
-            return (contacts + [terminal]).map { point in
-                transformPoint(
-                    transform,
-                    SIMD3<Float>(Float(point[0]), Float(point[1]), Float(point[2]))
-                )
+        func modelPoint(_ values: [Double]) -> SIMD3<Float> {
+            SIMD3<Float>(Float(values[0]), Float(values[1]), Float(values[2]))
+        }
+        // A real cord cannot pass through the board, so the span that is not
+        // hanging free is the shortest route around it. Solving that in model
+        // space keeps the board an axis-aligned box; the pose transform is rigid,
+        // so lengths are the same either way. The box is grown by the cord's own
+        // radius because the cord bends around the lip at its own thickness.
+        let cordMargin = Float(suspension.cord.radius) * 2 + additionalClearance + 0.002
+        let obstacleMinimum = minimum - SIMD3<Float>(repeating: cordMargin)
+        let obstacleMaximum = maximum + SIMD3<Float>(repeating: cordMargin)
+        // When both bores face the same way the board hangs with its cords in
+        // front of that face, so the convergence point belongs in the same plane.
+        // Leaving it in the board's mid-plane would force a taut cord to detour
+        // around the whole board to reach a hole on the face.
+        let boreAxes = suspension.attachments.compactMap { attachment -> SIMD3<Float>? in
+            guard let stubValues = attachment.contactPointsInModel.last else { return nil }
+            return normalized(
+                modelPoint(stubValues)
+                    - modelPoint(pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel)
+            )
+        }
+        if boreAxes.count == suspension.attachments.count,
+           let leading = boreAxes.first,
+           boreAxes.allSatisfy({ simd_dot($0, leading) > 0.9 }),
+           let sharedAxis = normalized(boreAxes.reduce(SIMD3<Float>.zero, +)) {
+            let anchorBefore = transformPoint(simd_inverse(transform), fixedAnchor)
+            let facePlane = simd_dot(sharedAxis, SIMD3<Float>(
+                sharedAxis.x >= 0 ? obstacleMaximum.x : obstacleMinimum.x,
+                sharedAxis.y >= 0 ? obstacleMaximum.y : obstacleMinimum.y,
+                sharedAxis.z >= 0 ? obstacleMaximum.z : obstacleMinimum.z
+            )) + 0.005
+            let shift = facePlane - simd_dot(sharedAxis, anchorBefore)
+            if shift > 0 {
+                fixedAnchor = transformPoint(transform, anchorBefore + sharedAxis * shift)
             }
+        }
+        // A pose can stand the board on end and leave both bores on one line below
+        // the convergence point. The board would swing until that point sat above
+        // it, so the pull stays centred; instead the farther cord runs a little
+        // proud of the nearer one, which is how two cords actually share a line.
+        let boreExits: [SIMD3<Float>] = suspension.attachments.compactMap { attachment in
+            guard let stubValues = attachment.contactPointsInModel.last else { return nil }
+            return transformPoint(transform, modelPoint(stubValues))
+        }
+        var trailingLead: Int?
+        if boreExits.count == 2,
+           let spread = normalized(boreExits[1] - boreExits[0]),
+           let toFirst = normalized(boreExits[0] - fixedAnchor),
+           abs(simd_dot(spread, toFirst)) > 0.985 {
+            let firstDistance = simd_length(boreExits[0] - fixedAnchor)
+            let secondDistance = simd_length(boreExits[1] - fixedAnchor)
+            trailingLead = firstDistance > secondDistance ? 0 : 1
+        }
+        let anchorInModel = transformPoint(simd_inverse(transform), fixedAnchor)
+        let transformedRoutes: [[SIMD3<Float>]] = try suspension.attachments.enumerated().map { index, attachment in
+            let terminal = modelPoint(pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel)
+            if let contacts = pose.cordContactPoints?[attachment.id] {
+                return (contacts.map(modelPoint) + [terminal]).map { transformPoint(transform, $0) }
+            }
+            guard let stubValues = attachment.contactPointsInModel.last else {
+                // Boards that publish a bare mouth with no approach stub keep the
+                // plain terminal route.
+                return [transformPoint(transform, terminal)]
+            }
+            let stub = modelPoint(stubValues)
+            guard let outward = normalized(stub - terminal) else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            // The cord leaves along the bore's own axis, far enough out to clear
+            // the board before the free span takes over.
+            let boreFace = SIMD3<Float>(
+                outward.x >= 0 ? obstacleMaximum.x : obstacleMinimum.x,
+                outward.y >= 0 ? obstacleMaximum.y : obstacleMinimum.y,
+                outward.z >= 0 ? obstacleMaximum.z : obstacleMinimum.z
+            )
+            let clearingStandoff = simd_dot(outward, boreFace) - simd_dot(outward, terminal) + 0.005
+            let sharedLineOffset: Float = index == trailingLead ? 0.012 : 0
+            let standoff = max(simd_length(stub - terminal), clearingStandoff) + sharedLineOffset
+            let exit = terminal + outward * standoff
+            let wraps = tautPath(
+                from: anchorInModel,
+                to: exit,
+                minimum: obstacleMinimum,
+                maximum: obstacleMaximum
+            )
+            return (wraps + [exit, terminal]).map { transformPoint(transform, $0) }
         }
         guard transformedRoutes.allSatisfy({ route in
                   !route.isEmpty
-                      && route.allSatisfy(\.allFinite)
-                      && zip(route, route.dropFirst()).allSatisfy({
-                          simd_length($0.1 - $0.0) > 1e-7
-                      })
+                        && route.allSatisfy(\.allFinite)
+                        && zip(route, route.dropFirst()).allSatisfy({
+                            simd_length($0.1 - $0.0) > 1e-7
+                        })
               }) else {
             throw SuspendedPresentationError.invalidPose
         }
@@ -198,7 +278,6 @@ enum SuspendedBoardPresentation {
             leads,
             requiredClearance: 2 * tubeRadius + additionalClearance
         )
-
         let framing = try makeCameraFraming(
             pose: pose,
             transform: transform,
@@ -216,9 +295,9 @@ enum SuspendedBoardPresentation {
             tubeRadius: tubeRadius,
             requiredClearance: tubeRadius + additionalClearance
         )
-    }
+}
 
-    static func solve(
+     static func solve(
         pose: BoardModelCanonicalPose,
         suspension: BoardModelTwoBranchSuspension,
         bounds: BoardModelBounds
@@ -499,6 +578,82 @@ enum SuspendedBoardPresentation {
             throw SuspendedPresentationError.invalidBounds
         }
         return (minimum, maximum)
+    }
+
+    /// True when the open segment passes through the box interior, so a cord
+    /// laid along it would be inside the board rather than around it.
+    private static func segmentEntersBox(
+        _ start: SIMD3<Float>,
+        _ end: SIMD3<Float>,
+        minimum: SIMD3<Float>,
+        maximum: SIMD3<Float>
+    ) -> Bool {
+        let delta = end - start
+        var entry: Float = 0
+        var exit: Float = 1
+        for axis in 0..<3 {
+            if abs(delta[axis]) < 1e-9 {
+                if start[axis] <= minimum[axis] || start[axis] >= maximum[axis] { return false }
+                continue
+            }
+            var near = (minimum[axis] - start[axis]) / delta[axis]
+            var far = (maximum[axis] - start[axis]) / delta[axis]
+            if near > far { swap(&near, &far) }
+            entry = max(entry, near)
+            exit = min(exit, far)
+            if entry >= exit { return false }
+        }
+        return exit - entry > 1e-5
+    }
+
+    /// Shortest cord route from `start` to `end` that stays out of the box. A
+    /// taut cord takes the shortest path it can reach, so the corners of the
+    /// obstacle are the only places it can bend.
+    private static func tautPath(
+        from start: SIMD3<Float>,
+        to end: SIMD3<Float>,
+        minimum: SIMD3<Float>,
+        maximum: SIMD3<Float>
+    ) -> [SIMD3<Float>] {
+        guard segmentEntersBox(start, end, minimum: minimum, maximum: maximum) else { return [] }
+        var nodes = [start, end]
+        for x in [minimum.x, maximum.x] {
+            for y in [minimum.y, maximum.y] {
+                for z in [minimum.z, maximum.z] {
+                    nodes.append(SIMD3<Float>(x, y, z))
+                }
+            }
+        }
+        var best = [Float](repeating: .greatestFiniteMagnitude, count: nodes.count)
+        var previous = [Int](repeating: -1, count: nodes.count)
+        var settled = [Bool](repeating: false, count: nodes.count)
+        best[0] = 0
+        while true {
+            var current = -1
+            for index in nodes.indices where !settled[index] {
+                if current < 0 || best[index] < best[current] { current = index }
+            }
+            guard current >= 0, best[current] < .greatestFiniteMagnitude, current != 1 else { break }
+            settled[current] = true
+            for next in nodes.indices where !settled[next] {
+                guard !segmentEntersBox(
+                    nodes[current], nodes[next], minimum: minimum, maximum: maximum
+                ) else { continue }
+                let candidate = best[current] + simd_length(nodes[next] - nodes[current])
+                if candidate < best[next] {
+                    best[next] = candidate
+                    previous[next] = current
+                }
+            }
+        }
+        guard best[1] < .greatestFiniteMagnitude else { return [] }
+        var route: [SIMD3<Float>] = []
+        var cursor = 1
+        while previous[cursor] > 0 {
+            cursor = previous[cursor]
+            route.append(nodes[cursor])
+        }
+        return route.reversed()
     }
 
     private static func transformPoint(

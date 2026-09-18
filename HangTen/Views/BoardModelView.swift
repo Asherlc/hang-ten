@@ -626,6 +626,7 @@ final class BoardModelScene {
             ?? orientation.map { Set($0.rotations.keys) }
             ?? []
         self.resourceLease = resourceLease
+
         self.geometryByNodeID = geometryByNodeID
         contactNodes = boundContactNodes
         contactIDsByNode = boundContactIDsByNode

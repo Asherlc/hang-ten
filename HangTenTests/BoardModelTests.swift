@@ -368,10 +368,17 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
-                let expectedSegmentCount = suspension.attachments.reduce(0) {
-                    $0 + SuspendedCordSolver.sampleCount - 1
-                        + (suspension.canonicalPoses[position.id]?.cordContactPoints?[$1.id]?.count ?? $1.contactPointsInModel.count)
+                let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
+                let solved = try BoardModelScene.solveSuspension(
+                    pose: pose,
+                    suspension: .pairedLeadCord(suspension),
+                    bounds: media.descriptor.modelBounds
+                )
+                let expectedSegmentCount: Int
+                guard case .pairedLead(let paired) = solved else {
+                    return XCTFail("\(boardID)/\(position.id) must solve a paired lead")
                 }
+                expectedSegmentCount = paired.leads.reduce(0) { $0 + $1.samples.count - 1 }
                 XCTAssertEqual(cord.childNodes.count, expectedSegmentCount, "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
@@ -417,7 +424,7 @@ final class BoardModelTests: XCTestCase {
             attachments: zip(profile.attachments, [-0.083, 0.083]).map { attachment, x in
                 BoardModelPairedLeadAttachment(id: attachment.id, nodeID: attachment.nodeID,
                     pointInModel: [x, 0, 0.012], provenance: "deliberately invalid former route")
-            }, anchor: profile.anchor, cord: profile.cord, canonicalPoses: profile.canonicalPoses
+            }, passages: profile.passages, anchor: profile.anchor, cord: profile.cord, canonicalPoses: profile.canonicalPoses
         )
         let sourceURL = repositoryRootURL().appendingPathComponent("Hangboards/lattice-mxedge-lift-large/assets/primary.usdz")
         let model = try XCTUnwrap(BoardModelScene(source: try SCNScene(url: sourceURL),
@@ -440,6 +447,10 @@ final class BoardModelTests: XCTestCase {
                     BoardModelPairedLeadAttachment(id: "left", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test"),
                     BoardModelPairedLeadAttachment(id: "right", nodeID: "Lead/Right", pointInModel: right, provenance: "test"),
                 ],
+                passages: BoardModelPassagePairs(
+                    left: [BoardModelPassage(id: "left-lip", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test")],
+                    right: [BoardModelPassage(id: "right-lip", nodeID: "Lead/Right", pointInModel: right, provenance: "test")]
+                ),
                 anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
                 cord: BoardModelCord(restLength: 2, radius: 0.01, material: "test-cord", provenance: "test"),
                 canonicalPoses: ["primary": selectedPose]
@@ -1133,7 +1144,20 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.select(positionID: "front"))
         XCTAssertFalse(model.isUnavailable)
         XCTAssertFalse(model.isTransientCordAccessible)
-        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
+        let pose = try XCTUnwrap(suspension.canonicalPoses["front"])
+        let solved = try BoardModelScene.solveSuspension(
+            pose: pose,
+            suspension: .pairedLeadCord(suspension),
+            bounds: media.descriptor.modelBounds
+        )
+        guard case .pairedLead(let paired) = solved else {
+            return XCTFail("nature.stone-hanger/front must solve a paired lead")
+        }
+        XCTAssertEqual(paired.leads.count, 2)
+        XCTAssertEqual(
+            model.transientCordNode?.childNodes.count,
+            paired.leads.reduce(0) { $0 + $1.samples.count - 1 }
+        )
     }
 
     func testNatureStoneHangerHighlightsNativeContactMaterialsAndClearsThem() async throws {
@@ -1581,6 +1605,10 @@ final class BoardModelTests: XCTestCase {
                 .init(id: "left", nodeID: "body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
                 .init(id: "right", nodeID: "body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
             ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "body", pointInModel: [0.2, 0.4, 0.1], provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")]
+            ),
             anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
             cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: ["primary": BoardModelCanonicalPose(
@@ -1658,6 +1686,10 @@ final class BoardModelTests: XCTestCase {
                 .init(id: "left", nodeID: "Body", pointInModel: [0.2, 0.4, 0.1], provenance: "test"),
                 .init(id: "right", nodeID: "Body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")
             ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "Body", pointInModel: [0.2, 0.4, 0.1], provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "Body", pointInModel: [0.8, 0.4, 0.1], provenance: "test")]
+            ),
             anchor: .init(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
             cord: .init(restLength: 2, radius: 0.01, material: "test", provenance: "test"),
             canonicalPoses: ["primary": BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1))]

@@ -447,6 +447,7 @@ class BoardModelPairedLeadAttachment:
 @dataclass(frozen=True)
 class BoardModelPairedLeadCord:
     attachments: tuple[BoardModelPairedLeadAttachment, BoardModelPairedLeadAttachment]
+    passages: BoardModelPassagePairs
     anchor: BoardModelInvisibleAnchor
     cord: BoardModelCord
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
@@ -760,9 +761,9 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         )
 
     if suspension_type == "pairedLeadCord":
-        _closed(payload, {"type", "attachments", "anchor", "cord", "canonicalPoses"}, source)
+        _closed(payload, {"type", "attachments", "passages", "anchor", "cord", "canonicalPoses"}, source)
         _canonical_member_order(
-            payload, ("type", "attachments", "anchor", "cord", "canonicalPoses"), source
+            payload, ("type", "attachments", "passages", "anchor", "cord", "canonicalPoses"), source
         )
         attachments_source = f"{source}.attachments"
         attachments_value = payload["attachments"]
@@ -821,6 +822,41 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
         )
         anchor = _load_model_anchor(anchor_payload, anchor_source)
+        passages_source = f"{source}.passages"
+        passages_payload = _mapping(payload["passages"], passages_source)
+        _closed(passages_payload, {"left", "right"}, passages_source)
+        _canonical_member_order(passages_payload, ("left", "right"), passages_source)
+
+        def load_passage_list(key: str, side: str) -> tuple[BoardModelPassage, ...]:
+            side_source = f"{passages_source}.{key}"
+            raw_list = passages_payload[key]
+            if not isinstance(raw_list, list) or len(raw_list) != 1:
+                raise ValueError(f"{side_source} must contain exactly one passage")
+            item = _mapping(raw_list[0], f"{side_source}[0]")
+            _closed(
+                item, {"id", "nodeID", "pointInModel", "provenance"}, f"{side_source}[0]"
+            )
+            _canonical_member_order(
+                item, ("id", "nodeID", "pointInModel", "provenance"), f"{side_source}[0]"
+            )
+            passage_id = _identifier(item["id"], f"{side_source}[0].id")
+            node_id = _string(item["nodeID"], f"{side_source}[0].nodeID")
+            point = _finite_vector3(item["pointInModel"], f"{side_source}[0].pointInModel")
+            provenance = _string(item["provenance"], f"{side_source}[0].provenance")
+            return (BoardModelPassage(
+                passage_id,
+                node_id,
+                point,
+                point,
+                provenance,
+                False,
+            ),)
+
+        left_passages = load_passage_list("left", "left")
+        right_passages = load_passage_list("right", "right")
+        if left_passages[0].id == right_passages[0].id:
+            raise ValueError(f"{passages_source} left and right passage IDs must be distinct")
+
         cord_source = f"{source}.cord"
         cord_payload = _mapping(payload["cord"], cord_source)
         _closed(cord_payload, {"restLength", "radius", "material", "provenance"}, cord_source)
@@ -835,6 +871,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         )
         return BoardModelPairedLeadCord(
             (attachments[0], attachments[1]),
+            BoardModelPassagePairs(left_passages, right_passages),
             anchor,
             cord,
             _load_model_poses(

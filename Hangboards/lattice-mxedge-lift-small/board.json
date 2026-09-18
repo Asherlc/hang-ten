@@ -66,6 +66,32 @@
               "provenance": "Lattice MXS-Front.jpg; displayEstimate; upper right external mouth, opposite lower mouth when inverted; interior omitted"
             }
           ],
+          "passages": {
+            "left": [
+              {
+                "id": "left-lip-mouth",
+                "nodeID": "Body_actual_surface_001",
+                "pointInModel": [
+                  -0.068,
+                  0.048999998,
+                  0
+                ],
+                "provenance": "Lattice MXS-Front.jpg; displayEstimate; upper left external mouth"
+              }
+            ],
+            "right": [
+              {
+                "id": "right-lip-mouth",
+                "nodeID": "Body_actual_surface_001",
+                "pointInModel": [
+                  0.068,
+                  0.048999998,
+                  0
+                ],
+                "provenance": "Lattice MXS-Front.jpg; displayEstimate; upper right external mouth"
+              }
+            ]
+          },
           "anchor": {
             "offsetFromBoardBounds": [
               0,

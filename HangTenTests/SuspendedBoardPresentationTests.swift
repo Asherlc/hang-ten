@@ -97,6 +97,10 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                 BoardModelPairedLeadAttachment(id: "left", nodeID: "left-attachment", pointInModel: left, provenance: "test", contactPointsInModel: leftContacts),
                 BoardModelPairedLeadAttachment(id: "right", nodeID: "right-attachment", pointInModel: right, provenance: "test", contactPointsInModel: rightContacts),
             ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "left-attachment", pointInModel: left, provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "right-attachment", pointInModel: right, provenance: "test")]
+            ),
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: anchor),
             cord: BoardModelCord(restLength: restLength, radius: radius, material: "test-cord", provenance: "test"),
             canonicalPoses: canonicalPoses
@@ -187,7 +191,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertTrue(result.leads.flatMap(\.centerlineSamples).allSatisfy { result.cameraFraming.contains($0) })
     }
 
-    func testPairedLeadPreservesOrderedOverLipRouteContacts() throws {
+    func testPairedLeadExitsAlongBoreAxisToTheDeclaredTerminal() throws {
         let leftContacts = [[-0.6, 0.5, 0.1], [-0.6, 0.35, 0.05]]
         let rightContacts = [[0.6, 0.5, 0.1], [0.6, 0.35, 0.05]]
         let profile = pairedLeadSuspension(
@@ -205,20 +209,21 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
 
         for (lead, attachment) in zip(result.leads, profile.attachments) {
-            let expectedRoute = attachment.contactPointsInModel.map {
-                SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2]))
-            } + [SIMD3<Float>(
+            let terminal = SIMD3<Float>(
                 Float(attachment.pointInModel[0]),
                 Float(attachment.pointInModel[1]),
                 Float(attachment.pointInModel[2])
-            )]
-            var previousIndex = -1
-            for point in expectedRoute {
-                let index = try XCTUnwrap(lead.samples.firstIndex(of: point))
-                XCTAssertGreaterThan(index, previousIndex)
-                previousIndex = index
-            }
-            XCTAssertEqual(lead.samples.last, expectedRoute.last)
+            )
+            let stubValues = try XCTUnwrap(attachment.contactPointsInModel.last)
+            let stub = SIMD3<Float>(Float(stubValues[0]), Float(stubValues[1]), Float(stubValues[2]))
+            XCTAssertEqual(lead.samples.first, result.fixedAnchor)
+            XCTAssertEqual(lead.samples.last, terminal)
+            let exit = lead.samples[lead.samples.count - 2]
+            XCTAssertGreaterThan(
+                simd_dot(simd_normalize(exit - terminal), simd_normalize(stub - terminal)),
+                0.99
+            )
+            XCTAssertGreaterThanOrEqual(simd_length(exit - terminal), simd_length(stub - terminal))
             XCTAssertLessThanOrEqual(lead.arcLength, 2.5 + SuspendedCordSolver.tautTolerance)
         }
     }

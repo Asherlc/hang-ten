@@ -65,6 +65,32 @@
               "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper right external mouth, opposite lower mouth when inverted; interior omitted"
             }
           ],
+          "passages": {
+            "left": [
+              {
+                "id": "left-lip-mouth",
+                "nodeID": "MXL_body_editable_skin_001",
+                "pointInModel": [
+                  -0.068,
+                  0.048999998,
+                  0
+                ],
+                "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper left lip mouth"
+              }
+            ],
+            "right": [
+              {
+                "id": "right-lip-mouth",
+                "nodeID": "MXL_body_editable_skin_001",
+                "pointInModel": [
+                  0.068,
+                  0.048999998,
+                  0
+                ],
+                "provenance": "Lattice MXL-Front.jpg; displayEstimate; upper right lip mouth"
+              }
+            ]
+          },
           "anchor": {
             "offsetFromBoardBounds": [
               0,

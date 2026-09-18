@@ -111,7 +111,7 @@ def _write_shared_model_parser_parity_package(
         canonical = json.dumps(suspension, separators=(",", ":"))
         reordered = {
             key: suspension[key]
-            for key in ("anchor", "attachments", "canonicalPoses", "cord", "type")
+            for key in ("anchor", "attachments", "passages", "canonicalPoses", "cord", "type")
         }
         board_json = board_json.replace(
             '"suspension":' + canonical,
@@ -592,6 +592,18 @@ def test_v2_rejects_incomplete_or_degenerate_pose_contact_routes(tmp_path: Path,
         }],
     })
     with pytest.raises(ValueError, match="cordContactPoints|distinct"):
+        load_board_catalog_module().load_board_package(package)
+
+
+def test_v2_paired_leads_reject_duplicate_passage_ids(tmp_path: Path) -> None:
+    package = _write_shared_model_parser_parity_package(tmp_path, {
+        "base": "pairedLeadCordModel", "mutations": [{
+            "target": "board", "op": "replace",
+            "path": ["presentations", 0, "media", "suspension", "passages", "right", 0, "id"],
+            "value": "left-lip",
+        }],
+    })
+    with pytest.raises(ValueError, match="passage IDs must be distinct"):
         load_board_catalog_module().load_board_package(package)
 
 
