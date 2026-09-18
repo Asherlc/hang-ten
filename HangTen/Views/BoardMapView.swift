@@ -369,9 +369,7 @@ struct BoardDetailMapView: View {
                 )
             }
         }
-        .aspectRatio(map.presentation.aspectRatio(for: BoardMapPresentationSelection.resolvePositionID(
-            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
-        )), contentMode: .fit)
+        .aspectRatio(board.aspectRatio, contentMode: .fit)
         .accessibilityIdentifier("boardDetail.map")
     }
 
@@ -571,7 +569,7 @@ struct BoardMapView: View {
                     )
                 }
             }
-            .aspectRatio(content.presentation.aspectRatio(for: selectedPositionID), contentMode: .fit)
+            .aspectRatio(board.aspectRatio, contentMode: .fit)
         }
         .animation(.easeInOut(duration: 0.18), value: highlightedHoldIDs)
         .onChange(of: highlightedHoldIDs) { previousHoldIDs, holdIDs in
