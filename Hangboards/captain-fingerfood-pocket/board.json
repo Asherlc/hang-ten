@@ -56,7 +56,7 @@
             ]
           },
           "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
-          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood POCKET Lines product page publishes total rope length 1 m; 0.27 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
+          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood POCKET Lines product page publishes total rope length 1 m; 0.4 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
           "canonicalPoses": {
             "edge-20-front": {"rotation": [0.199367862, 0, 0, 0.979924719], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "edge-15-inverted": {"rotation": [9e-9, 0.199367862, -0.979924719, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},

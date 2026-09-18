@@ -368,10 +368,17 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isUnavailable, "\(boardID)/\(position.id)")
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
-                let expectedSegmentCount = suspension.attachments.reduce(0) {
-                    $0 + SuspendedCordSolver.sampleCount - 1
-                        + (suspension.canonicalPoses[position.id]?.cordContactPoints?[$1.id]?.count ?? $1.contactPointsInModel.count)
+                let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
+                let solved = try BoardModelScene.solveSuspension(
+                    pose: pose,
+                    suspension: .pairedLeadCord(suspension),
+                    bounds: media.descriptor.modelBounds
+                )
+                let expectedSegmentCount: Int
+                guard case .pairedLead(let paired) = solved else {
+                    return XCTFail("\(boardID)/\(position.id) must solve a paired lead")
                 }
+                expectedSegmentCount = paired.leads.reduce(0) { $0 + $1.samples.count - 1 }
                 XCTAssertEqual(cord.childNodes.count, expectedSegmentCount, "\(boardID)/\(position.id)")
                 XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory, "\(boardID)/\(position.id)")
                 XCTAssertTrue(cord.childNodes.allSatisfy { node in
@@ -1127,7 +1134,20 @@ final class BoardModelTests: XCTestCase {
         XCTAssertTrue(model.select(positionID: "front"))
         XCTAssertFalse(model.isUnavailable)
         XCTAssertFalse(model.isTransientCordAccessible)
-        XCTAssertEqual(model.transientCordNode?.childNodes.count, 2 * (SuspendedCordSolver.sampleCount - 1))
+        let pose = try XCTUnwrap(suspension.canonicalPoses["front"])
+        let solved = try BoardModelScene.solveSuspension(
+            pose: pose,
+            suspension: .pairedLeadCord(suspension),
+            bounds: media.descriptor.modelBounds
+        )
+        guard case .pairedLead(let paired) = solved else {
+            return XCTFail("nature.stone-hanger/front must solve a paired lead")
+        }
+        XCTAssertEqual(paired.leads.count, 2)
+        XCTAssertEqual(
+            model.transientCordNode?.childNodes.count,
+            paired.leads.reduce(0) { $0 + $1.samples.count - 1 }
+        )
     }
 
     func testNatureStoneHangerHighlightsNativeContactMaterialsAndClearsThem() async throws {

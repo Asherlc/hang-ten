@@ -56,7 +56,7 @@
             ]
           },
           "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
-          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood DUAL product page publishes total rope length 1 m; 0.275 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
+          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood DUAL product page publishes total rope length 1 m; 0.4 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
           "canonicalPoses": {
             "curved-lip-front": {"rotation": [0.173648148, 0, 0, 0.984807758], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "exterior-jug-back": {"rotation": [-0.984807767, 0, 0, 0.1736481], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
