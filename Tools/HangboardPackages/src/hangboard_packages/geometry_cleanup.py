@@ -372,40 +372,30 @@ def clean_board_geometry(board_path: Path, dry_run: bool = False) -> dict[str, A
                         match = analyze_path_for_shape_constraint(path, NormalizedFrame.from_json(frame, "frame"))
                         if match and match.confidence > 0.9:
                             # Replace with shape constraint
-                            # Schema only allows "roundedRect" or "path" for shape type
-                            # shapeConstraint uses: "oval", "circle", "pill", "roundedRectangle", "rectangle"
-                            # Pills and circles become roundedRect with appropriate corner radius
+                            # Derive tight frame from the original path BEFORE
+                            # replacing the shape, so the replacement doesn't
+                            # expand to fill the old (possibly larger) frame.
+                            tight_frame, _ = shape_for_path(path, width, height)
+
                             constraint_shape = match.constraint_type
                             if match.constraint_type in ("pill", "circle"):
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.5}
-                                new_path = display_path_for_shape(
-                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
-                                )
-                                new_frame = normalized_frame_for_path(new_path, width, height)
-                                piece["frame"] = new_frame.to_json()
+                                piece["frame"] = tight_frame.to_json()
                             elif match.constraint_type == "oval":
                                 # Keep oval as a path — roundedRect cannot
                                 # represent continuous ellipse curvature.
-                                # Derive tight frame from the original path.
+                                # Use shape_for_path for consistent frame+shape.
                                 new_frame, new_shape = shape_for_path(path, width, height)
                                 piece["frame"] = new_frame.to_json()
                                 piece["shape"] = new_shape
                             elif match.constraint_type == "rectangle":
                                 piece["shape"] = {"type": "roundedRect", "cornerRadiusFraction": 0.0}
-                                new_path = display_path_for_shape(
-                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
-                                )
-                                new_frame = normalized_frame_for_path(new_path, width, height)
-                                piece["frame"] = new_frame.to_json()
+                                piece["frame"] = tight_frame.to_json()
                             else:
                                 piece["shape"] = {"type": match.constraint_type}
                                 if match.corner_radius_fraction is not None:
                                     piece["shape"]["cornerRadiusFraction"] = round(match.corner_radius_fraction, 3)
-                                new_path = display_path_for_shape(
-                                    frame, piece["shape"], width, height, label=f"contact {contact_id}[{piece_index}]"
-                                )
-                                new_frame = normalized_frame_for_path(new_path, width, height)
-                                piece["frame"] = new_frame.to_json()
+                                piece["frame"] = tight_frame.to_json()
 
                             # Map shape type to constraint shape name
                             if match.constraint_type == "roundedRect":
