@@ -216,21 +216,21 @@
           "canonicalPoses": {
             "three-edge-upright": {
               "rotation": [
-                0,
-                0,
-                0,
-                1
-              ],
-              "translation": [
+                1,
                 0,
                 0,
                 0
+              ],
+              "translation": [
+                0,
+                0.075999998,
+                0.075999998
               ],
               "camera": {
                 "viewDirection": [
                   0,
                   0,
-                  -1
+                  1
                 ],
                 "fitPadding": 0.1
               }
@@ -258,21 +258,21 @@
             },
             "two-edge-upright": {
               "rotation": [
-                1,
                 0,
                 0,
-                0
+                0,
+                1
               ],
               "translation": [
                 0,
-                0.075999998,
-                0.075999998
+                0,
+                0
               ],
               "camera": {
                 "viewDirection": [
                   0,
                   0,
-                  1
+                  -1
                 ],
                 "fitPadding": 0.1
               }
