@@ -1718,8 +1718,7 @@ struct WorkoutView: View {
     }
 
     private var boardIsOneHanded: Bool {
-        !board.contacts.isEmpty &&
-        board.contacts.allSatisfy { $0.handCapacity == 1 }
+        board.isOneHanded
     }
 
     private var planNeedsHandChoice: Bool {
@@ -1736,7 +1735,8 @@ struct WorkoutView: View {
 				let step = step(at: elapsed)
 				let presentedStep = WorkoutLiveStepResolver.materialized(
 					step,
-					selectedHandSide: selectedHandSide
+					selectedHandSide: selectedHandSide,
+					boardIsOneHanded: boardIsOneHanded
 				)
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: monotonicTime)
@@ -1753,7 +1753,7 @@ struct WorkoutView: View {
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
 				let resolvedHighlightedStep = highlightedStep.map {
-					WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide)
+					WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded)
 				}
 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
@@ -1862,7 +1862,8 @@ struct WorkoutView: View {
 					WorkoutStepPickerView(
 						plan: plan,
 						currentStepID: step.id,
-						selectedHandSide: selectedHandSide
+						selectedHandSide: selectedHandSide,
+						boardIsOneHanded: boardIsOneHanded
 					) { selectedStep in
 						jump(to: selectedStep)
 					}
@@ -3068,8 +3069,9 @@ struct WorkoutView: View {
 				sampleCount: 0,
 				status: .unmeasured
 			)
-			let resolvedHandUse: WorkoutHandUse = step.handUse == .either ? .single : step.handUse
-			let resolvedSide: WorkoutSide = step.handUse == .either ? (selectedHandSide ?? .both) : step.side
+			let needsResolvedHandChoice = step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
+			let resolvedHandUse: WorkoutHandUse = needsResolvedHandChoice ? .single : step.handUse
+			let resolvedSide: WorkoutSide = needsResolvedHandChoice ? (selectedHandSide ?? .both) : step.side
 			return WorkoutStepMeasurement(
 				stepID: measurement.stepID,
 				plannedActiveDuration: measurement.plannedActiveDuration,

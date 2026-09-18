@@ -319,9 +319,9 @@ final class AppStore: ObservableObject {
     }
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
-        if step.handUse == .either {
+        if step.handUse == .either || (step.handUse == .double && board.isOneHanded) {
             return Set([WorkoutSide.left, .right].flatMap { side in
-                step.resolvingEitherHand(selectedHandSide: side).flatMap {
+                step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded).flatMap {
                     try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)
                 } ?? []
             })
@@ -332,9 +332,9 @@ final class AppStore: ObservableObject {
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
             return step.targets.contains { target in
-                if step.handUse == .either {
+                if step.handUse == .either || (step.handUse == .double && board.isOneHanded) {
                     return [WorkoutSide.left, .right].contains { side in
-                        guard let resolved = step.resolvingEitherHand(selectedHandSide: side) else {
+                        guard let resolved = step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded) else {
                             return true
                         }
                         return (try? ContactResolver.resolve(target, step: resolved, board: board)) == nil

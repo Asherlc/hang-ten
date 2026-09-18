@@ -96,6 +96,27 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testLivePresentationResolvesBilateralStepsOnAOneHandedBoard() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang, targets: [], handUse: .double,
+            side: .both
+        )
+
+        let resolved = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .right,
+            boardIsOneHanded: true
+        )
+        XCTAssertEqual(resolved.handUse, .single)
+        XCTAssertEqual(resolved.side, .right)
+
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(bilateral, selectedHandSide: nil, boardIsOneHanded: true),
+            bilateral
+        )
+    }
+
     func testHandCuePolicyHidesOppositeCueAfterEitherHandMaterializes() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",

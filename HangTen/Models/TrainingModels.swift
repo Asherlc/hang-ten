@@ -1173,6 +1173,30 @@ struct BoardRevision: Identifiable, Hashable {
         presentations.first(where: \.isDefault) ?? presentations[0]
     }
 
+    /// True when every physical contact on this board fits only one hand AND
+    /// no two contacts share the same hold-defining properties (kind, shape,
+    /// depth, finger capacity, hand capacity). That second check matters:
+    /// some boards represent a single two-hand edge as a mirrored pair of
+    /// handCapacity-1 contacts (see `ContactResolver.outermostPair`), and a
+    /// bilateral hang is still possible on those. Only when no such pair
+    /// exists can a prescription (however authored) never be performed with
+    /// both hands at once on this board.
+    var isOneHanded: Bool {
+        guard !contacts.isEmpty, contacts.allSatisfy({ $0.handCapacity == 1 }) else {
+            return false
+        }
+        return !contacts.contains { contact in
+            contacts.contains { other in
+                other.id != contact.id
+                    && other.kind == contact.kind
+                    && other.shape == contact.shape
+                    && other.depth == contact.depth
+                    && other.fingerCapacity == contact.fingerCapacity
+                    && other.handCapacity == contact.handCapacity
+            }
+        }
+    }
+
     func presentation(id: String?) -> BoardPresentation? {
         guard let id else { return nil }
         return presentations.first { $0.id == id }
@@ -1515,8 +1539,13 @@ struct WorkoutStep: Identifiable, Hashable {
 
     /// Materializes an athlete's start-of-session hand choice for downstream
     /// board resolution, highlighting, and activity recording.
-    func resolvingEitherHand(selectedHandSide: WorkoutSide?) -> WorkoutStep? {
-        guard handUse == .either else { return self }
+    ///
+    /// `boardIsOneHanded` forces this resolution for `.double` steps too:
+    /// a board where every contact only fits one hand can never actually
+    /// perform a bilateral prescription, regardless of how the step was
+    /// authored.
+    func resolvingEitherHand(selectedHandSide: WorkoutSide?, boardIsOneHanded: Bool = false) -> WorkoutStep? {
+        guard handUse == .either || (handUse == .double && boardIsOneHanded) else { return self }
         guard selectedHandSide == .left || selectedHandSide == .right else {
             return nil
         }
