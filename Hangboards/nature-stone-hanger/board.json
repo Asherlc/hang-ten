@@ -38,7 +38,7 @@
         "cord": {"restLength": 0.55, "radius": 0.002, "material": "matteCord", "provenance": "displayEstimate; supplied cord diameter"},
         "canonicalPoses": {
           "front": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-          "reverse": {"rotation": [0, 1, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+          "reverse": {"rotation": [0, 1, 0, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, 1], "fitPadding": 0.1}}
         }
       }
     }
