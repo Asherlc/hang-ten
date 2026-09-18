@@ -1525,21 +1525,6 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testModelSurfaceUnavailableStateNeverPermitsContactSelection() {
-        XCTAssertFalse(BoardModelSurface.permitsContactSelection(
-            for: .unavailable,
-            onContactTap: { _ in }
-        ))
-        XCTAssertFalse(BoardModelSurface.permitsContactSelection(
-            for: .loading,
-            onContactTap: { _ in }
-        ))
-        XCTAssertTrue(BoardModelSurface.permitsContactSelection(
-            for: .ready,
-            onContactTap: { _ in }
-        ))
-    }
-
     func testModelAccessibilityEnumeratesOnlyDescriptorBoundContacts() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, contactID: nil),

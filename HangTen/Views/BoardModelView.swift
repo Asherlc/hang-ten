@@ -386,19 +386,6 @@ struct BoardModelSurface: View {
         self.onContactTap = onContactTap
     }
 
-    enum DisplayState: Equatable {
-        case loading
-        case ready
-        case unavailable
-    }
-
-    static func permitsContactSelection(
-        for state: DisplayState,
-        onContactTap: ((PhysicalContact) -> Void)?
-    ) -> Bool {
-        state == .ready && onContactTap != nil
-    }
-
     var body: some View {
         Group {
             if case .ready(let model) = result {
@@ -413,7 +400,7 @@ struct BoardModelSurface: View {
                     onUnavailable: { result = .unavailable }
                 )
                 .accessibilityIdentifier("boardModel.3d")
-                .allowsHitTesting(Self.permitsContactSelection(for: .ready, onContactTap: onContactTap))
+                .allowsHitTesting(true)
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
                     ProgressView()
@@ -1876,7 +1863,9 @@ private struct BoardModelView: UIViewRepresentable {
         view.positionID = positionID
         view.delegate = view
         view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:))))
-        view.addGestureRecognizer(UIPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:))))
+        let orbitPan = UIPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:)))
+        orbitPan.delegate = view.orbitGestureDelegate
+        view.addGestureRecognizer(orbitPan)
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
         view.selectPositionIfNeeded()
         return view
@@ -1890,7 +1879,7 @@ private struct BoardModelView: UIViewRepresentable {
         view.onContactTap = onContactTap
         view.onUnavailable = onUnavailable
         view.highlightedContactIDs = highlightedContactIDs
-        view.isUserInteractionEnabled = onContactTap != nil
+        view.isUserInteractionEnabled = true
         view.needsAccessibilityProjection = true
         view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
@@ -1925,6 +1914,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var onUnavailable: (() -> Void)?
     var positionID: String?
     var needsAccessibilityProjection = true
+    let orbitGestureDelegate = OrbitPanGestureDelegate()
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
 
