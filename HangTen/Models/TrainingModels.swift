@@ -1203,7 +1203,12 @@ struct BoardRevision: Identifiable, Hashable {
         let rightmost = sorted.last!
         guard leftmost.0.id != rightmost.0.id,
               leftmost.1 < 0.5,
-              rightmost.1 > 0.5 else { return true }
+              rightmost.1 > 0.5,
+              leftmost.0.kind == rightmost.0.kind,
+              leftmost.0.shape == rightmost.0.shape,
+              leftmost.0.depth == rightmost.0.depth,
+              leftmost.0.fingerCapacity == rightmost.0.fingerCapacity,
+              leftmost.0.handCapacity == rightmost.0.handCapacity else { return true }
         return false
     }
 
