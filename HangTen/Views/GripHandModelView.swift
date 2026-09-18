@@ -54,7 +54,8 @@ struct GripHandModelView: UIViewRepresentable {
         view.accessibilityElementsHidden = true
         context.coordinator.install(in: view)
         view.didResize = { [weak coordinator = context.coordinator] in coordinator?.resetCamera() }
-        view.onPan = { [weak coordinator = context.coordinator] recognizer in
+        view.onPan = { [weak coordinator = context.coordinator, weak view] recognizer in
+            guard let view else { return }
             coordinator?.orbitPan(recognizer, in: view)
         }
         view.onPinch = { [weak coordinator = context.coordinator] recognizer in

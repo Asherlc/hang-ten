@@ -1963,14 +1963,14 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     }
 
     @objc func selectContact(_ recognizer: UITapGestureRecognizer) {
+        guard let model, onContactTap != nil else { return }
         // CPU-only nearest-hit regressions require this commit before SceneKit
         // traverses newly cloned geometry.
         SCNTransaction.flush()
-        guard let model,
-              let hit = hitTest(recognizer.location(in: self), options: [
-                  SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
-                  SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
-              ]).first,
+        guard let hit = hitTest(recognizer.location(in: self), options: [
+            SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+            SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
+        ]).first,
               let id = model.contactID(for: hit.node),
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)
