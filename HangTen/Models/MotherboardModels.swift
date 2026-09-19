@@ -92,6 +92,24 @@ struct WorkoutInitialWeightConfiguration: Equatable {
     }
 }
 
+/// A presentation accepts its result once, then hands it off after dismissal.
+struct WorkoutInitialWeightHandoff {
+    private var didAccept = false
+    private var pendingConfiguration: WorkoutInitialWeightConfiguration?
+
+    mutating func accept(_ configuration: WorkoutInitialWeightConfiguration) -> Bool {
+        guard !didAccept else { return false }
+        didAccept = true
+        pendingConfiguration = configuration
+        return true
+    }
+
+    mutating func consume() -> WorkoutInitialWeightConfiguration? {
+        defer { pendingConfiguration = nil }
+        return pendingConfiguration
+    }
+}
+
 struct MotherboardMeasurement: Codable, Equatable {
     let timestamp: Date
     let sampleNumber: UInt16
