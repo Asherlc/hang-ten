@@ -288,7 +288,7 @@ private final class GripHandSceneView: SCNView {
     }
 
     func installOrbitGestures() {
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        let pan = OrbitPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         pan.delegate = orbitGestureDelegate
         addGestureRecognizer(pan)
         addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:))))

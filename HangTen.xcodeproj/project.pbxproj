@@ -154,6 +154,7 @@
 		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
 		AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000004 /* GripHandOrbitTests.swift */; };
+		AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
 		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
@@ -252,6 +253,7 @@
 		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
 		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
 		AD0000000000000000000004 /* GripHandOrbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandOrbitTests.swift; sourceTree = "<group>"; };
+		AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanArbitrationTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
 				AD0000000000000000000004 /* GripHandOrbitTests.swift */,
+				AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */,
 				BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */,
 			);
 			path = HangTenTests;
@@ -973,6 +976,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
 				AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */,
 				AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */,
+				AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
