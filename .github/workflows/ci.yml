@@ -447,7 +447,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-paywall:
     name: "Test (iOS Simulator: HangTenUITests / paywall)"
@@ -539,7 +539,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-boards:
     name: "Test (iOS Simulator: HangTenUITests / boards)"
@@ -637,7 +637,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-boards-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-boards-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui:
     # Keep this stable: branch ruleset "Main" requires this exact check name.

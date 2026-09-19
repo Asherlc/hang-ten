@@ -159,9 +159,8 @@ run_xctest_attempt() {
   attempt_deadline=$((SECONDS + XCTEST_ATTEMPT_TIMEOUT_SECONDS))
 
   if [[ "$attempt" -eq 1 ]]; then
-    if ! run_xcodebuild_with_watchdog "$attempt" "build-for-testing" "build-for-testing"; then
-      return $?
-    fi
+    run_xcodebuild_with_watchdog "$attempt" "build-for-testing" "build-for-testing" \
+      || return $?
     built_for_testing_ok=1
     run_xcodebuild_with_watchdog "$attempt" "test-without-building" "test-without-building" "$result_bundle" \
       || return $?

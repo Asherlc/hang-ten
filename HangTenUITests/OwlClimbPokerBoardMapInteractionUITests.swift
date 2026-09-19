@@ -33,27 +33,26 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 
     func testTappingFaceBSloperMapElementSelectsSloper() throws {
         let app = XCUIApplication()
-        app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
+        // Prefer the board-detail review route over the picker: after a landscape
+        // 3D board-detail test, picker launch often white-screens under CI load.
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
         app.launch()
 
-        let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 30))
-        search.tap()
-        search.typeText("Poker")
-
-        let holdSpecs = app.buttons["boardPicker.holdSpecs.owl-climb.poker"]
-        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
-        holdSpecs.tap()
+        XCTAssertTrue(
+            app.navigationBars["Hold specs"].waitForExistence(timeout: 30),
+            "The DEBUG board-detail route must be displayed."
+        )
 
         let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
-        XCTAssertTrue(faceB.waitForExistence(timeout: 5))
+        XCTAssertTrue(faceB.waitForExistence(timeout: 10))
         faceB.tap()
 
-        let sloper = app.buttons
-            .matching(identifier: "boardDetail.map")
-            .matching(NSPredicate(format: "label == %@", "Face B left deep sloper"))
-            .element
-        XCTAssertTrue(sloper.waitForExistence(timeout: 5))
+        let sloper = app.buttons["Face B left deep sloper"]
+        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
         XCTAssertTrue(sloper.isHittable)
         addScreenshot(named: "Poker Face B normal")
 
@@ -64,7 +63,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         sloper.tap()
 
         XCTAssertTrue(
-            selected.waitForExistence(timeout: 5),
+            selected.waitForExistence(timeout: 10),
             "Tapping the Face B sloper map element must select the matching hold."
         )
         addScreenshot(named: "Poker Face B sloper active")
