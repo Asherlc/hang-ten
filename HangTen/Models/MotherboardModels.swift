@@ -58,6 +58,40 @@ enum WorkoutLoadAdjustmentDisplayUnit: String, CaseIterable, Codable, Identifiab
     }
 }
 
+enum WorkoutInitialWeightSource: String, CaseIterable, Codable, Identifiable {
+    case sensor
+    case manual
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .sensor: "Sensor"
+        case .manual: "Manual"
+        }
+    }
+}
+
+struct WorkoutInitialWeightConfiguration: Equatable {
+    let source: WorkoutInitialWeightSource
+    let manualWeightKGF: Double?
+    let manualWeightIncludesBodyweight: Bool
+
+    static let sensor = WorkoutInitialWeightConfiguration(
+        source: .sensor,
+        manualWeightKGF: nil,
+        manualWeightIncludesBodyweight: false
+    )
+
+    static func manual(weightKGF: Double, includesBodyweight: Bool) -> WorkoutInitialWeightConfiguration {
+        WorkoutInitialWeightConfiguration(
+            source: .manual,
+            manualWeightKGF: weightKGF.isFinite ? max(0, weightKGF) : 0,
+            manualWeightIncludesBodyweight: includesBodyweight
+        )
+    }
+}
+
 struct MotherboardMeasurement: Codable, Equatable {
     let timestamp: Date
     let sampleNumber: UInt16
@@ -377,6 +411,9 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     let stepTitles: [String]
     let forceSensorProfile: ForceSensorProfile
     let bodyweightKGF: Double?
+    let initialWeightSource: WorkoutInitialWeightSource
+    let manualWeightKGF: Double?
+    let manualWeightIncludesBodyweight: Bool
     let loadAdjustmentKGF: Double
     let loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit
     let motherboardMeasurements: [MotherboardMeasurement]
@@ -385,6 +422,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     private enum CodingKeys: String, CodingKey {
         case id, planID, planTitle, recordedAt, startDate, endDate
         case motherboardIdentifier, batteryValue, steps, stepTitles, forceSensorProfile, bodyweightKGF
+        case initialWeightSource, manualWeightKGF, manualWeightIncludesBodyweight
         case loadAdjustmentKGF
         case loadAdjustmentDisplayUnit
         case motherboardMeasurements, motherboardMeasurementsTruncated
@@ -403,6 +441,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         stepTitles: [String] = [],
         forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
+        initialWeight: WorkoutInitialWeightConfiguration = .sensor,
         loadAdjustmentKGF: Double = 0,
         loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms,
         motherboardMeasurements: [MotherboardMeasurement] = [],
@@ -420,6 +459,9 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         self.stepTitles = stepTitles
         self.forceSensorProfile = forceSensorProfile
         self.bodyweightKGF = bodyweightKGF
+        initialWeightSource = initialWeight.source
+        manualWeightKGF = initialWeight.manualWeightKGF
+        manualWeightIncludesBodyweight = initialWeight.manualWeightIncludesBodyweight
         self.loadAdjustmentKGF = Self.normalizedLoadAdjustment(loadAdjustmentKGF)
         self.loadAdjustmentDisplayUnit = loadAdjustmentDisplayUnit
         self.motherboardMeasurements = motherboardMeasurements
@@ -432,6 +474,45 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
             return "Step \(index + 1)"
         }
         return stepTitles[index]
+    }
+
+    var initialWeight: WorkoutInitialWeightConfiguration {
+        guard initialWeightSource == .manual,
+              let manualWeightKGF else {
+            return .sensor
+        }
+        return .manual(
+            weightKGF: manualWeightKGF,
+            includesBodyweight: manualWeightIncludesBodyweight
+        )
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        planID = try container.decode(String.self, forKey: .planID)
+        planTitle = try container.decode(String.self, forKey: .planTitle)
+        recordedAt = try container.decode(Date.self, forKey: .recordedAt)
+        startDate = try container.decode(Date.self, forKey: .startDate)
+        endDate = try container.decode(Date.self, forKey: .endDate)
+        motherboardIdentifier = try container.decodeIfPresent(String.self, forKey: .motherboardIdentifier)
+        batteryValue = try container.decodeIfPresent(UInt16.self, forKey: .batteryValue)
+        steps = try container.decode([WorkoutStepMeasurement].self, forKey: .steps)
+        stepTitles = try container.decode([String].self, forKey: .stepTitles)
+        forceSensorProfile = try container.decode(ForceSensorProfile.self, forKey: .forceSensorProfile)
+        bodyweightKGF = try container.decodeIfPresent(Double.self, forKey: .bodyweightKGF)
+        initialWeightSource = try container.decodeIfPresent(WorkoutInitialWeightSource.self, forKey: .initialWeightSource) ?? .sensor
+        if initialWeightSource == .manual {
+            manualWeightKGF = try container.decodeIfPresent(Double.self, forKey: .manualWeightKGF)
+            manualWeightIncludesBodyweight = try container.decodeIfPresent(Bool.self, forKey: .manualWeightIncludesBodyweight) ?? false
+        } else {
+            manualWeightKGF = nil
+            manualWeightIncludesBodyweight = false
+        }
+        loadAdjustmentKGF = Self.normalizedLoadAdjustment(try container.decode(Double.self, forKey: .loadAdjustmentKGF))
+        loadAdjustmentDisplayUnit = try container.decode(WorkoutLoadAdjustmentDisplayUnit.self, forKey: .loadAdjustmentDisplayUnit)
+        motherboardMeasurements = try container.decode([MotherboardMeasurement].self, forKey: .motherboardMeasurements)
+        motherboardMeasurementsTruncated = try container.decode(Bool.self, forKey: .motherboardMeasurementsTruncated)
     }
 
     private static func normalizedLoadAdjustment(_ value: Double) -> Double {

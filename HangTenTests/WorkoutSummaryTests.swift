@@ -2,6 +2,27 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSummaryTests: XCTestCase {
+    func testInitialWeightTextClearlyDescribesManualStandaloneAndBodyweightModes() {
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.initialWeightText(
+                for: .manual(weightKGF: 10, includesBodyweight: false),
+                unit: .kilograms
+            ),
+            "Manual weight: 10.0 kg standalone"
+        )
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.initialWeightText(
+                for: .manual(weightKGF: 10, includesBodyweight: true),
+                unit: .pounds
+            ),
+            "Manual weight: +22.0 lb plus bodyweight"
+        )
+        XCTAssertEqual(
+            WorkoutSummaryFormatting.initialWeightText(for: .sensor, unit: .kilograms),
+            "Sensor weight"
+        )
+    }
+
     func testLoadedLiftSummaryUsesSignedLoadCopy() {
         XCTAssertEqual(
             WorkoutStepFormatting.externalLoadText(-5, unit: .kilograms),
