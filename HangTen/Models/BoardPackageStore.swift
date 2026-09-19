@@ -572,6 +572,12 @@ struct BoardPackageStore {
                 reason: "dimensions must not be empty when present"
             )
         }
+        guard PhysicalContact.validHandCapacityRange.contains(document.handCapacity) else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: document.id,
+                reason: "board handCapacity must be in \(PhysicalContact.validHandCapacityRange)"
+            )
+        }
         guard !document.equipmentObjects.isEmpty else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: document.id,
@@ -624,6 +630,12 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(
                     boardID: document.id,
                     reason: "contact \(contact.id) has an invalid hand capacity"
+                )
+            }
+            if document.handCapacity == 1, contact.handCapacity == 2 {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: document.id,
+                    reason: "one-handed board cannot include contact \(contact.id) with handCapacity 2"
                 )
             }
             if Set(contact.gripTypes).count != contact.gripTypes.count {
@@ -1022,6 +1034,7 @@ struct BoardPackageStore {
             subtitle: document.subtitle,
             dimensions: document.dimensions,
             aspectRatio: document.aspectRatio,
+            handCapacity: document.handCapacity,
             unilateralHandResolution: document.unilateralHandResolution,
             equipmentObjects: document.equipmentObjects.map(\.equipmentObject),
             contacts: contacts,
@@ -2277,6 +2290,7 @@ private struct BoardPackageBoardDocument: Decodable {
     let productURL: URL
     let dimensions: String?
     let aspectRatio: Double
+    let handCapacity: Int
     let unilateralHandResolution: UnilateralHandResolution?
     let equipmentObjects: [BoardPackageEquipmentObjectDocument]
     let presentations: [BoardPackagePresentationDocument]
@@ -2286,14 +2300,14 @@ private struct BoardPackageBoardDocument: Decodable {
 
     private enum CodingKeys: String, CodingKey {
         case schemaVersion, id, revisionID, manufacturer, name, subtitle, productURL, dimensions
-        case aspectRatio, unilateralHandResolution, equipmentObjects, presentations, positions
+        case aspectRatio, handCapacity, unilateralHandResolution, equipmentObjects, presentations, positions
         case positionTransitions, contacts
     }
 
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys([
             "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "unilateralHandResolution", "equipmentObjects",
+            "dimensions", "aspectRatio", "handCapacity", "unilateralHandResolution", "equipmentObjects",
             "presentations", "positions", "positionTransitions", "contacts"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -2308,6 +2322,9 @@ private struct BoardPackageBoardDocument: Decodable {
             ? try container.decode(String.self, forKey: .dimensions)
             : nil
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        handCapacity = container.contains(.handCapacity)
+            ? try container.decode(Int.self, forKey: .handCapacity)
+            : 2
         unilateralHandResolution = container.contains(.unilateralHandResolution)
             ? try container.decode(UnilateralHandResolution.self, forKey: .unilateralHandResolution)
             : nil

@@ -6,6 +6,7 @@
   "subtitle": "Aluminium lifting-edge base kit with wood edge and two blocker faces.",
   "productURL": "https://www.plateauclimbing.com/products/plateau-lifting-edge",
   "aspectRatio": 1.5,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

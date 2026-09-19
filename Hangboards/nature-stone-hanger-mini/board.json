@@ -7,6 +7,7 @@
   "productURL": "https://natureclimbing.com/products/stone-hanger-mini-beech",
   "dimensions": "10 × 6 × 2.5 cm",
   "aspectRatio": 1.0,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

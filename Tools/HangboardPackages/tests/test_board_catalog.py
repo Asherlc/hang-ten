@@ -101,6 +101,32 @@ def test_board_schema_loads_optional_unilateral_hand_resolution() -> None:
     assert board.unilateral_hand_resolution == module.UnilateralHandResolution.ATHLETE_RELATIVE
 
 
+def test_board_schema_loads_board_hand_capacity_default_and_rejects_invalid() -> None:
+    module = load_board_catalog_module()
+    omitted = module._load_board(board_document())
+    assert omitted.hand_capacity == 2
+
+    one_handed = board_document()
+    one_handed["handCapacity"] = 1
+    assert module._load_board(one_handed).hand_capacity == 1
+
+    zero = board_document()
+    zero["handCapacity"] = 0
+    with pytest.raises(ValueError, match="handCapacity must be a positive integer"):
+        module._load_board(zero)
+
+    out_of_range = board_document()
+    out_of_range["handCapacity"] = 3
+    with pytest.raises(ValueError, match="handCapacity must be in 1...2"):
+        module._load_board(out_of_range)
+
+    conflict = board_document()
+    conflict["handCapacity"] = 1
+    conflict["contacts"][0]["handCapacity"] = 2
+    with pytest.raises(ValueError, match="one-handed board cannot include contact"):
+        module._load_board(conflict)
+
+
 def test_board_revision_preserves_positional_model_contact_frames_argument() -> None:
     module = load_board_catalog_module()
     model_contact_frames = {("primary", "hold-a"): object()}

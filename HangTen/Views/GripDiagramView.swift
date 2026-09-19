@@ -93,23 +93,36 @@ struct GripDiagramView: View {
         return "\(cueLabel), \(accessibilityCueLabel), both hands"
     }
 
-    private var cueLabel: String {
+    /// Hold label for the grip cue. Bilateral boards keep the historical plural
+    /// forms ("Outer jugs", "… edges"); single-hand holds stay singular so the
+    /// cue does not read as a two-handed prescription.
+    static func cueLabel(for hold: PhysicalContact) -> String {
         guard hold.kind != .sloper else { return hold.name }
+
+        let singular: String
+        if hold.kind == .jug {
+            singular = "Outer jug"
+        } else {
+            singular = hold.name
+                .replacingOccurrences(of: "Left ", with: "")
+                .replacingOccurrences(of: "Right ", with: "")
+                .replacingOccurrences(of: ", left", with: "")
+                .replacingOccurrences(of: ", right", with: "")
+        }
+
+        guard hold.handCapacity != 1 else { return singular }
 
         if hold.kind == .jug {
             return "Outer jugs"
         }
-
-        let undirected = hold.name
-            .replacingOccurrences(of: "Left ", with: "")
-            .replacingOccurrences(of: "Right ", with: "")
-            .replacingOccurrences(of: ", left", with: "")
-            .replacingOccurrences(of: ", right", with: "")
-
-        if undirected.hasSuffix(" edge") || undirected.hasSuffix(" pocket") {
-            return undirected + "s"
+        if singular.hasSuffix(" edge") || singular.hasSuffix(" pocket") {
+            return singular + "s"
         }
-        return undirected
+        return singular
+    }
+
+    private var cueLabel: String {
+        Self.cueLabel(for: hold)
     }
 
     private var accessibilityCueLabel: String {
