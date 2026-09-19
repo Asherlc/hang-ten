@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import re
-import shlex
 from pathlib import Path
 
 import yaml
@@ -66,45 +65,109 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     active_docs = "\n".join(
         path.read_text(encoding="utf-8") for path in (README, ADDING_A_BOARD)
     )
+    xctest_runner = REPO_ROOT / "scripts/ci-run-xctest.sh"
+    xctest_script = xctest_runner.read_text(encoding="utf-8")
 
     assert "hangboard-packages.sh validate --root Hangboards" in ci_workflow_text
     assert "pytest tests -q" in ci_workflow_text
     assert "stage-board-packages.py" in ci_workflow_text
-    for job_name, test_target in (
-        ("test-unit", "HangTenTests"),
-        ("test-ui", "HangTenUITests"),
-    ):
+
+    assert xctest_runner.is_file()
+    assert "xcodebuild" in xctest_script
+    assert "build-for-testing" in xctest_script
+    assert "test-without-building" in xctest_script
+    assert 'XCTEST_MAX_ATTEMPTS="${XCTEST_MAX_ATTEMPTS:-2}"' in xctest_script
+    assert "while (( attempt <= XCTEST_MAX_ATTEMPTS )); do" in xctest_script
+    assert "run_xctest_attempt \"$attempt\"" in xctest_script
+    assert "mark_attempt_failed \"$attempt\"" in xctest_script
+    assert "os.setsid()" in xctest_script
+    assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_script
+    assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_script
+    assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_script
+    assert xctest_script.count('kill -0 -- "-$xcodebuild_pid"') == 2
+    xctest_attempt_body = _shell_function_body(xctest_script, "run_xctest_attempt")
+    assert "build-for-testing" in xctest_attempt_body
+    assert "test-without-building" in xctest_attempt_body
+
+    expected_suite_jobs = (
+        ("test-unit", "HangTenTests", "2", None),
+        ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "3"),
+        (
+            "test-ui-map",
+            "\n".join(
+                (
+                    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests",
+                    "HangTenUITests/IronPalmBoardMapInteractionUITests",
+                    "HangTenUITests/GripCueDiagnosticScreenshotUITests",
+                )
+            ),
+            "1",
+            "3",
+        ),
+        (
+            "test-ui-picker",
+            "HangTenUITests/BeastmakerBoardPickerInteractionUITests",
+            "1",
+            "3",
+        ),
+        (
+            "test-ui-misc",
+            "\n".join(
+                (
+                    "HangTenUITests/GitHubSignInUITests",
+                    "HangTenUITests/SettingsBoardEditorVisibilityUITests",
+                )
+            ),
+            "1",
+            "3",
+        ),
+    )
+    for job_name, only_testing, workers, max_attempts in expected_suite_jobs:
         test_job = jobs[job_name]
         xctest_step = next(
             step for step in test_job["steps"] if step.get("name") == "Run XCTest suite"
         )
         xctest_command = xctest_step["run"]
-        xctest_tokens = shlex.split(xctest_command)
 
         assert test_job["timeout-minutes"] == 70
         assert xctest_step["env"]["XCTEST_ATTEMPT_TIMEOUT_SECONDS"] == "1800"
-        assert "xcodebuild" in xctest_command
-        only_testing_tokens = [
-            token for token in xctest_tokens if token.startswith("-only-testing:")
-        ]
-        assert only_testing_tokens == [f"-only-testing:{test_target}"]
-        assert "-skip-testing" not in xctest_command
-        worker_flag = "-maximum-parallel-testing-workers"
-        assert xctest_tokens.count(worker_flag) == 1
-        assert xctest_tokens[xctest_tokens.index(worker_flag) + 1] == "1"
-        xctest_attempt_body = _shell_function_body(xctest_command, "run_xctest_attempt")
-        assert "os.setsid()" in xctest_command
-        assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_command
-        assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_command
-        assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_command
-        assert xctest_command.count('kill -0 -- "-$xcodebuild_pid"') == 2
-        assert re.search(
-            r"python3 -c .*?\\\n\s+xcodebuild \\.*?\n\s+test\s+>",
-            xctest_attempt_body,
-            flags=re.DOTALL,
+        assert xctest_step["env"]["XCTEST_PARALLEL_WORKERS"] == workers
+        if max_attempts is None:
+            assert "XCTEST_MAX_ATTEMPTS" not in xctest_step["env"]
+        else:
+            assert xctest_step["env"]["XCTEST_MAX_ATTEMPTS"] == max_attempts
+        assert " ".join(str(xctest_step["env"]["XCTEST_ONLY_TESTING"]).split()) == " ".join(
+            only_testing.split()
         )
-        assert "if ! run_xctest_attempt 1; then" in xctest_command
-        assert "run_xctest_attempt 2" in xctest_command
+        assert "scripts/ci-run-xctest.sh" in xctest_command
+        assert "xcodebuild" not in xctest_command
+
+    ui_shard_job_names = (
+        "test-ui-paywall",
+        "test-ui-map",
+        "test-ui-picker",
+        "test-ui-misc",
+    )
+    ui_shard_targets: list[str] = []
+    for job_name in ui_shard_job_names:
+        xctest_step = next(
+            step
+            for step in jobs[job_name]["steps"]
+            if step.get("name") == "Run XCTest suite"
+        )
+        ui_shard_targets.extend(str(xctest_step["env"]["XCTEST_ONLY_TESTING"]).split())
+    assert len(ui_shard_targets) == len(set(ui_shard_targets))
+    discovered_ui_classes = {
+        f"HangTenUITests/{match.group(1)}"
+        for path in (REPO_ROOT / "HangTenUITests").glob("*.swift")
+        for match in re.finditer(
+            r"^\s*(?:open\s+|final\s+)?class\s+(\w+UITests)\b",
+            path.read_text(encoding="utf-8"),
+            flags=re.MULTILINE,
+        )
+    }
+    assert set(ui_shard_targets) == discovered_ui_classes
+
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
     assert "exactly two states" not in active_docs
@@ -119,6 +182,10 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     workflow = _ci_workflow()
     jobs = workflow["jobs"]
     unit_test_job = jobs["test-unit"]
+    ui_paywall_job = jobs["test-ui-paywall"]
+    ui_map_job = jobs["test-ui-map"]
+    ui_picker_job = jobs["test-ui-picker"]
+    ui_misc_job = jobs["test-ui-misc"]
     ui_test_job = jobs["test-ui"]
     required_check = jobs["build-required"]
 
@@ -126,6 +193,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     assert [job["name"] for job in jobs.values()].count(required_name) == 1
 
     assert "build-ios" not in jobs
+    assert "test-ui-boards" not in jobs
     assert unit_test_job["name"] == "Test (iOS Simulator: HangTenTests)"
     assert ui_test_job["name"] == "Test (iOS Simulator: HangTenUITests)"
     expected_predicate = (
@@ -134,8 +202,22 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
         "needs.changes.outputs.workflow == 'true' || "
         "needs.changes.outputs.shared_board_content == 'true'"
     )
-    assert " ".join(unit_test_job["if"].split()) == expected_predicate
-    assert " ".join(ui_test_job["if"].split()) == expected_predicate
+    for path_gated_job in (
+        unit_test_job,
+        ui_paywall_job,
+        ui_map_job,
+        ui_picker_job,
+        ui_misc_job,
+    ):
+        assert " ".join(path_gated_job["if"].split()) == expected_predicate
+    assert ui_test_job["if"] == "always() && github.event.action != 'closed'"
+    assert ui_test_job["needs"] == [
+        "changes",
+        "test-ui-paywall",
+        "test-ui-map",
+        "test-ui-picker",
+        "test-ui-misc",
+    ]
     assert required_check["name"] == required_name
     assert required_check["needs"] == ["changes", "test-unit", "test-ui"]
     assert required_check["if"] == "always() && github.event.action != 'closed'"
@@ -153,7 +235,18 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     assert '[[ "$UNIT_TEST_RESULT" != "success" ]]' in report_step["run"]
     assert '[[ "$UI_TEST_RESULT" != "success" ]]' in report_step["run"]
     assert '[[ "$UNIT_TEST_RESULT" != "skipped" ]]' in report_step["run"]
-    assert '[[ "$UI_TEST_RESULT" != "skipped" ]]' in report_step["run"]
+
+    ui_report_step = next(
+        step
+        for step in ui_test_job["steps"]
+        if step.get("name") == "Report required UI test status"
+    )
+    assert ui_report_step["env"]["PAYWALL_RESULT"] == "${{ needs.test-ui-paywall.result }}"
+    assert ui_report_step["env"]["MAP_RESULT"] == "${{ needs.test-ui-map.result }}"
+    assert ui_report_step["env"]["PICKER_RESULT"] == "${{ needs.test-ui-picker.result }}"
+    assert ui_report_step["env"]["MISC_RESULT"] == "${{ needs.test-ui-misc.result }}"
+    assert '[[ "$PAYWALL_RESULT" == "failure"' in ui_report_step["run"]
+    assert '[[ "$PAYWALL_RESULT" != "skipped" ]]' in ui_report_step["run"]
 
 
 def test_ci_pull_request_triggers_exclude_edited_events() -> None:

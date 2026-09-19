@@ -48,7 +48,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
 
       - id: filter
         uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d
@@ -164,7 +163,6 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-          lfs: true
 
       # reviewdog/action-actionlint v1.73.2
       - name: Validate workflow syntax
@@ -177,7 +175,9 @@ jobs:
   build-required:
     # Keep this stable: branch protection requires this exact check name. A
     # test job skipped by path classification is reported here so this stable
-    # check does not leave the pull request waiting forever.
+    # check does not leave the pull request waiting forever. Depends on the
+    # HangTenUITests aggregator (not shards) so the required check graph is
+    # unchanged.
     name: Build (Debug simulator)
     needs:
       - changes
@@ -203,6 +203,12 @@ jobs:
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
+            # Prefer failure over cancelled so a failed shard is not masked when
+            # a sibling is cancelled mid-run.
+            if [[ "$UNIT_TEST_RESULT" == "failure" || "$UI_TEST_RESULT" == "failure" ]]; then
+              echo "Required iOS test failed: HangTenTests=$UNIT_TEST_RESULT HangTenUITests=$UI_TEST_RESULT" >&2
+              exit 1
+            fi
             if [[ "$UNIT_TEST_RESULT" == "cancelled" || "$UI_TEST_RESULT" == "cancelled" ]]; then
               echo "Required iOS test was cancelled for this attempt; evaluating only non-cancelled runs."
               exit 0
@@ -213,8 +219,23 @@ jobs:
             fi
             echo "Required iOS tests succeeded."
           else
-            if [[ "$UNIT_TEST_RESULT" != "skipped" ]] || [[ "$UI_TEST_RESULT" != "skipped" ]]; then
-              echo "Non-required iOS tests had unexpected results: HangTenTests=$UNIT_TEST_RESULT HangTenUITests=$UI_TEST_RESULT" >&2
+            # HangTenTests is path-gated and skipped when iOS is not required.
+            # The HangTenUITests aggregator always runs (like this job) and
+            # reports success only after confirming both shards were skipped.
+            if [[ "$UNIT_TEST_RESULT" != "skipped" ]]; then
+              echo "Non-required HangTenTests had unexpected result: $UNIT_TEST_RESULT" >&2
+              exit 1
+            fi
+            if [[ "$UI_TEST_RESULT" == "failure" ]]; then
+              echo "Non-required UI test aggregator failed: HangTenUITests=$UI_TEST_RESULT" >&2
+              exit 1
+            fi
+            if [[ "$UI_TEST_RESULT" == "cancelled" ]]; then
+              echo "UI test aggregator was cancelled for this attempt; evaluating only non-cancelled runs."
+              exit 0
+            fi
+            if [[ "$UI_TEST_RESULT" != "success" ]]; then
+              echo "Non-required UI test aggregator did not succeed: HangTenUITests=$UI_TEST_RESULT" >&2
               exit 1
             fi
             echo "iOS tests are not required for the changed components."
@@ -296,7 +317,7 @@ jobs:
       needs.changes.outputs.workflow == 'true' ||
       needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
-    # Two bounded attempts plus result-bundle upload need a little headroom,
+    # One soft retry plus result-bundle upload need a little headroom,
     # while each attempt has its own watchdog below.
     timeout-minutes: 70
 
@@ -314,6 +335,24 @@ jobs:
         with:
           path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
           key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
+      - name: Capture Xcode version for DerivedData cache key
+        run: |
+          set -euo pipefail
+          mkdir -p .context
+          xcodebuild -version | tee .context/ci-xcode-version.txt
+
+      # actions/cache/restore v4.2.3
+      # Suite name comes before Xcode/Package hashes so restore-keys cannot
+      # accidentally hydrate unit DerivedData from a UITest cache (or vice versa).
+      - name: Restore Xcode DerivedData
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-
 
       - name: Show Apple toolchain
         run: |
@@ -343,102 +382,23 @@ jobs:
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
           XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_LABEL: HangTenTests
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-test-derived-data
+          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-test-logs
+          XCTEST_RESULT_ROOT: ${{ runner.temp }}
+          XCTEST_ONLY_TESTING: HangTenTests
+          XCTEST_PARALLEL_WORKERS: "2"
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/hang-ten-test-logs" "$RUNNER_TEMP/hang-ten-test-derived-data"
+          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
           telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
           trap 'rm -f "$telemetry_xcconfig"' EXIT
           umask 077
           printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset ANALYTICS_API_KEY
-
-          run_xctest_attempt() {
-            local attempt="$1"
-            local attempt_derived_data="$RUNNER_TEMP/hang-ten-test-derived-data/attempt-$attempt"
-            local attempt_result_bundle="$RUNNER_TEMP/HangTenTests-attempt-$attempt.xcresult"
-            local attempt_log_dir="$RUNNER_TEMP/hang-ten-test-logs/attempt-$attempt"
-            local attempt_log="$attempt_log_dir/test.log"
-            local timeout_seconds="$XCTEST_ATTEMPT_TIMEOUT_SECONDS"
-            local attempt_started
-            local xcodebuild_pid
-            local xcodebuild_status=0
-
-            mkdir -p "$attempt_derived_data" "$attempt_log_dir"
-            : > "$attempt_log"
-
-            # Do not let a simulator/XCTest deadlock consume the whole job.
-            # Writing xcodebuild output to a file lets the watchdog sample the
-            # still-running process before it is terminated; the complete log
-            # is printed and uploaded after either outcome.
-            attempt_started=$SECONDS
-            # Give xcodebuild and its XCTest/simulator descendants their own
-            # process group. A background command normally inherits this
-            # script's group, so signalling that inherited group could kill
-            # the Actions shell itself. Python is present on hosted macOS
-            # runners and setsid() makes the exec'd xcodebuild PID its group
-            # leader, which lets the timeout clean up the whole attempt.
-            python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
-              xcodebuild \
-              -project HangTen.xcodeproj \
-              -scheme HangTen \
-              -configuration Debug \
-              -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
-              -parallel-testing-enabled YES \
-              -maximum-parallel-testing-workers 1 \
-              -only-testing:HangTenTests \
-              -derivedDataPath "$attempt_derived_data" \
-              -resultBundlePath "$attempt_result_bundle" \
-              -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
-              -showBuildTimingSummary \
-              -xcconfig "$telemetry_xcconfig" \
-              COMPILER_INDEX_STORE_ENABLE=NO \
-              CODE_SIGNING_ALLOWED=YES \
-              CODE_SIGNING_REQUIRED=YES \
-              CODE_SIGN_IDENTITY="-" \
-              test > "$attempt_log" 2>&1 &
-            xcodebuild_pid=$!
-
-            while kill -0 "$xcodebuild_pid" 2>/dev/null; do
-              if (( SECONDS - attempt_started >= timeout_seconds )); then
-                echo "XCTest attempt $attempt exceeded ${timeout_seconds}s; collecting diagnostics before retrying." | tee -a "$attempt_log"
-                sample "$xcodebuild_pid" 10 -file "$attempt_log_dir/xcodebuild.sample.txt" || true
-                xcrun simctl list devices >> "$attempt_log_dir/simctl-devices.txt" 2>&1 || true
-                # Signal the isolated process group, not merely xcodebuild:
-                # XCTest and Simulator children can otherwise outlive a timed
-                # out attempt and interfere with the clean retry below.
-                kill -TERM -- "-$xcodebuild_pid" 2>/dev/null || true
-                for _ in $(seq 1 30); do
-                  # Keep waiting for the group even if xcodebuild itself has
-                  # already exited: its children may still be shutting down.
-                  kill -0 -- "-$xcodebuild_pid" 2>/dev/null || break
-                  sleep 1
-                done
-                if kill -0 -- "-$xcodebuild_pid" 2>/dev/null; then
-                  echo "XCTest attempt $attempt ignored SIGTERM; sending SIGKILL." | tee -a "$attempt_log"
-                  kill -KILL -- "-$xcodebuild_pid" 2>/dev/null || true
-                fi
-                wait "$xcodebuild_pid" || true
-                cat "$attempt_log"
-                return 124
-              fi
-              sleep 5
-            done
-
-            wait "$xcodebuild_pid" || xcodebuild_status=$?
-            cat "$attempt_log"
-            return "$xcodebuild_status"
-          }
-
-          if ! run_xctest_attempt 1; then
-            echo "attempt_1_failed=true" >> "$GITHUB_OUTPUT"
-            echo "XCTest attempt 1 failed; retrying once with clean paths."
-            if ! run_xctest_attempt 2; then
-              echo "attempt_2_failed=true" >> "$GITHUB_OUTPUT"
-              echo "XCTest attempt 2 failed; retrying a third time with clean paths."
-              run_xctest_attempt 3
-            fi
-          fi
+          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
@@ -480,8 +440,17 @@ jobs:
             exit 1
           fi
 
-  test-ui:
-    name: "Test (iOS Simulator: HangTenUITests)"
+      # actions/cache/save v4.2.3
+      # Save only on success so failed builds cannot poison DerivedData.
+      - name: Save Xcode DerivedData
+        if: success()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test-ui-paywall:
+    name: "Test (iOS Simulator: HangTenUITests / paywall)"
     needs:
       - changes
     if: >-
@@ -490,8 +459,6 @@ jobs:
       needs.changes.outputs.workflow == 'true' ||
       needs.changes.outputs.shared_board_content == 'true'
     runs-on: macos-26
-    # Two bounded attempts plus result-bundle upload need a little headroom,
-    # while each attempt has its own watchdog below.
     timeout-minutes: 70
 
     steps:
@@ -509,6 +476,22 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
           key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
 
+      - name: Capture Xcode version for DerivedData cache key
+        run: |
+          set -euo pipefail
+          mkdir -p .context
+          xcodebuild -version | tee .context/ci-xcode-version.txt
+
+      # actions/cache/restore v4.2.3
+      - name: Restore Xcode DerivedData
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-
+
       - name: Show Apple toolchain
         run: |
           set -euo pipefail
@@ -521,94 +504,379 @@ jobs:
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
           XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_MAX_ATTEMPTS: "3"
+          XCTEST_LABEL: HangTenUITests-paywall
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
+          XCTEST_RESULT_ROOT: ${{ runner.temp }}
+          XCTEST_ONLY_TESTING: HangTenUITests/WorkoutPaywallUITests
+          XCTEST_PARALLEL_WORKERS: "1"
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/hang-ten-ui-test-logs" "$RUNNER_TEMP/hang-ten-ui-test-derived-data"
+          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
           telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
           trap 'rm -f "$telemetry_xcconfig"' EXIT
           umask 077
           printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset ANALYTICS_API_KEY
-
-          run_xctest_attempt() {
-            local attempt="$1"
-            local attempt_derived_data="$RUNNER_TEMP/hang-ten-ui-test-derived-data/attempt-$attempt"
-            local attempt_result_bundle="$RUNNER_TEMP/HangTenUITests-attempt-$attempt.xcresult"
-            local attempt_log_dir="$RUNNER_TEMP/hang-ten-ui-test-logs/attempt-$attempt"
-            local attempt_log="$attempt_log_dir/test.log"
-            local timeout_seconds="$XCTEST_ATTEMPT_TIMEOUT_SECONDS"
-            local attempt_started
-            local xcodebuild_pid
-            local xcodebuild_status=0
-
-            mkdir -p "$attempt_derived_data" "$attempt_log_dir"
-            : > "$attempt_log"
-            attempt_started=$SECONDS
-            python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
-              xcodebuild \
-              -project HangTen.xcodeproj \
-              -scheme HangTen \
-              -configuration Debug \
-              -destination "platform=iOS Simulator,name=iPhone 17 Pro,OS=latest" \
-              -parallel-testing-enabled YES \
-              -maximum-parallel-testing-workers 1 \
-              -only-testing:HangTenUITests \
-              -derivedDataPath "$attempt_derived_data" \
-              -resultBundlePath "$attempt_result_bundle" \
-              -clonedSourcePackagesDirPath "$RUNNER_TEMP/hang-ten-swiftpm-source-packages" \
-              -showBuildTimingSummary \
-              -xcconfig "$telemetry_xcconfig" \
-              COMPILER_INDEX_STORE_ENABLE=NO \
-              CODE_SIGNING_ALLOWED=YES \
-              CODE_SIGNING_REQUIRED=YES \
-              CODE_SIGN_IDENTITY="-" \
-              test > "$attempt_log" 2>&1 &
-            xcodebuild_pid=$!
-
-            while kill -0 "$xcodebuild_pid" 2>/dev/null; do
-              if (( SECONDS - attempt_started >= timeout_seconds )); then
-                echo "XCTest attempt $attempt exceeded ${timeout_seconds}s; collecting diagnostics before retrying." | tee -a "$attempt_log"
-                sample "$xcodebuild_pid" 10 -file "$attempt_log_dir/xcodebuild.sample.txt" || true
-                xcrun simctl list devices >> "$attempt_log_dir/simctl-devices.txt" 2>&1 || true
-                kill -TERM -- "-$xcodebuild_pid" 2>/dev/null || true
-                for _ in $(seq 1 30); do
-                  kill -0 -- "-$xcodebuild_pid" 2>/dev/null || break
-                  sleep 1
-                done
-                if kill -0 -- "-$xcodebuild_pid" 2>/dev/null; then
-                  echo "XCTest attempt $attempt ignored SIGTERM; sending SIGKILL." | tee -a "$attempt_log"
-                  kill -KILL -- "-$xcodebuild_pid" 2>/dev/null || true
-                fi
-                wait "$xcodebuild_pid" || true
-                cat "$attempt_log"
-                return 124
-              fi
-              sleep 5
-            done
-
-            wait "$xcodebuild_pid" || xcodebuild_status=$?
-            cat "$attempt_log"
-            return "$xcodebuild_status"
-          }
-
-          if ! run_xctest_attempt 1; then
-            echo "attempt_1_failed=true" >> "$GITHUB_OUTPUT"
-            echo "XCTest attempt 1 failed; retrying once with clean paths."
-            if ! run_xctest_attempt 2; then
-              echo "attempt_2_failed=true" >> "$GITHUB_OUTPUT"
-              echo "XCTest attempt 2 failed; retrying a third time with clean paths."
-              run_xctest_attempt 3
-            fi
-          fi
+          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true' || steps.xctest.outputs.attempt_3_failed == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ci-test-results-HangTenUITests-${{ github.run_id }}
+          name: ci-test-results-HangTenUITests-paywall-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-paywall-attempt-*.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
+
+      # actions/cache/save v4.2.3
+      - name: Save Xcode DerivedData
+        if: success()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test-ui-map:
+    name: "Test (iOS Simulator: HangTenUITests / map)"
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
+    runs-on: macos-26
+    timeout-minutes: 70
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          lfs: true
+
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
+      - name: Capture Xcode version for DerivedData cache key
+        run: |
+          set -euo pipefail
+          mkdir -p .context
+          xcodebuild -version | tee .context/ci-xcode-version.txt
+
+      # actions/cache/restore v4.2.3
+      - name: Restore Xcode DerivedData
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Run XCTest suite
+        id: xctest
+        env:
+          ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
+          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_MAX_ATTEMPTS: "3"
+          XCTEST_LABEL: HangTenUITests-map
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
+          XCTEST_RESULT_ROOT: ${{ runner.temp }}
+          XCTEST_ONLY_TESTING: >-
+            HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
+            HangTenUITests/IronPalmBoardMapInteractionUITests
+            HangTenUITests/GripCueDiagnosticScreenshotUITests
+          XCTEST_PARALLEL_WORKERS: "1"
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+        run: |
+          set -euo pipefail
+          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset ANALYTICS_API_KEY
+          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload test diagnostics on failure
+        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true' || steps.xctest.outputs.attempt_3_failed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-test-results-HangTenUITests-map-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/HangTenUITests-map-attempt-*.xcresult
+            ${{ runner.temp }}/hang-ten-ui-test-logs/
+          if-no-files-found: ignore
+
+      # actions/cache/save v4.2.3
+      - name: Save Xcode DerivedData
+        if: success()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test-ui-picker:
+    name: "Test (iOS Simulator: HangTenUITests / picker)"
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
+    runs-on: macos-26
+    timeout-minutes: 70
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          lfs: true
+
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
+      - name: Capture Xcode version for DerivedData cache key
+        run: |
+          set -euo pipefail
+          mkdir -p .context
+          xcodebuild -version | tee .context/ci-xcode-version.txt
+
+      # actions/cache/restore v4.2.3
+      - name: Restore Xcode DerivedData
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Run XCTest suite
+        id: xctest
+        env:
+          ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
+          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_MAX_ATTEMPTS: "3"
+          XCTEST_LABEL: HangTenUITests-picker
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
+          XCTEST_RESULT_ROOT: ${{ runner.temp }}
+          XCTEST_ONLY_TESTING: HangTenUITests/BeastmakerBoardPickerInteractionUITests
+          XCTEST_PARALLEL_WORKERS: "1"
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+        run: |
+          set -euo pipefail
+          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset ANALYTICS_API_KEY
+          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload test diagnostics on failure
+        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true' || steps.xctest.outputs.attempt_3_failed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-test-results-HangTenUITests-picker-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/HangTenUITests-picker-attempt-*.xcresult
+            ${{ runner.temp }}/hang-ten-ui-test-logs/
+          if-no-files-found: ignore
+
+      # actions/cache/save v4.2.3
+      - name: Save Xcode DerivedData
+        if: success()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test-ui-misc:
+    name: "Test (iOS Simulator: HangTenUITests / misc)"
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.ios == 'true' ||
+      needs.changes.outputs.workflow == 'true' ||
+      needs.changes.outputs.shared_board_content == 'true'
+    runs-on: macos-26
+    timeout-minutes: 70
+
+    steps:
+      # actions/checkout v4.2.2
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          lfs: true
+
+      # actions/cache v4.2.3
+      - name: Restore Swift package sources
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+
+      - name: Capture Xcode version for DerivedData cache key
+        run: |
+          set -euo pipefail
+          mkdir -p .context
+          xcodebuild -version | tee .context/ci-xcode-version.txt
+
+      # actions/cache/restore v4.2.3
+      - name: Restore Xcode DerivedData
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          restore-keys: |
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-
+
+      - name: Show Apple toolchain
+        run: |
+          set -euo pipefail
+          sw_vers
+          xcodebuild -version
+          xcodebuild -showsdks
+
+      - name: Run XCTest suite
+        id: xctest
+        env:
+          ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
+          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_MAX_ATTEMPTS: "3"
+          XCTEST_LABEL: HangTenUITests-misc
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
+          XCTEST_RESULT_ROOT: ${{ runner.temp }}
+          XCTEST_ONLY_TESTING: >-
+            HangTenUITests/GitHubSignInUITests
+            HangTenUITests/SettingsBoardEditorVisibilityUITests
+          XCTEST_PARALLEL_WORKERS: "1"
+          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
+        run: |
+          set -euo pipefail
+          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
+          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
+          trap 'rm -f "$telemetry_xcconfig"' EXIT
+          umask 077
+          printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
+          chmod 600 "$telemetry_xcconfig"
+          unset ANALYTICS_API_KEY
+          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
+
+      # actions/upload-artifact v4.6.2
+      - name: Upload test diagnostics on failure
+        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true' || steps.xctest.outputs.attempt_3_failed == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ci-test-results-HangTenUITests-misc-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/HangTenUITests-misc-attempt-*.xcresult
+            ${{ runner.temp }}/hang-ten-ui-test-logs/
+          if-no-files-found: ignore
+
+      # actions/cache/save v4.2.3
+      - name: Save Xcode DerivedData
+        if: success()
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
+        with:
+          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+  test-ui:
+    # Keep this stable: branch ruleset "Main" requires this exact check name.
+    # Shard display names can differ; this aggregator is the required context.
+    name: "Test (iOS Simulator: HangTenUITests)"
+    needs:
+      - changes
+      - test-ui-paywall
+      - test-ui-map
+      - test-ui-picker
+      - test-ui-misc
+    if: always() && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report required UI test status
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          PAYWALL_RESULT: ${{ needs.test-ui-paywall.result }}
+          MAP_RESULT: ${{ needs.test-ui-map.result }}
+          PICKER_RESULT: ${{ needs.test-ui-picker.result }}
+          MISC_RESULT: ${{ needs.test-ui-misc.result }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+        run: |
+          set -euo pipefail
+          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
+            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
+            exit 0
+          fi
+          if [[ "$CHANGES_RESULT" != "success" ]]; then
+            echo "Change classification did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+          if [[ "$BUILD_REQUIRED" == "true" ]]; then
+            # Prefer failure over cancelled so a failed shard is not masked when
+            # a sibling is cancelled mid-run.
+            if [[ "$PAYWALL_RESULT" == "failure" || "$MAP_RESULT" == "failure" || "$PICKER_RESULT" == "failure" || "$MISC_RESULT" == "failure" ]]; then
+              echo "Required UI test shard failed: paywall=$PAYWALL_RESULT map=$MAP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+              exit 1
+            fi
+            if [[ "$PAYWALL_RESULT" == "cancelled" || "$MAP_RESULT" == "cancelled" || "$PICKER_RESULT" == "cancelled" || "$MISC_RESULT" == "cancelled" ]]; then
+              echo "Required UI test shard was cancelled for this attempt; evaluating only non-cancelled runs."
+              exit 0
+            fi
+            if [[ "$PAYWALL_RESULT" != "success" ]] || [[ "$MAP_RESULT" != "success" ]] || [[ "$PICKER_RESULT" != "success" ]] || [[ "$MISC_RESULT" != "success" ]]; then
+              echo "Required UI test shards did not succeed: paywall=$PAYWALL_RESULT map=$MAP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+              exit 1
+            fi
+            echo "Required UI test shards succeeded."
+          else
+            if [[ "$PAYWALL_RESULT" != "skipped" ]] || [[ "$MAP_RESULT" != "skipped" ]] || [[ "$PICKER_RESULT" != "skipped" ]] || [[ "$MISC_RESULT" != "skipped" ]]; then
+              echo "Non-required UI test shards had unexpected results: paywall=$PAYWALL_RESULT map=$MAP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+              exit 1
+            fi
+            echo "UI tests are not required for the changed components."
+          fi

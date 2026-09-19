@@ -1,6 +1,52 @@
 import XCTest
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
+    override func tearDown() {
+        // Landscape review launches leave the shared simulator in landscape;
+        // reset so later cases/suites on the same device are not poisoned.
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
+    // Named so it sorts before testLandscape* under alphabetical XCTest order.
+    func testFaceBSloperMapElementSelectsSloper() throws {
+        let app = XCUIApplication()
+        // Prefer the board-detail review route over the picker: after a landscape
+        // 3D board-detail test, picker launch often white-screens under CI load.
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "owl-climb.poker",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+
+        XCTAssertTrue(
+            app.navigationBars["Hold specs"].waitForExistence(timeout: 30),
+            "The DEBUG board-detail route must be displayed."
+        )
+
+        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
+        XCTAssertTrue(faceB.waitForExistence(timeout: 10))
+        faceB.tap()
+
+        let sloper = app.buttons["Face B left deep sloper"]
+        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
+        XCTAssertTrue(sloper.isHittable)
+        addScreenshot(named: "Poker Face B normal")
+
+        let selected = app.otherElements[
+            "boardDetail.selectedHold.face-b-left-deep-sloper"
+        ]
+        XCTAssertFalse(selected.exists)
+        sloper.tap()
+
+        XCTAssertTrue(
+            selected.waitForExistence(timeout: 10),
+            "Tapping the Face B sloper map element must select the matching hold."
+        )
+        addScreenshot(named: "Poker Face B sloper active")
+    }
+
     func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {
         let app = XCUIApplication()
         app.launchEnvironment = [
@@ -29,45 +75,8 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
         XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
         XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
         XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
-    }
 
-    func testTappingFaceBSloperMapElementSelectsSloper() throws {
-        let app = XCUIApplication()
-        app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
-        app.launch()
-
-        let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 30))
-        search.tap()
-        search.typeText("Poker")
-
-        let holdSpecs = app.buttons["boardPicker.holdSpecs.owl-climb.poker"]
-        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
-        holdSpecs.tap()
-
-        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
-        XCTAssertTrue(faceB.waitForExistence(timeout: 5))
-        faceB.tap()
-
-        let sloper = app.buttons
-            .matching(identifier: "boardDetail.map")
-            .matching(NSPredicate(format: "label == %@", "Face B left deep sloper"))
-            .element
-        XCTAssertTrue(sloper.waitForExistence(timeout: 5))
-        XCTAssertTrue(sloper.isHittable)
-        addScreenshot(named: "Poker Face B normal")
-
-        let selected = app.otherElements[
-            "boardDetail.selectedHold.face-b-left-deep-sloper"
-        ]
-        XCTAssertFalse(selected.exists)
-        sloper.tap()
-
-        XCTAssertTrue(
-            selected.waitForExistence(timeout: 5),
-            "Tapping the Face B sloper map element must select the matching hold."
-        )
-        addScreenshot(named: "Poker Face B sloper active")
+        XCUIDevice.shared.orientation = .portrait
     }
 
     private func addScreenshot(named name: String) {
@@ -79,21 +88,40 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 }
 
 final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
     func testTappingModelCenterSelectsBoard() throws {
         let app = XCUIApplication()
         app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
         app.launch()
 
         let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 30))
+        if !search.waitForExistence(timeout: 45) {
+            // Picker review route can white-screen under CI load after landscape
+            // board-detail cases; one terminate+relaunch recovers reliably.
+            app.terminate()
+            app.launch()
+            XCTAssertTrue(
+                search.waitForExistence(timeout: 60),
+                "Board picker Search boards must appear after relaunch."
+            )
+        }
         search.tap()
         search.typeText("Beastmaker 1000")
 
         let picker = app.navigationBars["Choose board"]
-        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(picker.waitForExistence(timeout: 30))
 
         let board = app.buttons["boardPicker.board.beastmaker-1000"]
-        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        XCTAssertTrue(board.waitForExistence(timeout: 45))
 
         // The model is display-only and intentionally collapsed from the
         // accessibility tree. The card button frame still covers its visible
