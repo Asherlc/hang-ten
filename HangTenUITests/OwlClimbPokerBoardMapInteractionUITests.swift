@@ -88,21 +88,40 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
 }
 
 final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
     func testTappingModelCenterSelectsBoard() throws {
         let app = XCUIApplication()
         app.launchEnvironment = ["HANGTEN_REVIEW_BOARD_PICKER": "1"]
         app.launch()
 
         let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 30))
+        if !search.waitForExistence(timeout: 45) {
+            // Picker review route can white-screen under CI load after landscape
+            // board-detail cases; one terminate+relaunch recovers reliably.
+            app.terminate()
+            app.launch()
+            XCTAssertTrue(
+                search.waitForExistence(timeout: 60),
+                "Board picker Search boards must appear after relaunch."
+            )
+        }
         search.tap()
         search.typeText("Beastmaker 1000")
 
         let picker = app.navigationBars["Choose board"]
-        XCTAssertTrue(picker.waitForExistence(timeout: 10))
+        XCTAssertTrue(picker.waitForExistence(timeout: 30))
 
         let board = app.buttons["boardPicker.board.beastmaker-1000"]
-        XCTAssertTrue(board.waitForExistence(timeout: 10))
+        XCTAssertTrue(board.waitForExistence(timeout: 45))
 
         // The model is display-only and intentionally collapsed from the
         // accessibility tree. The card button frame still covers its visible

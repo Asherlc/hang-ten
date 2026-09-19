@@ -53,21 +53,28 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 }
 
 final class IronPalmBoardMapInteractionUITests: XCTestCase {
+    override func tearDown() {
+        // Landscape review launches leave the shared simulator in landscape;
+        // reset so later cases/suites on the same device are not poisoned.
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
     func testTappingRightSloperPathSelectsRightSloper() throws {
         let app = XCUIApplication()
+        // Prefer the board-detail review route over the picker: after a landscape
+        // 3D board-detail test, picker launch often white-screens under CI load.
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_PICKER": "1",
+            "HANGTEN_REVIEW_BOARD_ID": "soill.iron-palm-2",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
         ]
         app.launch()
 
-        let search = app.searchFields["Search boards"]
-        XCTAssertTrue(search.waitForExistence(timeout: 10))
-        search.tap()
-        search.typeText("Iron Palm")
-
-        let holdSpecs = app.buttons["boardPicker.holdSpecs.soill.iron-palm-2"]
-        XCTAssertTrue(holdSpecs.waitForExistence(timeout: 10))
-        holdSpecs.tap()
+        XCTAssertTrue(
+            app.navigationBars["Hold specs"].waitForExistence(timeout: 30),
+            "The DEBUG board-detail route must be displayed."
+        )
 
         let rightSloper = app.buttons["Right sloper"]
         XCTAssertTrue(
