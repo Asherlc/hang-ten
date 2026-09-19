@@ -37,7 +37,6 @@ struct GripHandModelView: UIViewRepresentable {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
-    var interactive = false
     var resetToken = 0
 
     func makeCoordinator() -> Coordinator { Coordinator() }
@@ -50,22 +49,25 @@ struct GripHandModelView: UIViewRepresentable {
         view.preferredFramesPerSecond = 30
         view.rendersContinuously = false
         view.isPlaying = false
+        view.isUserInteractionEnabled = true
         view.isAccessibilityElement = false
         view.accessibilityElementsHidden = true
         context.coordinator.install(in: view)
         view.didResize = { [weak coordinator = context.coordinator] in coordinator?.resetCamera() }
+        view.onPan = { [weak coordinator = context.coordinator, weak view] recognizer in
+            guard let view else { return }
+            coordinator?.orbitPan(recognizer, in: view)
+        }
+        view.onPinch = { [weak coordinator = context.coordinator] recognizer in
+            coordinator?.orbitPinch(recognizer)
+        }
+        view.installOrbitGestures()
         return view
     }
 
     func updateUIView(_ view: SCNView, context: Context) {
         let pose = GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration)
         context.coordinator.update(pose: pose, side: side, resetToken: resetToken)
-        view.isUserInteractionEnabled = interactive
-        view.allowsCameraControl = interactive
-        view.defaultCameraController.interactionMode = .orbitTurntable
-        view.defaultCameraController.inertiaEnabled = false
-        view.defaultCameraController.minimumVerticalAngle = -75
-        view.defaultCameraController.maximumVerticalAngle = 75
         view.setNeedsDisplay()
     }
 
@@ -84,6 +86,12 @@ struct GripHandModelView: UIViewRepresentable {
         private var currentPose: GripHandPose?
         private var currentSide: GripCueSide?
         private var currentResetToken: Int?
+        private var canonicalCenter = SIMD3<Float>.zero
+        private var canonicalOffset = SIMD3<Float>(0, 0, 1)
+        private var canonicalOrthographicScale: Double = 1
+        private var orbitAzimuth: Float = 0
+        private var orbitElevation: Float = 0
+        private var orbitZoom: Float = 1
 
         func install(in view: SCNView) {
             self.view = view
@@ -144,8 +152,9 @@ struct GripHandModelView: UIViewRepresentable {
             }
             let center = (low + high) / 2
             // A palm-oblique view reveals the finger pads and joint bends.
-            camera.simdPosition = center + SIMD3<Float>(currentSide == .left ? 5.8 : -5.8, 2.75, 9.4)
-            camera.look(at: SCNVector3(center.x, center.y, center.z))
+            let offset = SIMD3<Float>(currentSide == .left ? 5.8 : -5.8, 2.75, 9.4)
+            guard let transform = Self.cameraTransform(position: center + offset, target: center) else { return }
+            camera.simdTransform = transform
             let inverseCamera = simd_inverse(camera.simdTransform)
             var halfWidth: Float = 0
             var halfHeight: Float = 0
@@ -156,10 +165,99 @@ struct GripHandModelView: UIViewRepresentable {
             }
             let size = view?.bounds.size ?? .zero
             let aspect = size.height > 0 && size.width > 0 ? Float(size.width / size.height) : 0.85
-            camera.camera?.orthographicScale = Double(max(halfHeight, halfWidth / aspect) * 1.08)
+            let orthographicScale = Double(max(halfHeight, halfWidth / aspect) * 1.08)
+            camera.camera?.orthographicScale = orthographicScale
             view?.pointOfView = camera
-            view?.defaultCameraController.target = SCNVector3(center.x, center.y, center.z)
             view?.setNeedsDisplay()
+
+            canonicalCenter = center
+            canonicalOffset = offset
+            canonicalOrthographicScale = orthographicScale
+            orbitAzimuth = 0
+            orbitElevation = 0
+            orbitZoom = 1
+        }
+
+        /// Mirrors the hangboard's bounded turntable orbit: a fixed pitch axis
+        /// derived from the canonical view keeps drags predictable even as the
+        /// user spins past the original framing.
+        func orbit(azimuthDelta: Float, elevationDelta: Float, zoomScale: Float = 1) {
+            guard azimuthDelta.isFinite, elevationDelta.isFinite,
+                  zoomScale.isFinite, zoomScale > 0 else { return }
+            let fullRotation: Float = .pi * 2
+            let nextAzimuth = (orbitAzimuth + azimuthDelta).truncatingRemainder(dividingBy: fullRotation)
+            let nextElevation = min(max(orbitElevation + elevationDelta, -0.55), 0.55)
+            let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+
+            let baseDistance = simd_length(canonicalOffset)
+            guard baseDistance > 1e-6 else { return }
+            let baseDirection = canonicalOffset / baseDistance
+            let worldUp = SIMD3<Float>(0, 1, 0)
+            let rightVector = simd_cross(worldUp, baseDirection)
+            guard simd_length(rightVector) > 1e-6 else { return }
+            let right = simd_normalize(rightVector)
+
+            let yaw = simd_quatf(angle: nextAzimuth, axis: worldUp)
+            let pitch = simd_quatf(angle: nextElevation, axis: right)
+            let distance = baseDistance / nextZoom
+            guard distance.isFinite, distance > 0 else { return }
+            let rotatedOffset = (pitch * yaw).act(baseDirection) * distance
+            guard rotatedOffset.x.isFinite, rotatedOffset.y.isFinite, rotatedOffset.z.isFinite,
+                  let transform = Self.cameraTransform(
+                      position: canonicalCenter + rotatedOffset,
+                      target: canonicalCenter
+                  ) else { return }
+
+            camera.simdTransform = transform
+            camera.camera?.orthographicScale = canonicalOrthographicScale / Double(nextZoom)
+            orbitAzimuth = nextAzimuth
+            orbitElevation = nextElevation
+            orbitZoom = nextZoom
+            view?.setNeedsDisplay()
+        }
+
+        func orbitPan(_ recognizer: UIPanGestureRecognizer, in view: UIView) {
+            guard recognizer.state == .changed else { return }
+            let translation = recognizer.translation(in: view)
+            let width = max(view.bounds.width, 1)
+            let height = max(view.bounds.height, 1)
+            orbit(
+                azimuthDelta: Float(-translation.x / width) * 0.9,
+                elevationDelta: Float(-translation.y / height) * 0.65
+            )
+            recognizer.setTranslation(.zero, in: view)
+        }
+
+        func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
+            guard recognizer.state == .changed else { return }
+            orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: Float(recognizer.scale))
+            recognizer.scale = 1
+        }
+
+        /// `SCNNode.look(at:)` isn't a pure function of position and target —
+        /// it can be influenced by the node's prior orientation, which made a
+        /// post-orbit reset land on a subtly different framing than a fresh
+        /// one. Deriving an explicit right-handed basis avoids that drift.
+        private static func cameraTransform(
+            position: SIMD3<Float>,
+            target: SIMD3<Float>
+        ) -> simd_float4x4? {
+            let direction = target - position
+            let length = simd_length(direction)
+            guard length.isFinite, length > 1e-6 else { return nil }
+            let forward = direction / length
+            let worldUp = SIMD3<Float>(0, 1, 0)
+            let rightVector = simd_cross(forward, worldUp)
+            let rightLength = simd_length(rightVector)
+            guard rightLength.isFinite, rightLength > 1e-6 else { return nil }
+            let right = rightVector / rightLength
+            let up = simd_cross(right, forward)
+            var transform = matrix_identity_float4x4
+            transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
+            transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
+            transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
+            transform.columns.3 = SIMD4<Float>(position.x, position.y, position.z, 1)
+            return transform
         }
 
         private func addLight(type: SCNLight.LightType, intensity: CGFloat, position: SCNVector3) {
@@ -176,7 +274,10 @@ struct GripHandModelView: UIViewRepresentable {
 
 private final class GripHandSceneView: SCNView {
     var didResize: (() -> Void)?
+    var onPan: ((UIPanGestureRecognizer) -> Void)?
+    var onPinch: ((UIPinchGestureRecognizer) -> Void)?
     private var previousSize: CGSize = .zero
+    private let orbitGestureDelegate = OrbitPanGestureDelegate()
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -184,6 +285,21 @@ private final class GripHandSceneView: SCNView {
             previousSize = bounds.size
             didResize?()
         }
+    }
+
+    func installOrbitGestures() {
+        let pan = OrbitPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+        pan.delegate = orbitGestureDelegate
+        addGestureRecognizer(pan)
+        addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(handlePinch(_:))))
+    }
+
+    @objc private func handlePan(_ recognizer: UIPanGestureRecognizer) {
+        onPan?(recognizer)
+    }
+
+    @objc private func handlePinch(_ recognizer: UIPinchGestureRecognizer) {
+        onPinch?(recognizer)
     }
 }
 
@@ -369,7 +485,7 @@ struct GripHandModelInspector: View {
 
     private var model: some View {
         GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration,
-                          side: side, interactive: true, resetToken: resetToken)
+                          side: side, resetToken: resetToken)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .accessibilityLabel("Rotatable 3D \(side.accessibilityIdentifier) hand")
     }
@@ -420,9 +536,9 @@ struct GripHandModelReviewView: View {
                 }
                 HStack {
                     GripHandModelView(posture: posture, fingerConfiguration: configuration,
-                                      side: .left, interactive: true, resetToken: resetToken)
+                                      side: .left, resetToken: resetToken)
                     GripHandModelView(posture: posture, fingerConfiguration: configuration,
-                                      side: .right, interactive: true, resetToken: resetToken)
+                                      side: .right, resetToken: resetToken)
                 }
                 Text(fingers.isEmpty ? "Fingers not specified" : "Highlighted: " + FingerSlot.allCases.filter(fingers.contains).map(\.rawValue).joined(separator: ", "))
                     .font(.caption)

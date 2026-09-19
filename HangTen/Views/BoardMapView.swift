@@ -477,6 +477,7 @@ struct BoardMapView: View {
     let onHoldTap: ((PhysicalContact) -> Void)?
     private let requestedPresentationID: String?
     private let activeHoldID: String?
+    private let isDisplayOnly: Bool
 
     @State private var presentationSelection: BoardMapPresentationSelection
     @State private var selectedPositionID: String?
@@ -487,7 +488,8 @@ struct BoardMapView: View {
         highlightMode: BoardHighlightMode = .active,
         selectedPresentationID: String? = nil,
         activeHoldID: String? = nil,
-        onHoldTap: ((PhysicalContact) -> Void)? = nil
+        onHoldTap: ((PhysicalContact) -> Void)? = nil,
+        isDisplayOnly: Bool = false
     ) {
         self.board = board
         self.highlightedHoldIDs = highlightedHoldIDs
@@ -495,6 +497,7 @@ struct BoardMapView: View {
         self.onHoldTap = onHoldTap
         requestedPresentationID = selectedPresentationID
         self.activeHoldID = activeHoldID
+        self.isDisplayOnly = isDisplayOnly
         let resolvedSelection = BoardMapPresentationSelection(
             board: board,
             requestedPresentationID: selectedPresentationID,
@@ -565,7 +568,8 @@ struct BoardMapView: View {
                         positionID: selectedPositionID,
                         highlightedContactIDs: highlightedHoldIDs,
                         highlightMode: highlightMode,
-                        onContactTap: onHoldTap
+                        onContactTap: onHoldTap,
+                        isDisplayOnly: isDisplayOnly
                     )
                 }
             }

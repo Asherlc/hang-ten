@@ -429,6 +429,7 @@ struct BoardModelSurface: View {
     let highlightedContactIDs: Set<String>
     let highlightMode: BoardHighlightMode
     let onContactTap: ((PhysicalContact) -> Void)?
+    var isDisplayOnly = false
     @State private var result: ResultState = .loading
 
     init(
@@ -437,7 +438,8 @@ struct BoardModelSurface: View {
         positionID: String? = nil,
         highlightedContactIDs: Set<String>,
         highlightMode: BoardHighlightMode,
-        onContactTap: ((PhysicalContact) -> Void)?
+        onContactTap: ((PhysicalContact) -> Void)?,
+        isDisplayOnly: Bool = false
     ) {
         self.board = board
         self.presentation = presentation
@@ -445,19 +447,7 @@ struct BoardModelSurface: View {
         self.highlightedContactIDs = highlightedContactIDs
         self.highlightMode = highlightMode
         self.onContactTap = onContactTap
-    }
-
-    enum DisplayState: Equatable {
-        case loading
-        case ready
-        case unavailable
-    }
-
-    static func permitsContactSelection(
-        for state: DisplayState,
-        onContactTap: ((PhysicalContact) -> Void)?
-    ) -> Bool {
-        state == .ready && onContactTap != nil
+        self.isDisplayOnly = isDisplayOnly
     }
 
     var body: some View {
@@ -471,10 +461,14 @@ struct BoardModelSurface: View {
                     highlightedContactIDs: highlightedContactIDs,
                     highlightMode: highlightMode,
                     onContactTap: onContactTap,
-                    onUnavailable: { result = .unavailable }
+                    onUnavailable: { result = .unavailable },
+                    isDisplayOnly: isDisplayOnly
                 )
                 .accessibilityIdentifier("boardModel.3d")
-                .allowsHitTesting(Self.permitsContactSelection(for: .ready, onContactTap: onContactTap))
+                // Display-only picker cards wrap this in a Button; claiming
+                // SwiftUI hits here would intercept the card select tap even
+                // when the hosted SCNView has user interaction disabled.
+                .allowsHitTesting(!isDisplayOnly)
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
                     ProgressView()
@@ -1923,6 +1917,7 @@ private struct BoardModelView: UIViewRepresentable {
     let highlightMode: BoardHighlightMode
     let onContactTap: ((PhysicalContact) -> Void)?
     let onUnavailable: (() -> Void)?
+    var isDisplayOnly = false
 
     func makeUIView(context: Context) -> BoardModelSCNView {
         let view = BoardModelSCNView()
@@ -1936,8 +1931,17 @@ private struct BoardModelView: UIViewRepresentable {
         view.onUnavailable = onUnavailable
         view.positionID = positionID
         view.delegate = view
-        view.addGestureRecognizer(UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:))))
-        view.addGestureRecognizer(UIPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:))))
+        let orbitPan = OrbitPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:)))
+        orbitPan.delegate = view.orbitGestureDelegate
+        view.addGestureRecognizer(orbitPan)
+        view.orbitPanGesture = orbitPan
+        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:)))
+        tapGesture.delegate = view
+        // Short taps never clear orbit activation distance, so the pan fails
+        // and the contact tap can recognize without being stolen by micro-drags.
+        tapGesture.require(toFail: orbitPan)
+        view.addGestureRecognizer(tapGesture)
+        view.contactTapGesture = tapGesture
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
         view.selectPositionIfNeeded()
         return view
@@ -1951,11 +1955,12 @@ private struct BoardModelView: UIViewRepresentable {
         view.onContactTap = onContactTap
         view.onUnavailable = onUnavailable
         view.highlightedContactIDs = highlightedContactIDs
-        view.isUserInteractionEnabled = onContactTap != nil
+        view.isUserInteractionEnabled = !isDisplayOnly
         view.needsAccessibilityProjection = true
         view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
         view.updateAccessibility()
+        view.updateTapGesturePresence()
     }
 
     static func dismantleUIView(_ view: BoardModelSCNView, coordinator: ()) {
@@ -1965,6 +1970,8 @@ private struct BoardModelView: UIViewRepresentable {
         view.delegate = nil
         view.scene = nil
         view.model = nil
+        view.contactTapGesture = nil
+        view.orbitPanGesture = nil
     }
 }
 
@@ -1977,7 +1984,7 @@ private final class BoardModelAccessibilityElement: UIAccessibilityElement {
     }
 }
 
-class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
+class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerDelegate {
     var model: BoardModelScene?
     var boardName = "hangboard"
     var contacts: [PhysicalContact] = []
@@ -1986,8 +1993,32 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     var onUnavailable: (() -> Void)?
     var positionID: String?
     var needsAccessibilityProjection = true
+    let orbitGestureDelegate = OrbitPanGestureDelegate()
+    var orbitPanGesture: OrbitPanGestureRecognizer?
+    var contactTapGesture: UITapGestureRecognizer?
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
+
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard gestureRecognizer is UITapGestureRecognizer else { return true }
+        return onContactTap != nil
+    }
+
+    func updateTapGesturePresence() {
+        let shouldHaveTap = onContactTap != nil
+        if let contactTapGesture, !shouldHaveTap {
+            removeGestureRecognizer(contactTapGesture)
+            self.contactTapGesture = nil
+        } else if contactTapGesture == nil, shouldHaveTap {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(selectContact(_:)))
+            tap.delegate = self
+            if let orbitPanGesture {
+                tap.require(toFail: orbitPanGesture)
+            }
+            addGestureRecognizer(tap)
+            self.contactTapGesture = tap
+        }
+    }
 
     private func requestPausedRedraw() {
         guard !rendersContinuously, !isPlaying else { return }
@@ -2034,14 +2065,14 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate {
     }
 
     @objc func selectContact(_ recognizer: UITapGestureRecognizer) {
+        guard let model, onContactTap != nil else { return }
         // CPU-only nearest-hit regressions require this commit before SceneKit
         // traverses newly cloned geometry.
         SCNTransaction.flush()
-        guard let model,
-              let hit = hitTest(recognizer.location(in: self), options: [
-                  SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
-                  SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
-              ]).first,
+        guard let hit = hitTest(recognizer.location(in: self), options: [
+            SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+            SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
+        ]).first,
               let id = model.contactID(for: hit.node),
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)

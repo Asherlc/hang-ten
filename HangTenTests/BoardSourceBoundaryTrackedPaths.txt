@@ -86,6 +86,7 @@ HangTen/Views/GripDiagramView.swift
 HangTen/Views/GripHandModelView.swift
 HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
+HangTen/Views/OrbitPanGestureDelegate.swift
 HangTen/Views/RootView.swift
 HangTen/Views/SuspendedBoardPresentation.swift
 HangTen/Views/TrainView.swift
