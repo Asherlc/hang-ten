@@ -15,6 +15,7 @@
 # Optional:
 #   SWIFT_PACKAGE_CACHE_PATH     -clonedSourcePackagesDirPath
 #   XCTEST_DESTINATION           xcodebuild -destination (default: iPhone 17 Pro)
+#   XCTEST_MAX_ATTEMPTS          Soft retries including the first run (default: 2)
 #   GITHUB_OUTPUT                When set, records attempt_N_failed=true
 
 set -euo pipefail
@@ -27,6 +28,12 @@ set -euo pipefail
 : "${XCTEST_ONLY_TESTING:?XCTEST_ONLY_TESTING is required}"
 : "${XCTEST_PARALLEL_WORKERS:?XCTEST_PARALLEL_WORKERS is required}"
 : "${XCTEST_ATTEMPT_TIMEOUT_SECONDS:?XCTEST_ATTEMPT_TIMEOUT_SECONDS is required}"
+
+XCTEST_MAX_ATTEMPTS="${XCTEST_MAX_ATTEMPTS:-2}"
+if ! [[ "$XCTEST_MAX_ATTEMPTS" =~ ^[1-9][0-9]*$ ]]; then
+  echo "XCTEST_MAX_ATTEMPTS must be a positive integer; got: $XCTEST_MAX_ATTEMPTS" >&2
+  exit 1
+fi
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$repo_root"
@@ -190,12 +197,16 @@ run_xctest_attempt() {
     || return $?
 }
 
-if ! run_xctest_attempt 1; then
-  mark_attempt_failed 1
-  echo "XCTest attempt 1 failed; retrying once while reusing DerivedData."
-  if ! run_xctest_attempt 2; then
-    mark_attempt_failed 2
-    echo "XCTest attempt 2 failed." >&2
+attempt=1
+while (( attempt <= XCTEST_MAX_ATTEMPTS )); do
+  if run_xctest_attempt "$attempt"; then
+    exit 0
+  fi
+  mark_attempt_failed "$attempt"
+  if (( attempt == XCTEST_MAX_ATTEMPTS )); then
+    echo "XCTest attempt $attempt failed." >&2
     exit 1
   fi
-fi
+  echo "XCTest attempt $attempt failed; retrying while reusing DerivedData."
+  attempt=$((attempt + 1))
+done
