@@ -322,32 +322,71 @@ final class AppStore: ObservableObject {
     }
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
-        if step.handUse == .either || (step.handUse == .double && board.isOneHanded) {
-            return Set([WorkoutSide.left, .right].flatMap { side in
-                step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded).flatMap {
-                    try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)
-                } ?? []
-            })
-        }
-        return Set((try? ContactResolver.resolve(step.workRequirements, step: step, board: board).map(\.id)) ?? [])
+        let candidates = handResolutionCandidates(for: step, on: board)
+        return Set(candidates.flatMap {
+            (try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)) ?? []
+        })
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
         plan.steps.contains { step in
-            if step.handUse == .either || (step.handUse == .double && board.isOneHanded) {
-                return [WorkoutSide.left, .right].contains { side in
-                    guard let resolved = step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded) else {
-                        return true
+            if WorkoutSessionHandResolver.stepNeedsHandResolution(
+                step,
+                boardIsOneHanded: board.isOneHanded
+            ) {
+                // Alternate / left / right need both unilateral sides independently
+                // resolvable. Both-hands (two boards) is also compatible when the
+                // single-hold materialization yields at least one contact.
+                let sidesResolve = [WorkoutSide.left, .right].allSatisfy { side in
+                    guard let resolved = step.resolvingEitherHand(
+                        selectedHandSide: side,
+                        boardIsOneHanded: board.isOneHanded
+                    ) else {
+                        return false
                     }
-                    return resolved.workRequirements.contains { target in
-                        (try? ContactResolver.resolve(target, step: resolved, board: board)) == nil
+                    return resolved.workRequirements.allSatisfy { target in
+                        (try? ContactResolver.resolve(target, step: resolved, board: board)) != nil
                     }
                 }
+                let both = WorkoutSessionHandResolver.materialized(
+                    step,
+                    preference: .both,
+                    boardIsOneHanded: board.isOneHanded
+                )
+                let bothResolves = !((try? ContactResolver.resolve(
+                    both.workRequirements,
+                    step: both,
+                    board: board
+                )) ?? []).isEmpty
+                return !(sidesResolve || bothResolves)
             }
             return step.workRequirements.contains { target in
                 (try? ContactResolver.resolve(target, step: step, board: board)) == nil
             }
         }
+    }
+
+    /// Left/right unilateral materializations plus both-mode single-hold materialization
+    /// when the step still needs a start-of-session hand preference on this board.
+    private func handResolutionCandidates(
+        for step: WorkoutStep,
+        on board: BoardRevision
+    ) -> [WorkoutStep] {
+        guard WorkoutSessionHandResolver.stepNeedsHandResolution(
+            step,
+            boardIsOneHanded: board.isOneHanded
+        ) else {
+            return [step]
+        }
+        let leftRight = [WorkoutSide.left, .right].compactMap {
+            step.resolvingEitherHand(selectedHandSide: $0, boardIsOneHanded: board.isOneHanded)
+        }
+        let both = WorkoutSessionHandResolver.materialized(
+            step,
+            preference: .both,
+            boardIsOneHanded: board.isOneHanded
+        )
+        return leftRight + [both]
     }
 
     private func reloadCustomRoutines() {
@@ -385,6 +424,8 @@ final class AppStore: ObservableObject {
         startDate: Date,
         endDate: Date,
         selectedHandSide: WorkoutSide? = nil,
+        handPreference: WorkoutSessionHandPreference? = nil,
+        sessionSteps: [WorkoutStep]? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         if let session {
@@ -411,6 +452,8 @@ final class AppStore: ObservableObject {
                 on: board,
                 stopwatchDurations: stopwatchDurations,
                 selectedHandSide: selectedHandSide,
+                handPreference: handPreference,
+                sessionSteps: sessionSteps,
                 stepMeasurements: session?.steps ?? []
             )
             activityContext = PendingWorkoutActivityContext(
@@ -450,6 +493,8 @@ final class AppStore: ObservableObject {
         startDate: Date,
         endDate: Date,
         selectedHandSide: WorkoutSide? = nil,
+        handPreference: WorkoutSessionHandPreference? = nil,
+        sessionSteps: [WorkoutStep]? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         markSessionComplete(
@@ -459,6 +504,8 @@ final class AppStore: ObservableObject {
             startDate: startDate,
             endDate: endDate,
             selectedHandSide: selectedHandSide,
+            handPreference: handPreference,
+            sessionSteps: sessionSteps,
             session: session
         )
     }

@@ -7,6 +7,7 @@
   "productURL": "https://natureclimbing.com/products/mini-hanger",
   "dimensions": "10.5 × 6 × 3 cm",
   "aspectRatio": 1.0,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

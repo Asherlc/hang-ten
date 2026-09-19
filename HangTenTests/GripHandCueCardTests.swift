@@ -24,6 +24,47 @@ final class GripHandCueCardTests: XCTestCase {
         XCTAssertEqual(GripDiagramView.singleSide(handCapacity: 1, resolvedSide: nil), .right)
     }
 
+    func testCueLabelStaysSingularForOneHandCapacity() {
+        let edge = PhysicalContact(
+            id: "curved-edge-20",
+            name: "20 mm curved edge",
+            kind: .edge,
+            handCapacity: 1,
+            depth: .range(.init(minimum: 20, maximum: 20))
+        )
+        let jug = PhysicalContact(
+            id: "outer-jug",
+            name: "Outer jug",
+            kind: .jug,
+            handCapacity: 1
+        )
+        XCTAssertEqual(GripDiagramView.cueLabel(for: edge), "20 mm curved edge")
+        XCTAssertEqual(GripDiagramView.cueLabel(for: jug), "Outer jug")
+    }
+
+    func testCueLabelPluralizesTwoHandCapacityEdgesAndJugs() {
+        let edge = PhysicalContact(
+            id: "edge",
+            name: "20 mm edge",
+            kind: .edge,
+            handCapacity: 2
+        )
+        let jug = PhysicalContact(
+            id: "jug",
+            name: "Outer jug",
+            kind: .jug,
+            handCapacity: 2
+        )
+        let unspecified = PhysicalContact(
+            id: "edge-unspecified",
+            name: "20 mm edge",
+            kind: .edge
+        )
+        XCTAssertEqual(GripDiagramView.cueLabel(for: edge), "20 mm edges")
+        XCTAssertEqual(GripDiagramView.cueLabel(for: jug), "Outer jugs")
+        XCTAssertEqual(GripDiagramView.cueLabel(for: unspecified), "20 mm edges")
+    }
+
     func testPocketCountDoesNotInventExactFingerHighlights() {
         for grip in GripType.allCases {
             let pose = GripHandPose(posture: grip, fingerConfiguration: nil)

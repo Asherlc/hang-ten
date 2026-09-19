@@ -1120,6 +1120,9 @@ struct BoardRevision: Identifiable, Hashable {
     let subtitle: String
     let dimensions: String?
     let aspectRatio: CGFloat
+    /// Package-authored simultaneous hand capacity for the board (`1...2`).
+    /// Omitted in `board.json` decodes as `2` (conventional two-handed).
+    let handCapacity: Int
     let unilateralHandResolution: UnilateralHandResolution?
     let equipmentObjects: [EquipmentObject]
     let contacts: [PhysicalContact]
@@ -1139,6 +1142,7 @@ struct BoardRevision: Identifiable, Hashable {
         subtitle: String,
         dimensions: String?,
         aspectRatio: CGFloat,
+        handCapacity: Int = 2,
         unilateralHandResolution: UnilateralHandResolution? = nil,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [PhysicalContact],
@@ -1148,6 +1152,10 @@ struct BoardRevision: Identifiable, Hashable {
         positions: [BoardPosition]? = nil,
         positionTransitions: [BoardPositionTransition] = []
     ) {
+        precondition(
+            PhysicalContact.validHandCapacityRange.contains(handCapacity),
+            "BoardRevision handCapacity must be in \(PhysicalContact.validHandCapacityRange)."
+        )
         self.id = id
         self.revisionID = revisionID
         self.manufacturer = manufacturer
@@ -1155,6 +1163,7 @@ struct BoardRevision: Identifiable, Hashable {
         self.subtitle = subtitle
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.handCapacity = handCapacity
         self.unilateralHandResolution = unilateralHandResolution
         self.equipmentObjects = equipmentObjects
         self.contacts = contacts
@@ -1181,35 +1190,10 @@ struct BoardRevision: Identifiable, Hashable {
         presentations.first(where: \.isDefault) ?? presentations[0]
     }
 
-    /// True when every physical contact on this board fits only one hand AND
-    /// no two contacts share the same hold-defining properties (kind, shape,
-    /// depth, finger capacity, hand capacity). That second check matters:
-    /// some boards represent a single two-hand edge as a mirrored pair of
-    /// handCapacity-1 contacts (see `ContactResolver.outermostPair`), and a
-    /// bilateral hang is still possible on those. Only when no such pair
-    /// exists can a prescription (however authored) never be performed with
-    /// both hands at once on this board.
+    /// True when the package authors this board as one-handed (`handCapacity == 1`).
+    /// Not inferred from contact inventory or spatial pairing.
     var isOneHanded: Bool {
-        guard !contacts.isEmpty, contacts.allSatisfy({ $0.handCapacity == 1 }) else {
-            return false
-        }
-        let framedContacts = contacts.compactMap { contact -> (PhysicalContact, CGFloat)? in
-            guard let frame = contact.resolvedFrame(in: self.defaultPresentation) else { return nil }
-            return (contact, frame.rect.midX)
-        }
-        let hasBilateralPair = framedContacts.contains { left in
-            guard left.1 < 0.5 else { return false }
-            return framedContacts.contains { right in
-                guard right.1 > 0.5 else { return false }
-                return right.0.id != left.0.id
-                    && right.0.kind == left.0.kind
-                    && right.0.shape == left.0.shape
-                    && right.0.depth == left.0.depth
-                    && right.0.fingerCapacity == left.0.fingerCapacity
-                    && right.0.handCapacity == left.0.handCapacity
-            }
-        }
-        return !hasBilateralPair
+        handCapacity == 1
     }
 
     func presentation(id: String?) -> BoardPresentation? {
@@ -1522,6 +1506,25 @@ enum WorkoutSide: String, Codable, CaseIterable, Hashable {
     case left
     case right
     case both
+}
+
+/// Athlete start-of-session hand preference. Does not add `WorkoutHandUse` cases;
+/// it only drives materialization / alternate expansion before the session runs.
+enum WorkoutSessionHandPreference: Equatable {
+    case left
+    case right
+    case alternate
+    case both
+
+    /// Left/right map to a concrete side for gradual migration; alternate and both
+    /// require the dedicated session-step path instead.
+    var selectedHandSide: WorkoutSide? {
+        switch self {
+        case .left: return .left
+        case .right: return .right
+        case .alternate, .both: return nil
+        }
+    }
 }
 
 enum WorkoutAction: String, Codable, CaseIterable, Hashable {

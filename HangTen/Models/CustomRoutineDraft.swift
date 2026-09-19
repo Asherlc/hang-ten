@@ -78,6 +78,7 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 /// Resolves the editor preview through a valid athlete-hand alternative. An
 /// either-hand definition deliberately retains `.both` until a session starts,
 /// which is not a contact-resolver input for a single-contact requirement.
+/// Both-hands (two boards) preview also includes the single-hold materialization.
 enum CustomRoutineBoardPreview {
     static func contactIDs(
         for step: CustomRoutineStepDraft,
@@ -125,13 +126,21 @@ enum CustomRoutineBoardPreview {
             repetitions: draft.repetitions,
             externalLoadKGF: draft.externalLoadKGF
         )
-        let needsHandChoice = step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
-        let candidates = needsHandChoice
-            ? [WorkoutSide.left, .right].compactMap {
-                step.resolvingEitherHand(selectedHandSide: $0, boardIsOneHanded: boardIsOneHanded)
-            }
-            : [step]
-        return candidates
+        guard WorkoutSessionHandResolver.stepNeedsHandResolution(
+            step,
+            boardIsOneHanded: boardIsOneHanded
+        ) else {
+            return [step]
+        }
+        let leftRight = [WorkoutSide.left, .right].compactMap {
+            step.resolvingEitherHand(selectedHandSide: $0, boardIsOneHanded: boardIsOneHanded)
+        }
+        let both = WorkoutSessionHandResolver.materialized(
+            step,
+            preference: .both,
+            boardIsOneHanded: boardIsOneHanded
+        )
+        return leftRight + [both]
     }
 
     private static func requirement(

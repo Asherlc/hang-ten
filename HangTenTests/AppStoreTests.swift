@@ -386,6 +386,221 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(segment.side, .right)
     }
 
+    func testCompletionForwardsAlternateHandPreferenceWithoutHandSideRequired() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set("lattice.mxedge-lift-small", forKey: "HangTen.selectedBoardID.v1")
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(
+            requirement: ContactRequirement(
+                kind: .edge,
+                depth: .range(.init(minimum: 14, maximum: 14)),
+                handCapacity: 1,
+                selection: .single
+            ),
+            handUse: .either,
+            side: .both
+        )
+        let sessionSteps = WorkoutSessionHandResolver.sessionSteps(
+            from: plan.steps,
+            preference: .alternate,
+            boardIsOneHanded: appStore.board(for: plan).isOneHanded
+        )
+
+        appStore.markSessionComplete(
+            plan,
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_020),
+            handPreference: .alternate,
+            sessionSteps: sessionSteps
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        XCTAssertEqual(context.activitySegments.count, 2)
+        XCTAssertEqual(context.activitySegments.map(\.side), [.left, .right])
+        XCTAssertEqual(
+            context.activitySegments.map(\.handUse),
+            [.single, .single]
+        )
+        XCTAssertNil(appStore.healthAuthorizationError)
+    }
+
+    func testCompletionForwardsBothHandPreferenceAsDoubleBoth() throws {
+        let suiteName = "AppStoreTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suiteName)!
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+        defaults.set("lattice.mxedge-lift-small", forKey: "HangTen.selectedBoardID.v1")
+        defaults.set(true, forKey: "HangTen.healthAuthorizationRequested.v1")
+        let historyStore = LocalWorkoutHistoryStore(defaults: defaults)
+        let healthStore = FakeWorkoutHealthStore()
+        let appStore = AppStore(
+            healthKitService: healthStore,
+            workoutHistoryStore: historyStore,
+            defaults: defaults
+        )
+        let plan = activityPlan(
+            requirement: ContactRequirement(
+                kind: .edge,
+                depth: .range(.init(minimum: 14, maximum: 14)),
+                handCapacity: 1,
+                selection: .single
+            ),
+            handUse: .either,
+            side: .both
+        )
+
+        appStore.markSessionComplete(
+            plan,
+            startDate: Date(timeIntervalSinceReferenceDate: 1_000),
+            endDate: Date(timeIntervalSinceReferenceDate: 1_010),
+            handPreference: .both
+        )
+        waitUntil { healthStore.saveCallCount == 1 }
+
+        let context = try XCTUnwrap(healthStore.savedActivityContexts.first ?? nil)
+        let segment = try XCTUnwrap(context.activitySegments.first)
+        XCTAssertEqual(segment.handUse, .double)
+        XCTAssertEqual(segment.side, .both)
+        XCTAssertNil(appStore.healthAuthorizationError)
+    }
+
+    func testBilateralDoubleOnOneHandedBoardIsCompatibleViaBothModeSingleHold() {
+        let board = oneHandedCompatibilityBoard()
+        let requirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
+        let plan = TrainingPlan(
+            id: "one-handed-bilateral",
+            title: "One-handed bilateral",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/one-handed-bilateral")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [
+                WorkoutStep(
+                    id: "bilateral-step",
+                    number: 1,
+                    title: "Bilateral",
+                    instruction: "",
+                    accessory: "",
+                    duration: 10,
+                    phase: .hang,
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            target: .fromLegacyTargets([requirement]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
+                    handUse: .double,
+                    side: .both
+                )
+            ]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertFalse(
+            store.isIncompatible(plan, on: board),
+            "Both-hands on a one-handed board must be compatible when single-hold materialization resolves"
+        )
+        XCTAssertEqual(
+            store.contactIDs(for: plan.steps[0], on: board),
+            ["one-handed-pocket"]
+        )
+    }
+
+    func testEitherHandOnOneHandedBoardContactIDsIncludeBothModeSingleHold() {
+        let board = oneHandedCompatibilityBoard()
+        let requirement = ContactRequirement.kind(.pocket, selection: .single)
+        let step = WorkoutStep(
+            id: "either-step",
+            number: 1,
+            title: "Either",
+            instruction: "",
+            accessory: "",
+            duration: 10,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([requirement]),
+                    timing: .fixed,
+                    duration: 10
+                )
+            ],
+            handUse: .either,
+            side: .both
+        )
+        let plan = TrainingPlan(
+            id: "one-handed-either",
+            title: "One-handed either",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/one-handed-either")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [step]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertFalse(store.isIncompatible(plan, on: board))
+        XCTAssertEqual(store.contactIDs(for: step, on: board), ["one-handed-pocket"])
+    }
+
+    func testUnresolvableEitherHandOnOneHandedBoardRemainsIncompatible() {
+        let board = oneHandedCompatibilityBoard()
+        let requirement = ContactRequirement.kind(.sloper, selection: .single)
+        let plan = TrainingPlan(
+            id: "one-handed-missing",
+            title: "Missing hold",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/one-handed-missing")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [
+                WorkoutStep(
+                    id: "missing-step",
+                    number: 1,
+                    title: "Missing",
+                    instruction: "",
+                    accessory: "",
+                    duration: 10,
+                    phase: .hang,
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            target: .fromLegacyTargets([requirement]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
+                    handUse: .either,
+                    side: .both
+                )
+            ]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertTrue(
+            store.isIncompatible(plan, on: board),
+            "Alternate and both-mode paths must both fail when no contact matches"
+        )
+        XCTAssertEqual(store.contactIDs(for: plan.steps[0], on: board), [])
+    }
+
     func testWriteOnlyHealthStoreUsesLocalFallbackWhenHistoryReadIsUnsupported() {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
@@ -843,13 +1058,20 @@ final class AppStoreTests: XCTestCase {
     }
 
     func testCompletionFailsClosedWhenStepGripMetadataIsUnknown() {
-        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
+        let contact = PhysicalContact(
+            id: "edge",
+            name: "Edge",
+            kind: .edge,
+            gripTypes: [.openHand]
+        )
+        let board = activityBoard(contacts: [contact])
         assertCompletionFailsForUnresolvedTarget(
             plan: activityPlan(
                 requirement: .kind(.edge, selection: .single),
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                boardID: board.id
             ),
-            board: activityBoard(contacts: [contact])
+            board: board
         )
     }
 
@@ -886,11 +1108,13 @@ final class AppStoreTests: XCTestCase {
             PhysicalContact(id: "left", name: "Left edge", kind: .edge),
             PhysicalContact(id: "right", name: "Right edge", kind: .edge)
         ]
+        let board = activityBoard(contacts: contacts)
         assertCompletionFailsForUnresolvedTarget(
             plan: activityPlan(
-                requirement: .kind(.edge, selection: .bilateralPair)
+                requirement: .kind(.edge, selection: .bilateralPair),
+                boardID: board.id
             ),
-            board: activityBoard(contacts: contacts)
+            board: board
         )
     }
 
@@ -960,7 +1184,8 @@ final class AppStoreTests: XCTestCase {
         gripType: GripType? = nil,
         handUse: WorkoutHandUse = .double,
         side: WorkoutSide = .both,
-        timing: WorkoutSegmentTiming = .fixed
+        timing: WorkoutSegmentTiming = .fixed,
+        boardID: String? = nil
     ) -> TrainingPlan {
         let targets = requirement.map { [$0] } ?? []
         return TrainingPlan(
@@ -971,7 +1196,7 @@ final class AppStoreTests: XCTestCase {
             sourceLabel: "Source fixture",
             sourceURL: URL(string: "https://example.com/source")!,
             provenance: .adapted,
-            boardID: nil,
+            boardID: boardID,
             steps: [
                 WorkoutStep(
                     id: "activity-step",
@@ -1702,6 +1927,51 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         let defaults = UserDefaults(suiteName: suite)!
         defaults.removePersistentDomain(forName: suite)
         return defaults
+    }
+
+    private func oneHandedCompatibilityBoard() -> BoardRevision {
+        let contact = PhysicalContact(
+            id: "one-handed-pocket",
+            name: "One-handed pocket",
+            kind: .pocket,
+            handCapacity: 1,
+            side: .left
+        )
+        return BoardRevision(
+            id: "one-handed-compatibility-board",
+            revisionID: "test-fixture",
+            manufacturer: "Fixture",
+            name: "One-handed board",
+            subtitle: "",
+            dimensions: "",
+            aspectRatio: 1,
+            handCapacity: 1,
+            contacts: [contact],
+            productURL: URL(string: "https://example.com/one-handed-compatibility")!,
+            photoAssetName: nil,
+            presentations: [
+                BoardPresentation(
+                    id: "primary",
+                    name: "Primary",
+                    aspectRatio: 1,
+                    isDefault: true,
+                    media: .raster(BoardRasterMedia(
+                        assetPath: "",
+                        contactGeometry: [
+                            contact.id: [
+                                BoardContactPiece(
+                                    id: "\(contact.id)-piece",
+                                    contactID: contact.id,
+                                    frame: CGRect(x: 0.5, y: 0, width: 0.1, height: 0.1),
+                                    shape: .roundedRect(cornerRadiusFraction: 0),
+                                    treatment: .surface
+                                )
+                            ]
+                        ]
+                    ))
+                )
+            ]
+        )
     }
 
     private func workoutSessionRecord(

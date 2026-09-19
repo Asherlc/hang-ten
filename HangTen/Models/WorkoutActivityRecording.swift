@@ -576,17 +576,31 @@ enum ContactResolver {
 }
 
 struct WorkoutActivityRecorder {
+    /// Records activity for a completed session.
+    ///
+    /// Resolution priority:
+    /// 1. `sessionSteps` — already-materialized session timeline (preferred)
+    /// 2. `handPreference` — expand/materialize via `WorkoutSessionHandResolver`
+    /// 3. `selectedHandSide` — legacy left/right-only path
     func segments(
         for plan: TrainingPlan,
         on board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
-        selectedHandSide: WorkoutSide? = nil
+        selectedHandSide: WorkoutSide? = nil,
+        handPreference: WorkoutSessionHandPreference? = nil,
+        sessionSteps: [WorkoutStep]? = nil
     ) throws -> [RecordedActivitySegment] {
+        let recordingSteps = try resolvedRecordingSteps(
+            for: plan,
+            on: board,
+            selectedHandSide: selectedHandSide,
+            handPreference: handPreference,
+            sessionSteps: sessionSteps
+        )
         var result: [RecordedActivitySegment] = []
-        for step in plan.steps {
-            let recordedStep = try resolvedHandStep(step, selectedHandSide: selectedHandSide, board: board)
+        for recordedStep in recordingSteps {
             for (index, segment) in recordedStep.segments.enumerated() {
-                let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
+                let key = WorkoutActivitySegmentKey(stepID: recordedStep.id, segmentIndex: index)
                 let duration: TimeInterval?
                 switch segment.kind {
                 case .rest:
@@ -609,8 +623,8 @@ struct WorkoutActivityRecorder {
                 if segment.kind == .rest {
                     result.append(
                         RecordedActivitySegment(
-                            stepID: step.id,
-                            stepNumber: step.number,
+                            stepID: recordedStep.id,
+                            stepNumber: recordedStep.number,
                             kind: .rest,
                             target: nil,
                             durationSeconds: duration
@@ -619,16 +633,16 @@ struct WorkoutActivityRecorder {
                     continue
                 }
                 guard let segmentTarget = segment.target else {
-                    guard allowsSourceLinkedUntargetedWork(segment, in: step, plan: plan) else {
+                    guard allowsSourceLinkedUntargetedWork(segment, in: recordedStep, plan: plan) else {
                         throw WorkoutActivityRecordingError.unresolvedTarget(
-                            stepID: step.id,
+                            stepID: recordedStep.id,
                             segmentIndex: index
                         )
                     }
                     result.append(
                         RecordedActivitySegment(
-                            stepID: step.id,
-                            stepNumber: step.number,
+                            stepID: recordedStep.id,
+                            stepNumber: recordedStep.number,
                             kind: .work,
                             target: .selfSelected,
                             durationSeconds: duration,
@@ -643,8 +657,8 @@ struct WorkoutActivityRecorder {
                 case .selfSelected:
                     result.append(
                         RecordedActivitySegment(
-                            stepID: step.id,
-                            stepNumber: step.number,
+                            stepID: recordedStep.id,
+                            stepNumber: recordedStep.number,
                             kind: .work,
                             target: .selfSelected,
                             durationSeconds: duration,
@@ -663,8 +677,8 @@ struct WorkoutActivityRecorder {
                             )
                             resolvedSegments.append(
                                 RecordedActivitySegment(
-                                    stepID: step.id,
-                                    stepNumber: step.number,
+                                    stepID: recordedStep.id,
+                                    stepNumber: recordedStep.number,
                                     kind: .work,
                                     target: .resolvedContacts(
                                         ResolvedContactSnapshot(
@@ -685,18 +699,18 @@ struct WorkoutActivityRecorder {
                     } catch {
                         guard allowsSourceLinkedRequirementFallback(
                             segment,
-                            in: step,
+                            in: recordedStep,
                             plan: plan
                         ) else {
                             throw WorkoutActivityRecordingError.unresolvedTarget(
-                                stepID: step.id,
+                                stepID: recordedStep.id,
                                 segmentIndex: index
                             )
                         }
                         result.append(
                             RecordedActivitySegment(
-                                stepID: step.id,
-                                stepNumber: step.number,
+                                stepID: recordedStep.id,
+                                stepNumber: recordedStep.number,
                                 kind: .work,
                                 target: .selfSelected,
                                 durationSeconds: duration,
@@ -709,6 +723,28 @@ struct WorkoutActivityRecorder {
             }
         }
         return result
+    }
+
+    private func resolvedRecordingSteps(
+        for plan: TrainingPlan,
+        on board: BoardRevision,
+        selectedHandSide: WorkoutSide?,
+        handPreference: WorkoutSessionHandPreference?,
+        sessionSteps: [WorkoutStep]?
+    ) throws -> [WorkoutStep] {
+        if let sessionSteps {
+            return sessionSteps
+        }
+        if let handPreference {
+            return WorkoutSessionHandResolver.sessionSteps(
+                from: plan.steps,
+                preference: handPreference,
+                boardIsOneHanded: board.isOneHanded
+            )
+        }
+        return try plan.steps.map {
+            try resolvedHandStep($0, selectedHandSide: selectedHandSide, board: board)
+        }
     }
 
     private func resolvedHandStep(
@@ -767,6 +803,8 @@ struct WorkoutActivityRecorder {
         on board: BoardRevision,
         stopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:],
         selectedHandSide: WorkoutSide? = nil,
+        handPreference: WorkoutSessionHandPreference? = nil,
+        sessionSteps: [WorkoutStep]? = nil,
         stepMeasurements: [WorkoutStepMeasurement] = []
     ) throws -> WorkoutActivityMetadata {
         WorkoutActivityMetadata(
@@ -774,7 +812,9 @@ struct WorkoutActivityRecorder {
                 for: plan,
                 on: board,
                 stopwatchDurations: stopwatchDurations,
-                selectedHandSide: selectedHandSide
+                selectedHandSide: selectedHandSide,
+                handPreference: handPreference,
+                sessionSteps: sessionSteps
             ),
             measurements: measuredSteps(from: stepMeasurements)
         )

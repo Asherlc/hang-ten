@@ -7,6 +7,7 @@
   "productURL": "https://crimptonite.com/product/helium-mobile/",
   "dimensions": "400 \u00d7 58 \u00d7 24 mm",
   "aspectRatio": 1.5,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

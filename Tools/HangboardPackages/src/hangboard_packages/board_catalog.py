@@ -1121,6 +1121,7 @@ class BoardRevision:
     presentations: tuple[BoardPresentation, ...]
     positions: tuple[BoardPosition, ...]
     position_transitions: tuple[BoardPositionTransition, ...]
+    hand_capacity: int = field(default=2, kw_only=True)
     unilateral_hand_resolution: UnilateralHandResolution | None = field(
         default=None, kw_only=True
     )
@@ -1488,6 +1489,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         "board.json",
         optional={
             "dimensions",
+            "handCapacity",
             "unilateralHandResolution",
             "equipmentObjects",
             "positions",
@@ -1502,6 +1504,14 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
     facts["aspectRatio"] = _number(value["aspectRatio"], "board.json.aspectRatio")
     if facts["aspectRatio"] <= 0:
         raise ValueError("board.json.aspectRatio must be positive")
+    if "handCapacity" in value:
+        hand_capacity = _positive_integer(
+            value["handCapacity"], "board.json.handCapacity"
+        )
+        if hand_capacity not in range(1, 3):
+            raise ValueError("board.json.handCapacity must be in 1...2")
+    else:
+        hand_capacity = 2
     unilateral_hand_resolution = None
     if "unilateralHandResolution" in value:
         raw_resolution = _string(
@@ -1574,6 +1584,10 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
             raise ValueError(
                 f"contact {contact.id} references unknown equipment object "
                 f"{contact.equipment_object_id}"
+            )
+        if hand_capacity == 1 and contact.hand_capacity == 2:
+            raise ValueError(
+                f"one-handed board cannot include contact {contact.id} with handCapacity 2"
             )
     owned_equipment_object_ids = {
         contact.equipment_object_id for contact in contacts_tuple
@@ -1672,6 +1686,7 @@ def _load_board(value: Mapping[str, Any]) -> BoardRevision:
         presentations,
         positions,
         position_transitions,
+        hand_capacity=hand_capacity,
         unilateral_hand_resolution=unilateral_hand_resolution,
     )
 

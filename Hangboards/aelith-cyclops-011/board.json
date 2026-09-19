@@ -6,6 +6,7 @@
   "subtitle": "Portable anodized-aluminium trainer with one mono edge.",
   "productURL": "https://aelithequipment.com/product/011-blue-x-black-cyclops-portable-hangboard/",
   "aspectRatio": 1.0,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

@@ -117,6 +117,137 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testCaptainFingerfoodDualWorkoutsResolveAsOneHandedAfterHandChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        XCTAssertEqual(board.handCapacity, 1)
+        XCTAssertTrue(board.isOneHanded)
+
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Hang", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([
+                    ContactRequirement(
+                        kind: .edge,
+                        depth: .range(.init(minimum: 20, maximum: 20)),
+                        selection: .bilateralPair
+                    )
+                ]),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .double, side: .both
+        )
+
+        XCTAssertTrue(
+            bilateral.handUse == .either || board.isOneHanded,
+            "Dual must gate the start-of-session hand picker like other one-handed boards"
+        )
+
+        let resolved = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .left,
+            boardIsOneHanded: board.isOneHanded
+        )
+        XCTAssertEqual(resolved.handUse, .single)
+        XCTAssertEqual(resolved.side, .left)
+        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(WorkoutTimeline.labels(for: resolved), ["Hang", "Left hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: resolved))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: resolved))
+        XCTAssertEqual(
+            GripDiagramView.singleSide(handCapacity: 1, resolvedSide: resolved.side),
+            .left
+        )
+        let dualEdge = try XCTUnwrap(board.contacts.first { $0.id == "curved-edge-20" })
+        XCTAssertEqual(GripDiagramView.cueLabel(for: dualEdge), "20 mm curved edge")
+    }
+
+    func testBoardHandCapacityDrivesOneHandedWorkoutMaterialization() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .double, side: .both
+        )
+        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge, handCapacity: 1)
+        let productURL = URL(string: "https://example.com/board")!
+
+        let oneHanded = BoardRevision(
+            id: "fixture.one-handed",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "One handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 1,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertTrue(oneHanded.isOneHanded)
+        let resolvedOneHanded = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .left,
+            boardIsOneHanded: oneHanded.isOneHanded
+        )
+        XCTAssertEqual(resolvedOneHanded.handUse, .single)
+        XCTAssertEqual(resolvedOneHanded.side, .left)
+
+        let twoHanded = BoardRevision(
+            id: "fixture.two-handed",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Two handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertFalse(twoHanded.isOneHanded)
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(
+                bilateral,
+                selectedHandSide: .left,
+                boardIsOneHanded: twoHanded.isOneHanded
+            ),
+            bilateral
+        )
+
+        let omittedDefault = BoardRevision(
+            id: "fixture.omitted-default",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Default two handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertEqual(omittedDefault.handCapacity, 2)
+        XCTAssertFalse(omittedDefault.isOneHanded)
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(
+                bilateral,
+                selectedHandSide: .left,
+                boardIsOneHanded: omittedDefault.isOneHanded
+            ),
+            bilateral
+        )
+    }
+
     func testOneHandedBoardResolutionNormalizesBilateralTargetsToSingleSelection() throws {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
@@ -140,6 +271,254 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(
             resolved.segments.first?.contactRequirements,
             [ContactRequirement(kind: .jug, selection: .single)]
+        )
+    }
+
+    func testSessionHandPreferenceMapsLeftRightOnly() {
+        XCTAssertEqual(WorkoutSessionHandPreference.left.selectedHandSide, .left)
+        XCTAssertEqual(WorkoutSessionHandPreference.right.selectedHandSide, .right)
+        XCTAssertNil(WorkoutSessionHandPreference.alternate.selectedHandSide)
+        XCTAssertNil(WorkoutSessionHandPreference.both.selectedHandSide)
+    }
+
+    func testNeedsHandChoiceGatesOnEitherOrOneHandedDoubleNotBareBoard() {
+        let either = WorkoutStep(
+            id: "either", number: 1, title: "Either", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, handUse: .either, side: .both
+        )
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, handUse: .double, side: .both
+        )
+        let fixedSingle = WorkoutStep(
+            id: "left", number: 1, title: "Left", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang, handUse: .single, side: .left
+        )
+        let rest = WorkoutStep(
+            id: "rest", number: 2, title: "Rest", instruction: "Rest.",
+            accessory: "", duration: 30, phase: .rest,
+            handUse: .double, side: .both
+        )
+
+        XCTAssertTrue(
+            WorkoutSessionHandResolver.needsHandChoice(steps: [either], boardIsOneHanded: false)
+        )
+        XCTAssertTrue(
+            WorkoutSessionHandResolver.needsHandChoice(steps: [bilateral], boardIsOneHanded: true)
+        )
+        XCTAssertFalse(
+            WorkoutSessionHandResolver.needsHandChoice(steps: [bilateral], boardIsOneHanded: false)
+        )
+        XCTAssertFalse(
+            WorkoutSessionHandResolver.needsHandChoice(steps: [fixedSingle], boardIsOneHanded: true),
+            "One-handed board alone must not force a hand choice when no step needs resolution"
+        )
+        XCTAssertFalse(
+            WorkoutSessionHandResolver.needsHandChoice(
+                steps: [fixedSingle, rest],
+                boardIsOneHanded: true
+            ),
+            "Default .double rests must not force a hand choice on one-handed boards"
+        )
+    }
+
+    func testSessionStepsLeaveRestUnchangedForAllPreferences() throws {
+        let work = WorkoutStep(
+            id: "either", number: 1, title: "Either", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
+            handUse: .either, side: .both
+        )
+        let rest = WorkoutStep(
+            id: "rest", number: 2, title: "Rest", instruction: "Rest.",
+            accessory: "", duration: 30, phase: .rest,
+            segments: [WorkoutSegment(
+                kind: .rest,
+                target: nil,
+                timing: .fixed,
+                duration: 30
+            )],
+            handUse: .double, side: .both
+        )
+
+        for preference in [
+            WorkoutSessionHandPreference.left,
+            .right,
+            .both,
+            .alternate
+        ] {
+            let resolved = WorkoutSessionHandResolver.sessionSteps(
+                from: [work, rest],
+                preference: preference,
+                boardIsOneHanded: true
+            )
+            let resolvedRest = try XCTUnwrap(resolved.first { $0.id == "rest" })
+            XCTAssertEqual(resolvedRest.id, rest.id, "\(preference)")
+            XCTAssertEqual(resolvedRest.title, rest.title, "\(preference)")
+            XCTAssertEqual(resolvedRest.instruction, rest.instruction, "\(preference)")
+            XCTAssertEqual(resolvedRest.duration, rest.duration, "\(preference)")
+            XCTAssertEqual(resolvedRest.phase, rest.phase, "\(preference)")
+            XCTAssertEqual(resolvedRest.segments, rest.segments, "\(preference)")
+            XCTAssertEqual(resolvedRest.workRequirements, rest.workRequirements, "\(preference)")
+            XCTAssertEqual(resolvedRest.handUse, .double, "\(preference)")
+            XCTAssertEqual(resolvedRest.side, .both, "\(preference)")
+            XCTAssertEqual(resolvedRest.action, rest.action, "\(preference)")
+        }
+    }
+
+    func testSessionStepsLeftRightMaterializeEitherAndOneHandedDouble() {
+        let either = WorkoutStep(
+            id: "either", number: 1, title: "Either", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
+            handUse: .either, side: .both
+        )
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 2, title: "Both", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .double, side: .both
+        )
+
+        let leftSteps = WorkoutSessionHandResolver.sessionSteps(
+            from: [either, bilateral],
+            preference: .left,
+            boardIsOneHanded: true
+        )
+        XCTAssertEqual(leftSteps.map(\.id), ["either", "bilateral"])
+        XCTAssertEqual(leftSteps.map(\.side), [.left, .left])
+        XCTAssertEqual(leftSteps.map(\.handUse), [.single, .single])
+        XCTAssertEqual(leftSteps.map(\.number), [1, 2])
+
+        let rightSteps = WorkoutSessionHandResolver.sessionSteps(
+            from: [either],
+            preference: .right,
+            boardIsOneHanded: false
+        )
+        XCTAssertEqual(rightSteps.first?.side, .right)
+        XCTAssertEqual(rightSteps.first?.handUse, .single)
+    }
+
+    func testSessionStepsBothKeepsDoubleBothWithSingleHandSelection() throws {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .either, side: .both
+        )
+
+        let both = WorkoutSessionHandResolver.sessionSteps(
+            from: [bilateral],
+            preference: .both,
+            boardIsOneHanded: false
+        )
+        let resolved = try XCTUnwrap(both.first)
+        XCTAssertEqual(resolved.handUse, .double)
+        XCTAssertEqual(resolved.side, .both)
+        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(
+            resolved.segments.first?.contactRequirements.map(\.selection),
+            [.single]
+        )
+        XCTAssertNotEqual(resolved.workRequirements.map(\.selection), [.bilateralPair])
+    }
+
+    func testSessionStepsAlternateExpandsLeftThenRightWithoutDuplicatingRest() {
+        let either = WorkoutStep(
+            id: "hang", number: 1, title: "Hang", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .edge, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
+            handUse: .either, side: .both
+        )
+        let rest = WorkoutStep(
+            id: "rest", number: 2, title: "Rest", instruction: "Rest.",
+            accessory: "", duration: 30, phase: .rest,
+            handUse: .double, side: .both
+        )
+        let fixed = WorkoutStep(
+            id: "fixed-left", number: 3, title: "Left only", instruction: "Hang.",
+            accessory: "", duration: 5, phase: .hang,
+            handUse: .single, side: .left
+        )
+
+        let expanded = WorkoutSessionHandResolver.sessionSteps(
+            from: [either, rest, fixed],
+            preference: .alternate,
+            boardIsOneHanded: false
+        )
+
+        XCTAssertEqual(expanded.map(\.id), ["hang.left", "hang.right", "rest", "fixed-left"])
+        XCTAssertEqual(expanded.map(\.side), [.left, .right, .both, .left])
+        XCTAssertEqual(expanded.map(\.handUse), [.single, .single, .double, .single])
+        XCTAssertEqual(expanded.map(\.number), [1, 2, 3, 4])
+        XCTAssertEqual(Set(expanded.map(\.id)).count, expanded.count)
+        XCTAssertEqual(
+            expanded.reduce(0) { $0 + $1.duration },
+            either.duration * 2 + rest.duration + fixed.duration
+        )
+
+        // Already-expanded singles are identity under preference materialize.
+        for step in expanded where step.handUse == .single {
+            XCTAssertEqual(
+                WorkoutSessionHandResolver.materialized(
+                    step,
+                    preference: .alternate,
+                    boardIsOneHanded: false
+                ),
+                step
+            )
+        }
+    }
+
+    func testSessionStepsAlternateExpandsOneHandedDouble() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
+            handUse: .double, side: .both
+        )
+
+        let expanded = WorkoutSessionHandResolver.sessionSteps(
+            from: [bilateral],
+            preference: .alternate,
+            boardIsOneHanded: true
+        )
+        XCTAssertEqual(expanded.map(\.id), ["bilateral.left", "bilateral.right"])
+        XCTAssertEqual(expanded.map(\.side), [.left, .right])
+        XCTAssertEqual(expanded.map(\.handUse), [.single, .single])
+        XCTAssertEqual(
+            expanded.map { $0.workRequirements.map(\.selection) },
+            [[.single], [.single]]
         )
     }
 

@@ -51,6 +51,96 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertEqual(board.contacts.map(\.id), ["left-edge", "right-edge"])
     }
 
+    func testAuthoredOneHandedBoardsReportHandCapacityOne() throws {
+        let expectedOneHanded = [
+            "captain-fingerfood.dual",
+            "captain-fingerfood.pocket",
+            "captain-fingerfood.unlevel",
+            "lattice.mini-bar",
+            "lattice.mxedge-lift-small",
+            "lattice.mxedge-lift-large",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "plateau.lifting-edge",
+            "frictitious.nug",
+            "aelith.cyclops-011",
+            "crimptonite.helium-mobile",
+        ]
+
+        for boardID in expectedOneHanded {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID), boardID)
+            XCTAssertEqual(board.handCapacity, 1, boardID)
+            XCTAssertTrue(board.isOneHanded, boardID)
+        }
+    }
+
+    func testOmittedBoardHandCapacityDefaultsToTwoHanded() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        XCTAssertEqual(board.handCapacity, 2)
+        XCTAssertFalse(board.isOneHanded)
+    }
+
+    func testStorePreservesBoardHandCapacityAndRejectsInvalidOrInconsistentValues() throws {
+        let oneHanded = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["handCapacity"] = 1
+            }
+        }
+        defer { oneHanded.remove() }
+
+        let authored = try XCTUnwrap(BoardPackageStore(bundle: oneHanded.bundle).boards.first)
+        XCTAssertEqual(authored.handCapacity, 1)
+        XCTAssertTrue(authored.isOneHanded)
+
+        for invalid in [0, 3] {
+            let invalidFixture = try makeFixtureBundle { hangboardsURL in
+                try self.mutateBoard(
+                    at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+                ) { board in
+                    board["handCapacity"] = invalid
+                }
+            }
+            defer { invalidFixture.remove() }
+
+            XCTAssertThrowsError(
+                try BoardPackageStore(bundle: invalidFixture.bundle),
+                "must reject board handCapacity \(invalid)"
+            ) { error in
+                XCTAssertEqual(
+                    error as? BoardPackageStoreError,
+                    .invalidPackage(
+                        boardID: "fixture.board",
+                        reason: "board handCapacity must be in \(PhysicalContact.validHandCapacityRange)"
+                    )
+                )
+            }
+        }
+
+        let inconsistent = try makeFixtureBundle { hangboardsURL in
+            try self.mutateBoard(
+                at: hangboardsURL.appendingPathComponent("fixture-model/board.json")
+            ) { board in
+                board["handCapacity"] = 1
+                var holds = try XCTUnwrap(board["contacts"] as? [[String: Any]])
+                holds[0]["handCapacity"] = 2
+                board["contacts"] = holds
+            }
+        }
+        defer { inconsistent.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: inconsistent.bundle)) { error in
+            XCTAssertEqual(
+                error as? BoardPackageStoreError,
+                .invalidPackage(
+                    boardID: "fixture.board",
+                    reason: "one-handed board cannot include contact hold-left with handCapacity 2"
+                )
+            )
+        }
+    }
+
     func testMXEdgeLiftPackagesLoadTypedUnilateralResolutionPolicy() throws {
         let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
 
