@@ -1693,7 +1693,6 @@ struct WorkoutView: View {
     init(plan: TrainingPlan, startsImmediately: Bool = false) {
         self.plan = plan
         self.startsImmediately = startsImmediately
-        self.timeline = WorkoutTimeline(steps: plan.steps)
     }
 
     @State private var sessionState = WorkoutSessionState()
@@ -1720,7 +1719,9 @@ struct WorkoutView: View {
 	    @State private var liftCompletion = WorkoutLiftCompletion()
 	    @State private var pendingCountdownStart: PendingCountdownStart?
 	    @State private var countdownArmTask: Task<Void, Never>?
-	    @State private var selectedHandSide: WorkoutSide?
+	    @State private var handPreference: WorkoutSessionHandPreference?
+	    /// Preference-expanded steps; source of truth for timeline once set.
+	    @State private var sessionSteps: [WorkoutStep]?
 	    @State private var showsHandSidePicker = false
 
     private var board: BoardRevision {
@@ -1732,10 +1733,21 @@ struct WorkoutView: View {
     }
 
     private var planNeedsHandChoice: Bool {
-        plan.steps.contains { $0.handUse == .either } || boardIsOneHanded
+        WorkoutSessionHandResolver.needsHandChoice(plan: plan, board: board)
     }
 
-	private let timeline: WorkoutTimeline
+	/// Session-expanded steps when a preference is chosen; otherwise authored plan steps.
+	private var activeSteps: [WorkoutStep] {
+		sessionSteps ?? plan.steps
+	}
+
+	private var sessionDuration: TimeInterval {
+		activeSteps.reduce(0) { $0 + $1.duration }
+	}
+
+	private var timeline: WorkoutTimeline {
+		WorkoutTimeline(steps: activeSteps)
+	}
 
     var body: some View {
 		GeometryReader { geometry in
@@ -1743,15 +1755,12 @@ struct WorkoutView: View {
 				let monotonicTime = WorkoutClock.monotonicTime
 				let elapsed = currentElapsed(at: monotonicTime)
 				let step = step(at: elapsed)
-				let presentedStep = WorkoutLiveStepResolver.materialized(
-					step,
-					selectedHandSide: selectedHandSide,
-					boardIsOneHanded: boardIsOneHanded
-				)
+				// Session steps are already preference-materialized / alternate-expanded.
+				let presentedStep = step
 				let stepElapsed = elapsedInStep(at: elapsed)
 				let countdown = countdownRemaining(at: monotonicTime)
 				let canNavigate = canNavigate(at: monotonicTime)
-				let isComplete = elapsed >= plan.duration
+				let isComplete = elapsed >= sessionDuration
 				let isTimedResting = isRestInterval(step: step, stepElapsed: stepElapsed)
 				let boardCue = timeline.boardCue(
 					currentStep: step,
@@ -1762,9 +1771,7 @@ struct WorkoutView: View {
 				)
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
-				let resolvedHighlightedStep = highlightedStep.map {
-					WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded)
-				}
+				let resolvedHighlightedStep = highlightedStep
 				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
@@ -1870,10 +1877,8 @@ struct WorkoutView: View {
 				}
 				.sheet(isPresented: $showsStepPicker) {
 					WorkoutStepPickerView(
-						plan: plan,
-						currentStepID: step.id,
-						selectedHandSide: selectedHandSide,
-						boardIsOneHanded: boardIsOneHanded
+						steps: activeSteps,
+						currentStepID: step.id
 					) { selectedStep in
 						jump(to: selectedStep)
 					}
@@ -1947,45 +1952,35 @@ struct WorkoutView: View {
 					Text("Which hand will you use for this routine?")
 						.font(.system(size: 16, weight: .medium, design: .rounded))
 						.foregroundStyle(Color.hangMuted)
-					
+					Text("Alternate does each work step left then right. Both hands means simultaneous on two boards.")
+						.font(.system(size: 14, weight: .medium, design: .rounded))
+						.foregroundStyle(Color.hangMuted)
+
 					VStack(spacing: 12) {
-						Button {
-							selectedHandSide = .left
-							showsHandSidePicker = false
-							toggleRunning()
-						} label: {
-							HStack {
-								Image(systemName: "hand.left")
-								Text("Left hand")
-								Spacer()
-							}
-							.font(.system(size: 16, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangInk)
-							.padding(.horizontal, 17)
-							.padding(.vertical, 15)
-							.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-						}
-						.buttonStyle(.plain)
-						.accessibilityIdentifier("handSide.left")
-						
-						Button {
-							selectedHandSide = .right
-							showsHandSidePicker = false
-							toggleRunning()
-						} label: {
-							HStack {
-								Image(systemName: "hand.right")
-								Text("Right hand")
-								Spacer()
-							}
-							.font(.system(size: 16, weight: .bold, design: .rounded))
-							.foregroundStyle(Color.hangInk)
-							.padding(.horizontal, 17)
-							.padding(.vertical, 15)
-							.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-						}
-						.buttonStyle(.plain)
-						.accessibilityIdentifier("handSide.right")
+						handPreferenceButton(
+							title: "Left hand",
+							systemImage: "hand.left",
+							preference: .left,
+							accessibilityID: "handSide.left"
+						)
+						handPreferenceButton(
+							title: "Right hand",
+							systemImage: "hand.right",
+							preference: .right,
+							accessibilityID: "handSide.right"
+						)
+						handPreferenceButton(
+							title: "Alternate hands",
+							systemImage: "arrow.left.arrow.right",
+							preference: .alternate,
+							accessibilityID: "handSide.alternate"
+						)
+						handPreferenceButton(
+							title: "Both hands (two boards)",
+							systemImage: "square.split.2x1",
+							preference: .both,
+							accessibilityID: "handSide.both"
+						)
 					}
 				}
 				.padding(24)
@@ -2009,8 +2004,8 @@ struct WorkoutView: View {
 				if let rawStep = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_STEP"],
 				   let requestedStep = Int(rawStep),
 				   requestedStep > 1 {
-						sessionState.pausedElapsed = plan.steps
-							.prefix(min(requestedStep - 1, plan.steps.count))
+						sessionState.pausedElapsed = activeSteps
+							.prefix(min(requestedStep - 1, activeSteps.count))
 							.reduce(0) { $0 + $1.duration }
 				}
 			}
@@ -2129,7 +2124,7 @@ struct WorkoutView: View {
 							hold: hold,
 							gripType: holdCue.gripType,
 							fingerConfiguration: holdCue.fingerConfiguration,
-							resolvedHandSide: selectedHandSide
+							resolvedHandSide: resolvedHandSide(for: step)
 						)
 					} else {
 						HStack(spacing: 12) {
@@ -2198,7 +2193,7 @@ struct WorkoutView: View {
 				isComplete: isComplete
 			)
 
-			ProgressView(value: min(elapsed, plan.duration), total: plan.duration)
+			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
 				.tint(Color.hangGreenDark)
 
 			HStack(spacing: 12) {
@@ -2323,7 +2318,7 @@ struct WorkoutView: View {
 						? "Session complete"
 						: countdown > 0
 							? "Get ready"
-							: "Step \(step.number) of \(plan.steps.count)"
+							: "Step \(step.number) of \(activeSteps.count)"
 				)
 				Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
 					.font(.system(size: 22, weight: .bold, design: .rounded))
@@ -2460,7 +2455,7 @@ struct WorkoutView: View {
                         ? "Session complete"
                         : countdown > 0
                             ? "Get ready"
-                            : "Step \(step.number) of \(plan.steps.count)"
+                            : "Step \(step.number) of \(activeSteps.count)"
                 )
                 Spacer()
                 Pill(
@@ -2502,7 +2497,7 @@ struct WorkoutView: View {
                 }
             }
 
-            ProgressView(value: min(elapsed, plan.duration), total: plan.duration)
+            ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
                 .tint(Color.hangGreenDark)
         }
     }
@@ -2855,11 +2850,54 @@ struct WorkoutView: View {
 		.accessibilityIdentifier("workout.stopwatch")
 	}
 
+	private func handPreferenceButton(
+		title: String,
+		systemImage: String,
+		preference: WorkoutSessionHandPreference,
+		accessibilityID: String
+	) -> some View {
+		Button {
+			chooseHandPreference(preference)
+		} label: {
+			HStack {
+				Image(systemName: systemImage)
+				Text(title)
+				Spacer()
+			}
+			.font(.system(size: 16, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangInk)
+			.padding(.horizontal, 17)
+			.padding(.vertical, 15)
+			.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+		}
+		.buttonStyle(.plain)
+		.accessibilityIdentifier(accessibilityID)
+	}
+
+	private func chooseHandPreference(_ preference: WorkoutSessionHandPreference) {
+		handPreference = preference
+		sessionSteps = WorkoutSessionHandResolver.sessionSteps(
+			from: plan.steps,
+			preference: preference,
+			boardIsOneHanded: boardIsOneHanded
+		)
+		initializeStopwatches()
+		showsHandSidePicker = false
+		toggleRunning()
+	}
+
+	private func resolvedHandSide(for step: WorkoutStep) -> WorkoutSide? {
+		if step.side == .left || step.side == .right {
+			return step.side
+		}
+		return handPreference?.selectedHandSide
+	}
+
     private func toggleRunning() {
 		if sessionState.activeStartUptime == nil,
 		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
 		   planNeedsHandChoice,
-		   selectedHandSide == nil {
+		   handPreference == nil {
 			showsHandSidePicker = true
 			return
 		}
@@ -2933,7 +2971,7 @@ struct WorkoutView: View {
 		let schedule = CountdownAudioSchedule(remainingFrom: "3")
 			.appendingShortIntervals(
 				WorkoutCountdownIntervalPolicy.shortDurations(
-					in: plan.steps,
+					in: activeSteps,
 					startingAt: targetElapsed
 				),
 				startingAt: 3
@@ -3031,7 +3069,7 @@ struct WorkoutView: View {
               ) else { return }
 
 		let elapsed = currentElapsed(at: monotonicTime)
-		guard elapsed < plan.duration else { return }
+		guard elapsed < sessionDuration else { return }
 		let currentStep = step(at: elapsed)
 		guard !currentStep.isRestStep,
 			  !isRestInterval(step: currentStep, stepElapsed: elapsedInStep(at: elapsed)) else { return }
@@ -3054,7 +3092,7 @@ struct WorkoutView: View {
 			startedAt: sessionState.routineStartedAt,
 			countdownRemaining: countdownRemaining(at: monotonicTime),
 			workoutElapsed: currentElapsed(at: monotonicTime),
-			planDuration: plan.duration
+			planDuration: sessionDuration
 		)
 	}
 
@@ -3065,12 +3103,13 @@ struct WorkoutView: View {
 			at: monotonicTime,
 			in: &stopwatches
 		)
-		recorder.pause(at: plan.duration)
+		recorder.pause(at: sessionDuration)
 
 		let completedMeasurements = Dictionary(
-			uniqueKeysWithValues: recorder.finish(at: plan.duration).map { ($0.stepID, $0) }
+			uniqueKeysWithValues: recorder.finish(at: sessionDuration).map { ($0.stepID, $0) }
 		)
-		let steps = plan.steps.map { step in
+		// Session steps already carry resolved handUse/side (left/right/both/alternate expansion).
+		let steps = activeSteps.map { step in
 			let measurement = completedMeasurements[step.id] ?? WorkoutStepMeasurement(
 				stepID: step.id,
 				plannedActiveDuration: step.activeDuration,
@@ -3079,9 +3118,6 @@ struct WorkoutView: View {
 				sampleCount: 0,
 				status: .unmeasured
 			)
-			let needsResolvedHandChoice = step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
-			let resolvedHandUse: WorkoutHandUse = needsResolvedHandChoice ? .single : step.handUse
-			let resolvedSide: WorkoutSide = needsResolvedHandChoice ? (selectedHandSide ?? .both) : step.side
 			return WorkoutStepMeasurement(
 				stepID: measurement.stepID,
 				plannedActiveDuration: measurement.plannedActiveDuration,
@@ -3089,8 +3125,8 @@ struct WorkoutView: View {
 				peakLoadKGF: measurement.peakLoadKGF,
 				sampleCount: measurement.sampleCount,
 				status: measurement.status,
-				handUse: resolvedHandUse,
-				side: resolvedSide,
+				handUse: step.handUse,
+				side: step.side,
 				action: step.action,
 				repetitions: step.repetitions,
 				completedRepetitions: step.action == .loadedLift
@@ -3103,7 +3139,7 @@ struct WorkoutView: View {
 			)
 		}
 		let recordedAt = Date()
-		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-plan.duration)
+		let startDate = sessionState.routineStartedAt ?? recordedAt.addingTimeInterval(-sessionDuration)
 		let endDate = WorkoutSessionPolicy.completedWorkoutInterval(
 			sessionStartedAt: startDate,
 			recordedAt: recordedAt
@@ -3118,7 +3154,7 @@ struct WorkoutView: View {
 			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
 			batteryValue: motherboardBluetoothService.batteryValue,
 			steps: steps,
-			stepTitles: plan.steps.map(\.title),
+			stepTitles: activeSteps.map(\.title),
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
 			bodyweightKGF: bodyweightKGF,
 			loadAdjustmentKGF: loadAdjustmentKGF,
@@ -3155,7 +3191,8 @@ struct WorkoutView: View {
 			stopwatchDurations: completedStopwatchDurations,
 			startDate: session.startDate,
 			endDate: session.endDate,
-			selectedHandSide: planNeedsHandChoice ? selectedHandSide : nil,
+			handPreference: planNeedsHandChoice ? handPreference : nil,
+			sessionSteps: planNeedsHandChoice ? sessionSteps : nil,
 			session: session
 		)
 		summarySession = nil
@@ -3200,7 +3237,7 @@ struct WorkoutView: View {
 	}
 
     private func currentElapsed(at uptime: TimeInterval) -> TimeInterval {
-        sessionState.currentElapsed(planDuration: plan.duration, at: uptime)
+        sessionState.currentElapsed(planDuration: sessionDuration, at: uptime)
     }
 
     private func countdownRemaining(at uptime: TimeInterval) -> Int {
@@ -3208,7 +3245,7 @@ struct WorkoutView: View {
     }
 
     private func step(at elapsed: TimeInterval) -> WorkoutStep {
-        timeline.step(at: elapsed) ?? plan.steps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
+        timeline.step(at: elapsed) ?? activeSteps.last ?? PlanCatalog.metoliusTenMinute.steps[0]
     }
 
     private func elapsedInStep(at elapsed: TimeInterval) -> TimeInterval {
@@ -3216,11 +3253,11 @@ struct WorkoutView: View {
     }
 
     private func canNavigate(at uptime: TimeInterval) -> Bool {
-        sessionState.canNavigate(planDuration: plan.duration, at: uptime)
+        sessionState.canNavigate(planDuration: sessionDuration, at: uptime)
     }
 
     private func seek(to targetElapsed: TimeInterval, at uptime: TimeInterval) {
-        sessionState.seek(to: targetElapsed, planDuration: plan.duration, at: uptime)
+        sessionState.seek(to: targetElapsed, planDuration: sessionDuration, at: uptime)
         audioCoach.stop()
     }
 
@@ -3241,8 +3278,8 @@ struct WorkoutView: View {
 		let elapsed = currentElapsed(at: monotonicTime)
 		guard let target = timeline.skipTarget(from: elapsed) else { return }
 
-		if target >= plan.duration || timeline.step(at: target)?.phase == .rest {
-			sessionState.seek(to: target, planDuration: plan.duration, at: monotonicTime)
+		if target >= sessionDuration || timeline.step(at: target)?.phase == .rest {
+			sessionState.seek(to: target, planDuration: sessionDuration, at: monotonicTime)
 			audioCoach.stop()
 			return
 		}
@@ -3253,16 +3290,16 @@ struct WorkoutView: View {
 
 	private func stepStartElapsed(at elapsed: TimeInterval) -> TimeInterval {
 		var cursor: TimeInterval = 0
-        for step in plan.steps {
+        for step in activeSteps {
             if elapsed < cursor + step.duration {
                 return cursor
             }
             cursor += step.duration
 		}
-		return max(0, cursor - (plan.steps.last?.duration ?? 0))
+		return max(0, cursor - (activeSteps.last?.duration ?? 0))
 	}
 	private func initializeStopwatches() {
-		for step in plan.steps {
+		for step in activeSteps {
 			for (index, segment) in step.segments.enumerated() where segment.kind == .work && segment.timing == .stopwatch {
 				let key = WorkoutActivitySegmentKey(stepID: step.id, segmentIndex: index)
 				if stopwatches[key] == nil { stopwatches[key] = WorkoutStopwatch() }
@@ -3393,7 +3430,7 @@ struct WorkoutView: View {
 			intervalSecondsRemaining: secondsRemaining,
 			intervalDuration: intervalDuration,
 			followingShortSegmentDurations: WorkoutCountdownIntervalPolicy.shortDurations(
-				in: plan.steps,
+				in: activeSteps,
 				startingAt: intervalEndElapsed
 			),
 			isComplete: isComplete

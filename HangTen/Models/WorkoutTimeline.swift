@@ -10,6 +10,173 @@ enum WorkoutLiveStepResolver {
     ) -> WorkoutStep {
         step.resolvingEitherHand(selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded) ?? step
     }
+
+    /// Preference-aware materialization for a single step. Alternate expansion is
+    /// handled by `WorkoutSessionHandResolver.sessionSteps`; after that, steps are
+    /// already concrete singles and this is an identity for them.
+    static func materialized(
+        _ step: WorkoutStep,
+        preference: WorkoutSessionHandPreference,
+        boardIsOneHanded: Bool = false
+    ) -> WorkoutStep {
+        WorkoutSessionHandResolver.materialized(
+            step,
+            preference: preference,
+            boardIsOneHanded: boardIsOneHanded
+        )
+    }
+}
+
+/// Central start-of-session hand preference: gating, left/right/both materialization,
+/// and alternate (L then R) expansion.
+enum WorkoutSessionHandResolver {
+    static func needsHandChoice(plan: TrainingPlan, board: BoardRevision) -> Bool {
+        needsHandChoice(steps: plan.steps, boardIsOneHanded: board.isOneHanded)
+    }
+
+    static func needsHandChoice(steps: [WorkoutStep], boardIsOneHanded: Bool) -> Bool {
+        steps.contains { stepNeedsHandResolution($0, boardIsOneHanded: boardIsOneHanded) }
+    }
+
+    /// True when a non-rest step must resolve to a concrete hand side for this board.
+    /// Rest steps default to `.double` and must never force a hand choice.
+    static func stepNeedsHandResolution(_ step: WorkoutStep, boardIsOneHanded: Bool) -> Bool {
+        guard !step.isRestStep else { return false }
+        return step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
+    }
+
+    static func sessionSteps(
+        from steps: [WorkoutStep],
+        preference: WorkoutSessionHandPreference,
+        boardIsOneHanded: Bool
+    ) -> [WorkoutStep] {
+        let resolved: [WorkoutStep]
+        switch preference {
+        case .left, .right, .both:
+            resolved = steps.map {
+                materialized($0, preference: preference, boardIsOneHanded: boardIsOneHanded)
+            }
+        case .alternate:
+            resolved = steps.flatMap { step in
+                expandAlternate(step, boardIsOneHanded: boardIsOneHanded)
+            }
+        }
+        return renumbered(resolved)
+    }
+
+    static func materialized(
+        _ step: WorkoutStep,
+        preference: WorkoutSessionHandPreference,
+        boardIsOneHanded: Bool = false
+    ) -> WorkoutStep {
+        // Rests pass through unchanged for every preference — never rewrite to
+        // `.single` or retarget, even on one-handed boards.
+        guard !step.isRestStep else { return step }
+
+        switch preference {
+        case .left, .right:
+            return WorkoutLiveStepResolver.materialized(
+                step,
+                selectedHandSide: preference.selectedHandSide,
+                boardIsOneHanded: boardIsOneHanded
+            )
+        case .both:
+            return materializeBoth(step, boardIsOneHanded: boardIsOneHanded)
+        case .alternate:
+            // Alternate is expanded in `sessionSteps`. Concrete singles pass through.
+            return step
+        }
+    }
+
+    private static func materializeBoth(
+        _ step: WorkoutStep,
+        boardIsOneHanded: Bool
+    ) -> WorkoutStep {
+        guard stepNeedsHandResolution(step, boardIsOneHanded: boardIsOneHanded) else {
+            return step
+        }
+        let singleHandedTargets = step.targets.map(\.singleHandSelection)
+        let singleHandedSegments = step.segments.map { segment in
+            WorkoutSegment(
+                kind: segment.kind,
+                targets: segment.targets.map(\.singleHandSelection),
+                timing: segment.timing,
+                duration: segment.duration
+            )
+        }
+        return WorkoutStep(
+            id: step.id,
+            number: step.number,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: singleHandedTargets,
+            segments: singleHandedSegments,
+            gripType: step.gripType,
+            fingerConfiguration: step.fingerConfiguration,
+            handUse: .double,
+            side: .both,
+            action: step.action,
+            repetitions: step.repetitions,
+            externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
+    }
+
+    private static func expandAlternate(
+        _ step: WorkoutStep,
+        boardIsOneHanded: Bool
+    ) -> [WorkoutStep] {
+        // Rest and already-fixed `.single` steps pass through unchanged.
+        guard stepNeedsHandResolution(step, boardIsOneHanded: boardIsOneHanded) else {
+            return [step]
+        }
+
+        let left = WorkoutLiveStepResolver.materialized(
+            step,
+            selectedHandSide: .left,
+            boardIsOneHanded: boardIsOneHanded
+        )
+        let right = WorkoutLiveStepResolver.materialized(
+            step,
+            selectedHandSide: .right,
+            boardIsOneHanded: boardIsOneHanded
+        )
+        return [
+            replacingID(left, with: "\(step.id).left"),
+            replacingID(right, with: "\(step.id).right")
+        ]
+    }
+
+    private static func replacingID(_ step: WorkoutStep, with id: String) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: step.number,
+            title: step.title,
+            instruction: step.instruction,
+            accessory: step.accessory,
+            duration: step.duration,
+            phase: step.phase,
+            targets: step.targets,
+            segments: step.segments,
+            gripType: step.gripType,
+            fingerConfiguration: step.fingerConfiguration,
+            handUse: step.handUse,
+            side: step.side,
+            action: step.action,
+            repetitions: step.repetitions,
+            externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
+    }
+
+    private static func renumbered(_ steps: [WorkoutStep]) -> [WorkoutStep] {
+        steps.enumerated().map { index, step in
+            step.withNumber(index + 1)
+        }
+    }
 }
 
 struct WorkoutClock {

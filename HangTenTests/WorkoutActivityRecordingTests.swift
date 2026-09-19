@@ -1081,6 +1081,81 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testEitherHandActivityRecordsLeftRightPreferenceLikeSelectedHandSide() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+        let recorder = WorkoutActivityRecorder()
+
+        let left = try XCTUnwrap(
+            try recorder.segments(for: workout, on: board, handPreference: .left).first
+        )
+        XCTAssertEqual(left.handUse, .single)
+        XCTAssertEqual(left.side, .left)
+
+        let right = try XCTUnwrap(
+            try recorder.segments(for: workout, on: board, handPreference: .right).first
+        )
+        XCTAssertEqual(right.handUse, .single)
+        XCTAssertEqual(right.side, .right)
+        XCTAssertEqual(right.target?.resolvedContactSnapshot?.contactIDs, ["left-b"])
+    }
+
+    func testEitherHandActivityRecordsBothPreferenceAsDoubleBoth() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            handPreference: .both
+        )
+        let record = try XCTUnwrap(records.first)
+        XCTAssertEqual(record.handUse, .double)
+        XCTAssertEqual(record.side, .both)
+        XCTAssertEqual(record.stepID, "portable-step")
+        XCTAssertEqual(
+            record.target?.resolvedContactSnapshot?.requirement.selection,
+            .single
+        )
+    }
+
+    func testEitherHandActivityRecordsAlternateAsExpandedLeftThenRightSteps() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            handPreference: .alternate
+        )
+
+        XCTAssertEqual(records.count, 2)
+        XCTAssertEqual(records.map(\.stepID), ["portable-step.left", "portable-step.right"])
+        XCTAssertEqual(records.map(\.stepNumber), [1, 2])
+        XCTAssertEqual(records.map(\.handUse), [.single, .single])
+        XCTAssertEqual(records.map(\.side), [.left, .right])
+    }
+
+    func testSessionStepsArePreferredSourceOfTruthOverUnresolvedPlanSteps() throws {
+        let board = portableBoard(handCapacity: 1)
+        let workout = portablePlan(handUse: .either, side: .both)
+        let sessionSteps = WorkoutSessionHandResolver.sessionSteps(
+            from: workout.steps,
+            preference: .alternate,
+            boardIsOneHanded: board.isOneHanded
+        )
+
+        // Without sessionSteps/handPreference this would throw handSideRequired.
+        let records = try WorkoutActivityRecorder().segments(
+            for: workout,
+            on: board,
+            sessionSteps: sessionSteps
+        )
+
+        XCTAssertEqual(records.map(\.stepID), ["portable-step.left", "portable-step.right"])
+        XCTAssertEqual(records.map(\.side), [.left, .right])
+    }
+
     func testDoubleHandWorkOnOneHandedBoardRecordsThroughNormalizedSegmentTargets() throws {
         let board = oneHandedRecordingBoard()
         let requirement = ContactRequirement.kind(.pocket, selection: .bilateralPair)
