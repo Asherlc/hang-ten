@@ -494,8 +494,14 @@ final class AppStoreTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [requirement],
-                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            target: .fromLegacyTargets([requirement]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
                     handUse: .double,
                     side: .both
                 )
@@ -524,7 +530,14 @@ final class AppStoreTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [requirement],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([requirement]),
+                    timing: .fixed,
+                    duration: 10
+                )
+            ],
             handUse: .either,
             side: .both
         )
@@ -566,7 +579,14 @@ final class AppStoreTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [requirement],
+                    segments: [
+                        WorkoutSegment(
+                            kind: .work,
+                            target: .fromLegacyTargets([requirement]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
                     handUse: .either,
                     side: .both
                 )
@@ -1038,13 +1058,20 @@ final class AppStoreTests: XCTestCase {
     }
 
     func testCompletionFailsClosedWhenStepGripMetadataIsUnknown() {
-        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge)
+        let contact = PhysicalContact(
+            id: "edge",
+            name: "Edge",
+            kind: .edge,
+            gripTypes: [.openHand]
+        )
+        let board = activityBoard(contacts: [contact])
         assertCompletionFailsForUnresolvedTarget(
             plan: activityPlan(
                 requirement: .kind(.edge, selection: .single),
-                gripType: .halfCrimp
+                gripType: .halfCrimp,
+                boardID: board.id
             ),
-            board: activityBoard(contacts: [contact])
+            board: board
         )
     }
 
@@ -1081,11 +1108,13 @@ final class AppStoreTests: XCTestCase {
             PhysicalContact(id: "left", name: "Left edge", kind: .edge),
             PhysicalContact(id: "right", name: "Right edge", kind: .edge)
         ]
+        let board = activityBoard(contacts: contacts)
         assertCompletionFailsForUnresolvedTarget(
             plan: activityPlan(
-                requirement: .kind(.edge, selection: .bilateralPair)
+                requirement: .kind(.edge, selection: .bilateralPair),
+                boardID: board.id
             ),
-            board: activityBoard(contacts: contacts)
+            board: board
         )
     }
 
@@ -1155,7 +1184,8 @@ final class AppStoreTests: XCTestCase {
         gripType: GripType? = nil,
         handUse: WorkoutHandUse = .double,
         side: WorkoutSide = .both,
-        timing: WorkoutSegmentTiming = .fixed
+        timing: WorkoutSegmentTiming = .fixed,
+        boardID: String? = nil
     ) -> TrainingPlan {
         let targets = requirement.map { [$0] } ?? []
         return TrainingPlan(
@@ -1166,7 +1196,7 @@ final class AppStoreTests: XCTestCase {
             sourceLabel: "Source fixture",
             sourceURL: URL(string: "https://example.com/source")!,
             provenance: .adapted,
-            boardID: nil,
+            boardID: boardID,
             steps: [
                 WorkoutStep(
                     id: "activity-step",
@@ -1176,11 +1206,10 @@ final class AppStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: targets,
                     segments: [
                         WorkoutSegment(
                             kind: .work,
-                            targets: targets,
+                            target: .fromLegacyTargets(targets),
                             timing: timing,
                             duration: timing == .fixed ? 10 : nil
                         )

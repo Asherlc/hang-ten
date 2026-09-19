@@ -125,6 +125,30 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
+    func testBoardMapPositionResolverFollowsHighlightedHoldWhenActiveHoldIsNil() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        let presentationID = board.defaultPresentation.id
+        let highlighted = "straight-edge-20"
+        let expectedPosition = try XCTUnwrap(
+            board.position(presentationID: presentationID, containingContactID: highlighted)?.id
+        )
+
+        XCTAssertEqual(
+            BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: presentationID,
+                activeHoldID: nil,
+                highlightedHoldIDs: [highlighted]
+            ),
+            expectedPosition
+        )
+        XCTAssertNotEqual(
+            expectedPosition,
+            board.position(presentationID: presentationID)?.id,
+            "Highlighted hold should select a pose other than the default first position."
+        )
+    }
+
     func testModelSceneRejectsUnknownPositionWithoutFallback() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, contactID: nil),
@@ -1429,7 +1453,7 @@ final class BoardModelTests: XCTestCase {
                 BoardCatalog.packageStore.board(id: $0)
             })
             for step in plan.steps {
-                XCTAssertNoThrow(try ContactResolver.resolve(step.targets, step: step, board: board))
+                XCTAssertNoThrow(try ContactResolver.resolve(step.workRequirements, step: step, board: board))
             }
         }
 
@@ -1437,13 +1461,13 @@ final class BoardModelTests: XCTestCase {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let compatibleGenericPlans = PlanCatalog.all.filter { plan in
                 plan.boardID == nil && plan.steps.allSatisfy { step in
-                    (try? ContactResolver.resolve(step.targets, step: step, board: board)) != nil
+                    (try? ContactResolver.resolve(step.workRequirements, step: step, board: board)) != nil
                 }
             }
             XCTAssertFalse(compatibleGenericPlans.isEmpty, boardID)
             for plan in compatibleGenericPlans {
                 for step in plan.steps {
-                    let resolvedIDs = try ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)
+                    let resolvedIDs = try ContactResolver.resolve(step.workRequirements, step: step, board: board).map(\.id)
                     XCTAssertTrue(Set(resolvedIDs).isSubset(of: Set(board.contacts.map(\.id))), "\(plan.id): \(boardID)")
                 }
             }

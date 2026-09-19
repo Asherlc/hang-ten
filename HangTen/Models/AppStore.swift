@@ -324,7 +324,7 @@ final class AppStore: ObservableObject {
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let candidates = handResolutionCandidates(for: step, on: board)
         return Set(candidates.flatMap {
-            (try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)) ?? []
+            (try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)) ?? []
         })
     }
 
@@ -344,7 +344,7 @@ final class AppStore: ObservableObject {
                     ) else {
                         return false
                     }
-                    return resolved.targets.allSatisfy { target in
+                    return resolved.workRequirements.allSatisfy { target in
                         (try? ContactResolver.resolve(target, step: resolved, board: board)) != nil
                     }
                 }
@@ -354,13 +354,13 @@ final class AppStore: ObservableObject {
                     boardIsOneHanded: board.isOneHanded
                 )
                 let bothResolves = !((try? ContactResolver.resolve(
-                    both.targets,
+                    both.workRequirements,
                     step: both,
                     board: board
                 )) ?? []).isEmpty
                 return !(sidesResolve || bothResolves)
             }
-            return step.targets.contains { target in
+            return step.workRequirements.contains { target in
                 (try? ContactResolver.resolve(target, step: step, board: board)) == nil
             }
         }

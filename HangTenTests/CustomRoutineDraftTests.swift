@@ -65,7 +65,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             CustomRoutineDefinition.self,
             from: JSONEncoder().encode(draft.definition())
         )
-        XCTAssertNil(persisted.steps[0].targets.first?.contactID)
+        XCTAssertNil(persisted.steps[0].workRequirements.first?.contactID)
 
         CustomRoutineBoardPreview.toggle(board.contacts[0], in: &step, on: board)
 
@@ -89,7 +89,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(CustomRoutineBoardPreview.contactIDs(for: step, on: board), ["left"])
         var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
         draft.steps = [step]
-        XCTAssertEqual(draft.definition().steps.first?.targets.first?.contactID, "left")
+        XCTAssertEqual(draft.definition().steps.first?.workRequirements.first?.contactID, "left")
     }
 
     func testChangingSingleHandToEitherClearsExactContactAndResolvesBothHands() {
@@ -365,7 +365,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             from: JSONEncoder().encode(draft.retargeted(to: .generic).definition())
         )
 
-        let target = try XCTUnwrap(savedGenericDefinition.steps.first?.targets.first)
+        let target = try XCTUnwrap(savedGenericDefinition.steps.first?.workRequirements.first)
         XCTAssertEqual(savedGenericDefinition.targetMode, .generic)
         XCTAssertNil(target.contactID)
         XCTAssertEqual(target.kind, .edge)
@@ -480,7 +480,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         let step = draft.definition().steps[0]
 
-        XCTAssertEqual(step.targets, [])
+        XCTAssertEqual(step.workRequirements, [])
         XCTAssertNil(step.gripType)
         XCTAssertEqual(step.handUse, .double)
         XCTAssertEqual(step.side, .both)
@@ -488,7 +488,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNil(step.repetitions)
         XCTAssertNil(step.externalLoadKGF)
         XCTAssertEqual(step.segments, [
-            WorkoutSegmentDefinition(kind: .rest, targets: [], timing: .fixed, duration: 15)
+            WorkoutSegmentDefinition(kind: .rest, target: nil, timing: .fixed, duration: 15)
         ])
     }
 
@@ -525,7 +525,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             definition.targetMode,
             .boardSpecific(boardID: BoardCatalog.defaultBoard.id)
         )
-        XCTAssertEqual(definition.steps[0].targets, [.kind(.edge)])
+        XCTAssertEqual(definition.steps[0].workRequirements, [.kind(.edge)])
     }
 
     func testGenericDraftCanStoreKindAndFeatureTargets() {
@@ -535,7 +535,7 @@ final class CustomRoutineDraftTests: XCTestCase {
             .init(id: "feature", title: "Edge", instruction: "", accessory: "", duration: 10, phase: .hang, targets: [.edge(depth: .category(.medium))], timing: .fixed)
         ]
 
-        XCTAssertEqual(draft.definition().steps.map(\.targets), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
+        XCTAssertEqual(draft.definition().steps.map(\.workRequirements), [[.kind(.jug)], [.edge(depth: .category(.medium))]])
     }
 
     func testEditingDraftOmitsLegacyGripAndFingerCueFieldsFromDefinition() {
@@ -554,7 +554,6 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.jug)],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(
                     engagedFingers: [.index, .ring]
@@ -585,10 +584,9 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.edge)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.kind(.edge)],
+                    target: .fromLegacyTargets([.kind(.edge)]),
                     timing: .fixed,
                     duration: 10
                 )],
@@ -615,7 +613,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(definition.steps[0].accessory, source.steps[0].accessory)
         XCTAssertEqual(definition.steps[0].duration, source.steps[0].duration)
         XCTAssertEqual(definition.steps[0].phase, source.steps[0].phase)
-        XCTAssertEqual(definition.steps[0].targets, source.steps[0].targets)
+        XCTAssertEqual(definition.steps[0].workRequirements, source.steps[0].workRequirements)
         XCTAssertEqual(definition.steps[0].segments, source.steps[0].segments)
         XCTAssertEqual(definition.steps[0].activeDuration, source.steps[0].activeDuration)
         XCTAssertNil(definition.steps[0].gripType)
@@ -638,7 +636,14 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.jug)],
+                segments: [
+                    WorkoutSegmentDefinition(
+                        kind: .work,
+                        target: .fromLegacyTargets([.kind(.jug)]),
+                        timing: .fixed,
+                        duration: 10
+                    )
+                ],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(
                     engagedFingers: [.pinky]
@@ -663,10 +668,9 @@ final class CustomRoutineDraftTests: XCTestCase {
             accessory: sourceStep.accessory,
             duration: sourceStep.duration,
             phase: sourceStep.phase,
-            targets: sourceStep.targets,
             segments: [WorkoutSegmentDefinition(
                 kind: .work,
-                targets: [.kind(.jug)],
+                target: .fromLegacyTargets([.kind(.jug)]),
                 timing: .fixed,
                 duration: 10
             )],
@@ -691,7 +695,6 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .rest,
-                targets: [.kind(.jug)],
                 gripType: .fullCrimp,
                 fingerConfiguration: FingerConfiguration(
                     engagedFingers: [.middle, .pinky]
@@ -721,7 +724,6 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.edge)],
                 gripType: .openHand,
                 activeDuration: 10
             )]
@@ -769,10 +771,9 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "Up to 60s",
                 duration: 60,
                 phase: .hang,
-                targets: [ContactRequirement(kind: .sloper, shape: .round)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [ContactRequirement(kind: .sloper, shape: .round)],
+                    target: .fromLegacyTargets([ContactRequirement(kind: .sloper, shape: .round)]),
                     timing: .stopwatch,
                     duration: nil
                 )]
@@ -804,10 +805,9 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "",
                 duration: 60,
                 phase: .hang,
-                targets: [.kind(.jug)],
                 segments: [WorkoutSegmentDefinition(
                     kind: .work,
-                    targets: [.kind(.jug)],
+                    target: .fromLegacyTargets([.kind(.jug)]),
                     timing: .undefined,
                     duration: nil
                 )]
@@ -833,7 +833,6 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "",
                 duration: 10,
                 phase: .pull,
-                targets: [.kind(.jug)],
                 handUse: .single,
                 side: .left,
                 action: .isometricPull,

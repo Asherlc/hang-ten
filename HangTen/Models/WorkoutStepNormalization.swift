@@ -30,7 +30,7 @@ enum WorkoutStepNormalizer {
         } else if let activeDuration = step.timedWorkDuration {
             let workSegment = WorkoutSegment(
                 kind: .work,
-                targets: step.targets,
+                target: .selfSelected,
                 timing: .fixed,
                 duration: activeDuration
             )
@@ -46,15 +46,6 @@ enum WorkoutStepNormalizer {
                     )
                 ]
                 : [workSegment]
-        } else if !step.targets.isEmpty {
-            segments = [
-                WorkoutSegment(
-                    kind: .work,
-                    targets: step.targets,
-                    timing: .undefined,
-                    duration: nil
-                )
-            ]
         } else {
             return step
         }
@@ -67,7 +58,6 @@ enum WorkoutStepNormalizer {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: step.targets,
             segments: segments,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
@@ -132,7 +122,6 @@ enum WorkoutStepNormalizer {
                     accessory: step.accessory,
                     duration: duration,
                     phase: step.phase,
-                    targets: segment.targets,
                     segments: [segment],
                     gripType: step.gripType,
                     fingerConfiguration: step.fingerConfiguration,
@@ -152,7 +141,6 @@ enum WorkoutStepNormalizer {
                     accessory: "\(Int(duration))s rest",
                     duration: duration,
                     phase: .rest,
-                    targets: [],
                     segments: [segment],
                     gripType: nil,
                     fingerConfiguration: nil

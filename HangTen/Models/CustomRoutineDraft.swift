@@ -89,7 +89,7 @@ enum CustomRoutineBoardPreview {
         }
         let resolvedSteps = resolvedSteps(for: step, boardIsOneHanded: board.isOneHanded)
         return Set(resolvedSteps.flatMap {
-            (try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)) ?? []
+            (try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)) ?? []
         })
     }
 
@@ -106,6 +106,9 @@ enum CustomRoutineBoardPreview {
     }
 
     private static func resolvedSteps(for draft: CustomRoutineStepDraft, boardIsOneHanded: Bool) -> [WorkoutStep] {
+        let workTarget: WorkoutSegmentTarget = draft.targets.isEmpty
+            ? .selfSelected
+            : .fromLegacyTargets(draft.targets)
         let step = WorkoutStep(
             id: draft.id,
             number: 0,
@@ -114,7 +117,9 @@ enum CustomRoutineBoardPreview {
             accessory: draft.accessory,
             duration: draft.duration,
             phase: draft.phase,
-            targets: draft.targets,
+            segments: draft.phase == .rest
+                ? [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: draft.duration)]
+                : [WorkoutSegment(kind: .work, target: workTarget, timing: draft.timing, duration: draft.timing == .fixed ? draft.duration : nil)],
             handUse: draft.handUse,
             side: draft.side,
             action: draft.action,
@@ -362,6 +367,8 @@ struct CustomRoutineDraft: Equatable {
 
     private static func stepDraft(from definition: WorkoutStepDefinition) -> CustomRoutineStepDraft {
         let isRest = definition.phase == .rest
+        let workSegment = definition.segments.first(where: { $0.kind == .work })
+        let targets = isRest ? [] : (workSegment?.contactRequirements ?? definition.workRequirements)
         return CustomRoutineStepDraft(
             id: definition.id,
             title: definition.title,
@@ -369,7 +376,7 @@ struct CustomRoutineDraft: Equatable {
             accessory: definition.accessory,
             duration: definition.duration,
             phase: definition.phase,
-            targets: definition.targets,
+            targets: targets,
             timing: definition.segments.first?.timing ?? .fixed,
             activeDuration: definition.activeDuration,
             handUse: isRest ? .double : definition.handUse,
@@ -382,14 +389,16 @@ struct CustomRoutineDraft: Equatable {
 
     private static func stepDefinition(from step: CustomRoutineStepDraft) -> WorkoutStepDefinition {
         let timing: WorkoutSegmentTiming = step.isRest ? .fixed : step.timing
-        let targets = step.isRest ? [] : step.targets
         let handUse: WorkoutHandUse = step.isRest ? .double : step.handUse
         let side: WorkoutSide = step.isRest ? .both : step.side
         let action: WorkoutAction = step.isRest ? .hang : step.action
         let segmentDuration: TimeInterval? = timing == .fixed ? step.duration : nil
+        let segmentTarget: WorkoutSegmentTarget? = step.isRest
+            ? nil
+            : (step.targets.isEmpty ? .selfSelected : .fromLegacyTargets(step.targets))
         let segment = WorkoutSegmentDefinition(
             kind: step.isRest ? .rest : .work,
-            targets: targets,
+            target: segmentTarget,
             timing: timing,
             duration: segmentDuration
         )
@@ -400,7 +409,6 @@ struct CustomRoutineDraft: Equatable {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: targets,
             segments: [segment],
             activeDuration: step.activeDuration,
             handUse: handUse,

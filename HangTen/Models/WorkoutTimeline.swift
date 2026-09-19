@@ -95,14 +95,8 @@ enum WorkoutSessionHandResolver {
         guard stepNeedsHandResolution(step, boardIsOneHanded: boardIsOneHanded) else {
             return step
         }
-        let singleHandedTargets = step.targets.map(\.singleHandSelection)
         let singleHandedSegments = step.segments.map { segment in
-            WorkoutSegment(
-                kind: segment.kind,
-                targets: segment.targets.map(\.singleHandSelection),
-                timing: segment.timing,
-                duration: segment.duration
-            )
+            segment.mappingRequirements(\.singleHandSelection)
         }
         return WorkoutStep(
             id: step.id,
@@ -112,7 +106,6 @@ enum WorkoutSessionHandResolver {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: singleHandedTargets,
             segments: singleHandedSegments,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
@@ -159,7 +152,6 @@ enum WorkoutSessionHandResolver {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: step.targets,
             segments: step.segments,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
@@ -318,23 +310,32 @@ enum WorkoutHoldCuePolicy {
               step.gripType != nil || step.fingerConfiguration != nil else {
             return nil
         }
-        if step.targets.isEmpty {
+        let requirements = step.workRequirements
+        if requirements.isEmpty {
             return WorkoutHoldCue(
                 gripType: step.gripType,
                 fingerConfiguration: step.fingerConfiguration
             )
         }
-        guard step.targets.count == 1,
-              let target = step.targets.first,
-              let hold,
-              (try? ContactResolver.resolve(target, step: step, board: board))?
-                .contains(where: { $0.id == hold.id }) == true
-        else {
+        // Attach the highlighted hold only when it satisfies the single work
+        // requirement. Source grip/finger cues still show when the active board
+        // cannot resolve the requirement (board-agnostic soft-fall) or when no
+        // hold is highlighted yet (e.g. either-hand before selection).
+        if requirements.count == 1,
+           let target = requirements.first,
+           let hold,
+           (try? ContactResolver.resolve(target, step: step, board: board))?
+             .contains(where: { $0.id == hold.id }) == true {
+            return WorkoutHoldCue(
+                hold: hold,
+                gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration
+            )
+        }
+        if hold != nil {
             return nil
         }
-
         return WorkoutHoldCue(
-            hold: hold,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration
         )
@@ -568,7 +569,7 @@ enum WorkoutLiftCompletionPolicy {
 enum WorkoutHighlightResolver {
     static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
         (try? ContactResolver.resolve(
-            step.targets,
+            step.workRequirements,
             step: step,
             board: board
         ).map(\.id)) ?? []

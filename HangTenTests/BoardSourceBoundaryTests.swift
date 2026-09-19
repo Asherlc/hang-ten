@@ -220,10 +220,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
 
     func testEveryBuiltInPlanTargetResolvesOnItsPackageBoard() {
         for plan in PlanCatalog.all {
-            let board = BoardCatalog.board(for: plan.boardID)
+            // Board-agnostic catalog plans intentionally soft-fall to
+            // self-selected recording when the athlete's board lacks a matching
+            // depth. The hard invariant is package-bound plans only.
+            guard let boardID = plan.boardID else { continue }
+            let board = BoardCatalog.board(for: boardID)
 
             for step in plan.steps {
-                for target in step.targets {
+                for target in step.workRequirements {
                     XCTAssertFalse(
                         (try? ContactResolver.resolve(target, step: step, board: board))?.isEmpty ?? true,
                         "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."

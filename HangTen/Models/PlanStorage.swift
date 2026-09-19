@@ -314,24 +314,30 @@ struct ContactRequirement: Codable, Hashable {
 
 struct WorkoutSegmentDefinition: Codable, Hashable {
     let kind: WorkoutSegmentKind
-    let targets: [ContactRequirement]
+    /// Required for work; must be nil for rest.
+    let target: WorkoutSegmentTarget?
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
 
     init(
         kind: WorkoutSegmentKind,
-        targets: [ContactRequirement],
+        target: WorkoutSegmentTarget?,
         timing: WorkoutSegmentTiming,
         duration: TimeInterval?
     ) {
         self.kind = kind
-        self.targets = targets
+        self.target = target
         self.timing = timing
         self.duration = duration
     }
 
+    var contactRequirements: [ContactRequirement] {
+        target?.contactRequirements ?? []
+    }
+
     private enum CodingKeys: String, CodingKey {
         case kind
+        case target
         case targets
         case timing
         case duration
@@ -340,17 +346,79 @@ struct WorkoutSegmentDefinition: Codable, Hashable {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         kind = try container.decode(WorkoutSegmentKind.self, forKey: .kind)
-        targets = try container.decode([ContactRequirement].self, forKey: .targets)
         timing = try container.decode(WorkoutSegmentTiming.self, forKey: .timing)
         duration = try container.decodeIfPresent(TimeInterval.self, forKey: .duration)
+
+        if container.contains(.target) {
+            let decoded = try container.decode(WorkoutSegmentTarget.self, forKey: .target)
+            switch kind {
+            case .work:
+                target = decoded
+            case .rest:
+                throw DecodingError.dataCorruptedError(
+                    forKey: .target,
+                    in: container,
+                    debugDescription: "Rest segments must not define a target."
+                )
+            }
+        } else if container.contains(.targets) {
+            // Temporary legacy migration: array form → tagged target.
+            let legacy = try container.decode([ContactRequirement].self, forKey: .targets)
+            switch kind {
+            case .work:
+                target = .fromLegacyTargets(legacy)
+            case .rest:
+                guard legacy.isEmpty else {
+                    throw DecodingError.dataCorruptedError(
+                        forKey: .targets,
+                        in: container,
+                        debugDescription: "Rest segments must not define a target."
+                    )
+                }
+                target = nil
+            }
+        } else {
+            switch kind {
+            case .work:
+                throw DecodingError.dataCorruptedError(
+                    forKey: .target,
+                    in: container,
+                    debugDescription: "Work segments require a target."
+                )
+            case .rest:
+                target = nil
+            }
+        }
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(kind, forKey: .kind)
-        try container.encode(targets, forKey: .targets)
         try container.encode(timing, forKey: .timing)
         try container.encodeIfPresent(duration, forKey: .duration)
+        switch kind {
+        case .work:
+            guard let target else {
+                throw EncodingError.invalidValue(
+                    Optional<WorkoutSegmentTarget>.none as Any,
+                    EncodingError.Context(
+                        codingPath: container.codingPath + [CodingKeys.target],
+                        debugDescription: "Work segments require a target."
+                    )
+                )
+            }
+            try container.encode(target, forKey: .target)
+        case .rest:
+            guard target == nil else {
+                throw EncodingError.invalidValue(
+                    target as Any,
+                    EncodingError.Context(
+                        codingPath: container.codingPath + [CodingKeys.target],
+                        debugDescription: "Rest segments must not define a target."
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -361,7 +429,6 @@ struct WorkoutStepDefinition: Codable, Hashable {
     let accessory: String
     let duration: TimeInterval
     let phase: WorkoutPhase
-    let targets: [ContactRequirement]
     let segments: [WorkoutSegmentDefinition]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
@@ -379,7 +446,6 @@ struct WorkoutStepDefinition: Codable, Hashable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
@@ -396,7 +462,6 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.accessory = accessory
         self.duration = duration
         self.phase = phase
-        self.targets = targets
         self.segments = segments
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
@@ -406,6 +471,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         self.action = action
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
+    }
+
+    /// Contact requirements prescribed by work segments.
+    var workRequirements: [ContactRequirement] {
+        segments.flatMap(\.contactRequirements)
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -435,11 +505,39 @@ struct WorkoutStepDefinition: Codable, Hashable {
         accessory = try container.decode(String.self, forKey: .accessory)
         duration = try container.decode(TimeInterval.self, forKey: .duration)
         phase = try container.decode(WorkoutPhase.self, forKey: .phase)
-        targets = try container.decode([ContactRequirement].self, forKey: .targets)
-        segments = try container.decodeIfPresent(
+        let legacyTargets = try container.decodeIfPresent(
+            [ContactRequirement].self,
+            forKey: .targets
+        ) ?? []
+        var decodedSegments = try container.decodeIfPresent(
             [WorkoutSegmentDefinition].self,
             forKey: .segments
         ) ?? []
+        // Temporary migration: promote legacy step-level targets onto a work
+        // segment when the definition still uses the compact (no segments) form.
+        if decodedSegments.isEmpty, phase != .rest, !legacyTargets.isEmpty {
+            let timing: WorkoutSegmentTiming
+            let segmentDuration: TimeInterval?
+            if let activeDuration = try container.decodeIfPresent(
+                TimeInterval.self,
+                forKey: .activeDuration
+            ) {
+                timing = .fixed
+                segmentDuration = activeDuration
+            } else {
+                timing = .undefined
+                segmentDuration = nil
+            }
+            decodedSegments = [
+                WorkoutSegmentDefinition(
+                    kind: .work,
+                    target: .fromLegacyTargets(legacyTargets),
+                    timing: timing,
+                    duration: segmentDuration
+                )
+            ]
+        }
+        segments = decodedSegments
         gripType = try container.decodeIfPresent(GripType.self, forKey: .gripType)
         fingerConfiguration = try container.decodeIfPresent(
             FingerConfiguration.self,
@@ -464,7 +562,6 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encode(accessory, forKey: .accessory)
         try container.encode(duration, forKey: .duration)
         try container.encode(phase, forKey: .phase)
-        try container.encode(targets, forKey: .targets)
         try container.encode(segments, forKey: .segments)
         try container.encodeIfPresent(gripType, forKey: .gripType)
         try container.encodeIfPresent(fingerConfiguration, forKey: .fingerConfiguration)
@@ -491,11 +588,10 @@ extension WorkoutStepDefinition {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            targets: step.targets,
             segments: step.segments.map { segment in
                 WorkoutSegmentDefinition(
                     kind: segment.kind,
-                    targets: segment.targets,
+                    target: segment.target,
                     timing: segment.timing,
                     duration: segment.duration
                 )
@@ -519,7 +615,6 @@ extension WorkoutStepDefinition {
             accessory: accessory,
             duration: duration,
             phase: phase,
-            targets: targets,
             segments: segments,
             activeDuration: activeDuration,
             handUse: handUse,
@@ -538,13 +633,23 @@ extension WorkoutStepDefinition {
             accessory: accessory,
             duration: duration,
             phase: phase,
-            targets: targets.map { $0.strippingExactContactID() },
-            segments: segments.map {
-                WorkoutSegmentDefinition(
-                    kind: $0.kind,
-                    targets: $0.targets.map { $0.strippingExactContactID() },
-                    timing: $0.timing,
-                    duration: $0.duration
+            segments: segments.map { segment in
+                let strippedTarget: WorkoutSegmentTarget?
+                switch segment.target {
+                case .selfSelected:
+                    strippedTarget = .selfSelected
+                case .requirements(let requirements):
+                    strippedTarget = .fromLegacyTargets(
+                        requirements.map { $0.strippingExactContactID() }
+                    )
+                case nil:
+                    strippedTarget = nil
+                }
+                return WorkoutSegmentDefinition(
+                    kind: segment.kind,
+                    target: strippedTarget,
+                    timing: segment.timing,
+                    duration: segment.duration
                 )
             },
             gripType: gripType,
@@ -794,7 +899,7 @@ enum PlanLibraryValidator {
             }
             let allowsUntargetedStep = !plansReferencingBlock.isEmpty &&
                 plansReferencingBlock.allSatisfy {
-                    allowsSourceLinkedUntargetedWork(step, in: $0)
+                    allowsExplicitSelfSelectedWork(step, in: $0)
                 }
             validateStep(
                 step,
@@ -859,24 +964,43 @@ enum PlanLibraryValidator {
         }
         if step.phase != .rest,
            step.phase != .conditioning,
-           step.targets.isEmpty,
+           step.segments.isEmpty,
            !allowsUntargetedStep {
-            issues.append(PlanValidationIssue(path: "\(path).targets", message: "Non-rest steps need at least one target."))
+            issues.append(
+                PlanValidationIssue(
+                    path: "\(path).target",
+                    message: "Non-rest steps need at least one target."
+                )
+            )
         }
         let isCompoundStep = step.segments.count > 1
         for (index, segment) in step.segments.enumerated() {
-            let targetPath = "\(path).segments[\(index)].targets"
+            let targetPath = "\(path).segments[\(index)].target"
             let timingPath = "\(path).segments[\(index)].timing"
             let durationPath = "\(path).segments[\(index)].duration"
-            if segment.kind == .work && segment.targets.isEmpty && !allowsUntargetedStep {
-                issues.append(
-                    PlanValidationIssue(
-                        path: targetPath,
-                        message: "Work segments require a target."
+            if segment.kind == .work {
+                switch segment.target {
+                case .none:
+                    issues.append(
+                        PlanValidationIssue(
+                            path: targetPath,
+                            message: "Work segments require a target."
+                        )
                     )
-                )
+                case .selfSelected:
+                    if !allowsUntargetedStep {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: targetPath,
+                                message: "Work segments require a target."
+                            )
+                        )
+                    }
+                case .requirements:
+                    break
+                }
             }
-            if segment.kind == .rest && !segment.targets.isEmpty {
+            if segment.kind == .rest && segment.target != nil {
                 issues.append(
                     PlanValidationIssue(
                         path: targetPath,
@@ -1039,21 +1163,11 @@ enum PlanLibraryValidator {
                             issues.append(PlanValidationIssue(path: referencePath, message: "Expanded step ID \"\(expandedID)\" is repeated in the plan."))
                         }
                     }
-                    validateTargets(
-                        step.targets,
-                        planBoardID: plan.boardID,
-                        stepPath: "\(referencePath).steps[\(stepIndex)]",
-                        boardByID: boardByID,
-                        availableBoards: availableBoards,
-                        handUse: step.handUse,
-                        side: step.side,
-                        gripType: step.gripType,
-                        issues: &issues
-                    )
                     for (segmentIndex, segment) in step.segments.enumerated() {
-                        guard !segment.targets.isEmpty else { continue }
+                        let requirements = segment.contactRequirements
+                        guard !requirements.isEmpty else { continue }
                         validateTargets(
-                            segment.targets,
+                            requirements,
                             planBoardID: plan.boardID,
                             stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
                             boardByID: boardByID,
@@ -1086,15 +1200,27 @@ enum PlanLibraryValidator {
         }
     }
 
-    private static func allowsSourceLinkedUntargetedWork(
+    /// Plan IDs whose linked source tells the athlete to choose holds (or
+    /// establishes no hold prescription, so inventing one would be unfaithful).
+    /// Custom athlete-authored plans may also use `.selfSelected`.
+    private static let plansAllowingExplicitSelfSelectedWork: Set<String> = [
+        "rptc.seven-three-repeaters",
+        "coach.bechtel-three-six-nine",
+        "research.eva-int-hangs"
+    ]
+
+    /// Whether catalog validation may accept `.selfSelected` work (or compact
+    /// hang rows that materialize as self-selected). Board-agnostic
+    /// source-linked plans are no longer exempt merely because `boardID` is nil.
+    private static func allowsExplicitSelfSelectedWork(
         _ step: WorkoutStepDefinition,
         in plan: PlanDefinition
     ) -> Bool {
-        plan.metadata.provenance != .custom
-            && plan.metadata.sourceURL != nil
-            && plan.boardID == nil
-            && step.phase != .rest
-            && step.phase != .conditioning
+        guard step.phase != .rest, step.phase != .conditioning else { return false }
+        if plan.metadata.provenance == .custom {
+            return true
+        }
+        return plansAllowingExplicitSelfSelectedWork.contains(plan.id)
     }
 
     private static func stepEndsInRestAfterNormalization(_ step: WorkoutStepDefinition) -> Bool {
@@ -1187,7 +1313,15 @@ enum PlanLibraryValidator {
                     let step = WorkoutStep(
                         id: "validation", number: 0, title: "Validation",
                         instruction: "", accessory: "", duration: 1, phase: .hang,
-                        targets: [target], gripType: gripType,
+                        segments: [
+                            WorkoutSegment(
+                                kind: .work,
+                                target: .fromLegacyTargets([target]),
+                                timing: .undefined,
+                                duration: nil
+                            )
+                        ],
+                        gripType: gripType,
                         handUse: assignmentHandUse, side: assignmentSide
                     )
                     return (try? ContactResolver.resolve(target, step: step, board: board)) != nil
@@ -1247,11 +1381,10 @@ struct PlanDefinitionResolver {
                 for (stepIndex, stepDefinition) in block.steps.enumerated() {
                     let sourceID = reference.stepIDs.indices.contains(stepIndex) ? reference.stepIDs[stepIndex] : stepDefinition.id
                     let resolvedID = reference.repeatCount > 1 ? "\(sourceID)-\(repetition + 1)" : sourceID
-                    let targets = stepDefinition.targets
                     let segments = stepDefinition.segments.map {
                         WorkoutSegment(
                             kind: $0.kind,
-                            targets: $0.targets,
+                            target: $0.target,
                             timing: $0.timing,
                             duration: $0.duration
                         )
@@ -1264,7 +1397,6 @@ struct PlanDefinitionResolver {
                         accessory: stepDefinition.accessory,
                         duration: stepDefinition.duration,
                         phase: stepDefinition.phase,
-                        targets: targets,
                         segments: segments,
                         gripType: stepDefinition.gripType,
                         fingerConfiguration: stepDefinition.fingerConfiguration,
@@ -1528,7 +1660,7 @@ enum BuiltInPlanLibraryDefinition {
                     "Generic Metolius sequences are faithful task-order expansions marked adapted because the app adds guided timing.",
                     "Generic Metolius cycles remain ten 60-second minutes; defaults are 5 seconds per pull-up and 1 second per other counted repetition.",
                     "All research and coach routines are explicitly marked as adapted.",
-                    "Board-specific plans use source-backed factual contact requirements; source-generic work remains self-selected."
+                    "Board-specific and board-agnostic catalog work uses source-backed contact requirements; .selfSelected is limited to custom plans and an explicit allowlist of athlete-chosen-hold sources."
                 ]
             ),
             blocks: blocks,

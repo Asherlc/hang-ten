@@ -132,7 +132,12 @@ extension BoardPresentation {
 struct BoardMapPresentationSelection: Equatable {
     private(set) var presentationID: String
 
-    static func resolvePositionID(board: BoardRevision, presentationID: String?, activeHoldID: String?) -> String? {
+    static func resolvePositionID(
+        board: BoardRevision,
+        presentationID: String?,
+        activeHoldID: String?,
+        highlightedHoldIDs: Set<String> = []
+    ) -> String? {
         let resolvedPresentationID = presentationID ?? board.defaultPresentation.id
         if let activeHoldID,
            let activePosition = board.position(
@@ -140,6 +145,18 @@ struct BoardMapPresentationSelection: Equatable {
                containingContactID: activeHoldID
            ) {
             return activePosition.id
+        }
+        if activeHoldID == nil,
+           let highlightedPosition = board.contacts.lazy
+               .filter({ highlightedHoldIDs.contains($0.id) })
+               .compactMap({
+                   board.position(
+                       presentationID: resolvedPresentationID,
+                       containingContactID: $0.id
+                   )
+               })
+               .first {
+            return highlightedPosition.id
         }
         guard activeHoldID == nil else { return nil }
         return board.position(presentationID: resolvedPresentationID)?.id
@@ -508,7 +525,8 @@ struct BoardMapView: View {
         _selectedPositionID = State(initialValue: BoardMapPresentationSelection.resolvePositionID(
             board: board,
             presentationID: resolvedSelection.presentationID,
-            activeHoldID: activeHoldID
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs
         ))
     }
 
@@ -586,7 +604,8 @@ struct BoardMapView: View {
             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
-                activeHoldID: activeHoldID
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: holdIDs
             )
         }
         .onChange(of: activeHoldID) { _, holdID in
@@ -594,7 +613,8 @@ struct BoardMapView: View {
             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
-                activeHoldID: holdID
+                activeHoldID: holdID,
+                highlightedHoldIDs: highlightedHoldIDs
             )
         }
         .onChange(of: requestedPresentationID) { _, presentationID in
@@ -607,7 +627,8 @@ struct BoardMapView: View {
             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
-                activeHoldID: activeHoldID
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: highlightedHoldIDs
             )
         }
         .onChange(of: board.id) { _, _ in
@@ -620,7 +641,8 @@ struct BoardMapView: View {
             selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
                 board: board,
                 presentationID: presentationSelection.presentationID,
-                activeHoldID: activeHoldID
+                activeHoldID: activeHoldID,
+                highlightedHoldIDs: highlightedHoldIDs
             )
         }
     }
@@ -630,7 +652,8 @@ struct BoardMapView: View {
         selectedPositionID = BoardMapPresentationSelection.resolvePositionID(
             board: board,
             presentationID: presentationSelection.presentationID,
-            activeHoldID: activeHoldID
+            activeHoldID: activeHoldID,
+            highlightedHoldIDs: highlightedHoldIDs
         )
     }
 }

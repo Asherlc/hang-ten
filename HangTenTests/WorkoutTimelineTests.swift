@@ -66,7 +66,7 @@ final class WorkoutTimelineTests: XCTestCase {
     func testLivePresentationMaterializesEitherHandForLabelsAndPreservesUnresolvedStep() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .either,
+            accessory: "", duration: 10, phase: .hang, handUse: .either,
             side: .both
         )
 
@@ -87,7 +87,7 @@ final class WorkoutTimelineTests: XCTestCase {
 
         let bilateral = WorkoutStep(
             id: "bilateral", number: 2, title: "Both hands", instruction: "Hang.",
-            accessory: "", duration: 7, phase: .hang, targets: [], handUse: .double,
+            accessory: "", duration: 7, phase: .hang, handUse: .double,
             side: .both
         )
         XCTAssertEqual(
@@ -99,7 +99,7 @@ final class WorkoutTimelineTests: XCTestCase {
     func testLivePresentationResolvesBilateralStepsOnAOneHandedBoard() {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
-            accessory: "", duration: 7, phase: .hang, targets: [], handUse: .double,
+            accessory: "", duration: 7, phase: .hang, handUse: .double,
             side: .both
         )
 
@@ -125,7 +125,18 @@ final class WorkoutTimelineTests: XCTestCase {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Hang", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .edge, depth: .range(.init(minimum: 20, maximum: 20)), selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([
+                    ContactRequirement(
+                        kind: .edge,
+                        depth: .range(.init(minimum: 20, maximum: 20)),
+                        selection: .bilateralPair
+                    )
+                ]),
+                timing: .fixed,
+                duration: 7
+            )],
             handUse: .double, side: .both
         )
 
@@ -141,7 +152,7 @@ final class WorkoutTimelineTests: XCTestCase {
         )
         XCTAssertEqual(resolved.handUse, .single)
         XCTAssertEqual(resolved.side, .left)
-        XCTAssertEqual(resolved.targets.map(\.selection), [.single])
+        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
         XCTAssertEqual(WorkoutTimeline.labels(for: resolved), ["Hang", "Left hand"])
         XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: resolved))
         XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: resolved))
@@ -157,7 +168,12 @@ final class WorkoutTimelineTests: XCTestCase {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
             handUse: .double, side: .both
         )
         let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge, handCapacity: 1)
@@ -236,10 +252,9 @@ final class WorkoutTimelineTests: XCTestCase {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
             segments: [WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(kind: .jug, selection: .bilateralPair),
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
                 timing: .fixed,
                 duration: 7
             )],
@@ -252,9 +267,9 @@ final class WorkoutTimelineTests: XCTestCase {
 
         XCTAssertEqual(resolved.handUse, .single)
         XCTAssertEqual(resolved.side, .left)
-        XCTAssertEqual(resolved.targets, [ContactRequirement(kind: .jug, selection: .single)])
+        XCTAssertEqual(resolved.workRequirements, [ContactRequirement(kind: .jug, selection: .single)])
         XCTAssertEqual(
-            resolved.segments.first?.targets,
+            resolved.segments.first?.contactRequirements,
             [ContactRequirement(kind: .jug, selection: .single)]
         )
     }
@@ -269,19 +284,19 @@ final class WorkoutTimelineTests: XCTestCase {
     func testNeedsHandChoiceGatesOnEitherOrOneHandedDoubleNotBareBoard() {
         let either = WorkoutStep(
             id: "either", number: 1, title: "Either", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .either, side: .both
+            accessory: "", duration: 10, phase: .hang, handUse: .either, side: .both
         )
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .double, side: .both
+            accessory: "", duration: 10, phase: .hang, handUse: .double, side: .both
         )
         let fixedSingle = WorkoutStep(
             id: "left", number: 1, title: "Left", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .single, side: .left
+            accessory: "", duration: 10, phase: .hang, handUse: .single, side: .left
         )
         let rest = WorkoutStep(
             id: "rest", number: 2, title: "Rest", instruction: "Rest.",
-            accessory: "", duration: 30, phase: .rest, targets: [],
+            accessory: "", duration: 30, phase: .rest,
             handUse: .double, side: .both
         )
 
@@ -311,13 +326,23 @@ final class WorkoutTimelineTests: XCTestCase {
         let work = WorkoutStep(
             id: "either", number: 1, title: "Either", instruction: "Hang.",
             accessory: "", duration: 10, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .single)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
             handUse: .either, side: .both
         )
         let rest = WorkoutStep(
             id: "rest", number: 2, title: "Rest", instruction: "Rest.",
             accessory: "", duration: 30, phase: .rest,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .rest,
+                target: nil,
+                timing: .fixed,
+                duration: 30
+            )],
             handUse: .double, side: .both
         )
 
@@ -338,7 +363,8 @@ final class WorkoutTimelineTests: XCTestCase {
             XCTAssertEqual(resolvedRest.instruction, rest.instruction, "\(preference)")
             XCTAssertEqual(resolvedRest.duration, rest.duration, "\(preference)")
             XCTAssertEqual(resolvedRest.phase, rest.phase, "\(preference)")
-            XCTAssertEqual(resolvedRest.targets, rest.targets, "\(preference)")
+            XCTAssertEqual(resolvedRest.segments, rest.segments, "\(preference)")
+            XCTAssertEqual(resolvedRest.workRequirements, rest.workRequirements, "\(preference)")
             XCTAssertEqual(resolvedRest.handUse, .double, "\(preference)")
             XCTAssertEqual(resolvedRest.side, .both, "\(preference)")
             XCTAssertEqual(resolvedRest.action, rest.action, "\(preference)")
@@ -349,13 +375,23 @@ final class WorkoutTimelineTests: XCTestCase {
         let either = WorkoutStep(
             id: "either", number: 1, title: "Either", instruction: "Hang.",
             accessory: "", duration: 10, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .single)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
             handUse: .either, side: .both
         )
         let bilateral = WorkoutStep(
             id: "bilateral", number: 2, title: "Both", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
             handUse: .double, side: .both
         )
 
@@ -382,10 +418,9 @@ final class WorkoutTimelineTests: XCTestCase {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
             segments: [WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(kind: .jug, selection: .bilateralPair),
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
                 timing: .fixed,
                 duration: 7
             )],
@@ -400,26 +435,34 @@ final class WorkoutTimelineTests: XCTestCase {
         let resolved = try XCTUnwrap(both.first)
         XCTAssertEqual(resolved.handUse, .double)
         XCTAssertEqual(resolved.side, .both)
-        XCTAssertEqual(resolved.targets.map(\.selection), [.single])
-        XCTAssertEqual(resolved.segments.first?.targets.map(\.selection), [.single])
-        XCTAssertNotEqual(resolved.targets.map(\.selection), [.bilateralPair])
+        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(
+            resolved.segments.first?.contactRequirements.map(\.selection),
+            [.single]
+        )
+        XCTAssertNotEqual(resolved.workRequirements.map(\.selection), [.bilateralPair])
     }
 
     func testSessionStepsAlternateExpandsLeftThenRightWithoutDuplicatingRest() {
         let either = WorkoutStep(
             id: "hang", number: 1, title: "Hang", instruction: "Hang.",
             accessory: "", duration: 10, phase: .hang,
-            targets: [ContactRequirement(kind: .edge, selection: .single)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .edge, selection: .single)]),
+                timing: .fixed,
+                duration: 10
+            )],
             handUse: .either, side: .both
         )
         let rest = WorkoutStep(
             id: "rest", number: 2, title: "Rest", instruction: "Rest.",
-            accessory: "", duration: 30, phase: .rest, targets: [],
+            accessory: "", duration: 30, phase: .rest,
             handUse: .double, side: .both
         )
         let fixed = WorkoutStep(
             id: "fixed-left", number: 3, title: "Left only", instruction: "Hang.",
-            accessory: "", duration: 5, phase: .hang, targets: [],
+            accessory: "", duration: 5, phase: .hang,
             handUse: .single, side: .left
         )
 
@@ -456,7 +499,12 @@ final class WorkoutTimelineTests: XCTestCase {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
-            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                timing: .fixed,
+                duration: 7
+            )],
             handUse: .double, side: .both
         )
 
@@ -468,13 +516,16 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(expanded.map(\.id), ["bilateral.left", "bilateral.right"])
         XCTAssertEqual(expanded.map(\.side), [.left, .right])
         XCTAssertEqual(expanded.map(\.handUse), [.single, .single])
-        XCTAssertEqual(expanded.map { $0.targets.map(\.selection) }, [[.single], [.single]])
+        XCTAssertEqual(
+            expanded.map { $0.workRequirements.map(\.selection) },
+            [[.single], [.single]]
+        )
     }
 
     func testHandCuePolicyHidesOppositeCueAfterEitherHandMaterializes() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [], handUse: .either,
+            accessory: "", duration: 10, phase: .hang, handUse: .either,
             side: .both
         )
         let resolved = WorkoutLiveStepResolver.materialized(
@@ -492,11 +543,10 @@ final class WorkoutTimelineTests: XCTestCase {
     func testPerSideCueRuleHidesTheIdleHandForACueStepDerivedFromRest() throws {
         let rest = WorkoutStep(
             id: "rest", number: 1, title: "Rest", instruction: "Rest.",
-            accessory: "", duration: 30, phase: .rest, targets: []
-        )
+            accessory: "", duration: 30, phase: .rest)
         let singleRight = WorkoutStep(
             id: "work-right", number: 2, title: "Right hang", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [],
+            accessory: "", duration: 10, phase: .hang,
             gripType: .halfCrimp, handUse: .single, side: .right
         )
         let timeline = WorkoutTimeline(steps: [rest, singleRight])
@@ -515,16 +565,15 @@ final class WorkoutTimelineTests: XCTestCase {
     func testLandscapeHandCueFollowsCueStepWhileCurrentStepIsResting() throws {
         let leftWork = WorkoutStep(
             id: "work-left", number: 1, title: "Left hang", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [],
+            accessory: "", duration: 10, phase: .hang,
             gripType: .halfCrimp, handUse: .single, side: .left
         )
         let rest = WorkoutStep(
             id: "rest", number: 2, title: "Rest", instruction: "Rest.",
-            accessory: "", duration: 30, phase: .rest, targets: []
-        )
+            accessory: "", duration: 30, phase: .rest)
         let eitherWork = WorkoutStep(
             id: "work-either", number: 3, title: "Either hang", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [],
+            accessory: "", duration: 10, phase: .hang,
             gripType: .halfCrimp, handUse: .either, side: .both
         )
         let timeline = WorkoutTimeline(steps: [leftWork, rest, eitherWork])
@@ -570,7 +619,7 @@ final class WorkoutTimelineTests: XCTestCase {
     func testLandscapeHandCueShowsBothSlotsForBilateralCueStep() {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [],
+            accessory: "", duration: 10, phase: .hang,
             gripType: .halfCrimp, handUse: .double, side: .both
         )
         let holdCue = WorkoutHoldCue(gripType: .halfCrimp)
@@ -593,7 +642,7 @@ final class WorkoutTimelineTests: XCTestCase {
     func testLandscapeHandCueStillHonoursTheCountdownAndCompletionGate() {
         let rightWork = WorkoutStep(
             id: "work-right", number: 1, title: "Right hang", instruction: "Hang.",
-            accessory: "", duration: 10, phase: .hang, targets: [],
+            accessory: "", duration: 10, phase: .hang,
             gripType: .halfCrimp, handUse: .single, side: .right
         )
         let holdCue = WorkoutHoldCue(gripType: .halfCrimp)
@@ -643,7 +692,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .pull,
-            targets: [.kind(.jug)],
             handUse: .single,
             side: .left,
             action: .loadedLift,
@@ -715,9 +763,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "",
             accessory: "",
             duration: 30,
-            phase: .rest,
-            targets: []
-        )
+            phase: .rest)
 
         XCTAssertEqual(WorkoutTimeline.labels(for: rest), ["Rest"])
     }
@@ -773,7 +819,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .pull,
-            targets: [.kind(.pocket)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.pocket)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             handUse: .single,
             side: .left,
             action: .loadedLift,
@@ -793,7 +846,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .pull,
-            targets: [.kind(.pocket)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.pocket)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             handUse: .single,
             side: .right,
             action: .loadedLift,
@@ -846,7 +906,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .pull,
-            targets: [.edge(depth: .category(.small))],
             action: .loadedLift,
             repetitions: 1
         )
@@ -857,12 +916,12 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
-    func testHoldCueRejectsUnknownContactGripMetadataForStepGrip() {
+    func testHoldCueRejectsIncompatibleNonEmptyContactGripMetadataForStepGrip() {
         let hold = PhysicalContact(
             id: "cue-edge",
             name: "Cue edge",
             kind: .edge,
-            gripTypes: []
+            gripTypes: [.openHand]
         )
         let step = WorkoutStep(
             id: "cue-step",
@@ -872,7 +931,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.edge)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             gripType: .halfCrimp,
             fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
         )
@@ -898,7 +964,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.pocket)]
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.pocket)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ]
         )
 
         let cue = WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
@@ -922,7 +995,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.edge(depth: .category(.large))],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.edge(depth: .category(.large))]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             gripType: .halfCrimp
         )
 
@@ -946,7 +1026,14 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge), .kind(.jug)]
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.edge), .kind(.jug)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ]
         )
 
         XCTAssertNil(WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold])))
@@ -967,13 +1054,65 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge, selection: .single)],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.edge, selection: .single)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             gripType: .halfCrimp
         )
 
         XCTAssertNotNil(
             WorkoutHoldCuePolicy.resolve(step: step, hold: hold, on: board(containing: [hold]))
         )
+    }
+
+    func testHoldCueKeepsSourceBackedGripWhenRequirementDoesNotResolveOnBoard() {
+        let fingers = FingerConfiguration(
+            engagedFingers: [.index, .middle, .ring, .pinky]
+        )
+        let step = WorkoutStep(
+            id: "max-hang-cue",
+            number: 1,
+            title: "Max hang",
+            instruction: "Hang on a 20 mm edge.",
+            accessory: "7s",
+            duration: 7,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([
+                        .edge(depth: .range(.init(minimum: 20, maximum: 20)))
+                    ]),
+                    timing: .fixed,
+                    duration: 7
+                )
+            ],
+            gripType: .halfCrimp,
+            fingerConfiguration: fingers,
+            handUse: .either
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(
+            step: step,
+            hold: nil,
+            on: board(containing: [
+                PhysicalContact(
+                    id: "edge-19",
+                    name: "19 mm",
+                    kind: .edge,
+                    depth: .range(.init(minimum: 19, maximum: 19))
+                )
+            ])
+        )
+
+        XCTAssertNil(cue?.hold)
+        XCTAssertEqual(cue?.gripType, .halfCrimp)
+        XCTAssertEqual(cue?.fingerConfiguration, fingers)
     }
 
     func testSelfSelectedWorkKeepsItsSourceBackedGripCueWithoutInventingAContact() {
@@ -988,7 +1127,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [],
             gripType: .halfCrimp,
             fingerConfiguration: fingers
         )
@@ -1020,7 +1158,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge, selection: .single)],
             gripType: .halfCrimp,
             fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring])
         )
@@ -1108,7 +1245,15 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Cue accessory",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge, selection: .single)]
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([.kind(.edge)]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
+            gripType: .halfCrimp
         )
 
         XCTAssertNil(
@@ -1167,7 +1312,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "First accessory",
             duration: 60,
             phase: .hang,
-            targets: [.kind(.jug)],
             timedWorkDuration: 30
         ),
         WorkoutStep(
@@ -1177,9 +1321,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Second instruction",
             accessory: "Second accessory",
             duration: 20,
-            phase: .rest,
-            targets: []
-        ),
+            phase: .rest),
         WorkoutStep(
             id: "third",
             number: 3,
@@ -1187,9 +1329,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Third instruction",
             accessory: "Third accessory",
             duration: 10,
-            phase: .hang,
-            targets: [.kind(.jug)]
-        )
+            phase: .hang)
     ]
 
     func testDurationAndOffsetsIncludeWholeSteps() {
@@ -1265,7 +1405,6 @@ final class WorkoutTimelineTests: XCTestCase {
             accessory: "Work accessory",
             duration: 30,
             phase: .hang,
-            targets: [.kind(.jug)],
             timedWorkDuration: 15
         ),
         WorkoutStep(
@@ -1275,9 +1414,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Rest instruction",
             accessory: "Rest accessory",
             duration: 10,
-            phase: .rest,
-            targets: []
-        ),
+            phase: .rest),
         WorkoutStep(
             id: "rest-two",
             number: 3,
@@ -1285,9 +1422,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Rest instruction",
             accessory: "Rest accessory",
             duration: 10,
-            phase: .rest,
-            targets: []
-        ),
+            phase: .rest),
         WorkoutStep(
             id: "next-work",
             number: 4,
@@ -1295,9 +1430,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Next work instruction",
             accessory: "Next work accessory",
             duration: 20,
-            phase: .pull,
-            targets: [.kind(.edge)]
-        ),
+            phase: .pull),
         WorkoutStep(
             id: "final-rest",
             number: 5,
@@ -1305,9 +1438,7 @@ final class WorkoutTimelineTests: XCTestCase {
             instruction: "Final rest instruction",
             accessory: "Final rest accessory",
             duration: 5,
-            phase: .rest,
-            targets: []
-        )
+            phase: .rest)
     ]
 
     func testNextWorkStepSkipsConsecutiveRestSteps() {
@@ -3239,9 +3370,7 @@ final class WorkoutStepDurationTests: XCTestCase {
             instruction: "Rest.",
             accessory: "",
             duration: 30,
-            phase: .rest,
-            targets: []
-        )
+            phase: .rest)
 
         XCTAssertEqual(rest.activeDuration, 30)
         XCTAssertFalse(rest.hasRestInterval)
@@ -3257,7 +3386,6 @@ final class WorkoutStepDurationTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .pull,
-            targets: [.kind(.jug)],
             timedWorkDuration: 10
         )
 
@@ -3305,8 +3433,8 @@ final class MetoliusTaskExpansionTests: XCTestCase {
 
         XCTAssertEqual(steps.map(\.id), ["test.minute-2.task-1", "test.minute-2.task-2", "test.minute-2.rest"])
         XCTAssertEqual(steps.map(\.duration), [15, 10, 35])
-        XCTAssertEqual(steps[0].targets, first.targets)
-        XCTAssertEqual(steps[1].targets, second.targets)
+        XCTAssertEqual(steps[0].workRequirements, first.targets)
+        XCTAssertEqual(steps[1].workRequirements, second.targets)
     }
 
     func testExpansionRejectsTasksThatExceedTheMinute() {
@@ -3341,8 +3469,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             ["Round sloper pull-ups", "Medium-edge hang", "Minute 2 rest"]
         )
         XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
-        XCTAssertTrue(steps[0].targets.isEmpty)
-        XCTAssertTrue(steps[1].targets.isEmpty)
+        XCTAssertEqual(
+            steps[0].workRequirements,
+            [ContactRequirement(kind: .sloper, shape: .round)]
+        )
+        XCTAssertEqual(
+            steps[1].workRequirements,
+            [ContactRequirement.edge(depth: .category(.medium))]
+        )
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
@@ -3352,25 +3486,33 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         }
 
         XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
-        XCTAssertTrue(steps.prefix(2).allSatisfy(\.targets.isEmpty))
+        let offsetTargets = [
+            ContactRequirement.kind(.jug),
+            ContactRequirement.edge(depth: .category(.small))
+        ]
+        XCTAssertEqual(steps[0].workRequirements, offsetTargets)
+        XCTAssertEqual(steps[1].workRequirements, offsetTargets)
         XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
         XCTAssertTrue(steps[1].instruction.lowercased().contains("repeat"))
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
-    func testMaxEffortMetoliusStepsUseStopwatchTiming() {
-        let step = PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }!
+    func testMaxEffortMetoliusStepsUseStopwatchTiming() throws {
+        let step = try XCTUnwrap(
+            PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }
+        )
 
         XCTAssertEqual(step.duration, 60)
         XCTAssertEqual(step.timedWorkDuration, nil)
-        XCTAssertEqual(step.segments, [
-            WorkoutSegment(
-                kind: .work,
-                target: nil,
-                timing: .stopwatch,
-                duration: nil
-            )
-        ])
+        XCTAssertEqual(step.segments.count, 1)
+        let work = step.segments[0]
+        XCTAssertEqual(work.kind, .work)
+        XCTAssertEqual(work.timing, .stopwatch)
+        XCTAssertNil(work.duration)
+        guard case let .requirements(requirements)? = work.target else {
+            return XCTFail("Expected stopwatch work to keep round-sloper requirements")
+        }
+        XCTAssertEqual(requirements, [ContactRequirement(kind: .sloper, shape: .round)])
     }
 
     func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
@@ -3408,8 +3550,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 
         let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
-        XCTAssertTrue(entryMinuteSix[0].targets.isEmpty)
-        XCTAssertTrue(entryMinuteSix[1].targets.isEmpty)
+        XCTAssertEqual(
+            entryMinuteSix[0].workRequirements,
+            [ContactRequirement(kind: .sloper, shape: .round)]
+        )
+        XCTAssertEqual(
+            entryMinuteSix[1].workRequirements,
+            [ContactRequirement.kind(.pocket)]
+        )
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
         XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])
@@ -3452,9 +3600,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 instruction: "",
                 accessory: "",
                 duration: 10,
-                phase: .hang,
-                targets: []
-            ),
+                phase: .hang),
             WorkoutStep(
                 id: "short",
                 number: 2,
@@ -3462,9 +3608,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 instruction: "",
                 accessory: "",
                 duration: 3,
-                phase: .hang,
-                targets: []
-            ),
+                phase: .hang),
             WorkoutStep(
                 id: "following",
                 number: 3,
@@ -3472,9 +3616,7 @@ final class WorkoutAudioCuePolicyTests: XCTestCase {
                 instruction: "",
                 accessory: "",
                 duration: 10,
-                phase: .rest,
-                targets: []
-            )
+                phase: .rest)
         ]
         let followingShortDurations = WorkoutCountdownIntervalPolicy.shortDurations(
             in: routeSteps,
@@ -3819,7 +3961,6 @@ final class WorkoutSessionStateTests: XCTestCase {
             accessory: "First accessory",
             duration: 60,
             phase: .hang,
-            targets: [.kind(.jug)],
             timedWorkDuration: 30
         ),
         WorkoutStep(
@@ -3829,9 +3970,7 @@ final class WorkoutSessionStateTests: XCTestCase {
             instruction: "Second instruction",
             accessory: "Second accessory",
             duration: 20,
-            phase: .rest,
-            targets: []
-        ),
+            phase: .rest),
         WorkoutStep(
             id: "third",
             number: 3,
@@ -3839,9 +3978,7 @@ final class WorkoutSessionStateTests: XCTestCase {
             instruction: "Third instruction",
             accessory: "Third accessory",
             duration: 10,
-            phase: .hang,
-            targets: [.kind(.jug)]
-        )
+            phase: .hang)
     ]
 
     func testInitialStartUsesMonotonicUptimeForElapsedAndCountdown() {

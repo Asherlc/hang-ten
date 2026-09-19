@@ -471,16 +471,10 @@ enum ContactResolver {
         return board.contacts.filter { resolvedIDs.contains($0.id) }
     }
 
+    /// Every contact shown by the default presentation, including multi-position
+    /// model boards where each authored position only lists a subset.
     private static func contactIDsForDefaultPosition(on board: BoardRevision) -> Set<String> {
-        if let position = board.positions.first(where: {
-            $0.presentationID == board.defaultPresentation.id
-        }) {
-            if !position.contactIDsWereExplicitlyAuthored {
-                return board.defaultPresentation.contactIDs
-            }
-            return Set(position.contactIDs)
-        }
-        return board.defaultPresentation.contactIDs
+        board.defaultPresentation.contactIDs
     }
 
     private static func matches(
@@ -503,6 +497,9 @@ enum ContactResolver {
         contact: PhysicalContact
     ) -> Bool {
         guard let stepGripType else { return true }
+        // Empty grip metadata means the contact does not constrain grip; only
+        // non-empty inventories can reject an incompatible step grip.
+        guard !contact.gripTypes.isEmpty else { return true }
         return contact.gripTypes.contains(stepGripType)
     }
 
@@ -635,7 +632,7 @@ struct WorkoutActivityRecorder {
                     )
                     continue
                 }
-                guard !segment.targets.isEmpty else {
+                guard let segmentTarget = segment.target else {
                     guard allowsSourceLinkedUntargetedWork(segment, in: recordedStep, plan: plan) else {
                         throw WorkoutActivityRecordingError.unresolvedTarget(
                             stepID: recordedStep.id,
@@ -656,39 +653,72 @@ struct WorkoutActivityRecorder {
                     continue
                 }
 
-                for requirement in segment.targets {
-                    let contacts: [PhysicalContact]
-                    do {
-                        contacts = try ContactResolver.resolve(
-                            requirement,
-                            step: recordedStep,
-                            board: board
-                        )
-                    } catch {
-                        throw WorkoutActivityRecordingError.unresolvedTarget(
-                            stepID: recordedStep.id,
-                            segmentIndex: index
-                        )
-                    }
+                switch segmentTarget {
+                case .selfSelected:
                     result.append(
                         RecordedActivitySegment(
                             stepID: recordedStep.id,
                             stepNumber: recordedStep.number,
                             kind: .work,
-                            target: .resolvedContacts(
-                                ResolvedContactSnapshot(
-                                    boardID: board.id,
-                                    revisionID: board.revisionID,
-                                    modelSHA256: modelSHA256(for: board.defaultPresentation),
-                                    requirement: requirement,
-                                    contactIDs: contacts.map(\.id)
-                                )
-                            ),
+                            target: .selfSelected,
                             durationSeconds: duration,
                             handUse: recordedStep.handUse,
                             side: recordedStep.side
                         )
                     )
+                case .requirements(let requirements):
+                    do {
+                        var resolvedSegments: [RecordedActivitySegment] = []
+                        for requirement in requirements {
+                            let contacts = try ContactResolver.resolve(
+                                requirement,
+                                step: recordedStep,
+                                board: board
+                            )
+                            resolvedSegments.append(
+                                RecordedActivitySegment(
+                                    stepID: recordedStep.id,
+                                    stepNumber: recordedStep.number,
+                                    kind: .work,
+                                    target: .resolvedContacts(
+                                        ResolvedContactSnapshot(
+                                            boardID: board.id,
+                                            revisionID: board.revisionID,
+                                            modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                            requirement: requirement,
+                                            contactIDs: contacts.map(\.id)
+                                        )
+                                    ),
+                                    durationSeconds: duration,
+                                    handUse: recordedStep.handUse,
+                                    side: recordedStep.side
+                                )
+                            )
+                        }
+                        result.append(contentsOf: resolvedSegments)
+                    } catch {
+                        guard allowsSourceLinkedRequirementFallback(
+                            segment,
+                            in: recordedStep,
+                            plan: plan
+                        ) else {
+                            throw WorkoutActivityRecordingError.unresolvedTarget(
+                                stepID: recordedStep.id,
+                                segmentIndex: index
+                            )
+                        }
+                        result.append(
+                            RecordedActivitySegment(
+                                stepID: recordedStep.id,
+                                stepNumber: recordedStep.number,
+                                kind: .work,
+                                target: .selfSelected,
+                                durationSeconds: duration,
+                                handUse: recordedStep.handUse,
+                                side: recordedStep.side
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -740,13 +770,32 @@ struct WorkoutActivityRecorder {
         in step: WorkoutStep,
         plan: TrainingPlan
     ) -> Bool {
+        allowsBoardAgnosticSourceLinkedWork(segment, in: step, plan: plan)
+            && (segment.target == nil || segment.target?.isSelfSelected == true)
+    }
+
+    /// Board-agnostic source plans soft-fall to self-selected when a prescribed
+    /// requirement cannot resolve on the athlete's chosen board. Board-bound
+    /// and custom plans still fail closed.
+    private func allowsSourceLinkedRequirementFallback(
+        _ segment: WorkoutSegment,
+        in step: WorkoutStep,
+        plan: TrainingPlan
+    ) -> Bool {
+        allowsBoardAgnosticSourceLinkedWork(segment, in: step, plan: plan)
+    }
+
+    private func allowsBoardAgnosticSourceLinkedWork(
+        _ segment: WorkoutSegment,
+        in step: WorkoutStep,
+        plan: TrainingPlan
+    ) -> Bool {
         plan.provenance != .custom
             && plan.sourceURL != nil
             && plan.boardID == nil
             && step.phase != .rest
             && step.phase != .conditioning
             && segment.kind == .work
-            && segment.targets.isEmpty
     }
 
     func metadata(

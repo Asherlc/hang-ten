@@ -29,9 +29,14 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: mode == .generic
-                    ? [.edge(depth: .category(.medium))]
-                    : [.kind(.edge)],
+                segments: [
+                    WorkoutSegmentDefinition(
+                        kind: .work,
+                        target: .fromLegacyTargets([.kind(.edge)]),
+                        timing: .fixed,
+                        duration: 10
+                    )
+                ],
                 gripType: .halfCrimp,
                 activeDuration: 10
             )]
@@ -55,7 +60,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(
             resolvedIDs,
             Set(try ContactResolver.resolve(
-                custom.steps[0].targets,
+                custom.steps[0].workRequirements,
                 step: custom.steps[0],
                 board: BoardCatalog.defaultBoard
             ).map(\.id))
@@ -115,23 +120,34 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertNil(store.customDefinition(for: duplicate.id))
     }
 
-    func testTargetlessForceFeedbackPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
+    func testSelfSelectedAllowlistedPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
         let source = try XCTUnwrap(
-            store.plans.first { $0.id == "research.force-feedback-f80" }
+            store.plans.first { $0.id == "rptc.seven-three-repeaters" }
         )
 
         XCTAssertThrowsError(try store.duplicateRoutine(source)) { error in
             guard case let CustomRoutineStoreError.validationFailed(issues) = error else {
                 return XCTFail("Unexpected error: \(error)")
             }
-            XCTAssertTrue(issues.contains(.missingTargets(stepIndex: 0)))
+            XCTAssertTrue(
+                issues.contains(where: {
+                    if case .missingWorkSegmentTargets(stepIndex: 0, segmentIndex: _) = $0 {
+                        return true
+                    }
+                    if case .missingTargets(stepIndex: 0) = $0 {
+                        return true
+                    }
+                    return false
+                }),
+                "Self-selected catalog work must not become an unsourced custom routine without athlete targets: \(issues)"
+            )
         }
     }
 
-    func testTargetlessOrdinaryPlanCannotBecomeAnUnsourcedCustomRoutine() throws {
+    func testMaxHangsDuplicateKeepsSegmentOwnedRequirements() throws {
         let (suiteName, defaults) = makeDefaults()
         defer { defaults.removePersistentDomain(forName: suiteName) }
         let store = AppStore(defaults: defaults)
@@ -139,12 +155,14 @@ final class CustomRoutineAppStoreTests: XCTestCase {
             store.plans.first { $0.id == "research.max-hangs" }
         )
 
-        XCTAssertThrowsError(try store.duplicateRoutine(source)) { error in
-            guard case let CustomRoutineStoreError.validationFailed(issues) = error else {
-                return XCTFail("Unexpected error: \(error)")
-            }
-            XCTAssertTrue(issues.contains(.missingTargets(stepIndex: 0)))
-        }
+        let duplicate = try store.duplicateRoutine(source)
+
+        XCTAssertTrue(duplicate.id.hasPrefix("custom."))
+        XCTAssertFalse(duplicate.steps[0].workRequirements.isEmpty)
+        XCTAssertEqual(
+            duplicate.steps[0].workRequirements.first?.depth,
+            .range(.init(minimum: 20, maximum: 20))
+        )
     }
 
     func testPlanDetailDuplicateUsesCurrentPlanAfterStoredEdit() throws {
@@ -169,7 +187,14 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 accessory: "8s",
                 duration: 8,
                 phase: .hang,
-                targets: [.kind(.edge)],
+                segments: [
+                    WorkoutSegmentDefinition(
+                        kind: .work,
+                        target: .fromLegacyTargets([.kind(.edge)]),
+                        timing: .fixed,
+                        duration: 8
+                    )
+                ],
                 gripType: .halfCrimp,
                 activeDuration: 8
             )]

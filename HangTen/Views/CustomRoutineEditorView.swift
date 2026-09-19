@@ -226,7 +226,7 @@ struct CustomRoutineEditorView: View {
         for (index, step) in definition.steps.enumerated() where !step.duration.isFinite || step.duration <= 0 {
             issues.append("Step \(index + 1) needs a positive duration.")
         }
-        for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.targets.isEmpty {
+        for (index, step) in definition.steps.enumerated() where step.phase != .rest && step.workRequirements.isEmpty {
             issues.append("Step \(index + 1) needs a hold target.")
         }
         for (index, step) in definition.steps.enumerated() where !WorkoutStepSemantics.hasValidHandUseAndSide(step.handUse, step.side) {
