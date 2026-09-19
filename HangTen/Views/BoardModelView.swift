@@ -181,6 +181,12 @@ enum BoardModelAsset {
             return nil
         }
     }
+
+    #if DEBUG
+    @MainActor static var queuedLoadWaiterCount: Int {
+        BoardModelLoadGate.debugQueuedWaiters
+    }
+    #endif
 }
 
 private final class BoardModelLoadedAsset {
@@ -322,6 +328,7 @@ private enum BoardModelLoadGate {
     /// Returns false when the caller is cancelled before the slot is granted
     /// (the caller must NOT call `release()` in that case).
     static func acquire() async -> Bool {
+        guard !Task.isCancelled else { return false }
         if active < limit {
             active += 1
             return true
@@ -354,6 +361,10 @@ private enum BoardModelLoadGate {
             waiters.removeFirst().continuation.resume(returning: true)
         }
     }
+
+    #if DEBUG
+    fileprivate static var debugQueuedWaiters: Int { waiters.count }
+    #endif
 }
 
 @MainActor

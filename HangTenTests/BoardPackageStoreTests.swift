@@ -332,7 +332,16 @@ final class BoardPackageStoreTests: XCTestCase {
                 )
             }
         }
-        try await Task.sleep(for: .milliseconds(50))
+        var admissionIndex = 0
+        while BoardModelAsset.queuedLoadWaiterCount == 0, admissionIndex < 100 {
+            admissionIndex += 1
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        XCTAssertGreaterThanOrEqual(
+            BoardModelAsset.queuedLoadWaiterCount,
+            1,
+            "queued load must register as a gate waiter before it is cancelled"
+        )
         queued.cancel()
 
         let queuedResult = await queued.value
