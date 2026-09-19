@@ -308,6 +308,54 @@ private enum BoardModelCache {
     }
 }
 
+/// Serializes 3D model loads (decode + MainActor scene build) so only one is
+/// in flight globally. SwiftUI `.task` cancels on disappear; a cancelled
+/// queued load is removed and resumed with `false` so it never consumes or
+/// leaks a slot. Mirrors the waiter pattern used by `BoardModelCache`.
+@MainActor
+private enum BoardModelLoadGate {
+    private static let limit = 1
+    private static var active = 0
+    private static var waiters: [(id: UUID, continuation: CheckedContinuation<Bool, Never>)] = []
+
+    /// Returns true when the caller holds a slot and must call `release()`.
+    /// Returns false when the caller is cancelled before the slot is granted
+    /// (the caller must NOT call `release()` in that case).
+    static func acquire() async -> Bool {
+        if active < limit {
+            active += 1
+            return true
+        }
+        let waiterID = UUID()
+        return await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                guard !Task.isCancelled else {
+                    continuation.resume(returning: false)
+                    return
+                }
+                waiters.append((waiterID, continuation))
+            }
+        } onCancel: {
+            Task { @MainActor in
+                guard let index = waiters.firstIndex(where: { $0.id == waiterID }) else {
+                    return
+                }
+                let waiter = waiters.remove(at: index)
+                waiter.continuation.resume(returning: false)
+            }
+        }
+    }
+
+    static func release() {
+        if waiters.isEmpty {
+            active -= 1
+        } else {
+            // Hand the slot to the earliest waiter; active stays at limit.
+            waiters.removeFirst().continuation.resume(returning: true)
+        }
+    }
+}
+
 @MainActor
 enum BoardModelLoader {
     static func load(
@@ -319,6 +367,8 @@ enum BoardModelLoader {
         guard case .model(let media) = presentation.media else {
             return nil
         }
+        guard await BoardModelLoadGate.acquire() else { return nil }
+        defer { BoardModelLoadGate.release() }
         let key = BoardModelKey(
             boardID: board.id,
             presentationID: presentation.id,
