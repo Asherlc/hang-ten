@@ -117,6 +117,121 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testCaptainFingerfoodDualWorkoutsResolveAsOneHandedAfterHandChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        XCTAssertEqual(board.handCapacity, 1)
+        XCTAssertTrue(board.isOneHanded)
+
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Hang", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            targets: [ContactRequirement(kind: .edge, depth: .range(.init(minimum: 20, maximum: 20)), selection: .bilateralPair)],
+            handUse: .double, side: .both
+        )
+
+        XCTAssertTrue(
+            bilateral.handUse == .either || board.isOneHanded,
+            "Dual must gate the start-of-session hand picker like other one-handed boards"
+        )
+
+        let resolved = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .left,
+            boardIsOneHanded: board.isOneHanded
+        )
+        XCTAssertEqual(resolved.handUse, .single)
+        XCTAssertEqual(resolved.side, .left)
+        XCTAssertEqual(resolved.targets.map(\.selection), [.single])
+        XCTAssertEqual(WorkoutTimeline.labels(for: resolved), ["Hang", "Left hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: resolved))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: resolved))
+        XCTAssertEqual(
+            GripDiagramView.singleSide(handCapacity: 1, resolvedSide: resolved.side),
+            .left
+        )
+        let dualEdge = try XCTUnwrap(board.contacts.first { $0.id == "curved-edge-20" })
+        XCTAssertEqual(GripDiagramView.cueLabel(for: dualEdge), "20 mm curved edge")
+    }
+
+    func testBoardHandCapacityDrivesOneHandedWorkoutMaterialization() {
+        let bilateral = WorkoutStep(
+            id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",
+            accessory: "", duration: 7, phase: .hang,
+            targets: [ContactRequirement(kind: .jug, selection: .bilateralPair)],
+            handUse: .double, side: .both
+        )
+        let contact = PhysicalContact(id: "edge", name: "Edge", kind: .edge, handCapacity: 1)
+        let productURL = URL(string: "https://example.com/board")!
+
+        let oneHanded = BoardRevision(
+            id: "fixture.one-handed",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "One handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 1,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertTrue(oneHanded.isOneHanded)
+        let resolvedOneHanded = WorkoutLiveStepResolver.materialized(
+            bilateral,
+            selectedHandSide: .left,
+            boardIsOneHanded: oneHanded.isOneHanded
+        )
+        XCTAssertEqual(resolvedOneHanded.handUse, .single)
+        XCTAssertEqual(resolvedOneHanded.side, .left)
+
+        let twoHanded = BoardRevision(
+            id: "fixture.two-handed",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Two handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertFalse(twoHanded.isOneHanded)
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(
+                bilateral,
+                selectedHandSide: .left,
+                boardIsOneHanded: twoHanded.isOneHanded
+            ),
+            bilateral
+        )
+
+        let omittedDefault = BoardRevision(
+            id: "fixture.omitted-default",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Default two handed",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            contacts: [contact],
+            productURL: productURL,
+            photoAssetName: nil
+        )
+        XCTAssertEqual(omittedDefault.handCapacity, 2)
+        XCTAssertFalse(omittedDefault.isOneHanded)
+        XCTAssertEqual(
+            WorkoutLiveStepResolver.materialized(
+                bilateral,
+                selectedHandSide: .left,
+                boardIsOneHanded: omittedDefault.isOneHanded
+            ),
+            bilateral
+        )
+    }
+
     func testOneHandedBoardResolutionNormalizesBilateralTargetsToSingleSelection() throws {
         let bilateral = WorkoutStep(
             id: "bilateral", number: 1, title: "Both hands", instruction: "Hang.",

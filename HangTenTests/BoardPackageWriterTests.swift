@@ -59,6 +59,40 @@ final class BoardPackageWriterTests: XCTestCase {
         XCTAssertNil(document.unilateralHandResolution)
     }
 
+    func testEditorRoundTripPreservesBoardHandCapacityAndOmitsDefaultTwo() throws {
+        var oneHanded = makeDocument()
+        oneHanded.handCapacity = 1
+
+        let encodedOne = try BoardPackageWriter.data(for: oneHanded)
+        let payloadOne = try XCTUnwrap(
+            JSONSerialization.jsonObject(with: encodedOne) as? [String: Any]
+        )
+        XCTAssertEqual(payloadOne["handCapacity"] as? Int, 1)
+        XCTAssertEqual(try BoardEditableDocument(data: encodedOne).handCapacity, 1)
+
+        let omittedDefault = try decode(jsonObject(for: makeDocument()))
+        XCTAssertEqual(omittedDefault.handCapacity, 2)
+        XCTAssertNil(try jsonObject(for: omittedDefault)["handCapacity"])
+
+        var explicitTwo = makeDocument()
+        explicitTwo.handCapacity = 2
+        XCTAssertNil(try jsonObject(for: explicitTwo)["handCapacity"])
+    }
+
+    func testEditorRejectsInvalidBoardHandCapacityAndContactConflict() throws {
+        for invalid in [0, 3] {
+            var payload = try jsonObject(for: makeDocument())
+            payload["handCapacity"] = invalid
+            let document = try decode(payload)
+            XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+        }
+
+        var conflict = makeDocument()
+        conflict.handCapacity = 1
+        conflict.contacts[0].handCapacity = 2
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: conflict))
+    }
+
     func testWriterRoundTripsForgeStyleCategoricalContactDepth() throws {
         var document = makeDocument()
         document.contacts[0].kind = .edge

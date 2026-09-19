@@ -1846,6 +1846,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
+            handCapacity: 1,
             contacts: [contact],
             productURL: URL(string: "https://example.com/one-handed-recording")!,
             photoAssetName: nil,

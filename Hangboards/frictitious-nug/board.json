@@ -7,6 +7,7 @@
   "productURL": "https://frictitiousclimbing.com/products/the-nug",
   "dimensions": "130 × 60 × 40 mm",
   "aspectRatio": 1.5,
+  "handCapacity": 1,
   "equipmentObjects": [
     {
       "id": "primary"

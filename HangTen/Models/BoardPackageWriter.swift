@@ -10,6 +10,8 @@ struct BoardEditableDocument: Equatable, Decodable {
     var productURL: URL
     var dimensions: String?
     var aspectRatio: Double
+    /// Package-authored simultaneous hand capacity (`1...2`). Omitted JSON → `2`.
+    var handCapacity: Int
     var unilateralHandResolution: UnilateralHandResolution?
     var equipmentObjects: [EquipmentObject]
     var contacts: [BoardEditableContact]
@@ -27,6 +29,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         case productURL
         case dimensions
         case aspectRatio
+        case handCapacity
         case unilateralHandResolution
         case equipmentObjects
         case contacts
@@ -45,6 +48,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL: URL,
         dimensions: String?,
         aspectRatio: Double,
+        handCapacity: Int = 2,
         unilateralHandResolution: UnilateralHandResolution? = nil,
         equipmentObjects: [EquipmentObject] = [.init(id: "primary")],
         contacts: [BoardEditableContact],
@@ -61,6 +65,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         self.productURL = productURL
         self.dimensions = dimensions
         self.aspectRatio = aspectRatio
+        self.handCapacity = handCapacity
         self.unilateralHandResolution = unilateralHandResolution
         self.equipmentObjects = equipmentObjects
         self.contacts = contacts
@@ -72,7 +77,7 @@ struct BoardEditableDocument: Equatable, Decodable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownEditorKeys([
             "schemaVersion", "id", "revisionID", "manufacturer", "name", "subtitle", "productURL",
-            "dimensions", "aspectRatio", "unilateralHandResolution", "equipmentObjects", "contacts",
+            "dimensions", "aspectRatio", "handCapacity", "unilateralHandResolution", "equipmentObjects", "contacts",
             "presentations", "positions", "positionTransitions"
         ])
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -92,6 +97,7 @@ struct BoardEditableDocument: Equatable, Decodable {
         productURL = try container.decode(URL.self, forKey: .productURL)
         dimensions = try container.decodeIfPresent(String.self, forKey: .dimensions)
         aspectRatio = try container.decode(Double.self, forKey: .aspectRatio)
+        handCapacity = try container.decodeIfPresent(Int.self, forKey: .handCapacity) ?? 2
         unilateralHandResolution = container.contains(.unilateralHandResolution)
             ? try container.decode(UnilateralHandResolution.self, forKey: .unilateralHandResolution)
             : nil
@@ -607,6 +613,12 @@ enum BoardPackageWriter {
         guard document.aspectRatio.isFinite, document.aspectRatio > 0 else {
             throw invalid("aspect ratio must be positive", document)
         }
+        guard PhysicalContact.validHandCapacityRange.contains(document.handCapacity) else {
+            throw invalid(
+                "board handCapacity must be in \(PhysicalContact.validHandCapacityRange)",
+                document
+            )
+        }
         guard !document.presentations.isEmpty else {
             throw invalid("presentations must not be empty", document)
         }
@@ -742,6 +754,12 @@ enum BoardPackageWriter {
             if let handCapacity = contact.handCapacity,
                !PhysicalContact.validHandCapacityRange.contains(handCapacity) {
                 throw invalid("contact \(contact.id) has an invalid hand capacity", document)
+            }
+            if document.handCapacity == 1, contact.handCapacity == 2 {
+                throw invalid(
+                    "one-handed board cannot include contact \(contact.id) with handCapacity 2",
+                    document
+                )
             }
             if Set(contact.gripTypes).count != contact.gripTypes.count {
                 throw invalid("contact \(contact.id) has duplicate gripTypes", document)
@@ -919,11 +937,16 @@ enum BoardPackageWriter {
         if let dimensions = document.dimensions {
             entries.insert(("dimensions", .string(dimensions)), at: 6)
         }
+        var afterAspectRatio = document.dimensions == nil ? 7 : 8
+        if document.handCapacity != 2 {
+            entries.insert(("handCapacity", .int(document.handCapacity)), at: afterAspectRatio)
+            afterAspectRatio += 1
+        }
         if let unilateralHandResolution = document.unilateralHandResolution {
             entries.insert((
                 "unilateralHandResolution",
                 .string(unilateralHandResolution.rawValue)
-            ), at: document.dimensions == nil ? 7 : 8)
+            ), at: afterAspectRatio)
         }
         entries.append(("revisionID", .string(document.revisionID)))
         entries.append(("contacts", .array(document.contacts.map(canonicalContactValue))))
