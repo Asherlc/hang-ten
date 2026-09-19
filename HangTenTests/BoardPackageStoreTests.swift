@@ -219,6 +219,152 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testModelLoadsAreSerializedAcrossDistinctBoards() async throws {
+        let loadCount = 4
+        var fixtures: [FixtureBundle] = []
+        defer { fixtures.forEach { $0.remove() } }
+        var stores: [BoardPackageStore] = []
+        for index in 0..<loadCount {
+            let fixture = try makeModelFixtureBundle(
+                modelSHA256Matches: true,
+                boardID: "fixture.concurrent-\(index)-\(UUID().uuidString.lowercased())"
+            )
+            fixtures.append(fixture)
+            stores.append(try BoardPackageStore(bundle: fixture.bundle))
+        }
+
+        let tracker = ModelLoadConcurrencyTracker()
+        let results = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+            for store in stores {
+                group.addTask {
+                    guard let board = store.boards.first else { return false }
+                    let presentation = board.defaultPresentation
+                    return await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                        tracker.enter()
+                        Thread.sleep(forTimeInterval: 0.1)
+                        tracker.exit()
+                        return makeBoardModelFixtureScene()
+                    }) {
+                        await BoardModelLoader.load(
+                            board: board,
+                            presentation: presentation,
+                            store: store
+                        ) != nil
+                    }
+                }
+            }
+            var results: [Bool] = []
+            for await result in group {
+                results.append(result)
+            }
+            return results
+        }
+
+        XCTAssertEqual(results.filter { $0 }.count, loadCount, "every distinct board must load")
+        XCTAssertEqual(tracker.peak, 1, "model decodes must never overlap across boards")
+    }
+
+    @MainActor
+    func testCancelledQueuedModelLoadDoesNotJamOrLeakGate() async throws {
+        let heldFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.held-\(UUID().uuidString.lowercased())"
+        )
+        defer { heldFixture.remove() }
+        let queuedFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.queued-\(UUID().uuidString.lowercased())"
+        )
+        defer { queuedFixture.remove() }
+        let afterFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.after-\(UUID().uuidString.lowercased())"
+        )
+        defer { afterFixture.remove() }
+
+        let heldStore = try BoardPackageStore(bundle: heldFixture.bundle)
+        let queuedStore = try BoardPackageStore(bundle: queuedFixture.bundle)
+        let afterStore = try BoardPackageStore(bundle: afterFixture.bundle)
+
+        let heldBoard = try XCTUnwrap(heldStore.boards.first)
+        let queuedBoard = try XCTUnwrap(queuedStore.boards.first)
+        let afterBoard = try XCTUnwrap(afterStore.boards.first)
+
+        let tracker = ModelLoadConcurrencyTracker()
+
+        // Held load owns the gate while its decode sleeps for half a second.
+        let held = Task { @MainActor in
+            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                tracker.enter()
+                Thread.sleep(forTimeInterval: 0.5)
+                tracker.exit()
+                return makeBoardModelFixtureScene()
+            }) {
+                await BoardModelLoader.load(
+                    board: heldBoard,
+                    presentation: heldBoard.defaultPresentation,
+                    store: heldStore
+                )
+            }
+        }
+        var waitIndex = 0
+        while tracker.current == 0, waitIndex < 100 {
+            waitIndex += 1
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        XCTAssertGreaterThanOrEqual(
+            tracker.current,
+            1,
+            "held load must occupy the decode hook before the queued load is created"
+        )
+
+        // Queued behind held; cancelled before it is granted a slot. The hook is
+        // set so a buggy (non-serializing) gate would let it succeed -- making the
+        // nil assertion discriminate the gate rather than a junk-byte decode.
+        let queued = Task { @MainActor in
+            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                makeBoardModelFixtureScene()
+            }) {
+                await BoardModelLoader.load(
+                    board: queuedBoard,
+                    presentation: queuedBoard.defaultPresentation,
+                    store: queuedStore
+                )
+            }
+        }
+        var admissionIndex = 0
+        while BoardModelAsset.queuedLoadWaiterCount == 0, admissionIndex < 100 {
+            admissionIndex += 1
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        XCTAssertGreaterThanOrEqual(
+            BoardModelAsset.queuedLoadWaiterCount,
+            1,
+            "queued load must register as a gate waiter before it is cancelled"
+        )
+        queued.cancel()
+
+        let queuedResult = await queued.value
+        let heldResult = await held.value
+
+        XCTAssertNotNil(heldResult, "held load must still complete")
+        XCTAssertNil(queuedResult, "cancelled queued load must return nil")
+
+        // The fixture logs are junk bytes, so the hook is required for a
+        // successful decode; it also keeps `after` independent of the gate timing.
+        let after = await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+            makeBoardModelFixtureScene()
+        }) {
+            await BoardModelLoader.load(
+                board: afterBoard,
+                presentation: afterBoard.defaultPresentation,
+                store: afterStore
+            )
+        }
+        XCTAssertNotNil(after, "gate must remain usable after a queued load is cancelled")
+    }
+
+    @MainActor
     func testCancelledOnDemandAccessCancelsProgressAndEndsOnlyAfterLateSuccess() async throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
@@ -4791,5 +4937,36 @@ private final class TestBoardModelResourceRequest: BoardModelResourceRequesting 
 
     func endAccessingResources() {
         endAction()
+    }
+}
+
+private final class ModelLoadConcurrencyTracker: @unchecked Sendable {
+    private let lock = NSLock()
+    private var active = 0
+    private var peakActive = 0
+
+    func enter() {
+        lock.lock()
+        active += 1
+        peakActive = max(peakActive, active)
+        lock.unlock()
+    }
+
+    func exit() {
+        lock.lock()
+        active -= 1
+        lock.unlock()
+    }
+
+    var current: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return active
+    }
+
+    var peak: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return peakActive
     }
 }
