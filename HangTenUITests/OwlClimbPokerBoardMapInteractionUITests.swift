@@ -1,37 +1,15 @@
 import XCTest
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
-    func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {
-        let app = XCUIApplication()
-        app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_ID": "escape-unlimited",
-            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
-            "HANGTEN_REVIEW_LANDSCAPE": "1",
-        ]
-        app.launch()
-
-        XCTAssertTrue(
-            app.navigationBars["Hold specs"].waitForExistence(timeout: 10),
-            "The DEBUG board-detail route must be displayed."
-        )
-
-        let tabBar = app.tabBars.firstMatch
-        XCTAssertFalse(
-            tabBar.exists && tabBar.isHittable,
-            "The root TabView tab bar must not be visible in landscape board detail."
-        )
-
-        let map = app.descendants(matching: .any)
-            .matching(identifier: "boardDetail.map")
-            .firstMatch
-        XCTAssertTrue(map.waitForExistence(timeout: 10), "The board detail map must be present.")
-        XCTAssertGreaterThanOrEqual(map.frame.minX, app.frame.minX)
-        XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
-        XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
-        XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+    override func tearDown() {
+        // Landscape review launches leave the shared simulator in landscape;
+        // reset so later cases/suites on the same device are not poisoned.
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
     }
 
-    func testTappingFaceBSloperMapElementSelectsSloper() throws {
+    // Named so it sorts before testLandscape* under alphabetical XCTest order.
+    func testFaceBSloperMapElementSelectsSloper() throws {
         let app = XCUIApplication()
         // Prefer the board-detail review route over the picker: after a landscape
         // 3D board-detail test, picker launch often white-screens under CI load.
@@ -67,6 +45,38 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "Tapping the Face B sloper map element must select the matching hold."
         )
         addScreenshot(named: "Poker Face B sloper active")
+    }
+
+    func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "escape-unlimited",
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+            "HANGTEN_REVIEW_LANDSCAPE": "1",
+        ]
+        app.launch()
+
+        XCTAssertTrue(
+            app.navigationBars["Hold specs"].waitForExistence(timeout: 10),
+            "The DEBUG board-detail route must be displayed."
+        )
+
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertFalse(
+            tabBar.exists && tabBar.isHittable,
+            "The root TabView tab bar must not be visible in landscape board detail."
+        )
+
+        let map = app.descendants(matching: .any)
+            .matching(identifier: "boardDetail.map")
+            .firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10), "The board detail map must be present.")
+        XCTAssertGreaterThanOrEqual(map.frame.minX, app.frame.minX)
+        XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
+        XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
+        XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+
+        XCUIDevice.shared.orientation = .portrait
     }
 
     private func addScreenshot(named name: String) {

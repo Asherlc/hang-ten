@@ -8,7 +8,8 @@
 #   XCTEST_RESULT_ROOT           Directory for *.xcresult bundles (usually $RUNNER_TEMP)
 #   XCTEST_XCCONFIG              Analytics/signing xcconfig path
 #   XCTEST_ONLY_TESTING          Whitespace-separated -only-testing identifiers
-#   XCTEST_PARALLEL_WORKERS      maximum-parallel-testing-workers value
+#   XCTEST_PARALLEL_WORKERS      maximum-parallel-testing-workers value;
+#                                parallel testing enabled only when > 1
 #   XCTEST_ATTEMPT_TIMEOUT_SECONDS
 #
 # Optional:
@@ -87,13 +88,20 @@ run_xcodebuild_with_watchdog() {
 
   : > "$attempt_log"
 
+  # Parallel clones (even with 1 worker) leave the simulator unhealthy for UI
+  # shards. Enable parallel testing only when workers > 1 (unit tests).
+  local parallel_enabled=NO
+  if [[ "$XCTEST_PARALLEL_WORKERS" -gt 1 ]]; then
+    parallel_enabled=YES
+  fi
+
   cmd=(
     xcodebuild
     -project HangTen.xcodeproj
     -scheme HangTen
     -configuration Debug
     -destination "$destination"
-    -parallel-testing-enabled YES
+    -parallel-testing-enabled "$parallel_enabled"
     -maximum-parallel-testing-workers "$XCTEST_PARALLEL_WORKERS"
   )
   for target in "${only_testing_targets[@]}"; do
