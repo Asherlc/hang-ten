@@ -1193,16 +1193,23 @@ struct BoardRevision: Identifiable, Hashable {
         guard !contacts.isEmpty, contacts.allSatisfy({ $0.handCapacity == 1 }) else {
             return false
         }
-        return !contacts.contains { contact in
-            contacts.contains { other in
-                other.id != contact.id
-                    && other.kind == contact.kind
-                    && other.shape == contact.shape
-                    && other.depth == contact.depth
-                    && other.fingerCapacity == contact.fingerCapacity
-                    && other.handCapacity == contact.handCapacity
+        let framedContacts = contacts.compactMap { contact -> (PhysicalContact, CGFloat)? in
+            guard let frame = contact.resolvedFrame(in: self.defaultPresentation) else { return nil }
+            return (contact, frame.rect.midX)
+        }
+        let hasBilateralPair = framedContacts.contains { left in
+            guard left.1 < 0.5 else { return false }
+            return framedContacts.contains { right in
+                guard right.1 > 0.5 else { return false }
+                return right.0.id != left.0.id
+                    && right.0.kind == left.0.kind
+                    && right.0.shape == left.0.shape
+                    && right.0.depth == left.0.depth
+                    && right.0.fingerCapacity == left.0.fingerCapacity
+                    && right.0.handCapacity == left.0.handCapacity
             }
         }
+        return !hasBilateralPair
     }
 
     func presentation(id: String?) -> BoardPresentation? {
