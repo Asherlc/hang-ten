@@ -29,9 +29,6 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
-                targets: mode == .generic
-                    ? [.edge(depth: .category(.medium))]
-                    : [.kind(.edge)],
                 gripType: .halfCrimp,
                 activeDuration: 10
             )]
@@ -55,7 +52,7 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertEqual(
             resolvedIDs,
             Set(try ContactResolver.resolve(
-                custom.steps[0].targets,
+                custom.steps[0].workRequirements,
                 step: custom.steps[0],
                 board: BoardCatalog.defaultBoard
             ).map(\.id))
@@ -169,7 +166,6 @@ final class CustomRoutineAppStoreTests: XCTestCase {
                 accessory: "8s",
                 duration: 8,
                 phase: .hang,
-                targets: [.kind(.edge)],
                 gripType: .halfCrimp,
                 activeDuration: 8
             )]

@@ -151,14 +151,15 @@ enum WorkoutHoldCuePolicy {
               step.gripType != nil || step.fingerConfiguration != nil else {
             return nil
         }
-        if step.targets.isEmpty {
+        let requirements = step.workRequirements
+        if requirements.isEmpty {
             return WorkoutHoldCue(
                 gripType: step.gripType,
                 fingerConfiguration: step.fingerConfiguration
             )
         }
-        guard step.targets.count == 1,
-              let target = step.targets.first,
+        guard requirements.count == 1,
+              let target = requirements.first,
               let hold,
               (try? ContactResolver.resolve(target, step: step, board: board))?
                 .contains(where: { $0.id == hold.id }) == true
@@ -401,7 +402,7 @@ enum WorkoutLiftCompletionPolicy {
 enum WorkoutHighlightResolver {
     static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
         (try? ContactResolver.resolve(
-            step.targets,
+            step.workRequirements,
             step: step,
             board: board
         ).map(\.id)) ?? []

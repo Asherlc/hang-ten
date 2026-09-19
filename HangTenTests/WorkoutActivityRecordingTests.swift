@@ -99,9 +99,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             instruction: "Hang with both hands.",
             accessory: "",
             duration: 10,
-            phase: .hang,
-            targets: [.edge(selection: .single)]
-        )
+            phase: .hang)
 
         XCTAssertEqual(
             try ContactResolver.resolve(
@@ -301,7 +299,6 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 60,
                     phase: .hang,
-                    targets: [],
                     segments: segments
                 )
             ]
@@ -352,7 +349,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: requirement,
+                target: .fromLegacyTargets([requirement]),
                 timing: .fixed,
                 duration: 10
             )
@@ -459,7 +456,6 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [singleRequirement],
             handUse: .single,
             side: .right
         )
@@ -476,9 +472,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             instruction: "",
             accessory: "",
             duration: 10,
-            phase: .hang,
-            targets: [pairRequirement]
-        )
+            phase: .hang)
         XCTAssertThrowsError(
             try ContactResolver.resolve(pairRequirement, step: pairStep, board: board)
         )
@@ -490,7 +484,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             [
                 WorkoutSegment(
                     kind: .work,
-                    target: .edge(depth: .category(.medium)),
+                    target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                     timing: .fixed,
                     duration: 12
                 )
@@ -509,7 +503,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testMultiRequirementWorkRecordsOneAuditableSnapshotPerRequirement() throws {
         let segment = WorkoutSegment(
             kind: .work,
-            targets: [.edge(depth: .category(.medium)), .kind(.jug)],
+            target: .fromLegacyTargets([.edge(depth: .category(.medium)), .kind(.jug)]),
             timing: .fixed,
             duration: 10
         )
@@ -535,7 +529,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .edge(depth: .category(.medium)),
+                target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                 timing: .fixed,
                 duration: 20
             ),
@@ -647,7 +641,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         }
     }
 
-    func testGenericMetoliusWorkIsExplicitlySelfSelectedOnCompactII() throws {
+    func testGenericMetoliusWorkRetainsSemanticRequirementsAndRecordsResolvedOrSelfSelected() throws {
         let compactII = try XCTUnwrap(
             BoardCatalog.all.first { $0.id == "metolius.wood-grips-compact-ii" }
         )
@@ -661,17 +655,60 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             let workSegments = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
             XCTAssertFalse(workSegments.isEmpty, "Missing source work for \(plan.id).")
             XCTAssertTrue(
-                workSegments.allSatisfy(\.targets.isEmpty),
-                "Generic source work must not synthesize board-resolved requirements for \(plan.id)."
+                workSegments.contains { !$0.contactRequirements.isEmpty },
+                "Generic Metolius work must retain authored semantic requirements for \(plan.id)."
             )
 
             let recordedWork = try WorkoutActivityRecorder()
                 .segments(for: plan, on: compactII)
                 .filter { $0.kind == .work }
-            XCTAssertEqual(recordedWork.count, workSegments.count)
+            let workStepIDs = Set(
+                plan.steps.filter { step in
+                    step.segments.contains { $0.kind == .work }
+                }.map(\.id)
+            )
+            XCTAssertEqual(Set(recordedWork.map(\.stepID)), workStepIDs)
             XCTAssertTrue(
-                recordedWork.allSatisfy { $0.target == .selfSelected },
-                "Generic source work must preserve the athlete's explicit selection for \(plan.id)."
+                recordedWork.allSatisfy {
+                    if case .resolvedContacts = $0.target { return true }
+                    return $0.target == .selfSelected
+                },
+                "Board-agnostic Metolius work must resolve or soft-fall to self-selected for \(plan.id)."
+            )
+        }
+    }
+
+    func testBoardAgnosticSourceLinkedUnmatchedRequirementsRecordSelfSelected() throws {
+        let workout = plan(boardID: nil, [
+            WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([.kind(.pinch)]),
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].target, .selfSelected)
+    }
+
+    func testBoardBoundUnmatchedRequirementsStillFailClosed() {
+        let workout = plan(boardID: board.id, [
+            WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets([.kind(.pinch)]),
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        XCTAssertThrowsError(
+            try WorkoutActivityRecorder().segments(for: workout, on: board)
+        ) { error in
+            XCTAssertEqual(
+                error as? WorkoutActivityRecordingError,
+                .unresolvedTarget(stepID: "step", segmentIndex: 0)
             )
         }
     }
@@ -680,7 +717,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .edge(depth: .category(.medium)),
+                target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -700,7 +737,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(),
+                target: .fromLegacyTargets([ContactRequirement()]),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -715,7 +752,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .edge(depth: .category(.medium)),
+                target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                 timing: .undefined,
                 duration: 30
             )
@@ -730,7 +767,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .edge(depth: .category(.medium)),
+                target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                 timing: .fixed,
                 duration: 10
             )
@@ -749,7 +786,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(),
+                target: .fromLegacyTargets([ContactRequirement()]),
                 timing: .fixed,
                 duration: 10
             )
@@ -767,7 +804,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     func testRepeatedSourceSegmentsRemainDistinct() throws {
         let repeated = WorkoutSegment(
             kind: .work,
-            target: .edge(depth: .category(.medium)),
+            target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
             timing: .fixed,
             duration: 5
         )
@@ -833,7 +870,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .fixed,
                 duration: 10
             )
@@ -870,7 +907,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .fixed,
                 duration: 10
             )
@@ -897,10 +934,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(
+                target: .fromLegacyTargets([ContactRequirement(
                     kind: .edge,
                     shape: .round
-                ),
+                )]),
                 timing: .fixed,
                 duration: 1
             )
@@ -920,13 +957,13 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                targets: [
+                target: .fromLegacyTargets([
                     .kind(.jug),
                     ContactRequirement(
                         kind: .edge,
                         shape: .round
                     )
-                ],
+                ]),
                 timing: .fixed,
                 duration: 10
             )
@@ -946,7 +983,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1102,8 +1139,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [requirement],
-                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                    segments: [WorkoutSegment(kind: .work, target: .fromLegacyTargets([requirement]), timing: .fixed, duration: 10)],
                     handUse: .double,
                     side: .both
                 )
@@ -1147,8 +1183,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [requirement],
-                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                    segments: [WorkoutSegment(kind: .work, target: .fromLegacyTargets([requirement]), timing: .fixed, duration: 10)],
                     handUse: .double,
                     side: .both
                 )
@@ -1208,7 +1243,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(seriesRecoverySteps.map(\.duration), Array(repeating: 150, count: 10))
         XCTAssertEqual(setRecoverySteps.count, 1)
         XCTAssertEqual(setRecoverySteps.first?.duration, 360)
-        XCTAssertTrue(workSteps.allSatisfy { $0.targets.isEmpty })
+        XCTAssertTrue(workSteps.allSatisfy { $0.workRequirements.isEmpty })
 
         let recordedWork = try WorkoutActivityRecorder()
             .segments(for: plan, on: board)
@@ -1240,7 +1275,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .edge(depth: .category(.medium)),
+                target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1287,7 +1322,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .fixed,
                 duration: 10
             )
@@ -1349,7 +1384,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .fixed,
                 duration: 8
             )
@@ -1379,7 +1414,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: .kind(.edge),
+                target: .fromLegacyTargets([.kind(.edge)]),
                 timing: .stopwatch,
                 duration: nil
             )
@@ -1427,10 +1462,10 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let workout = plan([
             WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(
+                target: .fromLegacyTargets([ContactRequirement(
                     kind: .edge,
                     shape: .round
-                ),
+                )]),
                 timing: .fixed,
                 duration: 10
             )
@@ -1743,7 +1778,14 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             accessory: "",
             duration: 60,
             phase: .hang,
-            targets: targets
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets(targets),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ]
         )
     }
 
@@ -1769,8 +1811,16 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 60,
                     phase: .hang,
-                    targets: targets,
-                    segments: segments
+                    segments: segments.isEmpty
+                        ? [
+                            WorkoutSegment(
+                                kind: .work,
+                                target: .fromLegacyTargets(targets),
+                                timing: .undefined,
+                                duration: nil
+                            )
+                        ]
+                        : segments
                 )
             ]
         )
@@ -1903,8 +1953,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                     accessory: "",
                     duration: 10,
                     phase: .hang,
-                    targets: [requirement],
-                    segments: [WorkoutSegment(kind: .work, target: requirement, timing: .fixed, duration: 10)],
+                    segments: [WorkoutSegment(kind: .work, target: .fromLegacyTargets([requirement]), timing: .fixed, duration: 10)],
                     handUse: handUse,
                     side: side
                 )

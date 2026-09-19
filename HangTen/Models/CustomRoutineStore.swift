@@ -222,42 +222,35 @@ enum CustomRoutineValidator {
             }
 
             if step.phase == .rest {
-                if !step.targets.isEmpty {
+                if step.segments.contains(where: { $0.target != nil }) {
                     issues.append(.restStepHasTargets(stepIndex: stepIndex))
                 }
-            } else if step.targets.isEmpty {
-                issues.append(.missingTargets(stepIndex: stepIndex))
-            }
-            if !step.targets.isEmpty {
-                validate(
-                    targets: step.targets,
-                    stepIndex: stepIndex,
-                    segmentIndex: nil,
-                    boards: boards,
-                    targetMode: definition.targetMode,
-                    handUse: step.handUse,
-                    side: step.side,
-                    issues: &issues
-                )
-            }
-
-            for (segmentIndex, segment) in step.segments.enumerated() {
-                if segment.kind == .work && segment.targets.isEmpty {
-                    issues.append(.missingWorkSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
-                } else if segment.kind == .rest && !segment.targets.isEmpty {
-                    issues.append(.restSegmentHasTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
+            } else {
+                let workSegments = step.segments.filter { $0.kind == .work }
+                if workSegments.isEmpty {
+                    issues.append(.missingTargets(stepIndex: stepIndex))
                 }
-                if !segment.targets.isEmpty {
-                    validate(
-                        targets: segment.targets,
-                        stepIndex: stepIndex,
-                        segmentIndex: segmentIndex,
-                        boards: boards,
-                        targetMode: definition.targetMode,
-                        handUse: step.handUse,
-                        side: step.side,
-                        issues: &issues
-                    )
+                for (segmentIndex, segment) in step.segments.enumerated() where segment.kind == .work {
+                    switch segment.target {
+                    case .none, .selfSelected:
+                        issues.append(.missingWorkSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
+                    case .requirements(let requirements):
+                        validate(
+                            targets: requirements,
+                            stepIndex: stepIndex,
+                            segmentIndex: segmentIndex,
+                            boards: boards,
+                            targetMode: definition.targetMode,
+                            handUse: step.handUse,
+                            side: step.side,
+                            issues: &issues
+                        )
+                    }
+                }
+            }
+            for (segmentIndex, segment) in step.segments.enumerated() {
+                if segment.kind == .rest && segment.target != nil {
+                    issues.append(.restSegmentHasTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
                 }
 
                 if segment.kind == .rest && segment.timing != .fixed {
@@ -324,13 +317,13 @@ enum CustomRoutineValidator {
         availableBoards.filter { board in
             definition.steps.allSatisfy { step in
                 (step.phase == .rest || targetsResolve(
-                    step.targets,
+                    step.workRequirements,
                     handUse: step.handUse,
                     side: step.side,
                     on: board
                 )) && step.segments.allSatisfy { segment in
                     segment.kind == .rest || targetsResolve(
-                        segment.targets,
+                        segment.contactRequirements,
                         handUse: step.handUse,
                         side: step.side,
                         on: board
@@ -432,7 +425,14 @@ enum CustomRoutineValidator {
             accessory: "",
             duration: 1,
             phase: .hang,
-            targets: [target],
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([target]),
+                    timing: .undefined,
+                    duration: nil
+                )
+            ],
             handUse: handUse,
             side: side
         )

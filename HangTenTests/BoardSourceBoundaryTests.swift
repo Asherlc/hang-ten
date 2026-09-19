@@ -223,7 +223,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             let board = BoardCatalog.board(for: plan.boardID)
 
             for step in plan.steps {
-                for target in step.targets {
+                for target in step.workRequirements {
                     XCTAssertFalse(
                         (try? ContactResolver.resolve(target, step: step, board: board))?.isEmpty ?? true,
                         "Expected target in \(plan.id)/\(step.id) to resolve on \(board.id)."

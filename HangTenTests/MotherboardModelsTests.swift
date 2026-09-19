@@ -692,9 +692,7 @@ final class MotherboardModelsTests: XCTestCase {
             instruction: "Shake out.",
             accessory: "Recovery",
             duration: 10,
-            phase: .rest,
-            targets: []
-        )
+            phase: .rest)
         let hang = WorkoutStep(
             id: "hang",
             number: 2,
@@ -702,9 +700,7 @@ final class MotherboardModelsTests: XCTestCase {
             instruction: "Hang on.",
             accessory: "Active",
             duration: 10,
-            phase: .hang,
-            targets: []
-        )
+            phase: .hang)
 
         XCTAssertEqual(rest.activeDuration, rest.duration)
         XCTAssertTrue(rest.isRestStep)

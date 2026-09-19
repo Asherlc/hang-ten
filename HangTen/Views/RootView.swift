@@ -810,7 +810,7 @@ struct PlanDetailView: View {
                     VStack(alignment: .leading, spacing: 21) {
                         titleBlock(for: currentPlan)
                         if let firstStep = currentPlan.steps.first,
-                           !firstStep.targets.isEmpty {
+                           !firstStep.workRequirements.isEmpty {
                             boardPreview(for: currentPlan)
                         }
                         stepsCard(for: currentPlan)

@@ -10,9 +10,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             instruction: "Rest 3 minutes between sets.",
             accessory: "3-minute rest period between sets",
             duration: 180,
-            phase: .rest,
-            targets: []
-        )
+            phase: .rest)
 
         let canonical = WorkoutStepNormalizer.materializingImplicitSegments(terminalRest)
 
@@ -31,9 +29,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "20s work · 10s rest",
             duration: 30,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: 20),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
             ],
             gripType: .halfCrimp,
@@ -46,9 +43,9 @@ final class WorkoutStepNormalizationTests: XCTestCase {
         XCTAssertEqual(result.map(\.duration), [20, 10])
         XCTAssertEqual(result.map(\.phase), [.hang, .rest])
         XCTAssertEqual(result.map { $0.segments.count }, [1, 1])
-        XCTAssertEqual(result[0].targets, [.kind(.edge)])
+        XCTAssertEqual(result[0].workRequirements, [.kind(.edge)])
         XCTAssertEqual(result[0].timedWorkDuration, 20)
-        XCTAssertTrue(result[1].targets.isEmpty)
+        XCTAssertTrue(result[1].workRequirements.isEmpty)
         XCTAssertTrue(result[1].instruction.isEmpty)
     }
 
@@ -61,11 +58,10 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "8s work · 4s rest",
             duration: 12,
             phase: .hang,
-            targets: [.kind(.jug)],
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    target: .edge(depth: .category(.medium)),
+                    target: .fromLegacyTargets([.edge(depth: .category(.medium))]),
                     timing: .fixed,
                     duration: 8
                 ),
@@ -76,7 +72,7 @@ final class WorkoutStepNormalizationTests: XCTestCase {
 
         let result = try WorkoutStepNormalizer.expand(source)
 
-        XCTAssertEqual(result[0].targets, [.edge(depth: .category(.medium))])
+        XCTAssertEqual(result[0].workRequirements, [.edge(depth: .category(.medium))])
         XCTAssertEqual(result[0].segments, [source.segments[0]])
         XCTAssertEqual(result[0].phase, .hang)
         XCTAssertEqual(result[0].gripType, .halfCrimp)
@@ -93,11 +89,10 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "8s work · 4s rest",
             duration: 12,
             phase: .hang,
-            targets: [.kind(.pocket, fingerCapacity: 3)],
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    target: .kind(.pocket, fingerCapacity: 3),
+                    target: .fromLegacyTargets([.kind(.pocket, fingerCapacity: 3)]),
                     timing: .fixed,
                     duration: 8
                 ),
@@ -122,10 +117,9 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "Up to 60s",
             duration: 60,
             phase: .hang,
-            targets: [ContactRequirement(kind: .sloper, shape: .round)],
             segments: [WorkoutSegment(
                 kind: .work,
-                target: ContactRequirement(kind: .sloper, shape: .round),
+                target: .fromLegacyTargets([ContactRequirement(kind: .sloper, shape: .round)]),
                 timing: .stopwatch,
                 duration: nil
             )],
@@ -148,9 +142,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 60,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .stopwatch, duration: nil),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .stopwatch, duration: nil),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
             ]
         )
@@ -172,9 +165,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 30,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: 20),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
             ]
         )
@@ -200,9 +192,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 0),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: 0),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
             ]
         )
@@ -224,9 +215,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 0,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 5),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: 5),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 5)
             ]
         )
@@ -248,9 +238,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: -10),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: -10),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
             ]
         )
@@ -272,9 +261,8 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: .infinity),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: .infinity),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 1)
             ]
         )
@@ -296,17 +284,16 @@ final class WorkoutStepNormalizationTests: XCTestCase {
             accessory: "",
             duration: .infinity,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    target: .kind(.edge),
+                    target: .fromLegacyTargets([.kind(.edge)]),
                     timing: .fixed,
                     duration: 5
                 ),
                 WorkoutSegment(
                     kind: .work,
-                    target: .kind(.edge),
+                    target: .fromLegacyTargets([.kind(.edge)]),
                     timing: .fixed,
                     duration: 5
                 )

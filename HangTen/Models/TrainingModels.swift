@@ -1300,37 +1300,166 @@ enum WorkoutSegmentTiming: String, CaseIterable, Codable, Hashable, Identifiable
     }
 }
 
+/// Prescription for a work segment: athlete-chosen holds, or one or more
+/// concrete contact requirements. Rest segments never carry a target.
+enum WorkoutSegmentTarget: Codable, Hashable {
+    case selfSelected
+    case requirements([ContactRequirement])
+
+    /// Maps a legacy empty-array self-selected prescription or a non-empty
+    /// requirement list. Empty arrays become `.selfSelected`; callers that
+    /// need a hard non-empty requirements value should use `requirements(_:)`.
+    static func fromLegacyTargets(_ targets: [ContactRequirement]) -> WorkoutSegmentTarget {
+        targets.isEmpty ? .selfSelected : .requirements(targets)
+    }
+
+    /// Non-empty requirements only. Returns nil when `requirements` is empty.
+    static func requirements(_ requirements: [ContactRequirement]) -> WorkoutSegmentTarget? {
+        guard !requirements.isEmpty else { return nil }
+        return .requirements(requirements)
+    }
+
+    var contactRequirements: [ContactRequirement] {
+        switch self {
+        case .selfSelected:
+            []
+        case .requirements(let requirements):
+            requirements
+        }
+    }
+
+    var isSelfSelected: Bool {
+        if case .selfSelected = self { return true }
+        return false
+    }
+
+    private enum Kind: String, Codable {
+        case selfSelected
+        case requirements
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind
+        case requirements
+    }
+
+    private struct DynamicCodingKey: CodingKey {
+        var stringValue: String
+        init?(stringValue: String) { self.stringValue = stringValue }
+        var intValue: Int? { nil }
+        init?(intValue: Int) { nil }
+    }
+
+    init(from decoder: Decoder) throws {
+        let rawContainer = try decoder.container(keyedBy: DynamicCodingKey.self)
+        let allowedKeys = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknownKey = rawContainer.allKeys.first(where: {
+            !allowedKeys.contains($0.stringValue)
+        }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknownKey,
+                in: rawContainer,
+                debugDescription: "Unsupported workout segment target field \(unknownKey.stringValue)."
+            )
+        }
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        switch try container.decode(Kind.self, forKey: .kind) {
+        case .selfSelected:
+            guard !container.contains(.requirements) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .requirements,
+                    in: container,
+                    debugDescription: "Self-selected segment targets cannot contain requirements."
+                )
+            }
+            self = .selfSelected
+        case .requirements:
+            let requirements = try container.decode([ContactRequirement].self, forKey: .requirements)
+            guard !requirements.isEmpty else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .requirements,
+                    in: container,
+                    debugDescription: "Segment requirement targets must be non-empty."
+                )
+            }
+            self = .requirements(requirements)
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .selfSelected:
+            try container.encode(Kind.selfSelected, forKey: .kind)
+        case .requirements(let requirements):
+            guard !requirements.isEmpty else {
+                throw EncodingError.invalidValue(
+                    requirements,
+                    EncodingError.Context(
+                        codingPath: container.codingPath + [CodingKeys.requirements],
+                        debugDescription: "Segment requirement targets must be non-empty."
+                    )
+                )
+            }
+            try container.encode(Kind.requirements, forKey: .kind)
+            try container.encode(requirements, forKey: .requirements)
+        }
+    }
+}
+
 struct WorkoutSegment: Hashable {
     let kind: WorkoutSegmentKind
-    let targets: [ContactRequirement]
-    var target: ContactRequirement? { targets.first }
+    /// Required for work; must be nil for rest.
+    let target: WorkoutSegmentTarget?
     let timing: WorkoutSegmentTiming
     let duration: TimeInterval?
 
     init(
         kind: WorkoutSegmentKind,
-        target: ContactRequirement?,
-        timing: WorkoutSegmentTiming,
-        duration: TimeInterval?
-    ) {
-        self.init(
-            kind: kind,
-            targets: target.map { [$0] } ?? [],
-            timing: timing,
-            duration: duration
-        )
-    }
-
-    init(
-        kind: WorkoutSegmentKind,
-        targets: [ContactRequirement],
+        target: WorkoutSegmentTarget?,
         timing: WorkoutSegmentTiming,
         duration: TimeInterval?
     ) {
         self.kind = kind
-        self.targets = targets
+        self.target = target
         self.timing = timing
         self.duration = duration
+    }
+
+    /// Convenience for work segments with an explicit target, or rest with nil.
+    init(
+        kind: WorkoutSegmentKind,
+        timing: WorkoutSegmentTiming,
+        duration: TimeInterval?,
+        target: WorkoutSegmentTarget? = nil
+    ) {
+        self.init(kind: kind, target: target, timing: timing, duration: duration)
+    }
+
+    var contactRequirements: [ContactRequirement] {
+        target?.contactRequirements ?? []
+    }
+
+    var isSelfSelected: Bool {
+        target?.isSelfSelected == true
+    }
+
+    func mappingRequirements(_ transform: (ContactRequirement) -> ContactRequirement) -> WorkoutSegment {
+        guard let target else {
+            return self
+        }
+        switch target {
+        case .selfSelected:
+            return self
+        case .requirements(let requirements):
+            return WorkoutSegment(
+                kind: kind,
+                target: .fromLegacyTargets(requirements.map(transform)),
+                timing: timing,
+                duration: duration
+            )
+        }
     }
 }
 
@@ -1448,7 +1577,6 @@ struct WorkoutStep: Identifiable, Hashable {
     let accessory: String
     let duration: TimeInterval
     let phase: WorkoutPhase
-    let targets: [ContactRequirement]
     let segments: [WorkoutSegment]
     let gripType: GripType?
     let fingerConfiguration: FingerConfiguration?
@@ -1470,7 +1598,6 @@ struct WorkoutStep: Identifiable, Hashable {
         accessory: String,
         duration: TimeInterval,
         phase: WorkoutPhase,
-        targets: [ContactRequirement],
         segments: [WorkoutSegment] = [],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
@@ -1488,7 +1615,6 @@ struct WorkoutStep: Identifiable, Hashable {
         self.accessory = accessory
         self.duration = duration
         self.phase = phase
-        self.targets = targets
         self.segments = segments
         self.gripType = gripType
         self.fingerConfiguration = fingerConfiguration
@@ -1498,6 +1624,22 @@ struct WorkoutStep: Identifiable, Hashable {
         self.repetitions = repetitions
         self.externalLoadKGF = externalLoadKGF
         self.timedWorkDuration = timedWorkDuration
+    }
+
+    /// Contact requirements prescribed by work segments. Self-selected work
+    /// contributes nothing; rest segments are ignored.
+    var workRequirements: [ContactRequirement] {
+        segments.flatMap(\.contactRequirements)
+    }
+
+    /// True when every work segment is self-selected (or there is no work
+    /// segment carrying requirements).
+    var isSelfSelectedWork: Bool {
+        let workTargets = segments.compactMap { segment -> WorkoutSegmentTarget? in
+            guard segment.kind == .work else { return nil }
+            return segment.target
+        }
+        return !workTargets.isEmpty && workTargets.allSatisfy(\.isSelfSelected)
     }
 
     var activeDuration: TimeInterval {
@@ -1539,7 +1681,6 @@ struct WorkoutStep: Identifiable, Hashable {
             accessory: accessory,
             duration: duration,
             phase: phase,
-            targets: targets,
             segments: segments,
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
@@ -1564,18 +1705,12 @@ struct WorkoutStep: Identifiable, Hashable {
         guard let side = selectedHandSide, side == .left || side == .right else {
             return nil
         }
-        let singleHandedTargets = targets.map(\.singleHandSelection)
         let singleHandedSegments = segments.map { segment in
-            WorkoutSegment(
-                kind: segment.kind,
-                targets: segment.targets.map(\.singleHandSelection),
-                timing: segment.timing,
-                duration: segment.duration
-            )
+            segment.mappingRequirements(\.singleHandSelection)
         }
         return WorkoutStep(
             id: id, number: number, title: title, instruction: instruction,
-            accessory: accessory, duration: duration, phase: phase, targets: singleHandedTargets,
+            accessory: accessory, duration: duration, phase: phase,
             segments: singleHandedSegments, gripType: gripType,
             fingerConfiguration: fingerConfiguration, handUse: .single,
             side: side, action: action, repetitions: repetitions,
@@ -1617,22 +1752,6 @@ struct MetoliusTaskDefinition: Hashable {
         self.timing = timing
     }
 
-    /// Generic source plans name the athlete's chosen hold in their visible
-    /// instruction. They do not authorize the app to resolve that wording to
-    /// a board contact, so the persisted target must remain self-selected.
-    func usingSelfSelectedContacts() -> MetoliusTaskDefinition {
-        MetoliusTaskDefinition(
-            title: title,
-            instruction: instruction,
-            accessory: accessory,
-            duration: duration,
-            phase: phase,
-            targets: [],
-            gripType: gripType,
-            fingerConfiguration: fingerConfiguration,
-            timing: timing
-        )
-    }
 }
 
 enum RoutineProvenance: String, Codable, Hashable {
@@ -1850,11 +1969,10 @@ enum MetoliusCycleBuilder {
                 accessory: task.accessory,
                 duration: task.duration,
                 phase: task.phase,
-                targets: task.targets,
                 segments: [
                     WorkoutSegment(
                         kind: .work,
-                        targets: task.targets,
+                        target: .fromLegacyTargets(task.targets),
                         timing: task.timing,
                         duration: task.timing == .fixed ? task.duration : nil
                     )
@@ -1876,7 +1994,6 @@ enum MetoliusCycleBuilder {
             accessory: "\(Int(remaining))s rest",
                     duration: remaining,
                     phase: .rest,
-                    targets: [],
                     segments: [fixedRest(remaining)]
                 )
             )
@@ -2115,7 +2232,7 @@ enum LegacyPlanSeedCatalog {
                 steps += try MetoliusCycleBuilder.expand(
                     planID: planID,
                     minute: index + 1,
-                    tasks: tasks.map { $0.usingSelfSelectedContacts() }
+                    tasks: tasks
                 )
             } catch {
                 preconditionFailure("Invalid Metolius plan \(planID) minute \(index + 1): \(error)")
@@ -2151,11 +2268,10 @@ enum LegacyPlanSeedCatalog {
                 accessory: "60-second source cycle · remaining time rest",
                 duration: MetoliusCycleBuilder.cycleDuration,
                 phase: minute.phase,
-                targets: minute.targets,
                 segments: [
                     WorkoutSegment(
                         kind: .work,
-                        targets: minute.targets,
+                        target: .fromLegacyTargets(minute.targets),
                         timing: .undefined,
                         duration: nil
                     )
@@ -2553,7 +2669,7 @@ enum LegacyPlanSeedCatalog {
     )
 
     private static func fixedWork(_ target: ContactRequirement, _ duration: TimeInterval) -> WorkoutSegment {
-        WorkoutSegment(kind: .work, target: target, timing: .fixed, duration: duration)
+        WorkoutSegment(kind: .work, target: .fromLegacyTargets([target]), timing: .fixed, duration: duration)
     }
 
     private static func fixedRest(_ duration: TimeInterval) -> WorkoutSegment {
@@ -2583,11 +2699,10 @@ enum LegacyPlanSeedCatalog {
             accessory: accessory,
             duration: active + rest,
             phase: .hang,
-            targets: targets,
             segments: [
                 WorkoutSegment(
                     kind: .work,
-                    targets: targets,
+                    target: .fromLegacyTargets(targets),
                     timing: .fixed,
                     duration: active
                 )
@@ -2608,7 +2723,6 @@ enum LegacyPlanSeedCatalog {
             accessory: accessory,
             duration: duration,
             phase: .rest,
-            targets: [],
             segments: [fixedRest(duration)]
         )
     }
@@ -2618,6 +2732,100 @@ enum LegacyPlanSeedCatalog {
             step.withNumber(index + 1)
         }
     }
+
+    /// Lattice Half 4 Max Hang names a 20 mm edge. Encoded as a millimeter
+    /// range requirement so board resolvers can light a factual 20 mm contact.
+    private static let maxHangs20mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 20, maximum: 20)),
+        selection: .single
+    )
+
+    /// Frontiers force-feedback study instrumented hold.
+    private static let forceFeedback12mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 12, maximum: 12)),
+        selection: .single
+    )
+
+    /// Reported Megos protocol edge depth range.
+    private static let megos20to24mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 20, maximum: 24)),
+        selection: .single
+    )
+
+    /// Hörst 7–53 recommends 14–20 mm edges for half/open work.
+    private static let horst14to20mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 14, maximum: 20)),
+        selection: .single
+    )
+
+    /// Hörst 7–53 recommends 20–30 mm two-finger pockets.
+    private static let horst20to30mmTwoFingerPocketTarget = ContactRequirement(
+        kind: .pocket,
+        depth: .range(.init(minimum: 20, maximum: 30)),
+        fingerCapacity: 2,
+        selection: .single
+    )
+
+    /// Density Hangs tip: relatively large edges (20–35 mm).
+    private static let densityLargeEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 20, maximum: 35)),
+        selection: .single
+    )
+
+    /// Zlagboard endurance example hold class (“e.g., 20 mm edges”).
+    private static let zlagboard20mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 20, maximum: 20)),
+        selection: .single
+    )
+
+    /// Hooper's Beta “medium to large ledge” spans categorical medium+large mm.
+    private static let hoopersMediumToLargeLedgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 15, maximum: 50)),
+        selection: .single
+    )
+
+    /// Hooper's Beta minimal-edge / small half-crimp recruitment hold.
+    private static let hoopersSmallEdgeTarget = ContactRequirement.edge(
+        depth: .category(.small),
+        selection: .single
+    )
+
+    /// Method Climbing repeaters: try 15 mm or 20 mm.
+    private static let methodRepeaters15to20mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 15, maximum: 20)),
+        selection: .single
+    )
+
+    private static let method20mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 20, maximum: 20)),
+        selection: .single
+    )
+
+    private static let method15mmEdgeTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 15, maximum: 15)),
+        selection: .single
+    )
+
+    private static let methodDeepThreeFingerPocketTarget = ContactRequirement(
+        kind: .pocket,
+        depth: .category(.large),
+        fingerCapacity: 3,
+        selection: .single
+    )
+
+    private static let methodMediumThreeFingerPocketTarget = ContactRequirement(
+        kind: .pocket,
+        depth: .category(.medium),
+        fingerCapacity: 3,
+        selection: .single
+    )
+
+    private static let methodJugTarget = ContactRequirement.kind(.jug)
+    private static let methodSloperTarget = ContactRequirement.kind(.sloper)
+    private static let methodSmallEdgeTarget = ContactRequirement.edge(
+        depth: .category(.small),
+        selection: .single
+    )
 
     static let maxHangs = TrainingPlan(
         id: "research.max-hangs",
@@ -2636,7 +2844,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [],
+                targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .either
@@ -2648,7 +2856,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [],
+                targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .either
@@ -2660,7 +2868,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [],
+                targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .either
@@ -2672,7 +2880,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · 3m recovery · half crimp",
                 active: 7,
                 rest: 180,
-                targets: [],
+                targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .either
@@ -2684,7 +2892,7 @@ enum LegacyPlanSeedCatalog {
                 accessory: "7s hang · half crimp",
                 active: 7,
                 rest: 0,
-                targets: [],
+                targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .either
@@ -2713,7 +2921,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "10s hang · 6s rest · 80% MFSi",
                             active: 10,
                             rest: set == 3 && rep == 12 ? 0 : 6,
-                            targets: [],
+                            targets: [forceFeedback12mmEdgeTarget],
                             gripType: nil
                         )
                     )
@@ -2754,7 +2962,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: 0,
-                            targets: [],
+                            targets: [forceFeedback12mmEdgeTarget],
                             gripType: nil
                         )
                     )
@@ -2766,7 +2974,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "6s max",
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
-                            targets: [],
+                            targets: [forceFeedback12mmEdgeTarget],
                             gripType: nil
                         )
                     )
@@ -2834,12 +3042,12 @@ enum LegacyPlanSeedCatalog {
                 grip: GripType?,
                 fingerConfiguration: FingerConfiguration?
             )] = [
-                ("29 mm open edge", [], .openHand, nil),
-                ("19 mm open edge", [], .openHand, nil),
-                ("19 mm half crimp", [], .halfCrimp, nil),
-                ("Front-three open edge", [], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("Back-three half crimp", [], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("Front-two open edge", [], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
+                ("29 mm open edge", [ContactRequirement.edge(depth: .range(.init(minimum: 29, maximum: 29)))], .openHand, nil),
+                ("19 mm open edge", [ContactRequirement.edge(depth: .range(.init(minimum: 19, maximum: 19)))], .openHand, nil),
+                ("19 mm half crimp", [ContactRequirement.edge(depth: .range(.init(minimum: 19, maximum: 19)))], .halfCrimp, nil),
+                ("Front-three open edge", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("Back-three half crimp", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("Front-two open edge", [ContactRequirement(kind: .edge, fingerCapacity: 2)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle]))
             ]
 
             for set in 1...2 {
@@ -2899,7 +3107,6 @@ enum LegacyPlanSeedCatalog {
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let targets: [ContactRequirement] = []
 
             for set in 1...6 {
                 for side in [WorkoutSide.left, .right] {
@@ -2913,11 +3120,10 @@ enum LegacyPlanSeedCatalog {
                                 accessory: "7s hang · 3s rest",
                                 duration: 10,
                                 phase: .hang,
-                                targets: targets,
                                 segments: [
                                     WorkoutSegment(
                                         kind: .work,
-                                        targets: [],
+                                        target: .fromLegacyTargets([megos20to24mmEdgeTarget]),
                                         timing: .fixed,
                                         duration: 7
                                     ),
@@ -2976,7 +3182,6 @@ enum LegacyPlanSeedCatalog {
                         : "7s two-handed deadhang · 3s rest",
                     duration: finalRep ? 180 : 10,
                     phase: .hang,
-                    targets: [],
                     timedWorkDuration: 7
                 )
             } + [
@@ -2987,9 +3192,7 @@ enum LegacyPlanSeedCatalog {
                     instruction: "Rest 3 minutes between sets. If you chose another of the source-permitted 1–3 sets on this grip, begin it after this rest; then move to the next of approximately 5–10 grips.",
                     accessory: "3-minute rest period between sets",
                     duration: 180,
-                    phase: .rest,
-                    targets: []
-                )
+                    phase: .rest)
             ]
         }())
     )
@@ -3006,12 +3209,12 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [], .halfCrimp, nil),
-                ("F3 Open Hang", [], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [ContactRequirement(kind: .edge, fingerCapacity: 4)], .halfCrimp, nil),
+                ("F3 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 2)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 2)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -3046,9 +3249,9 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType)] = [
-                ("29 mm half crimp", [], .halfCrimp),
-                ("19 mm open edge", [], .openHand),
-                ("Two-finger pocket", [], .openHand)
+                ("14–20 mm half crimp", [horst14to20mmEdgeTarget], .halfCrimp),
+                ("14–20 mm open edge", [horst14to20mmEdgeTarget], .openHand),
+                ("20–30 mm two-finger pocket", [horst20to30mmTwoFingerPocketTarget], .openHand)
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -3134,8 +3337,8 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType)] = [
-                ("29 mm open edge", [], .openHand),
-                ("Four-finger pocket", [], .openHand)
+                ("20–35 mm large edge", [densityLargeEdgeTarget], .openHand),
+                ("20–35 mm large edge · set B", [densityLargeEdgeTarget], .openHand)
             ]
 
             for (holdIndex, grip) in grips.enumerated() {
@@ -3200,7 +3403,7 @@ enum LegacyPlanSeedCatalog {
                         accessory: "60s hang · 60s rest",
                         active: 60,
                         rest: interval < 10 ? 60 : 0,
-                        targets: [],
+                        targets: [zlagboard20mmEdgeTarget],
                         gripType: nil
                     )
                 )
@@ -3233,11 +3436,10 @@ enum LegacyPlanSeedCatalog {
             accessory: accessory,
             duration: duration,
             phase: phase,
-            targets: targets,
             segments: phase == .hang || phase == .pull
                 ? [WorkoutSegment(
                     kind: .work,
-                    targets: targets,
+                    target: .fromLegacyTargets(targets),
                     timing: timing,
                     duration: timing == .fixed ? duration : nil
                 )]
@@ -3267,11 +3469,16 @@ enum LegacyPlanSeedCatalog {
         id: String,
         title: String,
         instruction: String,
-        work: [(duration: TimeInterval, phase: WorkoutPhase, gripType: GripType?)],
+        work: [(duration: TimeInterval, phase: WorkoutPhase, gripType: GripType?, targets: [ContactRequirement])],
         rest: TimeInterval
     ) -> WorkoutStep {
         let workSegments = work.map {
-            WorkoutSegment(kind: .work, targets: [], timing: .fixed, duration: $0.duration)
+            WorkoutSegment(
+                kind: .work,
+                target: .fromLegacyTargets($0.targets),
+                timing: .fixed,
+                duration: $0.duration
+            )
         }
         let segments = workSegments + (rest > 0
             ? [WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: rest)]
@@ -3284,7 +3491,6 @@ enum LegacyPlanSeedCatalog {
             accessory: "60s EMOM · rest for the remainder of the minute",
             duration: segments.compactMap(\.duration).reduce(0, +),
             phase: work.first?.phase ?? .conditioning,
-            targets: [],
             segments: segments,
             gripType: work.first?.gripType
         )
@@ -3308,17 +3514,17 @@ enum LegacyPlanSeedCatalog {
                 conditioningTask(id: "hoopers-intro-wide-push-ups", title: "Warm-up · wide push-ups", instruction: "Perform wide push-ups with hands rotated outward as comfortable."),
                 conditioningTask(id: "hoopers-intro-narrow-pull-ups", title: "Warm-up · narrow pull-ups", instruction: "Perform narrow pull-ups on a large edge."),
                 conditioningTask(id: "hoopers-intro-narrow-push-ups", title: "Warm-up · narrow push-ups", instruction: "Perform narrow push-ups, preferably on fists or as diamond push-ups."),
-                hangStep(id: "hoopers-intro-round-1-set-1-hang", title: "Round 1 · submax no-weight hang", instruction: "Hang submaximally with no weight for 30 seconds on a medium-to-large ledge.", accessory: "30s hang · submax · no weight", active: 30, rest: 0, targets: [], gripType: .openHand),
+                hangStep(id: "hoopers-intro-round-1-set-1-hang", title: "Round 1 · submax no-weight hang", instruction: "Hang submaximally with no weight for 30 seconds on a medium-to-large ledge.", accessory: "30s hang · submax · no weight", active: 30, rest: 0, targets: [hoopersMediumToLargeLedgeTarget], gripType: .openHand),
                 conditioningTask(id: "hoopers-intro-round-1-set-1-taps", title: "Round 1 · plank shoulder taps", instruction: "Perform 30–40 plank shoulder taps (or thigh taps). Stop if form breaks.", accessory: "30–40 reps", duration: 60),
-                hangStep(id: "hoopers-intro-round-1-set-2-hang", title: "Round 1 · submax no-weight hang", instruction: "Repeat the 30-second submaximal no-weight hang on a medium-to-large ledge.", accessory: "30s hang · set 2 of 2", active: 30, rest: 0, targets: [], gripType: .openHand),
+                hangStep(id: "hoopers-intro-round-1-set-2-hang", title: "Round 1 · submax no-weight hang", instruction: "Repeat the 30-second submaximal no-weight hang on a medium-to-large ledge.", accessory: "30s hang · set 2 of 2", active: 30, rest: 0, targets: [hoopersMediumToLargeLedgeTarget], gripType: .openHand),
                 conditioningTask(id: "hoopers-intro-round-1-set-2-taps", title: "Round 1 · plank shoulder taps", instruction: "Perform 30–40 plank shoulder taps (or thigh taps) after the second hang.", accessory: "30–40 reps · set 2 of 2", duration: 60)
             ]
 
             for set in 1...3 {
                 for rep in 1...5 {
                     steps.append(contentsOf: [
-                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-left", title: "Round 2 · single-arm recruitment pull", instruction: "With the feet on the ground and elbow slightly bent, pull the hangboard down rather than lifting off. Build toward near-max over a 5-second hold on the left hand.", accessory: "5s left · rep \(rep) of 5", active: 5, rest: 0, targets: [], gripType: .halfCrimp),
-                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-right", title: "Round 2 · single-arm recruitment pull", instruction: "Repeat the 5-second single-arm recruitment pull on the right hand. Do not lift off the ground.", accessory: "5s right · rep \(rep) of 5", active: 5, rest: 0, targets: [], gripType: .halfCrimp)
+                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-left", title: "Round 2 · single-arm recruitment pull", instruction: "With the feet on the ground and elbow slightly bent, pull the hangboard down rather than lifting off. Build toward near-max over a 5-second hold on the left hand.", accessory: "5s left · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp),
+                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-right", title: "Round 2 · single-arm recruitment pull", instruction: "Repeat the 5-second single-arm recruitment pull on the right hand. Do not lift off the ground.", accessory: "5s right · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp)
                     ])
                 }
                 steps.append(conditioningTask(id: "hoopers-intro-round-2-set-\(set)-kicks", title: "Round 2 · flutter and scissor kicks", instruction: "Perform 20–30 flutter kicks and 20–30 scissor kicks. Protect your lower back and neck.", accessory: "20–30 each", duration: 90))
@@ -3326,21 +3532,21 @@ enum LegacyPlanSeedCatalog {
 
             for set in 1...3 {
                 steps.append(contentsOf: [
-                    hangStep(id: "hoopers-intro-round-3-set-\(set)-hang", title: "Round 3 · submax weighted hang", instruction: "Hang submaximally with weight for 20 seconds in an open-hand position on a medium-to-large ledge.", accessory: "20s hang · submax · weighted", active: 20, rest: 0, targets: [], gripType: .openHand),
+                    hangStep(id: "hoopers-intro-round-3-set-\(set)-hang", title: "Round 3 · submax weighted hang", instruction: "Hang submaximally with weight for 20 seconds in an open-hand position on a medium-to-large ledge.", accessory: "20s hang · submax · weighted", active: 20, rest: 0, targets: [hoopersMediumToLargeLedgeTarget], gripType: .openHand),
                     conditioningTask(id: "hoopers-intro-round-3-set-\(set)-side-plank", title: "Round 3 · side plank with hip abduction", instruction: "Perform about 10 hip-abduction reps on each side.", accessory: "~10 each side", duration: 90)
                 ])
             }
 
             for set in 1...4 {
                 steps.append(contentsOf: [
-                    hangStep(id: "hoopers-intro-round-4-set-\(set)-hang", title: "Round 4 · minimal-edge hang\(set == 4 ? " (optional set 4)" : "")", instruction: "Hang on the minimal edge for 12 seconds at effort level ±3 seconds. Start the full 3-minute rest immediately after the hold.\(set == 4 ? " This fourth set is optional; stop after three if that is your choice." : "")", accessory: "12s hang · full 3m rest · \(set == 4 ? "optional" : "set \(set) of 3–4")", active: 12, rest: 0, targets: [], gripType: .halfCrimp),
+                    hangStep(id: "hoopers-intro-round-4-set-\(set)-hang", title: "Round 4 · minimal-edge hang\(set == 4 ? " (optional set 4)" : "")", instruction: "Hang on the minimal edge for 12 seconds at effort level ±3 seconds. Start the full 3-minute rest immediately after the hold.\(set == 4 ? " This fourth set is optional; stop after three if that is your choice." : "")", accessory: "12s hang · full 3m rest · \(set == 4 ? "optional" : "set \(set) of 3–4")", active: 12, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp),
                     conditioningTask(id: "hoopers-intro-round-4-set-\(set)-recovery", title: "Round 4 · bird dog and stretches\(set == 4 ? " (optional set 4)" : "")", instruction: "Use the full 3-minute recovery: plank bird dog for approximately 45–60 seconds, then stretch.\(set == 4 ? " Skip this recovery with the optional fourth set." : "")", accessory: "45–60s bird dog · 3m total recovery", duration: 180)
                 ])
             }
 
             for set in 1...4 {
                 steps.append(contentsOf: [
-                    guidedTask(id: "hoopers-intro-round-5-set-\(set)-pull-ups", title: "Round 5 · hangboard pull-ups (optional set \(set))", instruction: "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.", accessory: "Optional · set \(set) of 2–4 total", phase: .pull),
+                    guidedTask(id: "hoopers-intro-round-5-set-\(set)-pull-ups", title: "Round 5 · hangboard pull-ups (optional set \(set))", instruction: "Use open hands on medium-to-large ledges; vary ledges, offsets, or your favorite ledge pull. Stop after 2–4 total paired sets.", accessory: "Optional · set \(set) of 2–4 total", phase: .pull, targets: [hoopersMediumToLargeLedgeTarget]),
                     conditioningTask(id: "hoopers-intro-round-5-set-\(set)-hollow", title: "Round 5 · hollow rock/hold (paired optional set \(set))", instruction: "Within the same optional set, perform 10–20 hollow rocks, then hold. Keep a stable spine; stop or regress if your back feels it. Stop Round 5 after 2–4 total paired sets.", accessory: "Optional · 10–20 reps then hold")
                 ])
             }
@@ -3369,7 +3575,7 @@ enum LegacyPlanSeedCatalog {
                             accessory: "7s hang · 7s rest",
                             active: 7,
                             rest: rep < 5 ? 7 : 0,
-                            targets: [],
+                            targets: [methodRepeaters15to20mmEdgeTarget],
                             gripType: .halfCrimp
                         )
                     )
@@ -3392,16 +3598,16 @@ enum LegacyPlanSeedCatalog {
         provenance: .adapted,
         boardID: nil,
         steps: numbered([
-            emomMinute(id: "method-emom-minute-1", title: "Minute 1 · 20mm hang", instruction: "Hang for 20 seconds on 20mm, then rest for the remainder of the minute.", work: [(20, .hang, .halfCrimp)], rest: 40),
-            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.", work: [(15, .hang, .openHand), (15, .pull, nil)], rest: 30),
-            emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.", work: [(10, .hang, .halfCrimp), (5, .pull, nil)], rest: 45),
-            emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(15, .hang, .halfCrimp)], rest: 45),
-            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(10, .hang, .openHand), (15, .pull, nil)], rest: 35),
-            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(10, .hang, .openHand)], rest: 50),
-            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(15, .pull, nil), (15, .pull, nil)], rest: 30),
-            emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(25, .hang, .halfCrimp)], rest: 35),
-            emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(20, .hang, .halfCrimp), (10, .pull, nil)], rest: 30),
-            guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, duration: 60, timing: .stopwatch, gripType: .openHand)
+            emomMinute(id: "method-emom-minute-1", title: "Minute 1 · 20mm hang", instruction: "Hang for 20 seconds on 20mm, then rest for the remainder of the minute.", work: [(20, .hang, .halfCrimp, [method20mmEdgeTarget])], rest: 40),
+            emomMinute(id: "method-emom-minute-2", title: "Minute 2 · deep three-finger pocket + jug pull-ups", instruction: "Hang for 15 seconds on deep three-finger pockets, then do 3 pull-ups on jugs.", work: [(15, .hang, .openHand, [methodDeepThreeFingerPocketTarget]), (15, .pull, nil, [methodJugTarget])], rest: 30),
+            emomMinute(id: "method-emom-minute-3", title: "Minute 3 · 20mm hang + jug knee raises", instruction: "Hang for 10 seconds on 20mm, then do 5 knee raises on jugs.", work: [(10, .hang, .halfCrimp, [method20mmEdgeTarget]), (5, .pull, nil, [methodJugTarget])], rest: 45),
+            emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(15, .hang, .halfCrimp, [method15mmEdgeTarget])], rest: 45),
+            emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(10, .hang, .openHand, [methodSloperTarget]), (15, .pull, nil, [methodJugTarget])], rest: 35),
+            emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(10, .hang, .openHand, [methodMediumThreeFingerPocketTarget])], rest: 50),
+            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(15, .pull, nil, [methodJugTarget]), (15, .pull, nil, [methodSmallEdgeTarget])], rest: 30),
+            emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(25, .hang, .halfCrimp, [method15mmEdgeTarget])], rest: 35),
+            emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(20, .hang, .halfCrimp, [method20mmEdgeTarget]), (10, .pull, nil, [methodJugTarget])], rest: 30),
+            guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, targets: [methodSloperTarget], duration: 60, timing: .stopwatch, gripType: .openHand)
         ])
     )
 
@@ -3418,16 +3624,16 @@ enum LegacyPlanSeedCatalog {
             var steps: [WorkoutStep] = [
                 guidedTask(id: "rei-sample-warm-up", title: "Warm-up", instruction: "Warm up with 20–30 minutes of easy climbing or light traversing, OR use 20–30-second dead hangs on the biggest holds plus several pull-up sets.", accessory: "20–30m easy climbing OR 20–30s big-hold hangs + pull-up sets", phase: .conditioning, duration: 1500, timing: .stopwatch)
             ]
-            let grips: [(title: String, grip: GripType)] = [
-                ("Jug", .openHand),
-                ("Three-finger pocket", .openHand),
-                ("Medium edge", .openHand),
-                ("Medium pinch", .openHand),
-                ("Large sloper", .openHand)
+            let grips: [(title: String, grip: GripType, targets: [ContactRequirement])] = [
+                ("Jug", .openHand, [ContactRequirement.kind(.jug)]),
+                ("Three-finger pocket", .openHand, [ContactRequirement(kind: .pocket, fingerCapacity: 3)]),
+                ("Medium edge", .openHand, [mediumEdgeTarget]),
+                ("Medium pinch", .openHand, [ContactRequirement(kind: .pinch, depth: .category(.medium))]),
+                ("Large sloper", .openHand, [ContactRequirement(kind: .sloper, depth: .category(.large))])
             ]
             for (index, grip) in grips.enumerated() {
                 for rep in 1...6 {
-                    steps.append(hangStep(id: "rei-sample-\(index + 1)-rep-\(rep)", title: "\(grip.title) · rep \(rep)", instruction: "Hang for 7–10 seconds, rest for 5 seconds, and repeat six times. Stop at pain.", accessory: "7s hang · 5s rest", active: 7, rest: rep < 6 ? 5 : 0, targets: [], gripType: grip.grip))
+                    steps.append(hangStep(id: "rei-sample-\(index + 1)-rep-\(rep)", title: "\(grip.title) · rep \(rep)", instruction: "Hang for 7–10 seconds, rest for 5 seconds, and repeat six times. Stop at pain.", accessory: "7s hang · 5s rest", active: 7, rest: rep < 6 ? 5 : 0, targets: grip.targets, gripType: grip.grip))
                 }
                 if index < grips.count - 1 {
                     steps.append(recoveryStep(id: "rei-sample-\(index + 1)-recovery", title: "Three-minute grip recovery", duration: 180, accessory: "3m recovery · rest a full day or two before hard finger training"))
@@ -3483,11 +3689,19 @@ enum LegacyPlanSeedCatalog {
             assert(
                 plan.steps.allSatisfy { step in
                     if step.phase == .rest {
-                        return step.targets.isEmpty && step.timedWorkDuration == nil
+                        return step.workRequirements.isEmpty && step.timedWorkDuration == nil
                     }
                     let timing = step.segments.first?.timing ?? .fixed
-                    return step.targets.isEmpty
-                        && step.segments.allSatisfy(\.targets.isEmpty)
+                    return step.segments.allSatisfy { segment in
+                        switch segment.kind {
+                        case .rest:
+                            return segment.target == nil
+                        case .work:
+                            // Generic Metolius work keeps authored semantic
+                            // requirements (or explicit self-selected when empty).
+                            return segment.target != nil
+                        }
+                    }
                         && (
                         timing == .fixed
                             ? step.timedWorkDuration == step.duration
@@ -3531,7 +3745,7 @@ enum LegacyPlanSeedCatalog {
                 let board = BoardCatalog.board(for: boardID)
                 assert(
                     plan.steps.allSatisfy { step in
-                        step.targets.allSatisfy {
+                        step.workRequirements.allSatisfy {
                             (try? ContactResolver.resolve($0, step: step, board: board)) != nil
                         }
                     },

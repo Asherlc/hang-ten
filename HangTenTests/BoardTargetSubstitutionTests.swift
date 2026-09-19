@@ -175,7 +175,9 @@ final class ContactResolverTests: XCTestCase {
         }
     }
 
-    func testResolutionRequiresDefaultPositionMembership() throws {
+    func testResolutionUsesAllDefaultPresentationContactsNotOnlyFirstPosition() throws {
+        // Authored membership lists only the left edge, matching Dual-style
+        // multi-position packages where each pose owns a subset.
         let board = fixtureBoard(positionContactIDs: ["edge-left"])
         let requirement = ContactRequirement.edge(
             depth: .range(.init(minimum: 19, maximum: 21)),
@@ -187,15 +189,74 @@ final class ContactResolverTests: XCTestCase {
             try ContactResolver.resolve(requirement, step: step, board: board).map(\.id),
             ["edge-left"]
         )
+        // Both 20 mm edges remain candidates via presentation.contactIDs; the
+        // single selector still picks a stable contact without requiring the
+        // first authored position to list every hold.
+        XCTAssertEqual(
+            Set(board.defaultPresentation.contactIDs),
+            Set(["edge-left", "edge-right", "edge-deep"])
+        )
     }
 
-    func testStepGripConstraintRejectsUnknownContactGripMetadata() {
+    func testMaxHangsHighlightsDualTwentyMillimeterEdge() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        let step = try XCTUnwrap(
+            LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }
+        )
+        let resolved = try ContactResolver.resolve(
+            step.workRequirements,
+            step: step,
+            board: board
+        )
+        XCTAssertEqual(Set(resolved.map(\.kind)), [.edge])
+        XCTAssertTrue(resolved.allSatisfy {
+            $0.depth == .range(.init(minimum: 20, maximum: 20))
+        })
+        XCTAssertEqual(
+            WorkoutHighlightResolver.contactIDs(for: step, on: board),
+            resolved.map(\.id)
+        )
+    }
+
+    func testMetoliusEntryHighlightsJugAndMediumEdgeOnDual() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        let jugStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusEntry.steps.first { $0.id == "entry.minute-1.task-1" }
+        )
+        let mediumStep = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusEntry.steps.first { $0.id == "entry.minute-3.task-1" }
+        )
+
+        XCTAssertEqual(
+            WorkoutHighlightResolver.contactIDs(for: jugStep, on: board),
+            ["outer-jug"]
+        )
+        let mediumIDs = WorkoutHighlightResolver.contactIDs(for: mediumStep, on: board)
+        XCTAssertEqual(mediumIDs.count, 1)
+        XCTAssertTrue(mediumIDs[0] == "curved-edge-20" || mediumIDs[0] == "straight-edge-20")
+    }
+
+    func testEmptyContactGripTypesDoNotConstrainStepGrip() throws {
         let board = fixtureBoard(gripTypes: [])
         let requirement = ContactRequirement.edge(
             depth: .range(.init(minimum: 29, maximum: 31)),
             selection: .single
         )
-        let step = fixtureStep(target: requirement, gripType: .openHand)
+        let step = fixtureStep(target: requirement, gripType: .halfCrimp)
+
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: step, board: board).map(\.id),
+            ["edge-deep"]
+        )
+    }
+
+    func testStepGripConstraintRejectsIncompatibleNonEmptyContactGripMetadata() {
+        let board = fixtureBoard(gripTypes: [.openHand])
+        let requirement = ContactRequirement.edge(
+            depth: .range(.init(minimum: 29, maximum: 31)),
+            selection: .single
+        )
+        let step = fixtureStep(target: requirement, gripType: .halfCrimp)
 
         XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: step, board: board)) {
             XCTAssertEqual($0 as? ContactResolutionError, .noMatches)
@@ -220,7 +281,7 @@ final class ContactResolverTests: XCTestCase {
         )
     }
 
-    func testSingleDoesNotGuessAmongMultipleCandidatesWithoutEveryDefaultPresentationFrame() {
+    func testSingleDoesNotGuessAmongMultipleCandidatesWithoutEveryDefaultPresentationFrame() throws {
         let board = jugBoard(
             [
                 .init(id: "jug-left", frame: CGRect(x: 0.1, y: 0.4, width: 0.1, height: 0.1)),
@@ -230,9 +291,11 @@ final class ContactResolverTests: XCTestCase {
         )
         let requirement = ContactRequirement.kind(.jug, selection: .single)
 
-        XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .ambiguousSingle(candidateCount: 2))
-        }
+        // Contacts missing default-presentation geometry are not candidates.
+        XCTAssertEqual(
+            try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board).map(\.id),
+            ["jug-left"]
+        )
     }
 
     func testBilateralPairDoesNotGuessAmongCandidatesWithoutEveryDefaultPresentationFrame() {
@@ -246,7 +309,7 @@ final class ContactResolverTests: XCTestCase {
         let requirement = ContactRequirement.kind(.jug, selection: .bilateralPair)
 
         XCTAssertThrowsError(try ContactResolver.resolve(requirement, step: fixtureStep(target: requirement), board: board)) {
-            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 2))
+            XCTAssertEqual($0 as? ContactResolutionError, .invalidBilateralPair(candidateCount: 1))
         }
     }
 
@@ -264,7 +327,6 @@ final class ContactResolverTests: XCTestCase {
             accessory: "",
             duration: 10,
             phase: .hang,
-            targets: [target],
             gripType: gripType,
             handUse: handUse,
             side: side

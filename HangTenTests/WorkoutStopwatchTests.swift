@@ -128,10 +128,9 @@ final class WorkoutStopwatchTests: XCTestCase {
                 accessory: "",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.jug)],
                 segments: [
-                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil),
-                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil)
+                    WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .stopwatch, duration: nil),
+                    WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .stopwatch, duration: nil)
                 ]
             ),
             WorkoutStep(
@@ -142,9 +141,8 @@ final class WorkoutStopwatchTests: XCTestCase {
                 accessory: "",
                 duration: 10,
                 phase: .hang,
-                targets: [.kind(.jug)],
                 segments: [
-                    WorkoutSegment(kind: .work, target: .kind(.jug), timing: .stopwatch, duration: nil)
+                    WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.jug)]), timing: .stopwatch, duration: nil)
                 ]
             )
         ]

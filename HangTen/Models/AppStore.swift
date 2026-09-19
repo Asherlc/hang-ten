@@ -325,11 +325,11 @@ final class AppStore: ObservableObject {
         if step.handUse == .either || (step.handUse == .double && board.isOneHanded) {
             return Set([WorkoutSide.left, .right].flatMap { side in
                 step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded).flatMap {
-                    try? ContactResolver.resolve($0.targets, step: $0, board: board).map(\.id)
+                    try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)
                 } ?? []
             })
         }
-        return Set((try? ContactResolver.resolve(step.targets, step: step, board: board).map(\.id)) ?? [])
+        return Set((try? ContactResolver.resolve(step.workRequirements, step: step, board: board).map(\.id)) ?? [])
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
@@ -339,12 +339,12 @@ final class AppStore: ObservableObject {
                     guard let resolved = step.resolvingEitherHand(selectedHandSide: side, boardIsOneHanded: board.isOneHanded) else {
                         return true
                     }
-                    return resolved.targets.contains { target in
+                    return resolved.workRequirements.contains { target in
                         (try? ContactResolver.resolve(target, step: resolved, board: board)) == nil
                     }
                 }
             }
-            return step.targets.contains { target in
+            return step.workRequirements.contains { target in
                 (try? ContactResolver.resolve(target, step: step, board: board)) == nil
             }
         }

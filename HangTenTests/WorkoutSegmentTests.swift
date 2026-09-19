@@ -23,9 +23,8 @@ final class WorkoutSegmentTests: XCTestCase {
             accessory: "20s hang · 10s rest",
             duration: 30,
             phase: .hang,
-            targets: [.kind(.edge)],
             segments: [
-                WorkoutSegment(kind: .work, target: .kind(.edge), timing: .fixed, duration: 20),
+                WorkoutSegment(kind: .work, target: .fromLegacyTargets([.kind(.edge)]), timing: .fixed, duration: 20),
                 WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 10)
             ]
         )

@@ -981,11 +981,10 @@ final class AppStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
-                    targets: targets,
                     segments: [
                         WorkoutSegment(
                             kind: .work,
-                            targets: targets,
+                            target: .fromLegacyTargets(targets),
                             timing: timing,
                             duration: timing == .fixed ? 10 : nil
                         )
