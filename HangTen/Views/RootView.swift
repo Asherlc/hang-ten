@@ -55,10 +55,9 @@ private struct WorkoutInitialWeightSetupView: View {
                     .accessibilityIdentifier("workout.initialWeight.sourcePicker")
                     .accessibilityLabel("Weight source")
                     .onChange(of: source) { _, selectedSource in
-                        if selectedSource == .sensor {
-                            configuration = .sensor
-                        }
-                        guard selectedSource == .sensor, !isSensorStreaming else { return }
+                        guard selectedSource == .sensor else { return }
+                        configuration = .sensor
+                        guard !isSensorStreaming else { return }
                         onRequestSensorPairing()
                     }
                 }
@@ -133,6 +132,15 @@ private struct WorkoutSensorPairingView: View {
     let onConnected: () -> Void
     let onCancel: () -> Void
 
+    private var isSensorConnectionActive: Bool {
+        switch service.state {
+        case .scanning, .connecting, .calibrating, .streaming:
+            true
+        case .bluetoothUnavailable, .unauthorized, .idle, .disconnected, .failed:
+            false
+        }
+    }
+
     var body: some View {
         NavigationStack {
             VStack(alignment: .leading, spacing: 20) {
@@ -152,7 +160,7 @@ private struct WorkoutSensorPairingView: View {
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(Color.hangGreenDark)
-                .disabled(service.state.shouldDisconnect)
+                .disabled(isSensorConnectionActive)
                 .accessibilityIdentifier("workout.sensorPairing.connect")
                 .accessibilityLabel("Connect sensor")
 
