@@ -79,6 +79,18 @@ permissions, discovery, GATT behavior, device calibration accuracy, firmware
 compatibility, disconnect timing, or force accuracy; all of those require a
 physical Motherboard before release.
 
+Combine `HANGTEN_REVIEW_SENSOR_DISCONNECTED=1` with the Motherboard fixture
+to leave it disconnected at launch and exercise Connect sensor in the nested
+initial-weight pairing sheet. The fixture still streams after that action.
+
+Initial weight setup is the sole entry point for manual workout weight. Manual
+sessions save the entered weight and Add bodyweight choice, with the legacy
+load adjustment set to zero. They do not show the sensor meter, collect sensor
+samples, or mark steps interrupted when an unused sensor disconnects. Sensor
+sessions retain measurement and interruption behavior and omit manual weight.
+Pairing is presented by the setup sheet; successful pairing dismisses first,
+then setup dismisses before handing off once to preparation or workout start.
+
 ## Workout clock and spoken cues
 
 `WorkoutView` uses one elapsed session clock backed by monotonic system uptime.

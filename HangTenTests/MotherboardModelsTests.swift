@@ -2,6 +2,105 @@ import XCTest
 @testable import HangTen
 
 final class MotherboardModelsTests: XCTestCase {
+    func testInitialWeightHandoffConsumesAcceptedConfigurationExactlyOnce() {
+        for configuration in [WorkoutInitialWeightConfiguration.sensor, .manual(weightKGF: 12.5, includesBodyweight: true)] {
+            var handoff = WorkoutInitialWeightHandoff()
+            XCTAssertTrue(handoff.accept(configuration))
+            XCTAssertFalse(handoff.accept(.manual(weightKGF: 99, includesBodyweight: false)))
+            XCTAssertEqual(handoff.consume(), configuration)
+            XCTAssertNil(handoff.consume())
+            XCTAssertFalse(handoff.accept(configuration), "Late streaming callbacks cannot restart the workout")
+        }
+    }
+
+    func testCancelledInitialWeightPresentationHasNoHandoffAndCanRetry() {
+        var handoff = WorkoutInitialWeightHandoff()
+        XCTAssertNil(handoff.consume())
+        XCTAssertTrue(handoff.accept(.sensor))
+        XCTAssertEqual(handoff.consume(), .sensor)
+    }
+
+    func testSensorSessionIgnoresStaleManualValuesWhenDecoding() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(), planID: "plan", planTitle: "Test plan",
+            recordedAt: Date(), startDate: Date(), endDate: Date(),
+            motherboardIdentifier: nil, batteryValue: nil, steps: [], initialWeight: .sensor
+        )
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: JSONEncoder().encode(record)) as? [String: Any])
+        XCTAssertNil(object["manualWeightKGF"])
+        object["manualWeightKGF"] = 42
+        object["manualWeightIncludesBodyweight"] = true
+        let decoded = try JSONDecoder().decode(WorkoutSessionRecord.self, from: JSONSerialization.data(withJSONObject: object))
+        XCTAssertNil(decoded.manualWeightKGF)
+        XCTAssertFalse(decoded.manualWeightIncludesBodyweight)
+        XCTAssertEqual(decoded.initialWeight, .sensor)
+        XCTAssertEqual(decoded.loadAdjustmentKGF, 0)
+    }
+
+    func testInitialWeightConfigurationKeepsManualWeightSeparateFromSensorMode() {
+        let sensor = WorkoutInitialWeightConfiguration.sensor
+        XCTAssertEqual(sensor.source, .sensor)
+        XCTAssertNil(sensor.manualWeightKGF)
+        XCTAssertFalse(sensor.manualWeightIncludesBodyweight)
+
+        let manual = WorkoutInitialWeightConfiguration.manual(
+            weightKGF: 12.5,
+            includesBodyweight: true
+        )
+        XCTAssertEqual(manual.source, .manual)
+        XCTAssertEqual(manual.manualWeightKGF, 12.5)
+        XCTAssertTrue(manual.manualWeightIncludesBodyweight)
+    }
+
+    func testSessionRecordRoundTripsManualInitialWeightDetails() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: [],
+            initialWeight: .manual(weightKGF: 12.5, includesBodyweight: true)
+        )
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONEncoder().encode(record)
+        )
+
+        XCTAssertEqual(decoded.initialWeight, record.initialWeight)
+        XCTAssertEqual(decoded.loadAdjustmentKGF, 0)
+    }
+
+    func testSessionRecordDecodesLegacyRecordAsSensorWeightSource() throws {
+        let record = WorkoutSessionRecord(
+            id: UUID(),
+            planID: "plan",
+            planTitle: "Test plan",
+            recordedAt: Date(timeIntervalSince1970: 100),
+            startDate: Date(timeIntervalSince1970: 0),
+            endDate: Date(timeIntervalSince1970: 600),
+            motherboardIdentifier: nil,
+            batteryValue: nil,
+            steps: []
+        )
+        let data = try JSONEncoder().encode(record)
+        var object = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        object.removeValue(forKey: "initialWeightSource")
+        object.removeValue(forKey: "manualWeightKGF")
+        object.removeValue(forKey: "manualWeightIncludesBodyweight")
+
+        let decoded = try JSONDecoder().decode(
+            WorkoutSessionRecord.self,
+            from: JSONSerialization.data(withJSONObject: object)
+        )
+
+        XCTAssertEqual(decoded.initialWeight, .sensor)
+    }
+
     func testForceRockerCentersAtThresholdAndTiltsTowardLoadDirection() {
         XCTAssertEqual(
             MotherboardForceRocker.state(loadKGF: 10, thresholdKGF: 10),

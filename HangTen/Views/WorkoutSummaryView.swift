@@ -10,6 +10,23 @@ enum WorkoutSummaryMode: Equatable {
 }
 
 enum WorkoutSummaryFormatting {
+    static func initialWeightText(
+        for initialWeight: WorkoutInitialWeightConfiguration,
+        unit: WorkoutLoadAdjustmentDisplayUnit
+    ) -> String {
+        switch initialWeight.source {
+        case .sensor:
+            return "Sensor weight"
+        case .manual:
+            let weightKGF = initialWeight.manualWeightKGF ?? 0
+            let displayedValue = unit.value(fromKilogramsForce: weightKGF)
+            let value = String(format: "%.1f %@", displayedValue, unit.label)
+            return initialWeight.manualWeightIncludesBodyweight
+                ? "Manual weight: +\(value) plus bodyweight"
+                : "Manual weight: \(value) standalone"
+        }
+    }
+
     static func stepRowTitle(for session: WorkoutSessionRecord, at index: Int) -> String {
         session.stepTitle(at: index)
     }
@@ -184,7 +201,7 @@ struct WorkoutSessionHistoryView: View {
                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
                                 .font(.system(size: 12, weight: .medium, design: .rounded))
                                 .foregroundStyle(Color.hangMuted)
-                            Text(session.forceSensorProfile.label)
+                            Text(session.initialWeight.source.label)
                                 .font(.system(size: 12, weight: .medium, design: .rounded))
                                 .foregroundStyle(Color.hangMuted)
                         }
@@ -242,10 +259,21 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
-            Section("Sensor") {
-                Text(session.forceSensorProfile.label)
-                    .font(.system(size: 15, weight: .semibold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
+            if session.initialWeight.source == .sensor {
+                Section("Sensor") {
+                    Text(session.forceSensorProfile.label)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
+            }
+
+            Section("Initial weight") {
+                Text(WorkoutSummaryFormatting.initialWeightText(
+                    for: session.initialWeight,
+                    unit: loadAdjustmentUnit
+                ))
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+                .foregroundStyle(Color.hangInk)
             }
 
             if let loadAdjustmentText = WorkoutSummaryFormatting.loadAdjustmentText(

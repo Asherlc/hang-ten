@@ -67,7 +67,8 @@ struct HangTenApp: App {
 		))
 
 		#if DEBUG
-		if useMotherboardReviewFixture {
+		if useMotherboardReviewFixture,
+           environment["HANGTEN_REVIEW_SENSOR_DISCONNECTED"] != "1" {
 			motherboardBluetoothService.connect()
 		}
 		#endif

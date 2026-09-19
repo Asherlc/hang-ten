@@ -11,6 +11,204 @@ struct MotherboardWorkoutPreparationHandoff {
     }
 }
 
+private struct WorkoutInitialWeightSetupView: View {
+    @ObservedObject var service: MotherboardBluetoothService
+    @ObservedObject var settings: MotherboardSettingsStore
+    let unit: WorkoutLoadAdjustmentDisplayUnit
+    let onContinue: (WorkoutInitialWeightConfiguration) -> Void
+    let onCancel: () -> Void
+
+    @State private var source: WorkoutInitialWeightSource
+    @State private var manualWeight: Double
+    @State private var includesBodyweight: Bool
+    @State private var showsSensorPairing = false
+    @State private var pairingHandoff = WorkoutInitialWeightHandoff()
+
+    private var isSensorStreaming: Bool { service.state == .streaming }
+
+    init(
+        configuration: WorkoutInitialWeightConfiguration,
+        unit: WorkoutLoadAdjustmentDisplayUnit,
+        service: MotherboardBluetoothService,
+        settings: MotherboardSettingsStore,
+        onContinue: @escaping (WorkoutInitialWeightConfiguration) -> Void,
+        onCancel: @escaping () -> Void
+    ) {
+        self.service = service
+        self.settings = settings
+        self.unit = unit
+        self.onContinue = onContinue
+        self.onCancel = onCancel
+        _source = State(initialValue: configuration.source)
+        _manualWeight = State(initialValue: unit.value(fromKilogramsForce: configuration.manualWeightKGF ?? 0))
+        _includesBodyweight = State(initialValue: configuration.manualWeightIncludesBodyweight)
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section("Weight source") {
+                    Picker("Weight source", selection: $source) {
+                        ForEach(WorkoutInitialWeightSource.allCases) { source in
+                            Text(source.label).tag(source)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("workout.initialWeight.sourcePicker")
+                    .accessibilityLabel("Weight source")
+                    .onChange(of: source) { _, selectedSource in
+                        guard selectedSource == .sensor else { return }
+                        guard !isSensorStreaming else { return }
+                        requestSensorPairing()
+                    }
+                }
+
+                if source == .manual {
+                    Section {
+                        HStack {
+                            TextField(
+                                "Weight",
+                                value: $manualWeight,
+                                format: .number.precision(.fractionLength(1))
+                            )
+                            .keyboardType(.decimalPad)
+                            .accessibilityIdentifier("workout.initialWeight.manualField")
+                            .accessibilityLabel("Manual weight")
+                            Text(unit.label)
+                                .foregroundStyle(Color.hangMuted)
+                        }
+
+                        Toggle("Add bodyweight", isOn: $includesBodyweight)
+                            .accessibilityIdentifier("workout.initialWeight.addBodyweight")
+                            .accessibilityLabel("Add bodyweight")
+                    } header: {
+                        Text("Manual weight")
+                    } footer: {
+                        Text("Off records this as a standalone weight. On records it as added load on top of bodyweight.")
+                    }
+                } else {
+                    Section {
+                        Text(isSensorStreaming
+                             ? "The connected sensor will capture your workout load and optional bodyweight baseline."
+                             : "Connect a sensor to capture your workout load and optional bodyweight baseline.")
+                    }
+                }
+            }
+            .navigationTitle("Initial weight")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: onCancel)
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Continue", action: continueWorkout)
+                        .accessibilityIdentifier("workout.initialWeight.continue")
+                }
+            }
+        }
+        .interactiveDismissDisabled()
+        .sheet(isPresented: $showsSensorPairing, onDismiss: {
+            if let configuration = pairingHandoff.consume() {
+                onContinue(configuration)
+            }
+        }) {
+            WorkoutSensorPairingView(
+                service: service,
+                settings: settings,
+                onConnected: {
+                    guard showsSensorPairing, pairingHandoff.accept(.sensor) else { return }
+                    showsSensorPairing = false
+                },
+                onCancel: { showsSensorPairing = false }
+            )
+        }
+    }
+
+    private func requestSensorPairing() {
+        pairingHandoff = WorkoutInitialWeightHandoff()
+        showsSensorPairing = true
+    }
+
+    private func continueWorkout() {
+        let selectedConfiguration: WorkoutInitialWeightConfiguration
+        switch source {
+        case .sensor:
+            selectedConfiguration = .sensor
+        case .manual:
+            selectedConfiguration = .manual(
+                weightKGF: unit.kilogramsForce(fromDisplayedForce: manualWeight),
+                includesBodyweight: includesBodyweight
+            )
+        }
+        if selectedConfiguration.source == .sensor, !isSensorStreaming {
+            requestSensorPairing()
+        } else {
+            onContinue(selectedConfiguration)
+        }
+    }
+}
+
+private struct WorkoutSensorPairingView: View {
+    @ObservedObject var service: MotherboardBluetoothService
+    @ObservedObject var settings: MotherboardSettingsStore
+    let onConnected: () -> Void
+    let onCancel: () -> Void
+
+    private var isSensorConnectionActive: Bool {
+        switch service.state {
+        case .scanning, .connecting, .calibrating, .streaming:
+            true
+        case .bluetoothUnavailable, .unauthorized, .idle, .disconnected, .failed:
+            false
+        }
+    }
+
+    var body: some View {
+        NavigationStack {
+            VStack(alignment: .leading, spacing: 20) {
+                SectionLabel(title: "Sensor required")
+                Text("Connect a training sensor")
+                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color.hangInk)
+                Text(ForceSensorConnectionCopy.detail(
+                    for: service.state,
+                    profile: service.connectedProfile ?? settings.forceSensorProfile
+                ))
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundStyle(Color.hangMuted)
+
+                Button("Connect sensor") {
+                    service.connect(profile: settings.forceSensorProfile)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(Color.hangGreenDark)
+                .disabled(isSensorConnectionActive)
+                .accessibilityIdentifier("workout.sensorPairing.connect")
+                .accessibilityLabel("Connect sensor")
+
+                Spacer()
+            }
+            .padding(24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+            .background(Color.hangBackground)
+            .navigationTitle("Sensor pairing")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel", action: onCancel)
+                        .accessibilityIdentifier("workout.sensorPairing.cancel")
+                        .accessibilityLabel("Cancel sensor pairing")
+                }
+            }
+        }
+        .accessibilityIdentifier("workout.sensorPairing.modal")
+        .onChange(of: service.state, initial: true) { _, state in
+            guard state == .streaming else { return }
+            onConnected()
+        }
+    }
+}
+
 @MainActor
 protocol RootViewBackgroundTaskApplication: AnyObject {
 	func beginBackgroundTask(withName taskName: String?, expirationHandler handler: (@MainActor @Sendable () -> Void)?) -> UIBackgroundTaskIdentifier
@@ -1706,13 +1904,14 @@ struct WorkoutView: View {
 	    @State private var summarySession: WorkoutSessionRecord?
     @State private var didSaveSession = false
     @State private var didInterruptRecorder = false
-    @State private var showsWorkoutPreparation = false
-    @State private var didCompleteWorkoutPreparation = false
+	@State private var showsWorkoutPreparation = false
+	@State private var showsInitialWeightSetup = false
+	@State private var initialWeightHandoff = WorkoutInitialWeightHandoff()
+	@State private var didCompleteWorkoutPreparation = false
+	@State private var didConfigureInitialWeight = false
+	@State private var initialWeight = WorkoutInitialWeightConfiguration.manual(weightKGF: 0, includesBodyweight: false)
 	    @State private var workoutPreparationHandoff = MotherboardWorkoutPreparationHandoff()
 	    @State private var bodyweightKGF: Double?
-	    @State private var loadAdjustmentKGF: Double = 0
-	    @State private var didLoadInitialLoadAdjustment = false
-	    @State private var didSetLoadAdjustment = false
 	    @State private var motherboardMeasurementCollector = MotherboardWorkoutMeasurementCollector()
 	    @State private var stopwatches: [WorkoutActivitySegmentKey: WorkoutStopwatch] = [:]
 	    @State private var completedStopwatchDurations: [WorkoutActivitySegmentKey: TimeInterval] = [:]
@@ -1945,6 +2144,20 @@ struct WorkoutView: View {
 				}
 			)
 		}
+        .sheet(isPresented: $showsInitialWeightSetup, onDismiss: {
+            // Wait for setup dismissal before presenting preparation/hand choice or starting.
+            guard initialWeightHandoff.consume() != nil else { return }
+            toggleRunning()
+        }) {
+            WorkoutInitialWeightSetupView(
+                configuration: initialWeight,
+                unit: motherboardSettingsStore.loadAdjustmentUnit,
+                service: motherboardBluetoothService,
+                settings: motherboardSettingsStore,
+                onContinue: continueFromInitialWeightSetup,
+                onCancel: { showsInitialWeightSetup = false }
+            )
+        }
 		.sheet(isPresented: $showsHandSidePicker) {
 			NavigationStack {
 				VStack(alignment: .leading, spacing: 20) {
@@ -1993,10 +2206,6 @@ struct WorkoutView: View {
 		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
-			if !didLoadInitialLoadAdjustment {
-				loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
-				didLoadInitialLoadAdjustment = true
-			}
 			configureRecorder()
 			#if DEBUG
 			if !didApplyReviewStep {
@@ -2035,11 +2244,6 @@ struct WorkoutView: View {
 			guard phase != .active else { return }
 			pauseForInterruption()
 		}
-		.onChange(of: store.sessionHistory) { _, _ in
-			guard WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
-			      !didSetLoadAdjustment else { return }
-			loadAdjustmentKGF = store.mostRecentSavedLoadAdjustmentKGF
-		}
 		.onChange(of: audioCoach.countdownPreparationState) { _, state in
 			guard let pendingCountdownStart else { return }
 			switch WorkoutSessionPolicy.consumePendingCountdown(
@@ -2056,7 +2260,7 @@ struct WorkoutView: View {
 		}
 		.onReceive(motherboardBluetoothService.$latestMeasurement.compactMap { $0 }) { measurement in
 			let monotonicTime = WorkoutClock.monotonicTime
-			guard sessionState.activeStartUptime != nil else { return }
+			guard sessionState.activeStartUptime != nil, initialWeight.source == .sensor else { return }
 			consume(measurement, at: monotonicTime)
 			capture(measurement, at: monotonicTime)
 		}
@@ -2157,7 +2361,7 @@ struct WorkoutView: View {
 						isResting: isResting
 					)
 				}
-				if motherboardBluetoothService.state.showsWorkoutMeter {
+				if initialWeight.source == .sensor, motherboardBluetoothService.state.showsWorkoutMeter {
 					meter(step: step)
 				}
 			}
@@ -2265,7 +2469,7 @@ struct WorkoutView: View {
 						.frame(width: 224)
 				}
 			}
-			if motherboardBluetoothService.state.showsWorkoutMeter {
+			if initialWeight.source == .sensor, motherboardBluetoothService.state.showsWorkoutMeter {
 				meter(step: step)
 			}
 		}
@@ -2416,9 +2620,6 @@ struct WorkoutView: View {
 
 			VStack(spacing: 6) {
 				HStack(spacing: 10) {
-					loadAdjustmentField(compact: true)
-						.disabled(motherboardBluetoothService.state.disablesManualLoadAdjustment)
-
 					Spacer(minLength: 0)
 
 					controlButton(isComplete: isComplete, countdown: countdown)
@@ -2484,30 +2685,10 @@ struct WorkoutView: View {
 					.foregroundStyle(step.phase.textTint)
 			}
 
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .center, spacing: 12) {
-                    portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
-                    Spacer(minLength: 0)
-                    loadAdjustmentControlIfAvailable(countdown: countdown, isComplete: isComplete)
-                }
-
-                VStack(alignment: .trailing, spacing: 8) {
-                    portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
-                    loadAdjustmentControlIfAvailable(countdown: countdown, isComplete: isComplete)
-                }
-            }
+            portraitTimerLabel(step: step, stepElapsed: stepElapsed, countdown: countdown, isComplete: isComplete)
 
             ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
                 .tint(Color.hangGreenDark)
-        }
-    }
-
-    @ViewBuilder
-    private func loadAdjustmentControlIfAvailable(countdown: Int, isComplete: Bool) -> some View {
-        if WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
-           countdown == 0,
-           !isComplete {
-            loadAdjustmentControl
         }
     }
 
@@ -2597,62 +2778,6 @@ struct WorkoutView: View {
 
 			skipStepButton(step: step, canNavigate: canNavigate)
 		}
-	}
-
-	private var loadAdjustmentControl: some View {
-		VStack(alignment: .trailing, spacing: 4) {
-			loadAdjustmentField(compact: true)
-				.disabled(motherboardBluetoothService.state.disablesManualLoadAdjustment)
-
-			if motherboardBluetoothService.state.disablesManualLoadAdjustment {
-				Text("Using connected scale for load.")
-					.font(.system(size: 11, weight: .semibold, design: .rounded))
-					.foregroundStyle(Color.hangMuted)
-			}
-		}
-	}
-
-	private func loadAdjustmentField(compact: Bool) -> some View {
-		HStack(spacing: compact ? 5 : 8) {
-			TextField(
-				"",
-				value: loadAdjustmentBinding,
-				format: .number.precision(.fractionLength(1))
-			)
-			.keyboardType(.numbersAndPunctuation)
-			.font(.system(size: compact ? 16 : 20, weight: .semibold, design: .rounded))
-			.multilineTextAlignment(.center)
-			.padding(.horizontal, compact ? 8 : 12)
-			.padding(.vertical, compact ? 6 : 9)
-			.background(Color.hangCream, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
-			.overlay {
-				RoundedRectangle(cornerRadius: 10, style: .continuous)
-					.stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
-			}
-			.frame(
-				minWidth: compact ? 72 : 96,
-				idealWidth: compact ? 84 : 116,
-				maxWidth: compact ? 96 : 144
-			)
-			.layoutPriority(1)
-			.accessibilityLabel("Workout load adjustment")
-			.accessibilityHint("Use a positive value for added weight or a negative value for pulley assistance. This starts from your latest saved session.")
-
-			Text(motherboardSettingsStore.loadAdjustmentUnit.label)
-				.font(.system(size: compact ? 14 : 17, weight: .bold, design: .rounded))
-				.foregroundStyle(Color.hangMuted)
-		}
-		.accessibilityElement(children: .contain)
-	}
-
-	private var loadAdjustmentBinding: Binding<Double> {
-		Binding(
-			get: { motherboardSettingsStore.loadAdjustmentUnit.value(fromKilogramsForce: loadAdjustmentKGF) },
-			set: { displayedValue in
-				didSetLoadAdjustment = true
-				loadAdjustmentKGF = motherboardSettingsStore.loadAdjustmentUnit.kilogramsForce(fromDisplayedForce: displayedValue)
-			}
-		)
 	}
 
 	private func liftCompletionControl(
@@ -2896,6 +3021,12 @@ struct WorkoutView: View {
     private func toggleRunning() {
 		if sessionState.activeStartUptime == nil,
 		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
+		   !didConfigureInitialWeight {
+			showsInitialWeightSetup = true
+			return
+		}
+		if sessionState.activeStartUptime == nil,
+		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
 		   planNeedsHandChoice,
 		   handPreference == nil {
 			showsHandSidePicker = true
@@ -3061,6 +3192,7 @@ struct WorkoutView: View {
 	}
 
 	private func consume(_ measurement: MotherboardMeasurement, at monotonicTime: TimeInterval) {
+		guard initialWeight.source == .sensor else { return }
 		guard sessionState.activeStartUptime != nil,
 			  countdownRemaining(at: monotonicTime) == 0,
               WorkoutSessionPolicy.isMeasurementEligible(
@@ -3085,6 +3217,7 @@ struct WorkoutView: View {
 	}
 
 	private func capture(_ measurement: MotherboardMeasurement, at monotonicTime: TimeInterval) {
+		guard initialWeight.source == .sensor else { return }
 		guard sessionState.activeStartUptime != nil,
 			  motherboardBluetoothService.connectedProfile == .motherboard else { return }
 		motherboardMeasurementCollector.capture(
@@ -3151,13 +3284,14 @@ struct WorkoutView: View {
 			recordedAt: recordedAt,
 			startDate: startDate,
 			endDate: endDate,
-			motherboardIdentifier: motherboardBluetoothService.connectedDeviceID?.uuidString,
-			batteryValue: motherboardBluetoothService.batteryValue,
+			motherboardIdentifier: initialWeight.source == .sensor ? motherboardBluetoothService.connectedDeviceID?.uuidString : nil,
+			batteryValue: initialWeight.source == .sensor ? motherboardBluetoothService.batteryValue : nil,
 			steps: steps,
 			stepTitles: activeSteps.map(\.title),
 			forceSensorProfile: motherboardBluetoothService.connectedProfile ?? motherboardSettingsStore.forceSensorProfile,
-			bodyweightKGF: bodyweightKGF,
-			loadAdjustmentKGF: loadAdjustmentKGF,
+			bodyweightKGF: initialWeight.source == .sensor ? bodyweightKGF : nil,
+			initialWeight: initialWeight,
+			loadAdjustmentKGF: 0,
 			loadAdjustmentDisplayUnit: motherboardSettingsStore.loadAdjustmentUnit,
 			motherboardMeasurements: motherboardMeasurementCollector.measurements,
 			motherboardMeasurementsTruncated: motherboardMeasurementCollector.didTruncate
@@ -3174,13 +3308,22 @@ struct WorkoutView: View {
 	}
 
 	private var needsWorkoutPreparation: Bool {
-		MotherboardWorkoutPreparation.requiresPreparation(
+		initialWeight.source == .sensor && MotherboardWorkoutPreparation.requiresPreparation(
 			isInitialStart: sessionState.activeStartUptime == nil
 				&& sessionState.pausedElapsed == 0
 				&& !didCompleteWorkoutPreparation,
 			isStreaming: motherboardBluetoothService.state == .streaming
 		)
 	}
+
+    private func continueFromInitialWeightSetup(_ configuration: WorkoutInitialWeightConfiguration) {
+        guard configuration.source != .sensor || motherboardBluetoothService.state == .streaming,
+              initialWeightHandoff.accept(configuration) else { return }
+        initialWeight = configuration
+        bodyweightKGF = nil
+        didConfigureInitialWeight = true
+        showsInitialWeightSetup = false
+    }
 
 	private func save(_ session: WorkoutSessionRecord) {
 		guard !didSaveSession, completedSession?.id == session.id else { return }
@@ -3209,6 +3352,7 @@ struct WorkoutView: View {
 	}
 
 	private func interruptRecorderForSensorLoss() {
+        guard initialWeight.source == .sensor else { return }
 		let monotonicTime = WorkoutClock.monotonicTime
 		guard sessionState.activeStartUptime != nil,
 			  countdownRemaining(at: monotonicTime) == 0,
@@ -3228,6 +3372,7 @@ struct WorkoutView: View {
 	}
 
 	private func interruptRecorderIfNeeded() {
+        guard initialWeight.source == .sensor else { return }
 		let monotonicTime = WorkoutClock.monotonicTime
 		let hasStartedActiveWork = sessionState.activeStartUptime != nil && countdownRemaining(at: monotonicTime) == 0
 		let hasElapsedWork = currentElapsed(at: monotonicTime) > 0
