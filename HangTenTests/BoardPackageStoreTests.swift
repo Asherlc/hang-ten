@@ -219,6 +219,52 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testModelLoadsAreSerializedAcrossDistinctBoards() async throws {
+        let loadCount = 4
+        var fixtures: [FixtureBundle] = []
+        defer { fixtures.forEach { $0.remove() } }
+        var stores: [BoardPackageStore] = []
+        for index in 0..<loadCount {
+            let fixture = try makeModelFixtureBundle(
+                modelSHA256Matches: true,
+                boardID: "fixture.concurrent-\(index)-\(UUID().uuidString.lowercased())"
+            )
+            fixtures.append(fixture)
+            stores.append(try BoardPackageStore(bundle: fixture.bundle))
+        }
+
+        let tracker = ModelLoadConcurrencyTracker()
+        let results = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
+            for store in stores {
+                group.addTask {
+                    guard let board = store.boards.first else { return false }
+                    let presentation = board.defaultPresentation
+                    return await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                        tracker.enter()
+                        Thread.sleep(forTimeInterval: 0.1)
+                        tracker.exit()
+                        return makeBoardModelFixtureScene()
+                    }) {
+                        await BoardModelLoader.load(
+                            board: board,
+                            presentation: presentation,
+                            store: store
+                        ) != nil
+                    }
+                }
+            }
+            var results: [Bool] = []
+            for await result in group {
+                results.append(result)
+            }
+            return results
+        }
+
+        XCTAssertEqual(results.filter { $0 }.count, loadCount, "every distinct board must load")
+        XCTAssertEqual(tracker.peak, 1, "model decodes must never overlap across boards")
+    }
+
+    @MainActor
     func testCancelledOnDemandAccessCancelsProgressAndEndsOnlyAfterLateSuccess() async throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
@@ -4791,5 +4837,36 @@ private final class TestBoardModelResourceRequest: BoardModelResourceRequesting 
 
     func endAccessingResources() {
         endAction()
+    }
+}
+
+private final class ModelLoadConcurrencyTracker: @unchecked Sendable {
+    private let lock = NSLock()
+    private var active = 0
+    private var peakActive = 0
+
+    func enter() {
+        lock.lock()
+        active += 1
+        peakActive = max(peakActive, active)
+        lock.unlock()
+    }
+
+    func exit() {
+        lock.lock()
+        active -= 1
+        lock.unlock()
+    }
+
+    var current: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return active
+    }
+
+    var peak: Int {
+        lock.lock()
+        defer { lock.unlock() }
+        return peakActive
     }
 }
