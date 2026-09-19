@@ -655,7 +655,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             let workSegments = plan.steps.flatMap(\.segments).filter { $0.kind == .work }
             XCTAssertFalse(workSegments.isEmpty, "Missing source work for \(plan.id).")
             XCTAssertTrue(
-                workSegments.contains { !$0.contactRequirements.isEmpty },
+                workSegments.allSatisfy { !$0.contactRequirements.isEmpty },
                 "Generic Metolius work must retain authored semantic requirements for \(plan.id)."
             )
 

@@ -1292,13 +1292,14 @@ enum WorkoutSegmentTarget: Codable, Hashable {
 
     /// Maps a legacy empty-array self-selected prescription or a non-empty
     /// requirement list. Empty arrays become `.selfSelected`; callers that
-    /// need a hard non-empty requirements value should use `requirements(_:)`.
+    /// need a hard non-empty requirements value should use `nonEmptyRequirements(_:)`.
     static func fromLegacyTargets(_ targets: [ContactRequirement]) -> WorkoutSegmentTarget {
         targets.isEmpty ? .selfSelected : .requirements(targets)
     }
 
     /// Non-empty requirements only. Returns nil when `requirements` is empty.
-    static func requirements(_ requirements: [ContactRequirement]) -> WorkoutSegmentTarget? {
+    /// Named distinctly from the `.requirements` enum case to avoid overload ambiguity.
+    static func nonEmptyRequirements(_ requirements: [ContactRequirement]) -> WorkoutSegmentTarget? {
         guard !requirements.isEmpty else { return nil }
         return .requirements(requirements)
     }
@@ -1331,7 +1332,7 @@ enum WorkoutSegmentTarget: Codable, Hashable {
         var stringValue: String
         init?(stringValue: String) { self.stringValue = stringValue }
         var intValue: Int? { nil }
-        init?(intValue: Int) { nil }
+        init?(intValue: Int) { return nil }
     }
 
     init(from decoder: Decoder) throws {

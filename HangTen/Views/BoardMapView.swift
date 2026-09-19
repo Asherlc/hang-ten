@@ -147,13 +147,15 @@ struct BoardMapPresentationSelection: Equatable {
             return activePosition.id
         }
         if activeHoldID == nil,
-           let highlightedHoldID = board.contacts.first(where: {
-               highlightedHoldIDs.contains($0.id)
-           })?.id,
-           let highlightedPosition = board.position(
-               presentationID: resolvedPresentationID,
-               containingContactID: highlightedHoldID
-           ) {
+           let highlightedPosition = board.contacts.lazy
+               .filter({ highlightedHoldIDs.contains($0.id) })
+               .compactMap({
+                   board.position(
+                       presentationID: resolvedPresentationID,
+                       containingContactID: $0.id
+                   )
+               })
+               .first {
             return highlightedPosition.id
         }
         guard activeHoldID == nil else { return nil }
