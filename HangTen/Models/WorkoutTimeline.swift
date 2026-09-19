@@ -317,17 +317,25 @@ enum WorkoutHoldCuePolicy {
                 fingerConfiguration: step.fingerConfiguration
             )
         }
-        guard requirements.count == 1,
-              let target = requirements.first,
-              let hold,
-              (try? ContactResolver.resolve(target, step: step, board: board))?
-                .contains(where: { $0.id == hold.id }) == true
-        else {
+        // Attach the highlighted hold only when it satisfies the single work
+        // requirement. Source grip/finger cues still show when the active board
+        // cannot resolve the requirement (board-agnostic soft-fall) or when no
+        // hold is highlighted yet (e.g. either-hand before selection).
+        if requirements.count == 1,
+           let target = requirements.first,
+           let hold,
+           (try? ContactResolver.resolve(target, step: step, board: board))?
+             .contains(where: { $0.id == hold.id }) == true {
+            return WorkoutHoldCue(
+                hold: hold,
+                gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration
+            )
+        }
+        if hold != nil {
             return nil
         }
-
         return WorkoutHoldCue(
-            hold: hold,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration
         )

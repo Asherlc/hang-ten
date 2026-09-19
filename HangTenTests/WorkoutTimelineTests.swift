@@ -1070,6 +1070,51 @@ final class WorkoutTimelineTests: XCTestCase {
         )
     }
 
+    func testHoldCueKeepsSourceBackedGripWhenRequirementDoesNotResolveOnBoard() {
+        let fingers = FingerConfiguration(
+            engagedFingers: [.index, .middle, .ring, .pinky]
+        )
+        let step = WorkoutStep(
+            id: "max-hang-cue",
+            number: 1,
+            title: "Max hang",
+            instruction: "Hang on a 20 mm edge.",
+            accessory: "7s",
+            duration: 7,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([
+                        .edge(depth: .range(.init(minimum: 20, maximum: 20)))
+                    ]),
+                    timing: .fixed,
+                    duration: 7
+                )
+            ],
+            gripType: .halfCrimp,
+            fingerConfiguration: fingers,
+            handUse: .either
+        )
+
+        let cue = WorkoutHoldCuePolicy.resolve(
+            step: step,
+            hold: nil,
+            on: board(containing: [
+                PhysicalContact(
+                    id: "edge-19",
+                    name: "19 mm",
+                    kind: .edge,
+                    depth: .range(.init(minimum: 19, maximum: 19))
+                )
+            ])
+        )
+
+        XCTAssertNil(cue?.hold)
+        XCTAssertEqual(cue?.gripType, .halfCrimp)
+        XCTAssertEqual(cue?.fingerConfiguration, fingers)
+    }
+
     func testSelfSelectedWorkKeepsItsSourceBackedGripCueWithoutInventingAContact() {
         let fingers = FingerConfiguration(
             engagedFingers: [.index, .middle, .ring, .pinky]
@@ -3424,8 +3469,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
             ["Round sloper pull-ups", "Medium-edge hang", "Minute 2 rest"]
         )
         XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
-        XCTAssertTrue(steps[0].workRequirements.isEmpty)
-        XCTAssertTrue(steps[1].workRequirements.isEmpty)
+        XCTAssertEqual(
+            steps[0].workRequirements,
+            [ContactRequirement(kind: .sloper, shape: .round)]
+        )
+        XCTAssertEqual(
+            steps[1].workRequirements,
+            [ContactRequirement.edge(depth: .category(.medium))]
+        )
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
@@ -3435,25 +3486,33 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         }
 
         XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
-        XCTAssertTrue(steps.prefix(2).allSatisfy { $0.workRequirements.isEmpty })
+        let offsetTargets = [
+            ContactRequirement.kind(.jug),
+            ContactRequirement.edge(depth: .category(.small))
+        ]
+        XCTAssertEqual(steps[0].workRequirements, offsetTargets)
+        XCTAssertEqual(steps[1].workRequirements, offsetTargets)
         XCTAssertTrue(steps[1].instruction.lowercased().contains("change hands"))
         XCTAssertTrue(steps[1].instruction.lowercased().contains("repeat"))
         XCTAssertEqual(steps[2].phase, .rest)
     }
 
-    func testMaxEffortMetoliusStepsUseStopwatchTiming() {
-        let step = PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }!
+    func testMaxEffortMetoliusStepsUseStopwatchTiming() throws {
+        let step = try XCTUnwrap(
+            PlanCatalog.metoliusEntry.steps.first { $0.title == "Maximum sloper hang" }
+        )
 
         XCTAssertEqual(step.duration, 60)
         XCTAssertEqual(step.timedWorkDuration, nil)
-        XCTAssertEqual(step.segments, [
-            WorkoutSegment(
-                kind: .work,
-                target: nil,
-                timing: .stopwatch,
-                duration: nil
-            )
-        ])
+        XCTAssertEqual(step.segments.count, 1)
+        let work = step.segments[0]
+        XCTAssertEqual(work.kind, .work)
+        XCTAssertEqual(work.timing, .stopwatch)
+        XCTAssertNil(work.duration)
+        guard case let .requirements(requirements)? = work.target else {
+            return XCTFail("Expected stopwatch work to keep round-sloper requirements")
+        }
+        XCTAssertEqual(requirements, [ContactRequirement(kind: .sloper, shape: .round)])
     }
 
     func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
@@ -3491,8 +3550,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
 
         let entryMinuteSix = entry.filter { $0.id.hasPrefix("entry.minute-6.") }
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
-        XCTAssertTrue(entryMinuteSix[0].workRequirements.isEmpty)
-        XCTAssertTrue(entryMinuteSix[1].workRequirements.isEmpty)
+        XCTAssertEqual(
+            entryMinuteSix[0].workRequirements,
+            [ContactRequirement(kind: .sloper, shape: .round)]
+        )
+        XCTAssertEqual(
+            entryMinuteSix[1].workRequirements,
+            [ContactRequirement.kind(.pocket)]
+        )
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }
         XCTAssertEqual(advancedMinuteEight.map(\.duration), [15, 15, 30])

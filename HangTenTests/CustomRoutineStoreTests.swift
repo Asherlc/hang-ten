@@ -64,11 +64,13 @@ final class CustomRoutineStoreTests: XCTestCase {
         let steps = try XCTUnwrap(routines[0]["steps"] as? [[String: Any]])
         let segments = try XCTUnwrap(steps[0]["segments"] as? [[String: Any]])
 
+        let target = try XCTUnwrap(segments[0]["target"] as? [String: Any])
+        XCTAssertEqual(target["kind"] as? String, "requirements")
         XCTAssertEqual(
-            segments[0]["targets"] as? [[String: String]],
+            target["requirements"] as? [[String: String]],
             [["kind": "edge", "selection": "single"]]
         )
-        XCTAssertNil(segments[0]["target"])
+        XCTAssertNil(segments[0]["targets"])
     }
 
     func testCustomRoutineLibraryRejectsFormerSchemaVersionField() {
@@ -182,6 +184,14 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            target: .fromLegacyTargets([.kind(.edge)]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
                     gripType: .halfCrimp,
                     activeDuration: 10
                 )
@@ -227,6 +237,14 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "10s",
                     duration: 10,
                     phase: .hang,
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            target: .fromLegacyTargets([.kind(.edge)]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ],
                     activeDuration: 10
                 )
             ]
@@ -431,7 +449,7 @@ final class CustomRoutineStoreTests: XCTestCase {
 
         let issues = CustomRoutineValidator.issues(for: definition, availableBoards: [jugOnlyBoard])
 
-        XCTAssertTrue(issues.contains(.unresolvableTargets(stepIndex: 0)))
+        XCTAssertTrue(issues.contains(.unresolvableSegmentTargets(stepIndex: 0, segmentIndex: 0)))
     }
 
     func testSaveRejectsRoutineWhoseImplicitNormalizedStepsEndInRest() throws {
@@ -454,6 +472,20 @@ final class CustomRoutineStoreTests: XCTestCase {
                     accessory: "8s hang · 4s rest",
                     duration: 12,
                     phase: .hang,
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            target: .fromLegacyTargets([.kind(.edge)]),
+                            timing: .fixed,
+                            duration: 8
+                        ),
+                        WorkoutSegmentDefinition(
+                            kind: .rest,
+                            target: nil,
+                            timing: .fixed,
+                            duration: 4
+                        )
+                    ],
                     activeDuration: 8
                 )
             ]
@@ -608,7 +640,7 @@ final class CustomRoutineStoreTests: XCTestCase {
             availableBoards: BoardCatalog.all
         )
 
-        XCTAssertTrue(issues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: nil)))
+        XCTAssertTrue(issues.contains(.targetModeMismatch(stepIndex: 0, segmentIndex: 0)))
     }
 
     func testStoreNormalizesOlderGenericExactContactIDsOnLoad() throws {
@@ -765,7 +797,16 @@ final class CustomRoutineStoreTests: XCTestCase {
                     instruction: "Hang with open timing.",
                     accessory: "Up to 20s",
                     duration: 20,
-                    phase: .hang),
+                    phase: .hang,
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .work,
+                            target: .fromLegacyTargets([.kind(.edge)]),
+                            timing: .undefined,
+                            duration: nil
+                        )
+                    ]
+                ),
                 WorkoutStepDefinition(
                     id: "stopwatch",
                     title: "Maximum hang",
@@ -920,7 +961,16 @@ final class CustomRoutineStoreTests: XCTestCase {
                     instruction: "Rest.",
                     accessory: "10s",
                     duration: 10,
-                    phase: .rest)
+                    phase: .rest,
+                    segments: [
+                        WorkoutSegmentDefinition(
+                            kind: .rest,
+                            target: .fromLegacyTargets([.kind(.edge)]),
+                            timing: .fixed,
+                            duration: 10
+                        )
+                    ]
+                )
             ]
         )
 
@@ -1038,14 +1088,27 @@ final class CustomRoutineStoreTests: XCTestCase {
         targets: [ContactRequirement],
         segments: [WorkoutSegmentDefinition] = []
     ) -> WorkoutStepDefinition {
-        WorkoutStepDefinition(
+        let resolvedSegments: [WorkoutSegmentDefinition]
+        if segments.isEmpty {
+            resolvedSegments = [
+                WorkoutSegmentDefinition(
+                    kind: .work,
+                    target: .fromLegacyTargets(targets),
+                    timing: .fixed,
+                    duration: 10
+                )
+            ]
+        } else {
+            resolvedSegments = segments
+        }
+        return WorkoutStepDefinition(
             id: "step-1",
             title: "Hang",
             instruction: "Hang.",
             accessory: "10s",
             duration: 10,
             phase: .hang,
-            segments: segments,
+            segments: resolvedSegments,
             activeDuration: 10
         )
     }

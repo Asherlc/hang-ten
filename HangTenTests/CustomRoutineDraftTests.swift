@@ -636,6 +636,14 @@ final class CustomRoutineDraftTests: XCTestCase {
                 accessory: "10s",
                 duration: 10,
                 phase: .hang,
+                segments: [
+                    WorkoutSegmentDefinition(
+                        kind: .work,
+                        target: .fromLegacyTargets([.kind(.jug)]),
+                        timing: .fixed,
+                        duration: 10
+                    )
+                ],
                 gripType: .openHand,
                 fingerConfiguration: FingerConfiguration(
                     engagedFingers: [.pinky]
