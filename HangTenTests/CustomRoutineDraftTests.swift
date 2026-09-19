@@ -1015,7 +1015,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         )]]
         return BoardRevision(
             id: "one-handed", revisionID: "test", manufacturer: "Fixture", name: "One-handed",
-            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            subtitle: "", dimensions: "", aspectRatio: 1, handCapacity: 1, contacts: contacts,
             productURL: URL(string: "https://example.com/one-handed")!, photoAssetName: nil,
             presentations: [BoardPresentation(
                 id: "front", name: "Front", aspectRatio: 1, isDefault: true,
