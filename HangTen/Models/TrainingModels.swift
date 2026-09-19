@@ -1379,6 +1379,25 @@ enum WorkoutSide: String, Codable, CaseIterable, Hashable {
     case both
 }
 
+/// Athlete start-of-session hand preference. Does not add `WorkoutHandUse` cases;
+/// it only drives materialization / alternate expansion before the session runs.
+enum WorkoutSessionHandPreference: Equatable {
+    case left
+    case right
+    case alternate
+    case both
+
+    /// Left/right map to a concrete side for gradual migration; alternate and both
+    /// require the dedicated session-step path instead.
+    var selectedHandSide: WorkoutSide? {
+        switch self {
+        case .left: return .left
+        case .right: return .right
+        case .alternate, .both: return nil
+        }
+    }
+}
+
 enum WorkoutAction: String, Codable, CaseIterable, Hashable {
     case hang
     case isometricPull
