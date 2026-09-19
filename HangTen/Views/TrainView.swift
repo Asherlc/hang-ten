@@ -434,7 +434,7 @@ private struct BoardPickerCard: View {
             ZStack(alignment: .topTrailing) {
                 Button(action: onSelect) {
                     VStack(alignment: .leading, spacing: 14) {
-                        BoardMapView(board: board)
+                        BoardMapView(board: board, isDisplayOnly: true)
                             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
 
                         HStack(alignment: .top, spacing: 12) {
