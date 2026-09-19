@@ -43,19 +43,16 @@ enum WorkoutStepFormatting {
 struct WorkoutStepPickerView: View {
     @Environment(\.dismiss) private var dismiss
 
-    let plan: TrainingPlan
+    /// Session-expanded steps (already preference-materialized / alternate-expanded).
+    let steps: [WorkoutStep]
     let currentStepID: WorkoutStep.ID
-    let selectedHandSide: WorkoutSide?
-    let boardIsOneHanded: Bool
     let onSelect: (WorkoutStep) -> Void
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 LazyVStack(spacing: 10) {
-                    ForEach(plan.steps.map {
-                        WorkoutLiveStepResolver.materialized($0, selectedHandSide: selectedHandSide, boardIsOneHanded: boardIsOneHanded)
-                    }) { step in
+                    ForEach(steps) { step in
                         stepRow(step)
                     }
                 }

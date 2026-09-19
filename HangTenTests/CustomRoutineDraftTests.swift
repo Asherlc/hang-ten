@@ -26,6 +26,24 @@ final class CustomRoutineDraftTests: XCTestCase {
         )
     }
 
+    func testDoubleHandPreviewOnOneHandedBoardResolvesBothModeSingleHold() {
+        let board = oneHandedBoard()
+        let step = CustomRoutineStepDraft(
+            id: "double", title: "Double", instruction: "", accessory: "", duration: 10,
+            phase: .hang,
+            targets: [ContactRequirement.kind(.jug, selection: .bilateralPair)],
+            timing: .fixed,
+            handUse: .double,
+            side: .both
+        )
+
+        XCTAssertEqual(
+            CustomRoutineBoardPreview.contactIDs(for: step, on: board),
+            Set(["jug"]),
+            "Both-mode single-hold materialization must preview the resolvable contact"
+        )
+    }
+
     func testEitherHandBoardPreviewKeepsAndRemovesItsResolvedAlternative() throws {
         let board = mirroredBoard()
         var step = CustomRoutineStepDraft(
