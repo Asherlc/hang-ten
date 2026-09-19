@@ -265,6 +265,97 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     @MainActor
+    func testCancelledQueuedModelLoadDoesNotJamOrLeakGate() async throws {
+        let heldFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.held-\(UUID().uuidString.lowercased())"
+        )
+        defer { heldFixture.remove() }
+        let queuedFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.queued-\(UUID().uuidString.lowercased())"
+        )
+        defer { queuedFixture.remove() }
+        let afterFixture = try makeModelFixtureBundle(
+            modelSHA256Matches: true,
+            boardID: "fixture.after-\(UUID().uuidString.lowercased())"
+        )
+        defer { afterFixture.remove() }
+
+        let heldStore = try BoardPackageStore(bundle: heldFixture.bundle)
+        let queuedStore = try BoardPackageStore(bundle: queuedFixture.bundle)
+        let afterStore = try BoardPackageStore(bundle: afterFixture.bundle)
+
+        let heldBoard = try XCTUnwrap(heldStore.boards.first)
+        let queuedBoard = try XCTUnwrap(queuedStore.boards.first)
+        let afterBoard = try XCTUnwrap(afterStore.boards.first)
+
+        let tracker = ModelLoadConcurrencyTracker()
+
+        // Held load owns the gate while its decode sleeps for half a second.
+        let held = Task { @MainActor in
+            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                tracker.enter()
+                Thread.sleep(forTimeInterval: 0.5)
+                tracker.exit()
+                return makeBoardModelFixtureScene()
+            }) {
+                await BoardModelLoader.load(
+                    board: heldBoard,
+                    presentation: heldBoard.defaultPresentation,
+                    store: heldStore
+                )
+            }
+        }
+        var waitIndex = 0
+        while tracker.current == 0, waitIndex < 100 {
+            waitIndex += 1
+            try await Task.sleep(for: .milliseconds(10))
+        }
+        XCTAssertGreaterThanOrEqual(
+            tracker.current,
+            1,
+            "held load must occupy the decode hook before the queued load is created"
+        )
+
+        // Queued behind held; cancelled before it is granted a slot. The hook is
+        // set so a buggy (non-serializing) gate would let it succeed -- making the
+        // nil assertion discriminate the gate rather than a junk-byte decode.
+        let queued = Task { @MainActor in
+            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                makeBoardModelFixtureScene()
+            }) {
+                await BoardModelLoader.load(
+                    board: queuedBoard,
+                    presentation: queuedBoard.defaultPresentation,
+                    store: queuedStore
+                )
+            }
+        }
+        try await Task.sleep(for: .milliseconds(50))
+        queued.cancel()
+
+        let queuedResult = await queued.value
+        let heldResult = await held.value
+
+        XCTAssertNotNil(heldResult, "held load must still complete")
+        XCTAssertNil(queuedResult, "cancelled queued load must return nil")
+
+        // The fixture logs are junk bytes, so the hook is required for a
+        // successful decode; it also keeps `after` independent of the gate timing.
+        let after = await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+            makeBoardModelFixtureScene()
+        }) {
+            await BoardModelLoader.load(
+                board: afterBoard,
+                presentation: afterBoard.defaultPresentation,
+                store: afterStore
+            )
+        }
+        XCTAssertNotNil(after, "gate must remain usable after a queued load is cancelled")
+    }
+
+    @MainActor
     func testCancelledOnDemandAccessCancelsProgressAndEndsOnlyAfterLateSuccess() async throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
         defer { fixture.remove() }
