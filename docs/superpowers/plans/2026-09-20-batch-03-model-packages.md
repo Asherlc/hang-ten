@@ -302,14 +302,16 @@ Give a fresh reviewer the Task 2 commit and the Appendix A table. The reviewer m
 
 **Interfaces:**
 
-- Consumes: schema-v1 source manifests whose existing `auditedModelSource` is always the accepted user-provided parent; optional `operatorAuthoredCorrection` is a closed, hash-bound derived source.
-- Produces: `compile_model_package(blend_path: Path, board_json_path: Path, output_directory: Path, *, asset_stem: str = "primary") -> ModelDescriptorV1`; `VerifiedSource(accepted_path: Path, compile_path: Path, source_geometry_changed: bool, correction_report_path: Path | None)`; `CorrectionReport(package_id: str, accepted_source_path: str, corrected_source_path: str, prohibited_automation_used: bool, candidate_generated_at: datetime)`; `load_closed_correction_report(path: Path) -> CorrectionReport`; `verify_source_manifest(manifest_path: Path, package_id: str, repository_root: Path, now: datetime | None) -> VerifiedSource`; `import_package(manifest_path: Path, mapping_path: Path, package_id: str, board_json: Path, output_directory: Path, *, asset_stem: str = "primary") -> Mapping[str, object]`; `verify_import_output(manifest_path: Path, mapping_path: Path, package_id: str, asset_stem: str, output_directory: Path, report_path: Path, repository_root: Path, expected_source_geometry_changed: bool, now: datetime | None) -> Mapping[str, object]`; import CLI `--asset-stem`; and ordinary-Python CLI `verify-import --manifest PATH --mapping PATH --package ID --asset-stem STEM --output-directory PATH --report PATH --repository-root PATH --expected-source-geometry-changed {true,false}`.
+- Consumes: schema-v1 source manifests bound to a requested `(packageID, presentationID)`, whose existing `auditedModelSource` is always the accepted user-provided parent; optional `operatorAuthoredCorrection` is a closed, hash-bound derived source. The low-level verifier requires `presentation_id` without a default; both public import paths supply their validated `asset_stem` as that expected identity.
+- Produces: `compile_model_package(blend_path: Path, board_json_path: Path, output_directory: Path, *, asset_stem: str = "primary") -> ModelDescriptorV1`; `VerifiedSource(package_id: str, presentation_id: str, accepted_path: Path, compile_path: Path, source_geometry_changed: bool, correction_report_path: Path | None)`; `CorrectionReport(package_id: str, presentation_id: str, accepted_source_path: str, corrected_source_path: str, prohibited_automation_used: bool, candidate_generated_at: datetime)`; `load_closed_correction_report(path: Path) -> CorrectionReport`; `verify_source_manifest(manifest_path: Path, package_id: str, presentation_id: str, repository_root: Path, now: datetime | None) -> VerifiedSource`; `import_package(manifest_path: Path, mapping_path: Path, package_id: str, board_json: Path, output_directory: Path, *, asset_stem: str = "primary") -> Mapping[str, object]`; `verify_import_output(manifest_path: Path, mapping_path: Path, package_id: str, asset_stem: str, output_directory: Path, report_path: Path, repository_root: Path, expected_source_geometry_changed: bool, now: datetime | None) -> Mapping[str, object]`; import CLI `--asset-stem`; and ordinary-Python CLI `verify-import --manifest PATH --mapping PATH --package ID --asset-stem STEM --output-directory PATH --report PATH --repository-root PATH --expected-source-geometry-changed {true,false}`.
 
 - [ ] **Step 1: Test named compiler assets first**
 
 Add tests that `asset_stem="depth-15mm"` yields exactly `assets/depth-15mm.usdz` and `assets/depth-15mm.model.json`, while an omitted stem yields `assets/primary.usdz` and `assets/primary.model.json`. Parameterize `""`, `"Primary"`, `"depth/15mm"`, `"."`, `"depth 15mm"`, and `"../escape"`; each must raise `ModelPackageError("asset_stem must match ^[a-z0-9]+(?:-[a-z0-9]+)*$")` before the mocked Blender runner is called. Update mocked expected staged-file sets to use the selected stem.
 
 - [ ] **Step 2: Test the correction chain first**
+
+Add top-level `presentationID` to the closed manifest schema. All eight Batch 03 manifests explicitly require it: `primary` for the five single-presentation sources and the matching `depth-18mm`, `depth-15mm`, or `depth-10mm` for Plateau. Every correction report and every generated import report also requires explicit `presentationID`, including `primary`; unknown, blank, null, malformed, or mismatched values fail. Retain backward compatibility only for an existing schema-v1 **uncorrected** manifest whose `presentationID` key is absent and whose caller explicitly requests `primary`: the loader normalizes that documented legacy primary form and the verifier still requires equality with the requested `primary`. A missing key never authorizes a named presentation or an operator correction. Never derive requested identity from a filename, a correction, declaration order, or the board's default. Public `asset_stem="primary"` defaults remain explicit primary requests; an explicit wrong value never takes the legacy path.
 
 Keep `auditedModelSource.provenanceType == "user-provided"`. Add an optional closed object with exactly:
 
@@ -327,6 +329,11 @@ The base fixture is intentionally unapproved. In the success test, a fake clock 
 
 | Mutation | Exact diagnostic |
 | --- | --- |
+| Manifest explicitly declares `depth-15mm` for requested `depth-18mm` | `model source manifest presentationID must equal depth-18mm` |
+| Manifest omits `presentationID` for a named presentation or any corrected source | `model source manifest presentationID is required` |
+| Manifest explicitly declares a non-primary identity for requested `primary` | `model source manifest presentationID must equal primary` |
+| Correction report omits `presentationID` | `correction report presentationID is required` |
+| Correction report declares `depth-15mm` for requested `depth-18mm` | `correction report presentationID must equal depth-18mm` |
 | Unknown `operatorAuthoredCorrection.extra` | `operatorAuthoredCorrection: unknown keys: extra` |
 | Missing `parentSHA256` | `operatorAuthoredCorrection: missing keys: parentSHA256` |
 | Parent hash differs from `auditedModelSource.sha256` | `operatorAuthoredCorrection.parentSHA256 must equal auditedModelSource.sha256` |
@@ -339,13 +346,14 @@ The base fixture is intentionally unapproved. In the success test, a fake clock 
 | `reviewedAt > now` | `operatorAuthoredCorrection.humanApproval.reviewedAt must not be in the future` |
 | Report `packageID`, `acceptedSourcePath`, or `correctedSourcePath` disagrees | `correction report FIELD does not match source manifest` |
 
-An uncorrected manifest returns the accepted GLB as both `accepted_path` and `compile_path`, `source_geometry_changed == false`, and `correction_report_path is None`.
+An uncorrected manifest returns the accepted GLB as both `accepted_path` and `compile_path`, `source_geometry_changed == false`, and `correction_report_path is None`; its `VerifiedSource.package_id` and `.presentation_id` must equal the caller's validated request. Test explicit `primary` and the narrowly allowed legacy primary form for identical outputs; a legacy key omission with requested `depth-18mm` must fail, as must omission on a corrected `primary` manifest.
 
 Add `verify_import_output` tests using valid uncorrected and corrected `fixture.board/primary` fixtures. The verifier must derive the expected descriptor bindings directly from every mapping object whose role is `body` or `contact`; attachment objects remain audit evidence but are not descriptor nodes. Mutate one field at a time and require these first diagnostics:
 
 | Mutation | Exact diagnostic |
 | --- | --- |
 | Manifest `packageID` differs from the CLI package | `model source manifest packageID must equal fixture.board` |
+| Manifest `presentationID` differs from CLI `--asset-stem primary` | `model source manifest presentationID must equal primary` |
 | Mapping `packageID` differs from the CLI package | `contact mapping packageID must equal fixture.board` |
 | Import report `packageID` differs | `import report packageID must equal fixture.board` |
 | Import report `presentationID` differs | `import report presentationID must equal primary` |
@@ -371,6 +379,8 @@ The corrected-fixture success case proves the accepted parent, retained correcti
 
 Include corrected fixtures for each of the three Plateau presentation IDs. The closed report parser must support Task 4's explicit presentation identity, render path/hash list, preserved node/material/contact inventory, and post-inspection verdict fields without allowing arbitrary unknown keys. Revalidate every retained review image and the approval's binding to that exact candidate. Tests must reject mismatched presentation identity or render hashes and missing review views; this verification does not determine whether geometry contains holes.
 
+For both `import_package(..., asset_stem="depth-18mm")` and `verify_import_output(..., asset_stem="depth-18mm", ...)`, supply the complete otherwise-valid `depth-15mm` manifest and correction chain: its accepted source, corrected `.blend`, correction audit, render files/hashes, and completed approval all remain internally consistent. Require the first diagnostic `model source manifest presentationID must equal depth-18mm`. Repeat for all six directed swaps between the three Plateau depths. Spy on the source scene opener and Blender runner: neither may be called, and no corrected geometry may be resolved/opened. Separately change only that valid 15 mm manifest's top-level `presentationID` to `depth-18mm`, retaining its accepted parent and complete 15 mm correction/report chain with valid hashes; require `correction report presentationID must equal depth-18mm` before corrected-path resolution. Keep matching outer identities and mutate each accepted-parent binding, compiled-source binding, retained review-image binding, or approval candidate binding in turn; the full chain must fail verification. Matching package IDs alone never satisfy these tests.
+
 - [ ] **Step 3: Run the model-tool tests and confirm red**
 
 Run: `rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardModels/test_contact_model_package.py Tools/HangboardModels/test_import_contact_model_source.py -q`
@@ -385,39 +395,63 @@ Validate stems with `^[a-z0-9]+(?:-[a-z0-9]+)*$`. Implement the verification flo
 def verify_source_manifest(
     manifest_path: Path,
     package_id: str,
+    presentation_id: str,
     repository_root: Path,
     now: datetime | None,
 ) -> VerifiedSource:
-    manifest = load_closed_manifest(manifest_path)
+    validate_presentation_identifier(presentation_id)
+    manifest = load_closed_manifest(
+        manifest_path,
+        allow_legacy_uncorrected_primary=(presentation_id == "primary"),
+    )
     if manifest.package_id != package_id:
         raise SourceManifestError(f"model source manifest packageID must equal {package_id}")
+    if manifest.presentation_id != presentation_id:
+        raise SourceManifestError(
+            f"model source manifest presentationID must equal {presentation_id}"
+        )
     accepted = verify_regular_hash_bound_path(repository_root, manifest.audited_model_source)
     if manifest.operator_authored_correction is None:
-        return VerifiedSource(accepted, accepted, False, None)
+        return VerifiedSource(package_id, presentation_id, accepted, accepted, False, None)
     correction = manifest.operator_authored_correction
     require_equal(correction.parent_sha256, manifest.audited_model_source.sha256)
-    compiled = verify_regular_hash_bound_path(repository_root, correction.retained_source)
     report_path = verify_regular_hash_bound_path(repository_root, correction.correction_audit)
     correction_report = load_closed_correction_report(report_path)
-    validate_correction_report(correction_report, manifest, accepted, compiled)
+    if correction_report.presentation_id != presentation_id:
+        raise SourceManifestError(
+            f"correction report presentationID must equal {presentation_id}"
+        )
+    validate_correction_report_identity(
+        correction_report, manifest, package_id, presentation_id,
+    )
+    compiled = verify_regular_hash_bound_path(repository_root, correction.retained_source)
+    validate_correction_report(
+        correction_report, manifest, accepted, compiled, presentation_id=presentation_id,
+    )
+    verify_review_images_and_candidate_binding(
+        correction_report, correction.human_approval, repository_root,
+        package_id=package_id, presentation_id=presentation_id,
+    )
     validation_now = datetime.now(timezone.utc) if now is None else now
     validate_completed_utc_approval(
         correction.human_approval,
         candidate_generated_at=correction_report.candidate_generated_at,
         now=validation_now,
     )
-    return VerifiedSource(accepted, compiled, True, report_path)
+    return VerifiedSource(package_id, presentation_id, accepted, compiled, True, report_path)
 ```
 
-Have the importer call `verify_source_manifest(manifest_path, package_id, Path.cwd(), None)`, open only `VerifiedSource.compile_path`, and never mutate the accepted or corrected source. Add exact report fields `presentationID`, `assetPath`, `descriptorPath`, `acceptedSourceModelPath`, `acceptedSourceModelSHA256`, `compiledSourcePath`, `compiledSourceSHA256`, `sourceGeometryChanged`, nullable `correctionAuditPath`, and ordered `logicalContactIDs`; preserve existing model/descriptor/bounds/node/contact/mapping fields. `import_package` passes its `asset_stem` argument to `compile_model_package` and uses it for both output paths and the report's presentation ID.
+`load_closed_manifest` applies the Step 2 legacy rule only for a missing key on an uncorrected schema-v1 manifest; otherwise `presentationID` is required and validated. `load_closed_correction_report` always requires it. `validate_correction_report_identity` checks the report's package/presentation and accepted/corrected source path/hash declarations against the manifest before corrected geometry resolution. The later artifact checks recompute those hashes, verify all retained review images, and require approval of that exact package/presentation/candidate source/render set. The approved report hash binds those records together. All checks complete before opening a source scene or invoking the compiler; a mismatch is not deferred to package promotion or an offline aggregate test.
 
-Implement `verify_import_output` as a non-Blender path in the same script. It first calls `verify_source_manifest(manifest_path, package_id, repository_root, now)`. It loads the closed mapping and import report; requires their package/presentation/source fields to equal the CLI request and `VerifiedSource`; derives `assets/{asset_stem}.usdz` and `assets/{asset_stem}.model.json`; resolves those beneath `output_directory` without symlinks; hashes each once; and compares those hashes with the report plus the descriptor's `modelSHA256`. Build expected descriptor nodes by sorting mapping objects with role `body` or `contact` by `sourceNodeID` and projecting them to `{nodeID,role}` plus `contactID` for contacts. Require byte-for-byte equality with descriptor `nodes`, exact equality between report `contactMappings` and the mapping's contact projection, exact ordered equality between report `logicalContactIDs` and mapping `logicalContactIDs`, and descriptor contact keys equal to the same set. Return the verified paths/hashes mapping and print `PASS {package_id}/{asset_stem} verified import output`. Parse `true`/`false` explicitly for `--expected-source-geometry-changed`; dispatch `verify-import` before importing `bpy`, while the existing no-subcommand Blender invocation remains backward compatible.
+Have `import_package` validate `asset_stem`, then call `verify_source_manifest(manifest_path, package_id, asset_stem, Path.cwd(), None)` before source-scene opening or any Blender runner call. Require the returned `(package_id,presentation_id)` to equal the request, open only `VerifiedSource.compile_path`, and never mutate the accepted or corrected source. Add exact report fields `presentationID`, `assetPath`, `descriptorPath`, `acceptedSourceModelPath`, `acceptedSourceModelSHA256`, `compiledSourcePath`, `compiledSourceSHA256`, `sourceGeometryChanged`, nullable `correctionAuditPath`, and ordered `logicalContactIDs`; preserve existing model/descriptor/bounds/node/contact/mapping fields. The import CLI passes `--asset-stem` directly into `import_package`; that same validated stem goes to `compile_model_package`, both output paths, and the report's verified presentation ID. Never let the manifest select or overwrite the requested stem.
+
+Implement `verify_import_output` as a non-Blender path in the same script. It first calls `verify_source_manifest(manifest_path, package_id, asset_stem, repository_root, now)`. It loads the closed mapping and import report; requires their package/presentation/source fields to equal the CLI request and `VerifiedSource`; derives `assets/{asset_stem}.usdz` and `assets/{asset_stem}.model.json`; resolves those beneath `output_directory` without symlinks; hashes each once; and compares those hashes with the report plus the descriptor's `modelSHA256`. Build expected descriptor nodes by sorting mapping objects with role `body` or `contact` by `sourceNodeID` and projecting them to `{nodeID,role}` plus `contactID` for contacts. Require byte-for-byte equality with descriptor `nodes`, exact equality between report `contactMappings` and the mapping's contact projection, exact ordered equality between report `logicalContactIDs` and mapping `logicalContactIDs`, and descriptor contact keys equal to the same set. Return the verified paths/hashes mapping and print `PASS {package_id}/{asset_stem} verified import output`. Parse `true`/`false` explicitly for `--expected-source-geometry-changed`; dispatch `verify-import` before importing `bpy`, while the existing no-subcommand Blender invocation remains backward compatible.
 
 - [ ] **Step 5: Run focused tests and a default-primary regression**
 
 Run: `rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardModels/test_contact_model_package.py Tools/HangboardModels/test_import_contact_model_source.py Tools/HangboardModels/test_contact_model_descriptor.py -q`
 
-Expected: PASS; old callers still produce `primary.*`.
+Expected: PASS; old callers still produce `primary.*` from explicitly validated primary identity, including the narrowly allowed legacy uncorrected manifest form. All six full Plateau-chain swaps and report-only cross-presentation swaps fail before source-scene opening or Blender runner invocation in both entrypoints.
 
 - [ ] **Step 6: Commit, push, and review importer support**
 
@@ -466,7 +500,7 @@ ACCEPTED_SOURCES = {
 }
 ```
 
-`test_retained_sources` requires exactly those eight destination filenames and hashes. `test_accepted_parent_manifests` requires closed base keys `schemaVersion`, `packageID`, `manufacturerPhysicalAuthority`, `historicalSource`, `auditedModelSource`, and `supersessionRuling`, allowing only Task 3's closed `operatorAuthoredCorrection` extension; `auditedModelSource` has exactly `provenanceType`, `authorization`, `retainedPath`, and `sha256`, with `provenanceType: user-provided`. Before retention, both tests fail with `missing retained Batch 03 source: aelith-cyclops-011.glb`. The separate Plateau correction test must fail until all three chains and post-inspection approvals exist; accepted-parent validation alone never authorizes Plateau export.
+`test_retained_sources` requires exactly those eight destination filenames and hashes. `test_accepted_parent_manifests` requires closed base keys `schemaVersion`, `packageID`, `presentationID`, `manufacturerPhysicalAuthority`, `historicalSource`, `auditedModelSource`, and `supersessionRuling`, allowing only Task 3's closed `operatorAuthoredCorrection` extension; `auditedModelSource` has exactly `provenanceType`, `authorization`, `retainedPath`, and `sha256`, with `provenanceType: user-provided`. Require explicit `primary` for the five single-presentation manifests and the matching depth identity for each Plateau manifest; none of these new manifests may use the legacy omission rule. Before retention, both tests fail with `missing retained Batch 03 source: aelith-cyclops-011.glb`. The separate Plateau correction test must fail until all three chains and post-inspection approvals exist; accepted-parent validation alone never authorizes Plateau export.
 
 - [ ] **Step 2: Hash all eight exact absolute paths before any copy**
 
@@ -523,7 +557,7 @@ Run `test_retained_sources`; expected: eight paths, eight unique SHA-256 values,
 
 - [ ] **Step 4: Author eight accepted-parent manifests and six node/contact mappings**
 
-For every manifest, use its final package ID, exact Task 2 manufacturer publisher/evidence packet, `historicalSource: {"status":"missing"}`, the corresponding retained path/hash, and a supersession ruling naming the exact revision. Do not add `operatorAuthoredCorrection` to Port or Oak yet.
+For every manifest, use its final package ID, explicit `presentationID` (`primary` or its exact Plateau depth), exact Task 2 manufacturer publisher/evidence packet, `historicalSource: {"status":"missing"}`, the corresponding retained path/hash, and a supersession ruling naming the exact revision. Correction reports added here and in Tasks 5/6 must repeat the same presentation identity. Do not add `operatorAuthoredCorrection` to Port or Oak yet.
 
 Use this complete mapping table; `B` means `{"role":"body"}`, `C:id` means `{"role":"contact","contactID":"id"}`, and each attachment row also has `selectable:false`, the shown order/source position, and evidence-ref metadata. `logicalContactIDs` is the listed ordered array.
 
@@ -548,7 +582,7 @@ Require these exact pairs; each key also names its own manifest, `.blend`, corre
 | `plateau-lifting-edge-depth-15mm` | `plateau-lifting-edge-15mm.glb` |
 | `plateau-lifting-edge-depth-10mm` | `plateau-lifting-edge-10mm.glb` |
 
-Parameterize every mutation over all three keys. Missing `operatorAuthoredCorrection` fails `KEY: Plateau correction is required`; reusing another presentation's parent, corrected path/hash, audit, render pair, or approval fails `KEY: Plateau correction identity mismatch`, even when that other chain is internally valid. Missing or mismatched source/audit/render bytes, absent/false approval, approval predating `candidateGeneratedAt` or after the validation clock, and `prohibitedAutomationUsed:true` must fail the existing Task 3 chain or the closed Plateau report validator. A false import/report flag fails `sourceGeometryChanged must equal true`. Assert all three `.blend` paths are distinct and each hash matches its own retained bytes; merely counting three corrections is insufficient.
+Parameterize every mutation over all three keys. Missing `operatorAuthoredCorrection` fails `KEY: Plateau correction is required`. First call Task 3's `verify_source_manifest` with the expected package and presentation from the row, never from the supplied manifest: a whole manifest/chain swap fails `model source manifest presentationID must equal EXPECTED_DEPTH`; a correction report swap fails `correction report presentationID must equal EXPECTED_DEPTH`. After these identity checks, reusing another presentation's parent, corrected path/hash, audit, render pair, or approval fails `KEY: Plateau correction identity mismatch`, even when that other chain is internally valid. Missing or mismatched source/audit/render bytes, absent/false approval, approval predating `candidateGeneratedAt` or after the validation clock, and `prohibitedAutomationUsed:true` must fail the existing Task 3 chain or the closed Plateau report validator. A false import/report flag fails `sourceGeometryChanged must equal true`. Assert all three `.blend` paths are distinct and each hash matches its own retained bytes; merely counting three corrections is insufficient.
 
 Use the closed correction report extension to bind `presentationID`, `sourceGeometryChanged:true`, the exact normal/rear-oblique paths and SHA-256 values, the preserved Step 4 node/contact inventory, and an explicit human verdict on removed/capped screw/mounting holes and preserved lower cord exits. Record each accepted source's exact per-node material identities and assignments before editing, preserve them in the corrected source, and bind both inventories in the audit for exact comparison. Hash-bind that report via `correctionAuditSHA256`. Tests validate this artifact/approval contract and exact inventories; they must not analyze pixels, infer topology, detect holes automatically, or treat node names as a proxy for absence of holes.
 
@@ -815,7 +849,7 @@ lower side: [-0.7071067811865475,0,0,0.7071067811865476]
 
 Apply the seeds exactly as follows: front 22° to Aelith `front-cup`, NUG `front-25`, Port `front-upright`, Oak `front-upright`, and KARMA8A `granite-front`; front inverted to NUG `front-inverted-20`, Port `front-inverted`, Oak `wood-inverted`, and KARMA8A `wood-inverted`; reverse 22° to NUG `reverse-13` and Port `reverse-upright`; reverse inverted to NUG `reverse-inverted-8` and Port `reverse-inverted`; upper side to both `outer-upper` positions; lower side to NUG `outer-lower`. For Port and the two Nature `pinch-side` positions, start from a side-on view, manually adjust the quaternion until the approved complete corrected contact and both cord exits are visible, normalize it, record its four exact numeric components in the import report and package, and require byte-for-byte equality between them. Do not reuse a bottom-band or upper-only batch pose. Record any manually chosen pose-specific exterior `cordContactPoints` as exact triples with `displayEstimate` provenance, then run `validate_suspension_candidate` and the human visibility gate.
 
-Each package task calls `import_package(manifest_path, mapping_path, package_id, board_json, output_directory, asset_stem="primary")` once with a new nonexistent owner-named output directory. It asserts `assetPath == "assets/primary.usdz"`, `descriptorPath == "assets/primary.model.json"`, and the package-specific `sourceGeometryChanged` value before promoting those two files. Never export over a retained source; remove that package's raster files only after model/descriptor hashes agree.
+Each package task calls `import_package(manifest_path, mapping_path, package_id, board_json, output_directory, asset_stem="primary")` once with a new nonexistent owner-named output directory. That explicit stem supplies `presentation_id="primary"` to source verification; require the manifest and any correction report to declare `primary` and the returned `VerifiedSource.presentation_id` to match. It asserts `assetPath == "assets/primary.usdz"`, `descriptorPath == "assets/primary.model.json"`, and the package-specific `sourceGeometryChanged` value before promoting those two files. Never export over a retained source; remove that package's raster files only after model/descriptor hashes agree.
 
 ## Task 8: Build the Aelith Cyclops #011 model-only package
 
@@ -1174,7 +1208,7 @@ Write one contact `edge-18` with exact base range 18 and the three positions/eff
 
 - [ ] **Step 5: Import all three approved corrected sources independently**
 
-Revalidate all three Task 4 correction/approval chains before the first import. The manifests retain their immutable accepted GLB parents but resolve `compile_path` to their own corrected `.blend`; no accepted GLB may be used as the compiled Plateau source. Run each exact import and its ordinary-Python verification gate in order:
+Revalidate all three Task 4 correction/approval chains before the first import. For each command below, the literal CLI `--asset-stem depth-18mm`, `depth-15mm`, or `depth-10mm` is the requested presentation passed by both `import_package` and `verify_import_output` to `verify_source_manifest`; require the manifest, correction report, and returned `VerifiedSource` to match that exact depth before corrected geometry resolution/opening. The manifests retain their immutable accepted GLB parents but resolve `compile_path` to their own corrected `.blend`; no accepted GLB may be used as the compiled Plateau source. A full chain swap must fail Task 3's precise presentation mismatch diagnostic even if it retains the same package ID and valid hashes. Run each exact import and its ordinary-Python verification gate in order:
 
 ```bash
 rtk proxy blender --background --python Tools/HangboardModels/import_contact_model_source.py -- --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-18mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-18mm.contact-map.json --package plateau.lifting-edge --board-json Hangboards/plateau-lifting-edge/board.json --asset-stem depth-18mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-18 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-18mm.json
