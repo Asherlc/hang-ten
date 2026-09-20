@@ -2220,11 +2220,7 @@ struct WorkoutView: View {
 				routineStartedAt: sessionState.routineStartedAt
 			) {
 				didAutoStart = true
-				if planNeedsHandChoice {
-					showsHandSidePicker = true
-				} else {
-					toggleRunning()
-				}
+				toggleRunning()
 			}
 			initializeStopwatches()
 		}
