@@ -1,0 +1,338 @@
+{
+  "model": "Trango Rock Prodigy Natural",
+  "revision": "Rock Prodigy Natural, 2021 quick-start revision, beech two-piece",
+  "featureMapping": [
+    {
+      "holdId": "left-jug",
+      "nodeName": "hold--left-jug",
+      "description": "Continuous top jug (manual nominal 40 mm)",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1487,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail-upper",
+      "nodeName": "hold--left-rail-upper",
+      "description": "Upper variable rail, outside 20 to inside 33",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        20,
+        33
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1476,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail-lower",
+      "nodeName": "hold--left-rail-lower",
+      "description": "Lower variable rail, outside 10 to inside 24",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        10,
+        24
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1494,
+      "selectable": true
+    },
+    {
+      "holdId": "left-closed-crimp",
+      "nodeName": "hold--left-closed-crimp",
+      "description": "Open-ended crimp channel and thumb shoulder",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 31310,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-3finger",
+      "nodeName": "hold--left-pocket-3finger",
+      "description": "Deep three-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 38,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-2finger",
+      "nodeName": "hold--left-pocket-2finger",
+      "description": "Lower two-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 29,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 540,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-supported",
+      "nodeName": "hold--left-pocket-supported",
+      "description": "Supported pocket, outside36 to inside26",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        36,
+        26
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 684,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-thumb",
+      "nodeName": "hold--left-pinch-thumb",
+      "description": "Bottom thumb opposition shared by medium and wide pinches",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 472,
+      "selectable": true
+    },
+    {
+      "holdId": "right-jug",
+      "nodeName": "hold--right-jug",
+      "description": "Continuous top jug (manual nominal 40 mm)",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1487,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail-upper",
+      "nodeName": "hold--right-rail-upper",
+      "description": "Upper variable rail, outside 20 to inside 33",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        20,
+        33
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1476,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail-lower",
+      "nodeName": "hold--right-rail-lower",
+      "description": "Lower variable rail, outside 10 to inside 24",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        10,
+        24
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1494,
+      "selectable": true
+    },
+    {
+      "holdId": "right-closed-crimp",
+      "nodeName": "hold--right-closed-crimp",
+      "description": "Open-ended crimp channel and thumb shoulder",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 31312,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-3finger",
+      "nodeName": "hold--right-pocket-3finger",
+      "description": "Deep three-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 38,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-2finger",
+      "nodeName": "hold--right-pocket-2finger",
+      "description": "Lower two-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 29,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 540,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-supported",
+      "nodeName": "hold--right-pocket-supported",
+      "description": "Supported pocket, outside36 to inside26",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        36,
+        26
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 684,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-thumb",
+      "nodeName": "hold--right-pinch-thumb",
+      "description": "Bottom thumb opposition shared by medium and wide pinches",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 472,
+      "selectable": true
+    }
+  ],
+  "sourceRegister": [
+    {
+      "id": "N1",
+      "url": "https://trango.com/products/rock-prodigy-natural",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Each half 7.5 x 6 x 1.5 inches; FSC beech; adjustable removable cleat mount; product page says 10 mm crimp.",
+      "doesNotEstablish": "Crimp conflicts with precise manual; no hidden back detail.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N2",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "PDF pages 3,4,6,7 diagrams inspected",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Page 6 dimensions and page 7 physical grip map; 7.5 crimp; rails 20-33 and 10-24 outside-to-inside; pockets 38,29,36-26; jug40.",
+      "doesNotEstablish": "40 jug vs 38.1 nominal body thickness uses different measuring convention or rounding; not resolved.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N3",
+      "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage2_Rails.jpg?v=1724692982&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Oblique routed rail and crimp shoulder.",
+      "doesNotEstablish": "No exact radii.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N4",
+      "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage1_Pockets.jpg?v=1724692982&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Bottom supported recess, deep pocket and open-ended crimp channel.",
+      "doesNotEstablish": "No measured rear construction.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ],
+  "conflicts": [
+    {
+      "issue": "Product page 10 mm crimp vs manual 7.5 mm",
+      "ruling": "Use the exact 2021 numbered grip guide value of 7.5 mm for the modeled crimp. Retain 10 mm as conflicting page copy."
+    },
+    {
+      "issue": "Generic manual wording mentions rotations",
+      "ruling": "Mounting and all grip diagrams establish the fixed front pose; sliding/removal is not evidence of additional canonical training rotations."
+    },
+    {
+      "issue": "40 mm jug vs 38.1 mm nominal thickness",
+      "ruling": "Retain both facts; use nominal body dimensions, and do not enlarge the board or claim a 40 mm calibrated jug surface."
+    }
+  ],
+  "limitations": [
+    "Manual jug 40 mm and nominal thickness 38.1 mm cannot both be treated as identical section measurements; model keeps the published 38.1 mm body.",
+    "Rear cleat mating details not measured. Front crimp and thumb shoulder curvature estimated."
+  ],
+  "sourceBinaryRetention": "Original image/PDF bytes could not be downloaded. This file contains authored observations and metadata, not substitutes for originals.",
+  "assetSha256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90"
+}

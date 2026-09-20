@@ -1,0 +1,15 @@
+{
+  "assetFile": "trango-rock-prodigy-natural.glb",
+  "assetSha256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90",
+  "reviewedAtUTC": "2026-09-20T18:32:40.812999+00:00",
+  "scope": "Visual inspection of the five final genuine GLB render panels in this conversation, separate from structural and evidence tests.",
+  "notes": "Reviewed five final views. Separate halves and all 16 contacts remain; variable rails and real pockets are visible. No large planar shading artifacts or detached selection shells. Thumb/crimp contours and rear interface retain the documented simplification limits.",
+  "renderHashes": {
+    "renders/01-front.png": "b4cceb7e9d092821c850877bcc45a817d7a7205a95417117230715817337f31c",
+    "renders/02-reverse.png": "19ab30a1075c8ac916aa9b36f0805f2533318157eac47f24b62717928067f021",
+    "renders/03-oblique.png": "d47962e493192922cdbc1feedad62560f04edc7ba651f1da448822ad9b814ed5",
+    "renders/04-contact-detail.png": "0cfe361381a5915dca1745e44cc4fd9f6879fa2b4c8870a68eb50d63095bb913",
+    "renders/05-material-closeup.png": "86ec4c0034501c74e0f273bdc0665f288747dc45ff44a54ecb7217899a9bdcd7"
+  },
+  "manufacturerAccuracyCertified": false
+}

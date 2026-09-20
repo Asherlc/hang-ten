@@ -1,0 +1,58 @@
+{
+  "attemptResult": "BLOCKED: container network/DNS unavailable and download bridge failed on viewed originals",
+  "originalFilesRetained": 0,
+  "sources": [
+    {
+      "id": "D1",
+      "url": "https://frictitiousclimbing.com/products/doormount-pro",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Pro 7 variant identity; 25.5 x 4.5 x 2.25 inches; poplar; depths 35/25/20/15/10 mm; pocket and jug; doorway clamp.",
+      "doesNotEstablish": "Pocket depth, routing radii, and board-only rear mounting machining are not dimensioned.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "D2",
+      "url": "https://cdn.instant.so/sites/bok0avMvQiSRIEaF/assets/akfH3QAsM57AjzC5/pro7.jpg?width=3840",
+      "publisher": "Frictitious embedded image",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Unobstructed Pro 7 face, shared lower stepped cavities, deep subpockets, center channel and oval mounting opening.",
+      "doesNotEstablish": "No precise section or hidden routing; perspective and lighting affect depth judgments.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "D3",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Current Pro 7 front and external clamp association.",
+      "doesNotEstablish": "Clamp obscures center; not proof of Pro 5 geometry.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "D4",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-Rubber-back.jpg?v=1779384119&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Lower pictured board is Pro 7; rear pads and rolled upper edge.",
+      "doesNotEstablish": "Top board is Pro 5, excluded. Pad/clamp details are external mounting components.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "renderer": "PyMuPDF 1.28.2",
+  "purpose": "Review-only full PDF pages. Originals unchanged; no crops or geometry extraction.",
+  "renders": [
+    {
+      "path": "review-renders/F2-page-01.png",
+      "sha256": "b363661ff2a4b424e1da77166cdb4f191c92ea70ba70bbd5a20c48e7d3135c4f",
+      "sourcePath": "originals/F2.pdf",
+      "sourceSHA256": "1603ceaf2f4bedbf2698235eea075b90a78c8115020f23248e1a8bf0466ddf5b",
+      "pageNumber": 1,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/F3-page-01.png",
+      "sha256": "a7831b4a2b7596162a4942ad00303c33753ce7ed8ef0cd28de22b44c8fbd5d76",
+      "sourcePath": "originals/F3.pdf",
+      "sourceSHA256": "9d56bd2fa27908a2a96ded090f3cacf0278e4be0ea659191eea7c582ae6efff3",
+      "pageNumber": 1,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/F4-page-03.png",
+      "sha256": "589fbbaebffa739b301add26b15af17fd068c6de9476f708532713b39c58adfe",
+      "sourcePath": "originals/F4.pdf",
+      "sourceSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+      "pageNumber": 3,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/F4-page-04.png",
+      "sha256": "6274b0123278d4814b8869a9d96ed3ebaadacb6bc1c233bcc67f02fabb8827f1",
+      "sourcePath": "originals/F4.pdf",
+      "sourceSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+      "pageNumber": 4,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/F4-page-05.png",
+      "sha256": "7501004977d1cd830f4475a7b44fdce4ba759683bd3cad6051cdf23330027a5f",
+      "sourcePath": "originals/F4.pdf",
+      "sourceSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+      "pageNumber": 5,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/F4-page-06.png",
+      "sha256": "5e4365fc387330f130189686b6705e70971a5861e2f69b3db7fe962d73897890",
+      "sourcePath": "originals/F4.pdf",
+      "sourceSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+      "pageNumber": 6,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-03.png",
+      "sha256": "cc3bdbb18cc2e296a7f00eb67165881f4287831370fc827384a01a6569bb74ea",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 3,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-04.png",
+      "sha256": "d3a8e30d926da522beb76fbcad7e80e6f61f79f8fafcd59e05b35fd08e6b1407",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 4,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-05.png",
+      "sha256": "58c030e610d3b8bbf0786e4f774510592003a69a4f26058349b684c862e6e8d6",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 5,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-06.png",
+      "sha256": "6b0fa94c0e5f9fcffec22f88a8173c4c8a1680c4638a039a77f9db6a3b3b3a31",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 6,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-07.png",
+      "sha256": "5c41ff544f1f9e3547183017e6cee1142a0f217ed0ddd90ae606574e726f48db",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 7,
+      "dpi": 120,
+      "fullPage": true
+    },
+    {
+      "path": "review-renders/N2-page-12.png",
+      "sha256": "a0b0e6d7918d31688fe8a6c8960bf6ffbe9b6868c6e9561128982ec0d304e491",
+      "sourcePath": "originals/N2.pdf",
+      "sourceSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+      "pageNumber": 12,
+      "dpi": 120,
+      "fullPage": true
+    }
+  ]
+}

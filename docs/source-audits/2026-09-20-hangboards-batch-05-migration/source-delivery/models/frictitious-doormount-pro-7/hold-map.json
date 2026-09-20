@@ -1,0 +1,269 @@
+{
+  "schemaVersion": 1,
+  "assetFile": "frictitious-doormount-pro-7.glb",
+  "assetSha256": "8b639807ff660566dca2fd313f00abfadaae0bfbaf0c28ecbc82477f2732113f",
+  "coordinateSystem": {
+    "sourceUnits": "metres",
+    "sourceAxes": {
+      "right": [
+        1,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        1
+      ],
+      "physicalFrontFacingDirection": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "canonicalCamera": {
+      "lookingDirection": [
+        0,
+        1,
+        0
+      ],
+      "upDirection": [
+        0,
+        0,
+        1
+      ]
+    },
+    "origin": "Center of the authored board/pair in X; body datum Z=0; rear mounting plane Y=0. Pair gap is an authored display spacing, not a training prescription.",
+    "exportConversion": {
+      "node": "SOURCE-ZUP_to_GLTF-YUP",
+      "rotationQuaternionXYZW": [
+        -0.7071067811865476,
+        0,
+        0,
+        0.7071067811865476
+      ],
+      "matrixRowMajor": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "glTFUp": [
+        0,
+        1,
+        0
+      ],
+      "glTFPhysicalFront": [
+        0,
+        0,
+        1
+      ],
+      "glTFCameraLookingDirection": [
+        0,
+        0,
+        -1
+      ]
+    }
+  },
+  "holdCount": 13,
+  "holds": [
+    {
+      "holdId": "jug",
+      "nodeName": "hold--jug",
+      "description": "One uninterrupted full-width top jug",
+      "evidenceReferences": [
+        "D1",
+        "D3",
+        "D4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 3981,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-35",
+      "nodeName": "hold--left-edge-35",
+      "description": "Outer upper 35 mm edge",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 35,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 954,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-25",
+      "nodeName": "hold--left-edge-25",
+      "description": "Upper 25 mm terrace excluding nested pocket",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1386,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-2finger",
+      "nodeName": "hold--left-pocket-2finger",
+      "description": "Deeper two-finger region continuous with the upper cavity",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 40,
+      "triangleCount": 504,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-20",
+      "nodeName": "hold--left-edge-20",
+      "description": "20 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-15",
+      "nodeName": "hold--left-edge-15",
+      "description": "15 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 594,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-10",
+      "nodeName": "hold--left-edge-10",
+      "description": "10 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 10,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-35",
+      "nodeName": "hold--right-edge-35",
+      "description": "Outer upper 35 mm edge",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 35,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 954,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-25",
+      "nodeName": "hold--right-edge-25",
+      "description": "Upper 25 mm terrace excluding nested pocket",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1386,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-2finger",
+      "nodeName": "hold--right-pocket-2finger",
+      "description": "Deeper two-finger region continuous with the upper cavity",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 40,
+      "triangleCount": 504,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-20",
+      "nodeName": "hold--right-edge-20",
+      "description": "20 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-15",
+      "nodeName": "hold--right-edge-15",
+      "description": "15 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 594,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-10",
+      "nodeName": "hold--right-edge-10",
+      "description": "10 mm lower terrace in shared opening",
+      "evidenceReferences": [
+        "D1",
+        "D2"
+      ],
+      "depthMm": 10,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    }
+  ],
+  "bodies": [
+    {
+      "nodeName": "body--board",
+      "selectable": false
+    }
+  ]
+}

@@ -1,0 +1,187 @@
+{
+  "assetFile": "zlagboard-evo.glb",
+  "sha256": "bf3c44e8538a22ffc5c86ca6b7410ce58b265dd33f70328c205490c3069d2f8b",
+  "bytes": 1571940,
+  "triangles": 42134,
+  "vertices": 33529,
+  "contactCount": 21,
+  "checks": {
+    "clean_trimesh_and_VTK_import": {
+      "pass": true,
+      "detail": null
+    },
+    "unique_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "exact_hold_mapping": {
+      "pass": true,
+      "detail": null
+    },
+    "hold_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "body_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "only_production_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "root_coordinate_conversion": {
+      "pass": true,
+      "detail": null
+    },
+    "applied_mesh_transforms": {
+      "pass": true,
+      "detail": null
+    },
+    "self_contained": {
+      "pass": true,
+      "detail": null
+    },
+    "no_environment": {
+      "pass": true,
+      "detail": null
+    },
+    "material_on_every_primitive": {
+      "pass": true,
+      "detail": null
+    },
+    "assembled_watertight": {
+      "pass": true,
+      "detail": null
+    },
+    "consistent_winding": {
+      "pass": true,
+      "detail": null
+    },
+    "positive_volume": {
+      "pass": true,
+      "detail": 0.002808472344853607
+    },
+    "finite_nondegenerate": {
+      "pass": true,
+      "detail": null
+    },
+    "no_duplicate_triangles": {
+      "pass": true,
+      "detail": null
+    },
+    "one_connected_patch_per_contact": {
+      "pass": true,
+      "detail": {
+        "hold--center-sloping-jug": 1,
+        "hold--left-jug": 1,
+        "hold--left-sloper-20": 1,
+        "hold--left-sloper-32": 1,
+        "hold--right-jug": 1,
+        "hold--right-sloper-20": 1,
+        "hold--right-sloper-32": 1,
+        "hold--row-1-column-1": 1,
+        "hold--row-1-column-2": 1,
+        "hold--row-1-column-3": 1,
+        "hold--row-1-column-4": 1,
+        "hold--row-1-column-5": 1,
+        "hold--row-1-column-6": 1,
+        "hold--row-1-column-7": 1,
+        "hold--row-2-column-1": 1,
+        "hold--row-2-column-2": 1,
+        "hold--row-2-column-3": 1,
+        "hold--row-2-column-4": 1,
+        "hold--row-2-column-5": 1,
+        "hold--row-2-column-6": 1,
+        "hold--row-2-column-7": 1
+      }
+    },
+    "physical_unit_count": {
+      "pass": true,
+      "detail": null
+    },
+    "metric_bounds": {
+      "pass": true,
+      "detail": {
+        "master": [
+          [
+            -0.35,
+            -0.042,
+            -0.06
+          ],
+          [
+            0.35,
+            0.0,
+            0.06
+          ]
+        ],
+        "export": [
+          [
+            -0.3499999940395355,
+            -0.041999999433755875,
+            -0.05999999865889549
+          ],
+          [
+            0.3499999940395355,
+            0.0,
+            0.05999999865889549
+          ]
+        ]
+      }
+    },
+    "normalized_finite_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "shared_contact_boundary_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "indexed_vertex_efficiency": {
+      "pass": true,
+      "detail": {
+        "vertices": 33529,
+        "triangles": 42134
+      }
+    },
+    "meaningful_size_reduction": {
+      "pass": true,
+      "detail": null
+    },
+    "UV0_finite_unit_square": {
+      "pass": true,
+      "detail": null
+    },
+    "UV_local_stretch": {
+      "pass": true,
+      "detail": null
+    },
+    "locked_contact_boundaries": {
+      "pass": true,
+      "detail": null
+    },
+    "sampled_surface_deviation": {
+      "pass": true,
+      "detail": null
+    }
+  },
+  "structuralPass": true,
+  "sourceBoundsMetres": [
+    [
+      -0.3499999940395355,
+      -0.041999999433755875,
+      -0.05999999865889549
+    ],
+    [
+      0.3499999940395355,
+      0.0,
+      0.05999999865889549
+    ]
+  ],
+  "software": {
+    "trimesh": "4.11.1",
+    "VTK": "9.6.2"
+  },
+  "photoFidelityCertified": false,
+  "targetPhoneTested": false
+}

@@ -1,0 +1,15 @@
+{
+  "assetFile": "zlagboard-evo.glb",
+  "assetSha256": "bf3c44e8538a22ffc5c86ca6b7410ce58b265dd33f70328c205490c3069d2f8b",
+  "reviewedAtUTC": "2026-09-20T18:32:45.331531+00:00",
+  "scope": "Visual inspection of the five final genuine GLB render panels in this conversation, separate from structural and evidence tests.",
+  "notes": "Reviewed five final views. The Evo-specific two-by-seven recess pattern and seven upper contacts remain distinct, without substituting Pro geometry. Pocket surfaces and rounded lips remain continuous. Bare-board scale, unlabelled floor angles and reverse geometry remain documented estimates.",
+  "renderHashes": {
+    "renders/01-front.png": "b4ff83a3b45baff1d1dd8dcc3cdc0bbcc2ade30c40ae540eaaf300851908783d",
+    "renders/02-reverse.png": "4fed37be47e43f5c524d3dd096443aaddd263053a8fce1919722057e1ab85f5e",
+    "renders/03-oblique.png": "9d370f12d47a743a27c49e9c7b1bbe66fde1364289190cd51e7da7c945b7c9b1",
+    "renders/04-contact-detail.png": "285aa9e7962389b0144057d949accda24f4d9cda660d8545294ea254e3af432e",
+    "renders/05-material-closeup.png": "11e98b7328c11b4dc2895408045d829de758ede5cdc2e7156bc4e3882b252691"
+  },
+  "manufacturerAccuracyCertified": false
+}

@@ -1,0 +1,437 @@
+{
+  "model": "Zlagboard.Evo",
+  "revision": "Zlagboard.Evo, current two-row diagram/photograph",
+  "featureMapping": [
+    {
+      "holdId": "left-jug",
+      "nodeName": "hold--left-jug",
+      "description": "left jug",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": null,
+      "triangleCount": 1319,
+      "selectable": true
+    },
+    {
+      "holdId": "left-sloper-32",
+      "nodeName": "hold--left-sloper-32",
+      "description": "left sloper 32",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": 32,
+      "triangleCount": 1148,
+      "selectable": true
+    },
+    {
+      "holdId": "left-sloper-20",
+      "nodeName": "hold--left-sloper-20",
+      "description": "left sloper 20",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": 20,
+      "triangleCount": 895,
+      "selectable": true
+    },
+    {
+      "holdId": "center-sloping-jug",
+      "nodeName": "hold--center-sloping-jug",
+      "description": "center sloping jug",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": null,
+      "triangleCount": 3320,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-20",
+      "nodeName": "hold--right-sloper-20",
+      "description": "right sloper 20",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": 20,
+      "triangleCount": 893,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-32",
+      "nodeName": "hold--right-sloper-32",
+      "description": "right sloper 32",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": 32,
+      "triangleCount": 1156,
+      "selectable": true
+    },
+    {
+      "holdId": "right-jug",
+      "nodeName": "hold--right-jug",
+      "description": "right jug",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalAngleDeg": null,
+      "triangleCount": 1320,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-1",
+      "nodeName": "hold--row-1-column-1",
+      "description": "Row 1, column 1 from delivered physical left; edge, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 1,
+      "floorType": "edge",
+      "triangleCount": 918,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-2",
+      "nodeName": "hold--row-1-column-2",
+      "description": "Row 1, column 2 from delivered physical left; sloper, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 2,
+      "floorType": "sloper",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-3",
+      "nodeName": "hold--row-1-column-3",
+      "description": "Row 1, column 3 from delivered physical left; sloper, nominal 25 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 3,
+      "floorType": "sloper",
+      "triangleCount": 594,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-4",
+      "nodeName": "hold--row-1-column-4",
+      "description": "Row 1, column 4 from delivered physical left; edge, nominal 35 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 35,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 4,
+      "floorType": "edge",
+      "triangleCount": 882,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-5",
+      "nodeName": "hold--row-1-column-5",
+      "description": "Row 1, column 5 from delivered physical left; sloper, nominal 25 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 5,
+      "floorType": "sloper",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-6",
+      "nodeName": "hold--row-1-column-6",
+      "description": "Row 1, column 6 from delivered physical left; sloper, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 6,
+      "floorType": "sloper",
+      "triangleCount": 684,
+      "selectable": true
+    },
+    {
+      "holdId": "row-1-column-7",
+      "nodeName": "hold--row-1-column-7",
+      "description": "Row 1, column 7 from delivered physical left; edge, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 1,
+      "physicalColumn": 7,
+      "floorType": "edge",
+      "triangleCount": 936,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-1",
+      "nodeName": "hold--row-2-column-1",
+      "description": "Row 2, column 1 from delivered physical left; edge, nominal 20 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 1,
+      "floorType": "edge",
+      "triangleCount": 918,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-2",
+      "nodeName": "hold--row-2-column-2",
+      "description": "Row 2, column 2 from delivered physical left; sloper, nominal 25 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 2,
+      "floorType": "sloper",
+      "triangleCount": 738,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-3",
+      "nodeName": "hold--row-2-column-3",
+      "description": "Row 2, column 3 from delivered physical left; edge, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 3,
+      "floorType": "edge",
+      "triangleCount": 594,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-4",
+      "nodeName": "hold--row-2-column-4",
+      "description": "Row 2, column 4 from delivered physical left; sloper, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 4,
+      "floorType": "sloper",
+      "triangleCount": 900,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-5",
+      "nodeName": "hold--row-2-column-5",
+      "description": "Row 2, column 5 from delivered physical left; edge, nominal 30 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 5,
+      "floorType": "edge",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-6",
+      "nodeName": "hold--row-2-column-6",
+      "description": "Row 2, column 6 from delivered physical left; sloper, nominal 25 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 6,
+      "floorType": "sloper",
+      "triangleCount": 702,
+      "selectable": true
+    },
+    {
+      "holdId": "row-2-column-7",
+      "nodeName": "hold--row-2-column-7",
+      "description": "Row 2, column 7 from delivered physical left; edge, nominal 20 mm",
+      "evidenceReferences": [
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "physicalRow": 2,
+      "physicalColumn": 7,
+      "floorType": "edge",
+      "triangleCount": 936,
+      "selectable": true
+    }
+  ],
+  "sourceRegister": [
+    {
+      "id": "E1",
+      "url": "https://zlagboard.com/hangboards",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Exact Evo identity, lime wood, separate metal mounting components.",
+      "doesNotEstablish": "No board-only dimensions published on this page.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E2",
+      "url": "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Evo-specific diagram: two rows of seven recesses, seven top regions; all depth/angle labels.",
+      "doesNotEstablish": "Diagram is not scaled CAD; unspecified sloper/incut angles remain unknown.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E3",
+      "url": "https://zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Original Evo front; two rows, stepped upper lip, attached external frame.",
+      "doesNotEstablish": "No reverse view; mounting frame/phone excluded.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E4",
+      "url": "https://chalkr.de/vertical-life-zlagboard-evo-trainingsboard.html",
+      "publisher": "Chalkr",
+      "evidenceTier": "retailer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "SKU111463 / EAN8068020470854; 70.5/23/8 cm assembled/listed dimensions; alder claim.",
+      "doesNotEstablish": "Axis labels and scope unclear; material conflicts with manufacturer lime.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E5",
+      "url": "https://www.oliunid.com/zlagboard-zlagboard-evo-climbing-hangboard",
+      "publisher": "Oliunid",
+      "evidenceTier": "retailer-index-only",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Indexed dimension listing 70 x 23 x 6 cm.",
+      "doesNotEstablish": "Full page fetch failed; low confidence. Not used as bare-wood height/depth.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ],
+  "conflicts": [
+    {
+      "issue": "Lime manufacturer versus alder retailer",
+      "ruling": "Use primary current lime material. No grain texture is invented."
+    },
+    {
+      "issue": "70/70.5 cm width and 6/8 cm depth listings with 23 cm height",
+      "ruling": "Retain conflicting assembled listings; author 700 mm bare-board width calibration and photo-proportioned 120 mm wood height. All bare-wood dimensions are estimates."
+    },
+    {
+      "issue": "Retailer box copy mentions Pro on Evo page",
+      "ruling": "Ignore generic copied inventory; use Evo-specific manufacturer photograph and two-row guide."
+    }
+  ],
+  "limitations": [
+    "Bare-wood scale is estimated: 700 x 120 x 42 mm. Retailer assembled/package dimensions are not proof of wood dimensions.",
+    "Reverse lacks independent photographic coverage; delivered reverse is simplified, not a verified physical back replica.",
+    "Unnamed sloper pocket floor angles are estimated at 12 degrees; only top 20/32 degree regions have published angles."
+  ],
+  "sourceBinaryRetention": "Original image/PDF bytes could not be downloaded. This file contains authored observations and metadata, not substitutes for originals.",
+  "assetSha256": "bf3c44e8538a22ffc5c86ca6b7410ce58b265dd33f70328c205490c3069d2f8b"
+}
