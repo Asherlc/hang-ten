@@ -3197,7 +3197,6 @@ final class WorkoutSessionPolicyTests: XCTestCase {
     func testImmediateStartIsAllowedOnlyForAnUnstartedFirstAppearance() {
         XCTAssertTrue(
             WorkoutSessionPolicy.shouldAutoStart(
-                startsImmediately: true,
                 didAutoStart: false,
                 isRunning: false,
                 routineStartedAt: nil
@@ -3208,7 +3207,6 @@ final class WorkoutSessionPolicyTests: XCTestCase {
     func testImmediateStartIsDisabledAfterTheOneShotHasRun() {
         XCTAssertFalse(
             WorkoutSessionPolicy.shouldAutoStart(
-                startsImmediately: true,
                 didAutoStart: true,
                 isRunning: false,
                 routineStartedAt: nil
@@ -3221,7 +3219,6 @@ final class WorkoutSessionPolicyTests: XCTestCase {
 
         XCTAssertFalse(
             WorkoutSessionPolicy.shouldAutoStart(
-                startsImmediately: true,
                 didAutoStart: false,
                 isRunning: true,
                 routineStartedAt: routineStart
@@ -3229,21 +3226,9 @@ final class WorkoutSessionPolicyTests: XCTestCase {
         )
         XCTAssertFalse(
             WorkoutSessionPolicy.shouldAutoStart(
-                startsImmediately: true,
                 didAutoStart: false,
                 isRunning: false,
                 routineStartedAt: routineStart
-            )
-        )
-    }
-
-    func testManualWorkoutRouteDoesNotAutoStart() {
-        XCTAssertFalse(
-            WorkoutSessionPolicy.shouldAutoStart(
-                startsImmediately: false,
-                didAutoStart: false,
-                isRunning: false,
-                routineStartedAt: nil
             )
         )
     }
