@@ -2663,6 +2663,10 @@ final class WorkoutAudioCoachTests: XCTestCase {
     // Catches a bounded retry budget leaving other-app audio ducked indefinitely.
     func testCountdownCompletionRetriesDeactivationUntilItNotifiesOtherApps() async {
         let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 4)
+        let deactivated = expectation(description: "notification-aware deactivation")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivated.fulfill()
+        }
         let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
         let coach = WorkoutAudioCoach(
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
@@ -2676,7 +2680,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         completionScheduler.complete()
 
-        await waitUntilDeactivationNotifiesOtherApps(audioSession)
+        await fulfillment(of: [deactivated], timeout: 1)
         XCTAssertEqual(audioSession.deactivationAttemptCount, 5)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -2890,6 +2894,10 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
     func testDeactivationRetriesAfterTransientFailureOnceSpeechHasFinished() async {
         let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 1)
+        let deactivated = expectation(description: "notification-aware deactivation")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivated.fulfill()
+        }
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
@@ -2902,24 +2910,11 @@ final class WorkoutAudioCoachTests: XCTestCase {
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
         coach.stop()
-        await waitUntilDeactivationNotifiesOtherApps(audioSession)
+        await fulfillment(of: [deactivated], timeout: 1)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
-    }
-
-    private func waitUntilDeactivationNotifiesOtherApps(
-        _ audioSession: RecordingWorkoutAudioSession,
-        maxYields: Int = 32
-    ) async {
-        for _ in 0..<maxYields {
-            if audioSession.didDeactivateWithNotification {
-                return
-            }
-            await Task.yield()
-        }
-        XCTFail("Expected notification-aware deactivation within \(maxYields) main-actor yields")
     }
 }
 

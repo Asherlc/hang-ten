@@ -426,28 +426,15 @@ run_xctest_attempt() {
 # True when the attempt's test phase appears to have finished (not cut off).
 # Used to avoid failed-only narrowing after partial runs that leave early
 # failures in the xcresult while later tests never executed.
+# Require terminal suite log evidence only — xcresult summary Failed/Passed can
+# appear on interrupted runs with partial failures and must not authorize narrowing.
 test_phase_completed_normally() {
   local attempt="$1"
-  local result_bundle="$XCTEST_RESULT_ROOT/${XCTEST_LABEL}-attempt-${attempt}.xcresult"
   local attempt_log_dir="$XCTEST_LOG_ROOT/attempt-$attempt"
-  local summary_result=""
 
   if [[ -d "$attempt_log_dir" ]] && \
     grep -R -q -E "Test Suite 'Selected tests' (passed|failed)" "$attempt_log_dir" --include='*.log' 2>/dev/null; then
     return 0
-  fi
-
-  if [[ -d "$result_bundle" ]]; then
-    summary_result="$(
-      xcrun xcresulttool get test-results summary --path "$result_bundle" --compact 2>/dev/null \
-        | python3 -c 'import json,sys; print(json.load(sys.stdin).get("result") or "")' \
-        2>/dev/null || true
-    )"
-    case "$summary_result" in
-      Failed|Passed)
-        return 0
-        ;;
-    esac
   fi
 
   return 1
