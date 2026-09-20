@@ -265,7 +265,7 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 | `HANGTEN_REVIEW_BOARD_PICKER=1` | Open the full-page board picker from Train. |
 | `HANGTEN_REVIEW_SETTINGS=1` | Open Settings from Train. |
 | `HANGTEN_REVIEW_PLAN_ID=<TrainingPlan.id>` | Make a specific plan the featured plan. |
-| `HANGTEN_REVIEW_WORKOUT=1` | Open the featured workout. |
+| `hangten://plan/<TrainingPlan.id>/workout` | Deep-link into that plan’s workout with auto-start (same as plan-detail Start routine). Also accepts `hangten:///plan/<id>/workout`. |
 | `HANGTEN_REVIEW_STEP=<step number>` | Preview any plan step without waiting. |
 | `HANGTEN_REVIEW_HEALTH=1` | Open Settings from Train with the Apple Health card visible. |
 | `HANGTEN_REVIEW_MOTHERBOARD=1` | Open Settings from Train and use the deterministic sensor transport. |
@@ -276,10 +276,16 @@ Pass app environment through `simctl` with the `SIMCTL_CHILD_` prefix:
 Example:
 
 ```sh
-SIMCTL_CHILD_HANGTEN_REVIEW_WORKOUT=1 \
+xcrun simctl openurl <uuid> 'hangten://plan/<planID>/workout'
+```
+
+With optional DEBUG env for step preview / orientation after launch:
+
+```sh
 SIMCTL_CHILD_HANGTEN_REVIEW_STEP=2 \
 SIMCTL_CHILD_HANGTEN_REVIEW_LANDSCAPE=1 \
 xcrun simctl launch <uuid> com.hangten.training
+xcrun simctl openurl <uuid> 'hangten://plan/research.max-hangs/workout'
 ```
 
 These hooks are compiled only in DEBUG and do not affect production launches.

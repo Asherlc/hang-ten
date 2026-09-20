@@ -4,17 +4,12 @@ struct TrainView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var deepLinkManager: DeepLinkManager
     @State private var showsDeepLinkedBoardDetail = false
+    @State private var showsDeepLinkedWorkout = false
+    @State private var deepLinkedWorkoutPlan: TrainingPlan?
     private let onBrowsePlans: () -> Void
     @State private var showsPlanReview: Bool = {
         #if DEBUG
         return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
-        #else
-        return false
-        #endif
-    }()
-    @State private var showsWorkoutReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_WORKOUT"] == "1"
         #else
         return false
         #endif
@@ -79,13 +74,6 @@ struct TrainView: View {
                     noCompatiblePlan
                 }
             }
-            .navigationDestination(isPresented: $showsWorkoutReview) {
-                if let plan = reviewPlan {
-                    WorkoutAccessGate(plan: plan)
-                } else {
-                    noCompatiblePlan
-                }
-            }
             .navigationDestination(isPresented: $showsSettingsReview) {
                 AppSettingsView()
             }
@@ -99,9 +87,27 @@ struct TrainView: View {
                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
                     .onAppear { deepLinkManager.clearPending() }
             }
+            .navigationDestination(isPresented: $showsDeepLinkedWorkout) {
+                if let plan = deepLinkedWorkoutPlan {
+                    WorkoutAccessGate(plan: plan)
+                } else {
+                    noCompatiblePlan
+                }
+            }
             .onChange(of: deepLinkManager.pendingBoardID, initial: true) { _, boardID in
                 guard boardID != nil else { return }
                 showsDeepLinkedBoardDetail = true
+            }
+            .onChange(of: deepLinkManager.pendingWorkoutPlanID, initial: true) { _, planID in
+                guard let planID else { return }
+                guard let plan = store.plans.first(where: { $0.id == planID })
+                        ?? PlanCatalog.plan(id: planID) else {
+                    deepLinkManager.clearPending()
+                    return
+                }
+                deepLinkedWorkoutPlan = plan
+                showsDeepLinkedWorkout = true
+                deepLinkManager.clearPending()
             }
         }
     }

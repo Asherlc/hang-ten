@@ -2,20 +2,26 @@ import XCTest
 
 final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     private let app = XCUIApplication()
+    private let workoutDeepLink = URL(string: "hangten://plan/research.max-hangs/workout")!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            "HANGTEN_REVIEW_WORKOUT": "1",
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]
         app.launch()
+        openWorkoutDeepLink()
     }
 
     func testMaxHangsStepOneExposesIndividualHandCuesAndCapturesDiagnosticScreenshot() throws {
+        // Auto-start presents initial weight setup; cancel to return to the idle workout screen.
+        if app.buttons["Cancel"].waitForExistence(timeout: 10) {
+            app.buttons["Cancel"].tap()
+        }
+        XCTAssertTrue(app.buttons["Start"].waitForExistence(timeout: 10))
+
         let leftHandCue = app.otherElements["workout.gripCue.left"]
         let rightHandCue = app.otherElements["workout.gripCue.right"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
@@ -34,11 +40,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testLandscapePreStartHasNoLegacyLoadAdjustment() throws {
-        XCTAssertTrue(app.buttons["Start routine"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
-        app.buttons["Start routine"].tap()
-        XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.textFields.count, 1)
         XCTAssertTrue(app.switches["workout.initialWeight.addBodyweight"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
@@ -51,12 +55,12 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
         app.launch()
+        dismissSettingsReviewIfPresented()
+        openWorkoutDeepLink()
 
-        XCTAssertTrue(app.buttons["Start routine"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
-        app.buttons["Start routine"].tap()
-        XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 10))
         app.buttons["workout.initialWeight.continue"].tap()
         XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
         app.buttons["handSide.left"].tap()
@@ -65,27 +69,37 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
     }
 
+    private func openWorkoutDeepLink() {
+        app.open(workoutDeepLink)
+    }
+
+    private func dismissSettingsReviewIfPresented() {
+        // HANGTEN_REVIEW_MOTHERBOARD still opens Settings from Train; dismiss so the
+        // workout deep link can present on the Train stack.
+        guard app.navigationBars["Settings"].waitForExistence(timeout: 5) else { return }
+        app.navigationBars["Settings"].buttons.firstMatch.tap()
+    }
 }
 
 final class InitialWeightSetupUITests: XCTestCase {
     private let app = XCUIApplication()
+    private let workoutDeepLink = URL(string: "hangten://plan/research.max-hangs/workout")!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            "HANGTEN_REVIEW_WORKOUT": "1",
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_PORTRAIT": "1",
             "HANGTEN_REVIEW_MOTHERBOARD": "1",
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
         ]
         app.launch()
-        XCTAssertTrue(app.buttons["Start routine"].waitForExistence(timeout: 15))
-        XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
+        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            app.navigationBars["Settings"].buttons.firstMatch.tap()
+        }
+        app.open(workoutDeepLink)
+        XCTAssertTrue(app.segmentedControls["workout.initialWeight.sourcePicker"].waitForExistence(timeout: 15))
         if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
-        app.buttons["Start routine"].tap()
-        XCTAssertTrue(app.segmentedControls["workout.initialWeight.sourcePicker"].waitForExistence(timeout: 10))
     }
 
     func testPairingCancelKeepsManualDraftAndAllowsRetry() {
@@ -134,7 +148,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
-        XCTAssertFalse(app.buttons["Start routine"].exists)
+        XCTAssertFalse(app.buttons["Start"].exists)
     }
 }
 

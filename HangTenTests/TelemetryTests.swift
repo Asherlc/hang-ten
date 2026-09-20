@@ -16,9 +16,12 @@ final class TelemetryTests: XCTestCase {
         )
 
         XCTAssertNil(RootReviewDestination.initial(environment: [:]))
+        XCTAssertNil(
+            RootReviewDestination.initial(environment: ["HANGTEN_REVIEW_WORKOUT": "1"])
+        )
         XCTAssertEqual(
-            RootReviewDestination.initial(environment: ["HANGTEN_REVIEW_WORKOUT": "1"]),
-            .workout
+            RootReviewDestination.initial(environment: ["HANGTEN_REVIEW_BOARD_EDITOR": "1"]),
+            .boardEditor
         )
     }
 

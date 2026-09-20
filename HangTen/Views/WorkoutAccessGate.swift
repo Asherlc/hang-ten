@@ -3,23 +3,19 @@ import SwiftUI
 struct WorkoutAccessGate<Label: View>: View {
     @EnvironmentObject private var store: AppStore
     @State private var pendingPlan: TrainingPlan?
-    @State private var pendingStartsImmediately = false
     @State private var showsPaywall = false
     @State private var showsWorkout = false
 
     private let plan: TrainingPlan
-    private let startsImmediately: Bool
     private let launchesOnAppear: Bool
     private let label: Label
 
     init(
         plan: TrainingPlan,
-        startsImmediately: Bool = false,
         launchesOnAppear: Bool = false,
         @ViewBuilder label: () -> Label
     ) {
         self.plan = plan
-        self.startsImmediately = startsImmediately
         self.launchesOnAppear = launchesOnAppear
         self.label = label()
     }
@@ -27,19 +23,20 @@ struct WorkoutAccessGate<Label: View>: View {
     var body: some View {
         Group {
             if launchesOnAppear {
-                Color.clear
+                if showsWorkout, let pendingPlan {
+                    WorkoutView(plan: pendingPlan)
+                } else {
+                    Color.clear
+                }
             } else {
                 Button(action: requestLaunch) {
                     label
                 }
-            }
-        }
-        .navigationDestination(isPresented: $showsWorkout) {
-            if let pendingPlan {
-                WorkoutView(
-                    plan: pendingPlan,
-                    startsImmediately: pendingStartsImmediately
-                )
+                .navigationDestination(isPresented: $showsWorkout) {
+                    if let pendingPlan {
+                        WorkoutView(plan: pendingPlan)
+                    }
+                }
             }
         }
         .sheet(isPresented: $showsPaywall, onDismiss: continuePendingLaunchIfAllowed) {
@@ -56,7 +53,6 @@ struct WorkoutAccessGate<Label: View>: View {
 
     private func requestLaunch() {
         pendingPlan = plan
-        pendingStartsImmediately = startsImmediately
 
         switch store.workoutLaunchDecision {
         case .allowed:
@@ -80,12 +76,10 @@ struct WorkoutAccessGate<Label: View>: View {
 extension WorkoutAccessGate where Label == EmptyView {
     init(
         plan: TrainingPlan,
-        startsImmediately: Bool = false,
         launchesOnAppear: Bool = true
     ) {
         self.init(
             plan: plan,
-            startsImmediately: startsImmediately,
             launchesOnAppear: launchesOnAppear
         ) {
             EmptyView()

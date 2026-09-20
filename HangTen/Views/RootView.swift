@@ -352,14 +352,10 @@ enum RootTab: Hashable, CaseIterable {
 }
 
 enum RootReviewDestination: Equatable {
-    case workout
     case boardEditor
 
     static func initial(environment: [String: String]) -> Self? {
         #if DEBUG
-        if environment["HANGTEN_REVIEW_WORKOUT"] == "1" {
-            return .workout
-        }
         if environment["HANGTEN_REVIEW_BOARD_EDITOR"] == "1" {
             return .boardEditor
         }
@@ -415,12 +411,7 @@ struct RootView: View {
 
     var body: some View {
 		Group {
-			if reviewDestination == .workout,
-			   let plan = store.featuredPlan {
-				NavigationStack {
-					WorkoutAccessGate(plan: plan)
-				}
-			} else if reviewDestination == .boardEditor {
+			if reviewDestination == .boardEditor {
 				NavigationStack {
 					BoardEditorListView()
 				}
@@ -478,6 +469,8 @@ struct RootView: View {
             if let boardID = deepLinkManager.pendingBoardID,
                let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
                 store.selectBoard(board)
+                selectedTab = .train
+            } else if deepLinkManager.pendingWorkoutPlanID != nil {
                 selectedTab = .train
             }
         }
@@ -1596,13 +1589,11 @@ enum WorkoutSessionPolicy {
     }
 
     static func shouldAutoStart(
-        startsImmediately: Bool,
         didAutoStart: Bool,
         isRunning: Bool,
         routineStartedAt: Date?
     ) -> Bool {
-        startsImmediately
-            && !didAutoStart
+        !didAutoStart
             && !isRunning
             && isFirstStart(routineStartedAt: routineStartedAt)
     }
@@ -1886,11 +1877,9 @@ struct WorkoutView: View {
 	@AppStorage("workoutAudioCuesEnabled") private var audioCuesEnabled = true
 
     let plan: TrainingPlan
-    let startsImmediately: Bool
 
-    init(plan: TrainingPlan, startsImmediately: Bool = false) {
+    init(plan: TrainingPlan) {
         self.plan = plan
-        self.startsImmediately = startsImmediately
     }
 
     @State private var sessionState = WorkoutSessionState()
@@ -2226,7 +2215,6 @@ struct WorkoutView: View {
 				}
 			#endif
 			if WorkoutSessionPolicy.shouldAutoStart(
-				startsImmediately: startsImmediately,
 				didAutoStart: didAutoStart,
 				isRunning: sessionState.activeStartUptime != nil,
 				routineStartedAt: sessionState.routineStartedAt
@@ -2886,7 +2874,7 @@ struct WorkoutView: View {
 						? "Log session"
 						: countdown > 0
 							? "Cancel countdown"
-							: (sessionState.activeStartUptime == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start routine" : (sessionState.activeStartUptime == nil ? "Resume" : "Pause"))
+							: (sessionState.activeStartUptime == nil && WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt) ? "Start" : (sessionState.activeStartUptime == nil ? "Resume" : "Pause"))
                 )
                 if isComplete {
                     Image(systemName: "arrow.right")
