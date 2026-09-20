@@ -1927,9 +1927,13 @@ private struct BoardModelView: UIViewRepresentable {
         view.rendersContinuously = false
         view.isPlaying = false
         view.allowsCameraControl = false
-        view.display(model)
-        view.onUnavailable = onUnavailable
+        view.boardName = boardName
+        view.contacts = contacts
         view.positionID = positionID
+        view.highlightedContactIDs = highlightedContactIDs
+        view.onContactTap = onContactTap
+        view.onUnavailable = onUnavailable
+        view.display(model)
         view.delegate = view
         let orbitPan = OrbitPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:)))
         orbitPan.delegate = view.orbitGestureDelegate
@@ -1943,7 +1947,10 @@ private struct BoardModelView: UIViewRepresentable {
         view.addGestureRecognizer(tapGesture)
         view.contactTapGesture = tapGesture
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
+        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
+        view.updateAccessibility()
+        view.updateTapGesturePresence()
         return view
     }
 
