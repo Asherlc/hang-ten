@@ -1,0 +1,73 @@
+{
+  "contacts": {
+    "edge-16": {
+      "center": [
+        0.5,
+        0.791558444
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.83809526,
+          0.791558444
+        ],
+        "min": [
+          0.16190474,
+          0.791558444
+        ]
+      },
+      "nodeIDs": [
+        "edge_16_mesh_001"
+      ]
+    },
+    "edge-25": {
+      "center": [
+        0.5,
+        0.208441556
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.83809526,
+          0.208441556
+        ],
+        "min": [
+          0.16190474,
+          0.208441556
+        ]
+      },
+      "nodeIDs": [
+        "edge_25_mesh_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.052499998,
+      0.0385,
+      0.0185
+    ],
+    "min": [
+      -0.052499998,
+      -0.0385,
+      -0.0185
+    ]
+  },
+  "modelSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
+  "nodes": [
+    {
+      "nodeID": "Cube_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-16",
+      "nodeID": "edge_16_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-25",
+      "nodeID": "edge_25_mesh_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}
