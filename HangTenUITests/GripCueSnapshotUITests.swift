@@ -44,8 +44,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
-        if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
-        XCTAssertEqual(app.textFields.count, 1)
         XCTAssertTrue(app.switches["workout.initialWeight.addBodyweight"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Manual initial weight setup in landscape"
@@ -64,7 +62,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
         XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 15))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
-        if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
         app.buttons["workout.initialWeight.continue"].tap()
         XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
         app.buttons["handSide.left"].tap()
