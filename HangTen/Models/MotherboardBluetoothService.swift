@@ -829,7 +829,11 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             return ForceSensorAdapterRegistry.automaticProfiles
                 .filter { $0 != .motherboard }
                 .first { profile in
-                    matches(profile, advertisement: advertisement)
+                    matchesForAutomaticSelection(
+                        profile,
+                        advertisement: advertisement,
+                        advertisedLocalName: advertisedLocalName
+                    )
                 }
         case .motherboard:
             return isExpectedMotherboard(peripheralName: peripheralName, advertisedLocalName: advertisedLocalName)
@@ -850,6 +854,20 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             return adapter.matches(advertisement)
         }
         return WHC06ProtocolAdapter(profile: profile)?.matches(advertisement) == true
+    }
+
+    private func matchesForAutomaticSelection(
+        _ profile: ForceSensorProfile,
+        advertisement: ForceSensorAdvertisement,
+        advertisedLocalName: String?
+    ) -> Bool {
+        if let adapter = ForceSensorAdapterRegistry.adapter(for: profile) {
+            return adapter.matches(advertisement)
+        }
+        return WHC06ProtocolAdapter(profile: profile)?.matchesForAutomaticSelection(
+            advertisement,
+            advertisedLocalName: advertisedLocalName
+        ) == true
     }
 
     private func clearSelectedPeripheral() {

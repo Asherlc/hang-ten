@@ -186,7 +186,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
                 0x00, 0x01,
                 0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
-                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92, 0x00, 0x00
             ])]
         )
 
@@ -195,6 +195,90 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.connectedProfile, .whC06)
         XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0)
         XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testExplicitWHC06SelectionStreamsUnitZeroAdvertisementWithoutCapturedFingerprint() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "Scale")
+        defer { service.disconnect() }
+
+        service.connect(profile: .whC06)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                0x01, 0x07, 0xD0, 0x01, 0xF4, 0x00
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(
+            try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF,
+            9.071_847_4,
+            accuracy: 0.000_000_001
+        )
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testAutomaticScanUsesIFB7LocalNameWhenPeripheralNameIsStale() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "Stale cached name")
+        defer { service.disconnect() }
+
+        service.connect(profile: .automatic)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [
+                CBAdvertisementDataLocalNameKey: "IF_B7",
+                CBAdvertisementDataManufacturerDataKey: Data([
+                    0x00, 0x01,
+                    0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x0A, 0x28, 0x01, 0xF4, 0x01
+                ])
+            ]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 26, accuracy: 0.000_001)
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testAutomaticScanPrefersCurrentNonWHC06LocalNameOverStaleIFB7PeripheralName() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "IF_B7")
+        defer { service.disconnect() }
+
+        service.connect(profile: .automatic)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [
+                CBAdvertisementDataLocalNameKey: "HLK-LD2410B",
+                CBAdvertisementDataManufacturerDataKey: Data([
+                    0x00, 0x01,
+                    0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x0A, 0x28, 0x01, 0xF4, 0x01
+                ])
+            ]
+        )
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.connectedDeviceID)
+        XCTAssertNil(service.connectedProfile)
+        XCTAssertNil(service.latestMeasurement)
     }
 
     func testAutomaticScanIgnoresLD2410BThenStreamsTheResolvedWHC06Advertisement() throws {
@@ -231,7 +315,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
                 0x00, 0x01,
                 0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
-                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92, 0x00, 0x00
             ])]
         )
 
