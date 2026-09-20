@@ -149,6 +149,52 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
+    func testDualPlanHighlightsSurvivePoseSelection() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "captain-fingerfood.dual"))
+        let store = AppStore(defaults: UserDefaults(suiteName: "BoardModelTests.dual-plan.\(UUID().uuidString)")!)
+        let plan = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
+        let step = try XCTUnwrap(plan.steps.first)
+        let highlightedIDs = store.contactIDs(for: step, on: board)
+        XCTAssertFalse(
+            highlightedIDs.isEmpty,
+            "Plan detail must resolve at least one Dual Max Hangs contact for highlighting"
+        )
+
+        let highlightedID = try XCTUnwrap(
+            board.contacts.first { highlightedIDs.contains($0.id) }?.id
+        )
+        let positionID = try XCTUnwrap(
+            BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: board.defaultPresentation.id,
+                activeHoldID: highlightedID,
+                highlightedHoldIDs: highlightedIDs
+            )
+        )
+
+        let (_, _, model) = try await loadMigratedModel("captain-fingerfood.dual")
+        let node = try XCTUnwrap(model.contactNodes[highlightedID]?.first)
+        let original = try XCTUnwrap(node.geometry?.firstMaterial)
+
+        // Mirror BoardModelView: pose first, then paint (and pose must not
+        // short-circuit a subsequent highlight via lastHighlights).
+        XCTAssertTrue(model.select(positionID: positionID))
+        model.highlight(highlightedIDs, mode: .active)
+        XCTAssertEqual(
+            node.geometry?.firstMaterial?.diffuse.contents as? UIColor,
+            UIColor(Color.holdActive)
+        )
+        XCTAssertFalse(node.geometry?.firstMaterial === original)
+
+        // Selecting the same pose again must still allow re-highlight.
+        XCTAssertTrue(model.select(positionID: positionID))
+        model.highlight(highlightedIDs, mode: .active)
+        XCTAssertEqual(
+            node.geometry?.firstMaterial?.diffuse.contents as? UIColor,
+            UIColor(Color.holdActive)
+        )
+    }
+
     func testModelSceneRejectsUnknownPositionWithoutFallback() throws {
         let descriptor = modelDescriptor(nodes: [
             .init(nodeID: "Board/Body", role: .body, contactID: nil),
