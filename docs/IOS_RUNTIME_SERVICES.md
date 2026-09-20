@@ -14,10 +14,12 @@ dismiss back to the originating tab. History is a separate root tab that opens
 directly to the chronological saved-session list.
 
 Board detail and active workout sessions expose **Report a problem**
-(`boardDetail.reportProblem` / `workout.reportProblem`). Reports submit through
-Sentry User Feedback with typed ID tags only (`report_source`, `board_id`, and
+(`boardDetail.reportProblem` / `workout.reportProblem`). When Sentry is
+configured, reports submit through Sentry User Feedback with typed ID tags only
+(`report_source`, `board_id`, and
 optional `hold_id` / `plan_id` / `step_id`); the optional email field is
-user-typed follow-up contact.
+user-typed follow-up contact. Without Sentry configuration, submission is a
+no-op.
 
 The DEBUG routes `HANGTEN_REVIEW_BOARD_PICKER=1`,
 `HANGTEN_REVIEW_SETTINGS=1`, and `HANGTEN_REVIEW_HISTORY=1` open those states
