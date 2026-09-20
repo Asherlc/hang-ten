@@ -228,6 +228,11 @@ final class AppStore: ObservableObject {
         telemetry.tracking.track(.boardSelected(family: family))
     }
 
+    func submitUserReport(_ report: HangTenUserReport) {
+        guard !report.message.isEmpty else { return }
+        telemetry.userReports.submit(report)
+    }
+
     func customDefinition(for id: String) -> CustomRoutineDefinition? {
         customDefinitions.first { $0.id == id }
     }

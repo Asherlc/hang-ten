@@ -151,6 +151,8 @@
 		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
 		AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */; };
 		AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* SentryDiagnostics.swift */; };
+		AB0000000000000000000009 /* SentryUserReports.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000006 /* SentryUserReports.swift */; };
+		AA00000000000000000000E8 /* ReportProblemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000E8 /* ReportProblemView.swift */; };
 		AB0000000000000000000004 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* AmplitudeSwift */; };
 		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
 		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
@@ -338,6 +340,8 @@
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000003 /* SentryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryDiagnostics.swift; sourceTree = "<group>"; };
+		AC0000000000000000000006 /* SentryUserReports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryUserReports.swift; sourceTree = "<group>"; };
+		BB00000000000000000000E8 /* ReportProblemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportProblemView.swift; sourceTree = "<group>"; };
 		AC0000000000000000000004 /* Analytics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.xcconfig; sourceTree = "<group>"; };
 		AC0000000000000000000005 /* Analytics.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.local.xcconfig.example; sourceTree = "<group>"; };
 		BB00000000000000000000B1 /* HoldPathEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngine.swift; sourceTree = "<group>"; };
@@ -491,6 +495,7 @@
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
+				AC0000000000000000000006 /* SentryUserReports.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -514,6 +519,7 @@
                 E32000000000000000000006 /* OrbitPanGestureDelegate.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
+				BB00000000000000000000E8 /* ReportProblemView.swift */,
 				BB0000000000000000000094 /* BoardEditorSession.swift */,
 				BB0000000000000000000095 /* HoldEditorCanvasView.swift */,
 				BB0000000000000000000096 /* BoardEditorScreen.swift */,
@@ -920,7 +926,10 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
 			00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
-				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,);
+				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,
+				AB0000000000000000000009 /* SentryUserReports.swift in Sources */,
+				AA00000000000000000000E8 /* ReportProblemView.swift in Sources */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CC0000000000000000000005 /* Sources */ = {

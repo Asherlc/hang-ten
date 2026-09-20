@@ -47,6 +47,147 @@ final class TelemetryTests: XCTestCase {
         XCTAssertFalse(TelemetryComposition.make(configuration: configuration).isNoOp)
     }
 
+    func testSentryOnlyCompositionInstallsDiagnosticsAndUserReports() {
+        let dependencies = TelemetryComposition.make(
+            analytics: AnalyticsConfiguration(apiKey: ""),
+            sentry: SentryConfiguration(dsn: "https://example@o0.ingest.sentry.io/1")
+        )
+
+        XCTAssertFalse(dependencies.isNoOp)
+        XCTAssertTrue(dependencies.diagnostics is SentryDiagnostics)
+        XCTAssertTrue(dependencies.userReports is SentryUserReports)
+        XCTAssertTrue(dependencies.tracking is NoOpTelemetry)
+    }
+
+    func testAmplitudeOnlyCompositionLeavesSentryAdaptersNoOp() {
+        let dependencies = TelemetryComposition.make(
+            analytics: AnalyticsConfiguration(apiKey: "test-api-key"),
+            sentry: SentryConfiguration(dsn: "$(SENTRY_DSN)")
+        )
+
+        XCTAssertFalse(dependencies.isNoOp)
+        XCTAssertTrue(dependencies.tracking is AmplitudeAnalyticsTelemetry)
+        XCTAssertTrue(dependencies.diagnostics is NoOpTelemetry)
+        XCTAssertTrue(dependencies.userReports is NoOpTelemetry)
+    }
+
+    func testNeitherAmplitudeNorSentryBuildsFullyNoOpDependencies() {
+        let dependencies = TelemetryComposition.make(
+            analytics: AnalyticsConfiguration(apiKey: ""),
+            sentry: SentryConfiguration(dsn: "")
+        )
+
+        XCTAssertTrue(dependencies.isNoOp)
+        XCTAssertTrue(dependencies.tracking is NoOpTelemetry)
+        XCTAssertTrue(dependencies.diagnostics is NoOpTelemetry)
+        XCTAssertTrue(dependencies.userReports is NoOpTelemetry)
+    }
+
+    func testBothAmplitudeAndSentryInstallIndependentAdapters() {
+        let dependencies = TelemetryComposition.make(
+            analytics: AnalyticsConfiguration(apiKey: "test-api-key"),
+            sentry: SentryConfiguration(dsn: "https://example@o0.ingest.sentry.io/1")
+        )
+
+        XCTAssertFalse(dependencies.isNoOp)
+        XCTAssertTrue(dependencies.tracking is AmplitudeAnalyticsTelemetry)
+        XCTAssertTrue(dependencies.diagnostics is SentryDiagnostics)
+        XCTAssertTrue(dependencies.userReports is SentryUserReports)
+    }
+
+    func testUnexpandedSentryDSNIsNotConfigured() {
+        XCTAssertFalse(SentryConfiguration(dsn: "$(SENTRY_DSN)").isConfigured)
+        XCTAssertFalse(SentryConfiguration(dsn: "  ").isConfigured)
+        XCTAssertTrue(SentryConfiguration(dsn: "https://example@o0.ingest.sentry.io/1").isConfigured)
+    }
+
+    func testUserReportMapsOnlyTypedIDTags() {
+        let report = HangTenUserReport(
+            source: .boardDetail,
+            message: "  Highlight is wrong  ",
+            contactEmail: "  climber@example.com  ",
+            boardID: "board-1",
+            holdID: "hold-2",
+            planID: nil,
+            stepID: " "
+        )
+
+        XCTAssertEqual(report.message, "Highlight is wrong")
+        XCTAssertEqual(report.contactEmail, "climber@example.com")
+        XCTAssertNil(report.stepID)
+        XCTAssertEqual(report.tags, [
+            "report_source": "board_detail",
+            "board_id": "board-1",
+            "hold_id": "hold-2"
+        ])
+    }
+
+    func testEmptyContactEmailBecomesNil() {
+        let report = HangTenUserReport(
+            source: .workout,
+            message: "Step timing feels early",
+            contactEmail: "   ",
+            boardID: "board-1",
+            planID: "plan-9",
+            stepID: "step-3"
+        )
+
+        XCTAssertNil(report.contactEmail)
+        XCTAssertEqual(report.tags["plan_id"], "plan-9")
+        XCTAssertEqual(report.tags["step_id"], "step-3")
+        XCTAssertEqual(report.tags["report_source"], "workout")
+        XCTAssertNil(report.tags["hold_id"])
+    }
+
+    @MainActor
+    func testAppStoreForwardsUserReportsToAdapter() {
+        let reports = RecordingUserReports()
+        let telemetry = TelemetryDependencies(
+            tracking: NoOpTelemetry(),
+            diagnostics: NoOpTelemetry(),
+            userReports: reports,
+            flags: NoOpTelemetry(),
+            replay: NoOpTelemetry(),
+            isNoOp: false
+        )
+        let store = AppStore(telemetry: telemetry)
+        let report = HangTenUserReport(
+            source: .workout,
+            message: "Wrong hold highlighted",
+            boardID: store.selectedBoard.id,
+            planID: "plan-1",
+            stepID: "step-1"
+        )
+
+        store.submitUserReport(report)
+
+        XCTAssertEqual(reports.submissions, [report])
+    }
+
+    @MainActor
+    func testAppStoreIgnoresEmptyUserReportMessages() {
+        let reports = RecordingUserReports()
+        let telemetry = TelemetryDependencies(
+            tracking: NoOpTelemetry(),
+            diagnostics: NoOpTelemetry(),
+            userReports: reports,
+            flags: NoOpTelemetry(),
+            replay: NoOpTelemetry(),
+            isNoOp: false
+        )
+        let store = AppStore(telemetry: telemetry)
+
+        store.submitUserReport(
+            HangTenUserReport(
+                source: .boardDetail,
+                message: "   ",
+                boardID: "board-1"
+            )
+        )
+
+        XCTAssertTrue(reports.submissions.isEmpty)
+    }
+
     func testAmplitudeAdapterTranslatesOnlyTypedProperties() {
         let client = RecordingAmplitudeClient()
         let telemetry = AmplitudeAnalyticsTelemetry(client: client)
@@ -85,6 +226,9 @@ final class TelemetryTests: XCTestCase {
         let telemetry = NoOpTelemetry()
         telemetry.track(.customRoutineSaved)
         telemetry.record(.init(category: .persistence, operation: .save, error: TestError()))
+        telemetry.submit(
+            HangTenUserReport(source: .boardDetail, message: "noop", boardID: "board-1")
+        )
         XCTAssertFalse(telemetry.isEnabled("future-flag", default: false))
     }
 
@@ -122,6 +266,14 @@ final class TelemetryTests: XCTestCase {
 }
 
 private struct TestError: Error {}
+
+private final class RecordingUserReports: UserReportSubmitting {
+    private(set) var submissions: [HangTenUserReport] = []
+
+    func submit(_ report: HangTenUserReport) {
+        submissions.append(report)
+    }
+}
 
 private final class RecordingAmplitudeClient: AmplitudeTrackingClient {
     struct Capture: Equatable {

@@ -8,6 +8,10 @@ protocol DiagnosticReporting: AnyObject {
     func record(_ diagnostic: HangTenDiagnostic)
 }
 
+protocol UserReportSubmitting: AnyObject {
+    func submit(_ report: HangTenUserReport)
+}
+
 protocol FeatureFlagProviding: AnyObject {
     func isEnabled(_ key: String, default defaultValue: Bool) -> Bool
 }
@@ -160,10 +164,73 @@ struct HangTenDiagnostic: Equatable {
     }
 }
 
-final class NoOpTelemetry: TelemetryTracking, DiagnosticReporting, FeatureFlagProviding, SessionReplayControlling {
+struct HangTenUserReport: Equatable {
+    enum Source: String, Equatable {
+        case boardDetail = "board_detail"
+        case workout = "workout"
+    }
+
+    let source: Source
+    let message: String
+    let contactEmail: String?
+    let boardID: String
+    let holdID: String?
+    let planID: String?
+    let stepID: String?
+
+    init(
+        source: Source,
+        message: String,
+        contactEmail: String? = nil,
+        boardID: String,
+        holdID: String? = nil,
+        planID: String? = nil,
+        stepID: String? = nil
+    ) {
+        self.source = source
+        self.message = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedEmail = contactEmail?.trimmingCharacters(in: .whitespacesAndNewlines)
+        self.contactEmail = (trimmedEmail?.isEmpty == false) ? trimmedEmail : nil
+        self.boardID = boardID
+        self.holdID = holdID.flatMap { id in
+            let trimmed = id.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
+        }
+        self.planID = planID.flatMap { id in
+            let trimmed = id.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
+        }
+        self.stepID = stepID.flatMap { id in
+            let trimmed = id.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? nil : trimmed
+        }
+    }
+
+    /// Typed IDs only — attached as Sentry scope tags on submit.
+    var tags: [String: String] {
+        var tags = [
+            "report_source": source.rawValue,
+            "board_id": boardID
+        ]
+        if let holdID {
+            tags["hold_id"] = holdID
+        }
+        if let planID {
+            tags["plan_id"] = planID
+        }
+        if let stepID {
+            tags["step_id"] = stepID
+        }
+        return tags
+    }
+}
+
+final class NoOpTelemetry: TelemetryTracking, DiagnosticReporting, UserReportSubmitting, FeatureFlagProviding, SessionReplayControlling {
     func track(_ event: HangTenTelemetryEvent) {}
 
     func record(_ diagnostic: HangTenDiagnostic) {}
+
+    func submit(_ report: HangTenUserReport) {}
 
     func isEnabled(_ key: String, default defaultValue: Bool) -> Bool {
         defaultValue

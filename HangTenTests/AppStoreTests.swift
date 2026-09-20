@@ -2013,6 +2013,7 @@ private final class RecordingTelemetry: TelemetryTracking, DiagnosticReporting, 
         TelemetryDependencies(
             tracking: self,
             diagnostics: self,
+            userReports: NoOpTelemetry(),
             flags: NoOpTelemetry(),
             replay: self,
             isNoOp: false
