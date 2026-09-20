@@ -109,6 +109,16 @@ struct TrainView: View {
                    let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
                     store.selectBoard(board)
                 }
+                switch PlanStartAvailabilityPolicy.availability(
+                    for: plan,
+                    metadata: store.metadata(for: plan)
+                ) {
+                case .available:
+                    break
+                case .unavailable:
+                    deepLinkManager.clearPending()
+                    return
+                }
                 deepLinkedWorkoutPlan = plan
                 showsDeepLinkedWorkout = true
                 deepLinkManager.clearPending()
