@@ -202,8 +202,10 @@ struct TrainView: View {
 
 struct BoardDetailView: View {
     let board: BoardRevision
+    @EnvironmentObject private var store: AppStore
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedHoldID: String?
+    @State private var showsReportProblem = false
 
     private var isCompactHeight: Bool {
         verticalSizeClass == .compact
@@ -260,6 +262,25 @@ struct BoardDetailView: View {
         .navigationTitle("Hold specs")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(isCompactHeight ? .hidden : .automatic, for: .tabBar)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showsReportProblem = true
+                } label: {
+                    Image(systemName: "exclamationmark.bubble")
+                }
+                .accessibilityLabel("Report a problem")
+                .accessibilityIdentifier("boardDetail.reportProblem")
+            }
+        }
+        .sheet(isPresented: $showsReportProblem) {
+            ReportProblemView(
+                source: .boardDetail,
+                boardID: board.id,
+                holdID: selectedHoldID
+            )
+            .environmentObject(store)
+        }
         .accessibilityIdentifier("boardDetail.screen")
     }
 

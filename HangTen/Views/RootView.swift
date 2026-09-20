@@ -1897,6 +1897,7 @@ struct WorkoutView: View {
     @State private var didAutoStart = false
     @State private var showEndConfirmation = false
     @State private var showsStepPicker = false
+    @State private var showsReportProblem = false
     @State private var didComplete = false
     @State private var didApplyReviewStep = false
 	    @State private var recorder = MotherboardWorkoutRecorder()
@@ -2099,12 +2100,29 @@ struct WorkoutView: View {
 				}
 				.accessibilityLabel(audioCuesEnabled ? "Turn off spoken cues" : "Turn on spoken cues")
 
+				Button {
+					showsReportProblem = true
+				} label: {
+					Image(systemName: "exclamationmark.bubble")
+				}
+				.accessibilityLabel("Report a problem")
+				.accessibilityIdentifier("workout.reportProblem")
+
 				Button("End") {
 					showEndConfirmation = true
 				}
 				.font(.system(size: 13, weight: .bold, design: .rounded))
 				.foregroundStyle(Color.hangGreenDark)
 			}
+        }
+        .sheet(isPresented: $showsReportProblem) {
+            ReportProblemView(
+                source: .workout,
+                boardID: board.id,
+                planID: plan.id,
+                stepID: step(at: currentElapsed(at: WorkoutClock.monotonicTime)).id
+            )
+            .environmentObject(store)
         }
         .confirmationDialog("End this session?", isPresented: $showEndConfirmation, titleVisibility: .visible) {
             Button("End session", role: .destructive) {

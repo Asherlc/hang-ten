@@ -9,8 +9,11 @@ struct HangTenApp: App {
 	@StateObject private var store: AppStore
 
 	init() {
-		SentrySDK.start { options in
-			options.dsn = Bundle.main.object(forInfoDictionaryKey: "SENTRY_DSN") as? String
+		let sentryConfiguration = SentryConfiguration(bundle: .main)
+		if sentryConfiguration.isConfigured {
+			SentrySDK.start { options in
+				options.dsn = sentryConfiguration.dsn
+			}
 		}
 
 		#if DEBUG

@@ -32,6 +32,7 @@ HangTen/Models/PlanStorage.swift
 HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
 HangTen/Models/SentryDiagnostics.swift
+HangTen/Models/SentryUserReports.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
 HangTen/Models/SuspensionProfiles.swift
 HangTen/Models/Telemetry.swift
@@ -87,6 +88,7 @@ HangTen/Views/GripHandModelView.swift
 HangTen/Views/MotherboardViews.swift
 HangTen/Views/MotherboardWorkoutPreparationView.swift
 HangTen/Views/OrbitPanGestureDelegate.swift
+HangTen/Views/ReportProblemView.swift
 HangTen/Views/RootView.swift
 HangTen/Views/SuspendedBoardPresentation.swift
 HangTen/Views/TrainView.swift

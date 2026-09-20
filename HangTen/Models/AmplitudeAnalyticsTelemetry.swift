@@ -21,9 +21,28 @@ struct AnalyticsConfiguration {
     }
 }
 
+struct SentryConfiguration {
+    let dsn: String
+
+    init(dsn: String) {
+        self.dsn = dsn.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    init(bundle: Bundle) {
+        self.init(
+            dsn: bundle.object(forInfoDictionaryKey: "SENTRY_DSN") as? String ?? ""
+        )
+    }
+
+    var isConfigured: Bool {
+        !dsn.isEmpty && !dsn.hasPrefix("$(")
+    }
+}
+
 struct TelemetryDependencies {
     let tracking: any TelemetryTracking
     let diagnostics: any DiagnosticReporting
+    let userReports: any UserReportSubmitting
     let flags: any FeatureFlagProviding
     let replay: any SessionReplayControlling
     let isNoOp: Bool
@@ -33,6 +52,7 @@ struct TelemetryDependencies {
         return TelemetryDependencies(
             tracking: noOp,
             diagnostics: noOp,
+            userReports: noOp,
             flags: noOp,
             replay: noOp,
             isNoOp: true
@@ -42,22 +62,33 @@ struct TelemetryDependencies {
 
 enum TelemetryComposition {
     static func make(bundle: Bundle) -> TelemetryDependencies {
-        make(configuration: AnalyticsConfiguration(bundle: bundle))
+        make(
+            analytics: AnalyticsConfiguration(bundle: bundle),
+            sentry: SentryConfiguration(bundle: bundle)
+        )
     }
 
     static func make(configuration: AnalyticsConfiguration) -> TelemetryDependencies {
-        guard configuration.isConfigured else {
-            return .noOp()
-        }
+        make(analytics: configuration, sentry: SentryConfiguration(dsn: ""))
+    }
+
+    static func make(
+        analytics: AnalyticsConfiguration,
+        sentry: SentryConfiguration
+    ) -> TelemetryDependencies {
+        let noOp = NoOpTelemetry()
+        let trackingConfigured = analytics.isConfigured
+        let sentryConfigured = sentry.isConfigured
 
         return TelemetryDependencies(
-            tracking: AmplitudeAnalyticsTelemetry(
-                client: AmplitudeSDKClient(configuration: configuration)
-            ),
-            diagnostics: SentryDiagnostics(),
-            flags: NoOpTelemetry(),
-            replay: NoOpTelemetry(),
-            isNoOp: false
+            tracking: trackingConfigured
+                ? AmplitudeAnalyticsTelemetry(client: AmplitudeSDKClient(configuration: analytics))
+                : noOp,
+            diagnostics: sentryConfigured ? SentryDiagnostics() : noOp,
+            userReports: sentryConfigured ? SentryUserReports() : noOp,
+            flags: noOp,
+            replay: noOp,
+            isNoOp: !trackingConfigured && !sentryConfigured
         )
     }
 }
