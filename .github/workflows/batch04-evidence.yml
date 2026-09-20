@@ -1,0 +1,143 @@
+name: Batch 04 evidence capture
+
+# Temporary artifact-only branch: no app build, release, deployment or secrets.
+on:
+  push:
+    branches: [artifacts/batch04-evidence-20260920]
+    paths: [.github/workflows/batch04-evidence.yml]
+permissions:
+  contents: read
+concurrency:
+  group: batch04-evidence-artifacts
+  cancel-in-progress: false
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Retrieve public original product references
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p evidence runtime
+          cat > /tmp/capture.py <<'PY'
+          import concurrent.futures, datetime, hashlib, html, json, pathlib, re, urllib.request, urllib.parse
+          root=pathlib.Path('evidence')
+          sources={
+          'owl-climb-poker':[
+            'https://owlclimb.com/index.php/en/prds-2/poker/',
+            'https://www.oliunid.com/owl-climb-poker-climbing-hangboard',
+            'https://bananafingers.co.uk/owl-climb-poker-hangboard-owlclimb-poker',
+            'https://woguclimbing.com/review-owl-climb-accesorios-entrenamiento-escalada/'
+          ],
+          'crimptonite-helium-mobile':[
+            'https://crimptonite.com/product/helium-mobile/',
+            'https://9cbouldering.com/products/helium-mobile-hangboard.js',
+            'https://9cbouldering.com/products/helium-mobile-hangboard',
+            'https://sintrabouldershop.com/shop/crimptonite-mobile-hangboard-helium',
+            'https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580',
+            'https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580'
+          ],
+          'metolius-light-rail-2-0':[
+            'https://www.metoliusclimbing.com/products/light-rail',
+            'https://www.metoliusclimbing.com/products/light-rail.js',
+            'https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616',
+            'https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826',
+            'https://www.rei.com/product/255212/metolius-light-rail-20'
+          ],
+          'metolius-rock-rings-3d':[
+            'https://www.metoliusclimbing.com/products/rock-rings-3d',
+            'https://www.metoliusclimbing.com/products/rock-rings-3d.js',
+            'https://www.metoliusclimbing.com/cdn/shop/files/Rock-Ring-Depts.jpg?v=1762201543',
+            'https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123',
+            'https://www.wildernesssupply.ca/training/metolius/rock-rings-3d',
+            'https://www.brack.ch/fr/metolius-trainingsring-rock-rings-3d-noir-blanc-1804523'
+          ],
+          'yy-vertical-penta-evo':[
+            'https://www.yyvertical.com/en/products/penta-evo',
+            'https://www.yyvertical.com/en/products/penta-evo.js',
+            'https://www.yyvertical.com/en/blogs/news/installer-cordelettes-agres-penta-evo-guide-complet-4-noeuds',
+            'https://www.maxclimbing.com/en-de/products/penta-evo',
+            'https://www.maxclimbing.com/products/penta-evo.js',
+            'https://varuste.net/en/p135969/yy-vertical-penta-evo',
+            'https://www.maxclimbing.com/cdn/shop/files/YY_WEB_TRAIN_PENTA-EVO_600-600_3_800x800_crop_center_2x_6052bd91-7c80-49fe-a0b6-dbfd95034ba1.webp?v=1740652026&width=1445'
+          ],
+          'trango-rock-prodigy-pivot':[
+            'https://trango.com/products/rock-prodigy-pivot',
+            'https://trango.com/products/rock-prodigy-pivot.js',
+            'https://trango.com/cdn/shop/products/22840-501_RockProdigyPivotGrey_MainImage.jpg?v=1755037446&width=1946',
+            'https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage2_CloseUp.jpg?v=1755037446&width=1946',
+            'https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage3_SingleBoard.jpg?v=1755037446&width=1946',
+            'https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage4_DualBoard.jpg?v=1755037446&width=1946',
+            'https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507',
+            'https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905',
+            'https://www.gearx.com/products/trango-rock-prodigypivot-hm47z-grey'
+          ]}
+          for n in range(4):
+            for base in ['https://owlclimb.com/wp-content/uploads/2019/03/','https://www.oliunid.com/media/catalog/product/o/w/','https://i0.wp.com/owlclimb.com/wp-content/uploads/2019/03/']:
+              sources['owl-climb-poker'].append(base+'owlclimb_poker19_'+str(n)+'.jpg')
+          def download(task):
+            slug,url=task; record={'product':slug,'url':url,'retrievedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat()}; discovered=[]
+            try:
+              req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; product-reference-research/1.0)'})
+              with urllib.request.urlopen(req,timeout=25) as response:
+                data=response.read(16*1024*1024+1); mime=response.headers.get('Content-Type',''); record.update(status=response.status,finalURL=response.url,mime=mime)
+              if len(data)>16*1024*1024: raise ValueError('Response exceeds reference-file size cap')
+              name=pathlib.Path(urllib.parse.urlparse(url).path).name or 'index.html'
+              if '.' not in name: name+='.html'
+              name=hashlib.sha256(url.encode()).hexdigest()[:10]+'-'+re.sub(r'[^A-Za-z0-9._-]','_',name)
+              folder=root/slug; folder.mkdir(parents=True,exist_ok=True); path=folder/name; path.write_bytes(data)
+              record.update(file=str(path.relative_to(root)),bytes=len(data),sha256=hashlib.sha256(data).hexdigest())
+              if 'json' in mime or url.endswith('.js'):
+                try:
+                  product=json.loads(data); images=product.get('images',[])
+                  if isinstance(images,list):
+                    for image in images:
+                      src=image if isinstance(image,str) else image.get('src','')
+                      if src: discovered.append(urllib.parse.urljoin(url,src))
+                except (ValueError,AttributeError): pass
+              if 'html' in mime:
+                text=html.unescape(data.decode('utf-8',errors='replace')).replace('\\/','/')
+                keywords={'owl-climb-poker':['poker','ceria'],'crimptonite-helium-mobile':['helium'],'metolius-light-rail-2-0':['light-rail','light_rail','lightrail'],'metolius-rock-rings-3d':['rock-ring','rock_ring','rockring'],'yy-vertical-penta-evo':['penta','noeud'],'trango-rock-prodigy-pivot':['pivot']}[slug]
+                for match in re.findall(r'(?:https?:)?//[^\s\"\'<>]+?\.(?:jpg|jpeg|png|webp|pdf)(?:\?[^\s\"\'<>]*)?',text,re.I):
+                  if any(k in match.lower() for k in keywords): discovered.append(urllib.parse.urljoin(url,match))
+            except Exception as error:
+              record['error']=type(error).__name__+': '+str(error)
+            return record,discovered
+          tasks=[(slug,url) for slug,urls in sources.items() for url in urls]; records=[]; known=set(tasks); follow=[]
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+            for rec,urls in pool.map(download,tasks):
+              records.append(rec)
+              for url in list(dict.fromkeys(urls))[:30]:
+                task=(rec['product'],url)
+                if task not in known: known.add(task);follow.append(task)
+            for rec,_ in pool.map(download,follow): records.append(rec)
+          (root/'retrieval-manifest.json').write_text(json.dumps(records,indent=2))
+          (root/'RIGHTS.txt').write_text('Original third-party evidence files retained for source review. No commercial redistribution or application-texture license is claimed. Files are not generated illustrations. HTTP success alone is not proof of product identity; each source requires visual inspection.\n')
+          print(json.dumps({'attempts':len(records),'saved':sum('file' in r for r in records),'errors':sum('error' in r for r in records)}))
+          PY
+          python /tmp/capture.py
+      - name: Preserve evidence artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: batch04-original-evidence
+          path: evidence/
+          retention-days: 7
+          if-no-files-found: error
+      - name: Fetch official portable Blender runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 1 --max-time 300 https://download.blender.org/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz -o runtime/blender-4.5.3-linux-x64.tar.xz
+          sha256sum runtime/blender-4.5.3-linux-x64.tar.xz > runtime/SHA256SUMS
+          tar -xJf runtime/blender-4.5.3-linux-x64.tar.xz -C /tmp
+          /tmp/blender-4.5.3-linux-x64/blender --background --factory-startup --python-expr "import bpy; print('BLENDER_PREFLIGHT', bpy.app.version_string); bpy.ops.wm.save_as_mainfile(filepath='/tmp/probe.blend'); bpy.ops.wm.open_mainfile(filepath='/tmp/probe.blend'); print('REOPEN_PASS', len(bpy.data.objects))" > runtime/blender-preflight.log 2>&1
+          cat runtime/blender-preflight.log
+      - name: Preserve verified Blender runtime
+        uses: actions/upload-artifact@v4
+        with:
+          name: batch04-blender-runtime
+          path: runtime/
+          compression-level: 0
+          retention-days: 3
+          if-no-files-found: error
