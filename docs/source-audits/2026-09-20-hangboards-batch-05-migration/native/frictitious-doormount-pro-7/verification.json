@@ -1,0 +1,131 @@
+{
+  "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+  "descriptorSHA256": "eea1505a86df1af33d440b2da55c729e53102ad7bc15b9f502e821fe75570fa4",
+  "cleanEmptySceneImport": true,
+  "contactCount": 13,
+  "meshCount": 14,
+  "unionOfAllContactTrianglesUnchanged": true,
+  "ownershipTransferTriangles": 0,
+  "originalContactTriangleCounts": {
+    "top-jug": 3981,
+    "edge-35-left": 954,
+    "edge-35-right": 954,
+    "mixed-25-pocket-left": 1386,
+    "mixed-25-pocket-right": 1386,
+    "hold-7": 504,
+    "hold-6": 504,
+    "hold-12": 756,
+    "hold-13": 756,
+    "hold-11": 594,
+    "hold-8": 594,
+    "hold-10": 720,
+    "hold-9": 720
+  },
+  "contactTriangleChecks": [
+    {
+      "contactID": "edge-35-left",
+      "triangleCount": 954,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-35-right",
+      "triangleCount": 954,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-10",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-11",
+      "triangleCount": 594,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-12",
+      "triangleCount": 756,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-13",
+      "triangleCount": 756,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-6",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-7",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-8",
+      "triangleCount": 594,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-9",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mixed-25-pocket-left",
+      "triangleCount": 1386,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mixed-25-pocket-right",
+      "triangleCount": 1386,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "top-jug",
+      "triangleCount": 3981,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    }
+  ],
+  "mountingClosureRays": [
+    {
+      "centerSourceMetres": [
+        0.0,
+        0,
+        0.011
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.02615000307559967,
+      "backYMetres": 7.450580596923828e-09
+    }
+  ],
+  "maximumSourceContactCornerNormalDelta": 0.00035349872682783235,
+  "allImportedImageMaterials": true,
+  "allTriangles": true,
+  "descriptorCanonicalSorted": true,
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state.",
+  "nativeCompiler": "Tools/HangboardModels/contact_model_package.py",
+  "nativeImporter": "Tools/HangboardModels/import_contact_model_source.py",
+  "compilerSHA256": "d70040768c1228f5fac2dd9ce58aa0a18f97c4d1e3a5f6ae175f2cb70a3e44d1",
+  "importerSHA256": "15859f52961b1a071fd8da694e4ff8d92812361f2996ecb836dbbe435e3ad53b",
+  "usdzMembers": [
+    "primary.usdc",
+    "textures/frictitious-doormount-pro-7-substrate.png"
+  ]
+}

@@ -57,6 +57,8 @@ MODEL_PACKAGE_IDS = {
     "clavellium-training-block",
     "zlagboard.evo",
     "zlagboard.pro",
+    "frictitious.doormount-pro-7",
+    "frictitious.megalith",
 }
 
 FIXED_FRONT_MODEL_PACKAGE_SLUGS = (

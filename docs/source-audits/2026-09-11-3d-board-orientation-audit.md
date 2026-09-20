@@ -779,3 +779,12 @@ Bounds and orthographic front camera are an authored display estimate, not
 published board measurements. +Y is up and +Z faces the athlete; the source GLB
 root transform was baked exactly once in native preparation. No suspension is
 documented in the approved source set; both exclusions have explicit user approval.
+
+## Frictitious native migration, 2026-09-20
+
+Author: Astra. Approved evidence D1/D2/D3/D4 (lower Pro 7 only), M1/M2/M3 (side profile). Model bounds are mesh-derived; cavity profile/curvature is an authored display estimate.
+
+| Package | model bounds (metres) | position and hold IDs | pivot / quaternion | evidence and review |
+| --- | --- | --- | --- | --- |
+| `frictitious.doormount-pro-7` | [-0.323850006, -0.057150006, -6e-09] → [0.323850006, 0.05715001, 0.057150006] | Existing primary, all 13 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
+| `frictitious.megalith` | [-0.339724988, -0.082550004, -9e-09] → [0.339724988, 0.082550012, 0.057150003] | Existing primary, all 20 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |

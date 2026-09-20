@@ -1,0 +1,337 @@
+{
+  "contacts": {
+    "edge-35-left": {
+      "center": [
+        0.10938706,
+        0.592738458
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.181951526,
+          0.667979052
+        ],
+        "min": [
+          0.036822593,
+          0.517497864
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_edge_35_001"
+      ]
+    },
+    "edge-35-right": {
+      "center": [
+        0.890612941,
+        0.592738458
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.963177407,
+          0.667979052
+        ],
+        "min": [
+          0.818048474,
+          0.517497864
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_edge_35_001"
+      ]
+    },
+    "hold-10": {
+      "center": [
+        0.373161974,
+        0.15266847
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.434383203,
+          0.220909944
+        ],
+        "min": [
+          0.311940746,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_edge_10_001"
+      ]
+    },
+    "hold-11": {
+      "center": [
+        0.253553106,
+        0.101924808
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.314089889,
+          0.119422621
+        ],
+        "min": [
+          0.193016323,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_edge_15_001"
+      ]
+    },
+    "hold-12": {
+      "center": [
+        0.130152519,
+        0.15266847
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.194919838,
+          0.220909944
+        ],
+        "min": [
+          0.065385199,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_edge_20_001"
+      ]
+    },
+    "hold-13": {
+      "center": [
+        0.869847482,
+        0.15266847
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.934614801,
+          0.220909944
+        ],
+        "min": [
+          0.805080162,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_edge_20_001"
+      ]
+    },
+    "hold-6": {
+      "center": [
+        0.747027935,
+        0.597112882
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.771730733,
+          0.628608948
+        ],
+        "min": [
+          0.722325137,
+          0.565616816
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_pocket_2finger_001"
+      ]
+    },
+    "hold-7": {
+      "center": [
+        0.252972065,
+        0.597112882
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.277674863,
+          0.628608948
+        ],
+        "min": [
+          0.228269267,
+          0.565616816
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_pocket_2finger_001"
+      ]
+    },
+    "hold-8": {
+      "center": [
+        0.746446894,
+        0.101924808
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.806983677,
+          0.119422621
+        ],
+        "min": [
+          0.685910111,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_edge_15_001"
+      ]
+    },
+    "hold-9": {
+      "center": [
+        0.626838026,
+        0.15266847
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.688059254,
+          0.220909944
+        ],
+        "min": [
+          0.565616797,
+          0.084426995
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_edge_10_001"
+      ]
+    },
+    "mixed-25-pocket-left": {
+      "center": [
+        0.330168295,
+        0.563429614
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.445190674,
+          0.657480351
+        ],
+        "min": [
+          0.215145915,
+          0.469378878
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_edge_25_001"
+      ]
+    },
+    "mixed-25-pocket-right": {
+      "center": [
+        0.669831706,
+        0.563429614
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.784854085,
+          0.657480351
+        ],
+        "min": [
+          0.554809326,
+          0.469378878
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_edge_25_001"
+      ]
+    },
+    "top-jug": {
+      "center": [
+        0.5,
+        0.940314209
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.998456049,
+          1.0
+        ],
+        "min": [
+          0.001543951,
+          0.880628418
+        ]
+      },
+      "nodeIDs": [
+        "hold__jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.323850006,
+      0.05715001,
+      0.057150006
+    ],
+    "min": [
+      -0.323850006,
+      -0.057150006,
+      -6e-09
+    ]
+  },
+  "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+  "nodes": [
+    {
+      "nodeID": "body__board_mounting_omitted_001",
+      "role": "body"
+    },
+    {
+      "contactID": "top-jug",
+      "nodeID": "hold__jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-10",
+      "nodeID": "hold__left_edge_10_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-11",
+      "nodeID": "hold__left_edge_15_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-12",
+      "nodeID": "hold__left_edge_20_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mixed-25-pocket-left",
+      "nodeID": "hold__left_edge_25_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-35-left",
+      "nodeID": "hold__left_edge_35_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-7",
+      "nodeID": "hold__left_pocket_2finger_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-9",
+      "nodeID": "hold__right_edge_10_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-8",
+      "nodeID": "hold__right_edge_15_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-13",
+      "nodeID": "hold__right_edge_20_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mixed-25-pocket-right",
+      "nodeID": "hold__right_edge_25_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-35-right",
+      "nodeID": "hold__right_edge_35_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "hold-6",
+      "nodeID": "hold__right_pocket_2finger_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

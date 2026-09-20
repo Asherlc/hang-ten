@@ -1,0 +1,227 @@
+{
+  "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+  "descriptorSHA256": "20ba8fdaf126b2ae1ddb74faf455edc4f3046461777f71bd5b39a9849c1386cc",
+  "cleanEmptySceneImport": true,
+  "contactCount": 20,
+  "meshCount": 21,
+  "unionOfAllContactTrianglesUnchanged": true,
+  "ownershipTransferTriangles": 18,
+  "originalContactTriangleCounts": {
+    "top-jug": 4150,
+    "center-edge-25": 408,
+    "mono-left": 396,
+    "mono-right": 396,
+    "pocket-2finger-left": 504,
+    "pocket-2finger-right": 504,
+    "edge-8-left": 828,
+    "edge-10-left": 720,
+    "edge-12-left": 828,
+    "edge-15-left": 720,
+    "edge-20-left": 702,
+    "edge-30-left": 792,
+    "edge-8-right": 828,
+    "edge-10-right": 720,
+    "edge-12-right": 828,
+    "edge-15-right": 702,
+    "edge-20-right": 720,
+    "edge-30-right": 792,
+    "edge-40-pocket-left": 1134,
+    "edge-40-pocket-right": 1134
+  },
+  "contactTriangleChecks": [
+    {
+      "contactID": "center-edge-25",
+      "triangleCount": 408,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-10-left",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-10-right",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-12-left",
+      "triangleCount": 828,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-12-right",
+      "triangleCount": 828,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-15-left",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-15-right",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": true
+    },
+    {
+      "contactID": "edge-20-left",
+      "triangleCount": 702,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-20-right",
+      "triangleCount": 702,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": true
+    },
+    {
+      "contactID": "edge-30-left",
+      "triangleCount": 792,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-30-right",
+      "triangleCount": 792,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-40-pocket-left",
+      "triangleCount": 1134,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-40-pocket-right",
+      "triangleCount": 1134,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-8-left",
+      "triangleCount": 828,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-8-right",
+      "triangleCount": 828,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mono-left",
+      "triangleCount": 396,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mono-right",
+      "triangleCount": 396,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "pocket-2finger-left",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "pocket-2finger-right",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "top-jug",
+      "triangleCount": 4150,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    }
+  ],
+  "mountingClosureRays": [
+    {
+      "centerSourceMetres": [
+        -0.29,
+        0,
+        0.008
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.022000007331371307,
+      "backYMetres": 7.450580596923828e-09
+    },
+    {
+      "centerSourceMetres": [
+        -0.13,
+        0,
+        -0.043
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.037000007927417755,
+      "backYMetres": 7.450580596923828e-09
+    },
+    {
+      "centerSourceMetres": [
+        -0.062,
+        0,
+        0.011
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.0260000079870224,
+      "backYMetres": 7.450580596923828e-09
+    },
+    {
+      "centerSourceMetres": [
+        0.29,
+        0,
+        0.008
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.022000007331371307,
+      "backYMetres": 7.450580596923828e-09
+    },
+    {
+      "centerSourceMetres": [
+        0.13,
+        0,
+        -0.043
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.037000007927417755,
+      "backYMetres": 7.450580596923828e-09
+    },
+    {
+      "centerSourceMetres": [
+        0.062,
+        0,
+        0.011
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.0260000079870224,
+      "backYMetres": 7.450580596923828e-09
+    }
+  ],
+  "maximumSourceContactCornerNormalDelta": 0.00020088853227333866,
+  "allImportedImageMaterials": true,
+  "allTriangles": true,
+  "descriptorCanonicalSorted": true,
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state."
+}

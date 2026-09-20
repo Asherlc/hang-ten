@@ -1,0 +1,55 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 13,
+  "contactMappings": {
+    "hold--jug": "top-jug",
+    "hold--left-edge-10": "hold-10",
+    "hold--left-edge-15": "hold-11",
+    "hold--left-edge-20": "hold-12",
+    "hold--left-edge-25": "mixed-25-pocket-left",
+    "hold--left-edge-35": "edge-35-left",
+    "hold--left-pocket-2finger": "hold-7",
+    "hold--right-edge-10": "hold-9",
+    "hold--right-edge-15": "hold-8",
+    "hold--right-edge-20": "hold-13",
+    "hold--right-edge-25": "mixed-25-pocket-right",
+    "hold--right-edge-35": "edge-35-right",
+    "hold--right-pocket-2finger": "hold-6"
+  },
+  "descriptorSHA256": "eea1505a86df1af33d440b2da55c729e53102ad7bc15b9f502e821fe75570fa4",
+  "modelBounds": {
+    "max": [
+      0.323850006,
+      0.05715001,
+      0.057150006
+    ],
+    "min": [
+      -0.323850006,
+      -0.057150006,
+      -6e-09
+    ]
+  },
+  "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+  "nodeCount": 14,
+  "packageID": "frictitious.doormount-pro-7",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/frictitious-doormount-pro-7.blend",
+  "sourceModelSHA256": "680c2144280b1fcc244bd3b1573a04e409221bf349f2986278cd2c680329ad79",
+  "sourceObjectIDs": [
+    "body--board",
+    "hold--jug",
+    "hold--left-edge-10",
+    "hold--left-edge-15",
+    "hold--left-edge-20",
+    "hold--left-edge-25",
+    "hold--left-edge-35",
+    "hold--left-pocket-2finger",
+    "hold--right-edge-10",
+    "hold--right-edge-15",
+    "hold--right-edge-20",
+    "hold--right-edge-25",
+    "hold--right-edge-35",
+    "hold--right-pocket-2finger"
+  ],
+  "status": "converted"
+}

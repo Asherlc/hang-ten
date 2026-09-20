@@ -885,6 +885,68 @@
         "reviewedAt": "2026-09-20",
         "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
       }
+    },
+    {
+      "packageID": "frictitious.doormount-pro-7",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved D1/D3 document doorway clamp mounting; no board-suspension cord is documented for this exact Pro 7 revision. Clamp, pads and mounting hardware are omitted display components, not absent physical features.",
+      "evidence": [
+        {
+          "view": "Pro 7 variant identity; 25.5 x 4.5 x 2.25 inches; poplar; depths 35/25/20/15/10 mm; pocket and jug; doorway clamp.",
+          "url": "https://frictitiousclimbing.com/products/doormount-pro",
+          "exactRevisionID": "frictitious.doormount-pro-7-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "451edefb80b74ec186eb1d25b375223ec42cad53639e8222efc7d55634cb1155",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.doormount-pro-7-D1-2026-09-20.html"
+        },
+        {
+          "view": "Current Pro 7 front and external clamp association.",
+          "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+          "exactRevisionID": "frictitious.doormount-pro-7-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "a67b16b6a84d2aa25c734990e43f56129ace1189a8291b3c4787ae35fd10497d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.doormount-pro-7-D3-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
+      "packageID": "frictitious.megalith",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved M1/M2 document a fixed wall board and mounting screw locations; no board-suspension cord is documented for this exact revision. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "26.75 x 6.5 x 2.25 inches; poplar; edge depths 40/30/20/15/12/10/8; 25 mm center edge; mono and 2-finger features; full-width jug.",
+          "url": "https://frictitiousclimbing.com/products/megalith",
+          "exactRevisionID": "frictitious.megalith-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "33faf609270b05dc54b4f0161bc46d6a20732f12370e467bb797140935e64d8b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.megalith-M1-2026-09-20.html"
+        },
+        {
+          "view": "Three tiers; depth ordering; continuous stepped openings; six screw openings; central protruding grip and bottom notch.",
+          "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840",
+          "exactRevisionID": "frictitious.megalith-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "93d9089def4eaf45b58e9805540fbef2c7fb5fe84b278d4a03143a0243c9ef19",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.megalith-M2-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
     }
   ]
 }
