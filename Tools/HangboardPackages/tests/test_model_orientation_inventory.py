@@ -55,6 +55,8 @@ MODEL_PACKAGE_IDS = {
     "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
     "clavellium-training-block",
+    "zlagboard.evo",
+    "zlagboard.pro",
 }
 
 FIXED_FRONT_MODEL_PACKAGE_SLUGS = (

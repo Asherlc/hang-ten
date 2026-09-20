@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "approvalStatus": "PENDING",
+  "approvalStatus": "APPROVED",
   "captureMethod": "HTTP GET at exact canonical URLs; response entity bytes retained without re-encoding; Accept-Encoding identity; no image conversion/cropping",
   "sources": [
     {
@@ -38,7 +38,7 @@
       "kind": "image",
       "path": "originals/D2.jpg",
       "supports": "Unobstructed Pro 7 face, shared lower stepped cavities, deep subpockets, center channel and oval mounting opening.",
-      "caveats": "No precise section or hidden routing; perspective and lighting affect depth judgments. Small cosmetic logo differs from D3; the seven-type layout agrees. Human review of this exact pairing remains pending.",
+      "caveats": "No precise section or hidden routing; perspective and lighting affect depth judgments. Small cosmetic logo differs from D3; the seven-type layout agrees. This exact pairing was approved by the user on 2026-09-20 as evidence, not model acceptance.",
       "fetchedURL": "https://cdn.instant.so/sites/bok0avMvQiSRIEaF/assets/akfH3QAsM57AjzC5/pro7.jpg?width=3840",
       "fetchedAtUTC": "2026-09-20T19:35:59.981342+00:00",
       "httpStatus": 200,
@@ -607,5 +607,13 @@
   "captureNotes": [
     "Initial sandbox attempts failed DNS resolution for all 24 exact URLs (three attempts each); retried identical URLs with authorized network access. All retained requests returned HTTP 200.",
     "The delivery source registers remain byte-preserved historical statements, including unavailable binary notes and conflict rulings; this evidence packet supersedes those notes only for these 24 retained captures."
-  ]
+  ],
+  "humanApproval": {
+    "approved": true,
+    "reviewer": "user (explicit chat approval)",
+    "reviewedAt": "2026-09-20",
+    "scope": "Exact 24 manufacturer captures, 12 full-page PDF review views and all six cord exclusions in REVIEW.md approved as the basis for evidence-led migration.",
+    "modelAcceptance": false,
+    "record": "../human-approval.json"
+  }
 }

@@ -823,6 +823,68 @@
         "reviewedAt": "2026-09-16",
         "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
       }
+    },
+    {
+      "packageID": "zlagboard.evo",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "E1 and E3 show the metal mounting frame. No board-suspension cord is documented in this approved exact-revision set; phone-retention bands are not hangboard suspension. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "current manufacturer product page",
+          "url": "https://zlagboard.com/hangboards",
+          "exactRevisionID": "zlagboard.evo-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c1ccf4c71588fa82744a122308a4469841472f31973f75a4adfaf363759cbf1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.evo-E1-2026-09-20.html"
+        },
+        {
+          "view": "exact revision manufacturer front with mounting frame",
+          "url": "https://zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png",
+          "exactRevisionID": "zlagboard.evo-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.evo-E3-2026-09-20.png"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
+      "packageID": "zlagboard.pro",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "E1 and P3 show the metal mounting frame. No board-suspension cord is documented in this approved exact-revision set; phone-retention bands are not hangboard suspension. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "current manufacturer product page",
+          "url": "https://zlagboard.com/hangboards",
+          "exactRevisionID": "zlagboard.pro-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c1ccf4c71588fa82744a122308a4469841472f31973f75a4adfaf363759cbf1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.pro-E1-2026-09-20.html"
+        },
+        {
+          "view": "exact revision manufacturer front with mounting frame",
+          "url": "https://zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png",
+          "exactRevisionID": "zlagboard.pro-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.pro-P3-2026-09-20.png"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
     }
   ]
 }

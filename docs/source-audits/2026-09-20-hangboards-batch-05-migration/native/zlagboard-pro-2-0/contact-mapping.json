@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "logicalContactIDs": [
+    "top-jug-left",
+    "top-jug-right",
+    "top-sloper-32-left",
+    "top-sloper-32-right",
+    "top-sloper-20-left",
+    "top-sloper-20-right",
+    "top-sloper-jug-center",
+    "edge-30-left",
+    "sloper-edge-30-left",
+    "sloper-edge-25-left",
+    "edge-35-center",
+    "sloper-edge-25-right",
+    "sloper-edge-30-right",
+    "edge-30-right",
+    "edge-20-left",
+    "sloper-edge-25-lower-left",
+    "edge-30-inner-left",
+    "sloper-edge-30-center",
+    "edge-30-inner-right",
+    "sloper-edge-25-lower-right",
+    "edge-20-right",
+    "edge-incut-15-left",
+    "edge-15-left",
+    "edge-incut-30-left",
+    "edge-incut-10-center",
+    "edge-incut-30-right",
+    "edge-15-right",
+    "edge-incut-15-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body--board",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--left-jug",
+      "role": "contact",
+      "contactID": "top-jug-left"
+    },
+    {
+      "sourceNodeID": "hold--right-jug",
+      "role": "contact",
+      "contactID": "top-jug-right"
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-32",
+      "role": "contact",
+      "contactID": "top-sloper-32-left"
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-32",
+      "role": "contact",
+      "contactID": "top-sloper-32-right"
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-20",
+      "role": "contact",
+      "contactID": "top-sloper-20-left"
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-20",
+      "role": "contact",
+      "contactID": "top-sloper-20-right"
+    },
+    {
+      "sourceNodeID": "hold--center-sloping-jug",
+      "role": "contact",
+      "contactID": "top-sloper-jug-center"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-1",
+      "role": "contact",
+      "contactID": "edge-30-left"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-2",
+      "role": "contact",
+      "contactID": "sloper-edge-30-left"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-3",
+      "role": "contact",
+      "contactID": "sloper-edge-25-left"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-4",
+      "role": "contact",
+      "contactID": "edge-35-center"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-5",
+      "role": "contact",
+      "contactID": "sloper-edge-25-right"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-6",
+      "role": "contact",
+      "contactID": "sloper-edge-30-right"
+    },
+    {
+      "sourceNodeID": "hold--row-1-column-7",
+      "role": "contact",
+      "contactID": "edge-30-right"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-1",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-2",
+      "role": "contact",
+      "contactID": "sloper-edge-25-lower-left"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-3",
+      "role": "contact",
+      "contactID": "edge-30-inner-left"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-4",
+      "role": "contact",
+      "contactID": "sloper-edge-30-center"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-5",
+      "role": "contact",
+      "contactID": "edge-30-inner-right"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-6",
+      "role": "contact",
+      "contactID": "sloper-edge-25-lower-right"
+    },
+    {
+      "sourceNodeID": "hold--row-2-column-7",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-1",
+      "role": "contact",
+      "contactID": "edge-incut-15-left"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-2",
+      "role": "contact",
+      "contactID": "edge-15-left"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-3",
+      "role": "contact",
+      "contactID": "edge-incut-30-left"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-4",
+      "role": "contact",
+      "contactID": "edge-incut-10-center"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-5",
+      "role": "contact",
+      "contactID": "edge-incut-30-right"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-6",
+      "role": "contact",
+      "contactID": "edge-15-right"
+    },
+    {
+      "sourceNodeID": "hold--row-3-column-7",
+      "role": "contact",
+      "contactID": "edge-incut-15-right"
+    }
+  ],
+  "sourceAuthority": "P2/P3 with shared E1 current manufacturer product page",
+  "ruling": "Explicit diagram top-band and row/column semantic mapping; existing app contact order and facts preserved exactly, no count-only correspondence.",
+  "packageID": "zlagboard.pro"
+}

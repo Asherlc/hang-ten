@@ -762,3 +762,20 @@ the same correct AABBs, so nothing user-visible breaks. The shared
 nearest-hit test helper's universal assumption (patch-center ray strikes a
 hold) does not cover lip-modeled recessed contacts; the new regression
 tests assert binding, selection, and finite framing instead.
+
+
+## Batch 05 Zlagboard fixed-front migration (2026-09-20)
+
+Author: Astra, after explicit user evidence approval on 2026-09-20.
+[Evidence, mapping and native verification](2026-09-20-hangboards-batch-05-migration/native/README.md)
+retain E1/E2/E3 and E1/P2/P3 authority and distinguish estimates from facts.
+
+| Package | Model bounds in metres (min → max) | Position / hold IDs | Pivot / quaternion | Review |
+| --- | --- | --- | --- | --- |
+| `zlagboard.evo` | (-0.350, -0.060, 0) → (0.350, 0.060, 0.042) | Existing primary; all 21 stable hold IDs, exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
+| `zlagboard.pro` | (-0.3525, -0.076, 0) → (0.3525, 0.076, 0.042) | Existing primary; all 28 stable hold IDs, Pro 2.0 exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
+
+Bounds and orthographic front camera are an authored display estimate, not
+published board measurements. +Y is up and +Z faces the athlete; the source GLB
+root transform was baked exactly once in native preparation. No suspension is
+documented in the approved source set; both exclusions have explicit user approval.

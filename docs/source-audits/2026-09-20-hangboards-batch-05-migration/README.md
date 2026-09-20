@@ -1,6 +1,6 @@
 # Batch 05 migration evidence packet
 
-The bounded migration design was approved in chat. **Exact evidence approval and all six proposed cord exclusions remain PENDING.** Start at [REVIEW.md](REVIEW.md). This commit retains evidence only; no Hangboards package, app code, production tool, geometry, material, test or Xcode project changes are included.
+The bounded migration design was approved in chat. **The user approved the exact 24 captures, 12 PDF views and all six cord exclusions on 2026-09-20**; see [the approval record](human-approval.json). This authorizes migration, not model acceptance. Start at [REVIEW.md](REVIEW.md). The initial evidence commits retained sources only. Subsequent migration work is documented under [native](native/README.md).
 
 ## Retained delivery
 
@@ -27,7 +27,7 @@ The delivery says primary binary downloads were unavailable. Those historical so
 
 ## Remaining migration work
 
-1. Obtain exact-evidence and six cord-exclusion human approval; record reviewer, date, and scope truthfully.
+1. Exact-evidence and six cord-exclusion approval recorded: user, 2026-09-20. Native/model acceptance remains separate.
 2. Reconcile app/source contact counts (13/13, 18/20, 20/22, 14/16, 21/21, 28/28), especially Forge IM Deep/Shallow/IMR and overlapping pinches. Preserve stable identities and unsupported-depth omissions; keep Zlag board dimensions estimates.
 3. Review and correct source geometry/materials after the gate: Natural thumb-support channel fidelity, dark/jagged crimp artifacts, mounting holes/hardware omission, and any other evidenced discrepancy. The six delivered GLBs remain immutable originals here.
 4. Import through retained native tooling with explicit contact bindings, compile model-only USDZ/descriptor packages, and update the closed cord audit after approval. No routine changes.

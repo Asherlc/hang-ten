@@ -1,8 +1,8 @@
 # Batch 05 exact evidence review
 
-**Human approval: PENDING.** No reviewer, approval date, or acceptance is recorded.
+**Human evidence approval: APPROVED by the user in chat on 2026-09-20.** The [hash-bound approval record](human-approval.json) covers all 24 originals, 12 PDF review views and six cord exclusions. Model acceptance remains pending.
 
-This gate covers the exact 24 originals in [the hash manifest](evidence/manifest.json) and the six proposed cord exclusions below. Approval of this set would permit subsequent evidence-based geometry work; it would not accept delivered models, contact mappings, disputed depths, or native rendering.
+This gate covers the exact 24 originals in [the hash manifest](evidence/manifest.json) and the six proposed cord exclusions below. Approval of this set permits subsequent evidence-based geometry work; it would not accept delivered models, contact mappings, disputed depths, or native rendering.
 
 Five HTML captures, 15 images, and four PDFs are retained at their exact requested URLs. Images below are original bytes. Linked PDF previews are full-page review renders with separate [provenance](evidence/review-renders/manifest.json). Product HTML captures are archival source bytes, not self-contained offline websites.
 
@@ -78,9 +78,9 @@ P2 explicitly names pro2 and P3 is the 2019 three-row photo linked by the curren
 
 ![P3: Zlagboard.Pro 2.0 manufacturer evidence](evidence/originals/P3.png)
 
-## Six proposed cord exclusions
+## Six approved cord exclusions
 
-Each proposed record has `sourceFact: noDocumentedSuspension`, `decision: excluded`, and `topology: null`. **Human approval for every row: PENDING.** These are bounded findings from the retained sources, not claims that every possible accessory or suspension use is impossible. The production cord audit is unchanged.
+Each approved record has `sourceFact: noDocumentedSuspension`, `decision: excluded`, and `topology: null`. **Human approval for every row: user, 2026-09-20.** These are bounded findings from the retained sources, not claims that every possible accessory or suspension use is impossible. Production records are added only as the corresponding packages migrate.
 
 | Board | Retained evidence | Proposed ruling |
 | --- | --- | --- |
@@ -93,6 +93,6 @@ Each proposed record has `sourceFact: noDocumentedSuspension`, `decision: exclud
 
 ## Remaining gates
 
-Delivered mounting holes conflict with the display omission rule: later models must omit mounting holes, screws and external mounting hardware, while documenting that the physical products have them. Known dark/jagged crimp artifacts and possible shape discrepancies remain unresolved. No native Blender/SceneKit acceptance has been performed. No routines change.
+Delivered mounting holes conflict with the display omission rule: later models must omit mounting holes, screws and external mounting hardware, while documenting that the physical products have them. Known dark/jagged crimp artifacts and possible shape discrepancies in other delivered boards remain unresolved. Zlagboard native package checks and controller render review are documented in [native/README.md](native/README.md); current-source SceneKit acceptance remains pending. No routines change.
 
-Before geometry changes: obtain human approval of this exact evidence set and all six cord exclusions. Then reconcile inventories, correct only explicitly reviewed geometry/material issues, compile USDZ/descriptors, and validate app rendering and picking.
+The evidence gate was approved on 2026-09-20. Reconcile inventories, correct only explicitly reviewed geometry/material issues, compile USDZ/descriptors, and validate app rendering and picking.
