@@ -105,6 +105,10 @@ struct TrainView: View {
                     deepLinkManager.clearPending()
                     return
                 }
+                if let boardID = plan.boardID,
+                   let board = BoardCatalog.all.first(where: { $0.id == boardID }) {
+                    store.selectBoard(board)
+                }
                 deepLinkedWorkoutPlan = plan
                 showsDeepLinkedWorkout = true
                 deepLinkManager.clearPending()

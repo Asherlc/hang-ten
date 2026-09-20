@@ -2,6 +2,7 @@ import SwiftUI
 
 struct WorkoutAccessGate<Label: View>: View {
     @EnvironmentObject private var store: AppStore
+    @Environment(\.dismiss) private var dismiss
     @State private var pendingPlan: TrainingPlan?
     @State private var showsPaywall = false
     @State private var showsWorkout = false
@@ -63,7 +64,12 @@ struct WorkoutAccessGate<Label: View>: View {
     }
 
     private func continuePendingLaunchIfAllowed() {
-        guard pendingPlan != nil, store.workoutLaunchDecision == .allowed else { return }
+        guard pendingPlan != nil, store.workoutLaunchDecision == .allowed else {
+            if launchesOnAppear {
+                dismiss()
+            }
+            return
+        }
         showsWorkout = true
     }
 
