@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge | The Rock Climber&#039;s Training Manual</title>
+<link rel="profile" href="http://gmpg.org/xfn/11" />
+<link rel="pingback" href="https://rockclimberstrainingmanual.com/xmlrpc.php" />
+<!--[if lt IE 9]>
+<script src="https://s0.wp.com/wp-content/themes/pub/expound/js/html5.js?m=1376965621i" type="text/javascript"></script>
+<![endif]-->
+
+<meta name='robots' content='max-image-preview:large' />
+<meta name="google-site-verification" content="NJ3VubvJ_HzZKIJIf6omhsjNr_KWFQVjddVkuuUS3Fk" />
+
+<!-- Async WordPress.com Remote Login -->
+<script id="wpcom_remote_login_js">
+var wpcom_remote_login_extra_auth = '';
+function wpcom_remote_login_remove_dom_node_id( element_id ) {
+	var dom_node = document.getElementById( element_id );
+	if ( dom_node ) { dom_node.parentNode.removeChild( dom_node ); }
+}
+function wpcom_remote_login_remove_dom_node_classes( class_name ) {
+	var dom_nodes = document.querySelectorAll( '.' + class_name );
+	for ( var i = 0; i < dom_nodes.length; i++ ) {
+		dom_nodes[ i ].parentNode.removeChild( dom_nodes[ i ] );
+	}
+}
+function wpcom_remote_login_final_cleanup() {
+	wpcom_remote_login_remove_dom_node_classes( "wpcom_remote_login_msg" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_validate" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_js" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_iframe" );
+	wpcom_remote_login_remove_dom_node_id( "wpcom_request_access_styles" );
+}
+
+// Watch for messages back from the remote login
+window.addEventListener( "message", function( e ) {
+	if ( e.origin === "https://r-login.wordpress.com" ) {
+		var data = {};
+		try {
+			data = JSON.parse( e.data );
+		} catch( e ) {
+			wpcom_remote_login_final_cleanup();
+			return;
+		}
+
+		if ( data.msg === 'LOGIN' ) {
+			// Clean up the login check iframe
+			wpcom_remote_login_remove_dom_node_id( "wpcom_remote_login_key" );
+
+			var id_regex = new RegExp( /^[0-9]+$/ );
+			var token_regex = new RegExp( /^.*|.*|.*$/ );
+			if (
+				token_regex.test( data.token )
+				&& id_regex.test( data.wpcomid )
+			) {
+				// We have everything we need to ask for a login
+				var script = document.createElement( "script" );
+				script.setAttribute( "id", "wpcom_remote_login_validate" );
+				script.src = '/remote-login.php?wpcom_remote_login=validate'
+					+ '&wpcomid=' + data.wpcomid
+					+ '&token=' + encodeURIComponent( data.token )
+					+ '&host=' + window.location.protocol
+					+ '//' + window.location.hostname
+					+ '&postid=4772'
+					+ '&is_singular=1';
+				document.body.appendChild( script );
+			}
+
+			return;
+		}
+
+		// Safari ITP, not logged in, so redirect
+		if ( data.msg === 'LOGIN-REDIRECT' ) {
+			window.location = 'https://wordpress.com/log-in?redirect_to=' + window.location.href;
+			return;
+		}
+
+		// Safari ITP, storage access failed, remove the request
+		if ( data.msg === 'LOGIN-REMOVE' ) {
+			var css_zap = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } @media screen and ( max-width: 782px ) { html { margin-top: 0 !important; } * html body { margin-top: 0 !important; } }';
+			var style_zap = document.createElement( 'style' );
+			style_zap.type = 'text/css';
+			style_zap.appendChild( document.createTextNode( css_zap ) );
+			document.body.appendChild( style_zap );
+
+			var e = document.getElementById( 'wpcom_request_access_iframe' );
+			e.parentNode.removeChild( e );
+
+			document.cookie = 'wordpress_com_login_access=denied; path=/; max-age=31536000';
+
+			return;
+		}
+
+		// Safari ITP
+		if ( data.msg === 'REQUEST_ACCESS' ) {
+			console.log( 'request access: safari' );
+
+			// Check ITP iframe enable/disable knob
+			if ( wpcom_remote_login_extra_auth !== 'safari_itp_iframe' ) {
+				return;
+			}
+
+			// If we are in a "private window" there is no ITP.
+			var private_window = false;
+			try {
+				var opendb = window.openDatabase( null, null, null, null );
+			} catch( e ) {
+				private_window = true;
+			}
+
+			if ( private_window ) {
+				console.log( 'private window' );
+				return;
+			}
+
+			var iframe = document.createElement( 'iframe' );
+			iframe.id = 'wpcom_request_access_iframe';
+			iframe.setAttribute( 'scrolling', 'no' );
+			iframe.setAttribute( 'sandbox', 'allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-top-navigation-by-user-activation' );
+			iframe.src = 'https://r-login.wordpress.com/remote-login.php?wpcom_remote_login=request_access&origin=' + encodeURIComponent( data.origin ) + '&wpcomid=' + encodeURIComponent( data.wpcomid );
+
+			var css = 'html { -webkit-transition: margin-top 1s; transition: margin-top 1s; } /* 9001 */ html { margin-top: 46px !important; } * html body { margin-top: 46px !important; } @media screen and ( max-width: 660px ) { html { margin-top: 71px !important; } * html body { margin-top: 71px !important; } #wpcom_request_access_iframe { display: block; height: 71px !important; } } #wpcom_request_access_iframe { border: 0px; height: 46px; position: fixed; top: 0; left: 0; width: 100%; min-width: 100%; z-index: 99999; background: #23282d; } ';
+
+			var style = document.createElement( 'style' );
+			style.type = 'text/css';
+			style.id = 'wpcom_request_access_styles';
+			style.appendChild( document.createTextNode( css ) );
+			document.body.appendChild( style );
+
+			document.body.appendChild( iframe );
+		}
+
+		if ( data.msg === 'DONE' ) {
+			wpcom_remote_login_final_cleanup();
+		}
+	}
+}, false );
+
+// Inject the remote login iframe after the page has had a chance to load
+// more critical resources
+window.addEventListener( "DOMContentLoaded", function( e ) {
+	var iframe = document.createElement( "iframe" );
+	iframe.style.display = "none";
+	iframe.setAttribute( "scrolling", "no" );
+	iframe.setAttribute( "id", "wpcom_remote_login_key" );
+	iframe.src = "https://r-login.wordpress.com/remote-login.php"
+		+ "?wpcom_remote_login=key"
+		+ "&origin=aHR0cHM6Ly9yb2NrY2xpbWJlcnN0cmFpbmluZ21hbnVhbC5jb20%3D"
+		+ "&wpcomid=56703055"
+		+ "&time=" + Math.floor( Date.now() / 1000 );
+	document.body.appendChild( iframe );
+}, false );
+</script>
+<link rel='dns-prefetch' href='//s0.wp.com' />
+<link rel='dns-prefetch' href='//widgets.wp.com' />
+<link rel='dns-prefetch' href='//wordpress.com' />
+<link rel='dns-prefetch' href='//af.pubmine.com' />
+<link rel="alternate" type="application/rss+xml" title="The Rock Climber&#039;s Training Manual &raquo; Feed" href="https://rockclimberstrainingmanual.com/feed/" />
+<link rel="alternate" type="application/rss+xml" title="The Rock Climber&#039;s Training Manual &raquo; Comments Feed" href="https://rockclimberstrainingmanual.com/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="The Rock Climber&#039;s Training Manual &raquo; The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge Comments Feed" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/feed/" />
+	<script type="text/javascript">
+		/* <![CDATA[ */
+		function addLoadEvent(func) {
+			var oldonload = window.onload;
+			if (typeof window.onload != 'function') {
+				window.onload = func;
+			} else {
+				window.onload = function () {
+					oldonload();
+					func();
+				}
+			}
+		}
+		/* ]]> */
+	</script>
+	<style id="wp-img-auto-sizes-contain-inline-css">
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-2-1' href='/_static/??/wp-content/mu-plugins/widgets/eu-cookie-law/templates/style.css,/wp-content/mu-plugins/likes/jetpack-likes.css?m=1743883414j&cssminify=yes' type='text/css' media='all' />
+<style id="wp-emoji-styles-inline-css">
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+/*# sourceURL=wp-emoji-styles-inline-css */
+</style>
+<style id="wp-block-library-inline-css">
+:root{--wp-block-synced-color:#7a00df;--wp-block-synced-color--rgb:122,0,223;--wp-bound-block-color:var(--wp-block-synced-color);--wp-editor-canvas-background:#ddd;--wp-admin-theme-color:#007cba;--wp-admin-theme-color--rgb:0,124,186;--wp-admin-theme-color-darker-10:#006ba1;--wp-admin-theme-color-darker-10--rgb:0,107,160.5;--wp-admin-theme-color-darker-20:#005a87;--wp-admin-theme-color-darker-20--rgb:0,90,135;--wp-admin-border-width-focus:2px}@media (min-resolution:192dpi){:root{--wp-admin-border-width-focus:1.5px}}.wp-element-button{cursor:pointer}:root .has-very-light-gray-background-color{background-color:#eee}:root .has-very-dark-gray-background-color{background-color:#313131}:root .has-very-light-gray-color{color:#eee}:root .has-very-dark-gray-color{color:#313131}:root .has-vivid-green-cyan-to-vivid-cyan-blue-gradient-background{background:linear-gradient(135deg,#00d084,#0693e3)}:root .has-purple-crush-gradient-background{background:linear-gradient(135deg,#34e2e4,#4721fb 50%,#ab1dfe)}:root .has-hazy-dawn-gradient-background{background:linear-gradient(135deg,#faaca8,#dad0ec)}:root .has-subdued-olive-gradient-background{background:linear-gradient(135deg,#fafae1,#67a671)}:root .has-atomic-cream-gradient-background{background:linear-gradient(135deg,#fdd79a,#004a59)}:root .has-nightshade-gradient-background{background:linear-gradient(135deg,#330968,#31cdcf)}:root .has-midnight-gradient-background{background:linear-gradient(135deg,#020381,#2874fc)}:root{--wp--preset--font-size--normal:16px;--wp--preset--font-size--huge:42px}.has-regular-font-size{font-size:1em}.has-larger-font-size{font-size:2.625em}.has-normal-font-size{font-size:var(--wp--preset--font-size--normal)}.has-huge-font-size{font-size:var(--wp--preset--font-size--huge)}:root .has-text-align-center{text-align:center}:root .has-text-align-left{text-align:left}:root .has-text-align-right{text-align:right}.has-fit-text{white-space:nowrap!important}#end-resizable-editor-section{display:none}.aligncenter{clear:both}.items-justified-left{justify-content:flex-start}.items-justified-center{justify-content:center}.items-justified-right{justify-content:flex-end}.items-justified-space-between{justify-content:space-between}.screen-reader-text{word-wrap:normal!important;border:0;clip-path:inset(50%);height:1px;margin:-1px;overflow:hidden;padding:0;position:absolute;width:1px;word-break:normal!important}.screen-reader-text:focus{background-color:#ddd;clip-path:none;color:#444;display:block;font-size:1em;height:auto;left:5px;line-height:normal;padding:15px 23px 14px;text-decoration:none;top:5px;width:auto;z-index:100000}html :where(.has-border-color){border-style:solid}html :where([style^=border-color],[style*=";border-color"],[style*="; border-color"]){border-style:solid}html :where([style^=border-top-color],[style*=";border-top-color"],[style*="; border-top-color"]){border-top-style:solid}html :where([style^=border-right-color],[style*=";border-right-color"],[style*="; border-right-color"]){border-right-style:solid}html :where([style^=border-bottom-color],[style*=";border-bottom-color"],[style*="; border-bottom-color"]){border-bottom-style:solid}html :where([style^=border-left-color],[style*=";border-left-color"],[style*="; border-left-color"]){border-left-style:solid}html :where([style^=border-width],[style*=";border-width"],[style*="; border-width"]){border-style:solid}html :where([style^=border-top-width],[style*=";border-top-width"],[style*="; border-top-width"]){border-top-style:solid}html :where([style^=border-right-width],[style*=";border-right-width"],[style*="; border-right-width"]){border-right-style:solid}html :where([style^=border-bottom-width],[style*=";border-bottom-width"],[style*="; border-bottom-width"]){border-bottom-style:solid}html :where([style^=border-left-width],[style*=";border-left-width"],[style*="; border-left-width"]){border-left-style:solid}html :where(img[class*=wp-image-]){height:auto;max-width:100%}:where(figure){margin:0 0 1em}html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:var(--wp-admin--admin-bar--height,0px)}@media screen and (max-width:600px){html :where(.is-position-sticky){--wp-admin--admin-bar--position-offset:0px}}
+
+/*# sourceURL=/wp-content/plugins/gutenberg-core/v24.0.0/build/styles/block-library/common.min.css */
+</style>
+<style id="wp-block-library-inline-css-extra">
+.has-text-align-justify {
+	text-align:justify;
+}
+.has-text-align-justify{text-align:justify;}
+/*# sourceURL=wp-block-library-inline-css */
+</style>
+
+<style id="classic-theme-styles-inline-css">
+.wp-block-button__link{background-color:#32373c;border-radius:9999px;box-shadow:none;color:#fff;font-size:1.125em;padding:calc(.667em + 2px) calc(1.333em + 2px);text-decoration:none}.wp-block-file__button{background:#32373c;color:#fff}.wp-block-accordion-heading{margin:0}.wp-block-accordion-heading__toggle{background-color:inherit!important;color:inherit!important}.wp-block-accordion-heading__toggle:not(:focus-visible){outline:none}.wp-block-accordion-heading__toggle:focus,.wp-block-accordion-heading__toggle:hover{background-color:inherit!important;border:none;box-shadow:none;color:inherit;padding:var(--wp--preset--spacing--20,1em) 0;text-decoration:none}.wp-block-accordion-heading__toggle:focus-visible{outline:auto;outline-offset:0}.wp-block-tab:not(.has-text-color){color:inherit!important}.wp-block-tab:not(.has-background){background-color:inherit!important}.wp-block-tab:focus,.wp-block-tab:hover{text-decoration:none}.wp-block-tab:focus-visible{outline:auto;outline-offset:0}
+/*# sourceURL=/wp-content/plugins/gutenberg-core/v24.0.0/build/styles/block-library/classic.min.css */
+</style>
+
+<style id="coblocks-inline-format-inline-css">
+.uppercase{text-transform:uppercase}
+/*# sourceURL=coblocks-inline-format-inline-css */
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-12-1' href='/_static/??-eJx9jcEKg0AMRH+oaVhorR7Eb9E16IpZg8min2889FZ6GYbhPQYPgbhlo2zIBWQtU8qKcdvJd5be0AmmMfW0Ejv2jKoP/K0daZzIXNdvB6PzvyJ+A8MgO6mCJ6fCYLN/6e113IZXU9WfUL/DcgHSTkDo&cssminify=yes' type='text/css' media='all' />
+<style id="global-styles-inline-css">
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-family--albert-sans: 'Albert Sans', sans-serif;--wp--preset--font-family--alegreya: Alegreya, serif;--wp--preset--font-family--arvo: Arvo, serif;--wp--preset--font-family--bodoni-moda: 'Bodoni Moda', serif;--wp--preset--font-family--bricolage-grotesque: 'Bricolage Grotesque', sans-serif;--wp--preset--font-family--cabin: Cabin, sans-serif;--wp--preset--font-family--chivo: Chivo, sans-serif;--wp--preset--font-family--commissioner: Commissioner, sans-serif;--wp--preset--font-family--cormorant: Cormorant, serif;--wp--preset--font-family--courier-prime: 'Courier Prime', monospace;--wp--preset--font-family--crimson-pro: 'Crimson Pro', serif;--wp--preset--font-family--dm-mono: 'DM Mono', monospace;--wp--preset--font-family--dm-sans: 'DM Sans', sans-serif;--wp--preset--font-family--dm-serif-display: 'DM Serif Display', serif;--wp--preset--font-family--domine: Domine, serif;--wp--preset--font-family--eb-garamond: 'EB Garamond', serif;--wp--preset--font-family--epilogue: Epilogue, sans-serif;--wp--preset--font-family--fahkwang: Fahkwang, sans-serif;--wp--preset--font-family--figtree: Figtree, sans-serif;--wp--preset--font-family--fira-sans: 'Fira Sans', sans-serif;--wp--preset--font-family--fjalla-one: 'Fjalla One', sans-serif;--wp--preset--font-family--fraunces: Fraunces, serif;--wp--preset--font-family--gabarito: Gabarito, system-ui;--wp--preset--font-family--ibm-plex-mono: 'IBM Plex Mono', monospace;--wp--preset--font-family--ibm-plex-sans: 'IBM Plex Sans', sans-serif;--wp--preset--font-family--ibarra-real-nova: 'Ibarra Real Nova', serif;--wp--preset--font-family--instrument-serif: 'Instrument Serif', serif;--wp--preset--font-family--inter: Inter, sans-serif;--wp--preset--font-family--josefin-sans: 'Josefin Sans', sans-serif;--wp--preset--font-family--jost: Jost, sans-serif;--wp--preset--font-family--libre-baskerville: 'Libre Baskerville', serif;--wp--preset--font-family--libre-franklin: 'Libre Franklin', sans-serif;--wp--preset--font-family--literata: Literata, serif;--wp--preset--font-family--lora: Lora, serif;--wp--preset--font-family--merriweather: Merriweather, serif;--wp--preset--font-family--montserrat: Montserrat, sans-serif;--wp--preset--font-family--newsreader: Newsreader, serif;--wp--preset--font-family--noto-sans-mono: 'Noto Sans Mono', sans-serif;--wp--preset--font-family--nunito: Nunito, sans-serif;--wp--preset--font-family--open-sans: 'Open Sans', sans-serif;--wp--preset--font-family--overpass: Overpass, sans-serif;--wp--preset--font-family--pt-serif: 'PT Serif', serif;--wp--preset--font-family--petrona: Petrona, serif;--wp--preset--font-family--piazzolla: Piazzolla, serif;--wp--preset--font-family--playfair-display: 'Playfair Display', serif;--wp--preset--font-family--plus-jakarta-sans: 'Plus Jakarta Sans', sans-serif;--wp--preset--font-family--poppins: Poppins, sans-serif;--wp--preset--font-family--raleway: Raleway, sans-serif;--wp--preset--font-family--roboto: Roboto, sans-serif;--wp--preset--font-family--roboto-slab: 'Roboto Slab', serif;--wp--preset--font-family--rubik: Rubik, sans-serif;--wp--preset--font-family--rufina: Rufina, serif;--wp--preset--font-family--sora: Sora, sans-serif;--wp--preset--font-family--source-sans-3: 'Source Sans 3', sans-serif;--wp--preset--font-family--source-serif-4: 'Source Serif 4', serif;--wp--preset--font-family--space-mono: 'Space Mono', monospace;--wp--preset--font-family--syne: Syne, sans-serif;--wp--preset--font-family--texturina: Texturina, serif;--wp--preset--font-family--urbanist: Urbanist, sans-serif;--wp--preset--font-family--work-sans: 'Work Sans', sans-serif;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}.wp-block-button{--wp--preset--dimension--25: 25%;--wp--preset--dimension--50: 50%;--wp--preset--dimension--75: 75%;--wp--preset--dimension--100: 100%;}:where(body) { margin: 0; }:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}body{padding-top: 0px;padding-right: 0px;padding-bottom: 0px;padding-left: 0px;}:root :where(.wp-element-button, .wp-block-button__link){background-color: #32373c;border-width: 0;color: #fff;font-family: inherit;font-size: inherit;font-style: inherit;font-weight: inherit;letter-spacing: inherit;line-height: inherit;padding-top: calc(0.667em + 2px);padding-right: calc(1.333em + 2px);padding-bottom: calc(0.667em + 2px);padding-left: calc(1.333em + 2px);text-decoration: none;text-transform: inherit;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}.has-albert-sans-font-family{font-family: var(--wp--preset--font-family--albert-sans) !important;}.has-alegreya-font-family{font-family: var(--wp--preset--font-family--alegreya) !important;}.has-arvo-font-family{font-family: var(--wp--preset--font-family--arvo) !important;}.has-bodoni-moda-font-family{font-family: var(--wp--preset--font-family--bodoni-moda) !important;}.has-bricolage-grotesque-font-family{font-family: var(--wp--preset--font-family--bricolage-grotesque) !important;}.has-cabin-font-family{font-family: var(--wp--preset--font-family--cabin) !important;}.has-chivo-font-family{font-family: var(--wp--preset--font-family--chivo) !important;}.has-commissioner-font-family{font-family: var(--wp--preset--font-family--commissioner) !important;}.has-cormorant-font-family{font-family: var(--wp--preset--font-family--cormorant) !important;}.has-courier-prime-font-family{font-family: var(--wp--preset--font-family--courier-prime) !important;}.has-crimson-pro-font-family{font-family: var(--wp--preset--font-family--crimson-pro) !important;}.has-dm-mono-font-family{font-family: var(--wp--preset--font-family--dm-mono) !important;}.has-dm-sans-font-family{font-family: var(--wp--preset--font-family--dm-sans) !important;}.has-dm-serif-display-font-family{font-family: var(--wp--preset--font-family--dm-serif-display) !important;}.has-domine-font-family{font-family: var(--wp--preset--font-family--domine) !important;}.has-eb-garamond-font-family{font-family: var(--wp--preset--font-family--eb-garamond) !important;}.has-epilogue-font-family{font-family: var(--wp--preset--font-family--epilogue) !important;}.has-fahkwang-font-family{font-family: var(--wp--preset--font-family--fahkwang) !important;}.has-figtree-font-family{font-family: var(--wp--preset--font-family--figtree) !important;}.has-fira-sans-font-family{font-family: var(--wp--preset--font-family--fira-sans) !important;}.has-fjalla-one-font-family{font-family: var(--wp--preset--font-family--fjalla-one) !important;}.has-fraunces-font-family{font-family: var(--wp--preset--font-family--fraunces) !important;}.has-gabarito-font-family{font-family: var(--wp--preset--font-family--gabarito) !important;}.has-ibm-plex-mono-font-family{font-family: var(--wp--preset--font-family--ibm-plex-mono) !important;}.has-ibm-plex-sans-font-family{font-family: var(--wp--preset--font-family--ibm-plex-sans) !important;}.has-ibarra-real-nova-font-family{font-family: var(--wp--preset--font-family--ibarra-real-nova) !important;}.has-instrument-serif-font-family{font-family: var(--wp--preset--font-family--instrument-serif) !important;}.has-inter-font-family{font-family: var(--wp--preset--font-family--inter) !important;}.has-josefin-sans-font-family{font-family: var(--wp--preset--font-family--josefin-sans) !important;}.has-jost-font-family{font-family: var(--wp--preset--font-family--jost) !important;}.has-libre-baskerville-font-family{font-family: var(--wp--preset--font-family--libre-baskerville) !important;}.has-libre-franklin-font-family{font-family: var(--wp--preset--font-family--libre-franklin) !important;}.has-literata-font-family{font-family: var(--wp--preset--font-family--literata) !important;}.has-lora-font-family{font-family: var(--wp--preset--font-family--lora) !important;}.has-merriweather-font-family{font-family: var(--wp--preset--font-family--merriweather) !important;}.has-montserrat-font-family{font-family: var(--wp--preset--font-family--montserrat) !important;}.has-newsreader-font-family{font-family: var(--wp--preset--font-family--newsreader) !important;}.has-noto-sans-mono-font-family{font-family: var(--wp--preset--font-family--noto-sans-mono) !important;}.has-nunito-font-family{font-family: var(--wp--preset--font-family--nunito) !important;}.has-open-sans-font-family{font-family: var(--wp--preset--font-family--open-sans) !important;}.has-overpass-font-family{font-family: var(--wp--preset--font-family--overpass) !important;}.has-pt-serif-font-family{font-family: var(--wp--preset--font-family--pt-serif) !important;}.has-petrona-font-family{font-family: var(--wp--preset--font-family--petrona) !important;}.has-piazzolla-font-family{font-family: var(--wp--preset--font-family--piazzolla) !important;}.has-playfair-display-font-family{font-family: var(--wp--preset--font-family--playfair-display) !important;}.has-plus-jakarta-sans-font-family{font-family: var(--wp--preset--font-family--plus-jakarta-sans) !important;}.has-poppins-font-family{font-family: var(--wp--preset--font-family--poppins) !important;}.has-raleway-font-family{font-family: var(--wp--preset--font-family--raleway) !important;}.has-roboto-font-family{font-family: var(--wp--preset--font-family--roboto) !important;}.has-roboto-slab-font-family{font-family: var(--wp--preset--font-family--roboto-slab) !important;}.has-rubik-font-family{font-family: var(--wp--preset--font-family--rubik) !important;}.has-rufina-font-family{font-family: var(--wp--preset--font-family--rufina) !important;}.has-sora-font-family{font-family: var(--wp--preset--font-family--sora) !important;}.has-source-sans-3-font-family{font-family: var(--wp--preset--font-family--source-sans-3) !important;}.has-source-serif-4-font-family{font-family: var(--wp--preset--font-family--source-serif-4) !important;}.has-space-mono-font-family{font-family: var(--wp--preset--font-family--space-mono) !important;}.has-syne-font-family{font-family: var(--wp--preset--font-family--syne) !important;}.has-texturina-font-family{font-family: var(--wp--preset--font-family--texturina) !important;}.has-urbanist-font-family{font-family: var(--wp--preset--font-family--urbanist) !important;}.has-work-sans-font-family{font-family: var(--wp--preset--font-family--work-sans) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-14-1' href='/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/jetpack_vendor/automattic/jetpack-mu-wpcom/src/build/verbum-comments/verbum-comments.css?m=1785880900i&cssminify=yes' type='text/css' media='all' />
+<link rel='stylesheet' id='verbum-gutenberg-css-css' href='https://widgets.wp.com/verbum-block-editor/block-editor.css?ver=1771405207' media='all' />
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-16-1' href='/_static/??-eJx9jVEOwjAMQy9EicYQiA/EWbYSSqBNqjXV4PYEkGCAxJ/9EtswZueFFVkhVZdjDcQFvKRkyEU6o7nyReZGZkDAomTp8hLPw6RTj5isIdce8JKl8h6KXiP+PE7GB+yjBJPhsfy2/0IBxUXxnZLwh3GH2NFwj+7Stlkvm9WmbdvF6QaGbl0a&cssminify=yes' type='text/css' media='all' />
+<style id="jetpack-global-styles-frontend-style-inline-css">
+:root { --font-headings: unset; --font-base: unset; --font-headings-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; --font-base-default: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;}
+/*# sourceURL=jetpack-global-styles-frontend-style-inline-css */
+</style>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-18-1' href='/_static/??-eJyNjcsKAjEMRX/ImhmUURfip0inLW3GNCmmQfx7H7gRN+7ugcs5cGsuCPfEHaq5RpaRFZbUmw+XD4MaQ5VolBS0+GuKPsb7eyLndVBdwd+iM3KA2ZAiqAT05Eiy6Bf8KHtJ9RkvW8gks6fX4VSP426/mQ7TMA7LA38FSqA=&cssminify=yes' type='text/css' media='all' />
+<script id="wpcom-actionbar-placeholder-js-extra">
+var actionbardata = {"siteID":"56703055","postID":"4772","siteURL":"https://rockclimberstrainingmanual.com","xhrURL":"https://rockclimberstrainingmanual.com/wp-admin/admin-ajax.php","nonce":"80de19069d","isLoggedIn":"","statusMessage":"","subsEmailDefault":"instantly","proxyScriptUrl":"https://s0.wp.com/wp-content/js/wpcom-proxy-request.js?m=1513050504i&amp;ver=20211021","shortlink":"https://wp.me/p3PV3p-1eY","i18n":{"followedText":"New posts from this site will now appear in your \u003Ca href=\"https://wordpress.com/reader\"\u003EReader\u003C/a\u003E","foldBar":"Collapse this bar","unfoldBar":"Expand this bar","shortLinkCopied":"Shortlink copied to clipboard."}};
+//# sourceURL=wpcom-actionbar-placeholder-js-extra
+</script>
+<script id="jetpack-mu-wpcom-settings-js-before">
+var JETPACK_MU_WPCOM_SETTINGS = {"assetsUrl":"https://s0.wp.com/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/jetpack_vendor/automattic/jetpack-mu-wpcom/src/build/"};
+//# sourceURL=jetpack-mu-wpcom-settings-js-before
+</script>
+<script crossorigin='anonymous' type='text/javascript'  src='/_static/??/wp-content/js/rlt-proxy.js,/wp-content/blog-plugins/wordads-classes/js/cmp/v2/cmp-non-gdpr.js?m=1780567333j'></script>
+<script id="rlt-proxy-js-after">
+	rltInitialize( {"token":null,"iframeOrigins":["https:\/\/widgets.wp.com"]} );
+//# sourceURL=rlt-proxy-js-after
+</script>
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="https://rockclimberstrainingmanual.wordpress.com/xmlrpc.php?rsd" />
+<meta name="generator" content="WordPress.com" />
+<link rel="canonical" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/" />
+<link rel='shortlink' href='https://wp.me/p3PV3p-1eY' />
+<link rel="alternate" type="application/json+oembed" href="https://public-api.wordpress.com/oembed/?format=json&amp;url=https%3A%2F%2Frockclimberstrainingmanual.com%2F2015%2F09%2F03%2Fthe-worlds-most-technologically-advanced-finger-training-system-the-forge%2F&amp;for=wpcom-auto-discovery" /><link rel="alternate" type="application/xml+oembed" href="https://public-api.wordpress.com/oembed/?format=xml&amp;url=https%3A%2F%2Frockclimberstrainingmanual.com%2F2015%2F09%2F03%2Fthe-worlds-most-technologically-advanced-finger-training-system-the-forge%2F&amp;for=wpcom-auto-discovery" />
+<!-- Jetpack Open Graph Tags -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge" />
+<meta property="og:url" content="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/" />
+<meta property="og:description" content="The new Rock Prodigy Forge hangboard will be available from Trango beginning this week, and I&#8217;d like to share with our loyal readers just how it came to be. I&#8217;m confident The Forge is t…" />
+<meta property="article:published_time" content="2015-09-03T14:00:16+00:00" />
+<meta property="article:modified_time" content="2015-09-03T14:00:16+00:00" />
+<meta property="og:site_name" content="The Rock Climber&#039;s Training Manual" />
+<meta property="og:image" content="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=700" />
+<meta property="og:image:width" content="700" />
+<meta property="og:image:height" content="467" />
+<meta property="og:image:alt" content="The all-new Rock Prodigy FORGE, by Trango. The world&#039;s most advanced finger strength training device." />
+<meta property="og:locale" content="en_US" />
+<meta property="article:publisher" content="https://www.facebook.com/WordPresscom" />
+<meta name="twitter:text:title" content="The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge" />
+<meta name="twitter:image" content="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=640" />
+<meta name="twitter:image:alt" content="The all-new Rock Prodigy FORGE, by Trango. The world&#039;s most advanced finger strength training device." />
+<meta name="twitter:card" content="summary_large_image" />
+
+<!-- End Jetpack Open Graph Tags -->
+<link rel="shortcut icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico?m=1713425267i" sizes="16x16 24x24 32x32 48x48" />
+<link rel="icon" type="image/x-icon" href="https://s0.wp.com/i/favicon.ico?m=1713425267i" sizes="16x16 24x24 32x32 48x48" />
+<link rel="apple-touch-icon" href="https://s0.wp.com/i/webclip.png?m=1713868326i" />
+<link rel='openid.server' href='https://rockclimberstrainingmanual.com/?openidserver=1' />
+<link rel='openid.delegate' href='https://rockclimberstrainingmanual.com/' />
+<link rel="search" type="application/opensearchdescription+xml" href="https://rockclimberstrainingmanual.com/osd.xml" title="The Rock Climber&#039;s Training Manual" />
+<link rel="search" type="application/opensearchdescription+xml" href="https://s1.wp.com/opensearch.xml" title="WordPress.com" />
+<meta name="theme-color" content="#1532c4" />
+<style>.recentcomments a{display:inline !important;padding:0 !important;margin:0 !important;}</style>		<style type="text/css">
+			.recentcomments a {
+				display: inline !important;
+				padding: 0 !important;
+				margin: 0 !important;
+			}
+
+			table.recentcommentsavatartop img.avatar, table.recentcommentsavatarend img.avatar {
+				border: 0px;
+				margin: 0;
+			}
+
+			table.recentcommentsavatartop a, table.recentcommentsavatarend a {
+				border: 0px !important;
+				background-color: transparent !important;
+			}
+
+			td.recentcommentsavatarend, td.recentcommentsavatartop {
+				padding: 0px 0px 1px 0px;
+				margin: 0px;
+			}
+
+			td.recentcommentstextend {
+				border: none !important;
+				padding: 0px 0px 2px 10px;
+			}
+
+			.rtl td.recentcommentstextend {
+				padding: 0px 10px 2px 0px;
+			}
+
+			td.recentcommentstexttop {
+				border: none;
+				padding: 0px 0px 0px 10px;
+			}
+
+			.rtl td.recentcommentstexttop {
+				padding: 0px 10px 0px 0px;
+			}
+		</style>
+		<meta name="description" content="The new Rock Prodigy Forge hangboard will be available from Trango beginning this week, and I&#039;d like to share with our loyal readers just how it came to be. I&#039;m confident The Forge is the most technologically advanced finger strength training device ever created. While it may not appear to be a complex product, it&hellip;" />
+	<style type="text/css">
+	        .site-title a,
+        .site-title a:hover,
+        .site-description {
+			color: #d7d8e5;
+        }
+	
+			.site-header .site-branding {
+			background-color: transparent;
+			background-image: url('https://rockclimberstrainingmanual.com/wp-content/uploads/2013/12/cropped-1-mark-anderson-on-to-bolt-or-not-to-be-14a-smith-rock_mike-anderson-photo1.jpg');
+			background-position: 50% 0;
+			background-repeat: no-repeat;
+			height: 146px;
+		}
+		</style>
+	<style id="custom-background-css">
+body.custom-background { background-color: #1532c4; background-image: url("https://rockclimberstrainingmanual.files.wordpress.com/2013/12/img_4222_crop_transparent.jpg"); background-position: left top; background-size: auto; background-repeat: no-repeat; background-attachment: scroll; }
+</style>
+<script>
+var wa_client = {}; wa_client.cmd = []; wa_client.config = { 'blog_id': 56703055, 'blog_language': 'en', 'is_wordads': false, 'hosting_type': 0, 'afp_account_id': null, 'afp_host_id': 5038568878849053, 'theme': 'pub/expound', '_': { 'title': 'Advertisement', 'privacy_settings': 'Privacy Settings' }, 'formats': [ 'inline', 'belowpost', 'bottom_sticky', 'sidebar_sticky_right', 'sidebar', 'gutenberg_rectangle', 'gutenberg_leaderboard', 'gutenberg_mobile_leaderboard', 'gutenberg_skyscraper' ] };
+</script>
+		<script type="text/javascript">
+
+			window.doNotSellCallback = function() {
+
+				var linkElements = [
+					'a[href="https://wordpress.com/?ref=footer_blog"]',
+					'a[href="https://wordpress.com/?ref=footer_website"]',
+					'a[href="https://wordpress.com/?ref=vertical_footer"]',
+					'a[href^="https://wordpress.com/?ref=footer_segment_"]',
+				].join(',');
+
+				var dnsLink = document.createElement( 'a' );
+				dnsLink.href = 'https://wordpress.com/advertising-program-optout/';
+				dnsLink.classList.add( 'do-not-sell-link' );
+				dnsLink.rel = 'nofollow';
+				dnsLink.style.marginLeft = '0.5em';
+				dnsLink.textContent = 'Do Not Sell or Share My Personal Information';
+
+				var creditLinks = document.querySelectorAll( linkElements );
+
+				if ( 0 === creditLinks.length ) {
+					return false;
+				}
+
+				Array.prototype.forEach.call( creditLinks, function( el ) {
+					el.insertAdjacentElement( 'afterend', dnsLink );
+				});
+
+				return true;
+			};
+
+		</script>
+		<script type="text/javascript">
+	window.google_analytics_uacct = "UA-52447-2";
+</script>
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-52447-2']);
+	_gaq.push(['_gat._anonymizeIp']);
+	_gaq.push(['_setDomainName', 'none']);
+	_gaq.push(['_setAllowLinker', true]);
+	_gaq.push(['_initData']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ga);
+	})();
+</script>
+<link crossorigin='anonymous' rel='stylesheet' id='all-css-0-3' href='/_static/??-eJyNjMEKgzAQBX9IfVpq60X8lGLXRaLJJrhZ/P1SUM8eZxgGeyopSmbJCFYmb7MTxcI5jbQeDDXBxwnh6yOtCt1d4q0i1QK3ByFO5llB4xZN2V/NKf6/IfTNu2sfzbPuXssPrlM6pw==&cssminify=yes' type='text/css' media='all' />
+
+</head>
+
+<body class="wp-singular post-template-default single single-post postid-4772 single-format-standard custom-background wp-theme-pubexpound customizer-styles-applied group-blog jetpack-reblog-enabled">
+<div id="page" class="hfeed site">
+		<header id="masthead" class="site-header" role="banner">
+		<div class="site-branding">
+			<a href="https://rockclimberstrainingmanual.com/" class="wrapper-link">
+				<div class="site-title-group">
+					<h1 class="site-title"><a href="https://rockclimberstrainingmanual.com/" title="The Rock Climber&#039;s Training Manual" rel="home">The Rock Climber&#039;s Training Manual</a></h1>
+					<h2 class="site-description">A Comprehensive Program for Continuous Climbing Improvement</h2>
+				</div>
+			</a>
+		</div>
+
+		<nav id="site-navigation" class="navigation-main" role="navigation">
+			<h1 class="menu-toggle">Menu</h1>
+			<div class="screen-reader-text skip-link"><a href="#content" title="Skip to content">Skip to content</a></div>
+
+			<div class="menu"><ul>
+<li ><a href="https://rockclimberstrainingmanual.com/">Home</a></li><li class="page_item page-item-967"><a href="https://rockclimberstrainingmanual.com/why-train-for-rock-climbing/">Why Train?</a></li>
+<li class="page_item page-item-1 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/">Training</a>
+<ul class='children'>
+	<li class="page_item page-item-971"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/rock-climbing-training-plan/">Building A Training Plan</a></li>
+	<li class="page_item page-item-973"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/skill-development/">Skill Development</a></li>
+	<li class="page_item page-item-841"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/base-fitness/">Base Fitness</a></li>
+	<li class="page_item page-item-843"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/strength/">Strength</a></li>
+	<li class="page_item page-item-845"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/power/">Power</a></li>
+	<li class="page_item page-item-847"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/power-endurance/">Power Endurance</a></li>
+	<li class="page_item page-item-969"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing/weight-management/">Weight Management</a></li>
+</ul>
+</li>
+<li class="page_item page-item-837 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/rock-climbing-performance/">Performance</a>
+<ul class='children'>
+	<li class="page_item page-item-881"><a href="https://rockclimberstrainingmanual.com/rock-climbing-performance/on-sight/">On Sight</a></li>
+	<li class="page_item page-item-883"><a href="https://rockclimberstrainingmanual.com/rock-climbing-performance/redpoint/">Redpoint</a></li>
+	<li class="page_item page-item-885"><a href="https://rockclimberstrainingmanual.com/rock-climbing-performance/trad-and-big-wall-free-climbing/">Trad and Big Wall Free Climbing</a></li>
+	<li class="page_item page-item-887"><a href="https://rockclimberstrainingmanual.com/rock-climbing-performance/bouldering/">Bouldering</a></li>
+</ul>
+</li>
+<li class="page_item page-item-873 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/rock-climbing-training-motivation/">Motivation</a>
+<ul class='children'>
+	<li class="page_item page-item-875"><a href="https://rockclimberstrainingmanual.com/rock-climbing-training-motivation/videos/">Videos</a></li>
+	<li class="page_item page-item-879"><a href="https://rockclimberstrainingmanual.com/rock-climbing-training-motivation/tales/">Tales</a></li>
+</ul>
+</li>
+<li class="page_item page-item-849"><a href="https://rockclimberstrainingmanual.com/training-for-climbing-testimonials/">Testimonials</a></li>
+<li class="page_item page-item-889 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/">Tools</a>
+<ul class='children'>
+	<li class="page_item page-item-891 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-rock-climbers-training-manual/">The Rock Climber&#8217;s Training Manual</a>
+	<ul class='children'>
+		<li class="page_item page-item-1471"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-rock-climbers-training-manual/purchase-complete/"></a></li>
+	</ul>
+</li>
+	<li class="page_item page-item-893"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/rock-prodigy-training-center/">Rock Prodigy Training Center</a></li>
+	<li class="page_item page-item-895"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/free-downloads/">Free Downloads</a></li>
+	<li class="page_item page-item-926"><a href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-making-of-a-rock-prodigy/">&#8220;The Making of a &#8216;Rockprodigy'&#8221;</a></li>
+</ul>
+</li>
+<li class="page_item page-item-902 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing-questions-answers/">Q &amp; A</a>
+<ul class='children'>
+	<li class="page_item page-item-904"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing-questions-answers/faqs/">FAQs</a></li>
+	<li class="page_item page-item-897"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing-questions-answers/ask-a-question/">Ask a Question</a></li>
+</ul>
+</li>
+<li class="page_item page-item-978 current_page_parent"><a href="https://rockclimberstrainingmanual.com/training-for-rock-climbing-articles/">Articles</a></li>
+<li class="page_item page-item-1191"><a href="https://rockclimberstrainingmanual.com/contribute-rock-climbing-training-content/">Contribute Content</a></li>
+<li class="page_item page-item-2147"><a href="https://rockclimberstrainingmanual.com/forum/">Forum</a></li>
+<li class="page_item page-item-191 page_item_has_children"><a href="https://rockclimberstrainingmanual.com/about-us/">About Us</a>
+<ul class='children'>
+	<li class="page_item page-item-868"><a href="https://rockclimberstrainingmanual.com/about-us/mike-anderson/">Mike Anderson</a></li>
+	<li class="page_item page-item-871"><a href="https://rockclimberstrainingmanual.com/about-us/mark-anderson/">Mark Anderson</a></li>
+	<li class="page_item page-item-851"><a href="https://rockclimberstrainingmanual.com/about-us/contact/">Contact</a></li>
+</ul>
+</li>
+</ul></div>
+					</nav><!-- #site-navigation -->
+	</header><!-- #masthead -->
+
+	<div id="main" class="site-main">
+
+	<div id="primary" class="content-area">
+		<div id="content" class="site-content" role="main">
+
+		
+			
+<article id="post-4772" class="post-4772 post type-post status-publish format-standard hentry category-uncategorized">
+	<header class="entry-header">
+		<h1 class="entry-title">The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge</h1>
+
+		<div class="entry-meta">
+			<a class="author" rel="author" href="https://rockclimberstrainingmanual.com/author/rockprodigy13/">rockprodigy13</a> / <a class="entry-date" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/">September 3, 2015</a>		</div><!-- .entry-meta -->
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		<div data-shortcode="caption" id="attachment_4795" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg"><img aria-describedby="caption-attachment-4795" data-attachment-id="4795" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4795" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg" data-orig-size="1024,683" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Forge Pic1" data-image-description="" data-image-caption="&lt;p&gt;The all-new Rock Prodigy FORGE, by Trango. The world&amp;#8217;s most advanced finger strength training device.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=700" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=700&#038;h=467" alt="The all-new Rock Prodigy FORGE, by Trango. The world&#039;s most advanced finger strength training device." width="700" height="467" class="size-large wp-image-4795" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/forge-pic1.jpg 1024w" sizes="(max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4795" class="wp-caption-text">The all-new Rock Prodigy FORGE, by Trango. The world&#8217;s most advanced finger strength training device.</p></div>
+<p>The new <a href="http://www.trango.com/p-329-rock-prodigy-forge.aspx">Rock Prodigy Forge</a> hangboard will be available from <a href="http://www.trango.com/">Trango</a> beginning this week, and I&#8217;d like to share with our loyal readers just how it came to be. I&#8217;m confident The Forge is the most technologically advanced finger strength training device ever created.  While it may not appear to be a complex product, it was developed iteratively using the latest engineering technology, and based on the latest finger strength training research. </p>
+<div data-shortcode="caption" id="attachment_4769" style="width: 710px" class="wp-caption aligncenter"><a href="http://www.trango.com/p-329-rock-prodigy-forge.aspx"><img aria-describedby="caption-attachment-4769" data-attachment-id="4769" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4769" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg" data-orig-size="876,633" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Forge Intro" data-image-description="" data-image-caption="&lt;p&gt;The all-new Rock Prodigy FORGE, by Trango. The world&amp;#8217;s most advanced finger strength training device.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=700" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=700&#038;h=506" alt="The all-new Rock Prodigy FORGE, by Trango. The world&#039;s most advanced finger strength training device." width="700" height="506" class="size-large wp-image-4769" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/forge-intro.jpg 876w" sizes="(max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4769" class="wp-caption-text">Solid model rendering of the Forge.</p></div>
+<p>In 2013, we launched the <a href="http://www.trango.com/s-49-hangboard.aspx">Rock Prodigy Training Center</a>, and we&#8217;ve <a href="https://rockclimberstrainingmanual.com/2015/02/11/introducing-the-great-rock-prodigy-training-methods-survey/">collected user data </a>on its effectiveness, and compiled customer suggestions for improvement. The Forge is the result of all of that experience and a published, peer reviewed research paper on the Rock Prodigy Training Method and Training Center, and what we have developed is incredible. Of those who have had a chance to product test it&#8230;four-out-of-four psycho-hangboard-fiends love it!</p>
+<p>Perhaps the biggest innovation is in how the Forge was designed. Like with the RPTC, we wanted to apply the latest Computer Aided Design (CAD) and Computer Aided Manufacturing (CAM) tools and techniques to what has traditionally been considered the &#8220;art&#8221; of hold-shaping, and the Forge is the result of that which yields perfect symmetry in the design and some pretty cool other features.  With this computer-aided process, we would only need to design one half of the board, then the other half would be replicated automatically. Besides the obvious manufacturing advantages, the computer-aided processes would allow us to quickly create prototypes to test different grip shapes so that we could iterate on the shape of each grip individually. This iterative process was an enormous improvement, and enabled us to really perfect each grip. For example, we created over 8 different designs and prototypes for the Closed Crimp grip alone!</p>
+<div data-shortcode="caption" id="attachment_4774" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg"><img aria-describedby="caption-attachment-4774" data-attachment-id="4774" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4774" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg" data-orig-size="1096,587" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Iterative CAD Design Montage" data-image-description="" data-image-caption="&lt;p&gt;Our computer-aided iterative design process that allowed for rapid design evolution to make sure we got it right!&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=700" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=700&#038;h=375" alt="Our computer-aided iterative design process that allowed for rapid design evolution to make sure we got it right!" width="700" height="375" class="size-large wp-image-4774" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/iterative-cad-design-montage.jpg 1096w" sizes="(max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4774" class="wp-caption-text">Our computer-aided iterative design process that allowed for rapid design evolution to make sure we got it right!</p></div>
+<p>The Forge is intended to be a compliment to the Rock Prodigy Training Center, not a replacement. It is more compact and in most cases it offers more advanced (i.e. &#8220;difficult&#8221;) grips for those climbers who have experience with hangboard training and would like to progress to more difficult holds, while other holds are simply improved to benefit climbers of all abilities. Many of the holds are replicated from the RPTC, but have less depth in their geometry, making them more difficult. There are also some new holds, and other features to increase the training intensity. These are all described below in more detail. </p>
+<div data-shortcode="caption" id="attachment_4724" style="width: 235px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg"><img aria-describedby="caption-attachment-4724" data-attachment-id="4724" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4724" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg" data-orig-size="2448,3264" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;2.2&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;SM-G900V&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1440839663&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;4.8&quot;,&quot;iso&quot;:&quot;250&quot;,&quot;shutter_speed&quot;:&quot;0.033333333333333&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;1&quot;}" data-image-title="20150829_091423" data-image-description="" data-image-caption="&lt;p&gt;Psych-Hangboard-Tester, Mike Anderson taking the new Trango Forge through its paces.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg?w=225&#038;h=300" alt="Psych-Hangboard-Tester, Mike Anderson taking the new Trango Forge through its paces." width="225" height="300" class="size-medium wp-image-4724" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg?w=225 225w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg?w=450 450w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/20150829_091423.jpg?w=113 113w" sizes="auto, (max-width: 225px) 100vw, 225px" /></a><p id="caption-attachment-4724" class="wp-caption-text">Psycho-Hangboard-Tester, Mike Anderson taking the new Trango Forge through its paces.</p></div>
+<p>First, let me introduce some of the key new features of the Forge:</p>
+<p><strong>1. New Holds: </strong></p>
+<p>The Forge incorporates several new holds, which I&#8217;ll detail here. </p>
+<div data-shortcode="caption" id="attachment_4716" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg"><img aria-describedby="caption-attachment-4716" data-attachment-id="4716" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4716" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg" data-orig-size="1229,654" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Micro Crimp" data-image-description="" data-image-caption="&lt;p&gt;The re-deigned Micro Crimp, with a thumb fence to prevent PIP joint injury.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=700&#038;h=372" alt="The re-deigned Micro Crimp, with a thumb fence to prevent DIP joint injury." width="700" height="372" class="size-large wp-image-4716" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp.jpg 1229w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4716" class="wp-caption-text">The re-deigned Micro Crimp, with a thumb support to prevent DIP joint injury.</p></div>
+<p>&#8211; Advanced Micro Crimp with DIP guard technology:</p>
+<p> This is similar to the Micro Crimp on the RPTC, but Mark ingeniously came up with a &#8220;thumb support&#8221; to prevent climbers from wrapping their thumb over their index finger during training. This practice is perfectly acceptable on hard moves, and makes a stronger grip, but doing so repeatedly in training is risky because it places a lot of stress on the Distal Interphalangeal (DIP) joint of the index finger. It also can create skin problems in the cuticle of the index finger. This guard allows you to train the grip in the proper position, without excessively loading up your DIP joint. </p>
+<div data-shortcode="caption" id="attachment_4752" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg"><img aria-describedby="caption-attachment-4752" data-attachment-id="4752" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4752" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg" data-orig-size="3264,2448" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;2.2&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;SM-G900V&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1440839623&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;4.8&quot;,&quot;iso&quot;:&quot;400&quot;,&quot;shutter_speed&quot;:&quot;0.033333333333333&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;1&quot;}" data-image-title="Mike hang small crimp &amp;#8211; left hand" data-image-description="" data-image-caption="&lt;p&gt;The Micro Crimp with PIP guard in action.  It appears that my thumb is wrapping over my index finger (which would put it under a lot of stress), but in fact, my thumb is resting safely on the thumb guard.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=700&#038;h=525" alt="The Micro Crimp with DIP guard in action.  It appears that my thumb is wrapping over my index finger (which would put it under a lot of stress), but in fact, my thumb is resting safely on the thumb support." width="700" height="525" class="size-large wp-image-4752" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=1400 1400w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/mike-hang-small-crimp-left-hand.jpg?w=1024 1024w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4752" class="wp-caption-text">The Micro Crimp with DIP guard in action.  It appears that my thumb is wrapping over my index finger (which would put it under a lot of stress), but in fact, my thumb is resting safely on the thumb support.</p></div>
+<div data-shortcode="caption" id="attachment_4720" style="width: 310px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg"><img aria-describedby="caption-attachment-4720" data-attachment-id="4720" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4720" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg" data-orig-size="1000,556" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Micro crimp with shim" data-image-description="" data-image-caption="&lt;p&gt;The re-designed Micro Crimp with Thumb Guard. I&amp;#8217;ve added some cardboard shim material to create the correct depth for the thumb groove.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=300&#038;h=167" alt="The re-designed Micro Crimp with Thumb Support. I&#039;ve added some cardboard shim material to make this grip more maniacally heinous for my thumb size. Your thumb will probably fit perfectly :) "   class="size-medium wp-image-4720" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/micro-crimp-with-shim.jpg 1000w" sizes="(max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4720" class="wp-caption-text">The re-designed Micro Crimp with Thumb Support.</p></div>
+<p>The &#8220;support&#8221; was designed with a lot of depth to accommodate climbers of all sizes, but I added some shims to mine to make the grip extra difficult to hang onto. Only super-psycho crimping fiends would want to do this 🙂 Most thumbs will fit perfectly. I also sanded a little bit of the texture off the thumb support to prevent myself from &#8220;milking it&#8221; too much.  That&#8217;s one great thing about this board&#8230;it can easily be customized. Early testers love this re-designed crimp!</p>
+<div data-shortcode="caption" id="attachment_4719" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg"><img aria-describedby="caption-attachment-4719" data-attachment-id="4719" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4719" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg" data-orig-size="1229,747" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Slopey Crimp" data-image-description="" data-image-caption="&lt;p&gt;The Forge&amp;#8217;s new Slopey Crimp grip.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=700&#038;h=425" alt="The Forge&#039;s new Slopey Crimp grip." width="700" height="425" class="size-large wp-image-4719" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopey-crimp.jpg 1229w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4719" class="wp-caption-text">The Forge&#8217;s new Slopey Crimp grip.</p></div>
+<p>&#8211; Slopey Crimper:</p>
+<p>This is something our customers have been clamoring for, and I was happy to be able to incorporate it into the Forge. The new Slopey Crimp was modeled after an eGgrips hold I’ve been training on for years. It uses a slightly open-hand crimp grip with a thumb catch, and is complimentary to the closed crimp grip. This is a grip I find on routes all over the place, so it&#8217;s useful to train. This grip took some work to perfect, but you can see in the photos below that, in the end, the new slopey crimp creates the finger joint positions we were designing for:<br />
+&#8211; I: bent at the DIP<br />
+&#8211; M: bent at the PIP<br />
+&#8211; R: bent at the PIP<br />
+&#8211; P: bent at the DIP</p>
+<div data-shortcode="caption" id="attachment_4723" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg"><img aria-describedby="caption-attachment-4723" data-attachment-id="4723" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4723" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg" data-orig-size="871,342" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="slimper montage" data-image-description="" data-image-caption="&lt;p&gt;The new Slopey Crimp was modeled after an E-grips hold I&amp;#8217;ve been training on for years. It uses a slightly open-hand crimp grip with a thumb catch.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=700&#038;h=275" alt="The new Slopey Crimp was modeled after an eGrips hold I&#039;ve been training on for years. It uses a slightly open-hand crimp grip with a thumb catch." width="700" height="275" class="size-large wp-image-4723" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slimper-montage.jpg 871w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4723" class="wp-caption-text">The new Slopey Crimp was modeled after an eGrips hold I&#8217;ve been training on for years (the orange hold in the photo). It uses a slightly open-hand crimp grip with a thumb catch. The center photo is the Forge, the right photo is the eGrips hold.</p></div>
+<div data-shortcode="caption" id="attachment_4718" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg"><img aria-describedby="caption-attachment-4718" data-attachment-id="4718" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4718" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg" data-orig-size="1229,747" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Slopers" data-image-description="" data-image-caption="&lt;p&gt;New 30 degree and 40 degree slopers.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=700&#038;h=425" alt="New 30 degree and 40 degree slopers." width="700" height="425" class="size-large wp-image-4718" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/slopers.jpg 1229w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4718" class="wp-caption-text">New 30 degree and 40 degree slopers.</p></div>
+<p>&#8211; Slopers</p>
+<p>You asked for steeper slopers, so here they are! The Forge incorporates two slopers; a totally heinous 40 degree sloper on the top-center of the board, and a more reasonable 30 degree sloper above each pinch. Note that the 30 degree sloper is an add-on caused by the pinch, and the palm will sit on the pinch when training this hold. Boulderers may find some application for this in training for slopey, groveling topouts, but most sloper lovers will stick to the 40 degree sloper. </p>
+<div data-shortcode="caption" id="attachment_4717" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg"><img aria-describedby="caption-attachment-4717" data-attachment-id="4717" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4717" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg" data-orig-size="1229,747" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Pinch" data-image-description="" data-image-caption="&lt;p&gt;Re-designed Pinch grip with &amp;#8220;honesty bumper&amp;#8221;.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=700&#038;h=425" alt="Re-designed Pinch grip with &quot;honesty bumper&quot;." width="700" height="425" class="size-large wp-image-4717" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/pinch.jpg 1229w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4717" class="wp-caption-text">Re-designed Pinch grip with &#8220;honesty bumper&#8221;.</p></div>
+<p>&#8211;  Re-designed Pinch with Honesty Technology</p>
+<p>The pinch grip has all-new geometry (detailed next), but we also added a little bump to keep us all &#8220;honest&#8221; while we train 🙂 This will make it harder to migrate higher on the pinch, or reach the sloper with our fingertips. This was another feature that YOU, the customer asked for, so thanks for the great suggestions!  </p>
+<div data-shortcode="caption" id="attachment_4732" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg"><img aria-describedby="caption-attachment-4732" data-attachment-id="4732" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4732" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg" data-orig-size="1229,747" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Flat Edge" data-image-description="" data-image-caption="&lt;p&gt;Large, Flat Edge for pullups, etc.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=700&#038;h=425" alt="Large, Flat Edge for pullups, etc." width="700" height="425" class="size-large wp-image-4732" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/flat-edge.jpg 1229w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4732" class="wp-caption-text">Large, Flat Edge for pullups, etc.</p></div>
+<p>&#8211; Large Flat Edge</p>
+<p>This was added in place of the large jugs on the RPTC. It can be used for standard grip training, warming up, or just as a convenient surface to do pullups, etc.  The geometry was designed to allow it to be used without interfering with the Slopey Crimp just below it. </p>
+<p><strong>2. All-New Hold Geometry</strong></p>
+<p>As I said, we intended the Forge to be complimentary to the RPTC, not a replacement.  Therefore, every grip on the Forge is distinct from the RPTC. There may be similar grips (i.e., 2-Finger pockets), but the depth is different, generally creating a more difficult grip for more intense training. The changes are summarized in this table:</p>
+<div data-shortcode="caption" id="attachment_4715" style="width: 472px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg"><img aria-describedby="caption-attachment-4715" data-attachment-id="4715" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4715" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg" data-orig-size="466,348" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Updated Hold Geometry" data-image-description="" data-image-caption="&lt;p&gt;Summary of the Forge&amp;#8217;s advanced grip geometry.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg?w=466" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg?w=700" alt="Summary of the Forge&#039;s advanced grip geometry."   class="size-full wp-image-4715" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg 466w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg?w=150&amp;h=112 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/updated-hold-geometry.jpg?w=300&amp;h=224 300w" sizes="(max-width: 466px) 100vw, 466px" /></a><p id="caption-attachment-4715" class="wp-caption-text">Summary of the Forge&#8217;s advanced grip geometry. These are the depths of each pocket in inches (why didn&#8217;t we use metric?).</p></div>
+<p>For the Variable Depth Edge Rail (VDER), we also reduced the range, or rate of change of depth, which is another suggestion we received from multiple users. Doing so makes the VDER more consistent for each finger because the depth change is less noticeable. But wait, there&#8217;s more!  We changed the basic sizes of all of the grips, but we also made other modifications to improve ergonomics and/or increase training intensity, which I&#8217;ll detail below. </p>
+<p><strong>3. Equation-Driven Hold Lip Radius</strong></p>
+<p>Typically, climbing holds and many hangboards are shaped by hand, and it&#8217;s up to the shaper&#8217;s artistry. For hangboard training, little details like the shape of a hold&#8217;s lip are absolutely critical because a bad shape can cause major skin irritation, and flappers. Our computer-aided design and manufacturing process gave us more control over the lip designs, and we wanted to take advantage of that. This would allow us to ensure consistent shapes across several different hold types (e.g., the VDER (Variable Depth Edge Rail) and two-finger pockets have the same lip profile). The RPTC features circular lip radii, which were very comfortable, but on smaller holds you have to make those radii pretty small to be functional, and we wanted to push the envelope of comfort and training specificity on the Forge. We knew that a logarithmic shape would be a better lip profile for most grips, so we west to work. The design software I used enabled us to specify the shape of a curve, and apply it anywhere on the design.  We developed several different profiles, created prototypes of each, and tested them until we settled on the perfect shape. Our automated process allowed us to apply that shape to all of the pockets, and the VDER.  Who knew math was so cool? 🙂</p>
+<div data-shortcode="caption" id="attachment_4738" style="width: 310px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg"><img aria-describedby="caption-attachment-4738" data-attachment-id="4738" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4738" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg" data-orig-size="502,416" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;Anderson, Mark LMD&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1410513188&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Logarithmic Edge Radii_a25_d600" data-image-description="" data-image-caption="&lt;p&gt;Different hold lip profiles. Note the difference between a simple circular radius and the logarithmic shape.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg?w=502" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg?w=300&#038;h=249" alt="Different hold lip profiles. Note the difference between a simple circular radius and the logarithmic shape." width="300" height="249" class="size-medium wp-image-4738" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/logarithmic-edge-radii_a25_d600.jpg 502w" sizes="auto, (max-width: 300px) 100vw, 300px" /></a><p id="caption-attachment-4738" class="wp-caption-text">Different hold lip profiles. Note the difference between a simple circular radius and the logarithmic (exponential) shape.</p></div>
+<p><strong>4. Drafted Pockets</strong></p>
+<p>&#8220;Draft&#8221; is a slightly increased slope on the interior of a concave surface. All of the pockets, including the VDER are drafted at a slight angle, which essentially turns them all into slight slopers. It may seem like this would make the grips harder to hold onto (and it would, if taken to an extreme).  However, if the optimal slope is added, it reduces the resulting angle of DIP joint flexion without noticeably increasing the difficulty of the grip.  This allows for greater skin contact in the back of the hold (where a flat surface would leave dead space), thus increasing skin comfort and DIP joint safety.   </p>
+<div data-shortcode="caption" id="attachment_4781" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg"><img aria-describedby="caption-attachment-4781" data-attachment-id="4781" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4781" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg" data-orig-size="1275,748" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="Draft Highlighted" data-image-description="" data-image-caption="&lt;p&gt;CAD model of the Forge. The draft that was added&lt;br /&gt;
+to all of the pockets is apparent in this screen&lt;br /&gt;
+capture, indicated by the extra line at the bottom of&lt;br /&gt;
+each pocket (and circled in red).&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=700&#038;h=411" alt="CAD model of the Forge. The draft that was added to all of the pockets is apparent in this screen capture, indicated by the extra line at the bottom of each pocket (and circled in red)." width="700" height="411" class="size-large wp-image-4781" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg?w=1024 1024w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/draft-highlighted.jpg 1275w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4781" class="wp-caption-text">CAD model of the Forge. The draft that was added<br />to all of the pockets is apparent in this screen<br />capture, indicated by the extra line at the bottom of<br />each pocket (and circled in red).</p></div>
+<p>To experiment with the draft, Mark modified his RPTC hangboard setup to allow it to rotate about the base, as shown in this photo (note the hinges at the bottom):</p>
+<div data-shortcode="caption" id="attachment_4787" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg"><img aria-describedby="caption-attachment-4787" data-attachment-id="4787" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4787" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg" data-orig-size="4000,3000" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;3.5&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;Canon PowerShot SX260 HS&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1409673156&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;4.5&quot;,&quot;iso&quot;:&quot;1000&quot;,&quot;shutter_speed&quot;:&quot;0.05&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;1&quot;}" data-image-title="Draft Test 4" data-image-description="" data-image-caption="&lt;p&gt;Rotating hangboard fixture to allow us to test Draft. Note the hinges at the bottom.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=700&#038;h=525" alt="Rotating hangboard fixture to allow us to test Draft. Note the hinges at the bottom." width="700" height="525" class="size-large wp-image-4787" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=1400 1400w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=150 150w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=768 768w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-4.jpg?w=1024 1024w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4787" class="wp-caption-text">Rotating hangboard fixture to allow us to test Draft. Note the hinges at the bottom.</p></div>
+<p>We experimented by setting different angles, then hanging from edges and pockets on the board to find the perfect draft angles:</p>
+<div data-shortcode="caption" id="attachment_4788" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg"><img aria-describedby="caption-attachment-4788" data-attachment-id="4788" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4788" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg" data-orig-size="3000,4000" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;3.5&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;Canon PowerShot SX260 HS&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1409681424&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;4.5&quot;,&quot;iso&quot;:&quot;1000&quot;,&quot;shutter_speed&quot;:&quot;0.05&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;1&quot;}" data-image-title="Draft Test 2" data-image-description="" data-image-caption="&lt;p&gt;Mark testing out a potential draft angle as Adam Sanders supervises the operation and records the angle.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=700&#038;h=933" alt="Mark testing out a potential draft angle as Adam Sanders of Trango supervises the operation and records the angle." width="700" height="933" class="size-large wp-image-4788" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=700 700w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=1400 1400w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=113 113w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=225 225w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/09/draft-test-2.jpg?w=768 768w" sizes="auto, (max-width: 700px) 100vw, 700px" /></a><p id="caption-attachment-4788" class="wp-caption-text">Mark testing out a potential draft angle as Adam Sanders of Trango supervises the operation and records the angle.</p></div>
+<p>Those of us who have tested it absolutely love the draft! In some cases we find it makes the holds easier to use, and in all cases they are much more comfortable on the skin.</p>
+<p><strong>5. Improved Texture</strong></p>
+<p>Sorry, no pictures for this one, but trust me&#8230;when you get your hands on the Forge, you&#8217;ll love the texture.  It&#8217;s not as rough as the RPTC, so grips may feel a little more slippery at first. However, this should produce a more consistent training surface across the life of the board, and it absolutely creates a more comfortable grip when using high levels of resistance. It’s also a safer option for preventing skin injuries on the smaller holds of the Forge. And Highly Obsessed Hangboard Fiends (HOHFs) should note that a very rough texture will wear more over time, making it difficult to compare results. Additionally, users have the option to make adjustments to the texture to meet their preferences. Just a little sandpaper can remove or add texture (finer grit to remove, coarser to add). <strong>You may want to practice first on an unused surface!</strong> </p>
+<p><strong>6. Rotatable Board</strong></p>
+<p>Ok, so this isn&#8217;t really new or unique to the Forge&#8230;the RPTC had this capability too, but I think it bears repeating while I&#8217;m on a roll here.  The great thing about the split hangboard design is that the spacing can be adjusted, but the angle of rotation can be adjusted as well! This should be done to improve ergonomics for certain grip types. For example, I find this particularly helpful on my &#8220;Index-Middle&#8221; finger, two-finger pocket grip.  When you hang from a two-finger pocket with your index and middle finger, your middle finger is longer, and the load on each finger is unbalanced, and often uncomfortable.  (The opposite is true for MR grips, which is why the MR two-finger pockets on all Rock Prodigy devices are slightly angled.) By rotating the pockets (rotate the right pocket counter-clockwise, and the left clockwise), the holding surface for the middle finger moves farther from your wrist, and it is possible to create a really comfortable grip.  Take a look at the photos:</p>
+<div data-shortcode="caption" id="attachment_4748" style="width: 710px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg"><img aria-describedby="caption-attachment-4748" data-attachment-id="4748" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4748" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg" data-orig-size="3264,1836" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;2.2&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;SM-G900V&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;1440846022&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;4.8&quot;,&quot;iso&quot;:&quot;400&quot;,&quot;shutter_speed&quot;:&quot;0.033333333333333&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;1&quot;}" data-image-title="J hang 2f &amp;#8211; IM close" data-image-description="" data-image-caption="&lt;p&gt;By rotating the Forge slightly (canted inward), Janelle&amp;#8217;s fingers line up better with the pocket surface.&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg?w=700" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg?w=700&#038;h=394" alt="By rotating the Forge slightly (canted inward), Janelle&#039;s fingers line up better with the pocket surface."   class="size-large wp-image-4748" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg?w=300 300w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg?w=600 600w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/j-hang-2f-im-close.jpg?w=150 150w" sizes="(max-width: 300px) 100vw, 300px" /></a><p id="caption-attachment-4748" class="wp-caption-text">By rotating the Forge slightly (canted inward), Janelle&#8217;s fingers line up with the pocket surface perfectly.</p></div>
+<p>To create this rotation, I simply place a 3/4&#8243; shim material (wood block) under the outer bracket that holds the Forge (<a href="https://rockclimberstrainingmanual.com/2014/11/12/adjustable-mount-2-0-for-the-rock-prodigy-training-center/">see this post on how to create an adjustable mount</a>, with more adjustable mount designs on their way).  The angle of rotation can be adjusted by changing the thickness of the wood shim, or placed under the inner bracket to rotate in the opposite direction (which you might want to do for your &#8220;Middle-Ring&#8221; two finger pocket).</p>
+<div data-shortcode="caption" id="attachment_4767" style="width: 681px" class="wp-caption aligncenter"><a href="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg"><img aria-describedby="caption-attachment-4767" data-attachment-id="4767" data-permalink="https://rockclimberstrainingmanual.com/?attachment_id=4767" data-orig-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg" data-orig-size="675,711" data-comments-opened="1" data-image-meta="{&quot;aperture&quot;:&quot;0&quot;,&quot;credit&quot;:&quot;&quot;,&quot;camera&quot;:&quot;&quot;,&quot;caption&quot;:&quot;&quot;,&quot;created_timestamp&quot;:&quot;0&quot;,&quot;copyright&quot;:&quot;&quot;,&quot;focal_length&quot;:&quot;0&quot;,&quot;iso&quot;:&quot;0&quot;,&quot;shutter_speed&quot;:&quot;0&quot;,&quot;title&quot;:&quot;&quot;,&quot;orientation&quot;:&quot;0&quot;}" data-image-title="janelle hang 2f IM full_annotated" data-image-description="" data-image-caption="&lt;p&gt;By rotating the Forge slightly (canted inward), Janelle&amp;#8217;s fingers line up better with the pocket surface&lt;/p&gt;
+" data-large-file="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg?w=675" loading="lazy" src="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg?w=700" alt="By rotating the Forge slightly (canted inward), Janelle&#039;s fingers line up better with the pocket surface"   class="size-full wp-image-4767" srcset="https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg 675w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg?w=142&amp;h=150 142w, https://rockclimberstrainingmanual.com/wp-content/uploads/2015/08/janelle-hang-2f-im-full_annotated.jpg?w=285&amp;h=300 285w" sizes="(max-width: 675px) 100vw, 675px" /></a><p id="caption-attachment-4767" class="wp-caption-text">By rotating the Forge slightly (canted inward), Janelle&#8217;s fingers line up better with the pocket surface</p></div>
+<p>Finally, please remember, the Forge is a more advanced hangboard than the RPTC!  If you&#8217;re transitioning your training over to it, you need to adjust your expectations in terms of what weight you expect to be able to hang on these new grips.  The new features of the Forge such as reduced geometry, draft, new texture are all conspiring to increase your training intensity, so expect to need to ratchet back the externally applied intensity (the weight you hang) on each grip. </p>
+<p>Now go out there, get a Forge, and hammer your fingers into the best shape of your life!</p>
+<p><strong><a href="http://www.trango.com/p-329-rock-prodigy-forge.aspx">Order your Forge here!</a></strong></p>
+<div id="atatags-370373-6ab04b5aca909">
+		<script type="text/javascript">
+			__ATA = window.__ATA || {};
+			__ATA.cmd = window.__ATA.cmd || [];
+			__ATA.cmd.push(function() {
+				__ATA.initVideoSlot('atatags-370373-6ab04b5aca909', {
+					sectionId: '370373',
+					format: 'inread'
+				});
+			});
+		</script>
+	</div><span id="wordads-inline-marker" style="display: none;"></span><div id="jp-post-flair" class="sharedaddy sd-like-enabled sd-sharing-enabled"><div class="sharedaddy sd-sharing-enabled"><div class="robots-nocontent sd-block sd-social sd-social-icon-text sd-sharing"><h3 class="sd-title">Share this:</h3><div class="sd-content"><ul><li class="share-custom share-custom-instagram"><a rel="nofollow noopener noreferrer"
+				data-shared="sharing-custom-4772"
+				class="share-custom share-custom-instagram sd-button share-icon"
+				href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?share=custom-1466372376"
+				target="_blank"
+				aria-labelledby="sharing-custom-4772"
+				>
+				<span id="sharing-custom-4772" hidden>Share on Instagram (Opens in new window)</span>
+				<span style="background-image:url(&quot;https://www.google.com/url?sa=i&amp;rct=j&amp;q=&amp;esrc=s&amp;source=images&amp;cd=&amp;cad=rja&amp;uact=8&amp;ved=0ahUKEwjPtorchrXNAhUIEVIKHYWkBcYQjRwIBw&amp;url=https%3A%2F%2Fwww.iconfinder.com%2Ficons%2F167679%2Finstagram_icon&amp;psig=AFQjCNH5mpF5iqQomCgxTRhj-Cq0gAQs9A&amp;ust=1466458752087906&quot;);">Instagram</span>
+			</a></li><li class="share-twitter"><a rel="nofollow noopener noreferrer"
+				data-shared="sharing-twitter-4772"
+				class="share-twitter sd-button share-icon"
+				href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?share=twitter"
+				target="_blank"
+				aria-labelledby="sharing-twitter-4772"
+				>
+				<span id="sharing-twitter-4772" hidden>Share on X (Opens in new window)</span>
+				<span>X</span>
+			</a></li><li class="share-facebook"><a rel="nofollow noopener noreferrer"
+				data-shared="sharing-facebook-4772"
+				class="share-facebook sd-button share-icon"
+				href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?share=facebook"
+				target="_blank"
+				aria-labelledby="sharing-facebook-4772"
+				>
+				<span id="sharing-facebook-4772" hidden>Share on Facebook (Opens in new window)</span>
+				<span>Facebook</span>
+			</a></li><li class="share-end"></li></ul></div></div></div><div class='sharedaddy sd-block sd-like jetpack-likes-widget-wrapper jetpack-likes-widget-unloaded' id='like-post-wrapper-56703055-4772-6ab04b5acc394' data-src='//widgets.wp.com/likes/index.html?ver=20260920#blog_id=56703055&amp;post_id=4772&amp;origin=rockclimberstrainingmanual.wordpress.com&amp;obj_id=56703055-4772-6ab04b5acc394&amp;domain=rockclimberstrainingmanual.com' data-name='like-post-frame-56703055-4772-6ab04b5acc394' data-title='Like or Reblog'><div class='likes-widget-placeholder post-likes-widget-placeholder' style='height: 55px;'><span class='button'><span>Like</span></span> <span class='loading'>Loading...</span></div><span class='sd-text-color'></span><a class='sd-link-color'></a></div></div>			</div><!-- .entry-content -->
+
+	<footer class="entry-meta">
+		<a class="entry-date" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/">September 3, 2015</a> in <a href="https://rockclimberstrainingmanual.com/category/uncategorized/" rel="category tag">Uncategorized</a>. 
+			</footer><!-- .entry-meta -->
+</article><!-- #post-## -->
+			<div class="related-content">
+	<h3 class="related-content-title">Related posts</h3>
+	
+		<article id="post-5172" class="post-5172 post type-post status-publish format-standard hentry category-uncategorized">
+
+			
+			<header class="entry-header">
+				<h3 class="entry-title"><a href="https://rockclimberstrainingmanual.com/2015/12/30/introducing-the-rock-prodigy-forge-user-experience-survey-win-some-shwag/" rel="bookmark">Introducing the &#8220;Rock Prodigy Forge User Experience&#8221; Survey &#8211; Win some shwag!</a></h3>
+			</header><!-- .entry-header -->
+
+		</article>
+
+	
+		<article id="post-6141" class="post-6141 post type-post status-publish format-standard hentry category-power-endurance category-skill-development category-strength category-tools category-training tag-climbing-science tag-hangboard-beta tag-injuries tag-power-endurance tag-research tag-rock-climbers-training-manual tag-rock-prodigy-training-center tag-strength tag-training tag-training-tools">
+
+			
+			<header class="entry-header">
+				<h3 class="entry-title"><a href="https://rockclimberstrainingmanual.com/2016/08/24/review-of-the-latest-climbing-research/" rel="bookmark">Review of the Latest Climbing Research</a></h3>
+			</header><!-- .entry-header -->
+
+		</article>
+
+	
+		<article id="post-5233" class="post-5233 post type-post status-publish format-standard hentry category-strength category-tools category-training category-uncategorized tag-forge tag-hangboard-beta tag-rock-prodigy-forge tag-rptc tag-training">
+
+			
+			<header class="entry-header">
+				<h3 class="entry-title"><a href="https://rockclimberstrainingmanual.com/2016/01/20/adjustable-hangboard-mount-3-0-easiest-yet/" rel="bookmark">Adjustable Hangboard Mount (3.0) &#8211; Easiest yet!</a></h3>
+			</header><!-- .entry-header -->
+
+		</article>
+
+	</div>
+
+				<nav role="navigation" id="nav-below" class="navigation-post">
+		<h1 class="screen-reader-text">Post navigation</h1>
+
+	
+		<div class="nav-previous"><a href="https://rockclimberstrainingmanual.com/2015/08/19/thunder-strike-part-ii-the-exciting-conclusion/" rel="prev"><span class="meta-nav">&larr;</span> Thunder Strike &#8211; Part II &#8212; the exciting conclusion!</a></div>		<div class="nav-next"><a href="https://rockclimberstrainingmanual.com/2015/09/22/kids-climbing-wall/" rel="next">Kids Climbing Wall <span class="meta-nav">&rarr;</span></a></div>
+	
+	</nav><!-- #nav-below -->
+	
+			
+	<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			7 thoughts on &ldquo;<span>The World&#8217;s Most Technologically Advanced Finger Training System &#8211; The Forge</span>&rdquo;		</h2>
+
+		
+		<ol class="comment-list">
+				<li class="comment even thread-even depth-1" id="li-comment-6311">
+		<article id="comment-6311" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img referrerpolicy="no-referrer" alt='Rui&#039;s avatar' src='https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=40&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=40&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=60&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=80&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=120&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/04378a07c16b2e58ce07ee811c0f095e006dbf71f06adc530268df531a58ff20?s=160&#038;d=identicon&#038;r=G 4x' class='avatar avatar-40' height='40' width='40' loading='lazy' decoding='async' />					<cite class="fn">Rui</cite> <span class="says">says:</span>				</div><!-- .comment-author .vcard -->
+				
+				<div class="comment-meta commentmetadata">
+					<a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comment-6311"><time datetime="2015-09-10T11:27:39-06:00">
+					September 10, 2015 at 11:27 am					</time></a>
+									</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content"><p>instead of canting inwards the two individual parts of the hangboard, did you consider re-designing the three finger pocket at off-set heights,such as having the middle position 4 to 6mm higher than the adjacent positions on either side?  The higher position would correspond to an more ergonomic position for the typically longer middle finger (the distal joint in middle finger is not aligned with the other distal joints), which appears to be what you are trying to achieve in rotating the board.</p>
+<p id="comment-like-6311" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?like_comment=6311&#038;_wpnonce=60d4373bc1" class="comment-like-link needs-login" rel="nofollow" data-blog="56703055"><span>Like</span></a><span id="comment-like-count-6311" class="comment-like-feedback">Like</span></p>
+</div>
+
+			<div class="reply">
+			<a rel="nofollow" class="comment-reply-link" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?replytocom=6311#respond" data-commentid="6311" data-postid="4772" data-belowelement="comment-6311" data-respondelement="respond" data-replyto="Reply to Rui" aria-label="Reply to Rui">Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-monomaniac29 odd alt depth-2" id="li-comment-6316">
+		<article id="comment-6316" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img referrerpolicy="no-referrer" alt='monomaniac29&#039;s avatar' src='https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=40&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=40&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=60&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=80&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=120&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=160&#038;d=identicon&#038;r=G 4x' class='avatar avatar-40' height='40' width='40' loading='lazy' decoding='async' />					<cite class="fn"><a href="http://rockclimberstrainingmanual.com" class="url" rel="ugc">monomaniac29</a></cite> <span class="says">says:</span>				</div><!-- .comment-author .vcard -->
+				
+				<div class="comment-meta commentmetadata">
+					<a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comment-6316"><time datetime="2015-09-11T14:02:52-06:00">
+					September 11, 2015 at 2:02 pm					</time></a>
+									</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content"><p>Rui,</p>
+<p>We have considered using an angled pocket for the IM and/or IMR pockets.  The reason we haven&#8217;t pursued that design is that we find the disparity in I and M finger lengths varies drastically among climbers, so it would be very difficult to pin down an angle that would suit everyone.  For now we think it&#8217;s better to leave it &#8220;neutral&#8221; (horizontal) rather than inadvertently pick an arbitrary angle that doesn&#8217;t work for many climbers.</p>
+<p>Mark</p>
+<p id="comment-like-6316" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?like_comment=6316&#038;_wpnonce=e4c46d2748" class="comment-like-link needs-login" rel="nofollow" data-blog="56703055"><span>Like</span></a><span id="comment-like-count-6316" class="comment-like-feedback">Like</span></p>
+</div>
+
+			<div class="reply">
+			<a rel="nofollow" class="comment-reply-link" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?replytocom=6316#respond" data-commentid="6316" data-postid="4772" data-belowelement="comment-6316" data-respondelement="respond" data-replyto="Reply to monomaniac29" aria-label="Reply to monomaniac29">Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+	<li class="comment even thread-odd thread-alt depth-1" id="li-comment-6342">
+		<article id="comment-6342" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img referrerpolicy="no-referrer" alt='PK&#039;s avatar' src='https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=40&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=40&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=60&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=80&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=120&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/6a15d747e81d8ba099047e22198cdb39af2f4b73a1a48152338ae75cfc8909d0?s=160&#038;d=identicon&#038;r=G 4x' class='avatar avatar-40' height='40' width='40' loading='lazy' decoding='async' />					<cite class="fn">PK</cite> <span class="says">says:</span>				</div><!-- .comment-author .vcard -->
+				
+				<div class="comment-meta commentmetadata">
+					<a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comment-6342"><time datetime="2015-09-18T14:32:30-06:00">
+					September 18, 2015 at 2:32 pm					</time></a>
+									</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content"><p>I just received my Forge and I measured the slopers out to about 34 degrees and 16 degrees for the ones above the pinch.  I measured the distance from the top of the flat edge to the highest point of the steeper sloper to 10mm, which appears less than the distance in the rendering.  Having just completed a session with it last night, I noted the steep sloper felt a bit easier than the 35 degree Beastmaker.  </p>
+<p>Aside from that, I have to commend you on the pinches.  The 4&#8243; wide grip is brutal and is exactly what I was looking for.  The Honesty bump was a really nice touch as well.  I also really like what you&#8217;ve done with the micro edge, after experimenting a bit with it last night I know I&#8217;m going to be in for some good &#8216;try hard&#8217; in the future.</p>
+<p>Haven&#8217;t played around too much with the sloping crimp just yet, but it seems the lack of distance between the top of the edge and the bottom of the flat edge might make it a bit difficult to get a consistent grip on the hold, especially when quickly trying to position your fingers during a repeater set.  I measured this distance at 5mm and it seems like bumping this to 10mm might make the hold a bit easier to quickly grab.</p>
+<p>Great job overall, looking forward to training on it for years to come.</p>
+<p id="comment-like-6342" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?like_comment=6342&#038;_wpnonce=11a49c2323" class="comment-like-link needs-login" rel="nofollow" data-blog="56703055"><span>Like</span></a><span id="comment-like-count-6342" class="comment-like-feedback">Like</span></p>
+</div>
+
+			<div class="reply">
+			<a rel="nofollow" class="comment-reply-link" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?replytocom=6342#respond" data-commentid="6342" data-postid="4772" data-belowelement="comment-6342" data-respondelement="respond" data-replyto="Reply to PK" aria-label="Reply to PK">Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="https://rockclimberstrainingmanual.com/2015/12/30/introducing-the-rock-prodigy-forge-user-experience-survey-win-some-shwag/" class="url" rel="ugc">Introducing the &#8220;Rock Prodigy Forge User Experience&#8221; Survey &#8211; Win some shwag! | The Rock Climber&#039;s Training Manual</a></p>
+	</li><!-- #comment-## -->
+	<li class="post pingback">
+		<p>Pingback: <a href="https://rockclimberstrainingmanual.com/2016/01/20/adjustable-hangboard-mount-3-0-easiest-yet/" class="url" rel="ugc">Adjustable Hangboard Mount (3.0) &#8211; Easiest yet! | The Rock Climber&#039;s Training Manual</a></p>
+	</li><!-- #comment-## -->
+	<li class="comment odd alt thread-even depth-1" id="li-comment-9068">
+		<article id="comment-9068" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img referrerpolicy="no-referrer" alt='Steve P&#039;s avatar' src='https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=40&#038;d=identicon&#038;r=G' srcset='https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=40&#038;d=identicon&#038;r=G 1x, https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=60&#038;d=identicon&#038;r=G 1.5x, https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=80&#038;d=identicon&#038;r=G 2x, https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=120&#038;d=identicon&#038;r=G 3x, https://2.gravatar.com/avatar/8733694217a5c8074db490b9620edef8d675c632b192a85b99e1c05a7667e5cb?s=160&#038;d=identicon&#038;r=G 4x' class='avatar avatar-40' height='40' width='40' loading='lazy' decoding='async' />					<cite class="fn">Steve P</cite> <span class="says">says:</span>				</div><!-- .comment-author .vcard -->
+				
+				<div class="comment-meta commentmetadata">
+					<a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comment-9068"><time datetime="2016-10-22T12:46:19-06:00">
+					October 22, 2016 at 12:46 pm					</time></a>
+									</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content"><p>I&#8217;ve been on the fence for a while, debating whether to switch to the Forge from my Metolious hangboard. How often should a hangboard last? One of my main concerns is the VDER, variable depth edge. How can I be certain from that I&#8217;m not slightly changing my hand position between workouts? I don&#8217;t want to get a different edge depth each set.</p>
+<p id="comment-like-9068" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?like_comment=9068&#038;_wpnonce=ccb26383db" class="comment-like-link needs-login" rel="nofollow" data-blog="56703055"><span>Like</span></a><span id="comment-like-count-9068" class="comment-like-feedback">Like</span></p>
+</div>
+
+			<div class="reply">
+			<a rel="nofollow" class="comment-reply-link" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?replytocom=9068#respond" data-commentid="9068" data-postid="4772" data-belowelement="comment-9068" data-respondelement="respond" data-replyto="Reply to Steve P" aria-label="Reply to Steve P">Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	<ul class="children">
+	<li class="comment byuser comment-author-monomaniac29 even depth-2" id="li-comment-9070">
+		<article id="comment-9070" class="comment">
+			<footer>
+				<div class="comment-author vcard">
+					<img referrerpolicy="no-referrer" alt='monomaniac29&#039;s avatar' src='https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=40&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=40&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=60&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=80&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=120&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/cdb7d5186123f23ac47e6136c3225fef82e3f3da20c9cc86c09bf5b019553edc?s=160&#038;d=identicon&#038;r=G 4x' class='avatar avatar-40' height='40' width='40' loading='lazy' decoding='async' />					<cite class="fn"><a href="http://rockclimberstrainingmanual.com" class="url" rel="ugc">monomaniac29</a></cite> <span class="says">says:</span>				</div><!-- .comment-author .vcard -->
+				
+				<div class="comment-meta commentmetadata">
+					<a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comment-9070"><time datetime="2016-10-22T21:34:27-06:00">
+					October 22, 2016 at 9:34 pm					</time></a>
+									</div><!-- .comment-meta .commentmetadata -->
+			</footer>
+
+			<div class="comment-content"><p>Steve,</p>
+<p>Both the RPTC and the Forge come with &#8220;Position Index Bumps&#8221; that are designed to help you locate the same position on the VDER each set.  I think if you ask around you will hear that these are quite effective at limiting &#8220;cheating&#8221;.  For more information, check out the RPTC page under the &#8220;Tools&#8221; menu.</p>
+<p>Mark</p>
+<p id="comment-like-9070" data-liked=comment-not-liked class="comment-likes comment-not-liked"><a href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?like_comment=9070&#038;_wpnonce=420ba04261" class="comment-like-link needs-login" rel="nofollow" data-blog="56703055"><span>Like</span></a><span id="comment-like-count-9070" class="comment-like-feedback">Like</span></p>
+</div>
+
+			<div class="reply">
+			<a rel="nofollow" class="comment-reply-link" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/?replytocom=9070#respond" data-commentid="9070" data-postid="4772" data-belowelement="comment-9070" data-respondelement="respond" data-replyto="Reply to monomaniac29" aria-label="Reply to monomaniac29">Reply</a>			</div><!-- .reply -->
+		</article><!-- #comment-## -->
+
+	</li><!-- #comment-## -->
+</ul><!-- .children -->
+</li><!-- #comment-## -->
+		</ol><!-- .comment-list -->
+
+		
+	
+	
+		<div id="respond" class="comment-respond">
+		<h3 id="reply-title" class="comment-reply-title">Leave a comment <small><a rel="nofollow" id="cancel-comment-reply-link" href="/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#respond" style="display:none;">Cancel reply</a></small></h3><form action="https://rockclimberstrainingmanual.com/wp-comments-post.php" method="post" id="commentform" class="comment-form">
+
+
+<div class="comment-form__verbum transparent"></div><div class="verbum-form-meta"><input type='hidden' name='comment_post_ID' value='4772' id='comment_post_ID' />
+<input type='hidden' name='comment_parent' id='comment_parent' value='0' />
+
+			<input type="hidden" name="highlander_comment_nonce" id="highlander_comment_nonce" value="25de0799cf" />
+			<input type="hidden" name="verbum_show_subscription_modal" value="" /></div><p style="display: none;"><input type="hidden" id="akismet_comment_nonce" name="akismet_comment_nonce" value="79e4b6348b" /></p><p style="display: none !important;" class="akismet-fields-container" data-prefix="ak_"><label>&#916;<textarea name="ak_hp_textarea" cols="45" rows="8" maxlength="100"></textarea></label><input type="hidden" id="ak_js_1" name="ak_js" value="74"/><script>
+document.getElementById( "ak_js_1" ).setAttribute( "value", ( new Date() ).getTime() );
+</script>
+</p></form>	</div><!-- #respond -->
+	
+</div><!-- #comments -->
+
+		
+		</div><!-- #content -->
+	</div><!-- #primary -->
+
+	<div id="secondary" class="widget-area" role="complementary">
+				<aside id="text-2" class="widget widget_text"><h1 class="widget-title">Buy our book please!</h1>			<div class="textwidget"><span style="font-family:Arial;font-size:large;color:red;"><em>The Rock Climber's Training Manual</em> is now available <a title="Order Link" href="https://rockclimberstrainingmanual.com/tools-for-rock-climbing-training/the-rock-climbers-training-manual/">order yours here!</a></span></div>
+		</aside><aside id="search-2" class="widget widget_search">	<form method="get" id="searchform" class="searchform" action="https://rockclimberstrainingmanual.com/" role="search">
+		<label for="s" class="screen-reader-text">Search</label>
+		<input type="search" class="field" name="s" value="" id="s" placeholder="Search &hellip;" />
+		<input type="submit" class="submit" id="searchsubmit" value="Search" />
+	</form>
+</aside>
+		<aside id="recent-posts-2" class="widget widget_recent_entries">
+		<h1 class="widget-title">Recent Posts</h1>
+		<ul>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2020/04/05/how-to-become-an-expert-climber-in-five-simple-lessons-lesson-5/">How to Become an Expert Climber in Five Simple Lessons (Lesson 5)</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2020/03/19/how-to-become-an-expert-climber-in-five-simple-lessons-lesson-4/">How to Become an Expert Climber in Five Simple Lessons (Lesson 4)</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2020/03/07/how-to-become-an-expert-climber-in-five-simple-lessons-lesson-3/">How to Become an Expert Climber in Five Simple Lessons (Lesson 3)</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2020/02/29/how-to-become-an-expert-climber-in-five-simple-lessons-lesson-2/">How to Become an Expert Climber in Five Simple Lessons (Lesson 2)</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2020/02/25/how-to-become-an-expert-climber-in-five-simple-lessons/">How to Become an Expert Climber in Five Simple Lessons</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2019/11/08/whitewater-canyoning-in-switzerland-nala-inferiore/">Whitewater Canyoning in Switzerland &#8212; Nala Inferiore</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2019/10/15/swiss-sport-climbing-part-2-off-the-beaten-path/">Swiss Sport Climbing Part 2: Off the Beaten Path</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2019/10/01/high-wire-act-vf-murren/">High Wire Act: VF Murren</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2019/09/15/klettersteig-on-the-flank-of-the-eiger/">Klettersteig on the Flank of the Eiger</a>
+									</li>
+											<li>
+					<a href="https://rockclimberstrainingmanual.com/2019/09/03/swiss-sport-climbing-part-1-the-giants/">Swiss Sport Climbing Part 1: The Giants</a>
+									</li>
+					</ul>
+
+		</aside><aside id="recent-comments-2" class="widget widget_recent_comments"><h1 class="widget-title">Recent Comments</h1>				<table class="recentcommentsavatar" cellspacing="0" cellpadding="0" border="0">
+					<tr><td title="Unlock Bouldering Potential: Get Better Systematically" class="recentcommentsavatartop" style="height:48px; width:48px;"><a href="https://rockclimbingrealms.com/how-to-get-better-at-bouldering/" rel="nofollow"></a></td><td class="recentcommentstexttop" style=""><a href="https://rockclimbingrealms.com/how-to-get-better-at-bouldering/" rel="nofollow">Unlock Bouldering Po&hellip;</a> on <a href="https://rockclimberstrainingmanual.com/2017/02/07/training-for-9a-part-iii/comment-page-1/#comment-148634">Training for 9a &#8211; Part I&hellip;</a></td></tr><tr><td title="Unlock Bouldering Potential: Get Better Systematically" class="recentcommentsavatarend" style="height:48px; width:48px;"><a href="https://rockclimbingrealms.com/how-to-get-better-at-bouldering/" rel="nofollow"></a></td><td class="recentcommentstextend" style=""><a href="https://rockclimbingrealms.com/how-to-get-better-at-bouldering/" rel="nofollow">Unlock Bouldering Po&hellip;</a> on <a href="https://rockclimberstrainingmanual.com/2014/01/26/deliberate-practice/comment-page-1/#comment-148633">Deliberate Practice</a></td></tr><tr><td title="Sir Ravenstorm" class="recentcommentsavatarend" style="height:48px; width:48px;"><a href="https://sir-ravenstorm.tumblr.com/" rel="nofollow"><img referrerpolicy="no-referrer" alt='Sir Ravenstorm&#039;s avatar' src='https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=48&#038;d=identicon&#038;r=G' srcset='https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=48&#038;d=identicon&#038;r=G 1x, https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=72&#038;d=identicon&#038;r=G 1.5x, https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=96&#038;d=identicon&#038;r=G 2x, https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=144&#038;d=identicon&#038;r=G 3x, https://0.gravatar.com/avatar/c019e172ed2dca614aa7690d93e11ba80b44fbb89170d9bfc39035b2c9e62fcf?s=192&#038;d=identicon&#038;r=G 4x' class='avatar avatar-48' height='48' width='48' loading='lazy' decoding='async' /></a></td><td class="recentcommentstextend" style=""><a href="https://sir-ravenstorm.tumblr.com/" rel="nofollow">Sir Ravenstorm</a> on <a href="https://rockclimberstrainingmanual.com/2015/03/10/delivered-from-purgatory/comment-page-1/#comment-148617">Delivered From Purgatory</a></td></tr><tr><td title="Kotlin" class="recentcommentsavatarend" style="height:48px; width:48px;"><a href="https://medium.com/@aksoymelihcan" rel="nofollow"><img referrerpolicy="no-referrer" alt='Kotlin&#039;s avatar' src='https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=48&#038;d=identicon&#038;r=G' srcset='https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=48&#038;d=identicon&#038;r=G 1x, https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=72&#038;d=identicon&#038;r=G 1.5x, https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=96&#038;d=identicon&#038;r=G 2x, https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=144&#038;d=identicon&#038;r=G 3x, https://2.gravatar.com/avatar/28e846dc40548aac95e7bf0408134d7164b30395fe914e558b0950e76f086209?s=192&#038;d=identicon&#038;r=G 4x' class='avatar avatar-48' height='48' width='48' loading='lazy' decoding='async' /></a></td><td class="recentcommentstextend" style=""><a href="https://medium.com/@aksoymelihcan" rel="nofollow">Kotlin</a> on <a href="https://rockclimberstrainingmanual.com/2013/01/15/campus-training-part-3-basic-routine/comment-page-1/#comment-143668">Campus Training Part 3: Basic&hellip;</a></td></tr><tr><td title="Charles Macneill" class="recentcommentsavatarend" style="height:48px; width:48px;"><img referrerpolicy="no-referrer" alt='Charles Macneill&#039;s avatar' src='https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=48&#038;d=identicon&#038;r=G' srcset='https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=48&#038;d=identicon&#038;r=G 1x, https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=72&#038;d=identicon&#038;r=G 1.5x, https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=96&#038;d=identicon&#038;r=G 2x, https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=144&#038;d=identicon&#038;r=G 3x, https://2.gravatar.com/avatar/eb4d5d7746d57cd96bf96e9888ceded3ffc67ae461f91749acd939dc023fc8c6?s=192&#038;d=identicon&#038;r=G 4x' class='avatar avatar-48' height='48' width='48' loading='lazy' decoding='async' /></td><td class="recentcommentstextend" style="">Charles Macneill on <a href="https://rockclimberstrainingmanual.com/2015/09/22/kids-climbing-wall/comment-page-1/#comment-140852">Kids Climbing Wall</a></td></tr>				</table>
+				</aside><aside id="archives-2" class="widget widget_archive"><h1 class="widget-title">Archives</h1>
+			<ul>
+					<li><a href='https://rockclimberstrainingmanual.com/2020/04/'>April 2020</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2020/03/'>March 2020</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2020/02/'>February 2020</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/11/'>November 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/10/'>October 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/09/'>September 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/08/'>August 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/07/'>July 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/06/'>June 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/05/'>May 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2019/01/'>January 2019</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/12/'>December 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/11/'>November 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/10/'>October 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/09/'>September 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/08/'>August 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/07/'>July 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2018/02/'>February 2018</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/12/'>December 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/10/'>October 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/09/'>September 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/08/'>August 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/07/'>July 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/06/'>June 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/05/'>May 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/04/'>April 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/03/'>March 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/02/'>February 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2017/01/'>January 2017</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/12/'>December 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/11/'>November 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/10/'>October 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/09/'>September 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/08/'>August 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/06/'>June 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/05/'>May 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/04/'>April 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/03/'>March 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/02/'>February 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2016/01/'>January 2016</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/12/'>December 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/10/'>October 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/09/'>September 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/08/'>August 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/07/'>July 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/06/'>June 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/05/'>May 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/04/'>April 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/03/'>March 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/02/'>February 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2015/01/'>January 2015</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/12/'>December 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/11/'>November 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/10/'>October 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/09/'>September 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/08/'>August 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/07/'>July 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/06/'>June 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/05/'>May 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/04/'>April 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/03/'>March 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/02/'>February 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2014/01/'>January 2014</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/12/'>December 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/11/'>November 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/10/'>October 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/09/'>September 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/08/'>August 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/04/'>April 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/03/'>March 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/02/'>February 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2013/01/'>January 2013</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/12/'>December 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/11/'>November 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/10/'>October 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/09/'>September 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/08/'>August 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/07/'>July 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/06/'>June 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/05/'>May 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/04/'>April 2012</a></li>
+	<li><a href='https://rockclimberstrainingmanual.com/2012/03/'>March 2012</a></li>
+			</ul>
+
+			</aside><aside id="follow_button_widget-2" class="widget widget_follow_button_widget">
+		<a class="wordpress-follow-button" href="https://rockclimberstrainingmanual.com" data-blog="56703055" data-lang="en" >Follow The Rock Climber&#039;s Training Manual on WordPress.com</a>
+		<script type="text/javascript">(function(d){ window.wpcomPlatform = {"titles":{"timelines":"Embeddable Timelines","followButton":"Follow Button","wpEmbeds":"WordPress Embeds"}}; var f = d.getElementsByTagName('SCRIPT')[0], p = d.createElement('SCRIPT');p.type = 'text/javascript';p.async = true;p.src = '//widgets.wp.com/platform.js';f.parentNode.insertBefore(p,f);}(document));</script>
+
+		</aside><aside id="meta-2" class="widget widget_meta"><h1 class="widget-title">Meta</h1>
+		<ul>
+			<li><a class="click-register" href="https://wordpress.com/start?ref=wplogin">Create account</a></li>			<li><a href="https://rockclimberstrainingmanual.wordpress.com/wp-login.php">Log in</a></li>
+			<li><a href="https://rockclimberstrainingmanual.com/feed/">Entries feed</a></li>
+			<li><a href="https://rockclimberstrainingmanual.com/comments/feed/">Comments feed</a></li>
+
+			<li><a href="https://wordpress.com/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.com</a></li>
+		</ul>
+
+		</aside>	</div><!-- #secondary -->
+	</div><!-- #main -->
+
+	<footer id="colophon" class="site-footer" role="contentinfo">
+		<div class="site-info">
+			<a href="https://wordpress.com/?ref=footer_blog" rel="nofollow">Blog at WordPress.com.</a>
+		</div><!-- .site-info -->
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+<!--  -->
+<script type="speculationrules">
+{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/files/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/pub/expound/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"conservative"}]}
+</script>
+<script id="grofiles-cards-js" src="//0.gravatar.com/js/hovercards/hovercards.min.js?ver=202638d1133547e8a1f2801609f51cef12522abe7f6647d869e9fbc974fe356a37e613"></script>
+<script id="wpgroho-js-extra">
+var WPGroHo = {"my_hash":""};
+//# sourceURL=wpgroho-js-extra
+</script>
+<script crossorigin='anonymous' type='text/javascript'  src='/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1610363240i'></script>
+
+	<script>
+		// Initialize and attach hovercards to all gravatars
+		( function() {
+			function init() {
+				if ( typeof Gravatar === 'undefined' ) {
+					return;
+				}
+
+				if ( typeof Gravatar.init !== 'function' ) {
+					return;
+				}
+
+				Gravatar.profile_cb = function ( hash, id ) {
+					WPGroHo.syncProfileData( hash, id );
+				};
+
+				Gravatar.my_hash = WPGroHo.my_hash;
+				Gravatar.init(
+					'body',
+					'#wp-admin-bar-my-account',
+					{
+						i18n: {
+							'Edit your profile →': 'Edit your profile →',
+							'View profile →': 'View profile →',
+							'Contact': 'Contact',
+							'Send money': 'Send money',
+							'Sorry, we are unable to load this Gravatar profile.': 'Sorry, we are unable to load this Gravatar profile.',
+							'Gravatar not found.': 'Gravatar not found.',
+							'Too Many Requests.': 'Too Many Requests.',
+							'Internal Server Error.': 'Internal Server Error.',
+							'Is this you?': 'Is this you?',
+							'Claim your free profile.': 'Claim your free profile.',
+							'Email': 'Email',
+							'Home Phone': 'Home Phone',
+							'Work Phone': 'Work Phone',
+							'Cell Phone': 'Cell Phone',
+							'Contact Form': 'Contact Form',
+							'Calendar': 'Calendar',
+						},
+					}
+				);
+			}
+
+			if ( document.readyState !== 'loading' ) {
+				init();
+			} else {
+				document.addEventListener( 'DOMContentLoaded', init );
+			}
+		} )();
+	</script>
+
+		<div style="display:none">
+	<div class="grofile-hash-map-f3c2edde186581ce482844f4e763e01f">
+	</div>
+	<div class="grofile-hash-map-9c0c2ede33c5e28baea8a91012cd875e">
+	</div>
+	<div class="grofile-hash-map-195c2fad6f073c6245b08ac3cf659ac3">
+	</div>
+	<div class="grofile-hash-map-519b15a5b0bdd03ca842145f249d6563">
+	</div>
+	<div class="grofile-hash-map-f088041c11182ccbb3a3bb02878a3792">
+	</div>
+	<div class="grofile-hash-map-e31e5507764e7fc6c3fd57b5ff642ff9">
+	</div>
+	<div class="grofile-hash-map-47c9d7fde2c1da20fb3c3a7e4b8666ca">
+	</div>
+	</div>
+		<!-- CCPA [start] -->
+		<script type="text/javascript">
+			( function () {
+
+				var setupPrivacy = function() {
+
+					// Minimal Mozilla Cookie library
+					// https://developer.mozilla.org/en-US/docs/Web/API/Document/cookie/Simple_document.cookie_framework
+					var cookieLib = window.cookieLib = {getItem:function(e){return e&&decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*"+encodeURIComponent(e).replace(/[\-\.\+\*]/g,"\\$&")+"\\s*\\=\\s*([^;]*).*$)|^.*$"),"$1"))||null},setItem:function(e,o,n,t,r,i){if(!e||/^(?:expires|max\-age|path|domain|secure)$/i.test(e))return!1;var c="";if(n)switch(n.constructor){case Number:c=n===1/0?"; expires=Fri, 31 Dec 9999 23:59:59 GMT":"; max-age="+n;break;case String:c="; expires="+n;break;case Date:c="; expires="+n.toUTCString()}return"rootDomain"!==r&&".rootDomain"!==r||(r=(".rootDomain"===r?".":"")+document.location.hostname.split(".").slice(-2).join(".")),document.cookie=encodeURIComponent(e)+"="+encodeURIComponent(o)+c+(r?"; domain="+r:"")+(t?"; path="+t:"")+(i?"; secure":""),!0}};
+
+					// Implement IAB USP API.
+					window.__uspapi = function( command, version, callback ) {
+
+						// Validate callback.
+						if ( typeof callback !== 'function' ) {
+							return;
+						}
+
+						// Validate the given command.
+						if ( command !== 'getUSPData' || version !== 1 ) {
+							callback( null, false );
+							return;
+						}
+
+						// Check for GPC. If set, override any stored cookie.
+						if ( navigator.globalPrivacyControl ) {
+							callback( { version: 1, uspString: '1YYN' }, true );
+							return;
+						}
+
+						// Check for cookie.
+						var consent = cookieLib.getItem( 'usprivacy' );
+
+						// Invalid cookie.
+						if ( null === consent ) {
+							callback( null, false );
+							return;
+						}
+
+						// Everything checks out. Fire the provided callback with the consent data.
+						callback( { version: 1, uspString: consent }, true );
+					};
+
+					// Initialization.
+					document.addEventListener( 'DOMContentLoaded', function() {
+
+						// Internal functions.
+						var setDefaultOptInCookie = function() {
+							var value = '1YNN';
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'usprivacy', value, 365 * 24 * 60 * 60, '/', domain );
+						};
+
+						var setDefaultOptOutCookie = function() {
+							var value = '1YYN';
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'usprivacy', value, 24 * 60 * 60, '/', domain );
+						};
+
+						var setDefaultNotApplicableCookie = function() {
+							var value = '1---';
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'usprivacy', value, 24 * 60 * 60, '/', domain );
+						};
+
+						var setCcpaAppliesCookie = function( applies ) {
+							var domain = '.wordpress.com' === location.hostname.slice( -14 ) ? '.rootDomain' : location.hostname;
+							cookieLib.setItem( 'ccpa_applies', applies, 24 * 60 * 60, '/', domain );
+						}
+
+						var maybeCallDoNotSellCallback = function() {
+							if ( 'function' === typeof window.doNotSellCallback ) {
+								return window.doNotSellCallback();
+							}
+
+							return false;
+						}
+
+						// Look for usprivacy cookie first.
+						var usprivacyCookie = cookieLib.getItem( 'usprivacy' );
+
+						// Found a usprivacy cookie.
+						if ( null !== usprivacyCookie ) {
+
+							// If the cookie indicates that CCPA does not apply, then bail.
+							if ( '1---' === usprivacyCookie ) {
+								return;
+							}
+
+							// CCPA applies, so call our callback to add Do Not Sell link to the page.
+							maybeCallDoNotSellCallback();
+
+							// We're all done, no more processing needed.
+							return;
+						}
+
+						// We don't have a usprivacy cookie, so check to see if we have a CCPA applies cookie.
+						var ccpaCookie = cookieLib.getItem( 'ccpa_applies' );
+
+						// No CCPA applies cookie found, so we'll need to geolocate if this visitor is from California.
+						// This needs to happen client side because we do not have region geo data in our $SERVER headers,
+						// only country data -- therefore we can't vary cache on the region.
+						if ( null === ccpaCookie ) {
+
+							var request = new XMLHttpRequest();
+							request.open( 'GET', 'https://public-api.wordpress.com/geo/', true );
+
+							request.onreadystatechange = function () {
+								if ( 4 === this.readyState ) {
+									if ( 200 === this.status ) {
+
+										// Got a geo response. Parse out the region data.
+										var data = JSON.parse( this.response );
+										var region      = data.region ? data.region.toLowerCase() : '';
+										var ccpa_applies = ['california', 'colorado', 'connecticut', 'delaware', 'indiana', 'iowa', 'montana', 'new jersey', 'oregon', 'tennessee', 'texas', 'utah', 'virginia'].indexOf( region ) > -1;
+										// Set CCPA applies cookie. This keeps us from having to make a geo request too frequently.
+										setCcpaAppliesCookie( ccpa_applies );
+
+										// Check if CCPA applies to set the proper usprivacy cookie.
+										if ( ccpa_applies ) {
+											if ( maybeCallDoNotSellCallback() ) {
+												// Do Not Sell link added, so set default opt-in.
+												setDefaultOptInCookie();
+											} else {
+												// Failed showing Do Not Sell link as required, so default to opt-OUT just to be safe.
+												setDefaultOptOutCookie();
+											}
+										} else {
+											// CCPA does not apply.
+											setDefaultNotApplicableCookie();
+										}
+									} else {
+										// Could not geo, so let's assume for now that CCPA applies to be safe.
+										setCcpaAppliesCookie( true );
+										if ( maybeCallDoNotSellCallback() ) {
+											// Do Not Sell link added, so set default opt-in.
+											setDefaultOptInCookie();
+										} else {
+											// Failed showing Do Not Sell link as required, so default to opt-OUT just to be safe.
+											setDefaultOptOutCookie();
+										}
+									}
+								}
+							};
+
+							// Send the geo request.
+							request.send();
+						} else {
+							// We found a CCPA applies cookie.
+							if ( ccpaCookie === 'true' ) {
+								if ( maybeCallDoNotSellCallback() ) {
+									// Do Not Sell link added, so set default opt-in.
+									setDefaultOptInCookie();
+								} else {
+									// Failed showing Do Not Sell link as required, so default to opt-OUT just to be safe.
+									setDefaultOptOutCookie();
+								}
+							} else {
+								// CCPA does not apply.
+								setDefaultNotApplicableCookie();
+							}
+						}
+					} );
+				};
+
+				// Kickoff initialization.
+				if ( window.defQueue && defQueue.isLOHP && defQueue.isLOHP === 2020 ) {
+					defQueue.items.push( setupPrivacy );
+				} else {
+					setupPrivacy();
+				}
+
+			} )();
+		</script>
+
+		<!-- CCPA [end] -->
+		<div class="widget widget_eu_cookie_law_widget">
+<div
+	class="hide-on-button ads-active"
+	data-hide-timeout="30"
+	data-consent-expiration="180"
+	id="eu-cookie-law"
+	style="display: none"
+>
+	<form method="post">
+		<input type="submit" value="Close and accept" class="accept" />
+
+		Privacy &amp; Cookies: This site uses cookies. By continuing to use this website, you agree to their use. <br />
+To find out more, including how to control cookies, see here:
+				<a href="https://automattic.com/cookies/" rel="nofollow">
+			Cookie Policy		</a>
+ </form>
+</div>
+</div>		<div id="actionbar" dir="ltr" style="display: none;"
+			class="actnbr-pub-expound actnbr-has-follow actnbr-has-actions">
+		<ul>
+								<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-comment" href="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/#comments">
+							<svg class="gridicon gridicons-comment" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M12 16l-5 5v-5H5c-1.1 0-2-.9-2-2V5c0-1.1.9-2 2-2h14c1.1 0 2 .9 2 2v9c0 1.1-.9 2-2 2h-7z"/></g></svg>							<span>Comment						</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+						<a class="actnbr-action actnbr-actn-reblog" href="">
+							<svg class="gridicon gridicons-reblog" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M22.086 9.914L20 7.828V18c0 1.105-.895 2-2 2h-7v-2h7V7.828l-2.086 2.086L14.5 8.5 19 4l4.5 4.5-1.414 1.414zM6 16.172V6h7V4H6c-1.105 0-2 .895-2 2v10.172l-2.086-2.086L.5 15.5 5 20l4.5-4.5-1.414-1.414L6 16.172z"/></g></svg><span>Reblog</span>
+						</a>
+					</li>
+									<li class="actnbr-btn actnbr-hidden">
+								<a class="actnbr-action actnbr-actn-follow " href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z"  fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V3H17.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H14.5V13.5H10.5V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path d="M19.5303 15.0303L15.5 19.0605L12.9697 16.5303L14.0303 15.4697L15.5 16.9395L18.4697 13.9697L19.5303 15.0303Z" fill="#008A20"></path></svg>
+			<span>Subscribed</span>
+		</a>
+							<div class="actnbr-popover tip tip-top-left actnbr-notice" id="follow-bubble">
+							<div class="tip-arrow"></div>
+							<div class="tip-inner actnbr-follow-bubble">
+															<ul>
+											<li class="actnbr-sitename">
+			<a href="https://rockclimberstrainingmanual.com">
+				<img loading='lazy' alt='' src='https://s0.wp.com/i/logo/wpcom-gray-white.png?m=1479929237i' srcset='https://s0.wp.com/i/logo/wpcom-gray-white.png 1x' class='avatar avatar-50' height='50' width='50' />				The Rock Climber&#039;s Training Manual			</a>
+		</li>
+										<div class="actnbr-message no-display"></div>
+									<form method="post" action="https://subscribe.wordpress.com" accept-charset="utf-8" style="display: none;">
+																						<div class="actnbr-follow-count">Join 233 other subscribers</div>
+																					<div>
+										<input type="email" name="email" placeholder="Enter your email address" class="actnbr-email-field" aria-label="Enter your email address" />
+										</div>
+										<input type="hidden" name="action" value="subscribe" />
+										<input type="hidden" name="blog_id" value="56703055" />
+										<input type="hidden" name="source" value="https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/" />
+										<input type="hidden" name="sub-type" value="actionbar-follow" />
+										<input type="hidden" id="_wpnonce" name="_wpnonce" value="3a5c8f8268" />										<div class="actnbr-button-wrap">
+											<button type="submit" value="Sign me up">
+												Sign me up											</button>
+										</div>
+									</form>
+									<li class="actnbr-login-nudge">
+										<div>
+											Already have a WordPress.com account? <a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Frockclimberstrainingmanual.com%252F2015%252F09%252F03%252Fthe-worlds-most-technologically-advanced-finger-training-system-the-forge%252F">Log in now.</a>										</div>
+									</li>
+								</ul>
+															</div>
+						</div>
+					</li>
+							<li class="actnbr-ellipsis actnbr-hidden">
+				<svg class="gridicon gridicons-ellipsis" height="24" width="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M7 12c0 1.104-.896 2-2 2s-2-.896-2-2 .896-2 2-2 2 .896 2 2zm12-2c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2zm-7 0c-1.104 0-2 .896-2 2s.896 2 2 2 2-.896 2-2-.896-2-2-2z"/></g></svg>				<div class="actnbr-popover tip tip-top-left actnbr-more">
+					<div class="tip-arrow"></div>
+					<div class="tip-inner">
+						<ul>
+								<li class="actnbr-sitename">
+			<a href="https://rockclimberstrainingmanual.com">
+				<img loading='lazy' alt='' src='https://s0.wp.com/i/logo/wpcom-gray-white.png?m=1479929237i' srcset='https://s0.wp.com/i/logo/wpcom-gray-white.png 1x' class='avatar avatar-50' height='50' width='50' />				The Rock Climber&#039;s Training Manual			</a>
+		</li>
+								<li class="actnbr-folded-follow">
+										<a class="actnbr-action actnbr-actn-follow " href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path clip-rule="evenodd" d="m4 4.5h12v6.5h1.5v-6.5-1.5h-1.5-12-1.5v1.5 10.5c0 1.1046.89543 2 2 2h7v-1.5h-7c-.27614 0-.5-.2239-.5-.5zm10.5 2h-9v1.5h9zm-5 3h-4v1.5h4zm3.5 1.5h-1v1h1zm-1-1.5h-1.5v1.5 1 1.5h1.5 1 1.5v-1.5-1-1.5h-1.5zm-2.5 2.5h-4v1.5h4zm6.5 1.25h1.5v2.25h2.25v1.5h-2.25v2.25h-1.5v-2.25h-2.25v-1.5h2.25z"  fill-rule="evenodd"></path></svg>
+			<span>Subscribe</span>
+		</a>
+		<a class="actnbr-action actnbr-actn-following  no-display" href="">
+			<svg class="gridicon" height="20" width="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M16 4.5H4V15C4 15.2761 4.22386 15.5 4.5 15.5H11.5V17H4.5C3.39543 17 2.5 16.1046 2.5 15V3H17.5V12.5H16V4.5ZM5.5 6.5H14.5V8H5.5V6.5ZM5.5 9.5H9.5V11H5.5V9.5ZM12 11H13V12H12V11ZM10.5 9.5H14.5V13.5H10.5V9.5ZM5.5 12H9.5V13.5H5.5V12Z" fill="#008A20"></path><path d="M19.5303 15.0303L15.5 19.0605L12.9697 16.5303L14.0303 15.4697L15.5 16.9395L18.4697 13.9697L19.5303 15.0303Z" fill="#008A20"></path></svg>
+			<span>Subscribed</span>
+		</a>
+								</li>
+														<li class="actnbr-signup"><a href="https://wordpress.com/start/">Sign up</a></li>
+							<li class="actnbr-login"><a href="https://wordpress.com/log-in?redirect_to=https%3A%2F%2Fr-login.wordpress.com%2Fremote-login.php%3Faction%3Dlink%26back%3Dhttps%253A%252F%252Frockclimberstrainingmanual.com%252F2015%252F09%252F03%252Fthe-worlds-most-technologically-advanced-finger-training-system-the-forge%252F">Log in</a></li>
+																<li class="actnbr-shortlink">
+										<a href="https://wp.me/p3PV3p-1eY">
+											<span class="actnbr-shortlink__text">Copy shortlink</span>
+											<span class="actnbr-shortlink__icon"><svg class="gridicon gridicons-checkmark" height="16" width="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g><path d="M9 19.414l-6.707-6.707 1.414-1.414L9 16.586 20.293 5.293l1.414 1.414"/></g></svg></span>
+										</a>
+									</li>
+																<li class="flb-report">
+									<a href="https://wordpress.com/abuse/?report_url=https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/" target="_blank" rel="noopener noreferrer">
+										Report this content									</a>
+								</li>
+															<li class="actnbr-reader">
+									<a href="https://wordpress.com/reader/blogs/56703055/posts/4772">
+										View post in Reader									</a>
+								</li>
+															<li class="actnbr-subs">
+									<a href="https://subscribe.wordpress.com/">Manage subscriptions</a>
+								</li>
+																<li class="actnbr-fold"><a href="">Collapse this bar</a></li>
+														</ul>
+					</div>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+<script>
+window.addEventListener( "DOMContentLoaded", function( event ) {
+	var link = document.createElement( "link" );
+	link.href = "/wp-content/mu-plugins/actionbar/actionbar.css?v=20250116";
+	link.type = "text/css";
+	link.rel = "stylesheet";
+	document.head.appendChild( link );
+
+	var script = document.createElement( "script" );
+	script.src = "/wp-content/mu-plugins/actionbar/actionbar.js?v=20250204";
+	document.body.appendChild( script );
+} );
+</script>
+
+			<div id="jp-carousel-loading-overlay" style="display: none;">
+			<div id="jp-carousel-loading-wrapper">
+				<span id="jp-carousel-library-loading"><svg class="jetpack-spinner" width="40" height="40" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="none" stroke="#ddd" stroke-width="8"/><path d="M 50 4 A 46 46 0 0 1 96 50" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" dur="1.4s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/></path></svg></span>
+			</div>
+		</div>
+		<div class="jp-carousel-overlay" style="display: none;">
+
+		<div class="jp-carousel-container">
+			<!-- The Carousel Swiper -->
+			<div
+				class="jp-carousel-wrap swiper jp-carousel-swiper-container jp-carousel-transitions"
+				itemscope
+				itemtype="https://schema.org/ImageGallery">
+				<div class="jp-carousel swiper-wrapper"></div>
+				<div class="jp-swiper-button-prev swiper-button-prev">
+					<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<mask id="maskPrev" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="6" width="9" height="12">
+							<path d="M16.2072 16.59L11.6496 12L16.2072 7.41L14.8041 6L8.8335 12L14.8041 18L16.2072 16.59Z" fill="white"/>
+						</mask>
+						<g mask="url(#maskPrev)">
+							<rect x="0.579102" width="23.8823" height="24" fill="#FFFFFF"/>
+						</g>
+					</svg>
+				</div>
+				<div class="jp-swiper-button-next swiper-button-next">
+					<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<mask id="maskNext" mask-type="alpha" maskUnits="userSpaceOnUse" x="8" y="6" width="8" height="12">
+							<path d="M8.59814 16.59L13.1557 12L8.59814 7.41L10.0012 6L15.9718 12L10.0012 18L8.59814 16.59Z" fill="white"/>
+						</mask>
+						<g mask="url(#maskNext)">
+							<rect x="0.34375" width="23.8822" height="24" fill="#FFFFFF"/>
+						</g>
+					</svg>
+				</div>
+			</div>
+			<!-- The main close buton -->
+			<div class="jp-carousel-close-hint">
+				<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<mask id="maskClose" mask-type="alpha" maskUnits="userSpaceOnUse" x="5" y="5" width="15" height="14">
+						<path d="M19.3166 6.41L17.9135 5L12.3509 10.59L6.78834 5L5.38525 6.41L10.9478 12L5.38525 17.59L6.78834 19L12.3509 13.41L17.9135 19L19.3166 17.59L13.754 12L19.3166 6.41Z" fill="white"/>
+					</mask>
+					<g mask="url(#maskClose)">
+						<rect x="0.409668" width="23.8823" height="24" fill="#FFFFFF"/>
+					</g>
+				</svg>
+			</div>
+			<!-- Image info, comments and meta -->
+			<div class="jp-carousel-info">
+				<div class="jp-carousel-info-footer">
+					<div class="jp-carousel-pagination-container">
+						<div class="jp-swiper-pagination swiper-pagination"></div>
+						<div class="jp-carousel-pagination"></div>
+					</div>
+					<div class="jp-carousel-photo-title-container">
+						<div class="jp-carousel-photo-caption"></div>
+					</div>
+					<div class="jp-carousel-photo-icons-container">
+						<a href="#" class="jp-carousel-icon-btn jp-carousel-icon-info" aria-label="Toggle photo metadata visibility">
+							<span class="jp-carousel-icon">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="maskInfo" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="21" height="20">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M12.7537 2C7.26076 2 2.80273 6.48 2.80273 12C2.80273 17.52 7.26076 22 12.7537 22C18.2466 22 22.7046 17.52 22.7046 12C22.7046 6.48 18.2466 2 12.7537 2ZM11.7586 7V9H13.7488V7H11.7586ZM11.7586 11V17H13.7488V11H11.7586ZM4.79292 12C4.79292 16.41 8.36531 20 12.7537 20C17.142 20 20.7144 16.41 20.7144 12C20.7144 7.59 17.142 4 12.7537 4C8.36531 4 4.79292 7.59 4.79292 12Z" fill="white"/>
+									</mask>
+									<g mask="url(#maskInfo)">
+										<rect x="0.8125" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+							</span>
+						</a>
+												<a href="#" class="jp-carousel-icon-btn jp-carousel-icon-comments" aria-label="Toggle photo comments visibility">
+							<span class="jp-carousel-icon">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="maskComments" mask-type="alpha" maskUnits="userSpaceOnUse" x="2" y="2" width="21" height="20">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M4.3271 2H20.2486C21.3432 2 22.2388 2.9 22.2388 4V16C22.2388 17.1 21.3432 18 20.2486 18H6.31729L2.33691 22V4C2.33691 2.9 3.2325 2 4.3271 2ZM6.31729 16H20.2486V4H4.3271V18L6.31729 16Z" fill="white"/>
+									</mask>
+									<g mask="url(#maskComments)">
+										<rect x="0.34668" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+
+								<span class="jp-carousel-has-comments-indicator" aria-label="This image has comments."></span>
+							</span>
+						</a>
+											</div>
+				</div>
+				<div class="jp-carousel-info-extra">
+					<div class="jp-carousel-info-content-wrapper">
+						<div class="jp-carousel-photo-title-container">
+							<div class="jp-carousel-photo-title"></div>
+						</div>
+						<div class="jp-carousel-comments-wrapper">
+															<div id="jp-carousel-comments-loading">
+									<span>Loading Comments...</span>
+								</div>
+								<div class="jp-carousel-comments"></div>
+								<div id="jp-carousel-comment-form-container">
+									<span id="jp-carousel-comment-form-spinner"><svg class="jetpack-spinner" width="20" height="20" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><circle cx="50" cy="50" r="46" fill="none" stroke="#ddd" stroke-width="8"/><path d="M 50 4 A 46 46 0 0 1 96 50" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" dur="1.4s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/></path></svg></span>
+									<div id="jp-carousel-comment-post-results"></div>
+																														<form id="jp-carousel-comment-form">
+												<label for="jp-carousel-comment-form-comment-field" class="screen-reader-text">Write a Comment...</label>
+												<textarea
+													name="comment"
+													class="jp-carousel-comment-form-field jp-carousel-comment-form-textarea"
+													id="jp-carousel-comment-form-comment-field"
+													placeholder="Write a Comment..."
+												></textarea>
+												<div id="jp-carousel-comment-form-submit-and-info-wrapper">
+													<div id="jp-carousel-comment-form-commenting-as">
+																													<fieldset>
+																<label for="jp-carousel-comment-form-email-field">Email (Required)</label>
+																<input type="text" name="email" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-email-field" />
+															</fieldset>
+															<fieldset>
+																<label for="jp-carousel-comment-form-author-field">Name (Required)</label>
+																<input type="text" name="author" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-author-field" />
+															</fieldset>
+															<fieldset>
+																<label for="jp-carousel-comment-form-url-field">Website</label>
+																<input type="text" name="url" class="jp-carousel-comment-form-field jp-carousel-comment-form-text-field" id="jp-carousel-comment-form-url-field" />
+															</fieldset>
+																											</div>
+													<input
+														type="submit"
+														name="submit"
+														class="jp-carousel-comment-form-button"
+														id="jp-carousel-comment-form-button-submit"
+														value="Post Comment" />
+												</div>
+											</form>
+																											</div>
+													</div>
+						<div class="jp-carousel-image-meta">
+							<div class="jp-carousel-title-and-caption">
+								<div class="jp-carousel-photo-info">
+									<div class="jp-carousel-caption" itemprop="caption description"></div>
+								</div>
+
+								<div class="jp-carousel-photo-description"></div>
+							</div>
+							<a class="jp-carousel-image-download" href="#" aria-label="Download image" target="_blank" style="display: none;">
+								<svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+									<mask id="mask0" mask-type="alpha" maskUnits="userSpaceOnUse" x="3" y="3" width="19" height="18">
+										<path fill-rule="evenodd" clip-rule="evenodd" d="M5.84615 5V19H19.7775V12H21.7677V19C21.7677 20.1 20.8721 21 19.7775 21H5.84615C4.74159 21 3.85596 20.1 3.85596 19V5C3.85596 3.9 4.74159 3 5.84615 3H12.8118V5H5.84615ZM14.802 5V3H21.7677V10H19.7775V6.41L9.99569 16.24L8.59261 14.83L18.3744 5H14.802Z" fill="white"/>
+									</mask>
+									<g mask="url(#mask0)">
+										<rect x="0.870605" width="23.8823" height="24" fill="#FFFFFF"/>
+									</g>
+								</svg>
+								<span class="jp-carousel-download-text"></span>
+							</a>
+							<div class="jp-carousel-image-map" style="display: none;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		</div>
+		
+	<script type="text/javascript">
+		window.WPCOM_sharing_counts = {"https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/":4772};
+	</script>
+				
+	<script type="text/javascript">
+		(function () {
+			var wpcom_reblog = {
+				source: 'toolbar',
+
+				toggle_reblog_box_flair: function (obj_id, post_id) {
+
+					// Go to site selector. This will redirect to their blog if they only have one.
+					const postEndpoint = `https://wordpress.com/post`;
+
+					// Ideally we would use the permalink here, but fortunately this will be replaced with the 
+					// post permalink in the editor.
+					const originalURL = `${ document.location.href }?page_id=${ post_id }`; 
+					
+					const url =
+						postEndpoint +
+						'?url=' +
+						encodeURIComponent( originalURL ) +
+						'&is_post_share=true' +
+						'&v=5';
+
+					const redirect = function () {
+						if (
+							! window.open( url, '_blank' )
+						) {
+							location.href = url;
+						}
+					};
+
+					if ( /Firefox/.test( navigator.userAgent ) ) {
+						setTimeout( redirect, 0 );
+					} else {
+						redirect();
+					}
+				},
+			};
+
+			window.wpcom_reblog = wpcom_reblog;
+		})();
+	</script>
+<script crossorigin='anonymous' type='text/javascript'  src='/_static/??-eJx9jEsOwjAMBS9EcIuqdoU4i2msNKnzoXbI9ckO1AXbeTMPWjFrTkpJ4cnZmcLV+STQ8mHRilkZRUggdITK5n27BrnATxbrN/LWkQpQ7WvePRnGBkqxMCqd+J8f9nu3X5UqbZgs09HlR7yPyzxM0zyMS/gAPatD8g=='></script>
+<script id="wp-hooks-js" src="/wp-content/plugins/gutenberg-core/v24.0.0/build/scripts/hooks/index.min.js?m=1789650619i&#038;ver=f0f188028580e8dc1255"></script>
+<script id="wp-i18n-js" src="/wp-content/plugins/gutenberg-core/v24.0.0/build/scripts/i18n/index.min.js?m=1789650619i&#038;ver=1dfe7db3940c23ea9216"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script id="verbum-settings-js-before">
+window.VerbumComments = {"Log in or provide your name and email to leave a reply.":"Log in or provide your name and email to leave a reply.","Log in or provide your name and email to leave a comment.":"Log in or provide your name and email to leave a comment.","Receive web and mobile notifications for posts on this site.":"Receive web and mobile notifications for posts on this site.","Name":"Name","Email (address never made public)":"Email (address never made public)","Website (optional)":"Website (optional)","Leave a reply. (log in optional)":"Leave a reply. (log in optional)","Leave a comment. (log in optional)":"Leave a comment. (log in optional)","Log in to leave a reply.":"Log in to leave a reply.","Log in to leave a comment.":"Log in to leave a comment.","Logged in via %s":"Logged in via %s","Log out":"Log out","Your browser is blocking the cookies needed to log in and comment here. Allow cookies in your privacy settings, then reload the page.":"Your browser is blocking the cookies needed to log in and comment here. Allow cookies in your privacy settings, then reload the page.","Email":"Email","(Address never made public)":"(Address never made public)","Instantly":"Instantly","Daily":"Daily","Reply":"Reply","Comment":"Comment","WordPress":"WordPress","Weekly":"Weekly","Notify me of new posts":"Notify me of new posts","Email me new posts":"Email me new posts","Email me new comments":"Email me new comments","Cancel":"Cancel","Write a comment...":"Write a comment...","Write a reply...":"Write a reply...","Website":"Website","Optional":"Optional","We'll keep you in the loop!":"We'll keep you in the loop!","Loading your comment...":"Loading your comment...","Discover more from":"Discover more from The Rock Climber's Training Manual","Subscribe now to keep reading and get access to the full archive.":"Subscribe now to keep reading and get access to the full archive.","Continue reading":"Continue reading","Never miss a beat!":"Never miss a beat!","Interested in getting blog post updates? Simply click the button below to stay in the loop!":"Interested in getting blog post updates? Simply click the button below to stay in the loop!","Enter your email address":"Enter your email address","Subscribe":"Subscribe","Comment sent successfully":"Comment sent successfully","Save my name, email, and website in this browser for the next time I comment.":"Save my name, email, and website in this browser for the next time I comment.","hovercardi18n":{"Edit your profile \u2192":"Edit your profile \u2192","View profile \u2192":"View profile \u2192","Contact":"Contact","Send money":"Send money","Gravatar not found.":"Gravatar not found.","This profile is private.":"This profile is private.","Too Many Requests.":"Too Many Requests.","Internal Server Error.":"Internal Server Error.","Sorry, we are unable to load this Gravatar profile.":"Sorry, we are unable to load this Gravatar profile."},"siteId":56703055,"postId":4772,"mustLogIn":false,"requireNameEmail":true,"commentRegistration":false,"connectURL":"https://rockclimberstrainingmanual.wordpress.com/public.api/connect/?action=request\u0026domain=rockclimberstrainingmanual.com","logoutURL":"https://rockclimberstrainingmanual.wordpress.com/wp-login.php?action=logout\u0026_wpnonce=759c964255","homeURL":"https://rockclimberstrainingmanual.com/","subscribeToBlog":true,"subscribeToComment":true,"isJetpackCommentsLoggedIn":false,"jetpackUsername":"","jetpackUserId":0,"jetpackSignature":"","jetpackAvatar":"https://0.gravatar.com/avatar/?s=96\u0026amp;d=identicon\u0026amp;r=G","enableBlocks":true,"enableSubscriptionModal":true,"currentLocale":"en","isJetpackComments":false,"allowedBlocks":["core/paragraph","core/list","core/code","core/list-item","core/quote","core/image","core/embed","core/quote","core/code"],"embedNonce":"1796fa1c9c","verbumBundleUrl":"/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/jetpack_vendor/automattic/jetpack-mu-wpcom/src/features/verbum-comments/dist/index.js","isRTL":false,"vbeCacheBuster":1789740582,"iframeUniqueId":0,"colorScheme":false}
+//# sourceURL=verbum-settings-js-before
+</script>
+<script data-wp-strategy="defer" defer id="verbum-dynamic-loader-js" src="/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/jetpack_vendor/automattic/jetpack-mu-wpcom/src/build/verbum-comments/assets/dynamic-loader.js?m=1772522099i&#038;minify=false&#038;ver=8b5296f9195db92c42e4"></script>
+<script id="comment-like-js-extra">
+var comment_like_text = {"loading":"Loading...","swipeUrl":"https://s0.wp.com/wp-content/mu-plugins/comment-likes/js/lib/swipe.js?m=1382645497i&amp;ver=20131008"};
+//# sourceURL=comment-like-js-extra
+</script>
+<script id="jetpack-carousel-js-extra">
+var jetpackSwiperLibraryPath = {"url":"/wp-content/mu-plugins/jetpack-plugin/sun/_inc/blocks/swiper.js"};
+var jetpackCarouselStrings = {"widths":[370,700,1000,1200,1400,2000],"is_logged_in":"","lang":"en","ajaxurl":"https://rockclimberstrainingmanual.com/wp-admin/admin-ajax.php","nonce":"b9644ce854","display_exif":"1","display_comments":"1","single_image_gallery":"1","single_image_gallery_media_file":"","background_color":"black","comment":"Comment","post_comment":"Post Comment","write_comment":"Write a Comment...","loading_comments":"Loading Comments...","image_label":"Open image in full-screen.","download_original":"View full size \u003Cspan class=\"photo-size\"\u003E{0}\u003Cspan class=\"photo-size-times\"\u003E\u00d7\u003C/span\u003E{1}\u003C/span\u003E","no_comment_text":"Please be sure to submit some text with your comment.","no_comment_email":"Please provide an email address to comment.","no_comment_author":"Please provide your name to comment.","comment_post_error":"Sorry, but there was an error posting your comment. Please try again later.","comment_approved":"Your comment was approved.","comment_unapproved":"Your comment is in moderation.","camera":"Camera","aperture":"Aperture","shutter_speed":"Shutter Speed","focal_length":"Focal Length","copyright":"Copyright","comment_registration":"0","require_name_email":"1","login_url":"https://rockclimberstrainingmanual.wordpress.com/wp-login.php?redirect_to=https%3A%2F%2Frockclimberstrainingmanual.com%2F2015%2F09%2F03%2Fthe-worlds-most-technologically-advanced-finger-training-system-the-forge%2F","blog_id":"56703055","meta_data":["camera","aperture","shutter_speed","focal_length","copyright"],"stats_query_args":"blog=56703055&v=wpcom&tz=-6&user_id=0&subd=rockclimberstrainingmanual","is_public":"1"};
+//# sourceURL=jetpack-carousel-js-extra
+</script>
+<script id="sharing-js-js-extra">
+var sharing_js_options = {"lang":"en","counts":"1","is_stats_active":"1"};
+//# sourceURL=sharing-js-js-extra
+</script>
+<script id="jetpack-script-data-js-before">
+window.JetpackScriptData = {"site":{"host":"wpcom","is_wpcom_platform":true}};
+//# sourceURL=jetpack-script-data-js-before
+</script>
+<script crossorigin='anonymous' type='text/javascript'  src='/_static/??-eJydUNtuwyAM/aERNq1St4dpn1K5QFInYBA2vfx9WZtEaStt1R6Q4PhcfNCHpEwkcSQ6FJV86ZBYmxhChZTHwbHu74Cm5xe9EMrOhUpLZavdMcVC9kdCsMcOBCM9x+cBU/WnQbXRFFYtHichkvHF3m6SXfKnJuCD+6JG7ySBGVSFDqkKx4HmQtNss3dkY9ZQJAYQQTOrgNkJ621Bb2eQTcYkyoLAE8GLvE0tMXoZyLGw8zNtAv6oAwNycKLem9er3QS0+UK2v2iniOtH3D3/3YR3kJ0Fa0+XK1I3VvgOX2/rj/XnalVPfwZh3Oa4'></script>
+<script id="sharing-js-js-after">
+window.WPCOM_sharing_popups = window.WPCOM_sharing_popups || {};
+window.WPCOM_sharing_popups[ "twitter" ] = "menubar=1,resizable=1,width=600,height=350";
+window.WPCOM_sharing_popups = window.WPCOM_sharing_popups || {};
+window.WPCOM_sharing_popups[ "facebook" ] = "menubar=1,resizable=1,width=600,height=400";
+//# sourceURL=sharing-js-js-after
+</script>
+<script id="wp-emoji-settings" type="application/json">
+{"baseUrl":"https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/72x72/","ext":".png","svgUrl":"https://s0.wp.com/wp-content/mu-plugins/wpcom-smileys/twemoji/2/svg/","svgExt":".svg","source":{"concatemoji":"/wp-includes/js/wp-emoji-release.min.js?m=1783090810i&ver=7.1.1-alpha-63587"}}
+</script>
+<script type="module">
+/*! This file is auto-generated */
+var e="script#wp-emoji-settings",t=document.querySelector(e);if(!(t instanceof HTMLScriptElement))throw new Error("Element missing: "+e);const r=JSON.parse(t.text),s=(window._wpemojiSettings=r,"wpEmojiSettingsSupports"),o=["flag","emoji"];function i(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(s,JSON.stringify(t))}catch(e){}}function c(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0);const r=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data);return t.every((e,t)=>e===r[t])}function p(e,t){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var n=e.getImageData(16,16,1,1);for(let e=0;e<n.data.length;e++)if(0!==n.data[e])return!1;return!0}function u(e,t,n,r){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\udde8\ud83c\uddf6","\ud83c\udde8\u200b\ud83c\uddf6")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!r(e,"\ud83e\u1fac8")}return!1}function f(e,t,n,r){let a;const s=(a="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):document.createElement("canvas")).getContext("2d",{willReadFrequently:!0}),o=(s.textBaseline="top",s.font="600 32px Arial",{});return e.forEach(e=>{o[e]=t(s,e,n,r)}),o}function a(e){var t=document.createElement("script");t.src=e,t.defer=!0,document.head.appendChild(t)}r.supports={everything:!0,everythingExceptFlag:!0},new Promise(t=>{let n=function(){try{var e=JSON.parse(sessionStorage.getItem(s));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(o),u.toString(),c.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"});const a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=e=>{i(n=e.data),a.terminate(),t(n)})}catch(e){}i(n=f(o,u,c,p))}t(n)}).then(e=>{for(const n in e)r.supports[n]=e[n],r.supports.everything=r.supports.everything&&r.supports[n],"flag"!==n&&(r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&r.supports[n]);var t;r.supports.everythingExceptFlag=r.supports.everythingExceptFlag&&!r.supports.flag,r.supports.everything||((t=r.source||{}).concatemoji?a(t.concatemoji):t.wpemoji&&t.twemoji&&(a(t.twemoji),a(t.wpemoji)))});
+//# sourceURL=/wp-includes/js/wp-emoji-loader.min.js
+</script>
+	<iframe src='https://widgets.wp.com/likes/master.html?ver=20260920#ver=20260920' scrolling='no' id='likes-master' name='likes-master' style='display:none;'></iframe>
+	<div id='likes-other-gravatars' role="dialog" aria-hidden="true" tabindex="-1"><div class="likes-text"><span>%d</span></div><ul class="wpl-avatars sd-like-gravatars"></ul></div>
+	<script src="//stats.wp.com/w.js?69" defer></script> <script type="text/javascript">
+_tkq = window._tkq || [];
+_stq = window._stq || [];
+_tkq.push(['storeContext', {'blog_id':'56703055','blog_tz':'-6','user_lang':'en','blog_lang':'en','user_id':'0'}]);
+		// Prevent sending pageview tracking from WP-Admin pages.
+		_stq.push(['view', {'blog':'56703055','v':'wpcom','tz':'-6','user_id':'0','post':'4772','subd':'rockclimberstrainingmanual'}]);
+		_stq.push(['extra', {'crypt':'UE5XaGUuOTlwaD85flAmcm1mcmZsaDhkV11YdWtpP0NsWnVkPS9sL0ViLndld3BuVT01Uj14Ti1yYTBnX3xuYUQ3Qz1oblZbVHV3MTZoVXFwTTVDK2wuPT1KWzJNV19iQk9bTmF0PUUlUlYzbW1nYyxHTnlKQiUsT0hKb2tYK09aZkN6LzJmYVtxMGpoLT9rJnJRJXg4UUR1VWN0dTBZTmxRSlN6JWx4cEtHLXErWnNjRzVselB1MkMsUEF5Mi9iQTU3eFFdeDM2MXR4PUF6bF9yNkcwRVJsM2tDUXxmZkVCVX4vLy03dnwmQTF+VjBWJmRucHR+PWxtZm0tXVd8eXEscGFOa0NRXXQxTS5wcn5OQ1lPSDB3ZHp0RDVyd3VWM0FwRUcvQUlxNEYmOCtpUW4mcnpQTHZHQ3NzcjR6dDQ1a25fLVFKbFRhN25KLCxtOHxkRStjfHcuVHVFPUV3aC53K1p0UmdSaVB6JkpELDlKdno3YUUzLGtpc2ZSZmE9cHBpZUxsLDVmW2tyVF8='}]);
+_stq.push([ 'clickTrackerInit', '56703055', '4772' ]);
+</script>
+<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
+<meta id="bilmur" property="bilmur:data" content="" data-provider="wordpress.com" data-service="simple" data-site-tz="America/Denver" data-custom-props="{&quot;logged_in&quot;:&quot;0&quot;,&quot;wptheme&quot;:&quot;pub\/expound&quot;,&quot;wptheme_is_block&quot;:&quot;0&quot;}"   >
+		<script defer src="/wp-content/js/bilmur.min.js?i=19&amp;m=202638"></script> 	
+<script>
+(function() {
+	'use strict';
+
+	const fetches = {};
+	const promises = {};
+	const urls = {
+		'wp-polyfill': '/wp-includes/js/dist/vendor/wp-polyfill.min.js?m=1786440387i&ver=3.15.0',
+		'verbum': '/wp-content/mu-plugins/jetpack-mu-wpcom-plugin/sun/jetpack_vendor/automattic/jetpack-mu-wpcom/src/build/verbum-comments/verbum-comments.js?m=1789668866i&minify=false&ver=1277503d9f869014c379'
+	};
+	const loaders = {
+		'verbum': () => {
+			fetchExternalScript('wp-polyfill');
+			fetchExternalScript('verbum');
+			promises['wp-polyfill'] = promises['wp-polyfill'] || loadWPScript('wp-polyfill');
+			promises['verbum'] = promises['verbum'] || promises['wp-polyfill'].then( () => loadWPScript('verbum') );
+			return promises['verbum'];
+		},
+		
+	};
+	const scriptExtras = {
+		
+	};
+
+	window.WP_Enqueue_Dynamic_Script = {
+		loadScript: (handle) => {
+			if (!loaders[handle]) {
+				console.error('WP_Enqueue_Dynamic_Script: unregistered script `' + handle + '`.');
+			}
+			return loaders[handle]();
+		}
+	};
+
+	function fetchExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		fetches[handle] = fetches[handle] || fetch(urls[handle], { mode: 'no-cors' });
+		return fetches[handle];
+	}
+
+	function runExtraScript(handle, type, index) {
+		const id = 'wp-enqueue-dynamic-script:' + handle + ':' + type + ':' + (index + 1);
+		const template = document.getElementById(id);
+		if (!template) {
+			return Promise.reject();
+		}
+
+		const script = document.createElement( 'script' );
+		script.innerHTML = template.innerHTML;
+		document.body.appendChild( script );
+		return Promise.resolve();
+	}
+
+	function loadExternalScript(handle) {
+		if (!urls[handle]) {
+			return Promise.resolve();
+		}
+
+		return fetches[handle].then(() => {
+			return new Promise((resolve, reject) => {
+				const script = document.createElement('script');
+				script.onload = () => resolve();
+				script.onerror = (e) => reject(e);
+				script.src = urls[handle];
+				document.body.appendChild(script);
+			});
+		});
+	}
+
+	function loadExtra(handle, pos) {
+		const count = (scriptExtras[handle] && scriptExtras[handle][pos]) || 0;
+		let promise = Promise.resolve();
+
+		for (let i = 0; i < count; i++) {
+			promise = promise.then(() => runExtraScript(handle, pos, i));
+		}
+
+		return promise;
+	}
+
+	function loadWPScript(handle) {
+		// Core loads scripts in this order. See: https://github.com/WordPress/WordPress/blob/a59eb9d39c4fcba834b70c9e8dfd64feeec10ba6/wp-includes/class-wp-scripts.php#L428.
+		return loadExtra(handle, 'translations')
+			.then(() => loadExtra(handle, 'before'))
+			.then(() => loadExternalScript(handle))
+			.then(() => loadExtra(handle, 'after'));
+	}
+} )();
+</script>
+
+</body>
+</html>

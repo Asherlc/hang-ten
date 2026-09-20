@@ -947,6 +947,84 @@
         "reviewedAt": "2026-09-20",
         "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
       }
+    },
+    {
+      "packageID": "trango.rock-prodigy-forge",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved exact-revision product and mounting sources establish fixed wall/backer or cleat mounting, with no documented board suspension. Lower large passages have unresolved purpose; optional pulley-kit cord is external training equipment, not board suspension.",
+      "evidence": [
+        {
+          "view": "Exact Forge; two independent halves; 5.25 x 12.75 inches; 3.95 lb/side.",
+          "url": "https://trango.com/products/rock-prodigy-forge",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "8367909a9b8c629f51f0efefff1f9139fe257d6d59fcbe52a44486baa5786da5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F1-2026-09-20.html"
+        },
+        {
+          "view": "Eight mounting screws and initial 4-8 inch spacing; thumb support function.",
+          "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/2018_update_forge_instructions_booklet.pdf?v=1588609204",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F4-2026-09-20.pdf"
+        },
+        {
+          "view": "Green pair; independent left/right outline and mounting locations.",
+          "url": "https://trango.com/cdn/shop/products/22820_Rock_Prodigy_Forge_Main_Image.jpg?v=1582662057&width=1946",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ff7bb2862cabcc7b86288db6f45afa08d23a30d8987f464c25b27b0533e8e8e5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F5-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
+      "packageID": "trango.rock-prodigy-natural",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved exact-revision product and mounting sources establish fixed wall/backer or cleat mounting, with no documented board suspension. Lower large passages have unresolved purpose; optional pulley-kit cord is external training equipment, not board suspension.",
+      "evidence": [
+        {
+          "view": "Each half 7.5 x 6 x 1.5 inches; FSC beech; adjustable removable cleat mount; product page says 10 mm crimp.",
+          "url": "https://trango.com/products/rock-prodigy-natural",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "430189672d2440e5ce78bec0670f6faa6e2fffa01d30cb0b7af102cd9d3cbc1f",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N1-2026-09-20.html"
+        },
+        {
+          "view": "Page 6 dimensions and page 7 physical grip map; 7.5 crimp; rails 20-33 and 10-24 outside-to-inside; pockets 38,29,36-26; jug40.",
+          "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N2-2026-09-20.pdf"
+        },
+        {
+          "view": "Current marked main image: crimp 10 mm, center pocket 27 mm, supported pocket 30/27 mm.",
+          "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d603d3b3dd31f53be1f5a3cf1ac09e8a12b414c050af2ea5baeb4e55140daa19",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N5-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
     }
   ]
 }

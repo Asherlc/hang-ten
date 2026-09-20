@@ -788,3 +788,6 @@ Author: Astra. Approved evidence D1/D2/D3/D4 (lower Pro 7 only), M1/M2/M3 (side 
 | --- | --- | --- | --- | --- |
 | `frictitious.doormount-pro-7` | [-0.323850006, -0.057150006, -6e-09] → [0.323850006, 0.05715001, 0.057150006] | Existing primary, all 13 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
 | `frictitious.megalith` | [-0.339724988, -0.082550004, -9e-09] → [0.339724988, 0.082550012, 0.057150003] | Existing primary, all 20 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
+
+| `trango.rock-prodigy-forge` | Fixed front, split adjustable spacing | F1/F2/F4/F5/F6/F7 approved 2026-09-20; no canonical alternate pose established. |
+| `trango.rock-prodigy-natural` | Fixed front, removable cleat mount | N1/N2/N3/N4/N5 approved 2026-09-20; removal/sliding is not a training rotation. |

@@ -1,0 +1,167 @@
+{
+  "product": "forge",
+  "artifactSHA256": "9f277ba8f38550092ced3e0a8228c0277ed1ec793eb6d995b8026a2a12909bad",
+  "mountingOpenings": [
+    {
+      "unitId": "left",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        -0.2332,
+        0.0,
+        -0.044
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.5,
+      "radiusZMm": 6.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        0.2332,
+        0.0,
+        -0.044
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.5,
+      "radiusZMm": 6.5,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "probes": [
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.19319999999999998,
+        -0.043,
+        0.025418907176086632
+      ],
+      "targetDepthMm": 13.5,
+      "actualDepthMm": 13.5,
+      "holdIds": [
+        "left-rail"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.1172,
+        -0.043,
+        -0.002372394118358088
+      ],
+      "targetDepthMm": 25.0,
+      "actualDepthMm": 25.0,
+      "holdIds": [
+        "left-mr-deep"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.1172,
+        -0.043,
+        -0.03342343647101485
+      ],
+      "targetDepthMm": 15.0,
+      "actualDepthMm": 15.0,
+      "holdIds": [
+        "left-mr-shallow"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.2292,
+        -0.043,
+        -0.04437239411835809
+      ],
+      "targetDepthMm": 25.0,
+      "actualDepthMm": 25.0,
+      "holdIds": [
+        "left-imr"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.19319999999999998,
+        -0.043,
+        0.025418907176086632
+      ],
+      "targetDepthMm": 13.5,
+      "actualDepthMm": 13.5,
+      "holdIds": [
+        "right-rail"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.1172,
+        -0.043,
+        -0.002372394118358088
+      ],
+      "targetDepthMm": 25.0,
+      "actualDepthMm": 25.0,
+      "holdIds": [
+        "right-mr-deep"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.1172,
+        -0.043,
+        -0.03342343647101485
+      ],
+      "targetDepthMm": 15.0,
+      "actualDepthMm": 15.0,
+      "holdIds": [
+        "right-mr-shallow"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.2292,
+        -0.043,
+        -0.04437239411835809
+      ],
+      "targetDepthMm": 25.0,
+      "actualDepthMm": 25.0,
+      "holdIds": [
+        "right-imr"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    }
+  ],
+  "vertices": 213632,
+  "triangles": 427264,
+  "watertight": true,
+  "windingConsistent": true,
+  "geometryIsDisplayEstimate": true
+}

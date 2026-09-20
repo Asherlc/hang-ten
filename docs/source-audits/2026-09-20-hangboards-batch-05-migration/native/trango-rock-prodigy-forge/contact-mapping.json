@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "packageID": "trango.rock-prodigy-forge",
+  "logicalContactIDs": [
+    "sloper-30-left",
+    "sloper-30-right",
+    "sloper-40-left",
+    "sloper-40-right",
+    "large-flat-edge-left",
+    "large-flat-edge-right",
+    "slopey-crimper-left",
+    "slopey-crimper-right",
+    "variable-edge-rail-left",
+    "variable-edge-rail-right",
+    "closed-crimp-left",
+    "closed-crimp-right",
+    "mr-deep-left",
+    "mr-deep-right",
+    "mr-shallow-left",
+    "mr-shallow-right",
+    "im-deep-left",
+    "im-deep-right",
+    "im-shallow-left",
+    "im-shallow-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body--left",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "body--right",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-30",
+      "role": "contact",
+      "contactID": "sloper-30-left"
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-40",
+      "role": "contact",
+      "contactID": "sloper-40-left"
+    },
+    {
+      "sourceNodeID": "hold--left-flat-edge",
+      "role": "contact",
+      "contactID": "large-flat-edge-left"
+    },
+    {
+      "sourceNodeID": "hold--left-slopey-crimper",
+      "role": "contact",
+      "contactID": "slopey-crimper-left"
+    },
+    {
+      "sourceNodeID": "hold--left-rail",
+      "role": "contact",
+      "contactID": "variable-edge-rail-left"
+    },
+    {
+      "sourceNodeID": "hold--left-closed-crimp",
+      "role": "contact",
+      "contactID": "closed-crimp-left"
+    },
+    {
+      "sourceNodeID": "hold--left-mr-deep",
+      "role": "contact",
+      "contactID": "mr-deep-left"
+    },
+    {
+      "sourceNodeID": "hold--left-mr-shallow",
+      "role": "contact",
+      "contactID": "mr-shallow-left"
+    },
+    {
+      "sourceNodeID": "hold--left-im-deep",
+      "role": "contact",
+      "contactID": "im-deep-left"
+    },
+    {
+      "sourceNodeID": "hold--left-im-shallow",
+      "role": "contact",
+      "contactID": "im-shallow-left"
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-medium",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-narrow",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-30",
+      "role": "contact",
+      "contactID": "sloper-30-right"
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-40",
+      "role": "contact",
+      "contactID": "sloper-40-right"
+    },
+    {
+      "sourceNodeID": "hold--right-flat-edge",
+      "role": "contact",
+      "contactID": "large-flat-edge-right"
+    },
+    {
+      "sourceNodeID": "hold--right-slopey-crimper",
+      "role": "contact",
+      "contactID": "slopey-crimper-right"
+    },
+    {
+      "sourceNodeID": "hold--right-rail",
+      "role": "contact",
+      "contactID": "variable-edge-rail-right"
+    },
+    {
+      "sourceNodeID": "hold--right-closed-crimp",
+      "role": "contact",
+      "contactID": "closed-crimp-right"
+    },
+    {
+      "sourceNodeID": "hold--right-mr-deep",
+      "role": "contact",
+      "contactID": "mr-deep-right"
+    },
+    {
+      "sourceNodeID": "hold--right-mr-shallow",
+      "role": "contact",
+      "contactID": "mr-shallow-right"
+    },
+    {
+      "sourceNodeID": "hold--right-im-deep",
+      "role": "contact",
+      "contactID": "im-deep-right"
+    },
+    {
+      "sourceNodeID": "hold--right-im-shallow",
+      "role": "contact",
+      "contactID": "im-shallow-right"
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-medium",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-narrow",
+      "role": "body"
+    }
+  ],
+  "ruling": "Preserve existing factual inventory. Extra delivered thumb/jaw components are physical body surfaces involved in compound grips, not independent complete pinch holds. Forge IM deep/shallow partition the continuous IMR lower surface without duplication."
+}

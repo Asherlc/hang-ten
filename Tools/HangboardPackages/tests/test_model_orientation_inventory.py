@@ -59,6 +59,8 @@ MODEL_PACKAGE_IDS = {
     "zlagboard.pro",
     "frictitious.doormount-pro-7",
     "frictitious.megalith",
+    "trango.rock-prodigy-forge",
+    "trango.rock-prodigy-natural",
 }
 
 FIXED_FRONT_MODEL_PACKAGE_SLUGS = (

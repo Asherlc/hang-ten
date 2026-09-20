@@ -1,0 +1,414 @@
+{
+  "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+  "descriptorSHA256": "13191c7985d0b1c8dc48301bd301f5fdae60fae092e620a3c6a06143990f986f",
+  "cleanEmptySceneImport": true,
+  "allImportedImageMaterials": true,
+  "allTriangles": true,
+  "preparedTrianglesUnchanged": true,
+  "sourceNodeCorrespondence": [
+    {
+      "sourceNodeID": "body--left",
+      "importedNodeID": "body__left_002",
+      "triangles": 31344
+    },
+    {
+      "sourceNodeID": "body--right",
+      "importedNodeID": "body__right_002",
+      "triangles": 31344
+    },
+    {
+      "sourceNodeID": "hold--left-jug",
+      "importedNodeID": "hold__left_jug_002",
+      "triangles": 1487
+    },
+    {
+      "sourceNodeID": "hold--left-rail-upper",
+      "importedNodeID": "hold__left_rail_upper_002",
+      "triangles": 1476
+    },
+    {
+      "sourceNodeID": "hold--left-rail-lower",
+      "importedNodeID": "hold__left_rail_lower_002",
+      "triangles": 1494
+    },
+    {
+      "sourceNodeID": "hold--left-closed-crimp",
+      "importedNodeID": "hold__left_closed_crimp_002",
+      "triangles": 74617
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-3finger",
+      "importedNodeID": "hold__left_pocket_3finger_002",
+      "triangles": 756
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-2finger",
+      "importedNodeID": "hold__left_pocket_2finger_002",
+      "triangles": 540
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-supported",
+      "importedNodeID": "hold__left_pocket_supported_002",
+      "triangles": 684
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-thumb",
+      "importedNodeID": "hold__left_pinch_thumb_002",
+      "triangles": 1100
+    },
+    {
+      "sourceNodeID": "hold--right-jug",
+      "importedNodeID": "hold__right_jug_002",
+      "triangles": 1487
+    },
+    {
+      "sourceNodeID": "hold--right-rail-upper",
+      "importedNodeID": "hold__right_rail_upper_002",
+      "triangles": 1476
+    },
+    {
+      "sourceNodeID": "hold--right-rail-lower",
+      "importedNodeID": "hold__right_rail_lower_002",
+      "triangles": 1494
+    },
+    {
+      "sourceNodeID": "hold--right-closed-crimp",
+      "importedNodeID": "hold__right_closed_crimp_002",
+      "triangles": 74617
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-3finger",
+      "importedNodeID": "hold__right_pocket_3finger_002",
+      "triangles": 756
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-2finger",
+      "importedNodeID": "hold__right_pocket_2finger_002",
+      "triangles": 540
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-supported",
+      "importedNodeID": "hold__right_pocket_supported_002",
+      "triangles": 684
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-thumb",
+      "importedNodeID": "hold__right_pinch_thumb_002",
+      "triangles": 1100
+    }
+  ],
+  "nativeContactRays": [
+    {
+      "expectedContactID": "bottom-variable-rail-left",
+      "nearestContactID": "bottom-variable-rail-left",
+      "nodeID": "hold__left_rail_lower_002",
+      "pointSourceMetres": [
+        -0.07260356843471527,
+        -0.02333524450659752,
+        0.010981804691255093
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "bottom-variable-rail-right",
+      "nearestContactID": "bottom-variable-rail-right",
+      "nodeID": "hold__right_rail_lower_002",
+      "pointSourceMetres": [
+        0.07260356843471527,
+        -0.02333524450659752,
+        0.010981804691255093
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "center-lower-pocket-left",
+      "nearestContactID": "center-lower-pocket-left",
+      "nodeID": "hold__left_pocket_2finger_002",
+      "pointSourceMetres": [
+        -0.1231047660112381,
+        -0.028433334082365036,
+        -0.06700000166893005
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "center-lower-pocket-right",
+      "nearestContactID": "center-lower-pocket-right",
+      "nodeID": "hold__right_pocket_2finger_002",
+      "pointSourceMetres": [
+        0.1231047734618187,
+        -0.028433334082365036,
+        -0.06700000166893005
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "closed-crimp-left",
+      "nearestContactID": "closed-crimp-left",
+      "nodeID": "hold__left_closed_crimp_002",
+      "pointSourceMetres": [
+        -0.23966436088085175,
+        -0.038100000470876694,
+        -0.03697923198342323
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "closed-crimp-right",
+      "nearestContactID": "closed-crimp-right",
+      "nodeID": "hold__right_closed_crimp_002",
+      "pointSourceMetres": [
+        0.23966436088085175,
+        -0.038100000470876694,
+        -0.03697923198342323
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "outer-supported-pocket-left",
+      "nearestContactID": "outer-supported-pocket-left",
+      "nodeID": "hold__left_pocket_supported_002",
+      "pointSourceMetres": [
+        -0.19644829630851746,
+        -0.027433333918452263,
+        -0.06650000065565109
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "outer-supported-pocket-right",
+      "nearestContactID": "outer-supported-pocket-right",
+      "nodeID": "hold__right_pocket_supported_002",
+      "pointSourceMetres": [
+        0.19644826650619507,
+        -0.027433333918452263,
+        -0.06650000065565109
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "top-jug-left",
+      "nearestContactID": "top-jug-left",
+      "nodeID": "hold__left_jug_002",
+      "pointSourceMetres": [
+        -0.23762592673301697,
+        -0.020066000521183014,
+        0.06627526879310608
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "top-jug-right",
+      "nearestContactID": "top-jug-right",
+      "nodeID": "hold__right_jug_002",
+      "pointSourceMetres": [
+        0.23762592673301697,
+        -0.020065998658537865,
+        0.06627526879310608
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "top-variable-rail-left",
+      "nearestContactID": "top-variable-rail-left",
+      "nodeID": "hold__left_rail_upper_002",
+      "pointSourceMetres": [
+        -0.07358117401599884,
+        -0.017346346750855446,
+        0.043142225593328476
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "top-variable-rail-right",
+      "nearestContactID": "top-variable-rail-right",
+      "nodeID": "hold__right_rail_upper_002",
+      "pointSourceMetres": [
+        0.07358117401599884,
+        -0.017346346750855446,
+        0.043142225593328476
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "upper-pocket-left",
+      "nearestContactID": "upper-pocket-left",
+      "nodeID": "hold__left_pocket_3finger_002",
+      "pointSourceMetres": [
+        -0.0746225118637085,
+        -0.024933334439992905,
+        -0.0280000027269125
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "upper-pocket-right",
+      "nearestContactID": "upper-pocket-right",
+      "nodeID": "hold__right_pocket_3finger_002",
+      "pointSourceMetres": [
+        0.0746225118637085,
+        -0.024933334439992905,
+        -0.0280000027269125
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -0.8574929237365723,
+        0.5144957900047302
+      ],
+      "bodyIncluded": true
+    }
+  ],
+  "mountingClosureRays": [
+    {
+      "sourceXZ": [
+        -0.085,
+        0.048
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.006843894720077515,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        -0.14200000000000002,
+        0.046
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.011362195014953613,
+      "backY": -2.9802322387695312e-08
+    },
+    {
+      "sourceXZ": [
+        -0.2,
+        0.043
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.015959739685058594,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.085,
+        0.048
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.006843924522399902,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.14200000000000002,
+        0.046
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.011362195014953613,
+      "backY": -2.9802322387695312e-08
+    },
+    {
+      "sourceXZ": [
+        0.2,
+        0.043
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.015959739685058594,
+      "backY": 0.0
+    }
+  ],
+  "preservedPassageRays": [
+    {
+      "sourceXZ": [
+        -0.21200000000000002,
+        -0.056
+      ],
+      "hit": false,
+      "purpose": "unresolved; not suspension"
+    },
+    {
+      "sourceXZ": [
+        0.21200000000000002,
+        -0.056
+      ],
+      "hit": false,
+      "purpose": "unresolved; not suspension"
+    }
+  ],
+  "authoredCrimpSection": {
+    "channelY": -0.02809998393058777,
+    "thumbTabY": -0.03810000419616699,
+    "hookHasDistinctRelief": true,
+    "supportedFloorStepMetres": 0.0028786063194274902
+  },
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS materials/picking/highlight/clear/orbit/reset/unavailable and human review"
+}

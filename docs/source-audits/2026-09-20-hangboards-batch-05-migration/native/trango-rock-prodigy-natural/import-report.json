@@ -1,0 +1,60 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 14,
+  "contactMappings": {
+    "hold--left-closed-crimp": "closed-crimp-left",
+    "hold--left-jug": "top-jug-left",
+    "hold--left-pocket-2finger": "center-lower-pocket-left",
+    "hold--left-pocket-3finger": "upper-pocket-left",
+    "hold--left-pocket-supported": "outer-supported-pocket-left",
+    "hold--left-rail-lower": "bottom-variable-rail-left",
+    "hold--left-rail-upper": "top-variable-rail-left",
+    "hold--right-closed-crimp": "closed-crimp-right",
+    "hold--right-jug": "top-jug-right",
+    "hold--right-pocket-2finger": "center-lower-pocket-right",
+    "hold--right-pocket-3finger": "upper-pocket-right",
+    "hold--right-pocket-supported": "outer-supported-pocket-right",
+    "hold--right-rail-lower": "bottom-variable-rail-right",
+    "hold--right-rail-upper": "top-variable-rail-right"
+  },
+  "descriptorSHA256": "13191c7985d0b1c8dc48301bd301f5fdae60fae092e620a3c6a06143990f986f",
+  "modelBounds": {
+    "max": [
+      0.240500003,
+      0.076200001,
+      0.0381
+    ],
+    "min": [
+      -0.240500003,
+      -0.076200001,
+      0.0
+    ]
+  },
+  "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+  "nodeCount": 18,
+  "packageID": "trango.rock-prodigy-natural",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-natural.blend",
+  "sourceModelSHA256": "b46009a07481d0dbc8490d24e4ea3d8d3c8a71d9d0b87c05b108bbb007cfeebd",
+  "sourceObjectIDs": [
+    "body--left",
+    "body--right",
+    "hold--left-closed-crimp",
+    "hold--left-jug",
+    "hold--left-pinch-thumb",
+    "hold--left-pocket-2finger",
+    "hold--left-pocket-3finger",
+    "hold--left-pocket-supported",
+    "hold--left-rail-lower",
+    "hold--left-rail-upper",
+    "hold--right-closed-crimp",
+    "hold--right-jug",
+    "hold--right-pinch-thumb",
+    "hold--right-pocket-2finger",
+    "hold--right-pocket-3finger",
+    "hold--right-pocket-supported",
+    "hold--right-rail-lower",
+    "hold--right-rail-upper"
+  ],
+  "status": "converted"
+}

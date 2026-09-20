@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "packageID": "trango.rock-prodigy-forge",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Trango",
+    "evidencePacket": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/REVIEW.md"
+  },
+  "historicalSource": {
+    "status": "missing",
+    "notes": "The old app raster authoring source is not a native contact-tagged model. Immutable user delivery GLB is retained separately."
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "User authorized evidence-led native migration; exact evidence approved 2026-09-20. Explicit derivative preparation documented here; no model acceptance implied.",
+    "retainedPath": ".context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-forge.blend",
+    "sha256": "678d98e04692a23338c34502c82a9dd48a6685cf55bbb01b31f515f9f5e4f9a8"
+  },
+  "supersessionRuling": "Prepared native derivative of hash-bound original GLB. Source root transforms are baked once for basis verification. Explicit analytic derivative corrects documented shape discrepancies and omits screws; it preserves distinct physical cavities. Constant material image adaptation is explicit. Manufacturer facts and stable app IDs govern mapping."
+}
