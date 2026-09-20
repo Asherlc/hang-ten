@@ -23,7 +23,7 @@ for slug in ["trango-rock-prodigy-forge","trango-rock-prodigy-natural"]:
   data=bpy.data.lights.new(name,"AREA");data.energy=energy;data.shape="DISK";data.size=size;obj=bpy.data.objects.new(name,data);scene.collection.objects.link(obj);obj.location=location;obj.rotation_euler=(-obj.location).to_track_quat('-Z','Y').to_euler()
  cam=bpy.data.objects.new("ReviewCamera",bpy.data.cameras.new("ReviewCamera"));scene.collection.objects.link(cam);scene.camera=cam;cam.data.type='ORTHO';cam.data.ortho_scale=.80
  for view,pos in [("crimp",(-.16,-.5,.2))]:
-  target=Vector((-.16,-.025,-.025)) if view=='crimp' else Vector((0,0,0)); cam.data.ortho_scale=(.22 if slug.endswith('natural') else .27) if view=='crimp' else (.60 if slug.endswith('natural') else .90); cam.location=pos;cam.rotation_euler=(target-cam.location).to_track_quat('-Z','Y').to_euler();scene.render.filepath=str(out/(slug+'-'+view+'.png'));
+  target=Vector((-.16,-.025,-.025)) if view=='crimp' else Vector((0,0,0)); cam.data.ortho_scale=(.22 if slug.endswith('natural') else .27) if view=='crimp' else (.60 if slug.endswith('natural') else .90); cam.location=pos;cam.rotation_euler=(target-cam.location).to_track_quat('-Z','Y').to_euler();
   bpy.context.view_layer.update()
   frames=cam.data.view_frame(scene=scene);xs=[p.x for p in frames];ys=[p.y for p in frames]
   samples=[]
@@ -40,9 +40,11 @@ for slug in ["trango-rock-prodigy-forge","trango-rock-prodigy-natural"]:
     poly=obj.data.polygons[index]
     sample.update({'point':list(point),'faceNormal':list(normal),'object':obj.name,'polygon':index,'vertices':[list(matrix@obj.data.vertices[v].co) for v in poly.vertices],'normals':[list(obj.data.corner_normals[i].vector) for i in poly.loop_indices]})
    samples.append(sample)
-  (out/(slug+'-samples.json')).write_text(json.dumps(samples,indent=2)+'\n')
-  for o in meshes:o.visible_shadow=False
-  scene.render.filepath=str(out/(slug+'-crimp-no-shadow.png'))
-  pass # Geometry ray diagnostics only
-  records.append({"model":str(model.relative_to(root)),"modelSHA256":hashlib.sha256(model.read_bytes()).hexdigest(),"view":view,"path":str(Path(scene.render.filepath).relative_to(root)),"renderer":bpy.app.version_string,"purpose":"Exact exported USDZ empty-scene native review; not app acceptance"})
+  samples_path=out/(slug+'-samples.json')
+  samples_path.write_text(json.dumps(samples,indent=2)+'\n')
+  records.append({"model":str(model.relative_to(root)),"modelSHA256":model_hash,"view":view,"artifactType":"native-ray-samples","path":str(samples_path.relative_to(root)),"sha256":hashlib.sha256(samples_path.read_bytes()).hexdigest(),"blenderVersion":bpy.app.version_string,"purpose":"Exact exported USDZ camera-ray samples; no render or app acceptance"})
+for record in records:
+ artifact=root/record['path']
+ assert artifact.suffix=='.json' and artifact.is_file()
+ assert record['sha256']==hashlib.sha256(artifact.read_bytes()).hexdigest()
 (out/'provenance.json').write_text(json.dumps(records,indent=2)+'\n')
