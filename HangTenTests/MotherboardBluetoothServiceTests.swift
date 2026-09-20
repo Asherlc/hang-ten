@@ -481,6 +481,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(
             transport: transport,
+            timeouts: .init(scan: 0.01, connect: 1, calibration: 1, streamAcknowledgement: 1),
             advertisementLivenessTimeout: 0.01
         )
         let device = MotherboardDiscoveredDevice(
@@ -498,11 +499,18 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         }
 
         XCTAssertEqual(transport.startScanCount, 2)
+        try await Task.sleep(for: .milliseconds(30))
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.connectedDeviceID)
+        XCTAssertNil(service.connectedProfile)
+        XCTAssertNil(service.latestMeasurement)
         emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 200)
 
         XCTAssertEqual(service.state, .streaming)
         XCTAssertEqual(service.connectedDeviceID, device.id)
         XCTAssertEqual(service.latestMeasurement?.aggregateLoadKGF, 2)
+        XCTAssertNil(service.lastError)
     }
 
     func testWHC06UserDisconnectDuringLivenessRecoveryScanRemainsTerminal() async throws {
@@ -529,6 +537,10 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
 
         XCTAssertEqual(service.state, .disconnected)
         XCTAssertEqual(transport.startScanCount, 2)
+        XCTAssertEqual(Array(transport.operations.suffix(3)), ["stopScan", "notify:off", "disconnect"])
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 200)
+        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertNil(service.latestMeasurement)
     }
 
     func testProgressorTareUsesTheAuditedHardwareCommandWithoutStartingSoftwareTare() {

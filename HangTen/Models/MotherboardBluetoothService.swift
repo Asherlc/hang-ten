@@ -477,7 +477,6 @@ final class MotherboardBluetoothService: ObservableObject {
 
         resetSession()
         state = .scanning
-        scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
         transport.startScan()
     }
 
