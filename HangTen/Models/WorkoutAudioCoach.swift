@@ -207,6 +207,7 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private let countdownSchedulerFactory: () -> any CountdownAudioScheduling
     private var countdownScheduler: (any CountdownAudioScheduling)?
     private let countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
+    private let sleep: (Duration) async throws -> Void
     private let logger = Logger(subsystem: "com.hangten.training", category: "WorkoutAudio")
     private var configuredAudioSession = false
     private var ownsCountdownSchedule = false
@@ -217,6 +218,10 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private var speechOwnership = WorkoutSpeechOwnership()
 
     private static let deactivationRetryDelay: Duration = .milliseconds(200)
+    private static let systemSleep: (Duration) async throws -> Void = { duration in
+        try await Task.sleep(for: duration)
+    }
+
     override convenience init() {
         self.init(
             synthesizer: AVSpeechSynthesizer(),
@@ -226,7 +231,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
     convenience init(
         synthesizer: any WorkoutSpeechSynthesizing,
-        audioSession: any WorkoutAudioSessionManaging
+        audioSession: any WorkoutAudioSessionManaging,
+        sleep: @escaping (Duration) async throws -> Void = WorkoutAudioCoach.systemSleep
     ) {
         self.init(
             synthesizer: synthesizer,
@@ -239,20 +245,8 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
                     volume: 1.0
                 )
             },
-            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler()
-        )
-    }
-
-    convenience init(
-        synthesizer: any WorkoutSpeechSynthesizing,
-        audioSession: any WorkoutAudioSessionManaging,
-        countdownScheduler: any CountdownAudioScheduling
-    ) {
-        self.init(
-            synthesizer: synthesizer,
-            audioSession: audioSession,
-            countdownSchedulerFactory: { countdownScheduler },
-            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler()
+            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler(),
+            sleep: sleep
         )
     }
 
@@ -260,13 +254,30 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         synthesizer: any WorkoutSpeechSynthesizing,
         audioSession: any WorkoutAudioSessionManaging,
         countdownScheduler: any CountdownAudioScheduling,
-        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
+        sleep: @escaping (Duration) async throws -> Void = WorkoutAudioCoach.systemSleep
     ) {
         self.init(
             synthesizer: synthesizer,
             audioSession: audioSession,
             countdownSchedulerFactory: { countdownScheduler },
-            countdownCompletionScheduler: countdownCompletionScheduler
+            countdownCompletionScheduler: SystemWorkoutCountdownCompletionScheduler(),
+            sleep: sleep
+        )
+    }
+
+    convenience init(
+        synthesizer: any WorkoutSpeechSynthesizing,
+        audioSession: any WorkoutAudioSessionManaging,
+        countdownScheduler: any CountdownAudioScheduling,
+        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling,
+        sleep: @escaping (Duration) async throws -> Void = WorkoutAudioCoach.systemSleep
+    ) {
+        self.init(
+            synthesizer: synthesizer,
+            audioSession: audioSession,
+            countdownSchedulerFactory: { countdownScheduler },
+            countdownCompletionScheduler: countdownCompletionScheduler,
+            sleep: sleep
         )
     }
 
@@ -274,12 +285,14 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
         synthesizer: any WorkoutSpeechSynthesizing,
         audioSession: any WorkoutAudioSessionManaging,
         countdownSchedulerFactory: @escaping () -> any CountdownAudioScheduling,
-        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling
+        countdownCompletionScheduler: any WorkoutCountdownCompletionScheduling,
+        sleep: @escaping (Duration) async throws -> Void = WorkoutAudioCoach.systemSleep
     ) {
         self.synthesizer = synthesizer
         self.audioSession = audioSession
         self.countdownSchedulerFactory = countdownSchedulerFactory
         self.countdownCompletionScheduler = countdownCompletionScheduler
+        self.sleep = sleep
         super.init()
         synthesizer.delegate = self
     }
@@ -508,16 +521,17 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
               !synthesizer.isSpeaking,
               deactivationRetryTask == nil else { return }
 
+        let sleep = self.sleep
         deactivationRetryTask = Task { @MainActor [weak self] in
             do {
-                try await Task.sleep(for: WorkoutAudioCoach.deactivationRetryDelay)
+                try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
             } catch {
                 return
             }
             guard !Task.isCancelled, let self else { return }
 
-            deactivationRetryTask = nil
-            deactivateAudioSessionIfSpeechStopped()
+            self.deactivationRetryTask = nil
+            self.deactivateAudioSessionIfSpeechStopped()
         }
     }
 }

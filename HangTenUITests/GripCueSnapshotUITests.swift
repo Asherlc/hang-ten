@@ -12,7 +12,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]
         app.launch()
-        openWorkoutDeepLink()
+        openWorkoutDeepLinkExpectingInitialWeightSetup()
     }
 
     func testMaxHangsStepOneExposesIndividualHandCuesAndCapturesDiagnosticScreenshot() throws {
@@ -40,7 +40,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testLandscapePreStartHasNoLegacyLoadAdjustment() throws {
-        waitForInitialWeightSetup(timeout: 15)
         selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
@@ -56,8 +55,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
         app.launch()
         dismissSettingsReviewIfPresented()
-        openWorkoutDeepLink()
-        waitForInitialWeightSetup(timeout: 15)
+        openWorkoutDeepLinkExpectingInitialWeightSetup()
         selectManualWeightSourceIfNeeded()
 
         XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 15))
@@ -70,16 +68,48 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
     }
 
-    private func openWorkoutDeepLink() {
-        // Brief settle so Train is ready before openurl (avoids landscape deep-link races).
-        _ = app.tabBars.firstMatch.waitForExistence(timeout: 5)
+    /// Opens the workout deep link only after Train is the top of the stack, then
+    /// retries once if the URL was dropped during a nav/orientation settle.
+    private func openWorkoutDeepLinkExpectingInitialWeightSetup(
+        perAttemptTimeout: TimeInterval = 20
+    ) {
+        waitForTrainShellReady(timeout: 20)
+        let sourcePicker = app.segmentedControls["workout.initialWeight.sourcePicker"]
         app.open(workoutDeepLink)
+        if sourcePicker.waitForExistence(timeout: perAttemptTimeout) {
+            return
+        }
+        // Landscape + Settings pop can swallow the first openurl; Train is ready now.
+        waitForTrainShellReady(timeout: 10)
+        app.open(workoutDeepLink)
+        XCTAssertTrue(
+            sourcePicker.waitForExistence(timeout: perAttemptTimeout),
+            "Initial weight setup source picker should appear after the workout deep link."
+        )
     }
 
-    private func waitForInitialWeightSetup(timeout: TimeInterval) {
+    /// Train content (not merely the tab bar) must be visible — the tab bar stays
+    /// present while Settings is pushed, which previously let deep links race.
+    private func waitForTrainShellReady(timeout: TimeInterval) {
+        let settings = app.navigationBars["Settings"]
+        let trainBoard = app.otherElements["train.board"]
+        let trainSettings = app.buttons["train.settings"]
+        let deadline = Date().addingTimeInterval(timeout)
+
+        while Date() < deadline {
+            if !settings.exists && (trainBoard.exists || trainSettings.exists) {
+                return
+            }
+            RunLoop.current.run(until: Date().addingTimeInterval(0.25))
+        }
+
+        XCTAssertFalse(
+            settings.exists,
+            "Settings must be dismissed before opening the workout deep link."
+        )
         XCTAssertTrue(
-            app.segmentedControls["workout.initialWeight.sourcePicker"].waitForExistence(timeout: timeout),
-            "Initial weight setup source picker should appear after the workout deep link."
+            trainBoard.exists || trainSettings.exists,
+            "Train shell (train.board / train.settings) should be ready before opening the workout deep link."
         )
     }
 
@@ -93,8 +123,20 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     private func dismissSettingsReviewIfPresented() {
         // HANGTEN_REVIEW_MOTHERBOARD still opens Settings from Train; dismiss so the
         // workout deep link can present on the Train stack.
-        guard app.navigationBars["Settings"].waitForExistence(timeout: 5) else { return }
-        app.navigationBars["Settings"].buttons.firstMatch.tap()
+        let settings = app.navigationBars["Settings"]
+        guard settings.waitForExistence(timeout: 8) else { return }
+        settings.buttons.firstMatch.tap()
+
+        let dismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"),
+            object: settings
+        )
+        let result = XCTWaiter.wait(for: [dismissed], timeout: 10)
+        XCTAssertEqual(
+            result,
+            .completed,
+            "Settings should finish dismissing before the workout deep link."
+        )
     }
 }
 
@@ -172,17 +214,27 @@ final class InitialWeightSetupUITests: XCTestCase {
 final class DualMaxHangsHighlightUITests: XCTestCase {
     func testDualBoardExposesTheResolvedMaxHangHold() throws {
         let app = XCUIApplication()
+        // HANGTEN_REVIEW_WORKOUT was removed; plan detail is the stable surface that
+        // paints Dual's resolved Max Hangs hold on boardModel.3d (no weight sheet).
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            "HANGTEN_REVIEW_WORKOUT": "1",
+            "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
-            "HANGTEN_REVIEW_STEP": "1",
         ]
         app.launch()
 
+        XCTAssertTrue(
+            app.navigationBars["Plan"].waitForExistence(timeout: 20),
+            "DEBUG plan-detail review route should open Max Hangs on Dual."
+        )
+
         let board = app.otherElements["boardModel.3d"]
-        XCTAssertTrue(board.waitForExistence(timeout: 30))
+        // 3D / ODR load can be slow under CI shard load.
+        XCTAssertTrue(
+            board.waitForExistence(timeout: 60),
+            "Plan detail must expose the Dual 3D board model."
+        )
         XCTAssertEqual(board.value as? String, "20 mm curved edge")
     }
 }

@@ -91,24 +91,35 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
 
     expected_suite_jobs = (
         ("test-unit", "HangTenTests", "2", None),
-        ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "3"),
+        ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "2"),
         (
             "test-ui-map",
             "\n".join(
                 (
                     "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests",
                     "HangTenUITests/IronPalmBoardMapInteractionUITests",
-                    "HangTenUITests/GripCueDiagnosticScreenshotUITests",
                 )
             ),
             "1",
-            "3",
+            "2",
+        ),
+        (
+            "test-ui-grip",
+            "\n".join(
+                (
+                    "HangTenUITests/GripCueDiagnosticScreenshotUITests",
+                    "HangTenUITests/InitialWeightSetupUITests",
+                    "HangTenUITests/DualMaxHangsHighlightUITests",
+                )
+            ),
+            "1",
+            "2",
         ),
         (
             "test-ui-picker",
             "HangTenUITests/BeastmakerBoardPickerInteractionUITests",
             "1",
-            "3",
+            "2",
         ),
         (
             "test-ui-misc",
@@ -119,7 +130,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
                 )
             ),
             "1",
-            "3",
+            "2",
         ),
     )
     for job_name, only_testing, workers, max_attempts in expected_suite_jobs:
@@ -145,6 +156,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     ui_shard_job_names = (
         "test-ui-paywall",
         "test-ui-map",
+        "test-ui-grip",
         "test-ui-picker",
         "test-ui-misc",
     )
@@ -184,6 +196,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     unit_test_job = jobs["test-unit"]
     ui_paywall_job = jobs["test-ui-paywall"]
     ui_map_job = jobs["test-ui-map"]
+    ui_grip_job = jobs["test-ui-grip"]
     ui_picker_job = jobs["test-ui-picker"]
     ui_misc_job = jobs["test-ui-misc"]
     ui_test_job = jobs["test-ui"]
@@ -206,6 +219,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
         unit_test_job,
         ui_paywall_job,
         ui_map_job,
+        ui_grip_job,
         ui_picker_job,
         ui_misc_job,
     ):
@@ -215,6 +229,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
         "changes",
         "test-ui-paywall",
         "test-ui-map",
+        "test-ui-grip",
         "test-ui-picker",
         "test-ui-misc",
     ]
@@ -243,6 +258,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     )
     assert ui_report_step["env"]["PAYWALL_RESULT"] == "${{ needs.test-ui-paywall.result }}"
     assert ui_report_step["env"]["MAP_RESULT"] == "${{ needs.test-ui-map.result }}"
+    assert ui_report_step["env"]["GRIP_RESULT"] == "${{ needs.test-ui-grip.result }}"
     assert ui_report_step["env"]["PICKER_RESULT"] == "${{ needs.test-ui-picker.result }}"
     assert ui_report_step["env"]["MISC_RESULT"] == "${{ needs.test-ui-misc.result }}"
     assert '[[ "$PAYWALL_RESULT" == "failure"' in ui_report_step["run"]

@@ -2663,23 +2663,24 @@ final class WorkoutAudioCoachTests: XCTestCase {
     // Catches a bounded retry budget leaving other-app audio ducked indefinitely.
     func testCountdownCompletionRetriesDeactivationUntilItNotifiesOtherApps() async {
         let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 4)
+        let deactivated = expectation(description: "notification-aware deactivation")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivated.fulfill()
+        }
         let completionScheduler = RecordingWorkoutCountdownCompletionScheduler()
         let coach = WorkoutAudioCoach(
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
             audioSession: audioSession,
             countdownScheduler: RecordingCountdownAudioScheduler(),
-            countdownCompletionScheduler: completionScheduler
+            countdownCompletionScheduler: completionScheduler,
+            sleep: { _ in }
         )
         coach.prepareCountdownAudio()
-        let deactivation = expectation(description: "retries countdown deactivation until other apps are notified")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
 
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         completionScheduler.complete()
 
-        await fulfillment(of: [deactivation], timeout: 2)
+        await fulfillment(of: [deactivated], timeout: 1)
         XCTAssertEqual(audioSession.deactivationAttemptCount, 5)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -2893,22 +2894,23 @@ final class WorkoutAudioCoachTests: XCTestCase {
 
     func testDeactivationRetriesAfterTransientFailureOnceSpeechHasFinished() async {
         let audioSession = RecordingWorkoutAudioSession(failedDeactivationAttempts: 1)
+        let deactivated = expectation(description: "notification-aware deactivation")
+        audioSession.onSuccessfulNotificationAwareDeactivation = {
+            deactivated.fulfill()
+        }
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
-            audioSession: audioSession
+            audioSession: audioSession,
+            sleep: { _ in }
         )
-        let deactivation = expectation(description: "retries deactivation after a transient failure")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
 
         coach.speak("3")
 
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
         coach.stop()
-        await fulfillment(of: [deactivation], timeout: 1)
+        await fulfillment(of: [deactivated], timeout: 1)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
         XCTAssertEqual(audioSession.deactivationCount, 1)
