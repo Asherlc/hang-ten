@@ -23,7 +23,7 @@
     "hold--right-mono": "mono-right",
     "hold--right-pocket-2finger": "pocket-2finger-right"
   },
-  "descriptorSHA256": "20ba8fdaf126b2ae1ddb74faf455edc4f3046461777f71bd5b39a9849c1386cc",
+  "descriptorSHA256": "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
   "modelBounds": {
     "max": [
       0.339724988,
@@ -36,12 +36,12 @@
       -9e-09
     ]
   },
-  "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+  "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
   "nodeCount": 21,
   "packageID": "frictitious.megalith",
   "sourceGeometryChanged": false,
   "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/frictitious-megalith.blend",
-  "sourceModelSHA256": "887332a849add5f475877ebef9c51e5cfba26109bd0544186cacf937b3dccca3",
+  "sourceModelSHA256": "7fb57805b0c645d3beaf269649f19f3e5602904ffe29825587e065e6a5e667d9",
   "sourceObjectIDs": [
     "body--board",
     "hold--center-edge-25",

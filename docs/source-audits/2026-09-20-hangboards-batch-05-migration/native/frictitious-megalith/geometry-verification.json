@@ -1,6 +1,6 @@
 {
-  "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
-  "descriptorSHA256": "20ba8fdaf126b2ae1ddb74faf455edc4f3046461777f71bd5b39a9849c1386cc",
+  "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+  "descriptorSHA256": "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
   "cleanEmptySceneImport": true,
   "contactCount": 20,
   "meshCount": 21,
@@ -223,5 +223,133 @@
   "allTriangles": true,
   "descriptorCanonicalSorted": true,
   "modelAcceptance": false,
-  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state."
+  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state.",
+  "textureCoordinateChecks": [
+    {
+      "nodeID": "body__board_mounting_omitted_001",
+      "loopCount": 455148,
+      "finiteUVCount": 455148,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__center_edge_25_001",
+      "loopCount": 1224,
+      "finiteUVCount": 1224,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__jug_001",
+      "loopCount": 12450,
+      "finiteUVCount": 12450,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_12_001",
+      "loopCount": 2484,
+      "finiteUVCount": 2484,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_15_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_20_001",
+      "loopCount": 2106,
+      "finiteUVCount": 2106,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_30_001",
+      "loopCount": 2376,
+      "finiteUVCount": 2376,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_40_001",
+      "loopCount": 3402,
+      "finiteUVCount": 3402,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_8_001",
+      "loopCount": 2484,
+      "finiteUVCount": 2484,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_mono_001",
+      "loopCount": 1188,
+      "finiteUVCount": 1188,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_12_001",
+      "loopCount": 2484,
+      "finiteUVCount": 2484,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_15_ownership_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_20_ownership_001",
+      "loopCount": 2106,
+      "finiteUVCount": 2106,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_30_001",
+      "loopCount": 2376,
+      "finiteUVCount": 2376,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_40_001",
+      "loopCount": 3402,
+      "finiteUVCount": 3402,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_8_001",
+      "loopCount": 2484,
+      "finiteUVCount": 2484,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_mono_001",
+      "loopCount": 1188,
+      "finiteUVCount": 1188,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    }
+  ]
 }

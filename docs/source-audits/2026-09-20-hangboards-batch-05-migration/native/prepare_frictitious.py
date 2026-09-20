@@ -19,6 +19,16 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def constant_substrate_uv(mesh):
+    """Deliberately sample the center of the uniform one-pixel substrate image.
+
+    Reconstructed meshes have no inherited UV layer. SceneKit requires explicit
+    coordinates even for this constant texture; no geometry or normals change.
+    """
+    uv = mesh.uv_layers.new(name="st")
+    for loop in uv.data:
+        loop.uv = (.5, .5)
+
 
 def omit_mounting_openings(obj, slug):
     """Surgical edit of seven known authored body bores, not hole detection.
@@ -70,6 +80,7 @@ def omit_mounting_openings(obj, slug):
     replacement.from_pydata(vertices,[],faces);replacement.materials.append(material)
     for polygon,value in zip(replacement.polygons,smooth):polygon.use_smooth=value
     replacement.normals_split_custom_set([n for group in face_normals for n in group])
+    constant_substrate_uv(replacement)
     obj.data=replacement
     return records
 
@@ -102,6 +113,7 @@ def reconcile_megalith_step_ownership():
         mesh=bpy.data.meshes.new(name+'-ownership');mesh.from_pydata(vertices,[],[f[0] for f in faces]);mesh.materials.append(material)
         for polygon,f in zip(mesh.polygons,faces):polygon.use_smooth=f[2]
         mesh.normals_split_custom_set([n for f in faces for n in f[1]])
+        constant_substrate_uv(mesh)
         obj.data=mesh
     return {'fromSourceNode':'hold--right-edge-20','toSourceNode':'hold--right-edge-15','triangleCount':18,'reason':'Inclusive cut ordering assigned the229mm-centered strip asymmetrically; M2 symmetric physical layout governs ownership.','physicalGeometryChanged':False,'triangleCoordinatesSourceMetres':transferred}
 
@@ -163,6 +175,11 @@ def prepare(slug):
     prepared.parent.mkdir(parents=True, exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=str(prepared), check_existing=False)
     report = {"sourcePath": str(source.relative_to(Path.cwd())), "sourceSHA256": expected, "preparedSHA256": digest(prepared), "preparedPath": str(prepared.relative_to(Path.cwd())), "blenderVersion": bpy.app.version_string, "removedTransformOnlyNodes": removed, "maximumWorldVertexDeltaMetres": max_delta, "geometryChanged": True, "contactOwnershipEdits": ownership_edits, "mountingOpeningsRemoved": len(hole_edits), "mountingEdits": hole_edits, "maximumContactVertexDeltaMetres": max_delta, "coordinatePreparation": "GLB native import + root world matrix bake only; Blender +Z up, front -Y, metres. Compiler transports to +Y up, front +Z.", "materialAdaptation": "One constant PNG RGBA8 sRGB image per source material, explicitly encoded from linear GLB factor with <=0.004 linear-channel error; no generated grain or source image use.", "sourceMaterialLinearRGBA": colors, "materialConversions": material_adaptations, "mountingOmission": "Only the mounting-interface authored body tubes are omitted, closing exact front/rear loops at their analytic support planes. Actual central relief, contact cavities, nested pockets and stepped depths remain unchanged. Physical products retain their mounting openings.", "meshInventory": [{"name":o.name,"vertices":len(o.data.vertices),"polygons":len(o.data.polygons)} for o in sorted(meshes,key=lambda o:o.name)]}
+    report["reconstructedMeshTextureCoordinates"] = {
+        "sourceNodeIDs": ["body--board"] + (["hold--right-edge-15", "hold--right-edge-20"] if slug.endswith("megalith") else []),
+        "uvLayer": "st", "everyLoopUV": [.5, .5],
+        "purpose": "Explicit center-pixel sampling of the unchanged constant substrate texture after mesh reconstruction; no geometry, normal or material change."
+    }
     (output / "preparation-report.json").write_text(json.dumps(report, indent=2)+"\n")
     manifest = {"schemaVersion":1,"packageID": "frictitious.doormount-pro-7" if slug.endswith("7") else "frictitious.megalith", "manufacturerPhysicalAuthority":{"publisher":"Frictitious Climbing","evidencePacket":str(HERE.parent.relative_to(Path.cwd()))+"/REVIEW.md"},"historicalSource":{"status":"missing","notes":"The old app raster authoring source is not a native contact-tagged model. Immutable user delivery GLB is retained separately."},"auditedModelSource":{"provenanceType":"user-provided","authorization":"User authorized evidence-led native migration; exact evidence approved 2026-09-20. Explicit derivative preparation documented here; no model acceptance implied.","retainedPath":str(prepared.relative_to(Path.cwd())),"sha256":digest(prepared)},"supersessionRuling":"Prepared native derivative of hash-bound original GLB. Source root transforms are baked once; explicit mounting-only tube removal and support-plane caps are recorded, preserving contact geometry; constant material image adaptation is explicit. Manufacturer facts and stable app IDs govern mapping."}
     (output / "source-manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")

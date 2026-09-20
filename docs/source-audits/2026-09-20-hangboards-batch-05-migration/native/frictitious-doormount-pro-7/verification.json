@@ -1,6 +1,6 @@
 {
-  "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
-  "descriptorSHA256": "eea1505a86df1af33d440b2da55c729e53102ad7bc15b9f502e821fe75570fa4",
+  "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+  "descriptorSHA256": "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
   "cleanEmptySceneImport": true,
   "contactCount": 13,
   "meshCount": 14,
@@ -120,6 +120,92 @@
   "descriptorCanonicalSorted": true,
   "modelAcceptance": false,
   "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state.",
+  "textureCoordinateChecks": [
+    {
+      "nodeID": "body__board_mounting_omitted_001",
+      "loopCount": 266187,
+      "finiteUVCount": 266187,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__jug_001",
+      "loopCount": 11943,
+      "finiteUVCount": 11943,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_15_001",
+      "loopCount": 1782,
+      "finiteUVCount": 1782,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_20_001",
+      "loopCount": 2268,
+      "finiteUVCount": 2268,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_25_001",
+      "loopCount": 4158,
+      "finiteUVCount": 4158,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_35_001",
+      "loopCount": 2862,
+      "finiteUVCount": 2862,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_15_001",
+      "loopCount": 1782,
+      "finiteUVCount": 1782,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_20_001",
+      "loopCount": 2268,
+      "finiteUVCount": 2268,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_25_001",
+      "loopCount": 4158,
+      "finiteUVCount": 4158,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_35_001",
+      "loopCount": 2862,
+      "finiteUVCount": 2862,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    }
+  ],
   "nativeCompiler": "Tools/HangboardModels/contact_model_package.py",
   "nativeImporter": "Tools/HangboardModels/import_contact_model_source.py",
   "compilerSHA256": "d70040768c1228f5fac2dd9ce58aa0a18f97c4d1e3a5f6ae175f2cb70a3e44d1",

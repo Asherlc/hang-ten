@@ -93,6 +93,43 @@ The material adaptation is the preceding Zlagboard pattern: explicitly encode
 constant linear source RGBA as one PNG RGBA8 sRGB texture, quantifying channel
 error below0.004. No generated wood grain or source image texture is involved.
 
+## Native texture-coordinate correction
+
+Native SceneKit validation exposed white/grey reconstructed surfaces even though
+the exported substrate PNG and PBR parameters were correct. The original GLBs
+have texture coordinates; the mounting-closure reconstruction dropped the body
+UV layer on both boards, and the ownership reconstruction dropped it on Megalith's
+right 15/20 mm meshes. The other imported meshes retained their coordinates.
+Increasing texture size did not fix the white body. A candidate with only explicit
+UV coordinates restored the intended beige in native front and oblique controls
+for both boards, using the same one-pixel PNG, renderer and materials.
+
+Preparation now deliberately assigns `st=(0.5,0.5)` to every loop of those four
+reconstructed meshes, sampling the center of the constant image. This is texture
+transport metadata, not inferred geometry or generated grain. Original coordinates
+on every other mesh remain unchanged. Each `uv-transport-verification.json` binds
+old/new USDZ hashes and records that the canonical `usdcat` layer is byte-identical
+after removing only the `st` and `st:indices` attributes; existing UV arrays and
+embedded PNG bytes match exactly. Thus vertices, topology, winding, corner normals,
+materials, bindings and transforms are unchanged. Descriptors differ only in their
+model hash. Contact identities, original GLBs, screw closures and the 18-triangle
+ownership ruling are preserved.
+
+The retained verifier now clean-reimports the actual USDZ, requires a finite UV
+for every loop and validates every used material's diffuse-image binding plus
+roughness 0.78 and metallic 0. Before correction, this verifier failed on the
+DoorMount body; the native regression independently failed on all four meshes.
+The corrected native candidate test passes. Full app acceptance remains separate.
+
+Technical references: [Blender USD material export](https://docs.blender.org/manual/en/4.4/files/import_export/usd.html)
+supports the simple Principled/image/UV network used here.
+[OpenUSD's primvar reader](https://openusd.org/release/spec_usdpreviewsurface.html)
+defines a missing-coordinate fallback, but actual SceneKit controls demonstrated
+that this asset needs explicit UVs. [Apple's physically based material documentation](https://developer.apple.com/documentation/scenekit/scnmaterial/lightingmodel-swift.struct/physicallybased)
+states that diffuse, roughness and metalness govern this shading model; its
+`specular` property is ignored. No runtime material substitution or lighting
+change was used to fix these packages.
+
 ## Ledge diagnosis and exact export review
 
 The original GLBs and exact exported USDZs were independently imported into

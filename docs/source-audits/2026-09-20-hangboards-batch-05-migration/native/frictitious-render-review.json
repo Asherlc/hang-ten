@@ -1,63 +1,63 @@
 {
   "reviewer": "Astra controller + implementing Astra",
   "reviewedAt": "2026-09-20",
-  "scope": "Preparation visual review of exact exported USDZs after clean empty-scene import; not iOS acceptance",
-  "result": "All six front/oblique/ledge views pass: stepped/nested contacts and mirrored form intact; identified mounting holes absent; no visible jagged dark artifacts or fill scars.",
+  "scope": "UV-only correction: six regenerated exact-USDZ front/oblique/ledge views and separately reviewed same-material iOS candidate controls; not final app acceptance",
+  "result": "Controller reviewed all six final UV-corrected desktop views and verified exact image/model hashes: unchanged stepped/nested pocket, mono and central forms and screw omissions, no new visual defects from UV change. Four same-material iOS candidate front/oblique controls restore consistent beige including formerly white surfaces. Megalith oblique diagnostic viewport crops the model; final app framing remains a separate acceptance check.",
   "modelAcceptance": false,
   "renders": [
     {
       "model": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
-      "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+      "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
       "view": "front",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-doormount-pro-7-front.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "771d7468d8902af04529ab38f1d83b1e1b95488cc00022ae9af96d1c6c3c0a3b"
+      "imageSHA256": "d6357ee660fe5df6536da2c9df0802be26ae5e72ebd118f474193dcbe26a690f"
     },
     {
       "model": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
-      "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+      "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
       "view": "oblique",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-doormount-pro-7-oblique.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "10010dc44f2a2a528fc39cf185c7f2482f06a410ce899cf58ce2a063289facbd"
+      "imageSHA256": "c6b2b66db1e12b03824bd032441cdaafbc2a13e305c1a81c9a9be475d3644266"
     },
     {
       "model": "Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
-      "modelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+      "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
       "view": "ledge",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-doormount-pro-7-ledge.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "f1461ac045dbe6d124d20a8362e0008f5c88e703fa51b79f33deab77e979b4fc"
+      "imageSHA256": "b35be6cf8521a722985a626844f28523dfff0177e5f6da739ce8637d6a5a5d0b"
     },
     {
       "model": "Hangboards/frictitious-megalith/assets/primary.usdz",
-      "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+      "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
       "view": "front",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-megalith-front.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "61e210022557d60770d4a0d9745927769498668fb3722103d88ccd2724de60fc"
+      "imageSHA256": "de39e3c565fecc38a0ae6fcf5fdb24e23208bffb5a69b4fe6ad0296d5759a3c1"
     },
     {
       "model": "Hangboards/frictitious-megalith/assets/primary.usdz",
-      "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+      "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
       "view": "oblique",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-megalith-oblique.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "7a2edbf42cc0b3975c3a325bebfb4280d44c98fd8d2970e5ef825f5081326973"
+      "imageSHA256": "cf49b41bf3521959111f7b84bc70bc1cd248542fd067a07721feac563211a3a4"
     },
     {
       "model": "Hangboards/frictitious-megalith/assets/primary.usdz",
-      "modelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+      "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
       "view": "ledge",
       "path": ".context/hangboards-batch-05-astra-migration/frictitious-renders/frictitious-megalith-ledge.png",
       "renderer": "5.2.0 LTS",
       "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-      "imageSHA256": "bab40da382df19e40678cdf0ea1469c4efa4fe575baec2cd56a51a2063639890"
+      "imageSHA256": "5233e8c349e451bd2a4f5b88788e7300ac96007582aa352b5e38630f4355ed3a"
     }
   ]
 }

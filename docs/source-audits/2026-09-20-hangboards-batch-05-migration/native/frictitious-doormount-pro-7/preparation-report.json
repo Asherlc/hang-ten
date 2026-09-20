@@ -1,7 +1,7 @@
 {
   "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/frictitious-doormount-pro-7/frictitious-doormount-pro-7.glb",
   "sourceSHA256": "8b639807ff660566dca2fd313f00abfadaae0bfbaf0c28ecbc82477f2732113f",
-  "preparedSHA256": "680c2144280b1fcc244bd3b1573a04e409221bf349f2986278cd2c680329ad79",
+  "preparedSHA256": "8959d232f6f92a026c0cd7400502efc8c8d1030699e364e9ff894722e6b67acb",
   "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/frictitious-doormount-pro-7.blend",
   "blenderVersion": "5.2.0 LTS",
   "removedTransformOnlyNodes": [
@@ -128,5 +128,16 @@
       "vertices": 475,
       "polygons": 504
     }
-  ]
+  ],
+  "reconstructedMeshTextureCoordinates": {
+    "sourceNodeIDs": [
+      "body--board"
+    ],
+    "uvLayer": "st",
+    "everyLoopUV": [
+      0.5,
+      0.5
+    ],
+    "purpose": "Explicit center-pixel sampling of the unchanged constant substrate texture after mesh reconstruction; no geometry, normal or material change."
+  }
 }

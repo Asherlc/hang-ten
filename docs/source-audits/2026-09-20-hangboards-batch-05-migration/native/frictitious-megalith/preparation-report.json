@@ -1,7 +1,7 @@
 {
   "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/frictitious-megalith/frictitious-megalith.glb",
   "sourceSHA256": "d8a9fb8c1f308d0d11e90f760e30f1cfde3bf36cb19b212ef24a368835adceb1",
-  "preparedSHA256": "887332a849add5f475877ebef9c51e5cfba26109bd0544186cacf937b3dccca3",
+  "preparedSHA256": "7fb57805b0c645d3beaf269649f19f3e5602904ffe29825587e065e6a5e667d9",
   "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/frictitious-megalith.blend",
   "blenderVersion": "5.2.0 LTS",
   "removedTransformOnlyNodes": [
@@ -534,5 +534,18 @@
       "vertices": 474,
       "polygons": 504
     }
-  ]
+  ],
+  "reconstructedMeshTextureCoordinates": {
+    "sourceNodeIDs": [
+      "body--board",
+      "hold--right-edge-15",
+      "hold--right-edge-20"
+    ],
+    "uvLayer": "st",
+    "everyLoopUV": [
+      0.5,
+      0.5
+    ],
+    "purpose": "Explicit center-pixel sampling of the unchanged constant substrate texture after mesh reconstruction; no geometry, normal or material change."
+  }
 }
