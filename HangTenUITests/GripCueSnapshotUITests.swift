@@ -108,8 +108,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "Settings must be dismissed before opening the workout deep link."
         )
         XCTAssertTrue(
-            trainBoard.exists || trainSettings.exists || app.tabBars.firstMatch.exists,
-            "Train shell (train.board / train.settings / tab bar) should be ready before opening the workout deep link."
+            trainBoard.exists || trainSettings.exists,
+            "Train shell (train.board / train.settings) should be ready before opening the workout deep link."
         )
     }
 

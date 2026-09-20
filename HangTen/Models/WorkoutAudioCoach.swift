@@ -521,14 +521,14 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
               !synthesizer.isSpeaking,
               deactivationRetryTask == nil else { return }
 
+        let sleep = self.sleep
         deactivationRetryTask = Task { @MainActor [weak self] in
-            guard let self else { return }
             do {
-                try await self.sleep(WorkoutAudioCoach.deactivationRetryDelay)
+                try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
             } catch {
                 return
             }
-            guard !Task.isCancelled else { return }
+            guard !Task.isCancelled, let self else { return }
 
             self.deactivationRetryTask = nil
             self.deactivateAudioSessionIfSpeechStopped()
