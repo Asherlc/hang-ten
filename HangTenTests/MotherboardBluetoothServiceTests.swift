@@ -477,37 +477,58 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 1, accuracy: 0.000_001)
     }
 
-    func testWHC06AdvertisementStreamFailsAfterAuditedLivenessInterval() async throws {
+    func testWHC06AdvertisementStreamRescansAndResumesAfterLivenessExpiry() async throws {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(
             transport: transport,
             advertisementLivenessTimeout: 0.01
         )
+        let device = MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Scale",
+            profile: .genericWHC06
+        )
 
         service.connect(profile: .genericWHC06)
-        transport.emit(.advertisement(
-            MotherboardDiscoveredDevice(id: UUID(), name: "Scale", profile: .genericWHC06),
-            ForceSensorAdvertisement(
-                name: "Scale",
-                serviceUUIDs: [],
-                manufacturerData: [
-                    ForceSensorManufacturerData(
-                        companyIdentifier: 0x0100,
-                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 0, 0, 1])
-                    )
-                ]
-            ),
-            Date(timeIntervalSince1970: 1_234)
-        ))
-        try await waitForService("WH-C06 advertisement liveness failure") {
-            service.state == .failed
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 1_000)
+
+        XCTAssertEqual(service.state, .streaming)
+        try await waitForService("WH-C06 advertisement recovery scan") {
+            service.state == .scanning
         }
 
-        XCTAssertEqual(service.state, .failed)
-        XCTAssertEqual(
-            service.lastError,
-            "Generic WH-C06-compatible stopped advertising. Move the sensor closer and try again."
+        XCTAssertEqual(transport.startScanCount, 2)
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 200)
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, device.id)
+        XCTAssertEqual(service.latestMeasurement?.aggregateLoadKGF, 2)
+    }
+
+    func testWHC06UserDisconnectDuringLivenessRecoveryScanRemainsTerminal() async throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(
+            transport: transport,
+            timeouts: .init(scan: 0.01, connect: 1, calibration: 1, streamAcknowledgement: 1),
+            advertisementLivenessTimeout: 0.01
         )
+        let device = MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Scale",
+            profile: .genericWHC06
+        )
+
+        service.connect(profile: .genericWHC06)
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 1_000)
+        try await waitForService("WH-C06 advertisement recovery scan") {
+            service.state == .scanning
+        }
+
+        service.disconnect()
+        try await Task.sleep(for: .milliseconds(30))
+
+        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertEqual(transport.startScanCount, 2)
     }
 
     func testProgressorTareUsesTheAuditedHardwareCommandWithoutStartingSoftwareTare() {

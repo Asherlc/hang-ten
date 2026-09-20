@@ -429,7 +429,10 @@ final class MotherboardBluetoothService: ObservableObject {
 
         scheduleTimeout(
             after: advertisementLivenessTimeout,
-            message: "\(device.profile.label) stopped advertising. Move the sensor closer and try again."
+            message: "\(device.profile.label) stopped advertising. Move the sensor closer and try again.",
+            onExpiry: { [weak self] in
+                self?.recoverAdvertisementStream()
+            }
         )
         publish(samples)
     }
@@ -461,6 +464,18 @@ final class MotherboardBluetoothService: ObservableObject {
         }
 
         reconnectAttempts += 1
+        state = .scanning
+        scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
+        transport.startScan()
+    }
+
+    private func recoverAdvertisementStream() {
+        guard wantsConnection,
+              activeProfile.flatMap(WHC06ProtocolAdapter.init(profile:)) != nil else {
+            return
+        }
+
+        resetSession()
         state = .scanning
         scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
         transport.startScan()
@@ -563,7 +578,11 @@ final class MotherboardBluetoothService: ObservableObject {
         bodyweightMeanKGF = nil
     }
 
-    private func scheduleTimeout(after delay: TimeInterval, message: String) {
+    private func scheduleTimeout(
+        after delay: TimeInterval,
+        message: String,
+        onExpiry: (() -> Void)? = nil
+    ) {
         cancelTimeout()
         guard delay.isFinite, delay > 0, delay <= Self.maximumBodyweightMeasurementDuration else { return }
         let nanoseconds = UInt64(delay * 1_000_000_000)
@@ -574,7 +593,11 @@ final class MotherboardBluetoothService: ObservableObject {
                 return
             }
             guard !Task.isCancelled else { return }
-            self?.fail(message)
+            if let onExpiry {
+                onExpiry()
+            } else {
+                self?.fail(message)
+            }
         }
     }
 
