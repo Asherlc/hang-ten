@@ -65,6 +65,10 @@ second identity system, a schema-version fork, or duplicated boards.
 The input hashes below identify the accepted R4 GLB bytes. Conversion may
 change container bytes, but the import audit must retain each source hash and
 bind each resulting USDZ to its own generated descriptor hash.
+Accepted GLBs remain immutable provenance parents. For each Plateau
+presentation, export consumes its own separately retained, hash-bound,
+operator-authored corrected `.blend`, linked to its exact accepted parent by
+`operatorAuthoredCorrection`; it never compiles the uncorrected GLB directly.
 
 | Package slug | Board ID | Exact revision | Accepted GLB input(s) and SHA-256 |
 | --- | --- | --- | --- |
@@ -132,6 +136,26 @@ manual policy applies to correcting the source model's contact partitions:
 particularly the Port-A-Board side pinch, the standard Mini internal broad
 recess jug, and both Nature multi-node pinch mappings. Mesh names are hints,
 not automatic semantic authority.
+
+All three Plateau presentations (`depth-18mm`, `depth-15mm`, and `depth-10mm`)
+must omit every screw/mounting hole. An operator deliberately removes and caps
+each such hole in each corrected source mesh, without automated extraction,
+hole detection, or geometry repair. This display omission does not claim that
+the physical product lacks mounting holes. Preserve the lower open cord
+exits/grooves and their suspension attachment semantics; they are not
+screw/mounting holes and must not be capped. Preserve the oak edge, black body,
+reversible reducer/blocker in its applicable configurations, stable `edge-18`
+identity, and selectable contact geometry.
+
+Each of the three corrections has its own retained `.blend`, correction audit,
+and normal plus rear/oblique review images. The manifest hash-binds the source
+and correction audit to the accepted GLB; the audit binds the review images and
+records `sourceGeometryChanged:true` and `prohibitedAutomationUsed:false`.
+After candidate generation, explicit human inspection must confirm all holes
+are removed/capped and the cord exits and preserved features remain intact.
+Only then record the actual UTC approval instant, reviewer, and render hashes;
+never prefill or backdate approval. Missing or mismatched corrections,
+artifacts, or approvals in any presentation block promotion of all three.
 
 ## Model-only package contract
 
@@ -655,6 +679,17 @@ Implementation is accepted only when all affected layers agree.
   against the approved primary evidence and retained import/reimport reports.
 - Each source GLB hash matches the input table; each USDZ matches its generated
   descriptor hash.
+- The eight source manifests and eight mappings require exactly five geometry
+  corrections: Port, Oak, and each of Plateau's three presentations. Plateau
+  imports report `sourceGeometryChanged:true` and compile only their own
+  approved corrected sources; the accepted-source count remains eight and the
+  standalone mapping-review count remains one (KARMA8A).
+- Automated tests reject absent, swapped, hash-mismatched, or unapproved Plateau
+  correction chains and verify exact node/material/contact invariants. Absence
+  of screw/mounting holes is established by deliberate human visual review of
+  each source's retained normal and rear/oblique images and again of the final
+  shipped renders, never pixel analysis, automatic hole detection, topology
+  inference, or a node-name proxy.
 - Package validation finds no PNG, raster presentation, unlisted asset, mixed
   media, or descriptor inventory mismatch.
 
@@ -765,6 +800,13 @@ Implementation is accepted only when all affected layers agree.
   VoiceOver labels.
 - Plateau review confirms the blocker is visible but never selectable and that
   all three configurations highlight the same stable oak contact.
+- For each Plateau configuration, retained normal and rear/oblique views of
+  the corrected source and final shipped USDZ prove to the human reviewer that
+  every screw/mounting hole is removed and capped while the lower open cord
+  exits/grooves remain intact. Each approval follows candidate generation at
+  the actual review time and binds the exact source/model and relevant render
+  hashes; the current-source app review repeats this visual check at all three
+  depths before final acceptance.
 - Review artifacts and external resources follow workspace ownership and
   cleanup rules.
 

@@ -18,6 +18,7 @@
 - Keep schema version `3`. Five packages have exactly one original model presentation named `primary`; Plateau has exactly `depth-18mm`, `depth-15mm`, and `depth-10mm`, with only `depth-18mm` default.
 - Promote exactly Appendix A's 28 approved evidence files from `.context/sweet-hamster-batch03-research/evidence/` without downloading, decoding, re-encoding, resizing, minifying, cropping, or otherwise changing bytes.
 - Retain all eight accepted source GLBs and verify their exact SHA-256 values before import. A corrected authoring source never replaces or obscures its accepted parent GLB.
+- All three Plateau presentations must omit every screw/mounting hole. Task 4 separately retains and approves three operator-authored corrected `.blend` sources through `operatorAuthoredCorrection`; all three compile from those sources and report `sourceGeometryChanged:true`. Deliberately remove and cap each hole while preserving the lower open cord exits/grooves, attachment semantics, oak edge, black body, reversible reducer/blocker, contact identity, and selectable geometry. The cord exits are not mounting holes. No automatic hole detection, extraction, or mesh repair is permitted.
 - Never use image-driven hold detection, segmentation, generated masks/contours, source registration/alignment, vectorization, automatic path simplification/cropping, proximity selection, bounds-based face selection, or proposal/refine/promote geometry. Port's side pinch and the standard Nature jug are selected face-by-face by an operator in Blender Edit Mode; both Nature multi-node pinches are deliberately mapped and reviewed by an operator.
 - `contacts[]` is the sole physical-contact inventory. Descriptor node bindings may be many-to-one, but every descriptor's complete contact inventory equals the complete package inventory.
 - USDZ is the only ODR resource. Descriptors and transient, non-pickable suspension metadata remain bundled. Do not bake cords, anchors, knots, hardware, blockers-as-contacts, or environmental objects into USDZ.
@@ -30,6 +31,7 @@
 
 - A source-audit path that is a symlink, ignored, untracked, outside the repository, duplicated, or correct-looking but hash-mismatched must fail before package work; Task 1 tests every case.
 - An operator-corrected source that does not hash-bind its accepted parent, correction report, explicit `prohibitedAutomationUsed: false`, and completed approval must fail import; Task 3 tests that chain.
+- Require exactly five geometry corrections: Port, Oak, and all three Plateau presentations. Tasks 4, 7, 13, and 14 reject a missing/swapped Plateau source, audit, review image, or actual-time approval. Normal and rear/oblique images require human confirmation of capped screw/mounting holes and intact open cord exits for every corrected source and final shipped model; artifact/hash/node/material checks cannot establish hole absence.
 - Plateau's three presentations must never borrow another presentation's descriptor, local position, effective-depth map, pose, or USDZ; Tasks 13, 14, and 16 exercise cross-wiring mutations.
 - Multi-node contacts must remain one selectable identity after USDZ reimport: Port must never bind the obsolete bottom band, both Nature packages must bind both exterior pieces to `pinch-60`, and standard Nature's jug must bind only the manually partitioned recess; Tasks 5-7, 10-12, 14, and 17 test these exact node sets.
 - A cord may solve numerically yet collide, self-intersect, terminate outside its declared open route, disappear behind the board, become pickable/accessibility-visible, or omit a local pose; Tasks 15 and 17 exercise the production clearance, visibility, picking, and accessibility gates for every presentation/position.
@@ -49,7 +51,7 @@
 
 - Modify `Tools/HangboardModels/contact_model_package.py:136-219,668-685` and `Tools/HangboardModels/test_contact_model_package.py` for a validated asset stem instead of a hard-coded `primary` stem.
 - Modify `Tools/HangboardModels/import_contact_model_source.py:35-109,285-377` and `Tools/HangboardModels/test_import_contact_model_source.py:14-119` for the accepted-parent/operator-correction chain and asset-stem report fields.
-- Create `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/` containing the eight accepted GLBs, two corrected Blender sources, eight source manifests, eight contact mappings, correction/mapping approvals, import/reimport reports, render artifacts, `model-import-audit.json`, and `README.md`.
+- Create `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/` containing the eight accepted GLBs, five corrected Blender sources (Port, Oak, and three Plateau sources), eight source manifests, eight contact mappings, correction/mapping approvals, import/reimport reports, render artifacts, `model-import-audit.json`, and `README.md`.
 - Create `Tools/HangboardModels/verify_batch_03_models.py` and `Tools/HangboardModels/test_verify_batch_03_models.py` for exact shipped-asset clean reimport and descriptor reconstruction.
 
 ### Package/delivery boundary
@@ -348,6 +350,7 @@ Add `verify_import_output` tests using valid uncorrected and corrected `fixture.
 | Import report `packageID` differs | `import report packageID must equal fixture.board` |
 | Import report `presentationID` differs | `import report presentationID must equal primary` |
 | CLI expectation or report `sourceGeometryChanged` differs from an uncorrected `VerifiedSource` | `sourceGeometryChanged must equal false` |
+| CLI expectation or report `sourceGeometryChanged` differs from a corrected `VerifiedSource` | `sourceGeometryChanged must equal true` |
 | Report `acceptedSourceModelPath` differs | `import report acceptedSourceModelPath does not match verified source` |
 | Report `acceptedSourceModelSHA256` differs | `import report acceptedSourceModelSHA256 does not match verified source` |
 | Report `compiledSourcePath` differs | `import report compiledSourcePath does not match verified source` |
@@ -365,6 +368,8 @@ Add `verify_import_output` tests using valid uncorrected and corrected `fixture.
 | Report `logicalContactIDs` or descriptor contact inventory differs from mapping order/set | `generated contact inventory must equal mapping logicalContactIDs` |
 
 The corrected-fixture success case proves the accepted parent, retained correction, hash-bound correction report, parsed `candidateGeneratedAt`, and post-inspection approval are revalidated by this gate. The uncorrected success case proves `correctionAuditPath:null`. Both print only `PASS fixture.board/primary verified import output` on stdout and return exit status `0`.
+
+Include corrected fixtures for each of the three Plateau presentation IDs. The closed report parser must support Task 4's explicit presentation identity, render path/hash list, preserved node/material/contact inventory, and post-inspection verdict fields without allowing arbitrary unknown keys. Revalidate every retained review image and the approval's binding to that exact candidate. Tests must reject mismatched presentation identity or render hashes and missing review views; this verification does not determine whether geometry contains holes.
 
 - [ ] **Step 3: Run the model-tool tests and confirm red**
 
@@ -424,22 +429,25 @@ rtk git push
 
 Give a fresh reviewer the Task 3 commit and require an explicit verdict on path containment, correction-report hash binding, timestamped approval validation, default-`primary` compatibility, and rejection before Blender invocation.
 
-## Task 4: Retain the eight accepted GLBs and author unchanged source contracts
+## Task 4: Retain the eight accepted GLBs and approve all three Plateau corrections
 
-Assign this task to a fresh implementation agent. It owns immutable source retention and the six mappings that do not repartition geometry; it does not approve Port, Oak, or KARMA8A contact semantics.
+Assign this task to a fresh implementation agent and a different reviewer. It owns immutable source retention, six mappings whose node/contact assignments remain unchanged, and deliberate removal/capping of screw/mounting holes in each of the three Plateau sources. It does not approve Port, Oak, or KARMA8A contact semantics.
 
 **Files:**
 
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/source-delivery/*.glb` (8 exact files)
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/*.source.json` (8 accepted-parent manifests)
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/{aelith-cyclops-011,frictitious-nug,nature-stone-hanger-mini-karma8a,plateau-lifting-edge-depth-18mm,plateau-lifting-edge-depth-15mm,plateau-lifting-edge-depth-10mm}.contact-map.json`
+- Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/authored-source/plateau-lifting-edge-depth-{18,15,10}mm.blend` (3 separate sources)
+- Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/corrections/plateau-lifting-edge-depth-{18,15,10}mm.json` (3 separate correction audits)
+- Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/corrections/review/plateau-lifting-edge-depth-{18,15,10}mm-{normal,rear-oblique}.png` (6 review images)
 - Create: `Tools/HangboardModels/test_batch_03_source_contract.py`
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/README.md`
 
 **Interfaces:**
 
 - Consumes: eight absolute, user-approved source paths and exact SHA-256 values in `ACCEPTED_SOURCES` below; Task 2 evidence refs.
-- Produces: `verify_retained_source(path: Path, expected_sha256: str) -> None`, eight hash-bound accepted-parent manifests, and six structurally complete unchanged mappings. Tasks 5 and 6 add correction objects to the Port and Oak manifests; Task 7 approves the already-authored KARMA8A mapping.
+- Produces: `verify_retained_source(path: Path, expected_sha256: str) -> None`, eight hash-bound accepted-parent manifests, six structurally complete mappings with unchanged node/contact assignments, and `verify_plateau_corrections(root: Path) -> None` requiring all three approved corrections. Each Plateau manifest gains its own Task 3 `operatorAuthoredCorrection` chain and resolves `source_geometry_changed == true`. Tasks 5 and 6 add correction objects to the Port and Oak manifests; Task 7 approves the already-authored KARMA8A mapping.
 
 - [ ] **Step 1: Write the literal source contract and RED tests**
 
@@ -458,7 +466,7 @@ ACCEPTED_SOURCES = {
 }
 ```
 
-`test_retained_sources` requires exactly those eight destination filenames and hashes. `test_accepted_parent_manifests` requires closed keys `schemaVersion`, `packageID`, `manufacturerPhysicalAuthority`, `historicalSource`, `auditedModelSource`, and `supersessionRuling`; `auditedModelSource` has exactly `provenanceType`, `authorization`, `retainedPath`, and `sha256`, with `provenanceType: user-provided`. Before retention, both tests fail with `missing retained Batch 03 source: aelith-cyclops-011.glb`.
+`test_retained_sources` requires exactly those eight destination filenames and hashes. `test_accepted_parent_manifests` requires closed base keys `schemaVersion`, `packageID`, `manufacturerPhysicalAuthority`, `historicalSource`, `auditedModelSource`, and `supersessionRuling`, allowing only Task 3's closed `operatorAuthoredCorrection` extension; `auditedModelSource` has exactly `provenanceType`, `authorization`, `retainedPath`, and `sha256`, with `provenanceType: user-provided`. Before retention, both tests fail with `missing retained Batch 03 source: aelith-cyclops-011.glb`. The separate Plateau correction test must fail until all three chains and post-inspection approvals exist; accepted-parent validation alone never authorizes Plateau export.
 
 - [ ] **Step 2: Hash all eight exact absolute paths before any copy**
 
@@ -513,7 +521,7 @@ rtk cp -p -- /Users/asherlc/Downloads/hangboards-batch-03/plateau-lifting-edge/p
 
 Run `test_retained_sources`; expected: eight paths, eight unique SHA-256 values, and PASS. Never alter a retained GLB.
 
-- [ ] **Step 4: Author eight accepted-parent manifests and six unchanged mappings**
+- [ ] **Step 4: Author eight accepted-parent manifests and six node/contact mappings**
 
 For every manifest, use its final package ID, exact Task 2 manufacturer publisher/evidence packet, `historicalSource: {"status":"missing"}`, the corresponding retained path/hash, and a supersession ruling naming the exact revision. Do not add `operatorAuthoredCorrection` to Port or Oak yet.
 
@@ -528,13 +536,35 @@ Use this complete mapping table; `B` means `{"role":"body"}`, `C:id` means `{"ro
 | `plateau-lifting-edge-depth-15mm` | `edge-18` | same as 18 mm plus `body-reducer-polymer=B` |
 | `plateau-lifting-edge-depth-10mm` | `edge-18` | same as 18 mm plus `body-reducer-polymer=B` |
 
-The test feeds the exact GLB object inventories to `validate_mapping`, asserts every object is mapped once, body/attachment nodes have no contact ID, each ordered logical inventory matches the table, and reducer nodes are nonselectable body. It does not semantically approve the KARMA8A two-node pinch; that is Task 7.
+The test feeds the exact GLB object inventories to `validate_mapping`, then repeats validation against each corrected Plateau source after Step 4b. Assert every object is mapped once, body/attachment nodes have no contact ID, each ordered logical inventory matches the table, and reducer nodes are nonselectable body. These are node/contact invariants, not evidence that holes are absent. It does not semantically approve the KARMA8A two-node pinch; that is Task 7.
+
+- [ ] **Step 4a: Add the three-source Plateau correction contract before authoring**
+
+Require these exact pairs; each key also names its own manifest, `.blend`, correction audit, and review-image pair under the paths in Files:
+
+| Presentation source key | Immutable accepted parent |
+| --- | --- |
+| `plateau-lifting-edge-depth-18mm` | `plateau-lifting-edge.glb` |
+| `plateau-lifting-edge-depth-15mm` | `plateau-lifting-edge-15mm.glb` |
+| `plateau-lifting-edge-depth-10mm` | `plateau-lifting-edge-10mm.glb` |
+
+Parameterize every mutation over all three keys. Missing `operatorAuthoredCorrection` fails `KEY: Plateau correction is required`; reusing another presentation's parent, corrected path/hash, audit, render pair, or approval fails `KEY: Plateau correction identity mismatch`, even when that other chain is internally valid. Missing or mismatched source/audit/render bytes, absent/false approval, approval predating `candidateGeneratedAt` or after the validation clock, and `prohibitedAutomationUsed:true` must fail the existing Task 3 chain or the closed Plateau report validator. A false import/report flag fails `sourceGeometryChanged must equal true`. Assert all three `.blend` paths are distinct and each hash matches its own retained bytes; merely counting three corrections is insufficient.
+
+Use the closed correction report extension to bind `presentationID`, `sourceGeometryChanged:true`, the exact normal/rear-oblique paths and SHA-256 values, the preserved Step 4 node/contact inventory, and an explicit human verdict on removed/capped screw/mounting holes and preserved lower cord exits. Record each accepted source's exact per-node material identities and assignments before editing, preserve them in the corrected source, and bind both inventories in the audit for exact comparison. Hash-bind that report via `correctionAuditSHA256`. Tests validate this artifact/approval contract and exact inventories; they must not analyze pixels, infer topology, detect holes automatically, or treat node names as a proxy for absence of holes.
+
+- [ ] **Step 4b: Deliberately remove and cap every screw/mounting hole in each source**
+
+Read `migrate-hangboard-to-3d/SKILL.md`. Record an owned/trapped Blender workspace as in Task 5. Import each accepted Plateau GLB into its own empty scene, save a working copy under the owned directory, and preserve the original GLB bytes. Compare PL-1 through PL-6 visually. In Blender Edit Mode an operator deliberately selects and edits the relevant faces to remove and cap every screw/mounting hole, including rear openings; no image-driven selection, scripted repair, automatic hole filling, extraction, or topology inference is permitted. Preserve lower curled open cord exits/grooves and the two attachment markers/semantics, oak edge, black body, the 15/10 reducer and its orientation, materials, `edge-18mm→edge-18`, and all selectable contact surfaces. Do not cap a cord exit or claim the physical product has no mounting holes. Inspect caps, normals, and seams manually. Save each result at its distinct tracked `.blend` path; document deliberate edits and preserved invariants, accepted/corrected paths/hashes, `presentationID`, `sourceGeometryChanged:true`, and `prohibitedAutomationUsed:false` in its audit, with approval absent.
+
+- [ ] **Step 4c: Obtain a separate actual-time human approval for each correction**
+
+For each saved corrected source, render full-frame normal and rear/oblique views that expose all former screw/mounting-hole areas and the retained lower cord exits; retain additional views if these two do not reveal every area. After that candidate set exists, capture `candidateGeneratedAt` using `rtk date -u +%Y-%m-%dT%H:%M:%SZ` and hash every image. Show the images and approved manufacturer evidence to the human reviewer. Require explicit confirmation that every screw/mounting hole is removed and capped, the open cord exits/grooves remain intact, and the oak edge, black body, applicable blocker, and contact geometry remain correct. On rejection, return to Step 4b and invalidate that candidate's approval. Only after explicit approval capture a new actual RFC3339 UTC instant and write reviewer, notes, and all relevant render hashes in `humanApproval`; never prefill/backdate it or reuse the date-only evidence approval. Bind each manifest's `operatorAuthoredCorrection` to that source, its own accepted parent, correction audit, and completed approval. Source/render changes require new generation and review; any missing/mismatched chain blocks all three Plateau exports.
 
 - [ ] **Step 5: Run the Task 4 contract slice**
 
-Run: `rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardModels/test_batch_03_source_contract.py -q -k 'retained or accepted_parent or unchanged_mapping'`
+Run: `rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardModels/test_batch_03_source_contract.py -q -k 'retained or accepted_parent or unchanged_mapping or plateau_correction'`
 
-Expected: PASS for eight source hashes, eight accepted-parent manifests, and six unchanged mappings. Exact first failures are `accepted source hash mismatch: NAME`, `unmapped source object: NODE`, or `logicalContactIDs mismatch for KEY`.
+Expected: PASS for eight source hashes, eight accepted-parent manifests, six mappings with unchanged node/contact assignments, and all three Plateau correction chains with `sourceGeometryChanged:true`. Exact first failures include `accepted source hash mismatch: NAME`, `unmapped source object: NODE`, `logicalContactIDs mismatch for KEY`, and the Step 4a correction diagnostics. Automated PASS supplements the three required human visual verdicts and never proves hole absence.
 
 - [ ] **Step 6: Commit, push, and obtain an independent immutable-source review**
 
@@ -544,7 +574,7 @@ rtk git commit -m "docs: retain accepted batch 03 model sources"
 rtk git push
 ```
 
-A fresh reviewer reruns the absolute-path preflight, recomputes the eight retained hashes, compares every unchanged mapping row, and confirms Port/Oak have no premature correction object and KARMA8A has no mapping approval. Stop on any discrepancy.
+A fresh reviewer reruns the absolute-path preflight, recomputes the eight retained hashes, compares every mapping row, and reviews all three Plateau corrected sources and hash-bound normal/rear-oblique image sets for capped screw/mounting holes and intact cord exits. Confirm each Plateau source has its own completed actual-time approval, Port/Oak have no premature correction object, and KARMA8A has no mapping approval. Stop on any discrepancy.
 
 ## Task 5: Manually correct and approve the Port-A-Board side pinch
 
@@ -657,11 +687,11 @@ Assign this task to a fresh implementation agent and a different reviewer. It ch
 **Interfaces:**
 
 - Consumes: retained KARMA8A GLB hash `3ebe92f518cc66dd03f8256ebd6260a950f01252b74adbeb2b0c3116e775ffb6`, evidence refs `NK-1..NK-5`, and the Task 4 structural mapping.
-- Produces: an actual-time mapping approval over exact node set `{outer-pinch-upper,outer-pinch-lower}` and `verify_complete_batch_03_source_contract(root: Path) -> SourceContractReport` reporting `acceptedSources:8`, `manifests:8`, `mappings:8`, `geometryCorrections:2`, `mappingReviews:1`.
+- Produces: an actual-time mapping approval over exact node set `{outer-pinch-upper,outer-pinch-lower}` and `verify_complete_batch_03_source_contract(root: Path) -> SourceContractReport` reporting `acceptedSources:8`, `manifests:8`, `mappings:8`, `geometryCorrections:5`, `mappingReviews:1`.
 
 - [ ] **Step 1: Add the final-mapping RED contract**
 
-Require KARMA8A node sets `granite-edge-15→{granite-edge-15mm}`, `wood-edge-15→{wood-edge-15mm}`, and `pinch-60→{outer-pinch-upper,outer-pinch-lower}`; require `sourceGeometryChanged:false`. Before review, fail `KARMA8A combined-pinch approval is missing`. The complete-contract test requires the exact eight source/manifests/mappings and returns the five counts in the Interfaces block.
+Require KARMA8A node sets `granite-edge-15→{granite-edge-15mm}`, `wood-edge-15→{wood-edge-15mm}`, and `pinch-60→{outer-pinch-upper,outer-pinch-lower}`; require `sourceGeometryChanged:false`. Before review, fail `KARMA8A combined-pinch approval is missing`. The complete-contract test requires the exact eight source/manifests/mappings and returns the five counts in the Interfaces block. Require the exact corrected source-key set `{frictitious-port-a-board,nature-stone-hanger-mini,plateau-lifting-edge-depth-18mm,plateau-lifting-edge-depth-15mm,plateau-lifting-edge-depth-10mm}` and rerun Task 4's three-source correction/approval mutations; five arbitrary corrections cannot satisfy this gate.
 
 - [ ] **Step 2: Stop for deliberate human mapping review**
 
@@ -671,7 +701,7 @@ Open a clean, unmodified copy of the retained KARMA8A GLB. Render a normal full-
 
 Run: `rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardModels/test_batch_03_source_contract.py -q`
 
-Expected: PASS with `{"acceptedSources":8,"manifests":8,"mappings":8,"geometryCorrections":2,"mappingReviews":1}`. A missing second KARMA node fails `KARMA8A pinch-60 must bind both exterior nodes`; any correction declaration fails `KARMA8A mapping review must not claim geometry changed`; an incomplete Port/Oak chain retains the exact Task 5/6 diagnostic.
+Expected: PASS with `{"acceptedSources":8,"manifests":8,"mappings":8,"geometryCorrections":5,"mappingReviews":1}`. A missing second KARMA node fails `KARMA8A pinch-60 must bind both exterior nodes`; any KARMA8A correction declaration fails `KARMA8A mapping review must not claim geometry changed`; an incomplete Port/Oak chain retains the exact Task 5/6 diagnostic, and a missing/mismatched Plateau chain retains Task 4's exact diagnostic. No package conversion proceeds with any of the three Plateau corrections unapproved.
 
 - [ ] **Step 4: Commit, push, and obtain a fresh final source-contract review**
 
@@ -1093,8 +1123,8 @@ A fresh reviewer checks all three positions, complete two-node pinch, open groov
 
 **Interfaces:**
 
-- Consumes: runtime-plan Tasks 1, 2, and 6: `BoardPosition.effectiveDepths: [String: HoldDepth]?`, multiple original presentations, presentation-local position/pose validation, full-inventory descriptors, and per-presentation cord checks; Task 3 `asset_stem` importer.
-- Produces: the three exact package position/presentation IDs and assets consumed by runtime/experience plans; all use stable contact `edge-18`. Task 13 is the package plan's Plateau producer.
+- Consumes: runtime-plan Tasks 1, 2, and 6: `BoardPosition.effectiveDepths: [String: HoldDepth]?`, multiple original presentations, presentation-local position/pose validation, full-inventory descriptors, and per-presentation cord checks; Task 3 `asset_stem` importer; Task 4's three separately approved corrected Plateau sources and Task 7's complete five-correction gate.
+- Produces: the three exact package position/presentation IDs and assets consumed by runtime/experience plans; all use stable contact `edge-18`, omit every screw/mounting hole, preserve open cord exits, and report `sourceGeometryChanged:true`. Task 13 is the package plan's Plateau producer.
 
 - [ ] **Step 1: Add Plateau's exact contract test**
 
@@ -1130,6 +1160,8 @@ Use a valid three-presentation fixture and apply these one-field mutations:
 
 Each mutation changes only the named field and must fail before asset loading from a different presentation.
 
+Also parameterize the source/import gate over all three Plateau keys: removing a correction, replacing the compiled source with its accepted GLB or another depth's `.blend`, swapping approval/render bindings, or reporting `sourceGeometryChanged:false` must reject promotion with Task 4/Task 3 diagnostics. Verify exact black-body/oak-edge/reducer material and node/contact invariants against each approved corrected-source inventory. These tests verify the correction contract; human visual review establishes the absence of screw/mounting holes.
+
 - [ ] **Step 3: Run focused tests and confirm red**
 
 Run: `rtk proxy env PYTHONPATH=Tools/HangboardPackages/src .context/hangboard-packages-venv/bin/python -m pytest Tools/HangboardPackages/tests/test_batch_03_model_packages.py -q -k plateau`
@@ -1140,20 +1172,20 @@ Expected first diagnostic: `plateau.lifting-edge: model-only package contains ra
 
 Write one contact `edge-18` with exact base range 18 and the three positions/effective-depth objects in Step 1. Write the six ordered transition objects `(18,15)`, `(15,18)`, `(18,10)`, `(10,18)`, `(15,10)`, `(10,15)`, each with `kind:setupRequired`. For every presentation use `pairedLeadCord`, body node `body-black-aluminum`, local `canonicalPoses` containing only its same-named position, marker points `[-0.05,-0.03,0.009]` and `[0.05,-0.03,0.009]`, and one-point open routes from the lower curled extrusion—never bores. Use quaternion `[-0.21643961393810288,0,0,0.9762960071199334]`, translation `[0,0,0]`, view `[0,0,-1]`, and padding `0.1` for each local pose. Run the shared `validate_suspension_candidate` independently against each model/blocker geometry and label anchor `[0,0.15,0]`, `restLength:0.4`, `radius:0.002`, material, camera, and pose provenance `displayEstimate`.
 
-- [ ] **Step 5: Import all three accepted GLBs independently**
+- [ ] **Step 5: Import all three approved corrected sources independently**
 
-Run each exact import and its ordinary-Python verification gate in order:
+Revalidate all three Task 4 correction/approval chains before the first import. The manifests retain their immutable accepted GLB parents but resolve `compile_path` to their own corrected `.blend`; no accepted GLB may be used as the compiled Plateau source. Run each exact import and its ordinary-Python verification gate in order:
 
 ```bash
 rtk proxy blender --background --python Tools/HangboardModels/import_contact_model_source.py -- --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-18mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-18mm.contact-map.json --package plateau.lifting-edge --board-json Hangboards/plateau-lifting-edge/board.json --asset-stem depth-18mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-18 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-18mm.json
-rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-18mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-18mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-18mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-18 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-18mm.json --repository-root . --expected-source-geometry-changed false
+rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-18mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-18mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-18mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-18 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-18mm.json --repository-root . --expected-source-geometry-changed true
 rtk proxy blender --background --python Tools/HangboardModels/import_contact_model_source.py -- --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-15mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-15mm.contact-map.json --package plateau.lifting-edge --board-json Hangboards/plateau-lifting-edge/board.json --asset-stem depth-15mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-15 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-15mm.json
-rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-15mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-15mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-15mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-15 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-15mm.json --repository-root . --expected-source-geometry-changed false
+rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-15mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-15mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-15mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-15 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-15mm.json --repository-root . --expected-source-geometry-changed true
 rtk proxy blender --background --python Tools/HangboardModels/import_contact_model_source.py -- --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-10mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-10mm.contact-map.json --package plateau.lifting-edge --board-json Hangboards/plateau-lifting-edge/board.json --asset-stem depth-10mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-10 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-10mm.json
-rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-10mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-10mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-10mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-10 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-10mm.json --repository-root . --expected-source-geometry-changed false
+rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/bin/python Tools/HangboardModels/import_contact_model_source.py verify-import --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/manifests/plateau-lifting-edge-depth-10mm.source.json --mapping docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/mappings/plateau-lifting-edge-depth-10mm.contact-map.json --package plateau.lifting-edge --asset-stem depth-10mm --output-directory .context/sweet-hamster-batch03-model-packages-plateau-10 --report docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/import/plateau-lifting-edge-depth-10mm.json --repository-root . --expected-source-geometry-changed true
 ```
 
-The three gate lines must be exactly, in order, `PASS plateau.lifting-edge/depth-18mm verified import output`, `PASS plateau.lifting-edge/depth-15mm verified import output`, and `PASS plateau.lifting-edge/depth-10mm verified import output`, each with status `0`. They recheck the three Task 4 accepted parents, package/presentation stems and paths, exact `edge-18mm→edge-18` mapping, 15/10 reducer body identities, generated USDZ/descriptor hashes, and `sourceGeometryChanged:false`. Stop after the first failure. Only after all three gates pass may the implementer run this separate promotion/removal block:
+The three gate lines must be exactly, in order, `PASS plateau.lifting-edge/depth-18mm verified import output`, `PASS plateau.lifting-edge/depth-15mm verified import output`, and `PASS plateau.lifting-edge/depth-10mm verified import output`, each with status `0`. They recheck the three Task 4 accepted parents and their distinct corrected-source/audit/render/actual-time approval chains, package/presentation stems and paths, exact `edge-18mm→edge-18` mapping, preserved node/material inventories and 15/10 reducer body identities, generated USDZ/descriptor hashes, and `sourceGeometryChanged:true`. Stop after the first failure. Only after all three gates pass may the implementer run this separate promotion/removal block:
 
 ```bash
 rtk cp -p -- .context/sweet-hamster-batch03-model-packages-plateau-18/assets/depth-18mm.usdz Hangboards/plateau-lifting-edge/assets/depth-18mm.usdz
@@ -1165,7 +1197,7 @@ rtk cp -p -- .context/sweet-hamster-batch03-model-packages-plateau-10/assets/dep
 rtk git rm Hangboards/plateau-lifting-edge/assets/primary.png
 ```
 
-Promotion and raster removal are forbidden unless all three gates pass in the current run.
+Promotion and raster removal are forbidden unless all three gates pass in the current run and all three source corrections have matching human approvals. Final acceptance additionally requires Task 14's human review of the exact shipped normal/rear-oblique renders; source approval alone is insufficient.
 
 - [ ] **Step 6: Remove raster, validate, and commit**
 
@@ -1184,7 +1216,7 @@ rtk git commit -m "feat: add plateau depth model presentations"
 rtk git push
 ```
 
-Give a fresh reviewer the three package assets/descriptors/import reports, the six-transition set, three local pose maps, effective-depth maps, and solver lanes. Stop on any cross-wiring or blocker-selection finding.
+Give a fresh reviewer the three package assets/descriptors/import reports, their distinct corrected-source chains and normal/rear-oblique approvals, the six-transition set, three local pose maps, effective-depth maps, and solver lanes. Stop on any missing/mismatched correction or approval, screw/mounting hole, capped cord exit, cross-wiring, or blocker-selection finding.
 
 ## Task 14: Cleanly reimport, rebuild, render, and close the model-import audit
 
@@ -1196,13 +1228,14 @@ Give a fresh reviewer the three package assets/descriptors/import reports, the s
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/reports/reimport/*.json` (8)
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/renders/{aelith-cyclops-011,frictitious-nug,frictitious-port-a-board,nature-stone-hanger-mini,nature-stone-hanger-mini-karma8a,plateau-lifting-edge-depth-18mm,plateau-lifting-edge-depth-15mm,plateau-lifting-edge-depth-10mm}/normal.png`
 - Create: per-position `*-highlight.png` files beneath the corresponding eight render directories, with names exactly equal to that presentation's local position IDs.
+- Create: `rear-oblique.png` in each of the three `renders/plateau-lifting-edge-depth-{18,15,10}mm/` directories, plus additional retained views if needed to expose every former mounting-hole area and preserved lower cord exit.
 - Create: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/render-review.json`
 - Modify: `docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/README.md`
 
 **Interfaces:**
 
 - Consumes: `verify_batch(manifest_path: Path, repository_root: Path, report_directory: Path, render_directory: Path) -> Mapping[str, object]` and CLI arguments `--manifest`, `--repository-root`, `--report-directory`, and `--render-directory`; the final eight shipped pairs from Tasks 8-13.
-- Produces: eight deterministic clean-reimport reports, normal/per-position highlight renders, and a closed audit tying accepted/corrected/imported/reimported hashes and approvals together.
+- Produces: eight deterministic clean-reimport reports, normal/per-position highlight renders plus three Plateau rear/oblique view sets, and a closed audit tying accepted/corrected/imported/reimported hashes and approvals together.
 
 - [ ] **Step 1: Test the pure audit loader and exact eight-entry inventory**
 
@@ -1222,6 +1255,8 @@ EXPECTED_PRESENTATIONS = {
 assert {(entry.package_id, entry.presentation_id) for entry in audit.entries} == set(EXPECTED_PRESENTATIONS.values())
 ```
 
+Require exactly Task 7's five corrected source keys, including all three Plateau entries with `sourceGeometryChanged:true` and their own full Task 4 correction chains. Mutate each Plateau entry to omit/swap its corrected source, audit, source approval, normal/rear-oblique render, or final review binding; reject missing or mismatched artifacts even if counts remain eight entries/five corrections. Render-review approval must bind the exact shipped model/descriptor and every relevant render hash for each presentation, with an actual UTC instant at or after candidate generation and not in the future. An absent verdict for any depth prevents final acceptance.
+
 - [ ] **Step 2: Implement clean shipped-USDZ verification**
 
 For each entry: reset Blender to an empty scene; require zero objects/materials/images; import `repository_root / entry.asset_path`; call `validate_tagged_scene(imported_scene, frozenset(entry.expected_contacts), imported=True)` and `_snapshot_scene(imported_scene, imported_nodes, transform_to_board_frame=False, require_imported_materials=True, require_triangles=True)`; rebuild with `compile_descriptor`; require byte-for-byte JSON equality with `repository_root / entry.descriptor_path`; report model/descriptor hashes, bounds, nodes, contact mappings, and `cleanReimport: true`.
@@ -1233,6 +1268,8 @@ Require Port `pinch-body` to have one or more triangles and `outer-pinch-opposit
 - [ ] **Step 4: Render exact shipped assets without geometry analysis**
 
 Render one neutral normal view and one material-isolated highlight per authored position using the final package pose and descriptor bindings. Rendering may assign materials/camera only; it must not select faces, analyze pixels to infer geometry, crop automatically, generate masks/contours, or alter USDZ. Hash and list every full-frame render in the audit.
+
+For each Plateau shipped USDZ also render rear/oblique views revealing every former screw/mounting-hole area and the lower open cord exits/grooves. Hash-bind these views with the normal views; preserve their full frames. Exact node/material/contact invariants and correction hashes are automated checks, while hole absence and intact cord exits require human inspection. Do not add pixel analysis, automated hole detection, topology inference, or node-name proxies.
 
 - [ ] **Step 5: Run the verifier for all eight pairs**
 
@@ -1246,7 +1283,7 @@ Expected: eight successful clean reimports, exact descriptor reconstructions, an
 
 - [ ] **Step 6: Mandatory operator gate — review final shipped bytes**
 
-After all normal/highlight files exist, record their shared `candidateGeneratedAt` as an actual RFC3339 UTC instant and leave `render-review.json` unapproved. Review the sets against Task 2 manufacturer evidence. Explicitly inspect all positions, Port narrow-side highlight and lack of bottom-band highlight, Oak internal jug, both complete Nature multi-node pinches, Plateau blocker nonselection in all configurations, cord exits, and reset framing. Only after explicit inspection, capture the actual current RFC3339 UTC instant and record reviewer/notes plus exact shipped model/descriptor/render hashes; do not prefill/backdate it, and reject an instant before candidate generation or after the validation clock. A rejection returns to Task 5, 6, or 7 for source/mapping work, or the owning Task 8-13 for pose/suspension work; never patch the verifier or descriptor by hand.
+After all normal/highlight and Plateau rear/oblique files exist, record their shared `candidateGeneratedAt` as an actual RFC3339 UTC instant and leave `render-review.json` unapproved. Review the sets against Task 2 manufacturer evidence. Explicitly inspect all positions, Port narrow-side highlight and lack of bottom-band highlight, Oak internal jug, both complete Nature multi-node pinches, Plateau blocker nonselection in all configurations, cord exits, and reset framing. For each of the three Plateau presentations require an explicit verdict from its normal and rear/oblique views that every screw/mounting hole is removed/capped, the lower cord exits/grooves remain open, and oak edge, black body, applicable reversible blocker, and contact geometry are preserved. Only after explicit inspection, capture the actual current RFC3339 UTC instant and record reviewer/notes plus exact shipped model/descriptor/render hashes for every reviewed presentation; do not prefill/backdate it, and reject an instant before candidate generation or after the validation clock. Missing or mismatched approval for any Plateau depth blocks the gate. A rejection returns to Task 4 for Plateau source corrections, Task 5, 6, or 7 for other source/mapping work, or the owning Task 8-13 for pose/suspension work; never patch the verifier or descriptor by hand. Changed candidates require new generation and approval.
 
 - [ ] **Step 7: Promote approved reports/renders and commit**
 
@@ -1414,6 +1451,8 @@ Expected: all eight USDZ pairs and all 22 local-position cases pass. If the exac
 
 Use `validate-hang-ten-ios` on the isolated simulator for every board/position and all Plateau depths. This checkpoint covers only model/descriptor/suspension/picking/orbit/reset and unavailable behavior; the companion experience plan owns board-detail/editor/workout/Dynamic-Type/VoiceOver workflow acceptance. Record exact commit, simulator/runtime, package hashes, inspected positions, screenshots, and operator verdict in `ios-native-model-acceptance.md`.
 
+At every Plateau depth, inspect normal and rear/oblique app views to confirm screw/mounting holes remain absent/capped, lower open cord exits/grooves remain intact, and the oak contact, black body, and applicable nonselectable blocker match Task 14's approved shipped renders. Record each depth's explicit verdict and screenshot hashes; missing or failed visual review blocks native acceptance.
+
 - [ ] **Step 6: Commit native package validation**
 
 ```bash
@@ -1446,7 +1485,7 @@ rtk proxy env PYTHONPATH=Tools/HangboardModels .context/hangboard-packages-venv/
 rtk proxy blender --background --python Tools/HangboardModels/verify_batch_03_models.py -- --manifest docs/source-audits/2026-09-20-hangboards-batch-03-model-imports/model-import-audit.json --repository-root . --report-directory .context/sweet-hamster-batch03-model-packages-final/reports --render-directory .context/sweet-hamster-batch03-model-packages-final/renders
 ```
 
-Expected: `{"recordCount":28,"snapshotCount":28,"sourceTiers":{"manufacturer":28}}`, eight accepted source hashes, eight exact shipped model hashes, eight exact descriptor reconstructions, and geometry-change set exactly `{frictitious.port-a-board,nature.stone-hanger-mini}`.
+Expected: `{"recordCount":28,"snapshotCount":28,"sourceTiers":{"manufacturer":28}}`, eight accepted source hashes, eight exact shipped model hashes, eight exact descriptor reconstructions, and corrected source-key set exactly `{frictitious-port-a-board,nature-stone-hanger-mini,plateau-lifting-edge-depth-18mm,plateau-lifting-edge-depth-15mm,plateau-lifting-edge-depth-10mm}`. The source contract reports `{"acceptedSources":8,"manifests":8,"mappings":8,"geometryCorrections":5,"mappingReviews":1}`; all three Plateau imports require `sourceGeometryChanged:true`, matching source approvals, and Task 14's normal/rear-oblique shipped-render approvals. Automated verification alone cannot satisfy the human hole-removal verdicts.
 
 - [ ] **Step 2: Re-run package/audit/staging suites**
 
