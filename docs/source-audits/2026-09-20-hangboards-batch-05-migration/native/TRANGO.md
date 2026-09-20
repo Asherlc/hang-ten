@@ -89,7 +89,14 @@ The final authoring choices include:
 The numerical helper's ordinary winding orientation and surface-normal
 calculation construct the authored mesh; neither changes the authored outline
 or adds a smoothing modifier. Deliberate analytic tessellation uses a 0.025 mm
-height-error criterion. No generic mesh decimation, smoothing or shape repair is
+height-error criterion. A later native seam regression additionally bounds
+normal interpolation along the authored straight upper-crimp lips through
+64 explicit transverse roll bands, with exact shared flat/roll/floor breaklines
+and independent flat-face/transverse-roll verification limited to 0.5 degrees. A rejected
+adaptive normal-refinement trial failed its convergence/density review; it does
+not ship. Front/back outward normal direction is explicit; it is not
+inferred from averaged normals on skinny triangles. No generic mesh decimation,
+smoothing or shape repair is
 run. Exact triangle accounting from prepared Blender meshes through the final
 USDZ proves the unchanged transport boundary.
 
@@ -150,3 +157,48 @@ oblique and crimp-closeup renders come from empty imports of the exact final
 USDZs. These checks do not establish current-source iOS material, picking,
 highlight, clear, orbit/reset or unavailable-state acceptance. Those remain the
 controller's separate all-six native task.
+
+## Upper-lip shading regression
+
+The first rounded export checkpoint was not visually accepted: small triangular
+marks remained where a tilted roll normal interpolated onto an analytically flat
+front face. The actual USDZ triangle at the reviewed Forge pixel (341,304) had one
+15.15-degree tilted corner, despite only about 0.013 mm height error. The height
+criterion did not constrain the shading field. Shadow-disabled diagnostic renders
+retained the marks, excluding cast shadows as the cause. Two mirrored Natural
+hook normals were also inverted by the former averaged-normal sign heuristic.
+
+The independent pre-fix regression measured maximum interpolated normal errors of
+17.18494 degrees (Forge) and 18.56282 degrees (Natural). Retained technical evidence
+is [official Blender smooth-shading documentation](https://docs.blender.org/manual/en/latest/scene_layout/object/editing/shading.html),
+with exact capture/hash and diagnosis under `trango-authoring`. This is technical
+rendering evidence, not new product shape authority. The correction explicitly
+samples the authored lip's analytic normals and declares outward direction.
+A 0.5-degree verification limit bounds unit-normal deviation below 0.009; tiny
+sample spacing is a numerical shading requirement, not a manufacturer dimension.
+No shadow/renderer workaround ships. `verify_trango_lip_normals.py` binds its
+independent results to the authored arrays and final model hashes. It preserves
+the broader candidate-triangle error separately: Forge7.446 degrees includes
+curved-return/jaw transitions outside the diagnosed straight transverse roll,
+and no global0.5-degree claim is made. The flat-face scope includes all originally
+reviewed Forge lip positions. Native export
+verification additionally compares prepared and reimported custom normals.
+
+The final band topology uses295,072 Forge /120,864 Natural authored triangles,
+below the earlier rounded checkpoint427,264 /226,996. USDZ sizes are13,876,030
+and5,709,194 bytes. Final ray neighborhoods at the originally reviewed locations
+(867 rays per product per version) reduce flat-face normal error from18.02156 to
+0.03839 degrees Forge and20.71780 to0.04985 degrees Natural. Whole-neighborhood
+maxima remain recorded, including9.82669 degrees in Forge's curved terminal;
+this is not a global normal-error guarantee. The controller reviewed all six
+final desktop renders and accepted the visible geometry on2026-09-20. iOS
+acceptance remains separate.
+
+To reproduce the original-location comparison, `probe_trango_lip_locations.py`
+runs in Blender with `-- checkpoint` or `-- final`. Checkpoint files use the two
+old SHA256 identifiers recorded in `original-location-native-regression.json`,
+under the workspace's `trango-seam-checkpoint` directory. They can be copied
+read-only from local LFS objects; do not overwrite shipped packages. Then run
+`evaluate_trango_lip_locations.py` with the pinned authoring Python environment.
+The probe uses one native triangle BVH and the exact review camera, not image
+analysis. No shadow-disabled diagnostic setting is applied to final renders.

@@ -1,56 +1,56 @@
 [
   {
     "model": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
-    "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
+    "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
     "view": "front",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-forge-front.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "d7ab64b57588d3bea4dcf4634cdc85b6ce382b966e214dc7e56e82c965e2d4dd"
+    "imageSHA256": "470ffb611721b1cdf5c0fb46f095d93ccc3389a054844787dc8779a171c24a31"
   },
   {
     "model": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
-    "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
+    "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
     "view": "oblique",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-forge-oblique.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "bce243210534b25bf9dfeeaaa08083db35b37421df1358883d996d44883bae8a"
+    "imageSHA256": "d2c3c6b7ac303251f4ee0c4e86abe203a412d2e960de8105311012cf4ce8b6e1"
   },
   {
     "model": "Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
-    "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
+    "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
     "view": "crimp",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-forge-crimp.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "c48f12373f110a6f780615105ce07cc48cde2a66227f0b0af2fba5c5179edff1"
+    "imageSHA256": "06c75d1e23f6ad04597201f583a1f1e30a1de05042860966e2361ae93e16d983"
   },
   {
     "model": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
-    "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+    "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
     "view": "front",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-natural-front.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "027730c7348a5a9d422eac69e8505d94fd3fa254828133e5c65fa2a00bd0d56a"
+    "imageSHA256": "1d43ade64006cdec13cb31bf1671fc46d58074d6b6250123acd7b900d4adda2c"
   },
   {
     "model": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
-    "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+    "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
     "view": "oblique",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-natural-oblique.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "d19e7f0ef2069cd6360cbbe1a4c072dd05e083b1b989ffbe3a122214ce633587"
+    "imageSHA256": "a5f88da519d3828d37c93c313baa03c82dfcb0e0d66ccf09ee3a3153c755c9ad"
   },
   {
     "model": "Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
-    "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+    "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
     "view": "crimp",
     "path": ".context/hangboards-batch-05-astra-migration/trango-renders/trango-rock-prodigy-natural-crimp.png",
     "renderer": "5.2.0 LTS",
     "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
-    "imageSHA256": "006a16064f587a7ede6b1aa5cde54bbc7dc8904d61ef920eced03761043eb3d5"
+    "imageSHA256": "f6f27e56cfa40c25b3dd5c49a08d782e7523aa10c5bc98915c16c5113d7c19a9"
   }
 ]

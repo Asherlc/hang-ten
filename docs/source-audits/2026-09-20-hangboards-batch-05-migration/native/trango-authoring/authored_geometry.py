@@ -177,7 +177,6 @@ class Assembly:
         normals=m.vertex_normals.copy()
         for index,normal in self.normal_fields.items():
             n=np.asarray(normal,float); n/=np.linalg.norm(n)
-            if np.dot(n,normals[index])<0:n=-n
             normals[index]=n
         m.vertex_normals=normals
         return m
@@ -192,20 +191,20 @@ class Assembly:
 
 class Unit:
     def __init__(self,assembly:Assembly,name:str,outline,thickness:Callable,*,offset=0,mirror=False,
-                 top_profile=None,edge_label=None,front_label=None,front_resolution=5):
+                 top_profile=None,edge_label=None,front_label=None,front_resolution=5,front_section=None):
         self.a=assembly;self.name=name;self.outline=np.asarray(outline,float);self.thickness=thickness
         self.offset=float(offset);self.sign=-1 if mirror else 1
         self.top_profile=top_profile or (lambda x,z,t:0)
         self.edge_label=edge_label or (lambda x,z,t:'body')
         self.front_label=front_label or (lambda x,z:'body')
-        self.front_resolution=front_resolution
+        self.front_resolution=front_resolution;self.front_section=front_section
         self.mouths=[];self.backholes=[]
         self.a.units.append({'unitId':name,'mirrorApplied':mirror,'sourceOffsetMm':offset})
     def point(self,x,y,z):return [self.offset+self.sign*x,y,z]
     def tri(self,pts,label):
         if label=='body':label='body--'+self.name
         self.a.tri([self.point(*p) for p in pts],label)
-    def fill(self,poly,yfunc,label='body',refine=None):
+    def fill(self,poly,yfunc,label='body',refine=None,*,outward_y=-1):
         v,f=triangulate(poly,refine,height_func=yfunc if refine is not None else None)
         eps=.001
         try:
@@ -221,7 +220,7 @@ class Unit:
         inds=[]
         for i,(x,z) in enumerate(v):
             index=self.a.vertex(self.point(x,yy[i],z));inds.append(index)
-            self.a.normal_fields[index]=[self.sign*dx[i],-1,dz[i]]
+            self.a.normal_fields[index]=np.array([self.sign*dx[i],-1,dz[i]])*(-outward_y)
         faces=np.asarray(inds,dtype=np.int64)[f]
         assert np.all(faces[:,0]!=faces[:,1]) and np.all(faces[:,1]!=faces[:,2]) and np.all(faces[:,2]!=faces[:,0])
         if callable(label):
@@ -347,7 +346,42 @@ class Unit:
         for i,a in enumerate(self.mouths):
             for b in self.mouths[i+1:]:assert not Polygon(a).intersects(Polygon(b)),(self.name,'overlapping mouths')
         front=Polygon(self.outline,self.mouths)
-        self.fill(front,lambda x,z:-self.thickness(x,z),self.front_label,self.front_resolution)
+        parts=[front]
+        if self.front_section is not None:
+            # Explicit equal-width transverse samples of the authored cubic roll.
+            # Exact flat/roll/floor joins are constrained edges, never crossed by
+            # triangles. 64 bands bound the analytic 1-D normal error below 0.5°.
+            points,radius=self.front_section
+            outline=Polygon(points);remaining=front;parts=[]
+            def polygons(shape):
+                if shape.is_empty:return []
+                if shape.geom_type=='Polygon':return [shape]
+                return [p for child in shape.geoms for p in polygons(child)]
+            for distance in np.linspace(radius,-radius,65):
+                offset=outline.buffer(float(distance),quad_segs=8)
+                rings=[]
+                for p in polygons(offset):
+                    rings.append(Polygon(densify(p.exterior.coords[:-1],3),[densify(r.coords[:-1],3) for r in p.interiors]))
+                offset=shapely.union_all(rings)
+                parts.extend(polygons(remaining.difference(offset)))
+                remaining=remaining.intersection(offset)
+            parts.extend(polygons(remaining))
+            # The open-ended Natural crimp intersects the outer wall. Insert the
+            # exact same ring/outline intersection vertices into its loft loop.
+            points=np.array([p for part in parts for p in part.exterior.coords[:-1]])
+            refined=[]
+            for a,b in zip(self.outline,np.roll(self.outline,-1,axis=0)):
+                delta=b-a;length2=np.dot(delta,delta)
+                t=(points-a)@delta/length2
+                distance=np.abs((points[:,0]-a[0])*delta[1]-(points[:,1]-a[1])*delta[0])/np.sqrt(length2)
+                selected=points[(t>=-1e-9)&(t<1-1e-9)&(distance<1e-7)]
+                selected=np.vstack([a,selected])
+                _,unique=np.unique(np.round(selected,9),axis=0,return_index=True)
+                selected=selected[unique]
+                refined.extend(selected[np.argsort((selected-a)@delta)])
+            self.outline=np.asarray(refined)
+        for part in parts:
+            self.fill(part,lambda x,z:-self.thickness(x,z),self.front_label,self.front_resolution)
         rings=[]
         for t in [0,.035,.08,.16,.28,.42,.58,.73,.86,.95,1]:
             pts=[]
@@ -358,4 +392,4 @@ class Unit:
         for k,(a,b) in enumerate(zip(rings,rings[1:])):
             t=([0,.035,.08,.16,.28,.42,.58,.73,.86,.95,1][k]+[0,.035,.08,.16,.28,.42,.58,.73,.86,.95,1][k+1])/2
             self.link(a,b,lambda x,y,z:self.edge_label(x,z,t))
-        self.fill(Polygon(rings[-1][:,[0,2]],self.backholes),lambda x,z:0,'body')
+        self.fill(Polygon(rings[-1][:,[0,2]],self.backholes),lambda x,z:0,'body',outward_y=1)

@@ -23,7 +23,7 @@
     "hold--right-sloper-40": "sloper-40-right",
     "hold--right-slopey-crimper": "slopey-crimper-right"
   },
-  "descriptorSHA256": "1f22e1c40639ddab2895ee6ac92a41144399dac9a96d5ade7ea4dab59f08f8b3",
+  "descriptorSHA256": "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
   "modelBounds": {
     "max": [
       0.400050014,
@@ -36,12 +36,12 @@
       0.0
     ]
   },
-  "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
+  "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
   "nodeCount": 26,
   "packageID": "trango.rock-prodigy-forge",
   "sourceGeometryChanged": false,
   "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-forge.blend",
-  "sourceModelSHA256": "678d98e04692a23338c34502c82a9dd48a6685cf55bbb01b31f515f9f5e4f9a8",
+  "sourceModelSHA256": "4ea061f406b1a37a983940a1a865bbad233cb1a822b27cd81ba1d832387da13c",
   "sourceObjectIDs": [
     "body--left",
     "body--right",

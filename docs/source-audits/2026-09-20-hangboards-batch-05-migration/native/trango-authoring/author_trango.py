@@ -90,7 +90,7 @@ def forge():
                 if x>113:return ids['sloper-40']
                 return ids['flat-edge']
             return 'body'
-        u=Unit(a,side,out,thick,offset=(-76.2 if mirror else 76.2),mirror=mirror,top_profile=profile,edge_label=elabel,front_label=flabel,front_resolution=3.5)
+        u=Unit(a,side,out,thick,offset=(-76.2 if mirror else 76.2),mirror=mirror,top_profile=profile,edge_label=elabel,front_label=flabel,front_resolution=3.5,front_section=(FORGE_RECESS,2.0))
         u.cavity({'center':[117,24],'width':175,'height':20,'radius':8,'slope':-.06,'depth':{'kind':'linear','x':[29.5,204.5],'values':[7,20]},'holds':[{'id':ids['rail']}],'lipRadius':2.3,'floorAngleEstimateDeg':6,'lipProfile':'authored-noncircular'})
         u.cavity({'center':[41,-5],'width':47,'height':21,'radius':8,'depth':25,'floorAngleEstimateDeg':6,'lipProfile':'authored-noncircular','holds':[{'id':ids['mr-deep']}]})
         u.cavity({'center':[41,-35],'width':48,'height':22,'radius':8,'depth':15,'floorAngleEstimateDeg':6,'lipProfile':'authored-noncircular','holds':[{'id':ids['mr-shallow']}]})
@@ -123,7 +123,7 @@ def natural():
             if z>top-4:return ids['jug']
             if z<-72 and 54<x<177:return ids['pinch-thumb']
             return 'body'
-        u=Unit(a,side,out,thick,offset=-50 if mirror else 50,mirror=mirror,top_profile=jug_profile(top),edge_label=elabel,front_label=flabel,front_resolution=3)
+        u=Unit(a,side,out,thick,offset=-50 if mirror else 50,mirror=mirror,top_profile=jug_profile(top),edge_label=elabel,front_label=flabel,front_resolution=3,front_section=(NATURAL_RECESS,2.1))
         u.cavity({'center':[95,47],'width':164,'height':21,'radius':8,'slope':-.065,'depth':{'kind':'linear','x':[13,177],'values':[33,20]},'holds':[{'id':ids['rail-upper']}]})
         u.cavity({'center':[95,15],'width':164,'height':20,'radius':7,'slope':-.055,'depth':{'kind':'linear','x':[13,177],'values':[24,10]},'holds':[{'id':ids['rail-lower']}]})
         u.cavity({'center':[48,-18],'width':70,'height':23,'radius':9,'depth':38,'holds':[{'id':ids['pocket-3finger']}],'lipRadius':1.5})

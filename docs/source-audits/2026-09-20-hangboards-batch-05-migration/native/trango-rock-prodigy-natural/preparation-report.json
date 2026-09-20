@@ -1,7 +1,7 @@
 {
   "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/trango-rock-prodigy-natural/trango-rock-prodigy-natural.glb",
   "sourceSHA256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90",
-  "preparedSHA256": "b46009a07481d0dbc8490d24e4ea3d8d3c8a71d9d0b87c05b108bbb007cfeebd",
+  "preparedSHA256": "d1bb7baec8ec3689f6d51454c82b5a38d2f30b41db864fcc8bbd99b900f053fe",
   "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-natural.blend",
   "blenderVersion": "5.2.0 LTS",
   "removedTransformOnlyNodes": [
@@ -10,10 +10,10 @@
   ],
   "maximumWorldVertexDeltaMetres": 0.0,
   "geometryChanged": true,
-  "authoredGeometrySHA256": "d306814d48918c7f8abdb2da557bd33179484c6aa8e6d6516a76843f8412feab",
+  "authoredGeometrySHA256": "e713ed92f0825f12168c98efaa03a6e37e831b47e5271234a38514cd257f29ad",
   "authoringSHA256": {
-    "author_trango.py": "113b021acabd562b556aa1d765782e3392a6d48de6c2f3d63bff3bceb7d5b1f1",
-    "authored_geometry.py": "61b94391497841deed98e2c4192c5c216ea6f2473677b956cd0fa96bdebd29b3",
+    "author_trango.py": "0b9cc125c4be79c76d12e39d049c3848ff2613e23c777785cad25ea9c35bc579",
+    "authored_geometry.py": "1d6d9c82c89b78d947df8195da1ff04928247b4608f5623a94b78affb5d970d4",
     "geometry.py": "d5f87ec64a01bb8be90ebb5c7c554d9956d9aebb2652bc315de02d4034ddafea"
   },
   "geometryAuthoring": "trango-authoring/author_trango.py; explicit drafted cavity, crimp/shoulder, jaw/brow corrections and screw omissions. Original GLB retained immutable.",
@@ -52,18 +52,18 @@
   "meshInventory": [
     {
       "name": "body--left",
-      "vertices": 16353,
-      "polygons": 31344
+      "vertices": 16842,
+      "polygons": 32219
     },
     {
       "name": "body--right",
-      "vertices": 16353,
-      "polygons": 31344
+      "vertices": 16842,
+      "polygons": 32219
     },
     {
       "name": "hold--left-closed-crimp",
-      "vertices": 37519,
-      "polygons": 74617
+      "vertices": 10599,
+      "polygons": 20676
     },
     {
       "name": "hold--left-jug",
@@ -102,8 +102,8 @@
     },
     {
       "name": "hold--right-closed-crimp",
-      "vertices": 37519,
-      "polygons": 74617
+      "vertices": 10599,
+      "polygons": 20676
     },
     {
       "name": "hold--right-jug",

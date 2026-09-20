@@ -34,6 +34,7 @@ def test_trango_stable_contacts_bind_exact_native_surfaces(product):
     assert report['modelSHA256']==d['modelSHA256']
     assert report['cleanEmptySceneImport'] and report['allImportedImageMaterials']
     assert report['preparedTrianglesUnchanged']
+    assert report['preparedCustomNormalsUnchangedWithinTolerance']
     assert report['authoredCrimpSection']['hookHasDistinctRelief']
     if product=='natural':assert report['authoredCrimpSection']['supportedFloorStepMetres']>.0025
     else:assert report['authoredCrimpSection']['imLobeDepthTransitionMetres']>.010
@@ -49,6 +50,17 @@ def test_trango_stable_contacts_bind_exact_native_surfaces(product):
     assert len(report['preservedPassageRays'])==2
     assert all(not x['hit'] for x in report['preservedPassageRays'])
     prep=json.loads((AUDIT/slug/'preparation-report.json').read_text())
+    normal_report=json.loads((AUDIT/slug/'normal-verification.json').read_text())
+    assert normal_report['modelSHA256']==d['modelSHA256']
+    assert normal_report['authoredGeometrySHA256']==prep['authoredGeometrySHA256']
+    assert normal_report['maxFlatUpperFaceNormalErrorDegrees']<=.5
+    assert normal_report['maxTransverseRollNormalErrorDegrees']<=.5
+    assert normal_report['duplicateFaces']==0
+    assert normal_report['flippedAnalyticFrontNormals']==0
+    original_location=json.loads((AUDIT/'trango-authoring/original-location-native-regression.json').read_text())[product]
+    assert original_location['final']['modelSHA256']==d['modelSHA256']
+    assert original_location['checkpoint']['maxFlatFaceNormalErrorDegrees']>1
+    assert original_location['final']['maxFlatFaceNormalErrorDegrees']<.5
     with zipfile.ZipFile(package/'assets/primary.usdz') as archive:
         textures=[name for name in archive.namelist() if name.startswith('textures/')]
         assert len(textures)==1 and textures[0].endswith('.png')

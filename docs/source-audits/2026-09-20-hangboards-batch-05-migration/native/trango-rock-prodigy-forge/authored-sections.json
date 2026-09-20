@@ -1,6 +1,6 @@
 {
   "product": "forge",
-  "artifactSHA256": "9f277ba8f38550092ced3e0a8228c0277ed1ec793eb6d995b8026a2a12909bad",
+  "artifactSHA256": "a42c0d24cb7da0fc1d26c1c9dc87a5ac83bd2ec973d18600ae3ee1782527c72a",
   "mountingOpenings": [
     {
       "unitId": "left",
@@ -159,8 +159,8 @@
       "nestedBackWallPocket": false
     }
   ],
-  "vertices": 213632,
-  "triangles": 427264,
+  "vertices": 147536,
+  "triangles": 295072,
   "watertight": true,
   "windingConsistent": true,
   "geometryIsDisplayEstimate": true

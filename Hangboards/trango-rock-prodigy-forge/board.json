@@ -5,7 +5,7 @@
   "name": "Rock Prodigy Forge",
   "subtitle": "Two-piece training board with variable rails, drafted pockets, crimps, slopers, and flat edges.",
   "productURL": "https://trango.com/products/rock-prodigy-forge",
-  "dimensions": "12.75 × 5.25 in per side",
+  "dimensions": "12.75 \u00d7 5.25 in per side",
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
@@ -121,7 +121,7 @@
     {
       "id": "variable-edge-rail-left",
       "equipmentObjectID": "primary",
-      "name": "Left 7–20 mm variable-depth edge rail",
+      "name": "Left 7\u201320 mm variable-depth edge rail",
       "kind": "edge",
       "depth": {
         "range": {
@@ -134,7 +134,7 @@
     {
       "id": "variable-edge-rail-right",
       "equipmentObjectID": "primary",
-      "name": "Right 7–20 mm variable-depth edge rail",
+      "name": "Right 7\u201320 mm variable-depth edge rail",
       "kind": "edge",
       "depth": {
         "range": {

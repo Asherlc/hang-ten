@@ -1,7 +1,7 @@
 {
   "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/trango-rock-prodigy-forge/trango-rock-prodigy-forge.glb",
   "sourceSHA256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
-  "preparedSHA256": "678d98e04692a23338c34502c82a9dd48a6685cf55bbb01b31f515f9f5e4f9a8",
+  "preparedSHA256": "4ea061f406b1a37a983940a1a865bbad233cb1a822b27cd81ba1d832387da13c",
   "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-forge.blend",
   "blenderVersion": "5.2.0 LTS",
   "removedTransformOnlyNodes": [
@@ -10,10 +10,10 @@
   ],
   "maximumWorldVertexDeltaMetres": 0.0,
   "geometryChanged": true,
-  "authoredGeometrySHA256": "9f277ba8f38550092ced3e0a8228c0277ed1ec793eb6d995b8026a2a12909bad",
+  "authoredGeometrySHA256": "a42c0d24cb7da0fc1d26c1c9dc87a5ac83bd2ec973d18600ae3ee1782527c72a",
   "authoringSHA256": {
-    "author_trango.py": "113b021acabd562b556aa1d765782e3392a6d48de6c2f3d63bff3bceb7d5b1f1",
-    "authored_geometry.py": "61b94391497841deed98e2c4192c5c216ea6f2473677b956cd0fa96bdebd29b3",
+    "author_trango.py": "0b9cc125c4be79c76d12e39d049c3848ff2613e23c777785cad25ea9c35bc579",
+    "authored_geometry.py": "1d6d9c82c89b78d947df8195da1ff04928247b4608f5623a94b78affb5d970d4",
     "geometry.py": "d5f87ec64a01bb8be90ebb5c7c554d9956d9aebb2652bc315de02d4034ddafea"
   },
   "geometryAuthoring": "trango-authoring/author_trango.py; explicit drafted cavity, crimp/shoulder, jaw/brow corrections and screw omissions. Original GLB retained immutable.",
@@ -67,18 +67,18 @@
   "meshInventory": [
     {
       "name": "body--left",
-      "vertices": 39111,
-      "polygons": 75245
+      "vertices": 36556,
+      "polygons": 70466
     },
     {
       "name": "body--right",
-      "vertices": 39111,
-      "polygons": 75245
+      "vertices": 36556,
+      "polygons": 70466
     },
     {
       "name": "hold--left-closed-crimp",
-      "vertices": 40869,
-      "polygons": 80693
+      "vertices": 9730,
+      "polygons": 18863
     },
     {
       "name": "hold--left-flat-edge",
@@ -107,13 +107,13 @@
     },
     {
       "name": "hold--left-pinch-medium",
-      "vertices": 14987,
-      "polygons": 29345
+      "vertices": 14718,
+      "polygons": 28751
     },
     {
       "name": "hold--left-pinch-narrow",
-      "vertices": 3898,
-      "polygons": 7498
+      "vertices": 4488,
+      "polygons": 8604
     },
     {
       "name": "hold--left-rail",
@@ -133,12 +133,12 @@
     {
       "name": "hold--left-slopey-crimper",
       "vertices": 7650,
-      "polygons": 15014
+      "polygons": 15015
     },
     {
       "name": "hold--right-closed-crimp",
-      "vertices": 40869,
-      "polygons": 80693
+      "vertices": 9730,
+      "polygons": 18863
     },
     {
       "name": "hold--right-flat-edge",
@@ -167,13 +167,13 @@
     },
     {
       "name": "hold--right-pinch-medium",
-      "vertices": 14987,
-      "polygons": 29345
+      "vertices": 14718,
+      "polygons": 28751
     },
     {
       "name": "hold--right-pinch-narrow",
-      "vertices": 3898,
-      "polygons": 7498
+      "vertices": 4488,
+      "polygons": 8604
     },
     {
       "name": "hold--right-rail",
@@ -193,7 +193,7 @@
     {
       "name": "hold--right-slopey-crimper",
       "vertices": 7650,
-      "polygons": 15014
+      "polygons": 15015
     }
   ]
 }

@@ -1,20 +1,23 @@
 {
-  "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
-  "descriptorSHA256": "1f22e1c40639ddab2895ee6ac92a41144399dac9a96d5ade7ea4dab59f08f8b3",
+  "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+  "descriptorSHA256": "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
   "cleanEmptySceneImport": true,
   "allImportedImageMaterials": true,
   "allTriangles": true,
   "preparedTrianglesUnchanged": true,
+  "preparedCustomNormalsUnchangedWithinTolerance": true,
+  "normalVectorTolerance": 0.001,
+  "maximumNormalVectorDelta": 0.0007596906065720041,
   "sourceNodeCorrespondence": [
     {
       "sourceNodeID": "body--left",
       "importedNodeID": "body__left_002",
-      "triangles": 75245
+      "triangles": 70466
     },
     {
       "sourceNodeID": "body--right",
       "importedNodeID": "body__right_002",
-      "triangles": 75245
+      "triangles": 70466
     },
     {
       "sourceNodeID": "hold--left-sloper-30",
@@ -34,7 +37,7 @@
     {
       "sourceNodeID": "hold--left-slopey-crimper",
       "importedNodeID": "hold__left_slopey_crimper_002",
-      "triangles": 15014
+      "triangles": 15015
     },
     {
       "sourceNodeID": "hold--left-rail",
@@ -44,7 +47,7 @@
     {
       "sourceNodeID": "hold--left-closed-crimp",
       "importedNodeID": "hold__left_closed_crimp_002",
-      "triangles": 80693
+      "triangles": 18863
     },
     {
       "sourceNodeID": "hold--left-mr-deep",
@@ -69,12 +72,12 @@
     {
       "sourceNodeID": "hold--left-pinch-medium",
       "importedNodeID": "hold__left_pinch_medium_002",
-      "triangles": 29345
+      "triangles": 28751
     },
     {
       "sourceNodeID": "hold--left-pinch-narrow",
       "importedNodeID": "hold__left_pinch_narrow_002",
-      "triangles": 7498
+      "triangles": 8604
     },
     {
       "sourceNodeID": "hold--right-sloper-30",
@@ -94,7 +97,7 @@
     {
       "sourceNodeID": "hold--right-slopey-crimper",
       "importedNodeID": "hold__right_slopey_crimper_002",
-      "triangles": 15014
+      "triangles": 15015
     },
     {
       "sourceNodeID": "hold--right-rail",
@@ -104,7 +107,7 @@
     {
       "sourceNodeID": "hold--right-closed-crimp",
       "importedNodeID": "hold__right_closed_crimp_002",
-      "triangles": 80693
+      "triangles": 18863
     },
     {
       "sourceNodeID": "hold--right-mr-deep",
@@ -129,12 +132,12 @@
     {
       "sourceNodeID": "hold--right-pinch-medium",
       "importedNodeID": "hold__right_pinch_medium_002",
-      "triangles": 29345
+      "triangles": 28751
     },
     {
       "sourceNodeID": "hold--right-pinch-narrow",
       "importedNodeID": "hold__right_pinch_narrow_002",
-      "triangles": 7498
+      "triangles": 8604
     }
   ],
   "nativeContactRays": [
@@ -143,9 +146,9 @@
       "nearestContactID": "closed-crimp-left",
       "nodeID": "hold__left_closed_crimp_002",
       "pointSourceMetres": [
-        -0.27305787801742554,
-        -0.03917871043086052,
-        -0.004023804794996977
+        -0.27572280168533325,
+        -0.043000005185604095,
+        -0.018939826637506485
       ],
       "directionTowardCamera": [
         0.0,
@@ -159,9 +162,9 @@
       "nearestContactID": "closed-crimp-right",
       "nodeID": "hold__right_closed_crimp_002",
       "pointSourceMetres": [
-        0.27305787801742554,
-        -0.03917871415615082,
-        -0.004023805260658264
+        0.27572280168533325,
+        -0.043000005185604095,
+        -0.018939826637506485
       ],
       "directionTowardCamera": [
         0.0,
@@ -477,7 +480,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.042999982833862305,
+      "frontY": -0.04300001263618469,
       "backY": 0.0
     },
     {
@@ -487,7 +490,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.04300001263618469,
+      "frontY": -0.04300040006637573,
       "backY": 0.0
     },
     {
@@ -497,7 +500,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.04324078559875488,
+      "frontY": -0.04324045777320862,
       "backY": 0.0
     },
     {
@@ -517,7 +520,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.04300001263618469,
+      "frontY": -0.042999982833862305,
       "backY": 0.0
     },
     {
@@ -527,7 +530,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.04300001263618469,
+      "frontY": -0.04300042986869812,
       "backY": 0.0
     },
     {
@@ -537,7 +540,7 @@
       ],
       "frontHit": true,
       "backHit": true,
-      "frontY": -0.043240755796432495,
+      "frontY": -0.04324045777320862,
       "backY": 0.0
     }
   ],
@@ -561,7 +564,7 @@
   ],
   "authoredCrimpSection": {
     "channelY": -0.03549998998641968,
-    "thumbTabY": -0.042999982833862305,
+    "thumbTabY": -0.04300001263618469,
     "hookHasDistinctRelief": true,
     "imLobeDepthTransitionMetres": 0.01199999451637268
   },

@@ -1,20 +1,23 @@
 {
-  "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
-  "descriptorSHA256": "13191c7985d0b1c8dc48301bd301f5fdae60fae092e620a3c6a06143990f986f",
+  "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+  "descriptorSHA256": "fb9bc30444fcab8f87d37f900b26fe3c74e9121ef02c08958a4a8fc1a4428144",
   "cleanEmptySceneImport": true,
   "allImportedImageMaterials": true,
   "allTriangles": true,
   "preparedTrianglesUnchanged": true,
+  "preparedCustomNormalsUnchangedWithinTolerance": true,
+  "normalVectorTolerance": 0.001,
+  "maximumNormalVectorDelta": 0.0006920112503886792,
   "sourceNodeCorrespondence": [
     {
       "sourceNodeID": "body--left",
       "importedNodeID": "body__left_002",
-      "triangles": 31344
+      "triangles": 32219
     },
     {
       "sourceNodeID": "body--right",
       "importedNodeID": "body__right_002",
-      "triangles": 31344
+      "triangles": 32219
     },
     {
       "sourceNodeID": "hold--left-jug",
@@ -34,7 +37,7 @@
     {
       "sourceNodeID": "hold--left-closed-crimp",
       "importedNodeID": "hold__left_closed_crimp_002",
-      "triangles": 74617
+      "triangles": 20676
     },
     {
       "sourceNodeID": "hold--left-pocket-3finger",
@@ -74,7 +77,7 @@
     {
       "sourceNodeID": "hold--right-closed-crimp",
       "importedNodeID": "hold__right_closed_crimp_002",
-      "triangles": 74617
+      "triangles": 20676
     },
     {
       "sourceNodeID": "hold--right-pocket-3finger",
@@ -167,9 +170,9 @@
       "nearestContactID": "closed-crimp-left",
       "nodeID": "hold__left_closed_crimp_002",
       "pointSourceMetres": [
-        -0.23966436088085175,
-        -0.038100000470876694,
-        -0.03697923198342323
+        -0.14702938497066498,
+        -0.02810000255703926,
+        -0.03183012455701828
       ],
       "directionTowardCamera": [
         0.0,
@@ -183,9 +186,9 @@
       "nearestContactID": "closed-crimp-right",
       "nodeID": "hold__right_closed_crimp_002",
       "pointSourceMetres": [
-        0.23966436088085175,
-        -0.038100000470876694,
-        -0.03697923198342323
+        0.14702938497066498,
+        -0.02810000255703926,
+        -0.03183012455701828
       ],
       "directionTowardCamera": [
         0.0,
@@ -404,8 +407,8 @@
     }
   ],
   "authoredCrimpSection": {
-    "channelY": -0.02809998393058777,
-    "thumbTabY": -0.03810000419616699,
+    "channelY": -0.028100013732910156,
+    "thumbTabY": -0.03810003399848938,
     "hookHasDistinctRelief": true,
     "supportedFloorStepMetres": 0.0028786063194274902
   },

@@ -1,6 +1,6 @@
 {
   "product": "natural",
-  "artifactSHA256": "d306814d48918c7f8abdb2da557bd33179484c6aa8e6d6516a76843f8412feab",
+  "artifactSHA256": "e713ed92f0825f12168c98efaa03a6e37e831b47e5271234a38514cd257f29ad",
   "mountingOpenings": [
     {
       "unitId": "left",
@@ -189,8 +189,8 @@
       "nestedBackWallPocket": false
     }
   ],
-  "vertices": 113498,
-  "triangles": 226996,
+  "vertices": 60432,
+  "triangles": 120864,
   "watertight": true,
   "windingConsistent": true,
   "geometryIsDisplayEstimate": true

@@ -13,6 +13,16 @@ def triangles(obj):
     mesh=obj.data;mesh.calc_loop_triangles()
     vv=[obj.matrix_world@v.co for v in mesh.vertices]
     return Counter(tuple(sorted(tuple(round(c,7) for c in vv[i]) for i in tri.vertices)) for tri in mesh.loop_triangles)
+def corner_normals(obj):
+    transform=obj.matrix_world.to_3x3().inverted().transposed()
+    positions=[tuple(round(c,7) for c in obj.matrix_world@v.co) for v in obj.data.vertices]
+    values={}
+    for loop,normal in zip(obj.data.loops,obj.data.corner_normals):
+        key=positions[loop.vertex_index];n=(transform@normal.vector).normalized()
+        if key in values:assert (n-values[key]).length<.001
+        else:values[key]=n.copy()
+    return values
+
 def tree_for(meshes):
     vertices=[];faces=[];owners=[]
     for obj in meshes:
@@ -28,6 +38,7 @@ def verify(product,source=False):
     if not source:
         bpy.ops.wm.open_mainfile(filepath=str(root/'.context/hangboards-batch-05-astra-migration/prepared'/(slug+'.blend')))
         prepared={o['sourceNodeID']:triangles(bpy.data.objects[o['sourceNodeID']]) for o in mapping['objects']}
+        prepared_normals={o['sourceNodeID']:corner_normals(bpy.data.objects[o['sourceNodeID']]) for o in mapping['objects']}
     bpy.ops.wm.read_factory_settings(use_empty=True)
     if source:bpy.ops.import_scene.gltf(filepath=str(HERE.parent/'source-delivery/models'/slug/(slug+'.glb')))
     else:bpy.ops.wm.usd_import(filepath=str(model))
@@ -58,12 +69,17 @@ def verify(product,source=False):
 
     assert set(meshes)=={n['nodeID'] for n in descriptor['nodes']}
     # Compare every exact triangle to its prepared source; names may receive importer suffix.
-    correspondence=[]
+    correspondence=[];maximum_normal_delta=0.
     for entry in mapping['objects']:
         source_name=entry['sourceNodeID'];prefix=source_name.replace('-','_')
         matches=[n for n in meshes if n.startswith(prefix)]
         assert len(matches)==1,(source_name,matches)
         assert triangles(meshes[matches[0]])==prepared[source_name],source_name
+        actual_normals=corner_normals(meshes[matches[0]])
+        assert actual_normals.keys()==prepared_normals[source_name].keys()
+        normal_delta=max((actual_normals[k]-n).length for k,n in prepared_normals[source_name].items())
+        maximum_normal_delta=max(maximum_normal_delta,normal_delta)
+        assert normal_delta<.001,(source_name,normal_delta)
         correspondence.append({'sourceNodeID':source_name,'importedNodeID':matches[0],'triangles':sum(prepared[source_name].values())})
     node_contact={n['nodeID']:n.get('contactID') for n in descriptor['nodes']}
     rays=[]
@@ -102,7 +118,7 @@ def verify(product,source=False):
         assert all(math.isfinite(c) for v in obj.data.vertices for c in v.co)
         assert all(any(n.type=='TEX_IMAGE' and n.image for n in mat.node_tree.nodes) for mat in obj.data.materials)
     assert descriptor['modelSHA256']==digest(model)
-    report={'modelSHA256':digest(model),'descriptorSHA256':digest(package/'assets/primary.model.json'),'cleanEmptySceneImport':True,'allImportedImageMaterials':True,'allTriangles':True,'preparedTrianglesUnchanged':True,'sourceNodeCorrespondence':correspondence,'nativeContactRays':rays,'mountingClosureRays':closures,'preservedPassageRays':passages,'authoredCrimpSection':shape,'modelAcceptance':False,'remaining':'Current-source iOS materials/picking/highlight/clear/orbit/reset/unavailable and human review'}
+    report={'modelSHA256':digest(model),'descriptorSHA256':digest(package/'assets/primary.model.json'),'cleanEmptySceneImport':True,'allImportedImageMaterials':True,'allTriangles':True,'preparedTrianglesUnchanged':True,'preparedCustomNormalsUnchangedWithinTolerance':True,'normalVectorTolerance':.001,'maximumNormalVectorDelta':maximum_normal_delta,'sourceNodeCorrespondence':correspondence,'nativeContactRays':rays,'mountingClosureRays':closures,'preservedPassageRays':passages,'authoredCrimpSection':shape,'modelAcceptance':False,'remaining':'Current-source iOS materials/picking/highlight/clear/orbit/reset/unavailable and human review'}
     (native/'geometry-verification.json').write_text(json.dumps(report,indent=2)+'\n')
     print('VERIFIED',product,len(rays),'all-mesh nearest contact rays,',len(closures),'closed screws, 2 open passages')
 if __name__=='__main__':
