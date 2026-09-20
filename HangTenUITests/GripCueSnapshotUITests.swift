@@ -52,6 +52,24 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 }
 
+final class DualMaxHangsHighlightUITests: XCTestCase {
+    func testDualBoardExposesTheResolvedMaxHangHold() throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            "HANGTEN_REVIEW_WORKOUT": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+            "HANGTEN_REVIEW_STEP": "1",
+        ]
+        app.launch()
+
+        let board = app.otherElements["boardModel.3d"]
+        XCTAssertTrue(board.waitForExistence(timeout: 30))
+        XCTAssertEqual(board.value as? String, "20 mm curved edge")
+    }
+}
+
 final class IronPalmBoardMapInteractionUITests: XCTestCase {
     override func tearDown() {
         // Landscape review launches leave the shared simulator in landscape;
