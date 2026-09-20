@@ -711,6 +711,10 @@ final class BoardModelScene {
 
     @discardableResult
     func select(positionID: String?) -> Bool {
+        // Pose changes must invalidate the highlight short-circuit so a later
+        // applyHighlights call always repaints materials for the posed nodes.
+        lastHighlights = []
+        lastMode = nil
         guard let positionID, allowedPositionIDs.contains(positionID) else {
             enterUnavailable()
             return false
@@ -1947,8 +1951,11 @@ private struct BoardModelView: UIViewRepresentable {
         view.addGestureRecognizer(tapGesture)
         view.contactTapGesture = tapGesture
         view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
-        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
+        // Pose first, then paint. Dual and other multi-pose boards rebuild the
+        // visible transform in select(); highlighting beforehand can leave
+        // lastHighlights stuck while the posed materials never receive color.
         view.selectPositionIfNeeded()
+        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.updateAccessibility()
         view.updateTapGesturePresence()
         return view
@@ -1964,8 +1971,8 @@ private struct BoardModelView: UIViewRepresentable {
         view.highlightedContactIDs = highlightedContactIDs
         view.isUserInteractionEnabled = !isDisplayOnly
         view.needsAccessibilityProjection = true
-        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.selectPositionIfNeeded()
+        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
         view.updateAccessibility()
         view.updateTapGesturePresence()
     }

@@ -1131,8 +1131,26 @@ struct PlanDetailView: View {
     private func boardPreview(for currentPlan: TrainingPlan) -> some View {
         let board = store.board(for: currentPlan)
         let firstStep = currentPlan.steps.first
-        let firstStepHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
-        let firstStepHold = board.contacts.first { firstStepHoldIDs.contains($0.id) }
+        let resolvedHoldIDs = firstStep.map { store.contactIDs(for: $0, on: board) } ?? []
+        // Prefer a pose-backed hold so Dual-style multi-pose boards face the lit contact.
+        let firstStepHold = board.contacts.first { hold in
+            resolvedHoldIDs.contains(hold.id)
+                && board.position(
+                    presentationID: board.defaultPresentation.id,
+                    containingContactID: hold.id
+                ) != nil
+        }
+        let firstStepHoldIDs: Set<String> = {
+            guard let hold = firstStepHold,
+                  let position = board.position(
+                    presentationID: board.defaultPresentation.id,
+                    containingContactID: hold.id
+                  ) else {
+                return resolvedHoldIDs
+            }
+            let visible = resolvedHoldIDs.intersection(Set(position.contactIDs))
+            return visible.isEmpty ? resolvedHoldIDs : visible
+        }()
         let firstStepHoldCue = WorkoutHoldCuePolicy.resolve(
             step: firstStep,
             hold: firstStepHold,
