@@ -2668,18 +2668,15 @@ final class WorkoutAudioCoachTests: XCTestCase {
             synthesizer: RecordingWorkoutSpeechSynthesizer(),
             audioSession: audioSession,
             countdownScheduler: RecordingCountdownAudioScheduler(),
-            countdownCompletionScheduler: completionScheduler
+            countdownCompletionScheduler: completionScheduler,
+            sleep: { _ in }
         )
         coach.prepareCountdownAudio()
-        let deactivation = expectation(description: "retries countdown deactivation until other apps are notified")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
 
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         completionScheduler.complete()
 
-        await fulfillment(of: [deactivation], timeout: 2)
+        await waitUntilDeactivationNotifiesOtherApps(audioSession)
         XCTAssertEqual(audioSession.deactivationAttemptCount, 5)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -2896,23 +2893,33 @@ final class WorkoutAudioCoachTests: XCTestCase {
         let synthesizer = RecordingWorkoutSpeechSynthesizer()
         let coach = WorkoutAudioCoach(
             synthesizer: synthesizer,
-            audioSession: audioSession
+            audioSession: audioSession,
+            sleep: { _ in }
         )
-        let deactivation = expectation(description: "retries deactivation after a transient failure")
-        audioSession.onSuccessfulNotificationAwareDeactivation = {
-            deactivation.fulfill()
-        }
 
         coach.speak("3")
 
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
         coach.stop()
-        await fulfillment(of: [deactivation], timeout: 1)
+        await waitUntilDeactivationNotifiesOtherApps(audioSession)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
+    }
+
+    private func waitUntilDeactivationNotifiesOtherApps(
+        _ audioSession: RecordingWorkoutAudioSession,
+        maxYields: Int = 32
+    ) async {
+        for _ in 0..<maxYields {
+            if audioSession.didDeactivateWithNotification {
+                return
+            }
+            await Task.yield()
+        }
+        XCTFail("Expected notification-aware deactivation within \(maxYields) main-actor yields")
     }
 }
 
