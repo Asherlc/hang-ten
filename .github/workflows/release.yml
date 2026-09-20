@@ -211,7 +211,7 @@ jobs:
 
       # Apple-Actions/upload-testflight-build v5.2.1
       - name: Upload to App Store Connect
-        uses: Apple-Actions/upload-testflight-build@5e75ff58276689011512ba87a381d93dc67dbcf8
+        uses: Apple-Actions/upload-testflight-build@1fc69ca369a60b813eaaa2d936eda22794b52e17
         with:
           app-path: build/export/HangTen.ipa
           app-type: ios
