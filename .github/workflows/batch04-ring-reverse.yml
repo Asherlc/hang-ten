@@ -1,0 +1,31 @@
+name: Batch04 ring reverse
+on:
+  push:
+    branches: [artifacts/batch04-evidence-20260920]
+    paths: [.github/workflows/batch04-ring-reverse.yml]
+permissions:
+  contents: read
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - run: |
+          mkdir -p originals
+          python3 - <<'PY'
+          import urllib.request,pathlib,json,hashlib,datetime,concurrent.futures
+          def get(k):
+            u='https://i.ebayimg.com/images/g/'+k+'/s-l1600.webp';r={'url':u,'publisher':'Maloney’s Mercantile on eBay','parentPage':'https://www.ebay.com/itm/365881672541','tier':'owner photograph; exact mold comparison required','accessedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+            try:
+              with urllib.request.urlopen(urllib.request.Request(u,headers={'User-Agent':'Mozilla/5.0'}),timeout=25) as f:d=f.read();r.update(status=f.status,mime=f.headers.get('Content-Type'))
+              n=k+'.webp';pathlib.Path('originals',n).write_bytes(d);r.update(file=n,sha256=hashlib.sha256(d).hexdigest(),bytes=len(d))
+            except Exception as e:r['error']=str(e)
+            return r
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:rs=list(ex.map(get,['OX4AAOSwL8ZmDzn-','60AAAOSwohZmDzn~','yTQAAOSwZ2dmDzoA','xaEAAOSwFtFmDzoB']))
+          pathlib.Path('originals/retrieval-manifest.json').write_text(json.dumps(rs,indent=2));print(json.dumps(rs))
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: batch04-ring-reverse-originals
+          path: originals/
+          retention-days: 7
