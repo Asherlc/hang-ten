@@ -32,6 +32,17 @@ class ContactModelPackageTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "schemaVersion must be 3"):
                 compiler.load_logical_contact_ids(legacy)
 
+    def test_compiler_rejects_unknown_descriptor_version_before_opening_scene(self) -> None:
+        compiler = self.module()
+
+        with self.assertRaisesRegex(ValueError, "descriptor_version must be 1 or 2"):
+            compiler.compile_model_package(
+                Path("source.blend"),
+                Path("board.json"),
+                Path("output"),
+                descriptor_version=3,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

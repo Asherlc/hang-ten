@@ -16,8 +16,9 @@ import shutil
 import sys
 import tempfile
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
+from types import MappingProxyType
 
 _TOOLS = Path(__file__).resolve().parent
 if str(_TOOLS) not in sys.path:
@@ -40,6 +41,9 @@ class ValidatedMapping:
     attachment_facts: tuple[Mapping[str, object], ...]
     logical_contact_ids: frozenset[str]
     logical_contact_order: tuple[str, ...]
+    contact_slot_ids_by_node: Mapping[str, str] = field(
+        default_factory=lambda: MappingProxyType({})
+    )
 
 
 def write_json(path: Path, value: object) -> None:
@@ -110,6 +114,17 @@ def verify_source_manifest(manifest_path: Path, package_id: str) -> Path:
 
 
 def validate_mapping(
+    document: Mapping[str, object], source_objects: Mapping[str, str]
+) -> ValidatedMapping:
+    schema_version = document.get("schemaVersion")
+    if schema_version == 1:
+        return _validate_v1_mapping(document, source_objects)
+    if schema_version == 2:
+        return _validate_v2_mapping(document, source_objects)
+    raise MappingError("mapping schemaVersion must be 1 or 2")
+
+
+def _validate_v1_mapping(
     document: Mapping[str, object], source_objects: Mapping[str, str]
 ) -> ValidatedMapping:
     if document.get("schemaVersion") != 1:
@@ -201,6 +216,103 @@ def validate_mapping(
         facts,
         logical_contact_ids,
         logical_order,
+    )
+
+
+def _validate_v2_mapping(
+    document: Mapping[str, object], source_objects: Mapping[str, str]
+) -> ValidatedMapping:
+    if "logicalContactIDs" in document:
+        raise MappingError("schema v2 mapping may not declare logicalContactIDs")
+    slot_values = document.get("unitContactSlotIDs")
+    objects = document.get("objects")
+    if not isinstance(slot_values, list) or any(
+        not isinstance(value, str) or not value for value in slot_values
+    ):
+        raise MappingError("unitContactSlotIDs must contain non-empty strings")
+    if len(slot_values) != len(set(slot_values)):
+        raise MappingError("duplicate unit contact slot ID")
+    contact_slot_ids = frozenset(slot_values)
+    if not isinstance(objects, list):
+        raise MappingError("objects must be an array")
+    roles: dict[str, str] = {}
+    slot_ids_by_node: dict[str, str] = {}
+    attachments: list[Mapping[str, object]] = []
+    for index, raw in enumerate(objects):
+        if not isinstance(raw, Mapping):
+            raise MappingError(f"objects[{index}] must be an object")
+        node_id = raw.get("sourceNodeID")
+        role = raw.get("role")
+        if not isinstance(node_id, str) or not node_id:
+            raise MappingError(f"objects[{index}].sourceNodeID must be non-empty")
+        if node_id in roles:
+            raise MappingError(f"duplicate source mapping: {node_id}")
+        if node_id not in source_objects:
+            raise MappingError(f"unknown source object: {node_id}")
+        if role not in {"body", "contact", "attachment"}:
+            raise MappingError(f"unknown mapping role for {node_id}: {role}")
+        object_type = source_objects[node_id]
+        if role in {"body", "contact"} and object_type != "MESH":
+            raise MappingError(f"{role} mapping must name a mesh: {node_id}")
+        if role == "attachment":
+            if object_type == "MESH":
+                raise MappingError(f"attachment mapping must be non-mesh: {node_id}")
+            if raw.get("selectable") is not False:
+                raise MappingError(f"attachment must be explicitly nonselectable: {node_id}")
+            if any(key in raw for key in ("contactID", "contactSlotID", "holdID")):
+                raise MappingError(f"attachment may not declare a contact identity: {node_id}")
+            order, position, metadata = raw.get("order"), raw.get("position"), raw.get("metadata")
+            if not isinstance(order, int) or isinstance(order, bool) or order < 1:
+                raise MappingError(f"attachment order must be a positive integer: {node_id}")
+            if not isinstance(position, list) or len(position) != 3 or any(
+                not isinstance(value, (int, float))
+                or isinstance(value, bool)
+                or not math.isfinite(value)
+                for value in position
+            ):
+                raise MappingError(f"attachment position must be three finite numbers: {node_id}")
+            if not isinstance(metadata, Mapping) or not metadata:
+                raise MappingError(f"attachment metadata must be a non-empty object: {node_id}")
+            attachments.append({
+                "sourceNodeID": node_id,
+                "order": order,
+                "position": [float(value) for value in position],
+                "metadata": dict(metadata),
+            })
+        elif role == "contact":
+            if "contactID" in raw or "holdID" in raw:
+                raise MappingError(f"schema v2 contact may not declare contactID: {node_id}")
+            contact_slot_id = raw.get("contactSlotID")
+            if not isinstance(contact_slot_id, str) or not contact_slot_id:
+                raise MappingError(f"contact mapping requires contactSlotID: {node_id}")
+            if contact_slot_id not in contact_slot_ids:
+                raise MappingError(
+                    f"unknown unit contact slot ID for {node_id}: {contact_slot_id}"
+                )
+            slot_ids_by_node[node_id] = contact_slot_id
+        elif any(key in raw for key in ("contactID", "contactSlotID", "holdID")):
+            raise MappingError(f"body may not declare a contact identity: {node_id}")
+        roles[node_id] = str(role)
+    unknown = sorted(set(source_objects) - set(roles))
+    if unknown:
+        raise MappingError(f"unmapped source object: {unknown[0]}")
+    if not any(role == "body" for role in roles.values()):
+        raise MappingError("mapping requires a body mesh")
+    missing = sorted(contact_slot_ids - set(slot_ids_by_node.values()))
+    if missing:
+        raise MappingError(f"unmapped unit contact slot IDs: {', '.join(missing)}")
+    orders = [int(item["order"]) for item in attachments]
+    if len(orders) != len(set(orders)):
+        raise MappingError("attachment orders must be unique")
+    facts = tuple(sorted(attachments, key=lambda item: int(item["order"])))
+    return ValidatedMapping(
+        roles,
+        {},
+        tuple(str(item["sourceNodeID"]) for item in facts),
+        facts,
+        frozenset(),
+        (),
+        MappingProxyType(dict(slot_ids_by_node)),
     )
 
 
@@ -309,22 +421,36 @@ def import_package(
         scene = bpy.context.scene
         source_objects = {item.name: item.type for item in scene.objects}
         validated = validate_mapping(mapping, source_objects)
-        if _ordered_board_contact_ids(board_json) != validated.logical_contact_order:
-            raise MappingError("mapping logicalContactIDs must match board contact order")
         by_name = {item.name: item for item in scene.objects}
-        for node_id, role in validated.roles_by_node.items():
-            item = by_name[node_id]
-            if role == "attachment":
-                continue
-            item["role"] = role
-            if role == "contact":
-                item["contact_id"] = validated.contact_ids_by_node[node_id]
+        if mapping.get("schemaVersion") == 1:
+            if _ordered_board_contact_ids(board_json) != validated.logical_contact_order:
+                raise MappingError("mapping logicalContactIDs must match board contact order")
+            for node_id, role in validated.roles_by_node.items():
+                item = by_name[node_id]
+                if role == "attachment":
+                    continue
+                item["role"] = role
+                if role == "contact":
+                    item["contact_id"] = validated.contact_ids_by_node[node_id]
+        else:
+            for node_id, role in validated.roles_by_node.items():
+                item = by_name[node_id]
+                if role == "attachment":
+                    continue
+                item["role"] = role
+                if role == "contact":
+                    item["contact_slot_id"] = validated.contact_slot_ids_by_node[node_id]
         _preserve_attachment_evidence(by_name, validated)
         adapted = work / "contact-source.blend"
         bpy.ops.wm.save_as_mainfile(filepath=str(adapted), check_existing=False)
-        descriptor = compiler.compile_model_package(adapted, board_json, output)
+        if mapping.get("schemaVersion") == 1:
+            descriptor = compiler.compile_model_package(adapted, board_json, output)
+        else:
+            descriptor = compiler.compile_model_package(
+                adapted, board_json, output, descriptor_version=2
+            )
         descriptor_path = output / "assets/primary.model.json"
-        return {
+        report: dict[str, object] = {
             "packageID": package_id,
             "status": "converted",
             "sourceModelPath": str(source_model),
@@ -336,12 +462,19 @@ def import_package(
             "descriptorSHA256": _sha256(descriptor_path),
             "modelBounds": descriptor.to_json()["modelBounds"],
             "nodeCount": len(descriptor.nodes),
-            "contactCount": len(descriptor.contacts),
-            "contactMappings": {
+        }
+        if mapping.get("schemaVersion") == 1:
+            report["contactCount"] = len(descriptor.contacts)
+            report["contactMappings"] = {
                 source_id: validated.contact_ids_by_node[source_id]
                 for source_id in sorted(validated.contact_ids_by_node)
-            },
-        }
+            }
+        else:
+            report["contactSlotMappings"] = {
+                source_id: validated.contact_slot_ids_by_node[source_id]
+                for source_id in sorted(validated.contact_slot_ids_by_node)
+            }
+        return report
     finally:
         shutil.rmtree(work)
         if work.exists():

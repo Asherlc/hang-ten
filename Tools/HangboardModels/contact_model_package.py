@@ -19,13 +19,21 @@ import zipfile
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 _SCRIPT_DIRECTORY = Path(__file__).resolve().parent
 if str(_SCRIPT_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIRECTORY))
 
-from contact_model_descriptor import ModelBounds, ModelDescriptorV1, NodeBinding, compile_descriptor
+from contact_model_descriptor import (
+    ModelBounds,
+    ModelDescriptorV1,
+    ModelDescriptorV2,
+    NodeBinding,
+    SlotNodeBinding,
+    compile_descriptor,
+    compile_reusable_descriptor,
+)
 
 
 _BOUNDS_TOLERANCE_METERS = 0.000001
@@ -37,7 +45,7 @@ _DETERMINISTIC_ZIP_TIME = (1980, 1, 1, 0, 0, 0)
 
 @dataclass(frozen=True)
 class _SceneSnapshot:
-    nodes: tuple[NodeBinding, ...]
+    nodes: tuple[NodeBinding | SlotNodeBinding, ...]
     vertices_by_node_id: Mapping[str, tuple[tuple[float, float, float], ...]]
 
 
@@ -123,6 +131,63 @@ def validate_tagged_scene(
     return tuple(sorted(nodes, key=lambda node: node.node_id))
 
 
+def validate_reusable_tagged_scene(
+    scene: object,
+    contact_slot_ids: frozenset[str],
+    *,
+    imported: bool = False,
+) -> tuple[SlotNodeBinding, ...]:
+    """Validate generic contact-slot tags without using board contact IDs."""
+    if not isinstance(contact_slot_ids, frozenset):
+        raise ValueError("contact slot inventory must be a frozenset")
+    objects = getattr(scene, "objects", None)
+    if objects is None:
+        raise ValueError("scene must expose objects")
+    nodes: list[SlotNodeBinding] = []
+    for item in objects:
+        name = getattr(item, "name", None)
+        if not isinstance(name, str) or not name:
+            raise ValueError("scene object name must be non-empty")
+        if getattr(item, "type", None) != "MESH":
+            if imported:
+                continue
+            raise ValueError(f"non-mesh authored geometry is not permitted: {name}")
+        role = _object_property(item, "role", imported=imported)
+        if role not in {"body", "contact", "attachment"}:
+            raise ValueError(f"mesh {name} role must be body, contact, or attachment")
+        contact_slot_id = _object_property(item, "contact_slot_id", imported=imported)
+        if role == "body":
+            if contact_slot_id is not None:
+                raise ValueError(f"body mesh {name} may not declare contact_slot_id")
+            nodes.append(SlotNodeBinding(name, "body"))
+            continue
+        if role == "attachment":
+            if contact_slot_id is not None:
+                raise ValueError(f"attachment mesh {name} may not declare contact_slot_id")
+            nodes.append(SlotNodeBinding(name, "attachment"))
+            continue
+        if not isinstance(contact_slot_id, str) or not contact_slot_id:
+            raise ValueError(f"contact mesh {name} requires contact_slot_id")
+        if contact_slot_id not in contact_slot_ids:
+            raise ValueError(
+                f"contact mesh {name} has unknown contact_slot_id: {contact_slot_id}"
+            )
+        nodes.append(SlotNodeBinding(name, "contact", contact_slot_id))
+
+    node_ids = [node.node_id for node in nodes]
+    if len(node_ids) != len(set(node_ids)):
+        raise ValueError("scene contains duplicate mesh node IDs")
+    body_count = sum(node.role == "body" for node in nodes)
+    if body_count == 0:
+        raise ValueError("scene requires a body mesh")
+    bound_slot_ids = {
+        node.contact_slot_id for node in nodes if node.role == "contact"
+    }
+    if bound_slot_ids != set(contact_slot_ids):
+        raise ValueError("scene contact bindings must exactly match contact slot inventory")
+    return tuple(sorted(nodes, key=lambda node: node.node_id))
+
+
 def open_scene(blend_path: Path) -> object:
     """Open one authored Blender file without changing its bytes."""
     path = Path(blend_path)
@@ -134,6 +199,21 @@ def open_scene(blend_path: Path) -> object:
 
 
 def compile_model_package(
+    blend_path: Path,
+    board_json_path: Path,
+    output_directory: Path,
+    *,
+    descriptor_version: Literal[1, 2] = 1,
+) -> ModelDescriptorV1 | ModelDescriptorV2:
+    """Compile either a board-bound v1 or a reusable unit v2 descriptor."""
+    if descriptor_version == 1:
+        return _compile_v1_model_package(blend_path, board_json_path, output_directory)
+    if descriptor_version == 2:
+        return _compile_v2_model_package(blend_path, board_json_path, output_directory)
+    raise ValueError("descriptor_version must be 1 or 2")
+
+
+def _compile_v1_model_package(
     blend_path: Path,
     board_json_path: Path,
     output_directory: Path,
@@ -222,6 +302,110 @@ def compile_model_package(
             shutil.rmtree(staging)
 
 
+def _compile_v2_model_package(
+    blend_path: Path,
+    board_json_path: Path,
+    output_directory: Path,
+) -> ModelDescriptorV2:
+    """Export, reimport, and validate one generic reusable model unit."""
+    del board_json_path
+    source_scene = open_scene(blend_path)
+    source_slot_ids = _declared_contact_slot_ids(source_scene, imported=False)
+    source_nodes = validate_reusable_tagged_scene(source_scene, source_slot_ids)
+    source_snapshot = _snapshot_scene(
+        source_scene, source_nodes, transform_to_board_frame=True
+    )
+
+    destination = Path(output_directory).resolve()
+    if destination.exists():
+        raise ValueError(f"output directory must not already exist: {destination}")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    staging = Path(
+        tempfile.mkdtemp(
+            prefix=f".{destination.name}.model-compiler-", dir=destination.parent
+        )
+    )
+    try:
+        assets = staging / "assets"
+        assets.mkdir()
+        model_path = assets / "primary.usdz"
+        _export_temporary_copies(source_scene, source_nodes, model_path)
+        _canonicalize_usdz(model_path)
+        model_bytes = model_path.read_bytes()
+        if not model_bytes:
+            raise ValueError("USDZ export is empty")
+
+        imported_scene = _import_usdz_into_empty_scene(model_path)
+        imported_nodes = validate_reusable_tagged_scene(
+            imported_scene, source_slot_ids, imported=True
+        )
+        imported_snapshot = _snapshot_scene(
+            imported_scene,
+            imported_nodes,
+            transform_to_board_frame=True,
+            require_imported_materials=True,
+            require_triangles=True,
+        )
+        imported_source_node_ids = _imported_source_node_ids(
+            imported_scene, imported_snapshot.nodes
+        )
+        _require_bindings_unchanged(
+            source_snapshot.nodes,
+            imported_snapshot.nodes,
+            imported_source_node_ids,
+        )
+        _require_bounds_stable(source_snapshot, imported_snapshot)
+        descriptor = compile_reusable_descriptor(
+            model_bytes,
+            imported_snapshot.nodes,
+            imported_snapshot.vertices_by_node_id,
+            source_slot_ids,
+        )
+        descriptor_path = assets / "primary.model.json"
+        descriptor_path.write_text(
+            json.dumps(
+                descriptor.to_json(),
+                indent=2,
+                sort_keys=True,
+                allow_nan=False,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        staged_files = {
+            path.relative_to(staging).as_posix()
+            for path in staging.rglob("*")
+            if path.is_file()
+        }
+        if staged_files != {
+            "assets/primary.model.json",
+            "assets/primary.usdz",
+        }:
+            raise ValueError("compiler staging output contains unexpected files")
+        os.replace(staging, destination)
+        return descriptor
+    finally:
+        if staging.exists():
+            shutil.rmtree(staging)
+
+
+def _declared_contact_slot_ids(scene: object, *, imported: bool) -> frozenset[str]:
+    objects = getattr(scene, "objects", None)
+    if objects is None:
+        raise ValueError("scene must expose objects")
+    slot_ids: set[str] = set()
+    for item in objects:
+        if getattr(item, "type", None) != "MESH":
+            continue
+        if _object_property(item, "role", imported=imported) == "contact":
+            contact_slot_id = _object_property(
+                item, "contact_slot_id", imported=imported
+            )
+            if isinstance(contact_slot_id, str) and contact_slot_id:
+                slot_ids.add(contact_slot_id)
+    return frozenset(slot_ids)
+
+
 def _object_property(item: object, key: str, *, imported: bool) -> object:
     getter = getattr(item, "get", None)
     if not callable(getter):
@@ -234,7 +418,7 @@ def _object_property(item: object, key: str, *, imported: bool) -> object:
 
 def _snapshot_scene(
     scene: object,
-    nodes: Sequence[NodeBinding],
+    nodes: Sequence[NodeBinding | SlotNodeBinding],
     *,
     transform_to_board_frame: bool,
     require_imported_materials: bool = False,
@@ -308,7 +492,9 @@ def _image_has_usable_data(image: object | None) -> bool:
 
 
 def _export_temporary_copies(
-    source_scene: object, nodes: Sequence[NodeBinding], model_path: Path
+    source_scene: object,
+    nodes: Sequence[NodeBinding | SlotNodeBinding],
+    model_path: Path,
 ) -> None:
     bpy = _bpy()
     source_by_name = {item.name: item for item in source_scene.objects}
@@ -334,8 +520,12 @@ def _export_temporary_copies(
                 if attachment_payload is not None:
                     copied_owner[_ATTACHMENTS_PROPERTY] = attachment_payload
             if node.role == "contact":
-                assert node.contact_id is not None
-                copied["contact_id"] = node.contact_id
+                if isinstance(node, NodeBinding):
+                    assert node.contact_id is not None
+                    copied["contact_id"] = node.contact_id
+                else:
+                    assert node.contact_slot_id is not None
+                    copied["contact_slot_id"] = node.contact_slot_id
             copied.matrix_world = evaluated.matrix_world
             export_scene.collection.objects.link(copied)
             triangulator = copied.modifiers.new("Temporary USDZ triangulation", "TRIANGULATE")
@@ -573,7 +763,7 @@ def _board_axis_transform() -> object:
 
 
 def _imported_source_node_ids(
-    scene: object, imported_nodes: Sequence[NodeBinding]
+    scene: object, imported_nodes: Sequence[NodeBinding | SlotNodeBinding]
 ) -> dict[str, str]:
     by_name = {item.name: item for item in scene.objects}
     correspondence: dict[str, str] = {}
@@ -592,8 +782,8 @@ def _imported_source_node_ids(
 
 
 def _require_bindings_unchanged(
-    source_nodes: Sequence[NodeBinding],
-    imported_nodes: Sequence[NodeBinding],
+    source_nodes: Sequence[NodeBinding | SlotNodeBinding],
+    imported_nodes: Sequence[NodeBinding | SlotNodeBinding],
     imported_source_node_ids: Mapping[str, str],
 ) -> None:
     source_by_id = {node.node_id: node for node in source_nodes}
@@ -605,8 +795,17 @@ def _require_bindings_unchanged(
     for imported_node_id, source_node_id in imported_source_node_ids.items():
         source = source_by_id[source_node_id]
         imported = imported_by_id[imported_node_id]
-        if (source.role, source.contact_id) != (imported.role, imported.contact_id):
+        if (source.role, _contact_binding_id(source)) != (
+            imported.role,
+            _contact_binding_id(imported),
+        ):
             raise ValueError("USDZ reimport changed mesh-to-contact bindings")
+
+
+def _contact_binding_id(node: NodeBinding | SlotNodeBinding) -> str | None:
+    if isinstance(node, NodeBinding):
+        return node.contact_id
+    return node.contact_slot_id
 
 
 def _require_bounds_stable(source: _SceneSnapshot, imported: _SceneSnapshot) -> None:
@@ -638,7 +837,7 @@ def _bounds_by_binding(
 ) -> dict[tuple[str, str | None], ModelBounds]:
     vertices: dict[tuple[str, str | None], dict[str, Sequence[tuple[float, float, float]]]] = {}
     for node in snapshot.nodes:
-        binding = (node.role, node.contact_id)
+        binding = (node.role, _contact_binding_id(node))
         vertices.setdefault(binding, {})[node.node_id] = snapshot.vertices_by_node_id[
             node.node_id
         ]
