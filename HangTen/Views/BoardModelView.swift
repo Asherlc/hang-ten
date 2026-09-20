@@ -2012,6 +2012,40 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     var contactTapGesture: UITapGestureRecognizer?
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
+    private var accessibilityProjection: AccessibilityProjection?
+
+    private struct AccessibilityProjection: Equatable {
+        let cameraTransform: SCNMatrix4
+        let presentationTransform: SCNMatrix4
+        let projectionTransform: SCNMatrix4
+        let orthographicScale: Double
+        let presentationProjection: SCNMatrix4
+        let presentationScale: Double
+        let viewport: CGRect
+
+        static func == (lhs: Self, rhs: Self) -> Bool {
+            SCNMatrix4EqualToMatrix4(lhs.cameraTransform, rhs.cameraTransform)
+                && SCNMatrix4EqualToMatrix4(lhs.presentationTransform, rhs.presentationTransform)
+                && SCNMatrix4EqualToMatrix4(lhs.projectionTransform, rhs.projectionTransform)
+                && lhs.orthographicScale == rhs.orthographicScale
+                && SCNMatrix4EqualToMatrix4(lhs.presentationProjection, rhs.presentationProjection)
+                && lhs.presentationScale == rhs.presentationScale
+                && lhs.viewport == rhs.viewport
+        }
+    }
+
+    private var currentAccessibilityProjection: AccessibilityProjection? {
+        guard let pointOfView, let camera = pointOfView.camera else { return nil }
+        return AccessibilityProjection(
+            cameraTransform: pointOfView.worldTransform,
+            presentationTransform: pointOfView.presentation.worldTransform,
+            projectionTransform: camera.projectionTransform,
+            orthographicScale: camera.orthographicScale,
+            presentationProjection: pointOfView.presentation.camera?.projectionTransform ?? camera.projectionTransform,
+            presentationScale: pointOfView.presentation.camera?.orthographicScale ?? camera.orthographicScale,
+            viewport: bounds
+        )
+    }
 
     override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard gestureRecognizer is UITapGestureRecognizer else { return true }
@@ -2072,8 +2106,11 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
     nonisolated func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
         DispatchQueue.main.async { [weak self] in
-            guard let self, self.needsAccessibilityProjection else { return }
-            self.needsAccessibilityProjection = false
+            guard let self else { return }
+            // Camera gestures and implicit reset animations can change projection
+            // without a SwiftUI update. Refresh only when a rendered state changes.
+            guard self.needsAccessibilityProjection
+                    || self.accessibilityProjection != self.currentAccessibilityProjection else { return }
             self.updateAccessibility()
         }
     }
@@ -2122,6 +2159,8 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     }
 
     func updateAccessibility() {
+        needsAccessibilityProjection = false
+        accessibilityProjection = currentAccessibilityProjection
         guard let onContactTap, let model else {
             isAccessibilityElement = true
             accessibilityLabel = "\(boardName) hangboard"

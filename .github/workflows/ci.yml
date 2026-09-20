@@ -604,6 +604,7 @@ jobs:
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
           XCTEST_ONLY_TESTING: >-
             HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
+            HangTenUITests/Batch05BoardModelInteractionUITests
             HangTenUITests/IronPalmBoardMapInteractionUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages

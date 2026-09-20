@@ -1,5 +1,12 @@
 # Batch 05 migration evidence packet
 
+Current status: all six migrated models and their actual iOS portrait/landscape,
+selection, orbit and reset captures have passed controller Astra visual review.
+See [native iOS acceptance](native/ios/README.md) and its
+[hash-bound manifest](native/ios/manifest.json) for final package identities,
+validation, cleanup and the pre-existing Android gate limitation. The source
+packet and original-delivery claims below remain historical evidence.
+
 The bounded migration design was approved in chat. **The user approved the exact 24 captures, 12 PDF views and all six cord exclusions on 2026-09-20**; see [the approval record](human-approval.json). This authorizes migration, not model acceptance. Start at [REVIEW.md](REVIEW.md). The initial evidence commits retained sources only. Subsequent migration work is documented under [native](native/README.md).
 
 ## Retained delivery
@@ -25,7 +32,7 @@ The delivery says primary binary downloads were unavailable. Those historical so
 | [zlagboard-evo](source-delivery/models/zlagboard-evo/zlagboard-evo.glb) | 21 | `bf3c44e8538a22ffc5c86ca6b7410ce58b265dd33f70328c205490c3069d2f8b` |
 | [zlagboard-pro-2-0](source-delivery/models/zlagboard-pro-2-0/zlagboard-pro-2-0.glb) | 28 | `e71482d155485acd5ad710f7fb8cf2ac2a055ef14a634a6026733f2e970f3b56` |
 
-## Remaining migration work
+## Original migration checklist (historical)
 
 1. Exact-evidence and six cord-exclusion approval recorded: user, 2026-09-20. Native/model acceptance remains separate.
 2. Reconcile app/source contact counts (13/13, 18/20, 20/22, 14/16, 21/21, 28/28), especially Forge IM Deep/Shallow/IMR and overlapping pinches. Preserve stable identities and unsupported-depth omissions; keep Zlag board dimensions estimates.

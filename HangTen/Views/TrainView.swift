@@ -133,7 +133,7 @@ struct TrainView: View {
     private var selectedBoardCard: some View {
         VStack(alignment: .leading, spacing: 16) {
             BoardMapView(board: store.selectedBoard)
-                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .cardPreviewStyle()
 
             VStack(alignment: .leading, spacing: 5) {
                 SectionLabel(title: "Your board")
@@ -476,7 +476,7 @@ private struct BoardPickerCard: View {
                 Button(action: onSelect) {
                     VStack(alignment: .leading, spacing: 14) {
                         BoardMapView(board: board, isDisplayOnly: true)
-                            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .cardPreviewStyle()
 
                         HStack(alignment: .top, spacing: 12) {
                             VStack(alignment: .leading, spacing: 4) {
@@ -525,5 +525,18 @@ private struct BoardPickerCard: View {
             .accessibilityIdentifier("boardPicker.holdSpecs.\(board.id)")
         }
         .hangCard()
+    }
+}
+
+// Raster photos keep their card treatment; model silhouettes come from the USDZ.
+private extension BoardMapView {
+    @ViewBuilder
+    func cardPreviewStyle() -> some View {
+        switch board.defaultPresentation.media {
+        case .raster:
+            clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        case .model:
+            self
+        }
     }
 }

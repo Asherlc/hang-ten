@@ -1388,9 +1388,518 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    private func assertNativeNearestTrianglePicking(boardID: String) async throws {
+    // These literal identities bind native acceptance to the reviewed Batch 05
+    // exports. A changed contact binding, hidden contact, shared highlight material,
+    // unavailable model or camera regression must fail against the real loader.
+    func testGestureCameraChangesRefreshContactAccessibilityThroughAnimatedReset() async throws {
+        let (board, _, model) = try await loadMigratedModel("frictitious.doormount-pro-7")
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: 240))
+        let window = UIWindow(frame: view.frame)
+        let controller = UIViewController()
+        controller.view.addSubview(view)
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        defer { view.delegate = nil; window.isHidden = true }
+        view.delegate = view
+        view.rendersContinuously = false
+        view.isPlaying = false
+        view.display(model)
+        view.contacts = board.contacts
+        view.positionID = board.positions.first!.id
+        var tapped: String?
+        view.onContactTap = { tapped = $0.id }
+        view.selectPositionIfNeeded()
+        view.updateAccessibility()
+        let contactID = "edge-35-right"
+        let element = try XCTUnwrap((view.accessibilityElements as? [UIAccessibilityElement])?
+            .first { $0.accessibilityIdentifier == "boardModel.contact.\(contactID)" })
+        let node = try XCTUnwrap(model.contactNodes[contactID]?.first)
+        func expectedCenter() -> CGPoint {
+            let box = node.boundingBox
+            let local = SCNVector3((box.min.x + box.max.x) / 2,
+                                  (box.min.y + box.max.y) / 2,
+                                  (box.min.z + box.max.z) / 2)
+            let projected = view.projectPoint(node.convertPosition(local, to: nil))
+            return CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
+        }
+        func renderFrame() async {
+            SCNTransaction.flush()
+            view.setNeedsDisplay()
+            try? await Task.sleep(for: .milliseconds(80))
+        }
+        func assertAligned(accuracy: CGFloat = 0.1) {
+            let center = expectedCenter()
+            XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, center.x, accuracy: accuracy)
+            XCTAssertEqual(element.accessibilityFrameInContainerSpace.midY, center.y, accuracy: accuracy)
+        }
+        // Initial position selection animates its camera framing too.
+        try await Task.sleep(for: .milliseconds(300))
+        await renderFrame()
+        let canonicalFrame = element.accessibilityFrameInContainerSpace
+        let pan = ChangedBoardPanGesture()
+        pan.setTranslation(CGPoint(x: 160, y: 40), in: view)
+        view.orbitPan(pan)
+        await renderFrame()
+        XCTAssertNotEqual(element.accessibilityFrameInContainerSpace, canonicalFrame,
+                          "Pan must move the accessibility target with the rendered contact")
+        assertAligned()
+        let orbitedFrame = element.accessibilityFrameInContainerSpace
+        let pinch = ChangedBoardPinchGesture()
+        pinch.scale = 1.2
+        view.orbitPinch(pinch)
+        await renderFrame()
+        XCTAssertNotEqual(element.accessibilityFrameInContainerSpace, orbitedFrame,
+                          "Pinch must update the projected accessibility target")
+        assertAligned()
+
+        let samples = try nativeTriangleCenters(for: node)
+        let tapPoint = try XCTUnwrap(samples.lazy.compactMap { local -> CGPoint? in
+            let projected = view.projectPoint(node.convertPosition(local, to: nil))
+            let point = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
+            let hit = view.hitTest(point, options: [
+                SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+                SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
+            ]).first
+            return hit?.node === node ? point : nil
+        }.first)
+        let tap = LocatedBoardTapGesture()
+        tap.point = tapPoint
+        view.selectContact(tap)
+        XCTAssertEqual(tapped, contactID)
+        // Observe actual rendered frames through the production 0.18s transition.
+        for _ in 0..<8 {
+            try await Task.sleep(for: .milliseconds(40))
+            await renderFrame()
+            // During animation the main-thread assertion can be one render frame
+            // ahead of the queued accessibility callback.
+            assertAligned(accuracy: 3)
+        }
+        assertAligned()
+        XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, canonicalFrame.midX, accuracy: 0.1)
+        XCTAssertEqual(element.accessibilityFrameInContainerSpace.midY, canonicalFrame.midY, accuracy: 0.1)
+        XCTAssertFalse(view.rendersContinuously)
+        XCTAssertFalse(view.isPlaying)
+
+        view.frame.size = CGSize(width: 650, height: 180)
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        await renderFrame()
+        assertAligned()
+    }
+
+    func testBatch05FrictitiousNativeMaterialsHaveTextureCoordinates() async throws {
+        for id in ["frictitious.doormount-pro-7", "frictitious.megalith"] {
+            let (_, _, model) = try await loadMigratedModel(id)
+            for node in model.geometryNodes {
+                // SceneKit renders textured geometry without UVs white. Rebuilt
+                // mounting closures and ownership meshes must keep a usable UV source.
+                XCTAssertFalse(node.geometry!.sources(for: .texcoord).isEmpty,
+                               "\(id)/\(node.name ?? "unnamed") loses its substrate color without texture coordinates")
+            }
+        }
+    }
+
+    func testBatch05DoorMountNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "frictitious.doormount-pro-7",
+            modelSHA256: "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+            descriptorSHA256: "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
+            contactIDs: [
+                "top-jug",
+                "edge-35-left",
+                "edge-35-right",
+                "mixed-25-pocket-left",
+                "mixed-25-pocket-right",
+                "hold-6",
+                "hold-7",
+                "hold-8",
+                "hold-9",
+                "hold-10",
+                "hold-11",
+                "hold-12",
+                "hold-13",
+            ],
+            bindings: [
+                "body__board_mounting_omitted_001|body|-",
+                "hold__jug_001|contact|top-jug",
+                "hold__left_edge_10_001|contact|hold-10",
+                "hold__left_edge_15_001|contact|hold-11",
+                "hold__left_edge_20_001|contact|hold-12",
+                "hold__left_edge_25_001|contact|mixed-25-pocket-left",
+                "hold__left_edge_35_001|contact|edge-35-left",
+                "hold__left_pocket_2finger_001|contact|hold-7",
+                "hold__right_edge_10_001|contact|hold-9",
+                "hold__right_edge_15_001|contact|hold-8",
+                "hold__right_edge_20_001|contact|hold-13",
+                "hold__right_edge_25_001|contact|mixed-25-pocket-right",
+                "hold__right_edge_35_001|contact|edge-35-right",
+                "hold__right_pocket_2finger_001|contact|hold-6",
+            ]
+        )
+    }
+
+    func testBatch05MegalithNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "frictitious.megalith",
+            modelSHA256: "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+            descriptorSHA256: "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
+            contactIDs: [
+                "top-jug",
+                "center-edge-25",
+                "mono-left",
+                "mono-right",
+                "edge-8-left",
+                "edge-10-left",
+                "edge-12-left",
+                "edge-12-right",
+                "edge-10-right",
+                "edge-8-right",
+                "edge-30-left",
+                "edge-40-pocket-left",
+                "edge-40-pocket-right",
+                "edge-30-right",
+                "edge-15-left",
+                "edge-20-left",
+                "edge-20-right",
+                "edge-15-right",
+                "pocket-2finger-left",
+                "pocket-2finger-right",
+            ],
+            bindings: [
+                "body__board_mounting_omitted_001|body|-",
+                "hold__center_edge_25_001|contact|center-edge-25",
+                "hold__jug_001|contact|top-jug",
+                "hold__left_edge_10_001|contact|edge-10-left",
+                "hold__left_edge_12_001|contact|edge-12-left",
+                "hold__left_edge_15_001|contact|edge-15-left",
+                "hold__left_edge_20_001|contact|edge-20-left",
+                "hold__left_edge_30_001|contact|edge-30-left",
+                "hold__left_edge_40_001|contact|edge-40-pocket-left",
+                "hold__left_edge_8_001|contact|edge-8-left",
+                "hold__left_mono_001|contact|mono-left",
+                "hold__left_pocket_2finger_001|contact|pocket-2finger-left",
+                "hold__right_edge_10_001|contact|edge-10-right",
+                "hold__right_edge_12_001|contact|edge-12-right",
+                "hold__right_edge_15_ownership_001|contact|edge-15-right",
+                "hold__right_edge_20_ownership_001|contact|edge-20-right",
+                "hold__right_edge_30_001|contact|edge-30-right",
+                "hold__right_edge_40_001|contact|edge-40-pocket-right",
+                "hold__right_edge_8_001|contact|edge-8-right",
+                "hold__right_mono_001|contact|mono-right",
+                "hold__right_pocket_2finger_001|contact|pocket-2finger-right",
+            ]
+        )
+    }
+
+    func testBatch05ForgeNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "trango.rock-prodigy-forge",
+            modelSHA256: "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+            descriptorSHA256: "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
+            contactIDs: [
+                "sloper-30-left",
+                "sloper-30-right",
+                "sloper-40-left",
+                "sloper-40-right",
+                "large-flat-edge-left",
+                "large-flat-edge-right",
+                "slopey-crimper-left",
+                "slopey-crimper-right",
+                "variable-edge-rail-left",
+                "variable-edge-rail-right",
+                "closed-crimp-left",
+                "closed-crimp-right",
+                "mr-deep-left",
+                "mr-deep-right",
+                "mr-shallow-left",
+                "mr-shallow-right",
+                "im-deep-left",
+                "im-deep-right",
+                "im-shallow-left",
+                "im-shallow-right",
+            ],
+            bindings: [
+                "body__left_002|body|-",
+                "body__right_002|body|-",
+                "hold__left_closed_crimp_002|contact|closed-crimp-left",
+                "hold__left_flat_edge_002|contact|large-flat-edge-left",
+                "hold__left_im_deep_001|contact|im-deep-left",
+                "hold__left_im_shallow_001|contact|im-shallow-left",
+                "hold__left_mr_deep_002|contact|mr-deep-left",
+                "hold__left_mr_shallow_002|contact|mr-shallow-left",
+                "hold__left_pinch_medium_002|body|-",
+                "hold__left_pinch_narrow_002|body|-",
+                "hold__left_rail_002|contact|variable-edge-rail-left",
+                "hold__left_sloper_30_002|contact|sloper-30-left",
+                "hold__left_sloper_40_002|contact|sloper-40-left",
+                "hold__left_slopey_crimper_002|contact|slopey-crimper-left",
+                "hold__right_closed_crimp_002|contact|closed-crimp-right",
+                "hold__right_flat_edge_002|contact|large-flat-edge-right",
+                "hold__right_im_deep_001|contact|im-deep-right",
+                "hold__right_im_shallow_001|contact|im-shallow-right",
+                "hold__right_mr_deep_002|contact|mr-deep-right",
+                "hold__right_mr_shallow_002|contact|mr-shallow-right",
+                "hold__right_pinch_medium_002|body|-",
+                "hold__right_pinch_narrow_002|body|-",
+                "hold__right_rail_002|contact|variable-edge-rail-right",
+                "hold__right_sloper_30_002|contact|sloper-30-right",
+                "hold__right_sloper_40_002|contact|sloper-40-right",
+                "hold__right_slopey_crimper_002|contact|slopey-crimper-right",
+            ]
+        )
+    }
+
+    func testBatch05NaturalNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "trango.rock-prodigy-natural",
+            modelSHA256: "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+            descriptorSHA256: "fb9bc30444fcab8f87d37f900b26fe3c74e9121ef02c08958a4a8fc1a4428144",
+            contactIDs: [
+                "top-jug-left",
+                "top-jug-right",
+                "top-variable-rail-left",
+                "top-variable-rail-right",
+                "bottom-variable-rail-left",
+                "bottom-variable-rail-right",
+                "closed-crimp-left",
+                "closed-crimp-right",
+                "upper-pocket-left",
+                "upper-pocket-right",
+                "center-lower-pocket-left",
+                "center-lower-pocket-right",
+                "outer-supported-pocket-left",
+                "outer-supported-pocket-right",
+            ],
+            bindings: [
+                "body__left_002|body|-",
+                "body__right_002|body|-",
+                "hold__left_closed_crimp_002|contact|closed-crimp-left",
+                "hold__left_jug_002|contact|top-jug-left",
+                "hold__left_pinch_thumb_002|body|-",
+                "hold__left_pocket_2finger_002|contact|center-lower-pocket-left",
+                "hold__left_pocket_3finger_002|contact|upper-pocket-left",
+                "hold__left_pocket_supported_002|contact|outer-supported-pocket-left",
+                "hold__left_rail_lower_002|contact|bottom-variable-rail-left",
+                "hold__left_rail_upper_002|contact|top-variable-rail-left",
+                "hold__right_closed_crimp_002|contact|closed-crimp-right",
+                "hold__right_jug_002|contact|top-jug-right",
+                "hold__right_pinch_thumb_002|body|-",
+                "hold__right_pocket_2finger_002|contact|center-lower-pocket-right",
+                "hold__right_pocket_3finger_002|contact|upper-pocket-right",
+                "hold__right_pocket_supported_002|contact|outer-supported-pocket-right",
+                "hold__right_rail_lower_002|contact|bottom-variable-rail-right",
+                "hold__right_rail_upper_002|contact|top-variable-rail-right",
+            ]
+        )
+    }
+
+    func testBatch05EvoNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "zlagboard.evo",
+            modelSHA256: "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+            descriptorSHA256: "6acf2aeb88708410bc9cf8778eaac1c7372addfee7d818e1968c420b7c43180f",
+            contactIDs: [
+                "top-jug-left",
+                "top-sloper-32-left",
+                "top-sloper-20-left",
+                "top-sloper-jug-center",
+                "top-sloper-20-right",
+                "top-sloper-32-right",
+                "top-jug-right",
+                "edge-30-left",
+                "sloper-edge-30-left",
+                "sloper-edge-25-left",
+                "edge-35-center",
+                "sloper-edge-25-right",
+                "sloper-edge-30-right",
+                "edge-30-right",
+                "edge-20-left",
+                "sloper-edge-25-lower-left",
+                "edge-30-inner-left",
+                "sloper-edge-30-center",
+                "edge-30-inner-right",
+                "sloper-edge-25-lower-right",
+                "edge-20-right",
+            ],
+            bindings: [
+                "body__board_001|body|-",
+                "hold__center_sloping_jug_001|contact|top-sloper-jug-center",
+                "hold__left_jug_001|contact|top-jug-left",
+                "hold__left_sloper_20_001|contact|top-sloper-20-left",
+                "hold__left_sloper_32_001|contact|top-sloper-32-left",
+                "hold__right_jug_001|contact|top-jug-right",
+                "hold__right_sloper_20_001|contact|top-sloper-20-right",
+                "hold__right_sloper_32_001|contact|top-sloper-32-right",
+                "hold__row_1_column_1_001|contact|edge-30-left",
+                "hold__row_1_column_2_001|contact|sloper-edge-30-left",
+                "hold__row_1_column_3_001|contact|sloper-edge-25-left",
+                "hold__row_1_column_4_001|contact|edge-35-center",
+                "hold__row_1_column_5_001|contact|sloper-edge-25-right",
+                "hold__row_1_column_6_001|contact|sloper-edge-30-right",
+                "hold__row_1_column_7_001|contact|edge-30-right",
+                "hold__row_2_column_1_001|contact|edge-20-left",
+                "hold__row_2_column_2_001|contact|sloper-edge-25-lower-left",
+                "hold__row_2_column_3_001|contact|edge-30-inner-left",
+                "hold__row_2_column_4_001|contact|sloper-edge-30-center",
+                "hold__row_2_column_5_001|contact|edge-30-inner-right",
+                "hold__row_2_column_6_001|contact|sloper-edge-25-lower-right",
+                "hold__row_2_column_7_001|contact|edge-20-right",
+            ]
+        )
+    }
+
+    func testBatch05ProNativeAcceptance() async throws {
+        try await assertBatch05NativeContract(
+            boardID: "zlagboard.pro",
+            modelSHA256: "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+            descriptorSHA256: "2b5456425bc1a89ff8263a0d3c6474fa8419ec8f835cfdf60d844defd5ac17bd",
+            contactIDs: [
+                "top-jug-left",
+                "top-jug-right",
+                "top-sloper-32-left",
+                "top-sloper-32-right",
+                "top-sloper-20-left",
+                "top-sloper-20-right",
+                "top-sloper-jug-center",
+                "edge-30-left",
+                "sloper-edge-30-left",
+                "sloper-edge-25-left",
+                "edge-35-center",
+                "sloper-edge-25-right",
+                "sloper-edge-30-right",
+                "edge-30-right",
+                "edge-20-left",
+                "sloper-edge-25-lower-left",
+                "edge-30-inner-left",
+                "sloper-edge-30-center",
+                "edge-30-inner-right",
+                "sloper-edge-25-lower-right",
+                "edge-20-right",
+                "edge-incut-15-left",
+                "edge-15-left",
+                "edge-incut-30-left",
+                "edge-incut-10-center",
+                "edge-incut-30-right",
+                "edge-15-right",
+                "edge-incut-15-right",
+            ],
+            bindings: [
+                "body__board_001|body|-",
+                "hold__center_sloping_jug_001|contact|top-sloper-jug-center",
+                "hold__left_jug_001|contact|top-jug-left",
+                "hold__left_sloper_20_001|contact|top-sloper-20-left",
+                "hold__left_sloper_32_001|contact|top-sloper-32-left",
+                "hold__right_jug_001|contact|top-jug-right",
+                "hold__right_sloper_20_001|contact|top-sloper-20-right",
+                "hold__right_sloper_32_001|contact|top-sloper-32-right",
+                "hold__row_1_column_1_001|contact|edge-30-left",
+                "hold__row_1_column_2_001|contact|sloper-edge-30-left",
+                "hold__row_1_column_3_001|contact|sloper-edge-25-left",
+                "hold__row_1_column_4_001|contact|edge-35-center",
+                "hold__row_1_column_5_001|contact|sloper-edge-25-right",
+                "hold__row_1_column_6_001|contact|sloper-edge-30-right",
+                "hold__row_1_column_7_001|contact|edge-30-right",
+                "hold__row_2_column_1_001|contact|edge-20-left",
+                "hold__row_2_column_2_001|contact|sloper-edge-25-lower-left",
+                "hold__row_2_column_3_001|contact|edge-30-inner-left",
+                "hold__row_2_column_4_001|contact|sloper-edge-30-center",
+                "hold__row_2_column_5_001|contact|edge-30-inner-right",
+                "hold__row_2_column_6_001|contact|sloper-edge-25-lower-right",
+                "hold__row_2_column_7_001|contact|edge-20-right",
+                "hold__row_3_column_1_001|contact|edge-incut-15-left",
+                "hold__row_3_column_2_001|contact|edge-15-left",
+                "hold__row_3_column_3_001|contact|edge-incut-30-left",
+                "hold__row_3_column_4_001|contact|edge-incut-10-center",
+                "hold__row_3_column_5_001|contact|edge-incut-30-right",
+                "hold__row_3_column_6_001|contact|edge-15-right",
+                "hold__row_3_column_7_001|contact|edge-incut-15-right",
+            ]
+        )
+    }
+
+    private func assertBatch05NativeContract(
+        boardID: String, modelSHA256: String, descriptorSHA256: String,
+        contactIDs: [String], bindings: [String]
+    ) async throws {
         let (board, media, model) = try await loadMigratedModel(boardID)
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: 600))
+        XCTAssertEqual(board.contacts.map(\.id), contactIDs, boardID)
+        XCTAssertEqual(Set(model.contactNodes.keys), Set(contactIDs), boardID)
+        XCTAssertEqual(media.descriptor.nodes.map {
+            "\($0.nodeID)|\($0.role.rawValue)|\($0.contactID ?? "-")"
+        }, bindings, boardID)
+        XCTAssertEqual(media.descriptor.modelSHA256, modelSHA256, boardID)
+        let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+        XCTAssertEqual(SHA256.hash(data: try Data(contentsOf: descriptorURL))
+            .map { String(format: "%02x", $0) }.joined(), descriptorSHA256, boardID)
+        XCTAssertNil(media.suspension, boardID)
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board), boardID)
+        XCTAssertFalse(model.isUnavailable, boardID)
+
+        let originalMaterials = try model.geometryNodes.map { node in
+            (node, try XCTUnwrap(node.geometry?.materials, boardID))
+        }
+        for contactID in contactIDs {
+            model.highlight([contactID], mode: .active)
+            for (node, originals) in originalMaterials {
+                let current = try XCTUnwrap(node.geometry?.materials)
+                XCTAssertEqual(current.count, originals.count)
+                for (material, original) in zip(current, originals) {
+                    if model.contactID(for: node) == contactID {
+                        XCTAssertFalse(material === original, "\(boardID)/\(contactID) must clone")
+                        XCTAssertEqual(material.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+                    } else {
+                        XCTAssertTrue(material === original, "\(boardID)/\(contactID) must isolate")
+                    }
+                }
+            }
+            model.highlight([], mode: .active)
+            for (node, originals) in originalMaterials {
+                XCTAssertTrue(zip(node.geometry!.materials, originals).allSatisfy { $0 === $1 },
+                              "\(boardID)/\(contactID) clear restores original material identities")
+            }
+        }
+        for node in model.geometryNodes where model.contactID(for: node) == nil {
+            XCTAssertEqual(node.categoryBitMask, BoardModelScene.modelVisibleCategory)
+            XCTAssertEqual(node.categoryBitMask & BoardModelScene.modelPickCategory, 0)
+        }
+        for size in [CGSize(width: 393, height: 240), CGSize(width: 650, height: 230), CGSize(width: 334, height: 334 / board.defaultPresentation.aspectRatio), CGSize(width: 802, height: 802 / board.defaultPresentation.aspectRatio)] {
+            let view = BoardModelSCNView(frame: CGRect(origin: .zero, size: size))
+            view.display(model)
+            for position in board.positions {
+                XCTAssertTrue(model.select(positionID: position.id))
+                model.resetCamera(animated: false)
+                SCNTransaction.flush()
+                XCTAssertNil(model.transientCordNode)
+                let canonical = model.camera.simdTransform
+                let scale = model.camera.camera?.orthographicScale
+                for node in model.geometryNodes {
+                    let box = node.boundingBox
+                    for x in [box.min.x, box.max.x] {
+                        for y in [box.min.y, box.max.y] {
+                            for z in [box.min.z, box.max.z] {
+                                let point = view.projectPoint(node.convertPosition(SCNVector3(x, y, z), to: nil))
+                                XCTAssertTrue(point.x >= -0.001 && point.x <= Float(size.width) + 0.001
+                                    && point.y >= -0.001 && point.y <= Float(size.height) + 0.001
+                                    && point.z >= 0 && point.z <= 1, "\(boardID) visible framing \(position.id) \(size) node=\(node.name ?? "unnamed") point=\(point)")
+                            }
+                        }
+                    }
+                }
+                model.orbit(azimuth: 0.35, elevation: -0.25, zoomScale: 1.1)
+                XCTAssertNotEqual(model.camera.simdTransform, canonical)
+                XCTAssertEqual(model.activePositionID, position.id)
+                model.resetCamera(animated: false)
+                XCTAssertEqual(model.camera.simdTransform, canonical)
+                XCTAssertEqual(model.camera.camera?.orthographicScale, scale)
+                XCTAssertEqual(model.activePositionID, position.id)
+            }
+        }
+        try await assertNativeNearestTrianglePicking(boardID: boardID, requireVisibleSurface: true)
+    }
+
+    private func assertNativeNearestTrianglePicking(boardID: String, requireVisibleSurface: Bool = false) async throws {
+        let (board, media, model) = try await loadMigratedModel(boardID)
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: requireVisibleSurface ? 800 / board.defaultPresentation.aspectRatio : 600))
         view.display(model)
         model.frame(in: view.bounds.size)
         let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
@@ -1438,6 +1947,17 @@ final class BoardModelTests: XCTestCase {
                                   closest.flatMap({ model.contactID(for: $0.node) }) == contactID else {
                                 return false
                             }
+                            if requireVisibleSurface {
+                                let visibleHit = model.scene.rootNode.hitTestWithSegment(
+                                    from: start, to: end,
+                                    options: [
+                                        SCNHitTestOption.categoryBitMask.rawValue:
+                                            BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
+                                        SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                                    ]
+                                ).first
+                                guard visibleHit?.node === node else { return false }
+                            }
                             // Exercise the same projected-point nearest hit used by
                             // selectContact, not an accessibility/legend identity lookup.
                             let projected = view.projectPoint(center)
@@ -1449,8 +1969,17 @@ final class BoardModelTests: XCTestCase {
                                 SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
                                 SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
                             ]).first
-                            return screenHit?.node === node
+                            if requireVisibleSurface {
+                                let visibleScreenHit = view.hitTest(point, options: [
+                                    SCNHitTestOption.categoryBitMask:
+                                        BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
+                                    SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
+                                ]).first
+                                guard visibleScreenHit?.node === node else { return false }
+                            }
+                            let success = screenHit?.node === node
                                 && screenHit.flatMap { model.contactID(for: $0.node) } == contactID
+                            return success
                         }
                     }
                     XCTAssertTrue(
@@ -2356,4 +2885,31 @@ private final class ImmediateBoardModelResourceRequest: BoardModelResourceReques
     func endAccessingResources() {
         didEndAccess = true
     }
+}
+
+@MainActor
+private final class ChangedBoardPanGesture: UIPanGestureRecognizer {
+    private var simulatedTranslation = CGPoint.zero
+    override func translation(in view: UIView?) -> CGPoint { simulatedTranslation }
+    override func setTranslation(_ translation: CGPoint, in view: UIView?) {
+        simulatedTranslation = translation
+    }
+    override var state: UIGestureRecognizer.State {
+        get { .changed }
+        set { }
+    }
+}
+
+@MainActor
+private final class ChangedBoardPinchGesture: UIPinchGestureRecognizer {
+    override var state: UIGestureRecognizer.State {
+        get { .changed }
+        set { }
+    }
+}
+
+@MainActor
+private final class LocatedBoardTapGesture: UITapGestureRecognizer {
+    var point = CGPoint.zero
+    override func location(in view: UIView?) -> CGPoint { point }
 }
