@@ -173,20 +173,32 @@ final class InitialWeightSetupUITests: XCTestCase {
         let enteredValue = field.value as? String
         XCTAssertEqual(enteredValue, "12.5")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        let pairingCancel = app.buttons["workout.sensorPairing.cancel"]
         source.buttons["Sensor"].tap()
-        XCTAssertTrue(app.buttons["workout.sensorPairing.cancel"].waitForExistence(timeout: 10))
+        XCTAssertTrue(pairingCancel.waitForExistence(timeout: 10))
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Sensor pairing presented inside initial weight setup"
         attachment.lifetime = .keepAlways
         add(attachment)
-        app.buttons["workout.sensorPairing.cancel"].tap()
+        pairingCancel.tap()
+        let firstPairingDismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"),
+            object: pairingCancel
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [firstPairingDismissed], timeout: 10), .completed)
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
         source.buttons["Sensor"].tap()
-        XCTAssertTrue(app.buttons["workout.sensorPairing.cancel"].waitForExistence(timeout: 10))
-        app.buttons["workout.sensorPairing.cancel"].tap()
+        XCTAssertTrue(pairingCancel.waitForExistence(timeout: 10))
+        pairingCancel.tap()
+        let secondPairingDismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"),
+            object: pairingCancel
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [secondPairingDismissed], timeout: 10), .completed)
         app.buttons["workout.initialWeight.continue"].tap()
         XCTAssertTrue(app.buttons["workout.sensorPairing.connect"].waitForExistence(timeout: 10))
     }

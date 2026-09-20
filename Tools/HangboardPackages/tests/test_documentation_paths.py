@@ -8,6 +8,7 @@ import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
+CI_PATH_FILTERS = REPO_ROOT / ".github/ci-paths.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
@@ -33,6 +34,21 @@ def _ci_workflow() -> dict[str, object]:
     document = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
     assert isinstance(document, dict)
     return document
+
+
+def test_ui_test_changes_run_ios_and_python_contract_suites() -> None:
+    """UI-test edits must exercise their XCTest shard and shard-assignment contract."""
+    filters = yaml.safe_load(CI_PATH_FILTERS.read_text(encoding="utf-8"))
+    ui_test_path = "HangTenUITests/**"
+    missing_filters = {
+        filter_name
+        for filter_name in ("ios", "python")
+        if ui_test_path not in filters[filter_name]
+    }
+
+    assert not missing_filters, (
+        f"{ui_test_path} must trigger these CI filters: {sorted(missing_filters)}"
+    )
 
 
 def test_shell_function_body_ends_at_an_unindented_closing_brace() -> None:

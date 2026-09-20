@@ -1,6 +1,7 @@
 ios:
   - 'HangTen/**'
   - 'HangTenTests/**'
+  - 'HangTenUITests/**'
   - 'HangTen.xcodeproj/**'
   - '.github/ExportOptions.plist'
   - 'HangTen/Resources/CountdownAudio/**'
@@ -8,6 +9,7 @@ python:
   - 'Tools/HangboardPackages/**'
   - 'Tools/HangboardWorkbench/**/*.py'
   - 'Tools/HangboardWorkbench/tests/**/*.py'
+  - 'HangTenUITests/**'
   - 'scripts/hangboard-packages.sh'
   - 'scripts/run-supported-python.sh'
 workbench_web:
