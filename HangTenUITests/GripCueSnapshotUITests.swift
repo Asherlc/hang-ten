@@ -214,17 +214,27 @@ final class InitialWeightSetupUITests: XCTestCase {
 final class DualMaxHangsHighlightUITests: XCTestCase {
     func testDualBoardExposesTheResolvedMaxHangHold() throws {
         let app = XCUIApplication()
+        // HANGTEN_REVIEW_WORKOUT was removed; plan detail is the stable surface that
+        // paints Dual's resolved Max Hangs hold on boardModel.3d (no weight sheet).
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            "HANGTEN_REVIEW_WORKOUT": "1",
+            "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
-            "HANGTEN_REVIEW_STEP": "1",
         ]
         app.launch()
 
+        XCTAssertTrue(
+            app.navigationBars["Plan"].waitForExistence(timeout: 20),
+            "DEBUG plan-detail review route should open Max Hangs on Dual."
+        )
+
         let board = app.otherElements["boardModel.3d"]
-        XCTAssertTrue(board.waitForExistence(timeout: 30))
+        // 3D / ODR load can be slow under CI shard load.
+        XCTAssertTrue(
+            board.waitForExistence(timeout: 60),
+            "Plan detail must expose the Dual 3D board model."
+        )
         XCTAssertEqual(board.value as? String, "20 mm curved edge")
     }
 }
