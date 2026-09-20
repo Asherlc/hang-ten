@@ -1,0 +1,24 @@
+name: Batch05 Blender runtime
+on:
+  push:
+    branches: [artifacts/batch05-source-evidence-20260920-1840]
+    paths: [.github/workflows/batch05-blender-runtime.yml]
+permissions:
+  contents: read
+jobs:
+  download:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fetch and checksum official portable runtime
+        run: |
+          mkdir -p runtime && cd runtime
+          curl --fail --location --max-time 180 --output blender-4.5.3-linux-x64.tar.xz https://download.blender.org/release/Blender4.5/blender-4.5.3-linux-x64.tar.xz
+          curl --fail --location --max-time 30 --output blender-4.5.3.sha256 https://download.blender.org/release/Blender4.5/blender-4.5.3.sha256
+          grep 'blender-4.5.3-linux-x64.tar.xz' blender-4.5.3.sha256 | sha256sum --check -
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: batch05-portable-blender-runtime
+          path: runtime/
+          compression-level: 0
+          retention-days: 1
