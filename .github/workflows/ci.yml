@@ -697,7 +697,10 @@ jobs:
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
-          XCTEST_ONLY_TESTING: HangTenUITests/GripCueDiagnosticScreenshotUITests
+          XCTEST_ONLY_TESTING: >-
+            HangTenUITests/GripCueDiagnosticScreenshotUITests
+            HangTenUITests/InitialWeightSetupUITests
+            HangTenUITests/DualMaxHangsHighlightUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
