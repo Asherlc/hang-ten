@@ -40,6 +40,8 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testLandscapePreStartHasNoLegacyLoadAdjustment() throws {
+        waitForInitialWeightSetup(timeout: 15)
+        selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
@@ -57,8 +59,10 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launch()
         dismissSettingsReviewIfPresented()
         openWorkoutDeepLink()
+        waitForInitialWeightSetup(timeout: 15)
+        selectManualWeightSourceIfNeeded()
 
-        XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 15))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
         app.buttons["workout.initialWeight.continue"].tap()
@@ -70,7 +74,23 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     private func openWorkoutDeepLink() {
+        // Brief settle so Train is ready before openurl (avoids landscape deep-link races).
+        _ = app.tabBars.firstMatch.waitForExistence(timeout: 5)
         app.open(workoutDeepLink)
+    }
+
+    private func waitForInitialWeightSetup(timeout: TimeInterval) {
+        XCTAssertTrue(
+            app.segmentedControls["workout.initialWeight.sourcePicker"].waitForExistence(timeout: timeout),
+            "Initial weight setup source picker should appear after the workout deep link."
+        )
+    }
+
+    private func selectManualWeightSourceIfNeeded() {
+        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        let manual = source.buttons["Manual"]
+        guard manual.exists, !manual.isSelected else { return }
+        manual.tap()
     }
 
     private func dismissSettingsReviewIfPresented() {
