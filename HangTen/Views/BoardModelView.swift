@@ -2133,11 +2133,20 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         // frame before projectPoint observes it.
         let isSettled = attempt >= 2 && cameraPresentationIsSettled()
         guard !isSettled, attempt < 50 else {
+            // The renderer can stop before its last presentation callback is
+            // delivered when a paused view owns the reset. Re-apply the
+            // canonical state without actions while continuous rendering is
+            // still active so the next projection cannot use the last orbit
+            // frame. The visual transition has either settled or reached its
+            // one-second safety bound by this point.
+            model?.resetCamera(animated: false)
+            SCNTransaction.flush()
             finishingAnimatedResetGeneration = nil
             ownsAnimatedResetContinuousRendering = false
             rendersContinuously = false
             needsAccessibilityProjection = true
             setNeedsDisplay()
+            refreshCompletedAnimatedResetAccessibility(generation: generation)
             return
         }
 
@@ -2145,6 +2154,21 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self,
                   self.finishingAnimatedResetGeneration == generation else { return }
             self.finishAnimatedReset(generation: generation, attempt: attempt + 1)
+        }
+    }
+
+    private func refreshCompletedAnimatedResetAccessibility(generation: Int, turn: Int = 0) {
+        guard animatedResetRenderGeneration == generation else { return }
+        needsAccessibilityProjection = true
+        updateAccessibility()
+        guard turn < 2 else { return }
+        // Allow the dirty paused frame and any queued renderer callback to
+        // publish before taking the final projection snapshot. Each refresh
+        // remains generation guarded so a newer tap owns the view immediately.
+        DispatchQueue.main.async { [weak self] in
+            guard let self,
+                  self.animatedResetRenderGeneration == generation else { return }
+            self.refreshCompletedAnimatedResetAccessibility(generation: generation, turn: turn + 1)
         }
     }
 
