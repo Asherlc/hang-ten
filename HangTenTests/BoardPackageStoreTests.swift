@@ -21,6 +21,7 @@ final class BoardPackageStoreTests: XCTestCase {
             ("captain-fingerfood.dual", "captain-fingerfood-dual"),
             ("captain-fingerfood.pocket", "captain-fingerfood-pocket"),
             ("captain-fingerfood.unlevel", "captain-fingerfood-unlevel"),
+            ("j-bryant.ftg-32", "j-bryant-ftg-32"),
             ("yy.baguette-evo", "yy-baguette-evo"),
         ]
 
