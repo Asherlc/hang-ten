@@ -2110,6 +2110,12 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             self.rendersContinuously = false
             self.needsAccessibilityProjection = true
             self.setNeedsDisplay()
+            // The final continuous frame can be delivered before the
+            // presentation camera settles on CI. Commit the completed
+            // projection explicitly so the paused view cannot retain the
+            // last in-flight accessibility frame while no further renderer
+            // callback is guaranteed.
+            self.updateAccessibility()
         }
     }
 
