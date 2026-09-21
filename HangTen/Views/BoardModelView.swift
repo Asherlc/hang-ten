@@ -653,7 +653,7 @@ final class BoardModelScene {
                   geometryByNodeID[nodeID] == nil,
                   !geometry.materials.isEmpty,
                   geometry.sources(for: .vertex).contains(where: { $0.vectorCount > 0 }),
-                  let copiedGeometry = geometry.copy() as? SCNGeometry else {
+                  let snapshot = geometry.copy() as? SCNGeometry else {
                 invalidGeometry = true
                 return
             }
@@ -662,6 +662,29 @@ final class BoardModelScene {
                 invalidGeometry = true
                 return
             }
+            // Preserve the original copy/material path first: procedural
+            // geometries materialize their sized sources on this snapshot.
+            snapshot.materials = copiedMaterials
+            // SCNGeometry.copy() still shares mutable elements. Rebuild those
+            // for every mesh, including unreflected clones and crease topology.
+            let elements = snapshot.elements.map(Self.copyElement)
+            let copiedGeometry: SCNGeometry
+            if let channels = snapshot.geometrySourceChannels {
+                copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements, sourceChannels: channels)
+            } else {
+                // Preserve the implicit single-channel representation.
+                copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements)
+            }
+            copiedGeometry.name = snapshot.name
+            copiedGeometry.boundingBox = snapshot.boundingBox
+            copiedGeometry.levelsOfDetail = snapshot.levelsOfDetail
+            copiedGeometry.tessellator = snapshot.tessellator?.copy() as? SCNGeometryTessellator
+            copiedGeometry.subdivisionLevel = snapshot.subdivisionLevel
+            copiedGeometry.wantsAdaptiveSubdivision = snapshot.wantsAdaptiveSubdivision
+            copiedGeometry.edgeCreasesSource = snapshot.edgeCreasesSource
+            copiedGeometry.edgeCreasesElement = snapshot.edgeCreasesElement.map(Self.copyElement)
+            copiedGeometry.program = snapshot.program
+            copiedGeometry.shaderModifiers = snapshot.shaderModifiers
             copiedGeometry.materials = copiedMaterials
             node.geometry = copiedGeometry
             geometryByNodeID[nodeID] = node
@@ -950,6 +973,22 @@ final class BoardModelScene {
         }
     }
 
+    private static func copyElement(_ element: SCNGeometryElement) -> SCNGeometryElement {
+        let copy = SCNGeometryElement(data: element.data, primitiveType: element.primitiveType,
+            primitiveCount: element.primitiveCount, indicesChannelCount: element.indicesChannelCount,
+            interleavedIndicesChannels: element.hasInterleavedIndicesChannels,
+            bytesPerIndex: element.bytesPerIndex)
+        copyElementConfiguration(from: element, to: copy)
+        return copy
+    }
+
+    private static func copyElementConfiguration(from source: SCNGeometryElement, to target: SCNGeometryElement) {
+        target.primitiveRange = source.primitiveRange
+        target.pointSize = source.pointSize
+        target.minimumPointScreenSpaceRadius = source.minimumPointScreenSpaceRadius
+        target.maximumPointScreenSpaceRadius = source.maximumPointScreenSpaceRadius
+    }
+
     private static func reflectingGeometry(
         _ geometry: SCNGeometry, localTransform: simd_float4x4
     ) -> SCNGeometry? {
@@ -1005,7 +1044,7 @@ final class BoardModelScene {
             guard var indices = triangleIndices(element) else { return nil }
             for index in stride(from: 0, to: indices.count, by: 3) { indices.swapAt(index + 1, index + 2) }
             let reversed = SCNGeometryElement(indices: indices, primitiveType: .triangles)
-            reversed.primitiveRange = element.primitiveRange
+            copyElementConfiguration(from: element, to: reversed)
             elements.append(reversed)
         }
         // Materials already belong exclusively to this clone. The reflected
@@ -1716,16 +1755,19 @@ final class BoardModelScene {
             return nil
         }
 
+        // Reconstructed SceneKit buffers can copy when bridged to Data.
+        // Snapshot once per buffer, not once per vertex/index component.
+        let sourceData = source.data
         let vertices = (0..<source.vectorCount).compactMap { index -> SIMD3<Float>? in
             let offset = source.dataOffset + index * source.dataStride
             guard offset >= 0,
-                  offset + 3 * MemoryLayout<Float>.size <= source.data.count else {
+                  offset + 3 * MemoryLayout<Float>.size <= sourceData.count else {
                 return nil
             }
             let local = SIMD3<Float>(
-                float32(in: source.data, at: offset),
-                float32(in: source.data, at: offset + 4),
-                float32(in: source.data, at: offset + 8)
+                float32(in: sourceData, at: offset),
+                float32(in: sourceData, at: offset + 4),
+                float32(in: sourceData, at: offset + 8)
             )
             let world = node.simdWorldTransform * SIMD4<Float>(local.x, local.y, local.z, 1)
             guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { return nil }
@@ -1735,6 +1777,7 @@ final class BoardModelScene {
 
         var result: [Triangle] = []
         for element in geometry.elements {
+            let elementData = element.data
             guard element.primitiveType == .triangles,
                   element.indicesChannelCount > vertexChannel,
                   element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
@@ -1743,13 +1786,13 @@ final class BoardModelScene {
             }
             let indexCount = element.primitiveCount * 3
             guard indexCount >= 0,
-                  indexCount * element.indicesChannelCount * element.bytesPerIndex <= element.data.count else {
+                  indexCount * element.indicesChannelCount * element.bytesPerIndex <= elementData.count else {
                 return nil
             }
             for offset in stride(from: 0, to: indexCount, by: 3) {
-                guard let first = index(in: element, at: offset, channel: vertexChannel),
-                      let second = index(in: element, at: offset + 1, channel: vertexChannel),
-                      let third = index(in: element, at: offset + 2, channel: vertexChannel),
+                guard let first = index(in: element, data: elementData, at: offset, channel: vertexChannel),
+                      let second = index(in: element, data: elementData, at: offset + 1, channel: vertexChannel),
+                      let third = index(in: element, data: elementData, at: offset + 2, channel: vertexChannel),
                       vertices.indices.contains(first),
                       vertices.indices.contains(second),
                       vertices.indices.contains(third) else {
@@ -1769,15 +1812,15 @@ final class BoardModelScene {
         return Float(bitPattern: bitPattern)
     }
 
-    private static func index(in element: SCNGeometryElement, at index: Int, channel: Int) -> Int? {
+    private static func index(in element: SCNGeometryElement, data: Data, at index: Int, channel: Int) -> Int? {
         // Imported USDZs can index positions, normals and UVs independently.
         // Read the geometry's declared position channel, in either layout.
         let scalarIndex = element.hasInterleavedIndicesChannels
             ? index * element.indicesChannelCount + channel
             : channel * element.primitiveCount * 3 + index
         let offset = scalarIndex * element.bytesPerIndex
-        guard offset >= 0, offset + element.bytesPerIndex <= element.data.count else { return nil }
-        let value = element.data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
+        guard offset >= 0, offset + element.bytesPerIndex <= data.count else { return nil }
+        let value = data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
             $0 | UInt32($1.element) << UInt32($1.offset * 8)
         }
         return Int(value)

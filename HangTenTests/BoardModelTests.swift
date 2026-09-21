@@ -7,6 +7,8 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    private var reusableSourceGeometry: SCNGeometry?
+
     func testReusableInstanceAppliesBaseThenPositionAboutPlacedBoundsCenter() throws {
         let c = SIMD3<Float>(2, 3, 5)
         let p = SIMD3<Float>(4, 3, 5)
@@ -48,18 +50,45 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testReusableClonesOwnGeometryMaterialsAndContactBindings() throws {
-        let scene = try makeReusableScene(reflection: nil, suspensions: nil)
-        let left = try XCTUnwrap(scene.instanceScenes[0].sourceSlotNodes["edge"]?.first)
-        let right = try XCTUnwrap(scene.instanceScenes[1].sourceSlotNodes["edge"]?.first)
-        XCTAssertFalse(left === right)
-        XCTAssertFalse(left.geometry === right.geometry)
-        XCTAssertFalse(left.geometry?.firstMaterial === right.geometry?.firstMaterial)
-        XCTAssertEqual(scene.contactID(for: left), "edge-left")
-        XCTAssertEqual(scene.contactID(for: right), "edge-right")
-        left.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-        left.position.x = 42
-        XCTAssertEqual(right.position.x, 0)
-        XCTAssertEqual(right.geometry?.firstMaterial?.diffuse.contents as? UIColor, .brown)
+        for reflection: BoardModelTransform.Reflection? in [nil, .x] {
+            let scene = try makeReusableScene(reflection: reflection, suspensions: nil)
+            let left = try XCTUnwrap(scene.instanceScenes[0].sourceSlotNodes["edge"]?.first)
+            let right = try XCTUnwrap(scene.instanceScenes[1].sourceSlotNodes["edge"]?.first)
+            XCTAssertFalse(left === right)
+            XCTAssertFalse(left.geometry === right.geometry)
+            XCTAssertEqual(left.geometry?.geometrySourceChannels, reusableSourceGeometry?.geometrySourceChannels)
+            XCTAssertFalse(left.geometry?.firstMaterial === right.geometry?.firstMaterial)
+            XCTAssertEqual(scene.contactID(for: left), "edge-left")
+            XCTAssertEqual(scene.contactID(for: right), "edge-right")
+            left.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            left.position.x = 42
+            XCTAssertEqual(right.position.x, 0)
+            XCTAssertEqual(right.geometry?.firstMaterial?.diffuse.contents as? UIColor, .brown)
+            let sourceElement = try XCTUnwrap(reusableSourceGeometry?.elements.first)
+            let leftElement = try XCTUnwrap(left.geometry?.elements.first)
+            let rightElement = try XCTUnwrap(right.geometry?.elements.first)
+            XCTAssertFalse(leftElement === sourceElement)
+            XCTAssertFalse(rightElement === sourceElement)
+            XCTAssertFalse(leftElement === rightElement)
+            XCTAssertEqual(leftElement.primitiveType, sourceElement.primitiveType)
+            XCTAssertEqual(leftElement.primitiveCount, sourceElement.primitiveCount)
+            XCTAssertEqual(leftElement.bytesPerIndex, sourceElement.bytesPerIndex)
+            XCTAssertEqual(leftElement.indicesChannelCount, sourceElement.indicesChannelCount)
+            XCTAssertEqual(leftElement.hasInterleavedIndicesChannels, sourceElement.hasInterleavedIndicesChannels)
+            XCTAssertEqual(leftElement.data, sourceElement.data)
+            for element in [leftElement, rightElement] {
+                XCTAssertEqual(element.primitiveRange, NSRange(location: 0, length: 1))
+                XCTAssertEqual(element.pointSize, 3)
+                XCTAssertEqual(element.minimumPointScreenSpaceRadius, 2)
+                XCTAssertEqual(element.maximumPointScreenSpaceRadius, 7)
+            }
+            leftElement.primitiveRange = NSRange(location: 0, length: 0)
+            leftElement.pointSize = 9
+            for element in [sourceElement, rightElement] {
+                XCTAssertEqual(element.primitiveRange, NSRange(location: 0, length: 1))
+                XCTAssertEqual(element.pointSize, 3)
+            }
+        }
     }
 
     func testReusableContainerMatrixAndUnionCameraFollowPosition() throws {
@@ -167,6 +196,11 @@ final class BoardModelTests: XCTestCase {
             SCNGeometrySource(vertices: vertices),
             SCNGeometrySource(normals: Array(repeating: SCNVector3(-1 / sqrt(2), 0, 1 / sqrt(2)), count: 3))
         ], elements: [SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)])
+        geometry.elements[0].primitiveRange = NSRange(location: 0, length: 1)
+        geometry.elements[0].pointSize = 3
+        geometry.elements[0].minimumPointScreenSpaceRadius = 2
+        geometry.elements[0].maximumPointScreenSpaceRadius = 7
+        reusableSourceGeometry = geometry
         geometry.firstMaterial = SCNMaterial()
         geometry.firstMaterial?.diffuse.contents = UIColor.brown
         geometry.firstMaterial?.isDoubleSided = false
@@ -2320,6 +2354,9 @@ final class BoardModelTests: XCTestCase {
             )
         }
 
+        // Bridging reconstructed SceneKit buffers can copy the entire Data.
+        // Keep one snapshot per buffer instead of copying it for each index.
+        let sourceData = source.data
         func vertex(_ index: Int) throws -> SCNVector3 {
             guard index >= 0, index < source.vectorCount else {
                 throw NSError(
@@ -2331,25 +2368,25 @@ final class BoardModelTests: XCTestCase {
             func component(_ component: Int) -> Float {
                 let byteOffset = source.dataOffset + index * source.dataStride
                     + component * source.bytesPerComponent
-                return source.data.withUnsafeBytes {
+                return sourceData.withUnsafeBytes {
                     $0.loadUnaligned(fromByteOffset: byteOffset, as: Float.self)
                 }
             }
             return SCNVector3(component(0), component(1), component(2))
         }
 
-        func index(in element: SCNGeometryElement, at offset: Int) throws -> Int {
+        func index(in element: SCNGeometryElement, data: Data, at offset: Int) throws -> Int {
             let byteOffset = offset * element.bytesPerIndex
             guard [1, 2, 4, 8].contains(element.bytesPerIndex),
                   byteOffset >= 0,
-                  byteOffset + element.bytesPerIndex <= element.data.count else {
+                  byteOffset + element.bytesPerIndex <= data.count else {
                 throw NSError(
                     domain: "BoardModelTests.nativeTriangleCenters",
                     code: 3,
                     userInfo: [NSLocalizedDescriptionKey: "unsupported native triangle index layout"]
                 )
             }
-            return element.data.withUnsafeBytes { bytes in
+            return data.withUnsafeBytes { bytes in
                 switch element.bytesPerIndex {
                 case 1: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt8.self))
                 case 2: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt16.self))
@@ -2361,13 +2398,14 @@ final class BoardModelTests: XCTestCase {
 
         var centers: [SCNVector3] = []
         for element in geometry.elements where element.primitiveType == .triangles {
+            let elementData = element.data
             let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
             let attributeCount = geometry.sources.count
             let importerMultiIndexSize = plainSize * attributeCount
             let layout: (stride: Int, corners: [Int])
-            if element.data.count == plainSize {
+            if elementData.count == plainSize {
                 layout = (3, [0, 1, 2])
-            } else if element.data.count == importerMultiIndexSize,
+            } else if elementData.count == importerMultiIndexSize,
                       geometry.sources.first?.semantic == .vertex {
                 // USD-imported meshes use one index per attribute per corner:
                 // vertex/normal, or vertex/normal/UV for textured sources.
@@ -2376,14 +2414,14 @@ final class BoardModelTests: XCTestCase {
                 throw NSError(
                     domain: "BoardModelTests.nativeTriangleCenters",
                     code: 4,
-                    userInfo: [NSLocalizedDescriptionKey: "\(node.name ?? "unnamed"): unknown native triangle element layout: bytes=\(element.data.count), triangles=\(element.primitiveCount), bytesPerIndex=\(element.bytesPerIndex), sources=\(geometry.sources.map { $0.semantic.rawValue })"]
+                    userInfo: [NSLocalizedDescriptionKey: "\(node.name ?? "unnamed"): unknown native triangle element layout: bytes=\(elementData.count), triangles=\(element.primitiveCount), bytesPerIndex=\(element.bytesPerIndex), sources=\(geometry.sources.map { $0.semantic.rawValue })"]
                 )
             }
             for triangle in 0..<element.primitiveCount {
                 let base = triangle * layout.stride
-                let first = try vertex(index(in: element, at: base + layout.corners[0]))
-                let second = try vertex(index(in: element, at: base + layout.corners[1]))
-                let third = try vertex(index(in: element, at: base + layout.corners[2]))
+                let first = try vertex(index(in: element, data: elementData, at: base + layout.corners[0]))
+                let second = try vertex(index(in: element, data: elementData, at: base + layout.corners[1]))
+                let third = try vertex(index(in: element, data: elementData, at: base + layout.corners[2]))
                 centers.append(SCNVector3(
                     (first.x + second.x + third.x) / 3,
                     (first.y + second.y + third.y) / 3,
