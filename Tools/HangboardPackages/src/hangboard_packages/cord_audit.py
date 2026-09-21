@@ -26,7 +26,7 @@ from .board_catalog import (
 _DECISIONS = frozenset({"represented", "excluded"})
 _TOPOLOGIES = frozenset({"singleCord", "pairedLeadCord", "twoBranchCord"})
 _SOURCE_FACTS = frozenset({"documentedSuspension", "noDocumentedSuspension"})
-_SOURCE_TIERS = frozenset({"manufacturer", "manufacturer-instruction", "retailer"})
+_SOURCE_TIERS = frozenset({"independent", "manufacturer", "manufacturer-instruction", "retailer"})
 _SHA256 = re.compile(r"^[0-9a-fA-F]{64}$")
 _SNAPSHOT_ROOT = Path("docs/source-audits/2026-09-13-model-cord-snapshots")
 _SELF_AUTHORED_LEDGER_SUFFIXES = frozenset({".json", ".md", ".markdown"})

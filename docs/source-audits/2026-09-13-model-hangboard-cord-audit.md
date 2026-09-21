@@ -7,8 +7,8 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 34 discovered model packages after the 2026-09-20 Helium
-promotion. Nine have documented suspended presentation evidence and render
+The audit covers all 35 discovered model packages after the 2026-09-20 Light Rail
+promotion. Ten have documented suspended presentation evidence and render
 transient cord geometry; twenty-five remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
@@ -17,7 +17,7 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 9 | `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `represented` | 10 | `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
 | `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
@@ -289,7 +289,7 @@ retained byte evidence:
 | Package | Source fact | Promotion decision/ruling |
 | --- | --- | --- |
 | `crimptonite.helium-mobile` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` exterior leads only; no inferred interior route or `twoBranchCord`. |
-| `metolius.light-rail-2` | `documentedSuspension` | represent `pairedLeadCord` at upper-entry exterior regions only; no underside mouth or hidden vertical bore. |
+| `metolius.light-rail-2` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` upper-entry exterior leads only; no underside mouth or hidden vertical bore. |
 | `metolius.rock-rings-3d` | `documentedSuspension` | represent two independent per-unit `pairedLeadCord` systems; no inter-unit connection or central through-bore. |
 | `yy.penta-evo` | `documentedSuspension` | represent two independent exterior paired loops through the central ring; no invented channel or knot. |
 | `owl-climb.poker` | `noDocumentedSuspension` | exclude. |
@@ -339,6 +339,88 @@ hardware could never be used with the physical product.
 The original `primary` presentation ID is preserved. Historical presentation
 remediation lifecycle conversion is deferred to Task 14 under the controller's
 ID-collision ruling; this promotion does not alter that manifest.
+
+### 2026-09-20 Light Rail 2.0 model promotion — `pairedLeadCord`
+
+Ruling: `pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore.`
+
+Astra directly authored one reversible rounded rail with the continuous front
+recess seen in the exact LR2 manufacturer product image and archived Treeline
+field image. The delivered GLB remains PARTIAL source material, not promoted
+geometry. Manufacturer labels 40/20/40/15 govern the four canonical contacts;
+the retailer 40/26/19/15 conflict does not create another contact.
+
+| Source patch | Canonical contact | Imported node |
+| --- | --- | --- |
+| `lr-top-jug-40` | `jug-40-20mm-side` | `lr_top_jug_40_001` |
+| `lr-recess-lower-20` | `edge-20` | `lr_recess_lower_20_001` |
+| `lr-bottom-jug-40` | `jug-40-15mm-side` | `lr_bottom_jug_40_001` |
+| `lr-recess-upper-15` | `edge-15` | `lr_recess_upper_15_001` |
+
+Retained regular-file snapshots are
+`2026-09-13-model-cord-snapshots/metolius-light-rail-2-product.jpg` (SHA-256
+`7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272`) and
+`metolius-light-rail-2-field.jpg` (SHA-256
+`93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a`).
+The manufacturer URL and independent exact archive replay URL/tier are in the
+JSON. The live Treeline replacement bytes remain unaccepted, as documented in
+the Batch 04 source-to-contact audit.
+
+The approved source-Z-up entry markers `[-0.213,0,0.038]` and
+`[0.213,0,0.038]` map via `(x,y,z) → (x,z,-y)` to descriptor Y-up points
+`[-0.213,0.038,0]` and `[0.213,0.038,0]`. Each binds only its corresponding
+nonselectable `left_upper_entry_001` or `right_upper_entry_001` surface. The
+saved Y coordinate is `0.037999999`, a 1 nm inward clamp to the float32-imported
+descriptor bound, preserving the same source entry region. The
+schema-required point-only passage repeats that endpoint, not a bore route.
+The two exterior entry regions clip 3 mm below the top surface as an
+`authored-display-estimate`; this cut-off does not claim the physical entry is
+blind. No underside mouth, hidden connection or supplied knot is modeled.
+
+The 457 × 76 × 38 mm envelope follows the retained manufacturer metric facts.
+Nominal 40 mm jug labels do not enlarge the 38 mm body thickness. Unsurveyed
+roundovers, channel width/returns/back transition, entry radii/clipping, rear
+profile and constant pale wood material are `authored-display-estimate`.
+The final imported surface is closed, has Euler characteristic 2 (no handles
+or through-holes), and exact underside rays at both entry X coordinates meet
+solid surfaces. Its seven nodes comprise one body, four contacts and two
+attachments. No screws, mounting holes, hardware, textures, raster media or
+fallback geometry is retained. Hardware omission describes the display model,
+not a physical safety or installation claim.
+
+Positions retain the exact historical functional grouping: `20mm-side` owns
+`jug-40-20mm-side` and `edge-20`; `15mm-side` owns `jug-40-15mm-side` and
+`edge-15`. Upright rotation is identity; inverted rotation is a normalized
+180° turn about the front axis (`[0,0,1,0]`). Both bind the same two original
+upper-entry attachment regions. Inversion moves those existing physical
+regions underneath the displayed rail; it does not create new underside
+mouths. Explicit `cordContactPoints` guide each visible lead around its outer
+end silhouette and approach its original rotated endpoint from outside.
+These controller-approved exterior guides are `authored-display-estimate`,
+not a claim that the reference establishes their exact bends or hidden route.
+There are no attachment overrides, internal segments, extra attachment nodes,
+or connections between leads.
+
+After visual review, inverted guides follow the existing 6 mm rounded end
+profile at a 3.4 mm cord-centerline offset (the production clearance requirement
+is 3 mm), with maximum X = ±0.2319 m. This replaces the rejected 16.5 mm
+offset/88 mm floating verticals with close, rounded exterior bends. A 6 mm
+upright exterior entry approach centers each tube in the same approved mouth.
+
+The invisible anchor is 0.24 m above the untransformed upper bound. Both leads
+have the same 0.431878843 m display rest length and 2 mm estimated radius.
+Upright translation `[0,-0.133053677,0]` and inverted zero translation
+reconcile the extra exterior route consumed by inversion with that fixed
+length. Each complete pose route requires about 0.430378843 m, leaving 1.5 mm
+of display slack. All anchor/translation/route/radius/material/camera values
+are `authored-display-estimate`. The approximately 0.133 m change in displayed
+board height is intentional and included in camera reframing, not asserted
+physical metrology. Both final imported-USDZ poses pass the unmodified production solver
+and clearance gate. Front, inverted, rear, end, oblique, four contact-highlight
+and production-solved cord captures are retained under the task-owned review
+evidence directory; current-source iOS behavior remains final Task 14 review.
+
+Historical presentation-remediation conversion remains Task 14.
 
 ### 2026-09-15 Batch 01 fixed-board exclusion addendum
 

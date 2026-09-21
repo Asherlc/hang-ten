@@ -122,6 +122,46 @@ def test_helium_represents_only_two_exterior_cord_leads() -> None:
     assert "authored-display-estimate" in suspension["cord"]["provenance"]
 
 
+def test_light_rail_inversion_preserves_entry_identity_and_exposes_the_other_grips() -> None:
+    """Catch lost reversibility or a pose that silently invents underside mouths."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    assert board.get("positions") == [
+        {"id": "20mm-side", "presentationID": "primary", "contactIDs": ["jug-40-20mm-side", "edge-20"]},
+        {"id": "15mm-side", "presentationID": "primary", "contactIDs": ["jug-40-15mm-side", "edge-15"]},
+    ]
+    suspension = board["presentations"][0]["media"]["suspension"]
+    poses = suspension["canonicalPoses"]
+    assert set(poses) == {"20mm-side", "15mm-side"}
+    assert poses["20mm-side"]["rotation"] == [0, 0, 0, 1]
+    assert poses["15mm-side"]["rotation"] == [0, 0, 1, 0]
+    assert all("attachmentPoints" not in pose for pose in poses.values())
+    routes = poses["15mm-side"]["cordContactPoints"]
+    assert set(routes) == {"left-lead", "right-lead"}
+    # Each route must approach its original physical entry from above in model
+    # coordinates; inversion rotates that same entry underneath the model.
+    for lead in suspension["attachments"]:
+        route = routes[lead["id"]]
+        assert route[-1][0] == lead["pointInModel"][0]
+        assert route[-1][1] > lead["pointInModel"][1]
+        assert any(abs(point[0]) > .2285 for point in route)
+
+
+def test_light_rail_inverted_guides_stay_close_to_the_existing_end_silhouette() -> None:
+    """Catch floating end hooks that pass clearance but misrepresent flexible cord."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    descriptor = json.loads((LIGHT_RAIL_ROOT / media["descriptorPath"]).read_text())
+    suspension = media["suspension"]
+    bounds = descriptor["modelBounds"]
+    for route in suspension["canonicalPoses"]["15mm-side"]["cordContactPoints"].values():
+        for point in route:
+            # Existing native clearance tests enforce the minimum gap. The
+            # maximum should stay within two tube radii of the real envelope.
+            envelope_gap = max(max(bounds["min"][i] - point[i], point[i] - bounds["max"][i], 0)
+                               for i in range(3))
+            assert envelope_gap <= 2 * suspension["cord"]["radius"]
+
+
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
     depth = contact.get("depth")
     if not isinstance(depth, dict):
@@ -777,35 +817,23 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 
     assert board["id"] == "metolius.light-rail-2"
     assert board["dimensions"] == "18 × 3 × 1.5 in"
-    assert _presentation_summary(board) == [
-        (
-            "20mm-side",
-            "40 mm jug and 20 mm edge",
-            "assets/primary.png",
-            1.0,
-            True,
-            None,
-            False,
-        ),
-        (
-            "15mm-side",
-            "40 mm jug and 15 mm edge",
-            "assets/15mm-surface.png",
-            1.0,
-            False,
-            None,
-            False,
-        ),
-    ]
-
-    owners = _original_contact_owners(board)
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["derivation"] == {"type": "original"}
+    media = presentation["media"]
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "suspension"}
+    assert media["type"] == "model"
+    descriptor = _assert_model_descriptor(LIGHT_RAIL_ROOT, board, "light_rail_body_001")
     assert tuple(
         (
             contact["id"],
             contact["name"],
             contact["kind"],
             _scalar_depth(contact),
-            owners[contact["id"]],
+            contact["equipmentObjectID"],
         )
         for contact in board["contacts"]
     ) == (
@@ -814,35 +842,63 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             "40 mm rounded jug on 20 mm side",
             "jug",
             40,
-            "20mm-side",
+            "primary",
         ),
-        ("edge-20", "20 mm edge", "edge", 20, "20mm-side"),
+        ("edge-20", "20 mm edge", "edge", 20, "primary"),
         (
             "jug-40-15mm-side",
             "40 mm rounded jug on 15 mm side",
             "jug",
             40,
-            "15mm-side",
+            "primary",
         ),
-        ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
+        ("edge-15", "15 mm edge", "edge", 15, "primary"),
     )
-    geometry = document_contact_geometry(board)
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shapeConstraint"] == {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0,
-        }
-        for contact in board["contacts"]
-    )
+    assert {contact: value["nodeIDs"] for contact, value in descriptor["contacts"].items()} == {
+        "jug-40-20mm-side": ["lr_top_jug_40_001"],
+        "edge-20": ["lr_recess_lower_20_001"],
+        "jug-40-15mm-side": ["lr_bottom_jug_40_001"],
+        "edge-15": ["lr_recess_upper_15_001"],
+    }
+    assert {contact for position in board["positions"] for contact in position["contactIDs"]} == {
+        "jug-40-20mm-side", "edge-20", "jug-40-15mm-side", "edge-15"
+    }
+    with zipfile.ZipFile(LIGHT_RAIL_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    assert not any(token in node["nodeID"].lower() for node in descriptor["nodes"]
+                   for token in ("screw", "mount", "fastener", "hardware", "cleat", "bracket", "underside", "bore", "anchor"))
 
-    for asset_path, expected_size in {
-        "assets/primary.png": (1254, 1254),
-        "assets/15mm-surface.png": (1254, 1254),
-    }.items():
-        with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+
+def test_light_rail_cord_uses_only_two_upper_exterior_entries() -> None:
+    """Catch invented underside/through routes and selectable cord bindings."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    suspension = media["suspension"]
+    assert suspension["type"] == "pairedLeadCord"
+    assert len(suspension["attachments"]) == 2
+    expected_points = {"left_upper_entry_001": [-0.213, 0.038, 0],
+                       "right_upper_entry_001": [0.213, 0.038, 0]}
+    assert {lead["nodeID"] for lead in suspension["attachments"]} == set(expected_points)
+    for lead in suspension["attachments"]:
+        # Export float32 bounds may move the upper surface inward by 1 nm.
+        assert lead["pointInModel"] == pytest.approx(expected_points[lead["nodeID"]], abs=1e-8)
+    descriptor = json.loads((LIGHT_RAIL_ROOT / media["descriptorPath"]).read_text())
+    assert {node["nodeID"] for node in descriptor["nodes"] if node["role"] == "attachment"} == {
+        "left_upper_entry_001", "right_upper_entry_001"
+    }
+    for lead, side in zip(suspension["attachments"], ("left", "right"), strict=True):
+        assert "contactPointsInModel" not in lead
+        assert "authored-display-estimate" in lead["provenance"]
+        assert len(suspension["passages"][side]) == 1
+        passage = suspension["passages"][side][0]
+        assert set(passage) == {"id", "nodeID", "pointInModel", "provenance"}
+        assert passage["nodeID"] == lead["nodeID"]
+        assert passage["pointInModel"] == lead["pointInModel"]
+    assert suspension["anchor"]["visibility"] == "invisible"
+    assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+    assert "authored-display-estimate" in suspension["cord"]["provenance"]
 
 
 def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:

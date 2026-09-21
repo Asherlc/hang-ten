@@ -825,6 +825,37 @@
       }
     },
     {
+      "packageID": "metolius.light-rail-2",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore.",
+      "evidence": [
+        {
+          "view": "LR2 exact-revision manufacturer product view",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-product.jpg"
+        },
+        {
+          "view": "Approved Treeline exact-revision field view, exact archive replay 2026-01-29T01:24:02Z",
+          "url": "https://web.archive.org/web/20260129012402id_/https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-field.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed the exact approved manufacturer product and archived Treeline field originals retained by Task 7. One reversible rail has one continuous front recess and current manufacturer 40/20/40/15 contacts. Approve only the two visible upper exterior entry regions and independent exterior leads. Source underside markers 3/4, hidden vertical bores, connecting routes and old face screws are omitted. Entry clipping, unsurveyed cross-section, radii, rear, material and suspension display values are authored-display-estimate; clipping does not claim physical blind bores."
+      }
+    },
+    {
       "packageID": "crimptonite.helium-mobile",
       "decision": "represented",
       "sourceFact": "documentedSuspension",

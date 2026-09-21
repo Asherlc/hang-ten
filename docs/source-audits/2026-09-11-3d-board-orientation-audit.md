@@ -81,6 +81,28 @@ pivot override. The package's model bounds and descriptor remain the
 model-package sources of truth; this inventory entry adds no orientation,
 geometry, or physical claim.
 
+## Batch-04 Metolius Light Rail 2.0 promotion (2026-09-20)
+
+`metolius.light-rail-2` is one physical reversible Light Rail 2.0 unit with
+one v1 model presentation and exactly two canonical positions:
+`20mm-side` and `15mm-side`. The two positions expose the four ordered contact
+IDs `jug-40-20mm-side`, `edge-20`, `jug-40-15mm-side`, and `edge-15` without
+duplicating physical contacts. `20mm-side` is the identity upright pose;
+`15mm-side` is the physical 180-degree inversion around the front/view axis.
+The identity and inversion quaternion, and the per-position contact guides,
+are authored display estimates selected to show the two source-backed working
+sides; they are not manufacturer angle or metrology claims.
+
+The model's `pairedLeadCord` route is restricted to the same two evidenced
+exterior entry regions (`left_upper_entry_001` and `right_upper_entry_001`,
+corresponding to `cord-passage-1` and `cord-passage-2`). No underside mouth,
+hidden vertical bore, or other connection is represented. Cord geometry is
+transient and non-pickable; model bounds and descriptor data remain the
+model-package sources of truth. Evidence: the retained manufacturer Light
+Rail 2.0 product view and exact archived Treeline field view recorded in the
+[Batch-04 source register](2026-09-20-batch-04-3d-source-register.json) and
+[source-to-contact audit](2026-09-20-batch-04-source-to-contact-audit.md).
+
 ## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for

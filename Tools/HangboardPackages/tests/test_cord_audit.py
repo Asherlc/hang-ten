@@ -60,6 +60,31 @@ def test_helium_cord_audit_retains_exact_front_reverse_evidence() -> None:
         assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
 
 
+def test_light_rail_cord_audit_retains_exact_approved_upper_entry_evidence() -> None:
+    """Catch missing model coverage or substitution of the changed live field photo."""
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "metolius.light-rail-2" in records
+    record = records["metolius.light-rail-2"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    rail = next(item for item in raw["records"] if item["packageID"] == "metolius.light-rail-2")
+    assert rail["ruling"] == "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore."
+    assert rail["humanApproval"]["reviewer"] == "Astra"
+    assert rail["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in rail["evidence"]} == {
+        "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
+        "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
+    }
+    for item in rail["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
 def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
@@ -88,7 +113,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 25, "represented": 9}
+    assert report.decisions == {"excluded": 25, "represented": 10}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

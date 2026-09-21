@@ -37,6 +37,7 @@ MODEL_PACKAGE_IDS = {
     "lattice.mxedge-lift-small",
     "mammut.diamond-finger",
     "metolius.foundry",
+    "metolius.light-rail-2",
     "metolius.prime-rib",
     "metolius.project",
     "metolius.climbers-edge",
