@@ -523,15 +523,31 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
         let sleep = self.sleep
         deactivationRetryTask = Task { @MainActor [weak self] in
-            do {
-                try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
-            } catch {
-                return
-            }
-            guard !Task.isCancelled, let self else { return }
+            while true {
+                do {
+                    try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
+                } catch {
+                    // Caller that cancelled already cleared deactivationRetryTask
+                    // (and may have scheduled a replacement).
+                    return
+                }
+                guard !Task.isCancelled, let self else { return }
+                guard self.configuredAudioSession, !self.synthesizer.isSpeaking else {
+                    self.deactivationRetryTask = nil
+                    return
+                }
 
-            self.deactivationRetryTask = nil
-            self.deactivateAudioSessionIfSpeechStopped()
+                do {
+                    try self.audioSession.deactivateAndNotifyOthers()
+                    self.configuredAudioSession = false
+                    self.deactivationRetryTask = nil
+                    return
+                } catch {
+                    self.logger.error(
+                        "Unable to deactivate spoken cue audio session: \(error.localizedDescription, privacy: .public)"
+                    )
+                }
+            }
         }
     }
 }
