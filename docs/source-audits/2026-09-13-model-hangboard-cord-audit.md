@@ -7,8 +7,8 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 35 discovered model packages after the 2026-09-20 Light Rail
-promotion. Ten have documented suspended presentation evidence and render
+The audit covers all 36 discovered model packages after the 2026-09-20 Rock Rings
+promotion. Eleven have documented suspended presentation evidence and render
 transient cord geometry; twenty-five remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
@@ -17,7 +17,7 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 10 | `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `represented` | 11 | `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
 | `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
@@ -290,7 +290,7 @@ retained byte evidence:
 | --- | --- | --- |
 | `crimptonite.helium-mobile` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` exterior leads only; no inferred interior route or `twoBranchCord`. |
 | `metolius.light-rail-2` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` upper-entry exterior leads only; no underside mouth or hidden vertical bore. |
-| `metolius.rock-rings-3d` | `documentedSuspension` | represent two independent per-unit `pairedLeadCord` systems; no inter-unit connection or central through-bore. |
+| `metolius.rock-rings-3d` | `documentedSuspension` | Promoted 2026-09-20: two independent pairedLeadCord systems; no inter-unit connection or central through-bore. |
 | `yy.penta-evo` | `documentedSuspension` | represent two independent exterior paired loops through the central ring; no invented channel or knot. |
 | `owl-climb.poker` | `noDocumentedSuspension` | exclude. |
 | `trango.rock-prodigy-pivot` | `noDocumentedSuspension` | exclude; pulley-kit ropes are not Pivot suspension. |
@@ -420,6 +420,37 @@ and clearance gate. Front, inverted, rear, end, oblique, four contact-highlight
 and production-solved cord captures are retained under the task-owned review
 evidence directory; current-source iOS behavior remains final Task 14 review.
 
+Historical presentation-remediation conversion remains Task 14.
+
+### 2026-09-20 Rock Rings reusable-unit promotion
+
+Ruling: two independent pairedLeadCord systems; no inter-unit connection or central through-bore.
+
+The exact approved manufacturer black/white photograph and owner front/rear
+and lateral photographs are copied as regular files into the canonical snapshot
+directory. Their original URLs, SHA-256 values and revision/provenance caveats
+remain in the manifest and the Batch 04 source register. RR3 supports the two
+roof exits per unit; RR6 shows a solid rear; RR7 shows the lateral access mouth.
+The older bright-spot interpretation does not authorize a central through-bore.
+
+One manually authored 146 × 184 × 57 mm physical unit has four generic slots:
+`jug`, `pocket-40`, `pocket-32`, `pocket-25`. Two identical, unreflected instances
+map them to the eight existing left/right contact identities. The top jug and
+three inward pockets remain distinct selectable surfaces. Roof exits and lateral
+windows are nonselectable attachment geometry; only roof points bind the two
+visible leads of each independent cord system. No route through the side
+windows or between openings is claimed. Clipped shallow aperture geometry,
+unsurveyed radii, perimeter/rear sections and neutral resin appearance are
+`authored-display-estimate`; clipping does not claim a physically blind cavity.
+All mounting/screw holes and hardware are omitted.
+
+The current reusable paired-lead solver preserves fixed world anchors, and
+the package parser validates suspension poses without instance-base context.
+Consequently each unit has an identity base and its own `primary` pose
+translation (X = ±0.105 m). Its independent invisible anchor has matching
+world X, 0.19 m above the unit bounds. These positions, cord radius/rest length
+and camera choices are display estimates. This uses the existing complete
+suspension-pose mechanism without changing the renderer or inventing routing.
 Historical presentation-remediation conversion remains Task 14.
 
 ### 2026-09-15 Batch 01 fixed-board exclusion addendum

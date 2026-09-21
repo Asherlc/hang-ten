@@ -42,6 +42,7 @@
 		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
 		D10000000000000000000022 /* crimptonite-helium-mobile Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000022 /* crimptonite-helium-mobile Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-crimptonite-helium-mobile", ); }; };
 		D10000000000000000000023 /* metolius-light-rail-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000023 /* metolius-light-rail-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-light-rail-2", ); }; };
+		D10000000000000000000024 /* metolius-rock-rings-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-rock-rings-3d", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
@@ -220,6 +221,7 @@
 		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000022 /* crimptonite-helium-mobile Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "crimptonite-helium-mobile Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/crimptonite-helium-mobile/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000023 /* metolius-light-rail-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-light-rail-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-light-rail-2/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-rock-rings-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-rock-rings-3d/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
 				D20000000000000000000022 /* crimptonite-helium-mobile Hangboards */,
 				D20000000000000000000023 /* metolius-light-rail-2 Hangboards */,
+				D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */,
 			);
 			name = "On-Demand Model Resources";
 			sourceTree = "<group>";
@@ -812,6 +815,7 @@
 				D10000000000000000000020 /* soill-split-palm Hangboards in Resources */,
 				D10000000000000000000022 /* crimptonite-helium-mobile Hangboards in Resources */,
 				D10000000000000000000023 /* metolius-light-rail-2 Hangboards in Resources */,
+				D10000000000000000000024 /* metolius-rock-rings-3d Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,

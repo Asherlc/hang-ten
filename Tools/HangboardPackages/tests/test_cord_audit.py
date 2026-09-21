@@ -85,6 +85,32 @@ def test_light_rail_cord_audit_retains_exact_approved_upper_entry_evidence() -> 
         assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
 
 
+def test_rock_rings_cord_audit_retains_exact_manufacturer_and_owner_evidence() -> None:
+    """Catch missing coverage or revival of the disproved central through-bore."""
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "metolius.rock-rings-3d" in records
+    record = records["metolius.rock-rings-3d"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    rings = next(item for item in raw["records"] if item["packageID"] == "metolius.rock-rings-3d")
+    assert rings["ruling"] == "two independent pairedLeadCord systems; no inter-unit connection or central through-bore."
+    assert rings["humanApproval"]["reviewer"] == "Astra"
+    assert rings["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in rings["evidence"]} == {
+        "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
+        "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+        "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+    }
+    for item in rings["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
 def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
@@ -113,7 +139,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 25, "represented": 10}
+    assert report.decisions == {"excluded": 25, "represented": 11}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

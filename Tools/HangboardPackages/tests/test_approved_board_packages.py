@@ -907,10 +907,10 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
     assert board["id"] == "metolius.rock-rings-3d"
     assert board["dimensions"] == "184 × 146 × 57 mm"
     assert _presentation_summary(board) == [
-        ("front-pair", "Front pair", "assets/primary.png", 1.5, True, None, False)
+        ("primary", "Front pair", "assets/primary.usdz", 1.5, True, None, False)
     ]
 
-    owners = _original_contact_owners(board)
+    owners = {contact["id"]: contact["equipmentObjectID"] for contact in board["contacts"]}
     assert tuple(
         (
             contact["id"],
@@ -922,14 +922,14 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
         )
         for contact in board["contacts"]
     ) == (
-        ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
+        ("jug-left", "Left unit jug", "jug", None, None, "left-ring"),
         (
             "pocket-40-four-left",
             "Left unit 40 mm four-finger pocket",
             "pocket",
             40,
             4,
-            "front-pair",
+            "left-ring",
         ),
         (
             "pocket-32-three-left",
@@ -937,7 +937,7 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             32,
             3,
-            "front-pair",
+            "left-ring",
         ),
         (
             "pocket-25-two-left",
@@ -945,16 +945,16 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             25,
             2,
-            "front-pair",
+            "left-ring",
         ),
-        ("jug-right", "Right unit jug", "jug", None, None, "front-pair"),
+        ("jug-right", "Right unit jug", "jug", None, None, "right-ring"),
         (
             "pocket-40-four-right",
             "Right unit 40 mm four-finger pocket",
             "pocket",
             40,
             4,
-            "front-pair",
+            "right-ring",
         ),
         (
             "pocket-32-three-right",
@@ -962,7 +962,7 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             32,
             3,
-            "front-pair",
+            "right-ring",
         ),
         (
             "pocket-25-two-right",
@@ -970,54 +970,89 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             25,
             2,
-            "front-pair",
+            "right-ring",
         ),
     )
-    geometry = document_contact_geometry(board)
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shape"]["type"] == "path"
-        for contact in board["contacts"]
-    )
-    assert all(
-        geometry[contact["id"]][0]["shapeConstraint"]
-        == {"shape": "roundedRectangle", "rotationDegrees": 0}
-        for contact in board["contacts"]
-        if contact["kind"] == "pocket"
-    )
-
-    with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
-        assert image.format == "PNG"
-        assert image.size == (1536, 1024)
+    assert board["equipmentObjects"] == [{"id": "left-ring"}, {"id": "right-ring"}]
+    assert all(contact["equipmentObjectID"] == f"{contact['id'].rsplit('-', 1)[1]}-ring"
+               for contact in board["contacts"])
 
 
-def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
+def test_rock_rings_has_one_four_slot_asset_and_two_unreflected_instances() -> None:
+    """Catch baked duplicates, reflected units, lost ownership, or raster fallback."""
     board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
+    assert len(board["presentations"]) == 1
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert {p.relative_to(ROCK_RINGS_ROOT).as_posix() for p in ROCK_RINGS_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["modelSHA256"] == hashlib.sha256((ROCK_RINGS_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    assert "contacts" not in descriptor
+    assert set(descriptor["contactSlots"]) == {"jug", "pocket-40", "pocket-32", "pocket-25"}
+    assert all("contactID" not in node for node in descriptor["nodes"])
+    bounds = descriptor["modelBounds"]
+    assert [bounds["max"][i] - bounds["min"][i] for i in range(3)] == pytest.approx([.146, .184, .057], abs=.000001)
+    # A source asset has unit-local bounds and one body, never a baked pair.
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    with zipfile.ZipFile(ROCK_RINGS_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    assert len(media["instances"]) == 2
+    mapped = []
+    for side, instance in zip(("left", "right"), media["instances"], strict=True):
+        assert instance["equipmentObjectID"] == f"{side}-ring"
+        assert instance["contactIDsBySlotID"] == {
+            "jug": f"jug-{side}", "pocket-40": f"pocket-40-four-{side}",
+            "pocket-32": f"pocket-32-three-{side}", "pocket-25": f"pocket-25-two-{side}"
+        }
+        mapped.extend(instance["contactIDsBySlotID"].values())
+        assert "reflection" not in instance["baseTransform"]
+        assert instance["baseTransform"]["rotation"] == [0, 0, 0, 1]
+        assert "positionTransforms" not in instance
+    assert len(mapped) == len(set(mapped)) == 8
+    assert set(mapped) == {c["id"] for c in board["contacts"]}
+    assert board["positions"] == [{"id": "primary", "presentationID": "primary", "contactIDs": [c["id"] for c in board["contacts"]]}]
+    catalog = load_board_catalog_module()
+    assert catalog.load_board_package(ROCK_RINGS_ROOT).board.id == board["id"]
 
-    for left_id, right_id in (
-        ("jug-left", "jug-right"),
-        ("pocket-40-four-left", "pocket-40-four-right"),
-        ("pocket-32-three-left", "pocket-32-three-right"),
-        ("pocket-25-two-left", "pocket-25-two-right"),
-    ):
-        left = geometry[left_id][0]
-        right = geometry[right_id][0]
-        left_frame = left["frame"]
-        right_frame = right["frame"]
 
-        assert right_frame["x"] == pytest.approx(
-            1 - left_frame["x"] - left_frame["width"]
-        )
-        assert right_frame["y"] == left_frame["y"]
-        assert right_frame["width"] == left_frame["width"]
-        assert right_frame["height"] == left_frame["height"]
-        assert right["shape"]["type"] == left["shape"]["type"] == "path"
-        _assert_global_paths_are_horizontal_mirrors(left, right)
-        assert [
-            command.get("bendable") for command in right["shape"]["commands"]
-        ] == [command.get("bendable") for command in left["shape"]["commands"]]
-        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+def test_rock_rings_cords_have_independent_anchors_and_only_evidenced_openings() -> None:
+    """Catch a shared anchor, inter-unit route, fake central bore or contact binding."""
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
+    roles = {node["nodeID"].removesuffix("_001").replace("_", "-"): node["role"] for node in descriptor["nodes"]}
+    assert roles["roof-exit"] == roles["lateral-window"] == "attachment"
+    assert not any(token in name for name in roles for token in (
+        "mount", "screw", "fastener", "cleat", "bracket", "hardware", "central", "bore", "cord", "anchor"
+    ))
+    anchors = []
+    attachment_ids = []
+    for instance in media["instances"]:
+        suspension = instance["suspension"]
+        assert suspension["type"] == "pairedLeadCord"
+        assert len(suspension["attachments"]) == 2
+        assert set(suspension["passages"]) == {"left", "right"}
+        assert all(len(v) == 1 for v in suspension["passages"].values())
+        for passage in suspension["passages"].values():
+            assert set(passage[0]) == {"id", "nodeID", "pointInModel", "provenance"}
+        for attachment in suspension["attachments"]:
+            assert roles[attachment["nodeID"].removesuffix("_001").replace("_", "-")] == "attachment"
+            assert "contactPointsInModel" not in attachment
+            attachment_ids.append(attachment["id"])
+        assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
+        assert suspension["anchor"]["visibility"] == "invisible"
+        anchors.append(tuple(suspension["anchor"]["offsetFromBoardBounds"]))
+        assert set(suspension["canonicalPoses"]) == {"primary"}
+        assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+        assert "authored-display-estimate" in suspension["cord"]["provenance"]
+    assert len(set(anchors)) == 2
+    assert len(set(attachment_ids)) == 4
 
 
 def test_deluxe_model_package_freezes_the_independent_official_inventory() -> None:

@@ -38,6 +38,7 @@ MODEL_PACKAGE_IDS = {
     "mammut.diamond-finger",
     "metolius.foundry",
     "metolius.light-rail-2",
+    "metolius.rock-rings-3d",
     "metolius.prime-rib",
     "metolius.project",
     "metolius.climbers-edge",
@@ -375,6 +376,56 @@ def test_flash_board_uses_suspension_with_corrected_small_crimp_contacts() -> No
     assert set(positions["three-edge-upright"].contact_ids).isdisjoint(
         positions["two-edge-upright"].contact_ids
     )
+
+
+def test_rock_rings_uses_two_identical_unreflected_units_with_independent_cords() -> None:
+    board = _discovered_model_packages()["metolius.rock-rings-3d"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
+    assert len(media.instances) == 2
+
+    expected_slots = ("jug", "pocket-40", "pocket-32", "pocket-25")
+    expected_maps = (
+        {
+            "jug": "jug-left",
+            "pocket-40": "pocket-40-four-left",
+            "pocket-32": "pocket-32-three-left",
+            "pocket-25": "pocket-25-two-left",
+        },
+        {
+            "jug": "jug-right",
+            "pocket-40": "pocket-40-four-right",
+            "pocket-32": "pocket-32-three-right",
+            "pocket-25": "pocket-25-two-right",
+        },
+    )
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-ring",
+        "right-ring",
+    ]
+    for instance, expected_map in zip(media.instances, expected_maps):
+        assert set(instance.contact_ids_by_slot_id) == set(expected_slots)
+        assert dict(instance.contact_ids_by_slot_id) == expected_map
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.reflection is None
+        assert instance.position_transforms is None
+        assert instance.suspension is not None
+        assert len(instance.suspension.attachments) == 2
+        assert instance.suspension.anchor.visibility == "invisible"
+
+    # Each unit owns its own paired lead cord and anchor state.
+    left_suspension = media.instances[0].suspension
+    right_suspension = media.instances[1].suspension
+    assert left_suspension is not right_suspension
+    assert left_suspension is not None and right_suspension is not None
+    assert left_suspension.attachments is not right_suspension.attachments
 
 
 @pytest.mark.parametrize(

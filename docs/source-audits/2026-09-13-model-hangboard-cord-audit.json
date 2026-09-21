@@ -885,6 +885,45 @@
         "reviewedAt": "2026-09-20",
         "notes": "Inspected exact HE2/HE6 original Crimptonite photographs retained by Task 7 and the manual analytic candidate. Front and reverse each show two end mouths, three recesses occur only on the front, and the rear is continuous. Approve two independent exterior front leads; clipped mouth display geometry makes no claim about hidden connection. HE1 manufacturer 24 mm thickness wins the retailer conflict. Unmeasured mouth/pose/anchor/rest-length/material/camera values are authored-display-estimate."
       }
+    },
+    {
+      "packageID": "metolius.rock-rings-3d",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent pairedLeadCord systems; no inter-unit connection or central through-bore.",
+      "evidence": [
+        {
+          "view": "RR3 exact manufacturer black/white product and two roof exits per unit",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-product.jpg"
+        },
+        {
+          "view": "RR6 approved owner front/rear; uninterrupted rear disproves central through-bore",
+          "url": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-front-rear.webp"
+        },
+        {
+          "view": "RR7 approved owner lateral opening; no claimed hidden route",
+          "url": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-lateral.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed exact approved manufacturer black/white and retained owner front/rear/lateral originals. One canonical physical unit is rendered twice, identical and unreflected. Four generic contact slots map uniquely to eight preserved contacts. Each instance has its own pairedLeadCord and fixed invisible world anchor. Visible leads terminate at two roof exits; lateral windows are non-route attachment geometry. No central bore, concealed connection, inter-unit route, screw/mounting hole or hardware is modeled. Shallow aperture clipping is an authored-display-estimate, not proof of a physical blind cavity. Owner revision/year and CDN provenance caveats remain in the original source register; exact chemistry is unknown and source textures are not used."
+      }
     }
   ]
 }

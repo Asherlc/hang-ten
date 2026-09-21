@@ -374,6 +374,33 @@ def _suspension_topology(suspension: object | None) -> str | None:
     raise CordAuditError("model package has unsupported suspension topology")
 
 
+def _model_media_topology(media: PresentationMediaModel) -> str | None:
+    """Resolve topology from legacy media or every reusable model instance."""
+    if media.instances is None:
+        return _suspension_topology(media.suspension)
+    if media.suspension is not None:
+        raise CordAuditError(
+            "reusable model media cannot also declare a media-level suspension"
+        )
+
+    instances = tuple(media.instances)
+    if not instances:
+        raise CordAuditError("reusable model media must contain at least one instance")
+
+    topologies = tuple(_suspension_topology(instance.suspension) for instance in instances)
+    if any(topology is None for topology in topologies) and not all(
+        topology is None for topology in topologies
+    ):
+        raise CordAuditError(
+            "reusable model instances must all declare the same suspension topology"
+        )
+    if len(set(topologies)) > 1:
+        raise CordAuditError(
+            "reusable model instances must all declare the same suspension topology"
+        )
+    return topologies[0]
+
+
 def _model_package_topologies(inventory: BoardInventory) -> dict[str, str | None]:
     result: dict[str, str | None] = {}
     for package in inventory.packages:
@@ -390,7 +417,7 @@ def _model_package_topologies(inventory: BoardInventory) -> dict[str, str | None
             raise CordAuditError(
                 f"model package must contain exactly one model presentation: {package.board.id}"
             )
-        result[package.board.id] = _suspension_topology(model_media[0].suspension)
+        result[package.board.id] = _model_media_topology(model_media[0])
     return result
 
 

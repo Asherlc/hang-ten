@@ -830,6 +830,98 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testRockRingsPrimaryUsesCanonicalTranslationsForSeparatedInstancesAndUnionFraming() async throws {
+        let (board, media, model) = try await loadMigratedModel("metolius.rock-rings-3d")
+        let instances = try XCTUnwrap(media.instances)
+        XCTAssertEqual(instances.count, 2)
+        XCTAssertEqual(instances.map(\.equipmentObjectID), ["left-ring", "right-ring"])
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.translation == [0, 0, 0] })
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.rotation == SIMD4(0, 0, 0, 1) })
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.reflection == nil })
+
+        var canonicalTranslations: [[Double]] = []
+        for instance in instances {
+            guard let rawSuspension = instance.suspension else {
+                XCTFail("Rock Rings must use pairedLeadCord on every reusable instance")
+                return
+            }
+            guard case .pairedLeadCord(let suspension) = rawSuspension else {
+                XCTFail("Rock Rings must use pairedLeadCord on every reusable instance")
+                return
+            }
+            guard let pose = suspension.canonicalPoses["primary"] else {
+                XCTFail("Rock Rings pairedLeadCord must define a primary canonical pose")
+                return
+            }
+            canonicalTranslations.append(pose.translation)
+        }
+        XCTAssertEqual(canonicalTranslations.count, 2)
+        XCTAssertLessThan(canonicalTranslations[0][0], canonicalTranslations[1][0])
+        XCTAssertNotEqual(canonicalTranslations[0], canonicalTranslations[1])
+
+        XCTAssertTrue(model.select(positionID: "primary"))
+        XCTAssertFalse(model.isUnavailable)
+        XCTAssertEqual(model.activePositionID, "primary")
+        XCTAssertEqual(model.instanceScenes.count, 2)
+        XCTAssertTrue(model.instanceScenes.allSatisfy { $0.container.parent != nil })
+
+        let leftBounds = worldBounds(of: model.instanceScenes[0].container)
+        let rightBounds = worldBounds(of: model.instanceScenes[1].container)
+        for bounds in [leftBounds, rightBounds] {
+            XCTAssertTrue(bounds.minimum.x.isFinite && bounds.minimum.y.isFinite && bounds.minimum.z.isFinite)
+            XCTAssertTrue(bounds.maximum.x.isFinite && bounds.maximum.y.isFinite && bounds.maximum.z.isFinite)
+        }
+        XCTAssertLessThan(leftBounds.maximum.x, rightBounds.minimum.x)
+
+        let cords = model.instanceScenes.flatMap(\.transientCordNodes)
+        XCTAssertEqual(cords.count, 2)
+        XCTAssertTrue(cords.allSatisfy { $0.parent === model.scene.rootNode })
+        XCTAssertTrue(cords.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
+
+        let view = SCNView(frame: CGRect(x: 0, y: 0, width: 390, height: 228))
+        view.scene = model.scene
+        view.pointOfView = model.camera
+        model.frame(in: view.bounds.size)
+        SCNTransaction.flush()
+        let framedNodes = model.instanceScenes.map(\.container) + cords
+        for node in framedNodes {
+            let corners = worldBoundsCorners(of: node)
+            XCTAssertEqual(corners.count, 8, "every framed node must have a finite bounding box")
+            XCTAssertTrue(corners.allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite })
+            for point in corners {
+                let projected = view.projectPoint(SCNVector3(point))
+                XCTAssertTrue(
+                    projected.x.isFinite && projected.y.isFinite && projected.z.isFinite &&
+                    projected.z >= 0 && projected.z <= 1 &&
+                    view.bounds.contains(CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))),
+                    "primary camera must frame both transformed units and active cords"
+                )
+            }
+        }
+        XCTAssertEqual(board.positions.first?.id, "primary")
+    }
+
+    private func worldBounds(of node: SCNNode) -> (minimum: SIMD3<Float>, maximum: SIMD3<Float>) {
+        let corners = worldBoundsCorners(of: node)
+        return (
+            SIMD3(corners.map(\.x).min() ?? .nan, corners.map(\.y).min() ?? .nan, corners.map(\.z).min() ?? .nan),
+            SIMD3(corners.map(\.x).max() ?? .nan, corners.map(\.y).max() ?? .nan, corners.map(\.z).max() ?? .nan)
+        )
+    }
+
+    private func worldBoundsCorners(of node: SCNNode) -> [SIMD3<Float>] {
+        let (minimum, maximum) = node.boundingBox
+        return [
+            SIMD3(minimum.x, minimum.y, minimum.z), SIMD3(minimum.x, minimum.y, maximum.z),
+            SIMD3(minimum.x, maximum.y, minimum.z), SIMD3(minimum.x, maximum.y, maximum.z),
+            SIMD3(maximum.x, minimum.y, minimum.z), SIMD3(maximum.x, minimum.y, maximum.z),
+            SIMD3(maximum.x, maximum.y, minimum.z), SIMD3(maximum.x, maximum.y, maximum.z),
+        ].map { point in
+            let world = node.simdWorldTransform * SIMD4<Float>(point, 1)
+            return SIMD3(world.x, world.y, world.z)
+        }
+    }
+
     func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
         for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
