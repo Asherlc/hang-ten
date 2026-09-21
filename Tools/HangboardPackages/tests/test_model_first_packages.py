@@ -41,6 +41,15 @@ def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
     return tuple(matrix)
 
 
+def _shared_reusable_model_fixture(name: str) -> dict[str, object]:
+    fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
+    registry = fixtures["reusableModelFixtures"]
+    assert isinstance(registry, dict)
+    fixture = registry[name]
+    assert isinstance(fixture, dict)
+    return fixture
+
+
 def _apply_shared_json_mutation(document: object, mutation: dict[str, object]) -> None:
     path = mutation["path"]
     assert isinstance(path, list) and path
@@ -69,7 +78,14 @@ def _write_shared_model_parser_parity_package(
     root: Path, fixture: dict[str, object]
 ) -> Path:
     fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
-    model = fixtures[fixture.get("base", "model")]
+    reusable_fixture_name = fixture.get("reusableFixture")
+    if reusable_fixture_name is None:
+        model = fixtures[fixture.get("base", "model")]
+    else:
+        assert isinstance(reusable_fixture_name, str)
+        registry = fixtures["reusableModelFixtures"]
+        assert isinstance(registry, dict)
+        model = registry[reusable_fixture_name]
     assert isinstance(model, dict)
     board = copy.deepcopy(model["board"])
     descriptor = copy.deepcopy(model["descriptor"])
@@ -94,7 +110,7 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    if fixture.get("base") == "reusableModel":
+    if reusable_fixture_name is not None:
         _restore_reusable_translation_sentinels(board)
         board_json = _json_with_numeric_sentinels(board)
     else:
@@ -576,14 +592,13 @@ def test_reusable_instances_reject_non_nine_decimal_position_translation_lexeme(
 
 
 def test_shared_reusable_fixture_is_accepted_by_python_parser(tmp_path: Path) -> None:
-    fixture = next(
-        fixture
-        for fixture in _shared_model_parser_parity_fixtures()
-        if fixture["name"] == "reusable-valid"
-    )
+    fixture = _shared_reusable_model_fixture("reusable-valid")
+    assert fixture["board"]["id"] == "fixture.reusable-model"
 
     media = load_board_package(
-        _write_shared_model_parser_parity_package(tmp_path, fixture)
+        _write_shared_model_parser_parity_package(
+            tmp_path, {"reusableFixture": "reusable-valid", "mutations": []}
+        )
     ).board.presentations[0].media
     assert media.instances is not None
     assert media.instances[1].base_transform.reflection == "x"

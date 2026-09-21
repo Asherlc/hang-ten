@@ -113,7 +113,8 @@
       }
     }
   },
-  "reusableModel": {
+  "reusableModelFixtures": {
+    "reusable-valid": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {
       "schemaVersion": 3,
@@ -169,6 +170,7 @@
       "contactSlots": {
         "edge": {"nodeIDs": ["UnitEdge"], "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]}, "center": [0.25, 0.4]}
       }
+    }
     }
   },
   "directedTwoBranchModel": {
@@ -1069,10 +1071,6 @@
     }
   },
   "modelParserParity": [
-    {
-      "name": "reusable-valid", "base": "reusableModel", "valid": true,
-      "mutations": []
-    },
     {
       "name": "paired-pose-mouths-null", "base": "pairedLeadCordModel",
       "pythonException": "ValueError", "pythonError": "attachmentPoints.*object", "swiftError": "malformedJSON",
