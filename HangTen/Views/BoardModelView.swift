@@ -2013,6 +2013,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
     private var accessibilityContactIDs: [String] = []
     private var accessibilityProjection: AccessibilityProjection?
+    private var animatedResetRenderGeneration = 0
 
     private struct AccessibilityProjection: Equatable {
         let cameraTransform: SCNMatrix4
@@ -2073,6 +2074,31 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         setNeedsDisplay()
     }
 
+    private func requestAnimatedResetRedraw() {
+        needsAccessibilityProjection = true
+        guard !rendersContinuously, !isPlaying else {
+            setNeedsDisplay()
+            return
+        }
+
+        // A paused SCNView renders a single dirty frame, which leaves
+        // presentation transforms frozen while an implicit camera
+        // transaction is running. Keep the renderer alive through the short
+        // canonical transition so accessibility projection follows the
+        // presentation camera, then return to the board's paused state.
+        animatedResetRenderGeneration &+= 1
+        let generation = animatedResetRenderGeneration
+        rendersContinuously = true
+        setNeedsDisplay()
+        let duration = BoardModelScene.canonicalTransitionDuration + 0.1
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
+            guard let self, self.animatedResetRenderGeneration == generation else { return }
+            self.rendersContinuously = false
+            self.needsAccessibilityProjection = true
+            self.setNeedsDisplay()
+        }
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -2127,9 +2153,9 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
               let id = model.contactID(for: hit.node),
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)
+        requestAnimatedResetRedraw()
         _ = model.select(positionID: model.activePositionID)
         model.resetCamera(animated: true)
-        requestPausedRedraw()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
