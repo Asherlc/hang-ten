@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from conftest import load_board_catalog_module
-from test_model_first_packages import write_model_package
+from test_model_first_packages import _write_reusable_model_package, write_model_package
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -138,6 +138,16 @@ def test_legacy_model_positions_materialize_complete_inventory(tmp_path: Path) -
     ])
     board = BOARD_CATALOG.load_board_package(package).board
     assert board.positions[0].contact_ids == ("hold-left", "hold-right")
+
+
+def test_reusable_model_instances_are_the_only_pose_mechanism(tmp_path: Path) -> None:
+    media = BOARD_CATALOG.load_board_package(
+        _write_reusable_model_package(tmp_path)
+    ).board.presentations[0].media
+
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
 
 
 @pytest.mark.parametrize(
