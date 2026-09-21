@@ -310,7 +310,9 @@ def _compile_v2_model_package(
     """Export, reimport, and validate one generic reusable model unit."""
     del board_json_path
     source_scene = open_scene(blend_path)
-    source_slot_ids = _declared_contact_slot_ids(source_scene, imported=False)
+    source_slot_ids = _require_reusable_contact_slots(
+        _declared_contact_slot_ids(source_scene, imported=False)
+    )
     source_nodes = validate_reusable_tagged_scene(source_scene, source_slot_ids)
     source_snapshot = _snapshot_scene(
         source_scene, source_nodes, transform_to_board_frame=True
@@ -404,6 +406,12 @@ def _declared_contact_slot_ids(scene: object, *, imported: bool) -> frozenset[st
             if isinstance(contact_slot_id, str) and contact_slot_id:
                 slot_ids.add(contact_slot_id)
     return frozenset(slot_ids)
+
+
+def _require_reusable_contact_slots(slot_ids: frozenset[str]) -> frozenset[str]:
+    if not slot_ids:
+        raise ValueError("reusable scene must declare at least one contact slot")
+    return slot_ids
 
 
 def _object_property(item: object, key: str, *, imported: bool) -> object:

@@ -220,6 +220,18 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(leftElement.indicesChannelCount, sourceElement.indicesChannelCount)
             XCTAssertEqual(leftElement.hasInterleavedIndicesChannels, sourceElement.hasInterleavedIndicesChannels)
             XCTAssertEqual(leftElement.data, sourceElement.data)
+            XCTAssertEqual(rightElement.indicesChannelCount, sourceElement.indicesChannelCount)
+            XCTAssertEqual(rightElement.hasInterleavedIndicesChannels, sourceElement.hasInterleavedIndicesChannels)
+            XCTAssertEqual(rightElement.bytesPerIndex, sourceElement.bytesPerIndex)
+            XCTAssertEqual(rightElement.primitiveType, .triangles)
+            XCTAssertEqual(rightElement.primitiveCount, sourceElement.primitiveCount)
+            if reflection == nil {
+                XCTAssertEqual(rightElement.data, sourceElement.data)
+            } else {
+                // Reflection reverses winding while keeping the same channel layout.
+                XCTAssertEqual(rightElement.data.count, sourceElement.data.count)
+                XCTAssertNotEqual(rightElement.data, sourceElement.data)
+            }
             for element in [leftElement, rightElement] {
                 XCTAssertEqual(element.primitiveRange, NSRange(location: 0, length: 1))
                 XCTAssertEqual(element.pointSize, 3)

@@ -40,6 +40,29 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testReusablePositionTransformsRejectReflection() throws {
+        let fixture = try reusableFixtureBundle(named: "reusable-valid") { $0 }
+        addTeardownBlock { fixture.remove() }
+        let boardURL = fixture.rootURL
+            .appendingPathComponent("Hangboards/fixture-model/board.json")
+        var boardJSON = try String(contentsOf: boardURL, encoding: .utf8)
+        let needle = #""positionTransforms":{"primary":{"rotation":[0,0,0,1],"translation":[0.000000000,0.000000000,0.000000000]}"#
+        let replacement = #""positionTransforms":{"primary":{"reflection":"x","rotation":[0,0,0,1],"translation":[0.000000000,0.000000000,0.000000000]}"#
+        XCTAssertTrue(boardJSON.contains(needle), "expected sortedKeys positionTransforms shape in fixture board.json")
+        boardJSON = boardJSON.replacingOccurrences(of: needle, with: replacement)
+        try Data(boardJSON.utf8).write(to: boardURL)
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(
+                reason.contains("positionTransforms must omit reflection"),
+                "unexpected reason: \(reason)"
+            )
+        }
+    }
+
     func testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage() throws {
         let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
         let expected: [(id: String, slug: String)] = [

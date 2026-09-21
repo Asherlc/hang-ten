@@ -1025,6 +1025,9 @@ final class BoardModelScene {
     }
 
     private static func triangleIndices(_ element: SCNGeometryElement) -> [UInt32]? {
+        // Single-channel helper used by debug inspection and strip expansion.
+        // Multi-channel elements must go through reverseWindingPreservingChannels.
+        guard element.indicesChannelCount <= 1 else { return nil }
         let count: Int
         switch element.primitiveType {
         case .triangles: count = element.primitiveCount * 3
@@ -1081,6 +1084,93 @@ final class BoardModelScene {
         target.maximumPointScreenSpaceRadius = source.maximumPointScreenSpaceRadius
     }
 
+    /// Reverse triangle winding while preserving multi-channel USDZ index layouts.
+    /// Returns nil for unsupported primitives or channel layouts rather than flattening.
+    private static func reverseWindingPreservingChannels(
+        _ element: SCNGeometryElement
+    ) -> SCNGeometryElement? {
+        let channelCount = max(element.indicesChannelCount, 1)
+        guard [1, 2, 4].contains(element.bytesPerIndex) else { return nil }
+
+        if element.primitiveType == .triangleStrip {
+            // Strip expansion cannot preserve independent attribute channels.
+            guard channelCount == 1, var indices = triangleIndices(element) else { return nil }
+            for index in stride(from: 0, to: indices.count, by: 3) {
+                indices.swapAt(index + 1, index + 2)
+            }
+            let reversed = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+            copyElementConfiguration(from: element, to: reversed)
+            return reversed
+        }
+
+        guard element.primitiveType == .triangles else { return nil }
+        let vertexIndexCount = element.primitiveCount * 3
+        let scalarCount = vertexIndexCount * channelCount
+        guard scalarCount > 0,
+              element.data.count >= scalarCount * element.bytesPerIndex else { return nil }
+
+        var scalars = [UInt32](repeating: 0, count: scalarCount)
+        element.data.withUnsafeBytes { bytes in
+            for index in 0..<scalarCount {
+                let offset = index * element.bytesPerIndex
+                switch element.bytesPerIndex {
+                case 1:
+                    scalars[index] = UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
+                case 2:
+                    scalars[index] = UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
+                default:
+                    scalars[index] = bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self)
+                }
+            }
+        }
+
+        for triangle in 0..<element.primitiveCount {
+            let baseVertex = triangle * 3
+            // Swap complete per-vertex channel tuples (verts 1 and 2), not a
+            // flattened position-only stream.
+            if element.hasInterleavedIndicesChannels || channelCount == 1 {
+                let stride = channelCount
+                let first = (baseVertex + 1) * stride
+                let second = (baseVertex + 2) * stride
+                for channel in 0..<stride {
+                    scalars.swapAt(first + channel, second + channel)
+                }
+            } else {
+                for channel in 0..<channelCount {
+                    let channelBase = channel * vertexIndexCount
+                    scalars.swapAt(channelBase + baseVertex + 1, channelBase + baseVertex + 2)
+                }
+            }
+        }
+
+        var data = Data(count: scalarCount * element.bytesPerIndex)
+        data.withUnsafeMutableBytes { bytes in
+            for index in 0..<scalarCount {
+                let offset = index * element.bytesPerIndex
+                let value = scalars[index]
+                switch element.bytesPerIndex {
+                case 1:
+                    bytes.storeBytes(of: UInt8(truncatingIfNeeded: value), toByteOffset: offset, as: UInt8.self)
+                case 2:
+                    bytes.storeBytes(of: UInt16(truncatingIfNeeded: value), toByteOffset: offset, as: UInt16.self)
+                default:
+                    bytes.storeBytes(of: value, toByteOffset: offset, as: UInt32.self)
+                }
+            }
+        }
+
+        let reversed = SCNGeometryElement(
+            data: data,
+            primitiveType: .triangles,
+            primitiveCount: element.primitiveCount,
+            indicesChannelCount: element.indicesChannelCount,
+            interleavedIndicesChannels: element.hasInterleavedIndicesChannels,
+            bytesPerIndex: element.bytesPerIndex
+        )
+        copyElementConfiguration(from: element, to: reversed)
+        return reversed
+    }
+
     private static func reflectingGeometry(
         _ geometry: SCNGeometry, localTransform: simd_float4x4
     ) -> SCNGeometry? {
@@ -1133,15 +1223,17 @@ final class BoardModelScene {
         }
         var elements: [SCNGeometryElement] = []
         for element in geometry.elements {
-            guard var indices = triangleIndices(element) else { return nil }
-            for index in stride(from: 0, to: indices.count, by: 3) { indices.swapAt(index + 1, index + 2) }
-            let reversed = SCNGeometryElement(indices: indices, primitiveType: .triangles)
-            copyElementConfiguration(from: element, to: reversed)
+            guard let reversed = reverseWindingPreservingChannels(element) else { return nil }
             elements.append(reversed)
         }
         // Materials already belong exclusively to this clone. The reflected
         // sources and reversed winding preserve outward single-sided faces.
-        let result = SCNGeometry(sources: sources, elements: elements)
+        let result: SCNGeometry
+        if let channels = geometry.geometrySourceChannels {
+            result = SCNGeometry(sources: sources, elements: elements, sourceChannels: channels)
+        } else {
+            result = SCNGeometry(sources: sources, elements: elements)
+        }
         result.name = geometry.name
         result.materials = geometry.materials
         result.subdivisionLevel = geometry.subdivisionLevel

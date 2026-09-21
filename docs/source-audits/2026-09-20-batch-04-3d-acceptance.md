@@ -256,5 +256,6 @@ All acceptance criteria from Task 14 satisfied:
 - ✅ Cord clearance/non-picking confirmed (Helium, Light Rail)
 - ✅ Pivot p1/p2/p3/p5 positions and reflection verified
 - ✅ Acceptance document written with hashes, counts, evidence
+- ✅ Batch-04 ODR staging verified: `HangTen.xcodeproj/project.pbxproj` owns package-level `ASSET_TAGS` for all six slugs (`hang-ten-model-crimptonite-helium-mobile`, `hang-ten-model-metolius-light-rail-2`, `hang-ten-model-metolius-rock-rings-3d`, `hang-ten-model-yy-penta-evo`, `hang-ten-model-owl-climb-poker`, `hang-ten-model-trango-rock-prodigy-pivot`), each staging `assets/primary.usdz` as On-Demand Resources
 - ✅ `git diff --check` clean (pending)
 - ✅ Commit `test: verify batch 04 3d migration` ready

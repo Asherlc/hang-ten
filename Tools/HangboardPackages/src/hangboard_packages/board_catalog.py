@@ -1086,7 +1086,9 @@ def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
     return BoardModelOrientation(pivot, MappingProxyType(rotations))
 
 
-def _load_model_transform(value: Any, source: str) -> BoardModelTransform:
+def _load_model_transform(
+    value: Any, source: str, *, allow_reflection: bool = True
+) -> BoardModelTransform:
     payload = _mapping(value, source)
     _closed(payload, {"translation", "rotation"}, source, optional={"reflection"})
     translation = _finite_vector3(payload["translation"], f"{source}.translation")
@@ -1102,6 +1104,8 @@ def _load_model_transform(value: Any, source: str) -> BoardModelTransform:
         raise ValueError(f"{source}.rotation must be unit length")
     reflection = None
     if "reflection" in payload:
+        if not allow_reflection:
+            raise ValueError(f"{source}.reflection must be omitted")
         reflection = _string(payload["reflection"], f"{source}.reflection")
         if reflection != "x":
             raise ValueError(f"{source}.reflection must be x")
@@ -1133,7 +1137,9 @@ def _load_model_instance(value: Any, source: str) -> BoardModelInstance:
             {
                 _identifier(position_id, f"{source}.positionTransforms position ID"):
                 _load_model_transform(
-                    transform, f"{source}.positionTransforms[{position_id}]"
+                    transform,
+                    f"{source}.positionTransforms[{position_id}]",
+                    allow_reflection=False,
                 )
                 for position_id, transform in raw_position_transforms.items()
             }

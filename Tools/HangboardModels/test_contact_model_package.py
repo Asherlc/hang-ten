@@ -88,6 +88,23 @@ class ContactModelPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "no usable constant PBR material"):
             compiler._require_image_materials(_mesh_with_material(linked), "body")
 
+    def test_reusable_scene_must_declare_at_least_one_contact_slot(self) -> None:
+        compiler = self.module()
+        scene = SimpleNamespace(
+            objects=(
+                SimpleNamespace(type="MESH", get=lambda *_args, **_kwargs: None),
+                SimpleNamespace(type="EMPTY", get=lambda *_args, **_kwargs: "ignored"),
+            )
+        )
+        slot_ids = compiler._declared_contact_slot_ids(scene, imported=False)
+        self.assertEqual(slot_ids, frozenset())
+        with self.assertRaisesRegex(ValueError, "at least one contact slot"):
+            compiler._require_reusable_contact_slots(slot_ids)
+        self.assertEqual(
+            compiler._require_reusable_contact_slots(frozenset({"edge"})),
+            frozenset({"edge"}),
+        )
+
     def test_imported_material_gate_preserves_broken_image_rejection(self) -> None:
         """Falling back to constants for a broken image path would hide a bad export."""
         compiler = self.module()

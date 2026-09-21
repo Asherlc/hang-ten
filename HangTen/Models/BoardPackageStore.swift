@@ -1167,31 +1167,44 @@ struct BoardPackageStore {
         instanceDocuments: [BoardPackageModelInstanceDocument]?
     ) throws -> (descriptor: BoardModelDescriptor, instances: [BoardModelInstance]?) {
         let data: Data
-        let document: BoardPackageModelDescriptorDocument
-        let orderedContactIDs: [String]
+        let schemaVersion: Int
+        let document: BoardPackageModelDescriptorDocument?
+        let orderedContactIDs: [String]?
         do {
             data = try Data(contentsOf: url)
             var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
             let rawDescriptor = try rawDescriptorParser.parseDocument()
             try rawDescriptor.validateDuplicateKeysOutsideOrientations()
             let header = try JSONDecoder().decode(BoardPackageModelDescriptorHeader.self, from: data)
+            schemaVersion = header.schemaVersion
             if header.schemaVersion == 2 {
-                return try loadReusableModelDescriptor(
-                    data: data,
-                    modelURL: modelURL,
-                    physicalContacts: physicalContacts,
-                    equipmentObjectIDs: equipmentObjectIDs,
-                    positionIDs: positionIDs,
-                    boardID: boardID,
-                    resource: resource,
-                    suspensionDocument: suspensionDocument,
-                    instanceDocuments: instanceDocuments
-                )
+                document = nil
+                orderedContactIDs = nil
+            } else {
+                var memberOrder = BoardPackageJSONMemberOrder(data: data)
+                orderedContactIDs = try memberOrder.memberNames(inRootObjectNamed: "contacts")
+                document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
             }
-            var memberOrder = BoardPackageJSONMemberOrder(data: data)
-            orderedContactIDs = try memberOrder.memberNames(inRootObjectNamed: "contacts")
-            document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
         } catch {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "model descriptor is missing or malformed: \(resource)"
+            )
+        }
+        if schemaVersion == 2 {
+            return try loadReusableModelDescriptor(
+                data: data,
+                modelURL: modelURL,
+                physicalContacts: physicalContacts,
+                equipmentObjectIDs: equipmentObjectIDs,
+                positionIDs: positionIDs,
+                boardID: boardID,
+                resource: resource,
+                suspensionDocument: suspensionDocument,
+                instanceDocuments: instanceDocuments
+            )
+        }
+        guard let document, let orderedContactIDs else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "model descriptor is missing or malformed: \(resource)"
@@ -1502,13 +1515,17 @@ struct BoardPackageStore {
         let instances = try instanceMappings.map { item in
             BoardModelInstance(
                 equipmentObjectID: item.document.equipmentObjectID,
-                baseTransform: try makeModelTransform(item.document.baseTransform, boardID: boardID),
+                baseTransform: try makeModelTransform(
+                    item.document.baseTransform, boardID: boardID, allowReflection: true
+                ),
                 contactIDsBySlotID: item.mapping,
                 suspension: try item.document.suspension.map {
                     try makeModelSuspension($0, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
                 },
                 positionTransforms: try item.document.positionTransforms.map { transforms in
-                    try transforms.mapValues { try makeModelTransform($0, boardID: boardID) }
+                    try transforms.mapValues {
+                        try makeModelTransform($0, boardID: boardID, allowReflection: false)
+                    }
                 }
             )
         }
@@ -1517,7 +1534,8 @@ struct BoardPackageStore {
 
     private static func makeModelTransform(
         _ document: BoardPackageModelTransformDocument,
-        boardID: String
+        boardID: String,
+        allowReflection: Bool = true
     ) throws -> BoardModelTransform {
         guard document.translation.count == 3,
               document.translation.allSatisfy(\.isFinite),
@@ -1525,6 +1543,12 @@ struct BoardPackageStore {
               document.rotation.allSatisfy(\.isFinite),
               document.reflection == nil || document.reflection == "x" else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model transform must be finite with an x reflection")
+        }
+        if document.reflection != nil, !allowReflection {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "positionTransforms must omit reflection"
+            )
         }
         let norm = sqrt(document.rotation.reduce(0) { $0 + $1 * $1 })
         guard norm.isFinite, abs(norm - 1) <= 1e-6 else {

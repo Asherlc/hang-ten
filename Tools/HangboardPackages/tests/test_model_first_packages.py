@@ -623,8 +623,8 @@ def test_shared_reusable_fixture_is_accepted_by_python_parser(tmp_path: Path) ->
                 "primary",
                 "reflection",
             ],
-            "y",
-            "reflection",
+            "x",
+            "reflection must be omitted",
         ),
         (
             ["presentations", 0, "media", "instances", 0, "contactIDsBySlotID"],

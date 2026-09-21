@@ -16,7 +16,7 @@
 - Every target is schema-v3 with only `board.json`, `assets/primary.usdz`, and `assets/primary.model.json`. It has no raster, canonical path, `contactGeometry`, fallback geometry, or fallback presentation.
 - Descriptor-v2 has generic `contactSlots` and node `contactSlotID` values. Its `modelBounds` remain unit-local source geometry bounds.
 - Reusable media has exactly two instances. Each has an equipment object ID, finite base translation with exactly nine decimal places, a unit quaternion in `[x,y,z,w]` order, optional `reflection: "x"`, exact slot map, and exactly one pose mechanism.
-- Apply `F` then `B(p)=c+Rbase*(F(p)-c)+tbase` then `W(p)=ci+Rposition*(B(p)-ci)+tposition`, where `ci=B(c)`.
+- Apply `F` then `B(p)=c+Rbase*(F(p)-c)+tbase` then `W(p)=ci+Rposition*(B(p)-ci)+tposition`, where `ci=B(c)`. `F` is identity or reflection across the unit-bounds x-plane through `c`: `F(x,y,z)=(2c.x-x,y,z)`. `"x"` is valid only on `baseTransform`; each `positionTransforms` value must omit `reflection`, and Python/Swift validation rejects it.
 - Instance slot-map keys equal descriptor slots. Values are unique globally, union to all board contacts, and belong to their equipment object. Both position maps equal the package position IDs and each other.
 - Reject invalid descriptor version, transforms, reflection, maps, suspension bindings, hidden-route claims, mixed legacy/per-instance pose data, and position sets. Mark the model unavailable and never raster-fallback.
 - Reusable runtime loads USDZ once and deep-clones geometry and materials twice. Keep canonical-ID picking, highlights, workouts, and accessibility isolated per instance. Reflection preserves winding, normals, and culling.

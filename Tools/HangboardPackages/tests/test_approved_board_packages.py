@@ -450,7 +450,12 @@ def test_pivot_renders_one_reflected_half_with_eighteen_physical_contacts() -> N
             assert len(transform["rotation"]) == 4
 
     # Nine-decimal lexemes are a raw-text contract, not a decoded-float one.
-    for lexeme in re.findall(r'"translation": \[([^\]]*)\]', raw_board):
+    lexemes = re.findall(r'"translation"\s*:\s*\[([^\]]*)\]', raw_board)
+    expected_translation_count = sum(
+        1 + len(instance["positionTransforms"]) for instance in instances
+    )
+    assert len(lexemes) == expected_translation_count
+    for lexeme in lexemes:
         for component in lexeme.replace("\n", " ").split(","):
             assert re.fullmatch(r"-?(?:0|[1-9][0-9]*)\.[0-9]{9}", component.strip())
 
