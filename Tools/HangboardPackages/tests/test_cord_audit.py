@@ -111,6 +111,30 @@ def test_rock_rings_cord_audit_retains_exact_manufacturer_and_owner_evidence() -
         assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
 
 
+def test_penta_cord_audit_retains_exact_originals_without_inventing_binary_urls() -> None:
+    """Catch a missing reusable record or laundering unknown image provenance."""
+    records = {record.package_id: record for record in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "yy.penta-evo" in records
+    record = records["yy.penta-evo"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    penta = next(item for item in raw["records"] if item["packageID"] == "yy.penta-evo")
+    assert penta["ruling"] == "two independent paired exterior loops through the existing central ring; no invented channel or knot."
+    assert {e["snapshotSHA256"] for e in penta["evidence"]} == {
+        "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+        "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+    }
+    for item in penta["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+    source = json.loads((REPO_ROOT / "docs/source-audits/2026-09-20-batch-04-3d-source-register.json").read_text())["boards"]["yy.penta-evo"]
+    assert all(e["binaryURL"] is None and e["status"] == "unhashed" for e in source["evidence"])
+
+
 def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
@@ -139,7 +163,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 25, "represented": 11}
+    assert report.decisions == {"excluded": 25, "represented": 12}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,
@@ -370,7 +394,7 @@ def test_represented_record_requires_two_distinct_evidence_views(tmp_path: Path)
         )
 
 
-def test_represented_record_rejects_differently_labelled_duplicate_evidence_url(
+def test_represented_record_accepts_same_source_page_url_for_independent_snapshots(
     tmp_path: Path,
 ) -> None:
     inventory = _inventory(
@@ -380,22 +404,26 @@ def test_represented_record_rejects_differently_labelled_duplicate_evidence_url(
         )
     )
 
-    with pytest.raises(CordAuditError, match="distinct evidence URLs"):
-        _validate(
-            tmp_path,
-            inventory,
-            [
-                _record(
-                    "fixture.board",
-                    decision="represented",
-                    topology="singleCord",
-                    evidence=[
-                        {"view": "front", "url": "https://example.com/view"},
-                        {"view": "oblique", "url": "https://example.com/view"},
-                    ],
-                )
-            ],
-        )
+    report = _validate(
+        tmp_path,
+        inventory,
+        [
+            _record(
+                "fixture.board",
+                decision="represented",
+                topology="singleCord",
+                evidence=[
+                    {"view": "front", "url": "https://example.com/view"},
+                    {"view": "oblique", "url": "https://example.com/view"},
+                ],
+            )
+        ],
+    )
+
+    assert report.to_json() == {
+        "modelPackageIDs": ["fixture.board"],
+        "decisions": {"represented": 1},
+    }
 
 
 def test_represented_record_rejects_duplicate_normalized_evidence_view_labels(
@@ -441,7 +469,7 @@ def test_represented_record_rejects_reused_retained_source_artifact(
         topology="singleCord",
         evidence=[
             {"view": "front", "url": "https://example.com/front"},
-            {"view": "oblique", "url": "https://example.com/oblique"},
+            {"view": "oblique", "url": "https://example.com/front"},
         ],
     )
     record["evidence"][1]["snapshotPath"] = record["evidence"][0]["snapshotPath"]  # type: ignore[index]
@@ -465,7 +493,7 @@ def test_represented_record_rejects_reused_retained_source_bytes(
         topology="singleCord",
         evidence=[
             {"view": "front", "url": "https://example.com/front"},
-            {"view": "oblique", "url": "https://example.com/oblique"},
+            {"view": "oblique", "url": "https://example.com/front"},
         ],
     )
     manifest_path = _manifest_path(tmp_path, [record])

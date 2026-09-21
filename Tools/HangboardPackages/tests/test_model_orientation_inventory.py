@@ -39,6 +39,7 @@ MODEL_PACKAGE_IDS = {
     "metolius.foundry",
     "metolius.light-rail-2",
     "metolius.rock-rings-3d",
+    "yy.penta-evo",
     "metolius.prime-rib",
     "metolius.project",
     "metolius.climbers-edge",
@@ -426,6 +427,70 @@ def test_rock_rings_uses_two_identical_unreflected_units_with_independent_cords(
     assert left_suspension is not right_suspension
     assert left_suspension is not None and right_suspension is not None
     assert left_suspension.attachments is not right_suspension.attachments
+
+
+def test_penta_evo_uses_two_identical_unreflected_units_with_exact_slot_maps() -> None:
+    board = _discovered_model_packages()["yy.penta-evo"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
+    assert len(media.instances) == 2
+
+    slots = ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray")
+    expected_maps = (
+        {slot: f"{slot}-left" for slot in slots},
+        {slot: f"{slot}-right" for slot in slots},
+    )
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-penta", "right-penta"
+    ]
+    left_instance, right_instance = media.instances
+    for instance, expected_map in zip(media.instances, expected_maps, strict=True):
+        assert dict(instance.contact_ids_by_slot_id) == expected_map
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.reflection is None
+        assert instance.position_transforms is None
+        assert instance.suspension is not None
+        assert len(instance.suspension.attachments) == 2
+        assert instance.suspension.anchor.visibility == "invisible"
+        assert set(instance.suspension.canonical_poses) == {"primary", "reverse"}
+    assert left_instance.suspension is not None
+    assert right_instance.suspension is not None
+    for position_id, expected_rotation in {
+        "primary": (0, 0, 0, 1),
+        "reverse": (0, 1, 0, 0),
+    }.items():
+        left_pose = left_instance.suspension.canonical_poses[position_id]
+        right_pose = right_instance.suspension.canonical_poses[position_id]
+        assert left_pose.rotation == right_pose.rotation
+        assert left_pose.rotation == expected_rotation
+    assert media.instances[0].suspension is not media.instances[1].suspension
+    assert {position.id for position in board.positions} == {"primary", "reverse"}
+    assert all(position.presentation_id == presentation.id for position in board.positions)
+    expected_position_contacts = {
+        "primary": {
+            contact.id for contact in board.contacts
+            if contact.id not in {"edge-10-left", "edge-10-right"}
+        },
+        "reverse": {
+            contact.id for contact in board.contacts
+            if contact.id.rsplit("-", 1)[0] in {"edge-10", "mono", "duo", "tray"}
+        },
+    }
+    assert {position.id: set(position.contact_ids) for position in board.positions} == expected_position_contacts
+    assert {len(position.contact_ids) for position in board.positions} == {8, 12}
+    for position in board.positions:
+        expected_order = tuple(
+            contact.id for contact in board.contacts
+            if contact.id in expected_position_contacts[position.id]
+        )
+        assert position.contact_ids == expected_order
 
 
 @pytest.mark.parametrize(

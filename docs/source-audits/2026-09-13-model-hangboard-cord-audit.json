@@ -2,6 +2,37 @@
   "schemaVersion": 1,
   "records": [
     {
+      "packageID": "yy.penta-evo",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent paired exterior loops through the existing central ring; no invented channel or knot.",
+      "evidence": [
+        {
+          "view": "PE-RESTORED full front/reverse original: two exterior strands around top band and through central ring; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-front-reverse.webp"
+        },
+        {
+          "view": "PE-RESTORED intact close-up original: uninterrupted lower band and retaining concavities; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-close-up.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed both exact approved intact originals and independently rechecked YY product and installation article. Seven enumerated and pictured contacts per unit prevail over the eight-grip headline. The actual asymmetric unit is reused identically without reflection; rear 10 mm recess shares the front 15 mm physical band. Each instance has its own two-sided exterior wrap through the existing central ring and independent invisible anchor. No retired small passage, hidden channel, knot, hardware or inter-unit route is modeled. Original binary URLs remain null/unhashed in the source register; these product-page references do not claim download provenance. Unsurveyed outline, radii, rear, color, guide/endpoints, rest length and poses are authored-display-estimate."
+      }
+    },
+    {
       "packageID": "beastmaker-1000",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",

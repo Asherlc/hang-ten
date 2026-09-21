@@ -1,0 +1,201 @@
+{
+  "contactSlots": {
+    "duo": {
+      "center": [
+        0.160363392,
+        0.22173913
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.236273653,
+          0.328845476
+        ],
+        "min": [
+          0.08445313,
+          0.114632785
+        ]
+      },
+      "nodeIDs": [
+        "unit_duo_001"
+      ]
+    },
+    "edge-10": {
+      "center": [
+        0.87051266,
+        0.352173918
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.959552057,
+          0.520767412
+        ],
+        "min": [
+          0.781473264,
+          0.183580424
+        ]
+      },
+      "nodeIDs": [
+        "unit_edge_10_001"
+      ]
+    },
+    "edge-15": {
+      "center": [
+        0.87051266,
+        0.352173918
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.959552057,
+          0.520767412
+        ],
+        "min": [
+          0.781473264,
+          0.183580424
+        ]
+      },
+      "nodeIDs": [
+        "unit_edge_15_001"
+      ]
+    },
+    "edge-20": {
+      "center": [
+        0.711721527,
+        0.782608688
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.864164122,
+          0.911890958
+        ],
+        "min": [
+          0.559278933,
+          0.653326419
+        ]
+      },
+      "nodeIDs": [
+        "unit_edge_20_001"
+      ]
+    },
+    "edge-25": {
+      "center": [
+        0.288278473,
+        0.782608688
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.440721067,
+          0.911890958
+        ],
+        "min": [
+          0.135835878,
+          0.653326419
+        ]
+      },
+      "nodeIDs": [
+        "unit_edge_25_001"
+      ]
+    },
+    "mono": {
+      "center": [
+        0.120665591,
+        0.452173915
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.184623133,
+          0.515217391
+        ],
+        "min": [
+          0.056708049,
+          0.389130439
+        ]
+      },
+      "nodeIDs": [
+        "unit_mono_001"
+      ]
+    },
+    "tray": {
+      "center": [
+        0.5,
+        0.208787673
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.712006238,
+          0.248569132
+        ],
+        "min": [
+          0.287993762,
+          0.169006214
+        ]
+      },
+      "nodeIDs": [
+        "unit_tray_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.113356449,
+      0.115000002,
+      0.015
+    ],
+    "min": [
+      -0.113356449,
+      -0.115000002,
+      -0.015
+    ]
+  },
+  "modelSHA256": "d624aed1f3314b1330db11059ad47a308a970db9a5b4091deda3c634fe27e5f2",
+  "nodes": [
+    {
+      "nodeID": "central_ring_001",
+      "role": "attachment"
+    },
+    {
+      "nodeID": "penta_body_001",
+      "role": "body"
+    },
+    {
+      "contactSlotID": "duo",
+      "nodeID": "unit_duo_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "edge-10",
+      "nodeID": "unit_edge_10_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "edge-15",
+      "nodeID": "unit_edge_15_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "edge-20",
+      "nodeID": "unit_edge_20_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "edge-25",
+      "nodeID": "unit_edge_25_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "mono",
+      "nodeID": "unit_mono_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "tray",
+      "nodeID": "unit_tray_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "upper_band_exterior_001",
+      "role": "attachment"
+    }
+  ],
+  "schemaVersion": 2
+}

@@ -1573,30 +1573,86 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
             ("jug", None, None),
         ]
     )
-    assert _original_contact_owners(board) == {
-        contact["id"]: "front-pair" for contact in board["contacts"]
-    }
-
-    geometry = document_contact_geometry(board)
-    assert geometry["edge-25-left"][0]["frame"] == {
-        "x": 0.116,
-        "y": 0.350,
-        "width": 0.121,
-        "height": 0.122,
-    }
-    assert geometry["edge-20-left"][0]["frame"] == {
-        "x": 0.280,
-        "y": 0.350,
-        "width": 0.116,
-        "height": 0.122,
+    assert board["equipmentObjects"] == [{"id": "left-penta"}, {"id": "right-penta"}]
+    assert {contact["id"]: contact["equipmentObjectID"] for contact in board["contacts"]} == {
+        f"{slot}-{side}": f"{side}-penta"
+        for side in ("left", "right")
+        for slot in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray")
     }
 
 
-def test_yy_penta_evo_pair_uses_exact_horizontal_path_mirrors() -> None:
+def test_yy_penta_evo_pair_reuses_one_asymmetric_unit_without_reflection() -> None:
+    """Catch baked pairs or the old raster's incorrectly mirrored right unit."""
     board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert {p.relative_to(YY_PENTA_EVO_ROOT).as_posix() for p in YY_PENTA_EVO_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor = json.loads((YY_PENTA_EVO_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["modelSHA256"] == hashlib.sha256((YY_PENTA_EVO_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    slots = {"edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"}
+    assert set(descriptor["contactSlots"]) == slots
+    assert "contacts" not in descriptor
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    assert len(media["instances"]) == 2
+    for side, instance in zip(("left", "right"), media["instances"], strict=True):
+        assert instance["equipmentObjectID"] == f"{side}-penta"
+        assert instance["contactIDsBySlotID"] == {slot: f"{slot}-{side}" for slot in slots}
+        assert instance["baseTransform"] == {"translation": [0, 0, 0], "rotation": [0, 0, 0, 1]}
+        assert "positionTransforms" not in instance
+    assert load_board_catalog_module().load_board_package(YY_PENTA_EVO_ROOT).board.id == "yy.penta-evo"
 
-    for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
-        left = geometry[f"{prefix}-left"][0]
-        right = geometry[f"{prefix}-right"][0]
-        _assert_global_paths_are_horizontal_mirrors(left, right)
+
+def test_yy_penta_evo_cords_use_existing_ring_and_independent_exterior_routes() -> None:
+    """Catch false small passage holes, contact-bound leads or joined pair cords."""
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    descriptor = json.loads((YY_PENTA_EVO_ROOT / media["descriptorPath"]).read_text())
+    roles = {n["nodeID"].removesuffix("_001").replace("_", "-"): n["role"] for n in descriptor["nodes"]}
+    assert roles["central-ring"] == roles["upper-band-exterior"] == "attachment"
+    assert not any(token in name for name in roles for token in (
+        "mount", "screw", "fastener", "cleat", "bracket", "hardware", "passage", "bore", "cord", "anchor"
+    ))
+    anchors, lead_ids = [], []
+    for instance in media["instances"]:
+        suspension = instance["suspension"]
+        assert suspension["type"] == "pairedLeadCord"
+        assert len(suspension["attachments"]) == 2
+        assert set(suspension["passages"]) == {"left", "right"}
+        assert all(len(route) == 1 for route in suspension["passages"].values())
+        for lead in suspension["attachments"]:
+            assert roles[lead["nodeID"].removesuffix("_001").replace("_", "-")] == "attachment"
+            assert len(lead["contactPointsInModel"]) >= 2
+            assert "authored-display-estimate" in lead["provenance"]
+            lead_ids.append(lead["id"])
+        assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
+        assert suspension["anchor"]["visibility"] == "invisible"
+        anchors.append(tuple(suspension["anchor"]["offsetFromBoardBounds"]))
+        assert "authored-display-estimate" in suspension["cord"]["provenance"]
+        assert set(suspension["canonicalPoses"]) == {p["id"] for p in board["positions"]}
+    assert len(set(anchors)) == 2
+    assert len(set(lead_ids)) == 4
+
+
+def test_yy_penta_evo_positions_expose_only_contacts_reachable_on_that_face() -> None:
+    """Keep workout resolution from selecting the hidden rear 10mm on primary."""
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    positions = {position["id"]: set(position["contactIDs"]) for position in board["positions"]}
+    assert positions == {
+        "primary": {f"{slot}-{side}" for side in ("left", "right")
+                    for slot in ("edge-25", "edge-20", "edge-15", "mono", "duo", "tray")},
+        "reverse": {f"{slot}-{side}" for side in ("left", "right")
+                    for slot in ("edge-10", "mono", "duo", "tray")},
+    }
+    for instance in board["presentations"][0]["media"]["instances"]:
+        suspension = instance["suspension"]
+        for pose in suspension["canonicalPoses"].values():
+            # The runtime uses explicit pose routes for surface wraps; default
+            # contactPoints alone describe only the last approach stub.
+            assert pose["cordContactPoints"] == {
+                lead["id"]: lead["contactPointsInModel"] for lead in suspension["attachments"]
+            }

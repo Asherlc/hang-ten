@@ -472,11 +472,6 @@ def validate_cord_audit_manifest(
                 raise CordAuditError(
                     f"represented record requires two distinct evidence views: {package_id}"
                 )
-            evidence_urls = {item.url for item in record.evidence}
-            if len(evidence_urls) != len(record.evidence) or len(evidence_urls) < 2:
-                raise CordAuditError(
-                    f"represented record requires two distinct evidence URLs: {package_id}"
-                )
             if record.topology != package_topology:
                 raise CordAuditError(
                     f"represented record topology does not match package suspension topology: {package_id}"

@@ -842,3 +842,18 @@ evidence only. The 72 retired raster presentation IDs are compatibility
 aliases for those 18 physical contacts, not additional selectable contacts.
 The exact delivered-ID mapping and manufacturer-photo hashes are retained in
 [`2026-09-20-batch-04-3d-source-register.json`](2026-09-20-batch-04-3d-source-register.json).
+
+#### YY Vertical Penta Evo
+
+`yy.penta-evo` is one canonical Penta unit rendered twice as the identical
+`left-penta` and `right-penta` instances. Neither instance carries a reflection;
+the pair is not a left/right mirror. Both instances expose the same seven slot
+IDs (`edge-25`, `edge-20`, `edge-15`, `edge-10`, `mono`, `duo`, and `tray`) and
+map those slots to their same-suffixed `-left` or `-right` physical contacts.
+
+The reviewed position inventory is `primary` and `reverse`. The YY Vertical
+product page documents rotation of the Penta through its retaining notches;
+`reverse` is retained to expose the rear 10 mm edge. The two instances share
+the same authored position transform for each position, while their separate
+placement and suspension metadata keeps the units physically distinct. This
+is display orientation metadata, not a claim of factory angular metrology.

@@ -901,6 +901,60 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(board.positions.first?.id, "primary")
     }
 
+    func testPentaEvoPrimaryAndReverseUseIdenticalUnreflectedInstancesAndUnionFraming() async throws {
+        let (board, media, model) = try await loadMigratedModel("yy.penta-evo")
+        let instances = try XCTUnwrap(media.instances)
+        XCTAssertEqual(instances.count, 2)
+        XCTAssertEqual(instances.map(\.equipmentObjectID), ["left-penta", "right-penta"])
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.translation == [0, 0, 0] })
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.rotation == SIMD4(0, 0, 0, 1) })
+        XCTAssertTrue(instances.allSatisfy { $0.baseTransform.reflection == nil })
+        XCTAssertEqual(Set(board.positions.map(\.id)), ["primary", "reverse"])
+
+        for positionID in ["primary", "reverse"] {
+            let leftSuspension = try XCTUnwrap(instances[0].suspension)
+            let rightSuspension = try XCTUnwrap(instances[1].suspension)
+            guard case .pairedLeadCord(let left) = leftSuspension,
+                  case .pairedLeadCord(let right) = rightSuspension else {
+                return XCTFail("Penta Evo must use pairedLeadCord per instance")
+            }
+            let leftPose = try XCTUnwrap(left.canonicalPoses[positionID])
+            let rightPose = try XCTUnwrap(right.canonicalPoses[positionID])
+            XCTAssertEqual(leftPose.rotation, rightPose.rotation, positionID)
+            XCTAssertEqual(leftPose.camera, rightPose.camera, positionID)
+
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertFalse(model.isUnavailable, positionID)
+            XCTAssertEqual(model.activePositionID, positionID)
+            XCTAssertEqual(model.instanceScenes.count, 2)
+            let leftBounds = worldBounds(of: model.instanceScenes[0].container)
+            let rightBounds = worldBounds(of: model.instanceScenes[1].container)
+            XCTAssertLessThan(leftBounds.maximum.x, rightBounds.minimum.x, positionID)
+
+            let cords = model.instanceScenes.flatMap(\.transientCordNodes)
+            XCTAssertEqual(cords.count, 2, positionID)
+            XCTAssertTrue(cords.allSatisfy { $0.parent === model.scene.rootNode })
+            XCTAssertTrue(cords.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
+
+            let view = SCNView(frame: CGRect(x: 0, y: 0, width: 390, height: 228))
+            view.scene = model.scene
+            view.pointOfView = model.camera
+            model.frame(in: view.bounds.size)
+            SCNTransaction.flush()
+            for node in model.instanceScenes.map(\.container) + cords {
+                for point in worldBoundsCorners(of: node) {
+                    let projected = view.projectPoint(SCNVector3(point))
+                    XCTAssertTrue(
+                        projected.x.isFinite && projected.y.isFinite && projected.z.isFinite &&
+                        projected.z >= 0 && projected.z <= 1 &&
+                        view.bounds.contains(CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))),
+                        "\(positionID) camera must frame both Penta units and active cords"
+                    )
+                }
+            }
+        }
+    }
+
     private func worldBounds(of node: SCNNode) -> (minimum: SIMD3<Float>, maximum: SIMD3<Float>) {
         let corners = worldBoundsCorners(of: node)
         return (

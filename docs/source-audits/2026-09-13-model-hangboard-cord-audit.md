@@ -7,8 +7,8 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 36 discovered model packages after the 2026-09-20 Rock Rings
-promotion. Eleven have documented suspended presentation evidence and render
+The audit covers all 37 discovered model packages after the 2026-09-20 Penta Evo
+promotion. Twelve have documented suspended presentation evidence and render
 transient cord geometry; twenty-five remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
@@ -17,12 +17,68 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 11 | `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `represented` | 12 | `yy.penta-evo`, `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
 | `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
 ## Evidence review and approval
+
+### YY Penta Evo reusable-unit promotion — 2026-09-20
+
+Ruling: **two independent paired exterior loops through the existing central ring; no invented channel or knot.**
+
+The approved intact YY front/reverse and close-up originals are retained as
+`yy-penta-evo-front-reverse.webp` (SHA-256
+`83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571`)
+and `yy-penta-evo-close-up.webp` (SHA-256
+`1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc`).
+Both reference the [official product page](https://www.yyvertical.com/en/products/penta-evo).
+Their original binary URLs remain unknown; the page is not asserted to be a
+download URL. Distinct retained views, regular files and verified hashes
+establish the two evidence artifacts even though their reference URL is shared.
+The original source register retains `binaryURL: null` and `status: unhashed`.
+
+Independent research on 2026-09-20 confirmed that YY enumerates seven grips
+(25/20/15/10 mm, mono, duo, tray), despite an eight-grip headline, and documents
+360-degree rotation with retaining notches. Its
+[installation article](https://www.yyvertical.com/en/blogs/news/installer-cordelettes-agres-penta-evo-guide-complet-4-noeuds)
+explicitly passes the short cord through the existing ring. This corroborates
+the photographed exterior top-band loop without establishing a hidden channel.
+The article's knots and extensions are not part of the model or training copy.
+
+One manually authored asymmetric unit is exported once and rendered as
+`left-penta` and `right-penta`, both identical and unreflected. Its seven generic
+slots map to fourteen unchanged contact identities. Front 25/20/15 pockets,
+rear 10 pocket, through mono/duo, central ring and lower inner tray are retained.
+The reverse 10 mm pocket shares the physical front-15 band; it is not a second
+unit or a mirrored asset. Only the central ring and mono/duo are through
+openings. The lower band is intact; retired small passages, mounting/screw holes,
+hardware, knots and baked cords are absent.
+
+`primary` exposes twelve front/through contacts, excluding the rear-only 10 mm
+pair. `reverse` exposes the eight rear-10/mono/duo/tray contacts. Each unit uses
+identity rotation in primary and the same 180-degree Y rotation in reverse,
+with independent pose translations X = ±0.15 m and identity bases. This makes
+workout selection expose the actual contact face while preserving identity.
+
+Each unit owns two exterior leads, front and rear, around its existing upper
+band into the central ring. Explicit pose `cordContactPoints` preserve the
+reviewed route in both positions. The front/rear straight routes sit 3.5 mm
+from the corresponding face, round into the ring, and end separately at model
+coordinates (0, 0.061, ±0.004) m. Each unit has a separate fixed invisible
+anchor at (±0.15, 0.325000002, 0) m, 0.300 m rest allowance per lead and 2 mm
+cord radius. All these values and the unsurveyed outline/material/camera are
+`authored-display-estimate`, not measured physical rope, factory radii or a
+supplied knot. Source photographs show the rope continuing into a complete
+loop; the narrow paired-lead representation does not invent that unseen join.
+
+The hash-checked USDZ passes structural checks with one connected component,
+10,396 triangles, exactly three through openings, zero nonmanifold edges,
+degenerate triangles or reversed normals. Both instances in both positions
+pass the production solver and mesh/tube clearance gate. Native selected-state
+tests establish separated units and camera framing of both active cord systems;
+full current-source app visual acceptance remains the Batch 04 Task 14 gate.
 
 The human review retained exact-revision source responses where the cited page
 was available. Every retained evidence entry records its exact revision ID,
@@ -291,7 +347,7 @@ retained byte evidence:
 | `crimptonite.helium-mobile` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` exterior leads only; no inferred interior route or `twoBranchCord`. |
 | `metolius.light-rail-2` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` upper-entry exterior leads only; no underside mouth or hidden vertical bore. |
 | `metolius.rock-rings-3d` | `documentedSuspension` | Promoted 2026-09-20: two independent pairedLeadCord systems; no inter-unit connection or central through-bore. |
-| `yy.penta-evo` | `documentedSuspension` | represent two independent exterior paired loops through the central ring; no invented channel or knot. |
+| `yy.penta-evo` | `documentedSuspension` | Promoted 2026-09-20: two independent paired exterior loops through the existing central ring; no invented channel or knot. |
 | `owl-climb.poker` | `noDocumentedSuspension` | exclude. |
 | `trango.rock-prodigy-pivot` | `noDocumentedSuspension` | exclude; pulley-kit ropes are not Pivot suspension. |
 
