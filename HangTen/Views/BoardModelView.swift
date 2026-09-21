@@ -2018,6 +2018,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var animatedResetRenderGeneration = 0
     private var ownsAnimatedResetContinuousRendering = false
     private var finishingAnimatedResetGeneration: Int?
+    private var pendingCanonicalAccessibilityGeneration: Int?
 
     private struct AccessibilityProjection: Equatable {
         let cameraTransform: SCNMatrix4
@@ -2116,7 +2117,8 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private func finishAnimatedReset(generation: Int, attempt: Int = 0) {
         guard animatedResetRenderGeneration == generation,
               ownsAnimatedResetContinuousRendering,
-              !isPlaying else { return }
+              !isPlaying,
+              pendingCanonicalAccessibilityGeneration != generation else { return }
 
         // SceneKit may invoke the transaction completion block before the
         // presentation camera has been committed to its final render frame.
@@ -2141,12 +2143,13 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             // one-second safety bound by this point.
             model?.resetCamera(animated: false)
             SCNTransaction.flush()
-            finishingAnimatedResetGeneration = nil
-            ownsAnimatedResetContinuousRendering = false
-            rendersContinuously = false
+            // Keep the renderer alive until it has presented this canonical
+            // frame. A paused SCNView may retain the last orbit presentation
+            // after setNeedsDisplay(), so a direct accessibility projection
+            // here can still capture stale coordinates.
+            pendingCanonicalAccessibilityGeneration = generation
             needsAccessibilityProjection = true
             setNeedsDisplay()
-            refreshCompletedAnimatedResetAccessibility(generation: generation)
             return
         }
 
@@ -2154,21 +2157,6 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self,
                   self.finishingAnimatedResetGeneration == generation else { return }
             self.finishAnimatedReset(generation: generation, attempt: attempt + 1)
-        }
-    }
-
-    private func refreshCompletedAnimatedResetAccessibility(generation: Int, turn: Int = 0) {
-        guard animatedResetRenderGeneration == generation else { return }
-        needsAccessibilityProjection = true
-        updateAccessibility()
-        guard turn < 2 else { return }
-        // Allow the dirty paused frame and any queued renderer callback to
-        // publish before taking the final projection snapshot. Each refresh
-        // remains generation guarded so a newer tap owns the view immediately.
-        DispatchQueue.main.async { [weak self] in
-            guard let self,
-                  self.animatedResetRenderGeneration == generation else { return }
-            self.refreshCompletedAnimatedResetAccessibility(generation: generation, turn: turn + 1)
         }
     }
 
@@ -2235,6 +2223,21 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     nonisolated func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            if let generation = self.pendingCanonicalAccessibilityGeneration,
+               self.animatedResetRenderGeneration == generation,
+               self.ownsAnimatedResetContinuousRendering,
+               !self.isPlaying {
+                // This callback follows an actual canonical render. Update
+                // accessibility while the presentation camera still reflects
+                // that frame, then return the view to its paused state.
+                self.pendingCanonicalAccessibilityGeneration = nil
+                self.finishingAnimatedResetGeneration = nil
+                self.needsAccessibilityProjection = true
+                self.updateAccessibility()
+                self.ownsAnimatedResetContinuousRendering = false
+                self.rendersContinuously = false
+                return
+            }
             // Camera gestures and implicit reset animations can change projection
             // without a SwiftUI update. Refresh only when a rendered state changes.
             guard self.needsAccessibilityProjection
