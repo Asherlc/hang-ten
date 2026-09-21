@@ -868,7 +868,7 @@ final class BoardModelScene {
         currentFraming = framing
     }
 
-    func resetCamera(animated: Bool) {
+    func resetCamera(animated: Bool, completion: (() -> Void)? = nil) {
         guard let framing = canonicalFraming ?? currentFraming else { return }
         let apply = {
             self.applyCanonicalCamera(framing)
@@ -876,6 +876,7 @@ final class BoardModelScene {
         if animated {
             SCNTransaction.begin()
             SCNTransaction.animationDuration = Self.canonicalTransitionDuration
+            SCNTransaction.completionBlock = completion
             apply()
             SCNTransaction.commit()
         } else {
@@ -884,6 +885,7 @@ final class BoardModelScene {
             SCNTransaction.disableActions = true
             apply()
             SCNTransaction.commit()
+            completion?()
         }
     }
 
@@ -2015,6 +2017,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var accessibilityProjection: AccessibilityProjection?
     private var animatedResetRenderGeneration = 0
     private var ownsAnimatedResetContinuousRendering = false
+    private var finishingAnimatedResetGeneration: Int?
 
     private struct AccessibilityProjection: Equatable {
         let cameraTransform: SCNMatrix4
@@ -2075,11 +2078,12 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         setNeedsDisplay()
     }
 
-    private func requestAnimatedResetRedraw() {
+    @discardableResult
+    private func requestAnimatedResetRedraw() -> Int? {
         needsAccessibilityProjection = true
         guard !isPlaying else {
             setNeedsDisplay()
-            return
+            return nil
         }
 
         // A reset may already own continuous rendering when another contact
@@ -2087,7 +2091,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         // leave continuous rendering alone when another caller owns it.
         guard !rendersContinuously || ownsAnimatedResetContinuousRendering else {
             setNeedsDisplay()
-            return
+            return nil
         }
 
         // A paused SCNView renders a single dirty frame, which leaves
@@ -2104,19 +2108,75 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         setNeedsDisplay()
         let duration = BoardModelScene.canonicalTransitionDuration + 0.1
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
-            guard let self, self.animatedResetRenderGeneration == generation else { return }
-            guard self.ownsAnimatedResetContinuousRendering, !self.isPlaying else { return }
-            self.ownsAnimatedResetContinuousRendering = false
-            self.rendersContinuously = false
-            self.needsAccessibilityProjection = true
-            self.setNeedsDisplay()
-            // The final continuous frame can be delivered before the
-            // presentation camera settles on CI. Commit the completed
-            // projection explicitly so the paused view cannot retain the
-            // last in-flight accessibility frame while no further renderer
-            // callback is guaranteed.
-            self.updateAccessibility()
+            self?.finishAnimatedReset(generation: generation)
         }
+        return generation
+    }
+
+    private func finishAnimatedReset(generation: Int, attempt: Int = 0) {
+        guard animatedResetRenderGeneration == generation,
+              ownsAnimatedResetContinuousRendering,
+              !isPlaying else { return }
+
+        // SceneKit may invoke the transaction completion block before the
+        // presentation camera has been committed to its final render frame.
+        // Keep the renderer alive and project on the next run-loop turn until
+        // the presentation and model cameras agree. This prevents a paused
+        // view from retaining the last orbit frame as its accessibility frame.
+        finishingAnimatedResetGeneration = generation
+        needsAccessibilityProjection = true
+        setNeedsDisplay()
+        updateAccessibility()
+
+        // Give SceneKit at least two main-run-loop turns after the transaction
+        // callback, even when its presentation node already reports the final
+        // transform. The renderer may publish that presentation state one
+        // frame before projectPoint observes it.
+        let isSettled = attempt >= 2 && cameraPresentationIsSettled()
+        guard !isSettled, attempt < 50 else {
+            finishingAnimatedResetGeneration = nil
+            ownsAnimatedResetContinuousRendering = false
+            rendersContinuously = false
+            needsAccessibilityProjection = true
+            setNeedsDisplay()
+            updateAccessibility()
+            return
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) { [weak self] in
+            guard let self,
+                  self.finishingAnimatedResetGeneration == generation else { return }
+            self.finishAnimatedReset(generation: generation, attempt: attempt + 1)
+        }
+    }
+
+    private func cameraPresentationIsSettled() -> Bool {
+        guard let pointOfView,
+              let presentationCamera = pointOfView.presentation.camera,
+              let camera = pointOfView.camera else { return true }
+        let presentationTransform = pointOfView.presentation.worldTransform
+        let cameraTransform = pointOfView.worldTransform
+        let transformComponents: [(Float, Float)] = [
+            (presentationTransform.m11, cameraTransform.m11),
+            (presentationTransform.m12, cameraTransform.m12),
+            (presentationTransform.m13, cameraTransform.m13),
+            (presentationTransform.m14, cameraTransform.m14),
+            (presentationTransform.m21, cameraTransform.m21),
+            (presentationTransform.m22, cameraTransform.m22),
+            (presentationTransform.m23, cameraTransform.m23),
+            (presentationTransform.m24, cameraTransform.m24),
+            (presentationTransform.m31, cameraTransform.m31),
+            (presentationTransform.m32, cameraTransform.m32),
+            (presentationTransform.m33, cameraTransform.m33),
+            (presentationTransform.m34, cameraTransform.m34),
+            (presentationTransform.m41, cameraTransform.m41),
+            (presentationTransform.m42, cameraTransform.m42),
+            (presentationTransform.m43, cameraTransform.m43),
+            (presentationTransform.m44, cameraTransform.m44),
+        ]
+        let transformSettled = transformComponents.allSatisfy { abs($0.0 - $0.1) <= 0.0001 }
+        let scaleSettled = abs(presentationCamera.orthographicScale - camera.orthographicScale) <= 0.0001
+        return transformSettled && scaleSettled
     }
 
     func display(_ model: BoardModelScene) {
@@ -2173,9 +2233,12 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
               let id = model.contactID(for: hit.node),
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)
-        requestAnimatedResetRedraw()
+        let resetGeneration = requestAnimatedResetRedraw()
         _ = model.select(positionID: model.activePositionID)
-        model.resetCamera(animated: true)
+        model.resetCamera(animated: true) { [weak self] in
+            guard let self, let resetGeneration else { return }
+            self.finishAnimatedReset(generation: resetGeneration)
+        }
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
