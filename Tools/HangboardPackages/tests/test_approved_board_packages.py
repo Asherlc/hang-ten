@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
 import zipfile
 from pathlib import Path
@@ -303,6 +304,198 @@ def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
         "hold_03_left_001", "hold_03_right_001"
     ]
     assert descriptor["contacts"]["flat-sloper-2-right"]["nodeIDs"] == ["hold_02_right_001"]
+
+
+SOURCE_REGISTER = (
+    REPO_ROOT / "docs/source-audits/2026-09-20-batch-04-3d-source-register.json"
+)
+
+PIVOT_SLOTS = (
+    "upper-sloped-crimp",
+    "outer-sloped-crimp",
+    "variable-edge",
+    "medium-crimp",
+    "large-crimp",
+    "two-finger-pocket",
+    "three-finger-pocket",
+    "outer-wedge-pinch",
+    "lower-sloper",
+)
+
+PIVOT_APERTURES = ("three-finger-end-window", "two-finger-opening")
+
+HARDWARE_TOKENS = (
+    "fastener",
+    "screw",
+    "mount",
+    "cleat",
+    "bracket",
+    "hardware",
+    "bolt",
+    "counterbore",
+    "set-screw",
+    "rail-backer",
+    "anchor",
+    "cord",
+)
+
+
+def _source_node_name(node_id: str) -> str:
+    """USD identifiers sanitize hyphens; Blender's mesh child may add _001."""
+    return node_id.removesuffix("_001").replace("_", "-")
+
+
+def test_batch04_model_geometry_retains_only_documented_attachment_openings() -> None:
+    """Catch a lost finger opening, an invented fastener bore, or a stray p4."""
+    source_boards = json.loads(SOURCE_REGISTER.read_text())["boards"]
+    expected = {
+        "crimptonite-helium-mobile": {
+            "boardID": "crimptonite.helium-mobile",
+            "apertures": {"front-lead-mouth", "reverse-lead-mouth"},
+        },
+        "metolius-light-rail-2": {
+            "boardID": "metolius.light-rail-2",
+            "apertures": {"left-upper-entry", "right-upper-entry"},
+        },
+        "metolius-rock-rings-3d": {
+            "boardID": "metolius.rock-rings-3d",
+            "apertures": {"roof-exit", "lateral-window"},
+        },
+        "owl-climb-poker": {"boardID": "owl-climb.poker", "apertures": set()},
+        "yy-penta-evo": {
+            "boardID": "yy.penta-evo",
+            "apertures": {"central-ring", "upper-band-exterior"},
+        },
+        "trango-rock-prodigy-pivot": {
+            "boardID": "trango.rock-prodigy-pivot",
+            "apertures": {"two-finger-opening", "three-finger-end-window"},
+        },
+    }
+    for slug, requirement in expected.items():
+        descriptor = json.loads(
+            (HANGBOARDS_ROOT / slug / "assets/primary.model.json").read_text()
+        )
+        node_ids = {_source_node_name(node["nodeID"]) for node in descriptor["nodes"]}
+        attachments = {
+            _source_node_name(node["nodeID"])
+            for node in descriptor["nodes"]
+            if node["role"] == "attachment"
+        }
+        assert requirement["apertures"] <= node_ids, slug
+        assert attachments == requirement["apertures"], slug
+        assert not any(
+            token in node_id
+            for node_id in node_ids
+            for token in HARDWARE_TOKENS
+        ), slug
+        assert source_boards[requirement["boardID"]]["approvedApertures"] == sorted(
+            requirement["apertures"]
+        ), slug
+    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    assert [position["id"] for position in board["positions"]] == ["p1", "p2", "p3", "p5"]
+
+
+def test_pivot_renders_one_reflected_half_with_eighteen_physical_contacts() -> None:
+    """Catch a duplicated right half, a retained raster record, or a lost slot map."""
+    raw_board = (PIVOT_ROOT / "board.json").read_text()
+    board = json.loads(raw_board)
+    assert board["schemaVersion"] == 3
+    assert board["id"] == "trango.rock-prodigy-pivot"
+    assert [item["id"] for item in board["equipmentObjects"]] == ["left-half", "right-half"]
+    assert {
+        path.relative_to(PIVOT_ROOT).as_posix()
+        for path in PIVOT_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+
+    assert len(board["contacts"]) == 18
+    expected_contacts = {f"{slot}-{side}" for slot in PIVOT_SLOTS for side in ("left", "right")}
+    assert {contact["id"] for contact in board["contacts"]} == expected_contacts
+    for contact in board["contacts"]:
+        side = contact["id"].rsplit("-", 1)[1]
+        assert contact["equipmentObjectID"] == f"{side}-half", contact["id"]
+    assert not any(
+        "orientation-" in contact["id"] for contact in board["contacts"]
+    )
+
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["isDefault"] is True
+    media = presentation["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert "orientation" not in media and "suspension" not in media
+    assert "contactGeometry" not in raw_board
+    assert "raster" not in raw_board
+
+    instances = media["instances"]
+    assert len(instances) == 2
+    left, right = instances
+    assert [item["equipmentObjectID"] for item in instances] == ["left-half", "right-half"]
+    assert "reflection" not in left["baseTransform"]
+    assert right["baseTransform"]["reflection"] == "x"
+    for instance in instances:
+        assert instance["baseTransform"]["rotation"] == [0, 0, 0, 1]
+        assert instance["baseTransform"]["translation"] == [0, 0, 0]
+        assert "suspension" not in instance
+        side = instance["equipmentObjectID"].split("-", 1)[0]
+        assert instance["contactIDsBySlotID"] == {
+            slot: f"{slot}-{side}" for slot in PIVOT_SLOTS
+        }
+        transforms = instance["positionTransforms"]
+        assert list(transforms) == ["p1", "p2", "p3", "p5"]
+        for position_id, transform in transforms.items():
+            assert set(transform) == {"translation", "rotation"}, position_id
+            assert len(transform["translation"]) == 3
+            assert len(transform["rotation"]) == 4
+
+    # Nine-decimal lexemes are a raw-text contract, not a decoded-float one.
+    for lexeme in re.findall(r'"translation": \[([^\]]*)\]', raw_board):
+        for component in lexeme.replace("\n", " ").split(","):
+            assert re.fullmatch(r"-?(?:0|[1-9][0-9]*)\.[0-9]{9}", component.strip())
+
+    assert [position["id"] for position in board["positions"]] == ["p1", "p2", "p3", "p5"]
+    for position in board["positions"]:
+        assert position["presentationID"] == presentation["id"]
+    assert "p4" not in raw_board
+
+    # The right half is mirrored metadata, never a second baked mesh.
+    descriptor = json.loads((PIVOT_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert set(descriptor["contactSlots"]) == set(PIVOT_SLOTS)
+    nodes = {_source_node_name(node["nodeID"]): node for node in descriptor["nodes"]}
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    assert sorted(
+        name for name, node in nodes.items() if node["role"] == "attachment"
+    ) == list(PIVOT_APERTURES)
+    assert not any(
+        token in name for name in nodes for token in HARDWARE_TOKENS
+    )
+    assert not any("left" in name or "right" in name for name in nodes)
+    assert (
+        hashlib.sha256((PIVOT_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+        == descriptor["modelSHA256"]
+    )
+
+
+def test_pivot_retires_all_72_presentation_ids_through_the_tracked_map() -> None:
+    """Catch a retired orientation ID resurrected as a physical contact."""
+    register = json.loads(SOURCE_REGISTER.read_text())["boards"]["trango.rock-prodigy-pivot"]
+    retired = register["retiredPresentationIDToContactID"]
+    assert len(retired) == 72
+    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert set(retired.values()) == contact_ids
+    assert set(retired) >= contact_ids
+    assert {
+        retired_id for retired_id in retired if "orientation-" in retired_id
+    } == set(retired) - contact_ids
+    assert register["selectablePositions"] == ["p1", "p2", "p3", "p5"]
+    assert register["transitionOnlyPositions"] == ["p4"]
+    assert set(register["pivotPatchMappings"].values()) == set(PIVOT_SLOTS)
+    assert len(register["pivotPatchMappings"]) == 14
+    assert len(register["pivotPatchMappingsByDeliveredID"]) == 28
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:

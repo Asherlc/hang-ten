@@ -58,6 +58,7 @@ MODEL_PACKAGE_IDS = {
     "soill.split-palm",
     "soill.training-tiles",
     "the-hangboard.the-hangboard",
+    "trango.rock-prodigy-pivot",
     "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
     "clavellium-training-block",
@@ -493,6 +494,79 @@ def test_penta_evo_uses_two_identical_unreflected_units_with_exact_slot_maps() -
             if contact.id in expected_position_contacts[position.id]
         )
         assert position.contact_ids == expected_order
+
+
+def test_pivot_uses_one_reflected_half_with_four_selectable_positions() -> None:
+    """Catch a lost reflection, an incomplete pose map, or a selectable p4."""
+    board = _discovered_model_packages()["trango.rock-prodigy-pivot"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None and len(media.instances) == 2
+    assert media.orientation is None
+    assert media.suspension is None
+
+    slots = (
+        "upper-sloped-crimp",
+        "outer-sloped-crimp",
+        "variable-edge",
+        "medium-crimp",
+        "large-crimp",
+        "two-finger-pocket",
+        "three-finger-pocket",
+        "outer-wedge-pinch",
+        "lower-sloper",
+    )
+    left_instance, right_instance = media.instances
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-half", "right-half"
+    ]
+    assert left_instance.base_transform.reflection is None
+    assert right_instance.base_transform.reflection == "x"
+    for instance, side in ((left_instance, "left"), (right_instance, "right")):
+        assert instance.suspension is None
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.translation == (0, 0, 0)
+        assert dict(instance.contact_ids_by_slot_id) == {
+            slot: f"{slot}-{side}" for slot in slots
+        }
+        assert instance.position_transforms is not None
+        assert set(instance.position_transforms) == {"p1", "p2", "p3", "p5"}
+        for transform in instance.position_transforms.values():
+            assert transform.reflection is None
+            assert all(math.isfinite(value) for value in transform.translation)
+            assert math.isclose(
+                math.sqrt(sum(value * value for value in transform.rotation)),
+                1.0,
+                abs_tol=1e-6,
+            )
+
+    # Both halves keep the same key set; the right one mirrors every quarter turn.
+    assert set(left_instance.position_transforms) == set(right_instance.position_transforms)
+    for position_id in ("p1", "p2", "p3", "p5"):
+        left = left_instance.position_transforms[position_id]
+        right = right_instance.position_transforms[position_id]
+        assert left.rotation[0] == right.rotation[0] == 0
+        assert left.rotation[1] == right.rotation[1] == 0
+        assert left.rotation[2] == pytest.approx(-right.rotation[2], abs=1e-12)
+        assert left.rotation[3] == pytest.approx(right.rotation[3], abs=1e-12)
+        assert left.translation == pytest.approx(
+            tuple(-value for value in right.translation), abs=1e-12
+        )
+    # p5 exchanges the physical halves; p1 through p3 keep them in place.
+    assert left_instance.position_transforms["p1"].translation[0] < 0
+    assert left_instance.position_transforms["p2"].translation[0] < 0
+    assert left_instance.position_transforms["p3"].translation[0] < 0
+    assert left_instance.position_transforms["p5"].translation[0] > 0
+
+    assert [position.id for position in board.positions] == ["p1", "p2", "p3", "p5"]
+    assert all(position.presentation_id == presentation.id for position in board.positions)
+    assert {contact.id for contact in board.contacts} == {
+        f"{slot}-{side}" for slot in slots for side in ("left", "right")
+    }
 
 
 def test_poker_is_one_model_with_four_source_face_orientations() -> None:

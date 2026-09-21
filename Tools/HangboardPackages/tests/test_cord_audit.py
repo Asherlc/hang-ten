@@ -36,6 +36,37 @@ NEWLY_MODEL_ONLY_EXCLUSIONS = {
 }
 
 
+def test_pivot_exclusion_keeps_pulley_ropes_out_of_board_suspension() -> None:
+    """Catch a pulley-kit rope promoted to Pivot suspension or missing evidence."""
+    records = {r.package_id: r for r in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "trango.rock-prodigy-pivot" in records
+    record = records["trango.rock-prodigy-pivot"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "excluded", "noDocumentedSuspension", None
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    pivot = next(r for r in raw["records"] if r["packageID"] == "trango.rock-prodigy-pivot")
+    assert pivot["ruling"] == (
+        "noDocumentedSuspension; pulley-kit ropes are not Pivot suspension."
+    )
+    assert pivot["humanApproval"]["approved"] is True
+    assert {e["snapshotSHA256"] for e in pivot["evidence"]} == {
+        "339f743c7e5fff0b0619314cf6781d8f602c1545975390f4ab4424aa7461bf5d",
+        "e05deb5c0ea6d3361122926d7b3efee6b72bb9aad0a75fc09663bf599731e3e4",
+        "7aa2556dec24293e62c2be110fa7dfb6bcf118333ff35693e455a8a7babc67f7",
+        "26cf8d599a1a08bbcbbf688e14c9806d5f2381dc2aecdb608998ab22cee2c1b3",
+    }
+    for evidence in pivot["evidence"]:
+        snapshot = REPO_ROOT / evidence["snapshotPath"]
+        assert snapshot.is_file() and not snapshot.is_symlink()
+        assert snapshot.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(snapshot.read_bytes()).hexdigest() == evidence["snapshotSHA256"]
+    board = json.loads((REPO_ROOT / "Hangboards/trango-rock-prodigy-pivot/board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert "suspension" not in media
+    assert all("suspension" not in instance for instance in media["instances"])
+
+
 def test_poker_exclusion_retains_all_four_approved_manufacturer_faces() -> None:
     """Catch missing coverage or accidental suspension/hardware promotion."""
     records = {r.package_id: r for r in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
@@ -186,7 +217,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 26, "represented": 12}
+    assert report.decisions == {"excluded": 27, "represented": 12}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

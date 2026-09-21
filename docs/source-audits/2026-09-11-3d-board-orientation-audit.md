@@ -883,3 +883,33 @@ product page documents rotation of the Penta through its retaining notches;
 the same authored position transform for each position, while their separate
 placement and suspension metadata keeps the units physically distinct. This
 is display orientation metadata, not a claim of factory angular metrology.
+
+#### Trango Rock Prodigy Pivot
+
+`trango.rock-prodigy-pivot` is one canonical reauthored resin half rendered
+twice. The `left-half` instance is unreflected; the `right-half` instance
+carries `reflection: "x"` about the unit bounds centre. Unlike Penta, this pair
+*is* a left/right mirror, which is why exactly one physical half is exported.
+Both instances expose the same nine slot IDs (`upper-sloped-crimp`,
+`outer-sloped-crimp`, `variable-edge`, `medium-crimp`, `large-crimp`,
+`two-finger-pocket`, `three-finger-pocket`, `outer-wedge-pinch`, and
+`lower-sloper`) and map those slots to their same-suffixed `-left` or `-right`
+physical contacts, giving 18 physical contacts in total.
+
+The reviewed position inventory is exactly `p1`, `p2`, `p3`, and `p5`. Each
+instance owns a complete nine-decimal `positionTransforms` entry for those four
+keys and for no others; there is no top-level orientation or suspension
+metadata. Each Pivot unit mounts and rotates independently, so a position
+rotates each already-placed half about its own bounds centre: `p1` identity,
+`p2` a quarter turn about the model Z axis, `p3` a half turn, and `p5` the
+opposite quarter turn combined with the manufacturer side switch, which
+exchanges the two physical halves through their position translations. The
+right instance's rotation is the mirror conjugate of the left instance's, so
+the assembled pair stays mirror-symmetric in every position. Physical contact
+IDs are stable through every rotation and through the side exchange.
+
+Batch `p4` is manufacturer Orientation 3 Switch transition evidence only and is
+deliberately absent from both the package positions and both position transform
+maps. Model bounds, quaternions, translations, spacing, pivot choice and camera
+are display orientation metadata and `authored display estimate` values, not a
+claim of factory angular metrology.

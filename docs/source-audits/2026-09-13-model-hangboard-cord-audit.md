@@ -7,9 +7,9 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 38 discovered model packages after the 2026-09-20 Poker
-promotion. Twelve have documented suspended presentation evidence and render
-transient cord geometry; twenty-six remain
+The audit covers all 39 discovered model packages after the 2026-09-21 Rock
+Prodigy Pivot promotion. Twelve have documented suspended presentation evidence
+and render transient cord geometry; twenty-seven remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
 for documented suspended presentation, but it is never described as supplied
@@ -18,11 +18,54 @@ or integral.
 | Decision | Count | Packages |
 |---|---:|---|
 | `represented` | 12 | `yy.penta-evo`, `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
-| `excluded` | 26 | Owl Climb Poker; Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
+| `excluded` | 27 | Trango Rock Prodigy Pivot; Owl Climb Poker; Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
 ## Evidence review and approval
+
+### Trango Rock Prodigy Pivot reauthored model promotion — 2026-09-21
+
+Ruling: **noDocumentedSuspension; pulley-kit ropes are not Pivot suspension.**
+
+All four approved exact manufacturer originals are retained as regular files
+`trango-rock-prodigy-pivot-front.jpg`, `-dual-oblique.jpg`,
+`-single-oblique.jpg` and `-close-up.jpg` under the snapshot directory. Their
+URLs and unchanged SHA-256 values are recorded in the canonical JSON evidence
+entries. Together with the manufacturer Quick Start and depth guide facts in
+the closed
+[Batch 04 source register](2026-09-20-batch-04-3d-source-register.json) they
+establish the nine physical contacts per half, the four selectable quarter-turn
+positions, and the separate external Quad Cleat mounting hardware. They do not
+establish board suspension. The separately sold pulley kit's ropes are training
+accessories, not a suspended Pivot presentation, so no cord, anchor, passage or
+suspension metadata is promoted.
+
+The delivered Batch 04 Pivot GLB
+(`0c342998ced0a3fa99172ff08adf1d605933405df5520ec0833db23d5c2edda8`) remains
+**rejected as production geometry and retained as audit evidence only**. The
+promoted USDZ is one manually reauthored canonical half: a continuous moulded
+perimeter rim around a recessed field, a broad integrated concave wing, two
+supported crimp ledges with opposed moulded end stops, a scalloped three-finger
+trough, a continuous variable-depth rail cove and a lower wave sloper. The
+descriptor is v2 and the right half is reflection metadata, never a second
+baked mesh.
+
+Exactly two genuine openings are retained: the `two-finger-opening` through
+window and the `three-finger-end-window`. All six delivered fastener holes,
+every bolt counterbore and set-screw bore, and every screw, Quad Cleat,
+rail/backer and bracket mesh are omitted from the display model. That omission
+does not imply the physical product lacks them.
+
+Sourced PV5 depths (top sloped 12.5, side sloped 11.5, rail 16–31, medium
+9–10, large 11–12, two-finger 32–28, three-finger 28–17 mm) are preserved. The
+overall envelope, rear surface, silhouette radii, scallop count, wing section,
+along-rail depth gradient direction, material and camera are explicitly
+`authored-display-estimate`; the depth guide's L→R labels are relative to each
+illustration, so the gradient direction is authored rather than sourced. Only
+`p1`, `p2`, `p3` and `p5` are selectable; `p4` is Orientation 3 Switch
+transition evidence and is deliberately not selectable. Current-source app
+visual acceptance remains the Batch 04 Task 14 gate.
 
 ### Owl Climb Poker model promotion — 2026-09-20
 

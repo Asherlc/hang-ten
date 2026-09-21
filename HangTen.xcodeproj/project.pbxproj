@@ -45,6 +45,7 @@
 		D10000000000000000000024 /* metolius-rock-rings-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-rock-rings-3d", ); }; };
 		D10000000000000000000025 /* yy-penta-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000025 /* yy-penta-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-penta-evo", ); }; };
 		D10000000000000000000026 /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000026 /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
+		D10000000000000000000027 /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000027 /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
         E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
@@ -226,6 +227,7 @@
 		D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-rock-rings-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-rock-rings-3d/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000025 /* yy-penta-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-penta-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-penta-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000026 /* owl-climb-poker Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "owl-climb-poker Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/owl-climb-poker/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000027 /* trango-rock-prodigy-pivot Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-pivot Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-pivot/Hangboards"; sourceTree = "<absolute>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
         E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 				D20000000000000000000024 /* metolius-rock-rings-3d Hangboards */,
 				D20000000000000000000025 /* yy-penta-evo Hangboards */,
 				D20000000000000000000026 /* owl-climb-poker Hangboards */,
+				D20000000000000000000027 /* trango-rock-prodigy-pivot Hangboards */,
 			);
 			name = "On-Demand Model Resources";
 			sourceTree = "<group>";
@@ -824,6 +827,7 @@
 				D10000000000000000000024 /* metolius-rock-rings-3d Hangboards in Resources */,
 				D10000000000000000000025 /* yy-penta-evo Hangboards in Resources */,
 				D10000000000000000000026 /* owl-climb-poker Hangboards in Resources */,
+				D10000000000000000000027 /* trango-rock-prodigy-pivot Hangboards in Resources */,
 				AA0000000000000000000007 /* Assets.xcassets in Resources */,
 				A3D000000000000000000003 /* hand-mesh.json in Resources */,
 				AA0000000000000000000015 /* PlanLibrary.json in Resources */,

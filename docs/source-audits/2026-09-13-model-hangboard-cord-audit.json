@@ -1002,6 +1002,53 @@
         "reviewedAt": "2026-09-20",
         "notes": "Reviewed all four exact approved Owl manufacturer originals. One 660 x 100 x 100 mm beam has 34 unchanged same-face contacts, including exactly the two approved Face D deep rounded recess restores. Manufacturer mounting brackets are external hardware and are omitted, along with screws and mounting holes. No evidence establishes board suspension; no cord, anchor, passage or suspension metadata is promoted. Cyclic face order, unsurveyed depth assignments, relief transitions, edge radii, material and camera are authored-display-estimate. The mono/duo sequence is identical at both ends in every source view, not mirrored."
       }
+    },
+    {
+      "packageID": "trango.rock-prodigy-pivot",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "noDocumentedSuspension; pulley-kit ropes are not Pivot suspension.",
+      "evidence": [
+        {
+          "view": "PV2 exact manufacturer front pair",
+          "url": "https://trango.com/cdn/shop/products/22840-501_RockProdigyPivotGrey_MainImage.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "339f743c7e5fff0b0619314cf6781d8f602c1545975390f4ab4424aa7461bf5d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-front.jpg"
+        },
+        {
+          "view": "PV3 exact manufacturer dual-half oblique",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage4_DualBoard.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "e05deb5c0ea6d3361122926d7b3efee6b72bb9aad0a75fc09663bf599731e3e4",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-dual-oblique.jpg"
+        },
+        {
+          "view": "PV8 exact manufacturer single-half oblique",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage3_SingleBoard.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7aa2556dec24293e62c2be110fa7dfb6bcf118333ff35693e455a8a7babc67f7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-single-oblique.jpg"
+        },
+        {
+          "view": "PV7 exact manufacturer supported-crimp close-up",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage2_CloseUp.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "26cf8d599a1a08bbcbbf688e14c9806d5f2381dc2aecdb608998ab22cee2c1b3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-close-up.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-21",
+        "notes": "Reviewed all four exact approved Trango manufacturer originals plus the manufacturer Quick Start and depth guide facts in the closed Batch 04 source register. Nothing in that evidence establishes a suspended Pivot presentation: the product mounts on external Quad Cleat hardware, and the separately sold pulley kit's ropes are training accessories, not board suspension. No cord, anchor, passage or suspension metadata is promoted. One canonical resin half carries nine physical contacts and is rendered twice, the right instance reflected about the unit bounds centre. The only retained openings are the genuine two-finger through opening and the three-finger end window; all six delivered fastener holes, every bolt counterbore and set-screw bore, and the Quad Cleat, rail/backer and bracket hardware are omitted from the display model without implying the physical product lacks them. Sourced PV5 depths are preserved; the overall envelope, rear surface, silhouette radii, scallop count, wing section, rail depth gradient direction, material and camera remain authored-display-estimate."
+      }
     }
   ]
 }
