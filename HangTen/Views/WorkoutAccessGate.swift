@@ -4,19 +4,23 @@ struct WorkoutAccessGate<Label: View>: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var pendingPlan: TrainingPlan?
+    @State private var pendingInitialWeight = WorkoutInitialWeightConfiguration.untracked
     @State private var showsPaywall = false
     @State private var showsWorkout = false
 
     private let plan: TrainingPlan
+    private let initialWeight: WorkoutInitialWeightConfiguration
     private let launchesOnAppear: Bool
     private let label: Label
 
     init(
         plan: TrainingPlan,
+        initialWeight: WorkoutInitialWeightConfiguration = .untracked,
         launchesOnAppear: Bool = false,
         @ViewBuilder label: () -> Label
     ) {
         self.plan = plan
+        self.initialWeight = initialWeight
         self.launchesOnAppear = launchesOnAppear
         self.label = label()
     }
@@ -25,7 +29,7 @@ struct WorkoutAccessGate<Label: View>: View {
         Group {
             if launchesOnAppear {
                 if showsWorkout, let pendingPlan {
-                    WorkoutView(plan: pendingPlan)
+                    WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
                 } else {
                     Color.clear
                 }
@@ -35,7 +39,7 @@ struct WorkoutAccessGate<Label: View>: View {
                 }
                 .navigationDestination(isPresented: $showsWorkout) {
                     if let pendingPlan {
-                        WorkoutView(plan: pendingPlan)
+                        WorkoutView(plan: pendingPlan, initialWeight: pendingInitialWeight)
                     }
                 }
             }
@@ -54,6 +58,7 @@ struct WorkoutAccessGate<Label: View>: View {
 
     private func requestLaunch() {
         pendingPlan = plan
+        pendingInitialWeight = initialWeight
 
         switch store.workoutLaunchDecision {
         case .allowed:
@@ -82,10 +87,12 @@ struct WorkoutAccessGate<Label: View>: View {
 extension WorkoutAccessGate where Label == EmptyView {
     init(
         plan: TrainingPlan,
+        initialWeight: WorkoutInitialWeightConfiguration = .untracked,
         launchesOnAppear: Bool = true
     ) {
         self.init(
             plan: plan,
+            initialWeight: initialWeight,
             launchesOnAppear: launchesOnAppear
         ) {
             EmptyView()

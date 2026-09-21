@@ -1,5 +1,32 @@
 import SwiftUI
 
+enum TrainReviewDestination: Hashable {
+    case plan
+    case settings
+    case boardDetail
+    case boardPicker
+
+    static func initial(environment: [String: String]) -> Self? {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_PLAN"] == "1" {
+            return .plan
+        }
+        if environment["HANGTEN_REVIEW_SETTINGS"] == "1"
+            || environment["HANGTEN_REVIEW_HEALTH"] == "1"
+            || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
+            return .settings
+        }
+        if environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1" {
+            return .boardDetail
+        }
+        if environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1" {
+            return .boardPicker
+        }
+        #endif
+        return nil
+    }
+}
+
 struct TrainView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var deepLinkManager: DeepLinkManager
@@ -7,38 +34,9 @@ struct TrainView: View {
     @State private var showsDeepLinkedWorkout = false
     @State private var deepLinkedWorkoutPlan: TrainingPlan?
     private let onBrowsePlans: () -> Void
-    @State private var showsPlanReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
-        #else
-        return false
-        #endif
-    }()
-    @State private var showsSettingsReview: Bool = {
-        #if DEBUG
-        let environment = ProcessInfo.processInfo.environment
-        return environment["HANGTEN_REVIEW_SETTINGS"] == "1"
-            || environment["HANGTEN_REVIEW_HEALTH"] == "1"
-            || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
-        #else
-        return false
-        #endif
-    }()
-    @State private var showsBoardPickerReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1"
-        #else
-        return false
-        #endif
-    }()
-
-    @State private var showsBoardDetailReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1"
-        #else
-        return false
-        #endif
-    }()
+    @State private var reviewDestination = TrainReviewDestination.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
 
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
@@ -67,21 +65,21 @@ struct TrainView: View {
                     .accessibilityIdentifier("train.settings")
                 }
             }
-            .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = reviewPlan {
-                    PlanDetailView(plan: plan)
-                } else {
-                    noCompatiblePlan
+            .navigationDestination(item: $reviewDestination) { destination in
+                switch destination {
+                case .plan:
+                    if let plan = reviewPlan {
+                        PlanDetailView(plan: plan)
+                    } else {
+                        noCompatiblePlan
+                    }
+                case .settings:
+                    AppSettingsView()
+                case .boardDetail:
+                    BoardDetailView(board: store.selectedBoard)
+                case .boardPicker:
+                    BoardPickerView()
                 }
-            }
-            .navigationDestination(isPresented: $showsSettingsReview) {
-                AppSettingsView()
-            }
-            .navigationDestination(isPresented: $showsBoardDetailReview) {
-                BoardDetailView(board: store.selectedBoard)
-            }
-            .navigationDestination(isPresented: $showsBoardPickerReview) {
-                BoardPickerView()
             }
             .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)

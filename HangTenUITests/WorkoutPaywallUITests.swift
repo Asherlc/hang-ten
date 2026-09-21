@@ -62,13 +62,94 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertFalse(app.otherElements["paywall.lifetimeUnlock"].exists)
     }
 
+    func testVerifiedPurchaseCarriesScaleSnapshotIntoSensorPreparation() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launch()
+
+        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
+            app.navigationBars["Settings"].buttons.firstMatch.tap()
+        }
+        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        XCTAssertTrue(source.waitForExistence(timeout: 10))
+        source.buttons["Scale"].tap()
+        app.buttons["plan.startRoutine"].tap()
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+
+        app.buttons["paywall.purchase"].tap()
+        if app.buttons["handSide.left"].waitForExistence(timeout: 5) {
+            app.buttons["handSide.left"].tap()
+        }
+
+        XCTAssertTrue(app.buttons["Skip preparation"].waitForExistence(timeout: 15))
+        XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
+    }
+
+    func testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary() {
+        let app = lockedPlanApp()
+        app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "999"
+        app.launch()
+
+        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        XCTAssertTrue(source.waitForExistence(timeout: 10))
+        source.buttons["Manual"].tap()
+
+        let field = app.textFields["workout.initialWeight.manualField"]
+        XCTAssertTrue(field.waitForExistence(timeout: 2))
+        let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
+        field.tap()
+        field.typeText(
+            String(
+                repeating: XCUIKeyboardKey.delete.rawValue,
+                count: (field.value as? String)?.count ?? 0
+            )
+        )
+        field.typeText("12.5")
+
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        XCTAssertEqual(bodyweight.value as? String, "1")
+
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 2))
+        var remainingScrollAttempts = 4
+        while !start.isHittable, remainingScrollAttempts > 0 {
+            app.swipeUp()
+            remainingScrollAttempts -= 1
+        }
+        XCTAssertTrue(start.isHittable)
+        start.tap()
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
+
+        app.buttons["paywall.purchase"].tap()
+
+        let manualWeight = app.staticTexts["Manual weight: +12.5 \(unit) plus bodyweight"]
+        let summary = app.collectionViews.firstMatch
+        XCTAssertTrue(summary.waitForExistence(timeout: 10))
+        var remainingSummaryScrollAttempts = 10
+        while !manualWeight.exists, remainingSummaryScrollAttempts > 0 {
+            summary.swipeUp()
+            remainingSummaryScrollAttempts -= 1
+        }
+        XCTAssertTrue(
+            manualWeight.waitForExistence(timeout: 2)
+        )
+        XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
+    }
+
     func testLandscapePaywallKeepsRestorePurchasesInsideViewport() {
         let app = lockedPlanApp()
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_LANDSCAPE"] = "1"
         app.launch()
 
-        app.buttons["plan.startRoutine"].tap()
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 2))
+        start.tap()
 
         let restore = app.buttons["paywall.restore"]
         XCTAssertTrue(restore.waitForExistence(timeout: 2))

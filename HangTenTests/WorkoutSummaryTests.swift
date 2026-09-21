@@ -3,6 +3,9 @@ import XCTest
 
 final class WorkoutSummaryTests: XCTestCase {
     func testInitialWeightTextClearlyDescribesManualStandaloneAndBodyweightModes() {
+        XCTAssertNil(
+            WorkoutSummaryFormatting.initialWeightText(for: .untracked, unit: .kilograms)
+        )
         XCTAssertEqual(
             WorkoutSummaryFormatting.initialWeightText(
                 for: .manual(weightKGF: 10, includesBodyweight: false),
@@ -19,7 +22,7 @@ final class WorkoutSummaryTests: XCTestCase {
         )
         XCTAssertEqual(
             WorkoutSummaryFormatting.initialWeightText(for: .sensor, unit: .kilograms),
-            "Sensor weight"
+            "Supported scale"
         )
     }
 

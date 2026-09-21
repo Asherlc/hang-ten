@@ -12,24 +12,18 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]
         app.launch()
-        openWorkoutDeepLinkExpectingInitialWeightSetup()
     }
 
-    func testMaxHangsStepOneExposesIndividualHandCuesAndCapturesDiagnosticScreenshot() throws {
-        // Auto-start presents initial weight setup; cancel to return to the idle workout screen.
-        if app.buttons["Cancel"].waitForExistence(timeout: 10) {
-            app.buttons["Cancel"].tap()
-        }
-        XCTAssertTrue(app.buttons["Start"].waitForExistence(timeout: 10))
+    func testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts() throws {
+        openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
+        XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
+        XCTAssertFalse(app.buttons["Start"].exists)
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
 
         let leftHandCue = app.otherElements["workout.gripCue.left"]
-        let rightHandCue = app.otherElements["workout.gripCue.right"]
         XCTAssertTrue(leftHandCue.waitForExistence(timeout: 10))
-        XCTAssertTrue(rightHandCue.waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["workout.gripCue.left.model"].exists)
-        XCTAssertTrue(app.buttons["workout.gripCue.right.model"].exists)
         XCTAssertTrue(leftHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
-        XCTAssertTrue(rightHandCue.label.contains("Exact fingers: index, middle, ring, and pinky"))
         XCTAssertFalse(app.staticTexts["P+R+M+I"].exists)
         XCTAssertFalse(app.staticTexts["I+M+R+P"].exists)
 
@@ -40,27 +34,23 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     }
 
     func testLandscapePreStartHasNoLegacyLoadAdjustment() throws {
+        openPlanDetail()
         selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         XCTAssertTrue(app.switches["workout.initialWeight.addBodyweight"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "Manual initial weight setup in landscape"
+        attachment.name = "Inline manual weight setup in landscape"
         attachment.lifetime = .keepAlways
         add(attachment)
     }
 
     func testLandscapeManualWorkoutHidesStreamingSensorMeter() throws {
-        app.terminate()
-        app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
-        app.launch()
-        dismissSettingsReviewIfPresented()
-        openWorkoutDeepLinkExpectingInitialWeightSetup()
+        openPlanDetail(withMotherboardFixture: true)
         selectManualWeightSourceIfNeeded()
 
-        XCTAssertTrue(app.buttons["workout.initialWeight.continue"].waitForExistence(timeout: 15))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
-        app.buttons["workout.initialWeight.continue"].tap()
+        tapStartRoutine()
         XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
         app.buttons["handSide.left"].tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
@@ -70,21 +60,37 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
     /// Opens the workout deep link only after Train is the top of the stack, then
     /// retries once if the URL was dropped during a nav/orientation settle.
-    private func openWorkoutDeepLinkExpectingInitialWeightSetup(
+    private func openWorkoutDeepLinkAndChooseLeftHandIfNeeded(
         perAttemptTimeout: TimeInterval = 20
     ) {
         waitForTrainShellReady(timeout: 20)
-        let sourcePicker = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        let handChoice = app.buttons["handSide.left"]
+        let pause = app.buttons["Pause"]
         app.open(workoutDeepLink)
-        if sourcePicker.waitForExistence(timeout: perAttemptTimeout) {
-            return
+        if !handChoice.waitForExistence(timeout: perAttemptTimeout),
+           !pause.exists {
+            waitForTrainShellReady(timeout: 10)
+            app.open(workoutDeepLink)
         }
-        // Landscape + Settings pop can swallow the first openurl; Train is ready now.
-        waitForTrainShellReady(timeout: 10)
-        app.open(workoutDeepLink)
+        if handChoice.waitForExistence(timeout: perAttemptTimeout) {
+            handChoice.tap()
+        }
+        XCTAssertTrue(pause.waitForExistence(timeout: perAttemptTimeout))
+    }
+
+    private func openPlanDetail(withMotherboardFixture: Bool = false) {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
+        if withMotherboardFixture {
+            app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        } else {
+            app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_MOTHERBOARD")
+        }
+        app.launch()
         XCTAssertTrue(
-            sourcePicker.waitForExistence(timeout: perAttemptTimeout),
-            "Initial weight setup source picker should appear after the workout deep link."
+            app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
+            "The plan review route should take precedence over fixture-only review flags."
         )
     }
 
@@ -120,29 +126,19 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         manual.tap()
     }
 
-    private func dismissSettingsReviewIfPresented() {
-        // HANGTEN_REVIEW_MOTHERBOARD still opens Settings from Train; dismiss so the
-        // workout deep link can present on the Train stack.
-        let settings = app.navigationBars["Settings"]
-        guard settings.waitForExistence(timeout: 8) else { return }
-        settings.buttons.firstMatch.tap()
-
-        let dismissed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == false"),
-            object: settings
-        )
-        let result = XCTWaiter.wait(for: [dismissed], timeout: 10)
-        XCTAssertEqual(
-            result,
-            .completed,
-            "Settings should finish dismissing before the workout deep link."
-        )
+    private func tapStartRoutine() {
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable {
+            app.swipeUp()
+        }
+        start.tap()
     }
+
 }
 
 final class InitialWeightSetupUITests: XCTestCase {
     private let app = XCUIApplication()
-    private let workoutDeepLink = URL(string: "hangten://plan/research.max-hangs/workout")!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
@@ -151,17 +147,21 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_PORTRAIT": "1",
             "HANGTEN_REVIEW_MOTHERBOARD": "1",
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
+            "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
         ]
         app.launch()
-        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.navigationBars["Settings"].buttons.firstMatch.tap()
-        }
-        app.open(workoutDeepLink)
-        XCTAssertTrue(app.segmentedControls["workout.initialWeight.sourcePicker"].waitForExistence(timeout: 15))
-        if app.buttons["Turn off spoken cues"].exists { app.buttons["Turn off spoken cues"].tap() }
+        XCTAssertTrue(
+            app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
+            "The plan review route should take precedence over fixture-only review flags."
+        )
     }
 
-    func testPairingCancelKeepsManualDraftAndAllowsRetry() {
+    func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
+        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        XCTAssertTrue(source.buttons["Skip"].isSelected)
+        source.buttons["Manual"].tap()
+
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         // Tap the switch itself, rather than the center of its full-width Form row.
         bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
@@ -172,54 +172,68 @@ final class InitialWeightSetupUITests: XCTestCase {
         field.typeText("12.5")
         let enteredValue = field.value as? String
         XCTAssertEqual(enteredValue, "12.5")
-        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
-        let pairingCancel = app.buttons["workout.sensorPairing.cancel"]
-        source.buttons["Sensor"].tap()
-        XCTAssertTrue(pairingCancel.waitForExistence(timeout: 10))
+        source.buttons["Scale"].tap()
+        XCTAssertTrue(app.buttons["plan.initialWeight.connect"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["plan.startRoutine"].exists)
+        XCTAssertTrue(app.buttons["plan.initialWeight.scaleProfile"].exists)
+        XCTAssertFalse(app.navigationBars["Sensor pairing"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = "Sensor pairing presented inside initial weight setup"
+        attachment.name = "Inline supported scale setup"
         attachment.lifetime = .keepAlways
         add(attachment)
-        pairingCancel.tap()
-        let firstPairingDismissed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == false"),
-            object: pairingCancel
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [firstPairingDismissed], timeout: 10), .completed)
-        XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
-        source.buttons["Sensor"].tap()
-        XCTAssertTrue(pairingCancel.waitForExistence(timeout: 10))
-        pairingCancel.tap()
-        let secondPairingDismissed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == false"),
-            object: pairingCancel
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [secondPairingDismissed], timeout: 10), .completed)
-        app.buttons["workout.initialWeight.continue"].tap()
-        XCTAssertTrue(app.buttons["workout.sensorPairing.connect"].waitForExistence(timeout: 10))
     }
 
-    func testPairingStreamingDismissesSetupAndStartsOnceAfterPreparation() {
-        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Sensor"].tap()
-        let connect = app.buttons["workout.sensorPairing.connect"]
+    func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Scale"].tap()
+        let connect = app.buttons["plan.initialWeight.connect"]
         XCTAssertTrue(connect.waitForExistence(timeout: 10))
         connect.tap()
+        let status = app.staticTexts["plan.initialWeight.scaleStatus"]
+        let connected = XCTNSPredicateExpectation(
+            predicate: NSPredicate(
+                format: "label == %@",
+                "Your supported scale is connected and ready."
+            ),
+            object: status
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [connected], timeout: 10), .completed)
+        XCTAssertEqual(connect.label, "Disconnect scale")
+        XCTAssertTrue(app.buttons["plan.startRoutine"].exists)
+        tapStartRoutine()
         XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
         app.buttons["handSide.left"].tap()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["workout.sensorPairing.connect"].exists)
-        XCTAssertFalse(app.buttons["workout.initialWeight.continue"].exists)
+        XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
         skip.tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
         app.buttons["Pause"].tap()
         XCTAssertTrue(app.buttons["Resume"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.buttons["Start"].exists)
+    }
+
+    func testScaleSelectionDoesNotBlockStartWhenDisconnected() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Scale"].tap()
+        tapStartRoutine()
+        XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
+        app.buttons["handSide.left"].tap()
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.buttons["Skip preparation"].exists)
+        XCTAssertFalse(app.navigationBars["Sensor pairing"].exists)
+    }
+
+    private func tapStartRoutine() {
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable {
+            app.swipeUp()
+        }
+        start.tap()
     }
 }
 
