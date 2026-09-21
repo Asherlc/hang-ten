@@ -127,9 +127,16 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         app.buttons["paywall.purchase"].tap()
 
+        let manualWeight = app.staticTexts["Manual weight: +12.5 \(unit) plus bodyweight"]
+        let summary = app.collectionViews.firstMatch
+        XCTAssertTrue(summary.waitForExistence(timeout: 10))
+        var remainingSummaryScrollAttempts = 10
+        while !manualWeight.exists, remainingSummaryScrollAttempts > 0 {
+            summary.swipeUp()
+            remainingSummaryScrollAttempts -= 1
+        }
         XCTAssertTrue(
-            app.staticTexts["Manual weight: +12.5 \(unit) plus bodyweight"]
-                .waitForExistence(timeout: 10)
+            manualWeight.waitForExistence(timeout: 2)
         )
         XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
     }
@@ -142,12 +149,6 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
-        var remainingScrollAttempts = 4
-        while !start.isHittable, remainingScrollAttempts > 0 {
-            app.swipeUp()
-            remainingScrollAttempts -= 1
-        }
-        XCTAssertTrue(start.isHittable)
         start.tap()
 
         let restore = app.buttons["paywall.restore"]

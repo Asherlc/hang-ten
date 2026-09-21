@@ -81,15 +81,16 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
     private func openPlanDetail(withMotherboardFixture: Bool = false) {
         app.terminate()
         app.launchEnvironment["HANGTEN_REVIEW_PLAN"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         if withMotherboardFixture {
             app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
         } else {
             app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_MOTHERBOARD")
         }
         app.launch()
-        dismissSettingsReviewIfPresented()
         XCTAssertTrue(
-            app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15)
+            app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
+            "The plan review route should take precedence over fixture-only review flags."
         )
     }
 
@@ -134,24 +135,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         start.tap()
     }
 
-    private func dismissSettingsReviewIfPresented() {
-        // HANGTEN_REVIEW_MOTHERBOARD still opens Settings from Train; dismiss so the
-        // workout deep link can present on the Train stack.
-        let settings = app.navigationBars["Settings"]
-        guard settings.waitForExistence(timeout: 8) else { return }
-        settings.buttons.firstMatch.tap()
-
-        let dismissed = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == false"),
-            object: settings
-        )
-        let result = XCTWaiter.wait(for: [dismissed], timeout: 10)
-        XCTAssertEqual(
-            result,
-            .completed,
-            "Settings should finish dismissing before the workout deep link."
-        )
-    }
 }
 
 final class InitialWeightSetupUITests: XCTestCase {
@@ -165,12 +148,13 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_MOTHERBOARD": "1",
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
         ]
         app.launch()
-        if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
-            app.navigationBars["Settings"].buttons.firstMatch.tap()
-        }
-        XCTAssertTrue(app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15))
+        XCTAssertTrue(
+            app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
+            "The plan review route should take precedence over fixture-only review flags."
+        )
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
