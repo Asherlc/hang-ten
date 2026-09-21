@@ -429,7 +429,6 @@ final class MotherboardBluetoothService: ObservableObject {
 
         scheduleTimeout(
             after: advertisementLivenessTimeout,
-            message: "\(device.profile.label) stopped advertising. Move the sensor closer and try again.",
             onExpiry: { [weak self] in
                 self?.recoverAdvertisementStream()
             }
@@ -579,24 +578,28 @@ final class MotherboardBluetoothService: ObservableObject {
 
     private func scheduleTimeout(
         after delay: TimeInterval,
-        message: String,
-        onExpiry: (() -> Void)? = nil
+        message: String
+    ) {
+        scheduleTimeout(after: delay) { [weak self] in
+            self?.fail(message)
+        }
+    }
+
+    private func scheduleTimeout(
+        after delay: TimeInterval,
+        onExpiry: @escaping () -> Void
     ) {
         cancelTimeout()
         guard delay.isFinite, delay > 0, delay <= Self.maximumBodyweightMeasurementDuration else { return }
         let nanoseconds = UInt64(delay * 1_000_000_000)
-        timeoutTask = Task { [weak self] in
+        timeoutTask = Task {
             do {
                 try await Task.sleep(nanoseconds: nanoseconds)
             } catch {
                 return
             }
             guard !Task.isCancelled else { return }
-            if let onExpiry {
-                onExpiry()
-            } else {
-                self?.fail(message)
-            }
+            onExpiry()
         }
     }
 
