@@ -1033,22 +1033,36 @@ final class BoardModelScene {
         }
         guard [1, 2, 4].contains(element.bytesPerIndex),
               element.data.count >= count * element.bytesPerIndex else { return nil }
-        let indices: [UInt32] = element.data.withUnsafeBytes { bytes in
-            (0..<count).map { index in
+        var indices: [UInt32] = []
+        indices.reserveCapacity(count)
+        element.data.withUnsafeBytes { bytes in
+            for index in 0..<count {
                 let offset = index * element.bytesPerIndex
                 switch element.bytesPerIndex {
-                case 1: return UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
-                case 2: return UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
-                default: return bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self)
+                case 1:
+                    indices.append(UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self)))
+                case 2:
+                    indices.append(UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self)))
+                default:
+                    indices.append(bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self))
                 }
             }
         }
         if element.primitiveType == .triangles { return indices }
-        return (0..<element.primitiveCount).flatMap { index in
-            index.isMultiple(of: 2)
-                ? [indices[index], indices[index + 1], indices[index + 2]]
-                : [indices[index + 1], indices[index], indices[index + 2]]
+        var triangles: [UInt32] = []
+        triangles.reserveCapacity(element.primitiveCount * 3)
+        for index in 0..<element.primitiveCount {
+            if index.isMultiple(of: 2) {
+                triangles.append(indices[index])
+                triangles.append(indices[index + 1])
+                triangles.append(indices[index + 2])
+            } else {
+                triangles.append(indices[index + 1])
+                triangles.append(indices[index])
+                triangles.append(indices[index + 2])
+            }
         }
+        return triangles
     }
 
     private static func copyElement(_ element: SCNGeometryElement) -> SCNGeometryElement {
