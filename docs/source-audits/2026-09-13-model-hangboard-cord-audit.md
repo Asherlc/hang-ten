@@ -1,14 +1,14 @@
 # 3D model hangboard cord audit
 
-Initial audit: 2026-09-13; coverage addendum: 2026-09-15
+Initial audit: 2026-09-13; latest coverage addendum: 2026-09-20
 Scope: every model-media package discovered under `Hangboards/`  
 Decision: approved for package promotion after human review of the retained
 exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 20 discovered model packages. Eight have documented
-suspended presentation evidence and render transient cord geometry; twelve remain
+The audit covers all 34 discovered model packages. Nine have documented
+suspended presentation evidence and render transient cord geometry; 25 remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
 for documented suspended presentation, but it is never described as supplied
@@ -16,8 +16,8 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 8 | `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
-| `excluded` | 12 | Beastmaker 1000/2000; Lattice Triple Rung; Metolius Climber's Edge/Contact/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II; So iLL Training Tiles; The Hangboard; Trango Rock Prodigy Training Center |
+| `represented` | 9 | `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `j-bryant.ftg-32`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `tension.flash-board`, `yy.baguette-evo` |
+| `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; deWOODSTOK Woodbord; Escape Beta 22/Unlimited; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm 2/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -96,6 +96,27 @@ attachment, topology, or hidden-route claim.
   positions, model bytes, descriptor bytes, and orientation values unchanged
   at that stage; the later contact-first integration migrated contact-related
   board and descriptor fields.
+
+### J Bryant FTG-32 — `pairedLeadCord` (2026-09-20)
+
+The approved exact-revision gallery and human topology confirmation establish
+one physical loop passing through the two centered holes and around the rear
+of one block. Its runtime presentation shows two exterior leads from one
+shared invisible anchor; the known rear connecting segment is deliberately
+omitted. This does not claim two physical loops or an unseen rendered route.
+Both attachment and terminal-passage records bind to `Cube_001`; the two
+selectable ledges remain `edge-16` and `edge-25` contact nodes.
+
+The record retains the exact user-supplied suspended-front and material-oblique
+bytes under their original commerce URLs, with SHA-256 values
+`f276704568bb877405617446e7527183ad81291df8e9231611487e52cadd533c` and
+`13e329556225441266c61d7ee4f0aea8bdb49129c02450cd2ae1756fce50adb7`.
+The independently fetched front response has different bytes; the distinction
+is retained in the [FTG-32 source audit](2026-09-20-j-bryant-ftg-32-3d.md).
+The manifest records the 2026-09-20 user approval and commerce source tier.
+All unpublished attachment, exterior guide, anchor, cord and camera values
+remain `displayEstimate`; no rope length, material, rating or safety fact is
+inferred from the presentation.
 
 ### YY Vertical Baguette Evo — `twoBranchCord`
 
@@ -220,11 +241,12 @@ The promoted suspension edits were limited to `board.json` metadata. Physical
 contacts, logical positions, media paths, orientation blocks, USDZ files, and
 descriptor files were unchanged by those suspension edits. The subsequent
 contact-first integration migrated board and descriptor schemas and was then
-merged into this branch. At the current post-integration boundary, comparison
+merged into this branch. At that historical post-integration boundary, comparison
 against `origin/main` commit
 `d7ca9c5c95953e296adaf763c89dd892d8c40cf9` shows no branch diff for any USDZ
 or `.model.json` file. No cord, hardware, anchor, or raster fallback was baked
-into a USDZ.
+into a USDZ. The 2026-09-20 FTG-32 addition promotes its new hash-bound model
+package; its exact artifact boundary is included in the table below.
 
 | Package | Topology | Attachment/passage binding | USDZ `modelSHA256` | Descriptor file SHA-256 |
 |---|---|---|---|---|
@@ -232,6 +254,7 @@ into a USDZ.
 | `captain-fingerfood.dual` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `DUAL_skin_body_001`; through-hole/interior route omitted | `d7fbadb80de6eceee7617e12515a79acbf4347a0aebaa139bf2f5a4fc669da0e` | `1320ccae333047e2ffcdea0ac747923ec7e90c4cd16780df43cfb4aa81b6929e` |
 | `captain-fingerfood.pocket` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `body_skin_001`; through-hole/interior route omitted | `3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f` | `376e58a9dce8cae876c14ac286429e02780daf6c5c02a244e58703fd81cd4bc3` |
 | `captain-fingerfood.unlevel` | `pairedLeadCord` | Two ordered upper-lip routes to distinct recess terminals on `Body_EditableSkin_001`; through-hole/interior route omitted | `ab52e45b9cdc1c011cfc8a3a6a75cf7c06d19b76f74dab5f53972a9a734b867b` | `e03da79d95fe6d2259d1ca15e4e709544742d67e6d6e874fdac11e13d15784ab` |
+| `j-bryant.ftg-32` | `pairedLeadCord` | Two distinct centered front mouths on `Cube_001`; one physical loop, rear connecting segment deliberately omitted | `5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d` | `7b45d01a7bd46f71da3c0c1159afb89853a62d18b8d49bb002ed3fb0aaa4fbfa` |
 | `yy.baguette-evo` | `twoBranchCord` | Four ordered through-bores on `body_mesh_001` | `a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc` | `1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47` |
 | `lattice.mxedge-lift-large` | `pairedLeadCord` | Two distinct points on `MXL_body_editable_skin_001` | `b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25` | `831885d16fcd234ef7f7cbd224d931c18700d9fff64b569590d0b6e6a0bda4cb` |
 | `lattice.mxedge-lift-small` | `pairedLeadCord` | Two distinct points on `Body_actual_surface_001` | `662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee` | `0a029569bf3c9d232a335196a0fe77c41d27d34647318e005600a75aa8d5c2a4` |
@@ -247,13 +270,13 @@ they are not load, safety, knot, or physics claims.
 The audit command was run from the repository root:
 
 ```text
-PYTHONPATH=Tools/HangboardPackages/src Tools/HangboardPackages/.venv/bin/python -m hangboard_packages.cli audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json
+rtk scripts/hangboard-packages.sh audit-cords --root Hangboards --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json
 ```
 
-Result:
+Current result (2026-09-20; older dated verification entries below remain historical):
 
 ```json
-{"decisions":{"excluded":12,"represented":8},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","metolius.climbers-edge","metolius.contact","metolius.prime-rib","metolius.project","metolius.simulator-3d","metolius.wood-grips-compact-ii","nature.stone-hanger","soill.training-tiles","tension.flash-board","the-hangboard.the-hangboard","trango.rock-prodigy-training-center","yy.baguette-evo"]}
+{"decisions":{"excluded":25,"represented":9},"modelPackageIDs":["beastmaker-1000","beastmaker-2000","captain-fingerfood.dual","captain-fingerfood.pocket","captain-fingerfood.unlevel","clavellium-training-block","dewoodstok-woodbord","escape-beta-22","escape.unlimited","evolv-kilter-basic-long","j-bryant.ftg-32","lattice-triple-rung","lattice.mxedge-lift-large","lattice.mxedge-lift-small","mammut.diamond-finger","metolius.climbers-edge","metolius.contact","metolius.foundry","metolius.prime-rib","metolius.project","metolius.simulator-3d","metolius.wood-grips-compact-ii","metolius.wood-grips-deluxe-ii","moon.armstrong","nature.stoak-board-iii","nature.stone-hanger","soill.iron-palm-2","soill.split-palm","soill.training-tiles","target10a.linebreaker-base","tension.flash-board","the-hangboard.the-hangboard","trango.rock-prodigy-training-center","yy.baguette-evo"]}
 ```
 
 `python3 -m json.tool` passed for all four edited board packages and
@@ -296,7 +319,7 @@ source-register observations remain the basis for the fixed/wall-mounted fact.
 `target10a-linebreaker-base` is the package-directory/artifact slug; the
 catalog and manifest use its canonical `target10a.linebreaker-base` ID.
 
-Current inventory validation after all six packages became model-backed:
+Historical inventory validation after all six packages became model-backed:
 
 ```json
 {"decisions":{"excluded":18,"represented":8}}

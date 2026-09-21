@@ -32,6 +32,7 @@ TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 SIMULATOR_3D_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
+J_BRYANT_FTG32_ROOT = HANGBOARDS_ROOT / "j-bryant-ftg-32"
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
@@ -92,6 +93,65 @@ def _assert_model_descriptor(
             if node.get("contactID") == contact_id
         ]
     return descriptor
+
+
+def test_j_bryant_ftg32_is_one_hash_bound_model_with_exact_half_turn_positions() -> None:
+    board = json.loads((J_BRYANT_FTG32_ROOT / "board.json").read_text(encoding="utf-8"))
+    descriptor = _assert_model_descriptor(J_BRYANT_FTG32_ROOT, board, "Cube_001")
+    assert board["id"] == "j-bryant.ftg-32"
+    assert board["revisionID"] == "amazon-b0fzgy19t9-ftg-32-2026-09"
+    assert board["manufacturer"] == "J Bryant"
+    assert board["name"] == "FTG-32 Portable Grip Block"
+    assert board["dimensions"] == "10.5 × 7.7 × 3.7 cm"
+    assert board["aspectRatio"] == pytest.approx(105 / 77)
+    assert "handCapacity" not in board
+    assert board["equipmentObjects"] == [{"id": "primary"}]
+    assert len(board["presentations"]) == 1
+    assert [(c["id"], c["kind"], c["depth"]["range"], c["gripTypes"]) for c in board["contacts"]] == [
+        ("edge-16", "edge", {"minimum": 16, "maximum": 16}, []),
+        ("edge-25", "edge", {"minimum": 25, "maximum": 25}, []),
+    ]
+    assert all(set(c) == {"id", "equipmentObjectID", "name", "kind", "depth", "gripTypes"} for c in board["contacts"])
+    assert [(p["id"], p["contactIDs"]) for p in board["positions"]] == [
+        ("edge-25-down", ["edge-25"]),
+        ("edge-16-down", ["edge-16"]),
+    ]
+    media = board["presentations"][0]["media"]
+    assert list(media["orientation"]["rotations"]) == ["edge-16-down", "edge-25-down"]
+    assert media["orientation"]["rotations"] == {
+        "edge-25-down": [0, 0, 0, 1],
+        "edge-16-down": [0, 0, 1, 0],
+    }
+    suspension = media["suspension"]
+    assert suspension["type"] == "pairedLeadCord"
+    # Pose-local directions compensate for the exact in-plane half-turn so
+    # either selected lower ledge is viewed from above in the canonical scene.
+    assert {
+        position_id: pose["camera"]["viewDirection"]
+        for position_id, pose in suspension["canonicalPoses"].items()
+    } == {
+        "edge-25-down": [0, -0.3746065934, -0.9271838546],
+        "edge-16-down": [0, 0.3746065934, -0.9271838546],
+    }
+    assert [a["id"] for a in suspension["attachments"]] == ["left-lead", "right-lead"]
+    assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
+    assert all(a["nodeID"] == "Cube_001" for a in suspension["attachments"])
+    assert all("displayEstimate" in a["provenance"] for a in suspension["attachments"])
+    assert suspension["anchor"]["visibility"] == "invisible"
+    assert "displayEstimate" in suspension["anchor"]["provenance"]
+    assert "displayEstimate" in suspension["cord"]["provenance"]
+    assert all(
+        p["nodeID"] == "Cube_001" and "displayEstimate" in p["provenance"]
+        for passages in suspension["passages"].values() for p in passages
+    )
+    assert "rear" not in " ".join(node["nodeID"].casefold() for node in descriptor["nodes"])
+    spans = [descriptor["modelBounds"]["max"][i] - descriptor["modelBounds"]["min"][i] for i in range(3)]
+    assert spans == pytest.approx([0.105, 0.077, 0.037], abs=1e-6)
+    assert [(node["nodeID"], node["role"], node.get("contactID")) for node in descriptor["nodes"]] == [
+        ("Cube_001", "body", None),
+        ("edge_16_mesh_001", "contact", "edge-16"),
+        ("edge_25_mesh_001", "contact", "edge-25"),
+    ]
 
 
 def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
@@ -300,6 +360,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
         ("frictitious.doormount-pro-7", "frictitious-doormount-pro-7"),
         ("frictitious.megalith", "frictitious-megalith"),
         ("frictitious.port-a-board", "frictitious-port-a-board"),
+        ("j-bryant.ftg-32", "j-bryant-ftg-32"),
         ("lattice-triple-rung", "lattice-triple-rung"),
         ("mammut.diamond-finger", "mammut-diamond-finger"),
         ("metolius.climbers-edge", "metolius-climbers-edge"),

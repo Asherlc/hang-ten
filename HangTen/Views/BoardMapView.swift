@@ -282,6 +282,7 @@ struct BoardMapPresentationSelection: Equatable {
 struct BoardDetailMapView: View {
     let board: BoardRevision
     @Binding var selectedHoldID: String?
+    private let maximumMapHeight: CGFloat?
     private let selectedHoldContent: AnyView?
 
     @State private var presentationSelection: BoardMapPresentationSelection
@@ -289,10 +290,12 @@ struct BoardDetailMapView: View {
     init(
         board: BoardRevision,
         selectedHoldID: Binding<String?>,
+        maximumMapHeight: CGFloat? = nil,
         selectedHoldContent: AnyView? = nil
     ) {
         self.board = board
         _selectedHoldID = selectedHoldID
+        self.maximumMapHeight = maximumMapHeight
         self.selectedHoldContent = selectedHoldContent
         let initialPresentation = BoardMapPresentationSelection(
             board: board,
@@ -328,66 +331,74 @@ struct BoardDetailMapView: View {
 
     @ViewBuilder
     private func mapContent(_ map: BoardDetailHoldMap) -> some View {
-        if board.presentations.count > 1 {
-            Picker(
-                "Board surface",
-                selection: Binding(
-                    get: { map.presentation.id },
-                    set: selectPresentation
-                )
-            ) {
-                ForEach(board.presentations) { presentation in
-                    Text(presentation.name).tag(presentation.id)
-                }
-            }
-            .pickerStyle(.segmented)
-            .accessibilityIdentifier("boardDetail.presentationSelector")
-        }
-
-        Group {
-            switch map.presentation.media {
-            case .raster:
-                GeometryReader { proxy in
-                    let boardBounds = proxy.size
-                    ZStack {
-                        BoardPresentationImage(board: board, presentationID: map.presentation.id)
-
-                        ForEach(map.entries) { entry in
-                            PhysicalHoldVisual(
-                                hold: entry.hold,
-                                pieces: entry.pieces,
-                                isHighlighted: selectedHoldID == entry.hold.id,
-                                highlightMode: .active,
-                                isInverted: map.presentation.isInverted,
-                                onTap: { select($0.id) }
-                            )
-                            .frame(width: boardBounds.width, height: boardBounds.height)
-
-                            BoardHoldNumberMarker(
-                                entry: entry,
-                                isSelected: selectedHoldID == entry.hold.id
-                            ) {
-                                select(entry.hold.id)
-                            }
-                            .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
-                        }
+        // Explicit VStack keeps the segmented picker above the sized map with
+        // zero intra-section spacing (outer BoardDetailMapView spacing is 12).
+        VStack(alignment: .leading, spacing: 0) {
+            if board.presentations.count > 1 {
+                Picker(
+                    "Board surface",
+                    selection: Binding(
+                        get: { map.presentation.id },
+                        set: selectPresentation
+                    )
+                ) {
+                    ForEach(board.presentations) { presentation in
+                        Text(presentation.name).tag(presentation.id)
                     }
                 }
-            case .model:
-                BoardModelSurface(
-                    board: board,
-                    presentation: map.presentation,
-                    positionID: BoardMapPresentationSelection.resolvePositionID(
-                        board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
-                    ),
-                    highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
-                    highlightMode: .active,
-                    onContactTap: { select($0.id) }
-                )
+                .pickerStyle(.segmented)
+                .accessibilityIdentifier("boardDetail.presentationSelector")
             }
+
+            Group {
+                switch map.presentation.media {
+                case .raster:
+                    GeometryReader { proxy in
+                        let boardBounds = proxy.size
+                        ZStack {
+                            BoardPresentationImage(board: board, presentationID: map.presentation.id)
+
+                            ForEach(map.entries) { entry in
+                                PhysicalHoldVisual(
+                                    hold: entry.hold,
+                                    pieces: entry.pieces,
+                                    isHighlighted: selectedHoldID == entry.hold.id,
+                                    highlightMode: .active,
+                                    isInverted: map.presentation.isInverted,
+                                    onTap: { select($0.id) }
+                                )
+                                .frame(width: boardBounds.width, height: boardBounds.height)
+
+                                BoardHoldNumberMarker(
+                                    entry: entry,
+                                    isSelected: selectedHoldID == entry.hold.id
+                                ) {
+                                    select(entry.hold.id)
+                                }
+                                .position(markerPosition(for: entry.frame, in: boardBounds, isInverted: map.presentation.isInverted))
+                            }
+                        }
+                    }
+                case .model:
+                    BoardModelSurface(
+                        board: board,
+                        presentation: map.presentation,
+                        positionID: BoardMapPresentationSelection.resolvePositionID(
+                            board: board, presentationID: map.presentation.id, activeHoldID: selectedHoldID
+                        ),
+                        highlightedContactIDs: Set([selectedHoldID].compactMap { $0 }),
+                        highlightMode: .active,
+                        onContactTap: { select($0.id) }
+                    )
+                }
+            }
+            .modifier(
+                BoardDetailMapSizeModifier(
+                    aspectRatio: map.presentation.aspectRatio,
+                    maximumHeight: maximumMapHeight
+                )
+            )
         }
-        .aspectRatio(map.presentation.aspectRatio, contentMode: .fit)
-        .accessibilityIdentifier("boardDetail.map")
     }
 
     @ViewBuilder
@@ -460,6 +471,36 @@ struct BoardDetailMapView: View {
         )
         guard isInverted else { return center }
         return CGPoint(x: bounds.width - center.x, y: bounds.height - center.y)
+    }
+}
+
+private struct BoardDetailMapSizeModifier: ViewModifier {
+    let aspectRatio: CGFloat
+    let maximumHeight: CGFloat?
+
+    @ViewBuilder
+    func body(content: Content) -> some View {
+        if let maximumHeight {
+            content
+                .aspectRatio(aspectRatio, contentMode: .fit)
+                .frame(maxWidth: max(0, maximumHeight * aspectRatio))
+                // Separate non-interactive a11y node so XCTest does not resolve
+                // boardDetail.map to a ~30pt hold-marker button child.
+                .background {
+                    Color.clear
+                        .accessibilityElement()
+                        .accessibilityIdentifier("boardDetail.map")
+                }
+                .frame(maxWidth: .infinity)
+        } else {
+            content
+                .aspectRatio(aspectRatio, contentMode: .fit)
+                .background {
+                    Color.clear
+                        .accessibilityElement()
+                        .accessibilityIdentifier("boardDetail.map")
+                }
+        }
     }
 }
 

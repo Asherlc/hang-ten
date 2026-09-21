@@ -28,6 +28,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 MODEL_BYTES = b"staging fixture model bytes\x00\xff"
 LIVE_MODEL_PACKAGE_SLUGS = (
     "beastmaker-1000",
+    "j-bryant-ftg-32",
     "metolius-wood-grips-compact-ii",
     "tension-flash-board",
 )

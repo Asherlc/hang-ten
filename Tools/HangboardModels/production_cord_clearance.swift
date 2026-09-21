@@ -481,7 +481,7 @@ runBoardLocalUpperChannelRegression()
 
 var failures: [String] = []
 var count = 0
-for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fingerfood-unlevel", "lattice-mxedge-lift-large", "lattice-mxedge-lift-small", "nature-stone-hanger", "tension-flash-board", "yy-baguette-evo"] {
+for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fingerfood-unlevel", "j-bryant-ftg-32", "lattice-mxedge-lift-large", "lattice-mxedge-lift-small", "nature-stone-hanger", "tension-flash-board", "yy-baguette-evo"] {
     let package = URL(fileURLWithPath: FileManager.default.currentDirectoryPath).appendingPathComponent("Hangboards/" + slug)
     let doc = try loadJSON(BoardDocument.self, from: package.appendingPathComponent("board.json"))
     let media = doc.presentations[0].media
@@ -524,7 +524,7 @@ for slug in ["captain-fingerfood-dual", "captain-fingerfood-pocket", "captain-fi
         }
     }
 }
-precondition(count == 27, "Expected all 27 canonical poses")
+precondition(count == 29, "Expected all 29 canonical poses")
 if !failures.isEmpty {
     fputs(failures.joined(separator: "\n") + "\n", stderr)
     exit(1)

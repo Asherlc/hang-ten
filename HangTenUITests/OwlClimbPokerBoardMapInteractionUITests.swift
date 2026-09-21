@@ -48,9 +48,52 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     }
 
     func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "escape.unlimited",
+            expectedBoardName: "Unlimited Board"
+        )
+        assertMap(map, isInside: app)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapeSquareBoardDetailKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "nature.stone-hanger",
+            expectedBoardName: "Stone Hanger"
+        )
+        assertMap(map, isInside: app)
+        XCTAssertEqual(map.frame.midX, app.frame.midX, accuracy: 1)
+        XCTAssertEqual(map.frame.width, map.frame.height, accuracy: 1)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "nature.stone-hanger-mini",
+            expectedBoardName: "Stone Hanger Mini"
+        )
+        assertMap(map, isInside: app)
+
+        let presentationSelector = app.segmentedControls["boardDetail.presentationSelector"]
+        XCTAssertTrue(
+            presentationSelector.waitForExistence(timeout: 5),
+            "Multi-presentation boards must show the boardDetail.presentationSelector."
+        )
+        XCTAssertGreaterThanOrEqual(presentationSelector.frame.minY, app.frame.minY)
+        XCTAssertLessThanOrEqual(presentationSelector.frame.maxY, map.frame.minY + 1)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    private func launchLandscapeBoardDetail(
+        boardID: String,
+        expectedBoardName: String
+    ) throws -> (app: XCUIApplication, map: XCUIElement) {
         let app = XCUIApplication()
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_ID": "escape-unlimited",
+            "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_BOARD_DETAIL": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]
@@ -60,6 +103,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             app.navigationBars["Hold specs"].waitForExistence(timeout: 10),
             "The DEBUG board-detail route must be displayed."
         )
+        XCTAssertTrue(
+            app.staticTexts[expectedBoardName].waitForExistence(timeout: 5),
+            "Hold specs must show '\(expectedBoardName)' for boardID '\(boardID)' (wrong ID silently keeps the default board)."
+        )
 
         let tabBar = app.tabBars.firstMatch
         XCTAssertFalse(
@@ -67,16 +114,49 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "The root TabView tab bar must not be visible in landscape board detail."
         )
 
-        let map = app.descendants(matching: .any)
-            .matching(identifier: "boardDetail.map")
-            .firstMatch
+        let map = app.otherElements["boardDetail.map"]
         XCTAssertTrue(map.waitForExistence(timeout: 10), "The board detail map must be present.")
-        XCTAssertGreaterThanOrEqual(map.frame.minX, app.frame.minX)
-        XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
-        XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
-        XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+        return (app, map)
+    }
 
-        XCUIDevice.shared.orientation = .portrait
+    private func assertMap(
+        _ map: XCUIElement,
+        isInside app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let mapFrame = map.frame
+        let appFrame = app.frame
+        XCTAssertGreaterThanOrEqual(mapFrame.minX, appFrame.minX, file: file, line: line)
+        XCTAssertGreaterThanOrEqual(mapFrame.minY, appFrame.minY, file: file, line: line)
+        XCTAssertLessThanOrEqual(mapFrame.maxX, appFrame.maxX, file: file, line: line)
+        XCTAssertLessThanOrEqual(mapFrame.maxY, appFrame.maxY, file: file, line: line)
+        XCTAssertGreaterThan(
+            mapFrame.width,
+            80,
+            "Map must not collapse in compact landscape (frame=\(mapFrame), app=\(appFrame)).",
+            file: file,
+            line: line
+        )
+        XCTAssertGreaterThan(
+            mapFrame.height,
+            80,
+            "Map must not collapse in compact landscape (frame=\(mapFrame), app=\(appFrame)).",
+            file: file,
+            line: line
+        )
+        let holdMarker = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardDetail.holdMarker."))
+            .firstMatch
+        let modelSurface = app.descendants(matching: .any)["boardModel.3d"]
+        XCTAssertTrue(
+            map.isHittable
+                || (holdMarker.exists && holdMarker.isHittable)
+                || (modelSurface.exists && modelSurface.isHittable),
+            "Map (or a hold marker / 3D surface on it) must remain hittable in compact landscape.",
+            file: file,
+            line: line
+        )
     }
 
     private func addScreenshot(named name: String) {
