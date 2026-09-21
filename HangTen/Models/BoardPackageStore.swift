@@ -523,6 +523,7 @@ struct BoardPackageStore {
         let rawRasterGeometryByPresentationID: [String: BoardPackageRawJSONValue]
         do {
             let data = try Data(contentsOf: boardURL)
+            try validateReusableTranslationLexemes(data)
             document = try JSONDecoder().decode(BoardPackageBoardDocument.self, from: data)
         } catch {
             throw BoardPackageStoreError.malformedJSON(
@@ -722,7 +723,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateAssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation):
+            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -733,6 +734,18 @@ struct BoardPackageStore {
                 try validateAssetPath(assetPath, suffix: ".usdz", boardID: document.id, packageURL: packageURL)
                 try validateAssetPath(descriptorPath, suffix: ".model.json", boardID: document.id, packageURL: packageURL)
                 try validateModelDisplay(display, boardID: document.id)
+                if instances != nil && (suspension != nil || orientation != nil) {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "media.instances may not use legacy pose mechanisms"
+                    )
+                }
+                if let instances, instances.count != 2 {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "media.instances must contain exactly two instances"
+                    )
+                }
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
                 if modelAssetMode == .onDemand {
                     onDemandModelAssetPaths.insert(assetPath)
@@ -871,17 +884,21 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument):
-                let descriptor = try loadModelDescriptor(
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments):
+                let loadedDescriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: modelAssetMode == .bundled
                         ? packageURL.appendingPathComponent(assetPath)
                         : nil,
-                    physicalContactIDs: contactIDs,
+                    physicalContacts: contacts,
+                    equipmentObjectIDs: equipmentObjectIDs,
+                    positionIDs: declaredPositionIDs,
                     boardID: document.id,
                     resource: descriptorPath,
-                    suspensionDocument: suspensionDocument
+                    suspensionDocument: suspensionDocument,
+                    instanceDocuments: instanceDocuments
                 )
+                let descriptor = loadedDescriptor.descriptor
                 let suspension = try suspensionDocument.map {
                     try makeModelSuspension(
                         $0,
@@ -912,7 +929,8 @@ struct BoardPackageStore {
                             )
                         ),
                         suspension: suspension,
-                        orientation: orientation
+                        orientation: orientation,
+                        instances: loadedDescriptor.instances
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -1091,14 +1109,63 @@ struct BoardPackageStore {
         }
     }
 
+    private static func validateReusableTranslationLexemes(_ data: Data) throws {
+        var parser = BoardPackageRawJSONParser(data: data)
+        let document = try parser.parseDocument()
+        guard case .object(let root) = document,
+              case .array(let presentations)? = root.value(named: "presentations") else {
+            return
+        }
+
+        for presentation in presentations {
+            guard case .object(let presentationMembers) = presentation,
+                  case .object(let media)? = presentationMembers.value(named: "media"),
+                  case .array(let instances)? = media.value(named: "instances") else {
+                continue
+            }
+            for instance in instances {
+                guard case .object(let instanceMembers) = instance else { continue }
+                try validateTranslation(
+                    instanceMembers.value(named: "baseTransform")
+                )
+                guard case .object(let positionTransforms)? = instanceMembers.value(named: "positionTransforms") else {
+                    continue
+                }
+                for transform in positionTransforms.mapValues() {
+                    try validateTranslation(transform)
+                }
+            }
+        }
+    }
+
+    private static func validateTranslation(_ value: BoardPackageRawJSONValue?) throws {
+        guard case .object(let transform)? = value,
+              case .array(let translation)? = transform.value(named: "translation") else {
+            return
+        }
+        for component in translation {
+            guard case .number(_, let number) = component else { continue }
+            let lexeme = number.lexeme
+            guard lexeme.range(
+                of: #"^-?(?:0|[1-9][0-9]*)\.[0-9]{9}$"#,
+                options: .regularExpression
+            ) != nil else {
+                throw BoardPackageRawJSONError.invalid
+            }
+        }
+    }
+
     private static func loadModelDescriptor(
         at url: URL,
         modelURL: URL?,
-        physicalContactIDs: Set<String>,
+        physicalContacts: [PhysicalContact],
+        equipmentObjectIDs: Set<String>,
+        positionIDs: Set<String>,
         boardID: String,
         resource: String,
-        suspensionDocument: BoardPackageSuspensionDocument?
-    ) throws -> BoardModelDescriptor {
+        suspensionDocument: BoardPackageSuspensionDocument?,
+        instanceDocuments: [BoardPackageModelInstanceDocument]?
+    ) throws -> (descriptor: BoardModelDescriptor, instances: [BoardModelInstance]?) {
         let data: Data
         let document: BoardPackageModelDescriptorDocument
         let orderedContactIDs: [String]
@@ -1106,6 +1173,20 @@ struct BoardPackageStore {
             data = try Data(contentsOf: url)
             var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
             _ = try rawDescriptorParser.parseDocument()
+            let header = try JSONDecoder().decode(BoardPackageModelDescriptorHeader.self, from: data)
+            if header.schemaVersion == 2 {
+                return try loadReusableModelDescriptor(
+                    data: data,
+                    modelURL: modelURL,
+                    physicalContacts: physicalContacts,
+                    equipmentObjectIDs: equipmentObjectIDs,
+                    positionIDs: positionIDs,
+                    boardID: boardID,
+                    resource: resource,
+                    suspensionDocument: suspensionDocument,
+                    instanceDocuments: instanceDocuments
+                )
+            }
             var memberOrder = BoardPackageJSONMemberOrder(data: data)
             orderedContactIDs = try memberOrder.memberNames(inRootObjectNamed: "contacts")
             document = try JSONDecoder().decode(BoardPackageModelDescriptorDocument.self, from: data)
@@ -1195,7 +1276,9 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, contact, or attachment")
             }
         }
-        guard bodyCount >= 1, Set(nodeIDsByContact.keys) == physicalContactIDs,
+        let physicalContactIDs = Set(physicalContacts.map(\.id))
+        guard instanceDocuments == nil,
+              bodyCount >= 1, Set(nodeIDsByContact.keys) == physicalContactIDs,
               Set(document.contacts.keys) == physicalContactIDs else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor inventory must equal physical contacts")
         }
@@ -1235,16 +1318,221 @@ struct BoardPackageStore {
                 center: contact.center
             )
         }
-        return BoardModelDescriptor(
+        return (
+            BoardModelDescriptor(
+                schemaVersion: document.schemaVersion,
+                coordinateFrame: document.coordinateFrame,
+                modelSHA256: document.modelSHA256,
+                modelBounds: BoardModelBounds(
+                    minimum: document.modelBounds.minimum,
+                    maximum: document.modelBounds.maximum
+                ),
+                nodes: nodes,
+                contacts: contacts
+            ),
+            nil
+        )
+    }
+
+    private static func loadReusableModelDescriptor(
+        data: Data,
+        modelURL: URL?,
+        physicalContacts: [PhysicalContact],
+        equipmentObjectIDs: Set<String>,
+        positionIDs: Set<String>,
+        boardID: String,
+        resource: String,
+        suspensionDocument: BoardPackageSuspensionDocument?,
+        instanceDocuments: [BoardPackageModelInstanceDocument]?
+    ) throws -> (descriptor: BoardModelDescriptor, instances: [BoardModelInstance]?) {
+        guard suspensionDocument == nil, let instanceDocuments, instanceDocuments.count == 2 else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "reusable model descriptor requires exactly two media.instances without top-level pose data"
+            )
+        }
+
+        let document: BoardPackageReusableModelDescriptorDocument
+        let orderedSlotIDs: [String]
+        do {
+            var memberOrder = BoardPackageJSONMemberOrder(data: data)
+            orderedSlotIDs = try memberOrder.memberNames(inRootObjectNamed: "contactSlots")
+            document = try JSONDecoder().decode(BoardPackageReusableModelDescriptorDocument.self, from: data)
+        } catch {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "model descriptor is missing or malformed: \(resource)"
+            )
+        }
+        guard document.schemaVersion == 2,
+              document.coordinateFrame == "hang-ten-board-v1",
+              document.modelSHA256.count == 64,
+              document.modelSHA256.allSatisfy({ ("0"..."9").contains(String($0)) || ("a"..."f").contains(String($0)) }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor header is invalid")
+        }
+        if let modelURL {
+            let modelData: Data
+            do {
+                modelData = try Data(contentsOf: modelURL)
+            } catch {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "model descriptor is missing or malformed: \(resource)"
+                )
+            }
+            let actualHash = SHA256.hash(data: modelData)
+                .map { String(format: "%02x", $0) }
+                .joined()
+            guard actualHash == document.modelSHA256 else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "model descriptor SHA-256 does not match USDZ bytes"
+                )
+            }
+        }
+        try validateDescriptorVector(document.modelBounds.minimum, length: 3, boardID: boardID)
+        try validateDescriptorVector(document.modelBounds.maximum, length: 3, boardID: boardID)
+        guard zip(document.modelBounds.minimum, document.modelBounds.maximum).allSatisfy({ $0 <= $1 }),
+              zip(document.modelBounds.minimum.prefix(2), document.modelBounds.maximum.prefix(2)).allSatisfy({ $1 > $0 }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model bounds are invalid")
+        }
+        guard !document.nodes.isEmpty,
+              document.nodes.map(\.nodeID) == document.nodes.map(\.nodeID).sorted(),
+              Set(document.nodes.map(\.nodeID)).count == document.nodes.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor node IDs must be unique and sorted")
+        }
+
+        var nodes: [BoardModelNodeDescriptor] = []
+        var nodeIDsBySlotID: [String: [String]] = [:]
+        var bodyCount = 0
+        for node in document.nodes {
+            guard !node.nodeID.isEmpty else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor nodeID must not be empty")
+            }
+            switch node.role {
+            case "body":
+                bodyCount += 1
+                nodes.append(.init(nodeID: node.nodeID, role: .body, contactID: nil))
+            case "contact":
+                guard let slotID = node.contactSlotID, slotID.isBoardPackageIdentifier else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact node has invalid contactSlotID")
+                }
+                nodeIDsBySlotID[slotID, default: []].append(node.nodeID)
+                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: nil))
+            case "attachment":
+                nodes.append(.init(nodeID: node.nodeID, role: .attachment, contactID: nil))
+            default:
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor role must be body, contact, or attachment")
+            }
+        }
+        guard bodyCount >= 1,
+              orderedSlotIDs == orderedSlotIDs.sorted(),
+              Set(document.contactSlots.keys) == Set(nodeIDsBySlotID.keys) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contactSlots must exactly match bound contact slots")
+        }
+
+        var slots: [String: BoardModelContactDescriptor] = [:]
+        for slotID in orderedSlotIDs {
+            guard let slot = document.contactSlots[slotID],
+                  slotID.isBoardPackageIdentifier,
+                  slot.nodeIDs == (nodeIDsBySlotID[slotID] ?? []).sorted() else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact slot nodeIDs do not match bound nodes")
+            }
+            try validateDescriptorVector(slot.facePlaneAABB.minimum, length: 2, boardID: boardID)
+            try validateDescriptorVector(slot.facePlaneAABB.maximum, length: 2, boardID: boardID)
+            try validateDescriptorVector(slot.center, length: 2, boardID: boardID)
+            guard zip(slot.facePlaneAABB.minimum, slot.facePlaneAABB.maximum).allSatisfy({ $0 >= 0 && $0 <= $1 && $1 <= 1 }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor facePlaneAABB must be normalized")
+            }
+            let expectedCenter = zip(slot.facePlaneAABB.minimum, slot.facePlaneAABB.maximum).map {
+                boardDescriptorRoundedToNinePlaces($0 + ($1 - $0) / 2)
+            }
+            guard slot.center == expectedCenter else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor center must derive from facePlaneAABB")
+            }
+            slots[slotID] = BoardModelContactDescriptor(
+                nodeIDs: slot.nodeIDs,
+                facePlaneAABB: BoardModelFacePlaneAABB(
+                    minimum: slot.facePlaneAABB.minimum,
+                    maximum: slot.facePlaneAABB.maximum
+                ),
+                center: slot.center
+            )
+        }
+
+        var instanceMappings: [(document: BoardPackageModelInstanceDocument, mapping: [String: String])] = []
+        for instance in instanceDocuments {
+            guard instance.equipmentObjectID.isBoardPackageIdentifier,
+                  Set(instance.contactIDsBySlotID.keys) == Set(slots.keys),
+                  instance.contactIDsBySlotID.allSatisfy({ $0.key.isBoardPackageIdentifier && $0.value.isBoardPackageIdentifier }),
+                  (instance.suspension == nil) != (instance.positionTransforms == nil) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "reusable model instance is invalid")
+            }
+            if let positionTransforms = instance.positionTransforms,
+               Set(positionTransforms.keys) != positionIDs {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "instance positionTransforms must exactly match position IDs")
+            }
+            instanceMappings.append((instance, instance.contactIDsBySlotID))
+        }
+        guard Set(instanceMappings.map { $0.document.equipmentObjectID }) == equipmentObjectIDs,
+              Set(instanceMappings.map { $0.document.equipmentObjectID }).count == instanceMappings.count else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "media.instances must exactly match equipment objects")
+        }
+        let contactsByID = Dictionary(uniqueKeysWithValues: physicalContacts.map { ($0.id, $0) })
+        let mappedContactIDs = instanceMappings.flatMap { $0.mapping.values }
+        guard Set(mappedContactIDs).count == mappedContactIDs.count,
+              Set(mappedContactIDs) == Set(contactsByID.keys),
+              instanceMappings.allSatisfy({ item in
+                  item.mapping.values.allSatisfy { contactsByID[$0]?.equipmentObjectID == item.document.equipmentObjectID }
+              }) else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "media.instances must map every physical contact to its equipment object")
+        }
+        let descriptorContacts = Dictionary(uniqueKeysWithValues: instanceMappings.flatMap { item in
+            item.mapping.compactMap { slotID, contactID in slots[slotID].map { (contactID, $0) } }
+        })
+        let descriptor = BoardModelDescriptor(
             schemaVersion: document.schemaVersion,
             coordinateFrame: document.coordinateFrame,
             modelSHA256: document.modelSHA256,
-            modelBounds: BoardModelBounds(
-                minimum: document.modelBounds.minimum,
-                maximum: document.modelBounds.maximum
-            ),
+            modelBounds: BoardModelBounds(minimum: document.modelBounds.minimum, maximum: document.modelBounds.maximum),
             nodes: nodes,
-            contacts: contacts
+            contacts: descriptorContacts
+        )
+        let instances = try instanceMappings.map { item in
+            BoardModelInstance(
+                equipmentObjectID: item.document.equipmentObjectID,
+                baseTransform: try makeModelTransform(item.document.baseTransform, boardID: boardID),
+                contactIDsBySlotID: item.mapping,
+                suspension: try item.document.suspension.map {
+                    try makeModelSuspension($0, descriptor: descriptor, positionIDs: positionIDs, boardID: boardID)
+                },
+                positionTransforms: try item.document.positionTransforms.map { transforms in
+                    try transforms.mapValues { try makeModelTransform($0, boardID: boardID) }
+                }
+            )
+        }
+        return (descriptor, instances)
+    }
+
+    private static func makeModelTransform(
+        _ document: BoardPackageModelTransformDocument,
+        boardID: String
+    ) throws -> BoardModelTransform {
+        guard document.translation.count == 3,
+              document.translation.allSatisfy(\.isFinite),
+              document.rotation.count == 4,
+              document.rotation.allSatisfy(\.isFinite),
+              document.reflection == nil || document.reflection == "x" else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model transform must be finite with an x reflection")
+        }
+        let norm = sqrt(document.rotation.reduce(0) { $0 + $1 * $1 })
+        guard norm.isFinite, abs(norm - 1) <= 1e-6 else {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model transform rotation must be normalized")
+        }
+        return BoardModelTransform(
+            translation: document.translation,
+            rotation: SIMD4(document.rotation[0], document.rotation[1], document.rotation[2], document.rotation[3]),
+            reflection: document.reflection.map { _ in .x }
         )
     }
 
@@ -1816,8 +2104,25 @@ private enum BoardPackageRawJSONNumberKind: Equatable {
 }
 
 private enum BoardPackageRawJSONNumberValue: Equatable {
-    case integer(String)
-    case floating(Double)
+    case integer(lexeme: String)
+    case floating(value: Double, lexeme: String)
+
+    var lexeme: String {
+        switch self {
+        case .integer(let lexeme), .floating(_, let lexeme): lexeme
+        }
+    }
+
+    static func == (lhs: BoardPackageRawJSONNumberValue, rhs: BoardPackageRawJSONNumberValue) -> Bool {
+        switch (lhs, rhs) {
+        case (.integer(let lhs), .integer(let rhs)):
+            return (lhs == "-0" ? "0" : lhs) == (rhs == "-0" ? "0" : rhs)
+        case (.floating(let lhs, _), .floating(let rhs, _)):
+            return lhs == rhs
+        default:
+            return false
+        }
+    }
 }
 
 private indirect enum BoardPackageRawJSONValue: Equatable {
@@ -2115,13 +2420,12 @@ private struct BoardPackageRawJSONParser {
         let token = String(decoding: bytes[start..<index], as: UTF8.self)
         switch kind {
         case .integer:
-            let normalizedToken = token == "-0" ? "0" : token
-            return .number(kind: kind, value: .integer(normalizedToken))
+            return .number(kind: kind, value: .integer(lexeme: token))
         case .floating:
             guard let value = Double(token), value.isFinite else {
                 throw BoardPackageRawJSONError.invalid
             }
-            return .number(kind: kind, value: .floating(value))
+            return .number(kind: kind, value: .floating(value: value, lexeme: token))
         }
     }
 
@@ -2397,10 +2701,17 @@ private enum BoardPackageDerivationDocument: Decodable {
 
 private enum BoardPackageMediaDocument: Decodable {
     case raster(assetPath: String, contactGeometry: [String: [BoardPackageGeometryDocument]])
-    case model(assetPath: String, descriptorPath: String, display: BoardPackageModelDisplayDocument, suspension: BoardPackageSuspensionDocument?, orientation: BoardPackageModelOrientationDocument?)
+    case model(
+        assetPath: String,
+        descriptorPath: String,
+        display: BoardPackageModelDisplayDocument,
+        suspension: BoardPackageSuspensionDocument?,
+        orientation: BoardPackageModelOrientationDocument?,
+        instances: [BoardPackageModelInstanceDocument]?
+    )
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances
     }
 
     init(from decoder: Decoder) throws {
@@ -2417,7 +2728,7 @@ private enum BoardPackageMediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
@@ -2427,6 +2738,9 @@ private enum BoardPackageMediaDocument: Decodable {
                     : nil,
                 orientation: container.contains(.orientation)
                     ? try container.decode(BoardPackageModelOrientationDocument.self, forKey: .orientation)
+                    : nil,
+                instances: container.contains(.instances)
+                    ? try container.decode([BoardPackageModelInstanceDocument].self, forKey: .instances)
                     : nil
             )
         default:
@@ -2440,8 +2754,54 @@ private enum BoardPackageMediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _): assetPath
         }
+    }
+}
+
+private struct BoardPackageModelTransformDocument: Decodable {
+    let translation: [Double]
+    let rotation: [Double]
+    let reflection: String?
+
+    private enum CodingKeys: String, CodingKey { case translation, rotation, reflection }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["translation", "rotation", "reflection"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        translation = try container.decode([Double].self, forKey: .translation)
+        rotation = try container.decode([Double].self, forKey: .rotation)
+        reflection = container.contains(.reflection)
+            ? try container.decode(String.self, forKey: .reflection)
+            : nil
+    }
+}
+
+private struct BoardPackageModelInstanceDocument: Decodable {
+    let equipmentObjectID: String
+    let baseTransform: BoardPackageModelTransformDocument
+    let contactIDsBySlotID: [String: String]
+    let suspension: BoardPackageSuspensionDocument?
+    let positionTransforms: [String: BoardPackageModelTransformDocument]?
+
+    private enum CodingKeys: String, CodingKey {
+        case equipmentObjectID, baseTransform, contactIDsBySlotID, suspension, positionTransforms
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "equipmentObjectID", "baseTransform", "contactIDsBySlotID", "suspension", "positionTransforms"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        equipmentObjectID = try container.decode(String.self, forKey: .equipmentObjectID)
+        baseTransform = try container.decode(BoardPackageModelTransformDocument.self, forKey: .baseTransform)
+        contactIDsBySlotID = try container.decode([String: String].self, forKey: .contactIDsBySlotID)
+        suspension = container.contains(.suspension)
+            ? try container.decode(BoardPackageSuspensionDocument.self, forKey: .suspension)
+            : nil
+        positionTransforms = container.contains(.positionTransforms)
+            ? try container.decode([String: BoardPackageModelTransformDocument].self, forKey: .positionTransforms)
+            : nil
     }
 }
 
@@ -2840,6 +3200,57 @@ private struct BoardPackageModelDescriptorDocument: Decodable {
         modelBounds = try container.decode(BoardPackageModelBoundsDocument.self, forKey: .modelBounds)
         nodes = try container.decode([BoardPackageModelNodeDocument].self, forKey: .nodes)
         contacts = try container.decode([String: BoardPackageModelContactDocument].self, forKey: .contacts)
+    }
+}
+
+private struct BoardPackageModelDescriptorHeader: Decodable {
+    let schemaVersion: Int
+}
+
+private struct BoardPackageReusableModelDescriptorDocument: Decodable {
+    let schemaVersion: Int
+    let coordinateFrame: String
+    let modelSHA256: String
+    let modelBounds: BoardPackageModelBoundsDocument
+    let nodes: [BoardPackageReusableModelNodeDocument]
+    let contactSlots: [String: BoardPackageModelContactDocument]
+
+    private enum CodingKeys: String, CodingKey {
+        case schemaVersion, coordinateFrame, modelSHA256, modelBounds, nodes, contactSlots
+    }
+
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys([
+            "schemaVersion", "coordinateFrame", "modelSHA256", "modelBounds", "nodes", "contactSlots"
+        ])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        schemaVersion = try container.decode(Int.self, forKey: .schemaVersion)
+        coordinateFrame = try container.decode(String.self, forKey: .coordinateFrame)
+        modelSHA256 = try container.decode(String.self, forKey: .modelSHA256)
+        modelBounds = try container.decode(BoardPackageModelBoundsDocument.self, forKey: .modelBounds)
+        nodes = try container.decode([BoardPackageReusableModelNodeDocument].self, forKey: .nodes)
+        contactSlots = try container.decode([String: BoardPackageModelContactDocument].self, forKey: .contactSlots)
+    }
+}
+
+private struct BoardPackageReusableModelNodeDocument: Decodable {
+    let nodeID: String
+    let role: String
+    let contactSlotID: String?
+
+    private enum CodingKeys: String, CodingKey { case nodeID, role, contactSlotID }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        role = try container.decode(String.self, forKey: .role)
+        if role == "contact" {
+            try decoder.rejectUnknownKeys(["nodeID", "role", "contactSlotID"])
+            contactSlotID = try container.decode(String.self, forKey: .contactSlotID)
+        } else {
+            try decoder.rejectUnknownKeys(["nodeID", "role"])
+            contactSlotID = nil
+        }
+        nodeID = try container.decode(String.self, forKey: .nodeID)
     }
 }
 
