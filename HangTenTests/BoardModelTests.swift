@@ -1432,6 +1432,21 @@ final class BoardModelTests: XCTestCase {
             XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, center.x, accuracy: accuracy)
             XCTAssertEqual(element.accessibilityFrameInContainerSpace.midY, center.y, accuracy: accuracy)
         }
+        func isAligned(accuracy: CGFloat = 0.1) -> Bool {
+            let center = expectedCenter()
+            let frame = element.accessibilityFrameInContainerSpace
+            return abs(frame.midX - center.x) <= accuracy
+                && abs(frame.midY - center.y) <= accuracy
+        }
+        func waitForConvergence(
+            timeout: Duration = .seconds(3),
+            _ condition: () -> Bool
+        ) async {
+            let deadline = ContinuousClock.now.advanced(by: timeout)
+            while !condition(), ContinuousClock.now < deadline {
+                await renderFrame()
+            }
+        }
         // Initial position selection animates its camera framing too.
         try await Task.sleep(for: .milliseconds(300))
         await renderFrame()
@@ -1473,6 +1488,11 @@ final class BoardModelTests: XCTestCase {
             // During animation the main-thread assertion can be one render frame
             // ahead of the queued accessibility callback.
             assertAligned(accuracy: 3)
+        }
+        await waitForConvergence {
+            isAligned()
+                && abs(element.accessibilityFrameInContainerSpace.midX - canonicalFrame.midX) <= 0.1
+                && abs(element.accessibilityFrameInContainerSpace.midY - canonicalFrame.midY) <= 0.1
         }
         assertAligned()
         XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, canonicalFrame.midX, accuracy: 0.1)
