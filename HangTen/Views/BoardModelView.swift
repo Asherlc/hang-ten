@@ -2126,7 +2126,6 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         finishingAnimatedResetGeneration = generation
         needsAccessibilityProjection = true
         setNeedsDisplay()
-        updateAccessibility()
 
         // Give SceneKit at least two main-run-loop turns after the transaction
         // callback, even when its presentation node already reports the final
@@ -2139,7 +2138,6 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             rendersContinuously = false
             needsAccessibilityProjection = true
             setNeedsDisplay()
-            updateAccessibility()
             return
         }
 
