@@ -2061,6 +2061,10 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var ownsAnimatedResetPlayback = false
     private var finishingAnimatedResetGeneration: Int?
     private var pendingCanonicalAccessibilityGeneration: Int?
+    /// After a canonical commit, ignore renderer-driven accessibility refreshes
+    /// that would rewrite frames from a stalled orbit presentation tree.
+    private var freezeAccessibilityProjectionToCanonical = false
+    private var committedCanonicalAccessibilityGeneration: Int?
 
     private struct AccessibilityProjection: Equatable {
         let cameraTransform: SCNMatrix4
@@ -2198,20 +2202,36 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         }
     }
 
-    /// Snap the model camera to canonical, force SceneKit to render that
-    /// model state, refresh accessibility from the resulting projection, and
-    /// release reset-owned playback. Avoids waiting forever for a presentation
-    /// tree that never leaves the orbit pose on some simulator hosts.
+    /// Snap the model camera to canonical, clear any stalled presentation
+    /// state on the camera node, refresh accessibility, and release reset-
+    /// owned playback. Safe to call repeatedly for one generation.
     private func commitCanonicalAccessibility(generation: Int) {
         guard animatedResetRenderGeneration == generation else { return }
+        if committedCanonicalAccessibilityGeneration == generation { return }
+        committedCanonicalAccessibilityGeneration = generation
+
         model?.resetCamera(animated: false)
         SCNTransaction.flush()
-        pointOfView?.removeAllAnimations()
-        // snapshot() renders immediately from the model layer, so projectPoint
-        // observes the canonical camera instead of a stalled orbit presentation.
+        if let camera = model?.camera ?? pointOfView {
+            camera.removeAllAnimations()
+            // Detach/reattach clears a presentation tree that CI simulators
+            // can leave frozen on the last orbit pose after SCNTransaction
+            // actions. projectPoint follows presentation, so accessibility
+            // and the test's expectedCenter both stay wrong without this.
+            if let parent = camera.parent {
+                camera.removeFromParentNode()
+                parent.addChildNode(camera)
+            }
+            pointOfView = camera
+        }
+        model?.frame(in: bounds.size)
+        model?.resetCamera(animated: false)
+        SCNTransaction.flush()
         _ = snapshot()
+
         pendingCanonicalAccessibilityGeneration = nil
         finishingAnimatedResetGeneration = nil
+        freezeAccessibilityProjectionToCanonical = true
         needsAccessibilityProjection = true
         updateAccessibility()
         releaseAnimatedResetRendering()
@@ -2252,6 +2272,34 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         cameraPresentationIsSettled() && (model?.isCanonicalCameraApplied() ?? false)
     }
 
+    /// Project using the model-layer camera when accessibility is frozen to
+    /// canonical after reset. SceneKit's projectPoint follows the presentation
+    /// tree, which CI simulators can leave stuck on the last orbit frame.
+    private func projectContactPoint(_ worldPosition: SCNVector3) -> SCNVector3 {
+        guard freezeAccessibilityProjectionToCanonical,
+              let pov = pointOfView,
+              let camera = pov.camera,
+              camera.usesOrthographicProjection,
+              bounds.width > 0, bounds.height > 0 else {
+            return projectPoint(worldPosition)
+        }
+        let scale = camera.orthographicScale
+        guard scale.isFinite, scale > 0 else { return projectPoint(worldPosition) }
+
+        let world = SIMD4<Float>(worldPosition.x, worldPosition.y, worldPosition.z, 1)
+        let view = simd_inverse(pov.simdWorldTransform) * world
+        let aspect = Float(bounds.width / bounds.height)
+        guard aspect.isFinite, aspect > 0 else { return projectPoint(worldPosition) }
+        let halfHeight = Float(scale)
+        let halfWidth = halfHeight * aspect
+        let ndcX = view.x / halfWidth
+        let ndcY = view.y / halfHeight
+        let x = CGFloat(ndcX * 0.5 + 0.5) * bounds.width
+        // Match SceneKit/UIKit: Y increases downward in view space.
+        let y = CGFloat(0.5 - ndcY * 0.5) * bounds.height
+        return SCNVector3(x, y, CGFloat(view.z))
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -2288,14 +2336,13 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self else { return }
             if let generation = self.pendingCanonicalAccessibilityGeneration,
                self.animatedResetRenderGeneration == generation {
-                // A prior path asked for a post-render canonical commit. Do not
-                // wait for presentation settle — CI hosts can freeze the orbit
-                // presentation indefinitely.
                 self.commitCanonicalAccessibility(generation: generation)
                 return
             }
-            // Camera gestures and implicit reset animations can change projection
-            // without a SwiftUI update. Refresh only when a rendered state changes.
+            // After a canonical commit, in-flight renderer callbacks can still
+            // observe a stalled orbit presentation and would otherwise rewrite
+            // accessibility back off-canonical.
+            guard !self.freezeAccessibilityProjectionToCanonical else { return }
             guard self.needsAccessibilityProjection
                     || self.accessibilityProjection != self.currentAccessibilityProjection else { return }
             self.updateAccessibility()
@@ -2314,6 +2361,8 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
               let id = model.contactID(for: hit.node),
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)
+        freezeAccessibilityProjectionToCanonical = false
+        committedCanonicalAccessibilityGeneration = nil
         let resetGeneration = requestAnimatedResetRedraw()
         // Re-selecting the active position snaps the model camera with
         // disableActions inside select(), which collapses the animated reset
@@ -2324,10 +2373,17 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self else { return }
             self.finishAnimatedReset(generation: resetGeneration)
         }
+        // Hard deadline for CI hosts that never advance the presentation tree.
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + BoardModelScene.canonicalTransitionDuration + 0.35
+        ) { [weak self] in
+            self?.commitCanonicalAccessibility(generation: resetGeneration)
+        }
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
         guard let model, recognizer.state == .changed else { return }
+        freezeAccessibilityProjectionToCanonical = false
         let translation = recognizer.translation(in: self)
         let width = max(bounds.width, 1)
         let height = max(bounds.height, 1)
@@ -2341,6 +2397,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
     @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
         guard let model, recognizer.state == .changed else { return }
+        freezeAccessibilityProjectionToCanonical = false
         model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
         recognizer.scale = 1
         requestPausedRedraw()
@@ -2354,7 +2411,9 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
     func updateAccessibility() {
         needsAccessibilityProjection = false
-        accessibilityProjection = currentAccessibilityProjection
+        if !freezeAccessibilityProjectionToCanonical {
+            accessibilityProjection = currentAccessibilityProjection
+        }
         guard let onContactTap, let model else {
             isAccessibilityElement = true
             accessibilityLabel = "\(boardName) hangboard"
@@ -2369,7 +2428,8 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let node = model.contactNodes[contact.id]?.first else { return nil }
             let box = node.boundingBox
             let center = SCNVector3((box.min.x + box.max.x) / 2, (box.min.y + box.max.y) / 2, (box.min.z + box.max.z) / 2)
-            let projected = projectPoint(node.convertPosition(center, to: nil))
+            let world = node.convertPosition(center, to: nil)
+            let projected = projectContactPoint(world)
             guard projected.x.isFinite, projected.y.isFinite else { return nil }
             let element = contactAccessibilityElements[contact.id]
                 ?? BoardModelAccessibilityElement(accessibilityContainer: self)
