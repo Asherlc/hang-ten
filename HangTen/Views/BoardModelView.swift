@@ -2014,6 +2014,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var accessibilityContactIDs: [String] = []
     private var accessibilityProjection: AccessibilityProjection?
     private var animatedResetRenderGeneration = 0
+    private var ownsAnimatedResetContinuousRendering = false
 
     private struct AccessibilityProjection: Equatable {
         let cameraTransform: SCNMatrix4
@@ -2076,7 +2077,15 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
     private func requestAnimatedResetRedraw() {
         needsAccessibilityProjection = true
-        guard !rendersContinuously, !isPlaying else {
+        guard !isPlaying else {
+            setNeedsDisplay()
+            return
+        }
+
+        // A reset may already own continuous rendering when another contact
+        // is tapped. Keep that reset alive and replace its shutdown deadline;
+        // leave continuous rendering alone when another caller owns it.
+        guard !rendersContinuously || ownsAnimatedResetContinuousRendering else {
             setNeedsDisplay()
             return
         }
@@ -2088,11 +2097,16 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         // presentation camera, then return to the board's paused state.
         animatedResetRenderGeneration &+= 1
         let generation = animatedResetRenderGeneration
-        rendersContinuously = true
+        if !rendersContinuously {
+            ownsAnimatedResetContinuousRendering = true
+            rendersContinuously = true
+        }
         setNeedsDisplay()
         let duration = BoardModelScene.canonicalTransitionDuration + 0.1
         DispatchQueue.main.asyncAfter(deadline: .now() + duration) { [weak self] in
             guard let self, self.animatedResetRenderGeneration == generation else { return }
+            guard self.ownsAnimatedResetContinuousRendering, !self.isPlaying else { return }
+            self.ownsAnimatedResetContinuousRendering = false
             self.rendersContinuously = false
             self.needsAccessibilityProjection = true
             self.setNeedsDisplay()
