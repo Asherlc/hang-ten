@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -32,6 +33,93 @@ TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 SIMULATOR_3D_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
+HELIUM_ROOT = HANGBOARDS_ROOT / "crimptonite-helium-mobile"
+
+
+def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:
+    """Catch lost lip merges, extra contacts, stale rasters, or an unbound model."""
+    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["derivation"] == {"type": "original"}
+    media = presentation["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "suspension"}
+    assert {path.relative_to(HELIUM_ROOT).as_posix() for path in HELIUM_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    descriptor = json.loads((HELIUM_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256((HELIUM_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    with zipfile.ZipFile(HELIUM_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    expected = {
+        "edge-14": {"he-L-lower-14", "he-R-lower-14"},
+        "edge-22": {"he-L-upper-22", "he-R-upper-22"},
+        "center-edge-10": {"he-C-lower-10"},
+        "center-edge-18": {"he-C-upper-18"},
+        "top-jug": {"he-outer-top-jug"},
+        "back-jug-sloper": {"he-rear-jug-sloper"},
+    }
+    assert {contact["id"] for contact in board["contacts"]} == set(expected)
+    assert len(board["contacts"]) == 6
+    assert set(descriptor["contacts"]) == set(expected)
+    # USD identifiers sanitize hyphens; Blender's mesh child may add _001.
+    def source_name(node_id: str) -> str:
+        return node_id.removesuffix("_001").replace("_", "-")
+
+    assert {contact_id: {source_name(node) for node in contact["nodeIDs"]}
+            for contact_id, contact in descriptor["contacts"].items()} == expected
+    assert {contact_id: {source_name(node["nodeID"]) for node in descriptor["nodes"]
+                         if node.get("contactID") == contact_id}
+            for contact_id in expected} == expected
+    assert board["positions"] == [{"id": "primary", "presentationID": "primary", "contactIDs": [
+        "edge-14", "center-edge-18", "edge-22", "center-edge-10", "back-jug-sloper", "top-jug"
+    ]}]
+    bounds = descriptor["modelBounds"]
+    assert [bounds["max"][i] - bounds["min"][i] for i in range(3)] == pytest.approx([0.4, 0.058, 0.024], abs=0.000001)
+    nodes = {source_name(node["nodeID"]): node for node in descriptor["nodes"]}
+    assert {"front-lead-mouth", "reverse-lead-mouth"} <= set(nodes)
+    assert nodes["front-lead-mouth"]["role"] == nodes["reverse-lead-mouth"]["role"] == "attachment"
+    assert not any(token in name.lower() for name in nodes for token in ("mount", "screw", "fastener", "cleat", "bracket", "hardware", "cord", "anchor"))
+
+
+def test_helium_represents_only_two_exterior_cord_leads() -> None:
+    """Catch fabricated interior routing and attachments bound to selectable lips."""
+    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    suspension = media["suspension"]
+    assert suspension["type"] == "pairedLeadCord"
+    assert set(suspension["passages"]) == {"left", "right"}
+    for side in ("left", "right"):
+        # Schema requires one point-only mouth per lead; no entry/exit route.
+        assert len(suspension["passages"][side]) == 1
+        mouth = suspension["passages"][side][0]
+        assert set(mouth) == {"id", "nodeID", "pointInModel", "provenance"}
+        lead = next(item for item in suspension["attachments"] if item["id"] == f"{side}-lead")
+        assert mouth["nodeID"] == lead["nodeID"]
+        assert mouth["pointInModel"] == lead["pointInModel"]
+    assert len(suspension["attachments"]) == 2
+    descriptor = json.loads((HELIUM_ROOT / media["descriptorPath"]).read_text())
+    node_roles = {node["nodeID"]: node["role"] for node in descriptor["nodes"]}
+    assert {tuple(lead["pointInModel"]) for lead in suspension["attachments"]} == {
+        (-0.186, 0, 0.012), (0.186, 0, 0.012)
+    }
+    for lead in suspension["attachments"]:
+        assert node_roles[lead["nodeID"]] == "attachment"
+        assert "contactPointsInModel" not in lead
+        assert "authored-display-estimate" in lead["provenance"]
+    assert suspension["anchor"]["visibility"] == "invisible"
+    assert set(suspension["canonicalPoses"]) == {"primary"}
+    assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+    assert "authored-display-estimate" in suspension["cord"]["provenance"]
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:

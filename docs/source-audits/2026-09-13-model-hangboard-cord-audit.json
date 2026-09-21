@@ -823,6 +823,37 @@
         "reviewedAt": "2026-09-16",
         "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
       }
+    },
+    {
+      "packageID": "crimptonite.helium-mobile",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord.",
+      "evidence": [
+        {
+          "view": "HE2 exact-revision front",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-front.jpg"
+        },
+        {
+          "view": "HE6 exact-revision reverse",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-reverse.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Inspected exact HE2/HE6 original Crimptonite photographs retained by Task 7 and the manual analytic candidate. Front and reverse each show two end mouths, three recesses occur only on the front, and the rear is continuous. Approve two independent exterior front leads; clipped mouth display geometry makes no claim about hidden connection. HE1 manufacturer 24 mm thickness wins the retailer conflict. Unmeasured mouth/pose/anchor/rest-length/material/camera values are authored-display-estimate."
+      }
     }
   ]
 }

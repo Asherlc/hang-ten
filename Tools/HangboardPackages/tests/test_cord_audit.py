@@ -36,6 +36,30 @@ NEWLY_MODEL_ONLY_EXCLUSIONS = {
 }
 
 
+def test_helium_cord_audit_retains_exact_front_reverse_evidence() -> None:
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "crimptonite.helium-mobile" in records
+    record = records["crimptonite.helium-mobile"]
+    assert record.decision == "represented"
+    assert record.source_fact == "documentedSuspension"
+    assert record.topology == "pairedLeadCord"
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    helium = next(item for item in raw["records"] if item["packageID"] == "crimptonite.helium-mobile")
+    assert helium["ruling"] == "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord."
+    assert helium["humanApproval"]["reviewer"] == "Astra"
+    assert helium["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in helium["evidence"]} == {
+        "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
+        "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
+    }
+    for item in helium["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
 def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
@@ -64,7 +88,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 25, "represented": 8}
+    assert report.decisions == {"excluded": 25, "represented": 9}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

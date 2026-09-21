@@ -5,8 +5,8 @@
   "name": "Helium Mobile",
   "subtitle": "Ultra-light mobile board with four edges and jug/sloper surfaces.",
   "productURL": "https://crimptonite.com/product/helium-mobile/",
-  "dimensions": "400 \u00d7 58 \u00d7 24 mm",
-  "aspectRatio": 1.5,
+  "dimensions": "400 × 58 × 24 mm",
+  "aspectRatio": 6.8965517241379315,
   "handCapacity": 1,
   "equipmentObjects": [
     {
@@ -16,393 +16,120 @@
   "presentations": [
     {
       "id": "primary",
-      "name": "Front \u2014 14/10 mm side right-side up",
-      "aspectRatio": 1.5,
+      "name": "Helium Mobile",
+      "aspectRatio": 6.8965517241379315,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "contactGeometry": {
-          "edge-14": [
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "suspension": {
+          "type": "pairedLeadCord",
+          "attachments": [
             {
-              "frame": {
-                "x": 0.132,
-                "y": 0.543,
-                "width": 0.234,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
+              "id": "left-lead",
+              "nodeID": "front_lead_mouth_001",
+              "pointInModel": [
+                -0.186,
+                0,
+                0.012
+              ],
+              "provenance": "HE2 front aperture and HE1 supplied cord; authored-display-estimate mouth centre retained from source marker (x,y,z) -> (x,z,-y). Exterior endpoint only; no concealed route."
             },
             {
-              "frame": {
-                "x": 0.634,
-                "y": 0.543,
-                "width": 0.234,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
+              "id": "right-lead",
+              "nodeID": "front_lead_mouth_001",
+              "pointInModel": [
+                0.186,
+                0,
+                0.012
+              ],
+              "provenance": "HE2 front aperture and HE1 supplied cord; authored-display-estimate mouth centre retained from source marker (x,y,z) -> (x,z,-y). Exterior endpoint only; no concealed route."
             }
           ],
-          "center-edge-18": [
-            {
-              "frame": {
-                "x": 0.387082218099,
-                "y": 0.444621415039,
-                "width": 0.222143,
-                "height": 0.104614
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
+          "passages": {
+            "left": [
+              {
+                "id": "left-front-mouth",
+                "nodeID": "front_lead_mouth_001",
+                "pointInModel": [
+                  -0.186,
+                  0,
+                  0.012
+                ],
+                "provenance": "HE2 visible exterior mouth only; authored-display-estimate coordinate. Schema point-only binding duplicates the lead endpoint; no entry/exit bore or interior route."
+              }
+            ],
+            "right": [
+              {
+                "id": "right-front-mouth",
+                "nodeID": "front_lead_mouth_001",
+                "pointInModel": [
+                  0.186,
+                  0,
+                  0.012
+                ],
+                "provenance": "HE2 visible exterior mouth only; authored-display-estimate coordinate. Schema point-only binding duplicates the lead endpoint; no entry/exit bore or interior route."
+              }
+            ]
+          },
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.12,
+              0.34
+            ],
+            "visibility": "invisible",
+            "provenance": "authored-display-estimate: overhead/front convergence with 0.34 m front offset so the exterior leads leave the small observed mouths clear of the front face. Display camera orthographic front, up [0,1,0], padding 0.08; primary identity rotation/zero translation and camera padding 0.10 are authored-display-estimate, not a prescribed suspension position."
+          },
+          "cord": {
+            "restLength": 0.41,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "HE1 publishes Beal 4 mm cord (2 mm radius). Per-lead restLength 0.41 m covers the 0.406 m displayed endpoint separation; length and matte appearance are authored-display-estimate. No measured total length, knot, internal connection, or safety rating is claimed."
+          },
+          "canonicalPoses": {
+            "primary": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
               }
             }
-          ],
-          "edge-22": [
-            {
-              "frame": {
-                "x": 0.144359464193,
-                "y": 0.44777725293,
-                "width": 0.218451245443,
-                "height": 0.106477057615
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            },
-            {
-              "frame": {
-                "x": 0.630195028645,
-                "y": 0.440677820313,
-                "width": 0.219948389975,
-                "height": 0.113217981447
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "center-edge-10": [
-            {
-              "frame": {
-                "x": 0.382,
-                "y": 0.543,
-                "width": 0.236,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "top-jug": [
-            {
-              "frame": {
-                "x": 0.109697896484,
-                "y": 0.407536191961,
-                "width": 0.772,
-                "height": 0.0273682055
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "front-inverted",
-      "name": "Front \u2014 22/18 mm side right-side up",
-      "aspectRatio": 1.5,
-      "isDefault": false,
-      "derivation": {
-        "type": "derived",
-        "sourcePresentationID": "primary",
-        "isInverted": true
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/front-inverted.png",
-        "contactGeometry": {
-          "edge-14": [
-            {
-              "frame": {
-                "x": 0.132,
-                "y": 0.543,
-                "width": 0.234,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            },
-            {
-              "frame": {
-                "x": 0.634,
-                "y": 0.543,
-                "width": 0.234,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "center-edge-18": [
-            {
-              "frame": {
-                "x": 0.387082218099,
-                "y": 0.444621415039,
-                "width": 0.222143,
-                "height": 0.104614
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "edge-22": [
-            {
-              "frame": {
-                "x": 0.144359464193,
-                "y": 0.44777725293,
-                "width": 0.218451245443,
-                "height": 0.106477057615
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            },
-            {
-              "frame": {
-                "x": 0.630195028645,
-                "y": 0.440677820313,
-                "width": 0.219948389975,
-                "height": 0.113217981447
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "center-edge-10": [
-            {
-              "frame": {
-                "x": 0.382,
-                "y": 0.543,
-                "width": 0.236,
-                "height": 0.057
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ],
-          "top-jug": [
-            {
-              "frame": {
-                "x": 0.109697896484,
-                "y": 0.407536191961,
-                "width": 0.772,
-                "height": 0.0273682055
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "reverse",
-      "name": "Back \u2014 sloper side right-side up",
-      "aspectRatio": 1.5,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/reverse.png",
-        "contactGeometry": {
-          "back-jug-sloper": [
-            {
-              "frame": {
-                "x": 0.178,
-                "y": 0.412,
-                "width": 0.648,
-                "height": 0.156
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "reverse-inverted",
-      "name": "Back \u2014 jug side right-side up",
-      "aspectRatio": 1.5,
-      "isDefault": false,
-      "derivation": {
-        "type": "derived",
-        "sourcePresentationID": "reverse",
-        "isInverted": true
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/reverse-inverted.png",
-        "contactGeometry": {
-          "back-jug-sloper": [
-            {
-              "frame": {
-                "x": 0.178,
-                "y": 0.412,
-                "width": 0.648,
-                "height": 0.156
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ]
+          }
         }
       }
     }
@@ -480,6 +207,20 @@
       "kind": "jug",
       "handCapacity": 1,
       "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "primary",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-14",
+        "center-edge-18",
+        "edge-22",
+        "center-edge-10",
+        "back-jug-sloper",
+        "top-jug"
+      ]
     }
   ]
 }

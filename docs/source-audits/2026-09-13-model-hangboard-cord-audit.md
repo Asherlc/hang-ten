@@ -7,8 +7,9 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 20 discovered model packages. Eight have documented
-suspended presentation evidence and render transient cord geometry; twelve remain
+The audit covers all 34 discovered model packages after the 2026-09-20 Helium
+promotion. Nine have documented suspended presentation evidence and render
+transient cord geometry; twenty-five remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
 for documented suspended presentation, but it is never described as supplied
@@ -16,8 +17,8 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 8 | `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
-| `excluded` | 12 | Beastmaker 1000/2000; Lattice Triple Rung; Metolius Climber's Edge/Contact/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II; So iLL Training Tiles; The Hangboard; Trango Rock Prodigy Training Center |
+| `represented` | 9 | `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -276,8 +277,8 @@ environment.
 
 ### 2026-09-20 Batch 04 source-evidence handoff
 
-Batch 04 remains outside this closed machine-readable manifest until its six
-packages become model-media packages: the validator requires record IDs to
+Unpromoted Batch 04 packages remain outside this closed machine-readable
+manifest until they become model-media packages: the validator requires record IDs to
 equal the discovered model inventory, so adding future records now would make
 the current audit invalid. The complete pre-promotion source decisions are
 retained in [`2026-09-20-batch-04-3d-source-register.json`](2026-09-20-batch-04-3d-source-register.json)
@@ -287,12 +288,57 @@ retained byte evidence:
 
 | Package | Source fact | Promotion decision/ruling |
 | --- | --- | --- |
-| `crimptonite.helium-mobile` | `documentedSuspension` | represent `pairedLeadCord` exterior leads only; do not infer an interior route or `twoBranchCord`. |
+| `crimptonite.helium-mobile` | `documentedSuspension` | Promoted 2026-09-20: represented `pairedLeadCord` exterior leads only; no inferred interior route or `twoBranchCord`. |
 | `metolius.light-rail-2` | `documentedSuspension` | represent `pairedLeadCord` at upper-entry exterior regions only; no underside mouth or hidden vertical bore. |
 | `metolius.rock-rings-3d` | `documentedSuspension` | represent two independent per-unit `pairedLeadCord` systems; no inter-unit connection or central through-bore. |
 | `yy.penta-evo` | `documentedSuspension` | represent two independent exterior paired loops through the central ring; no invented channel or knot. |
 | `owl-climb.poker` | `noDocumentedSuspension` | exclude. |
 | `trango.rock-prodigy-pivot` | `noDocumentedSuspension` | exclude; pulley-kit ropes are not Pivot suspension. |
+
+### 2026-09-20 Helium model promotion — `pairedLeadCord`
+
+Astra reviewed the exact retained HE2 front and HE6 reverse originals and
+manually authored the final capsule, three front recesses, rounded rear, and
+four exterior mouth surfaces. The delivered GLB remains PARTIAL, with
+`sourceFidelityApproval: false`, and was inspected but not promoted. The
+manufacturer HE1 envelope is 400 × 58 × 24 mm and the nominal opposing lips
+remain 14/22 mm and 10/18 mm. No wood species, factory rounding radius, recess
+width, bore diameter, or hidden route is inferred.
+
+Ruling: `pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord.`
+The two retained source views are regular-file snapshots in
+`2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-front.jpg` (SHA-256
+`9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40`) and
+`crimptonite-helium-mobile-reverse.jpg` (SHA-256
+`5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a`).
+Their original URLs and retailer hosting tier remain explicit in the JSON.
+
+Source-Z-up markers `(x,y,z)` convert to descriptor Y-up as `(x,z,-y)`:
+front `[-0.186,0,0.012]` / `[0.186,0,0.012]`, reverse
+`[-0.186,0,-0.012]` / `[0.186,0,-0.012]`. Only the two front endpoints bind
+the exterior leads to nonselectable attachment geometry. Reverse mouths remain
+visible geometry with no lead-to-lead connection. Each short mouth surface
+ends at an authored display clipping depth; that cut-off is not a claim that
+the physical opening is blind. The paired-lead schema requires one point-only
+mouth record for each lead; these repeat the two front endpoints and supply no
+entry/exit bore or ordered passage pair. The invisible anchor offset is
+`[0,0.12,0.34]` and per-lead rest length is `0.41` m, both
+`authored-display-estimate`. The front offset keeps the 2 mm cord clear of the
+small mouth rim and front face; it does not establish physical hanging geometry.
+
+All unsurveyed silhouette rounding, recess widths/transitions, mouth diameters
+and clipping depths, constant pale-timber material, camera values, primary
+identity pose, invisible anchor offset and per-lead rest length are
+`authored-display-estimate`. HE1's supplied 4 mm cord supports the 2 mm radius;
+its total length is unknown. Cord meshes and anchor are transient runtime
+metadata, absent from USDZ, picking, and accessibility. All mounting/screw
+holes, screws, cleats, brackets, hardware, logos, raster textures, and fallback
+media are omitted from this display model. Omission is not a claim that such
+hardware could never be used with the physical product.
+
+The original `primary` presentation ID is preserved. Historical presentation
+remediation lifecycle conversion is deferred to Task 14 under the controller's
+ID-collision ruling; this promotion does not alter that manifest.
 
 ### 2026-09-15 Batch 01 fixed-board exclusion addendum
 

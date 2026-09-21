@@ -1,0 +1,189 @@
+{
+  "contacts": {
+    "back-jug-sloper": {
+      "center": [
+        0.5,
+        0.5
+      ],
+      "facePlaneAABB": {
+        "max": [
+          1.0,
+          1.0
+        ],
+        "min": [
+          0.0,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "he_rear_jug_sloper_001"
+      ]
+    },
+    "center-edge-10": {
+      "center": [
+        0.5,
+        0.344827589
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.627499996,
+          0.500000001
+        ],
+        "min": [
+          0.372500004,
+          0.189655177
+        ]
+      },
+      "nodeIDs": [
+        "he_C_lower_10_001"
+      ]
+    },
+    "center-edge-18": {
+      "center": [
+        0.5,
+        0.655172411
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.627499996,
+          0.810344823
+        ],
+        "min": [
+          0.372500004,
+          0.5
+        ]
+      },
+      "nodeIDs": [
+        "he_C_upper_18_001"
+      ]
+    },
+    "edge-14": {
+      "center": [
+        0.5,
+        0.344827589
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.932499976,
+          0.500000001
+        ],
+        "min": [
+          0.067500024,
+          0.189655177
+        ]
+      },
+      "nodeIDs": [
+        "he_L_lower_14_001",
+        "he_R_lower_14_001"
+      ]
+    },
+    "edge-22": {
+      "center": [
+        0.5,
+        0.655172411
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.932499976,
+          0.810344823
+        ],
+        "min": [
+          0.067500024,
+          0.5
+        ]
+      },
+      "nodeIDs": [
+        "he_L_upper_22_001",
+        "he_R_upper_22_001"
+      ]
+    },
+    "top-jug": {
+      "center": [
+        0.5,
+        0.941519781
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.946264365,
+          1.0
+        ],
+        "min": [
+          0.053735635,
+          0.883039562
+        ]
+      },
+      "nodeIDs": [
+        "he_outer_top_jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.200000003,
+      0.028999999,
+      0.012
+    ],
+    "min": [
+      -0.200000003,
+      -0.028999999,
+      -0.012
+    ]
+  },
+  "modelSHA256": "745f92fdafcfa26f3ff5fe77f1f993d5de68bf0a199173b6f7a43167eb56ba94",
+  "nodes": [
+    {
+      "nodeID": "front_lead_mouth_001",
+      "role": "attachment"
+    },
+    {
+      "contactID": "center-edge-10",
+      "nodeID": "he_C_lower_10_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "center-edge-18",
+      "nodeID": "he_C_upper_18_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-14",
+      "nodeID": "he_L_lower_14_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-22",
+      "nodeID": "he_L_upper_22_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-14",
+      "nodeID": "he_R_lower_14_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-22",
+      "nodeID": "he_R_upper_22_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-jug",
+      "nodeID": "he_outer_top_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "back-jug-sloper",
+      "nodeID": "he_rear_jug_sloper_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "helium_body_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "reverse_lead_mouth_001",
+      "role": "attachment"
+    }
+  ],
+  "schemaVersion": 1
+}
