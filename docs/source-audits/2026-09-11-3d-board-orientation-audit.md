@@ -71,6 +71,16 @@ shipped `board.json` and package descriptors; source/evidence facts and
 limitations come from the retained batch-02 migration records. No additional
 rotation, contact grouping, bound, dimension, or physical claim is implied.
 
+## Batch-04 Helium promotion (2026-09-20)
+
+`crimptonite.helium-mobile` has one model presentation and one canonical
+`primary` position. The package declares six ordered hold IDs:
+`edge-14`, `center-edge-18`, `edge-22`, `center-edge-10`,
+`back-jug-sloper`, and `top-jug`. It declares no orientation quaternion or
+pivot override. The package's model bounds and descriptor remain the
+model-package sources of truth; this inventory entry adds no orientation,
+geometry, or physical claim.
+
 ## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for

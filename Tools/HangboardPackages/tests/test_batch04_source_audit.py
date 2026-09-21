@@ -209,7 +209,7 @@ def test_batch04_register_records_exact_evidence_status_and_supersession() -> No
 
 def test_batch04_supersedes_historical_audits_without_opening_the_cord_manifest() -> None:
     cord_audit = (AUDIT_ROOT / "2026-09-13-model-hangboard-cord-audit.md").read_text()
-    assert "Batch 04 remains outside this closed machine-readable manifest" in cord_audit
+    assert "Unpromoted Batch 04 packages remain outside this closed machine-readable" in cord_audit
     assert "pulley-kit ropes are not Pivot suspension" in cord_audit
     orientation_audit = (AUDIT_ROOT / "2026-09-11-3d-board-orientation-audit.md").read_text()
     assert "retain only selectable `p1`,\n`p2`, `p3`, and `p5`" in orientation_audit

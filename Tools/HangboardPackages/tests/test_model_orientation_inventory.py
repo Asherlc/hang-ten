@@ -27,6 +27,7 @@ MODEL_PACKAGE_IDS = {
     "captain-fingerfood.dual",
     "captain-fingerfood.pocket",
     "captain-fingerfood.unlevel",
+    "crimptonite.helium-mobile",
     "dewoodstok-woodbord",
     "escape-beta-22",
     "escape.unlimited",
