@@ -2080,31 +2080,24 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     }
 
     @discardableResult
-    private func requestAnimatedResetRedraw() -> Int? {
+    private func requestAnimatedResetRedraw() -> Int {
         needsAccessibilityProjection = true
-        guard !isPlaying else {
-            setNeedsDisplay()
-            return nil
-        }
-
-        // A reset may already own continuous rendering when another contact
-        // is tapped. Keep that reset alive and replace its shutdown deadline;
-        // leave continuous rendering alone when another caller owns it.
-        guard !rendersContinuously || ownsAnimatedResetContinuousRendering else {
-            setNeedsDisplay()
-            return nil
-        }
+        animatedResetRenderGeneration &+= 1
+        let generation = animatedResetRenderGeneration
 
         // A paused SCNView renders a single dirty frame, which leaves
         // presentation transforms frozen while an implicit camera
         // transaction is running. Keep the renderer alive through the short
         // canonical transition so accessibility projection follows the
         // presentation camera, then return to the board's paused state.
-        animatedResetRenderGeneration &+= 1
-        let generation = animatedResetRenderGeneration
-        if !rendersContinuously {
-            ownsAnimatedResetContinuousRendering = true
-            rendersContinuously = true
+        // When the view is already playing or another caller owns continuous
+        // rendering, still return a generation and schedule finish so
+        // selectContact never drops the settle path.
+        if !isPlaying, !rendersContinuously || ownsAnimatedResetContinuousRendering {
+            if !rendersContinuously {
+                ownsAnimatedResetContinuousRendering = true
+                rendersContinuously = true
+            }
         }
         setNeedsDisplay()
         let duration = BoardModelScene.canonicalTransitionDuration + 0.1
@@ -2116,9 +2109,11 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
     private func finishAnimatedReset(generation: Int, attempt: Int = 0) {
         guard animatedResetRenderGeneration == generation,
-              ownsAnimatedResetContinuousRendering,
-              !isPlaying,
               pendingCanonicalAccessibilityGeneration != generation else { return }
+        // Prefer the reset-owned continuous path. When the view is already
+        // playing or rendering continuously for another reason, still settle
+        // accessibility — just avoid pausing playback ownership at the end.
+        guard ownsAnimatedResetContinuousRendering || isPlaying || rendersContinuously else { return }
 
         // SceneKit may invoke the transaction completion block before the
         // presentation camera has been committed to its final render frame.
@@ -2224,18 +2219,29 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             if let generation = self.pendingCanonicalAccessibilityGeneration,
-               self.animatedResetRenderGeneration == generation,
-               self.ownsAnimatedResetContinuousRendering,
-               !self.isPlaying {
-                // This callback follows an actual canonical render. Update
-                // accessibility while the presentation camera still reflects
-                // that frame, then return the view to its paused state.
+               self.animatedResetRenderGeneration == generation {
+                // Keep rendering until the presentation camera has actually
+                // reached the canonical model transform. Pausing on the first
+                // post-flush callback freezes the last orbit presentation and
+                // leaves accessibility stuck off-canonical.
+                guard self.cameraPresentationIsSettled() else {
+                    self.needsAccessibilityProjection = true
+                    if self.ownsAnimatedResetContinuousRendering {
+                        self.rendersContinuously = true
+                    }
+                    return
+                }
+                // Presentation matches the canonical model camera. Update
+                // accessibility while that frame is live, then release any
+                // reset-owned continuous rendering.
                 self.pendingCanonicalAccessibilityGeneration = nil
                 self.finishingAnimatedResetGeneration = nil
                 self.needsAccessibilityProjection = true
                 self.updateAccessibility()
-                self.ownsAnimatedResetContinuousRendering = false
-                self.rendersContinuously = false
+                if self.ownsAnimatedResetContinuousRendering {
+                    self.ownsAnimatedResetContinuousRendering = false
+                    self.rendersContinuously = false
+                }
                 return
             }
             // Camera gestures and implicit reset animations can change projection
@@ -2261,7 +2267,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         let resetGeneration = requestAnimatedResetRedraw()
         _ = model.select(positionID: model.activePositionID)
         model.resetCamera(animated: true) { [weak self] in
-            guard let self, let resetGeneration else { return }
+            guard let self else { return }
             self.finishAnimatedReset(generation: resetGeneration)
         }
     }
