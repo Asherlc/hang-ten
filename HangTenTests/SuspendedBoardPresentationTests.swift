@@ -5,6 +5,51 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
+    func testInstanceRoutedPairedLeadsPreserveAuthoredWorldAnchor() throws {
+        var transform = matrix_identity_float4x4
+        transform.columns.0.x = -1
+        transform.columns.3 = SIMD4(3, 0, 0, 1)
+        let paired = pairedLeadSuspension(
+            leftContacts: [[-0.6, 0.4, 0.15]], rightContacts: [[0.6, 0.4, 0.05]],
+            anchor: [3, 3, 0], restLength: 4)
+        guard case .pairedLead(let solved) = try SuspendedBoardPresentation.solveInstance(
+            pose: pose(), suspension: .pairedLeadCord(paired), bounds: bounds, transform: transform) else {
+            return XCTFail("Expected paired leads")
+        }
+        XCTAssertEqual(solved.fixedAnchor, SIMD3(3, 3, 0))
+        for lead in solved.leads {
+            XCTAssertEqual(lead.samples.first, SIMD3(3, 3, 0))
+        }
+        XCTAssertTrue(solved.cameraFraming.contains(SIMD3(3, 3, 0)))
+    }
+
+    func testInstanceRoutedPairedLeadsRejectLengthRequiringAnchorRelocation() throws {
+        var transform = matrix_identity_float4x4
+        transform.columns.0.x = -1
+        transform.columns.3 = SIMD4(3, 0, 0, 1)
+        let paired = pairedLeadSuspension(
+            leftContacts: [[-0.6, 0.4, 0.15]], rightContacts: [[0.6, 0.4, 0.05]],
+            anchor: [3, 3, 0], restLength: 3)
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solveInstance(
+            pose: pose(), suspension: .pairedLeadCord(paired), bounds: bounds, transform: transform)) {
+            XCTAssertEqual($0 as? SuspendedPresentationError, .cordTooShort)
+        }
+    }
+
+    func testLegacyRoutedPairedLeadsRetainProjectionWithExplicitModelTransform() throws {
+        var transform = matrix_identity_float4x4
+        transform.columns.0.x = -1
+        transform.columns.3 = SIMD4(3, 0, 0, 1)
+        let paired = pairedLeadSuspension(
+            leftContacts: [[-0.6, 0.4, 0.15]], rightContacts: [[0.6, 0.4, 0.05]],
+            anchor: [3, 3, 0], restLength: 3)
+        let solved = try SuspendedBoardPresentation.solve(
+            pose: pose(), suspension: paired, bounds: bounds, modelTransform: transform)
+        XCTAssertEqual(solved.fixedAnchor.x, 3)
+        XCTAssertEqual(solved.fixedAnchor.y, 3)
+        XCTAssertEqual(solved.fixedAnchor.z, 0.228, accuracy: 0.000001)
+    }
+
     func testInstanceSuspensionSolvesInWorldSpaceWithFixedAnchor() throws {
         var transform = matrix_identity_float4x4
         transform.columns.0.x = -1

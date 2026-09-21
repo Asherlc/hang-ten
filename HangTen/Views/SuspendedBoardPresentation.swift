@@ -48,7 +48,8 @@ enum SuspendedBoardPresentation {
         }
         switch suspension {
         case .pairedLeadCord(let profile):
-            return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
+            return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds,
+                modelTransform: transform, preserveAuthoredAnchor: true))
         case .twoBranchCord(let profile):
             return .twoBranch(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
         case .singleCord(let profile):
@@ -124,7 +125,8 @@ enum SuspendedBoardPresentation {
         pose: BoardModelCanonicalPose,
         suspension: BoardModelPairedLeadCord,
         bounds: BoardModelBounds,
-        modelTransform: simd_float4x4? = nil
+        modelTransform: simd_float4x4? = nil,
+        preserveAuthoredAnchor: Bool = false
     ) throws -> SuspendedPairedLeadSolvedPresentation {
         let transform = try modelTransform ?? boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
@@ -193,7 +195,10 @@ enum SuspendedBoardPresentation {
                     - modelPoint(pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel)
             )
         }
-        if boreAxes.count == suspension.attachments.count,
+        // Only reusable-instance solving opts out of legacy anchor projection;
+        // explicit transforms on legacy callers retain their existing behavior.
+        if !preserveAuthoredAnchor,
+           boreAxes.count == suspension.attachments.count,
            let leading = boreAxes.first,
            boreAxes.allSatisfy({ simd_dot($0, leading) > 0.9 }),
            let sharedAxis = normalized(boreAxes.reduce(SIMD3<Float>.zero, +)) {

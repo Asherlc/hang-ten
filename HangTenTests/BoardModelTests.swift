@@ -9,6 +9,65 @@ import XCTest
 final class BoardModelTests: XCTestCase {
     private var reusableSourceGeometry: SCNGeometry?
 
+    func testReusableSecondInstanceFailureDoesNotCommitPartialPresentation() throws {
+        let scene = try makeReusableScene(reflection: nil,
+            suspensions: reusableSuspensionsWithAlternatePose(rightTranslation: [0, -100, 0]))
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        let transforms = scene.instanceScenes.map { $0.container.simdTransform }
+        let cameraTransform = scene.camera.simdTransform
+        let cameraScale = scene.camera.camera?.orthographicScale
+        let cords = scene.instanceScenes.flatMap(\.transientCordNodes)
+        XCTAssertEqual(cords.count, 2)
+        XCTAssertFalse(scene.select(positionID: "alternate"))
+        XCTAssertNotNil(scene.instanceScenes[0].verifiedPresentations["alternate"], "First instance must finish solving before the second fails")
+        XCTAssertNil(scene.instanceScenes[1].verifiedPresentations["alternate"])
+        XCTAssertTrue(scene.isUnavailable)
+        XCTAssertNil(scene.activePositionID)
+        XCTAssertEqual(scene.instanceScenes.map { $0.container.simdTransform }, transforms)
+        XCTAssertEqual(scene.camera.simdTransform, cameraTransform)
+        XCTAssertEqual(scene.camera.camera?.orthographicScale, cameraScale)
+        XCTAssertTrue(scene.instanceScenes.allSatisfy { $0.transientCordNodes.isEmpty })
+        XCTAssertTrue(cords.allSatisfy { $0.parent == nil })
+        XCTAssertFalse(scene.scene.rootNode.childNodes.contains { $0.categoryBitMask == BoardModelScene.cordCategory })
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        XCTAssertEqual(scene.instanceScenes.flatMap(\.transientCordNodes).map(ObjectIdentifier.init), cords.map(ObjectIdentifier.init))
+    }
+
+    func testReusableSwitchesDistinctCachedCordGroupsWithoutStaleNodes() throws {
+        let scene = try makeReusableScene(reflection: nil,
+            suspensions: reusableSuspensionsWithAlternatePose(rightTranslation: [0, 1, 0]))
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        let primaryCords = scene.instanceScenes.flatMap(\.transientCordNodes)
+        let primaryTransforms = scene.instanceScenes.map { $0.container.simdTransform }
+        XCTAssertTrue(scene.select(positionID: "alternate"))
+        let alternateCords = scene.instanceScenes.flatMap(\.transientCordNodes)
+        XCTAssertEqual(alternateCords.count, 2)
+        XCTAssertNotEqual(scene.instanceScenes.map { $0.container.simdTransform }, primaryTransforms)
+        XCTAssertTrue(primaryCords.allSatisfy { $0.parent == nil })
+        XCTAssertTrue(alternateCords.allSatisfy { $0.parent === scene.scene.rootNode })
+        XCTAssertTrue(Set(primaryCords.map(ObjectIdentifier.init)).isDisjoint(with: alternateCords.map(ObjectIdentifier.init)))
+        for unit in scene.instanceScenes { XCTAssertEqual(Set(unit.verifiedPresentations.keys), ["primary", "alternate"]) }
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        XCTAssertEqual(scene.instanceScenes.flatMap(\.transientCordNodes).map(ObjectIdentifier.init), primaryCords.map(ObjectIdentifier.init))
+        XCTAssertTrue(alternateCords.allSatisfy { $0.parent == nil })
+        XCTAssertEqual(scene.instanceScenes.map { $0.container.simdTransform }, primaryTransforms)
+        XCTAssertTrue(scene.select(positionID: "alternate"))
+        XCTAssertEqual(scene.instanceScenes.flatMap(\.transientCordNodes).map(ObjectIdentifier.init), alternateCords.map(ObjectIdentifier.init))
+        XCTAssertTrue(primaryCords.allSatisfy { $0.parent == nil })
+        XCTAssertEqual(scene.scene.rootNode.childNodes.filter { $0.categoryBitMask == BoardModelScene.cordCategory }.count, 2)
+    }
+
+    private func reusableSuspensionsWithAlternatePose(rightTranslation: [Double]) -> [BoardModelSuspension] {
+        twoIndependentPairedLeadSuspensions().enumerated().map { index, suspension in
+            guard case .pairedLeadCord(let profile) = suspension else { preconditionFailure("Expected paired fixture") }
+            var poses = profile.canonicalPoses
+            poses["alternate"] = .init(rotation: [0, 0, 0, 1], translation: index == 0 ? [0, 1, 0] : rightTranslation,
+                camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1))
+            return .pairedLeadCord(.init(attachments: profile.attachments, passages: profile.passages,
+                anchor: profile.anchor, cord: profile.cord, canonicalPoses: poses))
+        }
+    }
+
     func testReusableInstancesIsolateHighlightAndSuspensionState() throws {
         let scene = try makeReusableScene(reflection: nil, suspensions: twoIndependentPairedLeadSuspensions())
         scene.highlight(Set(["edge-left"]), mode: .active)
@@ -317,7 +376,7 @@ final class BoardModelTests: XCTestCase {
         ]
         return try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor,
             display: display(), suspension: nil, orientation: nil,
-            allowedPositionIDs: ["primary"], resourceLease: nil, instances: instances))
+            allowedPositionIDs: suspensions.map { Set($0[0].canonicalPoses.keys) } ?? ["primary"], resourceLease: nil, instances: instances))
     }
 
     func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
