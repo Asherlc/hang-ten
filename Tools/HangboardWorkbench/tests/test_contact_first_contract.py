@@ -25,11 +25,11 @@ def test_schema_v3_raster_edit_keeps_facts_and_geometry_in_native_owners(
 ) -> None:
     library = tmp_path / "Hangboards"
     library.mkdir()
-    package_root = _copy_package(library, "trango-rock-prodigy-pivot")
+    package_root = _copy_package(library, "lattice-mini-bar")
     original = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
 
     package = board_package.load_board_package(package_root)
-    document = board_package.editor_document(package, "orientation-1")
+    document = board_package.editor_document(package, "edge-10")
 
     assert document["regions"]
     assert document["contacts"] == original["contacts"]
@@ -54,7 +54,7 @@ def test_schema_v3_raster_edit_keeps_facts_and_geometry_in_native_owners(
     first["displayPath"] = "M 5 5 L 25 5 L 25 25 L 5 25 Z"
     first.pop("shapeConstraint", None)
     saved = board_package.save_editor_document(
-        library, "trango-rock-prodigy-pivot", document
+        library, "lattice-mini-bar", document
     )
 
     assert saved.board["schemaVersion"] == 3
@@ -89,7 +89,7 @@ def test_schema_v3_model_package_is_discoverable_but_read_only(tmp_path: Path) -
 
 
 def test_schema_v2_board_is_rejected_without_a_compatibility_reader(tmp_path: Path) -> None:
-    package_root = _copy_package(tmp_path, "trango-rock-prodigy-pivot")
+    package_root = _copy_package(tmp_path, "lattice-mini-bar")
     document = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
     document["schemaVersion"] = 2
     (package_root / "board.json").write_text(
@@ -103,7 +103,7 @@ def test_schema_v2_board_is_rejected_without_a_compatibility_reader(tmp_path: Pa
 
 
 def test_editor_document_contains_no_legacy_hold_contract(tmp_path: Path) -> None:
-    package_root = _copy_package(tmp_path, "trango-rock-prodigy-pivot")
+    package_root = _copy_package(tmp_path, "lattice-mini-bar")
     document = board_package.editor_document(
         board_package.load_board_package(package_root)
     )
