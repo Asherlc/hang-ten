@@ -542,6 +542,61 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testJBryantFTG32CanonicalSelectedEdgesAreUnoccluded() async throws {
+        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 390, height: 228))
+        view.display(model)
+        model.frame(in: view.bounds.size)
+        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
+            .map { Float($1 - $0) }.max() ?? 1
+        let rayExtension = max(extent * 4, 1)
+
+        // Re-select the first edge too: visibility must survive the normal
+        // highlight-driven half-turn and its inverse without an orbit fallback.
+        for contactID in ["edge-25", "edge-16", "edge-25"] {
+            let positionID = try XCTUnwrap(BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: "primary",
+                activeHoldID: nil,
+                highlightedHoldIDs: [contactID]
+            ))
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertFalse(model.isUnavailable, positionID)
+            model.highlight([contactID], mode: .active)
+            SCNTransaction.flush()
+            let direction = model.camera.presentation.worldFront
+            let nodes = try XCTUnwrap(model.contactNodes[contactID])
+            for node in nodes {
+                XCTAssertEqual(node.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+                for localCenter in try nativeTriangleCenters(for: node) {
+                    let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
+                    let projected = view.projectPoint(center)
+                    XCTAssertTrue((0...1).contains(projected.z), positionID)
+                    XCTAssertTrue(view.bounds.contains(CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))), positionID)
+                    let closest = try XCTUnwrap(model.scene.rootNode.hitTestWithSegment(
+                        from: SCNVector3(center.x - direction.x * rayExtension,
+                                         center.y - direction.y * rayExtension,
+                                         center.z - direction.z * rayExtension),
+                        to: SCNVector3(center.x + direction.x * rayExtension,
+                                       center.y + direction.y * rayExtension,
+                                       center.z + direction.z * rayExtension),
+                        options: [
+                            // Include the visible body and transient cord, not
+                            // only selectable triangles. The USDZ is double-sided.
+                            SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.renderedCategory,
+                            SCNHitTestOption.backFaceCulling.rawValue: false,
+                            SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                        ]
+                    ).first, "\(positionID): missing rendered intersection")
+                    XCTAssertEqual(
+                        model.contactID(for: closest.node), contactID,
+                        "\(positionID): canonical selected ledge is occluded by \(closest.node.name ?? "unnamed") at \(closest.worldCoordinates)"
+                    )
+                }
+            }
+        }
+    }
+
     func testJBryantFTG32HighlightedContactResolvesItsMatchingHalfTurnPosition() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "j-bryant.ftg-32"))
         for (contactID, expectedPositionID) in [("edge-25", "edge-25-down"), ("edge-16", "edge-16-down")] {

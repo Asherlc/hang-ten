@@ -33,7 +33,7 @@
         "cord": {"restLength": 0.22, "radius": 0.0018, "material": "yellowSpeckledCord", "provenance": "displayEstimate; published suspension heights are not rope lengths"},
         "canonicalPoses": {
           "edge-25-down": {"rotation": [0, 0, 0, 1], "translation": [0, 0, 0], "camera": {"viewDirection": [0, -0.3746065934, -0.9271838546], "fitPadding": 0.1}},
-          "edge-16-down": {"rotation": [0, 0, 1, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, -0.3746065934, -0.9271838546], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [0.025, 0, 0.0025], "right-lead": [-0.025, 0, 0.0025]}, "cordContactPoints": {"left-lead": [[0.025, -0.0385, 0.0213], [0.025, 0, 0.0213]], "right-lead": [[-0.025, -0.0385, 0.0213], [-0.025, 0, 0.0213]]}}
+          "edge-16-down": {"rotation": [0, 0, 1, 0], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0.3746065934, -0.9271838546], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [0.025, 0, 0.0025], "right-lead": [-0.025, 0, 0.0025]}, "cordContactPoints": {"left-lead": [[0.025, -0.0385, 0.0213], [0.025, 0, 0.0213]], "right-lead": [[-0.025, -0.0385, 0.0213], [-0.025, 0, 0.0213]]}}
         }
       },
       "orientation": {"pivot": "modelBoundsCenter", "rotations": {"edge-16-down": [0, 0, 1, 0], "edge-25-down": [0, 0, 0, 1]}}

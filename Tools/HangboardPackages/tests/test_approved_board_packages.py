@@ -124,6 +124,15 @@ def test_j_bryant_ftg32_is_one_hash_bound_model_with_exact_half_turn_positions()
     }
     suspension = media["suspension"]
     assert suspension["type"] == "pairedLeadCord"
+    # Pose-local directions compensate for the exact in-plane half-turn so
+    # either selected lower ledge is viewed from above in the canonical scene.
+    assert {
+        position_id: pose["camera"]["viewDirection"]
+        for position_id, pose in suspension["canonicalPoses"].items()
+    } == {
+        "edge-25-down": [0, -0.3746065934, -0.9271838546],
+        "edge-16-down": [0, 0.3746065934, -0.9271838546],
+    }
     assert [a["id"] for a in suspension["attachments"]] == ["left-lead", "right-lead"]
     assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
     assert all(a["nodeID"] == "Cube_001" for a in suspension["attachments"])
