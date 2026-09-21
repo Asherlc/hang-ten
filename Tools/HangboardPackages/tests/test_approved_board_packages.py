@@ -34,6 +34,55 @@ MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 SIMULATOR_3D_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
 HELIUM_ROOT = HANGBOARDS_ROOT / "crimptonite-helium-mobile"
+POKER_ROOT = HANGBOARDS_ROOT / "owl-climb-poker"
+
+
+def test_poker_four_faces_keep_all_34_contacts_on_one_hash_bound_model() -> None:
+    """Catch a dropped Face D restore, cross-face selection, or raster fallback."""
+    board = json.loads((POKER_ROOT / "board.json").read_text())
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary" and presentation["isDefault"] is True
+    media = presentation["media"]
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "orientation"}
+    assert media["type"] == "model"
+    assert {p.relative_to(POKER_ROOT).as_posix() for p in POKER_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    base = {
+        "left-outer-slot", "left-single-pocket", "left-dual-pocket", "center-pull-up-slot",
+        "right-dual-pocket", "right-single-pocket", "right-outer-slot",
+    }
+    face_contacts = {
+        "face-a": {"face-a-" + suffix for suffix in base},
+        "face-b": {"face-b-" + suffix for suffix in base | {"left-deep-sloper", "right-deep-sloper"}},
+        "face-c": {"face-c-" + suffix for suffix in base | {"left-shallow-half-round", "right-shallow-half-round"}},
+        "face-d": {"face-d-" + suffix for suffix in base | {"left-deep-rounded-recess", "right-deep-rounded-recess"}},
+    }
+    expected = set().union(*face_contacts.values())
+    assert len(expected) == 34
+    assert {c["id"] for c in board["contacts"]} == expected
+    assert {p["id"]: set(p["contactIDs"]) for p in board["positions"]} == face_contacts
+    assert all(p["presentationID"] == "primary" for p in board["positions"])
+    assert media["orientation"] == {"pivot": "modelBoundsCenter", "rotations": {
+        "face-a": [0, 0, 0, 1], "face-b": [0.707106781, 0, 0, 0.707106781],
+        "face-c": [1, 0, 0, 0], "face-d": [-0.707106781, 0, 0, 0.707106781],
+    }}
+    descriptor = json.loads((POKER_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256((POKER_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    assert set(descriptor["contacts"]) == expected
+    assert {n.get("contactID") for n in descriptor["nodes"] if n["role"] == "contact"} == expected
+    for node in descriptor["nodes"]:
+        assert node["role"] in {"body", "contact"}
+        assert not any(word in node["nodeID"].lower() for word in ("screw", "mount", "bracket", "fastener", "cleat", "cord", "anchor"))
+    assert descriptor["modelBounds"]["min"] == pytest.approx([-.33, -.05, -.05], abs=1e-6)
+    assert descriptor["modelBounds"]["max"] == pytest.approx([.33, .05, .05], abs=1e-6)
+    with zipfile.ZipFile(POKER_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+    package = load_board_catalog_module().load_board_package(POKER_ROOT)
+    assert package.board.id == "owl-climb.poker"
 
 
 def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:

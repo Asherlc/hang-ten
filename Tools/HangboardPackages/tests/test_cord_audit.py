@@ -36,6 +36,29 @@ NEWLY_MODEL_ONLY_EXCLUSIONS = {
 }
 
 
+def test_poker_exclusion_retains_all_four_approved_manufacturer_faces() -> None:
+    """Catch missing coverage or accidental suspension/hardware promotion."""
+    records = {r.package_id: r for r in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "owl-climb.poker" in records
+    record = records["owl-climb.poker"]
+    assert (record.decision, record.source_fact, record.topology) == ("excluded", "noDocumentedSuspension", None)
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    poker = next(r for r in raw["records"] if r["packageID"] == "owl-climb.poker")
+    assert poker["ruling"] == "noDocumentedSuspension; excluded."
+    assert poker["humanApproval"]["approved"] is True
+    assert {e["snapshotSHA256"] for e in poker["evidence"]} == {
+        "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+        "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+        "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+        "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+    }
+    for evidence in poker["evidence"]:
+        snapshot = REPO_ROOT / evidence["snapshotPath"]
+        assert snapshot.is_file() and not snapshot.is_symlink()
+        assert snapshot.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(snapshot.read_bytes()).hexdigest() == evidence["snapshotSHA256"]
+
+
 def test_helium_cord_audit_retains_exact_front_reverse_evidence() -> None:
     manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
     records = {record.package_id: record for record in manifest.records}
@@ -163,7 +186,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 25, "represented": 12}
+    assert report.decisions == {"excluded": 26, "represented": 12}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

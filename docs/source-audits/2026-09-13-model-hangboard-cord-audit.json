@@ -955,6 +955,53 @@
         "reviewedAt": "2026-09-20",
         "notes": "Reviewed exact approved manufacturer black/white and retained owner front/rear/lateral originals. One canonical physical unit is rendered twice, identical and unreflected. Four generic contact slots map uniquely to eight preserved contacts. Each instance has its own pairedLeadCord and fixed invisible world anchor. Visible leads terminate at two roof exits; lateral windows are non-route attachment geometry. No central bore, concealed connection, inter-unit route, screw/mounting hole or hardware is modeled. Shallow aperture clipping is an authored-display-estimate, not proof of a physical blind cavity. Owner revision/year and CDN provenance caveats remain in the original source register; exact chemistry is unknown and source textures are not used."
       }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "noDocumentedSuspension; excluded.",
+      "evidence": [
+        {
+          "view": "OP-PHOTO-0 exact manufacturer face A",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-a.jpg"
+        },
+        {
+          "view": "OP-PHOTO-1 exact manufacturer face B",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-b.jpg"
+        },
+        {
+          "view": "OP-PHOTO-2 exact manufacturer face C",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-c.jpg"
+        },
+        {
+          "view": "OP-PHOTO-3 exact manufacturer face D",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-d.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed all four exact approved Owl manufacturer originals. One 660 x 100 x 100 mm beam has 34 unchanged same-face contacts, including exactly the two approved Face D deep rounded recess restores. Manufacturer mounting brackets are external hardware and are omitted, along with screws and mounting holes. No evidence establishes board suspension; no cord, anchor, passage or suspension metadata is promoted. Cyclic face order, unsurveyed depth assignments, relief transitions, edge radii, material and camera are authored-display-estimate. The mono/duo sequence is identical at both ends in every source view, not mirrored."
+      }
     }
   ]
 }

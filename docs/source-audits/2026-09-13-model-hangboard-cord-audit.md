@@ -7,9 +7,9 @@ exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 37 discovered model packages after the 2026-09-20 Penta Evo
+The audit covers all 38 discovered model packages after the 2026-09-20 Poker
 promotion. Twelve have documented suspended presentation evidence and render
-transient cord geometry; twenty-five remain
+transient cord geometry; twenty-six remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
 for documented suspended presentation, but it is never described as supplied
@@ -18,11 +18,41 @@ or integral.
 | Decision | Count | Packages |
 |---|---:|---|
 | `represented` | 12 | `yy.penta-evo`, `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
-| `excluded` | 25 | Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
+| `excluded` | 26 | Owl Climb Poker; Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
 ## Evidence review and approval
+
+### Owl Climb Poker model promotion — 2026-09-20
+
+Ruling: **noDocumentedSuspension; excluded.**
+
+All four approved exact manufacturer originals are retained as regular files
+`owl-climb-poker-face-a.jpg` through `owl-climb-poker-face-d.jpg` under the
+snapshot directory. Their URLs and unchanged SHA-256 values are recorded in
+the canonical JSON evidence entries. They establish the four same-face
+inventories (7, 9, 9, 9 contacts); the only delivered-mesh omissions restored
+are `face-d-left-deep-rounded-recess` and
+`face-d-right-deep-rounded-recess`. The supplied black end brackets are
+external mounting hardware, omitted from the display along with all screws,
+mounting holes and fasteners. They do not establish suspension.
+
+Independent manufacturer research on 2026-09-20 corroborates the
+[100 × 100 × 660 mm beam, four usable faces and rounded edges](https://owlclimb.com/index.php/en/prds-2/poker/).
+The conflicting retailer envelope remains excluded. The manufacturer lists
+depth families but does not map individual depths or cyclic order to the
+photographs. All unsurveyed depth assignments, cyclic assembly, cross-face
+transitions, radii, materials and display rotations remain
+`authored-display-estimate`. Neutral face A–D labels follow the approved
+photo sequence, not a claimed manufacturer numbering scheme. The single-
+and dual-finger pocket sequence runs in the same left-to-right order at both
+ends in all four photographs; it must not be mirrored.
+
+The one descriptor-v1 model has no suspension, anchor, attachment, passage,
+cord or hardware nodes. Four model positions rotate that one beam about its
+long axis; each exposes only its same-face canonical contacts. Current-source
+app visual acceptance remains the Batch 04 Task 14 gate.
 
 ### YY Penta Evo reusable-unit promotion — 2026-09-20
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -39,6 +40,7 @@ MODEL_PACKAGE_IDS = {
     "metolius.foundry",
     "metolius.light-rail-2",
     "metolius.rock-rings-3d",
+    "owl-climb.poker",
     "yy.penta-evo",
     "metolius.prime-rib",
     "metolius.project",
@@ -491,6 +493,128 @@ def test_penta_evo_uses_two_identical_unreflected_units_with_exact_slot_maps() -
             if contact.id in expected_position_contacts[position.id]
         )
         assert position.contact_ids == expected_order
+
+
+def test_poker_is_one_model_with_four_source_face_orientations() -> None:
+    """Pin the four-face model contract before Astra replaces the raster package."""
+    package_root = HANGBOARDS_ROOT / "owl-climb-poker"
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 3
+    assert board["id"] == "owl-climb.poker"
+    assert board["equipmentObjects"] == [{"id": "primary"}]
+    assert len(board["contacts"]) == 34
+    contact_ids = [contact["id"] for contact in board["contacts"]]
+    assert len(contact_ids) == len(set(contact_ids))
+    assert {
+        face: [contact_id for contact_id in contact_ids if contact_id.startswith(f"{face}-")]
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    } == {
+        "face-a": [
+            "face-a-left-outer-slot",
+            "face-a-left-single-pocket",
+            "face-a-left-dual-pocket",
+            "face-a-center-pull-up-slot",
+            "face-a-right-dual-pocket",
+            "face-a-right-single-pocket",
+            "face-a-right-outer-slot",
+        ],
+        "face-b": [
+            "face-b-left-outer-slot",
+            "face-b-left-single-pocket",
+            "face-b-left-dual-pocket",
+            "face-b-left-deep-sloper",
+            "face-b-center-pull-up-slot",
+            "face-b-right-deep-sloper",
+            "face-b-right-dual-pocket",
+            "face-b-right-single-pocket",
+            "face-b-right-outer-slot",
+        ],
+        "face-c": [
+            "face-c-left-outer-slot",
+            "face-c-left-single-pocket",
+            "face-c-left-dual-pocket",
+            "face-c-left-shallow-half-round",
+            "face-c-center-pull-up-slot",
+            "face-c-right-shallow-half-round",
+            "face-c-right-dual-pocket",
+            "face-c-right-single-pocket",
+            "face-c-right-outer-slot",
+        ],
+        "face-d": [
+            "face-d-left-outer-slot",
+            "face-d-left-single-pocket",
+            "face-d-left-dual-pocket",
+            "face-d-left-deep-rounded-recess",
+            "face-d-center-pull-up-slot",
+            "face-d-right-deep-rounded-recess",
+            "face-d-right-dual-pocket",
+            "face-d-right-single-pocket",
+            "face-d-right-outer-slot",
+        ],
+    }
+
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["media"]["type"] == "model"
+    assert set(presentation["media"]) == {
+        "type", "assetPath", "descriptorPath", "display", "orientation"
+    }
+    assert presentation["media"]["assetPath"] == "assets/primary.usdz"
+    assert presentation["media"]["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in json.dumps(board)
+    assert not any(
+        token in json.dumps(board).casefold()
+        for token in ("suspension", "screw", "fastener", "bracket", "cleat", "hardware")
+    )
+
+    expected_positions = {
+        face: [contact_id for contact_id in contact_ids if contact_id.startswith(f"{face}-")]
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    }
+    assert board["positions"] == [
+        {"id": face, "presentationID": "primary", "contactIDs": expected_positions[face]}
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    ]
+    orientation = presentation["media"]["orientation"]
+    assert orientation == {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+            "face-a": [0, 0, 0, 1],
+            "face-b": [0.707106781, 0, 0, 0.707106781],
+            "face-c": [1, 0, 0, 0],
+            "face-d": [-0.707106781, 0, 0, 0.707106781],
+        },
+    }
+
+    model_files = {
+        path.relative_to(package_root).as_posix()
+        for path in package_root.rglob("*")
+        if path.is_file()
+    }
+    assert model_files == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor_path = package_root / presentation["media"]["descriptorPath"]
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (package_root / presentation["media"]["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["contacts"]) == set(contact_ids)
+    assert not any(
+        token in json.dumps(descriptor).casefold()
+        for token in ("screw", "fastener", "bracket", "cleat", "hardware")
+    )
+
+    project = (REPOSITORY_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
+        encoding="utf-8"
+    )
+    assert "HangTenModelODR/owl-climb-poker/Hangboards" in project
+    assert 'ASSET_TAGS = ("hang-ten-model-owl-climb-poker", );' in project
 
 
 @pytest.mark.parametrize(

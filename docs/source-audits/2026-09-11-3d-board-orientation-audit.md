@@ -140,6 +140,32 @@ These sources support the physical unit identity, visible exits/windows, and
 contact-depth labeling; the authored placement and cord curves are display
 estimates, not factory metrology.
 
+## Batch-04 Owl Climb Poker promotion contract (2026-09-20)
+
+`owl-climb.poker` is one schema-v3 model presentation for one continuous
+660 × 100 × 100 mm Poker beam. The four usable source-backed faces retain the
+canonical position IDs `face-a`, `face-b`, `face-c`, and `face-d`; each position
+selects only its same-face contacts (7, 9, 9, and 9 respectively). Face D
+contains exactly the two approved restored contacts
+`face-d-left-deep-rounded-recess` and `face-d-right-deep-rounded-recess`.
+No contact is collapsed across faces.
+
+The descriptor-v1 model orientation uses `modelBoundsCenter` and rotates about
+the long model X axis in the source-photo cycle: `face-a` identity
+`[0, 0, 0, 1]`, `face-b` +90° `[0.707106781, 0, 0, 0.707106781]`, `face-c`
+180° `[1, 0, 0, 0]`, and `face-d` −90° `[-0.707106781, 0, 0,
+0.707106781]`. These quaternions are authored display estimates used to keep
+each retained manufacturer face upright; they are not manufacturer metrology.
+
+The model package is model-only: it has one `primary.usdz`, one hash-bound
+`primary.model.json`, no raster/contactGeometry/fallback state, no suspension,
+and no brackets, screws, mounting holes, fasteners, cleats, or other hardware.
+The approved source set is the Owl Climb manufacturer page and its four exact
+retained manufacturer photographs recorded in the [Batch-04 source
+register](2026-09-20-batch-04-3d-source-register.json). The delivered GLB is
+retained evidence only; the two Face D recesses are the only approved manual
+restoration.
+
 ## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for

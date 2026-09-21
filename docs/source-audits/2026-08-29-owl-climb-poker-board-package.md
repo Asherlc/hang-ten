@@ -58,3 +58,62 @@ and `rtk scripts/hangboard-packages.sh status --root Hangboards` pass with no
 drafts after the correction. App-rendered screenshots and interaction alignment
 will only be represented in the PR if the focused simulator test completes for
 this corrected asset/geometry revision.
+
+## Model-only supersession — Batch 04, 2026-09-20/21
+
+The raster/art paragraphs above describe the historical package. The approved
+Batch 04 migration replaces all four PNG presentations and contact paths with
+one physical beam in `assets/primary.usdz` and a hash-bound descriptor-v1
+`assets/primary.model.json`. It preserves all 34 existing contact records and
+the photo-0/A, photo-1/B, photo-2/C, photo-3/D mapping. Exactly the two delivered
+GLB omissions, `face-d-left-deep-rounded-recess` and
+`face-d-right-deep-rounded-recess`, are restored. The delivered partial GLB
+SHA-256 remains
+`7e56200618987e5c35efbc9902aa214414fa999e6b529e6baf627075aa381e12`;
+it is retained evidence, not an exported production mesh.
+
+Astra directly authored the rounded 660 × 100 × 100 mm beam, its seven
+recesses on each face, the B sloper pair, the C shallow rounded pair and the D
+deep rounded pair against all four retained manufacturer originals. Analytic
+recess cutters produce continuous inward relief and shared corners, not
+separate patches floating above a box. C/D uses one deliberately drawn,
+tangent-continuous section: the shallow C relief owns its visible upper
+surface, and the deeper D relief remains separately selectable. A smooth
+rounded return joins them; its unsurveyed profile is a display estimate.
+No photo pixels or delivered model coordinates were read
+by the authoring script. No tracing, registration, segmentation, contouring,
+image-derived geometry or automated shape proposal was used.
+
+The earlier general phrase "bilateral symmetry" does not apply to the
+mono/duo pocket order: all four originals show mono then duo from left to right
+at both ends. The production model deliberately preserves that asymmetry.
+The source's 100 mm half-circle size remains the existing contact fact;
+no new measured per-face depths are asserted. Manufacturer-listed depth
+families lack a photo map. Cyclic order, assigned display recess depths,
+corner transitions, bevels, material and cameras are
+`authored-display-estimate`. The manufacturer envelope wins the unresolved
+retailer bracket/packaging-envelope conflict.
+
+Four positions `face-a`, `face-b`, `face-c`, `face-d` rotate the beam around
+model X by 0°, +90°, 180°, -90°. Each exposes only its same-face 7/9/9/9
+canonical contacts. These display rotations preserve each source photograph's
+upright layout without claiming a published factory cyclic order. External
+black brackets, all screws, mounting holes and hardware are intentionally
+omitted. The model has no suspension, anchor or cord metadata; the canonical
+cord-audit ruling is `noDocumentedSuspension; excluded.`
+
+The reimported export is one closed component with 25,540 triangles, Euler
+characteristic 2, zero degenerate triangles and zero normal/winding
+disagreements. Every edge has incidence two; there are no through-holes. All
+34 contacts have independent descriptor bindings. Normal views of all four
+positions, corresponding obliques, ends/top/bottom and all 34 individual
+highlights are retained under `.context/learned-giraffe-task12-evidence` for
+fresh Astra review. Current-source native app acceptance remains Task 14.
+
+The first export's C/D overlap was rejected: Face C upper rays incorrectly
+hit D and the shared central edge had a 44.904° geometric-normal ridge.
+The actual-USDZ regression in `Tools/HangboardModels/verify_owl_climb_poker.py`
+now checks both sides' C/D ownership, non-flush C relief, retained D recess
+depth and the shared geometric seam. The corrected export has a 3.827°
+tessellation step at the tangent-continuous join, below the 5° guard. Probe
+coordinates and tolerance are authored display checks, not source metrology.

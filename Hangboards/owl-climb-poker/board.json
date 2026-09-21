@@ -5,7 +5,7 @@
   "name": "Poker",
   "subtitle": "Four-face rotating wood hangboard.",
   "productURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
-  "dimensions": "660 \u00d7 100 \u00d7 100 mm",
+  "dimensions": "660 × 100 × 100 mm",
   "aspectRatio": 6.6,
   "equipmentObjects": [
     {
@@ -14,772 +14,61 @@
   ],
   "presentations": [
     {
-      "id": "face-a",
-      "name": "Face A \u2014 flat center",
+      "id": "primary",
+      "name": "Four faces",
       "aspectRatio": 6.6,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/face-a.png",
-        "contactGeometry": {
-          "face-a-left-outer-slot": [
-            {
-              "frame": {
-                "x": 0.077,
-                "y": 0.266,
-                "width": 0.135,
-                "height": 0.248
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-left-single-pocket": [
-            {
-              "frame": {
-                "x": 0.079,
-                "y": 0.615,
-                "width": 0.034,
-                "height": 0.203
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-left-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.142,
-                "y": 0.617,
-                "width": 0.068,
-                "height": 0.196
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-center-pull-up-slot": [
-            {
-              "frame": {
-                "x": 0.43,
-                "y": 0.662,
-                "width": 0.14,
-                "height": 0.234
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-right-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.79,
-                "y": 0.617,
-                "width": 0.068,
-                "height": 0.196
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-right-single-pocket": [
-            {
-              "frame": {
-                "x": 0.887,
-                "y": 0.615,
-                "width": 0.034,
-                "height": 0.203
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-a-right-outer-slot": [
-            {
-              "frame": {
-                "x": 0.788,
-                "y": 0.266,
-                "width": 0.135,
-                "height": 0.248
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "face-b",
-      "name": "Face B \u2014 deep slopers",
-      "aspectRatio": 6.6,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/face-b.png",
-        "contactGeometry": {
-          "face-b-left-outer-slot": [
-            {
-              "frame": {
-                "x": 0.074,
-                "y": 0.283,
-                "width": 0.137,
-                "height": 0.243
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-left-single-pocket": [
-            {
-              "frame": {
-                "x": 0.078,
-                "y": 0.627,
-                "width": 0.034,
-                "height": 0.198
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-left-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.136,
-                "y": 0.628,
-                "width": 0.069,
-                "height": 0.193
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-left-deep-sloper": [
-            {
-              "frame": {
-                "x": 0.224,
-                "y": 0.225,
-                "width": 0.188,
-                "height": 0.725
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1,
-                      1
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.12,
-                      1
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.02,
-                      0.81
-                    ],
-                    "control2": [
-                      0,
-                      0.49
-                    ],
-                    "to": [
-                      0,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              }
-            }
-          ],
-          "face-b-center-pull-up-slot": [
-            {
-              "frame": {
-                "x": 0.434,
-                "y": 0.656,
-                "width": 0.132,
-                "height": 0.229
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-right-deep-sloper": [
-            {
-              "frame": {
-                "x": 0.588,
-                "y": 0.225,
-                "width": 0.188,
-                "height": 0.725
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1,
-                      0.49
-                    ],
-                    "control2": [
-                      0.98,
-                      0.81
-                    ],
-                    "to": [
-                      0.88,
-                      1
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0,
-                      1
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0,
-                      0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              }
-            }
-          ],
-          "face-b-right-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.795,
-                "y": 0.628,
-                "width": 0.069,
-                "height": 0.193
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-right-single-pocket": [
-            {
-              "frame": {
-                "x": 0.888,
-                "y": 0.627,
-                "width": 0.034,
-                "height": 0.198
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-b-right-outer-slot": [
-            {
-              "frame": {
-                "x": 0.789,
-                "y": 0.283,
-                "width": 0.137,
-                "height": 0.243
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "face-c",
-      "name": "Face C \u2014 shallow half-rounds",
-      "aspectRatio": 6.6,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/face-c.png",
-        "contactGeometry": {
-          "face-c-left-outer-slot": [
-            {
-              "frame": {
-                "x": 0.074,
-                "y": 0.28,
-                "width": 0.137,
-                "height": 0.244
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-left-single-pocket": [
-            {
-              "frame": {
-                "x": 0.078,
-                "y": 0.628,
-                "width": 0.034,
-                "height": 0.198
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-left-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.137,
-                "y": 0.628,
-                "width": 0.069,
-                "height": 0.193
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-left-shallow-half-round": [
-            {
-              "frame": {
-                "x": 0.223,
-                "y": 0.298,
-                "width": 0.186,
-                "height": 0.383
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "face-c-center-pull-up-slot": [
-            {
-              "frame": {
-                "x": 0.432,
-                "y": 0.659,
-                "width": 0.136,
-                "height": 0.23
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-right-shallow-half-round": [
-            {
-              "frame": {
-                "x": 0.591,
-                "y": 0.298,
-                "width": 0.186,
-                "height": 0.383
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "face-c-right-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.794,
-                "y": 0.628,
-                "width": 0.069,
-                "height": 0.193
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-right-single-pocket": [
-            {
-              "frame": {
-                "x": 0.888,
-                "y": 0.628,
-                "width": 0.034,
-                "height": 0.198
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-c-right-outer-slot": [
-            {
-              "frame": {
-                "x": 0.789,
-                "y": 0.28,
-                "width": 0.137,
-                "height": 0.244
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "id": "face-d",
-      "name": "Face D \u2014 deep rounded recesses",
-      "aspectRatio": 6.6,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/face-d.png",
-        "contactGeometry": {
-          "face-d-left-outer-slot": [
-            {
-              "frame": {
-                "x": 0.073,
-                "y": 0.275,
-                "width": 0.138,
-                "height": 0.247
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-left-single-pocket": [
-            {
-              "frame": {
-                "x": 0.078,
-                "y": 0.618,
-                "width": 0.034,
-                "height": 0.205
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-left-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.136,
-                "y": 0.62,
-                "width": 0.069,
-                "height": 0.197
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-left-deep-rounded-recess": [
-            {
-              "frame": {
-                "x": 0.218,
-                "y": 0.19,
-                "width": 0.194,
-                "height": 0.81
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "face-d-center-pull-up-slot": [
-            {
-              "frame": {
-                "x": 0.432,
-                "y": 0.651,
-                "width": 0.136,
-                "height": 0.233
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-right-deep-rounded-recess": [
-            {
-              "frame": {
-                "x": 0.588,
-                "y": 0.19,
-                "width": 0.194,
-                "height": 0.81
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "face-d-right-dual-pocket": [
-            {
-              "frame": {
-                "x": 0.795,
-                "y": 0.62,
-                "width": 0.069,
-                "height": 0.197
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-right-single-pocket": [
-            {
-              "frame": {
-                "x": 0.888,
-                "y": 0.618,
-                "width": 0.034,
-                "height": 0.205
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "face-d-right-outer-slot": [
-            {
-              "frame": {
-                "x": 0.789,
-                "y": 0.275,
-                "width": 0.138,
-                "height": 0.247
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.5
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 0
-              }
-            }
-          ]
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.1
+          }
+        },
+        "orientation": {
+          "pivot": "modelBoundsCenter",
+          "rotations": {
+            "face-a": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "face-b": [
+              0.707106781,
+              0,
+              0,
+              0.707106781
+            ],
+            "face-c": [
+              1,
+              0,
+              0,
+              0
+            ],
+            "face-d": [
+              -0.707106781,
+              0,
+              0,
+              0.707106781
+            ]
+          }
         }
       }
     }
@@ -1051,6 +340,66 @@
       "name": "Face D right outer slot",
       "kind": "edge",
       "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "face-a",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-a-left-outer-slot",
+        "face-a-left-single-pocket",
+        "face-a-left-dual-pocket",
+        "face-a-center-pull-up-slot",
+        "face-a-right-dual-pocket",
+        "face-a-right-single-pocket",
+        "face-a-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-b",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-b-left-outer-slot",
+        "face-b-left-single-pocket",
+        "face-b-left-dual-pocket",
+        "face-b-left-deep-sloper",
+        "face-b-center-pull-up-slot",
+        "face-b-right-deep-sloper",
+        "face-b-right-dual-pocket",
+        "face-b-right-single-pocket",
+        "face-b-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-c",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-c-left-outer-slot",
+        "face-c-left-single-pocket",
+        "face-c-left-dual-pocket",
+        "face-c-left-shallow-half-round",
+        "face-c-center-pull-up-slot",
+        "face-c-right-shallow-half-round",
+        "face-c-right-dual-pocket",
+        "face-c-right-single-pocket",
+        "face-c-right-outer-slot"
+      ]
+    },
+    {
+      "id": "face-d",
+      "presentationID": "primary",
+      "contactIDs": [
+        "face-d-left-outer-slot",
+        "face-d-left-single-pocket",
+        "face-d-left-dual-pocket",
+        "face-d-left-deep-rounded-recess",
+        "face-d-center-pull-up-slot",
+        "face-d-right-deep-rounded-recess",
+        "face-d-right-dual-pocket",
+        "face-d-right-single-pocket",
+        "face-d-right-outer-slot"
+      ]
     }
   ]
 }
