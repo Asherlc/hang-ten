@@ -453,26 +453,71 @@ def _snapshot_scene(
 
 
 def _require_image_materials(mesh: object, node_id: str) -> None:
-    materials = getattr(mesh, "materials", ())
-    polygons = getattr(mesh, "polygons", ())
+    materials = getattr(mesh, "materials", ()) or ()
+    polygons = getattr(mesh, "polygons", ()) or ()
     used_indexes = {polygon.material_index for polygon in polygons}
     if not used_indexes:
         raise ValueError(f"imported mesh {node_id} has no material-bearing faces")
     for index in used_indexes:
-        if index >= len(materials) or materials[index] is None:
+        if not isinstance(index, int) or index < 0 or index >= len(materials) or materials[index] is None:
             raise ValueError(f"imported mesh {node_id} is materialless")
         material = materials[index]
-        nodes = getattr(getattr(material, "node_tree", None), "nodes", ())
+        nodes = getattr(getattr(material, "node_tree", None), "nodes", ()) or ()
         image_nodes = [
             node for node in nodes if getattr(node, "type", None) == "TEX_IMAGE"
         ]
-        if not image_nodes:
-            raise ValueError(f"imported mesh {node_id} has no image material")
-        if not any(
-            _image_has_usable_data(getattr(node, "image", None))
-            for node in image_nodes
+        if image_nodes:
+            if not any(
+                _image_has_usable_data(getattr(node, "image", None))
+                for node in image_nodes
+            ):
+                raise ValueError(f"imported mesh {node_id} has no usable image data")
+            continue
+        if not _has_usable_constant_principled_material(nodes):
+            raise ValueError(f"imported mesh {node_id} has no usable constant PBR material")
+
+
+def _has_usable_constant_principled_material(nodes: object) -> bool:
+    """Accept only importer-visible, unlinked finite Principled Preview Surface values."""
+    for node in nodes:
+        if getattr(node, "type", None) != "BSDF_PRINCIPLED":
+            continue
+        sockets = [_node_input(node, name) for name in ("Base Color", "Roughness", "Metallic", "Alpha")]
+        if any(socket is None or bool(getattr(socket, "is_linked", False)) for socket in sockets):
+            continue
+        base_color = _finite_pbr_values(getattr(sockets[0], "default_value", None), 4)
+        roughness = _finite_pbr_values(getattr(sockets[1], "default_value", None), 1)
+        metallic = _finite_pbr_values(getattr(sockets[2], "default_value", None), 1)
+        alpha = _finite_pbr_values(getattr(sockets[3], "default_value", None), 1)
+        if None in (base_color, roughness, metallic, alpha):
+            continue
+        assert base_color is not None
+        assert roughness is not None
+        assert metallic is not None
+        assert alpha is not None
+        if (
+            all(0.0 <= value <= 1.0 for value in (*base_color, *roughness, *metallic, *alpha))
+            and base_color[3] > 0.0
+            and alpha[0] > 0.0
         ):
-            raise ValueError(f"imported mesh {node_id} has no usable image data")
+            return True
+    return False
+
+
+def _node_input(node: object, name: str) -> object | None:
+    inputs = getattr(node, "inputs", None)
+    getter = getattr(inputs, "get", None)
+    return getter(name) if callable(getter) else None
+
+
+def _finite_pbr_values(value: object, length: int) -> tuple[float, ...] | None:
+    try:
+        values = (float(value),) if length == 1 else tuple(float(item) for item in value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+    if len(values) != length or not all(math.isfinite(item) for item in values):
+        return None
+    return values
 
 
 def _image_has_usable_data(image: object | None) -> bool:
