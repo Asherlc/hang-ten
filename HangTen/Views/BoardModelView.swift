@@ -553,6 +553,13 @@ final class BoardModelInstanceScene {
     var contactNodes: [String: [SCNNode]] = [:]
     var sourceSlotNodes: [String: [SCNNode]] = [:]
     var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
+    var transientCordNodes: [SCNNode] = []
+    var verifiedPresentations: [String: BoardModelSolvedSuspension] = [:]
+    var highlightedContactIDs: Set<String> = []
+    fileprivate var highlightMode: BoardHighlightMode?
+    fileprivate var geometryByNodeID: [String: SCNNode] = [:]
+    fileprivate var contactIDsByNode: [ObjectIdentifier: String] = [:]
+    fileprivate var cordNodesByPosition: [String: SCNNode] = [:]
 
     init(instance: BoardModelInstance, container: SCNNode) {
         self.instance = instance
@@ -780,11 +787,12 @@ final class BoardModelScene {
                 let unit = BoardModelInstanceScene(instance: instance, container: prepared.root)
                 unit.sourceSlotNodes = prepared.contactNodes
                 unit.originalMaterials = prepared.originalMaterials
+                unit.geometryByNodeID = prepared.geometryByNodeID
                 for (slot, nodes) in prepared.contactNodes {
                     guard let contactID = instance.contactIDsBySlotID[slot] else { return nil }
                     unit.contactNodes[contactID, default: []].append(contentsOf: nodes)
                     boundContacts[contactID, default: []].append(contentsOf: nodes)
-                    for node in nodes { boundIDs[ObjectIdentifier(node)] = contactID }
+                    for node in nodes { unit.contactIDsByNode[ObjectIdentifier(node)] = contactID }
                 }
                 if instance.baseTransform.reflection == .x {
                     for node in prepared.geometryNodes {
@@ -815,7 +823,7 @@ final class BoardModelScene {
         self.allowedPositionIDs = allowedPositionIDs
             ?? suspension.map { Set($0.canonicalPoses.keys) }
             ?? orientation.map { Set($0.rotations.keys) }
-            ?? instances.map { Set($0.flatMap { $0.positionTransforms.map { Array($0.keys) } ?? [] }) }
+            ?? instances.map { Set($0.flatMap { $0.positionTransforms.map { Array($0.keys) } ?? $0.suspension.map { Array($0.canonicalPoses.keys) } ?? [] }) }
             ?? []
         self.resourceLease = resourceLease
 
@@ -823,7 +831,7 @@ final class BoardModelScene {
         instanceScenes = preparedInstances
         contactNodes = boundContacts
         contactIDsByNode = boundIDs
-        originalMaterials = preparedModels.reduce(into: [:]) { $0.merge($1.originalMaterials) { first, _ in first } }
+        originalMaterials = instances == nil ? first.originalMaterials : [:]
         let bounds = instances == nil ? descriptor.modelBounds : Self.reusableBounds(
             descriptor.modelBounds, transforms: preparedInstances.compactMap {
                 try? Self.reusableMatrix(instance: $0.instance,
@@ -865,7 +873,16 @@ final class BoardModelScene {
         includingReflection: Bool = false
     ) throws -> simd_float4x4 {
         let base = instance.baseTransform
-        let position = positionID.flatMap { instance.positionTransforms?[$0] }
+        let position: BoardModelTransform?
+        if let positionID, let suspension = instance.suspension {
+            guard instance.positionTransforms == nil,
+                  let pose = suspension.canonicalPoses[positionID], pose.rotation.count == 4 else {
+                throw ReusableTransformError.invalidTransform
+            }
+            position = BoardModelTransform(translation: pose.translation, rotation: SIMD4(pose.rotation), reflection: nil)
+        } else {
+            position = positionID.flatMap { instance.positionTransforms?[$0] }
+        }
         guard base.translation.count == 3,
               let baseRotation = quaternion(from: base.rotation),
               position.map({ $0.translation.count == 3 && $0.reflection == nil }) ?? true,
@@ -913,6 +930,10 @@ final class BoardModelScene {
 
     private func selectReusable(positionID: String) -> Bool {
         do {
+            let solutions = try instanceScenes.map { unit -> BoardModelSolvedSuspension? in
+                guard unit.instance.suspension != nil else { return nil }
+                return try solveInstanceSuspension(instance: unit, positionID: positionID)
+            }
             let transforms = try instanceScenes.map { unit in
                 if let positions = unit.instance.positionTransforms, positions[positionID] == nil {
                     throw ReusableTransformError.invalidTransform
@@ -924,17 +945,48 @@ final class BoardModelScene {
                 try Self.reusableMatrix(instance: $0.instance,
                     center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID, includingReflection: true)
             }
-            guard let framing = Self.framing(bounds: Self.reusableBounds(descriptor.modelBounds, transforms: boundTransforms), display: display) else {
+            let boardBounds = Self.reusableBounds(descriptor.modelBounds, transforms: boundTransforms)
+            let cordPoints = solutions.compactMap { $0 }.flatMap { solved in
+                let radius: Float
+                switch solved {
+                case .single(let value): radius = value.tubeRadius
+                case .pairedLead(let value): radius = value.tubeRadius
+                case .twoBranch(let value): radius = value.tubeRadius
+                }
+                return solved.cameraFraming.includedPoints.flatMap { [$0 - SIMD3(repeating: radius), $0 + SIMD3(repeating: radius)] }
+            }
+            let points = Self.boundsCorners(boardBounds) + cordPoints
+            let bounds = BoardModelBounds(
+                minimum: (0..<3).map { axis in Double(points.map { $0[axis] }.min()!) },
+                maximum: (0..<3).map { axis in Double(points.map { $0[axis] }.max()!) })
+            guard let framing = Self.framing(bounds: bounds, display: display) else {
                 throw ReusableTransformError.invalidTransform
             }
             let fixedFraming = Self.fixedFraming(from: framing)
             guard let cameraState = preparedCanonicalCameraState(for: fixedFraming) else {
                 throw ReusableTransformError.invalidTransform
             }
-            for (unit, transform) in zip(instanceScenes, transforms) {
+            let cords = zip(instanceScenes, solutions).map { unit, solved -> SCNNode? in
+                guard let solved else { return nil }
+                if let cached = unit.cordNodesByPosition[positionID] { return cached }
+                let cord = makeCordNode(for: solved)
+                unit.cordNodesByPosition[positionID] = cord
+                return cord
+            }
+            SCNTransaction.begin()
+            SCNTransaction.disableActions = true
+            for (index, unit) in instanceScenes.enumerated() {
+                let transform = transforms[index]
                 unit.container.simdTransform = transform * unit.sourceTransform
+                unit.transientCordNodes.forEach { $0.removeFromParentNode() }
+                unit.transientCordNodes = cords[index].map { [$0] } ?? []
+                unit.transientCordNodes.forEach { scene.rootNode.addChildNode($0) }
             }
             applyPreparedCameraState(cameraState)
+            SCNTransaction.commit()
+            orbitAzimuth = 0
+            orbitElevation = 0
+            orbitZoom = 1
             canonicalFraming = fixedFraming
             currentFraming = fixedFraming
             activePositionID = positionID
@@ -944,6 +996,32 @@ final class BoardModelScene {
             enterUnavailable()
             return false
         }
+    }
+
+    func solveInstanceSuspension(
+        instance: BoardModelInstanceScene, positionID: String
+    ) throws -> BoardModelSolvedSuspension {
+        guard instanceScenes.contains(where: { $0 === instance }),
+              let suspension = instance.instance.suspension,
+              let pose = suspension.canonicalPoses[positionID],
+              hasDeclaredAttachmentBindings(for: suspension, geometry: instance.geometryByNodeID) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        if let cached = instance.verifiedPresentations[positionID] { return cached }
+        let transform = try Self.reusableMatrix(instance: instance.instance,
+            center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID, includingReflection: true)
+        let solved = try SuspendedBoardPresentation.solveInstance(pose: pose, suspension: suspension,
+            bounds: descriptor.modelBounds, transform: transform)
+        // Reflection is baked into cloned meshes, so remove F from the node
+        // transform while retaining it in solved attachment and passage points.
+        let reflection = instance.instance.baseTransform.reflection == .x
+            ? Self.sourceReflection(center: Self.boundsCenter(descriptor.modelBounds)) : matrix_identity_float4x4
+        guard hasClearance(for: solved, suspension: suspension, geometryByNodeID: instance.geometryByNodeID,
+            boardContainer: instance.container, containerTransform: solved.boardTransform * reflection * instance.sourceTransform) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        instance.verifiedPresentations[positionID] = solved
+        return solved
     }
 
     private static func triangleIndices(_ element: SCNGeometryElement) -> [UInt32]? {
@@ -1115,6 +1193,9 @@ final class BoardModelScene {
     func contactID(for node: SCNNode) -> String? {
         var candidate: SCNNode? = node
         while let current = candidate {
+            for unit in instanceScenes {
+                if let contactID = unit.contactIDsByNode[ObjectIdentifier(current)] { return contactID }
+            }
             if let contactID = contactIDsByNode[ObjectIdentifier(current)] { return contactID }
             candidate = current.parent
         }
@@ -1127,6 +1208,7 @@ final class BoardModelScene {
         // applyHighlights call always repaints materials for the posed nodes.
         lastHighlights = []
         lastMode = nil
+        instanceScenes.forEach { $0.highlightMode = nil }
         guard let positionID, allowedPositionIDs.contains(positionID) else {
             enterUnavailable()
             return false
@@ -1207,7 +1289,8 @@ final class BoardModelScene {
         }
     }
 
-    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension) -> Bool {
+    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension, geometry: [String: SCNNode]? = nil) -> Bool {
+        let geometryByNodeID = geometry ?? self.geometryByNodeID
         let nodeIDs: [String]
         switch suspension {
         case .singleCord(let single):
@@ -1316,6 +1399,10 @@ final class BoardModelScene {
     }
 
     private func enterUnavailable() {
+        for unit in instanceScenes {
+            unit.transientCordNodes.forEach { $0.removeFromParentNode() }
+            unit.transientCordNodes = []
+        }
         transientCordNode?.removeFromParentNode()
         transientCordNode = nil
         isTransientCordAccessible = false
@@ -1548,7 +1635,12 @@ final class BoardModelScene {
         return root
     }
 
-    private func hasClearance(for solved: BoardModelSolvedSuspension) -> Bool {
+    private func hasClearance(for solved: BoardModelSolvedSuspension,
+        suspension: BoardModelSuspension? = nil, geometryByNodeID: [String: SCNNode]? = nil,
+        boardContainer: SCNNode? = nil, containerTransform: simd_float4x4? = nil) -> Bool {
+        let suspension = suspension ?? self.suspension
+        let geometryByNodeID = geometryByNodeID ?? self.geometryByNodeID
+        let boardContainer = boardContainer ?? self.boardContainer
         struct IntentionalContact {
             let pathIndex: Int
             let segmentIndex: Int
@@ -1645,7 +1737,7 @@ final class BoardModelScene {
         let previousTransform = boardContainer.simdTransform
         SCNTransaction.begin()
         SCNTransaction.disableActions = true
-        boardContainer.simdTransform = solved.boardTransform
+        boardContainer.simdTransform = containerTransform ?? solved.boardTransform
         defer {
             boardContainer.simdTransform = previousTransform
             SCNTransaction.commit()
@@ -2017,8 +2109,25 @@ final class BoardModelScene {
     }
 
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
+        if !instanceScenes.isEmpty {
+            for unit in instanceScenes {
+                let validIDs = contactIDs.intersection(Set(unit.contactNodes.keys))
+                guard validIDs != unit.highlightedContactIDs || mode != unit.highlightMode else { continue }
+                Self.applyHighlights(validIDs, mode: mode, contactNodes: unit.contactNodes, originalMaterials: unit.originalMaterials)
+                unit.highlightedContactIDs = validIDs
+                unit.highlightMode = mode
+            }
+            return
+        }
         let validIDs = contactIDs.intersection(Set(contactNodes.keys))
         guard validIDs != lastHighlights || mode != lastMode else { return }
+        Self.applyHighlights(validIDs, mode: mode, contactNodes: contactNodes, originalMaterials: originalMaterials)
+        lastHighlights = validIDs
+        lastMode = mode
+    }
+
+    private static func applyHighlights(_ validIDs: Set<String>, mode: BoardHighlightMode,
+        contactNodes: [String: [SCNNode]], originalMaterials: [ObjectIdentifier: [SCNMaterial]]) {
         let color = UIColor(mode == .active ? Color.holdActive : Color.restBlue)
         for (id, nodes) in contactNodes {
             for node in nodes {
@@ -2037,8 +2146,6 @@ final class BoardModelScene {
                 }
             }
         }
-        lastHighlights = validIDs
-        lastMode = mode
     }
 
     private static func nodeID(for node: SCNNode, beneath root: SCNNode) -> String? {

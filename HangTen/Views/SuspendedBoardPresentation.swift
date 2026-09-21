@@ -35,6 +35,46 @@ struct SuspendedPairedLeadSolvedPresentation {
 
 
 enum SuspendedBoardPresentation {
+    /// The caller supplies F -> B -> W. Anchors remain authored world points;
+    /// solving after placement preserves world gravity even for rotated units.
+    static func solveInstance(
+        pose: BoardModelCanonicalPose,
+        suspension: BoardModelSuspension,
+        bounds: BoardModelBounds,
+        transform: simd_float4x4
+    ) throws -> BoardModelSolvedSuspension {
+        guard (0..<4).allSatisfy({ transform[$0].allFinite }) else {
+            throw SuspendedPresentationError.invalidPose
+        }
+        switch suspension {
+        case .pairedLeadCord(let profile):
+            return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
+        case .twoBranchCord(let profile):
+            return .twoBranch(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
+        case .singleCord(let profile):
+            guard profile.attachment.pointInModel.count == 3,
+                  profile.attachment.pointInModel.allSatisfy(\.isFinite) else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            let (minimum, maximum) = try validatedBounds(bounds)
+            let corners = transformedBoundsCorners(minimum: minimum, maximum: maximum, transform: transform)
+            let worldBounds = BoardModelBounds(
+                minimum: (0..<3).map { axis in Double(corners.map { $0[axis] }.min()!) },
+                maximum: (0..<3).map { axis in Double(corners.map { $0[axis] }.max()!) })
+            let point = transformPoint(transform, SIMD3(profile.attachment.pointInModel.map(Float.init)))
+            let placed = BoardModelSingleCordSuspension(
+                attachment: .init(nodeID: profile.attachment.nodeID, pointInModel: [Double(point.x), Double(point.y), Double(point.z)], provenance: profile.attachment.provenance),
+                anchor: profile.anchor, cord: profile.cord, canonicalPoses: profile.canonicalPoses)
+            let identityPose = BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: pose.camera)
+            let solved = try SuspensionProfileSolver.solveSingle(pose: identityPose, profile: placed, bounds: worldBounds)
+            let framing = try makeCameraFraming(pose: pose, transform: transform,
+                points: corners + [solved.fixedAnchor, point] + solved.cord.samples)
+            return .single(SolvedSuspension(boardTransform: transform, fixedAnchor: solved.fixedAnchor,
+                transformedAttachment: point, cord: solved.cord, cameraFraming: framing,
+                tubeRadius: solved.tubeRadius, requiredClearance: solved.requiredClearance))
+        }
+    }
+
     private static func validateContactOverrides(_ routes: [String: [[Double]]]?, ids: Set<String>) throws {
         guard let routes else { return }
         guard Set(routes.keys) == ids,
@@ -83,9 +123,10 @@ enum SuspendedBoardPresentation {
     static func solve(
         pose: BoardModelCanonicalPose,
         suspension: BoardModelPairedLeadCord,
-        bounds: BoardModelBounds
+        bounds: BoardModelBounds,
+        modelTransform: simd_float4x4? = nil
     ) throws -> SuspendedPairedLeadSolvedPresentation {
-        let transform = try boardTransform(for: pose)
+        let transform = try modelTransform ?? boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
         try validateContactOverrides(pose.cordContactPoints, ids: Set(suspension.attachments.map(\.id)))
         if let points = pose.attachmentPoints {
@@ -300,9 +341,10 @@ enum SuspendedBoardPresentation {
      static func solve(
         pose: BoardModelCanonicalPose,
         suspension: BoardModelTwoBranchSuspension,
-        bounds: BoardModelBounds
+        bounds: BoardModelBounds,
+        modelTransform: simd_float4x4? = nil
     ) throws -> SuspendedTwoBranchSolvedPresentation {
-        let transform = try boardTransform(for: pose)
+        let transform = try modelTransform ?? boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
 
         guard suspension.branches.count == 2,

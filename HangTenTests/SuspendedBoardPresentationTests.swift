@@ -5,6 +5,31 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
+    func testInstanceSuspensionSolvesInWorldSpaceWithFixedAnchor() throws {
+        var transform = matrix_identity_float4x4
+        transform.columns.0.x = -1
+        transform.columns.3 = SIMD4(3, 0, 0, 1)
+        let paired = pairedLeadSuspension(anchor: [3, 3, 0], restLength: 3)
+        guard case .pairedLead(let solved) = try SuspendedBoardPresentation.solveInstance(
+            pose: pose(), suspension: .pairedLeadCord(paired), bounds: bounds, transform: transform) else {
+            return XCTFail("Expected paired leads")
+        }
+        XCTAssertEqual(solved.fixedAnchor, SIMD3(3, 3, 0))
+        XCTAssertEqual(try XCTUnwrap(solved.leads[0].samples.last), SIMD3(3.6, 0.4, 0.05))
+        XCTAssertEqual(try XCTUnwrap(solved.leads[1].samples.last), SIMD3(2.4, 0.4, -0.05))
+        XCTAssertTrue(solved.cameraFraming.includedPoints.allSatisfy { solved.cameraFraming.contains($0) })
+        guard case .single(let single) = try SuspendedBoardPresentation.solveInstance(
+            pose: pose(), suspension: suspension(attachment: [0.6, 0.4, 0], anchor: [3, 3, 0], restLength: 3),
+            bounds: bounds, transform: transform) else {
+            return XCTFail("Expected single cord")
+        }
+        XCTAssertEqual(single.transformedAttachment, SIMD3(2.4, 0.4, 0))
+        XCTAssertEqual(single.fixedAnchor, SIMD3(3, 3, 0))
+        transform.columns.3.x = .infinity
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solveInstance(
+            pose: pose(), suspension: .pairedLeadCord(paired), bounds: bounds, transform: transform))
+    }
+
     private let bounds = BoardModelBounds(
         minimum: [-1, -0.5, -0.2],
         maximum: [1, 0.5, 0.2]

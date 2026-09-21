@@ -9,6 +9,91 @@ import XCTest
 final class BoardModelTests: XCTestCase {
     private var reusableSourceGeometry: SCNGeometry?
 
+    func testReusableInstancesIsolateHighlightAndSuspensionState() throws {
+        let scene = try makeReusableScene(reflection: nil, suspensions: twoIndependentPairedLeadSuspensions())
+        scene.highlight(Set(["edge-left"]), mode: .active)
+        XCTAssertEqual(scene.instanceScenes[0].highlightedContactIDs, ["edge-left"])
+        XCTAssertTrue(scene.instanceScenes[1].highlightedContactIDs.isEmpty)
+        let rightMaterial = try XCTUnwrap(scene.contactNodes["edge-right"]?.first?.geometry?.firstMaterial)
+        XCTAssertEqual(rightMaterial.diffuse.contents as? UIColor, .brown)
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        XCTAssertEqual(scene.instanceScenes[0].transientCordNodes.count, 1)
+        XCTAssertEqual(scene.instanceScenes[1].transientCordNodes.count, 1)
+        let leftCord = try XCTUnwrap(scene.instanceScenes[0].transientCordNodes.first)
+        let rightCord = try XCTUnwrap(scene.instanceScenes[1].transientCordNodes.first)
+        XCTAssertFalse(leftCord === rightCord)
+        for unit in scene.instanceScenes {
+            XCTAssertEqual(Set(unit.verifiedPresentations.keys), ["primary"])
+        }
+        scene.highlight(["edge-right"], mode: .preview)
+        XCTAssertTrue(scene.instanceScenes[0].highlightedContactIDs.isEmpty)
+        XCTAssertEqual(scene.instanceScenes[1].highlightedContactIDs, ["edge-right"])
+        XCTAssertEqual(scene.contactNodes["edge-left"]?.first?.geometry?.firstMaterial?.diffuse.contents as? UIColor, .brown)
+        XCTAssertFalse(scene.select(positionID: nil))
+        XCTAssertTrue(scene.instanceScenes.allSatisfy { $0.transientCordNodes.isEmpty })
+        XCTAssertNil(leftCord.parent)
+        XCTAssertNil(rightCord.parent)
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        XCTAssertEqual(scene.instanceScenes.map { $0.transientCordNodes.count }, [1, 1])
+    }
+
+    func testReusableSuspensionUsesPlacedAttachmentsAndFramesOnlyActiveCords() throws {
+        for reflection: BoardModelTransform.Reflection? in [nil, .x] {
+            let scene = try makeReusableScene(reflection: reflection, suspensions: twoIndependentPairedLeadSuspensions())
+            XCTAssertTrue(scene.select(positionID: "primary"))
+            guard case .pairedLead(let left) = try scene.solveInstanceSuspension(instance: scene.instanceScenes[0], positionID: "primary"),
+                  case .pairedLead(let right) = try scene.solveInstanceSuspension(instance: scene.instanceScenes[1], positionID: "primary") else {
+                return XCTFail("Expected paired leads")
+            }
+            assertVectorEqual(try XCTUnwrap(left.leads[0].samples.last), SIMD3(-9, 4, 7), "left attachment")
+            assertVectorEqual(try XCTUnwrap(right.leads[0].samples.last), SIMD3(reflection == .x ? 11 : 13, 2, 7), "right attachment")
+            XCTAssertEqual(left.fixedAnchor, SIMD3(-8, 12, 10))
+            XCTAssertEqual(right.fixedAnchor, SIMD3(12, 14, 10))
+            let view = SCNView(frame: CGRect(x: 0, y: 0, width: 400, height: 400))
+            view.scene = scene.scene
+            view.pointOfView = scene.camera
+            scene.frame(in: view.bounds.size)
+            for point in left.leads.flatMap(\.samples) + right.leads.flatMap(\.samples) {
+                let projected = view.projectPoint(SCNVector3(point))
+                XCTAssertTrue(projected.x >= 0 && projected.x <= 400)
+                XCTAssertTrue(projected.y >= 0 && projected.y <= 400)
+            }
+            for unit in scene.instanceScenes {
+                let cord = try XCTUnwrap(unit.transientCordNodes.first)
+                for node in [cord] + cord.childNodes {
+                    XCTAssertEqual(node.categoryBitMask, BoardModelScene.cordCategory)
+                    XCTAssertNil(scene.contactID(for: node))
+                }
+            }
+            XCTAssertFalse(scene.isTransientCordAccessible)
+            XCTAssertEqual(Set(scene.contactNodes.keys), ["edge-left", "edge-right"])
+            SCNTransaction.flush()
+            let hits = scene.scene.rootNode.hitTestWithSegment(from: SCNVector3(-9, 3, 20), to: SCNVector3(-9, 3, 0), options: [
+                SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
+                SCNHitTestOption.backFaceCulling.rawValue: true
+            ])
+            XCTAssertEqual(scene.contactID(for: try XCTUnwrap(hits.first).node), "edge-left")
+            XCTAssertTrue(hits.allSatisfy { scene.contactID(for: $0.node) != nil })
+        }
+    }
+
+    private func twoIndependentPairedLeadSuspensions() -> [BoardModelSuspension] {
+        (0..<2).map { index in
+            let attachments = [1.0, 3.0].enumerated().map { lead, x in
+                BoardModelPairedLeadAttachment(id: "unit-\(index)-lead-\(lead)", nodeID: "Body",
+                    pointInModel: [x, 4, 7], provenance: "synthetic test")
+            }
+            return .pairedLeadCord(BoardModelPairedLeadCord(attachments: attachments,
+                passages: BoardModelPassagePairs(
+                    left: [.init(id: attachments[0].id, nodeID: "Body", pointInModel: attachments[0].pointInModel, provenance: "synthetic test")],
+                    right: [.init(id: attachments[1].id, nodeID: "Body", pointInModel: attachments[1].pointInModel, provenance: "synthetic test")]),
+                anchor: .init(offsetFromBoardBounds: [Double(index), 8 + Double(index) * 2, 5], visibility: "invisible", provenance: "synthetic test",
+                    position: index == 0 ? [-8, 12, 10] : [12, 14, 10]),
+                cord: .init(restLength: index == 0 ? 9 : 13, radius: 0.01, material: "synthetic test", provenance: "synthetic test"),
+                canonicalPoses: ["primary": .init(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: .init(viewDirection: [0, 0, 1], fitPadding: 0.1))]))
+        }
+    }
+
     func testReusableInstanceAppliesBaseThenPositionAboutPlacedBoundsCenter() throws {
         let c = SIMD3<Float>(2, 3, 5)
         let p = SIMD3<Float>(4, 3, 5)
@@ -224,11 +309,11 @@ final class BoardModelTests: XCTestCase {
             BoardModelInstance(equipmentObjectID: "left",
                 baseTransform: .init(translation: [-10, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil),
                 contactIDsBySlotID: ["edge": "edge-left"], suspension: suspensions?[0],
-                positionTransforms: ["primary": .init(translation: [0, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil)]),
+                positionTransforms: suspensions == nil ? ["primary": .init(translation: [0, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil)] : nil),
             BoardModelInstance(equipmentObjectID: "right",
                 baseTransform: .init(translation: [10, 0, 0], rotation: SIMD4(0, 0, 1, 0), reflection: reflection),
                 contactIDsBySlotID: ["edge": "edge-right"], suspension: suspensions?[1],
-                positionTransforms: ["primary": .init(translation: [-20, 0, 0], rotation: SIMD4(0, 1, 0, 0), reflection: nil)])
+                positionTransforms: suspensions == nil ? ["primary": .init(translation: [-20, 0, 0], rotation: SIMD4(0, 1, 0, 0), reflection: nil)] : nil)
         ]
         return try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor,
             display: display(), suspension: nil, orientation: nil,
