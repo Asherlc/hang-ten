@@ -145,7 +145,7 @@
             },
             {
               "equipmentObjectID": "right-unit",
-              "baseTransform": {"translation": [0.120000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1]},
+              "baseTransform": {"translation": [0.120000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1], "reflection": "x"},
               "contactIDsBySlotID": {"edge": "edge-right"},
               "positionTransforms": {"primary": {"translation": [0.000000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1]}}
             }
@@ -1069,6 +1069,10 @@
     }
   },
   "modelParserParity": [
+    {
+      "name": "reusable-valid", "base": "reusableModel", "valid": true,
+      "mutations": []
+    },
     {
       "name": "paired-pose-mouths-null", "base": "pairedLeadCordModel",
       "pythonException": "ValueError", "pythonError": "attachmentPoints.*object", "swiftError": "malformedJSON",

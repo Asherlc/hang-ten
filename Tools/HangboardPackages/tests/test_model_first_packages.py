@@ -94,7 +94,11 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    board_json = _dump_shared_json_document(board)
+    if fixture.get("base") == "reusableModel":
+        _restore_reusable_translation_sentinels(board)
+        board_json = _json_with_numeric_sentinels(board)
+    else:
+        board_json = _dump_shared_json_document(board)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
         suspension = board["presentations"][0]["media"]["suspension"]
         canonical = json.dumps(suspension, separators=(",", ":"))
@@ -343,6 +347,7 @@ def _valid_reusable_instances() -> list[dict[str, object]]:
                     "@number:0.000000000@",
                 ],
                 "rotation": [0, 0, 0, 1],
+                "reflection": "x",
             },
             "contactIDsBySlotID": {"edge": "edge-right"},
             "positionTransforms": {"primary": identity},
@@ -517,6 +522,7 @@ def test_v3_reusable_instances_bind_each_contact_slot_to_its_equipment_object(
     ]
     assert media.instances[0].contact_ids_by_slot_id == {"edge": "edge-left"}
     assert media.instances[1].base_transform.translation == (0.12, 0.0, 0.0)
+    assert media.instances[1].base_transform.reflection == "x"
     assert media.instances[1].position_transforms["primary"].reflection is None
 
 
@@ -548,6 +554,39 @@ def test_reusable_instances_reject_non_nine_decimal_raw_translation_lexemes(
     board_path.write_text(changed)
     with pytest.raises(ValueError, match="nine decimal"):
         load_board_package(document)
+
+
+def test_reusable_instances_reject_non_nine_decimal_position_translation_lexeme(
+    tmp_path: Path,
+) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    raw = board_path.read_text()
+    changed, count = re.subn(
+        r'("positionTransforms"\s*:\s*\{\s*"primary"\s*:\s*\{[^}]*"translation"\s*:\s*\[)0\.000000000',
+        r"\g<1>1e-1",
+        raw,
+        count=1,
+    )
+    assert count == 1
+    board_path.write_text(changed)
+
+    with pytest.raises(ValueError, match="nine decimal"):
+        load_board_package(document)
+
+
+def test_shared_reusable_fixture_is_accepted_by_python_parser(tmp_path: Path) -> None:
+    fixture = next(
+        fixture
+        for fixture in _shared_model_parser_parity_fixtures()
+        if fixture["name"] == "reusable-valid"
+    )
+
+    media = load_board_package(
+        _write_shared_model_parser_parity_package(tmp_path, fixture)
+    ).board.presentations[0].media
+    assert media.instances is not None
+    assert media.instances[1].base_transform.reflection == "x"
 
 
 @pytest.mark.parametrize(
@@ -807,6 +846,8 @@ def test_v2_paired_leads_use_pose_contact_route_for_length_validation(tmp_path: 
 
 def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
     for fixture in _shared_model_parser_parity_fixtures():
+        if fixture.get("valid"):
+            continue
         expected = fixture.get("pythonError")
         assert isinstance(expected, str) and expected and expected != ".*", fixture["name"]
 
@@ -874,7 +915,11 @@ def test_two_branch_declared_member_order_loads_without_sorting(tmp_path: Path) 
 
 @pytest.mark.parametrize(
     "fixture",
-    _shared_model_parser_parity_fixtures(),
+    tuple(
+        fixture
+        for fixture in _shared_model_parser_parity_fixtures()
+        if not fixture.get("valid")
+    ),
     ids=lambda fixture: str(fixture["name"]),
 )
 def test_v3_model_rejects_shared_cross_parser_malformed_fixture_matrix(
