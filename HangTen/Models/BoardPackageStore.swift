@@ -1172,7 +1172,8 @@ struct BoardPackageStore {
         do {
             data = try Data(contentsOf: url)
             var rawDescriptorParser = BoardPackageRawJSONParser(data: data)
-            _ = try rawDescriptorParser.parseDocument()
+            let rawDescriptor = try rawDescriptorParser.parseDocument()
+            try rawDescriptor.validateDuplicateKeysOutsideOrientations()
             let header = try JSONDecoder().decode(BoardPackageModelDescriptorHeader.self, from: data)
             if header.schemaVersion == 2 {
                 return try loadReusableModelDescriptor(
