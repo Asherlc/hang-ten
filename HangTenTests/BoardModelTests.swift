@@ -7,6 +7,200 @@ import XCTest
 
 @MainActor
 final class BoardModelTests: XCTestCase {
+    func testReusableInstanceAppliesBaseThenPositionAboutPlacedBoundsCenter() throws {
+        let c = SIMD3<Float>(2, 3, 5)
+        let p = SIMD3<Float>(4, 3, 5)
+        let f = SIMD3<Float>(0, 3, 5)
+        let baseRotation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 0, 1))
+        let b = c + baseRotation.act(f - c) + SIMD3<Float>(10, 0, 0)
+        let ci = c + baseRotation.act(c - c) + SIMD3<Float>(10, 0, 0)
+        let positionRotation = simd_quatf(angle: .pi, axis: SIMD3<Float>(0, 1, 0))
+        let w = ci + positionRotation.act(b - ci) + SIMD3<Float>(-20, 0, 0)
+        XCTAssertEqual(f, SIMD3<Float>(0, 3, 5))
+        assertVectorEqual(b, SIMD3<Float>(14, 3, 5), "base transform")
+        XCTAssertEqual(ci, SIMD3<Float>(12, 3, 5))
+        assertVectorEqual(w, SIMD3<Float>(-10, 3, 5), "position transform")
+        XCTAssertEqual(try BoardModelScene.reusableTransform(point: p, center: c, reflection: .x,
+            baseRotation: baseRotation, baseTranslation: SIMD3<Float>(10, 0, 0),
+            positionRotation: positionRotation, positionTranslation: SIMD3<Float>(-20, 0, 0)), w)
+    }
+
+    func testReusableUnitReflectionPreservesOutwardNormalsAndCulling() throws {
+        let scene = try makeReusableScene(reflection: .x, suspensions: nil)
+        XCTAssertTrue(scene.instanceScenes[1].container.childNodes.allSatisfy { $0.geometry?.firstMaterial?.isDoubleSided == false })
+        XCTAssertGreaterThan(scene.reusableTriangleSignedArea(instanceIndex: 1), 0)
+        XCTAssertGreaterThan(scene.reusableNormalDotOutward(instanceIndex: 1), 0)
+    }
+
+    func testReusableReflectedFrontRemainsHittableWithBackFaceCulling() throws {
+        let scene = try makeReusableScene(reflection: .x, suspensions: nil)
+        SCNTransaction.flush()
+        let options: [String: Any] = [
+            SCNHitTestOption.backFaceCulling.rawValue: true,
+            SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory
+        ]
+        let front = scene.scene.rootNode.hitTestWithSegment(
+            from: SCNVector3(11, 3, 10), to: SCNVector3(11, 3, 0), options: options)
+        XCTAssertEqual(scene.contactID(for: try XCTUnwrap(front.first).node), "edge-right")
+        let back = scene.scene.rootNode.hitTestWithSegment(
+            from: SCNVector3(11, 3, 0), to: SCNVector3(11, 3, 10), options: options)
+        XCTAssertTrue(back.isEmpty)
+    }
+
+    func testReusableClonesOwnGeometryMaterialsAndContactBindings() throws {
+        let scene = try makeReusableScene(reflection: nil, suspensions: nil)
+        let left = try XCTUnwrap(scene.instanceScenes[0].sourceSlotNodes["edge"]?.first)
+        let right = try XCTUnwrap(scene.instanceScenes[1].sourceSlotNodes["edge"]?.first)
+        XCTAssertFalse(left === right)
+        XCTAssertFalse(left.geometry === right.geometry)
+        XCTAssertFalse(left.geometry?.firstMaterial === right.geometry?.firstMaterial)
+        XCTAssertEqual(scene.contactID(for: left), "edge-left")
+        XCTAssertEqual(scene.contactID(for: right), "edge-right")
+        left.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+        left.position.x = 42
+        XCTAssertEqual(right.position.x, 0)
+        XCTAssertEqual(right.geometry?.firstMaterial?.diffuse.contents as? UIColor, .brown)
+    }
+
+    func testReusableContainerMatrixAndUnionCameraFollowPosition() throws {
+        let scene = try makeReusableScene(reflection: .x, suspensions: nil)
+        scene.frame(in: CGSize(width: 100, height: 100))
+        XCTAssertEqual(try XCTUnwrap(scene.camera.camera?.orthographicScale), 12, accuracy: 0.00001)
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        // Reflection is baked into geometry; the container applies B then W.
+        let actual = scene.instanceScenes[1].container.simdWorldTransform * SIMD4<Float>(0, 3, 5, 1)
+        assertVectorEqual(SIMD3<Float>(actual.x, actual.y, actual.z), SIMD3<Float>(-10, 3, 5), "placed-center transform")
+        let node = try XCTUnwrap(scene.instanceScenes[1].sourceSlotNodes["edge"]?.first)
+        let vertices = try XCTUnwrap(node.geometry?.sources(for: .vertex).first)
+        let reflectedVertex = vertices.data.withUnsafeBytes { bytes in
+            SIMD3<Float>(
+                bytes.loadUnaligned(fromByteOffset: vertices.dataOffset, as: Float.self),
+                bytes.loadUnaligned(fromByteOffset: vertices.dataOffset + 4, as: Float.self),
+                bytes.loadUnaligned(fromByteOffset: vertices.dataOffset + 8, as: Float.self))
+        }
+        assertVectorEqual(node.simdConvertPosition(reflectedVertex, to: nil), SIMD3<Float>(-6, 4, 7), "composed mesh and container")
+        scene.frame(in: CGSize(width: 100, height: 100))
+        XCTAssertEqual(try XCTUnwrap(scene.camera.camera?.orthographicScale), 2, accuracy: 0.00001)
+    }
+
+    func testReusableTransformRejectsNonfiniteOutput() {
+        XCTAssertThrowsError(try BoardModelScene.reusableTransform(
+            point: SIMD3<Float>(.infinity, 0, 0), center: .zero, reflection: nil,
+            baseRotation: simd_quatf(), baseTranslation: .zero,
+            positionRotation: simd_quatf(), positionTranslation: .zero
+        ))
+    }
+
+    func testReusableLoaderDecodesSourceOnceForTwoInstances() async throws {
+        let fixtureURL = repositoryRootURL().appendingPathComponent("HangTenTests/Fixtures/BoardPackageValidationFixtures.json")
+        let fixtures = try XCTUnwrap(JSONSerialization.jsonObject(with: Data(contentsOf: fixtureURL)) as? [String: Any])
+        let reusable = try XCTUnwrap(fixtures["reusableModelFixtures"] as? [String: Any])
+        let fixture = try XCTUnwrap(reusable["reusable-valid"] as? [String: Any])
+        var boardJSON = try XCTUnwrap(fixture["board"] as? [String: Any])
+        boardJSON["id"] = "fixture.learned-giraffe-\(UUID().uuidString.lowercased())"
+        let root = repositoryRootURL().appendingPathComponent(".context/learned-giraffe-reusable-\(UUID().uuidString).bundle")
+        defer { try? FileManager.default.removeItem(at: root) }
+        let package = root.appendingPathComponent("Hangboards/fixture-model")
+        let assets = package.appendingPathComponent("assets")
+        try FileManager.default.createDirectory(at: assets, withIntermediateDirectories: true)
+        try PropertyListSerialization.data(fromPropertyList: [
+            "CFBundleIdentifier": "com.hangten.tests.learned-giraffe.\(UUID().uuidString)",
+            "CFBundlePackageType": "BNDL", "CFBundleVersion": "1"
+        ], format: .xml, options: 0).write(to: root.appendingPathComponent("Info.plist"))
+        var serializedBoard = String(decoding: try JSONSerialization.data(withJSONObject: boardJSON, options: [.sortedKeys]), as: UTF8.self)
+        for (compact, precise) in [
+            ("[-0.12,0,0]", "[-0.120000000,0.000000000,0.000000000]"),
+            ("[0.12,0,0]", "[0.120000000,0.000000000,0.000000000]"),
+            ("[0,0,0]", "[0.000000000,0.000000000,0.000000000]")
+        ] {
+            serializedBoard = serializedBoard.replacingOccurrences(of: "\"translation\":\(compact)", with: "\"translation\":\(precise)")
+        }
+        try Data(serializedBoard.utf8).write(to: package.appendingPathComponent("board.json"))
+        try JSONSerialization.data(withJSONObject: XCTUnwrap(fixture["descriptor"]), options: [.sortedKeys])
+            .write(to: assets.appendingPathComponent("primary.model.json"))
+        try XCTUnwrap(Data(base64Encoded: XCTUnwrap(fixture["assetBase64"] as? String)))
+            .write(to: assets.appendingPathComponent("primary.usdz"))
+        let store = try BoardPackageStore(bundle: XCTUnwrap(Bundle(url: root)))
+        let board = try XCTUnwrap(store.boards.first)
+        _ = try XCTUnwrap(store.presentationAssetURL(for: board, presentationID: board.defaultPresentation.id))
+        BoardModelLoader.resetDebugSourceSceneDecodeCount()
+        let decodes = ReusableSourceDecodeCounter()
+        let loaded = await BoardModelAsset.$willDecodeForTesting.withValue({ _ in
+            decodes.increment()
+            // The hosted app can queue its own load before this test. Reset
+            // once our task owns the serialized decode gate, so that unrelated
+            // startup work cannot contaminate the public debug counter.
+            DispatchQueue.main.sync {
+                MainActor.assumeIsolated { BoardModelLoader.resetDebugSourceSceneDecodeCount() }
+            }
+        }) {
+            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
+                let source = SCNScene()
+                for name in ["UnitBody", "UnitEdge"] {
+                    let geometry = SCNGeometry(sources: [SCNGeometrySource(vertices: [
+                        SCNVector3(0, 0, 0), SCNVector3(1, 0, 0), SCNVector3(0, 1, 0)
+                    ])], elements: [SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)])
+                    let node = SCNNode(geometry: geometry)
+                    node.name = name
+                    node.geometry?.firstMaterial = SCNMaterial()
+                    source.rootNode.addChildNode(node)
+                }
+                return source
+            }) {
+                await BoardModelLoader.load(board: board, presentation: board.defaultPresentation, store: store)
+            }
+        }
+        XCTAssertEqual(decodes.value, 1)
+        XCTAssertEqual(BoardModelLoader.debugSourceSceneDecodeCount, 1)
+        XCTAssertEqual(try XCTUnwrap(loaded).instanceScenes.count, 2)
+    }
+
+    private func makeReusableScene(
+        reflection: BoardModelTransform.Reflection?,
+        suspensions: [BoardModelSuspension]?
+    ) throws -> BoardModelScene {
+        let source = SCNScene()
+        // A sloped face exercises the reflected normal's X component as well
+        // as the front-facing winding; an axis-aligned normal cannot do that.
+        let vertices = [SCNVector3(0, 2, 3), SCNVector3(4, 2, 7), SCNVector3(0, 4, 3)]
+        let geometry = SCNGeometry(sources: [
+            SCNGeometrySource(vertices: vertices),
+            SCNGeometrySource(normals: Array(repeating: SCNVector3(-1 / sqrt(2), 0, 1 / sqrt(2)), count: 3))
+        ], elements: [SCNGeometryElement(indices: [UInt16(0), 1, 2], primitiveType: .triangles)])
+        geometry.firstMaterial = SCNMaterial()
+        geometry.firstMaterial?.diffuse.contents = UIColor.brown
+        geometry.firstMaterial?.isDoubleSided = false
+        for name in ["Body", "Edge"] {
+            let node = SCNNode(geometry: geometry)
+            node.name = name
+            source.rootNode.addChildNode(node)
+        }
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: 2, coordinateFrame: "hang-ten-board-v1",
+            modelSHA256: String(repeating: "0", count: 64),
+            modelBounds: .init(minimum: [0, 2, 3], maximum: [4, 4, 7]),
+            nodes: [.init(nodeID: "Body", role: .body, contactID: nil),
+                    .init(nodeID: "Edge", role: .contact, contactID: nil)],
+            contacts: Dictionary(uniqueKeysWithValues: ["edge-left", "edge-right"].map {
+                ($0, BoardModelContactDescriptor(nodeIDs: ["Edge"],
+                    facePlaneAABB: .init(minimum: [0, 0], maximum: [1, 1]), center: [0.5, 0.5]))
+            })
+        )
+        let instances = [
+            BoardModelInstance(equipmentObjectID: "left",
+                baseTransform: .init(translation: [-10, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil),
+                contactIDsBySlotID: ["edge": "edge-left"], suspension: suspensions?[0],
+                positionTransforms: ["primary": .init(translation: [0, 0, 0], rotation: SIMD4(0, 0, 0, 1), reflection: nil)]),
+            BoardModelInstance(equipmentObjectID: "right",
+                baseTransform: .init(translation: [10, 0, 0], rotation: SIMD4(0, 0, 1, 0), reflection: reflection),
+                contactIDsBySlotID: ["edge": "edge-right"], suspension: suspensions?[1],
+                positionTransforms: ["primary": .init(translation: [-20, 0, 0], rotation: SIMD4(0, 1, 0, 0), reflection: nil)])
+        ]
+        return try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor,
+            display: display(), suspension: nil, orientation: nil,
+            allowedPositionIDs: ["primary"], resourceLease: nil, instances: instances))
+    }
+
     func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
         let content = BoardMapPresentationContent(board: board, selectedPresentationID: nil)
@@ -2342,6 +2536,14 @@ final class BoardModelTests: XCTestCase {
         return node
     }
 
+}
+
+private final class ReusableSourceDecodeCounter: @unchecked Sendable {
+    private let lock = NSLock()
+    private var count = 0
+
+    func increment() { lock.withLock { count += 1 } }
+    var value: Int { lock.withLock { count } }
 }
 
 private final class ImmediateBoardModelResourceRequest: BoardModelResourceRequesting {

@@ -369,6 +369,14 @@ private enum BoardModelLoadGate {
 
 @MainActor
 enum BoardModelLoader {
+    #if DEBUG
+    private(set) static var debugSourceSceneDecodeCount = 0
+
+    static func resetDebugSourceSceneDecodeCount() {
+        debugSourceSceneDecodeCount = 0
+    }
+    #endif
+
     static func load(
         board: BoardRevision,
         presentation: BoardPresentation,
@@ -395,6 +403,9 @@ enum BoardModelLoader {
         ), !Task.isCancelled else {
             return nil
         }
+        #if DEBUG
+        debugSourceSceneDecodeCount += 1
+        #endif
         return BoardModelScene(
             source: source.scene,
             descriptor: media.descriptor,
@@ -404,7 +415,8 @@ enum BoardModelLoader {
             allowedPositionIDs: Set(board.positions.filter {
                 $0.presentationID == presentation.id
             }.map(\.id)),
-            resourceLease: source.resourceLease
+            resourceLease: source.resourceLease,
+            instances: media.instances
         )
     }
 }
@@ -534,6 +546,22 @@ struct BoardModelUnavailableView: View {
 }
 
 @MainActor
+final class BoardModelInstanceScene {
+    let instance: BoardModelInstance
+    let container: SCNNode
+    fileprivate let sourceTransform: simd_float4x4
+    var contactNodes: [String: [SCNNode]] = [:]
+    var sourceSlotNodes: [String: [SCNNode]] = [:]
+    var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
+
+    init(instance: BoardModelInstance, container: SCNNode) {
+        self.instance = instance
+        self.container = container
+        sourceTransform = container.simdTransform
+    }
+}
+
+@MainActor
 final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
@@ -559,6 +587,7 @@ final class BoardModelScene {
     private let projectedWidth: Float
     private let projectedHeight: Float
     private(set) var contactNodes: [String: [SCNNode]] = [:]
+    private(set) var instanceScenes: [BoardModelInstanceScene] = []
     private var contactIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
     private var lastHighlights: Set<String> = []
@@ -580,15 +609,19 @@ final class BoardModelScene {
     private let allowedPositionIDs: Set<String>
     private let resourceLease: BoardModelResourceLease?
 
-    init?(
+    private struct PreparedModel {
+        let root: SCNNode
+        let geometryByNodeID: [String: SCNNode]
+        let geometryNodes: [SCNNode]
+        let contactNodes: [String: [SCNNode]]
+        let contactIDsByNode: [ObjectIdentifier: String]
+        let originalMaterials: [ObjectIdentifier: [SCNMaterial]]
+    }
+
+    private static func prepareModel(
         source: SCNScene,
-        descriptor: BoardModelDescriptor,
-        display: BoardModelDisplay,
-        suspension: BoardModelSuspension? = nil,
-        orientation: BoardModelOrientation? = nil,
-        allowedPositionIDs: Set<String>? = nil,
-        resourceLease: BoardModelResourceLease? = nil
-    ) {
+        descriptor: BoardModelDescriptor
+    ) -> PreparedModel? {
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -671,7 +704,87 @@ final class BoardModelScene {
             return nil
         }
 
-        geometryNodes = clonedGeometryNodes
+        return PreparedModel(root: modelRoot, geometryByNodeID: geometryByNodeID,
+            geometryNodes: clonedGeometryNodes, contactNodes: boundContactNodes,
+            contactIDsByNode: boundContactIDsByNode, originalMaterials: originals)
+    }
+
+    init?(
+        source: SCNScene,
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay,
+        suspension: BoardModelSuspension? = nil,
+        orientation: BoardModelOrientation? = nil,
+        allowedPositionIDs: Set<String>? = nil,
+        resourceLease: BoardModelResourceLease? = nil,
+        instances: [BoardModelInstance]? = nil
+    ) {
+        guard instances.map({ !$0.isEmpty }) ?? true else { return nil }
+        let modelContainer = SCNNode()
+        modelContainer.name = "board.model"
+        var preparedModels: [PreparedModel] = []
+        var preparedInstances: [BoardModelInstanceScene] = []
+        var boundContacts: [String: [SCNNode]] = [:]
+        var boundIDs: [ObjectIdentifier: String] = [:]
+        for index in 0..<(instances?.count ?? 1) {
+            let bindingDescriptor: BoardModelDescriptor
+            if let instance = instances?[index] {
+                // The validated v2 contract expands contacts to physical IDs.
+                // Recover this unit's source slots from that instance's map;
+                // v2 mesh entries intentionally have no physical contactID.
+                var slots: [String: BoardModelContactDescriptor] = [:]
+                var slotByNodeID: [String: String] = [:]
+                for (slotID, contactID) in instance.contactIDsBySlotID {
+                    guard let contact = descriptor.contacts[contactID] else { return nil }
+                    slots[slotID] = contact
+                    for nodeID in contact.nodeIDs {
+                        guard slotByNodeID.updateValue(slotID, forKey: nodeID) == nil else { return nil }
+                    }
+                }
+                bindingDescriptor = BoardModelDescriptor(schemaVersion: descriptor.schemaVersion,
+                    coordinateFrame: descriptor.coordinateFrame, modelSHA256: descriptor.modelSHA256,
+                    modelBounds: descriptor.modelBounds,
+                    nodes: descriptor.nodes.map {
+                        BoardModelNodeDescriptor(nodeID: $0.nodeID, role: $0.role,
+                            contactID: $0.role == .contact ? slotByNodeID[$0.nodeID] : nil)
+                    }, contacts: slots)
+            } else {
+                bindingDescriptor = descriptor
+            }
+            guard let prepared = Self.prepareModel(source: source, descriptor: bindingDescriptor) else { return nil }
+            preparedModels.append(prepared)
+            if let instance = instances?[index] {
+                let unit = BoardModelInstanceScene(instance: instance, container: prepared.root)
+                unit.sourceSlotNodes = prepared.contactNodes
+                unit.originalMaterials = prepared.originalMaterials
+                for (slot, nodes) in prepared.contactNodes {
+                    guard let contactID = instance.contactIDsBySlotID[slot] else { return nil }
+                    unit.contactNodes[contactID, default: []].append(contentsOf: nodes)
+                    boundContacts[contactID, default: []].append(contentsOf: nodes)
+                    for node in nodes { boundIDs[ObjectIdentifier(node)] = contactID }
+                }
+                if instance.baseTransform.reflection == .x {
+                    for node in prepared.geometryNodes {
+                        guard let geometry = node.geometry,
+                              let reflected = Self.reflectingGeometry(geometry,
+                                localTransform: node.simdWorldTransform.inverse
+                                    * Self.sourceReflection(center: Self.boundsCenter(descriptor.modelBounds))
+                                    * node.simdWorldTransform) else { return nil }
+                        node.geometry = reflected
+                    }
+                }
+                guard let transform = try? Self.reusableMatrix(instance: instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: nil) else { return nil }
+                unit.container.simdTransform = transform * unit.container.simdTransform
+                preparedInstances.append(unit)
+            } else {
+                boundContacts = prepared.contactNodes
+                boundIDs = prepared.contactIDsByNode
+            }
+            modelContainer.addChildNode(prepared.root)
+        }
+        guard let first = preparedModels.first else { return nil }
+        geometryNodes = preparedModels.flatMap(\.geometryNodes)
         self.descriptor = descriptor
         self.display = display
         self.suspension = suspension
@@ -679,26 +792,286 @@ final class BoardModelScene {
         self.allowedPositionIDs = allowedPositionIDs
             ?? suspension.map { Set($0.canonicalPoses.keys) }
             ?? orientation.map { Set($0.rotations.keys) }
+            ?? instances.map { Set($0.flatMap { $0.positionTransforms.map { Array($0.keys) } ?? [] }) }
             ?? []
         self.resourceLease = resourceLease
 
-        self.geometryByNodeID = geometryByNodeID
-        contactNodes = boundContactNodes
-        contactIDsByNode = boundContactIDsByNode
-        originalMaterials = originals
-        guard let framing = Self.framing(descriptor: descriptor, display: display) else {
+        self.geometryByNodeID = first.geometryByNodeID
+        instanceScenes = preparedInstances
+        contactNodes = boundContacts
+        contactIDsByNode = boundIDs
+        originalMaterials = preparedModels.reduce(into: [:]) { $0.merge($1.originalMaterials) { first, _ in first } }
+        let bounds = instances == nil ? descriptor.modelBounds : Self.reusableBounds(
+            descriptor.modelBounds, transforms: preparedInstances.compactMap {
+                try? Self.reusableMatrix(instance: $0.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: nil, includingReflection: true)
+            })
+        guard let framing = Self.framing(bounds: bounds, display: display) else {
             return nil
         }
         projectedWidth = framing.width
         projectedHeight = framing.height
         boardTransform = matrix_identity_float4x4
-        let modelContainer = SCNNode()
-        modelContainer.name = "board.model"
-        modelContainer.addChildNode(modelRoot)
         scene.rootNode.addChildNode(modelContainer)
         boardContainer = modelContainer
         configureCameraAndLighting(framing: framing)
     }
+
+    private enum ReusableTransformError: Error {
+        case invalidTransform
+    }
+
+    static func reusableTransform(
+        point: SIMD3<Float>, center: SIMD3<Float>, reflection: BoardModelTransform.Reflection?,
+        baseRotation: simd_quatf, baseTranslation: SIMD3<Float>,
+        positionRotation: simd_quatf, positionTranslation: SIMD3<Float>
+    ) throws -> SIMD3<Float> {
+        var f = point
+        if reflection == .x { f.x = 2 * center.x - point.x }
+        let b = center + baseRotation.act(f - center) + baseTranslation
+        let ci = center + baseRotation.act(center - center) + baseTranslation
+        let w = ci + positionRotation.act(b - ci) + positionTranslation
+        guard [f, b, ci, w].allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        return w
+    }
+
+    private static func reusableMatrix(
+        instance: BoardModelInstance, center: SIMD3<Float>, positionID: String?,
+        includingReflection: Bool = false
+    ) throws -> simd_float4x4 {
+        let base = instance.baseTransform
+        let position = positionID.flatMap { instance.positionTransforms?[$0] }
+        guard base.translation.count == 3,
+              let baseRotation = quaternion(from: base.rotation),
+              position.map({ $0.translation.count == 3 && $0.reflection == nil }) ?? true,
+              let positionRotation = quaternion(from: position?.rotation ?? SIMD4<Double>(0, 0, 0, 1)) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        let baseTranslation = SIMD3<Float>(Float(base.translation[0]), Float(base.translation[1]), Float(base.translation[2]))
+        let translation = position?.translation ?? [0, 0, 0]
+        let positionTranslation = SIMD3<Float>(Float(translation[0]), Float(translation[1]), Float(translation[2]))
+        // F is baked into each copied mesh: SceneKit's CPU back-face hit test
+        // does not account for a negative node-transform determinant. Bounds
+        // still use the full F -> B -> W matrix on the original source box.
+        let reflection = includingReflection && base.reflection == .x
+            ? sourceReflection(center: center) : matrix_identity_float4x4
+        var baseMatrix = transform(rotating: baseRotation, about: center)
+        baseMatrix.columns.3 += SIMD4<Float>(baseTranslation, 0)
+        var positionMatrix = transform(rotating: positionRotation, about: center + baseTranslation)
+        positionMatrix.columns.3 += SIMD4<Float>(positionTranslation, 0)
+        let matrix = positionMatrix * baseMatrix * reflection
+        _ = try reusableTransform(point: center, center: center, reflection: base.reflection,
+            baseRotation: baseRotation, baseTranslation: baseTranslation,
+            positionRotation: positionRotation, positionTranslation: positionTranslation)
+        guard (0..<4).allSatisfy({ column in (0..<4).allSatisfy { matrix[column][$0].isFinite } }) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        return matrix
+    }
+
+    private static func sourceReflection(center: SIMD3<Float>) -> simd_float4x4 {
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 * center.x
+        return reflection
+    }
+
+    private static func reusableBounds(
+        _ bounds: BoardModelBounds, transforms: [simd_float4x4]
+    ) -> BoardModelBounds {
+        let points = transforms.flatMap { matrix in boundsCorners(bounds).map { matrix * SIMD4<Float>($0, 1) } }
+        return BoardModelBounds(
+            minimum: (0..<3).map { axis in Double(points.map { $0[axis] }.min() ?? .nan) },
+            maximum: (0..<3).map { axis in Double(points.map { $0[axis] }.max() ?? .nan) }
+        )
+    }
+
+    private func selectReusable(positionID: String) -> Bool {
+        do {
+            let transforms = try instanceScenes.map { unit in
+                if let positions = unit.instance.positionTransforms, positions[positionID] == nil {
+                    throw ReusableTransformError.invalidTransform
+                }
+                return try Self.reusableMatrix(instance: unit.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID)
+            }
+            let boundTransforms = try instanceScenes.map {
+                try Self.reusableMatrix(instance: $0.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID, includingReflection: true)
+            }
+            guard let framing = Self.framing(bounds: Self.reusableBounds(descriptor.modelBounds, transforms: boundTransforms), display: display) else {
+                throw ReusableTransformError.invalidTransform
+            }
+            let fixedFraming = Self.fixedFraming(from: framing)
+            guard let cameraState = preparedCanonicalCameraState(for: fixedFraming) else {
+                throw ReusableTransformError.invalidTransform
+            }
+            for (unit, transform) in zip(instanceScenes, transforms) {
+                unit.container.simdTransform = transform * unit.sourceTransform
+            }
+            applyPreparedCameraState(cameraState)
+            canonicalFraming = fixedFraming
+            currentFraming = fixedFraming
+            activePositionID = positionID
+            isUnavailable = false
+            return true
+        } catch {
+            enterUnavailable()
+            return false
+        }
+    }
+
+    private static func triangleIndices(_ element: SCNGeometryElement) -> [UInt32]? {
+        let count: Int
+        switch element.primitiveType {
+        case .triangles: count = element.primitiveCount * 3
+        case .triangleStrip: count = element.primitiveCount + 2
+        default: return nil
+        }
+        guard [1, 2, 4].contains(element.bytesPerIndex),
+              element.data.count >= count * element.bytesPerIndex else { return nil }
+        let indices: [UInt32] = element.data.withUnsafeBytes { bytes in
+            (0..<count).map { index in
+                let offset = index * element.bytesPerIndex
+                switch element.bytesPerIndex {
+                case 1: return UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
+                case 2: return UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
+                default: return bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self)
+                }
+            }
+        }
+        if element.primitiveType == .triangles { return indices }
+        return (0..<element.primitiveCount).flatMap { index in
+            index.isMultiple(of: 2)
+                ? [indices[index], indices[index + 1], indices[index + 2]]
+                : [indices[index + 1], indices[index], indices[index + 2]]
+        }
+    }
+
+    private static func reflectingGeometry(
+        _ geometry: SCNGeometry, localTransform: simd_float4x4
+    ) -> SCNGeometry? {
+        let linear = simd_float3x3(columns: (
+            SIMD3<Float>(localTransform.columns.0.x, localTransform.columns.0.y, localTransform.columns.0.z),
+            SIMD3<Float>(localTransform.columns.1.x, localTransform.columns.1.y, localTransform.columns.1.z),
+            SIMD3<Float>(localTransform.columns.2.x, localTransform.columns.2.y, localTransform.columns.2.z)))
+        let normalTransform = linear.inverse.transpose
+        var sources: [SCNGeometrySource] = []
+        for source in geometry.sources {
+            guard [.vertex, .normal, .tangent].contains(source.semantic) else {
+                sources.append(source)
+                continue
+            }
+            guard source.usesFloatComponents, [4, 8].contains(source.bytesPerComponent),
+                  source.componentsPerVector >= 3 else { return nil }
+            var components: [Float] = []
+            for index in 0..<source.vectorCount {
+                let offset = source.dataOffset + index * source.dataStride
+                guard offset >= 0,
+                      offset + source.componentsPerVector * source.bytesPerComponent <= source.data.count else { return nil }
+                var values: [Float] = source.data.withUnsafeBytes { bytes in
+                    (0..<source.componentsPerVector).map { axis in
+                        let address = offset + axis * source.bytesPerComponent
+                        return source.bytesPerComponent == 4
+                            ? bytes.loadUnaligned(fromByteOffset: address, as: Float.self)
+                            : Float(bytes.loadUnaligned(fromByteOffset: address, as: Double.self))
+                    }
+                }
+                let vector = SIMD3<Float>(values[0], values[1], values[2])
+                let transformed: SIMD3<Float>
+                if source.semantic == .vertex {
+                    let point = localTransform * SIMD4<Float>(vector, 1)
+                    transformed = SIMD3<Float>(point.x, point.y, point.z)
+                } else {
+                    transformed = simd_normalize((source.semantic == .normal ? normalTransform : linear) * vector)
+                    if source.semantic == .tangent, values.count == 4 { values[3] = -values[3] }
+                }
+                guard transformed.x.isFinite, transformed.y.isFinite, transformed.z.isFinite else { return nil }
+                values[0] = transformed.x
+                values[1] = transformed.y
+                values[2] = transformed.z
+                components.append(contentsOf: values)
+            }
+            let data = components.withUnsafeBufferPointer { Data(buffer: $0) }
+            sources.append(SCNGeometrySource(data: data, semantic: source.semantic,
+                vectorCount: source.vectorCount, usesFloatComponents: true,
+                componentsPerVector: source.componentsPerVector, bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0, dataStride: source.componentsPerVector * MemoryLayout<Float>.size))
+        }
+        var elements: [SCNGeometryElement] = []
+        for element in geometry.elements {
+            guard var indices = triangleIndices(element) else { return nil }
+            for index in stride(from: 0, to: indices.count, by: 3) { indices.swapAt(index + 1, index + 2) }
+            let reversed = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+            reversed.primitiveRange = element.primitiveRange
+            elements.append(reversed)
+        }
+        // Materials already belong exclusively to this clone. The reflected
+        // sources and reversed winding preserve outward single-sided faces.
+        let result = SCNGeometry(sources: sources, elements: elements)
+        result.name = geometry.name
+        result.materials = geometry.materials
+        result.subdivisionLevel = geometry.subdivisionLevel
+        result.edgeCreasesSource = geometry.edgeCreasesSource
+        result.edgeCreasesElement = geometry.edgeCreasesElement
+        return result
+    }
+
+    #if DEBUG
+    private func reusableTriangle(instanceIndex: Int) -> (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)? {
+        guard instanceScenes.indices.contains(instanceIndex) else { return nil }
+        let root = instanceScenes[instanceIndex].container
+        var result: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)?
+        root.enumerateChildNodes { node, stop in
+            guard let geometry = node.geometry,
+                  let vertices = geometry.sources(for: .vertex).first,
+                  let normals = geometry.sources(for: .normal).first,
+                  let element = geometry.elements.first,
+                  let indices = Self.triangleIndices(element), indices.count >= 3 else { return }
+            func vector(_ source: SCNGeometrySource, _ index: UInt32) -> SIMD3<Float>? {
+                guard source.usesFloatComponents, source.componentsPerVector >= 3,
+                      [4, 8].contains(source.bytesPerComponent), Int(index) < source.vectorCount else { return nil }
+                let offset = source.dataOffset + Int(index) * source.dataStride
+                guard offset + 3 * source.bytesPerComponent <= source.data.count else { return nil }
+                return source.data.withUnsafeBytes { bytes in
+                    let values = (0..<3).map { axis -> Float in
+                        let address = offset + axis * source.bytesPerComponent
+                        return source.bytesPerComponent == 4
+                            ? bytes.loadUnaligned(fromByteOffset: address, as: Float.self)
+                            : Float(bytes.loadUnaligned(fromByteOffset: address, as: Double.self))
+                    }
+                    return SIMD3<Float>(values[0], values[1], values[2])
+                }
+            }
+            guard let a = vector(vertices, indices[0]), let b = vector(vertices, indices[1]),
+                  let c = vector(vertices, indices[2]), let normal = vector(normals, indices[0]) else { return }
+            let matrix = node.simdWorldTransform
+            func point(_ value: SIMD3<Float>) -> SIMD3<Float> {
+                let world = matrix * SIMD4<Float>(value, 1)
+                return SIMD3<Float>(world.x, world.y, world.z)
+            }
+            let linear = simd_float3x3(columns: (
+                SIMD3<Float>(matrix.columns.0.x, matrix.columns.0.y, matrix.columns.0.z),
+                SIMD3<Float>(matrix.columns.1.x, matrix.columns.1.y, matrix.columns.1.z),
+                SIMD3<Float>(matrix.columns.2.x, matrix.columns.2.y, matrix.columns.2.z)))
+            result = (point(a), point(b), point(c), linear.inverse.transpose * normal)
+            stop.pointee = true
+        }
+        return result
+    }
+
+    func reusableTriangleSignedArea(instanceIndex: Int) -> Float {
+        guard let (a, b, c, _) = reusableTriangle(instanceIndex: instanceIndex) else { return .nan }
+        return simd_cross(b - a, c - a).z / 2
+    }
+
+    func reusableNormalDotOutward(instanceIndex: Int) -> Float {
+        guard let (a, b, c, normal) = reusableTriangle(instanceIndex: instanceIndex) else { return .nan }
+        return simd_dot(simd_cross(b - a, c - a), normal)
+    }
+    #endif
 
     func contactID(for node: SCNNode) -> String? {
         var candidate: SCNNode? = node
@@ -718,6 +1091,9 @@ final class BoardModelScene {
         guard let positionID, allowedPositionIDs.contains(positionID) else {
             enterUnavailable()
             return false
+        }
+        if !instanceScenes.isEmpty {
+            return selectReusable(positionID: positionID)
         }
         if suspension == nil, let orientation {
             guard let components = orientation.rotations[positionID],
