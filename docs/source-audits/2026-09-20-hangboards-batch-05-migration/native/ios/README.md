@@ -116,6 +116,15 @@ its five-second budget during AX traversal, then passed with the same 0.5-point
 checks and a 15-second budget. The full 34-test UI result predates that test-only
 timeout adjustment; the focused Pro rerun verifies the final assertion.
 
+Final review found that `allSatisfy` alone could accept an empty or partial
+accessibility collection. The reset waiter and its post-wait checks now snapshot
+the identifier/frame pairs once, require exact equality with the canonical
+identifier set, and then compare the local frames. This follows Swift's
+[`allSatisfy` contract](https://developer.apple.com/documentation/swift/sequence/allsatisfy(_:)),
+under which an empty sequence returns true. The unchanged physical Pro flow
+passed one focused UI test in 55.635 seconds with zero failures; its owned
+iPhone 17 Pro simulator and workspace-local DerivedData were deleted afterward.
+
 Runtime smoke exercised initial countdown, visible hand/hold task cues, running
 and paused rotation, background/resume, the speaker-off control, skip countdown,
 completion, Save session, and persisted local History. The early landscape
@@ -186,7 +195,9 @@ runtime lighting avoided a global color/lighting workaround. Physical taps,
 body-inclusive visibility checks and review of actual screenshots also caught
 stale accessibility projections, a decorative silhouette mask, and an initially
 missed Forge reset. Each production correction retained a meaningful RED/GREEN
-regression; package geometry corrections remained with the separate UV task.
+regression. Trango and Frictitious geometry authoring remained in their separate
+migration tasks; the later UV task changed only four meshes' texture-coordinate
+attributes.
 
 The final reset assertion checks every contact, because a top-edge center alone
 can move less than two points during a visibly wrong orbit. Its waiter allows

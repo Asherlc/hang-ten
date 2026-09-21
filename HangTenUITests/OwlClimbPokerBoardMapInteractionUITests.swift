@@ -225,9 +225,12 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            allContacts.allElementsBoundByIndex.allSatisfy { element in
-                guard let canonical = canonicalFrames[element.identifier] else { return false }
-                let frame = element.frame
+            let currentFrames = Dictionary(
+                uniqueKeysWithValues: allContacts.allElementsBoundByIndex.map { ($0.identifier, $0.frame) }
+            )
+            guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
+            return currentFrames.allSatisfy { identifier, frame in
+                guard let canonical = canonicalFrames[identifier] else { return false }
                 return abs(frame.midX - canonical.midX) <= 0.5
                     && abs(frame.midY - canonical.midY) <= 0.5
             }
@@ -238,10 +241,15 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                        "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.
         // Require every projected contact to return to its canonical frame.
-        for element in allContacts.allElementsBoundByIndex {
-            let canonical = try XCTUnwrap(canonicalFrames[element.identifier])
-            XCTAssertEqual(element.frame.midX, canonical.midX, accuracy: 0.5, element.identifier)
-            XCTAssertEqual(element.frame.midY, canonical.midY, accuracy: 0.5, element.identifier)
+        let resetFrames = Dictionary(
+            uniqueKeysWithValues: allContacts.allElementsBoundByIndex.map { ($0.identifier, $0.frame) }
+        )
+        XCTAssertEqual(Set(resetFrames.keys), Set(canonicalFrames.keys),
+                       "Reset must preserve the complete canonical contact set")
+        for (identifier, frame) in resetFrames {
+            let canonical = try XCTUnwrap(canonicalFrames[identifier])
+            XCTAssertEqual(frame.midX, canonical.midX, accuracy: 0.5, identifier)
+            XCTAssertEqual(frame.midY, canonical.midY, accuracy: 0.5, identifier)
         }
         capture("\(boardID)-portrait-reset")
 

@@ -213,6 +213,22 @@
     "decision": "accepted all six models and retained neutral/active/orbit/reset portrait/landscape states; no outstanding findings",
     "date": "2026-09-20"
   },
+  "finalReviewFix": {
+    "base": "77e6ece8880fc5aa365e800434d3772bec5e8f13",
+    "change": "Reset wait and post-wait checks now require exact equality with the canonical accessibility contact identifier set before comparing the snapshotted projected frames.",
+    "focusedProUI": {
+      "test": "HangTenUITests/Batch05BoardModelInteractionUITests/testPro",
+      "result": "passed",
+      "executed": 1,
+      "failures": 0,
+      "testSeconds": 55.635,
+      "simulatorUUID": "11A70343-5C51-4F57-8B26-73FD925F0104",
+      "simulatorDeleted": true,
+      "derivedDataDeleted": true
+    },
+    "productionOrPackageChanges": false,
+    "capturesRegenerated": false
+  },
   "dispatchBase": "5a9ed0201e55cd1f1d664e5e2a8bd533d58bb20a",
   "dependencyBase": "de2478c1ba6e65c8364f01d646dc18aaec642616",
   "build": {
@@ -346,7 +362,7 @@
     },
     "latestScopedUI": {
       "evo": "passed after safe screenshot pixel-buffer lifetime correction",
-      "pro": "passed after allowing 15 seconds for 28-target AX traversal; exact 0.5pt tolerance unchanged"
+      "pro": "passed after final-review exact identifier-set hardening; 15-second traversal budget and exact 0.5pt tolerance unchanged"
     },
     "signedSimulatorDebug": "passed",
     "unsignedDeviceRelease": "passed",
@@ -437,7 +453,7 @@
     "HangTen/Views/TrainView.swift": "6927788c06125a7a4d0b29750fbb2d2e57b28d7c8ab4073500f8cb7f721a2197",
     "HangTenTests/BoardModelTests.swift": "4f4fcd2db9fc02eb25ff4cb7b6201dd7c5f8ffe8b266929e9ccbbf0ac21097b9",
     "HangTenTests/BoardSourceBoundaryTests.swift": "fa30b0b94c208006c12b5fa57f26afb24e2f12e1e65658ee2c72b1001ab0281e",
-    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift": "5111d55ae5a027b078696a3fc93469e5b6098afb65c4aae6f4e05a2b1d02ff13",
+    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift": "9eb66d360003aad1026c11e32c232d1253bf5578d3b0e6b9eba5d845f1390f05",
     ".github/workflows/ci.yml": "a16fda07709cbed5b2a855657ac049083ff26010a0e92a5ca72d152276b30d8f",
     "Tools/HangboardPackages/tests/test_documentation_paths.py": "fc134b5aa82378322a955e19be965816fff422dd5aeb333ce39ed7da615e025c"
   },
