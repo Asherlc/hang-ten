@@ -218,6 +218,9 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
     private var speechOwnership = WorkoutSpeechOwnership()
 
     private static let deactivationRetryDelay: Duration = .milliseconds(200)
+    /// Retries after the first failed `deactivateAndNotifyOthers()` call.
+    /// Enough to cover transient session contention (tests use 4 failures → 5 total attempts).
+    private static let maximumDeactivationRetries = 4
     private static let systemSleep: (Duration) async throws -> Void = { duration in
         try await Task.sleep(for: duration)
     }
@@ -523,15 +526,31 @@ final class WorkoutAudioCoach: NSObject, ObservableObject {
 
         let sleep = self.sleep
         deactivationRetryTask = Task { @MainActor [weak self] in
-            do {
-                try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
-            } catch {
-                return
-            }
-            guard !Task.isCancelled, let self else { return }
+            for _ in 0..<WorkoutAudioCoach.maximumDeactivationRetries {
+                do {
+                    try await sleep(WorkoutAudioCoach.deactivationRetryDelay)
+                } catch {
+                    return
+                }
+                guard !Task.isCancelled, let self else { return }
+                guard self.configuredAudioSession, !self.synthesizer.isSpeaking else {
+                    self.deactivationRetryTask = nil
+                    return
+                }
 
-            self.deactivationRetryTask = nil
-            self.deactivateAudioSessionIfSpeechStopped()
+                do {
+                    try self.audioSession.deactivateAndNotifyOthers()
+                    self.configuredAudioSession = false
+                    self.deactivationRetryTask = nil
+                    return
+                } catch {
+                    self.logger.error(
+                        "Unable to deactivate spoken cue audio session: \(error.localizedDescription, privacy: .public)"
+                    )
+                }
+            }
+
+            self?.deactivationRetryTask = nil
         }
     }
 }
