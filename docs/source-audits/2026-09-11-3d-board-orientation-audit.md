@@ -762,3 +762,14 @@ the same correct AABBs, so nothing user-visible breaks. The shared
 nearest-hit test helper's universal assumption (patch-center ray strikes a
 hold) does not cover lip-modeled recessed contacts; the new regression
 tests assert binding, selection, and finite framing instead.
+
+### 2026-09-20 Batch 04 orientation-source handoff
+
+Batch 04 package migrations consume the closed source register rather than
+reusing historical orientation prose. Pivot is the sole Batch 04 multi-position
+exception: its normalized 18 physical contacts retain only selectable `p1`,
+`p2`, `p3`, and `p5`; `p4` is manufacturer Orientation 3 Switch transition
+evidence only. The 72 retired raster presentation IDs are compatibility
+aliases for those 18 physical contacts, not additional selectable contacts.
+The exact delivered-ID mapping and manufacturer-photo hashes are retained in
+[`2026-09-20-batch-04-3d-source-register.json`](2026-09-20-batch-04-3d-source-register.json).

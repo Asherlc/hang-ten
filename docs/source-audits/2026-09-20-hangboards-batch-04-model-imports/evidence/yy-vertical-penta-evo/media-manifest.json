@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "file": "evidence/originals/14b413b6dd-yy-vertical-agres-nomades-penta-evo-3.webp",
+      "sha256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+      "pixelDimensions": [
+        2000,
+        2000
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "PE-RESTORED"
+      ],
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "publisher": "YY Vertical product photography; exact restored-image hosting publisher not recovered",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Product page is identified; the exact original binary URL was not recovered. Do not treat this page URL as the image download URL.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/originals/9957e0d26b-yy-vertical-agres-nomades-penta-evo-6.webp",
+      "sha256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+      "pixelDimensions": [
+        2000,
+        2000
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "PE-RESTORED"
+      ],
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "publisher": "YY Vertical product photography; exact restored-image hosting publisher not recovered",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Product page is identified; the exact original binary URL was not recovered. Do not treat this page URL as the image download URL.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/derived-review/yy-vertical-penta-evo-0.jpg",
+      "sha256": "57ea2ba8439674157f21c7e7f4eb922bd0c923e536f030cf9b69b4158c20dcf9",
+      "pixelDimensions": [
+        1500,
+        1200
+      ],
+      "kind": "derived-review",
+      "sourceIds": [
+        "PE2"
+      ],
+      "sourceURL": "https://www.yyvertical.com/en/products/penta-evo",
+      "publisher": "Earlier assembled research contact sheet; original publishers indicated by source register",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Derivative reduced-size collage, NOT an original full-resolution source file. Page URL is a reference, not the collage origin.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    }
+  ],
+  "sourceImagePolicy": "Original-reference files are distinct from derivative review collages and from application textures. No original PDFs/videos are supplied. Unknown binary URL provenance is expressly marked."
+}

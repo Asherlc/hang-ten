@@ -274,6 +274,26 @@ environment.
 - `xcodebuild build-for-testing ...` was blocked before compilation: CoreSimulatorService was unavailable and uncached Swift packages could not be cloned because `github.com` could not resolve. The focused and full XCTest suites therefore could not run in this environment.
 - Temporary Xcode output was created under `.context/gorgeous-dugong-task5-xcode/`, then removed and verified absent.
 
+### 2026-09-20 Batch 04 source-evidence handoff
+
+Batch 04 remains outside this closed machine-readable manifest until its six
+packages become model-media packages: the validator requires record IDs to
+equal the discovered model inventory, so adding future records now would make
+the current audit invalid. The complete pre-promotion source decisions are
+retained in [`2026-09-20-batch-04-3d-source-register.json`](2026-09-20-batch-04-3d-source-register.json)
+and its source-to-contact audit. When each package is promoted, its exact
+source fact and ruling must move into the closed manifest without changing the
+retained byte evidence:
+
+| Package | Source fact | Promotion decision/ruling |
+| --- | --- | --- |
+| `crimptonite.helium-mobile` | `documentedSuspension` | represent `pairedLeadCord` exterior leads only; do not infer an interior route or `twoBranchCord`. |
+| `metolius.light-rail-2` | `documentedSuspension` | represent `pairedLeadCord` at upper-entry exterior regions only; no underside mouth or hidden vertical bore. |
+| `metolius.rock-rings-3d` | `documentedSuspension` | represent two independent per-unit `pairedLeadCord` systems; no inter-unit connection or central through-bore. |
+| `yy.penta-evo` | `documentedSuspension` | represent two independent exterior paired loops through the central ring; no invented channel or knot. |
+| `owl-climb.poker` | `noDocumentedSuspension` | exclude. |
+| `trango.rock-prodigy-pivot` | `noDocumentedSuspension` | exclude; pulley-kit ropes are not Pivot suspension. |
+
 ### 2026-09-15 Batch 01 fixed-board exclusion addendum
 
 The closed manifest now covers the six Batch 01 model packages below. Each

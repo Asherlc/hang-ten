@@ -1,0 +1,106 @@
+{
+  "sources": [
+    {
+      "id": "PV1",
+      "publisher": "Trango",
+      "tier": "manufacturer product page",
+      "url": "https://trango.com/products/rock-prodigy-pivot",
+      "facts": "Exact Pivot identity, two independently oriented units, Quad Cleat system, four orientations and marketing 22 grip positions; gray/red options.",
+      "notEstablished": "No verified per-resin-half dimensions or rear surface metrology. Marketing count is not separate contact count."
+    },
+    {
+      "id": "PV2",
+      "publisher": "Trango",
+      "tier": "manufacturer original front photo; visually inspected 1000 \u00d7 1000",
+      "url": "https://trango.com/cdn/shop/products/22840-501_RockProdigyPivotGrey_MainImage.jpg?v=1755037446&width=1946",
+      "facts": "Mirrored front silhouettes with raised diagonal wing, long variable rail, two opposing supported crimps, scalloped three-finger recess with small end window, two-finger through opening, central and two small fastener holes, wavy outer edge.",
+      "notEstablished": "No scale bar, true rear profile or physical manufacturing tolerances."
+    },
+    {
+      "id": "PV3",
+      "publisher": "Trango",
+      "tier": "manufacturer original oblique photo; visually inspected 1000 \u00d7 1000",
+      "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage4_DualBoard.jpg?v=1755037446&width=1946",
+      "facts": "Actual raised wing/internal cove, rounded rail, upper pocket topology and opposite central ledges. Confirms cavities are physical, not painted depressions.",
+      "notEstablished": "Exact surface curvatures, all rear geometry or unit scale."
+    },
+    {
+      "id": "PV4",
+      "publisher": "Trango",
+      "tier": "manufacturer 20-page Quick Start Guide; relevant pages visually inspected",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Consumer_Quick_Start_FINAL_11.20.20.pdf?v=1612292507",
+      "facts": "PDF pages6\u201315 (one-based) show orientation1,2,3,3switch,4 and physical finger uses. Independent quarter turns and physical side switch. Pages3\u20135 list external mounting hardware. The guide explicitly says its grip list is not comprehensive.",
+      "notEstablished": "No single global assembly quaternion can express its independent moves. No application spacing or mesh partition prescription."
+    },
+    {
+      "id": "PV5",
+      "publisher": "Trango",
+      "tier": "manufacturer numbered one-page depth diagram; screenshot inspected",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Pivot_Depth_Guide.pdf?v=1634672905",
+      "facts": "Numbered values: top sloped12.5, side11.5, rail16\u201331, medium9\u201310, large11\u201312, 2f32\u201328, 3f28\u201317 mm. Bottom illustration is same half inverted, not its rear.",
+      "notEstablished": "No overall dimensions, exact contour radii or full sectional slopes. L\u2192R labels are relative to each displayed illustration."
+    },
+    {
+      "id": "PV6",
+      "publisher": "Oliunid France",
+      "tier": "retailer specification with unresolved ambiguity",
+      "url": "https://www.oliunid.fr/trango-rock-prodigy-pivot-poutre-d-escalade",
+      "facts": "Indexed listing states width40cm, height13cm, mass270g; unclear whether dimensions refer to assembly or one unit.",
+      "notEstablished": "These are not verified primary per-half resin measurements. Mass and dimensions cannot establish revision geometry."
+    },
+    {
+      "id": "PV7",
+      "publisher": "Trango",
+      "tier": "manufacturer original close-up; visually inspected 1000 \u00d7 1000",
+      "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage2_CloseUp.jpg?v=1755037446&width=1946",
+      "facts": "Opposed end stops on the two supported crimps, actual shelf lips and through openings are visible. Stops are part of the same molded feature, not separate holds.",
+      "notEstablished": "Measured stop radii or the exact sectional angles."
+    },
+    {
+      "id": "PV8",
+      "publisher": "Trango",
+      "tier": "manufacturer original single-half oblique; visually inspected 1000 \u00d7 1000",
+      "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage3_SingleBoard.jpg?v=1755037446&width=1946",
+      "facts": "Broad asymmetric raised wing has a tapered crest and concave cove; it is not a capsule. Confirms small fastener bore through the ridge near its base.",
+      "notEstablished": "Calibrated overall dimensions or hidden rear resin surface."
+    },
+    {
+      "id": "PV9",
+      "publisher": "Trango",
+      "tier": "manufacturer image of separate mounting hardware; visually inspected",
+      "url": "https://trango.com/cdn/shop/files/Quad_Cleat_Side_Shot.png?v=1755037447&width=1946",
+      "facts": "Quad Cleat is separate wooden hardware with a central T-nut and four bevelled blocks. It must not be invented as molded resin rear geometry.",
+      "notEstablished": "Rear resin cross-section; separate external hardware is excluded from the asset as requested."
+    },
+    {
+      "id": "PV10",
+      "publisher": "Outdoor Gear Exchange / GearX",
+      "tier": "retailer measurement listing with unresolved assembly definition",
+      "url": "https://www.gearx.com/products/trango-rock-prodigypivot-hm47z-grey",
+      "facts": "Indexed listing gives 15.5 \u00d7 5 \u00d7 2.5 inches and 6.6 lb.",
+      "notEstablished": "Whether the width describes adjacent halves, packaged components or a particular assembly spacing. Not a dimensioned primary drawing."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "22 marketed grips versus 28 authored physical surface regions.",
+      "ruling": "28 is the number of disjoint selectable patches, 14 per half; aliases and simultaneous pinch surfaces are documented. Do not pretend marketing positions equal independent physical holds."
+    },
+    {
+      "conflict": "Retail40 \u00d7 13cm/270g lacks per-unit/assembly definition; other listings mix package or other-board dimensions.",
+      "ruling": "Do not transplant or claim these as calibrated Pivot dimensions. Overall scale remains explicitly photo-derived and PARTIAL."
+    },
+    {
+      "conflict": "Depth guide bottom L\u2192R ranges appear reversed when applied to delivered upright left half.",
+      "ruling": "The lower diagram is a 180-degree rotation of the same half. Reverse its range order in base-left coordinates; preserve handedness during right-half mirroring."
+    },
+    {
+      "conflict": "Four marketed orientations but guide also includes a side-switch intermediate state.",
+      "ruling": "Export five preferred position records, including independent side translations for 3switch and4; no redundant contact meshes."
+    },
+    {
+      "conflict": "Retail 15.5 \u00d7 5 \u00d7 2.5 inch figure cannot be assigned unambiguously to an individual resin half, and differs from other retailer statements.",
+      "ruling": "Retain it as secondary evidence; do not silently rescale the independent components to an assembly/package width. Overall resin dimensions remain an explicitly open evidence item."
+    }
+  ]
+}
