@@ -2363,22 +2363,47 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         onContactTap?(contact)
         freezeAccessibilityProjectionToCanonical = false
         committedCanonicalAccessibilityGeneration = nil
-        let resetGeneration = requestAnimatedResetRedraw()
-        // Re-selecting the active position snaps the model camera with
-        // disableActions inside select(), which collapses the animated reset
-        // into a no-op from an already-canonical model while the presentation
-        // tree can remain on the last orbit frame. Orbit only moves the
-        // camera, so resetCamera alone restores the canonical framing.
-        model.resetCamera(animated: true) { [weak self] in
-            guard let self else { return }
-            self.finishAnimatedReset(generation: resetGeneration)
+
+        // Paused SCNViews (production default and XCTest hosts) do not reliably
+        // advance SCNTransaction actions or DispatchQueue.main.asyncAfter timers
+        // while a test awaits Task.sleep. Animate only when the scene is already
+        // playing; otherwise snap the model camera and refresh accessibility
+        // synchronously so projectPoint cannot stay on the last orbit frame.
+        if isPlaying || rendersContinuously {
+            let resetGeneration = requestAnimatedResetRedraw()
+            model.resetCamera(animated: true) { [weak self] in
+                guard let self else { return }
+                self.finishAnimatedReset(generation: resetGeneration)
+            }
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + BoardModelScene.canonicalTransitionDuration + 0.35
+            ) { [weak self] in
+                self?.commitCanonicalAccessibility(generation: resetGeneration)
+            }
+        } else {
+            commitCanonicalAccessibilitySynchronously()
         }
-        // Hard deadline for CI hosts that never advance the presentation tree.
-        DispatchQueue.main.asyncAfter(
-            deadline: .now() + BoardModelScene.canonicalTransitionDuration + 0.35
-        ) { [weak self] in
-            self?.commitCanonicalAccessibility(generation: resetGeneration)
+    }
+
+    /// Immediate canonical camera + accessibility refresh for paused views.
+    private func commitCanonicalAccessibilitySynchronously() {
+        model?.resetCamera(animated: false)
+        SCNTransaction.flush()
+        if let camera = model?.camera ?? pointOfView {
+            camera.removeAllAnimations()
+            if let parent = camera.parent {
+                camera.removeFromParentNode()
+                parent.addChildNode(camera)
+            }
+            pointOfView = camera
         }
+        model?.frame(in: bounds.size)
+        model?.resetCamera(animated: false)
+        SCNTransaction.flush()
+        freezeAccessibilityProjectionToCanonical = true
+        needsAccessibilityProjection = true
+        updateAccessibility()
+        requestPausedRedraw()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
