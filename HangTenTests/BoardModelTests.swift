@@ -1446,6 +1446,10 @@ final class BoardModelTests: XCTestCase {
             while !condition(), ContinuousClock.now < deadline {
                 await renderFrame()
             }
+            XCTAssertTrue(
+                condition(),
+                "Animated reset did not converge accessibility to the canonical camera within \(timeout)"
+            )
         }
         // Initial position selection animates its camera framing too.
         try await Task.sleep(for: .milliseconds(300))

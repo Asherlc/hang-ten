@@ -880,6 +880,9 @@ final class BoardModelScene {
             apply()
             SCNTransaction.commit()
         } else {
+            // Drop any in-flight orbit→canonical action so a paused or mid-
+            // transition presentation tree cannot keep the last orbit pose.
+            camera.removeAllAnimations()
             SCNTransaction.begin()
             SCNTransaction.animationDuration = 0
             SCNTransaction.disableActions = true
@@ -887,6 +890,44 @@ final class BoardModelScene {
             SCNTransaction.commit()
             completion?()
         }
+    }
+
+    /// True when the model camera matches the stored canonical framing.
+    /// Presentation agreement alone is not enough: both layers can settle on
+    /// the last orbit pose when an animated reset never advanced.
+    func isCanonicalCameraApplied(tolerance: Float = 0.0001) -> Bool {
+        guard let framing = canonicalFraming ?? currentFraming,
+              let expected = preparedCanonicalCameraState(for: framing) else {
+            return true
+        }
+        let actual = camera.simdTransform
+        let expectedTransform = expected.transform
+        let transformComponents: [(Float, Float)] = [
+            (actual.columns.0.x, expectedTransform.columns.0.x),
+            (actual.columns.0.y, expectedTransform.columns.0.y),
+            (actual.columns.0.z, expectedTransform.columns.0.z),
+            (actual.columns.0.w, expectedTransform.columns.0.w),
+            (actual.columns.1.x, expectedTransform.columns.1.x),
+            (actual.columns.1.y, expectedTransform.columns.1.y),
+            (actual.columns.1.z, expectedTransform.columns.1.z),
+            (actual.columns.1.w, expectedTransform.columns.1.w),
+            (actual.columns.2.x, expectedTransform.columns.2.x),
+            (actual.columns.2.y, expectedTransform.columns.2.y),
+            (actual.columns.2.z, expectedTransform.columns.2.z),
+            (actual.columns.2.w, expectedTransform.columns.2.w),
+            (actual.columns.3.x, expectedTransform.columns.3.x),
+            (actual.columns.3.y, expectedTransform.columns.3.y),
+            (actual.columns.3.z, expectedTransform.columns.3.z),
+            (actual.columns.3.w, expectedTransform.columns.3.w),
+        ]
+        guard transformComponents.allSatisfy({ abs($0.0 - $0.1) <= tolerance }) else {
+            return false
+        }
+        guard let expectedScale = expected.orthographicScale,
+              let actualScale = camera.camera?.orthographicScale else {
+            return expected.orthographicScale == nil
+        }
+        return abs(Float(actualScale - expectedScale)) <= tolerance
     }
 
     private func cameraScale(for framing: SuspendedCameraFraming) -> Float {
@@ -2017,6 +2058,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     private var accessibilityProjection: AccessibilityProjection?
     private var animatedResetRenderGeneration = 0
     private var ownsAnimatedResetContinuousRendering = false
+    private var ownsAnimatedResetPlayback = false
     private var finishingAnimatedResetGeneration: Int?
     private var pendingCanonicalAccessibilityGeneration: Int?
 
@@ -2087,13 +2129,17 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
 
         // A paused SCNView renders a single dirty frame, which leaves
         // presentation transforms frozen while an implicit camera
-        // transaction is running. Keep the renderer alive through the short
-        // canonical transition so accessibility projection follows the
-        // presentation camera, then return to the board's paused state.
-        // When the view is already playing or another caller owns continuous
-        // rendering, still return a generation and schedule finish so
-        // selectContact never drops the settle path.
-        if !isPlaying, !rendersContinuously || ownsAnimatedResetContinuousRendering {
+        // transaction is running. SCNTransaction actions also need the
+        // scene playing so presentation can advance toward the model
+        // camera. Own both for the short canonical transition, then
+        // restore the board's paused state.
+        if !isPlaying || ownsAnimatedResetPlayback {
+            if !isPlaying {
+                ownsAnimatedResetPlayback = true
+                isPlaying = true
+            }
+        }
+        if !rendersContinuously || ownsAnimatedResetContinuousRendering {
             if !rendersContinuously {
                 ownsAnimatedResetContinuousRendering = true
                 rendersContinuously = true
@@ -2107,28 +2153,43 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         return generation
     }
 
+    private func releaseAnimatedResetRendering() {
+        if ownsAnimatedResetContinuousRendering {
+            ownsAnimatedResetContinuousRendering = false
+            rendersContinuously = false
+        }
+        if ownsAnimatedResetPlayback {
+            ownsAnimatedResetPlayback = false
+            isPlaying = false
+        }
+    }
+
     private func finishAnimatedReset(generation: Int, attempt: Int = 0) {
         guard animatedResetRenderGeneration == generation,
               pendingCanonicalAccessibilityGeneration != generation else { return }
         // Prefer the reset-owned continuous path. When the view is already
         // playing or rendering continuously for another reason, still settle
         // accessibility — just avoid pausing playback ownership at the end.
-        guard ownsAnimatedResetContinuousRendering || isPlaying || rendersContinuously else { return }
+        guard ownsAnimatedResetContinuousRendering
+                || ownsAnimatedResetPlayback
+                || isPlaying
+                || rendersContinuously else { return }
 
         // SceneKit may invoke the transaction completion block before the
         // presentation camera has been committed to its final render frame.
         // Keep the renderer alive and project on the next run-loop turn until
-        // the presentation and model cameras agree. This prevents a paused
-        // view from retaining the last orbit frame as its accessibility frame.
+        // the presentation and model cameras agree on the canonical pose.
         finishingAnimatedResetGeneration = generation
         needsAccessibilityProjection = true
+        if ownsAnimatedResetPlayback { isPlaying = true }
+        if ownsAnimatedResetContinuousRendering { rendersContinuously = true }
         setNeedsDisplay()
 
         // Give SceneKit at least two main-run-loop turns after the transaction
         // callback, even when its presentation node already reports the final
         // transform. The renderer may publish that presentation state one
         // frame before projectPoint observes it.
-        let isSettled = attempt >= 2 && cameraPresentationIsSettled()
+        let isSettled = attempt >= 2 && cameraResetIsSettled()
         guard !isSettled, attempt < 50 else {
             // The renderer can stop before its last presentation callback is
             // delivered when a paused view owns the reset. Re-apply the
@@ -2184,6 +2245,12 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         return transformSettled && scaleSettled
     }
 
+    /// Presentation can agree with the model while both remain at the last
+    /// orbit pose. Require the model camera to match canonical framing too.
+    private func cameraResetIsSettled() -> Bool {
+        cameraPresentationIsSettled() && (model?.isCanonicalCameraApplied() ?? true)
+    }
+
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
@@ -2220,28 +2287,27 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self else { return }
             if let generation = self.pendingCanonicalAccessibilityGeneration,
                self.animatedResetRenderGeneration == generation {
-                // Keep rendering until the presentation camera has actually
-                // reached the canonical model transform. Pausing on the first
-                // post-flush callback freezes the last orbit presentation and
-                // leaves accessibility stuck off-canonical.
-                guard self.cameraPresentationIsSettled() else {
+                // Keep rendering until presentation matches the canonical model
+                // camera. Pausing when presentation merely equals an orbiting
+                // model freezes accessibility off-canonical.
+                guard self.cameraResetIsSettled() else {
                     self.needsAccessibilityProjection = true
                     if self.ownsAnimatedResetContinuousRendering {
                         self.rendersContinuously = true
+                    }
+                    if self.ownsAnimatedResetPlayback {
+                        self.isPlaying = true
                     }
                     return
                 }
                 // Presentation matches the canonical model camera. Update
                 // accessibility while that frame is live, then release any
-                // reset-owned continuous rendering.
+                // reset-owned continuous rendering / playback.
                 self.pendingCanonicalAccessibilityGeneration = nil
                 self.finishingAnimatedResetGeneration = nil
                 self.needsAccessibilityProjection = true
                 self.updateAccessibility()
-                if self.ownsAnimatedResetContinuousRendering {
-                    self.ownsAnimatedResetContinuousRendering = false
-                    self.rendersContinuously = false
-                }
+                self.releaseAnimatedResetRendering()
                 return
             }
             // Camera gestures and implicit reset animations can change projection
@@ -2265,7 +2331,11 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
               let contact = contacts.first(where: { $0.id == id }) else { return }
         onContactTap?(contact)
         let resetGeneration = requestAnimatedResetRedraw()
-        _ = model.select(positionID: model.activePositionID)
+        // Re-selecting the active position snaps the model camera with
+        // disableActions inside select(), which collapses the animated reset
+        // into a no-op from an already-canonical model while the presentation
+        // tree can remain on the last orbit frame. Orbit only moves the
+        // camera, so resetCamera alone restores the canonical framing.
         model.resetCamera(animated: true) { [weak self] in
             guard let self else { return }
             self.finishAnimatedReset(generation: resetGeneration)
