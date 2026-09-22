@@ -1,86 +1,123 @@
-# FreeCAD authoring — unverified prototype
+# FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: incomplete; not ready to merge.** This directory does not yet provide
-CAD authoring, conversion, or a working model compiler. `contract.py` is an
-unverified source-preflight prototype and is not wired into the application or
-existing model pipeline. No shipping models or `board.json` files were changed.
+**Status: pilot complete for one board; 39 of the 40 model-media boards are not
+migrated yet.** The pipeline below is implemented, executed, and reproducible.
+Do not read this as a finished catalogue migration.
 
-## Requested target
+## What this provides
 
-One self-contained `ModelSources/<package-directory>.FCStd` document per board,
-plus the existing `Hangboards/<package-directory>/board.json`. A single shared
-command should read those inputs and build the existing USDZ and hash-bound model
-descriptor. No required Blender, GLB, or STEP intermediate, and no board-specific
-Python authoring program.
+One self-contained native FreeCAD document per board:
 
-The user requested branching from PR #458's simplified models. This branch was
-created from `optimize/model-simplification-pilot-20260922` at
-`6b828e156d4e14ec4a8aa0e3b8f17212336be7bc`. The parent branch and main were not
-modified. The snapshot contains 40 model-media packages; only three were part of
-#458's simplification pilot:
+    ModelSources/<package-directory>.FCStd
 
-- `metolius-simulator-3d`
-- `metolius-wood-grips-deluxe-ii`
-- `lattice-mxedge-lift-small`
+plus the existing logical metadata at `Hangboards/<package-directory>/board.json`.
+One shared command turns those two inputs into the existing runtime pair
+(`assets/primary.usdz` and `assets/primary.model.json`). There is no required
+Blender, GLB, STEP, OBJ, or STL step, and no board-specific Python program in the
+build path.
 
-## Important migration distinction
+## Running it
 
-Wrapping existing triangles in FreeCAD Part faces does **not** recover sketches,
-constraints, feature history, analytic surfaces, or original manufacturing data.
-Such documents must be explicitly classified as imported faceted geometry, not
-presented as reconstructed parametric CAD. Native Part/Part Design/Sketcher
-features are the intended authoring format for newly constructed models.
+The pinned toolchain is FreeCAD 1.1.3 (OCCT 7.8.1, Python 3.11.14) with OpenUSD
+26.08 supplied to FreeCAD's interpreter out of band, because FreeCAD's launcher
+does not inherit `PYTHONPATH`:
 
-Do not bulk-promote a mesh-to-BRep conversion merely because the resulting file
-opens. Check editing performance, actual geometry, contact boundaries, normals,
-materials, and the regenerated runtime output. Preserve existing shape fidelity
-and label unknown product measurements as unknown.
+    HANGTEN_CAD_PYTHONPATH=<dir containing pxr> \
+      /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+      Tools/HangboardCAD/compile_board.py --package lattice-triple-rung
 
-## What exists
+Add `--check` to validate and stage without publishing, and `--report <path>` to
+write the JSON build report. The command validates `board.json` and the source
+archive, reopens and recomputes the document without modifying its bytes,
+extracts the bound components, tessellates at the document's pinned deflection,
+partitions the board surface, writes the USDZ directly, reopens the exported
+bytes, derives the descriptor from those bytes, and publishes the pair.
 
-`contract.py` sketches read-only ZIP/XML checks, an explicit builtin object-type
-allowlist, checks for some external/executable properties, and body/contact/slot
-binding validation. These checks have not been exercised against actual complete
-board documents. They are not a security sandbox or an approved production
-contract. Review the allowlist and property handling against native saved files
-before relying on them.
+## Source document contract
 
-## Work still required
+Document properties: `HangTenBoardID`, `HangTenPresentationID`,
+`HangTenSchemaVersion` (1 or 2), `HangTenSourceKind`,
+`HangTenCoordinateFrame` (`freecad-mm-z-up-front-negative-y`), and
+`HangTenTessellationDeflection`.
 
-1. Restore a working local execution environment with FreeCAD, its matching
-   Python/OCCT libraries, OpenUSD, NumPy, and pytest. Pin the validated toolchain.
-2. Write and run source-contract tests, including genuine FCStd save/reopen
-   fixtures. Verify builtin feature support, embedded dependencies, malformed
-   archives, external links, duplicate IDs, and descriptor-v2 reusable slots.
-3. Implement native document loading/recomputation and direct CAD tessellation
-   to USDZ. Preserve stable semantic node IDs and contact regions. Derive the
-   descriptor from the actual reopened output. Do not use old USDZ bytes as a
-   normal build input or hide an embedded runtime asset inside the CAD document.
-4. Establish the source metadata/document contract. Keep application facts in
-   `board.json`; store shape and geometric bindings in FCStd. Use explicit units
-   and one tested basis conversion: native millimetres, +X right, +Z up, front
-   -Y; runtime metres, +X right, +Y up, front +Z.
-5. Prove a representative simplified model end-to-end before expanding. Reopen
-   and recompute its native source, build twice from a clean environment, and
-   check shape, winding, normals, materials, contact IDs, and deterministic
-   output. Do not claim recovered parametric history for a faceted import.
-6. Add the public one-command build interface, source inventory, Git LFS rules,
-   and appropriate read-only CI. Keep generated outputs separate from authoring
-   files, and prevent failed builds from partially replacing existing packages.
-7. Run the existing model/package tests, relevant full repository tests, and
-   native app rendering/picking checks. Record every failure or unavailable
-   verification lane before promoting any runtime asset.
+Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
+`attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
+`Roughness`, `Metallic`, and optionally an embedded `TextureFile`. Objects
+without `NodeID` — sketches, datums, construction features — are never exported.
+The `NodeID` becomes the USD mesh prim name, which is what the application binds
+against.
 
-## Execution status
+Coordinate conversion is applied exactly once: native millimetres
+(+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
+`(x, y, z) -> (x/1000, z/1000, -y/1000)`.
 
-Local terminal and Python tools began consistently returning
-`TransportTimeoutError`; even a minimal terminal health check failed. The
-implementation could not be executed or verified after that failure. No passing
-CAD test suite, source conversion, rendering, or application build is claimed.
+## Surface partition
 
-Two temporary isolated setup workflows ran before the interruption. A native
-FreeCAD environment smoke test succeeded, but it did not validate this code or
-convert a repository board. The temporary workflow and unfinished remote test
-scaffold were removed. Setup artifacts were configured with seven-day retention.
-Do not use hosted CI as a replacement development shell when local execution is
-unavailable; continue the implementation in a working local execution session.
+The approved runtime contract partitions the board surface: the body node holds
+the surface *minus* the contact regions, and each contact node holds its region.
+The compiler assigns every tessellated body triangle to exactly one node using
+the contact regions built from the source document's own sketch edges, so the
+result has no duplicated coplanar geometry and no z-fighting. Verified on the
+pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
+region matching the approved reference to 0.0000 mm in both directions.
+
+## Pilot: lattice-triple-rung
+
+`ModelSources/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
+constrained 170-vertex Sketcher profile and a symmetric 550 mm pad. The three
+grip regions are `PartDesign::SubShapeBinder` runs of the profile's own sketch
+edges, extruded with a length expression on the pad.
+
+Provenance, recorded in `ModelSources/lattice-triple-rung.provenance.json`:
+
+* Published facts come from `board.json`: overall 550 x 130 x 50 mm and grip
+  depths 45 / 20 / 10 mm.
+* The cross-section is **measured** from the approved reference asset at the
+  pre-migration commit, as an ordered end-cap boundary loop. It is a measured
+  approximation of a display mesh, **not recovered manufacturing geometry**.
+* The 267 measured points were reduced to 170 authored vertices, with a recorded
+  maximum deviation of 0.1899 mm.
+
+## Known limitations and open interface question
+
+* **Only one of 40 model-media boards is migrated.** The other 39 still ship
+  their existing runtime assets, which are unchanged by this work.
+* `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
+  `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
+  and must not be presented as recovered parametric history.
+* FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
+  value in this pinned build. The authored sketch stores negated local
+  coordinates with positive driving dimensions and negates them back through an
+  explicit sketch placement; the pad's world bounding box is asserted, so any
+  change in that behaviour fails the build rather than silently mirroring.
+* Binding contact regions to the pad's **faces** was tried and rejected: FreeCAD
+  lost the face element map after a profile edit and unrelated contact regions
+  silently moved to different faces. The sketch-edge binding is used instead, and
+  the native checks fail if any region's depth changes after an unrelated edit.
+* CPU previews are neutral geometry renders with an explicit planar UV
+  projection. They are not native SceneKit screenshots and do not establish
+  native materials, picking, accessibility, suspension, or performance.
+* The migrated asset has not been validated in the iOS app or in Workbench.
+  Descriptor validation and the existing package suites pass, but that is not
+  native visual acceptance.
+
+## Tests
+
+    .context/organic-shark/venv/bin/python -m pytest Tools/HangboardCAD/tests -q
+
+* `test_contract.py` — archive preflight: traversal, case collisions, duplicate
+  members, unsupported object types, external links, missing embedded files,
+  LFS pointers, and binding completeness.
+* `test_usdz_writer.py` — real round trips including an asymmetric basis fixture
+  that catches scale, reflection, and axis-swap errors, embedded textures,
+  normals and UVs, and byte reproducibility.
+* `test_pilot_native.py` — runs the native checks and the compiler under the
+  pinned FreeCAD build as subprocesses; skipped, not silently passed, when that
+  toolchain is absent.
+* `tests/native_source_checks.py` — genuine native reopen, recompute, and edit
+  checks: pad length 550 -> 620 mm propagating to every contact, and a profile
+  dimension 50 -> 56 mm moving the edge-45 contact from 45.00 to 55.98 mm while
+  the unrelated contacts keep their measured depth.
+* `tests/compare_exports.py` — sampled two-way point-to-triangle distance against
+  the approved reference (0.21 mm worst case, limit 0.5 mm). A sampled bound, not
+  an exact Hausdorff distance and not a product accuracy claim.

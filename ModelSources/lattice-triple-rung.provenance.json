@@ -1,0 +1,34 @@
+{
+ "package": "lattice-triple-rung",
+ "boardID": "lattice-triple-rung",
+ "reference": "Hangboards/lattice-triple-rung/assets/primary.usdz",
+ "referenceCommit": "6b828e156d4e14ec4a8aa0e3b8f17212336be7bc",
+ "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
+ "referenceTexture": "neutral-tulipwood-100627a1c9c4.png",
+ "referenceTextureSHA256": "4ee071b0a013cfabfe784a494727337bd5893ed75775566195e640cd042b6094",
+ "method": "ordered end-cap boundary loop; native (x, y, z) = (X, -Z, Y)",
+ "publishedFacts": {
+  "source": "Hangboards/lattice-triple-rung/board.json",
+  "dimensions": "55 \u00d7 13 \u00d7 5 cm",
+  "gripDepthsMM": {
+   "edge-45": 45.0,
+   "edge-20": 20.0,
+   "edge-10": 10.0
+  }
+ },
+ "measuredMM": {
+  "width": 550.0,
+  "height": 130.0,
+  "depth": 50.0
+ },
+ "reductionToleranceMM": 0.2,
+ "achievedMaxDeviationMM": 0.1899,
+ "authoredVertexCount": 170,
+ "measuredVertexCount": 267,
+ "contactBandDepthSpansMM": {
+  "edge-10": 10.0,
+  "edge-20": 20.0,
+  "edge-45": 45.0
+ },
+ "notes": "Measured approximation of an approved display mesh. Not recovered manufacturing geometry. Contact regions are native SubShapeBinder runs of the profile sketch extruded along X, so they follow profile dimension edits."
+}
