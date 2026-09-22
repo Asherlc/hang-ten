@@ -1,0 +1,71 @@
+{
+  "attemptResult": "BLOCKED: container network/DNS unavailable and download bridge failed on viewed originals",
+  "originalFilesRetained": 0,
+  "sources": [
+    {
+      "id": "M1",
+      "url": "https://frictitiousclimbing.com/products/megalith",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "26.75 x 6.5 x 2.25 inches; poplar; edge depths 40/30/20/15/12/10/8; 25 mm center edge; mono and 2-finger features; full-width jug.",
+      "doesNotEstablish": "Mono/subpocket depths, radii, and rear section not dimensioned.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M2",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Three tiers; depth ordering; continuous stepped openings; six screw openings; central protruding grip and bottom notch.",
+      "doesNotEstablish": "No measured section.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M3",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front-1.jpg?v=1780436232&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Side profile: tier setbacks and rolled top jug.",
+      "doesNotEstablish": "Photo-derived curvature only.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M4",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Oblique detail of nested 2-finger contact in 40 mm ledge and separate bottom mono.",
+      "doesNotEstablish": "Cosmetic engraving differs from newer front; no measured small-pocket depth.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M5",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Mega-2.jpg?v=1764914587&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "In-use oblique construction and external support.",
+      "doesNotEstablish": "External support is not part of this board-only export.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ]
+}

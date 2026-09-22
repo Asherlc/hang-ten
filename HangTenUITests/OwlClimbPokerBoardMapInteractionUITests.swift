@@ -220,3 +220,169 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
         XCTAssertFalse(board.exists, "The picker card must disappear after selection.")
     }
 }
+
+/// Batch 05 acceptance uses physical screen coordinates. Accessibility is used
+/// only to locate projected frames and observe state, never to invoke a contact.
+final class Batch05BoardModelInteractionUITests: XCTestCase {
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    override func tearDown() {
+        XCUIDevice.shared.orientation = .portrait
+        super.tearDown()
+    }
+
+    func testDoorMount() throws {
+        try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right", surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296))
+    }
+
+    func testMegalith() throws {
+        try review(boardID: "frictitious.megalith", target: "center-edge-25", surfacePoint: CGVector(dx: 0.55742604, dy: 0.5415197))
+    }
+
+    func testForge() throws {
+        try review(boardID: "trango.rock-prodigy-forge", target: "variable-edge-rail-right", surfacePoint: CGVector(dx: 0.6323009872, dy: 0.2882222512))
+    }
+
+    func testNatural() throws {
+        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right", surfacePoint: CGVector(dx: 0.63137496, dy: 0.61984193))
+    }
+
+    func testEvo() throws {
+        try review(boardID: "zlagboard.evo", target: "edge-35-center", surfacePoint: CGVector(dx: 0.44739193, dy: 0.47573414))
+    }
+
+    func testPro() throws {
+        try review(boardID: "zlagboard.pro", target: "edge-35-center", surfacePoint: CGVector(dx: 0.44776505, dy: 0.3821585))
+    }
+
+    private func review(boardID: String, target: String, surfacePoint: CGVector) throws {
+        let app = XCUIApplication()
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": boardID,
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+        ]
+        app.launch()
+        let model = app.descendants(matching: .any).matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
+        XCTAssertTrue(model.waitForExistence(timeout: 60))
+        if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
+            try assertModelCornersAreVisible(model)
+        }
+        capture("\(boardID)-portrait-neutral")
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_DETAIL"] = "1"
+        app.launch()
+        XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
+        let contact = app.buttons["boardModel.contact.\(target)"]
+        XCTAssertTrue(contact.waitForExistence(timeout: 60))
+        let selected = app.otherElements["boardDetail.selectedHold.\(target)"]
+        XCTAssertFalse(selected.exists, "The tap must change the initial default contact")
+        capture("\(boardID)-portrait-initial")
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.exists)
+        // These points are exposed triangles verified against native body-inclusive
+        // visibility and the production closest screen hit on the final USDZs.
+        let initialPoint = map.coordinate(withNormalizedOffset: surfacePoint)
+        let contactOffset = CGVector(dx: initialPoint.screenPoint.x - contact.frame.midX,
+                                     dy: initialPoint.screenPoint.y - contact.frame.midY)
+        initialPoint.tap()
+        XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
+        capture("\(boardID)-portrait-active")
+
+        let initialContactFrame = contact.frame
+        let allContacts = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardModel.contact."))
+        let canonicalFrames = Dictionary(uniqueKeysWithValues: allContacts.allElementsBoundByIndex.map { ($0.identifier, $0.frame) })
+        map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
+            .press(forDuration: 0.1, thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
+        XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
+        XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
+        capture("\(boardID)-portrait-orbit")
+        // A real contact tap runs the production selectContact canonical reset.
+        if boardID == "trango.rock-prodigy-forge" {
+            // The thin rail's visible triangle changes with orbit; use its
+            // reviewed interior point on the active surface in this gesture pose.
+            map.coordinate(withNormalizedOffset: CGVector(dx: 0.78, dy: 0.365)).tap()
+        } else {
+            contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+                .withOffset(contactOffset).tap()
+        }
+        XCTAssertTrue(selected.exists)
+        let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let currentFrames = Dictionary(
+                uniqueKeysWithValues: allContacts.allElementsBoundByIndex.map { ($0.identifier, $0.frame) }
+            )
+            guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
+            return currentFrames.allSatisfy { identifier, frame in
+                guard let canonical = canonicalFrames[identifier] else { return false }
+                return abs(frame.midX - canonical.midX) <= 0.5
+                    && abs(frame.midY - canonical.midY) <= 0.5
+            }
+        }, object: nil)
+        // Reading all 28 Pro frames crosses the UI-test process boundary;
+        // allow traversal time without relaxing the canonical-frame tolerance.
+        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 15), .completed,
+                       "A physical surface tap must finish the canonical camera reset")
+        // A top-edge center may move less than two points despite a visible orbit.
+        // Require every projected contact to return to its canonical frame.
+        let resetFrames = Dictionary(
+            uniqueKeysWithValues: allContacts.allElementsBoundByIndex.map { ($0.identifier, $0.frame) }
+        )
+        XCTAssertEqual(Set(resetFrames.keys), Set(canonicalFrames.keys),
+                       "Reset must preserve the complete canonical contact set")
+        for (identifier, frame) in resetFrames {
+            let canonical = try XCTUnwrap(canonicalFrames[identifier])
+            XCTAssertEqual(frame.midX, canonical.midX, accuracy: 0.5, identifier)
+            XCTAssertEqual(frame.midY, canonical.midY, accuracy: 0.5, identifier)
+        }
+        capture("\(boardID)-portrait-reset")
+
+        XCUIDevice.shared.orientation = .landscapeRight
+        XCTAssertTrue(selected.waitForExistence(timeout: 10))
+        XCTAssertGreaterThan(app.frame.width, app.frame.height)
+        XCTAssertGreaterThanOrEqual(map.frame.minX, app.frame.minX)
+        XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
+        XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
+        XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+        capture("\(boardID)-landscape-active")
+        app.terminate()
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_BOARD_DETAIL")
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_PORTRAIT")
+        app.launchEnvironment["HANGTEN_REVIEW_LANDSCAPE"] = "1"
+        app.launch()
+        XCTAssertTrue(model.waitForExistence(timeout: 60))
+        capture("\(boardID)-landscape-neutral")
+    }
+
+    private func assertModelCornersAreVisible(_ model: XCUIElement) throws {
+        let screenshot = XCUIScreen.main.screenshot().image
+        let cgImage = try XCTUnwrap(screenshot.cgImage)
+        let width = cgImage.width
+        let height = cgImage.height
+        var pixels = [UInt8](repeating: 0, count: width * height * 4)
+        try pixels.withUnsafeMutableBytes { storage in
+            let context = try XCTUnwrap(CGContext(data: storage.baseAddress, width: width, height: height,
+                bitsPerComponent: 8, bytesPerRow: width * 4,
+                space: CGColorSpaceCreateDeviceRGB(),
+                bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
+            context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+        }
+        let frame = model.frame
+        let scale = CGFloat(width) / XCUIApplication().frame.width
+        // The approved Zlag bodies have nearly square lower corners. A card's
+        // decorative 18pt mask must not erase the real body inside this viewport.
+        for x in [frame.minX + 3, frame.maxX - 3] {
+            let offset = (Int((frame.maxY - 3) * scale) * width + Int(x * scale)) * 4
+            XCTAssertLessThan(pixels[offset + 2], 220,
+                              "Native body corner must contain wood, not the cream card background")
+        }
+    }
+
+    private func capture(_ name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+}

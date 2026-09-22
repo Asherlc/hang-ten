@@ -1,0 +1,144 @@
+{
+  "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/trango-rock-prodigy-natural/trango-rock-prodigy-natural.glb",
+  "sourceSHA256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90",
+  "preparedSHA256": "d1bb7baec8ec3689f6d51454c82b5a38d2f30b41db864fcc8bbd99b900f053fe",
+  "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-natural.blend",
+  "blenderVersion": "5.2.0 LTS",
+  "removedTransformOnlyNodes": [
+    "world",
+    "SOURCE-ZUP_to_GLTF-YUP"
+  ],
+  "maximumWorldVertexDeltaMetres": 0.0,
+  "geometryChanged": true,
+  "authoredGeometrySHA256": "e713ed92f0825f12168c98efaa03a6e37e831b47e5271234a38514cd257f29ad",
+  "authoringSHA256": {
+    "author_trango.py": "0b9cc125c4be79c76d12e39d049c3848ff2613e23c777785cad25ea9c35bc579",
+    "authored_geometry.py": "1d6d9c82c89b78d947df8195da1ff04928247b4608f5623a94b78affb5d970d4",
+    "geometry.py": "d5f87ec64a01bb8be90ebb5c7c554d9956d9aebb2652bc315de02d4034ddafea"
+  },
+  "geometryAuthoring": "trango-authoring/author_trango.py; explicit drafted cavity, crimp/shoulder, jaw/brow corrections and screw omissions. Original GLB retained immutable.",
+  "contactOwnershipEdits": [],
+  "mountingOpeningsRemoved": 6,
+  "preservedLargePassages": 2,
+  "coordinatePreparation": "Native GLB world bake checked once; derivative uses same native Blender Z-up/front -Y metres basis; no additional axis/scale transform.",
+  "materialConversions": {
+    "substrate": {
+      "format": "PNG RGBA8 sRGB",
+      "encodedSRGB8": [
+        209,
+        175,
+        142,
+        255
+      ],
+      "decodedLinearRGBA": [
+        0.6375968739940326,
+        0.4286904966139066,
+        0.2704977910130658,
+        1.0
+      ],
+      "maximumLinearChannelError": 0.0026820564962160565,
+      "linearChannelTolerance": 0.004,
+      "textureSHA256": "6babc05e3677a42b699cea48aad8f6044d215cdb3930f78860a713ca5e6d7fa9"
+    }
+  },
+  "sourceMaterialLinearRGBA": {
+    "substrate": [
+      0.6392157077789307,
+      0.4313725531101227,
+      0.2705882489681244,
+      1.0
+    ]
+  },
+  "meshInventory": [
+    {
+      "name": "body--left",
+      "vertices": 16842,
+      "polygons": 32219
+    },
+    {
+      "name": "body--right",
+      "vertices": 16842,
+      "polygons": 32219
+    },
+    {
+      "name": "hold--left-closed-crimp",
+      "vertices": 10599,
+      "polygons": 20676
+    },
+    {
+      "name": "hold--left-jug",
+      "vertices": 840,
+      "polygons": 1487
+    },
+    {
+      "name": "hold--left-pinch-thumb",
+      "vertices": 616,
+      "polygons": 1100
+    },
+    {
+      "name": "hold--left-pocket-2finger",
+      "vertices": 310,
+      "polygons": 540
+    },
+    {
+      "name": "hold--left-pocket-3finger",
+      "vertices": 430,
+      "polygons": 756
+    },
+    {
+      "name": "hold--left-pocket-supported",
+      "vertices": 390,
+      "polygons": 684
+    },
+    {
+      "name": "hold--left-rail-lower",
+      "vertices": 840,
+      "polygons": 1494
+    },
+    {
+      "name": "hold--left-rail-upper",
+      "vertices": 830,
+      "polygons": 1476
+    },
+    {
+      "name": "hold--right-closed-crimp",
+      "vertices": 10599,
+      "polygons": 20676
+    },
+    {
+      "name": "hold--right-jug",
+      "vertices": 840,
+      "polygons": 1487
+    },
+    {
+      "name": "hold--right-pinch-thumb",
+      "vertices": 616,
+      "polygons": 1100
+    },
+    {
+      "name": "hold--right-pocket-2finger",
+      "vertices": 310,
+      "polygons": 540
+    },
+    {
+      "name": "hold--right-pocket-3finger",
+      "vertices": 430,
+      "polygons": 756
+    },
+    {
+      "name": "hold--right-pocket-supported",
+      "vertices": 390,
+      "polygons": 684
+    },
+    {
+      "name": "hold--right-rail-lower",
+      "vertices": 840,
+      "polygons": 1494
+    },
+    {
+      "name": "hold--right-rail-upper",
+      "vertices": 830,
+      "polygons": 1476
+    }
+  ]
+}

@@ -1,0 +1,520 @@
+{
+  "schemaVersion": 1,
+  "status": "iOS native acceptance complete; pre-existing Android gate failures recorded",
+  "simulator": {
+    "uuid": "00342F0E-DC95-474D-A6BC-C550F37D2C17",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5 (23F77)",
+    "xcode": "27.0 (27A266a)"
+  },
+  "boards": [
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "package": "Hangboards/frictitious-doormount-pro-7",
+      "contactCount": 13,
+      "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+      "descriptorSHA256": "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
+      "captures": [
+        {
+          "path": "frictitious.doormount-pro-7-landscape-active.png",
+          "sha256": "1ff07f71e006bb1751a792f63479be92311f82b80f67eb1bc900f4e4bc1ed60b"
+        },
+        {
+          "path": "frictitious.doormount-pro-7-landscape-neutral.png",
+          "sha256": "1a9d26940fd83d3da1ea2509a646e8de9b7982697f31c53dfa60de437da75315"
+        },
+        {
+          "path": "frictitious.doormount-pro-7-portrait-active.png",
+          "sha256": "92606939bf43f1fb94266d7d816951bd0862ef7f9a1ca3f58b7e9231d24aa34d"
+        },
+        {
+          "path": "frictitious.doormount-pro-7-portrait-neutral.png",
+          "sha256": "e1957b6b3325a1d5195d8ebbd4b53e48c0e85a2f3fba1ffb43e7a875945be0ed"
+        },
+        {
+          "path": "frictitious.doormount-pro-7-portrait-orbit.png",
+          "sha256": "cc0fddbf7e89cb0eadc414f208f5075d0ff83c5bea6f7d3c5851c2116f0a45b8"
+        },
+        {
+          "path": "frictitious.doormount-pro-7-portrait-reset.png",
+          "sha256": "92606939bf43f1fb94266d7d816951bd0862ef7f9a1ca3f58b7e9231d24aa34d"
+        }
+      ]
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "package": "Hangboards/frictitious-megalith",
+      "contactCount": 20,
+      "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+      "descriptorSHA256": "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
+      "captures": [
+        {
+          "path": "frictitious.megalith-landscape-active.png",
+          "sha256": "22cf7fbe24830d5871d188760e118fb94e6e96a4041b42dcbbc838cf68dada8d"
+        },
+        {
+          "path": "frictitious.megalith-landscape-neutral.png",
+          "sha256": "f1e8aabf4e44afeca263e1bc20da8b47c99454425b73f9c5e102cde0d5fb6de2"
+        },
+        {
+          "path": "frictitious.megalith-portrait-active.png",
+          "sha256": "e11ef163cbd3c3dffba3ac27b0e7d78147d7865748961d33d81dc726a3409f7e"
+        },
+        {
+          "path": "frictitious.megalith-portrait-neutral.png",
+          "sha256": "4b7e84d0bb966f3521302f5c8f6a1a21f7317461c566805e14d759d43ad128c3"
+        },
+        {
+          "path": "frictitious.megalith-portrait-orbit.png",
+          "sha256": "38f14c4ff9cbb5ad2b012ac76e8471e5bb2f1b42b1e95ae783c932bfccf8ad90"
+        },
+        {
+          "path": "frictitious.megalith-portrait-reset.png",
+          "sha256": "e11ef163cbd3c3dffba3ac27b0e7d78147d7865748961d33d81dc726a3409f7e"
+        }
+      ]
+    },
+    {
+      "boardID": "trango.rock-prodigy-forge",
+      "package": "Hangboards/trango-rock-prodigy-forge",
+      "contactCount": 20,
+      "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+      "descriptorSHA256": "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
+      "captures": [
+        {
+          "path": "trango.rock-prodigy-forge-landscape-active.png",
+          "sha256": "5d3377dc2984bfdddeae5329e4907fee97cf019218b1cea1e1219eeb49029534"
+        },
+        {
+          "path": "trango.rock-prodigy-forge-landscape-neutral.png",
+          "sha256": "7057f89e0b0477c317b5e6aa91a97afe5fb60f1f1b92fd8c538ad1493a772b2f"
+        },
+        {
+          "path": "trango.rock-prodigy-forge-portrait-active.png",
+          "sha256": "9f78ce5a33a3087cc13a62c16a16e3cf93a1af4e8124ff013a398511f63d305c"
+        },
+        {
+          "path": "trango.rock-prodigy-forge-portrait-neutral.png",
+          "sha256": "efe395cda2ff0b17e4ef6da45653840f2626037b7486de592e4a2a6079901cf5"
+        },
+        {
+          "path": "trango.rock-prodigy-forge-portrait-orbit.png",
+          "sha256": "c45cd32c77ed7ce381b8dcdc8d6485aff54a1a4568f0522c3e03bb46639d6389"
+        },
+        {
+          "path": "trango.rock-prodigy-forge-portrait-reset.png",
+          "sha256": "9f78ce5a33a3087cc13a62c16a16e3cf93a1af4e8124ff013a398511f63d305c"
+        }
+      ]
+    },
+    {
+      "boardID": "trango.rock-prodigy-natural",
+      "package": "Hangboards/trango-rock-prodigy-natural",
+      "contactCount": 14,
+      "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+      "descriptorSHA256": "fb9bc30444fcab8f87d37f900b26fe3c74e9121ef02c08958a4a8fc1a4428144",
+      "captures": [
+        {
+          "path": "trango.rock-prodigy-natural-landscape-active.png",
+          "sha256": "a891558d08e65545fbe2e4b83fa21071fb407c3df8bc453520d19ea1304c60f9"
+        },
+        {
+          "path": "trango.rock-prodigy-natural-landscape-neutral.png",
+          "sha256": "6717b17a81b9ea4d09a1f5fc9c0fb4ed5ed4553a0ff83d1e4aa921c6bf8be8f4"
+        },
+        {
+          "path": "trango.rock-prodigy-natural-portrait-active.png",
+          "sha256": "892fadf38bfa51b9e88403cff1c9af2b62bf13d576a1563fac3b401797ad7758"
+        },
+        {
+          "path": "trango.rock-prodigy-natural-portrait-neutral.png",
+          "sha256": "62a93a1abfe2b57f44751953ec811bde31fd21d80ac783db8545225496920545"
+        },
+        {
+          "path": "trango.rock-prodigy-natural-portrait-orbit.png",
+          "sha256": "bd9d46f1b65bffed7308f33b1744d2334b265ad394ef4c39d44ac27a6f6109c7"
+        },
+        {
+          "path": "trango.rock-prodigy-natural-portrait-reset.png",
+          "sha256": "892fadf38bfa51b9e88403cff1c9af2b62bf13d576a1563fac3b401797ad7758"
+        }
+      ]
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "package": "Hangboards/zlagboard-evo",
+      "contactCount": 21,
+      "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+      "descriptorSHA256": "6acf2aeb88708410bc9cf8778eaac1c7372addfee7d818e1968c420b7c43180f",
+      "captures": [
+        {
+          "path": "zlagboard.evo-landscape-active.png",
+          "sha256": "6bedcd8aa8556bf71a5f8464756bd1519d6e6fb49106436c770147c41f454154"
+        },
+        {
+          "path": "zlagboard.evo-landscape-neutral.png",
+          "sha256": "7a730c2024fc8629f0b98e597b4920784764cce43c4acd932730f59a9931512b"
+        },
+        {
+          "path": "zlagboard.evo-portrait-active.png",
+          "sha256": "89964b4cf922811c733ebdd78ffbc6af921a0dfb6394c2b945f132afc18ae3a5"
+        },
+        {
+          "path": "zlagboard.evo-portrait-neutral.png",
+          "sha256": "b7682aec243ef4b98b0957c15583f9dd462a063fe229ed5603072b82d0a48d1c"
+        },
+        {
+          "path": "zlagboard.evo-portrait-orbit.png",
+          "sha256": "7cf1a836151b313e3b5efc4fd4f2f2a8eb3e8695d391b49fb32cdc903c5f17b5"
+        },
+        {
+          "path": "zlagboard.evo-portrait-reset.png",
+          "sha256": "89964b4cf922811c733ebdd78ffbc6af921a0dfb6394c2b945f132afc18ae3a5"
+        }
+      ]
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "package": "Hangboards/zlagboard-pro",
+      "contactCount": 28,
+      "modelSHA256": "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+      "descriptorSHA256": "2b5456425bc1a89ff8263a0d3c6474fa8419ec8f835cfdf60d844defd5ac17bd",
+      "captures": [
+        {
+          "path": "zlagboard.pro-landscape-active.png",
+          "sha256": "a6e37f86864708017a0a61d3e45004adeb030c08fae6deb259c571ceead8ded1"
+        },
+        {
+          "path": "zlagboard.pro-landscape-neutral.png",
+          "sha256": "2771e796027db2a3c4671aae374cf6cc0d3ddfcb22398558fbb0751fd332b587"
+        },
+        {
+          "path": "zlagboard.pro-portrait-active.png",
+          "sha256": "384da6e236b0b370ede53db887c18a87ca1f1f38baf06e51ad10a634e6fbe69b"
+        },
+        {
+          "path": "zlagboard.pro-portrait-neutral.png",
+          "sha256": "71ead74d6dd64f8550aab8bba89e39226af8a35b6f1908c5f623e3065d866b35"
+        },
+        {
+          "path": "zlagboard.pro-portrait-orbit.png",
+          "sha256": "9a4613e919acf485d45cd9075cf9d6fb8459e021ea71f5dfa032538cf4505513"
+        },
+        {
+          "path": "zlagboard.pro-portrait-reset.png",
+          "sha256": "fc876c789d9508f0028f71d5960abc3e7ffa6e71fe2d07fe95fd33d633a7b0f8"
+        }
+      ]
+    }
+  ],
+  "captureSource": "native-full-swift.xcresult: all34 UI tests passed; stale unit allowlist corrected in subsequent run",
+  "visualReview": {
+    "reviewer": "controller Astra",
+    "decision": "accepted all six models and retained neutral/active/orbit/reset portrait/landscape states; no outstanding findings",
+    "date": "2026-09-20"
+  },
+  "finalReviewFix": {
+    "base": "77e6ece8880fc5aa365e800434d3772bec5e8f13",
+    "change": "Reset wait and post-wait checks now require exact equality with the canonical accessibility contact identifier set before comparing the snapshotted projected frames.",
+    "focusedProUI": {
+      "test": "HangTenUITests/Batch05BoardModelInteractionUITests/testPro",
+      "result": "passed",
+      "executed": 1,
+      "failures": 0,
+      "testSeconds": 55.635,
+      "simulatorUUID": "11A70343-5C51-4F57-8B26-73FD925F0104",
+      "simulatorDeleted": true,
+      "derivedDataDeleted": true
+    },
+    "productionOrPackageChanges": false,
+    "capturesRegenerated": false
+  },
+  "dispatchBase": "5a9ed0201e55cd1f1d664e5e2a8bd533d58bb20a",
+  "dependencyBase": "de2478c1ba6e65c8364f01d646dc18aaec642616",
+  "build": {
+    "simulatorUUID": "00342F0E-DC95-474D-A6BC-C550F37D2C17",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "runtimeBuild": "23F77",
+    "xcode": "Xcode 27.0\nBuild version 27A266a",
+    "gitDispatchBase": "5a9ed0201e55cd1f1d664e5e2a8bd533d58bb20a",
+    "gitDependencyBase": "de2478c1ba6e65c8364f01d646dc18aaec642616",
+    "sourceChanges": "BoardModelView projection invalidation; Train model card mask; native/UI/inventory/CI tests",
+    "installedApp": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/00342F0E-DC95-474D-A6BC-C550F37D2C17/data/Containers/Bundle/Application/7C04D565-A972-4EFB-A727-58E3508B5DE8/HangTen.app",
+    "binarySHA256": {
+      "HangTen": "57bcc14755c5ab412527e9ac0486fdae208cc58564132558d48b846c5357f5e3",
+      "HangTen.debug.dylib": "95351b494710fb09ea32b914ea38884aec0301dffbf2612ed291ff937c11c203"
+    },
+    "installedMatchesBuilt": true,
+    "codesignVerify": true,
+    "healthKitEntitlement": true,
+    "healthShareDescription": "Hang Ten reads your Apple Health workout history to restore your progress on a new device.",
+    "healthUpdateDescription": "Hang Ten saves completed hangboard sessions to Apple Health."
+  },
+  "odr": [
+    {
+      "boardID": "frictitious.doormount-pro-7",
+      "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+      "descriptorSHA256": "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-frictitious-doormount-pro-7-05b26ed0d38e32974e9e9c0f2fd05430.assetpack/Hangboards/frictitious-doormount-pro-7/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-05b26ed0d38e32974e9e9c0f2fd05430",
+        "Tags": [
+          "hang-ten-model-frictitious-doormount-pro-7"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+      "descriptorSHA256": "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-frictitious-megalith-6a81b0f89a6a68606f058016c99d8b86.assetpack/Hangboards/frictitious-megalith/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-6a81b0f89a6a68606f058016c99d8b86",
+        "Tags": [
+          "hang-ten-model-frictitious-megalith"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    },
+    {
+      "boardID": "trango.rock-prodigy-forge",
+      "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+      "descriptorSHA256": "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-trango-rock-prodigy-forge-e3ba7fb8dc102df9254781ef36c4079b.assetpack/Hangboards/trango-rock-prodigy-forge/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-e3ba7fb8dc102df9254781ef36c4079b",
+        "Tags": [
+          "hang-ten-model-trango-rock-prodigy-forge"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    },
+    {
+      "boardID": "trango.rock-prodigy-natural",
+      "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+      "descriptorSHA256": "fb9bc30444fcab8f87d37f900b26fe3c74e9121ef02c08958a4a8fc1a4428144",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-trango-rock-prodigy-natural-e680ad1bc6c8d27b56e25ef191b31829.assetpack/Hangboards/trango-rock-prodigy-natural/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-e680ad1bc6c8d27b56e25ef191b31829",
+        "Tags": [
+          "hang-ten-model-trango-rock-prodigy-natural"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    },
+    {
+      "boardID": "zlagboard.evo",
+      "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+      "descriptorSHA256": "6acf2aeb88708410bc9cf8778eaac1c7372addfee7d818e1968c420b7c43180f",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-evo-0b78784dcf96651ad8ed90e6bf624ac9.assetpack/Hangboards/zlagboard-evo/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-0b78784dcf96651ad8ed90e6bf624ac9",
+        "Tags": [
+          "hang-ten-model-zlagboard-evo"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    },
+    {
+      "boardID": "zlagboard.pro",
+      "modelSHA256": "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+      "descriptorSHA256": "2b5456425bc1a89ff8263a0d3c6474fa8419ec8f835cfdf60d844defd5ac17bd",
+      "embeddedPack": "OnDemandResources/com.hangten.training.hang-ten-model-zlagboard-pro-b3be02ccb6cb0d1b9e573fdd1e258fa8.assetpack/Hangboards/zlagboard-pro/assets/primary.usdz",
+      "packInfo": {
+        "CFBundleIdentifier": "com.hangten.training.asset-pack-b3be02ccb6cb0d1b9e573fdd1e258fa8",
+        "Tags": [
+          "hang-ten-model-zlagboard-pro"
+        ]
+      },
+      "baseUSDZAbsent": true,
+      "metadataIdentical": true,
+      "builtAndInstalledVerified": true
+    }
+  ],
+  "validation": {
+    "python": {
+      "passed": 658,
+      "subtestsPassed": 24,
+      "seconds": 116.12
+    },
+    "swiftUnits": {
+      "executed": 1290,
+      "skippedLiveStoreKit": 2,
+      "failures": 0,
+      "seconds": 77.031
+    },
+    "fullUITests": {
+      "executed": 34,
+      "failures": 0,
+      "seconds": 814.756
+    },
+    "latestScopedUI": {
+      "evo": "passed after safe screenshot pixel-buffer lifetime correction",
+      "pro": "passed after final-review exact identifier-set hardening; 15-second traversal budget and exact 0.5pt tolerance unchanged"
+    },
+    "signedSimulatorDebug": "passed",
+    "unsignedDeviceRelease": "passed",
+    "actionlint": "passed",
+    "catalog": {
+      "packages": 63,
+      "modelPackages": 39,
+      "rasterPackages": 24,
+      "batchContacts": 116,
+      "cordExcluded": 31,
+      "cordRepresented": 8
+    },
+    "hardCut": "six model-only packages; retired-schema/model-first/tooling/staging tests passed",
+    "android": {
+      "jvmExecuted": 122,
+      "jvmPassed": 118,
+      "jvmFailed": 4,
+      "baselineIdentityProven": true,
+      "staging": "passed",
+      "lintDebug": "passed: 9 warnings, 0 errors",
+      "assembleDebug": "passed",
+      "syntheticClientReleaseBundle": "passed",
+      "connectedAPI35": "not run: missing image, disk constraint and known baseline canonical decoding blocker",
+      "existingCIGap": "documented Android verification job absent",
+      "productionChanges": false
+    }
+  },
+  "failClosed": {
+    "scope": "representative owned installed DoorMount copy: missing and corrupt USDZ",
+    "nativeRegression": "existing real-loader missing/corrupt and hash/descriptor rejection tests passed in full unit suite",
+    "mutations": "exact installed embedded ODR model only; canonical and built bytes unchanged",
+    "restoration": "durable backup and finally restoration byte-verified, marker removed, exact signed app reinstalled by final test build; all six installed hashes reverified",
+    "visualReview": "controller Astra accepted explicit unavailable and no rendered fallback for both states",
+    "axeLimitation": "AXe returned empty application tree; actual images, not empty tree, establish visible failure state"
+  },
+  "supplementalCaptures": [
+    {
+      "path": "frictitious.doormount-pro-7-corrupt-unavailable.png",
+      "sha256": "3bae5433381ef0fc7ea817d2ced1d2a73132f63fc54e1d6df544956a9b932993"
+    },
+    {
+      "path": "frictitious.doormount-pro-7-missing-unavailable.png",
+      "sha256": "3bae5433381ef0fc7ea817d2ced1d2a73132f63fc54e1d6df544956a9b932993"
+    },
+    {
+      "path": "runtime-audio-off-skip-countdown.png",
+      "sha256": "77b9767eb12a14f2c9cd90b8b532cafcc8ed3901b7db47c948f0a555e7bd2770"
+    },
+    {
+      "path": "runtime-health-after-allow.png",
+      "sha256": "3503d81c3e2e2551042728c470e34782c68832840b03be906fc45939bbc967ac"
+    },
+    {
+      "path": "runtime-health-enabled-permissions.png",
+      "sha256": "412b6a9d993e82c68530b7443929a31ec8a6001a7b6deeac0e1ce8d332ccf8ed"
+    },
+    {
+      "path": "runtime-health-permission-sheet.png",
+      "sha256": "4309a66ae332f97062f4860781198e2052369caca34e4b2e9f4a45d8cd47593d"
+    },
+    {
+      "path": "runtime-initial-countdown.png",
+      "sha256": "de949e5dd329c0f0139a0dc84aafa55c92bfc9ccfcc995cd08f7147dd930dd38"
+    },
+    {
+      "path": "runtime-paused-landscape.png",
+      "sha256": "ebda55d46a6fbd090101884f6a40b26ab83dcd93231fe461b76b2daed6a5285c"
+    },
+    {
+      "path": "runtime-paused-portrait.png",
+      "sha256": "49eeaf9cfd77a93b61711de61ea805d2bd588fbb2aef4a2068692eade8d4e264"
+    },
+    {
+      "path": "runtime-running-landscape.png",
+      "sha256": "0be026669a04933595b7242b002a54f81baa10f65e072afebad5d6ed7f0c0914"
+    },
+    {
+      "path": "runtime-running-portrait.png",
+      "sha256": "ba49ea9b86bf5bbfb52e653a8c6876f344963cd5ca206257077dc61aa615b819"
+    },
+    {
+      "path": "runtime-saved-local-history.png",
+      "sha256": "2b83f99ec8e1ae7d09eab6f03675718c7fa877c5b7afa08d1a65dd8caed9aa53"
+    }
+  ],
+  "sourceSHA256": {
+    "HangTen/Views/BoardModelView.swift": "9ac64f96fe1552b1cd79b5f2d65d1a665b006e060bead050a4528106b952686d",
+    "HangTen/Views/TrainView.swift": "6927788c06125a7a4d0b29750fbb2d2e57b28d7c8ab4073500f8cb7f721a2197",
+    "HangTenTests/BoardModelTests.swift": "4f4fcd2db9fc02eb25ff4cb7b6201dd7c5f8ffe8b266929e9ccbbf0ac21097b9",
+    "HangTenTests/BoardSourceBoundaryTests.swift": "fa30b0b94c208006c12b5fa57f26afb24e2f12e1e65658ee2c72b1001ab0281e",
+    "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests.swift": "9eb66d360003aad1026c11e32c232d1253bf5578d3b0e6b9eba5d845f1390f05",
+    ".github/workflows/ci.yml": "a16fda07709cbed5b2a855657ac049083ff26010a0e92a5ca72d152276b30d8f",
+    "Tools/HangboardPackages/tests/test_documentation_paths.py": "fc134b5aa82378322a955e19be965816fff422dd5aeb333ce39ed7da615e025c"
+  },
+  "cleanup": {
+    "verifiedAt": "2026-09-20T16:47:37.592207-07:00",
+    "simulatorUUID": "00342F0E-DC95-474D-A6BC-C550F37D2C17",
+    "simulatorAbsent": true,
+    "ownerSupervisorExitStatus": 0,
+    "absentPaths": [
+      ".context/DerivedData",
+      ".context/workout-raw.png",
+      ".context/workout-landscape.png",
+      ".context/hangboards-batch-05-astra-migration/native-failclosed/pending-restore.json"
+    ],
+    "pendingAndOwnedUUIDRecordsConsumed": true,
+    "externalTemporaryPaths": [
+      "/private/tmp/hangboards-batch-05-astra-native-pytest.tII6mk",
+      "/private/tmp/hangboards-batch-05-astra-native-ci.cX34tz",
+      "/private/tmp/hangboards-batch-05-astra-native-final-pytest.l3y1rB",
+      "/private/tmp/hangboards-batch-05-astra-native-closeout.s2TUX3"
+    ],
+    "externalTemporaryPathsAbsent": true,
+    "sharedResourcesUntouched": true,
+    "httpServersStarted": 0
+  },
+  "limitations": [
+    "Two opt-in live StoreKit tests skipped",
+    "Physical-device performance and audible speaker/ducking quality not certified",
+    "TestFlight-hosted ODR delivery not exercised",
+    "Cross-device HealthKit restoration requires signed physical-device validation",
+    "Baseline SDK/framework QoS priority inversion warning also occurs in unchanged existing native test; no performance claim",
+    "Android baseline four JVM failures and unrun connected test gate; no all-repository green claim"
+  ],
+  "runtimeSmoke": {
+    "rotation": "running portrait/landscape and paused portrait/landscape exercised; paused step preserved across rotation and background",
+    "audio": "actual initial 3-2-1 scheduling logged; speaker-off control and countdown UI exercised; task hand/hold cues visible; audible task speech/silence/ducking not certified",
+    "save": "actual Save session and local History verified; one persisted Max Hangs detailed record",
+    "health": "actual sheet read/write controls enabled and Allow tapped; Connected verified before and after relaunch; returned card shows History synced from Apple Health",
+    "healthFocusedTest": {
+      "executed": 1,
+      "failures": 0,
+      "seconds": 19.447
+    },
+    "earlyLandscapeCapture": "hand scene not yet ready; later portrait and paused views show ready hand/model",
+    "driverAttempts": "not a monolithic passing suite; temporary drivers corrected persisted settings, rest transition, summary modal, runner restart, and Health StaticText locator assumptions",
+    "physicalDeviceLimit": "no physical HealthKit record inspection or cross-device restoration claim",
+    "visualReview": "controller Astra accepted with early landscape readiness caveat"
+  },
+  "localEvidence": {
+    "native-closeout-pytest.log": "7b27a417ec54dfbb72e2fb3ffa0d46e317f14c14188e9db99ec7fa27041753cb",
+    "native-stable-red.log": "4cb706b448a0cf4b20fe36645008d469e5a372d4158b67a4c8d0c484d08bd134",
+    "native-card-clip-red.log": "36484e934771233270344b99b0a8006b1dfadbf92ffdd783ff2911bd93bdddc2",
+    "native-card-clip-green.log": "128b86c64955d42860a7232b14eefd6ae6d17e26d4cbf5ef0f393899c19d92b1",
+    "native-full-swift.log": "0e81c3c610e6cea2df62f2bf2b2f4b9912e85e24f29f2183b5d99e5680864ed7",
+    "native-final-units-smoke.log": "b678fa068ac7622c815c4097a6f682448e991f9a1c6be69f3de63d0a313fb358",
+    "native-scoped-smoke.log": "7b7a51839e9d81c11c10d1bcb7526b5b4bb443b6d3a06bf167448413a285477d",
+    "native-release.log": "070888bf59e54c0acb623c526a5f7ab16844a20c8a039700c000390d1f2c6f67",
+    "native-runtime-complete.log": "c68fdf2d2809ddfcdf78211e6ceba18c5c6e8fe2e0ae64dd598a7343d71d36cb",
+    "native-health-only.log": "641e2adfe5a8053f52a39184ecdbeec1b9b6c02e73e926f3cb7d8dc2893063e3",
+    "native-audio-final-events.json": "c099a48278dbea7c6cb2cb6d0d21cade6e7a3ef10378507581253652668b6f0a",
+    "native-owned-session-proof.json": "077006cee1d641ad775dba79c8f78ab6fe22257d948b729a8c73e5ec6e453f81",
+    "android-validation-report.md": "6903a3fc1348afbb11fcf3659fcb57a73b98a4d8965d6a40632eb56f64626937"
+  }
+}

@@ -19,15 +19,15 @@ class VerifyTheHangboardTests(unittest.TestCase):
         self.assertEqual(verifier.EXPECTED_CONTACT_IDS, tuple(item["id"] for item in board["contacts"]))
         self.assertEqual(15, len(verifier.EXPECTED_CONTACT_IDS))
 
-    def test_hardware_cover_contract_rejects_body_or_missing_results(self) -> None:
+    def test_repaired_surface_contract_rejects_floating_caps(self) -> None:
         verifier = self.module()
         results = [
-            {"x": x, "z": z, "intersects": True, "nodeID": verifier.EXPECTED_CAP_NODE_ID}
+            {"x": x, "z": z, "intersects": True, "nodeID": "body_001"}
             for x, z in verifier.MOUNTING_CAP_CENTERS_METERS
         ]
         verifier.require_hardware_free_results(results)
-        results[-1]["nodeID"] = "body_001"
-        with self.assertRaisesRegex(ValueError, "cap node"):
+        results[-1]["nodeID"] = "mounting_hardware_omission_caps_001"
+        with self.assertRaisesRegex(ValueError, "body surface"):
             verifier.require_hardware_free_results(results)
 
 

@@ -1,0 +1,26 @@
+{
+  "nativeCompiler": "Tools/HangboardModels/contact_model_package.py",
+  "compilerSHA256": "d70040768c1228f5fac2dd9ce58aa0a18f97c4d1e3a5f6ae175f2cb70a3e44d1",
+  "nativeImporter": "Tools/HangboardModels/import_contact_model_source.py",
+  "importerSHA256": "15859f52961b1a071fd8da694e4ff8d92812361f2996ecb836dbbe435e3ad53b",
+  "checksCompleted": [
+    "actual USDZ imported into empty scene",
+    "all imported meshes have usable image materials",
+    "triangular imported topology",
+    "source node correspondence and contact bindings unchanged",
+    "bounds stable within compiler tolerance",
+    "hash-bound canonical descriptor generated from imported triangles",
+    "all existing contact facts and order equal pre-migration base 8248d8d4",
+    "no raster asset/contactGeometry or suspension metadata",
+    "source linear RGB explicitly encoded to PNG sRGB; maximum linear quantization error <=0.004"
+  ],
+  "modelSHA256": "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+  "descriptorSHA256": "2b5456425bc1a89ff8263a0d3c6474fa8419ec8f835cfdf60d844defd5ac17bd",
+  "usdzMembers": [
+    "primary.usdc",
+    "textures/zlagboard-pro-2-0-substrate.png"
+  ],
+  "contactCount": 28,
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlights, orbit/reset, unavailable-state acceptance."
+}

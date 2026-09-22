@@ -336,7 +336,7 @@ def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
     board = json.loads((CLIMBERS_EDGE_ROOT / "board.json").read_text(encoding="utf-8"))
     assert len(board["presentations"]) == 1
     descriptor = _assert_model_descriptor(
-        CLIMBERS_EDGE_ROOT, board, {"body_001", "bore_free_body_caps_001"}
+        CLIMBERS_EDGE_ROOT, board, {"body_001"}
     )
     bounds = descriptor["modelBounds"]
     front_aspect = (bounds["max"][0] - bounds["min"][0]) / (
@@ -349,7 +349,7 @@ def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
 def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
     board = json.loads((SIMULATOR_3D_ROOT / "board.json").read_text(encoding="utf-8"))
     descriptor = _assert_model_descriptor(
-        SIMULATOR_3D_ROOT, board, {"board_body_001", "mounting_hardware_omission_caps_001"}
+        SIMULATOR_3D_ROOT, board, {"board_body_001"}
     )
     contacts = {contact["id"]: contact for contact in board["contacts"]}
 
@@ -1593,7 +1593,6 @@ def test_contact_is_a_bore_free_model_only_package_with_its_existing_contacts() 
     } == contact_ids
     assert [node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"] == [
         "body_001",
-        "bore_free_body_caps_001",
     ]
     assert descriptor["modelSHA256"] == hashlib.sha256(
         (CONTACT_ROOT / media["assetPath"]).read_bytes()

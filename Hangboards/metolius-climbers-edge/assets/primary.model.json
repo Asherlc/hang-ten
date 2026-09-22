@@ -296,17 +296,13 @@
     "min": [
       -0.300000012,
       -0.079999998,
-      0.0
+      -0.0
     ]
   },
-  "modelSHA256": "b17ea53a25d2050ab1424748ceab10fb7da0ba15faddcede8ec39c256b9c5fe3",
+  "modelSHA256": "046e977317dc1883c5cd09a552761753e58fc7b440c2df188cec4e8cfcf0264a",
   "nodes": [
     {
       "nodeID": "body_001",
-      "role": "body"
-    },
-    {
-      "nodeID": "bore_free_body_caps_001",
       "role": "body"
     },
     {

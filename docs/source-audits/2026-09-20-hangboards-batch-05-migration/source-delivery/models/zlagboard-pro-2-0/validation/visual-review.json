@@ -1,0 +1,15 @@
+{
+  "assetFile": "zlagboard-pro-2-0.glb",
+  "assetSha256": "e71482d155485acd5ad710f7fb8cf2ac2a055ef14a634a6026733f2e970f3b56",
+  "reviewedAtUTC": "2026-09-20T18:32:45.899692+00:00",
+  "scope": "Visual inspection of the five final genuine GLB render panels in this conversation, separate from structural and evidence tests.",
+  "notes": "Reviewed five final views. Pro 2.0 remains separate from Evo and Pro 1.0: three rows of seven recesses plus seven upper contacts. Pocket openings, incut/floor forms and continuous rounded lips are visible. Bare-board calibration and reverse details remain documented estimates.",
+  "renderHashes": {
+    "renders/01-front.png": "f4145b1f78e1a7c5145010e8a770cf14f2e01dca82ff65eea4f1225bf6c79d37",
+    "renders/02-reverse.png": "6f916cba64fc4ed41942aa465c5b6e2e0a0699380d3ca1ee30fac42bc67d033f",
+    "renders/03-oblique.png": "a88c0034269fc60f7118322ed1127e1d54157d033a407eabf5f1fdcfcbfc51d3",
+    "renders/04-contact-detail.png": "66ca0003ea6d3e6969af5db60a5ab184f696cc5adbbd438f9c546b638fd8ea24",
+    "renders/05-material-closeup.png": "f0bfa813e5a9c34f8bcced6a8bf55daa42d69a637bf784c8f4426872e75ed563"
+  },
+  "manufacturerAccuracyCertified": false
+}

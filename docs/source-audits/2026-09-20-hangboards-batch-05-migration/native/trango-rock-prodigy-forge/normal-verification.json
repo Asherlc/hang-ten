@@ -1,0 +1,14 @@
+{
+  "duplicateFaces": 0,
+  "maxCandidateTriangleNormalErrorDegrees": 7.446126293907125,
+  "scopedSamples": 55258,
+  "maxWholeRegionNormalErrorDegrees": 3.4650807993659525,
+  "maxFlatUpperFaceNormalErrorDegrees": 0.03021518250928949,
+  "maxTransverseRollNormalErrorDegrees": 0.14727935874711487,
+  "checkedPoints": 60844,
+  "flippedAnalyticFrontNormals": 0,
+  "normalErrorToleranceDegrees": 0.5,
+  "scope": "Flat upper face (including original reviewed Forge X129.4/152.9/194.4mm), plus transverse straight roll; curved terminal/jaw transition retained separately, not asserted globally <=0.5deg.",
+  "authoredGeometrySHA256": "a42c0d24cb7da0fc1d26c1c9dc87a5ac83bd2ec973d18600ae3ee1782527c72a",
+  "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e"
+}

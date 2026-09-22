@@ -283,6 +283,12 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let migratedModelBoardIDs: Set<String> = [
+            "frictitious.doormount-pro-7",
+            "frictitious.megalith",
+            "trango.rock-prodigy-forge",
+            "trango.rock-prodigy-natural",
+            "zlagboard.evo",
+            "zlagboard.pro",
             "beastmaker-1000",
             "beastmaker-2000",
             "captain-fingerfood.dual",

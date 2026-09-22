@@ -1,0 +1,58 @@
+{
+  "attemptResult": "BLOCKED: container network/DNS unavailable and download bridge failed on viewed originals",
+  "originalFilesRetained": 0,
+  "sources": [
+    {
+      "id": "N1",
+      "url": "https://trango.com/products/rock-prodigy-natural",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Each half 7.5 x 6 x 1.5 inches; FSC beech; adjustable removable cleat mount; product page says 10 mm crimp.",
+      "doesNotEstablish": "Crimp conflicts with precise manual; no hidden back detail.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N2",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "PDF pages 3,4,6,7 diagrams inspected",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Page 6 dimensions and page 7 physical grip map; 7.5 crimp; rails 20-33 and 10-24 outside-to-inside; pockets 38,29,36-26; jug40.",
+      "doesNotEstablish": "40 jug vs 38.1 nominal body thickness uses different measuring convention or rounding; not resolved.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N3",
+      "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage2_Rails.jpg?v=1724692982&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Oblique routed rail and crimp shoulder.",
+      "doesNotEstablish": "No exact radii.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "N4",
+      "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_AltImage1_Pockets.jpg?v=1724692982&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Bottom supported recess, deep pocket and open-ended crimp channel.",
+      "doesNotEstablish": "No measured rear construction.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ]
+}

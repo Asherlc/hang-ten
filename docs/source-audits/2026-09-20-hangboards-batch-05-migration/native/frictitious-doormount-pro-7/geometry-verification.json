@@ -1,0 +1,209 @@
+{
+  "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+  "descriptorSHA256": "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
+  "cleanEmptySceneImport": true,
+  "contactCount": 13,
+  "meshCount": 14,
+  "unionOfAllContactTrianglesUnchanged": true,
+  "ownershipTransferTriangles": 0,
+  "originalContactTriangleCounts": {
+    "top-jug": 3981,
+    "edge-35-left": 954,
+    "edge-35-right": 954,
+    "mixed-25-pocket-left": 1386,
+    "mixed-25-pocket-right": 1386,
+    "hold-7": 504,
+    "hold-6": 504,
+    "hold-12": 756,
+    "hold-13": 756,
+    "hold-11": 594,
+    "hold-8": 594,
+    "hold-10": 720,
+    "hold-9": 720
+  },
+  "contactTriangleChecks": [
+    {
+      "contactID": "edge-35-left",
+      "triangleCount": 954,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "edge-35-right",
+      "triangleCount": 954,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-10",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-11",
+      "triangleCount": 594,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-12",
+      "triangleCount": 756,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-13",
+      "triangleCount": 756,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-6",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-7",
+      "triangleCount": 504,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-8",
+      "triangleCount": 594,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "hold-9",
+      "triangleCount": 720,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mixed-25-pocket-left",
+      "triangleCount": 1386,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "mixed-25-pocket-right",
+      "triangleCount": 1386,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    },
+    {
+      "contactID": "top-jug",
+      "triangleCount": 3981,
+      "sourceWorldTrianglesPreservedAfterExplicitOwnershipRuling": true,
+      "ownershipReconciled": false
+    }
+  ],
+  "mountingClosureRays": [
+    {
+      "centerSourceMetres": [
+        0.0,
+        0,
+        0.011
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontYMetres": -0.02615000307559967,
+      "backYMetres": 7.450580596923828e-09
+    }
+  ],
+  "maximumSourceContactCornerNormalDelta": 0.00035349872682783235,
+  "allImportedImageMaterials": true,
+  "allTriangles": true,
+  "descriptorCanonicalSorted": true,
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS SceneKit materials, all-contact nearest picking, highlight isolation/clear, orbit/reset, unavailable state.",
+  "textureCoordinateChecks": [
+    {
+      "nodeID": "body__board_mounting_omitted_001",
+      "loopCount": 266187,
+      "finiteUVCount": 266187,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__jug_001",
+      "loopCount": 11943,
+      "finiteUVCount": 11943,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_15_001",
+      "loopCount": 1782,
+      "finiteUVCount": 1782,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_20_001",
+      "loopCount": 2268,
+      "finiteUVCount": 2268,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_25_001",
+      "loopCount": 4158,
+      "finiteUVCount": 4158,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_edge_35_001",
+      "loopCount": 2862,
+      "finiteUVCount": 2862,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__left_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_10_001",
+      "loopCount": 2160,
+      "finiteUVCount": 2160,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_15_001",
+      "loopCount": 1782,
+      "finiteUVCount": 1782,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_20_001",
+      "loopCount": 2268,
+      "finiteUVCount": 2268,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_25_001",
+      "loopCount": 4158,
+      "finiteUVCount": 4158,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_edge_35_001",
+      "loopCount": 2862,
+      "finiteUVCount": 2862,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    },
+    {
+      "nodeID": "hold__right_pocket_2finger_001",
+      "loopCount": 1512,
+      "finiteUVCount": 1512,
+      "allUsedMaterialsHaveDiffuseImageBinding": true
+    }
+  ]
+}

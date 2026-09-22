@@ -1,0 +1,71 @@
+{
+  "attemptResult": "BLOCKED: container network/DNS unavailable and download bridge failed on viewed originals",
+  "originalFilesRetained": 0,
+  "sources": [
+    {
+      "id": "P1",
+      "url": "https://zlagboard.com/hangboards",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Pro identity and lime wood; explicit Pro 2.0 compatible accessory description.",
+      "doesNotEstablish": "Page title shortens version to Pro; filename and exact-revision retailer cross-check needed.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "P2",
+      "url": "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Explicit pro2 guide: three rows of seven pockets plus seven top contact regions; third row incut features.",
+      "doesNotEstablish": "Not the old 24-grip Pro1 inventory; not a dimensioned drawing.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "P3",
+      "url": "https://zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "2019 product photograph confirms exact 3x7 pocket pattern and upper lip.",
+      "doesNotEstablish": "Reverse and bare-wood thickness not shown.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "P4",
+      "url": "https://chalkr.de/vertical-life-zlagboard-pro-trainingsboard.html",
+      "publisher": "Chalkr",
+      "evidenceTier": "retailer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Selected Pro2.0 variant SKU108728/EAN8068020470878; dimensions 70.5/25/8 cm.",
+      "doesNotEstablish": "Axis/scope unclear. Alder and 10-45 mm text conflicts with primary guide; likely mixed copy.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "P5",
+      "url": "https://hikinginfinland.com/2015/06/zlagboard-pro-review.html",
+      "publisher": "Hiking in Finland",
+      "evidenceTier": "third-party-excluded-revision",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "2015 old Pro review is a revision-conflict source only.",
+      "doesNotEstablish": "EXCLUDED geometry: 24 holds, alder, 70x16x6, older angles are NOT Pro2 evidence.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ]
+}

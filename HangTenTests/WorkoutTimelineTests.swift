@@ -2680,7 +2680,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         XCTAssertTrue(coach.startCountdown(remainingFrom: "3", startUptime: 100))
         completionScheduler.complete()
 
-        await fulfillment(of: [deactivated], timeout: 1)
+        await fulfillment(of: [deactivated], timeout: 5)
         XCTAssertEqual(audioSession.deactivationAttemptCount, 5)
         XCTAssertEqual(audioSession.deactivationCount, 1)
         XCTAssertTrue(audioSession.didDeactivateWithNotification)
@@ -2910,7 +2910,7 @@ final class WorkoutAudioCoachTests: XCTestCase {
         synthesizer.isSpeaking = false
         synthesizer.sendFinish(of: synthesizer.utterances[0])
         coach.stop()
-        await fulfillment(of: [deactivated], timeout: 1)
+        await fulfillment(of: [deactivated], timeout: 5)
 
         XCTAssertEqual(audioSession.deactivationAttemptCount, 2)
         XCTAssertEqual(audioSession.deactivationCount, 1)

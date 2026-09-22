@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "packageID": "zlagboard.pro",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Zlagboard / Vertical-Life",
+    "evidencePacket": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/REVIEW.md"
+  },
+  "historicalSource": {
+    "status": "missing",
+    "notes": "The old app raster authoring source is not a native contact-tagged model. Immutable user delivery GLB is retained separately."
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "User authorized evidence-led native migration; exact evidence approved 2026-09-20. Explicit derivative preparation documented here; no model acceptance implied.",
+    "retainedPath": ".context/hangboards-batch-05-astra-migration/prepared/zlagboard-pro-2-0.blend",
+    "sha256": "b363159aee0968206e76039104f693f57b462dc51562120cc584e15dc00c4761"
+  },
+  "supersessionRuling": "Prepared native derivative of hash-bound original GLB. Source root transforms are baked without geometry change; constant material image adaptation is explicit. Manufacturer facts and stable app IDs govern mapping."
+}

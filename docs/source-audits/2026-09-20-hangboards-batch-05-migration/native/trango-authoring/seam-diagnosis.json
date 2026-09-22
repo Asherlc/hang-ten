@@ -1,0 +1,33 @@
+{
+  "checkpointCommit": "efca7d6e7ab40c16c262f5409f050205b7ab4576",
+  "checkpointAcceptance": false,
+  "cause": "Smooth custom-normal interpolation crosses the analytic flat-to-roll boundary on otherwise valid triangles. Height-error tolerance alone does not constrain normal interpolation. Two Natural hook vertex normals were also incorrectly sign-flipped by an averaged-geometric-normal heuristic.",
+  "overlapOrTJunctionEvidence": "The assembled source derivative is watertight, winding-consistent and duplicate-face-free; exported triangle multisets equal prepared ones. The diagnosed flat triangle is part of the one constrained front graph triangulation.",
+  "shadowControl": "Artifacts persisted when all mesh shadow visibility was disabled. This diagnostic control is not a shipping material or render change.",
+  "correction": "Explicit flat/roll/floor shared breaklines and64 bounded transverse analytic section bands. Original cubic depth field, smooth analytic normals and contact labels preserved. Independent interior/edge normal interpolation checks require <=0.5degree. Explicit front/back normal direction removes heuristic flips. Rejected adaptive-normal subdivision is not shipped.",
+  "diagnosticArtifacts": [
+    {
+      "path": ".context/hangboards-batch-05-astra-migration/trango-seam-diagnostics/trango-rock-prodigy-forge-samples.json",
+      "sha256": "713bdd8e944382a4a9c6e75e9eafa209c3d8b7602f4a2ffd2e1b9dd1993537bb"
+    },
+    {
+      "path": ".context/hangboards-batch-05-astra-migration/trango-seam-diagnostics/trango-rock-prodigy-forge-crimp-no-shadow.png",
+      "sha256": "d9945c9ace58f0f27860e16c0256ba72f9bd5a8b9abf23bf2e450f40aec9999b"
+    },
+    {
+      "path": ".context/hangboards-batch-05-astra-migration/trango-seam-diagnostics/trango-rock-prodigy-natural-samples.json",
+      "sha256": "191c401a25396bd078e98d774dfab01b473c6aa05af513e946fa4deaa9af8248"
+    },
+    {
+      "path": ".context/hangboards-batch-05-astra-migration/trango-seam-diagnostics/trango-rock-prodigy-natural-crimp-no-shadow.png",
+      "sha256": "8c218fc6bc10cbb3e53f21cc762300bab660628d3b962eaf2ea5f669d2d014cc"
+    }
+  ],
+  "rejectedExperiment": {
+    "reason": "Normal-error-only subdivision reached iteration ceiling and density grew without convergence.",
+    "naturalTrianglesAt16Passes": 760684,
+    "naturalFinalHalfSplitEdges": 1853,
+    "forgeSplitEdgesIteration11": 47517,
+    "promoted": false
+  }
+}

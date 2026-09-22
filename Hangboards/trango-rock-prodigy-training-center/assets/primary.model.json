@@ -467,10 +467,10 @@
     "min": [
       -0.358139992,
       -0.115570001,
-      0.0
+      -0.0
     ]
   },
-  "modelSHA256": "f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1",
+  "modelSHA256": "05830a75724af20aa9d21765263ec71c8ac35365cb6810e11bdf1584995d1cf1",
   "nodes": [
     {
       "nodeID": "body_left_001",

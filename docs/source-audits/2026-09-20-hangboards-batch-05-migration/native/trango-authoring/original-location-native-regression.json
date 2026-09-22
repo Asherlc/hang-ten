@@ -1,0 +1,38 @@
+{
+  "forge": {
+    "checkpoint": {
+      "modelSHA256": "1fd9a717dc894e3c287130d084733ef7f434782ec41030988e8d6e47641f784c",
+      "probeSHA256": "24e685d8e5c06fe69219f920e41108b8e90f3c8cfbaae61de3e2ef2bd7808da9",
+      "samples": 867,
+      "flatSamples": 509,
+      "maxWholePatchNormalErrorDegrees": 18.0215620083607,
+      "maxFlatFaceNormalErrorDegrees": 18.0215620083607
+    },
+    "final": {
+      "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+      "probeSHA256": "c002eee1212d196d487b371cc49c713fa4589bfee3d20d875d228e77991454ef",
+      "samples": 867,
+      "flatSamples": 509,
+      "maxWholePatchNormalErrorDegrees": 9.826686014954833,
+      "maxFlatFaceNormalErrorDegrees": 0.03838869182007176
+    }
+  },
+  "natural": {
+    "checkpoint": {
+      "modelSHA256": "2e03d9169be9cc2c502d4eeaca365908702f1cb4a9090c5ab072344fa7e93c81",
+      "probeSHA256": "48600c12a4a5c878d9b8ca90d940c214465124fa4866b9d9cb33bfa81af5299f",
+      "samples": 867,
+      "flatSamples": 579,
+      "maxWholePatchNormalErrorDegrees": 20.71779523447911,
+      "maxFlatFaceNormalErrorDegrees": 20.71779523447911
+    },
+    "final": {
+      "modelSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+      "probeSHA256": "d7391485e5bd279e34e3d564fcf7c6c1c599afd1d7fedb23a9c5e6a657b5a880",
+      "samples": 867,
+      "flatSamples": 580,
+      "maxWholePatchNormalErrorDegrees": 0.23079185707877656,
+      "maxFlatFaceNormalErrorDegrees": 0.04985178386948602
+    }
+  }
+}

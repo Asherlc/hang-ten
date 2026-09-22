@@ -1,0 +1,573 @@
+{
+  "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+  "descriptorSHA256": "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
+  "cleanEmptySceneImport": true,
+  "allImportedImageMaterials": true,
+  "allTriangles": true,
+  "preparedTrianglesUnchanged": true,
+  "preparedCustomNormalsUnchangedWithinTolerance": true,
+  "normalVectorTolerance": 0.001,
+  "maximumNormalVectorDelta": 0.0007596906065720041,
+  "sourceNodeCorrespondence": [
+    {
+      "sourceNodeID": "body--left",
+      "importedNodeID": "body__left_002",
+      "triangles": 70466
+    },
+    {
+      "sourceNodeID": "body--right",
+      "importedNodeID": "body__right_002",
+      "triangles": 70466
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-30",
+      "importedNodeID": "hold__left_sloper_30_002",
+      "triangles": 223
+    },
+    {
+      "sourceNodeID": "hold--left-sloper-40",
+      "importedNodeID": "hold__left_sloper_40_002",
+      "triangles": 309
+    },
+    {
+      "sourceNodeID": "hold--left-flat-edge",
+      "importedNodeID": "hold__left_flat_edge_002",
+      "triangles": 339
+    },
+    {
+      "sourceNodeID": "hold--left-slopey-crimper",
+      "importedNodeID": "hold__left_slopey_crimper_002",
+      "triangles": 15015
+    },
+    {
+      "sourceNodeID": "hold--left-rail",
+      "importedNodeID": "hold__left_rail_002",
+      "triangles": 2210
+    },
+    {
+      "sourceNodeID": "hold--left-closed-crimp",
+      "importedNodeID": "hold__left_closed_crimp_002",
+      "triangles": 18863
+    },
+    {
+      "sourceNodeID": "hold--left-mr-deep",
+      "importedNodeID": "hold__left_mr_deep_002",
+      "triangles": 832
+    },
+    {
+      "sourceNodeID": "hold--left-mr-shallow",
+      "importedNodeID": "hold__left_mr_shallow_002",
+      "triangles": 884
+    },
+    {
+      "sourceNodeID": "hold--left-im-deep",
+      "importedNodeID": "hold__left_im_deep_001",
+      "triangles": 520
+    },
+    {
+      "sourceNodeID": "hold--left-im-shallow",
+      "importedNodeID": "hold__left_im_shallow_001",
+      "triangles": 520
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-medium",
+      "importedNodeID": "hold__left_pinch_medium_002",
+      "triangles": 28751
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-narrow",
+      "importedNodeID": "hold__left_pinch_narrow_002",
+      "triangles": 8604
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-30",
+      "importedNodeID": "hold__right_sloper_30_002",
+      "triangles": 223
+    },
+    {
+      "sourceNodeID": "hold--right-sloper-40",
+      "importedNodeID": "hold__right_sloper_40_002",
+      "triangles": 309
+    },
+    {
+      "sourceNodeID": "hold--right-flat-edge",
+      "importedNodeID": "hold__right_flat_edge_002",
+      "triangles": 339
+    },
+    {
+      "sourceNodeID": "hold--right-slopey-crimper",
+      "importedNodeID": "hold__right_slopey_crimper_002",
+      "triangles": 15015
+    },
+    {
+      "sourceNodeID": "hold--right-rail",
+      "importedNodeID": "hold__right_rail_002",
+      "triangles": 2210
+    },
+    {
+      "sourceNodeID": "hold--right-closed-crimp",
+      "importedNodeID": "hold__right_closed_crimp_002",
+      "triangles": 18863
+    },
+    {
+      "sourceNodeID": "hold--right-mr-deep",
+      "importedNodeID": "hold__right_mr_deep_002",
+      "triangles": 832
+    },
+    {
+      "sourceNodeID": "hold--right-mr-shallow",
+      "importedNodeID": "hold__right_mr_shallow_002",
+      "triangles": 884
+    },
+    {
+      "sourceNodeID": "hold--right-im-deep",
+      "importedNodeID": "hold__right_im_deep_001",
+      "triangles": 520
+    },
+    {
+      "sourceNodeID": "hold--right-im-shallow",
+      "importedNodeID": "hold__right_im_shallow_001",
+      "triangles": 520
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-medium",
+      "importedNodeID": "hold__right_pinch_medium_002",
+      "triangles": 28751
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-narrow",
+      "importedNodeID": "hold__right_pinch_narrow_002",
+      "triangles": 8604
+    }
+  ],
+  "nativeContactRays": [
+    {
+      "expectedContactID": "closed-crimp-left",
+      "nearestContactID": "closed-crimp-left",
+      "nodeID": "hold__left_closed_crimp_002",
+      "pointSourceMetres": [
+        -0.27572280168533325,
+        -0.043000005185604095,
+        -0.018939826637506485
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "closed-crimp-right",
+      "nearestContactID": "closed-crimp-right",
+      "nodeID": "hold__right_closed_crimp_002",
+      "pointSourceMetres": [
+        0.27572280168533325,
+        -0.043000005185604095,
+        -0.018939826637506485
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "im-deep-left",
+      "nearestContactID": "im-deep-left",
+      "nodeID": "hold__left_im_deep_001",
+      "pointSourceMetres": [
+        -0.23958545923233032,
+        -0.03186666965484619,
+        -0.05597750470042229
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "im-deep-right",
+      "nearestContactID": "im-deep-right",
+      "nodeID": "hold__right_im_deep_001",
+      "pointSourceMetres": [
+        0.23958544433116913,
+        -0.03186666965484619,
+        -0.05597750470042229
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "im-shallow-left",
+      "nearestContactID": "im-shallow-left",
+      "nodeID": "hold__left_im_shallow_001",
+      "pointSourceMetres": [
+        -0.2284581959247589,
+        -0.03386666998267174,
+        -0.05564005300402641
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "im-shallow-right",
+      "nearestContactID": "im-shallow-right",
+      "nodeID": "hold__right_im_shallow_001",
+      "pointSourceMetres": [
+        0.2284581959247589,
+        -0.03386666998267174,
+        -0.055640049278736115
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "large-flat-edge-left",
+      "nearestContactID": "large-flat-edge-left",
+      "nodeID": "hold__left_flat_edge_002",
+      "pointSourceMetres": [
+        -0.18917910754680634,
+        -0.03726666793227196,
+        0.05655592307448387
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "large-flat-edge-right",
+      "nearestContactID": "large-flat-edge-right",
+      "nodeID": "hold__right_flat_edge_002",
+      "pointSourceMetres": [
+        0.18917910754680634,
+        -0.03726666793227196,
+        0.05655592679977417
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "mr-deep-left",
+      "nearestContactID": "mr-deep-left",
+      "nodeID": "hold__left_mr_deep_002",
+      "pointSourceMetres": [
+        -0.13065363466739655,
+        -0.03400000184774399,
+        -0.012554062530398369
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "mr-deep-right",
+      "nearestContactID": "mr-deep-right",
+      "nodeID": "hold__right_mr_deep_002",
+      "pointSourceMetres": [
+        0.13065363466739655,
+        -0.03400000184774399,
+        -0.012554062530398369
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "mr-shallow-left",
+      "nearestContactID": "mr-shallow-left",
+      "nodeID": "hold__left_mr_shallow_002",
+      "pointSourceMetres": [
+        -0.11231111735105515,
+        -0.03733333572745323,
+        -0.043404411524534225
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "mr-shallow-right",
+      "nearestContactID": "mr-shallow-right",
+      "nodeID": "hold__right_mr_shallow_002",
+      "pointSourceMetres": [
+        0.11231110990047455,
+        -0.03733333572745323,
+        -0.043404411524534225
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "sloper-30-left",
+      "nearestContactID": "sloper-30-left",
+      "nodeID": "hold__left_sloper_30_002",
+      "pointSourceMetres": [
+        -0.39234763383865356,
+        -0.07713332772254944,
+        0.029645701870322227
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "sloper-30-right",
+      "nearestContactID": "sloper-30-right",
+      "nodeID": "hold__right_sloper_30_002",
+      "pointSourceMetres": [
+        0.39234763383865356,
+        -0.07713333517313004,
+        0.029645701870322227
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "sloper-40-left",
+      "nearestContactID": "sloper-40-left",
+      "nodeID": "hold__left_sloper_40_002",
+      "pointSourceMetres": [
+        -0.30434638261795044,
+        -0.04311603307723999,
+        0.06452029943466187
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "sloper-40-right",
+      "nearestContactID": "sloper-40-right",
+      "nodeID": "hold__right_sloper_40_002",
+      "pointSourceMetres": [
+        0.30434638261795044,
+        -0.04311602935194969,
+        0.06452029943466187
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "slopey-crimper-left",
+      "nearestContactID": "slopey-crimper-left",
+      "nodeID": "hold__left_slopey_crimper_002",
+      "pointSourceMetres": [
+        -0.16979104280471802,
+        -0.043000005185604095,
+        0.03613545745611191
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "slopey-crimper-right",
+      "nearestContactID": "slopey-crimper-right",
+      "nodeID": "hold__right_slopey_crimper_002",
+      "pointSourceMetres": [
+        0.16979104280471802,
+        -0.043000005185604095,
+        0.03613545745611191
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "variable-edge-rail-left",
+      "nearestContactID": "variable-edge-rail-left",
+      "nodeID": "hold__left_rail_002",
+      "pointSourceMetres": [
+        -0.27064961194992065,
+        -0.03609625995159149,
+        0.011478635482490063
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    },
+    {
+      "expectedContactID": "variable-edge-rail-right",
+      "nearestContactID": "variable-edge-rail-right",
+      "nodeID": "hold__right_rail_002",
+      "pointSourceMetres": [
+        0.27064961194992065,
+        -0.03609625995159149,
+        0.011478635482490063
+      ],
+      "directionTowardCamera": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "bodyIncluded": true
+    }
+  ],
+  "mountingClosureRays": [
+    {
+      "sourceXZ": [
+        -0.1162,
+        0.028
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.03521999716758728,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        -0.1552,
+        -0.025
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.04300001263618469,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        -0.2902,
+        0.002
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.04300040006637573,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        -0.2932,
+        0.031
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.04324045777320862,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.1162,
+        0.028
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.03521999716758728,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.1552,
+        -0.025
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.042999982833862305,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.2902,
+        0.002
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.04300042986869812,
+      "backY": 0.0
+    },
+    {
+      "sourceXZ": [
+        0.2932,
+        0.031
+      ],
+      "frontHit": true,
+      "backHit": true,
+      "frontY": -0.04324045777320862,
+      "backY": 0.0
+    }
+  ],
+  "preservedPassageRays": [
+    {
+      "sourceXZ": [
+        -0.23320000000000002,
+        -0.044
+      ],
+      "hit": false,
+      "purpose": "unresolved; not suspension"
+    },
+    {
+      "sourceXZ": [
+        0.23320000000000002,
+        -0.044
+      ],
+      "hit": false,
+      "purpose": "unresolved; not suspension"
+    }
+  ],
+  "authoredCrimpSection": {
+    "channelY": -0.03549998998641968,
+    "thumbTabY": -0.04300001263618469,
+    "hookHasDistinctRelief": true,
+    "imLobeDepthTransitionMetres": 0.01199999451637268
+  },
+  "modelAcceptance": false,
+  "remaining": "Current-source iOS materials/picking/highlight/clear/orbit/reset/unavailable and human review"
+}

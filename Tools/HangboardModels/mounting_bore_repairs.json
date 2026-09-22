@@ -1,0 +1,1213 @@
+{
+  "version": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "units": "metres",
+  "note": "Explicit display-only removal regions reviewed against existing source geometry, not physical mounting measurements.",
+  "models": {
+    "metolius-simulator-3d": {
+      "sha256": "3372f4d2b42a967d3ca65c2d1a0f56bd7762b32f9c1a80f79897841b020fbc94",
+      "dropNodes": [
+        "mounting_hardware_omission_caps_001"
+      ],
+      "holes": [
+        {
+          "center": [
+            -0.2982,
+            0.13706
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            0.2983,
+            0.13706
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            -0.1657,
+            0.11773
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            0.1658,
+            0.11773
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            -0.20808,
+            0.03159
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            0.20819,
+            0.03159
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            4e-05,
+            0.16603
+          ],
+          "radius": 0.007
+        },
+        {
+          "center": [
+            4e-05,
+            0.04126
+          ],
+          "radius": 0.007
+        }
+      ]
+    },
+    "beastmaker-2000": {
+      "sha256": "7272258e4e414fd771a8b3c2995c640707d84c8130880eb9c196896564fc9dde",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.24,
+            0.0235
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.24,
+            0.0235
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.24,
+            0.073
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.24,
+            0.073
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.041,
+            0.108
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.041,
+            0.108
+          ],
+          "radius": 0.0055
+        }
+      ]
+    },
+    "lattice-triple-rung": {
+      "sha256": "08e1361c8838c22a3ee72bafe38ac4d52e2d5464279fa6117970fddb14c4e447",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.225,
+            0.014
+          ],
+          "radius": 0.0065
+        },
+        {
+          "center": [
+            -0.075,
+            0.014
+          ],
+          "radius": 0.0065
+        },
+        {
+          "center": [
+            0.075,
+            0.014
+          ],
+          "radius": 0.0065
+        },
+        {
+          "center": [
+            0.225,
+            0.014
+          ],
+          "radius": 0.0065
+        },
+        {
+          "center": [
+            -0.225,
+            0.096
+          ],
+          "radius": 0.0065
+        },
+        {
+          "center": [
+            0.225,
+            0.096
+          ],
+          "radius": 0.0065
+        }
+      ]
+    },
+    "metolius-prime-rib": {
+      "sha256": "b5d7a6c6895c2fc2854a629922c9d46f7e7925f0043be1e5e54af3b9a027b5fe",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.223,
+            0.0285
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.223,
+            0.07
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.223,
+            0.0285
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.223,
+            0.07
+          ],
+          "radius": 0.0055
+        }
+      ]
+    },
+    "metolius-project": {
+      "sha256": "ce6538bea4ffe8cb9251156fad728dd14d6b1d731f0c39d00edd505354c9bb92",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.26,
+            0.115
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.26,
+            0.115
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.22,
+            0.028
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.22,
+            0.028
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.076,
+            0.039
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.076,
+            0.039
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            -0.086,
+            0.087
+          ],
+          "radius": 0.0055
+        },
+        {
+          "center": [
+            0.086,
+            0.087
+          ],
+          "radius": 0.0055
+        }
+      ]
+    },
+    "metolius-wood-grips-deluxe-ii": {
+      "sha256": "4ac98ff8ed0472a39ff2d2c0ab699592edd78aeed3e90cc133b1427380db3065",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.215,
+            0.055
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            -0.215,
+            0.116
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            -0.215,
+            0.18
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.215,
+            0.055
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.215,
+            0.116
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.215,
+            0.18
+          ],
+          "radius": 0.005
+        }
+      ]
+    },
+    "moon-armstrong": {
+      "sha256": "3a25155c7e708f593a8588c9ab3c434437ab65591c9c2f0a73c198fad86f04b9",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.205,
+            0.017
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            -0.205,
+            0.058
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            -0.205,
+            0.123
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.195,
+            0.017
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.195,
+            0.058
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.195,
+            0.123
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            -0.068,
+            0.107
+          ],
+          "radius": 0.005
+        },
+        {
+          "center": [
+            0.067,
+            0.107
+          ],
+          "radius": 0.005
+        }
+      ]
+    },
+    "target10a-linebreaker-base": {
+      "sha256": "270b3c7a8ce9a994f3c8a7edf71bf5d9464c924110cdeb5b264e385ff52d84bb",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.201,
+            0.026
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.201,
+            0.026
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            -0.233,
+            0.116
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            -0.04,
+            0.116
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.04,
+            0.116
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.233,
+            0.116
+          ],
+          "radius": 0.005,
+          "allowMixedBoundary": true
+        }
+      ]
+    },
+    "the-hangboard": {
+      "sha256": "212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f",
+      "dropNodes": [
+        "mounting_hardware_omission_caps_001"
+      ],
+      "holes": [
+        {
+          "center": [
+            -0.259,
+            -0.042
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            -0.259,
+            0.014
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            -0.031,
+            -0.042
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            -0.031,
+            0.014
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            0.031,
+            -0.042
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            0.031,
+            0.014
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            0.259,
+            -0.042
+          ],
+          "radius": 0.0045
+        },
+        {
+          "center": [
+            0.259,
+            0.014
+          ],
+          "radius": 0.0045
+        }
+      ]
+    },
+    "trango-rock-prodigy-training-center": {
+      "sha256": "f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1",
+      "dropNodes": [],
+      "holes": [
+        {
+          "center": [
+            -0.2520144,
+            0.0597241
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            -0.1656724,
+            -0.062051
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            -0.2062156,
+            0.0542946
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            -0.1011036,
+            0.062051
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            0.2520144,
+            0.0597241
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            0.1656724,
+            -0.062051
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            0.2062156,
+            0.0542946
+          ],
+          "radius": 0.006
+        },
+        {
+          "center": [
+            0.1011036,
+            0.062051
+          ],
+          "radius": 0.006
+        }
+      ]
+    },
+    "metolius-climbers-edge": {
+      "sha256": "b17ea53a25d2050ab1424748ceab10fb7da0ba15faddcede8ec39c256b9c5fe3",
+      "dropNodes": [
+        "bore_free_body_caps_001"
+      ],
+      "holes": [
+        {
+          "center": [
+            -0.244,
+            -0.069
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0,
+            -0.069
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.244,
+            -0.069
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            -0.26,
+            -0.0169
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.26,
+            -0.0169
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            -0.279,
+            0.04475
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0,
+            0.04475
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        },
+        {
+          "center": [
+            0.279,
+            0.04475
+          ],
+          "radius": 0.0085,
+          "allowMixedBoundary": true
+        }
+      ]
+    },
+    "metolius-contact": {
+      "sha256": "b944c78e1621bb0fece926e2f8d45608c2d391c6311e8557010ad153b8bcaa59",
+      "dropNodes": [
+        "bore_free_body_caps_001"
+      ],
+      "holes": [
+        {
+          "center": [
+            -0.068,
+            0.038
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            -0.32,
+            -0.102
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            -0.07,
+            -0.0745
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            -0.163,
+            0.018
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            0.068,
+            0.038
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            0.163,
+            0.018
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            0.32,
+            -0.102
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            0.07,
+            -0.0745
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            -0.265,
+            0.022
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        },
+        {
+          "center": [
+            0.265,
+            0.022
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "rearPlane": 0.0,
+          "rearNode": "body_001"
+        }
+      ]
+    },
+    "soill-training-tiles": {
+      "sha256": "4cb007105f5c70d57e739c884964d130f6ccf524d4c4adb974892bda4f670ebf",
+      "removeFaceRanges": {
+        "mounting_hardware_omission_caps_001": [
+          [
+            0,
+            460
+          ]
+        ]
+      },
+      "holes": [
+        {
+          "center": [
+            -0.14691,
+            0.01242
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.05448,
+            0.01421
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.25924,
+            0.02212
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.3592,
+            0.0321
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.16945,
+            0.04586
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.27866,
+            0.09307
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.07941,
+            0.09369
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.11405,
+            0.13943
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.31982,
+            0.14492
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            -0.23259,
+            0.15344
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.14691,
+            0.01242
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.05448,
+            0.01421
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.25924,
+            0.02212
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.3592,
+            0.0321
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.16945,
+            0.04586
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.27866,
+            0.09307
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.07941,
+            0.09369
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.11405,
+            0.13943
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.31982,
+            0.14492
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        },
+        {
+          "center": [
+            0.23259,
+            0.15344
+          ],
+          "radius": 0.008,
+          "allowMixedBoundary": true,
+          "nonplanar": true
+        }
+      ],
+      "skipNodes": [
+        "mounting_hardware_omission_caps_001"
+      ]
+    }
+  },
+  "inventory": {
+    "beastmaker-1000": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "4f9690d8969dddf8178ef4f7961c05115ab00266821e11982284ff8437b2ac6e",
+      "descriptorSHA256": "ad358fbf485f28bd0dad12730438817213c11413ceadc3f3cc39e78020e18c49",
+      "boardSHA256": "2c35dfa0cb4c171563872b0d19f81c1b8b5e184b9f8e6a1490c7d11195a8f238"
+    },
+    "beastmaker-2000": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "7272258e4e414fd771a8b3c2995c640707d84c8130880eb9c196896564fc9dde",
+      "descriptorSHA256": "d7e8333b1261c1aaa840d2cbbcf267fb0b43a326acfa71c940b0ae3711c38bb0",
+      "boardSHA256": "52a117654b5fa1dfc8584e7dbbc318a116572cc10abd495e8ee65fa682c6a4c4"
+    },
+    "captain-fingerfood-dual": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "d7fbadb80de6eceee7617e12515a79acbf4347a0aebaa139bf2f5a4fc669da0e",
+      "descriptorSHA256": "1320ccae333047e2ffcdea0ac747923ec7e90c4cd16780df43cfb4aa81b6929e",
+      "boardSHA256": "b80dc676af14be802a75e28eb6c419af068fe451a4deaae3511913b418767a71"
+    },
+    "captain-fingerfood-pocket": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
+      "descriptorSHA256": "376e58a9dce8cae876c14ac286429e02780daf6c5c02a244e58703fd81cd4bc3",
+      "boardSHA256": "3d358005b2745461ffa4b5610e2016a43673864d47ef44e85025f5ca41ccd0ea"
+    },
+    "captain-fingerfood-unlevel": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "ab52e45b9cdc1c011cfc8a3a6a75cf7c06d19b76f74dab5f53972a9a734b867b",
+      "descriptorSHA256": "e03da79d95fe6d2259d1ca15e4e709544742d67e6d6e874fdac11e13d15784ab",
+      "boardSHA256": "b22531a5d3a9e4f6c62555912e2c988c4cb39ded999ed50aed462aeb588cccc9"
+    },
+    "clavellium-training-block": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "6ba4bcd291d6e782943b5e1574328190c13cd8ba5d69574a43c5430d13b6db08",
+      "descriptorSHA256": "690f54a3e07f07925394821400ac384d4e40eb398f7987e148394109d7a96fbe",
+      "boardSHA256": "66994b48fafe7062b7ac1dc5143f49490753dae3507ca3e85f4ed2c22b87a0ec"
+    },
+    "crimptonite-helium-mobile": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "745f92fdafcfa26f3ff5fe77f1f993d5de68bf0a199173b6f7a43167eb56ba94",
+      "descriptorSHA256": "7c0811e51c55603d698286511edb3146e34aaeda29a0cc6f6777f1670fcd71d7",
+      "boardSHA256": "b27af3bf3be7d68d0ef5c08633aef0c880b95af33f2766a15d25df9a5a817e67"
+    },
+    "dewoodstok-woodbord": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b8ffc338baa9c5bc4d961ad727d1c87dde5d0539c13fc78a848c579b3cda3186",
+      "descriptorSHA256": "9d5369b4115f2dcae7392a3a305b96d42dc84fc743db08c25f77b4590fc1596a",
+      "boardSHA256": "462c92d3bf613d7919ca8acf4116aa7858b22775f2b8b40fb1cc5af1098d6f6b"
+    },
+    "escape-beta-22": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b266345aa9ebc9029d89d1980d3719fe8d44166712470c1b9b5542435d806687",
+      "descriptorSHA256": "5e83922698a7e13f02531542739290dfed33ab919f96b120d5def626e57d2fe7",
+      "boardSHA256": "76ea1f68bca5c753ea09e48cd1209cd7a96d09d46bb621026ca8596a7c215fe3"
+    },
+    "escape-unlimited": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "16469223be2e2609d7a9ebc05db704f4376c824fd5fb704e6d7ba851e25eedb8",
+      "descriptorSHA256": "f0c5bca3225da27f455c842dabcbfded9b8ebec35904911e44651c7dabde78c8",
+      "boardSHA256": "d1566c25419d92a79f82ccc14c88f506a1ff31d1ca14be15a74c06c4bf628b2c"
+    },
+    "evolv-kilter-basic-long": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "82a20c9772978184369799408c716232a96cbaa3e05781c5cb54f40de8430b41",
+      "descriptorSHA256": "181074283e3a79e693a5cc974c68dea034f9c077d6e2d6779cf49404b8f099d3",
+      "boardSHA256": "03508cc976519af228713f462ad543690351d2e92927e9e9d90c4224d0cb9979"
+    },
+    "j-bryant-ftg-32": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
+      "descriptorSHA256": "7b45d01a7bd46f71da3c0c1159afb89853a62d18b8d49bb002ed3fb0aaa4fbfa",
+      "boardSHA256": "8552236ab7da3458a1153a12b958611ec4a7593621eef652efb7ca33102616e8"
+    },
+    "lattice-mxedge-lift-large": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
+      "descriptorSHA256": "c5ea3ef6381886177c83487e9f70f6fdbbd8f73933f7a29169019b46755b5fbf",
+      "boardSHA256": "12124284ac66560f4740ede039ad49b0eb516bad910455919f3e444e6b560d62"
+    },
+    "lattice-mxedge-lift-small": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee",
+      "descriptorSHA256": "0a029569bf3c9d232a335196a0fe77c41d27d34647318e005600a75aa8d5c2a4",
+      "boardSHA256": "d4b7a32c1e91aaaa92a002f54a119f9dd001d11d91af38531146178bc074975e"
+    },
+    "lattice-triple-rung": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "08e1361c8838c22a3ee72bafe38ac4d52e2d5464279fa6117970fddb14c4e447",
+      "descriptorSHA256": "f439fceb4036281dd263f50c1c0cd42c4901a7f33f5e3b1508b741006f5ccfe2",
+      "boardSHA256": "9015164a286d98fdf4d4cc8f5ff7cd1240a94710f8cc459656aacf1b4893b8b3"
+    },
+    "mammut-diamond-finger": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "10ad0cfe885c091d043b043dc5b070452756e2b9859016ab034cdcb58a6df70d",
+      "descriptorSHA256": "c24f3e51aa4c45db65b79e67ef880a5ff125968b382419bf84b33fed71ecd4e9",
+      "boardSHA256": "2ed1a693febce9a5e4884e95c539c54ae0b2f7f4fb7bc8e587e266db836dbc37"
+    },
+    "metolius-climbers-edge": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b17ea53a25d2050ab1424748ceab10fb7da0ba15faddcede8ec39c256b9c5fe3",
+      "descriptorSHA256": "d2805c4735239508e6bf9b3b146cc06a3f4d0ace22130e8c79013cb2716d0952",
+      "boardSHA256": "57a5a3a53063b9312d477d244036a63b71c424ff66fd50f2d7d07b28cd7629d1"
+    },
+    "metolius-contact": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b944c78e1621bb0fece926e2f8d45608c2d391c6311e8557010ad153b8bcaa59",
+      "descriptorSHA256": "2ada55e49a8fe951aed6205cd0e5a206af98b1d4f684ace0ba1b4177aec9ff41",
+      "boardSHA256": "189e42b66f563818aa94538260cdb60aabb3536e8915842379d8097132800b90"
+    },
+    "metolius-foundry": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "87dfb3cd42eee1649e6555abaad59438ffdf2fe7df521623e3936d4053b5e0ba",
+      "descriptorSHA256": "93610c3973af91e559fd4a8f5fc84b7adbc0a121584624e23a0bdf5b0cc7165e",
+      "boardSHA256": "8c5ed756c9412febfce9a6797254669bb35e0652154b53adcff99fa9c852bb56"
+    },
+    "metolius-light-rail-2": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "e217c2268fe3ef1ff4fb6ecce464223b5958cec3a34afcdd217994b13558dcd5",
+      "descriptorSHA256": "bd2608738ed632b346203a368a8a681abe7346dc9e89602db2f6c7ef37363aa2",
+      "boardSHA256": "a6a98cfeec55a718295306b8188da4b12c139e63b86c9dbc13e8c9616c8469f4"
+    },
+    "metolius-prime-rib": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "b5d7a6c6895c2fc2854a629922c9d46f7e7925f0043be1e5e54af3b9a027b5fe",
+      "descriptorSHA256": "be452caa85df6e3b4cc9484394263fdcbd558baa4ab939ca26f4107b8aa03232",
+      "boardSHA256": "00396dbed2e36a11af7440eb42803a9a7245495693b43d17ade3c1e83463fc42"
+    },
+    "metolius-project": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "ce6538bea4ffe8cb9251156fad728dd14d6b1d731f0c39d00edd505354c9bb92",
+      "descriptorSHA256": "fe4363849e1d00a72bf6e1df2b7216c4084efa856ef5ca25487152f8e35bef56",
+      "boardSHA256": "0d75f45243f0a447cdbbb07de358a9a59167ff0406f3012d33a770fbff34e44a"
+    },
+    "metolius-rock-rings-3d": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
+      "descriptorSHA256": "6ba1c181b107cbdba6284651a2f2e4219158a6c2bbb6417ea8e4e4faa938727d",
+      "boardSHA256": "cbd7919f8cb9a43301c42759dfcfa7c4ae7d75ee676cfed7ccd8f4a497ffea55"
+    },
+    "metolius-simulator-3d": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "3372f4d2b42a967d3ca65c2d1a0f56bd7762b32f9c1a80f79897841b020fbc94",
+      "descriptorSHA256": "5d28f9ff8c33e7a2ae1a6cef472537fa4e26efdd208253ecb1758dae1ea33812",
+      "boardSHA256": "c57e419c5676a51ddb6bafe26926aaa21345d0d885abfc3d83c86784af00b4f0"
+    },
+    "metolius-wood-grips-compact-ii": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
+      "descriptorSHA256": "903c9e87fbf305f3184437d346bf6d25e44c51ebd787a426d533ea21dbfa57cf",
+      "boardSHA256": "efbb609e8c1f08f3d7b4b219beae5e268fc0179b907675405c4dc47860c1de26"
+    },
+    "metolius-wood-grips-deluxe-ii": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "4ac98ff8ed0472a39ff2d2c0ab699592edd78aeed3e90cc133b1427380db3065",
+      "descriptorSHA256": "2752cd073a328f3e1e99204f177042bf062d2dff0ecf24cde9de909bb2c4b600",
+      "boardSHA256": "a7b8db76f86d0423481c9e8bb3d0bf82f2d9c09ded8694716be5f0d7a3e86d61"
+    },
+    "moon-armstrong": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "3a25155c7e708f593a8588c9ab3c434437ab65591c9c2f0a73c198fad86f04b9",
+      "descriptorSHA256": "ef214a337dce42dc5ea987132557cd07099aebcae8adaba590637bd66572c464",
+      "boardSHA256": "2d8f3b787cc60d2400a177fa85607de2d3a8fef5ff33ab83b8fcd0870a55592f"
+    },
+    "nature-stoak-board-iii": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "99bf34b6fdf6c57d485d0c1eb55d425345fd5dcc07d787cd430c1616e1e3df79",
+      "descriptorSHA256": "ed45385ecff66f3ce7778a4dc4b46a7d3f02c61ccb2183a333fcaecb79ab6ec7",
+      "boardSHA256": "7545d5aca4b1fe3e7af6dd8abe4c876f9e653859f43d6957e6fe3f9429a6eb23"
+    },
+    "nature-stone-hanger": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "177f1fddada5ca508b241bc3a3b211280e8e6c6f8886ce2729d154de9b0b97c1",
+      "descriptorSHA256": "569fdaaf067ace45b36c5954f23b4b226b4adc3740d249a14cf6b5383c68e97b",
+      "boardSHA256": "5d521f0717d9b54733dc236f374810c106a0f766f86642043f311b23b990c679"
+    },
+    "owl-climb-poker": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "636a0f721edb42b3810280088f9d03ed83b037c9d2b616830a77754e75accc5c",
+      "descriptorSHA256": "caa431c85a9b40ec471cae48e9c1422adbaedf8ec0d6c90291a6e77f00b56f2c",
+      "boardSHA256": "b252d25772ae38e66ef0786a8f34b1ba016671addc96f0d6cf6ddcd39af76204"
+    },
+    "soill-iron-palm-2": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "f4ff71fd010bbf7f43c6a61bdc85ebea2321dbfcd454ca52dd3df6b179c59495",
+      "descriptorSHA256": "db57d23302e831cfa3cf75a29be89feb39127147c9f63317d807b84211b32289",
+      "boardSHA256": "8e4523bf5c51d2366aa9c1afee143c9ec12f706f938cdff50ffa077a876eded1"
+    },
+    "soill-split-palm": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "e16c60e7808ecc2d537e859e2668d4d95a431e55fb5202ea2a4c1d8452664de1",
+      "descriptorSHA256": "05218b58f322818d4026f326c0109926de1213310a939a6fd310f473196e671d",
+      "boardSHA256": "813ec067ff3b87f3ba0cb7ae5afc4814cc62862075b41acc7dc681a74fffd041"
+    },
+    "soill-training-tiles": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "4cb007105f5c70d57e739c884964d130f6ccf524d4c4adb974892bda4f670ebf",
+      "descriptorSHA256": "fa3e18d155a9ba3f808fef2ce9c1c4e6a076cd141f1d842440cf6dcb192395b8",
+      "boardSHA256": "59d397fa31a6924ada590bef8722f9361176512eb4d60d8d116029587af2d945"
+    },
+    "target10a-linebreaker-base": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "270b3c7a8ce9a994f3c8a7edf71bf5d9464c924110cdeb5b264e385ff52d84bb",
+      "descriptorSHA256": "3c021e613d5e9513c1881c8d6873e39f52671e342adeef9ff7a898dd768f65e2",
+      "boardSHA256": "1789551c2018423769b41fecb56b38745b7dc67809000ddf4a1b6ecf3b68523e"
+    },
+    "tension-flash-board": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524",
+      "descriptorSHA256": "f00bb82da1c5b9389c492dc78770e94f497367cc6cd6dc1e1d721b52ad3b56c0",
+      "boardSHA256": "ee9bc5e5b07206036f052db9bbe089cbae50f6ea268ca8504c01176ff66ef06b"
+    },
+    "the-hangboard": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f",
+      "descriptorSHA256": "a106a3710d354244a73664fc95faac0db5fe9700b0b46482a4d49c2c328b36a8",
+      "boardSHA256": "c854d1a578a1fe505923855fd30175c24ce952d7232b03f9776f536ad188d20a"
+    },
+    "trango-rock-prodigy-pivot": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "12ad677490ea3b69b3128f63403aff21eec775d6e6684fed018d550d841a5c5c",
+      "descriptorSHA256": "2fdec9b1bbe96d3ec95ef0783a1c7a2d1139f54d87df27e03966e7621df5db2e",
+      "boardSHA256": "a7490cf5fc715424782fdc4a801844694d2c3c02115bf9f8995417a5b5260eef"
+    },
+    "trango-rock-prodigy-training-center": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "f56c6da3e001f445810dfeaa3afd69e658d3c19780664952980a28ac4b5992c1",
+      "descriptorSHA256": "45b51d0390a71c0f21540dd6e682e5aa2afa15bc6e234c67edc2ffdd7c931073",
+      "boardSHA256": "aae206ba84c8aea2d7cf91452baa6055a4b4497f13a743dfb43a918f4eccb86e"
+    },
+    "yy-baguette-evo": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc",
+      "descriptorSHA256": "1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47",
+      "boardSHA256": "e400f061e15445d02a60823ac665f12db597ed86db0d4351d6b502bc3bdd573d"
+    },
+    "yy-penta-evo": {
+      "modelPath": "assets/primary.usdz",
+      "descriptorPath": "assets/primary.model.json",
+      "modelSHA256": "d624aed1f3314b1330db11059ad47a308a970db9a5b4091deda3c634fe27e5f2",
+      "descriptorSHA256": "b107f9c3a6009e9a012dc3e100ce9e2eb924b0273986f7cae4800971d3d2af5c",
+      "boardSHA256": "a8a443352528f136a39068089db7a09928d30abdab2a4efecc3c8a5bde670445"
+    }
+  },
+  "sourceCommit": "c9daec6a0d1e5c517960daba5e9b3e9f9f28b074"
+}

@@ -1,0 +1,182 @@
+{
+  "assetFile": "trango-rock-prodigy-natural.glb",
+  "sha256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90",
+  "bytes": 3815076,
+  "triangles": 102080,
+  "vertices": 80268,
+  "contactCount": 16,
+  "checks": {
+    "clean_trimesh_and_VTK_import": {
+      "pass": true,
+      "detail": null
+    },
+    "unique_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "exact_hold_mapping": {
+      "pass": true,
+      "detail": null
+    },
+    "hold_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "body_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "only_production_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "root_coordinate_conversion": {
+      "pass": true,
+      "detail": null
+    },
+    "applied_mesh_transforms": {
+      "pass": true,
+      "detail": null
+    },
+    "self_contained": {
+      "pass": true,
+      "detail": null
+    },
+    "no_environment": {
+      "pass": true,
+      "detail": null
+    },
+    "material_on_every_primitive": {
+      "pass": true,
+      "detail": null
+    },
+    "assembled_watertight": {
+      "pass": true,
+      "detail": null
+    },
+    "consistent_winding": {
+      "pass": true,
+      "detail": null
+    },
+    "positive_volume": {
+      "pass": true,
+      "detail": 0.0015776077311447122
+    },
+    "finite_nondegenerate": {
+      "pass": true,
+      "detail": null
+    },
+    "no_duplicate_triangles": {
+      "pass": true,
+      "detail": null
+    },
+    "one_connected_patch_per_contact": {
+      "pass": true,
+      "detail": {
+        "hold--left-closed-crimp": 1,
+        "hold--left-jug": 1,
+        "hold--left-pinch-thumb": 1,
+        "hold--left-pocket-2finger": 1,
+        "hold--left-pocket-3finger": 1,
+        "hold--left-pocket-supported": 1,
+        "hold--left-rail-lower": 1,
+        "hold--left-rail-upper": 1,
+        "hold--right-closed-crimp": 1,
+        "hold--right-jug": 1,
+        "hold--right-pinch-thumb": 1,
+        "hold--right-pocket-2finger": 1,
+        "hold--right-pocket-3finger": 1,
+        "hold--right-pocket-supported": 1,
+        "hold--right-rail-lower": 1,
+        "hold--right-rail-upper": 1
+      }
+    },
+    "physical_unit_count": {
+      "pass": true,
+      "detail": null
+    },
+    "metric_bounds": {
+      "pass": true,
+      "detail": {
+        "master": [
+          [
+            -0.2405,
+            -0.0381,
+            -0.0762
+          ],
+          [
+            0.2405,
+            -0.0,
+            0.0762
+          ]
+        ],
+        "export": [
+          [
+            -0.24050000309944153,
+            -0.038100000470876694,
+            -0.07620000094175339
+          ],
+          [
+            0.24050000309944153,
+            -0.0,
+            0.07620000094175339
+          ]
+        ]
+      }
+    },
+    "normalized_finite_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "shared_contact_boundary_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "indexed_vertex_efficiency": {
+      "pass": true,
+      "detail": {
+        "vertices": 80268,
+        "triangles": 102080
+      }
+    },
+    "meaningful_size_reduction": {
+      "pass": true,
+      "detail": null
+    },
+    "UV0_finite_unit_square": {
+      "pass": true,
+      "detail": null
+    },
+    "UV_local_stretch": {
+      "pass": true,
+      "detail": null
+    },
+    "locked_contact_boundaries": {
+      "pass": true,
+      "detail": null
+    },
+    "sampled_surface_deviation": {
+      "pass": true,
+      "detail": null
+    }
+  },
+  "structuralPass": true,
+  "sourceBoundsMetres": [
+    [
+      -0.24050000309944153,
+      -0.038100000470876694,
+      -0.07620000094175339
+    ],
+    [
+      0.24050000309944153,
+      -0.0,
+      0.07620000094175339
+    ]
+  ],
+  "software": {
+    "trimesh": "4.11.1",
+    "VTK": "9.6.2"
+  },
+  "photoFidelityCertified": false,
+  "targetPhoneTested": false
+}

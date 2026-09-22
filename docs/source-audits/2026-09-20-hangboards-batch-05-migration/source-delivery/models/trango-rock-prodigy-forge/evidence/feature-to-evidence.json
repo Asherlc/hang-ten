@@ -1,0 +1,536 @@
+{
+  "model": "Trango Rock Prodigy Forge",
+  "revision": "Rock Prodigy Forge, green two-piece version; not Training Center",
+  "featureMapping": [
+    {
+      "holdId": "left-sloper-30",
+      "nodeName": "hold--left-sloper-30",
+      "description": "30 degree outer sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 224,
+      "selectable": true
+    },
+    {
+      "holdId": "left-sloper-40",
+      "nodeName": "hold--left-sloper-40",
+      "description": "40 degree middle sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 309,
+      "selectable": true
+    },
+    {
+      "holdId": "left-flat-edge",
+      "nodeName": "hold--left-flat-edge",
+      "description": "Inner upper flat edge",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 253,
+      "selectable": true
+    },
+    {
+      "holdId": "left-slopey-crimper",
+      "nodeName": "hold--left-slopey-crimper",
+      "description": "Curved brow above rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 5014,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail",
+      "nodeName": "hold--left-rail",
+      "description": "One continuous variable-depth rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        7,
+        20
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1530,
+      "selectable": true
+    },
+    {
+      "holdId": "left-mr-deep",
+      "nodeName": "hold--left-mr-deep",
+      "description": "Inner deep MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "left-mr-shallow",
+      "nodeName": "hold--left-mr-shallow",
+      "description": "Inner shallow MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 612,
+      "selectable": true
+    },
+    {
+      "holdId": "left-closed-crimp",
+      "nodeName": "hold--left-closed-crimp",
+      "description": "Closed crimp and integral thumb shoulder",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 45103,
+      "selectable": true
+    },
+    {
+      "holdId": "left-imr",
+      "nodeName": "hold--left-imr",
+      "description": "One continuous three-finger pocket; IM options reuse it",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        19,
+        31
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-medium",
+      "nodeName": "hold--left-pinch-medium",
+      "description": "Outer upper pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 50,
+      "triangleCount": 9895,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-narrow",
+      "nodeName": "hold--left-pinch-narrow",
+      "description": "Outer lower pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 25,
+      "triangleCount": 5235,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-30",
+      "nodeName": "hold--right-sloper-30",
+      "description": "30 degree outer sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 224,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-40",
+      "nodeName": "hold--right-sloper-40",
+      "description": "40 degree middle sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 309,
+      "selectable": true
+    },
+    {
+      "holdId": "right-flat-edge",
+      "nodeName": "hold--right-flat-edge",
+      "description": "Inner upper flat edge",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 253,
+      "selectable": true
+    },
+    {
+      "holdId": "right-slopey-crimper",
+      "nodeName": "hold--right-slopey-crimper",
+      "description": "Curved brow above rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 5014,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail",
+      "nodeName": "hold--right-rail",
+      "description": "One continuous variable-depth rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        7,
+        20
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1530,
+      "selectable": true
+    },
+    {
+      "holdId": "right-mr-deep",
+      "nodeName": "hold--right-mr-deep",
+      "description": "Inner deep MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "right-mr-shallow",
+      "nodeName": "hold--right-mr-shallow",
+      "description": "Inner shallow MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 612,
+      "selectable": true
+    },
+    {
+      "holdId": "right-closed-crimp",
+      "nodeName": "hold--right-closed-crimp",
+      "description": "Closed crimp and integral thumb shoulder",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 45095,
+      "selectable": true
+    },
+    {
+      "holdId": "right-imr",
+      "nodeName": "hold--right-imr",
+      "description": "One continuous three-finger pocket; IM options reuse it",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        19,
+        31
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-medium",
+      "nodeName": "hold--right-pinch-medium",
+      "description": "Outer upper pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 50,
+      "triangleCount": 9891,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-narrow",
+      "nodeName": "hold--right-pinch-narrow",
+      "description": "Outer lower pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 25,
+      "triangleCount": 5233,
+      "selectable": true
+    }
+  ],
+  "sourceRegister": [
+    {
+      "id": "F1",
+      "url": "https://trango.com/products/rock-prodigy-forge",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Exact Forge; two independent halves; 5.25 x 12.75 inches; 3.95 lb/side.",
+      "doesNotEstablish": "Page does not state thickness or explicitly label dimension axes.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F2",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/forge-grip-identification-chart.pdf?v=1588609203",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "PDF page 1 screenshot inspected",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Numbered/labelled physical regions: 30/40 degree slopers, flat edge, slopey crimper, rail, two MR pockets, closed crimp with thumb support, one IMR pocket, pinches.",
+      "doesNotEstablish": "Grip combinations overlap; not a count of disjoint meshes.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F3",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Forge_Depth_Guide.pdf?v=1634672887",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "PDF page 1 screenshot inspected",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "7-20 rail; 7.5 crimp; MR 25/15; IMR 19-31; nominal pinch widths 100/50/25 mm.",
+      "doesNotEstablish": "No CAD sections or radii. Depth direction read from pictured right half.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F4",
+      "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/2018_update_forge_instructions_booklet.pdf?v=1588609204",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "Manual and mounting pages inspected",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Eight mounting screws and initial 4-8 inch spacing; thumb support function.",
+      "doesNotEstablish": "Exact back-surface topology not shown.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F5",
+      "url": "https://trango.com/cdn/shop/products/22820_Rock_Prodigy_Forge_Main_Image.jpg?v=1582662057&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Green pair; independent left/right outline and mounting locations.",
+      "doesNotEstablish": "Front projection does not fully resolve pinch undercuts.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F6",
+      "url": "https://trango.com/cdn/shop/files/22820_RockProdigyForge_AltImage1_6974b648-94cf-464a-8ea9-f0a14eb8958b.png?v=1755037539&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Oblique outer pinch, raised jaws, drafted pockets.",
+      "doesNotEstablish": "No ruler or reverse view.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F7",
+      "url": "https://trango.com/cdn/shop/files/22820_RockProdigyForge_AltIMage3_6794e534-75a5-4109-8a9e-0eb213f5a0e0.png?v=1755037540&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Close-up outer wide/medium/narrow pinch surfaces.",
+      "doesNotEstablish": "No backside calibration.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F8",
+      "url": "https://trango.com/cdn/shop/files/22820_RockProdigyForge_AltImage4_07218e65-ff06-4c5e-9590-f694e7d67b70.png?v=1755037540&width=1946",
+      "publisher": "Trango",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "MR pocket rounding and adjacent crimp thumb shoulder.",
+      "doesNotEstablish": "Estimated local radii.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "F9",
+      "url": "https://rockclimberstrainingmanual.com/2015/09/03/the-worlds-most-technologically-advanced-finger-training-system-the-forge/",
+      "publisher": "Product designers / Anderson brothers",
+      "evidenceTier": "designer-primary",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Independent mirrored halves and iterative CAD-designed grip distinctions.",
+      "doesNotEstablish": "Design renders are explanatory, not measurement scans.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ],
+  "conflicts": [
+    {
+      "issue": "Manufacturer dimension axes not explicit",
+      "ruling": "Interpret 12.75 inches as per-half width and 5.25 as height from the front aspect and individual-half listing. Thickness remains estimated."
+    },
+    {
+      "issue": "Photo shows five openings per half; manual supplies four screws per half",
+      "ruling": "Retain all five observed openings per half. Classify four small openings as mounting holes and the larger IMR opening as an observed passage with unresolved purpose; do not call it a hold or cord attachment."
+    },
+    {
+      "issue": "Pinch/IMR grip labels overlap physically",
+      "ruling": "Keep one IMR contact per half; medium/narrow pinch patches are reused in a wide-pinch interaction group. Do not clone the IM/IMR surfaces."
+    }
+  ],
+  "limitations": [
+    "Per-half depth and sculpted sections are photo-derived estimates; the published two dimensions do not identify axes explicitly.",
+    "Outer pinch widths and sloper transitions are approximate sculpted reconstructions, not calibrated CAD.",
+    "Hidden rear surface is simplified. Pinch grip combinations reference existing surfaces and do not create duplicate geometry."
+  ],
+  "sourceBinaryRetention": "Original image/PDF bytes could not be downloaded. This file contains authored observations and metadata, not substitutes for originals.",
+  "assetSha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba"
+}
