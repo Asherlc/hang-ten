@@ -942,3 +942,31 @@ runtime represents its two exterior leads from one shared invisible anchor.
 The rear connecting segment is deliberately omitted. No suspension mesh is
 included in the three-node USDZ. Orientation keys are stored in canonical
 position-ID order; the user-visible position sequence remains 25 mm then 16 mm.
+
+## Batch 05 Zlagboard fixed-front migration (2026-09-20)
+
+Author: Astra, after explicit user evidence approval on 2026-09-20.
+[Evidence, mapping and native verification](2026-09-20-hangboards-batch-05-migration/native/README.md)
+retain E1/E2/E3 and E1/P2/P3 authority and distinguish estimates from facts.
+
+| Package | Model bounds in metres (min → max) | Position / hold IDs | Pivot / quaternion | Review |
+| --- | --- | --- | --- | --- |
+| `zlagboard.evo` | (-0.350, -0.060, 0) → (0.350, 0.060, 0.042) | Existing primary; all 21 stable hold IDs, exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
+| `zlagboard.pro` | (-0.3525, -0.076, 0) → (0.3525, 0.076, 0.042) | Existing primary; all 28 stable hold IDs, Pro 2.0 exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
+
+Bounds and orthographic front camera are an authored display estimate, not
+published board measurements. +Y is up and +Z faces the athlete; the source GLB
+root transform was baked exactly once in native preparation. No suspension is
+documented in the approved source set; both exclusions have explicit user approval.
+
+## Frictitious native migration, 2026-09-20
+
+Author: Astra. Approved evidence D1/D2/D3/D4 (lower Pro 7 only), M1/M2/M3 (side profile). Model bounds are mesh-derived; cavity profile/curvature is an authored display estimate.
+
+| Package | model bounds (metres) | position and hold IDs | pivot / quaternion | evidence and review |
+| --- | --- | --- | --- | --- |
+| `frictitious.doormount-pro-7` | [-0.323850006, -0.057150006, -6e-09] → [0.323850006, 0.05715001, 0.057150006] | Existing primary, all 13 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
+| `frictitious.megalith` | [-0.339724988, -0.082550004, -9e-09] → [0.339724988, 0.082550012, 0.057150003] | Existing primary, all 20 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
+
+| `trango.rock-prodigy-forge` | Fixed front, split adjustable spacing | F1/F2/F4/F5/F6/F7 approved 2026-09-20; no canonical alternate pose established. |
+| `trango.rock-prodigy-natural` | Fixed front, removable cleat mount | N1/N2/N3/N4/N5 approved 2026-09-20; removal/sliding is not a training rotation. |

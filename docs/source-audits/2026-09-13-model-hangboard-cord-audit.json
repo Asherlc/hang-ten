@@ -2,37 +2,6 @@
   "schemaVersion": 1,
   "records": [
     {
-      "packageID": "yy.penta-evo",
-      "decision": "represented",
-      "sourceFact": "documentedSuspension",
-      "topology": "pairedLeadCord",
-      "ruling": "two independent paired exterior loops through the existing central ring; no invented channel or knot.",
-      "evidence": [
-        {
-          "view": "PE-RESTORED full front/reverse original: two exterior strands around top band and through central ring; binary URL unknown, product URL is reference only",
-          "url": "https://www.yyvertical.com/en/products/penta-evo",
-          "exactRevisionID": "yy-penta-evo-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-front-reverse.webp"
-        },
-        {
-          "view": "PE-RESTORED intact close-up original: uninterrupted lower band and retaining concavities; binary URL unknown, product URL is reference only",
-          "url": "https://www.yyvertical.com/en/products/penta-evo",
-          "exactRevisionID": "yy-penta-evo-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-close-up.webp"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "Astra",
-        "reviewedAt": "2026-09-20",
-        "notes": "Reviewed both exact approved intact originals and independently rechecked YY product and installation article. Seven enumerated and pictured contacts per unit prevail over the eight-grip headline. The actual asymmetric unit is reused identically without reflection; rear 10 mm recess shares the front 15 mm physical band. Each instance has its own two-sided exterior wrap through the existing central ring and independent invisible anchor. No retired small passage, hidden channel, knot, hardware or inter-unit route is modeled. Original binary URLs remain null/unhashed in the source register; these product-page references do not claim download provenance. Unsurveyed outline, radii, rear, color, guide/endpoints, rest length and poses are authored-display-estimate."
-      }
-    },
-    {
       "packageID": "beastmaker-1000",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
@@ -195,6 +164,191 @@
       }
     },
     {
+      "packageID": "crimptonite.helium-mobile",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord.",
+      "evidence": [
+        {
+          "view": "HE2 exact-revision front",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-front.jpg"
+        },
+        {
+          "view": "HE6 exact-revision reverse",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-reverse.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Inspected exact HE2/HE6 original Crimptonite photographs retained by Task 7 and the manual analytic candidate. Front and reverse each show two end mouths, three recesses occur only on the front, and the rear is continuous. Approve two independent exterior front leads; clipped mouth display geometry makes no claim about hidden connection. HE1 manufacturer 24 mm thickness wins the retailer conflict. Unmeasured mouth/pose/anchor/rest-length/material/camera values are authored-display-estimate."
+      }
+    },
+    {
+      "packageID": "dewoodstok-woodbord",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained deWoodstok Woodbord manufacturer product response and the reviewed source packet identify a fixed bamboo training board with supplied mounting screws; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
+          "exactRevisionID": "dewoodstok-woodbord-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d5943951b72683ec0cdde126e86c6c4834db78b71f03dbd8d19cc1ffc4236ef7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/dewoodstok-woodbord-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-mounting fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "escape-beta-22",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Escape Climbing Beta Board (ec72100) manufacturer product page specifies a wall-mounted 6 x 26 x 2 inch board with installation hardware and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://escapeclimbing.com/products/ec72100",
+          "exactRevisionID": "escape-beta-22-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "9e9f3c9264e6796efc4781d35cfb4514b27f7829c790fa9b575697f56920259a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-beta-22-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; only installation hardware is documented, no cord or rope suspension."
+      }
+    },
+    {
+      "packageID": "escape.unlimited",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Escape Unlimited manufacturer product response and reviewed source packet support a fixed Baltic-birch board with mounting holes; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://escapeclimbing.com/products/ec72000",
+          "exactRevisionID": "escape-unlimited-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1a72a7b98971ee6b14816ab2e933180d7289dae1444918b69d422ad004192cc3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-unlimited-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-board fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "evolv-kilter-basic-long",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Evolv Basic Training Board Long manufacturer product response and reviewed source packet describe the fixed long board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
+          "exactRevisionID": "evolv-basic-training-board-long-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "9bdfd3691762591ba86e145d57ba49c0d9c86c3211b39f2706718ec561b53163",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/evolv-kilter-basic-long-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and extracted manufacturer specification record; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "frictitious.doormount-pro-7",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved D1/D3 document doorway clamp mounting; no board-suspension cord is documented for this exact Pro 7 revision. Clamp, pads and mounting hardware are omitted display components, not absent physical features.",
+      "evidence": [
+        {
+          "view": "Pro 7 variant identity; 25.5 x 4.5 x 2.25 inches; poplar; depths 35/25/20/15/10 mm; pocket and jug; doorway clamp.",
+          "url": "https://frictitiousclimbing.com/products/doormount-pro",
+          "exactRevisionID": "frictitious.doormount-pro-7-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "451edefb80b74ec186eb1d25b375223ec42cad53639e8222efc7d55634cb1155",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.doormount-pro-7-D1-2026-09-20.html"
+        },
+        {
+          "view": "Current Pro 7 front and external clamp association.",
+          "url": "https://frictitiousclimbing.com/cdn/shop/files/DMP-7-Front_d597f381-f23b-4d16-a5b2-d9d201171fa5.jpg?v=1784063035&width=3840",
+          "exactRevisionID": "frictitious.doormount-pro-7-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "a67b16b6a84d2aa25c734990e43f56129ace1189a8291b3c4787ae35fd10497d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.doormount-pro-7-D3-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
+      "packageID": "frictitious.megalith",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Approved M1/M2 document a fixed wall board and mounting screw locations; no board-suspension cord is documented for this exact revision. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "26.75 x 6.5 x 2.25 inches; poplar; edge depths 40/30/20/15/12/10/8; 25 mm center edge; mono and 2-finger features; full-width jug.",
+          "url": "https://frictitiousclimbing.com/products/megalith",
+          "exactRevisionID": "frictitious.megalith-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "33faf609270b05dc54b4f0161bc46d6a20732f12370e467bb797140935e64d8b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.megalith-M1-2026-09-20.html"
+        },
+        {
+          "view": "Three tiers; depth ordering; continuous stepped openings; six screw openings; central protruding grip and bottom notch.",
+          "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840",
+          "exactRevisionID": "frictitious.megalith-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "93d9089def4eaf45b58e9805540fbef2c7fb5fe84b278d4a03143a0243c9ef19",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/frictitious.megalith-M2-2026-09-20.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
       "packageID": "j-bryant.ftg-32",
       "decision": "represented",
       "sourceFact": "documentedSuspension",
@@ -223,6 +377,29 @@
         "reviewer": "user design review",
         "reviewedAt": "2026-09-20",
         "notes": "Approved one block, one physical loop, two centered holes, pairedLeadCord exterior-lead representation, and deliberate rear-segment omission."
+      }
+    },
+    {
+      "packageID": "lattice-triple-rung",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
+          "exactRevisionID": "lattice-triple-rung-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "115daad45ddb5750d9de2f4ce44735dfded807a0e30a004f4aada8b9688ae9fa",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-triple-rung.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-13",
+        "notes": "Reviewed the retained exact-revision source artifacts."
       }
     },
     {
@@ -288,26 +465,26 @@
       }
     },
     {
-      "packageID": "lattice-triple-rung",
+      "packageID": "mammut.diamond-finger",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
       "topology": null,
-      "ruling": "Lattice Triple Rung evidence describes a fixed mounted board and does not establish a supplied or integral cord.",
+      "ruling": "The retained Mammut Diamond Finger Hangboard installation instructions document a wall-mounted plate fixed with adequate mounting solutions and document no supplied or integral cord or rope suspension.",
       "evidence": [
         {
-          "view": "manufacturer product",
-          "url": "https://latticetraining.com/product/triple-rung-wooden-hangboard/",
-          "exactRevisionID": "lattice-triple-rung-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "115daad45ddb5750d9de2f4ce44735dfded807a0e30a004f4aada8b9688ae9fa",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-triple-rung.html"
+          "view": "exact-revision manufacturer installation instructions",
+          "url": "https://chalkr.de/m/100015/111170/media/Mammut/mammut-diamond-finger-hangboard-bedienungsanleitung.pdf",
+          "exactRevisionID": "mammut-diamond-finger-current-2026-09-16",
+          "sourceTier": "manufacturer-instruction",
+          "snapshotSHA256": "6a0fbe07d2c1ac5a05f09bebc1f13e5e0c9274dfbaca8312940e12d98f1d66bd",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/mammut.diamond-finger-manufacturer-product-2026-09-16.pdf"
         }
       ],
       "humanApproval": {
         "approved": true,
         "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-13",
-        "notes": "Reviewed the retained exact-revision source artifacts."
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer installation instructions; the wall mount plate is the only mounting provision and no cord or rope suspension is documented."
       }
     },
     {
@@ -357,6 +534,60 @@
       }
     },
     {
+      "packageID": "metolius.foundry",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Metolius Foundry Training Board manufacturer product page describes a wall-mounted training board shipped with a training guide, instructions, and mounting hardware, and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/products/foundry-training-board",
+          "exactRevisionID": "metolius-foundry-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "6ddfa5354734b7226b3ecd1fb3db359a90cf5e487178b4f4add02f336daf1f6c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius.foundry-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it lists mounting hardware only and does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "metolius.light-rail-2",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore.",
+      "evidence": [
+        {
+          "view": "LR2 exact-revision manufacturer product view",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-product.jpg"
+        },
+        {
+          "view": "Approved Treeline exact-revision field view, exact archive replay 2026-01-29T01:24:02Z",
+          "url": "https://web.archive.org/web/20260129012402id_/https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-field.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed the exact approved manufacturer product and archived Treeline field originals retained by Task 7. One reversible rail has one continuous front recess and current manufacturer 40/20/40/15 contacts. Approve only the two visible upper exterior entry regions and independent exterior leads. Source underside markers 3/4, hidden vertical bores, connecting routes and old face screws are omitted. Entry clipping, unsurveyed cross-section, radii, rear, material and suspension display values are authored-display-estimate; clipping does not claim physical blind bores."
+      }
+    },
+    {
       "packageID": "metolius.prime-rib",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
@@ -400,6 +631,45 @@
         "reviewer": "hang-ten-cord-audit",
         "reviewedAt": "2026-09-13",
         "notes": "Reviewed the retained exact-revision source artifacts."
+      }
+    },
+    {
+      "packageID": "metolius.rock-rings-3d",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent pairedLeadCord systems; no inter-unit connection or central through-bore.",
+      "evidence": [
+        {
+          "view": "RR3 exact manufacturer black/white product and two roof exits per unit",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-product.jpg"
+        },
+        {
+          "view": "RR6 approved owner front/rear; uninterrupted rear disproves central through-bore",
+          "url": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-front-rear.webp"
+        },
+        {
+          "view": "RR7 approved owner lateral opening; no claimed hidden route",
+          "url": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-lateral.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed exact approved manufacturer black/white and retained owner front/rear/lateral originals. One canonical physical unit is rendered twice, identical and unreflected. Four generic contact slots map uniquely to eight preserved contacts. Each instance has its own pairedLeadCord and fixed invisible world anchor. Visible leads terminate at two roof exits; lateral windows are non-route attachment geometry. No central bore, concealed connection, inter-unit route, screw/mounting hole or hardware is modeled. Shallow aperture clipping is an authored-display-estimate, not proof of a physical blind cavity. Owner revision/year and CDN provenance caveats remain in the original source register; exact chemistry is unknown and source textures are not used."
       }
     },
     {
@@ -449,6 +719,75 @@
       }
     },
     {
+      "packageID": "metolius.wood-grips-deluxe-ii",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Metolius Wood Grips II manufacturer product response and reviewed source packet identify the Deluxe as a wall-fixed wooden training board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
+          "exactRevisionID": "metolius-wood-grips-deluxe-ii-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "0bd3c297deb023356fafa181a48a193c93723e779321d054a3d0f3cc82c9ad82",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-wood-grips-deluxe-ii-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register wall-fixed fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "moon.armstrong",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained Moon Armstrong Fingerboard Ash manufacturer product response and reviewed source packet describe the fixed ash board; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://moonclimbing.com/moon-armstrong-fingerboard-ash.html",
+          "exactRevisionID": "moon-armstrong-ash-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7ef4629d7164f3c62469db4a65ab303636fb82eae5d690bc7d131b1d3b5e639d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/moon-armstrong-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed-board fact; no suspension is documented."
+      }
+    },
+    {
+      "packageID": "nature.stoak-board-iii",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Nature Climbing Stoak Board III manufacturer product page describes a wall-mounted oak or beech board with bolt and screw mounting and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://natureclimbing.com/products/stoak-board-iii",
+          "exactRevisionID": "nature-stoak-board-iii-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5f7864d6e548a0746bcd35c977510a3a17e3d84a1032eaa796d82addc54617f7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/nature.stoak-board-iii-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; mounting is bolt/screw only and no cord or rope suspension is documented."
+      }
+    },
+    {
       "packageID": "nature.stone-hanger",
       "decision": "represented",
       "sourceFact": "documentedSuspension",
@@ -480,6 +819,99 @@
       }
     },
     {
+      "packageID": "owl-climb.poker",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "noDocumentedSuspension; excluded.",
+      "evidence": [
+        {
+          "view": "OP-PHOTO-0 exact manufacturer face A",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-a.jpg"
+        },
+        {
+          "view": "OP-PHOTO-1 exact manufacturer face B",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-b.jpg"
+        },
+        {
+          "view": "OP-PHOTO-2 exact manufacturer face C",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-c.jpg"
+        },
+        {
+          "view": "OP-PHOTO-3 exact manufacturer face D",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-d.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed all four exact approved Owl manufacturer originals. One 660 x 100 x 100 mm beam has 34 unchanged same-face contacts, including exactly the two approved Face D deep rounded recess restores. Manufacturer mounting brackets are external hardware and are omitted, along with screws and mounting holes. No evidence establishes board suspension; no cord, anchor, passage or suspension metadata is promoted. Cyclic face order, unsurveyed depth assignments, relief transitions, edge radii, material and camera are authored-display-estimate. The mono/duo sequence is identical at both ends in every source view, not mirrored."
+      }
+    },
+    {
+      "packageID": "soill.iron-palm-2",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current So iLL Iron Palm 2.0 manufacturer product page describes a wall-mounted training board and its grip features and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://soillholds.com/products/iron-palm-2-0",
+          "exactRevisionID": "soill-iron-palm-2-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "a93b40ba465cc6a8d5d1469f4454bb7773aec0ed398b63c1a04c31209d00cab3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.iron-palm-2-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "soill.split-palm",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current So iLL Split Palm manufacturer product page describes a two-piece wall-mounted training board and documents no supplied or integral cord or rope suspension.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://soillholds.com/products/split-palm",
+          "exactRevisionID": "soill-split-palm-current-2026-09-16",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ed060fc31589d53c9474a93e57036f5ad0b1caeca31cd651fba0a13481c48b9e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.split-palm-manufacturer-product-2026-09-16.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-16",
+        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
+      }
+    },
+    {
       "packageID": "soill.training-tiles",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
@@ -500,6 +932,29 @@
         "reviewer": "hang-ten-cord-audit",
         "reviewedAt": "2026-09-15",
         "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "target10a.linebreaker-base",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained target10a Linebreaker BASE manufacturer product response and reviewed source packet identify the fixed BASE with supplied mounting screws; neither documents a supplied or integral suspension system.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://www.target10a.com/magazin/2017/01/01/linebreaker-base/",
+          "exactRevisionID": "target10a-linebreaker-base-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "65afde30db091cc985306c2b2b9cb077c4fde392d45b7ee8c64ab4385180757d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/target10a-linebreaker-base-manufacturer-product-2026-09-15.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed BASE fact; no suspension is documented."
       }
     },
     {
@@ -557,481 +1012,81 @@
       }
     },
     {
-      "packageID": "trango.rock-prodigy-training-center",
+      "packageID": "trango.rock-prodigy-forge",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
       "topology": null,
-      "ruling": "The retained current Rock Prodigy Training Center manufacturer product view establishes the two-piece board arrangement but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "ruling": "Approved exact-revision product and mounting sources establish fixed wall/backer or cleat mounting, with no documented board suspension. Lower large passages have unresolved purpose; optional pulley-kit cord is external training equipment, not board suspension.",
       "evidence": [
         {
-          "view": "exact-revision manufacturer product",
-          "url": "https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946",
-          "exactRevisionID": "rock-prodigy-training-center-current-2026-09-15",
+          "view": "Exact Forge; two independent halves; 5.25 x 12.75 inches; 3.95 lb/side.",
+          "url": "https://trango.com/products/rock-prodigy-forge",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
           "sourceTier": "manufacturer",
-          "snapshotSHA256": "8293f7bd2c2517f8fda72d7ad678671cc801cd7d31fecd4e20ee42eea7170ebf",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-training-center-main.jpg"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
-      }
-    },
-    {
-      "packageID": "dewoodstok-woodbord",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained deWoodstok Woodbord manufacturer product response and the reviewed source packet identify a fixed bamboo training board with supplied mounting screws; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://www.dewoodstok.nl/product/hangboard-woodbord/",
-          "exactRevisionID": "dewoodstok-woodbord-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "d5943951b72683ec0cdde126e86c6c4834db78b71f03dbd8d19cc1ffc4236ef7",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/dewoodstok-woodbord-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-mounting fact; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "escape.unlimited",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained Escape Unlimited manufacturer product response and reviewed source packet support a fixed Baltic-birch board with mounting holes; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://escapeclimbing.com/products/ec72000",
-          "exactRevisionID": "escape-unlimited-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "1a72a7b98971ee6b14816ab2e933180d7289dae1444918b69d422ad004192cc3",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-unlimited-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and the source-register fixed-board fact; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "evolv-kilter-basic-long",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained Evolv Basic Training Board Long manufacturer product response and reviewed source packet describe the fixed long board; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://www.evolvsports.com/en-us/basic-training-board-_long_-66-0000082105",
-          "exactRevisionID": "evolv-basic-training-board-long-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "9bdfd3691762591ba86e145d57ba49c0d9c86c3211b39f2706718ec561b53163",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/evolv-kilter-basic-long-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and extracted manufacturer specification record; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "metolius.wood-grips-deluxe-ii",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained Metolius Wood Grips II manufacturer product response and reviewed source packet identify the Deluxe as a wall-fixed wooden training board; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards",
-          "exactRevisionID": "metolius-wood-grips-deluxe-ii-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "0bd3c297deb023356fafa181a48a193c93723e779321d054a3d0f3cc82c9ad82",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-wood-grips-deluxe-ii-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and source-register wall-fixed fact; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "moon.armstrong",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained Moon Armstrong Fingerboard Ash manufacturer product response and reviewed source packet describe the fixed ash board; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://moonclimbing.com/moon-armstrong-fingerboard-ash.html",
-          "exactRevisionID": "moon-armstrong-ash-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "7ef4629d7164f3c62469db4a65ab303636fb82eae5d690bc7d131b1d3b5e639d",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/moon-armstrong-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed-board fact; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "target10a.linebreaker-base",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained target10a Linebreaker BASE manufacturer product response and reviewed source packet identify the fixed BASE with supplied mounting screws; neither documents a supplied or integral suspension system.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://www.target10a.com/magazin/2017/01/01/linebreaker-base/",
-          "exactRevisionID": "target10a-linebreaker-base-current-2026-09-15",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "65afde30db091cc985306c2b2b9cb077c4fde392d45b7ee8c64ab4385180757d",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/target10a-linebreaker-base-manufacturer-product-2026-09-15.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-15",
-        "notes": "Reviewed the retained exact-revision manufacturer response and source-register fixed BASE fact; no suspension is documented."
-      }
-    },
-    {
-      "packageID": "yy.baguette-evo",
-      "decision": "represented",
-      "sourceFact": "documentedSuspension",
-      "topology": "twoBranchCord",
-      "ruling": "The current YY Vertical Baguette Evo Turn & Pull product evidence explicitly supports suspended use with rope or bungee; the reviewed presentation is therefore represented as transient display geometry without claiming that an accessory is supplied.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer",
-          "url": "https://www.yyvertical.com/en/products/baguette-evo",
-          "exactRevisionID": "baguette-evo-turn-pull-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette.html"
+          "snapshotSHA256": "8367909a9b8c629f51f0efefff1f9139fe257d6d59fcbe52a44486baa5786da5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F1-2026-09-20.html"
         },
         {
-          "view": "exact-revision product image",
-          "url": "https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp?v=1751469206",
-          "exactRevisionID": "baguette-evo-turn-pull-current",
+          "view": "Eight mounting screws and initial 4-8 inch spacing; thumb support function.",
+          "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/2018_update_forge_instructions_booklet.pdf?v=1588609204",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
           "sourceTier": "manufacturer",
-          "snapshotSHA256": "c42f96ebed2b58d1a287f5b125fd3607cc9244a651a92e2731fe4b589e80ea3e",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette-evo-image.webp"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-14",
-        "notes": "Reviewed current exact-revision manufacturer evidence and approved documented suspended presentation; optional rope/bungee remains explicitly non-supplied metadata."
-      }
-    },
-    {
-      "packageID": "escape-beta-22",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained current Escape Climbing Beta Board (ec72100) manufacturer product page specifies a wall-mounted 6 x 26 x 2 inch board with installation hardware and documents no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://escapeclimbing.com/products/ec72100",
-          "exactRevisionID": "escape-beta-22-current-2026-09-16",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "9e9f3c9264e6796efc4781d35cfb4514b27f7829c790fa9b575697f56920259a",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/escape-beta-22-manufacturer-product-2026-09-16.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer product; only installation hardware is documented, no cord or rope suspension."
-      }
-    },
-    {
-      "packageID": "mammut.diamond-finger",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained Mammut Diamond Finger Hangboard installation instructions document a wall-mounted plate fixed with adequate mounting solutions and document no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer installation instructions",
-          "url": "https://chalkr.de/m/100015/111170/media/Mammut/mammut-diamond-finger-hangboard-bedienungsanleitung.pdf",
-          "exactRevisionID": "mammut-diamond-finger-current-2026-09-16",
-          "sourceTier": "manufacturer-instruction",
-          "snapshotSHA256": "6a0fbe07d2c1ac5a05f09bebc1f13e5e0c9274dfbaca8312940e12d98f1d66bd",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/mammut.diamond-finger-manufacturer-product-2026-09-16.pdf"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer installation instructions; the wall mount plate is the only mounting provision and no cord or rope suspension is documented."
-      }
-    },
-    {
-      "packageID": "metolius.foundry",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained current Metolius Foundry Training Board manufacturer product page describes a wall-mounted training board shipped with a training guide, instructions, and mounting hardware, and documents no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://www.metoliusclimbing.com/products/foundry-training-board",
-          "exactRevisionID": "metolius-foundry-current-2026-09-16",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "6ddfa5354734b7226b3ecd1fb3db359a90cf5e487178b4f4add02f336daf1f6c",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius.foundry-manufacturer-product-2026-09-16.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer product; it lists mounting hardware only and does not establish a supplied or integral cord."
-      }
-    },
-    {
-      "packageID": "nature.stoak-board-iii",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained current Nature Climbing Stoak Board III manufacturer product page describes a wall-mounted oak or beech board with bolt and screw mounting and documents no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://natureclimbing.com/products/stoak-board-iii",
-          "exactRevisionID": "nature-stoak-board-iii-current-2026-09-16",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "5f7864d6e548a0746bcd35c977510a3a17e3d84a1032eaa796d82addc54617f7",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/nature.stoak-board-iii-manufacturer-product-2026-09-16.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer product; mounting is bolt/screw only and no cord or rope suspension is documented."
-      }
-    },
-    {
-      "packageID": "soill.iron-palm-2",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained current So iLL Iron Palm 2.0 manufacturer product page describes a wall-mounted training board and its grip features and documents no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://soillholds.com/products/iron-palm-2-0",
-          "exactRevisionID": "soill-iron-palm-2-current-2026-09-16",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "a93b40ba465cc6a8d5d1469f4454bb7773aec0ed398b63c1a04c31209d00cab3",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.iron-palm-2-manufacturer-product-2026-09-16.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
-      }
-    },
-    {
-      "packageID": "soill.split-palm",
-      "decision": "excluded",
-      "sourceFact": "noDocumentedSuspension",
-      "topology": null,
-      "ruling": "The retained current So iLL Split Palm manufacturer product page describes a two-piece wall-mounted training board and documents no supplied or integral cord or rope suspension.",
-      "evidence": [
-        {
-          "view": "exact-revision manufacturer product",
-          "url": "https://soillholds.com/products/split-palm",
-          "exactRevisionID": "soill-split-palm-current-2026-09-16",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "ed060fc31589d53c9474a93e57036f5ad0b1caeca31cd651fba0a13481c48b9e",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/soill.split-palm-manufacturer-product-2026-09-16.html"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "hang-ten-cord-audit",
-        "reviewedAt": "2026-09-16",
-        "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
-      }
-    },
-    {
-      "packageID": "metolius.light-rail-2",
-      "decision": "represented",
-      "sourceFact": "documentedSuspension",
-      "topology": "pairedLeadCord",
-      "ruling": "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore.",
-      "evidence": [
-        {
-          "view": "LR2 exact-revision manufacturer product view",
-          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616",
-          "exactRevisionID": "metolius-light-rail-2-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-product.jpg"
+          "snapshotSHA256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F4-2026-09-20.pdf"
         },
         {
-          "view": "Approved Treeline exact-revision field view, exact archive replay 2026-01-29T01:24:02Z",
-          "url": "https://web.archive.org/web/20260129012402id_/https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg",
-          "exactRevisionID": "metolius-light-rail-2-current",
-          "sourceTier": "independent",
-          "snapshotSHA256": "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-field.jpg"
+          "view": "Green pair; independent left/right outline and mounting locations.",
+          "url": "https://trango.com/cdn/shop/products/22820_Rock_Prodigy_Forge_Main_Image.jpg?v=1582662057&width=1946",
+          "exactRevisionID": "trango.rock-prodigy-forge-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ff7bb2862cabcc7b86288db6f45afa08d23a30d8987f464c25b27b0533e8e8e5",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-forge-F5-2026-09-20.jpg"
         }
       ],
       "humanApproval": {
         "approved": true,
-        "reviewer": "Astra",
+        "reviewer": "user (explicit chat approval)",
         "reviewedAt": "2026-09-20",
-        "notes": "Reviewed the exact approved manufacturer product and archived Treeline field originals retained by Task 7. One reversible rail has one continuous front recess and current manufacturer 40/20/40/15 contacts. Approve only the two visible upper exterior entry regions and independent exterior leads. Source underside markers 3/4, hidden vertical bores, connecting routes and old face screws are omitted. Entry clipping, unsurveyed cross-section, radii, rear, material and suspension display values are authored-display-estimate; clipping does not claim physical blind bores."
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
       }
     },
     {
-      "packageID": "crimptonite.helium-mobile",
-      "decision": "represented",
-      "sourceFact": "documentedSuspension",
-      "topology": "pairedLeadCord",
-      "ruling": "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord.",
-      "evidence": [
-        {
-          "view": "HE2 exact-revision front",
-          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580",
-          "exactRevisionID": "crimptonite-helium-mobile-current",
-          "sourceTier": "retailer",
-          "snapshotSHA256": "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-front.jpg"
-        },
-        {
-          "view": "HE6 exact-revision reverse",
-          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580",
-          "exactRevisionID": "crimptonite-helium-mobile-current",
-          "sourceTier": "retailer",
-          "snapshotSHA256": "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-reverse.jpg"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "Astra",
-        "reviewedAt": "2026-09-20",
-        "notes": "Inspected exact HE2/HE6 original Crimptonite photographs retained by Task 7 and the manual analytic candidate. Front and reverse each show two end mouths, three recesses occur only on the front, and the rear is continuous. Approve two independent exterior front leads; clipped mouth display geometry makes no claim about hidden connection. HE1 manufacturer 24 mm thickness wins the retailer conflict. Unmeasured mouth/pose/anchor/rest-length/material/camera values are authored-display-estimate."
-      }
-    },
-    {
-      "packageID": "metolius.rock-rings-3d",
-      "decision": "represented",
-      "sourceFact": "documentedSuspension",
-      "topology": "pairedLeadCord",
-      "ruling": "two independent pairedLeadCord systems; no inter-unit connection or central through-bore.",
-      "evidence": [
-        {
-          "view": "RR3 exact manufacturer black/white product and two roof exits per unit",
-          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123",
-          "exactRevisionID": "metolius-rock-rings-3d-current",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-product.jpg"
-        },
-        {
-          "view": "RR6 approved owner front/rear; uninterrupted rear disproves central through-bore",
-          "url": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
-          "exactRevisionID": "metolius-rock-rings-3d-current",
-          "sourceTier": "independent",
-          "snapshotSHA256": "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-front-rear.webp"
-        },
-        {
-          "view": "RR7 approved owner lateral opening; no claimed hidden route",
-          "url": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
-          "exactRevisionID": "metolius-rock-rings-3d-current",
-          "sourceTier": "independent",
-          "snapshotSHA256": "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-lateral.webp"
-        }
-      ],
-      "humanApproval": {
-        "approved": true,
-        "reviewer": "Astra",
-        "reviewedAt": "2026-09-20",
-        "notes": "Reviewed exact approved manufacturer black/white and retained owner front/rear/lateral originals. One canonical physical unit is rendered twice, identical and unreflected. Four generic contact slots map uniquely to eight preserved contacts. Each instance has its own pairedLeadCord and fixed invisible world anchor. Visible leads terminate at two roof exits; lateral windows are non-route attachment geometry. No central bore, concealed connection, inter-unit route, screw/mounting hole or hardware is modeled. Shallow aperture clipping is an authored-display-estimate, not proof of a physical blind cavity. Owner revision/year and CDN provenance caveats remain in the original source register; exact chemistry is unknown and source textures are not used."
-      }
-    },
-    {
-      "packageID": "owl-climb.poker",
+      "packageID": "trango.rock-prodigy-natural",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
       "topology": null,
-      "ruling": "noDocumentedSuspension; excluded.",
+      "ruling": "Approved exact-revision product and mounting sources establish fixed wall/backer or cleat mounting, with no documented board suspension. Lower large passages have unresolved purpose; optional pulley-kit cord is external training equipment, not board suspension.",
       "evidence": [
         {
-          "view": "OP-PHOTO-0 exact manufacturer face A",
-          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
-          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "view": "Each half 7.5 x 6 x 1.5 inches; FSC beech; adjustable removable cleat mount; product page says 10 mm crimp.",
+          "url": "https://trango.com/products/rock-prodigy-natural",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
           "sourceTier": "manufacturer",
-          "snapshotSHA256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-a.jpg"
+          "snapshotSHA256": "430189672d2440e5ce78bec0670f6faa6e2fffa01d30cb0b7af102cd9d3cbc1f",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N1-2026-09-20.html"
         },
         {
-          "view": "OP-PHOTO-1 exact manufacturer face B",
-          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
-          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "view": "Page 6 dimensions and page 7 physical grip map; 7.5 crimp; rails 20-33 and 10-24 outside-to-inside; pockets 38,29,36-26; jug40.",
+          "url": "https://cdn.shopify.com/s/files/1/0282/7557/2841/files/Rock_Prodigy_Natural_Consumer_Quick_Start_Final_Digital_9.21.21.pdf?v=1656514361",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
           "sourceTier": "manufacturer",
-          "snapshotSHA256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-b.jpg"
+          "snapshotSHA256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N2-2026-09-20.pdf"
         },
         {
-          "view": "OP-PHOTO-2 exact manufacturer face C",
-          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
-          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "view": "Current marked main image: crimp 10 mm, center pocket 27 mm, supported pocket 30/27 mm.",
+          "url": "https://trango.com/cdn/shop/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315&width=1946",
+          "exactRevisionID": "trango.rock-prodigy-natural-current-2026-09-20",
           "sourceTier": "manufacturer",
-          "snapshotSHA256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-c.jpg"
-        },
-        {
-          "view": "OP-PHOTO-3 exact manufacturer face D",
-          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
-          "exactRevisionID": "owl-climb-poker-2019-four-face",
-          "sourceTier": "manufacturer",
-          "snapshotSHA256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
-          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-d.jpg"
+          "snapshotSHA256": "d603d3b3dd31f53be1f5a3cf1ac09e8a12b414c050af2ea5baeb4e55140daa19",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango.rock-prodigy-natural-N5-2026-09-20.jpg"
         }
       ],
       "humanApproval": {
         "approved": true,
-        "reviewer": "Astra",
+        "reviewer": "user (explicit chat approval)",
         "reviewedAt": "2026-09-20",
-        "notes": "Reviewed all four exact approved Owl manufacturer originals. One 660 x 100 x 100 mm beam has 34 unchanged same-face contacts, including exactly the two approved Face D deep rounded recess restores. Manufacturer mounting brackets are external hardware and are omitted, along with screws and mounting holes. No evidence establishes board suspension; no cord, anchor, passage or suspension metadata is promoted. Cyclic face order, unsurveyed depth assignments, relief transitions, edge radii, material and camera are authored-display-estimate. The mono/duo sequence is identical at both ends in every source view, not mirrored."
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
       }
     },
     {
@@ -1079,6 +1134,153 @@
         "reviewer": "Astra",
         "reviewedAt": "2026-09-21",
         "notes": "Reviewed all four exact approved Trango manufacturer originals plus the manufacturer Quick Start and depth guide facts in the closed Batch 04 source register. Nothing in that evidence establishes a suspended Pivot presentation: the product mounts on external Quad Cleat hardware, and the separately sold pulley kit's ropes are training accessories, not board suspension. No cord, anchor, passage or suspension metadata is promoted. One canonical resin half carries nine physical contacts and is rendered twice, the right instance reflected about the unit bounds centre. The only retained openings are the genuine two-finger through opening and the three-finger end window; all six delivered fastener holes, every bolt counterbore and set-screw bore, and the Quad Cleat, rail/backer and bracket hardware are omitted from the display model without implying the physical product lacks them. Sourced PV5 depths are preserved; the overall envelope, rear surface, silhouette radii, scallop count, wing section, rail depth gradient direction, material and camera remain authored-display-estimate."
+      }
+    },
+    {
+      "packageID": "trango.rock-prodigy-training-center",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The retained current Rock Prodigy Training Center manufacturer product view establishes the two-piece board arrangement but does not establish a supplied or integral cord system, so no suspension is rendered.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer product",
+          "url": "https://trango.com/cdn/shop/files/22830_Rock_Prodigy_Training_Center_Main_Image.jpg?v=1737728750&width=1946",
+          "exactRevisionID": "rock-prodigy-training-center-current-2026-09-15",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "8293f7bd2c2517f8fda72d7ad678671cc801cd7d31fecd4e20ee42eea7170ebf",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-training-center-main.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-15",
+        "notes": "Reviewed the retained manufacturer product artifact; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "yy.baguette-evo",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "twoBranchCord",
+      "ruling": "The current YY Vertical Baguette Evo Turn & Pull product evidence explicitly supports suspended use with rope or bungee; the reviewed presentation is therefore represented as transient display geometry without claiming that an accessory is supplied.",
+      "evidence": [
+        {
+          "view": "exact-revision manufacturer",
+          "url": "https://www.yyvertical.com/en/products/baguette-evo",
+          "exactRevisionID": "baguette-evo-turn-pull-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "23ea747dda552429fe9bb1606e47812113ae062b0457941634a37831eeff3af1",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette.html"
+        },
+        {
+          "view": "exact-revision product image",
+          "url": "https://www.yyvertical.com/cdn/shop/files/YY_BAGUETTE_EVO_02_FG.webp?v=1751469206",
+          "exactRevisionID": "baguette-evo-turn-pull-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c42f96ebed2b58d1a287f5b125fd3607cc9244a651a92e2731fe4b589e80ea3e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-baguette-evo-image.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-14",
+        "notes": "Reviewed current exact-revision manufacturer evidence and approved documented suspended presentation; optional rope/bungee remains explicitly non-supplied metadata."
+      }
+    },
+    {
+      "packageID": "yy.penta-evo",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent paired exterior loops through the existing central ring; no invented channel or knot.",
+      "evidence": [
+        {
+          "view": "PE-RESTORED full front/reverse original: two exterior strands around top band and through central ring; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-front-reverse.webp"
+        },
+        {
+          "view": "PE-RESTORED intact close-up original: uninterrupted lower band and retaining concavities; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-close-up.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed both exact approved intact originals and independently rechecked YY product and installation article. Seven enumerated and pictured contacts per unit prevail over the eight-grip headline. The actual asymmetric unit is reused identically without reflection; rear 10 mm recess shares the front 15 mm physical band. Each instance has its own two-sided exterior wrap through the existing central ring and independent invisible anchor. No retired small passage, hidden channel, knot, hardware or inter-unit route is modeled. Original binary URLs remain null/unhashed in the source register; these product-page references do not claim download provenance. Unsurveyed outline, radii, rear, color, guide/endpoints, rest length and poses are authored-display-estimate."
+      }
+    },
+    {
+      "packageID": "zlagboard.evo",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "E1 and E3 show the metal mounting frame. No board-suspension cord is documented in this approved exact-revision set; phone-retention bands are not hangboard suspension. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "current manufacturer product page",
+          "url": "https://zlagboard.com/hangboards",
+          "exactRevisionID": "zlagboard.evo-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c1ccf4c71588fa82744a122308a4469841472f31973f75a4adfaf363759cbf1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.evo-E1-2026-09-20.html"
+        },
+        {
+          "view": "exact revision manufacturer front with mounting frame",
+          "url": "https://zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png",
+          "exactRevisionID": "zlagboard.evo-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.evo-E3-2026-09-20.png"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
+      }
+    },
+    {
+      "packageID": "zlagboard.pro",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "E1 and P3 show the metal mounting frame. No board-suspension cord is documented in this approved exact-revision set; phone-retention bands are not hangboard suspension. This bounded finding does not rule out other accessories or uses.",
+      "evidence": [
+        {
+          "view": "current manufacturer product page",
+          "url": "https://zlagboard.com/hangboards",
+          "exactRevisionID": "zlagboard.pro-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "c1ccf4c71588fa82744a122308a4469841472f31973f75a4adfaf363759cbf1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.pro-E1-2026-09-20.html"
+        },
+        {
+          "view": "exact revision manufacturer front with mounting frame",
+          "url": "https://zlagboard.com/assets/web/Zlagboard-2019-smaller2x-8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b.png",
+          "exactRevisionID": "zlagboard.pro-current-2026-09-20",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/zlagboard.pro-P3-2026-09-20.png"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user (explicit chat approval)",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved exact retained evidence and this cord exclusion in batch05 REVIEW.md. Evidence approval does not accept model geometry or native rendering."
       }
     }
   ]
