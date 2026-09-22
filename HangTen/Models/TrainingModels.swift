@@ -2203,6 +2203,32 @@ enum BundledPlanContactRequirements {
     static func simulator3DTargets(_ groups: MetoliusSimulator3DTarget...) -> [ContactRequirement] {
         groups.compactMap(\.requirement)
     }
+
+    static let metoliusRockRingBoardID = "metolius.rock-rings-3d"
+
+    enum MetoliusRockRingTarget {
+        case jugs
+        case fourFingerEdges
+        case threeFingerPockets
+        case twoFingerPockets
+
+        fileprivate var requirement: ContactRequirement {
+            switch self {
+            case .jugs:
+                .kind(.jug, selection: .single)
+            case .fourFingerEdges:
+                ContactRequirement(kind: .pocket, fingerCapacity: 4, selection: .single)
+            case .threeFingerPockets:
+                ContactRequirement(kind: .pocket, fingerCapacity: 3, selection: .single)
+            case .twoFingerPockets:
+                ContactRequirement(kind: .pocket, fingerCapacity: 2, selection: .single)
+            }
+        }
+    }
+
+    static func rockRingTargets(_ groups: MetoliusRockRingTarget...) -> [ContactRequirement] {
+        groups.map(\.requirement)
+    }
 }
 
 enum LegacyPlanSeedCatalog {
@@ -2452,6 +2478,32 @@ enum LegacyPlanSeedCatalog {
             ("20 second slightly bent arm hang, shallow 3 finger pocket (8), stay on, bump to x-deep three finger pockets 25 second dead hang.", BundledPlanContactRequirements.simulator3DTargets(.pocket8, .pocket9), .hang),
             ("10 second hang center pockets (18 & 17), reverse holds repeat, three power pull-ups (use weights or helper for resistance, should just be able to complete third pull).", BundledPlanContactRequirements.simulator3DTargets(.pocket18, .pocket17), .hang),
             ("8 fast pull-ups, jugs (1) (keeping form perfect), dead hang round sloper to failure (fighting hard!).", BundledPlanContactRequirements.simulator3DTargets(.outerJugs, .roundSlopers), .hang)
+        ]
+    )
+
+    private static let rockRingSourceURL = URL(
+        string: "https://www.metoliusclimbing.com/pages/rock-ring-training-guide"
+    )!
+
+    static let metoliusRockRing = officialMetoliusPlan(
+        id: "metolius.rock-rings.ten-minute",
+        title: "Metolius Rock Rings · 10-Minute Sequence",
+        level: "All levels",
+        sourceLabel: "Metolius Rock Ring Training Guide",
+        sourceURL: rockRingSourceURL,
+        boardID: BundledPlanContactRequirements.metoliusRockRingBoardID,
+        subtitle: "Official ten-minute sequence; remaining time rests.",
+        minutes: [
+            ("3 pull-ups on jugs.", BundledPlanContactRequirements.rockRingTargets(.jugs), .pull),
+            ("10 second bent-arm hang on 3 finger pockets; 15 second dead hang on 2 finger pockets.", BundledPlanContactRequirements.rockRingTargets(.threeFingerPockets, .twoFingerPockets), .hang),
+            ("2 offset pull-ups on 4 finger edge & 2 finger pocket; 2 offset pull-ups other way.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges, .twoFingerPockets), .pull),
+            ("20 second L-hang on 4 finger edges; 10 second dead hang on 3 finger pockets.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges, .threeFingerPockets), .hang),
+            ("5 pull-ups on 4 finger edges.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges), .pull),
+            ("20 second bent-arm hang on 3 finger pockets; 10 second dead hang on 2 finger pockets.", BundledPlanContactRequirements.rockRingTargets(.threeFingerPockets, .twoFingerPockets), .hang),
+            ("15 second L-hang on 4 finger edges; 15 second dead hang on 4 finger edges.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges), .hang),
+            ("10 second offset hang on 4 finger edge & 2 finger pocket; 10 second offset hang other way.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges, .twoFingerPockets), .hang),
+            ("20 second L-hang on 4 finger edges.", BundledPlanContactRequirements.rockRingTargets(.fourFingerEdges), .hang),
+            ("5 pull-ups on 3 finger pockets; dead hang 3 finger pockets to failure. Fight hard!!", BundledPlanContactRequirements.rockRingTargets(.threeFingerPockets), .hang)
         ]
     )
 
@@ -3680,7 +3732,8 @@ enum LegacyPlanSeedCatalog {
             metoliusContactAdvanced,
             metoliusSimulator3DEntry,
             metoliusSimulator3DIntermediate,
-            metoliusSimulator3DAdvanced
+            metoliusSimulator3DAdvanced,
+            metoliusRockRing
         ]
         let officialPlans = boardSpecificMetoliusPlans + [rptcRepeaters]
         let adaptedPlans = [
@@ -3741,7 +3794,7 @@ enum LegacyPlanSeedCatalog {
                 assert(cycleSteps.reduce(0) { $0 + $1.duration } == MetoliusCycleBuilder.cycleDuration)
             }
         }
-        assert(boardSpecificMetoliusPlans.count == 6, "The Contact and Simulator 3D guides have six routines")
+        assert(boardSpecificMetoliusPlans.count == 7, "The Contact, Simulator 3D, and Rock Ring guides have seven routines")
         for plan in boardSpecificMetoliusPlans {
             assert(plan.provenance == .official)
             assert(plan.duration == 600)
@@ -3752,7 +3805,8 @@ enum LegacyPlanSeedCatalog {
             assert(Set(plan.steps.map(\.id)).count == 10)
             assert(
                 plan.boardID == BundledPlanContactRequirements.metoliusContactBoardID ||
-                    plan.boardID == BundledPlanContactRequirements.metoliusSimulator3DBoardID
+                    plan.boardID == BundledPlanContactRequirements.metoliusSimulator3DBoardID ||
+                    plan.boardID == BundledPlanContactRequirements.metoliusRockRingBoardID
             )
         }
         assert(officialPlans.allSatisfy { $0.provenance == .official })

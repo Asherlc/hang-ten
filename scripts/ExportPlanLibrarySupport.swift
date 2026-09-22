@@ -9,3 +9,12 @@ struct WorkoutStepMeasurement {
     let sampleCount: Int
     let actualLoadedDuration: TimeInterval
 }
+
+// Stub: the exporter does not need session-hand resolution.
+enum WorkoutSessionHandResolver {
+    static func sessionSteps(
+        from steps: [WorkoutStep],
+        preference: WorkoutSessionHandPreference,
+        boardIsOneHanded: Bool
+    ) -> [WorkoutStep] { steps }
+}

@@ -4131,6 +4131,312 @@
       "title" : "Metolius Simulator 3D · Advanced"
     },
     {
+      "id" : "metolius.rock-rings.ten-minute.warm-up",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-1",
+          "instruction" : "3 pull-ups on jugs. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "kind" : "jug",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 1"
+        }
+      ],
+      "title" : "Minute 1"
+    },
+    {
+      "id" : "metolius.rock-rings.ten-minute.main",
+      "steps" : [
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-2",
+          "instruction" : "10 second bent-arm hang on 3 finger pockets; 15 second dead hang on 2 finger pockets. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 3,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  },
+                  {
+                    "fingerCapacity" : 2,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 2"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-3",
+          "instruction" : "2 offset pull-ups on 4 finger edge & 2 finger pocket; 2 offset pull-ups other way. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  },
+                  {
+                    "fingerCapacity" : 2,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 3"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-4",
+          "instruction" : "20 second L-hang on 4 finger edges; 10 second dead hang on 3 finger pockets. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  },
+                  {
+                    "fingerCapacity" : 3,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 4"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-5",
+          "instruction" : "5 pull-ups on 4 finger edges. Use the remaining time to rest until the next minute.",
+          "phase" : "pull",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 5"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-6",
+          "instruction" : "20 second bent-arm hang on 3 finger pockets; 10 second dead hang on 2 finger pockets. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 3,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  },
+                  {
+                    "fingerCapacity" : 2,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 6"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-7",
+          "instruction" : "15 second L-hang on 4 finger edges; 15 second dead hang on 4 finger edges. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 7"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-8",
+          "instruction" : "10 second offset hang on 4 finger edge & 2 finger pocket; 10 second offset hang other way. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  },
+                  {
+                    "fingerCapacity" : 2,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 8"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-9",
+          "instruction" : "20 second L-hang on 4 finger edges. Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 4,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 9"
+        },
+        {
+          "accessory" : "60-second source cycle · remaining time rest",
+          "action" : "hang",
+          "duration" : 60,
+          "handUse" : "double",
+          "id" : "metolius.rock-rings.ten-minute.minute-10",
+          "instruction" : "5 pull-ups on 3 finger pockets; dead hang 3 finger pockets to failure. Fight hard!! Use the remaining time to rest until the next minute.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "kind" : "requirements",
+                "requirements" : [
+                  {
+                    "fingerCapacity" : 3,
+                    "kind" : "pocket",
+                    "selection" : "single"
+                  }
+                ]
+              },
+              "timing" : "undefined"
+            }
+          ],
+          "side" : "both",
+          "title" : "Minute 10"
+        }
+      ],
+      "title" : "Metolius Rock Rings · 10-Minute Sequence"
+    },
+    {
       "id" : "rptc.seven-three-repeaters.warm-up",
       "steps" : [
         {
@@ -19413,6 +19719,38 @@
         "title" : "Metolius Simulator 3D · Advanced",
         "workoutLabels" : [
           "max-effort",
+          "pull-ups",
+          "core"
+        ]
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "metolius.rock-rings.ten-minute.warm-up"
+        },
+        {
+          "blockID" : "metolius.rock-rings.ten-minute.main"
+        }
+      ],
+      "boardID" : "metolius.rock-rings-3d",
+      "id" : "metolius.rock-rings.ten-minute",
+      "metadata" : {
+        "category" : "manufacturer",
+        "level" : "All levels",
+        "notes" : [
+          "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
+        ],
+        "provenance" : "official",
+        "sourceLabel" : "Metolius Rock Ring Training Guide",
+        "sourceURL" : "https:\/\/www.metoliusclimbing.com\/pages\/rock-ring-training-guide",
+        "subtitle" : "Official ten-minute sequence; remaining time rests.",
+        "tags" : [
+          "built-in",
+          "manufacturer"
+        ],
+        "title" : "Metolius Rock Rings · 10-Minute Sequence",
+        "workoutLabels" : [
           "pull-ups",
           "core"
         ]
