@@ -1,19 +1,26 @@
 # WH-C06 force sensor protocol audit
 
-- Audited upstream file: [`packages/core/src/models/device/wh-c06.model.ts`](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/02dd6ff227ffb0fc521fd547a83e85453351eb3b/packages/core/src/models/device/wh-c06.model.ts)
-- Audited file blob SHA: `90d693c649ea1cce4157d73c9a04caa8b77dfc47`
+Compatibility update audited 2026-09-20. This records the evidence and intended behavior of the in-progress WH-C06 Bluetooth compatibility fix; it is not a manufacturer protocol specification.
 
-## Mapped facts
+## Evidence
 
-| Hang Ten field | Audited source fact |
+- Audited upstream integration: [`wh-c06.model.ts` at `02dd6ff`](https://github.com/Stevie-Ray/hangtime-grip-connect/blob/02dd6ff227ffb0fc521fd547a83e85453351eb3b/packages/core/src/models/device/wh-c06.model.ts) (blob SHA `90d693c649ea1cce4157d73c9a04caa8b77dfc47`). It supplies the advertisement-only transport, company identifier, value offsets, and 10-second liveness behavior. Its unit nibble is named but not interpreted, and its commented `IF_B7` name is not an active filter.
+- Purported maker reference: [`ScaleWatcher.java` at `4cfdd1e`](https://github.com/sebws/Crane/blob/4cfdd1eb2afd250641afbfeac0fba36aab6fcf75/ScaleWatcher.java). This retained copy labels manufacturer data offset 10 as weight, offset 14 as status/unit, company identifier 256, and unit codes `1` kg, `2` lb, `3` stone, and `4` jin. A project contributor described the file as manufacturer-provided, but no first-party publication or chain of custody was located; Hang Ten therefore treats it as useful implementation evidence, not authenticated manufacturer documentation.
+- Field-report fix: [`plumbmybumb/get-a-grip@41e6150`](https://github.com/plumbmybumb/get-a-grip/commit/41e6150b457e0de48db1401c2f00d6155ea56473). The report identifies the failure mode: the count is hundredths of the scale's selected display unit, so treating a pounds reading as kilograms makes it approximately 2.2 times too heavy. Its cross-platform fixtures cover codes `0` through `4`, unknown/missing-unit fallback, and applying the 300 kg capacity check after conversion.
+- Independent `IF_B7` implementation: [`TheLastKiwi/Dyna` Bluetooth scan at `d8f32dd`](https://github.com/TheLastKiwi/Dyna/blob/d8f32dd83262748f2e7ee29459612630f01430e9/app/src/main/java/com/flying_kiwi/dyna/Utils/BTManager.java) and its [decoder at the same commit](https://github.com/TheLastKiwi/Dyna/blob/d8f32dd83262748f2e7ee29459612630f01430e9/app/src/main/java/com/flying_kiwi/dyna/Utils/DataCollector.java). It filters the WH-C06 by the exact name `IF_B7`, reads bytes 10/11, and records byte 14 as `1` for kg and `0` for lb. This supports the legacy code-`0` compatibility case; it does not establish that every WH-C06 advertises that name.
+
+## Mapped behavior
+
+| Hang Ten behavior | Evidence and compatibility boundary |
 | --- | --- |
-| Discovery scope | Advertisement-only source. No GATT services, write characteristics, or commands are mapped. |
-| Company identifier | Manufacturer company ID `0x0100` / `256`. |
-| Force value | Manufacturer payload bytes 10 and 11 are read as a big-endian UInt16 and divided by 100. |
-| Source unit | The low nibble of manufacturer payload byte 14 selects the unit: `1` is kg and `2` is lb. Hang Ten converts the raw hundredths value through `ForceSensorSourceUnit` into canonical kgf; unknown unit nibbles are rejected rather than assumed. |
-| Liveness | Advertisement liveness interval is 10 seconds. |
-| Named automatic discovery | No active advertised-name rule is mapped. The named `.whC06` profile automatically matches only company ID `0x0100` plus the implementation-captured 17-byte payload signature beginning `02 03`; this capture is not vendor-authoritative protocol documentation. |
-| Collision handling | The published 13-byte Hi-Link HLK-LD2410B presence-radar payload under company ID `0x0100` does not match or decode as named `.whC06`. |
-| Generic fallback | `.genericWHC06` remains an explicitly selected generic fallback, rather than an automatic-discovery candidate. |
+| Transport | Advertisement-only. No GATT services, characteristics, or commands are mapped. |
+| Company identifier | Manufacturer company ID `0x0100` / `256`. This identifier is shared and is not sufficient on its own to identify a WH-C06. |
+| Force value | Payload bytes 10 and 11 are an unsigned big-endian count. Divide by 100 to obtain a value in the scale's selected display unit, then convert that value to canonical kgf. |
+| Unit conversion | The low nibble of payload byte 14 is interpreted as `0` or `2` = lb, `1` = kg, `3` = stone, and `4` = jin (0.5 kg). The high nibble is not part of the unit code. |
+| Legacy/fallback payloads | Decoding requires at least 12 payload bytes, the minimum needed to read bytes 10/11. Payloads of 12–14 bytes have no readable unit byte and retain the legacy kg interpretation. For payloads of at least 15 bytes, an unknown unit nibble also falls back to kg. Extra trailing bytes are accepted. These fallbacks preserve older behavior; they are not claims that an undocumented code denotes kg. |
+| Explicit selection | Explicit `.whC06` and `.genericWHC06` selection match company ID `0x0100` without requiring `IF_B7` or the captured prefix. Payload length, units, and the capacity guard are evaluated during decode. This intentionally permits field variants but also means an explicit profile can initially match an unrelated device using the same company ID. |
+| Automatic selection | Only the named `.whC06` profile participates. It requires company ID `0x0100` plus either the exact name `IF_B7`, or the legacy captured payload signature `02 03` on a payload of at least 17 bytes. When an advertised local name is present, that current value takes precedence; the cached peripheral name is consulted only when the advertised local name is `nil`. Thus, a stale cached `IF_B7` name cannot override a different current local name. The 17-byte rule is a minimum, so extension/trailing bytes remain valid. The prefix is capture-derived compatibility evidence, not a vendor-authoritative fingerprint. `.genericWHC06` remains manual-only. |
+| Capacity/collision guard | The decoded, unit-converted value must be at most 300 kgf. Applying the guard after conversion preserves valid values such as 655.35 lb while rejecting impossible kg/stone interpretations. It also rejects the published 13-byte HLK-LD2410B collision under company ID `0x0100` because its bytes 10/11 become more than 300 kg under the missing-unit fallback. The 300 kg limit is a product-capacity sanity rule from the audited field implementation, not proof that a packet came from a WH-C06 and not a complete collision discriminator. |
+| Liveness | Advertisement liveness interval is 10 seconds. After an established WH-C06 stream becomes silent, iOS returns to advertisement discovery while preserving the user's connection intent; this recovery behavior is an iOS adaptation, not a claim from the audited protocol sources. |
 
-The generic fallback adapter rejects manufacturer payloads shorter than 15 bytes and reads payload indexes relative to the payload collection start, so sliced `Data` values decode the same way as zero-indexed buffers. No unit conversion is claimed for unsupported unit nibbles.
+The decoder indexes relative to `Data.startIndex`, so sliced payloads behave like zero-indexed buffers. All conversions happen before Hang Ten exposes the sample as canonical kgf.

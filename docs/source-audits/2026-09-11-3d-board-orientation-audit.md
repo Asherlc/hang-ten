@@ -913,3 +913,32 @@ deliberately absent from both the package positions and both position transform
 maps. Model bounds, quaternions, translations, spacing, pivot choice and camera
 are display orientation metadata and `authored display estimate` values, not a
 claim of factory angular metrology.
+
+## J Bryant FTG-32 promotion — 2026-09-20
+
+Package `j-bryant.ftg-32`, revision `amazon-b0fzgy19t9-ftg-32-2026-09`,
+uses one `primary` model presentation. Descriptor model bounds in metres are
+`[-0.052499998, -0.0385, -0.0185]` → `[0.052499998, 0.0385, 0.0185]`.
+The pivot is `modelBoundsCenter` in `hang-ten-board-v1`.
+
+| Position | Hold IDs | Exact quaternion `[x,y,z,w]` | Physical meaning |
+| --- | --- | --- | --- |
+| `edge-25-down` | `edge-25` | `[0,0,0,1]` | Baseline with the deep ledge below the shared front recess |
+| `edge-16-down` | `edge-16` | `[0,0,1,0]` | Exact face-plane half-turn with the shallow ledge below the same recess |
+
+Evidence: the retained exact-ASIN gallery attachments 1–4 and 2026-09-20
+human topology confirmation recorded in
+[`2026-09-20-j-bryant-ftg-32-3d.md`](2026-09-20-j-bryant-ftg-32-3d.md).
+Geometry author and deliberate visual reviewer: Astra, Task 2, 2026-09-20.
+The sourced envelope and 16/25 mm depths remain product facts; the exact
+face-plane half-turn preserves the human-confirmed one-sided presentation.
+Every unpublished shape, pose translation, camera, attachment, and cord value
+is an **authored display estimate** (`displayEstimate`), with the full numeric
+ledger pinned in that audit. The elevated canonical camera is a display choice.
+
+The suspension rotations match these orientation quaternions exactly. One
+physical loop passes through two centered holes and around the rear; the
+runtime represents its two exterior leads from one shared invisible anchor.
+The rear connecting segment is deliberately omitted. No suspension mesh is
+included in the three-node USDZ. Orientation keys are stored in canonical
+position-ID order; the user-visible position sequence remains 25 mm then 16 mm.

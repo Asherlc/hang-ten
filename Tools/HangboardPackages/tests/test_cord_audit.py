@@ -189,7 +189,7 @@ def test_penta_cord_audit_retains_exact_originals_without_inventing_binary_urls(
     assert all(e["binaryURL"] is None and e["status"] == "unhashed" for e in source["evidence"])
 
 
-def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
+def test_documented_suspension_packages_use_reviewed_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
         repository_root / "Hangboards", require_complete_inventory=True
@@ -206,6 +206,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         "captain-fingerfood.dual": "pairedLeadCord",
         "captain-fingerfood.pocket": "pairedLeadCord",
         "captain-fingerfood.unlevel": "pairedLeadCord",
+        "j-bryant.ftg-32": "pairedLeadCord",
         "yy.baguette-evo": "twoBranchCord",
     }
     assert {
@@ -217,8 +218,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 27, "represented": 12}
-
+    assert report.decisions == {"excluded": 27, "represented": 13}
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,
         "captain-fingerfood.pocket": 0.4,

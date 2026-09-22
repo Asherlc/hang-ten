@@ -59,6 +59,7 @@ enum WorkoutLoadAdjustmentDisplayUnit: String, CaseIterable, Codable, Identifiab
 }
 
 enum WorkoutInitialWeightSource: String, CaseIterable, Codable, Identifiable {
+    case untracked
     case sensor
     case manual
 
@@ -66,7 +67,8 @@ enum WorkoutInitialWeightSource: String, CaseIterable, Codable, Identifiable {
 
     var label: String {
         switch self {
-        case .sensor: "Sensor"
+        case .untracked: "Skip"
+        case .sensor: "Scale"
         case .manual: "Manual"
         }
     }
@@ -76,6 +78,12 @@ struct WorkoutInitialWeightConfiguration: Equatable {
     let source: WorkoutInitialWeightSource
     let manualWeightKGF: Double?
     let manualWeightIncludesBodyweight: Bool
+
+    static let untracked = WorkoutInitialWeightConfiguration(
+        source: .untracked,
+        manualWeightKGF: nil,
+        manualWeightIncludesBodyweight: false
+    )
 
     static let sensor = WorkoutInitialWeightConfiguration(
         source: .sensor,
@@ -89,24 +97,6 @@ struct WorkoutInitialWeightConfiguration: Equatable {
             manualWeightKGF: weightKGF.isFinite ? max(0, weightKGF) : 0,
             manualWeightIncludesBodyweight: includesBodyweight
         )
-    }
-}
-
-/// A presentation accepts its result once, then hands it off after dismissal.
-struct WorkoutInitialWeightHandoff {
-    private var didAccept = false
-    private var pendingConfiguration: WorkoutInitialWeightConfiguration?
-
-    mutating func accept(_ configuration: WorkoutInitialWeightConfiguration) -> Bool {
-        guard !didAccept else { return false }
-        didAccept = true
-        pendingConfiguration = configuration
-        return true
-    }
-
-    mutating func consume() -> WorkoutInitialWeightConfiguration? {
-        defer { pendingConfiguration = nil }
-        return pendingConfiguration
     }
 }
 
@@ -459,7 +449,7 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
         stepTitles: [String] = [],
         forceSensorProfile: ForceSensorProfile = .motherboard,
         bodyweightKGF: Double? = nil,
-        initialWeight: WorkoutInitialWeightConfiguration = .sensor,
+        initialWeight: WorkoutInitialWeightConfiguration = .untracked,
         loadAdjustmentKGF: Double = 0,
         loadAdjustmentDisplayUnit: WorkoutLoadAdjustmentDisplayUnit = .kilograms,
         motherboardMeasurements: [MotherboardMeasurement] = [],
@@ -495,14 +485,18 @@ struct WorkoutSessionRecord: Codable, Equatable, Identifiable {
     }
 
     var initialWeight: WorkoutInitialWeightConfiguration {
-        guard initialWeightSource == .manual,
-              let manualWeightKGF else {
+        switch initialWeightSource {
+        case .untracked:
+            return .untracked
+        case .sensor:
             return .sensor
+        case .manual:
+            guard let manualWeightKGF else { return .sensor }
+            return .manual(
+                weightKGF: manualWeightKGF,
+                includesBodyweight: manualWeightIncludesBodyweight
+            )
         }
-        return .manual(
-            weightKGF: manualWeightKGF,
-            includesBodyweight: manualWeightIncludesBodyweight
-        )
     }
 
     init(from decoder: Decoder) throws {

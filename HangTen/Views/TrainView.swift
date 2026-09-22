@@ -1,5 +1,32 @@
 import SwiftUI
 
+enum TrainReviewDestination: Hashable {
+    case plan
+    case settings
+    case boardDetail
+    case boardPicker
+
+    static func initial(environment: [String: String]) -> Self? {
+        #if DEBUG
+        if environment["HANGTEN_REVIEW_PLAN"] == "1" {
+            return .plan
+        }
+        if environment["HANGTEN_REVIEW_SETTINGS"] == "1"
+            || environment["HANGTEN_REVIEW_HEALTH"] == "1"
+            || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1" {
+            return .settings
+        }
+        if environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1" {
+            return .boardDetail
+        }
+        if environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1" {
+            return .boardPicker
+        }
+        #endif
+        return nil
+    }
+}
+
 struct TrainView: View {
     @EnvironmentObject private var store: AppStore
     @EnvironmentObject private var deepLinkManager: DeepLinkManager
@@ -7,38 +34,9 @@ struct TrainView: View {
     @State private var showsDeepLinkedWorkout = false
     @State private var deepLinkedWorkoutPlan: TrainingPlan?
     private let onBrowsePlans: () -> Void
-    @State private var showsPlanReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PLAN"] == "1"
-        #else
-        return false
-        #endif
-    }()
-    @State private var showsSettingsReview: Bool = {
-        #if DEBUG
-        let environment = ProcessInfo.processInfo.environment
-        return environment["HANGTEN_REVIEW_SETTINGS"] == "1"
-            || environment["HANGTEN_REVIEW_HEALTH"] == "1"
-            || environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
-        #else
-        return false
-        #endif
-    }()
-    @State private var showsBoardPickerReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_PICKER"] == "1"
-        #else
-        return false
-        #endif
-    }()
-
-    @State private var showsBoardDetailReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DETAIL"] == "1"
-        #else
-        return false
-        #endif
-    }()
+    @State private var reviewDestination = TrainReviewDestination.initial(
+        environment: ProcessInfo.processInfo.environment
+    )
 
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
@@ -67,21 +65,21 @@ struct TrainView: View {
                     .accessibilityIdentifier("train.settings")
                 }
             }
-            .navigationDestination(isPresented: $showsPlanReview) {
-                if let plan = reviewPlan {
-                    PlanDetailView(plan: plan)
-                } else {
-                    noCompatiblePlan
+            .navigationDestination(item: $reviewDestination) { destination in
+                switch destination {
+                case .plan:
+                    if let plan = reviewPlan {
+                        PlanDetailView(plan: plan)
+                    } else {
+                        noCompatiblePlan
+                    }
+                case .settings:
+                    AppSettingsView()
+                case .boardDetail:
+                    BoardDetailView(board: store.selectedBoard)
+                case .boardPicker:
+                    BoardPickerView()
                 }
-            }
-            .navigationDestination(isPresented: $showsSettingsReview) {
-                AppSettingsView()
-            }
-            .navigationDestination(isPresented: $showsBoardDetailReview) {
-                BoardDetailView(board: store.selectedBoard)
-            }
-            .navigationDestination(isPresented: $showsBoardPickerReview) {
-                BoardPickerView()
             }
             .navigationDestination(isPresented: $showsDeepLinkedBoardDetail) {
                 BoardDetailView(board: store.selectedBoard, initialHoldID: deepLinkManager.pendingHoldID)
@@ -226,6 +224,13 @@ struct BoardDetailView: View {
     @Environment(\.verticalSizeClass) private var verticalSizeClass
     @State private var selectedHoldID: String?
     @State private var showsReportProblem = false
+    @State private var compactMetrics = BoardDetailCompactMetrics()
+
+    private let compactContentSpacing: CGFloat = 10
+    private let compactCardPadding: CGFloat = 8
+    private let compactVerticalPadding: CGFloat = 8
+    /// Segmented presentation picker height reserved above the map in `mapContent`.
+    private let compactPresentationPickerHeight: CGFloat = 32
 
     private var isCompactHeight: Bool {
         verticalSizeClass == .compact
@@ -255,7 +260,7 @@ struct BoardDetailView: View {
 
     var body: some View {
         ScrollView(showsIndicators: false) {
-            VStack(alignment: .leading, spacing: isCompactHeight ? 10 : 20) {
+            VStack(alignment: .leading, spacing: isCompactHeight ? compactContentSpacing : 20) {
                 VStack(alignment: .leading, spacing: isCompactHeight ? 2 : 5) {
                     SectionLabel(title: board.manufacturer)
                     Text(board.name)
@@ -267,18 +272,41 @@ struct BoardDetailView: View {
                             .foregroundStyle(Color.hangMuted)
                     }
                 }
+                .overlay {
+                    GeometryReader { summary in
+                        Color.clear.preference(
+                            key: BoardDetailCompactMetricsPreferenceKey.self,
+                            value: BoardDetailCompactMetrics(summaryHeight: summary.size.height)
+                        )
+                    }
+                    .allowsHitTesting(false)
+                }
 
                 BoardDetailMapView(
                     board: board,
                     selectedHoldID: $selectedHoldID,
+                    maximumMapHeight: compactMaximumMapHeight,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
-                .hangCard(padding: isCompactHeight ? 8 : 14)
+                .hangCard(padding: isCompactHeight ? compactCardPadding : 14)
             }
             .padding(.horizontal, isCompactHeight ? 12 : 20)
-            .padding(.vertical, isCompactHeight ? 8 : 18)
+            .padding(.vertical, isCompactHeight ? compactVerticalPadding : 18)
         }
         .background(Color.hangBackground)
+        .background {
+            if isCompactHeight {
+                GeometryReader { viewport in
+                    Color.clear.preference(
+                        key: BoardDetailCompactMetricsPreferenceKey.self,
+                        value: BoardDetailCompactMetrics(viewportHeight: viewport.size.height)
+                    )
+                }
+            }
+        }
+        .onPreferenceChange(BoardDetailCompactMetricsPreferenceKey.self) {
+            compactMetrics = $0
+        }
         .navigationTitle("Hold specs")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(isCompactHeight ? .hidden : .automatic, for: .tabBar)
@@ -304,6 +332,26 @@ struct BoardDetailView: View {
         .accessibilityIdentifier("boardDetail.screen")
     }
 
+    private var compactMaximumMapHeight: CGFloat? {
+        guard isCompactHeight,
+              compactMetrics.viewportHeight > 0,
+              compactMetrics.summaryHeight > 0 else { return nil }
+        let presentationPickerReserve = board.presentations.count > 1
+            ? compactPresentationPickerHeight
+            : 0
+        return max(
+            1,
+            compactMetrics.viewportHeight
+                - (compactVerticalPadding * 2)
+                - compactMetrics.summaryHeight
+                - compactContentSpacing
+                // hangCard pads all sides; only the top inset sits above the map.
+                // Bottom card padding is below scrollable selected-hold/legend content.
+                - compactCardPadding
+                - presentationPickerReserve
+        )
+    }
+
     private func selectedHoldCard(_ hold: PhysicalContact) -> some View {
         VStack(alignment: .leading, spacing: 14) {
             SectionLabel(title: "Selected hold", tint: .holdActiveDeep)
@@ -326,6 +374,28 @@ struct BoardDetailView: View {
         .hangCard()
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("boardDetail.selectedHold.\(hold.id)")
+    }
+}
+
+private struct BoardDetailCompactMetrics: Equatable {
+    var viewportHeight: CGFloat = 0
+    var summaryHeight: CGFloat = 0
+}
+
+private struct BoardDetailCompactMetricsPreferenceKey: PreferenceKey {
+    static var defaultValue = BoardDetailCompactMetrics()
+
+    static func reduce(
+        value: inout BoardDetailCompactMetrics,
+        nextValue: () -> BoardDetailCompactMetrics
+    ) {
+        let next = nextValue()
+        if next.viewportHeight > 0 {
+            value.viewportHeight = next.viewportHeight
+        }
+        if next.summaryHeight > 0 {
+            value.summaryHeight = next.summaryHeight
+        }
     }
 }
 

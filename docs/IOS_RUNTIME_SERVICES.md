@@ -27,15 +27,28 @@ directly. `HANGTEN_REVIEW_HEALTH=1` and `HANGTEN_REVIEW_MOTHERBOARD=1` also
 open Settings from Train. Release builds ignore all review-only tab and
 navigation routing.
 
-## Motherboard Bluetooth sensor
+## Supported Bluetooth scales
 
-The optional Motherboard sensor is a live force input, not a workout timer.
-The user opens Train's gear → Settings and explicitly taps Connect sensor; the
-app then scans for
-the Bluetooth service, connects, enables TX notifications, requests the
-device's calibration rows, and starts its 30 Hz stream only after complete
-four-sensor calibration. iOS Bluetooth permission therefore follows a clear
-user action on physical devices rather than an automatic production launch.
+An optional supported scale is a live force input, not a workout timer. On a
+routine's plan page, Weight tracking defaults to **Skip**. The athlete can
+instead choose **Scale**, select any supported profile, and connect or
+disconnect inline before tapping Start routine. **Manual** keeps the numeric
+weight, unit, and Add bodyweight controls on that same page. Scale discovery
+and connection remain explicit user actions, so iOS Bluetooth permission
+follows clear intent on physical devices rather than an automatic production
+launch.
+
+Start routine is always available. Selecting Scale does not require a
+successful connection and never presents a blocking pairing sheet. The
+selected Skip, Scale, or Manual configuration is snapshotted when Start routine
+is tapped, retained while a purchase sheet is open, and passed into the workout.
+Workout deep links have no plan-page setup state, so they default to Skip and
+continue to auto-start.
+
+The Motherboard profile scans for its Bluetooth service, connects, enables TX
+notifications, requests calibration rows, and starts its 30 Hz stream only
+after complete four-sensor calibration. Other supported profiles use their
+reviewed adapters and capabilities.
 
 Notifications may be fragmented or contain more than one line. The service
 buffers them until CRLF-delimited calibration rows, stream acknowledgements,
@@ -88,16 +101,21 @@ compatibility, disconnect timing, or force accuracy; all of those require a
 physical Motherboard before release.
 
 Combine `HANGTEN_REVIEW_SENSOR_DISCONNECTED=1` with the Motherboard fixture
-to leave it disconnected at launch and exercise Connect sensor in the nested
-initial-weight pairing sheet. The fixture still streams after that action.
+to leave it disconnected at launch and exercise Connect supported scale on the
+plan page. The fixture still streams after that inline action.
 
-Initial weight setup is the sole entry point for manual workout weight. Manual
-sessions save the entered weight and Add bodyweight choice, with the legacy
-load adjustment set to zero. They do not show the sensor meter, collect sensor
-samples, or mark steps interrupted when an unused sensor disconnects. Sensor
-sessions retain measurement and interruption behavior and omit manual weight.
-Pairing is presented by the setup sheet; successful pairing dismisses first,
-then setup dismisses before handing off once to preparation or workout start.
+Manual sessions save the entered weight and Add bodyweight choice, with the
+legacy load adjustment set to zero. Skip sessions explicitly persist an
+untracked source. Manual and Skip sessions do not show the scale meter, collect
+scale samples, run scale preparation, or mark steps interrupted when an unused
+scale disconnects. Scale sessions retain preparation, measurement, and
+interruption behavior when a scale is streaming, and omit manual weight. If a
+selected scale is unavailable, the workout still starts and records the Scale
+choice without fabricated measurements. A scale that starts streaming only
+after that nonblocking start is ignored for the remainder of the session;
+tracking activates only when the initial scale preparation was completed or
+explicitly skipped. Skip and Manual records persist the neutral Automatic
+profile so a connected or configured scale cannot leak into those sessions.
 
 ## Workout clock and spoken cues
 

@@ -13,10 +13,12 @@ enum WorkoutSummaryFormatting {
     static func initialWeightText(
         for initialWeight: WorkoutInitialWeightConfiguration,
         unit: WorkoutLoadAdjustmentDisplayUnit
-    ) -> String {
+    ) -> String? {
         switch initialWeight.source {
+        case .untracked:
+            return nil
         case .sensor:
-            return "Sensor weight"
+            return "Supported scale"
         case .manual:
             let weightKGF = initialWeight.manualWeightKGF ?? 0
             let displayedValue = unit.value(fromKilogramsForce: weightKGF)
@@ -180,7 +182,7 @@ struct WorkoutSessionHistoryView: View {
                 ContentUnavailableView(
                     "No saved sessions",
                     systemImage: "clock.arrow.circlepath",
-                    description: Text("Save a measured workout to review it here.")
+                    description: Text("Save a completed workout to review it here.")
                 )
             } else {
                 ForEach(sessions) { session in
@@ -201,9 +203,11 @@ struct WorkoutSessionHistoryView: View {
                             Text(session.recordedAt.formatted(date: .abbreviated, time: .shortened))
                                 .font(.system(size: 12, weight: .medium, design: .rounded))
                                 .foregroundStyle(Color.hangMuted)
-                            Text(session.initialWeight.source.label)
-                                .font(.system(size: 12, weight: .medium, design: .rounded))
-                                .foregroundStyle(Color.hangMuted)
+                            if session.initialWeight.source != .untracked {
+                                Text(session.initialWeight.source.label)
+                                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                                    .foregroundStyle(Color.hangMuted)
+                            }
                         }
                         .padding(.vertical, 3)
                     }
@@ -253,27 +257,33 @@ private struct WorkoutSummaryContent: View {
                 .padding(.vertical, 4)
             }
 
-            Section("Measured load") {
+            Section(session.initialWeight.source == .sensor ? "Measured load" : "Workout steps") {
                 ForEach(Array(session.steps.enumerated()), id: \.element.stepID) { index, step in
-                    stepRow(step, title: WorkoutSummaryFormatting.stepRowTitle(for: session, at: index))
+                    stepRow(
+                        step,
+                        title: WorkoutSummaryFormatting.stepRowTitle(for: session, at: index),
+                        showsMeasuredLoad: session.initialWeight.source == .sensor
+                    )
                 }
             }
 
             if session.initialWeight.source == .sensor {
-                Section("Sensor") {
+                Section("Scale") {
                     Text(session.forceSensorProfile.label)
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
                 }
             }
 
-            Section("Initial weight") {
-                Text(WorkoutSummaryFormatting.initialWeightText(
-                    for: session.initialWeight,
-                    unit: loadAdjustmentUnit
-                ))
-                .font(.system(size: 15, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color.hangInk)
+            if let initialWeightText = WorkoutSummaryFormatting.initialWeightText(
+                for: session.initialWeight,
+                unit: loadAdjustmentUnit
+            ) {
+                Section("Initial weight") {
+                    Text(initialWeightText)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(Color.hangInk)
+                }
             }
 
             if let loadAdjustmentText = WorkoutSummaryFormatting.loadAdjustmentText(
@@ -287,7 +297,8 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
-            if let bodyweightBaselineText = WorkoutSummaryFormatting.bodyweightBaselineText(
+            if session.initialWeight.source == .sensor,
+               let bodyweightBaselineText = WorkoutSummaryFormatting.bodyweightBaselineText(
                 for: session.bodyweightKGF,
                 unit: unit
             ) {
@@ -298,12 +309,13 @@ private struct WorkoutSummaryContent: View {
                 }
             }
 
-            if let granularSampleCountText = WorkoutSummaryFormatting.granularSampleCountText(
+            if session.initialWeight.source == .sensor,
+               let granularSampleCountText = WorkoutSummaryFormatting.granularSampleCountText(
                 for: session.motherboardMeasurements,
                 profile: session.forceSensorProfile,
                 wasTruncated: session.motherboardMeasurementsTruncated
             ) {
-                Section("Granular sensor data") {
+                Section("Granular scale data") {
                     Text(granularSampleCountText)
                         .font(.system(size: 15, weight: .semibold, design: .rounded))
                         .foregroundStyle(Color.hangInk)
@@ -327,24 +339,32 @@ private struct WorkoutSummaryContent: View {
     }
 
     @ViewBuilder
-    private func stepRow(_ step: WorkoutStepMeasurement, title: String) -> some View {
+    private func stepRow(
+        _ step: WorkoutStepMeasurement,
+        title: String,
+        showsMeasuredLoad: Bool
+    ) -> some View {
         VStack(alignment: .leading, spacing: 7) {
             HStack(alignment: .firstTextBaseline) {
                 Text(title)
                     .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                 Spacer()
-                Text(statusText(for: step.status))
-                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                    .foregroundStyle(statusTint(for: step.status))
+                if showsMeasuredLoad {
+                    Text(statusText(for: step.status))
+                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .foregroundStyle(statusTint(for: step.status))
+                }
             }
 
             HStack {
                 summaryValue(title: "Planned", value: step.plannedActiveDuration.durationText)
-                Spacer()
-                summaryValue(title: "Loaded", value: step.actualLoadedDuration.durationText)
-                Spacer()
-                summaryValue(title: "Peak", value: peakText(for: step))
+                if showsMeasuredLoad {
+                    Spacer()
+                    summaryValue(title: "Loaded", value: step.actualLoadedDuration.durationText)
+                    Spacer()
+                    summaryValue(title: "Peak", value: peakText(for: step))
+                }
             }
 
             Text(WorkoutSummaryFormatting.semanticText(for: step, unit: unit))

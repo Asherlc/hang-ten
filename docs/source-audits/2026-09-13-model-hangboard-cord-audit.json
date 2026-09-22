@@ -195,6 +195,37 @@
       }
     },
     {
+      "packageID": "j-bryant.ftg-32",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "The approved exact-revision gallery and 2026-09-20 human topology confirmation establish one cord loop through two centered holes and around the rear. The app represents its two visible exterior leads from one shared invisible anchor; the known rear connecting segment is deliberately omitted.",
+      "evidence": [
+        {
+          "view": "exact-revision suspended pair/front",
+          "url": "https://m.media-amazon.com/images/I/61qkCE436dL._AC_SL1500_.jpg",
+          "exactRevisionID": "amazon-b0fzgy19t9-ftg-32-2026-09",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "f276704568bb877405617446e7527183ad81291df8e9231611487e52cadd533c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/j-bryant-ftg-32-01-suspended-pair-front.jpg"
+        },
+        {
+          "view": "exact-revision material/oblique",
+          "url": "https://m.media-amazon.com/images/I/71Mr+u-2MML._AC_SL1500_.jpg",
+          "exactRevisionID": "amazon-b0fzgy19t9-ftg-32-2026-09",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "13e329556225441266c61d7ee4f0aea8bdb49129c02450cd2ae1756fce50adb7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/j-bryant-ftg-32-02-material-oblique.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user design review",
+        "reviewedAt": "2026-09-20",
+        "notes": "Approved one block, one physical loop, two centered holes, pairedLeadCord exterior-lead representation, and deliberate rear-segment omission."
+      }
+    },
+    {
       "packageID": "lattice.mxedge-lift-large",
       "decision": "represented",
       "sourceFact": "documentedSuspension",

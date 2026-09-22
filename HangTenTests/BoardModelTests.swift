@@ -803,7 +803,7 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
-        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "j-bryant.ftg-32", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
@@ -989,7 +989,7 @@ final class BoardModelTests: XCTestCase {
     }
 
     func testPairedLeadModelHangboardsReserveCordAwareCanonicalCameraMargin() async throws {
-        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
+        for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "j-bryant.ftg-32", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)
             guard case .pairedLeadCord(let suspension) = media.suspension else {
                 return XCTFail("\(boardID) must load the approved pairedLeadCord suspension")
@@ -1014,6 +1014,207 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertTrue(model.select(positionID: position.id))
                 XCTAssertFalse(model.isUnavailable)
             }
+        }
+    }
+
+    func testJBryantFTG32SelectsOpposingEdgesWithOneNonPickableLoopPresentation() async throws {
+        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
+        XCTAssertEqual(board.contacts.map(\.id), ["edge-16", "edge-25"])
+        XCTAssertEqual(board.positions.map(\.id), ["edge-25-down", "edge-16-down"])
+        XCTAssertEqual(board.contactIDs(inPosition: "edge-25-down"), ["edge-25"])
+        XCTAssertEqual(board.contactIDs(inPosition: "edge-16-down"), ["edge-16"])
+        let orientation = try XCTUnwrap(media.orientation)
+        let edge25Rotation = try XCTUnwrap(orientation.rotations["edge-25-down"])
+        let edge16Rotation = try XCTUnwrap(orientation.rotations["edge-16-down"])
+        XCTAssertEqual(edge25Rotation, [0, 0, 0, 1])
+        XCTAssertEqual(edge16Rotation, [0, 0, 1, 0])
+        guard case .pairedLeadCord(let suspension) = media.suspension else {
+            return XCTFail("FTG-32 must reuse pairedLeadCord")
+        }
+        let edge25Pose = try XCTUnwrap(suspension.canonicalPoses["edge-25-down"])
+        let edge16Pose = try XCTUnwrap(suspension.canonicalPoses["edge-16-down"])
+        XCTAssertEqual(edge25Pose.rotation, [0, 0, 0, 1])
+        XCTAssertEqual(edge16Pose.rotation, [0, 0, 1, 0])
+        XCTAssertEqual(edge25Pose.rotation, [edge25Rotation.x, edge25Rotation.y, edge25Rotation.z, edge25Rotation.w])
+        XCTAssertEqual(edge16Pose.rotation, [edge16Rotation.x, edge16Rotation.y, edge16Rotation.z, edge16Rotation.w])
+        // One physical loop is displayed as two exterior leads sharing one
+        // invisible anchor; its known rear connecting segment is omitted.
+        XCTAssertEqual(suspension.anchor.visibility, "invisible")
+        XCTAssertEqual(suspension.attachments.map(\.id), ["left-lead", "right-lead"])
+        XCTAssertEqual(Set(suspension.attachments.map(\.nodeID)), ["Cube_001"])
+        XCTAssertTrue(suspension.attachments.allSatisfy { attachment in
+            media.descriptor.nodes.first(where: { $0.nodeID == attachment.nodeID })?.role == .body
+        })
+        for (positionID, contactID) in [("edge-25-down", "edge-25"), ("edge-16-down", "edge-16")] {
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertEqual(model.activePositionID, positionID)
+            XCTAssertFalse(model.isUnavailable)
+            XCTAssertFalse(model.isTransientCordAccessible)
+            let cord = try XCTUnwrap(model.transientCordNode)
+            XCTAssertFalse(cord.isHidden)
+            XCTAssertEqual(cord.categoryBitMask, BoardModelScene.cordCategory)
+            XCTAssertNil(model.contactID(for: cord))
+            XCTAssertFalse(cord.childNodes.isEmpty)
+            XCTAssertTrue(cord.childNodes.allSatisfy {
+                !$0.isHidden && $0.categoryBitMask == BoardModelScene.cordCategory
+                    && model.contactID(for: $0) == nil
+            })
+            let selected = try XCTUnwrap(model.contactNodes[contactID]?.first)
+            let original = try XCTUnwrap(selected.geometry?.firstMaterial)
+            model.highlight([contactID], mode: .active)
+            XCTAssertEqual(selected.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+            model.highlight([], mode: .active)
+            XCTAssertTrue(selected.geometry?.firstMaterial === original)
+            model.highlight([contactID], mode: .active)
+            XCTAssertEqual(selected.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+            model.highlight([], mode: .active)
+            XCTAssertTrue(selected.geometry?.firstMaterial === original)
+        }
+    }
+
+    func testJBryantFTG32CanonicalSelectedEdgesAreUnoccluded() async throws {
+        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 390, height: 228))
+        view.display(model)
+        model.frame(in: view.bounds.size)
+        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
+            .map { Float($1 - $0) }.max() ?? 1
+        let rayExtension = max(extent * 4, 1)
+
+        // Re-select the first edge too: visibility must survive the normal
+        // highlight-driven half-turn and its inverse without an orbit fallback.
+        for contactID in ["edge-25", "edge-16", "edge-25"] {
+            let positionID = try XCTUnwrap(BoardMapPresentationSelection.resolvePositionID(
+                board: board,
+                presentationID: "primary",
+                activeHoldID: nil,
+                highlightedHoldIDs: [contactID]
+            ))
+            XCTAssertTrue(model.select(positionID: positionID), positionID)
+            XCTAssertFalse(model.isUnavailable, positionID)
+            model.highlight([contactID], mode: .active)
+            SCNTransaction.flush()
+            let direction = model.camera.presentation.worldFront
+            let nodes = try XCTUnwrap(model.contactNodes[contactID])
+            for node in nodes {
+                XCTAssertEqual(node.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+                for localCenter in try nativeTriangleCenters(for: node) {
+                    let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
+                    let projected = view.projectPoint(center)
+                    XCTAssertTrue((0...1).contains(projected.z), positionID)
+                    XCTAssertTrue(view.bounds.contains(CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))), positionID)
+                    let closest = try XCTUnwrap(model.scene.rootNode.hitTestWithSegment(
+                        from: SCNVector3(center.x - direction.x * rayExtension,
+                                         center.y - direction.y * rayExtension,
+                                         center.z - direction.z * rayExtension),
+                        to: SCNVector3(center.x + direction.x * rayExtension,
+                                       center.y + direction.y * rayExtension,
+                                       center.z + direction.z * rayExtension),
+                        options: [
+                            // Include the visible body and transient cord, not
+                            // only selectable triangles. The USDZ is double-sided.
+                            SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.renderedCategory,
+                            SCNHitTestOption.backFaceCulling.rawValue: false,
+                            SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                        ]
+                    ).first, "\(positionID): missing rendered intersection")
+                    XCTAssertEqual(
+                        model.contactID(for: closest.node), contactID,
+                        "\(positionID): canonical selected ledge is occluded by \(closest.node.name ?? "unnamed") at \(closest.worldCoordinates)"
+                    )
+                }
+            }
+        }
+    }
+
+    func testJBryantFTG32HighlightedContactResolvesItsMatchingHalfTurnPosition() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "j-bryant.ftg-32"))
+        for (contactID, expectedPositionID) in [("edge-25", "edge-25-down"), ("edge-16", "edge-16-down")] {
+            XCTAssertEqual(
+                BoardMapPresentationSelection.resolvePositionID(
+                    board: board,
+                    presentationID: "primary",
+                    activeHoldID: nil,
+                    highlightedHoldIDs: [contactID]
+                ),
+                expectedPositionID
+            )
+        }
+        XCTAssertFalse(PlanCatalog.all.contains { $0.boardID == "j-bryant.ftg-32" })
+    }
+
+    func testJBryantFTG32NativePickingAndAccessibilityExcludeBodyHolesAndCord() async throws {
+        try await assertNativeNearestTrianglePicking(boardID: "j-bryant.ftg-32")
+        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
+        XCTAssertEqual(model.geometryNodes.count, 3)
+        XCTAssertEqual(model.contactNodes.count, 2)
+        XCTAssertEqual(Set(media.descriptor.nodes.map(\.nodeID)), [
+            "Cube_001", "edge_16_mesh_001", "edge_25_mesh_001",
+        ])
+        XCTAssertEqual(Set(media.descriptor.nodes.filter { $0.role == .contact }.map(\.nodeID)), [
+            "edge_16_mesh_001", "edge_25_mesh_001",
+        ])
+        let body = try XCTUnwrap(model.geometryNodes.first { $0.name == "Cube_001" })
+        XCTAssertNil(model.contactID(for: body))
+        for binding in media.descriptor.nodes where binding.role == .contact {
+            let name = binding.nodeID.lowercased()
+            XCTAssertFalse(["hole", "cord", "rear"].contains { name.contains($0) })
+        }
+
+        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
+        view.display(model)
+        view.contacts = board.contacts
+        view.onContactTap = { _ in }
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            let cord = try XCTUnwrap(model.transientCordNode)
+            XCTAssertNil(model.contactID(for: cord))
+            XCTAssertTrue(cord.childNodes.allSatisfy { model.contactID(for: $0) == nil })
+            XCTAssertFalse(model.isTransientCordAccessible)
+            view.updateAccessibility()
+            let rawAccessibilityElements = try XCTUnwrap(
+                view.accessibilityElements as? [UIAccessibilityElement]
+            )
+            XCTAssertEqual(rawAccessibilityElements.count, 2)
+            XCTAssertEqual(rawAccessibilityElements.map(\.accessibilityIdentifier), [
+                "boardModel.contact.edge-16",
+                "boardModel.contact.edge-25",
+            ])
+        }
+    }
+
+    func testJBryantFTG32InvalidSuspensionFailsClosedWithoutTransientCord() async throws {
+        let (board, media, _) = try await loadMigratedModel("j-bryant.ftg-32")
+        guard case .pairedLeadCord(let profile) = media.suspension else {
+            return XCTFail("FTG-32 must reuse pairedLeadCord")
+        }
+        let invalidProfile = BoardModelPairedLeadCord(
+            attachments: profile.attachments,
+            passages: profile.passages,
+            anchor: profile.anchor,
+            cord: BoardModelCord(
+                restLength: 0.001,
+                radius: profile.cord.radius,
+                material: profile.cord.material,
+                provenance: "Deliberately too short test fixture"
+            ),
+            canonicalPoses: profile.canonicalPoses
+        )
+        let sourceURL = repositoryRootURL()
+            .appendingPathComponent("Hangboards/j-bryant-ftg-32/assets/primary.usdz")
+        for position in board.positions {
+            let model = try XCTUnwrap(BoardModelScene(
+                source: try SCNScene(url: sourceURL),
+                descriptor: media.descriptor,
+                display: media.display,
+                suspension: .pairedLeadCord(invalidProfile),
+                orientation: media.orientation,
+                allowedPositionIDs: Set(board.positions.map(\.id))
+            ))
+            XCTAssertNil(model.transientCordNode)
+            XCTAssertFalse(model.select(positionID: position.id), position.id)
+            XCTAssertTrue(model.isUnavailable)
+            XCTAssertNil(model.transientCordNode)
         }
     }
 
@@ -2054,6 +2255,7 @@ final class BoardModelTests: XCTestCase {
 
     func testExistingRasterAndModelPresentationRoutingDoesNotRegress() throws {
         let modelBoardIDs = [
+            "j-bryant.ftg-32",
             "nature.stone-hanger",
             "yy.baguette-evo",
             "metolius.wood-grips-compact-ii",

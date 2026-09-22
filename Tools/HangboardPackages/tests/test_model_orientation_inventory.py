@@ -33,6 +33,7 @@ MODEL_PACKAGE_IDS = {
     "escape-beta-22",
     "escape.unlimited",
     "evolv-kilter-basic-long",
+    "j-bryant.ftg-32",
     "lattice-triple-rung",
     "lattice.mxedge-lift-large",
     "lattice.mxedge-lift-small",
@@ -331,6 +332,25 @@ def test_raster_media_rejects_orientation_key(tmp_path: Path) -> None:
         BOARD_CATALOG.load_board_package(
             write_model_package(tmp_path, media_overrides={"type": "raster", "orientation": _orientation()})
         )
+
+
+def test_j_bryant_ftg32_one_sided_positions_are_an_exact_z_half_turn() -> None:
+    board = _discovered_model_packages()["j-bryant.ftg-32"].board
+    media = board.presentations[0].media
+    assert isinstance(media, BOARD_CATALOG.PresentationMediaModel)
+    assert [(p.id, p.contact_ids) for p in board.positions] == [
+        ("edge-25-down", ("edge-25",)),
+        ("edge-16-down", ("edge-16",)),
+    ]
+    assert media.orientation is not None
+    assert media.orientation.pivot == "modelBoundsCenter"
+    assert media.orientation.rotations == {
+        "edge-25-down": (0, 0, 0, 1),
+        "edge-16-down": (0, 0, 1, 0),
+    }
+    assert media.suspension is not None
+    assert {key: pose.rotation for key, pose in media.suspension.canonical_poses.items()} == media.orientation.rotations
+    _assert_model_position_union_coverage(board)
 
 
 def test_discovered_model_inventory_matches_current_packages() -> None:
