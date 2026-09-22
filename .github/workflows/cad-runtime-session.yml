@@ -23,9 +23,9 @@ jobs:
           find squashfs-root/usr -maxdepth 3 -name '*FreeCAD*' -o -name '*python*' -o -name 'Part.so' > layout.txt
           cat squashfs-root/AppRun >> layout.txt
           mkdir wheels
-          python -m pip download --dest wheels --only-binary=:all: --python-version 3.11 --platform manylinux_2_17_x86_64 --implementation cp --abi cp311 usd-core==26.8
+          python -m pip download --dest wheels --only-binary=:all: --python-version 3.11 --platform manylinux_2_17_x86_64 --implementation cp --abi cp311 usd-core==25.11
           python -m pip download --dest wheels --only-binary=:all: pytest==9.0.2
-          tar --exclude='*.a' --exclude='*/__pycache__' --exclude='*/include' --exclude='*/share' --exclude='*/translations' -czf runtime.tar.gz squashfs-root/usr/bin squashfs-root/usr/lib squashfs-root/usr/Mod wheels layout.txt
+          tar --exclude='*.a' --exclude='*/__pycache__' --exclude='*/include' --exclude='*/share' --exclude='*/translations' -czf runtime.tar.gz squashfs-root/usr wheels layout.txt
       - uses: actions/upload-artifact@v4
         with:
           name: cad-runtime-session
