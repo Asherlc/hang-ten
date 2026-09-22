@@ -6,43 +6,27 @@ on:
 permissions:
   contents: read
 jobs:
-  inspect:
+  native:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-        with:
-          lfs: false
-          persist-credentials: false
-      - name: Fetch runtime models
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Prepare isolated native dependencies
         run: |
-          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" lfs pull --include='Hangboards/*/assets/*.usdz'
-      - name: Prepare read-only source snapshot
-        run: |
-          mkdir -p .context/freecad-authoring-session
-          python3 - <<'PY'
-          import pathlib, subprocess, tarfile
-          root = pathlib.Path('.')
-          paths = subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
-          with tarfile.open('.context/freecad-authoring-session/workspace.tar.gz', 'w:gz') as out:
-              for name in paths:
-                  p = root / name
-                  if not name or not p.is_file():
-                      continue
-                  text = p.suffix in {'.py','.sh','.toml','.json','.md','.yml','.yaml','.swift','.rb'} or name in {'.gitattributes','.gitignore'}
-                  if text or name.startswith('Hangboards/'):
-                      out.add(p, arcname=name, recursive=False)
-          PY
-          git rev-parse HEAD > .context/freecad-authoring-session/source-commit.txt
-      - name: Check native FreeCAD availability
-        run: |
-          sudo apt-get update -qq
-          apt-cache policy freecad-python3 | tee .context/freecad-authoring-session/freecad-available.txt
+          mkdir -p "$PWD/cad-session/debs" "$PWD/cad-session/wheels"
+          docker run --rm -v "$PWD/cad-session:/out" debian:trixie-slim sh -euxc '
+            apt-get update -qq
+            apt-get -y --download-only --no-install-recommends install freecad-python3 python3-pip python3-venv
+            cp /var/cache/apt/archives/*.deb /out/debs/
+            apt-get -y --no-install-recommends install freecad-python3 python3-pip python3-venv
+            python3 -m pip download --only-binary=:all: --no-deps -d /out/wheels usd-core==25.11
+            dpkg-query -W > /out/packages.txt
+            PYTHONPATH=/usr/lib/freecad-python3/lib:/usr/lib/freecad/lib python3 -c "import FreeCAD as A, Part; d=A.newDocument(\"Example\"); b=d.addObject(\"Part::Box\",\"Body\"); b.Length=100; b.Width=30; b.Height=50; b.addProperty(\"App::PropertyString\",\"HangTenRole\"); b.HangTenRole=\"body\"; d.recompute(); d.saveAs(\"/out/example.FCStd\"); print(A.Version())" > /out/native-smoke.txt
+          '
+          tar czf cad-session/native-deps.tar.gz -C cad-session debs
+          rm -r cad-session/debs
       - uses: actions/upload-artifact@v4
         with:
-          name: freecad-authoring-session-inputs
-          path: .context/freecad-authoring-session/
+          name: freecad-authoring-session-native
+          path: cad-session/
           retention-days: 7
           if-no-files-found: error
