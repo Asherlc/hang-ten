@@ -1,1 +1,4 @@
 Hangboards/*/assets/*.usdz filter=lfs diff=lfs merge=lfs -text
+
+# Self-contained FreeCAD authoring sources (native CAD, not text)
+ModelSources/*.FCStd filter=lfs diff=lfs merge=lfs -text

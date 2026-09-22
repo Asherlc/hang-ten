@@ -16,6 +16,7 @@ MAX_XML_BYTES = 32 * 1024**2
 # Exact builtin types: prefix matching would admit arbitrary addon/Python objects.
 BUILTIN_TYPES = frozenset({
     "App::DocumentObjectGroup", "App::Part", "App::Origin", "App::Line", "App::Plane",
+    "App::Point",
     "Part::Feature", "Part::Box", "Part::Cylinder", "Part::Cone", "Part::Sphere",
     "Part::Torus", "Part::Ellipsoid", "Part::Prism", "Part::Extrusion", "Part::Cut",
     "Part::Fuse", "Part::MultiFuse", "Part::Common", "Part::MultiCommon",
@@ -28,6 +29,21 @@ BUILTIN_TYPES = frozenset({
     "PartDesign::Mirrored", "PartDesign::LinearPattern", "PartDesign::PolarPattern",
     "PartDesign::MultiTransform", "PartDesign::SubShapeBinder", "PartDesign::ShapeBinder",
     "Sketcher::SketchObject",
+})
+# Document-local reference properties. These store object names inside the same
+# document and cannot name an external file.
+LOCAL_LINK_TYPES = frozenset({
+    "App::PropertyLink", "App::PropertyLinkSub", "App::PropertyLinkList",
+    "App::PropertyLinkSubList", "App::PropertyLinkListHidden",
+})
+# Cross-document reference properties. FreeCAD stores the referencing document's
+# path in a ``file`` attribute; an empty value means the reference stays inside
+# this document. A non-empty value is an external dependency and is rejected.
+XLINK_TYPES = frozenset({
+    "App::PropertyXLink", "App::PropertyXLinkSub", "App::PropertyXLinkSubList",
+})
+REJECTED_TYPES = frozenset({
+    "App::PropertyFile", "App::PropertyPath", "App::PropertyPersistentObject",
 })
 NODE_ID = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
@@ -96,9 +112,15 @@ def inspect_archive(path: Path) -> dict:
                 raise ValueError("document object/data inventory mismatch")
             for prop in root.findall(".//Property"):
                 kind = prop.get("type", "")
-                if ("Python" in kind or "XLink" in kind
-                        or kind in {"App::PropertyFile", "App::PropertyPath", "App::PropertyPersistentObject"}):
+                if "Python" in kind or kind in REJECTED_TYPES:
                     raise ValueError(f"unsupported executable/external property: {kind}")
+                if kind in XLINK_TYPES:
+                    for link in prop.iter():
+                        if link.get("file"):
+                            raise ValueError(
+                                "unsupported external document reference: "
+                                f"{prop.get('name', '')} -> {link.get('file')}"
+                            )
                 if kind == "App::PropertyFileIncluded":
                     child = prop.find("FileIncluded")
                     name = child.get("file", "") if child is not None else ""
