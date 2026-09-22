@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "assetCommit": "54436b7fa4d3556a1627c628d3b236ee9afb1636",
-  "authoritativeSource": "PR #457 committed assets, not the superseded local repair ZIP",
+  "assetCommit": "b6062d7c359df041115f701fe28231b9dc07fe61",
+  "authoritativeSource": "Committed simplification pilot exports; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -44,7 +44,7 @@
     "yy-baguette-evo",
     "yy-penta-evo"
   ],
-  "sha256Manifest": "874c3bac5dd1a984a676534a00224ce359fbeb68d504b2366d990d8c3e959f47",
+  "sha256Manifest": "3218214a12da04efe68729de13bd1f2e453764f44d29abc87e88c0fd8df4c0e5",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true
