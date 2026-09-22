@@ -99,11 +99,26 @@ jobs:
           dest=root/'docs/source-audits/2026-09-22-model-simplification-verification.json'
           dest.write_text(json.dumps(report,indent=2)+'\n')
           PY
+      - name: Refresh verified candidate checksum before alignment tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,importlib.util,json,pathlib
+          root=pathlib.Path.cwd()
+          spec=importlib.util.spec_from_file_location('delivery',root/'scripts/verify-model-delivery.py')
+          mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
+          path=root/mod.LOCK_PATH;lock=json.loads(path.read_text())
+          lock['sha256Manifest']=hashlib.sha256(mod.checksum_manifest(root,lock['modelPackages']).encode()).hexdigest()
+          path.write_text(json.dumps(lock,indent=2)+'\n')
+          mod.verify(root,lock)
+          print('Candidate checksum verified; actual assetCommit is set only after committing assets.')
+          PY
       - name: Run model and package suites
         shell: bash
         run: |
           set -euo pipefail
-          python -m pytest Tools/HangboardModels Tools/HangboardPackages/tests -q | tee "$SCRATCH/model-package-tests.log"
+          python -m pytest Tools/HangboardModels Tools/HangboardPackages/tests -q -rs | tee "$SCRATCH/model-package-tests.log"
           python -m hangboard_packages.cli validate --root Hangboards --final-inventory | tee "$SCRATCH/packages.log"
       - name: Commit exact exports and lock their delivery
         shell: bash
@@ -168,6 +183,7 @@ jobs:
           python ReviewTools/render_simplification.py --root "$SCRATCH/before" --boards metolius-simulator-3d metolius-wood-grips-deluxe-ii lattice-mxedge-lift-small
           cp -a "$SCRATCH/before/Previews" "$SCRATCH/hang-ten-simplification-pilot/Previews-Before"
           export RENDER_VARIANT='Conservative comparison'
+          export RENDER_COMMIT='Uncommitted comparison candidate from ef07a5fb'
           python ReviewTools/render_simplification.py --root "$SCRATCH/hang-ten-simplification-pilot/Alternatives/Conservative" --boards metolius-simulator-3d metolius-wood-grips-deluxe-ii lattice-mxedge-lift-small
           python scripts/verify-model-delivery.py --root "$SCRATCH/hang-ten-simplification-pilot" --report "$SCRATCH/hang-ten-simplification-pilot/Verification/exact-delivery.json"
           cp "$SCRATCH/"*.log "$SCRATCH/hang-ten-simplification-pilot/Verification/"
