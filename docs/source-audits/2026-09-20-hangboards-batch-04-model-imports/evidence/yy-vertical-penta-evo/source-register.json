@@ -1,0 +1,70 @@
+{
+  "sources": [
+    {
+      "id": "PE1",
+      "publisher": "YY Vertical",
+      "tier": "manufacturer product specifications and gallery",
+      "url": "https://www.yyvertical.com/en/products/penta-evo",
+      "facts": "Names Penta Evo; poplar plywood; 25/20/15/10 mm edges, mono, duo and jug; 360-degree movement and two cords; product copy conflicts between eight total and the seven enumerated grip types.",
+      "notEstablished": "Exact overall dimensions, measured slot mouth widths/radii, full retaining-notch layout and hidden cord route. Published photographs on this endpoint were low resolution in the web tool."
+    },
+    {
+      "id": "PE2",
+      "publisher": "YY Vertical photograph hosted by Max Climbing",
+      "tier": "manufacturer-branded original product photograph, retailer-hosted; visually inspected 600 \u00d7 600",
+      "url": "https://www.maxclimbing.com/cdn/shop/files/YY_WEB_TRAIN_PENTA-EVO_600-600_3_800x800_crop_center_2x_6052bd91-7c80-49fe-a0b6-dbfd95034ba1.webp?v=1740652026&width=1445",
+      "facts": "The paired product photograph establishes the front 25/20/15 slots, reverse 10 slot, through mono/duo, and central opening jug. The earlier low-resolution small-inlet interpretation was disproved by the restored full views.",
+      "notEstablished": "No calibrated factory contour or independent overall dimensions. Source copy was retained only as a derivative collage; see PE-RESTORED for the two full reference files."
+    },
+    {
+      "id": "PE3",
+      "publisher": "Max Climbing",
+      "tier": "retailer specifications",
+      "url": "https://www.maxclimbing.com/en-de/products/penta-evo",
+      "facts": "Reports diameter 23 cm and thickness 3 cm; 325 g per unit. Hosts manufacturer-branded front/reverse image.",
+      "notEstablished": "Dimensioned outline or independent measured mass."
+    },
+    {
+      "id": "PE4",
+      "publisher": "Varuste",
+      "tier": "retailer specifications",
+      "url": "https://varuste.net/en/p135969/yy-vertical-penta-evo",
+      "facts": "Reports 230 mm diameter and 30 mm thickness, with 350 g mass per unit.",
+      "notEstablished": "Exact face geometry and explanation of mass conflict."
+    },
+    {
+      "id": "PE5",
+      "publisher": "YY Vertical",
+      "tier": "manufacturer installation article, published 2025-05-13; text read, video inaccessible",
+      "url": "https://www.yyvertical.com/en/blogs/news/installer-cordelettes-agres-penta-evo-guide-complet-4-noeuds",
+      "facts": "Lists a supplied 60 cm suspension cord and 200 cm extension cord, and explicitly describes passing the short cord through the Penta Evo ring. This establishes that double cord is an assembly/use description, not two independent hidden board channels.",
+      "notEstablished": "The text supplies no section drawing or exact retaining-notch positions. The linked video CnM9QVauKSM could not be fetched; its unseen frames are not evidence. Cord lengths are recorded, not baked into production geometry."
+    },
+    {
+      "id": "PE-RESTORED",
+      "publisher": "YY Vertical product photography; exact binary host not recovered",
+      "tier": "Restored original-reference image files, 1248 x 1248 each",
+      "url": "https://www.yyvertical.com/en/products/penta-evo",
+      "facts": "Two intact files show the full front/reverse pair and close-up, uninterrupted lower band, top-vertex cord wrap and inner corner retaining concavities. See evidence/media-manifest.json for their exact filenames and hashes.",
+      "notEstablished": "Exact binary URLs and download provenance, factory radii, image calibration. Product page URL is not claimed to be their binary download URL."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "Primary copy says eight grips but enumerates seven types; a marketing count is not the physical inventory.",
+      "ruling": "Use the seven independently pictured contacts per unit. Do not create an eighth duplicate jug or duplicate reverse contact."
+    },
+    {
+      "conflict": "Mass varies 220/325/350 g per unit.",
+      "ruling": "Retain all values, do not infer wood density or dimensions from mass. Geometry uses corroborated retailer 230/30 mm envelope and published depths."
+    },
+    {
+      "conflict": "Reverse photograph visually swaps left and right.",
+      "ruling": "Model the 10 mm recess on the reverse of the same physical band as front 15 mm; do not mirror the entire unit or duplicate the mono/duo openings."
+    },
+    {
+      "conflict": "Earlier partial build interpreted a lower-band detail as a small drilled inlet.",
+      "ruling": "Complete retained front/reverse originals show intact wood there. Remove false geometry and markers 1/2. Preserve central-ring markers 3/4 and document the ID migration."
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "file": "evidence/originals/xaEAAOSwFtFmDzoB.webp",
+      "sha256": "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+      "pixelDimensions": [
+        1200,
+        1600
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "RR6"
+      ],
+      "sourceURL": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
+      "publisher": "Owner photograph, eBay-hosted",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "CDN location reconstructed from retained eBay image identifier; original listing/seller and exact source URL not independently re-fetched. Retained pixels are the source evidence.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/originals/KQkAAOSwjmJmDzoE.webp",
+      "sha256": "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+      "pixelDimensions": [
+        1200,
+        1600
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "RR7"
+      ],
+      "sourceURL": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
+      "publisher": "Owner photograph, eBay-hosted",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "CDN location reconstructed from retained eBay image identifier; original listing/seller and exact source URL not independently re-fetched. Retained pixels are the source evidence.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/derived-review/metolius-rock-rings-3d-0.jpg",
+      "sha256": "f4cd2b39f6a5b2f308894b9cd48665f99f98b4cee2b21d0c44f064915a1f57b0",
+      "pixelDimensions": [
+        1500,
+        1200
+      ],
+      "kind": "derived-review",
+      "sourceIds": [
+        "RR2",
+        "RR3"
+      ],
+      "sourceURL": "https://www.metoliusclimbing.com/products/rock-rings-3d",
+      "publisher": "Earlier assembled research contact sheet; original publishers indicated by source register",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Derivative reduced-size collage, NOT an original full-resolution source file. Page URL is a reference, not the collage origin.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    }
+  ],
+  "sourceImagePolicy": "Original-reference files are distinct from derivative review collages and from application textures. No original PDFs/videos are supplied. Unknown binary URL provenance is expressly marked."
+}

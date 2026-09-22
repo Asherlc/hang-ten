@@ -186,7 +186,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
                 0x00, 0x01,
                 0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
-                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92, 0x00, 0x00
             ])]
         )
 
@@ -195,6 +195,90 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(service.connectedProfile, .whC06)
         XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 0)
         XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testExplicitWHC06SelectionStreamsUnitZeroAdvertisementWithoutCapturedFingerprint() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "Scale")
+        defer { service.disconnect() }
+
+        service.connect(profile: .whC06)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
+                0x00, 0x01,
+                0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                0x01, 0x07, 0xD0, 0x01, 0xF4, 0x00
+            ])]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(
+            try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF,
+            9.071_847_4,
+            accuracy: 0.000_000_001
+        )
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testAutomaticScanUsesIFB7LocalNameWhenPeripheralNameIsStale() throws {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "Stale cached name")
+        defer { service.disconnect() }
+
+        service.connect(profile: .automatic)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [
+                CBAdvertisementDataLocalNameKey: "IF_B7",
+                CBAdvertisementDataManufacturerDataKey: Data([
+                    0x00, 0x01,
+                    0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x0A, 0x28, 0x01, 0xF4, 0x01
+                ])
+            ]
+        )
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, peripheral.deviceID)
+        XCTAssertEqual(service.connectedProfile, .whC06)
+        XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 26, accuracy: 0.000_001)
+        XCTAssertTrue(manager.connectedPeripherals.isEmpty)
+    }
+
+    func testAutomaticScanPrefersCurrentNonWHC06LocalNameOverStaleIFB7PeripheralName() {
+        let manager = FakeCentralManager()
+        let transport = CoreBluetoothMotherboardTransport { _ in manager }
+        let service = MotherboardBluetoothService(transport: transport)
+        let peripheral = FakeMotherboardPeripheral(name: "IF_B7")
+        defer { service.disconnect() }
+
+        service.connect(profile: .automatic)
+        deliverDiscovery(
+            peripheral,
+            to: transport,
+            advertisementData: [
+                CBAdvertisementDataLocalNameKey: "HLK-LD2410B",
+                CBAdvertisementDataManufacturerDataKey: Data([
+                    0x00, 0x01,
+                    0x99, 0x88, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
+                    0x01, 0x0A, 0x28, 0x01, 0xF4, 0x01
+                ])
+            ]
+        )
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.connectedDeviceID)
+        XCTAssertNil(service.connectedProfile)
+        XCTAssertNil(service.latestMeasurement)
     }
 
     func testAutomaticScanIgnoresLD2410BThenStreamsTheResolvedWHC06Advertisement() throws {
@@ -231,7 +315,7 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
             advertisementData: [CBAdvertisementDataManufacturerDataKey: Data([
                 0x00, 0x01,
                 0x02, 0x03, 0x11, 0x2A, 0xC0, 0x19, 0x11, 0x24, 0x9A,
-                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92
+                0x01, 0x00, 0x00, 0x01, 0xF4, 0x01, 0x9B, 0x92, 0x00, 0x00
             ])]
         )
 
@@ -393,37 +477,70 @@ final class MotherboardBluetoothServiceTests: XCTestCase {
         XCTAssertEqual(try XCTUnwrap(service.latestMeasurement).aggregateLoadKGF, 1, accuracy: 0.000_001)
     }
 
-    func testWHC06AdvertisementStreamFailsAfterAuditedLivenessInterval() async throws {
+    func testWHC06AdvertisementStreamRescansAndResumesAfterLivenessExpiry() async throws {
         let transport = FakeMotherboardTransport()
         let service = MotherboardBluetoothService(
             transport: transport,
+            timeouts: .init(scan: 0.01, connect: 1, calibration: 1, streamAcknowledgement: 1),
             advertisementLivenessTimeout: 0.01
+        )
+        let device = MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Scale",
+            profile: .genericWHC06
         )
 
         service.connect(profile: .genericWHC06)
-        transport.emit(.advertisement(
-            MotherboardDiscoveredDevice(id: UUID(), name: "Scale", profile: .genericWHC06),
-            ForceSensorAdvertisement(
-                name: "Scale",
-                serviceUUIDs: [],
-                manufacturerData: [
-                    ForceSensorManufacturerData(
-                        companyIdentifier: 0x0100,
-                        payload: Data([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 0, 0, 1])
-                    )
-                ]
-            ),
-            Date(timeIntervalSince1970: 1_234)
-        ))
-        try await waitForService("WH-C06 advertisement liveness failure") {
-            service.state == .failed
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 1_000)
+
+        XCTAssertEqual(service.state, .streaming)
+        try await waitForService("WH-C06 advertisement recovery scan") {
+            service.state == .scanning
         }
 
-        XCTAssertEqual(service.state, .failed)
-        XCTAssertEqual(
-            service.lastError,
-            "Generic WH-C06-compatible stopped advertising. Move the sensor closer and try again."
+        XCTAssertEqual(transport.startScanCount, 2)
+        try await Task.sleep(for: .milliseconds(30))
+
+        XCTAssertEqual(service.state, .scanning)
+        XCTAssertNil(service.connectedDeviceID)
+        XCTAssertNil(service.connectedProfile)
+        XCTAssertNil(service.latestMeasurement)
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 200)
+
+        XCTAssertEqual(service.state, .streaming)
+        XCTAssertEqual(service.connectedDeviceID, device.id)
+        XCTAssertEqual(service.latestMeasurement?.aggregateLoadKGF, 2)
+        XCTAssertNil(service.lastError)
+    }
+
+    func testWHC06UserDisconnectDuringLivenessRecoveryScanRemainsTerminal() async throws {
+        let transport = FakeMotherboardTransport()
+        let service = MotherboardBluetoothService(
+            transport: transport,
+            timeouts: .init(scan: 0.01, connect: 1, calibration: 1, streamAcknowledgement: 1),
+            advertisementLivenessTimeout: 0.01
         )
+        let device = MotherboardDiscoveredDevice(
+            id: UUID(),
+            name: "Scale",
+            profile: .genericWHC06
+        )
+
+        service.connect(profile: .genericWHC06)
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 1_000)
+        try await waitForService("WH-C06 advertisement recovery scan") {
+            service.state == .scanning
+        }
+
+        service.disconnect()
+        try await Task.sleep(for: .milliseconds(30))
+
+        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertEqual(transport.startScanCount, 2)
+        XCTAssertEqual(Array(transport.operations.suffix(3)), ["stopScan", "notify:off", "disconnect"])
+        emitWHC06Advertisement(on: transport, from: device, loadHundredthsKGF: 200)
+        XCTAssertEqual(service.state, .disconnected)
+        XCTAssertNil(service.latestMeasurement)
     }
 
     func testProgressorTareUsesTheAuditedHardwareCommandWithoutStartingSoftwareTare() {

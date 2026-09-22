@@ -113,6 +113,66 @@
       }
     }
   },
+  "reusableModelFixtures": {
+    "reusable-valid": {
+    "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
+    "board": {
+      "schemaVersion": 3,
+      "id": "fixture.reusable-model",
+      "revisionID": "2026-09-contact-first",
+      "manufacturer": "Fixture Maker",
+      "name": "Reusable model fixture",
+      "subtitle": "A reusable unit parser fixture.",
+      "productURL": "https://example.com/fixture.reusable-model",
+      "aspectRatio": 2,
+      "equipmentObjects": [{"id": "left-unit"}, {"id": "right-unit"}],
+      "presentations": [{
+        "id": "primary",
+        "name": "Primary",
+        "aspectRatio": 2,
+        "isDefault": true,
+        "derivation": {"type": "original"},
+        "media": {
+          "type": "model",
+          "assetPath": "assets/primary.usdz",
+          "descriptorPath": "assets/primary.model.json",
+          "display": {"camera": {"type": "orthographic", "viewDirection": [0, 0, -1], "up": [0, 1, 0], "fitPadding": 0.08}},
+          "instances": [
+            {
+              "equipmentObjectID": "left-unit",
+              "baseTransform": {"translation": [-0.120000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1]},
+              "contactIDsBySlotID": {"edge": "edge-left"},
+              "positionTransforms": {"primary": {"translation": [0.000000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1]}}
+            },
+            {
+              "equipmentObjectID": "right-unit",
+              "baseTransform": {"translation": [0.120000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1], "reflection": "x"},
+              "contactIDsBySlotID": {"edge": "edge-right"},
+              "positionTransforms": {"primary": {"translation": [0.000000000, 0.000000000, 0.000000000], "rotation": [0, 0, 0, 1]}}
+            }
+          ]
+        }
+      }],
+      "contacts": [
+        {"id": "edge-left", "equipmentObjectID": "left-unit", "name": "Left edge", "kind": "edge", "gripTypes": []},
+        {"id": "edge-right", "equipmentObjectID": "right-unit", "name": "Right edge", "kind": "edge", "gripTypes": []}
+      ]
+    },
+    "descriptor": {
+      "schemaVersion": 2,
+      "coordinateFrame": "hang-ten-board-v1",
+      "modelSHA256": "ea1e0d76824067b618ae5a67bdf49824903c8be6b1c1c5c244f6e21f7c688ff0",
+      "modelBounds": {"min": [0, 0, 0], "max": [1, 1, 0.1]},
+      "nodes": [
+        {"nodeID": "UnitBody", "role": "body"},
+        {"nodeID": "UnitEdge", "role": "contact", "contactSlotID": "edge"}
+      ],
+      "contactSlots": {
+        "edge": {"nodeIDs": ["UnitEdge"], "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]}, "center": [0.25, 0.4]}
+      }
+    }
+    }
+  },
   "directedTwoBranchModel": {
     "assetBase64": "Zml4ZWQgbW9kZWwgcGFja2FnZSBieXRlcw==",
     "board": {

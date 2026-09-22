@@ -1,0 +1,129 @@
+{
+  "contactSlots": {
+    "jug": {
+      "center": [
+        0.5,
+        0.915760861
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.844843264,
+          0.972826072
+        ],
+        "min": [
+          0.155156736,
+          0.85869565
+        ]
+      },
+      "nodeIDs": [
+        "unit_jug_001"
+      ]
+    },
+    "pocket-25": {
+      "center": [
+        0.5,
+        0.168478258
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.671232882,
+          0.244565227
+        ],
+        "min": [
+          0.328767118,
+          0.092391289
+        ]
+      },
+      "nodeIDs": [
+        "unit_pocket_25_001"
+      ]
+    },
+    "pocket-32": {
+      "center": [
+        0.5,
+        0.39673913
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.760273968,
+          0.483695652
+        ],
+        "min": [
+          0.239726032,
+          0.309782608
+        ]
+      },
+      "nodeIDs": [
+        "unit_pocket_32_001"
+      ]
+    },
+    "pocket-40": {
+      "center": [
+        0.5,
+        0.690217397
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.849315067,
+          0.793478268
+        ],
+        "min": [
+          0.150684933,
+          0.586956526
+        ]
+      },
+      "nodeIDs": [
+        "unit_pocket_40_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.072999999,
+      0.092,
+      0.0285
+    ],
+    "min": [
+      -0.072999999,
+      -0.092,
+      -0.0285
+    ]
+  },
+  "modelSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
+  "nodes": [
+    {
+      "nodeID": "lateral_window_001",
+      "role": "attachment"
+    },
+    {
+      "nodeID": "ring_body_001",
+      "role": "body"
+    },
+    {
+      "nodeID": "roof_exit_001",
+      "role": "attachment"
+    },
+    {
+      "contactSlotID": "jug",
+      "nodeID": "unit_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "pocket-25",
+      "nodeID": "unit_pocket_25_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "pocket-32",
+      "nodeID": "unit_pocket_32_001",
+      "role": "contact"
+    },
+    {
+      "contactSlotID": "pocket-40",
+      "nodeID": "unit_pocket_40_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 2
+}

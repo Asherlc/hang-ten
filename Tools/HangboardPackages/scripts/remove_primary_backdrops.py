@@ -27,7 +27,6 @@ _ENCLOSED_BACKGROUND_SEEDS = {
     "yy-travelboard": ((190, 625), (1348, 625)),
     "yy-verticalboard-evo": ((887, 500),),
     "yy-verticalboard-one": ((887, 500),),
-    "yy-penta-evo": ((145, 595), (1385, 595), (180, 720), (1355, 720)),
 }
 
 

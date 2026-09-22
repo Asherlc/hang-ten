@@ -36,7 +36,160 @@ NEWLY_MODEL_ONLY_EXCLUSIONS = {
 }
 
 
-def test_current_four_documented_suspension_packages_use_compact_visual_cords() -> None:
+def test_pivot_exclusion_keeps_pulley_ropes_out_of_board_suspension() -> None:
+    """Catch a pulley-kit rope promoted to Pivot suspension or missing evidence."""
+    records = {r.package_id: r for r in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "trango.rock-prodigy-pivot" in records
+    record = records["trango.rock-prodigy-pivot"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "excluded", "noDocumentedSuspension", None
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    pivot = next(r for r in raw["records"] if r["packageID"] == "trango.rock-prodigy-pivot")
+    assert pivot["ruling"] == (
+        "noDocumentedSuspension; pulley-kit ropes are not Pivot suspension."
+    )
+    assert pivot["humanApproval"]["approved"] is True
+    assert {e["snapshotSHA256"] for e in pivot["evidence"]} == {
+        "339f743c7e5fff0b0619314cf6781d8f602c1545975390f4ab4424aa7461bf5d",
+        "e05deb5c0ea6d3361122926d7b3efee6b72bb9aad0a75fc09663bf599731e3e4",
+        "7aa2556dec24293e62c2be110fa7dfb6bcf118333ff35693e455a8a7babc67f7",
+        "26cf8d599a1a08bbcbbf688e14c9806d5f2381dc2aecdb608998ab22cee2c1b3",
+    }
+    for evidence in pivot["evidence"]:
+        snapshot = REPO_ROOT / evidence["snapshotPath"]
+        assert snapshot.is_file() and not snapshot.is_symlink()
+        assert snapshot.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(snapshot.read_bytes()).hexdigest() == evidence["snapshotSHA256"]
+    board = json.loads((REPO_ROOT / "Hangboards/trango-rock-prodigy-pivot/board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert "suspension" not in media
+    assert all("suspension" not in instance for instance in media["instances"])
+
+
+def test_poker_exclusion_retains_all_four_approved_manufacturer_faces() -> None:
+    """Catch missing coverage or accidental suspension/hardware promotion."""
+    records = {r.package_id: r for r in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "owl-climb.poker" in records
+    record = records["owl-climb.poker"]
+    assert (record.decision, record.source_fact, record.topology) == ("excluded", "noDocumentedSuspension", None)
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    poker = next(r for r in raw["records"] if r["packageID"] == "owl-climb.poker")
+    assert poker["ruling"] == "noDocumentedSuspension; excluded."
+    assert poker["humanApproval"]["approved"] is True
+    assert {e["snapshotSHA256"] for e in poker["evidence"]} == {
+        "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+        "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+        "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+        "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+    }
+    for evidence in poker["evidence"]:
+        snapshot = REPO_ROOT / evidence["snapshotPath"]
+        assert snapshot.is_file() and not snapshot.is_symlink()
+        assert snapshot.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(snapshot.read_bytes()).hexdigest() == evidence["snapshotSHA256"]
+
+
+def test_helium_cord_audit_retains_exact_front_reverse_evidence() -> None:
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "crimptonite.helium-mobile" in records
+    record = records["crimptonite.helium-mobile"]
+    assert record.decision == "represented"
+    assert record.source_fact == "documentedSuspension"
+    assert record.topology == "pairedLeadCord"
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    helium = next(item for item in raw["records"] if item["packageID"] == "crimptonite.helium-mobile")
+    assert helium["ruling"] == "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord."
+    assert helium["humanApproval"]["reviewer"] == "Astra"
+    assert helium["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in helium["evidence"]} == {
+        "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
+        "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
+    }
+    for item in helium["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
+def test_light_rail_cord_audit_retains_exact_approved_upper_entry_evidence() -> None:
+    """Catch missing model coverage or substitution of the changed live field photo."""
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "metolius.light-rail-2" in records
+    record = records["metolius.light-rail-2"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    rail = next(item for item in raw["records"] if item["packageID"] == "metolius.light-rail-2")
+    assert rail["ruling"] == "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore."
+    assert rail["humanApproval"]["reviewer"] == "Astra"
+    assert rail["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in rail["evidence"]} == {
+        "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
+        "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
+    }
+    for item in rail["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
+def test_rock_rings_cord_audit_retains_exact_manufacturer_and_owner_evidence() -> None:
+    """Catch missing coverage or revival of the disproved central through-bore."""
+    manifest = load_cord_audit_manifest(PRODUCTION_MANIFEST)
+    records = {record.package_id: record for record in manifest.records}
+    assert "metolius.rock-rings-3d" in records
+    record = records["metolius.rock-rings-3d"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    rings = next(item for item in raw["records"] if item["packageID"] == "metolius.rock-rings-3d")
+    assert rings["ruling"] == "two independent pairedLeadCord systems; no inter-unit connection or central through-bore."
+    assert rings["humanApproval"]["reviewer"] == "Astra"
+    assert rings["humanApproval"]["reviewedAt"] == "2026-09-20"
+    assert {item["snapshotSHA256"] for item in rings["evidence"]} == {
+        "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
+        "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+        "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+    }
+    for item in rings["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+
+
+def test_penta_cord_audit_retains_exact_originals_without_inventing_binary_urls() -> None:
+    """Catch a missing reusable record or laundering unknown image provenance."""
+    records = {record.package_id: record for record in load_cord_audit_manifest(PRODUCTION_MANIFEST).records}
+    assert "yy.penta-evo" in records
+    record = records["yy.penta-evo"]
+    assert (record.decision, record.source_fact, record.topology) == (
+        "represented", "documentedSuspension", "pairedLeadCord"
+    )
+    raw = json.loads(PRODUCTION_MANIFEST.read_text())
+    penta = next(item for item in raw["records"] if item["packageID"] == "yy.penta-evo")
+    assert penta["ruling"] == "two independent paired exterior loops through the existing central ring; no invented channel or knot."
+    assert {e["snapshotSHA256"] for e in penta["evidence"]} == {
+        "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+        "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+    }
+    for item in penta["evidence"]:
+        retained = REPO_ROOT / item["snapshotPath"]
+        assert retained.is_file() and not retained.is_symlink()
+        assert retained.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
+        assert hashlib.sha256(retained.read_bytes()).hexdigest() == item["snapshotSHA256"]
+    source = json.loads((REPO_ROOT / "docs/source-audits/2026-09-20-batch-04-3d-source-register.json").read_text())["boards"]["yy.penta-evo"]
+    assert all(e["binaryURL"] is None and e["status"] == "unhashed" for e in source["evidence"])
+
+
+def test_documented_suspension_packages_use_reviewed_visual_cords() -> None:
     repository_root = Path(__file__).resolve().parents[3]
     inventory = cli.discover_board_packages(
         repository_root / "Hangboards", require_complete_inventory=True
@@ -53,6 +206,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         "captain-fingerfood.dual": "pairedLeadCord",
         "captain-fingerfood.pocket": "pairedLeadCord",
         "captain-fingerfood.unlevel": "pairedLeadCord",
+        "j-bryant.ftg-32": "pairedLeadCord",
         "yy.baguette-evo": "twoBranchCord",
     }
     assert {
@@ -64,7 +218,7 @@ def test_current_four_documented_suspension_packages_use_compact_visual_cords() 
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 31, "represented": 8}
+    assert report.decisions == {"excluded": 27, "represented": 13}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,
@@ -295,7 +449,7 @@ def test_represented_record_requires_two_distinct_evidence_views(tmp_path: Path)
         )
 
 
-def test_represented_record_rejects_differently_labelled_duplicate_evidence_url(
+def test_represented_record_accepts_same_source_page_url_for_independent_snapshots(
     tmp_path: Path,
 ) -> None:
     inventory = _inventory(
@@ -305,22 +459,26 @@ def test_represented_record_rejects_differently_labelled_duplicate_evidence_url(
         )
     )
 
-    with pytest.raises(CordAuditError, match="distinct evidence URLs"):
-        _validate(
-            tmp_path,
-            inventory,
-            [
-                _record(
-                    "fixture.board",
-                    decision="represented",
-                    topology="singleCord",
-                    evidence=[
-                        {"view": "front", "url": "https://example.com/view"},
-                        {"view": "oblique", "url": "https://example.com/view"},
-                    ],
-                )
-            ],
-        )
+    report = _validate(
+        tmp_path,
+        inventory,
+        [
+            _record(
+                "fixture.board",
+                decision="represented",
+                topology="singleCord",
+                evidence=[
+                    {"view": "front", "url": "https://example.com/view"},
+                    {"view": "oblique", "url": "https://example.com/view"},
+                ],
+            )
+        ],
+    )
+
+    assert report.to_json() == {
+        "modelPackageIDs": ["fixture.board"],
+        "decisions": {"represented": 1},
+    }
 
 
 def test_represented_record_rejects_duplicate_normalized_evidence_view_labels(
@@ -366,7 +524,7 @@ def test_represented_record_rejects_reused_retained_source_artifact(
         topology="singleCord",
         evidence=[
             {"view": "front", "url": "https://example.com/front"},
-            {"view": "oblique", "url": "https://example.com/oblique"},
+            {"view": "oblique", "url": "https://example.com/front"},
         ],
     )
     record["evidence"][1]["snapshotPath"] = record["evidence"][0]["snapshotPath"]  # type: ignore[index]
@@ -390,7 +548,7 @@ def test_represented_record_rejects_reused_retained_source_bytes(
         topology="singleCord",
         evidence=[
             {"view": "front", "url": "https://example.com/front"},
-            {"view": "oblique", "url": "https://example.com/oblique"},
+            {"view": "oblique", "url": "https://example.com/front"},
         ],
     )
     manifest_path = _manifest_path(tmp_path, [record])

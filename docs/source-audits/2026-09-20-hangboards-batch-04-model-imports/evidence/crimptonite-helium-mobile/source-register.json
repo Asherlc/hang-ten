@@ -1,0 +1,66 @@
+{
+  "sources": [
+    {
+      "id": "HE1",
+      "publisher": "Crimptonite",
+      "tier": "manufacturer product specification",
+      "url": "https://crimptonite.com/product/helium-mobile/",
+      "facts": "Exact Helium Mobile, successor to Nano; 400 \u00d7 58 \u00d7 24 mm, about 125 g. Outer recess depths 14/22 mm, central 10/18 mm, top jug; back usable as jug/sloper. Supplied Beal 4 mm cord.",
+      "notEstablished": "No measured cross-section, recess widths, bore dimensions or wood species. No rear factory cross-section is published on this page."
+    },
+    {
+      "id": "HE2",
+      "publisher": "9c Bouldering / Crimptonite product photography",
+      "tier": "retailer-hosted original product photograph; inspected 1000 \u00d7 514",
+      "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580",
+      "facts": "Three separate rounded elongated front recesses in capsule silhouette. Labels establish lower 14/10/14 and opposing upper 22/18/22. Two front end cord openings. Rounded outer top.",
+      "notEstablished": "No reverse, no exact opening diameters or concealed passage routing. The brush and cord are contextual objects, not part of exported geometry."
+    },
+    {
+      "id": "HE3",
+      "publisher": "9c Bouldering",
+      "tier": "retailer specification and separately labeled owner review",
+      "url": "https://9cbouldering.com/products/helium-mobile-hangboard",
+      "facts": "Same exact identity, 400 \u00d7 58 \u00d7 26 mm stated. One owner reports about 20 mm rather than 22 and 13 rather than 14; uncalibrated individual observation.",
+      "notEstablished": "Review is not verified manufacturing metrology. No evidence that this is a separately named revision."
+    },
+    {
+      "id": "HE4",
+      "publisher": "Kathmandu Outdoor & Travel",
+      "tier": "retailer identification",
+      "url": "https://www.kathmandu.nl/crimptonite-helium-mobile-hangboard-44079991-028055",
+      "facts": "Exact Crimptonite Helium Mobile, supplier code 44079991.",
+      "notEstablished": "Parsed page supplied no usable additional product photography or measured contact geometry."
+    },
+    {
+      "id": "HE5",
+      "publisher": "Sintra Boulder Shop",
+      "tier": "retailer page retrieval unsuccessful",
+      "url": "https://sintrabouldershop.com/shop/crimptonite-mobile-hangboard-helium",
+      "facts": "Page was located but returned a verification screen on direct access.",
+      "notEstablished": "No independently inspected rear reference."
+    },
+    {
+      "id": "HE6",
+      "publisher": "9c Bouldering / Crimptonite product photography",
+      "tier": "retailer-hosted original photograph, retained 1800 x 797 pixels",
+      "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580",
+      "facts": "Complete reverse: broad capsule face, continuous rolled edges, two end cord apertures, central engraving. No additional grip grooves.",
+      "notEstablished": "Internal cord connection, factory tolerances, exact rounding radii, wood species. Logos are not reproduced."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "Manufacturer thickness 24 mm versus retailer 26 mm.",
+      "ruling": "Use current manufacturer 24 mm; retain 26 mm as conflicting secondary data, not an interchangeable revision."
+    },
+    {
+      "conflict": "Nominal 22/14 mm versus one owner reporting 20/13 mm.",
+      "ruling": "Model explicit maker nominal dimensions, without claiming actual production tolerances. Do not silently change labels or scale from one unverified report."
+    },
+    {
+      "conflict": "Earlier research treated the maker-described rear use as a missing separate groove, although the newly inspected HE6 rear crop shows a broad smooth face.",
+      "ruling": "Authorize one continuous rear face/roll contact using HE1 plus HE6. Do not invent an extra groove or count jug and sloper as separate physical contacts. Preserve uncertain rear ends and concealed routing as explicit limitations; the selected 125-degree X display rotation is authored, not a prescribed hanging position."
+    }
+  ]
+}

@@ -12,7 +12,7 @@ from pathlib import Path, PurePosixPath
 import re
 import struct
 from types import MappingProxyType
-from typing import Any, Mapping
+from typing import Any, Literal, Mapping
 import zlib
 
 try:  # Standard package import, plus direct-file loading used by staging tests.
@@ -173,6 +173,112 @@ def _load_json(path: Path, label: str) -> Mapping[str, Any]:
         )
     except (json.JSONDecodeError, ValueError) as error:
         raise ValueError(f"{label} is invalid JSON: {path}") from error
+
+
+def _instance_translation_paths(raw: str) -> tuple[tuple[tuple[str | int, ...], str], ...]:
+    """Return unquoted scalar lexemes with their JSON member paths.
+
+    The board parser needs the authored spelling of reusable instance
+    translations, which is intentionally unavailable after ``json.loads``.
+    This scanner follows JSON structure without applying numeric conversion.
+    """
+
+    decoder = json.JSONDecoder()
+    scalars: list[tuple[tuple[str | int, ...], str]] = []
+    length = len(raw)
+
+    def whitespace(index: int) -> int:
+        while index < length and raw[index] in " \t\r\n":
+            index += 1
+        return index
+
+    def value(index: int, path: tuple[str | int, ...]) -> int:
+        index = whitespace(index)
+        if index >= length:
+            raise ValueError("board.json ends unexpectedly")
+        character = raw[index]
+        if character == '"':
+            _, end = decoder.raw_decode(raw, index)
+            return end
+        if character == "{":
+            index = whitespace(index + 1)
+            if index < length and raw[index] == "}":
+                return index + 1
+            while True:
+                if index >= length or raw[index] != '"':
+                    raise ValueError("board.json object member must have a string key")
+                key, index = decoder.raw_decode(raw, index)
+                if not isinstance(key, str):  # pragma: no cover - JSONDecoder contract
+                    raise ValueError("board.json object member must have a string key")
+                index = whitespace(index)
+                if index >= length or raw[index] != ":":
+                    raise ValueError("board.json object member is missing a colon")
+                index = value(index + 1, (*path, key))
+                index = whitespace(index)
+                if index < length and raw[index] == "}":
+                    return index + 1
+                if index >= length or raw[index] != ",":
+                    raise ValueError("board.json object members must be comma separated")
+                index = whitespace(index + 1)
+        if character == "[":
+            index = whitespace(index + 1)
+            if index < length and raw[index] == "]":
+                return index + 1
+            element = 0
+            while True:
+                index = value(index, (*path, element))
+                element += 1
+                index = whitespace(index)
+                if index < length and raw[index] == "]":
+                    return index + 1
+                if index >= length or raw[index] != ",":
+                    raise ValueError("board.json array items must be comma separated")
+                index = whitespace(index + 1)
+        for literal in ("true", "false", "null"):
+            if raw.startswith(literal, index):
+                return index + len(literal)
+        end = index
+        while end < length and raw[end] not in ",]} \t\r\n":
+            end += 1
+        if end == index:
+            raise ValueError("board.json has an invalid scalar")
+        scalars.append((path, raw[index:end]))
+        return end
+
+    end = whitespace(value(0, ()))
+    if end != length:
+        raise ValueError("board.json has trailing content")
+    return tuple(scalars)
+
+
+def _is_instance_translation_path(path: tuple[str | int, ...]) -> bool:
+    return (
+        len(path) == 8
+        and path[:4] == ("presentations", path[1], "media", "instances")
+        and isinstance(path[1], int)
+        and isinstance(path[4], int)
+        and path[5:7] == ("baseTransform", "translation")
+        and isinstance(path[7], int)
+    ) or (
+        len(path) == 9
+        and path[:4] == ("presentations", path[1], "media", "instances")
+        and isinstance(path[1], int)
+        and isinstance(path[4], int)
+        and path[5] == "positionTransforms"
+        and isinstance(path[6], str)
+        and path[7] == "translation"
+        and isinstance(path[8], int)
+    )
+
+
+def _validate_instance_translation_lexemes(raw: str) -> None:
+    for path, lexeme in _instance_translation_paths(raw):
+        if _is_instance_translation_path(path) and re.fullmatch(
+            r"-?(?:0|[1-9][0-9]*)\.[0-9]{9}", lexeme
+        ) is None:
+            raise ValueError(
+                "reusable instance translations must use exactly nine decimal places"
+            )
 
 
 def _reject_duplicate_json_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -385,9 +491,26 @@ class PresentationMediaModel:
     display: Mapping[str, Any]
     suspension: "BoardModelSuspension | None" = None
     orientation: "BoardModelOrientation | None" = None
+    instances: "tuple[BoardModelInstance, BoardModelInstance] | None" = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
+
+
+@dataclass(frozen=True)
+class BoardModelTransform:
+    translation: tuple[float, float, float]
+    rotation: tuple[float, float, float, float]
+    reflection: Literal["x"] | None
+
+
+@dataclass(frozen=True)
+class BoardModelInstance:
+    equipment_object_id: str
+    base_transform: BoardModelTransform
+    contact_ids_by_slot_id: Mapping[str, str]
+    suspension: "BoardModelSuspension | None"
+    position_transforms: Mapping[str, BoardModelTransform] | None
 
 
 @dataclass(frozen=True)
@@ -963,6 +1086,75 @@ def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
     return BoardModelOrientation(pivot, MappingProxyType(rotations))
 
 
+def _load_model_transform(
+    value: Any, source: str, *, allow_reflection: bool = True
+) -> BoardModelTransform:
+    payload = _mapping(value, source)
+    _closed(payload, {"translation", "rotation"}, source, optional={"reflection"})
+    translation = _finite_vector3(payload["translation"], f"{source}.translation")
+    raw_rotation = payload["rotation"]
+    if not isinstance(raw_rotation, list) or len(raw_rotation) != 4:
+        raise ValueError(f"{source}.rotation must contain exactly four coordinates")
+    rotation = tuple(
+        _number(component, f"{source}.rotation[{index}]")
+        for index, component in enumerate(raw_rotation)
+    )
+    norm = math.sqrt(sum(component * component for component in rotation))
+    if not math.isfinite(norm) or abs(norm - 1.0) > 1e-6:
+        raise ValueError(f"{source}.rotation must be unit length")
+    reflection = None
+    if "reflection" in payload:
+        if not allow_reflection:
+            raise ValueError(f"{source}.reflection must be omitted")
+        reflection = _string(payload["reflection"], f"{source}.reflection")
+        if reflection != "x":
+            raise ValueError(f"{source}.reflection must be x")
+    return BoardModelTransform(
+        translation, rotation, reflection  # type: ignore[arg-type]
+    )
+
+
+def _load_model_instance(value: Any, source: str) -> BoardModelInstance:
+    payload = _mapping(value, source)
+    required = {"equipmentObjectID", "baseTransform", "contactIDsBySlotID"}
+    _closed(payload, required, source, optional={"suspension", "positionTransforms"})
+    pose_mechanisms = {key for key in ("suspension", "positionTransforms") if key in payload}
+    if len(pose_mechanisms) != 1:
+        raise ValueError(f"{source} must declare exactly one pose mechanism")
+    slot_map_payload = _mapping(payload["contactIDsBySlotID"], f"{source}.contactIDsBySlotID")
+    contact_ids_by_slot_id = {
+        _identifier(slot_id, f"{source}.contactIDsBySlotID slot ID"): _identifier(
+            contact_id, f"{source}.contactIDsBySlotID[{slot_id}]"
+        )
+        for slot_id, contact_id in slot_map_payload.items()
+    }
+    position_transforms = None
+    if "positionTransforms" in payload:
+        raw_position_transforms = _mapping(
+            payload["positionTransforms"], f"{source}.positionTransforms"
+        )
+        position_transforms = MappingProxyType(
+            {
+                _identifier(position_id, f"{source}.positionTransforms position ID"):
+                _load_model_transform(
+                    transform,
+                    f"{source}.positionTransforms[{position_id}]",
+                    allow_reflection=False,
+                )
+                for position_id, transform in raw_position_transforms.items()
+            }
+        )
+    return BoardModelInstance(
+        _identifier(payload["equipmentObjectID"], f"{source}.equipmentObjectID"),
+        _load_model_transform(payload["baseTransform"], f"{source}.baseTransform"),
+        MappingProxyType(contact_ids_by_slot_id),
+        _load_model_suspension(payload["suspension"], f"{source}.suspension")
+        if "suspension" in payload
+        else None,
+        position_transforms,
+    )
+
+
 def _load_media(value: Any, source: str) -> PresentationMedia:
     payload = _mapping(value, source)
     media_type = _string(payload.get("type"), f"{source}.type")
@@ -980,7 +1172,20 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             MappingProxyType(contact_geometry),
         )
     if media_type == "model":
-        _closed(payload, {"type", "assetPath", "descriptorPath", "display"}, source, optional={"suspension", "orientation"})
+        _closed(
+            payload,
+            {"type", "assetPath", "descriptorPath", "display"},
+            source,
+            optional={"suspension", "orientation", "instances"},
+        )
+        has_instances = "instances" in payload
+        raw_instances = payload.get("instances")
+        if has_instances and ("orientation" in payload or "suspension" in payload):
+            raise ValueError(f"{source}.instances may not use legacy pose mechanisms")
+        if has_instances and (
+            not isinstance(raw_instances, list) or len(raw_instances) != 2
+        ):
+            raise ValueError(f"{source}.instances must contain exactly two instances")
         orientation = None
         if "orientation" in payload:
             orientation = _load_model_orientation(payload["orientation"], f"{source}.orientation")
@@ -999,6 +1204,12 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             if "suspension" in payload
             else None,
             orientation,
+            tuple(
+                _load_model_instance(instance, f"{source}.instances[{index}]")
+                for index, instance in enumerate(raw_instances)
+            )
+            if has_instances
+            else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -1938,6 +2149,153 @@ def _validate_model_suspension(
                     raise ValueError(f"suspension pose {position_id} restLength is shorter than {route}")
 
 
+def _validate_reusable_instances(
+    instances: tuple[BoardModelInstance, BoardModelInstance] | None,
+    slots: set[str],
+    contacts: tuple[PhysicalContact, ...],
+    equipment_objects: set[str],
+    position_ids: set[str],
+) -> None:
+    if instances is None:
+        raise ValueError("reusable model descriptor requires media.instances")
+    if {instance.equipment_object_id for instance in instances} != equipment_objects:
+        raise ValueError("media.instances must exactly match equipment objects")
+    if len({instance.equipment_object_id for instance in instances}) != len(instances):
+        raise ValueError("media.instances must use distinct equipmentObjectID values")
+    contacts_by_id = {contact.id: contact for contact in contacts}
+    mapped_contact_ids: list[str] = []
+    for index, instance in enumerate(instances):
+        source = f"media.instances[{index}]"
+        if set(instance.contact_ids_by_slot_id) != slots:
+            raise ValueError(f"{source}.contactIDsBySlotID must exactly match descriptor slots")
+        mapped_contact_ids.extend(instance.contact_ids_by_slot_id.values())
+        if instance.position_transforms is not None:
+            if set(instance.position_transforms) != position_ids:
+                raise ValueError(f"{source}.positionTransforms must exactly match position IDs")
+    for instance in instances:
+        for contact_id in instance.contact_ids_by_slot_id.values():
+            if contact_id not in contacts_by_id:
+                raise ValueError("media.instances contactIDsBySlotID must name physical contacts")
+            if contacts_by_id[contact_id].equipment_object_id != instance.equipment_object_id:
+                raise ValueError(
+                    "media.instances contactIDsBySlotID must belong to its equipmentObjectID"
+                )
+    if len(mapped_contact_ids) != len(set(mapped_contact_ids)):
+        raise ValueError("media.instances contactIDsBySlotID values must not be duplicate")
+    if set(mapped_contact_ids) != set(contacts_by_id):
+        raise ValueError("media.instances contactIDsBySlotID values must exhaust physical contacts")
+
+
+def _load_reusable_model_descriptor(
+    descriptor: Mapping[str, Any],
+    asset_path: Path,
+    contacts: tuple[PhysicalContact, ...],
+    *,
+    instances: tuple[BoardModelInstance, BoardModelInstance] | None,
+    equipment_objects: set[str],
+    position_ids: set[str],
+) -> Mapping[str, NormalizedFrame]:
+    _closed(
+        descriptor,
+        {"schemaVersion", "coordinateFrame", "modelSHA256", "modelBounds", "nodes", "contactSlots"},
+        "model descriptor",
+    )
+    if descriptor["schemaVersion"] != 2 or isinstance(descriptor["schemaVersion"], bool):
+        raise ValueError("model descriptor schemaVersion must be 2")
+    if descriptor["coordinateFrame"] != "hang-ten-board-v1":
+        raise ValueError("model descriptor coordinateFrame must be hang-ten-board-v1")
+    declared_hash = _string(descriptor["modelSHA256"], "model descriptor modelSHA256")
+    if not re.fullmatch(r"[0-9a-f]{64}", declared_hash):
+        raise ValueError("model descriptor modelSHA256 must be a lowercase SHA-256")
+    try:
+        actual_hash = hashlib.sha256(asset_path.read_bytes()).hexdigest()
+    except OSError as error:
+        raise ValueError("model asset must be readable for SHA-256 validation") from error
+    if declared_hash != actual_hash:
+        raise ValueError("model descriptor SHA-256 does not match USDZ bytes")
+    bounds = _mapping(descriptor["modelBounds"], "model descriptor modelBounds")
+    _closed(bounds, {"min", "max"}, "model descriptor modelBounds")
+    minimum = _descriptor_vector(bounds["min"], 3, "model descriptor modelBounds.min")
+    maximum = _descriptor_vector(bounds["max"], 3, "model descriptor modelBounds.max")
+    if any(minimum[index] > maximum[index] for index in range(3)):
+        raise ValueError("model descriptor modelBounds minimum exceeds maximum")
+    if any(not math.isfinite(maximum[index] - minimum[index]) or maximum[index] <= minimum[index] for index in range(2)):
+        raise ValueError("model descriptor modelBounds face span must be positive")
+    raw_nodes = descriptor["nodes"]
+    if not isinstance(raw_nodes, list) or not raw_nodes:
+        raise ValueError("model descriptor nodes must be a non-empty array")
+    node_ids: set[str] = set()
+    node_ids_by_slot: dict[str, list[str]] = {}
+    body_count = 0
+    ordered_node_ids: list[str] = []
+    for index, raw_node in enumerate(raw_nodes):
+        source = f"model descriptor nodes[{index}]"
+        node = _mapping(raw_node, source)
+        role = node.get("role")
+        _closed(node, {"nodeID", "role", "contactSlotID"} if role == "contact" else {"nodeID", "role"}, source)
+        node_id = _string(node["nodeID"], f"{source}.nodeID")
+        if node_id in node_ids:
+            raise ValueError(f"model descriptor has duplicate nodeID: {node_id}")
+        node_ids.add(node_id)
+        ordered_node_ids.append(node_id)
+        if role == "body":
+            body_count += 1
+        elif role == "contact":
+            slot_id = _identifier(node["contactSlotID"], f"{source}.contactSlotID")
+            node_ids_by_slot.setdefault(slot_id, []).append(node_id)
+        elif role != "attachment":
+            raise ValueError(f"{source}.role must be body, contact, or attachment")
+    if body_count < 1:
+        raise ValueError("model descriptor requires at least one body node")
+    if ordered_node_ids != sorted(ordered_node_ids):
+        raise ValueError("model descriptor nodes must be sorted by nodeID")
+    raw_slots = _mapping(descriptor["contactSlots"], "model descriptor contactSlots")
+    if list(raw_slots) != sorted(raw_slots) or set(raw_slots) != set(node_ids_by_slot):
+        raise ValueError("model descriptor contactSlots must exactly match bound contact slots")
+    frames_by_slot: dict[str, NormalizedFrame] = {}
+    for slot_id, raw_slot in raw_slots.items():
+        source = f"model descriptor contactSlots[{slot_id}]"
+        slot = _mapping(raw_slot, source)
+        _closed(slot, {"nodeIDs", "facePlaneAABB", "center"}, source)
+        node_ids_for_slot = slot["nodeIDs"]
+        if not isinstance(node_ids_for_slot, list) or node_ids_for_slot != sorted(node_ids_by_slot[slot_id]):
+            raise ValueError(f"{source}.nodeIDs must exactly match bound nodes")
+        face_bounds = _mapping(slot["facePlaneAABB"], f"{source}.facePlaneAABB")
+        _closed(face_bounds, {"min", "max"}, f"{source}.facePlaneAABB")
+        face_min = _descriptor_vector(face_bounds["min"], 2, f"{source}.facePlaneAABB.min")
+        face_max = _descriptor_vector(face_bounds["max"], 2, f"{source}.facePlaneAABB.max")
+        if any(face_min[index] > face_max[index] or face_min[index] < 0 or face_max[index] > 1 for index in range(2)):
+            raise ValueError(f"{source}.facePlaneAABB must be normalized")
+        center = _descriptor_vector(slot["center"], 2, f"{source}.center")
+        expected_center = tuple(round(face_min[index] + (face_max[index] - face_min[index]) / 2, 9) for index in range(2))
+        if center != expected_center:
+            raise ValueError(f"{source}.center must derive from facePlaneAABB")
+        frames_by_slot[slot_id] = NormalizedFrame(face_min[0], face_min[1], round(face_max[0] - face_min[0], 9), round(face_max[1] - face_min[1], 9))
+    _validate_reusable_instances(
+        instances, set(frames_by_slot), contacts, equipment_objects, position_ids,
+    )
+    assert instances is not None
+    for instance in instances:
+        if instance.suspension is not None:
+            _validate_model_suspension(
+                instance.suspension,
+                model_bounds=(minimum, maximum),
+                nodes={
+                    node["nodeID"]: node["role"]
+                    for node in raw_nodes
+                    if isinstance(node, Mapping)
+                },
+                position_ids=position_ids,
+            )
+    return MappingProxyType(
+        {
+            contact_id: frames_by_slot[slot_id]
+            for instance in instances
+            for slot_id, contact_id in instance.contact_ids_by_slot_id.items()
+        }
+    )
+
+
 def _load_model_descriptor(
     path: Path,
     asset_path: Path,
@@ -1945,8 +2303,24 @@ def _load_model_descriptor(
     *,
     suspension: BoardModelSuspension | None = None,
     position_ids: set[str] | None = None,
+    instances: tuple[BoardModelInstance, BoardModelInstance] | None = None,
+    contacts: tuple[PhysicalContact, ...] = (),
+    equipment_objects: frozenset[str] = frozenset(),
 ) -> Mapping[str, NormalizedFrame]:
     descriptor = _load_json(path, "model descriptor")
+    if descriptor.get("schemaVersion") == 2 and not isinstance(descriptor.get("schemaVersion"), bool):
+        if suspension is not None:
+            raise ValueError("reusable model descriptor may not use media suspension")
+        return _load_reusable_model_descriptor(
+            descriptor,
+            asset_path,
+            contacts,
+            instances=instances,
+            equipment_objects=equipment_objects,
+            position_ids=position_ids or set(),
+        )
+    if instances is not None:
+        raise ValueError("media.instances requires model descriptor schemaVersion 2")
     _closed(
         descriptor,
         {
@@ -2168,6 +2542,9 @@ def _validate_finished_shape(
             suspension=presentation.media.suspension,
             position_ids={position.id for position in board.positions
                           if position.presentation_id == presentation.id},
+            instances=presentation.media.instances,
+            contacts=board.contacts,
+            equipment_objects=frozenset(board.equipment_objects),
         )
         _validate_model_orientation(
             presentation.media.orientation,
@@ -2478,7 +2855,20 @@ def load_board_package(package_root: Path) -> BoardPackage:
     if root.is_symlink() or not root.is_dir():
         raise ValueError(f"board package does not exist as a regular directory: {root}")
     _require_no_symlinks(root)
-    board = _load_board(_load_json(root / "board.json", "board.json"))
+    board_path = root / "board.json"
+    if board_path.is_symlink() or not board_path.is_file():
+        raise ValueError(f"board.json does not exist as a regular file: {board_path}")
+    try:
+        raw_board = board_path.read_text(encoding="utf-8")
+    except OSError as error:
+        raise ValueError(f"board.json must be readable: {board_path}") from error
+    try:
+        _validate_instance_translation_lexemes(raw_board)
+    except ValueError as error:
+        if "reusable instance translations" in str(error):
+            raise
+        raise ValueError(f"board.json is invalid JSON: {board_path}") from error
+    board = _load_board(_load_json(board_path, "board.json"))
     board = replace(
         board,
         model_contact_frames=_validate_finished_shape(root, board),

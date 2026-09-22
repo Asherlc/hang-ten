@@ -429,7 +429,9 @@ final class MotherboardBluetoothService: ObservableObject {
 
         scheduleTimeout(
             after: advertisementLivenessTimeout,
-            message: "\(device.profile.label) stopped advertising. Move the sensor closer and try again."
+            onExpiry: { [weak self] in
+                self?.recoverAdvertisementStream()
+            }
         )
         publish(samples)
     }
@@ -463,6 +465,17 @@ final class MotherboardBluetoothService: ObservableObject {
         reconnectAttempts += 1
         state = .scanning
         scheduleTimeout(after: timeouts.scan, message: "Motherboard scan timed out. Move the sensor closer and try again.")
+        transport.startScan()
+    }
+
+    private func recoverAdvertisementStream() {
+        guard wantsConnection,
+              activeProfile.flatMap(WHC06ProtocolAdapter.init(profile:)) != nil else {
+            return
+        }
+
+        resetSession()
+        state = .scanning
         transport.startScan()
     }
 
@@ -563,18 +576,30 @@ final class MotherboardBluetoothService: ObservableObject {
         bodyweightMeanKGF = nil
     }
 
-    private func scheduleTimeout(after delay: TimeInterval, message: String) {
+    private func scheduleTimeout(
+        after delay: TimeInterval,
+        message: String
+    ) {
+        scheduleTimeout(after: delay) { [weak self] in
+            self?.fail(message)
+        }
+    }
+
+    private func scheduleTimeout(
+        after delay: TimeInterval,
+        onExpiry: @escaping () -> Void
+    ) {
         cancelTimeout()
         guard delay.isFinite, delay > 0, delay <= Self.maximumBodyweightMeasurementDuration else { return }
         let nanoseconds = UInt64(delay * 1_000_000_000)
-        timeoutTask = Task { [weak self] in
+        timeoutTask = Task {
             do {
                 try await Task.sleep(nanoseconds: nanoseconds)
             } catch {
                 return
             }
             guard !Task.isCancelled else { return }
-            self?.fail(message)
+            onExpiry()
         }
     }
 
@@ -829,7 +854,11 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             return ForceSensorAdapterRegistry.automaticProfiles
                 .filter { $0 != .motherboard }
                 .first { profile in
-                    matches(profile, advertisement: advertisement)
+                    matchesForAutomaticSelection(
+                        profile,
+                        advertisement: advertisement,
+                        advertisedLocalName: advertisedLocalName
+                    )
                 }
         case .motherboard:
             return isExpectedMotherboard(peripheralName: peripheralName, advertisedLocalName: advertisedLocalName)
@@ -850,6 +879,20 @@ final class CoreBluetoothMotherboardTransport: NSObject, MotherboardTransport {
             return adapter.matches(advertisement)
         }
         return WHC06ProtocolAdapter(profile: profile)?.matches(advertisement) == true
+    }
+
+    private func matchesForAutomaticSelection(
+        _ profile: ForceSensorProfile,
+        advertisement: ForceSensorAdvertisement,
+        advertisedLocalName: String?
+    ) -> Bool {
+        if let adapter = ForceSensorAdapterRegistry.adapter(for: profile) {
+            return adapter.matches(advertisement)
+        }
+        return WHC06ProtocolAdapter(profile: profile)?.matchesForAutomaticSelection(
+            advertisement,
+            advertisedLocalName: advertisedLocalName
+        ) == true
     }
 
     private func clearSelectedPeripheral() {

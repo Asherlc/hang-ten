@@ -3,6 +3,25 @@ import XCTest
 @testable import HangTen
 
 final class TelemetryTests: XCTestCase {
+    func testTrainReviewRoutingComposesPlanWithMotherboardFixture() {
+        XCTAssertNil(TrainReviewDestination.initial(environment: [:]))
+        XCTAssertEqual(
+            TrainReviewDestination.initial(
+                environment: ["HANGTEN_REVIEW_MOTHERBOARD": "1"]
+            ),
+            .settings
+        )
+        XCTAssertEqual(
+            TrainReviewDestination.initial(
+                environment: [
+                    "HANGTEN_REVIEW_MOTHERBOARD": "1",
+                    "HANGTEN_REVIEW_PLAN": "1",
+                ]
+            ),
+            .plan
+        )
+    }
+
     func testRootTabsUseTimelessOrderAndReviewRouting() {
         XCTAssertEqual(RootTab.allCases, [.train, .plans, .history])
         XCTAssertEqual(RootTab.initial(environment: [:]), .train)

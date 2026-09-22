@@ -48,6 +48,28 @@ class ImportContactModelSourceTests(unittest.TestCase):
         self.assertEqual(result.logical_contact_ids, frozenset({"edge"}))
         self.assertEqual(result.attachment_node_ids, ("Passage",))
 
+    def test_reusable_mapping_records_slot_ids(self) -> None:
+        importer = self.module()
+        mapping = {
+            "schemaVersion": 2,
+            "unitContactSlotIDs": ["edge"],
+            "objects": [
+                {"sourceNodeID": "Body", "role": "body"},
+                {"sourceNodeID": "Left", "role": "contact", "contactSlotID": "edge"},
+                {"sourceNodeID": "Right", "role": "contact", "contactSlotID": "edge"},
+            ],
+        }
+
+        result = importer.validate_mapping(
+            mapping,
+            {"Body": "MESH", "Left": "MESH", "Right": "MESH"},
+        )
+
+        self.assertEqual(
+            result.contact_slot_ids_by_node,
+            {"Left": "edge", "Right": "edge"},
+        )
+
     def test_mapping_rejects_legacy_hold_vocabulary(self) -> None:
         importer = self.module()
         mapping = self.mapping()

@@ -3085,6 +3085,62 @@ private enum RecordingWorkoutAudioSessionError: Error {
 }
 
 final class WorkoutSessionPolicyTests: XCTestCase {
+    func testScaleTrackingRequiresSelectedScaleAndCompletedInitialPreparation() {
+        XCTAssertFalse(
+            WorkoutSessionPolicy.isScaleTrackingReady(
+                source: .sensor,
+                didCompleteInitialPreparation: false
+            )
+        )
+        XCTAssertTrue(
+            WorkoutSessionPolicy.isScaleTrackingReady(
+                source: .sensor,
+                didCompleteInitialPreparation: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.isScaleTrackingReady(
+                source: .manual,
+                didCompleteInitialPreparation: true
+            )
+        )
+        XCTAssertFalse(
+            WorkoutSessionPolicy.isScaleTrackingReady(
+                source: .untracked,
+                didCompleteInitialPreparation: true
+            )
+        )
+    }
+
+    func testNonSensorSessionsPersistNeutralForceSensorProfile() {
+        for source in [WorkoutInitialWeightSource.manual, .untracked] {
+            XCTAssertEqual(
+                WorkoutSessionPolicy.recordedForceSensorProfile(
+                    source: source,
+                    connectedProfile: .motherboard,
+                    configuredProfile: .genericWHC06
+                ),
+                .automatic
+            )
+        }
+        XCTAssertEqual(
+            WorkoutSessionPolicy.recordedForceSensorProfile(
+                source: .sensor,
+                connectedProfile: .progressor,
+                configuredProfile: .genericWHC06
+            ),
+            .progressor
+        )
+        XCTAssertEqual(
+            WorkoutSessionPolicy.recordedForceSensorProfile(
+                source: .sensor,
+                connectedProfile: nil,
+                configuredProfile: .genericWHC06
+            ),
+            .genericWHC06
+        )
+    }
+
     func testDebugCountdownCaptureLeadDoesNotChangeVisibleCountdownDuration() {
         XCTAssertEqual(
             WorkoutSessionPolicy.countdownAudioArmLead(

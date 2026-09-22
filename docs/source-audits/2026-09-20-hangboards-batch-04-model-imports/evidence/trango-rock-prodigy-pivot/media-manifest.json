@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "file": "evidence/derived-review/trango-rock-prodigy-pivot-secondary-0.jpg",
+      "sha256": "6cb36e971d38c190422713d61638b5bc531753d5f73bc4f0aefb71b78e63eaf5",
+      "pixelDimensions": [
+        1600,
+        720
+      ],
+      "kind": "derived-review",
+      "sourceIds": [
+        "PV2",
+        "PV3",
+        "PV7",
+        "PV8"
+      ],
+      "sourceURL": "https://trango.com/products/rock-prodigy-pivot",
+      "publisher": "Earlier assembled research contact sheet; original publishers indicated by source register",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Derivative reduced-size collage, NOT an original full-resolution source file. Page URL is a reference, not the collage origin.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    }
+  ],
+  "sourceImagePolicy": "Original-reference files are distinct from derivative review collages and from application textures. No original PDFs/videos are supplied. Unknown binary URL provenance is expressly marked."
+}

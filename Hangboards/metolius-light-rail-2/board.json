@@ -5,8 +5,8 @@
   "name": "Light Rail 2.0",
   "subtitle": "Portable reversible training rail with four holds.",
   "productURL": "https://www.metoliusclimbing.com/products/light-rail",
-  "dimensions": "18 \u00d7 3 \u00d7 1.5 in",
-  "aspectRatio": 1.0,
+  "dimensions": "18 × 3 × 1.5 in",
+  "aspectRatio": 6.0131578947368425,
   "equipmentObjects": [
     {
       "id": "primary"
@@ -14,116 +14,364 @@
   ],
   "presentations": [
     {
-      "id": "20mm-side",
-      "name": "40 mm jug and 20 mm edge",
-      "aspectRatio": 1.0,
+      "id": "primary",
+      "name": "Light Rail 2.0",
+      "aspectRatio": 6.0131578947368425,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "contactGeometry": {
-          "jug-40-20mm-side": [
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              0,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "suspension": {
+          "type": "pairedLeadCord",
+          "attachments": [
             {
-              "frame": {
-                "x": 0.041,
-                "y": 0.420650717703,
-                "width": 0.916,
-                "height": 0.041
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
+              "id": "left-lead",
+              "nodeID": "left_upper_entry_001",
+              "pointInModel": [
+                -0.213,
+                0.037999999,
+                0
+              ],
+              "provenance": "LR2 and approved archived Treeline show the two upper exterior entry regions; source marker (x,y,z) -> (x,z,-y). Coordinate and clipped endpoint are authored-display-estimate; no underside mouth or hidden route. Upper Y is clamped inward by 1 nm to the importer-visible bound after float32 export."
+            },
+            {
+              "id": "right-lead",
+              "nodeID": "right_upper_entry_001",
+              "pointInModel": [
+                0.213,
+                0.037999999,
+                0
+              ],
+              "provenance": "LR2 and approved archived Treeline show the two upper exterior entry regions; source marker (x,y,z) -> (x,z,-y). Coordinate and clipped endpoint are authored-display-estimate; no underside mouth or hidden route. Upper Y is clamped inward by 1 nm to the importer-visible bound after float32 export."
             }
           ],
-          "edge-20": [
-            {
-              "frame": {
-                "x": 0.079,
-                "y": 0.470650717703,
-                "width": 0.842,
-                "height": 0.07
+          "passages": {
+            "left": [
+              {
+                "id": "left-upper-entry",
+                "nodeID": "left_upper_entry_001",
+                "pointInModel": [
+                  -0.213,
+                  0.037999999,
+                  0
+                ],
+                "provenance": "Point-only schema binding duplicates the same approved upper exterior endpoint. authored-display-estimate; not an entry/exit route."
+              }
+            ],
+            "right": [
+              {
+                "id": "right-upper-entry",
+                "nodeID": "right_upper_entry_001",
+                "pointInModel": [
+                  0.213,
+                  0.037999999,
+                  0
+                ],
+                "provenance": "Point-only schema binding duplicates the same approved upper exterior endpoint. authored-display-estimate; not an entry/exit route."
+              }
+            ]
+          },
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.24,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "authored-display-estimate: invisible overhead convergence. Both physical orientations retain the same two upper-entry regions. Inverted cordContactPoints follow the existing rounded outer end silhouettes at 3.4 mm centreline offset, close to the 3 mm production clearance requirement. These are flexible exterior display guides to the same rotated entries, not new apertures or measured routing. Upright translation -0.133053677 m and inverted zero translation reconcile the shared 0.431878843 m lead length with the complete exterior route. Front cameras and padding are authored-display-estimate. Upright 6 mm exterior entry approaches keep each tube centered in the same approved upper-entry region; these are authored-display-estimate bends, not new attachments."
+          },
+          "cord": {
+            "restLength": 0.431878843,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "authored-display-estimate: 0.431878843 m per exterior lead, 2 mm radius and matte appearance. The minimum complete inverted display route is 0.430378843 m, with 1.5 mm slack allowance. No published individual lead length, knot, internal connection or safety rating is claimed."
+          },
+          "canonicalPoses": {
+            "15mm-side": {
+              "rotation": [
+                0,
+                0,
+                1,
+                0
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.12,
+                  -1
+                ],
+                "fitPadding": 0.1
               },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.229700818,
+                    -0.038042204,
+                    0
+                  ],
+                  [
+                    -0.230640639,
+                    -0.0367,
+                    0
+                  ],
+                  [
+                    -0.231333111,
+                    -0.035214989,
+                    0
+                  ],
+                  [
+                    -0.231757193,
+                    -0.033632293,
+                    0
+                  ],
+                  [
+                    -0.2319,
+                    -0.032,
+                    0
+                  ],
+                  [
+                    -0.2319,
+                    -0.016,
+                    0
+                  ],
+                  [
+                    -0.2319,
+                    0,
+                    0
+                  ],
+                  [
+                    -0.2319,
+                    0.016,
+                    0
+                  ],
+                  [
+                    -0.2319,
+                    0.032,
+                    0
+                  ],
+                  [
+                    -0.231757193,
+                    0.033632293,
+                    0
+                  ],
+                  [
+                    -0.231333111,
+                    0.035214989,
+                    0
+                  ],
+                  [
+                    -0.230640639,
+                    0.0367,
+                    0
+                  ],
+                  [
+                    -0.229700818,
+                    0.038042204,
+                    0
+                  ],
+                  [
+                    -0.228542204,
+                    0.039200818,
+                    0
+                  ],
+                  [
+                    -0.2272,
+                    0.040140639,
+                    0
+                  ],
+                  [
+                    -0.225714989,
+                    0.040833111,
+                    0
+                  ],
+                  [
+                    -0.224132293,
+                    0.041257193,
+                    0
+                  ],
+                  [
+                    -0.2225,
+                    0.0414,
+                    0
+                  ],
+                  [
+                    -0.217,
+                    0.0414,
+                    0
+                  ],
+                  [
+                    -0.213,
+                    0.0414,
+                    0
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.229700818,
+                    -0.038042204,
+                    0
+                  ],
+                  [
+                    0.230640639,
+                    -0.0367,
+                    0
+                  ],
+                  [
+                    0.231333111,
+                    -0.035214989,
+                    0
+                  ],
+                  [
+                    0.231757193,
+                    -0.033632293,
+                    0
+                  ],
+                  [
+                    0.2319,
+                    -0.032,
+                    0
+                  ],
+                  [
+                    0.2319,
+                    -0.016,
+                    0
+                  ],
+                  [
+                    0.2319,
+                    0,
+                    0
+                  ],
+                  [
+                    0.2319,
+                    0.016,
+                    0
+                  ],
+                  [
+                    0.2319,
+                    0.032,
+                    0
+                  ],
+                  [
+                    0.231757193,
+                    0.033632293,
+                    0
+                  ],
+                  [
+                    0.231333111,
+                    0.035214989,
+                    0
+                  ],
+                  [
+                    0.230640639,
+                    0.0367,
+                    0
+                  ],
+                  [
+                    0.229700818,
+                    0.038042204,
+                    0
+                  ],
+                  [
+                    0.228542204,
+                    0.039200818,
+                    0
+                  ],
+                  [
+                    0.2272,
+                    0.040140639,
+                    0
+                  ],
+                  [
+                    0.225714989,
+                    0.040833111,
+                    0
+                  ],
+                  [
+                    0.224132293,
+                    0.041257193,
+                    0
+                  ],
+                  [
+                    0.2225,
+                    0.0414,
+                    0
+                  ],
+                  [
+                    0.217,
+                    0.0414,
+                    0
+                  ],
+                  [
+                    0.213,
+                    0.0414,
+                    0
+                  ]
+                ]
+              }
+            },
+            "20mm-side": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0,
+                -0.133053677,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  -0.12,
+                  -1
+                ],
+                "fitPadding": 0.1
               },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.213,
+                    0.044,
+                    0
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.213,
+                    0.044,
+                    0
+                  ]
+                ]
               }
             }
-          ]
-        }
-      }
-    },
-    {
-      "id": "15mm-side",
-      "name": "40 mm jug and 15 mm edge",
-      "aspectRatio": 1.0,
-      "isDefault": false,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/15mm-surface.png",
-        "contactGeometry": {
-          "jug-40-15mm-side": [
-            {
-              "frame": {
-                "x": 0.041,
-                "y": 0.423043062201,
-                "width": 0.916,
-                "height": 0.041
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "edge-15": [
-            {
-              "frame": {
-                "x": 0.079,
-                "y": 0.473043062201,
-                "width": 0.842,
-                "height": 0.067
-              },
-              "shape": {
-                "type": "roundedRect",
-                "cornerRadiusFraction": 0.05
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0.0
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ]
+          }
         }
       }
     }
@@ -181,6 +429,24 @@
         }
       },
       "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "20mm-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-40-20mm-side",
+        "edge-20"
+      ]
+    },
+    {
+      "id": "15mm-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-40-15mm-side",
+        "edge-15"
+      ]
     }
   ]
 }

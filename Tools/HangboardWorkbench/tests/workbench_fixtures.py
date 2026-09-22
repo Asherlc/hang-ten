@@ -5,7 +5,7 @@ import copy
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
-CANONICAL_PACKAGE = REPOSITORY_ROOT / "Hangboards" / "trango-rock-prodigy-pivot"
+CANONICAL_PACKAGE = REPOSITORY_ROOT / "Hangboards" / "lattice-mini-bar"
 PRIMARY_IMAGE = (
     REPOSITORY_ROOT
     / "Tools"

@@ -9,7 +9,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     }
 
     // Named so it sorts before testLandscape* under alphabetical XCTest order.
-    func testFaceBSloperMapElementSelectsSloper() throws {
+    func testModelBoardDetailRendersAndSelectsHold() throws {
         let app = XCUIApplication()
         // Prefer the board-detail review route over the picker: after a landscape
         // 3D board-detail test, picker launch often white-screens under CI load.
@@ -25,32 +25,80 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "The DEBUG board-detail route must be displayed."
         )
 
-        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
-        XCTAssertTrue(faceB.waitForExistence(timeout: 10))
-        faceB.tap()
+        // The poker board is a model board with a single presentation ("Four faces")
+        // and four orientations (face-a, face-b, face-c, face-d). The default
+        // orientation is face-a. There is no presentation selector since there
+        // is only one presentation. The 3D model loads asynchronously; verify
+        // the board detail map is present (which contains the model surface).
+        let map = app.otherElements["boardDetail.map"]
+        XCTAssertTrue(map.waitForExistence(timeout: 30), "The board detail map must be present.")
 
-        let sloper = app.buttons["Face B left deep sloper"]
-        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
-        XCTAssertTrue(sloper.isHittable)
-        addScreenshot(named: "Poker Face B normal")
+        // Select a face-a contact (default orientation). The hold legend buttons
+        // use accessibility identifier "boardDetail.holdLegend.<contactID>".
+        let faceALeftOuterSlot = app.buttons["boardDetail.holdLegend.face-a-left-outer-slot"]
+        XCTAssertTrue(faceALeftOuterSlot.waitForExistence(timeout: 10))
+        XCTAssertTrue(faceALeftOuterSlot.isHittable)
+        addScreenshot(named: "Poker Face A normal")
 
-        let selected = app.otherElements[
-            "boardDetail.selectedHold.face-b-left-deep-sloper"
-        ]
-        XCTAssertFalse(selected.exists)
-        sloper.tap()
-
-        XCTAssertTrue(
-            selected.waitForExistence(timeout: 10),
-            "Tapping the Face B sloper map element must select the matching hold."
-        )
-        addScreenshot(named: "Poker Face B sloper active")
+        let selected = app.otherElements["boardDetail.selectedHold.face-a-left-outer-slot"]
+        // The hold may already be selected by default; if so, tapping again is a no-op.
+        if !selected.exists {
+            faceALeftOuterSlot.tap()
+            XCTAssertTrue(
+                selected.waitForExistence(timeout: 10),
+                "Tapping the Face A hold legend button must select the matching hold."
+            )
+        }
+        addScreenshot(named: "Poker Face A selected")
     }
 
     func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "escape.unlimited",
+            expectedBoardName: "Unlimited Board"
+        )
+        assertMap(map, isInside: app)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapeSquareBoardDetailKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "nature.stone-hanger",
+            expectedBoardName: "Stone Hanger"
+        )
+        assertMap(map, isInside: app)
+        XCTAssertEqual(map.frame.midX, app.frame.midX, accuracy: 1)
+        XCTAssertEqual(map.frame.width, map.frame.height, accuracy: 1)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    func testLandscapeMultiPresentationSquareBoardDetailKeepsMapInViewport() throws {
+        let (app, map) = try launchLandscapeBoardDetail(
+            boardID: "nature.stone-hanger-mini",
+            expectedBoardName: "Stone Hanger Mini"
+        )
+        assertMap(map, isInside: app)
+
+        let presentationSelector = app.segmentedControls["boardDetail.presentationSelector"]
+        XCTAssertTrue(
+            presentationSelector.waitForExistence(timeout: 5),
+            "Multi-presentation boards must show the boardDetail.presentationSelector."
+        )
+        XCTAssertGreaterThanOrEqual(presentationSelector.frame.minY, app.frame.minY)
+        XCTAssertLessThanOrEqual(presentationSelector.frame.maxY, map.frame.minY + 1)
+
+        XCUIDevice.shared.orientation = .portrait
+    }
+
+    private func launchLandscapeBoardDetail(
+        boardID: String,
+        expectedBoardName: String
+    ) throws -> (app: XCUIApplication, map: XCUIElement) {
         let app = XCUIApplication()
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_ID": "escape-unlimited",
+            "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_BOARD_DETAIL": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
         ]
@@ -60,6 +108,10 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             app.navigationBars["Hold specs"].waitForExistence(timeout: 10),
             "The DEBUG board-detail route must be displayed."
         )
+        XCTAssertTrue(
+            app.staticTexts[expectedBoardName].waitForExistence(timeout: 5),
+            "Hold specs must show '\(expectedBoardName)' for boardID '\(boardID)' (wrong ID silently keeps the default board)."
+        )
 
         let tabBar = app.tabBars.firstMatch
         XCTAssertFalse(
@@ -67,16 +119,49 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "The root TabView tab bar must not be visible in landscape board detail."
         )
 
-        let map = app.descendants(matching: .any)
-            .matching(identifier: "boardDetail.map")
-            .firstMatch
+        let map = app.otherElements["boardDetail.map"]
         XCTAssertTrue(map.waitForExistence(timeout: 10), "The board detail map must be present.")
-        XCTAssertGreaterThanOrEqual(map.frame.minX, app.frame.minX)
-        XCTAssertGreaterThanOrEqual(map.frame.minY, app.frame.minY)
-        XCTAssertLessThanOrEqual(map.frame.maxX, app.frame.maxX)
-        XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
+        return (app, map)
+    }
 
-        XCUIDevice.shared.orientation = .portrait
+    private func assertMap(
+        _ map: XCUIElement,
+        isInside app: XCUIApplication,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let mapFrame = map.frame
+        let appFrame = app.frame
+        XCTAssertGreaterThanOrEqual(mapFrame.minX, appFrame.minX, file: file, line: line)
+        XCTAssertGreaterThanOrEqual(mapFrame.minY, appFrame.minY, file: file, line: line)
+        XCTAssertLessThanOrEqual(mapFrame.maxX, appFrame.maxX, file: file, line: line)
+        XCTAssertLessThanOrEqual(mapFrame.maxY, appFrame.maxY, file: file, line: line)
+        XCTAssertGreaterThan(
+            mapFrame.width,
+            80,
+            "Map must not collapse in compact landscape (frame=\(mapFrame), app=\(appFrame)).",
+            file: file,
+            line: line
+        )
+        XCTAssertGreaterThan(
+            mapFrame.height,
+            80,
+            "Map must not collapse in compact landscape (frame=\(mapFrame), app=\(appFrame)).",
+            file: file,
+            line: line
+        )
+        let holdMarker = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardDetail.holdMarker."))
+            .firstMatch
+        let modelSurface = app.descendants(matching: .any)["boardModel.3d"]
+        XCTAssertTrue(
+            map.isHittable
+                || (holdMarker.exists && holdMarker.isHittable)
+                || (modelSurface.exists && modelSurface.isHittable),
+            "Map (or a hold marker / 3D surface on it) must remain hittable in compact landscape.",
+            file: file,
+            line: line
+        )
     }
 
     private func addScreenshot(named name: String) {

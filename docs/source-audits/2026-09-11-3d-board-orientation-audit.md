@@ -71,6 +71,101 @@ shipped `board.json` and package descriptors; source/evidence facts and
 limitations come from the retained batch-02 migration records. No additional
 rotation, contact grouping, bound, dimension, or physical claim is implied.
 
+## Batch-04 Helium promotion (2026-09-20)
+
+`crimptonite.helium-mobile` has one model presentation and one canonical
+`primary` position. The package declares six ordered hold IDs:
+`edge-14`, `center-edge-18`, `edge-22`, `center-edge-10`,
+`back-jug-sloper`, and `top-jug`. It declares no orientation quaternion or
+pivot override. The package's model bounds and descriptor remain the
+model-package sources of truth; this inventory entry adds no orientation,
+geometry, or physical claim.
+
+## Batch-04 Metolius Light Rail 2.0 promotion (2026-09-20)
+
+`metolius.light-rail-2` is one physical reversible Light Rail 2.0 unit with
+one v1 model presentation and exactly two canonical positions:
+`20mm-side` and `15mm-side`. The two positions expose the four ordered contact
+IDs `jug-40-20mm-side`, `edge-20`, `jug-40-15mm-side`, and `edge-15` without
+duplicating physical contacts. `20mm-side` is the identity upright pose;
+`15mm-side` is the physical 180-degree inversion around the front/view axis.
+The identity and inversion quaternion, and the per-position contact guides,
+are authored display estimates selected to show the two source-backed working
+sides; they are not manufacturer angle or metrology claims.
+
+The model's `pairedLeadCord` route is restricted to the same two evidenced
+exterior entry regions (`left_upper_entry_001` and `right_upper_entry_001`,
+corresponding to `cord-passage-1` and `cord-passage-2`). No underside mouth,
+hidden vertical bore, or other connection is represented. Cord geometry is
+transient and non-pickable; model bounds and descriptor data remain the
+model-package sources of truth. Evidence: the retained manufacturer Light
+Rail 2.0 product view and exact archived Treeline field view recorded in the
+[Batch-04 source register](2026-09-20-batch-04-3d-source-register.json) and
+[source-to-contact audit](2026-09-20-batch-04-source-to-contact-audit.md).
+
+## Batch-04 Metolius Rock Rings 3D promotion (2026-09-20)
+
+`metolius.rock-rings-3d` uses one schema-v3 model presentation with one
+canonical physical ring unit (descriptor-v2 slots `jug`, `pocket-40`,
+`pocket-32`, and `pocket-25`) instantiated exactly twice. The `left-ring` and
+`right-ring` instances are the same unit presentation: both use the identity
+base rotation `[0, 0, 0, 1]`, have no reflection, and differ only by their
+placement translations. The canonical `primary` position is therefore the
+same physical orientation for both units; no handed or mirrored orientation
+is authored. The exact slot-to-contact maps are, respectively:
+
+* `jug` -> `jug-left` / `jug-right`;
+* `pocket-40` -> `pocket-40-four-left` / `pocket-40-four-right`;
+* `pocket-32` -> `pocket-32-three-left` / `pocket-32-three-right`;
+* `pocket-25` -> `pocket-25-two-left` / `pocket-25-two-right`.
+
+Each instance owns an independent `pairedLeadCord` document and invisible
+anchor. The retained route preserves the visible roof exits and lateral
+windows only; it does not claim a concealed route, inter-unit connection, or
+central through-bore. Cord geometry remains transient and non-pickable. The
+descriptor's model bounds and hash remain the model-package sources of truth;
+no physical dimensions or hidden attachment geometry are inferred here.
+
+The approved evidence set is the Metolius numbered depth guide
+([Rock-Ring-Depts.jpg](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Ring-Depts.jpg?v=1762201543)),
+the manufacturer black/white product view
+([Rock-Rings-black-white.jpg](https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123),
+SHA-256 `d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c`),
+and the retained owner front/rear and lateral views
+([front/rear](https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp),
+SHA-256 `b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0`;
+[lateral](https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp),
+SHA-256 `df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba`).
+These sources support the physical unit identity, visible exits/windows, and
+contact-depth labeling; the authored placement and cord curves are display
+estimates, not factory metrology.
+
+## Batch-04 Owl Climb Poker promotion contract (2026-09-20)
+
+`owl-climb.poker` is one schema-v3 model presentation for one continuous
+660 × 100 × 100 mm Poker beam. The four usable source-backed faces retain the
+canonical position IDs `face-a`, `face-b`, `face-c`, and `face-d`; each position
+selects only its same-face contacts (7, 9, 9, and 9 respectively). Face D
+contains exactly the two approved restored contacts
+`face-d-left-deep-rounded-recess` and `face-d-right-deep-rounded-recess`.
+No contact is collapsed across faces.
+
+The descriptor-v1 model orientation uses `modelBoundsCenter` and rotates about
+the long model X axis in the source-photo cycle: `face-a` identity
+`[0, 0, 0, 1]`, `face-b` +90° `[0.707106781, 0, 0, 0.707106781]`, `face-c`
+180° `[1, 0, 0, 0]`, and `face-d` −90° `[-0.707106781, 0, 0,
+0.707106781]`. These quaternions are authored display estimates used to keep
+each retained manufacturer face upright; they are not manufacturer metrology.
+
+The model package is model-only: it has one `primary.usdz`, one hash-bound
+`primary.model.json`, no raster/contactGeometry/fallback state, no suspension,
+and no brackets, screws, mounting holes, fasteners, cleats, or other hardware.
+The approved source set is the Owl Climb manufacturer page and its four exact
+retained manufacturer photographs recorded in the [Batch-04 source
+register](2026-09-20-batch-04-3d-source-register.json). The delivered GLB is
+retained evidence only; the two Face D recesses are the only approved manual
+restoration.
+
 ## Decision and review gate (initial five-package snapshot)
 
 The web evidence supports proceeding to a human/Astra orientation review for
@@ -763,31 +858,87 @@ nearest-hit test helper's universal assumption (patch-center ray strikes a
 hold) does not cover lip-modeled recessed contacts; the new regression
 tests assert binding, selection, and finite framing instead.
 
+### 2026-09-20 Batch 04 orientation-source handoff
 
-## Batch 05 Zlagboard fixed-front migration (2026-09-20)
+Batch 04 package migrations consume the closed source register rather than
+reusing historical orientation prose. Pivot is the sole Batch 04 multi-position
+exception: its normalized 18 physical contacts retain only selectable `p1`,
+`p2`, `p3`, and `p5`; `p4` is manufacturer Orientation 3 Switch transition
+evidence only. The 72 retired raster presentation IDs are compatibility
+aliases for those 18 physical contacts, not additional selectable contacts.
+The exact delivered-ID mapping and manufacturer-photo hashes are retained in
+[`2026-09-20-batch-04-3d-source-register.json`](2026-09-20-batch-04-3d-source-register.json).
 
-Author: Astra, after explicit user evidence approval on 2026-09-20.
-[Evidence, mapping and native verification](2026-09-20-hangboards-batch-05-migration/native/README.md)
-retain E1/E2/E3 and E1/P2/P3 authority and distinguish estimates from facts.
+#### YY Vertical Penta Evo
 
-| Package | Model bounds in metres (min → max) | Position / hold IDs | Pivot / quaternion | Review |
-| --- | --- | --- | --- | --- |
-| `zlagboard.evo` | (-0.350, -0.060, 0) → (0.350, 0.060, 0.042) | Existing primary; all 21 stable hold IDs, exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
-| `zlagboard.pro` | (-0.3525, -0.076, 0) → (0.3525, 0.076, 0.042) | Existing primary; all 28 stable hold IDs, Pro 2.0 exact mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Empty-scene native USDZ import, materials/bindings/bounds checked; front/oblique preparation renders reviewed; current-source iOS acceptance pending |
+`yy.penta-evo` is one canonical Penta unit rendered twice as the identical
+`left-penta` and `right-penta` instances. Neither instance carries a reflection;
+the pair is not a left/right mirror. Both instances expose the same seven slot
+IDs (`edge-25`, `edge-20`, `edge-15`, `edge-10`, `mono`, `duo`, and `tray`) and
+map those slots to their same-suffixed `-left` or `-right` physical contacts.
 
-Bounds and orthographic front camera are an authored display estimate, not
-published board measurements. +Y is up and +Z faces the athlete; the source GLB
-root transform was baked exactly once in native preparation. No suspension is
-documented in the approved source set; both exclusions have explicit user approval.
+The reviewed position inventory is `primary` and `reverse`. The YY Vertical
+product page documents rotation of the Penta through its retaining notches;
+`reverse` is retained to expose the rear 10 mm edge. The two instances share
+the same authored position transform for each position, while their separate
+placement and suspension metadata keeps the units physically distinct. This
+is display orientation metadata, not a claim of factory angular metrology.
 
-## Frictitious native migration, 2026-09-20
+#### Trango Rock Prodigy Pivot
 
-Author: Astra. Approved evidence D1/D2/D3/D4 (lower Pro 7 only), M1/M2/M3 (side profile). Model bounds are mesh-derived; cavity profile/curvature is an authored display estimate.
+`trango.rock-prodigy-pivot` is one canonical reauthored resin half rendered
+twice. The `left-half` instance is unreflected; the `right-half` instance
+carries `reflection: "x"` about the unit bounds centre. Unlike Penta, this pair
+*is* a left/right mirror, which is why exactly one physical half is exported.
+Both instances expose the same nine slot IDs (`upper-sloped-crimp`,
+`outer-sloped-crimp`, `variable-edge`, `medium-crimp`, `large-crimp`,
+`two-finger-pocket`, `three-finger-pocket`, `outer-wedge-pinch`, and
+`lower-sloper`) and map those slots to their same-suffixed `-left` or `-right`
+physical contacts, giving 18 physical contacts in total.
 
-| Package | model bounds (metres) | position and hold IDs | pivot / quaternion | evidence and review |
-| --- | --- | --- | --- | --- |
-| `frictitious.doormount-pro-7` | [-0.323850006, -0.057150006, -6e-09] → [0.323850006, 0.05715001, 0.057150006] | Existing primary, all 13 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
-| `frictitious.megalith` | [-0.339724988, -0.082550004, -9e-09] → [0.339724988, 0.082550012, 0.057150003] | Existing primary, all 20 stable/reconciled hold IDs; explicit mapping retained | Fixed front; no orientation override or authored pivot/quaternion | Exact USDZ empty-scene reimport; front/oblique/ledge review retained. Current-source iOS acceptance pending. |
+The reviewed position inventory is exactly `p1`, `p2`, `p3`, and `p5`. Each
+instance owns a complete nine-decimal `positionTransforms` entry for those four
+keys and for no others; there is no top-level orientation or suspension
+metadata. Each Pivot unit mounts and rotates independently, so a position
+rotates each already-placed half about its own bounds centre: `p1` identity,
+`p2` a quarter turn about the model Z axis, `p3` a half turn, and `p5` the
+opposite quarter turn combined with the manufacturer side switch, which
+exchanges the two physical halves through their position translations. The
+right instance's rotation is the mirror conjugate of the left instance's, so
+the assembled pair stays mirror-symmetric in every position. Physical contact
+IDs are stable through every rotation and through the side exchange.
 
-| `trango.rock-prodigy-forge` | Fixed front, split adjustable spacing | F1/F2/F4/F5/F6/F7 approved 2026-09-20; no canonical alternate pose established. |
-| `trango.rock-prodigy-natural` | Fixed front, removable cleat mount | N1/N2/N3/N4/N5 approved 2026-09-20; removal/sliding is not a training rotation. |
+Batch `p4` is manufacturer Orientation 3 Switch transition evidence only and is
+deliberately absent from both the package positions and both position transform
+maps. Model bounds, quaternions, translations, spacing, pivot choice and camera
+are display orientation metadata and `authored display estimate` values, not a
+claim of factory angular metrology.
+
+## J Bryant FTG-32 promotion — 2026-09-20
+
+Package `j-bryant.ftg-32`, revision `amazon-b0fzgy19t9-ftg-32-2026-09`,
+uses one `primary` model presentation. Descriptor model bounds in metres are
+`[-0.052499998, -0.0385, -0.0185]` → `[0.052499998, 0.0385, 0.0185]`.
+The pivot is `modelBoundsCenter` in `hang-ten-board-v1`.
+
+| Position | Hold IDs | Exact quaternion `[x,y,z,w]` | Physical meaning |
+| --- | --- | --- | --- |
+| `edge-25-down` | `edge-25` | `[0,0,0,1]` | Baseline with the deep ledge below the shared front recess |
+| `edge-16-down` | `edge-16` | `[0,0,1,0]` | Exact face-plane half-turn with the shallow ledge below the same recess |
+
+Evidence: the retained exact-ASIN gallery attachments 1–4 and 2026-09-20
+human topology confirmation recorded in
+[`2026-09-20-j-bryant-ftg-32-3d.md`](2026-09-20-j-bryant-ftg-32-3d.md).
+Geometry author and deliberate visual reviewer: Astra, Task 2, 2026-09-20.
+The sourced envelope and 16/25 mm depths remain product facts; the exact
+face-plane half-turn preserves the human-confirmed one-sided presentation.
+Every unpublished shape, pose translation, camera, attachment, and cord value
+is an **authored display estimate** (`displayEstimate`), with the full numeric
+ledger pinned in that audit. The elevated canonical camera is a display choice.
+
+The suspension rotations match these orientation quaternions exactly. One
+physical loop passes through two centered holes and around the rear; the
+runtime represents its two exterior leads from one shared invisible anchor.
+The rear connecting segment is deliberately omitted. No suspension mesh is
+included in the three-node USDZ. Orientation keys are stored in canonical
+position-ID order; the user-visible position sequence remains 25 mm then 16 mm.

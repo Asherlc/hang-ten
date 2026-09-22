@@ -5,6 +5,7 @@ import copy
 import hashlib
 import json
 from pathlib import Path
+import re
 
 import pytest
 from hangboard_packages.board_catalog import load_board_package
@@ -40,6 +41,15 @@ def _shared_model_parser_parity_fixtures() -> tuple[dict[str, object], ...]:
     return tuple(matrix)
 
 
+def _shared_reusable_model_fixture(name: str) -> dict[str, object]:
+    fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
+    registry = fixtures["reusableModelFixtures"]
+    assert isinstance(registry, dict)
+    fixture = registry[name]
+    assert isinstance(fixture, dict)
+    return fixture
+
+
 def _apply_shared_json_mutation(document: object, mutation: dict[str, object]) -> None:
     path = mutation["path"]
     assert isinstance(path, list) and path
@@ -68,7 +78,14 @@ def _write_shared_model_parser_parity_package(
     root: Path, fixture: dict[str, object]
 ) -> Path:
     fixtures = json.loads(_SHARED_VALIDATION_FIXTURES.read_text(encoding="utf-8"))
-    model = fixtures[fixture.get("base", "model")]
+    reusable_fixture_name = fixture.get("reusableFixture")
+    if reusable_fixture_name is None:
+        model = fixtures[fixture.get("base", "model")]
+    else:
+        assert isinstance(reusable_fixture_name, str)
+        registry = fixtures["reusableModelFixtures"]
+        assert isinstance(registry, dict)
+        model = registry[reusable_fixture_name]
     assert isinstance(model, dict)
     board = copy.deepcopy(model["board"])
     descriptor = copy.deepcopy(model["descriptor"])
@@ -93,7 +110,11 @@ def _write_shared_model_parser_parity_package(
         asset_path.parent.mkdir(parents=True, exist_ok=True)
         asset_path.write_bytes(base64.b64decode(extra_asset["base64"]))
     board_path = root / "board.json"
-    board_json = _dump_shared_json_document(board)
+    if reusable_fixture_name is not None:
+        _restore_reusable_translation_sentinels(board)
+        board_json = _json_with_numeric_sentinels(board)
+    else:
+        board_json = _dump_shared_json_document(board)
     if fixture.get("reorderTwoBranchSuspensionMembers"):
         suspension = board["presentations"][0]["media"]["suspension"]
         canonical = json.dumps(suspension, separators=(",", ":"))
@@ -210,6 +231,26 @@ def _descriptor() -> dict[str, object]:
     }
 
 
+def _reusable_descriptor() -> dict[str, object]:
+    return {
+        "schemaVersion": 2,
+        "coordinateFrame": "hang-ten-board-v1",
+        "modelSHA256": hashlib.sha256(MODEL_BYTES).hexdigest(),
+        "modelBounds": {"min": [0, 0, 0], "max": [1, 1, 0.1]},
+        "nodes": [
+            {"nodeID": "UnitBody", "role": "body"},
+            {"nodeID": "UnitEdge", "role": "contact", "contactSlotID": "edge"},
+        ],
+        "contactSlots": {
+            "edge": {
+                "nodeIDs": ["UnitEdge"],
+                "facePlaneAABB": {"min": [0.1, 0.2], "max": [0.4, 0.6]},
+                "center": [0.25, 0.4],
+            }
+        },
+    }
+
+
 def _model_document() -> dict[str, object]:
     return {
         "schemaVersion": 3,
@@ -255,25 +296,118 @@ def write_model_package(
     orientation: dict[str, object] | None = None,
     positions: list[dict[str, object]] | None = None,
     media_overrides: dict[str, object] | None = None,
+    *,
+    descriptor_version: int = 1,
+    instances: list[dict[str, object]] | None = None,
 ) -> Path:
     document = _model_document()
+    if descriptor_version == 2:
+        document["equipmentObjects"] = [{"id": "left-unit"}, {"id": "right-unit"}]
+        document["contacts"] = [
+            {**_physical_contact("edge-left", "Left edge"), "equipmentObjectID": "left-unit"},
+            {**_physical_contact("edge-right", "Right edge"), "equipmentObjectID": "right-unit"},
+        ]
+    elif descriptor_version != 1:
+        raise ValueError("descriptor_version must be 1 or 2")
     if orientation is not None:
         document["presentations"][0]["media"]["orientation"] = orientation
     if media_overrides:
         document["presentations"][0]["media"].update(media_overrides)
+    if instances is not None:
+        document["presentations"][0]["media"]["instances"] = instances
     if positions is not None:
         document["positions"] = positions
     assets = root / "assets"
     assets.mkdir(parents=True)
     (assets / "primary.usdz").write_bytes(MODEL_BYTES)
     (assets / "primary.model.json").write_text(
-        json.dumps(_descriptor()), encoding="utf-8"
+        json.dumps(_reusable_descriptor() if descriptor_version == 2 else _descriptor()),
+        encoding="utf-8",
     )
     (root / "board.json").write_text(json.dumps(document), encoding="utf-8")
     return root
 
 
 _write_model_package = write_model_package
+
+
+def _valid_reusable_instances() -> list[dict[str, object]]:
+    identity = {
+        "translation": [
+            "@number:0.000000000@",
+            "@number:0.000000000@",
+            "@number:0.000000000@",
+        ],
+        "rotation": [0, 0, 0, 1],
+    }
+    return [
+        {
+            "equipmentObjectID": "left-unit",
+            "baseTransform": {
+                "translation": [
+                    "@number:-0.120000000@",
+                    "@number:0.000000000@",
+                    "@number:0.000000000@",
+                ],
+                "rotation": [0, 0, 0, 1],
+            },
+            "contactIDsBySlotID": {"edge": "edge-left"},
+            "positionTransforms": {"primary": identity},
+        },
+        {
+            "equipmentObjectID": "right-unit",
+            "baseTransform": {
+                "translation": [
+                    "@number:0.120000000@",
+                    "@number:0.000000000@",
+                    "@number:0.000000000@",
+                ],
+                "rotation": [0, 0, 0, 1],
+                "reflection": "x",
+            },
+            "contactIDsBySlotID": {"edge": "edge-right"},
+            "positionTransforms": {"primary": identity},
+        },
+    ]
+
+
+def _json_with_numeric_sentinels(value: object) -> str:
+    encoded = json.dumps(value, sort_keys=True)
+    return re.sub(
+        r'"@number:(-?(?:0|[1-9][0-9]*)\.[0-9]{9})@"', r"\1", encoded
+    )
+
+
+def _write_reusable_model_package(tmp_path: Path) -> Path:
+    document = write_model_package(
+        tmp_path, descriptor_version=2, instances=_valid_reusable_instances()
+    )
+    board_path = document / "board.json"
+    board_path.write_text(
+        _json_with_numeric_sentinels(json.loads(board_path.read_text())),
+        encoding="utf-8",
+    )
+    return document
+
+
+def _restore_reusable_translation_sentinels(document: dict[str, object]) -> None:
+    media = document["presentations"][0]["media"]
+    assert isinstance(media, dict)
+    instances = media["instances"]
+    assert isinstance(instances, list)
+    for instance in instances:
+        assert isinstance(instance, dict)
+        transforms = [instance["baseTransform"]]
+        position_transforms = instance.get("positionTransforms", {})
+        assert isinstance(position_transforms, dict)
+        transforms.extend(position_transforms.values())
+        for transform in transforms:
+            assert isinstance(transform, dict)
+            translation = transform["translation"]
+            assert isinstance(translation, list)
+            transform["translation"] = [
+                f"@number:{float(component):.9f}@" for component in translation
+            ]
 
 
 def write_v3_model_package(
@@ -389,6 +523,163 @@ def test_v3_model_descriptor_binds_contacts_and_allows_two_bodies(tmp_path):
     loaded = load_board_package(package)
     assert loaded.board.revision_id == "2026-09-contact-first"
     assert tuple(contact.id for contact in loaded.board.contacts) == ("left-edge", "right-edge")
+
+
+def test_v3_reusable_instances_bind_each_contact_slot_to_its_equipment_object(
+    tmp_path: Path,
+) -> None:
+    package = load_board_package(_write_reusable_model_package(tmp_path))
+
+    media = package.board.presentations[0].media
+    assert media.instances is not None
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-unit",
+        "right-unit",
+    ]
+    assert media.instances[0].contact_ids_by_slot_id == {"edge": "edge-left"}
+    assert media.instances[1].base_transform.translation == (0.12, 0.0, 0.0)
+    assert media.instances[1].base_transform.reflection == "x"
+    assert media.instances[1].position_transforms["primary"].reflection is None
+
+
+def test_v3_reusable_instances_reject_cross_object_slot_mapping(tmp_path: Path) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    raw = board_path.read_text()
+    changed, count = re.subn(
+        r'(\"contactIDsBySlotID\"\s*:\s*\{\s*\"edge\"\s*:\s*)\"edge-left\"',
+        r'\1"edge-right"',
+        raw,
+        count=1,
+    )
+    assert count == 1
+    board_path.write_text(changed)
+    with pytest.raises(ValueError, match="equipmentObjectID"):
+        load_board_package(document)
+
+
+@pytest.mark.parametrize("invalid", ["0.1000000000", "1e-1", "NaN"])
+def test_reusable_instances_reject_non_nine_decimal_raw_translation_lexemes(
+    tmp_path: Path, invalid: str
+) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    raw = board_path.read_text()
+    changed, count = re.subn(r"0\.120000000", invalid, raw, count=1)
+    assert count == 1
+    board_path.write_text(changed)
+    with pytest.raises(ValueError, match="nine decimal"):
+        load_board_package(document)
+
+
+def test_reusable_instances_reject_non_nine_decimal_position_translation_lexeme(
+    tmp_path: Path,
+) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    raw = board_path.read_text()
+    changed, count = re.subn(
+        r'("positionTransforms"\s*:\s*\{\s*"primary"\s*:\s*\{[^}]*"translation"\s*:\s*\[)0\.000000000',
+        r"\g<1>1e-1",
+        raw,
+        count=1,
+    )
+    assert count == 1
+    board_path.write_text(changed)
+
+    with pytest.raises(ValueError, match="nine decimal"):
+        load_board_package(document)
+
+
+def test_shared_reusable_fixture_is_accepted_by_python_parser(tmp_path: Path) -> None:
+    fixture = _shared_reusable_model_fixture("reusable-valid")
+    assert fixture["board"]["id"] == "fixture.reusable-model"
+
+    media = load_board_package(
+        _write_shared_model_parser_parity_package(
+            tmp_path, {"reusableFixture": "reusable-valid", "mutations": []}
+        )
+    ).board.presentations[0].media
+    assert media.instances is not None
+    assert media.instances[1].base_transform.reflection == "x"
+
+
+@pytest.mark.parametrize(
+    ("path", "value", "error"),
+    [
+        (
+            ["presentations", 0, "media", "instances", 0, "baseTransform", "rotation"],
+            [0, 0, 0, 2],
+            "unit length",
+        ),
+        (
+            [
+                "presentations",
+                0,
+                "media",
+                "instances",
+                0,
+                "positionTransforms",
+                "primary",
+                "reflection",
+            ],
+            "x",
+            "reflection must be omitted",
+        ),
+        (
+            ["presentations", 0, "media", "instances", 0, "contactIDsBySlotID"],
+            {},
+            "contactIDsBySlotID",
+        ),
+        (
+            ["presentations", 0, "media", "instances", 1, "contactIDsBySlotID"],
+            {"edge": "edge-left"},
+                "equipmentObjectID|duplicate",
+        ),
+        (
+            ["presentations", 0, "media", "instances", 1, "positionTransforms"],
+            {
+                "secondary": {
+                    "translation": [0, 0, 0],
+                    "rotation": [0, 0, 0, 1],
+                }
+            },
+            "positionTransforms",
+        ),
+    ],
+)
+def test_reusable_instances_reject_invalid_transform_or_inventory_contract(
+    tmp_path: Path, path: list[object], value: object, error: str
+) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    board = json.loads(board_path.read_text())
+    parent: object = board
+    for component in path[:-1]:
+        assert isinstance(parent, (dict, list))
+        parent = parent[component]
+    assert isinstance(parent, (dict, list))
+    parent[path[-1]] = value
+    _restore_reusable_translation_sentinels(board)
+    board_path.write_text(_json_with_numeric_sentinels(board))
+
+    with pytest.raises(ValueError, match=error):
+        load_board_package(document)
+
+
+@pytest.mark.parametrize("legacy_key", ["orientation", "suspension"])
+def test_reusable_instances_reject_legacy_pose_mechanisms(
+    tmp_path: Path, legacy_key: str
+) -> None:
+    document = _write_reusable_model_package(tmp_path)
+    board_path = document / "board.json"
+    board = json.loads(board_path.read_text())
+    board["presentations"][0]["media"][legacy_key] = {}
+    _restore_reusable_translation_sentinels(board)
+    board_path.write_text(_json_with_numeric_sentinels(board))
+
+    with pytest.raises(ValueError, match="instances"):
+        load_board_package(document)
 
 
 @pytest.mark.parametrize("missing_contact", ["left-edge", "right-edge"])
@@ -570,6 +861,8 @@ def test_v2_paired_leads_use_pose_contact_route_for_length_validation(tmp_path: 
 
 def test_shared_matrix_declares_specific_python_error_for_every_fixture() -> None:
     for fixture in _shared_model_parser_parity_fixtures():
+        if fixture.get("valid"):
+            continue
         expected = fixture.get("pythonError")
         assert isinstance(expected, str) and expected and expected != ".*", fixture["name"]
 
@@ -637,7 +930,11 @@ def test_two_branch_declared_member_order_loads_without_sorting(tmp_path: Path) 
 
 @pytest.mark.parametrize(
     "fixture",
-    _shared_model_parser_parity_fixtures(),
+    tuple(
+        fixture
+        for fixture in _shared_model_parser_parity_fixtures()
+        if not fixture.get("valid")
+    ),
     ids=lambda fixture: str(fixture["name"]),
 )
 def test_v3_model_rejects_shared_cross_parser_malformed_fixture_matrix(

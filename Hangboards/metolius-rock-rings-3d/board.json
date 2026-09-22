@@ -15,773 +15,6 @@
       "id": "right-ring"
     }
   ],
-  "presentations": [
-    {
-      "id": "front-pair",
-      "name": "Front pair",
-      "aspectRatio": 1.5,
-      "isDefault": true,
-      "derivation": {
-        "type": "original"
-      },
-      "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "contactGeometry": {
-          "jug-left": [
-            {
-              "frame": {
-                "x": 0.184389344401,
-                "y": 0.324421225953,
-                "width": 0.241714065104,
-                "height": 0.097047676391
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.014545703164,
-                      -0.104839572347
-                    ],
-                    "control2": [
-                      0.416638049794,
-                      0.017461643607
-                    ],
-                    "to": [
-                      0.459465377378,
-                      0.002086398249
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.905173005885,
-                      -0.038616815786
-                    ],
-                    "control2": [
-                      0.919752218102,
-                      0.518025695539
-                    ],
-                    "to": [
-                      1.0,
-                      1.0
-                    ],
-                    "bendable": true
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "pocket-40-four-left": [
-            {
-              "frame": {
-                "x": 0.208419598958,
-                "y": 0.454,
-                "width": 0.169082128255,
-                "height": 0.091
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.179399997187,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.820600002813,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.919679885132,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857625773
-                    ],
-                    "to": [
-                      1.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142374227
-                    ],
-                    "control2": [
-                      0.919679885132,
-                      1.0
-                    ],
-                    "to": [
-                      0.820600002813,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.179399997187,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.080320114868,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142374227
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857625773
-                    ],
-                    "control2": [
-                      0.080320114868,
-                      0.0
-                    ],
-                    "to": [
-                      0.179399997187,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "pocket-32-three-left": [
-            {
-              "frame": {
-                "x": 0.231193926432,
-                "y": 0.615,
-                "width": 0.122843342448,
-                "height": 0.082
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.222505613969,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.777494386031,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.900380843712,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857624333
-                    ],
-                    "to": [
-                      1.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142375667
-                    ],
-                    "control2": [
-                      0.900380843712,
-                      1.0
-                    ],
-                    "to": [
-                      0.777494386031,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.222505613969,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.099619156288,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142375667
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857624333
-                    ],
-                    "control2": [
-                      0.099619156288,
-                      0.0
-                    ],
-                    "to": [
-                      0.222505613969,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "pocket-25-two-left": [
-            {
-              "frame": {
-                "x": 0.251207729167,
-                "y": 0.751552805664,
-                "width": 0.086956523438,
-                "height": 0.076447194336
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.293047576308,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.706952423692,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.868798134724,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857621696
-                    ],
-                    "to": [
-                      1.0,
-                      0.499999993613
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142378304
-                    ],
-                    "control2": [
-                      0.868798134724,
-                      1.0
-                    ],
-                    "to": [
-                      0.706952423692,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.293047576308,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.131201865276,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142378304
-                    ],
-                    "to": [
-                      0.0,
-                      0.499999993613
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857621696
-                    ],
-                    "control2": [
-                      0.131201865276,
-                      0.0
-                    ],
-                    "to": [
-                      0.293047576308,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "jug-right": [
-            {
-              "frame": {
-                "x": 0.573896590495,
-                "y": 0.324421225953,
-                "width": 0.241714065104,
-                "height": 0.097047676391
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.985454296836,
-                      -0.104839572347
-                    ],
-                    "control2": [
-                      0.583361950206,
-                      0.017461643607
-                    ],
-                    "to": [
-                      0.540534622622,
-                      0.002086398249
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.094826994115,
-                      -0.038616815786
-                    ],
-                    "control2": [
-                      0.080247781898,
-                      0.518025695539
-                    ],
-                    "to": [
-                      0.0,
-                      1.0
-                    ],
-                    "bendable": true
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              }
-            }
-          ],
-          "pocket-40-four-right": [
-            {
-              "frame": {
-                "x": 0.622498272787,
-                "y": 0.454,
-                "width": 0.169082128255,
-                "height": 0.091
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.179399997187,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.820600002813,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.919679885132,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857625773
-                    ],
-                    "to": [
-                      1.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142374227
-                    ],
-                    "control2": [
-                      0.919679885132,
-                      1.0
-                    ],
-                    "to": [
-                      0.820600002813,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.179399997187,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.080320114868,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142374227
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857625773
-                    ],
-                    "control2": [
-                      0.080320114868,
-                      0.0
-                    ],
-                    "to": [
-                      0.179399997187,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "pocket-32-three-right": [
-            {
-              "frame": {
-                "x": 0.64596273112,
-                "y": 0.615,
-                "width": 0.122843342448,
-                "height": 0.082
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.222505613969,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.777494386031,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.900380843712,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857624333
-                    ],
-                    "to": [
-                      1.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142375667
-                    ],
-                    "control2": [
-                      0.900380843712,
-                      1.0
-                    ],
-                    "to": [
-                      0.777494386031,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.222505613969,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.099619156288,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142375667
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857624333
-                    ],
-                    "control2": [
-                      0.099619156288,
-                      0.0
-                    ],
-                    "to": [
-                      0.222505613969,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "pocket-25-two-right": [
-            {
-              "frame": {
-                "x": 0.661835747395,
-                "y": 0.751552805664,
-                "width": 0.086956523438,
-                "height": 0.076447194336
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.293047576308,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.706952423692,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.868798134724,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.223857621696
-                    ],
-                    "to": [
-                      1.0,
-                      0.499999993613
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.776142378304
-                    ],
-                    "control2": [
-                      0.868798134724,
-                      1.0
-                    ],
-                    "to": [
-                      0.706952423692,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.293047576308,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.131201865276,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.776142378304
-                    ],
-                    "to": [
-                      0.0,
-                      0.499999993613
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.223857621696
-                    ],
-                    "control2": [
-                      0.131201865276,
-                      0.0
-                    ],
-                    "to": [
-                      0.293047576308,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
   "revisionID": "2026-09-contact-first",
   "contacts": [
     {
@@ -892,6 +125,278 @@
       },
       "gripTypes": [
         "twoFingerPocket"
+      ]
+    }
+  ],
+  "presentations": [
+    {
+      "id": "primary",
+      "name": "Front pair",
+      "aspectRatio": 1.5,
+      "isDefault": true,
+      "derivation": {
+        "type": "original"
+      },
+      "media": {
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              -0.1,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "instances": [
+          {
+            "equipmentObjectID": "left-ring",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "jug": "jug-left",
+              "pocket-40": "pocket-40-four-left",
+              "pocket-32": "pocket-32-three-left",
+              "pocket-25": "pocket-25-two-left"
+            },
+            "suspension": {
+              "type": "pairedLeadCord",
+              "attachments": [
+                {
+                  "id": "left-ring-left-lead",
+                  "nodeID": "roof_exit_001",
+                  "pointInModel": [
+                    -0.062,
+                    0.091,
+                    0
+                  ],
+                  "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                },
+                {
+                  "id": "left-ring-right-lead",
+                  "nodeID": "roof_exit_001",
+                  "pointInModel": [
+                    0.062,
+                    0.091,
+                    0
+                  ],
+                  "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                }
+              ],
+              "passages": {
+                "left": [
+                  {
+                    "id": "left-ring-left-roof",
+                    "nodeID": "roof_exit_001",
+                    "pointInModel": [
+                      -0.062,
+                      0.091,
+                      0
+                    ],
+                    "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                  }
+                ],
+                "right": [
+                  {
+                    "id": "left-ring-right-roof",
+                    "nodeID": "roof_exit_001",
+                    "pointInModel": [
+                      0.062,
+                      0.091,
+                      0
+                    ],
+                    "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                  }
+                ]
+              },
+              "anchor": {
+                "offsetFromBoardBounds": [
+                  -0.105,
+                  0.19,
+                  0
+                ],
+                "visibility": "invisible",
+                "provenance": "authored-display-estimate: unit-specific invisible overhead anchor; fixed world X matches this unit's canonical translation. Two anchors, no inter-unit connection. Neutral resin and every camera, pose and spacing value are display estimates."
+              },
+              "cord": {
+                "restLength": 0.202,
+                "radius": 0.002,
+                "material": "matteCord",
+                "provenance": "authored-display-estimate: 202 mm per exterior lead with 2 mm radius; not measured rope length, supplied knot or hidden routing. Each lead terminates visibly at its unit's roof exit."
+              },
+              "canonicalPoses": {
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    -0.105,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.1,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                }
+              }
+            }
+          },
+          {
+            "equipmentObjectID": "right-ring",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "jug": "jug-right",
+              "pocket-40": "pocket-40-four-right",
+              "pocket-32": "pocket-32-three-right",
+              "pocket-25": "pocket-25-two-right"
+            },
+            "suspension": {
+              "type": "pairedLeadCord",
+              "attachments": [
+                {
+                  "id": "right-ring-left-lead",
+                  "nodeID": "roof_exit_001",
+                  "pointInModel": [
+                    -0.062,
+                    0.091,
+                    0
+                  ],
+                  "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                },
+                {
+                  "id": "right-ring-right-lead",
+                  "nodeID": "roof_exit_001",
+                  "pointInModel": [
+                    0.062,
+                    0.091,
+                    0
+                  ],
+                  "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                }
+              ],
+              "passages": {
+                "left": [
+                  {
+                    "id": "right-ring-left-roof",
+                    "nodeID": "roof_exit_001",
+                    "pointInModel": [
+                      -0.062,
+                      0.091,
+                      0
+                    ],
+                    "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                  }
+                ],
+                "right": [
+                  {
+                    "id": "right-ring-right-roof",
+                    "nodeID": "roof_exit_001",
+                    "pointInModel": [
+                      0.062,
+                      0.091,
+                      0
+                    ],
+                    "provenance": "RR3 manufacturer and RR6/RR7 owner evidence establish two roof exits and lateral windows. Point coordinate is authored-display-estimate in importer basis (x,z,-y); clipped visible roof endpoint only, no hidden route."
+                  }
+                ]
+              },
+              "anchor": {
+                "offsetFromBoardBounds": [
+                  0.105,
+                  0.19,
+                  0
+                ],
+                "visibility": "invisible",
+                "provenance": "authored-display-estimate: unit-specific invisible overhead anchor; fixed world X matches this unit's canonical translation. Two anchors, no inter-unit connection. Neutral resin and every camera, pose and spacing value are display estimates."
+              },
+              "cord": {
+                "restLength": 0.202,
+                "radius": 0.002,
+                "material": "matteCord",
+                "provenance": "authored-display-estimate: 202 mm per exterior lead with 2 mm radius; not measured rope length, supplied knot or hidden routing. Each lead terminates visibly at its unit's roof exit."
+              },
+              "canonicalPoses": {
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0.105,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.1,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "positions": [
+    {
+      "id": "primary",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-left",
+        "pocket-40-four-left",
+        "pocket-32-three-left",
+        "pocket-25-two-left",
+        "jug-right",
+        "pocket-40-four-right",
+        "pocket-32-three-right",
+        "pocket-25-two-right"
       ]
     }
   ]
