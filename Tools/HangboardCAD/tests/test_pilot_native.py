@@ -19,7 +19,7 @@ FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources")
 FREECAD_CMD = FREECAD / "bin" / "freecadcmd"
 EXTRA_PATH = REPOSITORY / ".context" / "organic-shark" / "fcpy"
 PACKAGE = "lattice-triple-rung"
-SOURCE = REPOSITORY / "ModelSources" / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
 ASSET = REPOSITORY / "Hangboards" / PACKAGE / "assets" / "primary.usdz"
 
 requires_freecad = pytest.mark.skipif(

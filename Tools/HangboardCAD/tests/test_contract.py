@@ -171,7 +171,7 @@ def test_requires_every_contact_to_be_bound():
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
-REAL_SOURCE = REPOSITORY_ROOT / "ModelSources" / "lattice-triple-rung.FCStd"
+REAL_SOURCE = REPOSITORY_ROOT / "Hangboards" / "lattice-triple-rung" / "lattice-triple-rung.FCStd"
 REAL_OBJECT_INVENTORY = {
     "Body": "PartDesign::Body",
     "Origin": "App::Origin",
