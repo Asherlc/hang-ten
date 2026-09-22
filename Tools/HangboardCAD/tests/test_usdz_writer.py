@@ -113,7 +113,7 @@ def test_normals_and_uvs_round_trip(tmp_path):
     )
     write_usdz(target, [mesh])
     node = read_usdz(target)["nodes"]["body"]
-    assert node["normals"] == 4
+    assert len(node["normals"]) == 4
     assert node["uvs"] == 4
 
 
@@ -128,6 +128,27 @@ def test_out_of_range_triangle_index_is_rejected(tmp_path):
             tmp_path / "model.usdz",
             [_mesh(points=TRIANGLE, triangles=((0, 1, 3),))],
         )
+
+
+def test_normals_round_trip_as_unit_vectors(tmp_path):
+    """The basis change must not scale normals by the mm-to-metre factor."""
+    direction = (0.0, 0.6, 0.8)
+    mesh = Mesh(
+        node_id="body",
+        points_mm=ASYMMETRIC[:3],
+        triangles=((0, 1, 2),),
+        material=Material(name="wood"),
+        normals_mm=(direction,) * 3,
+    )
+    target = tmp_path / "model.usdz"
+    write_usdz(target, [mesh])
+    normals = read_usdz(target)["nodes"]["body"]["normals"]
+    assert len(normals) == 3
+    for normal in normals:
+        magnitude = sum(component * component for component in normal) ** 0.5
+        assert magnitude == pytest.approx(1.0, rel=0, abs=1e-6), normal
+    # same rotation as positions: (x, y, z) -> (x, z, -y)
+    assert normals[0] == pytest.approx((0.0, 0.8, -0.6), rel=0, abs=1e-6)
 
 
 def test_repeat_write_is_reproducible(tmp_path):

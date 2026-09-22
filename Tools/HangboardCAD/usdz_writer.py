@@ -68,6 +68,17 @@ def runtime_point(point_mm: Sequence[float]) -> tuple[float, float, float]:
     return (x * _METERS_PER_MILLIMETRE, z * _METERS_PER_MILLIMETRE, -y * _METERS_PER_MILLIMETRE)
 
 
+def runtime_direction(direction: Sequence[float]) -> tuple[float, float, float]:
+    """Rotate a direction into the runtime frame.
+
+    The basis change is ``(x, y, z) -> (x, z, -y)``; the millimetre-to-metre
+    factor belongs to positions only. Applying ``runtime_point`` to a normal
+    would emit unit-less vectors of magnitude 1e-3.
+    """
+    x, y, z = direction
+    return (x, z, -y)
+
+
 def _validate(meshes: Sequence[Mesh]) -> None:
     if not meshes:
         raise ValueError("at least one mesh is required")
@@ -150,7 +161,7 @@ def _mesh(stage: Usd.Stage, mesh: Mesh) -> None:
     prim.CreateDoubleSidedAttr(False)
 
     if mesh.normals_mm is not None:
-        normals = [Gf.Vec3f(*runtime_point(normal)) for normal in mesh.normals_mm]
+        normals = [Gf.Vec3f(*runtime_direction(normal)) for normal in mesh.normals_mm]
         prim.CreateNormalsAttr(normals)
         prim.SetNormalsInterpolation(UsdGeom.Tokens.vertex)
 
@@ -190,11 +201,19 @@ def _normalise_package_timestamps(path: Path) -> None:
         local = int.from_bytes(data[offset + 42 : offset + 46], "little")
         if data[local : local + 4] != b"PK\x03\x04":
             raise ValueError("packaged USDZ local header is malformed")
-        for base, time_field, date_field in ((local, 10, 12), (offset, 12, 14)):
+        # Field offsets differ between the two header layouts: name and extra
+        # lengths sit at +26/+28 in a local file header and at +28/+30 in a
+        # central directory header. Reading the local offsets for both would
+        # scan the wrong bytes and could corrupt unrelated data.
+        for base, time_field, date_field, name_field in (
+            (local, 10, 12, 26),
+            (offset, 12, 14, 28),
+        ):
             data[base + time_field : base + time_field + 2] = _DOS_TIME.to_bytes(2, "little")
             data[base + date_field : base + date_field + 2] = _DOS_DATE.to_bytes(2, "little")
-            extra_length = int.from_bytes(data[base + 28 : base + 30], "little")
-            cursor = base + 30 + int.from_bytes(data[base + 26 : base + 28], "little")
+            name_length = int.from_bytes(data[base + name_field : base + name_field + 2], "little")
+            extra_length = int.from_bytes(data[base + name_field + 2 : base + name_field + 4], "little")
+            cursor = base + 30 + name_length
             limit = cursor + extra_length
             while cursor + 4 <= limit:
                 field_id = int.from_bytes(data[cursor : cursor + 2], "little")
@@ -311,7 +330,9 @@ def read_usdz(path: Path) -> dict:
             ],
             "triangles": triangles,
             "material": bound.GetPrim().GetName() if bound else None,
-            "normals": len(mesh.GetNormalsAttr().Get() or []),
+            "normals": [
+                tuple(vector) for vector in (mesh.GetNormalsAttr().Get() or [])
+            ],
             "uvs": (
                 len(UsdGeom.PrimvarsAPI(prim).GetPrimvar("st").Get() or [])
                 if UsdGeom.PrimvarsAPI(prim).HasPrimvar("st")
