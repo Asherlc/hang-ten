@@ -880,14 +880,11 @@ final class BoardModelScene {
             apply()
             SCNTransaction.commit()
         } else {
-            // Drop any in-flight orbit→canonical action so a paused or mid-
-            // transition presentation tree cannot keep the last orbit pose.
+            // Apply outside SCNTransaction. On CI simulator hosts a committed
+            // disableActions transaction can leave the model camera untouched
+            // until a render loop tick that never arrives under Task.sleep.
             camera.removeAllAnimations()
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0
-            SCNTransaction.disableActions = true
             apply()
-            SCNTransaction.commit()
             completion?()
         }
     }
@@ -2363,47 +2360,32 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         onContactTap?(contact)
         freezeAccessibilityProjectionToCanonical = false
         committedCanonicalAccessibilityGeneration = nil
-
-        // Paused SCNViews (production default and XCTest hosts) do not reliably
-        // advance SCNTransaction actions or DispatchQueue.main.asyncAfter timers
-        // while a test awaits Task.sleep. Animate only when the scene is already
-        // playing; otherwise snap the model camera and refresh accessibility
-        // synchronously so projectPoint cannot stay on the last orbit frame.
-        if isPlaying || rendersContinuously {
-            let resetGeneration = requestAnimatedResetRedraw()
-            model.resetCamera(animated: true) { [weak self] in
-                guard let self else { return }
-                self.finishAnimatedReset(generation: resetGeneration)
-            }
-            DispatchQueue.main.asyncAfter(
-                deadline: .now() + BoardModelScene.canonicalTransitionDuration + 0.35
-            ) { [weak self] in
-                self?.commitCanonicalAccessibility(generation: resetGeneration)
-            }
-        } else {
-            commitCanonicalAccessibilitySynchronously()
-        }
+        // Always snap synchronously. Paused XCTest hosts do not advance
+        // SCNTransaction actions or main-queue timers during Task.sleep, so an
+        // animated reset leaves projectPoint and accessibility on the orbit
+        // frame for the full convergence wait.
+        commitCanonicalAccessibilitySynchronously()
     }
 
-    /// Immediate canonical camera + accessibility refresh for paused views.
+    /// Immediate canonical camera + accessibility refresh.
     private func commitCanonicalAccessibilitySynchronously() {
-        model?.resetCamera(animated: false)
-        SCNTransaction.flush()
-        if let camera = model?.camera ?? pointOfView {
+        guard let model else { return }
+        model.resetCamera(animated: false)
+        if let camera = model.camera as SCNNode? {
             camera.removeAllAnimations()
-            if let parent = camera.parent {
-                camera.removeFromParentNode()
-                parent.addChildNode(camera)
-            }
             pointOfView = camera
         }
-        model?.frame(in: bounds.size)
-        model?.resetCamera(animated: false)
-        SCNTransaction.flush()
+        // Re-apply framing scale for the current bounds after orbit zoom.
+        model.frame(in: bounds.size)
+        model.resetCamera(animated: false)
         freezeAccessibilityProjectionToCanonical = true
         needsAccessibilityProjection = true
         updateAccessibility()
+        // Force one paused redraw so later projectPoint calls see the model
+        // camera after the presentation tree catches a single frame.
         requestPausedRedraw()
+        _ = snapshot()
+        updateAccessibility()
     }
 
     @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
