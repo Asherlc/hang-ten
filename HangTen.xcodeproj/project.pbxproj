@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023 /* DeepLinkManager.swift */; settings = {ATTRIBUTES = (); }; };
+		1D872F6CB4AF206A2CD37B91 /* FreeWorkoutSaver.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8EFC3ACF01AA856FDC558 /* FreeWorkoutSaver.swift */; };
+		2A97A71704F3C343F8E685BE /* FreeWorkoutSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 466D1CDB6CC185DE40F47E06 /* FreeWorkoutSessionView.swift */; };
 		559CF313346BCC6820A8CEB4 /* FreeWorkoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0B160A405C176BB933091 /* FreeWorkoutUITests.swift */; };
 		657AB2421605583B8E5B5BFC /* FreeWorkoutBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
@@ -185,6 +187,7 @@
 		D1000000000000000000002B /* yy-penta-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002B /* yy-penta-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-penta-evo", ); }; };
 		D1000000000000000000002C /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002C /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
 		D1000000000000000000002D /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
+		D8B94A64F8BFBA4F0C51B9EF /* FreeWorkoutSaverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9AC34DC00A0B42A5F19C24 /* FreeWorkoutSaverTests.swift */; };
 		E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
 		E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
 		E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
@@ -211,6 +214,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		466D1CDB6CC185DE40F47E06 /* FreeWorkoutSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutSessionView.swift; sourceTree = "<group>"; };
 		63F0B160A405C176BB933091 /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
 		9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutBuilderView.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
@@ -339,6 +343,7 @@
 		BB00000000000000000000F2 /* FreeWorkoutDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeWorkoutDraft.swift; sourceTree = "<group>"; };
 		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000101 /* BoardEditorLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorLoadingView.swift; path = BoardEditor/BoardEditorLoadingView.swift; sourceTree = "<group>"; };
+		BB9AC34DC00A0B42A5F19C24 /* FreeWorkoutSaverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutSaverTests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
 		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
@@ -390,6 +395,7 @@
 		D2000000000000000000002B /* yy-penta-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-penta-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-penta-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002C /* owl-climb-poker Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "owl-climb-poker Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/owl-climb-poker/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-pivot Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-pivot/Hangboards"; sourceTree = "<absolute>"; };
+		DDD8EFC3ACF01AA856FDC558 /* FreeWorkoutSaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutSaver.swift; sourceTree = "<group>"; };
 		E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
 		E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
 		E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
@@ -558,6 +564,7 @@
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
 				AC0000000000000000000006 /* SentryUserReports.swift */,
 				BB00000000000000000000F2 /* FreeWorkoutDraft.swift */,
+				DDD8EFC3ACF01AA856FDC558 /* FreeWorkoutSaver.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -591,6 +598,7 @@
 				A3D000000000000000000002 /* GripHandModelView.swift */,
 				A3D000000000000000000004 /* hand-mesh.json */,
 				9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */,
+				466D1CDB6CC185DE40F47E06 /* FreeWorkoutSessionView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -665,6 +673,7 @@
 				BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */,
 				BB00000000000000000000A3 /* DeepLinkManagerTests.swift */,
 				BB00000000000000000000F1 /* FreeWorkoutTests.swift */,
+				BB9AC34DC00A0B42A5F19C24 /* FreeWorkoutSaverTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -974,6 +983,8 @@
 				AB0000000000000000000009 /* SentryUserReports.swift in Sources */,
 				AA00000000000000000000E8 /* ReportProblemView.swift in Sources */,
 				657AB2421605583B8E5B5BFC /* FreeWorkoutBuilderView.swift in Sources */,
+				1D872F6CB4AF206A2CD37B91 /* FreeWorkoutSaver.swift in Sources */,
+				2A97A71704F3C343F8E685BE /* FreeWorkoutSessionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1037,6 +1048,7 @@
 				AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */,
 				AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */,
 				AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */,
+				D8B94A64F8BFBA4F0C51B9EF /* FreeWorkoutSaverTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

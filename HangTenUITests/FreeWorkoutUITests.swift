@@ -11,4 +11,16 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(app.buttons["freeWorkout.addHang"].exists)
         XCTAssertTrue(app.buttons["freeWorkout.start"].exists)
     }
+
+    func testFreeWorkoutSessionStartsAndShowsControls() {
+        let app = XCUIApplication()
+        app.launch()
+        app.buttons["train.freeWorkout"].tap()
+        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
+        app.buttons["freeWorkout.start"].tap()
+        XCTAssertTrue(app.otherElements["freeWorkout.session"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["freeWorkout.completeSet"].exists)
+        XCTAssertTrue(app.buttons["freeWorkout.skip"].exists)
+        XCTAssertTrue(app.buttons["freeWorkout.finish"].exists)
+    }
 }
