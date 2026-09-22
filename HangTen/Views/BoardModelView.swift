@@ -2857,7 +2857,6 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         model.frame(in: bounds.size)
         model.resetCamera(animated: false)
         freezeAccessibilityProjectionToCanonical = true
-        needsAccessibilityProjection = true
         updateAccessibility()
         requestPausedRedraw()
     }
