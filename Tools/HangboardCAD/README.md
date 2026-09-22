@@ -87,7 +87,8 @@ The app loads the migrated USDZ and descriptor, renders the board with its wood
 texture, and selects and highlights the `45 mm upper edge` contact, so the
 descriptor's node IDs resolve to the exported meshes and the contact hit-testing
 works. The reference asset was staged by a second build and captured the same
-way, so the comparison below is a real staged A/B rather than a swapped file.
+way, so that comparison is a real staged A/B rather than a swapped file (the
+illustrative images live in the build session's scratch, not in this repository).
 
 The migrated asset renders a smoother surface than the reference, which shows
 banding and shading artifacts. Those artifacts are the residue of the earlier
@@ -110,6 +111,11 @@ performance. Those remain open.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
   and must not be presented as recovered parametric history.
+* The compiler refuses a source it cannot recompute cleanly, a contact region
+  whose depth disagrees with the published grip depth in `board.json`, a body
+  triangle claimed by two contact regions, an exported area that does not match
+  the body surface, and a document labelled `faceted-import` unless
+  `--allow-faceted-import` acknowledges it. Each guard has a failing test.
 * FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
   value in this pinned build. The authored sketch stores negated local
   coordinates with positive driving dimensions and negates them back through an
