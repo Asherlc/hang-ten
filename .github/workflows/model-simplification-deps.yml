@@ -1,0 +1,30 @@
+name: Prepare model simplification pilot
+on:
+  push:
+    branches: [optimize/model-simplification-pilot-20260922]
+    paths: [.github/workflows/model-simplification-deps.yml]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Collect source and pinned meshoptimizer dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .context/hang-ten-simplify/deps
+          git archive HEAD | gzip -1 > .context/hang-ten-simplify/deps/repository.tar.gz
+          curl --fail --location --retry 2 https://codeload.github.com/zeux/meshoptimizer/tar.gz/refs/tags/v1.0 -o .context/hang-ten-simplify/deps/meshoptimizer-v1.0.tar.gz
+          sha256sum .context/hang-ten-simplify/deps/*.tar.gz > .context/hang-ten-simplify/deps/SHA256SUMS
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: hang-ten-simplify-dependencies
+          path: .context/hang-ten-simplify/deps/
+          retention-days: 1
+          compression-level: 0
