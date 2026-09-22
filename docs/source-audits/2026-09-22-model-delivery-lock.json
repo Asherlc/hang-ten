@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "assetCommit": "b6062d7c359df041115f701fe28231b9dc07fe61",
+  "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung native FreeCAD migration; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
