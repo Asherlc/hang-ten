@@ -348,6 +348,18 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
     if document is None:
         raise BuildError("FreeCAD could not open the source document")
     document.recompute()
+    # A feature tree that fails to recompute leaves stale shapes in the file.
+    # Without this check the build would happily tessellate the stale body and
+    # freshly recomputed contact bands and publish the inconsistent mix, because
+    # a failed recompute is reported through object state, not an exception.
+    stale = []
+    for obj in document.Objects:
+        state = set(obj.State)
+        failed = state & {"Invalid", "Error", "Touched", "Recompute"}
+        if failed:
+            stale.append(f"{obj.Name}({obj.TypeId})={sorted(state)}")
+    if stale:
+        raise BuildError("source document did not recompute cleanly: " + "; ".join(stale))
     if _digest(source) != source_digest:
         raise BuildError("reopening the source modified its bytes")
     properties = _document_properties(document)

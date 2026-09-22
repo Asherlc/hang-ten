@@ -70,6 +70,14 @@ def test_native_source_checks_pass():
 
 
 @requires_freecad
+def test_a_source_that_fails_to_recompute_does_not_publish():
+    """A stale feature tree must fail the build, not ship a stale shape."""
+    result = run_under_freecad(TOOLS / "tests" / "native_broken_source_check.py")
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "broken-source checks passed" in result.stdout
+
+
+@requires_freecad
 def test_compiler_check_mode_reports_a_consistent_package(tmp_path):
     report = tmp_path / "report.json"
     result = run_under_freecad(
