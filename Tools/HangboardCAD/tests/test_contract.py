@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections import Counter
 import sys
 import zipfile
 from pathlib import Path
@@ -90,6 +91,36 @@ def test_accepts_a_document_local_xlink(tmp_path):
     assert contract.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
 
 
+NEW_XLINK_TYPES = [
+    "App::PropertyXLinkList",
+    "App::PropertyXLinkSubHidden",
+    "App::PropertyXLinkContainer",
+]
+
+
+@pytest.mark.parametrize("xlink_type", NEW_XLINK_TYPES)
+def test_rejects_external_reference_for_each_xlink_type(tmp_path, xlink_type):
+    document = DOCUMENT.replace(
+        "</ObjectData>",
+        f'<Property name="Support" type="{xlink_type}">'
+        '<XLink file="/tmp/other.FCStd" name="B"/></Property></ObjectData>',
+    )
+    archive = build_archive(tmp_path / "xlink_variant.FCStd", [], document)
+    with pytest.raises(ValueError, match="external document reference"):
+        contract.inspect_archive(archive)
+
+
+@pytest.mark.parametrize("xlink_type", NEW_XLINK_TYPES)
+def test_accepts_document_local_reference_for_each_xlink_type(tmp_path, xlink_type):
+    document = DOCUMENT.replace(
+        "</ObjectData>",
+        f'<Property name="Support" type="{xlink_type}">'
+        '<XLink file="" name="Profile"/></Property></ObjectData>',
+    )
+    archive = build_archive(tmp_path / "xlink_local.FCStd", [], document)
+    assert contract.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
+
+
 def test_rejects_an_absent_included_file(tmp_path):
     document = DOCUMENT.replace(
         "</ObjectData>",
@@ -137,3 +168,53 @@ def test_requires_every_contact_to_be_bound():
     nodes = [{"id": "body", "role": "body"}, {"id": "c", "role": "contact", "contact": "a"}]
     with pytest.raises(ValueError, match="does not match"):
         contract.validate_bindings(nodes, board, 1, [])
+
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+REAL_SOURCE = REPOSITORY_ROOT / "ModelSources" / "lattice-triple-rung.FCStd"
+REAL_OBJECT_INVENTORY = {
+    "Body": "PartDesign::Body",
+    "Origin": "App::Origin",
+    "X_Axis": "App::Line",
+    "Y_Axis": "App::Line",
+    "Z_Axis": "App::Line",
+    "XY_Plane": "App::Plane",
+    "XZ_Plane": "App::Plane",
+    "YZ_Plane": "App::Plane",
+    "Origin001": "App::Point",
+    "Profile": "Sketcher::SketchObject",
+    "Pad": "PartDesign::Pad",
+    "Region_edge_10": "PartDesign::SubShapeBinder",
+    "Surface_edge_10": "Part::Extrusion",
+    "Region_edge_20": "PartDesign::SubShapeBinder",
+    "Surface_edge_20": "Part::Extrusion",
+    "Region_edge_45": "PartDesign::SubShapeBinder",
+    "Surface_edge_45": "Part::Extrusion",
+}
+
+
+def test_real_committed_source_document_matches_inventory():
+    with REAL_SOURCE.open("rb") as stream:
+        if stream.read(80).startswith(b"version https://git-lfs.github.com/spec/v1"):
+            pytest.skip("Git LFS object not fetched in this checkout")
+    try:
+        result = contract.inspect_archive(REAL_SOURCE)
+    except ValueError as error:
+        if "Git LFS pointer" in str(error):
+            pytest.skip("Git LFS object not fetched in this checkout")
+        raise
+    assert set(result["objects"].values()) <= contract.BUILTIN_TYPES
+    assert result["objects"] == REAL_OBJECT_INVENTORY
+    assert Counter(result["objects"].values()) == {
+        "PartDesign::Body": 1,
+        "Sketcher::SketchObject": 1,
+        "PartDesign::Pad": 1,
+        "Part::Extrusion": 3,
+        "PartDesign::SubShapeBinder": 3,
+        "App::Origin": 1,
+        "App::Line": 3,
+        "App::Plane": 3,
+        "App::Point": 1,
+    }
+    assert len(result["objects"]) == 17
+    assert any("neutral-tulipwood" in member for member in result["members"])
