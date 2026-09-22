@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "sourceCommit": "ef07a5fb04104d5f0a5ed3accc4c6ae918e02529",
+  "models": {
+    "metolius-simulator-3d": {
+      "sha256": "19d5fd2da38786fcdf87cb8452789fb47ed2209c628421dd745d30c5b4f7b24e",
+      "conservative": {
+        "shade": false
+      },
+      "lean": {
+        "shade": false
+      },
+      "nodes": {
+        "board_body_001": {
+          "lean": {
+            "ratio": 0.12,
+            "error": 0.0007
+          }
+        }
+      },
+      "reviewedLayerSHA256": "e8c54a43825f48099d601be922f34afe3a837d3e0ac1d313ec5f80f41749e349",
+      "reviewedTriangleCount": 90386
+    },
+    "metolius-wood-grips-deluxe-ii": {
+      "sha256": "d0d4436f93a8a0c67104d33605d65747e83ef463ce823793ee6a6c8e35c0bcdd",
+      "conservative": {
+        "shade": false,
+        "permissive": true,
+        "planarNormals": true
+      },
+      "lean": {
+        "shade": false,
+        "permissive": true,
+        "planarNormals": true
+      },
+      "reviewedLayerSHA256": "c02f6841b59402a54cc70df35fc29b93b50b26d6e95e5db7c7a80bd71aadace0",
+      "reviewedTriangleCount": 18082
+    },
+    "lattice-mxedge-lift-small": {
+      "sha256": "662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee",
+      "lean": {
+        "ratio": 0.04,
+        "error": 0.0015
+      },
+      "reviewedLayerSHA256": "53a39f99c21c30f5ba308ecc8aef2933ed4371cd108cdbaf53de8e69c99afcb7",
+      "reviewedTriangleCount": 19456
+    }
+  }
+}

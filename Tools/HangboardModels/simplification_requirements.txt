@@ -1,0 +1,7 @@
+numpy==2.3.5
+numba==0.65.1
+scipy==1.17.0
+usd-core==26.8
+Pillow==12.3.0
+trimesh==4.11.1
+rtree==1.4.1
