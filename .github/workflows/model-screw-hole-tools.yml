@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Download binary USD and geometry tools for the isolated renderer
+      - name: Download the isolated nonplanar mesh inspection dependency
         shell: bash
         run: |
           set -euo pipefail
@@ -24,12 +24,12 @@ jobs:
             --python-version 3.13 --implementation cp --abi cp313 \
             --platform manylinux_2_28_x86_64 --platform manylinux_2_27_x86_64 \
             --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 \
-            --dest .context/remove-model-screw-holes-20260921/wheels usd-core manifold3d rtree
+            --dest .context/remove-model-screw-holes-20260921/wheels pymeshfix==0.18.1
           sha256sum .context/remove-model-screw-holes-20260921/wheels/* > .context/remove-model-screw-holes-20260921/wheels/SHA256SUMS
       - name: Upload isolated inspection dependencies
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: remove-model-screw-holes-20260921-tools
+          name: remove-model-screw-holes-20260921-nonplanar-tools
           path: .context/remove-model-screw-holes-20260921/wheels/
           if-no-files-found: error
           retention-days: 1
