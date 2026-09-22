@@ -48,12 +48,14 @@ import Part  # noqa: E402
 import Sketcher  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
 
+import reference as reference_module  # noqa: E402
+from reference import load_reference  # noqa: E402
+
 PACKAGE = "lattice-triple-rung"
 # The approved reference is read from Git at the recorded pre-migration commit,
 # never from the live runtime path: the shared compiler overwrites that path
 # with this migration's own output, so reading it there would silently make the
 # migration compare against itself.
-REFERENCE_COMMIT = "6b828e156d4e14ec4a8aa0e3b8f17212336be7bc"
 REFERENCE_PATH = f"Hangboards/{PACKAGE}/assets/primary.usdz"
 BOARD_JSON = REPOSITORY / "Hangboards" / PACKAGE / "board.json"
 DESTINATION = REPOSITORY / "ModelSources" / f"{PACKAGE}.FCStd"
@@ -170,41 +172,6 @@ MATERIAL_ROUGHNESS = 0.58
 MATERIAL_METALLIC = 0.0
 
 
-def _reference_asset() -> tuple[Path, str]:
-    """Materialise the approved reference from its recorded Git commit."""
-    import subprocess
-
-    override = os.environ.get("HANGTEN_REFERENCE")
-    if override:
-        path = Path(override)
-        return path, hashlib.sha256(path.read_bytes()).hexdigest()
-    stored = subprocess.run(
-        ["git", "show", f"{REFERENCE_COMMIT}:{REFERENCE_PATH}"],
-        cwd=REPOSITORY,
-        check=True,
-        capture_output=True,
-    ).stdout
-    # The reference is Git LFS tracked, so the stored blob is a pointer; the
-    # smudge filter resolves it and its declared object id is checked below.
-    resolved = subprocess.run(
-        ["git", "lfs", "smudge"], input=stored, capture_output=True, check=True
-    ).stdout
-    if resolved.startswith(b"version https://git-lfs.github.com/spec/v1"):
-        raise ValueError("Git LFS smudge did not resolve the reference object")
-    declared = None
-    for line in stored.decode("utf-8", "replace").splitlines():
-        if line.startswith("oid sha256:"):
-            declared = line.split(":", 1)[1].strip()
-    digest = hashlib.sha256(resolved).hexdigest()
-    if declared is not None and declared != digest:
-        raise ValueError("resolved reference does not match its Git LFS object id")
-    scratch_root = Path(os.environ.get("HANGTEN_CAD_SCRATCH", "/tmp")) / f"{PACKAGE}-assets"
-    scratch_root.mkdir(parents=True, exist_ok=True)
-    path = scratch_root / "reference.usdz"
-    path.write_bytes(resolved)
-    return path, digest
-
-
 def _reference_texture(reference: Path) -> tuple[str, Path, str]:
     """Extract the approved display texture from the reference package."""
     import zipfile
@@ -239,7 +206,9 @@ def _apply_material(obj, texture_source: Path | None) -> None:
 
 def main() -> int:
     board = json.loads(BOARD_JSON.read_text())
-    reference, reference_digest = _reference_asset()
+    reference, reference_digest = load_reference(
+        PACKAGE, "primary.usdz", Path(os.environ.get("HANGTEN_CAD_SCRATCH", "/tmp")) / f"{PACKAGE}-assets"
+    )
     stage = Usd.Stage.Open(str(reference))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
 
@@ -471,7 +440,7 @@ def main() -> int:
                 "package": PACKAGE,
                 "boardID": board["id"],
                 "reference": REFERENCE_PATH,
-                "referenceCommit": REFERENCE_COMMIT,
+                "referenceCommit": reference_module.REFERENCE_COMMIT,
                 "referenceSHA256": reference_digest,
                 "referenceTexture": texture_member,
                 "referenceTextureSHA256": texture_digest,

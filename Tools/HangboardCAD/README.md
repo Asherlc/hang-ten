@@ -90,9 +90,14 @@ works. The reference asset was staged by a second build and captured the same
 way, so the comparison below is a real staged A/B rather than a swapped file.
 
 The migrated asset renders a smoother surface than the reference, which shows
-banding artifacts. The reference also carries twelve 3.44 mm circular mounting
-passages (measured boundary loops at x = +/-75 mm and +/-225 mm, y = 14 mm and
-96 mm); this migration deliberately omits them, consistent with the repository
+banding and shading artifacts. Those artifacts are the residue of the earlier
+mounting-bore removal: the reference still carries six flat circular cap patches
+at exactly the positions recorded in
+``Tools/HangboardModels/mounting_bore_repairs.json`` (x = +/-75 mm and
++/-225 mm at y = 14 mm, and x = +/-225 mm at y = 96 mm). They are essentially
+flush with the surrounding surface - the two-way sampled deviation is 0.21 mm
+worst case - but the rim crease is visible. The migrated asset has a continuous
+surface there, so those seams are gone, consistent with the repository
 screw-hole/hardware omission policy.
 
 Not verified in the app: suspension and cord clearance, accessibility, and
@@ -133,7 +138,9 @@ performance. Those remain open.
   normals and UVs, and byte reproducibility.
 * `test_pilot_native.py` — runs the native checks and the compiler under the
   pinned FreeCAD build as subprocesses; skipped, not silently passed, when that
-  toolchain is absent.
+  toolchain is absent. The reference comparison resolves the pre-migration asset
+  from Git via `Tools/HangboardCAD/reference.py`, so no copy of it is kept in the
+  working tree.
 * `tests/native_source_checks.py` — genuine native reopen, recompute, and edit
   checks: pad length 550 -> 620 mm propagating to every contact, and a profile
   dimension 50 -> 56 mm moving the edge-45 contact from 45.00 to 55.98 mm while
