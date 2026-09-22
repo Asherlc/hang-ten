@@ -1,0 +1,15 @@
+{
+  "assetFile": "frictitious-doormount-pro-7.glb",
+  "assetSha256": "8b639807ff660566dca2fd313f00abfadaae0bfbaf0c28ecbc82477f2732113f",
+  "reviewedAtUTC": "2026-09-20T18:32:23.821537+00:00",
+  "scope": "Visual inspection of the five final genuine GLB render panels in this conversation, separate from structural and evidence tests.",
+  "notes": "Reviewed all five current views. Curved-transition protection removes the large triangular shading patches without flattening the lip geometry. All 13 contact regions remain; nested cavities and mounting opening are genuine geometry. Rear details remain simplified as documented.",
+  "renderHashes": {
+    "renders/01-front.png": "229ca7f5258018991cd78d1958004ca70a79cc63858c618373ad69e4c7c319ea",
+    "renders/02-reverse.png": "d8c9919aceb4db12303f3be8d2aeb4c559b130f94d0f1c8a5ee4bccbe197486f",
+    "renders/03-oblique.png": "1c8e40b7bf5a01dd0df80f2bddeed691baeab3096701641e9028699244665a2c",
+    "renders/04-contact-detail.png": "ce9e6e436bb1f26cf265da81d53968b4417270285a48aa767f4672a3351d2504",
+    "renders/05-material-closeup.png": "308d734416659651b461137a02449d2a70b6e48c07fee929cb92f09df9f8d404"
+  },
+  "manufacturerAccuracyCertified": false
+}

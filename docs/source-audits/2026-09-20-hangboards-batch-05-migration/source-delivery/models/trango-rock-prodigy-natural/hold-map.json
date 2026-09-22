@@ -1,0 +1,359 @@
+{
+  "schemaVersion": 1,
+  "assetFile": "trango-rock-prodigy-natural.glb",
+  "assetSha256": "a9a2087a263fc08ea489947ad5d41edad36c7af210b734de0873edf927586b90",
+  "coordinateSystem": {
+    "sourceUnits": "metres",
+    "sourceAxes": {
+      "right": [
+        1,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        1
+      ],
+      "physicalFrontFacingDirection": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "canonicalCamera": {
+      "lookingDirection": [
+        0,
+        1,
+        0
+      ],
+      "upDirection": [
+        0,
+        0,
+        1
+      ]
+    },
+    "origin": "Center of the authored board/pair in X; body datum Z=0; rear mounting plane Y=0. Pair gap is an authored display spacing, not a training prescription.",
+    "exportConversion": {
+      "node": "SOURCE-ZUP_to_GLTF-YUP",
+      "rotationQuaternionXYZW": [
+        -0.7071067811865476,
+        0,
+        0,
+        0.7071067811865476
+      ],
+      "matrixRowMajor": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "glTFUp": [
+        0,
+        1,
+        0
+      ],
+      "glTFPhysicalFront": [
+        0,
+        0,
+        1
+      ],
+      "glTFCameraLookingDirection": [
+        0,
+        0,
+        -1
+      ]
+    }
+  },
+  "holdCount": 16,
+  "holds": [
+    {
+      "holdId": "left-jug",
+      "nodeName": "hold--left-jug",
+      "description": "Continuous top jug (manual nominal 40 mm)",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1487,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail-upper",
+      "nodeName": "hold--left-rail-upper",
+      "description": "Upper variable rail, outside 20 to inside 33",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        20,
+        33
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1476,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail-lower",
+      "nodeName": "hold--left-rail-lower",
+      "description": "Lower variable rail, outside 10 to inside 24",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        10,
+        24
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1494,
+      "selectable": true
+    },
+    {
+      "holdId": "left-closed-crimp",
+      "nodeName": "hold--left-closed-crimp",
+      "description": "Open-ended crimp channel and thumb shoulder",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 31310,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-3finger",
+      "nodeName": "hold--left-pocket-3finger",
+      "description": "Deep three-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 38,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-2finger",
+      "nodeName": "hold--left-pocket-2finger",
+      "description": "Lower two-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 29,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 540,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-supported",
+      "nodeName": "hold--left-pocket-supported",
+      "description": "Supported pocket, outside36 to inside26",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        36,
+        26
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 684,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-thumb",
+      "nodeName": "hold--left-pinch-thumb",
+      "description": "Bottom thumb opposition shared by medium and wide pinches",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 472,
+      "selectable": true
+    },
+    {
+      "holdId": "right-jug",
+      "nodeName": "hold--right-jug",
+      "description": "Continuous top jug (manual nominal 40 mm)",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1487,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail-upper",
+      "nodeName": "hold--right-rail-upper",
+      "description": "Upper variable rail, outside 20 to inside 33",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        20,
+        33
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1476,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail-lower",
+      "nodeName": "hold--right-rail-lower",
+      "description": "Lower variable rail, outside 10 to inside 24",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        10,
+        24
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1494,
+      "selectable": true
+    },
+    {
+      "holdId": "right-closed-crimp",
+      "nodeName": "hold--right-closed-crimp",
+      "description": "Open-ended crimp channel and thumb shoulder",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 31312,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-3finger",
+      "nodeName": "hold--right-pocket-3finger",
+      "description": "Deep three-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 38,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 756,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-2finger",
+      "nodeName": "hold--right-pocket-2finger",
+      "description": "Lower two-finger pocket",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": 29,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 540,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-supported",
+      "nodeName": "hold--right-pocket-supported",
+      "description": "Supported pocket, outside36 to inside26",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": [
+        36,
+        26
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 684,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-thumb",
+      "nodeName": "hold--right-pinch-thumb",
+      "description": "Bottom thumb opposition shared by medium and wide pinches",
+      "evidenceReferences": [
+        "N1",
+        "N2",
+        "N3",
+        "N4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 472,
+      "selectable": true
+    }
+  ],
+  "bodies": [
+    {
+      "nodeName": "body--left",
+      "selectable": false
+    },
+    {
+      "nodeName": "body--right",
+      "selectable": false
+    }
+  ]
+}

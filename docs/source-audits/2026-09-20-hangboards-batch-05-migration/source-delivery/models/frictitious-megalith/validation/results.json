@@ -1,0 +1,186 @@
+{
+  "assetFile": "frictitious-megalith.glb",
+  "sha256": "d8a9fb8c1f308d0d11e90f760e30f1cfde3bf36cb19b212ef24a368835adceb1",
+  "bytes": 6054196,
+  "triangles": 169522,
+  "vertices": 125666,
+  "contactCount": 20,
+  "checks": {
+    "clean_trimesh_and_VTK_import": {
+      "pass": true,
+      "detail": null
+    },
+    "unique_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "exact_hold_mapping": {
+      "pass": true,
+      "detail": null
+    },
+    "hold_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "body_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "only_production_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "root_coordinate_conversion": {
+      "pass": true,
+      "detail": null
+    },
+    "applied_mesh_transforms": {
+      "pass": true,
+      "detail": null
+    },
+    "self_contained": {
+      "pass": true,
+      "detail": null
+    },
+    "no_environment": {
+      "pass": true,
+      "detail": null
+    },
+    "material_on_every_primitive": {
+      "pass": true,
+      "detail": null
+    },
+    "assembled_watertight": {
+      "pass": true,
+      "detail": null
+    },
+    "consistent_winding": {
+      "pass": true,
+      "detail": null
+    },
+    "positive_volume": {
+      "pass": true,
+      "detail": 0.004152943406231339
+    },
+    "finite_nondegenerate": {
+      "pass": true,
+      "detail": null
+    },
+    "no_duplicate_triangles": {
+      "pass": true,
+      "detail": null
+    },
+    "one_connected_patch_per_contact": {
+      "pass": true,
+      "detail": {
+        "hold--center-edge-25": 1,
+        "hold--jug": 1,
+        "hold--left-edge-10": 1,
+        "hold--left-edge-12": 1,
+        "hold--left-edge-15": 1,
+        "hold--left-edge-20": 1,
+        "hold--left-edge-30": 1,
+        "hold--left-edge-40": 1,
+        "hold--left-edge-8": 1,
+        "hold--left-mono": 1,
+        "hold--left-pocket-2finger": 1,
+        "hold--right-edge-10": 1,
+        "hold--right-edge-12": 1,
+        "hold--right-edge-15": 1,
+        "hold--right-edge-20": 1,
+        "hold--right-edge-30": 1,
+        "hold--right-edge-40": 1,
+        "hold--right-edge-8": 1,
+        "hold--right-mono": 1,
+        "hold--right-pocket-2finger": 1
+      }
+    },
+    "physical_unit_count": {
+      "pass": true,
+      "detail": null
+    },
+    "metric_bounds": {
+      "pass": true,
+      "detail": {
+        "master": [
+          [
+            -0.339725,
+            -0.05715,
+            -0.08255
+          ],
+          [
+            0.339725,
+            -0.0,
+            0.08255
+          ]
+        ],
+        "export": [
+          [
+            -0.33972498774528503,
+            -0.05714999884366989,
+            -0.08254999667406082
+          ],
+          [
+            0.33972498774528503,
+            -0.0,
+            0.08254999667406082
+          ]
+        ]
+      }
+    },
+    "normalized_finite_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "shared_contact_boundary_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "indexed_vertex_efficiency": {
+      "pass": true,
+      "detail": {
+        "vertices": 125666,
+        "triangles": 169522
+      }
+    },
+    "meaningful_size_reduction": {
+      "pass": true,
+      "detail": null
+    },
+    "UV0_finite_unit_square": {
+      "pass": true,
+      "detail": null
+    },
+    "UV_local_stretch": {
+      "pass": true,
+      "detail": null
+    },
+    "locked_contact_boundaries": {
+      "pass": true,
+      "detail": null
+    },
+    "sampled_surface_deviation": {
+      "pass": true,
+      "detail": null
+    }
+  },
+  "structuralPass": true,
+  "sourceBoundsMetres": [
+    [
+      -0.33972498774528503,
+      -0.05714999884366989,
+      -0.08254999667406082
+    ],
+    [
+      0.33972498774528503,
+      -0.0,
+      0.08254999667406082
+    ]
+  ],
+  "software": {
+    "trimesh": "4.11.1",
+    "VTK": "9.6.2"
+  },
+  "photoFidelityCertified": false,
+  "targetPhoneTested": false
+}

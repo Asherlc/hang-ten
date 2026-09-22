@@ -1,0 +1,551 @@
+{
+  "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/frictitious-megalith/frictitious-megalith.glb",
+  "sourceSHA256": "d8a9fb8c1f308d0d11e90f760e30f1cfde3bf36cb19b212ef24a368835adceb1",
+  "preparedSHA256": "7fb57805b0c645d3beaf269649f19f3e5602904ffe29825587e065e6a5e667d9",
+  "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/frictitious-megalith.blend",
+  "blenderVersion": "5.2.0 LTS",
+  "removedTransformOnlyNodes": [
+    "world",
+    "SOURCE-ZUP_to_GLTF-YUP"
+  ],
+  "maximumWorldVertexDeltaMetres": 0.0,
+  "geometryChanged": true,
+  "contactOwnershipEdits": [
+    {
+      "fromSourceNode": "hold--right-edge-20",
+      "toSourceNode": "hold--right-edge-15",
+      "triangleCount": 18,
+      "reason": "Inclusive cut ordering assigned the229mm-centered strip asymmetrically; M2 symmetric physical layout governs ownership.",
+      "physicalGeometryChanged": false,
+      "triangleCoordinatesSourceMetres": [
+        [
+          [
+            0.22783251106739044,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ],
+          [
+            0.23016749322414398,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ],
+          [
+            0.23016522824764252,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ]
+        ],
+        [
+          [
+            0.22783251106739044,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ],
+          [
+            0.23016522824764252,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ],
+          [
+            0.2278347760438919,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ]
+        ],
+        [
+          [
+            0.2278347760438919,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ],
+          [
+            0.23016522824764252,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ],
+          [
+            0.23016522824764252,
+            -0.0240000132471323,
+            -0.0650000050663948
+          ]
+        ],
+        [
+          [
+            0.2278347760438919,
+            -0.03500001132488251,
+            -0.06499999761581421
+          ],
+          [
+            0.23016522824764252,
+            -0.0240000132471323,
+            -0.0650000050663948
+          ],
+          [
+            0.2278347760438919,
+            -0.019000010564923286,
+            -0.0650000050663948
+          ]
+        ],
+        [
+          [
+            0.22784346342086792,
+            -0.017585797235369682,
+            -0.06441421806812286
+          ],
+          [
+            0.2301565259695053,
+            -0.022585798054933548,
+            -0.06441421806812286
+          ],
+          [
+            0.23014689981937408,
+            -0.02215225249528885,
+            -0.06376537680625916
+          ]
+        ],
+        [
+          [
+            0.22784346342086792,
+            -0.017585797235369682,
+            -0.06441421806812286
+          ],
+          [
+            0.23014689981937408,
+            -0.02215225249528885,
+            -0.06376537680625916
+          ],
+          [
+            0.22785310447216034,
+            -0.017152251675724983,
+            -0.06376537680625916
+          ]
+        ],
+        [
+          [
+            0.22785310447216034,
+            -0.017152251675724983,
+            -0.06376537680625916
+          ],
+          [
+            0.23014689981937408,
+            -0.02215225249528885,
+            -0.06376537680625916
+          ],
+          [
+            0.23013554513454437,
+            -0.022000011056661606,
+            -0.06300000846385956
+          ]
+        ],
+        [
+          [
+            0.22785310447216034,
+            -0.017152251675724983,
+            -0.06376537680625916
+          ],
+          [
+            0.23013554513454437,
+            -0.022000011056661606,
+            -0.06300000846385956
+          ],
+          [
+            0.22786445915699005,
+            -0.01700001209974289,
+            -0.06300000846385956
+          ]
+        ],
+        [
+          [
+            0.22783702611923218,
+            -0.01823464408516884,
+            -0.06484776735305786
+          ],
+          [
+            0.23016296327114105,
+            -0.023234644904732704,
+            -0.06484776735305786
+          ],
+          [
+            0.2301565259695053,
+            -0.022585798054933548,
+            -0.06441421806812286
+          ]
+        ],
+        [
+          [
+            0.22783702611923218,
+            -0.01823464408516884,
+            -0.06484776735305786
+          ],
+          [
+            0.2301565259695053,
+            -0.022585798054933548,
+            -0.06441421806812286
+          ],
+          [
+            0.22784346342086792,
+            -0.017585797235369682,
+            -0.06441421806812286
+          ]
+        ],
+        [
+          [
+            0.2278347760438919,
+            -0.019000010564923286,
+            -0.0650000050663948
+          ],
+          [
+            0.23016522824764252,
+            -0.0240000132471323,
+            -0.0650000050663948
+          ],
+          [
+            0.23016296327114105,
+            -0.023234644904732704,
+            -0.06484776735305786
+          ]
+        ],
+        [
+          [
+            0.2278347760438919,
+            -0.019000010564923286,
+            -0.0650000050663948
+          ],
+          [
+            0.23016296327114105,
+            -0.023234644904732704,
+            -0.06484776735305786
+          ],
+          [
+            0.22783702611923218,
+            -0.01823464408516884,
+            -0.06484776735305786
+          ]
+        ],
+        [
+          [
+            0.22780507802963257,
+            -0.037000011652708054,
+            -0.06700000166893005
+          ],
+          [
+            0.23019491136074066,
+            -0.037000011652708054,
+            -0.06700000166893005
+          ],
+          [
+            0.23018355667591095,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ]
+        ],
+        [
+          [
+            0.22780507802963257,
+            -0.037000011652708054,
+            -0.06700000166893005
+          ],
+          [
+            0.23018355667591095,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ],
+          [
+            0.22781644761562347,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ]
+        ],
+        [
+          [
+            0.22781644761562347,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ],
+          [
+            0.23018355667591095,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ],
+          [
+            0.23017393052577972,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ]
+        ],
+        [
+          [
+            0.22781644761562347,
+            -0.03684777021408081,
+            -0.06623463332653046
+          ],
+          [
+            0.23017393052577972,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ],
+          [
+            0.2278260737657547,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ]
+        ],
+        [
+          [
+            0.2278260737657547,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ],
+          [
+            0.23017393052577972,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ],
+          [
+            0.23016749322414398,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ]
+        ],
+        [
+          [
+            0.2278260737657547,
+            -0.03641422465443611,
+            -0.06558578461408615
+          ],
+          [
+            0.23016749322414398,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ],
+          [
+            0.22783251106739044,
+            -0.035765379667282104,
+            -0.06515224277973175
+          ]
+        ]
+      ]
+    }
+  ],
+  "mountingOpeningsRemoved": 6,
+  "mountingEdits": [
+    {
+      "centerSourceMetres": [
+        -0.29,
+        0,
+        0.008
+      ],
+      "frontSupportYMetres": -0.022,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    },
+    {
+      "centerSourceMetres": [
+        -0.13,
+        0,
+        -0.043
+      ],
+      "frontSupportYMetres": -0.037,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    },
+    {
+      "centerSourceMetres": [
+        -0.062,
+        0,
+        0.011
+      ],
+      "frontSupportYMetres": -0.026,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    },
+    {
+      "centerSourceMetres": [
+        0.29,
+        0,
+        0.008
+      ],
+      "frontSupportYMetres": -0.022,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    },
+    {
+      "centerSourceMetres": [
+        0.13,
+        0,
+        -0.043
+      ],
+      "frontSupportYMetres": -0.037,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    },
+    {
+      "centerSourceMetres": [
+        0.062,
+        0,
+        0.011
+      ],
+      "frontSupportYMetres": -0.026,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    }
+  ],
+  "maximumContactVertexDeltaMetres": 0.0,
+  "coordinatePreparation": "GLB native import + root world matrix bake only; Blender +Z up, front -Y, metres. Compiler transports to +Y up, front +Z.",
+  "materialAdaptation": "One constant PNG RGBA8 sRGB image per source material, explicitly encoded from linear GLB factor with <=0.004 linear-channel error; no generated grain or source image use.",
+  "sourceMaterialLinearRGBA": {
+    "substrate": [
+      0.6901960968971252,
+      0.501960813999176,
+      0.2980392277240753,
+      1.0
+    ]
+  },
+  "materialConversions": {
+    "substrate": {
+      "format": "PNG RGBA8 sRGB",
+      "encodedSRGB8": [
+        216,
+        188,
+        148,
+        255
+      ],
+      "decodedLinearRGBA": [
+        0.6866853124353135,
+        0.5028864580325687,
+        0.2961382707983211,
+        1.0
+      ],
+      "maximumLinearChannelError": 0.0035107844618117445,
+      "linearChannelTolerance": 0.004,
+      "textureSHA256": "26850ba25f77f8a54c0e284a94934ace1b4f33b27b3ee0160f4ca85cd14f8555"
+    }
+  },
+  "mountingOmission": "Only the mounting-interface authored body tubes are omitted, closing exact front/rear loops at their analytic support planes. Actual central relief, contact cavities, nested pockets and stepped depths remain unchanged. Physical products retain their mounting openings.",
+  "meshInventory": [
+    {
+      "name": "body--board",
+      "vertices": 111031,
+      "polygons": 151716
+    },
+    {
+      "name": "hold--center-edge-25",
+      "vertices": 293,
+      "polygons": 408
+    },
+    {
+      "name": "hold--jug",
+      "vertices": 2823,
+      "polygons": 4150
+    },
+    {
+      "name": "hold--left-edge-10",
+      "vertices": 574,
+      "polygons": 720
+    },
+    {
+      "name": "hold--left-edge-12",
+      "vertices": 694,
+      "polygons": 828
+    },
+    {
+      "name": "hold--left-edge-15",
+      "vertices": 613,
+      "polygons": 720
+    },
+    {
+      "name": "hold--left-edge-20",
+      "vertices": 599,
+      "polygons": 702
+    },
+    {
+      "name": "hold--left-edge-30",
+      "vertices": 669,
+      "polygons": 792
+    },
+    {
+      "name": "hold--left-edge-40",
+      "vertices": 1012,
+      "polygons": 1134
+    },
+    {
+      "name": "hold--left-edge-8",
+      "vertices": 700,
+      "polygons": 828
+    },
+    {
+      "name": "hold--left-mono",
+      "vertices": 398,
+      "polygons": 396
+    },
+    {
+      "name": "hold--left-pocket-2finger",
+      "vertices": 474,
+      "polygons": 504
+    },
+    {
+      "name": "hold--right-edge-10",
+      "vertices": 574,
+      "polygons": 720
+    },
+    {
+      "name": "hold--right-edge-12",
+      "vertices": 700,
+      "polygons": 828
+    },
+    {
+      "name": "hold--right-edge-15",
+      "vertices": 653,
+      "polygons": 720
+    },
+    {
+      "name": "hold--right-edge-20",
+      "vertices": 591,
+      "polygons": 702
+    },
+    {
+      "name": "hold--right-edge-30",
+      "vertices": 671,
+      "polygons": 792
+    },
+    {
+      "name": "hold--right-edge-40",
+      "vertices": 1074,
+      "polygons": 1134
+    },
+    {
+      "name": "hold--right-edge-8",
+      "vertices": 695,
+      "polygons": 828
+    },
+    {
+      "name": "hold--right-mono",
+      "vertices": 398,
+      "polygons": 396
+    },
+    {
+      "name": "hold--right-pocket-2finger",
+      "vertices": 474,
+      "polygons": 504
+    }
+  ],
+  "reconstructedMeshTextureCoordinates": {
+    "sourceNodeIDs": [
+      "body--board",
+      "hold--right-edge-15",
+      "hold--right-edge-20"
+    ],
+    "uvLayer": "st",
+    "everyLoopUV": [
+      0.5,
+      0.5
+    ],
+    "purpose": "Explicit center-pixel sampling of the unchanged constant substrate texture after mesh reconstruction; no geometry, normal or material change."
+  }
+}

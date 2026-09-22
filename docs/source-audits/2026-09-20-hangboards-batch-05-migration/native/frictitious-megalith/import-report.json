@@ -1,0 +1,69 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 20,
+  "contactMappings": {
+    "hold--center-edge-25": "center-edge-25",
+    "hold--jug": "top-jug",
+    "hold--left-edge-10": "edge-10-left",
+    "hold--left-edge-12": "edge-12-left",
+    "hold--left-edge-15": "edge-15-left",
+    "hold--left-edge-20": "edge-20-left",
+    "hold--left-edge-30": "edge-30-left",
+    "hold--left-edge-40": "edge-40-pocket-left",
+    "hold--left-edge-8": "edge-8-left",
+    "hold--left-mono": "mono-left",
+    "hold--left-pocket-2finger": "pocket-2finger-left",
+    "hold--right-edge-10": "edge-10-right",
+    "hold--right-edge-12": "edge-12-right",
+    "hold--right-edge-15": "edge-15-right",
+    "hold--right-edge-20": "edge-20-right",
+    "hold--right-edge-30": "edge-30-right",
+    "hold--right-edge-40": "edge-40-pocket-right",
+    "hold--right-edge-8": "edge-8-right",
+    "hold--right-mono": "mono-right",
+    "hold--right-pocket-2finger": "pocket-2finger-right"
+  },
+  "descriptorSHA256": "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
+  "modelBounds": {
+    "max": [
+      0.339724988,
+      0.082550012,
+      0.057150003
+    ],
+    "min": [
+      -0.339724988,
+      -0.082550004,
+      -9e-09
+    ]
+  },
+  "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+  "nodeCount": 21,
+  "packageID": "frictitious.megalith",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/frictitious-megalith.blend",
+  "sourceModelSHA256": "7fb57805b0c645d3beaf269649f19f3e5602904ffe29825587e065e6a5e667d9",
+  "sourceObjectIDs": [
+    "body--board",
+    "hold--center-edge-25",
+    "hold--jug",
+    "hold--left-edge-10",
+    "hold--left-edge-12",
+    "hold--left-edge-15",
+    "hold--left-edge-20",
+    "hold--left-edge-30",
+    "hold--left-edge-40",
+    "hold--left-edge-8",
+    "hold--left-mono",
+    "hold--left-pocket-2finger",
+    "hold--right-edge-10",
+    "hold--right-edge-12",
+    "hold--right-edge-15",
+    "hold--right-edge-20",
+    "hold--right-edge-30",
+    "hold--right-edge-40",
+    "hold--right-edge-8",
+    "hold--right-mono",
+    "hold--right-pocket-2finger"
+  ],
+  "status": "converted"
+}

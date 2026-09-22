@@ -1,0 +1,13 @@
+{
+  "url": "https://docs.blender.org/manual/en/latest/scene_layout/object/editing/shading.html",
+  "retrieved": "2026-09-20",
+  "retainedPath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/native/trango-authoring/blender-smooth-shading-2026-09-20.html",
+  "sha256": "c562eb36bcd7454448252541957778fe6b90b66957db4640347f8d38c535fe0a",
+  "relevance": "Official technical documentation: smooth shading interpolates normals while leaving geometry unchanged. Supports diagnosed interpolation error; not hangboard shape authority.",
+  "diagnosticControl": "Artifacts persisted with shadow visibility disabled; actual ray-hit triangle crosses from a tilted roll normal into the analytically flat face.",
+  "additionalPrimaryReference": {
+    "url": "https://doc.cgal.org/latest/Triangulation_2/index.html#Triangulation_2SecConstrainedTriangulations",
+    "consulted": "2026-09-20",
+    "relevance": "Constrained triangulations preserve specified edges and subdivide intersections; explains why a shared boundary chain is required, rather than merely welding coincident vertices."
+  }
+}

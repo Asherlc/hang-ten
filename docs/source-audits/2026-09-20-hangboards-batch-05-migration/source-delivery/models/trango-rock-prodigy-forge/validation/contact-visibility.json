@@ -1,0 +1,493 @@
+{
+  "assetFile": "trango-rock-prodigy-forge.glb",
+  "assetSha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "method": "Nearest-hit ray intersections against all actual exported triangles, with full body occlusion; no source labels used to invent geometry. Not a browser or physical-phone test.",
+  "allContactsExteriorAccessible": true,
+  "contactCount": 22,
+  "contacts": {
+    "hold--left-closed-crimp": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -0.18512546022733053,
+          -2.5835177528446986,
+          -0.009651689790189266
+        ],
+        "targetSourceM": [
+          -0.18512546022733053,
+          -0.03550000116229057,
+          -0.009651689790189266
+        ],
+        "firstIntersectionSourceM": [
+          -0.18512546022733053,
+          -0.03550000116229057,
+          -0.009651689790189266
+        ],
+        "triangleIndex": 80486
+      }
+    },
+    "hold--left-flat-edge": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          1.0633081791858554,
+          -2.316928027433292,
+          0.04116429512699445
+        ],
+        "targetSourceM": [
+          -0.07620000094175339,
+          -0.037911667178074517,
+          0.04116429512699445
+        ],
+        "firstIntersectionSourceM": [
+          -0.07620000094175339,
+          -0.03791166717807437,
+          0.04116429512699445
+        ],
+        "triangleIndex": 121536
+      }
+    },
+    "hold--left-imr": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          -0.25099394222100574,
+          -2.3116499697040878,
+          1.0825196092884422
+        ],
+        "targetSourceM": [
+          -0.25099394222100574,
+          -0.032633609448870025,
+          -0.05698857083916664
+        ],
+        "firstIntersectionSourceM": [
+          -0.25099394222100574,
+          -0.03263360944886973,
+          -0.05698857083916664
+        ],
+        "triangleIndex": 121840
+      }
+    },
+    "hold--left-mr-deep": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          -0.12992640336354574,
+          -2.3060163603346906,
+          1.1260710040043471
+        ],
+        "targetSourceM": [
+          -0.12992640336354574,
+          -0.02700000007947286,
+          -0.013437176123261452
+        ],
+        "firstIntersectionSourceM": [
+          -0.12992640336354574,
+          -0.027000000079472564,
+          -0.013437176123261452
+        ],
+        "triangleIndex": 122533
+      }
+    },
+    "hold--left-mr-shallow": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          -0.11161269744237264,
+          -2.3126830268523455,
+          1.0955349689285634
+        ],
+        "targetSourceM": [
+          -0.11161269744237264,
+          -0.033666666597127914,
+          -0.04397321119904518
+        ],
+        "firstIntersectionSourceM": [
+          -0.11161269744237264,
+          -0.033666666597127914,
+          -0.04397321119904518
+        ],
+        "triangleIndex": 123095
+      }
+    },
+    "hold--left-pinch-medium": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -0.336588591337204,
+          -2.637017753232129,
+          0.020299856395771105
+        ],
+        "targetSourceM": [
+          -0.336588591337204,
+          -0.08900000154972076,
+          0.020299856395771105
+        ],
+        "firstIntersectionSourceM": [
+          -0.336588591337204,
+          -0.08900000154972076,
+          0.020299856395771105
+        ],
+        "triangleIndex": 125316
+      }
+    },
+    "hold--left-pinch-narrow": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -0.3285646935304006,
+          -2.6240177492386176,
+          -0.055379319936037064
+        ],
+        "targetSourceM": [
+          -0.3285646935304006,
+          -0.07599999755620956,
+          -0.055379319936037064
+        ],
+        "firstIntersectionSourceM": [
+          -0.3285646935304006,
+          -0.07599999755620956,
+          -0.055379319936037064
+        ],
+        "triangleIndex": 134055
+      }
+    },
+    "hold--left-rail": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          -0.3389779974745406,
+          -2.3151126195859275,
+          1.148302246923903
+        ],
+        "targetSourceM": [
+          -0.2706496020158132,
+          -0.03609625933070978,
+          0.010844501356283823
+        ],
+        "firstIntersectionSourceM": [
+          -0.2706496020158132,
+          -0.03609625933070948,
+          0.010844501356283898
+        ],
+        "triangleIndex": 139066
+      }
+    },
+    "hold--left-sloper-30": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -2.6150161557806526,
+          -0.41760008329276915,
+          1.2281840519859204
+        ],
+        "targetSourceM": [
+          -0.39234761397043866,
+          -0.07713333268960317,
+          0.029759499554832775
+        ],
+        "firstIntersectionSourceM": [
+          -0.3923476139704385,
+          -0.0771333326896031,
+          0.029759499554832702
+        ],
+        "triangleIndex": 140334
+      }
+    },
+    "hold--left-sloper-40": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          0.9502930623956161,
+          -1.4353850848020784,
+          1.7923178746414938
+        ],
+        "targetSourceM": [
+          -0.30434635281562805,
+          -0.04463578015565872,
+          0.0648657704393069
+        ],
+        "firstIntersectionSourceM": [
+          -0.3043463528156283,
+          -0.04463578015565872,
+          0.06486577043930675
+        ],
+        "triangleIndex": 140581
+      }
+    },
+    "hold--left-slopey-crimper": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -0.16263961791992188,
+          -2.5950177500730827,
+          0.04259764403104782
+        ],
+        "targetSourceM": [
+          -0.16263961791992188,
+          -0.04699999839067459,
+          0.04259764403104782
+        ],
+        "firstIntersectionSourceM": [
+          -0.16263961791992188,
+          -0.04699999839067459,
+          0.04259764403104782
+        ],
+        "triangleIndex": 142258
+      }
+    },
+    "hold--right-closed-crimp": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          0.2022167593240738,
+          -2.5835177528446986,
+          -0.008736374787986279
+        ],
+        "targetSourceM": [
+          0.2022167593240738,
+          -0.03550000116229057,
+          -0.008736374787986279
+        ],
+        "firstIntersectionSourceM": [
+          0.2022167593240738,
+          -0.03550000116229057,
+          -0.008736374787986279
+        ],
+        "triangleIndex": 149654
+      }
+    },
+    "hold--right-flat-edge": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          -1.0633081791858554,
+          -2.316928027433292,
+          0.04116429512699445
+        ],
+        "targetSourceM": [
+          0.07620000094175339,
+          -0.037911667178074517,
+          0.04116429512699445
+        ],
+        "firstIntersectionSourceM": [
+          0.07620000094175339,
+          -0.03791166717807437,
+          0.04116429512699445
+        ],
+        "triangleIndex": 190999
+      }
+    },
+    "hold--right-imr": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          0.25099394222100574,
+          -2.3116499697040878,
+          1.0825196092884422
+        ],
+        "targetSourceM": [
+          0.25099394222100574,
+          -0.032633609448870025,
+          -0.05698857083916664
+        ],
+        "firstIntersectionSourceM": [
+          0.25099394222100574,
+          -0.03263360944886973,
+          -0.05698857083916664
+        ],
+        "triangleIndex": 191303
+      }
+    },
+    "hold--right-mr-deep": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          0.12992640336354574,
+          -2.3060163603346906,
+          1.1260710040043471
+        ],
+        "targetSourceM": [
+          0.12992640336354574,
+          -0.02700000007947286,
+          -0.013437176123261452
+        ],
+        "firstIntersectionSourceM": [
+          0.12992640336354574,
+          -0.027000000079472564,
+          -0.013437176123261452
+        ],
+        "triangleIndex": 191996
+      }
+    },
+    "hold--right-mr-shallow": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          0.11161269744237264,
+          -2.3126830268523455,
+          1.0955349689285634
+        ],
+        "targetSourceM": [
+          0.11161269744237264,
+          -0.033666666597127914,
+          -0.04397321119904518
+        ],
+        "firstIntersectionSourceM": [
+          0.11161269744237264,
+          -0.033666666597127914,
+          -0.04397321119904518
+        ],
+        "triangleIndex": 192558
+      }
+    },
+    "hold--right-pinch-medium": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          0.33964792887369794,
+          -2.637017753232129,
+          0.016127913103749354
+        ],
+        "targetSourceM": [
+          0.33964792887369794,
+          -0.08900000154972076,
+          0.016127913103749354
+        ],
+        "firstIntersectionSourceM": [
+          0.33964792887369794,
+          -0.08900000154972076,
+          0.016127913103749354
+        ],
+        "triangleIndex": 194778
+      }
+    },
+    "hold--right-pinch-narrow": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          0.3335915505886078,
+          -2.6240177492386176,
+          -0.055070788909991585
+        ],
+        "targetSourceM": [
+          0.3335915505886078,
+          -0.07599999755620956,
+          -0.055070788909991585
+        ],
+        "firstIntersectionSourceM": [
+          0.3335915505886078,
+          -0.07599999755620956,
+          -0.055070788909991585
+        ],
+        "triangleIndex": 203518
+      }
+    },
+    "hold--right-rail": {
+      "exteriorRayVisible": true,
+      "attempts": 2,
+      "witness": {
+        "originSourceM": [
+          0.3389779974745406,
+          -2.3151126195859275,
+          1.148302246923903
+        ],
+        "targetSourceM": [
+          0.2706496020158132,
+          -0.03609625933070978,
+          0.010844501356283823
+        ],
+        "firstIntersectionSourceM": [
+          0.2706496020158132,
+          -0.03609625933070948,
+          0.010844501356283898
+        ],
+        "triangleIndex": 208523
+      }
+    },
+    "hold--right-sloper-30": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          2.6150161557806526,
+          -0.41760008329276915,
+          1.2281840519859204
+        ],
+        "targetSourceM": [
+          0.39234761397043866,
+          -0.07713333268960317,
+          0.029759499554832775
+        ],
+        "firstIntersectionSourceM": [
+          0.3923476139704385,
+          -0.0771333326896031,
+          0.029759499554832702
+        ],
+        "triangleIndex": 209791
+      }
+    },
+    "hold--right-sloper-40": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          -0.9502930623956161,
+          -1.4353850848020784,
+          1.7923178746414938
+        ],
+        "targetSourceM": [
+          0.30434635281562805,
+          -0.04463578015565872,
+          0.0648657704393069
+        ],
+        "firstIntersectionSourceM": [
+          0.3043463528156283,
+          -0.04463578015565872,
+          0.06486577043930675
+        ],
+        "triangleIndex": 210038
+      }
+    },
+    "hold--right-slopey-crimper": {
+      "exteriorRayVisible": true,
+      "attempts": 1,
+      "witness": {
+        "originSourceM": [
+          0.11709701518217723,
+          -2.5950177500730827,
+          0.042604594180981316
+        ],
+        "targetSourceM": [
+          0.11709701518217723,
+          -0.04699999839067459,
+          0.042604594180981316
+        ],
+        "firstIntersectionSourceM": [
+          0.11709701518217723,
+          -0.04699999839067459,
+          0.042604594180981316
+        ],
+        "triangleIndex": 211762
+      }
+    }
+  }
+}

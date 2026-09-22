@@ -113,6 +113,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
             "\n".join(
                 (
                     "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests",
+                    "HangTenUITests/Batch05BoardModelInteractionUITests",
                     "HangTenUITests/IronPalmBoardMapInteractionUITests",
                 )
             ),

@@ -1,0 +1,352 @@
+{
+  "model": "Frictitious Megalith",
+  "revision": "Current Megalith, three-tier poplar version",
+  "featureMapping": [
+    {
+      "holdId": "jug",
+      "nodeName": "hold--jug",
+      "description": "Continuous full-width upper pull-up jug",
+      "evidenceReferences": [
+        "M1",
+        "M2",
+        "M3"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 4150,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-8",
+      "nodeName": "hold--left-edge-8",
+      "description": "8 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 8,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 828,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-10",
+      "nodeName": "hold--left-edge-10",
+      "description": "10 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 10,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-12",
+      "nodeName": "hold--left-edge-12",
+      "description": "12 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 12,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 828,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-30",
+      "nodeName": "hold--left-edge-30",
+      "description": "30 mm middle outer terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 792,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-40",
+      "nodeName": "hold--left-edge-40",
+      "description": "40 mm middle terrace outside deeper subpocket",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1134,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pocket-2finger",
+      "nodeName": "hold--left-pocket-2finger",
+      "description": "Two-finger dip in the 40 mm region",
+      "evidenceReferences": [
+        "M1",
+        "M4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 46,
+      "triangleCount": 504,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-15",
+      "nodeName": "hold--left-edge-15",
+      "description": "15 mm bottom outer terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "left-edge-20",
+      "nodeName": "hold--left-edge-20",
+      "description": "20 mm bottom inner terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 702,
+      "selectable": true
+    },
+    {
+      "holdId": "left-mono",
+      "nodeName": "hold--left-mono",
+      "description": "Separate bottom mono pocket, not the adjacent screw hole",
+      "evidenceReferences": [
+        "M1",
+        "M2",
+        "M4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 28,
+      "triangleCount": 396,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-8",
+      "nodeName": "hold--right-edge-8",
+      "description": "8 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 8,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 828,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-10",
+      "nodeName": "hold--right-edge-10",
+      "description": "10 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 10,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-12",
+      "nodeName": "hold--right-edge-12",
+      "description": "12 mm terrace within top shared opening",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 12,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 828,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-30",
+      "nodeName": "hold--right-edge-30",
+      "description": "30 mm middle outer terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 30,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 792,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-40",
+      "nodeName": "hold--right-edge-40",
+      "description": "40 mm middle terrace outside deeper subpocket",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 40,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1134,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pocket-2finger",
+      "nodeName": "hold--right-pocket-2finger",
+      "description": "Two-finger dip in the 40 mm region",
+      "evidenceReferences": [
+        "M1",
+        "M4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 46,
+      "triangleCount": 504,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-15",
+      "nodeName": "hold--right-edge-15",
+      "description": "15 mm bottom outer terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 702,
+      "selectable": true
+    },
+    {
+      "holdId": "right-edge-20",
+      "nodeName": "hold--right-edge-20",
+      "description": "20 mm bottom inner terrace",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 20,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "right-mono",
+      "nodeName": "hold--right-mono",
+      "description": "Separate bottom mono pocket, not the adjacent screw hole",
+      "evidenceReferences": [
+        "M1",
+        "M2",
+        "M4"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "estimatedDepthMm": 28,
+      "triangleCount": 396,
+      "selectable": true
+    },
+    {
+      "holdId": "center-edge-25",
+      "nodeName": "hold--center-edge-25",
+      "description": "Single-hand protruding center ledge",
+      "evidenceReferences": [
+        "M1",
+        "M2"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 408,
+      "selectable": true
+    }
+  ],
+  "sourceRegister": [
+    {
+      "id": "M1",
+      "url": "https://frictitiousclimbing.com/products/megalith",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "26.75 x 6.5 x 2.25 inches; poplar; edge depths 40/30/20/15/12/10/8; 25 mm center edge; mono and 2-finger features; full-width jug.",
+      "doesNotEstablish": "Mono/subpocket depths, radii, and rear section not dimensioned.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M2",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front.jpg?v=1780436232&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Three tiers; depth ordering; continuous stepped openings; six screw openings; central protruding grip and bottom notch.",
+      "doesNotEstablish": "No measured section.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M3",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Megalith-Front-1.jpg?v=1780436232&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Side profile: tier setbacks and rolled top jug.",
+      "doesNotEstablish": "Photo-derived curvature only.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M4",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Mega-4.jpg?v=1764914587&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Oblique detail of nested 2-finger contact in 40 mm ledge and separate bottom mono.",
+      "doesNotEstablish": "Cosmetic engraving differs from newer front; no measured small-pocket depth.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "M5",
+      "url": "https://frictitiousclimbing.com/cdn/shop/files/Mega-2.jpg?v=1764914587&width=3840",
+      "publisher": "Frictitious",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "In-use oblique construction and external support.",
+      "doesNotEstablish": "External support is not part of this board-only export.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ],
+  "conflicts": [
+    {
+      "issue": "Older in-use photos have different cosmetic markings",
+      "ruling": "Use the current front for inventory and outline; older photos only corroborate unchanged physical tier/slot construction. Do not reproduce cosmetic text."
+    }
+  ],
+  "limitations": [
+    "Mono depth 28 mm and subpocket depth 46 mm are estimates, not published specifications.",
+    "Rear and stepped section use source-informed estimates; no measured rear drawing was obtained."
+  ],
+  "sourceBinaryRetention": "Original image/PDF bytes could not be downloaded. This file contains authored observations and metadata, not substitutes for originals.",
+  "assetSha256": "d8a9fb8c1f308d0d11e90f760e30f1cfde3bf36cb19b212ef24a368835adceb1"
+}

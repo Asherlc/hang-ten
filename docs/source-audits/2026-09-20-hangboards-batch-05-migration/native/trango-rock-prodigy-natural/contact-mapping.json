@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "packageID": "trango.rock-prodigy-natural",
+  "logicalContactIDs": [
+    "top-jug-left",
+    "top-jug-right",
+    "top-variable-rail-left",
+    "top-variable-rail-right",
+    "bottom-variable-rail-left",
+    "bottom-variable-rail-right",
+    "closed-crimp-left",
+    "closed-crimp-right",
+    "upper-pocket-left",
+    "upper-pocket-right",
+    "center-lower-pocket-left",
+    "center-lower-pocket-right",
+    "outer-supported-pocket-left",
+    "outer-supported-pocket-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body--left",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "body--right",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--left-jug",
+      "role": "contact",
+      "contactID": "top-jug-left"
+    },
+    {
+      "sourceNodeID": "hold--left-rail-upper",
+      "role": "contact",
+      "contactID": "top-variable-rail-left"
+    },
+    {
+      "sourceNodeID": "hold--left-rail-lower",
+      "role": "contact",
+      "contactID": "bottom-variable-rail-left"
+    },
+    {
+      "sourceNodeID": "hold--left-closed-crimp",
+      "role": "contact",
+      "contactID": "closed-crimp-left"
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-3finger",
+      "role": "contact",
+      "contactID": "upper-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-2finger",
+      "role": "contact",
+      "contactID": "center-lower-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-supported",
+      "role": "contact",
+      "contactID": "outer-supported-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold--left-pinch-thumb",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--right-jug",
+      "role": "contact",
+      "contactID": "top-jug-right"
+    },
+    {
+      "sourceNodeID": "hold--right-rail-upper",
+      "role": "contact",
+      "contactID": "top-variable-rail-right"
+    },
+    {
+      "sourceNodeID": "hold--right-rail-lower",
+      "role": "contact",
+      "contactID": "bottom-variable-rail-right"
+    },
+    {
+      "sourceNodeID": "hold--right-closed-crimp",
+      "role": "contact",
+      "contactID": "closed-crimp-right"
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-3finger",
+      "role": "contact",
+      "contactID": "upper-pocket-right"
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-2finger",
+      "role": "contact",
+      "contactID": "center-lower-pocket-right"
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-supported",
+      "role": "contact",
+      "contactID": "outer-supported-pocket-right"
+    },
+    {
+      "sourceNodeID": "hold--right-pinch-thumb",
+      "role": "body"
+    }
+  ],
+  "ruling": "Preserve existing factual inventory. Extra delivered thumb/jaw components are physical body surfaces involved in compound grips, not independent complete pinch holds. Forge IM deep/shallow partition the continuous IMR lower surface without duplication."
+}

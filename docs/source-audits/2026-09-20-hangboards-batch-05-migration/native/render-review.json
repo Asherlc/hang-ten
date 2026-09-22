@@ -1,0 +1,43 @@
+{
+  "reviewDate": "2026-09-20",
+  "reviewer": "Astra (implementation and controller preparation review)",
+  "status": "Native preparation review only; final app acceptance pending",
+  "renders": [
+    {
+      "model": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+      "view": "front",
+      "path": ".context/hangboards-batch-05-astra-migration/renders/zlagboard-evo-front.png",
+      "renderer": "5.2.0 LTS",
+      "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
+      "renderSHA256": "8669574d5a6d098dfc1421ac556213c07ccdcfff1fa0d54a120b45d73c258f7d"
+    },
+    {
+      "model": "Hangboards/zlagboard-evo/assets/primary.usdz",
+      "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+      "view": "oblique",
+      "path": ".context/hangboards-batch-05-astra-migration/renders/zlagboard-evo-oblique.png",
+      "renderer": "5.2.0 LTS",
+      "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
+      "renderSHA256": "067de8c8b4b94b19cd4f3e18c854991ae7572ca93688bc14be6108469954d685"
+    },
+    {
+      "model": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "modelSHA256": "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+      "view": "front",
+      "path": ".context/hangboards-batch-05-astra-migration/renders/zlagboard-pro-front.png",
+      "renderer": "5.2.0 LTS",
+      "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
+      "renderSHA256": "d56a6557866628091b33d1d1b71f97539b12063caf1ac2d66a9d760002e0f859"
+    },
+    {
+      "model": "Hangboards/zlagboard-pro/assets/primary.usdz",
+      "modelSHA256": "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
+      "view": "oblique",
+      "path": ".context/hangboards-batch-05-astra-migration/renders/zlagboard-pro-oblique.png",
+      "renderer": "5.2.0 LTS",
+      "purpose": "Exact exported USDZ empty-scene native review; not app acceptance",
+      "renderSHA256": "99c36c21c697034309dd6115853e10c51e6cd6cf8759515f77af356dddfff1e5"
+    }
+  ]
+}

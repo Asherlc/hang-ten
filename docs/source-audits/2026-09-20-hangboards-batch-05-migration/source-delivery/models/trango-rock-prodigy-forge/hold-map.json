@@ -1,0 +1,491 @@
+{
+  "schemaVersion": 1,
+  "assetFile": "trango-rock-prodigy-forge.glb",
+  "assetSha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "coordinateSystem": {
+    "sourceUnits": "metres",
+    "sourceAxes": {
+      "right": [
+        1,
+        0,
+        0
+      ],
+      "up": [
+        0,
+        0,
+        1
+      ],
+      "physicalFrontFacingDirection": [
+        0,
+        -1,
+        0
+      ]
+    },
+    "canonicalCamera": {
+      "lookingDirection": [
+        0,
+        1,
+        0
+      ],
+      "upDirection": [
+        0,
+        0,
+        1
+      ]
+    },
+    "origin": "Center of the authored board/pair in X; body datum Z=0; rear mounting plane Y=0. Pair gap is an authored display spacing, not a training prescription.",
+    "exportConversion": {
+      "node": "SOURCE-ZUP_to_GLTF-YUP",
+      "rotationQuaternionXYZW": [
+        -0.7071067811865476,
+        0,
+        0,
+        0.7071067811865476
+      ],
+      "matrixRowMajor": [
+        [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "glTFUp": [
+        0,
+        1,
+        0
+      ],
+      "glTFPhysicalFront": [
+        0,
+        0,
+        1
+      ],
+      "glTFCameraLookingDirection": [
+        0,
+        0,
+        -1
+      ]
+    }
+  },
+  "holdCount": 22,
+  "holds": [
+    {
+      "holdId": "left-sloper-30",
+      "nodeName": "hold--left-sloper-30",
+      "description": "30 degree outer sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 224,
+      "selectable": true
+    },
+    {
+      "holdId": "left-sloper-40",
+      "nodeName": "hold--left-sloper-40",
+      "description": "40 degree middle sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 309,
+      "selectable": true
+    },
+    {
+      "holdId": "left-flat-edge",
+      "nodeName": "hold--left-flat-edge",
+      "description": "Inner upper flat edge",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 253,
+      "selectable": true
+    },
+    {
+      "holdId": "left-slopey-crimper",
+      "nodeName": "hold--left-slopey-crimper",
+      "description": "Curved brow above rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 5014,
+      "selectable": true
+    },
+    {
+      "holdId": "left-rail",
+      "nodeName": "hold--left-rail",
+      "description": "One continuous variable-depth rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        7,
+        20
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1530,
+      "selectable": true
+    },
+    {
+      "holdId": "left-mr-deep",
+      "nodeName": "hold--left-mr-deep",
+      "description": "Inner deep MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "left-mr-shallow",
+      "nodeName": "hold--left-mr-shallow",
+      "description": "Inner shallow MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 612,
+      "selectable": true
+    },
+    {
+      "holdId": "left-closed-crimp",
+      "nodeName": "hold--left-closed-crimp",
+      "description": "Closed crimp and integral thumb shoulder",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 45103,
+      "selectable": true
+    },
+    {
+      "holdId": "left-imr",
+      "nodeName": "hold--left-imr",
+      "description": "One continuous three-finger pocket; IM options reuse it",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        19,
+        31
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-medium",
+      "nodeName": "hold--left-pinch-medium",
+      "description": "Outer upper pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 50,
+      "triangleCount": 9895,
+      "selectable": true
+    },
+    {
+      "holdId": "left-pinch-narrow",
+      "nodeName": "hold--left-pinch-narrow",
+      "description": "Outer lower pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 25,
+      "triangleCount": 5235,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-30",
+      "nodeName": "hold--right-sloper-30",
+      "description": "30 degree outer sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 224,
+      "selectable": true
+    },
+    {
+      "holdId": "right-sloper-40",
+      "nodeName": "hold--right-sloper-40",
+      "description": "40 degree middle sloper",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 309,
+      "selectable": true
+    },
+    {
+      "holdId": "right-flat-edge",
+      "nodeName": "hold--right-flat-edge",
+      "description": "Inner upper flat edge",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 253,
+      "selectable": true
+    },
+    {
+      "holdId": "right-slopey-crimper",
+      "nodeName": "hold--right-slopey-crimper",
+      "description": "Curved brow above rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 5014,
+      "selectable": true
+    },
+    {
+      "holdId": "right-rail",
+      "nodeName": "hold--right-rail",
+      "description": "One continuous variable-depth rail",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        7,
+        20
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 1530,
+      "selectable": true
+    },
+    {
+      "holdId": "right-mr-deep",
+      "nodeName": "hold--right-mr-deep",
+      "description": "Inner deep MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 25,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 576,
+      "selectable": true
+    },
+    {
+      "holdId": "right-mr-shallow",
+      "nodeName": "hold--right-mr-shallow",
+      "description": "Inner shallow MR pocket",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 15,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 612,
+      "selectable": true
+    },
+    {
+      "holdId": "right-closed-crimp",
+      "nodeName": "hold--right-closed-crimp",
+      "description": "Closed crimp and integral thumb shoulder",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": 7.5,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 45095,
+      "selectable": true
+    },
+    {
+      "holdId": "right-imr",
+      "nodeName": "hold--right-imr",
+      "description": "One continuous three-finger pocket; IM options reuse it",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": [
+        19,
+        31
+      ],
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "triangleCount": 720,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-medium",
+      "nodeName": "hold--right-pinch-medium",
+      "description": "Outer upper pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 50,
+      "triangleCount": 9891,
+      "selectable": true
+    },
+    {
+      "holdId": "right-pinch-narrow",
+      "nodeName": "hold--right-pinch-narrow",
+      "description": "Outer lower pinch-jaw contact",
+      "evidenceReferences": [
+        "F2",
+        "F3",
+        "F5",
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "depthMm": null,
+      "geometryClassification": "published nominal depths plus manually photo-estimated shape",
+      "nominalPinchWidthMm": 25,
+      "triangleCount": 5233,
+      "selectable": true
+    }
+  ],
+  "bodies": [
+    {
+      "nodeName": "body--left",
+      "selectable": false
+    },
+    {
+      "nodeName": "body--right",
+      "selectable": false
+    }
+  ]
+}

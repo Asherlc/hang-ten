@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "packageID": "frictitious.megalith",
+  "manufacturerPhysicalAuthority": {
+    "publisher": "Frictitious Climbing",
+    "evidencePacket": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/REVIEW.md"
+  },
+  "historicalSource": {
+    "status": "missing",
+    "notes": "The old app raster authoring source is not a native contact-tagged model. Immutable user delivery GLB is retained separately."
+  },
+  "auditedModelSource": {
+    "provenanceType": "user-provided",
+    "authorization": "User authorized evidence-led native migration; exact evidence approved 2026-09-20. Explicit derivative preparation documented here; no model acceptance implied.",
+    "retainedPath": ".context/hangboards-batch-05-astra-migration/prepared/frictitious-megalith.blend",
+    "sha256": "7fb57805b0c645d3beaf269649f19f3e5602904ffe29825587e065e6a5e667d9"
+  },
+  "supersessionRuling": "Prepared native derivative of hash-bound original GLB. Source root transforms are baked once; explicit mounting-only tube removal and support-plane caps are recorded, preserving contact geometry; constant material image adaptation is explicit. Manufacturer facts and stable app IDs govern mapping."
+}

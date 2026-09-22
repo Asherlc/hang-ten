@@ -1,0 +1,20 @@
+{
+  "slug": "frictitious-doormount-pro-7",
+  "previousModelSHA256": "ef53c266c21f9d3045ee0fdb62d52b8d4aee49fd9463eca21db5c31e19617656",
+  "modelSHA256": "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
+  "onlyAddedUVNodeIDs": [
+    "body__board_mounting_omitted_001"
+  ],
+  "everyAddedUV": [
+    0.5,
+    0.5
+  ],
+  "existingUVArraysUnchanged": true,
+  "usdLayerExceptUVByteIdentical": true,
+  "usdLayerExceptUVSHA256": "ac1b3dd07d8e5ceead06a0ecf0357d31c55b65fc8e8447e77efc5c37c3588052",
+  "exactGeometryTopologyWindingNormalsMaterialBindingsAndParametersUnchanged": true,
+  "textureMembersByteIdentical": [
+    "textures/frictitious-doormount-pro-7-substrate.png"
+  ],
+  "descriptorExceptModelHashUnchanged": true
+}

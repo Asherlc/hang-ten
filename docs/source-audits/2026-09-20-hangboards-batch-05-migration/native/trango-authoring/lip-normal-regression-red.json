@@ -1,0 +1,14 @@
+{
+  "forge": {
+    "maxInterpolatedNormalErrorDegrees": 17.184940149883037,
+    "checkedPoints": 470442,
+    "flippedAnalyticFrontNormals": 0,
+    "normalErrorToleranceDegrees": 0.5
+  },
+  "natural": {
+    "maxInterpolatedNormalErrorDegrees": 18.562821731240412,
+    "checkedPoints": 419972,
+    "flippedAnalyticFrontNormals": 2,
+    "normalErrorToleranceDegrees": 0.5
+  }
+}

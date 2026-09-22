@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "note": "Interaction combinations reuse physical surfaces; they are not additional hold meshes.",
+  "combinations": [
+    {
+      "gripId": "left-wide-pinch",
+      "physicalHoldIds": [
+        "left-rail-upper",
+        "left-pinch-thumb"
+      ],
+      "createsNewMesh": false,
+      "evidence": [
+        "N2"
+      ]
+    },
+    {
+      "gripId": "left-medium-pinch",
+      "physicalHoldIds": [
+        "left-rail-lower",
+        "left-pinch-thumb"
+      ],
+      "createsNewMesh": false,
+      "evidence": [
+        "N2"
+      ]
+    },
+    {
+      "gripId": "right-wide-pinch",
+      "physicalHoldIds": [
+        "right-rail-upper",
+        "right-pinch-thumb"
+      ],
+      "createsNewMesh": false,
+      "evidence": [
+        "N2"
+      ]
+    },
+    {
+      "gripId": "right-medium-pinch",
+      "physicalHoldIds": [
+        "right-rail-lower",
+        "right-pinch-thumb"
+      ],
+      "createsNewMesh": false,
+      "evidence": [
+        "N2"
+      ]
+    }
+  ]
+}

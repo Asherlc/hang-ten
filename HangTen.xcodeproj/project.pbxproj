@@ -41,6 +41,12 @@
 		D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001E /* nature-stoak-board-iii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stoak-board-iii", ); }; };
 		D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001F /* soill-iron-palm-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-iron-palm-2", ); }; };
 		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
+		D10000000000000000000023 /* zlagboard-pro Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000023 /* zlagboard-pro Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-zlagboard-pro", ); }; };
+		D10000000000000000000024 /* frictitious-doormount-pro-7 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000024 /* frictitious-doormount-pro-7 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-doormount-pro-7", ); }; };
+		D10000000000000000000025 /* frictitious-megalith Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000025 /* frictitious-megalith Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-megalith", ); }; };
+		D10000000000000000000027 /* trango-rock-prodigy-natural Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000027 /* trango-rock-prodigy-natural Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-natural", ); }; };
+		D10000000000000000000026 /* trango-rock-prodigy-forge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000026 /* trango-rock-prodigy-forge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-forge", ); }; };
+		D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000022 /* zlagboard-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-zlagboard-evo", ); }; };
 		D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-crimptonite-helium-mobile", ); }; };
 		D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000029 /* metolius-light-rail-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-light-rail-2", ); }; };
 		D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-rock-rings-3d", ); }; };
@@ -224,6 +230,12 @@
 		D2000000000000000000001E /* nature-stoak-board-iii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stoak-board-iii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stoak-board-iii/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000001F /* soill-iron-palm-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-iron-palm-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-iron-palm-2/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000023 /* zlagboard-pro Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zlagboard-pro Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/zlagboard-pro/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000024 /* frictitious-doormount-pro-7 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-doormount-pro-7 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-doormount-pro-7/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000025 /* frictitious-megalith Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-megalith Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-megalith/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000027 /* trango-rock-prodigy-natural Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-natural Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-natural/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000026 /* trango-rock-prodigy-forge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-forge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-forge/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000022 /* zlagboard-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "zlagboard-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/zlagboard-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "crimptonite-helium-mobile Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/crimptonite-helium-mobile/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000029 /* metolius-light-rail-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-light-rail-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-light-rail-2/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-rock-rings-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-rock-rings-3d/Hangboards"; sourceTree = "<absolute>"; };
@@ -826,6 +838,12 @@
 				D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */,
 				D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */,
 				D10000000000000000000020 /* soill-split-palm Hangboards in Resources */,
+				D10000000000000000000023 /* zlagboard-pro Hangboards in Resources */,
+				D10000000000000000000024 /* frictitious-doormount-pro-7 Hangboards in Resources */,
+				D10000000000000000000025 /* frictitious-megalith Hangboards in Resources */,
+				D10000000000000000000027 /* trango-rock-prodigy-natural Hangboards in Resources */,
+				D10000000000000000000026 /* trango-rock-prodigy-forge Hangboards in Resources */,
+				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */,
 				D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */,
 				D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */,
