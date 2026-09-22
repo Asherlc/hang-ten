@@ -186,6 +186,7 @@
 		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
+		AA00000000000000000000F1 /* FreeWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000F1 /* FreeWorkoutTests.swift */; };
 
 		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023; settings = {ATTRIBUTES = (); }; };/* End PBXBuildFile section */
 
@@ -371,6 +372,7 @@
 		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000F1 /* FreeWorkoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeWorkoutTests.swift; sourceTree = "<group>"; };
 
 		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HangTen/Models/DeepLinkManager.swift"; sourceTree = "<group>"; };/* End PBXFileReference section */
 
@@ -633,6 +635,7 @@
 				AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */,
 				BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */,
 				BB00000000000000000000A3 /* DeepLinkManagerTests.swift */,
+				BB00000000000000000000F1 /* FreeWorkoutTests.swift */,
 			);
 			path = HangTenTests;
 			sourceTree = "<group>";
@@ -1018,6 +1021,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
 				AA00000000000000000000A3 /* DeepLinkManagerTests.swift in Sources */,
+				AA00000000000000000000F1 /* FreeWorkoutTests.swift in Sources */,
 				AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */,
 				AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */,
 				AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */,
