@@ -1419,7 +1419,7 @@ final class BoardModelTests: XCTestCase {
             let local = SCNVector3((box.min.x + box.max.x) / 2,
                                   (box.min.y + box.max.y) / 2,
                                   (box.min.z + box.max.z) / 2)
-            let projected = view.projectPoint(node.convertPosition(local, to: nil))
+            let projected = view.projectContactPoint(node.convertPosition(local, to: nil))
             return CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
         }
         func renderFrame() async {

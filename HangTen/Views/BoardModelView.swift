@@ -2272,7 +2272,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     /// Project using the model-layer camera when accessibility is frozen to
     /// canonical after reset. SceneKit's projectPoint follows the presentation
     /// tree, which CI simulators can leave stuck on the last orbit frame.
-    private func projectContactPoint(_ worldPosition: SCNVector3) -> SCNVector3 {
+    func projectContactPoint(_ worldPosition: SCNVector3) -> SCNVector3 {
         guard freezeAccessibilityProjectionToCanonical,
               let pov = pointOfView,
               let camera = pov.camera,
