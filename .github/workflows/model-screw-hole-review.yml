@@ -1,0 +1,42 @@
+name: Materialize model repair review
+on:
+  push:
+    branches: [review/model-screw-holes-20260922]
+    paths: [.github/workflows/model-screw-hole-review.yml]
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Package source, without changing geometry
+        run: |
+          mkdir -p .context/model-screw-hole-review
+          python3 - <<'PY'
+          import pathlib,subprocess,zipfile,base64,zlib
+          out=pathlib.Path('.context/model-screw-hole-review')
+          with zipfile.ZipFile(out/'sources.zip','w',zipfile.ZIP_DEFLATED) as z:
+              for name in subprocess.check_output(['git','ls-files','-z']).decode().split('\0'):
+                  p=pathlib.Path(name)
+                  if p.is_file() and p.suffix in {'.py','.json','.md','.txt','.toml','.swift','.sh','.yml','.yaml'}:
+                      z.write(p,name)
+          data=''.join(p.read_text().strip() for p in sorted(pathlib.Path('.context/remove-model-screw-holes-20260921').glob('payload-*.txt')))
+          d=zlib.decompressobj(); prefix=bytearray()
+          try:
+              for b in base64.b64decode(data[:len(data)//4*4]):
+                  prefix.extend(d.decompress(bytes([b])))
+          except Exception as e:
+              print(type(e).__name__,str(e))
+          (out/'recovered-source.txt').write_bytes(prefix)
+          print('Recovered',len(prefix),'bytes. Complete:',d.eof)
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: model-screw-hole-review-sources
+          path: .context/model-screw-hole-review/
+          retention-days: 1
