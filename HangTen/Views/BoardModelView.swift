@@ -2180,8 +2180,13 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
             guard let self else { return }
             // After a canonical commit, in-flight renderer callbacks can still
             // observe a stalled orbit presentation and would otherwise rewrite
-            // accessibility back off-canonical.
-            guard !self.freezeAccessibilityProjectionToCanonical else { return }
+            // accessibility back off-canonical. Clear the freeze when a new
+            // position or board explicitly requests a projection refresh.
+            if self.needsAccessibilityProjection {
+                self.freezeAccessibilityProjectionToCanonical = false
+            } else if self.freezeAccessibilityProjectionToCanonical {
+                return
+            }
             guard self.needsAccessibilityProjection
                     || self.accessibilityProjection != self.currentAccessibilityProjection else { return }
             self.updateAccessibility()
