@@ -9,8 +9,6 @@ import unicodedata
 import xml.etree.ElementTree as ET
 import zipfile
 
-SCHEMA_VERSION = 1
-COORDINATE_FRAME = "freecad-mm-z-up-front-negative-y"
 MAX_ARCHIVE_BYTES = 2 * 1024**3
 MAX_XML_BYTES = 32 * 1024**2
 # Exact builtin types: prefix matching would admit arbitrary addon/Python objects.
@@ -30,17 +28,13 @@ BUILTIN_TYPES = frozenset({
     "PartDesign::MultiTransform", "PartDesign::SubShapeBinder", "PartDesign::ShapeBinder",
     "Sketcher::SketchObject",
 })
-# Document-local reference properties. These store object names inside the same
-# document and cannot name an external file.
-LOCAL_LINK_TYPES = frozenset({
-    "App::PropertyLink", "App::PropertyLinkSub", "App::PropertyLinkList",
-    "App::PropertyLinkSubList", "App::PropertyLinkListHidden",
-})
 # Cross-document reference properties. FreeCAD stores the referencing document's
 # path in a ``file`` attribute; an empty value means the reference stays inside
 # this document. A non-empty value is an external dependency and is rejected.
 XLINK_TYPES = frozenset({
     "App::PropertyXLink", "App::PropertyXLinkSub", "App::PropertyXLinkSubList",
+    "App::PropertyXLinkList", "App::PropertyXLinkSubHidden",
+    "App::PropertyXLinkContainer",
 })
 REJECTED_TYPES = frozenset({
     "App::PropertyFile", "App::PropertyPath", "App::PropertyPersistentObject",
