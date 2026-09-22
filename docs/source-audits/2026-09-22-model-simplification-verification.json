@@ -1,0 +1,2464 @@
+{
+  "metolius-simulator-3d": {
+    "board": "metolius-simulator-3d",
+    "sourceSHA256": "19d5fd2da38786fcdf87cb8452789fb47ed2209c628421dd745d30c5b4f7b24e",
+    "modelSHA256": "12cdc98f6880c9a7cbfa779b60fb3045c67a5204028376d1766f8ebb094d34ea",
+    "descriptorRecompiledMatch": true,
+    "contactsBoundsAndIDsUnchanged": true,
+    "materialsAndTexturesUnchanged": true,
+    "meshResults": [
+      {
+        "node": "board_body_001",
+        "sourceTopology": {
+          "components": 8,
+          "boundaryEdges": 11956,
+          "nonmanifoldEdges": 0,
+          "euler": -16,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 8,
+          "boundaryEdges": 11956,
+          "nonmanifoldEdges": 0,
+          "euler": -16,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2859961423539756,
+          "p99MM": 0.19413480009344747,
+          "rmsMM": 0.046305951578348305
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.31803437742604024,
+          "p99MM": 0.22688225709176418,
+          "rmsMM": 0.061841994427114425
+        }
+      },
+      {
+        "node": "hold_01_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 726,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 726,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2543951546961298,
+          "p99MM": 0.20676896751518944,
+          "rmsMM": 0.07375545261697486
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3125060624575703,
+          "p99MM": 0.23137605268454034,
+          "rmsMM": 0.09227285491646023
+        }
+      },
+      {
+        "node": "hold_01_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 760,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 760,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2746988473317525,
+          "p99MM": 0.20480269455427236,
+          "rmsMM": 0.07098623677642546
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.31766087761140316,
+          "p99MM": 0.2281550166643248,
+          "rmsMM": 0.09391805027876178
+        }
+      },
+      {
+        "node": "hold_02_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 507,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 507,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.20886540882849833,
+          "p99MM": 0.192664051291449,
+          "rmsMM": 0.06113439821646888
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2849452091586756,
+          "p99MM": 0.19962749450884343,
+          "rmsMM": 0.07400442094324891
+        }
+      },
+      {
+        "node": "hold_02_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 549,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 549,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.29480714111891637,
+          "p99MM": 0.26310826792381203,
+          "rmsMM": 0.07747424679226453
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3009538152851539,
+          "p99MM": 0.27042917529341504,
+          "rmsMM": 0.08650667500682332
+        }
+      },
+      {
+        "node": "hold_03_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 568,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 568,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.3416349714082578,
+          "p99MM": 0.2620200063388264,
+          "rmsMM": 0.08377268700956687
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3437876973218236,
+          "p99MM": 0.2820252307699196,
+          "rmsMM": 0.09238753152264437
+        }
+      },
+      {
+        "node": "hold_03_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 534,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 534,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.29206234185118873,
+          "p99MM": 0.24719128673572488,
+          "rmsMM": 0.07924190042191474
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.29353304118950824,
+          "p99MM": 0.25768735662357106,
+          "rmsMM": 0.08759192231085132
+        }
+      },
+      {
+        "node": "hold_04_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 342,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 342,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.1818864738050083,
+          "p99MM": 0.13109944985182984,
+          "rmsMM": 0.03432370169033877
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2797483859628998,
+          "p99MM": 0.2040147546973802,
+          "rmsMM": 0.061004283345305756
+        }
+      },
+      {
+        "node": "hold_04_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 376,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 376,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.1977782390449159,
+          "p99MM": 0.1208314128971083,
+          "rmsMM": 0.03354221016166777
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2595931584682929,
+          "p99MM": 0.19414271337842107,
+          "rmsMM": 0.06148983448579377
+        }
+      },
+      {
+        "node": "hold_05_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 412,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 412,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.3334888422672975,
+          "p99MM": 0.1294739350238681,
+          "rmsMM": 0.03814704512732431
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.23302064327831448,
+          "p99MM": 0.19542246690794768,
+          "rmsMM": 0.06263311450010135
+        }
+      },
+      {
+        "node": "hold_05_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 426,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 426,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.19770750577182464,
+          "p99MM": 0.14139166716137155,
+          "rmsMM": 0.03829753236140309
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.27874792320283154,
+          "p99MM": 0.19861310752941866,
+          "rmsMM": 0.06451301043622354
+        }
+      },
+      {
+        "node": "hold_06_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 420,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 420,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.24825021007940049,
+          "p99MM": 0.1353403944334602,
+          "rmsMM": 0.03761174489832996
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.29863332605130166,
+          "p99MM": 0.20980506885240385,
+          "rmsMM": 0.06428012466132497
+        }
+      },
+      {
+        "node": "hold_06_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 428,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 428,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2262335586917305,
+          "p99MM": 0.132148828580725,
+          "rmsMM": 0.038482827761264334
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3061272078701631,
+          "p99MM": 0.2093710138921345,
+          "rmsMM": 0.06623409846440521
+        }
+      },
+      {
+        "node": "hold_07_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 371,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 371,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.17333560355754482,
+          "p99MM": 0.1300572882983796,
+          "rmsMM": 0.03353799395849785
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.25966627769839923,
+          "p99MM": 0.1910597791567193,
+          "rmsMM": 0.05275386987481551
+        }
+      },
+      {
+        "node": "hold_07_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 377,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 377,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2478225032516094,
+          "p99MM": 0.11981449252331378,
+          "rmsMM": 0.03130632535053299
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.26344021892376784,
+          "p99MM": 0.18468382113989712,
+          "rmsMM": 0.05163833203906913
+        }
+      },
+      {
+        "node": "hold_08_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 278,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 278,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2509680037266961,
+          "p99MM": 0.12471189354140741,
+          "rmsMM": 0.03907781414566
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2608233864572524,
+          "p99MM": 0.20662061925392067,
+          "rmsMM": 0.07006423202742361
+        }
+      },
+      {
+        "node": "hold_08_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 307,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 307,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.17365872061897827,
+          "p99MM": 0.13423129479855794,
+          "rmsMM": 0.04000479559940715
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.23569537353592834,
+          "p99MM": 0.20871685098901557,
+          "rmsMM": 0.0716653854874005
+        }
+      },
+      {
+        "node": "hold_09_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 461,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 461,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2097460419578886,
+          "p99MM": 0.11494600704898375,
+          "rmsMM": 0.030636988695386638
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.25531426138012175,
+          "p99MM": 0.1830910879737467,
+          "rmsMM": 0.053948781081681774
+        }
+      },
+      {
+        "node": "hold_09_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 512,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 512,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2018426597913567,
+          "p99MM": 0.12874449714879876,
+          "rmsMM": 0.03263898993263426
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2877453237801973,
+          "p99MM": 0.1825271056684131,
+          "rmsMM": 0.054634451498373766
+        }
+      },
+      {
+        "node": "hold_10_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 309,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 309,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.21694190555652634,
+          "p99MM": 0.1207848462462786,
+          "rmsMM": 0.03741656499361282
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.28661763611274166,
+          "p99MM": 0.19357289827945212,
+          "rmsMM": 0.06039645959944991
+        }
+      },
+      {
+        "node": "hold_10_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 306,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 306,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.22239367219092696,
+          "p99MM": 0.14649163576960988,
+          "rmsMM": 0.04188268564569618
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3562596283546353,
+          "p99MM": 0.20341076197951652,
+          "rmsMM": 0.06605768917638083
+        }
+      },
+      {
+        "node": "hold_11_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 323,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 323,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.16276415941649697,
+          "p99MM": 0.13311488424481918,
+          "rmsMM": 0.03789753215854184
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.3109891293036638,
+          "p99MM": 0.2078402578820708,
+          "rmsMM": 0.07281078078278243
+        }
+      },
+      {
+        "node": "hold_11_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 348,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 348,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.22373335532788832,
+          "p99MM": 0.1444923005481325,
+          "rmsMM": 0.0419400690439665
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2626562421768246,
+          "p99MM": 0.21615412902984554,
+          "rmsMM": 0.07183053045037122
+        }
+      },
+      {
+        "node": "hold_12_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 322,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 322,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2585347890848651,
+          "p99MM": 0.08864113766447776,
+          "rmsMM": 0.027598315913194636
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.27328791727287904,
+          "p99MM": 0.1876578104295746,
+          "rmsMM": 0.05469397948026841
+        }
+      },
+      {
+        "node": "hold_12_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 339,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 339,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.22010512947013777,
+          "p99MM": 0.0935496162859129,
+          "rmsMM": 0.027619480788859473
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2893477122988467,
+          "p99MM": 0.1877208069397766,
+          "rmsMM": 0.056309829110981674
+        }
+      },
+      {
+        "node": "hold_13_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 227,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 227,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.20164832865920365,
+          "p99MM": 0.135956602155662,
+          "rmsMM": 0.03945496224481237
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2654514670667739,
+          "p99MM": 0.20640917805171283,
+          "rmsMM": 0.07071863694566462
+        }
+      },
+      {
+        "node": "hold_13_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 242,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 242,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2093846280764668,
+          "p99MM": 0.12778391831155522,
+          "rmsMM": 0.03617018849973928
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2890592987115914,
+          "p99MM": 0.1969366800897892,
+          "rmsMM": 0.06726574399715976
+        }
+      },
+      {
+        "node": "hold_14_center_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 600,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 600,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.34708090705630473,
+          "p99MM": 0.23089886110027708,
+          "rmsMM": 0.08451730829214088
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.38173445989728194,
+          "p99MM": 0.24308660188869974,
+          "rmsMM": 0.10093397579145916
+        }
+      },
+      {
+        "node": "hold_15_center_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 391,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 391,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.1889532735948454,
+          "p99MM": 0.10007780926815549,
+          "rmsMM": 0.03024475492151637
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.26675731774075706,
+          "p99MM": 0.16862848269771746,
+          "rmsMM": 0.047983741297152945
+        }
+      },
+      {
+        "node": "hold_16_center_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 397,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 397,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.25173273169684923,
+          "p99MM": 0.13716760120725238,
+          "rmsMM": 0.03626453813470828
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.26006945417278193,
+          "p99MM": 0.18239489661391067,
+          "rmsMM": 0.05247156796098203
+        }
+      },
+      {
+        "node": "hold_17_center_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 306,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 306,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.18428282771360097,
+          "p99MM": 0.11882047926826882,
+          "rmsMM": 0.03257688059193305
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2843514562251631,
+          "p99MM": 0.18169284200586308,
+          "rmsMM": 0.04860304960214724
+        }
+      },
+      {
+        "node": "hold_18_center_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 310,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 310,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.18651817043917643,
+          "p99MM": 0.09826907503427429,
+          "rmsMM": 0.023983393264383014
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.24757736148735293,
+          "p99MM": 0.18183528852549447,
+          "rmsMM": 0.04692263840915907
+        }
+      }
+    ],
+    "closedBoreRays": [
+      {
+        "xy": [
+          -0.2982,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.06599855906774
+      },
+      {
+        "xy": [
+          -0.29785,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.06102659310953
+      },
+      {
+        "xy": [
+          -0.29855000000000004,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.07097052502594
+      },
+      {
+        "xy": [
+          -0.2982,
+          0.13740999999999998
+        ],
+        "hitCount": 2,
+        "depthMM": 34.24994777952366
+      },
+      {
+        "xy": [
+          -0.2982,
+          0.13671
+        ],
+        "hitCount": 2,
+        "depthMM": 33.882049338611814
+      },
+      {
+        "xy": [
+          0.2983,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.0875947460879
+      },
+      {
+        "xy": [
+          0.29865,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.09225029419363
+      },
+      {
+        "xy": [
+          0.29795,
+          0.13706
+        ],
+        "hitCount": 2,
+        "depthMM": 34.08293919798215
+      },
+      {
+        "xy": [
+          0.2983,
+          0.13740999999999998
+        ],
+        "hitCount": 2,
+        "depthMM": 34.265537944901496
+      },
+      {
+        "xy": [
+          0.2983,
+          0.13671
+        ],
+        "hitCount": 2,
+        "depthMM": 33.909651547274294
+      },
+      {
+        "xy": [
+          -0.1657,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.2726455677296
+      },
+      {
+        "xy": [
+          -0.16535,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.28480823870909
+      },
+      {
+        "xy": [
+          -0.16604999999999998,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.2604828967501
+      },
+      {
+        "xy": [
+          -0.1657,
+          0.11808
+        ],
+        "hitCount": 2,
+        "depthMM": 29.3377635792627
+      },
+      {
+        "xy": [
+          -0.1657,
+          0.11738
+        ],
+        "hitCount": 2,
+        "depthMM": 29.207527556196503
+      },
+      {
+        "xy": [
+          0.1658,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.22378570329492
+      },
+      {
+        "xy": [
+          0.16615,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.227636727435225
+      },
+      {
+        "xy": [
+          0.16545,
+          0.11773
+        ],
+        "hitCount": 2,
+        "depthMM": 29.21993467915461
+      },
+      {
+        "xy": [
+          0.1658,
+          0.11808
+        ],
+        "hitCount": 2,
+        "depthMM": 29.28778924934343
+      },
+      {
+        "xy": [
+          0.1658,
+          0.11738
+        ],
+        "hitCount": 2,
+        "depthMM": 29.159782157246404
+      },
+      {
+        "xy": [
+          -0.20808,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.181103511830667
+      },
+      {
+        "xy": [
+          -0.20773,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.17201798871222
+      },
+      {
+        "xy": [
+          -0.20842999999999998,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.190189034949118
+      },
+      {
+        "xy": [
+          -0.20808,
+          0.03194
+        ],
+        "hitCount": 2,
+        "depthMM": 21.23647719394766
+      },
+      {
+        "xy": [
+          -0.20808,
+          0.03124
+        ],
+        "hitCount": 2,
+        "depthMM": 21.128804967528385
+      },
+      {
+        "xy": [
+          0.20819,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.169138494402464
+      },
+      {
+        "xy": [
+          0.20853999999999998,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.17198536321946
+      },
+      {
+        "xy": [
+          0.20784,
+          0.03159
+        ],
+        "hitCount": 2,
+        "depthMM": 21.16629162558547
+      },
+      {
+        "xy": [
+          0.20819,
+          0.03194
+        ],
+        "hitCount": 2,
+        "depthMM": 21.237185582378476
+      },
+      {
+        "xy": [
+          0.20819,
+          0.03124
+        ],
+        "hitCount": 2,
+        "depthMM": 21.101091406426452
+      },
+      {
+        "xy": [
+          4e-05,
+          0.16603
+        ],
+        "hitCount": 2,
+        "depthMM": 37.28076060653664
+      },
+      {
+        "xy": [
+          0.00039,
+          0.16603
+        ],
+        "hitCount": 2,
+        "depthMM": 37.28965333726677
+      },
+      {
+        "xy": [
+          -0.00031,
+          0.16603
+        ],
+        "hitCount": 2,
+        "depthMM": 37.27186787580651
+      },
+      {
+        "xy": [
+          4e-05,
+          0.16638
+        ],
+        "hitCount": 2,
+        "depthMM": 37.46963810593851
+      },
+      {
+        "xy": [
+          4e-05,
+          0.16568000000000002
+        ],
+        "hitCount": 2,
+        "depthMM": 37.09188310713477
+      },
+      {
+        "xy": [
+          4e-05,
+          0.04126
+        ],
+        "hitCount": 2,
+        "depthMM": 20.31242975206875
+      },
+      {
+        "xy": [
+          0.00039,
+          0.04126
+        ],
+        "hitCount": 2,
+        "depthMM": 20.317442151123807
+      },
+      {
+        "xy": [
+          -0.00031,
+          0.04126
+        ],
+        "hitCount": 2,
+        "depthMM": 20.307417353013687
+      },
+      {
+        "xy": [
+          4e-05,
+          0.04161
+        ],
+        "hitCount": 2,
+        "depthMM": 20.370615834642052
+      },
+      {
+        "xy": [
+          4e-05,
+          0.040909999999999995
+        ],
+        "hitCount": 2,
+        "depthMM": 20.254243669495445
+      }
+    ],
+    "maxSampledDistanceMM": 0.38173445989728194,
+    "sampleCount": 115200
+  },
+  "metolius-wood-grips-deluxe-ii": {
+    "board": "metolius-wood-grips-deluxe-ii",
+    "sourceSHA256": "d0d4436f93a8a0c67104d33605d65747e83ef463ce823793ee6a6c8e35c0bcdd",
+    "modelSHA256": "cfdf112a2f4ebecb69ebeca2a2102af3e64bcb72a08ba90cb555e60fa50e16e6",
+    "descriptorRecompiledMatch": true,
+    "contactsBoundsAndIDsUnchanged": true,
+    "materialsAndTexturesUnchanged": true,
+    "meshResults": [
+      {
+        "node": "body_001",
+        "sourceTopology": {
+          "components": 5,
+          "boundaryEdges": 2088,
+          "nonmanifoldEdges": 0,
+          "euler": -16,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 5,
+          "boundaryEdges": 2088,
+          "nonmanifoldEdges": 0,
+          "euler": -16,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.4742246901933779,
+          "p99MM": 0.13392583105427514,
+          "rmsMM": 0.035105246992157724
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.23267578150965548,
+          "p99MM": 0.12559455336806105,
+          "rmsMM": 0.030394248066989836
+        }
+      },
+      {
+        "node": "hold_01_jug_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 77,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 77,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.11499195178524536,
+          "p99MM": 0.07944910830253046,
+          "rmsMM": 0.021295499312936728
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.14077935746762363,
+          "p99MM": 0.09531381100093306,
+          "rmsMM": 0.023630434287943456
+        }
+      },
+      {
+        "node": "hold_01_jug_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 82,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 82,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.13230857274839666,
+          "p99MM": 0.11000011177630231,
+          "rmsMM": 0.02949663750684235
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.18746962553118698,
+          "p99MM": 0.11582107521363488,
+          "rmsMM": 0.031451893159393625
+        }
+      },
+      {
+        "node": "hold_02_flat_stopper_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 110,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 110,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.11277250065451577,
+          "p99MM": 0.06150310128593952,
+          "rmsMM": 0.014105033673960397
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.15863596770932442,
+          "p99MM": 0.0687273456414306,
+          "rmsMM": 0.016051547844337048
+        }
+      },
+      {
+        "node": "hold_02_flat_stopper_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 51,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 51,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.15262980985030433,
+          "p99MM": 0.08538644693337727,
+          "rmsMM": 0.01936605745218225
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.14987378982591057,
+          "p99MM": 0.08964649745925901,
+          "rmsMM": 0.021381284569244353
+        }
+      },
+      {
+        "node": "hold_03_edge_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 142,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 142,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2265686332391407,
+          "p99MM": 0.12888589492577762,
+          "rmsMM": 0.02997646235687062
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2118237093644422,
+          "p99MM": 0.13134948071344604,
+          "rmsMM": 0.02917584894837497
+        }
+      },
+      {
+        "node": "hold_03_edge_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 195,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 195,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.19008676743778363,
+          "p99MM": 0.09844261035642224,
+          "rmsMM": 0.02098700041015976
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.18474313001538661,
+          "p99MM": 0.10841665490520401,
+          "rmsMM": 0.02319520780669708
+        }
+      },
+      {
+        "node": "hold_04_three_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 103,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 103,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.21985897724885436,
+          "p99MM": 0.11673632498566595,
+          "rmsMM": 0.027449234027005595
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.195674978085718,
+          "p99MM": 0.13128037896156547,
+          "rmsMM": 0.030355359270336703
+        }
+      },
+      {
+        "node": "hold_04_three_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 89,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 89,
+          "nonmanifoldEdges": 0,
+          "euler": 0,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.19544077175952593,
+          "p99MM": 0.11627262327966432,
+          "rmsMM": 0.029728775405049694
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.19981949351189612,
+          "p99MM": 0.12444941566247036,
+          "rmsMM": 0.03305487673210472
+        }
+      },
+      {
+        "node": "hold_05_two_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 90,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 90,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.22407153031026208,
+          "p99MM": 0.13012851795391506,
+          "rmsMM": 0.03374155430599094
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2268353752855791,
+          "p99MM": 0.11818832316734423,
+          "rmsMM": 0.03236825194220098
+        }
+      },
+      {
+        "node": "hold_05_two_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 79,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 79,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.18636679397635125,
+          "p99MM": 0.0982774665672787,
+          "rmsMM": 0.027903716190445915
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.14724350476268439,
+          "p99MM": 0.11102709239600597,
+          "rmsMM": 0.031178931975150453
+        }
+      },
+      {
+        "node": "hold_06_edge_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 66,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 66,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.17489102425392175,
+          "p99MM": 0.11207267987741908,
+          "rmsMM": 0.02721475975380386
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.18594103873108223,
+          "p99MM": 0.12069247808274172,
+          "rmsMM": 0.0298279656036231
+        }
+      },
+      {
+        "node": "hold_06_edge_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 102,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 102,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.1957291248066406,
+          "p99MM": 0.1432526517344265,
+          "rmsMM": 0.030674013352871638
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2495520044135141,
+          "p99MM": 0.1403835605647912,
+          "rmsMM": 0.032979565870923724
+        }
+      },
+      {
+        "node": "hold_07_three_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 68,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 68,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2889987931993242,
+          "p99MM": 0.10483939038354095,
+          "rmsMM": 0.03501561109331065
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.317211466705115,
+          "p99MM": 0.13692038196417775,
+          "rmsMM": 0.038664626184509776
+        }
+      },
+      {
+        "node": "hold_07_three_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 67,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 67,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.35230992893791474,
+          "p99MM": 0.1576427700418396,
+          "rmsMM": 0.03506213499499722
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.37794826980171653,
+          "p99MM": 0.13678787552756386,
+          "rmsMM": 0.034872201812849196
+        }
+      },
+      {
+        "node": "hold_08_two_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 60,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 60,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.12818894998614525,
+          "p99MM": 0.08822489910893715,
+          "rmsMM": 0.02256714495116082
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.16132457332107142,
+          "p99MM": 0.09011857371977725,
+          "rmsMM": 0.023062526675175388
+        }
+      },
+      {
+        "node": "hold_08_two_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 59,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 59,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.11942735937787749,
+          "p99MM": 0.08406734953331606,
+          "rmsMM": 0.02213080521460193
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.19278506846214596,
+          "p99MM": 0.09671873444365496,
+          "rmsMM": 0.025472563988902547
+        }
+      },
+      {
+        "node": "hold_09_edge_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 61,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 61,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.189321328477981,
+          "p99MM": 0.07741515859195369,
+          "rmsMM": 0.024836130287545066
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.1852686218840915,
+          "p99MM": 0.11815916973134939,
+          "rmsMM": 0.02920502279656649
+        }
+      },
+      {
+        "node": "hold_09_edge_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 54,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 54,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.19852345548854533,
+          "p99MM": 0.1091136681080386,
+          "rmsMM": 0.025341706578874627
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.19724586578771416,
+          "p99MM": 0.12014812345885331,
+          "rmsMM": 0.026598972380961882
+        }
+      },
+      {
+        "node": "hold_10_three_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 74,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 74,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.23879853395480985,
+          "p99MM": 0.14358892199493842,
+          "rmsMM": 0.02873352137354449
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.25530707443822737,
+          "p99MM": 0.1244777162439999,
+          "rmsMM": 0.028281259247185875
+        }
+      },
+      {
+        "node": "hold_10_three_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.20827299789204615,
+          "p99MM": 0.10678363292809591,
+          "rmsMM": 0.030627224489392448
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.1926214807417188,
+          "p99MM": 0.12773648418736522,
+          "rmsMM": 0.03425577814232574
+        }
+      },
+      {
+        "node": "hold_11_two_finger_left_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 55,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 55,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.1629890394768113,
+          "p99MM": 0.08889175176779335,
+          "rmsMM": 0.023151362502924794
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.18773533284013413,
+          "p99MM": 0.11886328248380675,
+          "rmsMM": 0.027912400307831518
+        }
+      },
+      {
+        "node": "hold_11_two_finger_right_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 63,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 63,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.17822040104169254,
+          "p99MM": 0.09672917918399837,
+          "rmsMM": 0.024845512895164047
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.1561676236890777,
+          "p99MM": 0.10339188828034697,
+          "rmsMM": 0.026122009946325443
+        }
+      },
+      {
+        "node": "hold_12_round_stopper_centre_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.3630060484436846,
+          "p99MM": 0.16259853056581314,
+          "rmsMM": 0.0362648849671497
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.4098496958814916,
+          "p99MM": 0.1960871198043196,
+          "rmsMM": 0.04179123047256617
+        }
+      },
+      {
+        "node": "hold_13_four_finger_centre_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 130,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 130,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2888483439754379,
+          "p99MM": 0.1623780817840914,
+          "rmsMM": 0.03833716199795115
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2810275169419241,
+          "p99MM": 0.1672685435588141,
+          "rmsMM": 0.03876273503719532
+        }
+      },
+      {
+        "node": "hold_14_four_finger_centre_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 64,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.29261906101838453,
+          "p99MM": 0.17742448460804214,
+          "rmsMM": 0.048289781609325615
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.2777731994300356,
+          "p99MM": 0.18751485410671168,
+          "rmsMM": 0.05121970303312764
+        }
+      },
+      {
+        "node": "hold_15_four_finger_centre_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 65,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 65,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.3932116166660788,
+          "p99MM": 0.16562021023348503,
+          "rmsMM": 0.040274961896265775
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.4178387959448532,
+          "p99MM": 0.20939850509150615,
+          "rmsMM": 0.04716109311556443
+        }
+      }
+    ],
+    "closedBoreRays": [
+      {
+        "xy": [
+          -0.215,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.94933628693004
+      },
+      {
+        "xy": [
+          -0.21465,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.94761799048863
+      },
+      {
+        "xy": [
+          -0.21534999999999999,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.951054583371466
+      },
+      {
+        "xy": [
+          -0.215,
+          0.05535
+        ],
+        "hitCount": 2,
+        "depthMM": 42.956782248844796
+      },
+      {
+        "xy": [
+          -0.215,
+          0.05465
+        ],
+        "hitCount": 2,
+        "depthMM": 42.941890325015294
+      },
+      {
+        "xy": [
+          -0.215,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 54.85554576836839
+      },
+      {
+        "xy": [
+          -0.21465,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 54.859065504654495
+      },
+      {
+        "xy": [
+          -0.21534999999999999,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 54.852026032082286
+      },
+      {
+        "xy": [
+          -0.215,
+          0.11635000000000001
+        ],
+        "hitCount": 2,
+        "depthMM": 54.85109796922553
+      },
+      {
+        "xy": [
+          -0.215,
+          0.11565
+        ],
+        "hitCount": 2,
+        "depthMM": 54.862020685069055
+      },
+      {
+        "xy": [
+          -0.215,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97321964321655
+      },
+      {
+        "xy": [
+          -0.21465,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97103067457327
+      },
+      {
+        "xy": [
+          -0.21534999999999999,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97540861185983
+      },
+      {
+        "xy": [
+          -0.215,
+          0.18034999999999998
+        ],
+        "hitCount": 2,
+        "depthMM": 69.96978669126094
+      },
+      {
+        "xy": [
+          -0.215,
+          0.17965
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97665259517217
+      },
+      {
+        "xy": [
+          0.215,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.999834656711755
+      },
+      {
+        "xy": [
+          0.21534999999999999,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.999834656711755
+      },
+      {
+        "xy": [
+          0.21465,
+          0.055
+        ],
+        "hitCount": 2,
+        "depthMM": 42.999834656711755
+      },
+      {
+        "xy": [
+          0.215,
+          0.05535
+        ],
+        "hitCount": 2,
+        "depthMM": 42.999834656711755
+      },
+      {
+        "xy": [
+          0.215,
+          0.05465
+        ],
+        "hitCount": 2,
+        "depthMM": 42.999834656711755
+      },
+      {
+        "xy": [
+          0.215,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 55.00338177520441
+      },
+      {
+        "xy": [
+          0.21534999999999999,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 55.00283109919942
+      },
+      {
+        "xy": [
+          0.21465,
+          0.116
+        ],
+        "hitCount": 2,
+        "depthMM": 55.0039324512094
+      },
+      {
+        "xy": [
+          0.215,
+          0.11635000000000001
+        ],
+        "hitCount": 2,
+        "depthMM": 55.003031346248584
+      },
+      {
+        "xy": [
+          0.215,
+          0.11565
+        ],
+        "hitCount": 2,
+        "depthMM": 55.00373220416024
+      },
+      {
+        "xy": [
+          0.215,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97683280406325
+      },
+      {
+        "xy": [
+          0.21534999999999999,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97696365677905
+      },
+      {
+        "xy": [
+          0.21465,
+          0.18
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97670195134745
+      },
+      {
+        "xy": [
+          0.215,
+          0.18034999999999998
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97767150230744
+      },
+      {
+        "xy": [
+          0.215,
+          0.17965
+        ],
+        "hitCount": 2,
+        "depthMM": 69.97599410581905
+      }
+    ],
+    "maxSampledDistanceMM": 0.4742246901933779,
+    "sampleCount": 97200
+  },
+  "lattice-mxedge-lift-small": {
+    "board": "lattice-mxedge-lift-small",
+    "sourceSHA256": "662f0681bea5356ba835df7b2505292ba59a1af090ec29281ef0a55d006777ee",
+    "modelSHA256": "4aa20d7e13b754c1e96ee7f9dd151c8153191c40f0b42e5940d81816eaad696b",
+    "descriptorRecompiledMatch": true,
+    "contactsBoundsAndIDsUnchanged": true,
+    "materialsAndTexturesUnchanged": true,
+    "meshResults": [
+      {
+        "node": "Body_actual_surface_001",
+        "sourceTopology": {
+          "components": 5,
+          "boundaryEdges": 3170,
+          "nonmanifoldEdges": 0,
+          "euler": -1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 5,
+          "boundaryEdges": 3170,
+          "nonmanifoldEdges": 0,
+          "euler": -1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.17099184070800189,
+          "p99MM": 0.0473613772042189,
+          "rmsMM": 0.011003066524888722
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.24220867550046218,
+          "p99MM": 0.17264565536604948,
+          "rmsMM": 0.04386941573759376
+        }
+      },
+      {
+        "node": "edge_14_actual_surface_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 763,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 763,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2049896320738847,
+          "p99MM": 0.13361858804149204,
+          "rmsMM": 0.04104768389961153
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.29376587196059356,
+          "p99MM": 0.2457010276975881,
+          "rmsMM": 0.10378666971709238
+        }
+      },
+      {
+        "node": "edge_18_actual_surface_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 851,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 851,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.16328212771783335,
+          "p99MM": 0.05264142758702064,
+          "rmsMM": 0.018808477284647372
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.22752913446898965,
+          "p99MM": 0.19843628733288216,
+          "rmsMM": 0.07552026832438308
+        }
+      },
+      {
+        "node": "edge_8_actual_surface_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 1044,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 1044,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.4069090982297477,
+          "p99MM": 0.1549245836150734,
+          "rmsMM": 0.04288945958266319
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.34824385821534204,
+          "p99MM": 0.23254161197219042,
+          "rmsMM": 0.09835909268683393
+        }
+      },
+      {
+        "node": "mono_25_actual_surface_001",
+        "sourceTopology": {
+          "components": 1,
+          "boundaryEdges": 650,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "outputTopology": {
+          "components": 1,
+          "boundaryEdges": 650,
+          "nonmanifoldEdges": 0,
+          "euler": 1,
+          "degenerateFaces": 0
+        },
+        "sourceToOutput": {
+          "samples": 1800,
+          "maxMM": 0.2359385555594286,
+          "p99MM": 0.10711882642908467,
+          "rmsMM": 0.025717287561462715
+        },
+        "outputToSource": {
+          "samples": 1800,
+          "maxMM": 0.16779402579308353,
+          "p99MM": 0.12335956080753885,
+          "rmsMM": 0.044942101493049155
+        }
+      }
+    ],
+    "maxSampledDistanceMM": 0.4069090982297477,
+    "sampleCount": 18000
+  },
+  "scope": {
+    "optimizedModels": 3,
+    "unchangedModels": 37,
+    "allBoardMetadataUnchanged": true,
+    "baseCommit": "ef07a5fb04104d5f0a5ed3accc4c6ae918e02529"
+  }
+}
