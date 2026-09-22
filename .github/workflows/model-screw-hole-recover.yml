@@ -1,0 +1,34 @@
+name: Recover retained model repair sources
+on:
+  push:
+    branches: [fix/remove-model-screw-holes-20260921]
+    paths: [.github/workflows/model-screw-hole-recover.yml]
+permissions:
+  contents: read
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          lfs: false
+          persist-credentials: false
+      - name: Preserve available source bytes
+        run: |
+          mkdir -p .context/screw-hole-recovery
+          git archive HEAD | gzip -1 > .context/screw-hole-recovery/repository.tar.gz
+          python3 - <<'PY'
+          import base64,pathlib,zlib
+          root=pathlib.Path('.context/remove-model-screw-holes-20260921')
+          data=''.join(p.read_text() for p in sorted(root.glob('payload-*.txt')))
+          out=zlib.decompressobj().decompress(base64.b64decode(data))
+          pathlib.Path('.context/screw-hole-recovery/partial-source.txt').write_bytes(out)
+          print(len(out), 'source bytes recovered; original source transport remains incomplete')
+          PY
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: screw-hole-recovery-source
+          path: .context/screw-hole-recovery/
+          retention-days: 1
+          compression-level: 0
