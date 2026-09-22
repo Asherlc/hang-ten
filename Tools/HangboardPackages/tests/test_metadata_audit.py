@@ -1019,7 +1019,7 @@ def test_repaired_boards_keep_only_exact_source_mapped_metadata() -> None:
     )
 
     megalith = packages["frictitious.megalith"]
-    assert len(megalith.contacts) == 18
+    assert len(megalith.contacts) == 20
     assert {
         hold.id: (hold.hand_capacity, hold.shape)
         for hold in megalith.contacts

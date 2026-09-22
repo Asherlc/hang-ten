@@ -1,0 +1,84 @@
+# products.py SHA256 0cd09967df472150ef6d1f19cd7b605a8f5dabb89f95407e5c6ff481c1928e32
+def doormount():
+    slug=ORDER[0];a=Assembly(slug);W=647.7;H=114.3;hw=W/2;top=H/2-6
+    pts=[[-hw,top],[hw,top],[hw,-12],[hw-27,-12],[hw-27,-H/2],[33,-H/2],[27,-H/2+9],[-27,-H/2+9],[-33,-H/2],[-hw+27,-H/2],[-hw+27,-12],[-hw,-12]]
+    out=rounded_outline(pts,[16,16,8,5,14,6,4,4,6,14,5,8])
+    def thick(x,z):
+        tier=44+13.15*smooth(-17,-8,z)
+        channel=31*band(x,-12,12,3)*(1-smooth(22,29,z))
+        return tier-channel
+    jug=reg(a,'jug','One uninterrupted full-width top jug',['D1','D3','D4'])
+    u=Unit(a,'board',out,thick,top_profile=jug_profile(top),edge_label=lambda x,z,t:jug if z>top-5 else 'body',front_resolution=4)
+    for sign,side in [(-1,'left'),(1,'right')]:
+        id35=reg(a,side+'-edge-35','Outer upper 35 mm edge',['D1','D2'],35)
+        u.cavity({'center':[sign*253,18],'width':94,'height':32,'radius':10,'depth':35,'holds':[{'id':id35}]})
+        id25=reg(a,side+'-edge-25','Upper 25 mm terrace excluding nested pocket',['D1','D2'],25)
+        idp=reg(a,side+'-pocket-2finger','Deeper two-finger region continuous with the upper cavity',['D1','D2'],None,estimatedDepthMm=40)
+        cx=sign*110
+        if sign<0:
+            ranges=[{'id':idp,'xRange':[-187,-147]},{'id':id25,'xRange':[-147,-33]}]
+            cuts=[-147];vals=[40,25];dip={'x0':-179,'x1':-149,'amount':6,'blend':3}
+        else:
+            ranges=[{'id':id25,'xRange':[33,147]},{'id':idp,'xRange':[147,187]}]
+            cuts=[147];vals=[25,40];dip={'x0':149,'x1':179,'amount':6,'blend':3}
+        u.cavity({'center':[cx,18],'width':149,'height':31,'radius':9,'depth':25,'dip':dip,'holds':[{'id':id25}],
+            'nestedCavities':[{'center':[sign*160,13.5],'width':32,'height':12,'radius':4.8,'depth':15,'holds':[{'id':idp}],'lipRadius':1.2}]})
+        ids={d:reg(a,f'{side}-edge-{d}',f'{d} mm lower terrace in shared opening',['D1','D2'],d) for d in (20,15,10)}
+        ds=[20,15,10] if sign<0 else [10,15,20]
+        edges=[-282,-200,-121,-42] if sign<0 else [42,121,200,282]
+        u.cavity({'center':[sign*162,-33],'width':239,'height':29,'radius':9,'depth':{'kind':'steps','cuts':edges[1:3],'values':ds,'blend':1},'holds':[{'id':ids[d],'xRange':[edges[j],edges[j+1]]} for j,d in enumerate(ds)]})
+    u.front_hole({'center':[0,11],'radius':7,'radiusZ':10})
+    u.finish();return a
+
+
+def megalith():
+    slug=ORDER[1];a=Assembly(slug);W=679.45;H=165.1;hw=W/2;top=H/2-6
+    pts=[[-hw,top],[hw,top],[hw,23],[hw-4,18],[hw,-5],[hw,-28],[hw-12,-33],[hw-12,-H/2],[74,-H/2],[69,-52],[-69,-52],[-74,-H/2],[-hw+12,-H/2],[-hw+12,-33],[-hw,-28],[-hw,-5],[-hw+4,18],[-hw,23]]
+    out=rounded_outline(pts,[18,18,8,2,5,12,4,18,12,9,9,12,18,4,12,5,2,8])
+    def thick(x,z):
+        tier=37+15*smooth(-35,-25,z)+5.15*smooth(21,30,z)
+        center=26*band(x,-73,73,3)*(1-smooth(18,26,z))
+        return tier-center
+    jug=reg(a,'jug','Continuous full-width upper pull-up jug',['M1','M2','M3'])
+    u=Unit(a,'board',out,thick,top_profile=jug_profile(top),edge_label=lambda x,z,t:jug if z>top-5 else 'body',front_resolution=4)
+    for sign,side in [(-1,'left'),(1,'right')]:
+        ids={d:reg(a,f'{side}-edge-{d}',f'{d} mm terrace within top shared opening',['M1','M2'],d) for d in (8,10,12)}
+        vals=[8,10,12] if sign<0 else [12,10,8]
+        edges=[-322,-226,-130,-34] if sign<0 else [34,130,226,322]
+        u.cavity({'center':[sign*178,51],'width':286,'height':26,'radius':9,'depth':{'kind':'steps','cuts':edges[1:3],'values':vals},'holds':[{'id':ids[d],'xRange':edges[j:j+2]} for j,d in enumerate(vals)]})
+        id30=reg(a,side+'-edge-30','30 mm middle outer terrace',['M1','M2'],30)
+        id40=reg(a,side+'-edge-40','40 mm middle terrace outside deeper subpocket',['M1','M2'],40)
+        idp=reg(a,side+'-pocket-2finger','Two-finger dip in the 40 mm region',['M1','M4'],None,estimatedDepthMm=46)
+        if sign<0:
+            hs=[{'id':id30,'xRange':[-319,-229]},{'id':id40,'xRange':[-229,-165]},{'id':idp,'xRange':[-165,-121]},{'id':id40,'xRange':[-121,-95]}]
+            cuts=[-229,-165,-121];vals=[30,40,46,40];dip={'x0':-161,'x1':-125,'amount':5,'blend':3}
+        else:
+            hs=[{'id':id40,'xRange':[95,121]},{'id':idp,'xRange':[121,165]},{'id':id40,'xRange':[165,229]},{'id':id30,'xRange':[229,319]}]
+            cuts=[121,165,229];vals=[40,46,40,30];dip={'x0':125,'x1':161,'amount':5,'blend':3}
+        main_hs=[{'id':id30,'xRange':[-319,-229]},{'id':id40,'xRange':[-229,-95]}] if sign<0 else [{'id':id40,'xRange':[95,229]},{'id':id30,'xRange':[229,319]}]
+        u.cavity({'center':[sign*207,2],'width':224,'height':33,'radius':10,'depth':{'kind':'steps','cuts':[sign*229],'values':[30,40] if sign<0 else [40,30],'blend':1.5},'dip':dip,'holds':main_hs,
+            'nestedCavities':[{'center':[sign*144,-8],'width':32,'height':12,'radius':4.8,'depth':6,'holds':[{'id':idp}],'lipRadius':1}]},through=[{'center':[sign*290,8],'radius':3.8}])
+        id15=reg(a,side+'-edge-15','15 mm bottom outer terrace',['M1','M2'],15)
+        id20=reg(a,side+'-edge-20','20 mm bottom inner terrace',['M1','M2'],20)
+        hs=[{'id':id15,'xRange':[-311,-229]},{'id':id20,'xRange':[-229,-147]}] if sign<0 else [{'id':id20,'xRange':[147,229]},{'id':id15,'xRange':[229,311]}]
+        u.cavity({'center':[sign*229,-53],'width':161,'height':28,'radius':10,'depth':{'kind':'steps','cuts':[sign*229],'values':[15,20] if sign<0 else [20,15]},'holds':hs})
+        mono=reg(a,side+'-mono','Separate bottom mono pocket, not the adjacent screw hole',['M1','M2','M4'],None,estimatedDepthMm=28)
+        u.cavity({'center':[sign*109,-59],'width':18,'height':23,'radius':7,'depth':28,'holds':[{'id':mono}],'lipRadius':1.5})
+        u.front_hole({'center':[sign*130,-43],'radius':3.8})
+        u.front_hole({'center':[sign*62,11],'radius':3.8})
+    center=reg(a,'center-edge-25','Single-hand protruding center ledge',['M1','M2'],25)
+    u.boss([0,-20],90,27,8,25,center)
+    u.finish();return a
+
+
+
+# geometry.py SHA256 d5f87ec64a01bb8be90ebb5c7c554d9956d9aebb2652bc315de02d4034ddafea
+    def hole(self,h,yfunc,record=True):
+        cx,cz=h['center'];r=h['radius'];rz=h.get('radiusZ',r)
+        loop=ellipse(cx,cz,r,rz,48)
+        front=np.array([[x,yfunc(x,z),z] for x,z in loop]);back=np.c_[loop[:,0],np.zeros(len(loop)),loop[:,1]]
+        self.link(front,back,'body');self.backholes.append(loop)
+        if record:self.a.mounts.append({'unitId':self.name,'kind':h.get('kind','mounting-opening-not-hold'),'centerSourceMeters':(np.array(self.point(cx,0,cz))/1000).tolist(),'axis':[0,1,0],'radiusMm':r,'radiusZMm':rz,'placementClassification':'photo-derived-estimate'})
+        return loop
+    def front_hole(self,h):
+        loop=self.hole(h,lambda x,z:-self.thickness(x,z));self.mouths.append(loop)

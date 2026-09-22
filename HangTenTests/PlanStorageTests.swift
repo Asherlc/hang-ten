@@ -2222,19 +2222,20 @@ final class PlanStorageTests: XCTestCase {
             ("metolius.contact.advanced", "metolius.contact", "https://www.metoliusclimbing.com/pages/contact-training-guide"),
             ("metolius.simulator-3d.entry", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
             ("metolius.simulator-3d.intermediate", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
-            ("metolius.simulator-3d.advanced", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide")
+            ("metolius.simulator-3d.advanced", "metolius.simulator-3d", "https://www.metoliusclimbing.com/pages/simulator-3d-training-guide"),
+            ("metolius.rock-rings.ten-minute", "metolius.rock-rings-3d", "https://www.metoliusclimbing.com/pages/rock-ring-training-guide")
         ]
         let expectedIDs = Set(expectedPlans.map(\.0))
         let plans = PlanCatalog.all.filter { expectedIDs.contains($0.id) }
         let boardSpecificFamilyPlans = PlanCatalog.all.filter {
-            $0.id.hasPrefix("metolius.contact.") || $0.id.hasPrefix("metolius.simulator-3d.")
+            $0.id.hasPrefix("metolius.contact.") || $0.id.hasPrefix("metolius.simulator-3d.") || $0.id.hasPrefix("metolius.rock-rings.")
         }
 
         // Detects a missing, cross-board, non-resolvable, or wrong-duration source cycle.
         XCTAssertEqual(Set(plans.map(\.id)), expectedIDs)
         XCTAssertEqual(plans.count, expectedPlans.count)
         XCTAssertEqual(Set(boardSpecificFamilyPlans.map(\.id)), expectedIDs)
-        XCTAssertEqual(boardSpecificFamilyPlans.count, 6)
+        XCTAssertEqual(boardSpecificFamilyPlans.count, 7)
 
         for (planID, boardID, sourceURL) in expectedPlans {
             let plan = try XCTUnwrap(plans.first { $0.id == planID })
@@ -2328,6 +2329,18 @@ final class PlanStorageTests: XCTestCase {
             ("metolius.contact.intermediate.minute-7", [edge(35), anyHold]),
             ("metolius.simulator-3d.entry.minute-10", [anyHold]),
             ("metolius.simulator-3d.intermediate.minute-7", [edge(25), anyHold]),
+            ("metolius.rock-rings.ten-minute.minute-2", [
+                ContactRequirement(kind: .pocket, fingerCapacity: 3, selection: .single),
+                ContactRequirement(kind: .pocket, fingerCapacity: 2, selection: .single)
+            ]),
+            ("metolius.rock-rings.ten-minute.minute-3", [
+                ContactRequirement(kind: .pocket, fingerCapacity: 4, selection: .single),
+                ContactRequirement(kind: .pocket, fingerCapacity: 2, selection: .single)
+            ]),
+            ("metolius.rock-rings.ten-minute.minute-4", [
+                ContactRequirement(kind: .pocket, fingerCapacity: 4, selection: .single),
+                ContactRequirement(kind: .pocket, fingerCapacity: 3, selection: .single)
+            ]),
         ]
 
         for expected in expectedSteps {

@@ -1,0 +1,191 @@
+{
+  "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/zlagboard-pro-2-0/zlagboard-pro-2-0.glb",
+  "sourceSHA256": "e71482d155485acd5ad710f7fb8cf2ac2a055ef14a634a6026733f2e970f3b56",
+  "preparedSHA256": "b363159aee0968206e76039104f693f57b462dc51562120cc584e15dc00c4761",
+  "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/zlagboard-pro-2-0.blend",
+  "blenderVersion": "5.2.0 LTS",
+  "removedTransformOnlyNodes": [
+    "world",
+    "SOURCE-ZUP_to_GLTF-YUP"
+  ],
+  "maximumWorldVertexDeltaMetres": 0.0,
+  "geometryChanged": false,
+  "coordinatePreparation": "GLB native import + root world matrix bake only; Blender +Z up, front -Y, metres. Compiler transports to +Y up, front +Z.",
+  "materialAdaptation": "One constant PNG RGBA8 sRGB image per source material, explicitly encoded from linear GLB factor with <=0.004 linear-channel error; no generated grain or source image use.",
+  "sourceMaterialLinearRGBA": {
+    "substrate": [
+      0.7411764860153198,
+      0.6000000238418579,
+      0.43921568989753723,
+      1.0
+    ]
+  },
+  "materialConversions": {
+    "substrate": {
+      "format": "PNG RGBA8 sRGB",
+      "encodedSRGB8": [
+        223,
+        203,
+        177,
+        255
+      ],
+      "decodedLinearRGBA": [
+        0.7379104087727308,
+        0.5972017883637634,
+        0.4396571738409188,
+        1.0
+      ],
+      "maximumLinearChannelError": 0.003266077242588983,
+      "linearChannelTolerance": 0.004,
+      "textureSHA256": "43c48077e1852af252a25876f4f265b52ef33345afb2fd3f250bacac02fa0005"
+    }
+  },
+  "mountingOmission": "Both sources already omit external metal frame, phone holder/bands, screws and mounting holes. No mounting topology to remove; this does not describe physical product absence.",
+  "meshInventory": [
+    {
+      "name": "body--board",
+      "vertices": 22810,
+      "polygons": 28025
+    },
+    {
+      "name": "hold--center-sloping-jug",
+      "vertices": 2111,
+      "polygons": 3320
+    },
+    {
+      "name": "hold--left-jug",
+      "vertices": 879,
+      "polygons": 1319
+    },
+    {
+      "name": "hold--left-sloper-20",
+      "vertices": 614,
+      "polygons": 895
+    },
+    {
+      "name": "hold--left-sloper-32",
+      "vertices": 839,
+      "polygons": 1148
+    },
+    {
+      "name": "hold--right-jug",
+      "vertices": 882,
+      "polygons": 1320
+    },
+    {
+      "name": "hold--right-sloper-20",
+      "vertices": 605,
+      "polygons": 893
+    },
+    {
+      "name": "hold--right-sloper-32",
+      "vertices": 849,
+      "polygons": 1156
+    },
+    {
+      "name": "hold--row-1-column-1",
+      "vertices": 808,
+      "polygons": 918
+    },
+    {
+      "name": "hold--row-1-column-2",
+      "vertices": 616,
+      "polygons": 720
+    },
+    {
+      "name": "hold--row-1-column-3",
+      "vertices": 499,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-1-column-4",
+      "vertices": 785,
+      "polygons": 900
+    },
+    {
+      "name": "hold--row-1-column-5",
+      "vertices": 499,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-1-column-6",
+      "vertices": 616,
+      "polygons": 720
+    },
+    {
+      "name": "hold--row-1-column-7",
+      "vertices": 808,
+      "polygons": 918
+    },
+    {
+      "name": "hold--row-2-column-1",
+      "vertices": 808,
+      "polygons": 918
+    },
+    {
+      "name": "hold--row-2-column-2",
+      "vertices": 602,
+      "polygons": 702
+    },
+    {
+      "name": "hold--row-2-column-3",
+      "vertices": 537,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-2-column-4",
+      "vertices": 731,
+      "polygons": 882
+    },
+    {
+      "name": "hold--row-2-column-5",
+      "vertices": 537,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-2-column-6",
+      "vertices": 602,
+      "polygons": 702
+    },
+    {
+      "name": "hold--row-2-column-7",
+      "vertices": 808,
+      "polygons": 918
+    },
+    {
+      "name": "hold--row-3-column-1",
+      "vertices": 876,
+      "polygons": 918
+    },
+    {
+      "name": "hold--row-3-column-2",
+      "vertices": 642,
+      "polygons": 720
+    },
+    {
+      "name": "hold--row-3-column-3",
+      "vertices": 568,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-3-column-4",
+      "vertices": 854,
+      "polygons": 900
+    },
+    {
+      "name": "hold--row-3-column-5",
+      "vertices": 568,
+      "polygons": 576
+    },
+    {
+      "name": "hold--row-3-column-6",
+      "vertices": 642,
+      "polygons": 720
+    },
+    {
+      "name": "hold--row-3-column-7",
+      "vertices": 876,
+      "polygons": 918
+    }
+  ]
+}

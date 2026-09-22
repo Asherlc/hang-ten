@@ -1,0 +1,22 @@
+{
+  "slug": "frictitious-megalith",
+  "previousModelSHA256": "8505a71e029834f2e33477a9edb4b41e6cc6c309777eb55c18bdef18f3551cde",
+  "modelSHA256": "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
+  "onlyAddedUVNodeIDs": [
+    "body__board_mounting_omitted_001",
+    "hold__right_edge_15_ownership_001",
+    "hold__right_edge_20_ownership_001"
+  ],
+  "everyAddedUV": [
+    0.5,
+    0.5
+  ],
+  "existingUVArraysUnchanged": true,
+  "usdLayerExceptUVByteIdentical": true,
+  "usdLayerExceptUVSHA256": "a67adcd583b67231fea0c43a577c2b6fe60266e63efd4d65c7a39f4a4ff4b02f",
+  "exactGeometryTopologyWindingNormalsMaterialBindingsAndParametersUnchanged": true,
+  "textureMembersByteIdentical": [
+    "textures/frictitious-megalith-substrate.png"
+  ],
+  "descriptorExceptModelHashUnchanged": true
+}

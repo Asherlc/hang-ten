@@ -1,0 +1,636 @@
+{
+  "assetFile": "trango-rock-prodigy-forge.glb",
+  "sha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "sourceSha256": "69207752313f7f849f07320b6879569f12f24aed05b86aee41ae9f17814b4c66",
+  "parts": {
+    "body--left": {
+      "sourceTriangles": 50687,
+      "triangles": 38163,
+      "curvedTrianglesProtected": 31522,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 38983,
+          "maxM": 9.233523039319251e-05,
+          "rmsM": 3.4411447827648144e-06
+        },
+        "exportToSource": {
+          "samples": 32721,
+          "maxM": 4.7531437742538814e-05,
+          "rmsM": 9.496967660414427e-07
+        }
+      }
+    },
+    "body--right": {
+      "sourceTriangles": 50687,
+      "triangles": 38231,
+      "curvedTrianglesProtected": 31543,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 38983,
+          "maxM": 9.44849800320018e-05,
+          "rmsM": 3.851652765356089e-06
+        },
+        "exportToSource": {
+          "samples": 32755,
+          "maxM": 4.1663256322277345e-05,
+          "rmsM": 9.294986262544764e-07
+        }
+      }
+    },
+    "hold--left-closed-crimp": {
+      "sourceTriangles": 47283,
+      "triangles": 45103,
+      "curvedTrianglesProtected": 40059,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 36170,
+          "maxM": 6.5047572371371284e-06,
+          "rmsM": 1.0912153577960846e-07
+        },
+        "exportToSource": {
+          "samples": 35080,
+          "maxM": 3.669098153117687e-06,
+          "rmsM": 5.0246948170814315e-08
+        }
+      }
+    },
+    "hold--left-flat-edge": {
+      "sourceTriangles": 339,
+      "triangles": 253,
+      "curvedTrianglesProtected": 157,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 570,
+          "maxM": 1.3877787807814457e-17,
+          "rmsM": 1.5102008187953507e-18
+        },
+        "exportToSource": {
+          "samples": 441,
+          "maxM": 1.3877787807814457e-17,
+          "rmsM": 1.716930969985325e-18
+        }
+      }
+    },
+    "hold--left-imr": {
+      "sourceTriangles": 720,
+      "triangles": 720,
+      "curvedTrianglesProtected": 720,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 1130,
+          "maxM": 6.206335383118183e-17,
+          "rmsM": 7.104255267164375e-18
+        },
+        "exportToSource": {
+          "samples": 1130,
+          "maxM": 6.206335383118183e-17,
+          "rmsM": 7.104255267164375e-18
+        }
+      }
+    },
+    "hold--left-mr-deep": {
+      "sourceTriangles": 576,
+      "triangles": 576,
+      "curvedTrianglesProtected": 576,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 906,
+          "maxM": 3.1080126089379415e-17,
+          "rmsM": 3.7732672922276896e-18
+        },
+        "exportToSource": {
+          "samples": 906,
+          "maxM": 3.1080126089379415e-17,
+          "rmsM": 3.7732672922276896e-18
+        }
+      }
+    },
+    "hold--left-mr-shallow": {
+      "sourceTriangles": 612,
+      "triangles": 612,
+      "curvedTrianglesProtected": 612,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 962,
+          "maxM": 2.943923360032078e-17,
+          "rmsM": 4.732593805701394e-18
+        },
+        "exportToSource": {
+          "samples": 962,
+          "maxM": 2.943923360032078e-17,
+          "rmsM": 4.732593805701394e-18
+        }
+      }
+    },
+    "hold--left-pinch-medium": {
+      "sourceTriangles": 12539,
+      "triangles": 9895,
+      "curvedTrianglesProtected": 8450,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 18565,
+          "maxM": 4.54368295768374e-05,
+          "rmsM": 1.3082297726171563e-06
+        },
+        "exportToSource": {
+          "samples": 15138,
+          "maxM": 2.894366627085322e-05,
+          "rmsM": 7.746882531540798e-07
+        }
+      }
+    },
+    "hold--left-pinch-narrow": {
+      "sourceTriangles": 5895,
+      "triangles": 5235,
+      "curvedTrianglesProtected": 4277,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 9010,
+          "maxM": 2.7267197720736507e-05,
+          "rmsM": 1.2022419737293362e-06
+        },
+        "exportToSource": {
+          "samples": 8020,
+          "maxM": 2.1484920221254208e-05,
+          "rmsM": 8.14293177651927e-07
+        }
+      }
+    },
+    "hold--left-rail": {
+      "sourceTriangles": 1530,
+      "triangles": 1530,
+      "curvedTrianglesProtected": 1530,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 2390,
+          "maxM": 6.206335383118183e-17,
+          "rmsM": 3.6412080226949646e-18
+        },
+        "exportToSource": {
+          "samples": 2390,
+          "maxM": 6.206335383118183e-17,
+          "rmsM": 3.6412080226949646e-18
+        }
+      }
+    },
+    "hold--left-sloper-30": {
+      "sourceTriangles": 224,
+      "triangles": 224,
+      "curvedTrianglesProtected": 197,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 379,
+          "maxM": 5.721958498152797e-17,
+          "rmsM": 8.675905631442084e-18
+        },
+        "exportToSource": {
+          "samples": 379,
+          "maxM": 5.721958498152797e-17,
+          "rmsM": 8.675905631442084e-18
+        }
+      }
+    },
+    "hold--left-sloper-40": {
+      "sourceTriangles": 309,
+      "triangles": 309,
+      "curvedTrianglesProtected": 235,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 520,
+          "maxM": 1.962615573354719e-17,
+          "rmsM": 4.7531715445831415e-18
+        },
+        "exportToSource": {
+          "samples": 520,
+          "maxM": 1.962615573354719e-17,
+          "rmsM": 4.7531715445831415e-18
+        }
+      }
+    },
+    "hold--left-slopey-crimper": {
+      "sourceTriangles": 5160,
+      "triangles": 5014,
+      "curvedTrianglesProtected": 4521,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 8053,
+          "maxM": 1.6194016993753226e-07,
+          "rmsM": 4.644078991796354e-09
+        },
+        "exportToSource": {
+          "samples": 7834,
+          "maxM": 1.0526231203666563e-07,
+          "rmsM": 3.319249183585291e-09
+        }
+      }
+    },
+    "hold--right-closed-crimp": {
+      "sourceTriangles": 47283,
+      "triangles": 45095,
+      "curvedTrianglesProtected": 40052,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 36170,
+          "maxM": 6.685826961894265e-06,
+          "rmsM": 1.0686997310689856e-07
+        },
+        "exportToSource": {
+          "samples": 35076,
+          "maxM": 4.26077215272035e-06,
+          "rmsM": 5.68463010600115e-08
+        }
+      }
+    },
+    "hold--right-flat-edge": {
+      "sourceTriangles": 339,
+      "triangles": 253,
+      "curvedTrianglesProtected": 157,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 570,
+          "maxM": 1.3877787807814457e-17,
+          "rmsM": 1.5918914372148441e-18
+        },
+        "exportToSource": {
+          "samples": 441,
+          "maxM": 1.3877787807814457e-17,
+          "rmsM": 1.8098041501452733e-18
+        }
+      }
+    },
+    "hold--right-imr": {
+      "sourceTriangles": 720,
+      "triangles": 720,
+      "curvedTrianglesProtected": 720,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 1130,
+          "maxM": 6.13071990641655e-17,
+          "rmsM": 6.869270811199396e-18
+        },
+        "exportToSource": {
+          "samples": 1130,
+          "maxM": 6.13071990641655e-17,
+          "rmsM": 6.869270811199396e-18
+        }
+      }
+    },
+    "hold--right-mr-deep": {
+      "sourceTriangles": 576,
+      "triangles": 576,
+      "curvedTrianglesProtected": 576,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 906,
+          "maxM": 3.049365591847692e-17,
+          "rmsM": 3.689256800245372e-18
+        },
+        "exportToSource": {
+          "samples": 906,
+          "maxM": 3.049365591847692e-17,
+          "rmsM": 3.689256800245372e-18
+        }
+      }
+    },
+    "hold--right-mr-shallow": {
+      "sourceTriangles": 612,
+      "triangles": 612,
+      "curvedTrianglesProtected": 612,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 962,
+          "maxM": 2.943923360032078e-17,
+          "rmsM": 4.126689358528459e-18
+        },
+        "exportToSource": {
+          "samples": 962,
+          "maxM": 2.943923360032078e-17,
+          "rmsM": 4.126689358528459e-18
+        }
+      }
+    },
+    "hold--right-pinch-medium": {
+      "sourceTriangles": 12539,
+      "triangles": 9891,
+      "curvedTrianglesProtected": 8459,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 18565,
+          "maxM": 4.54368295768374e-05,
+          "rmsM": 1.311445015031379e-06
+        },
+        "exportToSource": {
+          "samples": 15132,
+          "maxM": 2.894366627085322e-05,
+          "rmsM": 7.713546991592477e-07
+        }
+      }
+    },
+    "hold--right-pinch-narrow": {
+      "sourceTriangles": 5895,
+      "triangles": 5233,
+      "curvedTrianglesProtected": 4292,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 9010,
+          "maxM": 2.7267197720736507e-05,
+          "rmsM": 1.2777721384212164e-06
+        },
+        "exportToSource": {
+          "samples": 8017,
+          "maxM": 2.1484920221254208e-05,
+          "rmsM": 8.243596606617445e-07
+        }
+      }
+    },
+    "hold--right-rail": {
+      "sourceTriangles": 1530,
+      "triangles": 1530,
+      "curvedTrianglesProtected": 1530,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 2390,
+          "maxM": 5.605063087764203e-17,
+          "rmsM": 3.2198581299314707e-18
+        },
+        "exportToSource": {
+          "samples": 2390,
+          "maxM": 5.605063087764203e-17,
+          "rmsM": 3.2198581299314707e-18
+        }
+      }
+    },
+    "hold--right-sloper-30": {
+      "sourceTriangles": 224,
+      "triangles": 224,
+      "curvedTrianglesProtected": 197,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 379,
+          "maxM": 5.721958498152797e-17,
+          "rmsM": 8.72518539079997e-18
+        },
+        "exportToSource": {
+          "samples": 379,
+          "maxM": 5.721958498152797e-17,
+          "rmsM": 8.72518539079997e-18
+        }
+      }
+    },
+    "hold--right-sloper-40": {
+      "sourceTriangles": 309,
+      "triangles": 309,
+      "curvedTrianglesProtected": 235,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 520,
+          "maxM": 1.962615573354719e-17,
+          "rmsM": 5.660132850260263e-18
+        },
+        "exportToSource": {
+          "samples": 520,
+          "maxM": 1.962615573354719e-17,
+          "rmsM": 5.660132850260262e-18
+        }
+      }
+    },
+    "hold--right-slopey-crimper": {
+      "sourceTriangles": 5160,
+      "triangles": 5014,
+      "curvedTrianglesProtected": 4521,
+      "boundaryEdgesUnchanged": true,
+      "errorBudgetM": 0.00025,
+      "sampledSurfaceError": {
+        "sourceToExport": {
+          "samples": 8053,
+          "maxM": 1.484817076999323e-07,
+          "rmsM": 2.9707120135311423e-09
+        },
+        "exportToSource": {
+          "samples": 7834,
+          "maxM": 1.4848170656924355e-07,
+          "rmsM": 2.4709117369487946e-09
+        }
+      }
+    }
+  },
+  "uvCharts": {
+    "body--left": {
+      "chartCount": 1173,
+      "maxLocalStretchRatio": 1.0946347936474692,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "body--right": {
+      "chartCount": 1173,
+      "maxLocalStretchRatio": 1.0946347936474692,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-closed-crimp": {
+      "chartCount": 2232,
+      "maxLocalStretchRatio": 1.0946204247417768,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-flat-edge": {
+      "chartCount": 6,
+      "maxLocalStretchRatio": 1.0908822680994286,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-imr": {
+      "chartCount": 26,
+      "maxLocalStretchRatio": 1.093736770560398,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-mr-deep": {
+      "chartCount": 23,
+      "maxLocalStretchRatio": 1.0944576815433273,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-mr-shallow": {
+      "chartCount": 22,
+      "maxLocalStretchRatio": 1.0945167086484373,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-pinch-medium": {
+      "chartCount": 827,
+      "maxLocalStretchRatio": 1.0946157837809898,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-pinch-narrow": {
+      "chartCount": 261,
+      "maxLocalStretchRatio": 1.0941049714968982,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-rail": {
+      "chartCount": 24,
+      "maxLocalStretchRatio": 1.0945663415521565,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-sloper-30": {
+      "chartCount": 5,
+      "maxLocalStretchRatio": 1.0874993736546406,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-sloper-40": {
+      "chartCount": 6,
+      "maxLocalStretchRatio": 1.0941206362979001,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--left-slopey-crimper": {
+      "chartCount": 60,
+      "maxLocalStretchRatio": 1.0946031655347017,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-closed-crimp": {
+      "chartCount": 2232,
+      "maxLocalStretchRatio": 1.0946204247417768,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-flat-edge": {
+      "chartCount": 6,
+      "maxLocalStretchRatio": 1.0908822680994286,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-imr": {
+      "chartCount": 26,
+      "maxLocalStretchRatio": 1.093736770560398,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-mr-deep": {
+      "chartCount": 23,
+      "maxLocalStretchRatio": 1.0944576815433273,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-mr-shallow": {
+      "chartCount": 22,
+      "maxLocalStretchRatio": 1.0945167086484373,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-pinch-medium": {
+      "chartCount": 827,
+      "maxLocalStretchRatio": 1.0946157837809898,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-pinch-narrow": {
+      "chartCount": 261,
+      "maxLocalStretchRatio": 1.0941049714968982,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-rail": {
+      "chartCount": 24,
+      "maxLocalStretchRatio": 1.0945663415521565,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-sloper-30": {
+      "chartCount": 5,
+      "maxLocalStretchRatio": 1.0874993736546406,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-sloper-40": {
+      "chartCount": 6,
+      "maxLocalStretchRatio": 1.0941206362979001,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    },
+    "hold--right-slopey-crimper": {
+      "chartCount": 60,
+      "maxLocalStretchRatio": 1.0946031655347017,
+      "method": "connected angular-cone projection, 24 degree bound, uniform metric shelf atlas",
+      "UVOverlapBetweenMeshes": "intentional separate atlases; no textures applied",
+      "directionalGrainAtlas": false
+    }
+  },
+  "changes": [
+    "C1 sloper-junction edit using exact known loft rings; face/hold topology retained; recorded height calibration preserves overall dimensions."
+  ]
+}

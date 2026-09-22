@@ -1,0 +1,71 @@
+{
+  "attachmentNodeIDs": [],
+  "contactCount": 21,
+  "contactMappings": {
+    "hold--center-sloping-jug": "top-sloper-jug-center",
+    "hold--left-jug": "top-jug-left",
+    "hold--left-sloper-20": "top-sloper-20-left",
+    "hold--left-sloper-32": "top-sloper-32-left",
+    "hold--right-jug": "top-jug-right",
+    "hold--right-sloper-20": "top-sloper-20-right",
+    "hold--right-sloper-32": "top-sloper-32-right",
+    "hold--row-1-column-1": "edge-30-left",
+    "hold--row-1-column-2": "sloper-edge-30-left",
+    "hold--row-1-column-3": "sloper-edge-25-left",
+    "hold--row-1-column-4": "edge-35-center",
+    "hold--row-1-column-5": "sloper-edge-25-right",
+    "hold--row-1-column-6": "sloper-edge-30-right",
+    "hold--row-1-column-7": "edge-30-right",
+    "hold--row-2-column-1": "edge-20-left",
+    "hold--row-2-column-2": "sloper-edge-25-lower-left",
+    "hold--row-2-column-3": "edge-30-inner-left",
+    "hold--row-2-column-4": "sloper-edge-30-center",
+    "hold--row-2-column-5": "edge-30-inner-right",
+    "hold--row-2-column-6": "sloper-edge-25-lower-right",
+    "hold--row-2-column-7": "edge-20-right"
+  },
+  "descriptorSHA256": "6acf2aeb88708410bc9cf8778eaac1c7372addfee7d818e1968c420b7c43180f",
+  "modelBounds": {
+    "max": [
+      0.349999994,
+      0.060000006,
+      0.042000011
+    ],
+    "min": [
+      -0.349999994,
+      -0.060000006,
+      -8e-09
+    ]
+  },
+  "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+  "nodeCount": 22,
+  "packageID": "zlagboard.evo",
+  "sourceGeometryChanged": false,
+  "sourceModelPath": "/Users/asherlc/.paseo/worktrees/0h78jp9r/hangboards-batch-05-astra/.context/hangboards-batch-05-astra-migration/prepared/zlagboard-evo.blend",
+  "sourceModelSHA256": "e890215fb5b1134262ae7eb277d41e1743809ebff1558ada03348998c2e94701",
+  "sourceObjectIDs": [
+    "body--board",
+    "hold--center-sloping-jug",
+    "hold--left-jug",
+    "hold--left-sloper-20",
+    "hold--left-sloper-32",
+    "hold--right-jug",
+    "hold--right-sloper-20",
+    "hold--right-sloper-32",
+    "hold--row-1-column-1",
+    "hold--row-1-column-2",
+    "hold--row-1-column-3",
+    "hold--row-1-column-4",
+    "hold--row-1-column-5",
+    "hold--row-1-column-6",
+    "hold--row-1-column-7",
+    "hold--row-2-column-1",
+    "hold--row-2-column-2",
+    "hold--row-2-column-3",
+    "hold--row-2-column-4",
+    "hold--row-2-column-5",
+    "hold--row-2-column-6",
+    "hold--row-2-column-7"
+  ],
+  "status": "converted"
+}

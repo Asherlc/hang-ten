@@ -1590,7 +1590,8 @@ private enum PlanWorkoutLabelAudit {
         "hoopers-beta.introductory-home-hangboard": ["warm-up", "pull-ups", "core"],
         "method.intermediate-hangboarding.repeaters": ["repeaters"],
         "method.intermediate-hangboarding.emom": ["max-effort", "pull-ups", "core"],
-        "rei.hangboard-sample-workout": ["warm-up", "pull-ups"]
+        "rei.hangboard-sample-workout": ["warm-up", "pull-ups"],
+        "metolius.rock-rings.ten-minute": ["pull-ups", "core"]
     ]
 }
 
@@ -1699,7 +1700,7 @@ enum BuiltInPlanLibraryDefinition {
                 "Source-linked Metolius sequence with faithful task-order expansion and adapted guided timing.",
                 "The source cycles remain ten 60-second minutes; the app uses 5 seconds per pull-up and 1 second per other counted repetition when no duration is prescribed."
             ]
-        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") {
+        } else if plan.id.hasPrefix("metolius.contact.") || plan.id.hasPrefix("metolius.simulator-3d.") || plan.id.hasPrefix("metolius.rock-rings.") {
             notes = [
                 "Official board-specific Metolius source cycles retain the manufacturer task order and remaining-time rest."
             ]
@@ -1889,6 +1890,7 @@ enum PlanCatalog {
     static let methodRepeaters = required("method.intermediate-hangboarding.repeaters")
     static let methodEMOM = required("method.intermediate-hangboarding.emom")
     static let reiHangboardSample = required("rei.hangboard-sample-workout")
+    static let metoliusRockRing = required("metolius.rock-rings.ten-minute")
 
     static func plan(id: String) -> TrainingPlan? {
         store.plan(id: id)

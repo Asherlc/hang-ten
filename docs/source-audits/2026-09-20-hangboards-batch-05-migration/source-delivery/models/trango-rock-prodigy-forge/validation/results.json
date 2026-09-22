@@ -1,0 +1,188 @@
+{
+  "assetFile": "trango-rock-prodigy-forge.glb",
+  "sha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "bytes": 8141552,
+  "triangles": 215322,
+  "vertices": 172792,
+  "contactCount": 22,
+  "checks": {
+    "clean_trimesh_and_VTK_import": {
+      "pass": true,
+      "detail": null
+    },
+    "unique_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "exact_hold_mapping": {
+      "pass": true,
+      "detail": null
+    },
+    "hold_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "body_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "only_production_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "root_coordinate_conversion": {
+      "pass": true,
+      "detail": null
+    },
+    "applied_mesh_transforms": {
+      "pass": true,
+      "detail": null
+    },
+    "self_contained": {
+      "pass": true,
+      "detail": null
+    },
+    "no_environment": {
+      "pass": true,
+      "detail": null
+    },
+    "material_on_every_primitive": {
+      "pass": true,
+      "detail": null
+    },
+    "assembled_watertight": {
+      "pass": true,
+      "detail": null
+    },
+    "consistent_winding": {
+      "pass": true,
+      "detail": null
+    },
+    "positive_volume": {
+      "pass": true,
+      "detail": 0.0035413341625478018
+    },
+    "finite_nondegenerate": {
+      "pass": true,
+      "detail": null
+    },
+    "no_duplicate_triangles": {
+      "pass": true,
+      "detail": null
+    },
+    "one_connected_patch_per_contact": {
+      "pass": true,
+      "detail": {
+        "hold--left-closed-crimp": 1,
+        "hold--left-flat-edge": 1,
+        "hold--left-imr": 1,
+        "hold--left-mr-deep": 1,
+        "hold--left-mr-shallow": 1,
+        "hold--left-pinch-medium": 1,
+        "hold--left-pinch-narrow": 1,
+        "hold--left-rail": 1,
+        "hold--left-sloper-30": 1,
+        "hold--left-sloper-40": 1,
+        "hold--left-slopey-crimper": 1,
+        "hold--right-closed-crimp": 1,
+        "hold--right-flat-edge": 1,
+        "hold--right-imr": 1,
+        "hold--right-mr-deep": 1,
+        "hold--right-mr-shallow": 1,
+        "hold--right-pinch-medium": 1,
+        "hold--right-pinch-narrow": 1,
+        "hold--right-rail": 1,
+        "hold--right-sloper-30": 1,
+        "hold--right-sloper-40": 1,
+        "hold--right-slopey-crimper": 1
+      }
+    },
+    "physical_unit_count": {
+      "pass": true,
+      "detail": null
+    },
+    "metric_bounds": {
+      "pass": true,
+      "detail": {
+        "master": [
+          [
+            -0.40005,
+            -0.089,
+            -0.066675
+          ],
+          [
+            0.40005,
+            -0.0,
+            0.06668391998523258
+          ]
+        ],
+        "export": [
+          [
+            -0.40005001425743103,
+            -0.08900000154972076,
+            -0.06667499989271164
+          ],
+          [
+            0.40005001425743103,
+            -0.0,
+            0.06668391823768616
+          ]
+        ]
+      }
+    },
+    "normalized_finite_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "shared_contact_boundary_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "indexed_vertex_efficiency": {
+      "pass": true,
+      "detail": {
+        "vertices": 172792,
+        "triangles": 215322
+      }
+    },
+    "meaningful_size_reduction": {
+      "pass": true,
+      "detail": null
+    },
+    "UV0_finite_unit_square": {
+      "pass": true,
+      "detail": null
+    },
+    "UV_local_stretch": {
+      "pass": true,
+      "detail": null
+    },
+    "locked_contact_boundaries": {
+      "pass": true,
+      "detail": null
+    },
+    "sampled_surface_deviation": {
+      "pass": true,
+      "detail": null
+    }
+  },
+  "structuralPass": true,
+  "sourceBoundsMetres": [
+    [
+      -0.40005001425743103,
+      -0.08900000154972076,
+      -0.06667499989271164
+    ],
+    [
+      0.40005001425743103,
+      -0.0,
+      0.06668391823768616
+    ]
+  ],
+  "software": {
+    "trimesh": "4.11.1",
+    "VTK": "9.6.2"
+  },
+  "photoFidelityCertified": false,
+  "targetPhoneTested": false
+}

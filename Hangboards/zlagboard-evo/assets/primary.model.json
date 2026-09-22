@@ -1,0 +1,529 @@
+{
+  "contacts": {
+    "edge-20-left": {
+      "center": [
+        0.105714267,
+        0.218055607
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.172857134,
+          0.273611151
+        ],
+        "min": [
+          0.038571401,
+          0.162500064
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_1_001"
+      ]
+    },
+    "edge-20-right": {
+      "center": [
+        0.89714287,
+        0.218055607
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.965000024,
+          0.273611151
+        ],
+        "min": [
+          0.829285717,
+          0.162500064
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_7_001"
+      ]
+    },
+    "edge-30-inner-left": {
+      "center": [
+        0.364285714,
+        0.218055607
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.399285711,
+          0.273611151
+        ],
+        "min": [
+          0.329285717,
+          0.162500064
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_3_001"
+      ]
+    },
+    "edge-30-inner-right": {
+      "center": [
+        0.644285716,
+        0.218055607
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.678571432,
+          0.273611151
+        ],
+        "min": [
+          0.610000001,
+          0.162500064
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_5_001"
+      ]
+    },
+    "edge-30-left": {
+      "center": [
+        0.105714267,
+        0.568055602
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.172857134,
+          0.623611158
+        ],
+        "min": [
+          0.038571401,
+          0.512500047
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_1_001"
+      ]
+    },
+    "edge-30-right": {
+      "center": [
+        0.89714287,
+        0.568055602
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.965000024,
+          0.623611158
+        ],
+        "min": [
+          0.829285717,
+          0.512500047
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_7_001"
+      ]
+    },
+    "edge-35-center": {
+      "center": [
+        0.5,
+        0.565277825
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.565714287,
+          0.626388936
+        ],
+        "min": [
+          0.434285713,
+          0.504166714
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_4_001"
+      ]
+    },
+    "sloper-edge-25-left": {
+      "center": [
+        0.364285714,
+        0.589060215
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.399285711,
+          0.665620383
+        ],
+        "min": [
+          0.329285717,
+          0.512500047
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_3_001"
+      ]
+    },
+    "sloper-edge-25-lower-left": {
+      "center": [
+        0.251428563,
+        0.235989611
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.300714272,
+          0.317812477
+        ],
+        "min": [
+          0.202142855,
+          0.154166746
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_2_001"
+      ]
+    },
+    "sloper-edge-25-lower-right": {
+      "center": [
+        0.755714297,
+        0.235989611
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.802142868,
+          0.317812477
+        ],
+        "min": [
+          0.709285727,
+          0.154166746
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_6_001"
+      ]
+    },
+    "sloper-edge-25-right": {
+      "center": [
+        0.644285716,
+        0.589060215
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.678571432,
+          0.665620383
+        ],
+        "min": [
+          0.610000001,
+          0.512500047
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_5_001"
+      ]
+    },
+    "sloper-edge-30-center": {
+      "center": [
+        0.5,
+        0.240417871
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.565714287,
+          0.326668997
+        ],
+        "min": [
+          0.434285713,
+          0.154166746
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_2_column_4_001"
+      ]
+    },
+    "sloper-edge-30-left": {
+      "center": [
+        0.251428563,
+        0.590417858
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.300714272,
+          0.676669003
+        ],
+        "min": [
+          0.202142855,
+          0.504166714
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_2_001"
+      ]
+    },
+    "sloper-edge-30-right": {
+      "center": [
+        0.755714297,
+        0.590417858
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.802142868,
+          0.676669003
+        ],
+        "min": [
+          0.709285727,
+          0.504166714
+        ]
+      },
+      "nodeIDs": [
+        "hold__row_1_column_6_001"
+      ]
+    },
+    "top-jug-left": {
+      "center": [
+        0.070015747,
+        0.977728463
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.123621824,
+          0.999476442
+        ],
+        "min": [
+          0.01640967,
+          0.955980484
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_jug_001"
+      ]
+    },
+    "top-jug-right": {
+      "center": [
+        0.929984253,
+        0.977728478
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.98359033,
+          0.999476442
+        ],
+        "min": [
+          0.876378176,
+          0.955980515
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_jug_001"
+      ]
+    },
+    "top-sloper-20-left": {
+      "center": [
+        0.309952157,
+        0.936305241
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.365948332,
+          1.0
+        ],
+        "min": [
+          0.253955982,
+          0.872610483
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_sloper_20_001"
+      ]
+    },
+    "top-sloper-20-right": {
+      "center": [
+        0.690047843,
+        0.936305241
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.746044018,
+          1.0
+        ],
+        "min": [
+          0.634051668,
+          0.872610483
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_sloper_20_001"
+      ]
+    },
+    "top-sloper-32-left": {
+      "center": [
+        0.189982486,
+        0.890647902
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.253955982,
+          1.0
+        ],
+        "min": [
+          0.12600899,
+          0.781295804
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_sloper_32_001"
+      ]
+    },
+    "top-sloper-32-right": {
+      "center": [
+        0.810017514,
+        0.890647902
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.87399101,
+          1.0
+        ],
+        "min": [
+          0.746044018,
+          0.781295804
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_sloper_32_001"
+      ]
+    },
+    "top-sloper-jug-center": {
+      "center": [
+        0.5,
+        0.968060203
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.634051668,
+          1.0
+        ],
+        "min": [
+          0.365948332,
+          0.936120405
+        ]
+      },
+      "nodeIDs": [
+        "hold__center_sloping_jug_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.349999994,
+      0.060000006,
+      0.042000011
+    ],
+    "min": [
+      -0.349999994,
+      -0.060000006,
+      -8e-09
+    ]
+  },
+  "modelSHA256": "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
+  "nodes": [
+    {
+      "nodeID": "body__board_001",
+      "role": "body"
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "nodeID": "hold__center_sloping_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-jug-left",
+      "nodeID": "hold__left_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "nodeID": "hold__left_sloper_20_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "nodeID": "hold__left_sloper_32_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-jug-right",
+      "nodeID": "hold__right_jug_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "nodeID": "hold__right_sloper_20_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "nodeID": "hold__right_sloper_32_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-left",
+      "nodeID": "hold__row_1_column_1_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "nodeID": "hold__row_1_column_2_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "nodeID": "hold__row_1_column_3_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-35-center",
+      "nodeID": "hold__row_1_column_4_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "nodeID": "hold__row_1_column_5_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "nodeID": "hold__row_1_column_6_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-right",
+      "nodeID": "hold__row_1_column_7_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-left",
+      "nodeID": "hold__row_2_column_1_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "nodeID": "hold__row_2_column_2_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "nodeID": "hold__row_2_column_3_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "nodeID": "hold__row_2_column_4_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "nodeID": "hold__row_2_column_5_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "nodeID": "hold__row_2_column_6_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20-right",
+      "nodeID": "hold__row_2_column_7_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}

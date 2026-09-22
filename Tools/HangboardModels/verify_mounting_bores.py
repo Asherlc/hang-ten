@@ -12,6 +12,7 @@ import hashlib
 import json
 import struct
 import zipfile
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -197,6 +198,54 @@ def verify_catalog(root: Path, manifest: dict) -> dict:
     }
 
 
+def _target_triangle_approved(tri, holes, mesh_name, spec) -> bool:
+    """A new target triangle is allowed only inside an approved repair region.
+
+    Front patches live inside a reviewed hole cylinder (XY within radius +
+    1e-6, matching repair_stage); rear patches additionally require the
+    hole's rearPlane/rearNode planar match. Skip-node meshes never receive
+    front patches, so they admit only rear-patch triangles.
+    """
+    tri = np.asarray(tri, dtype=float).reshape(3, 3)
+    skipped = mesh_name in spec.get("skipNodes", ())
+    for hole in holes:
+        center = np.asarray(hole["center"], dtype=float)
+        radius = float(hole["radius"])
+        if np.linalg.norm(tri[:, :2] - center, axis=1).max() > radius + 1e-6:
+            continue
+        if not skipped:
+            return True
+        rear = hole.get("rearPlane")
+        if (
+            rear is not None
+            and hole.get("rearNode") == mesh_name
+            and np.abs(tri[:, 2] - rear).max() <= 1e-6
+        ):
+            return True
+    return False
+
+
+def _check_no_unapproved_target_triangles(
+    slug, mesh_name, retained_triangles, after_triangles, spec, key_fn
+) -> None:
+    """Reject target-only triangles (with multiplicities) outside regions."""
+    before_counts = Counter(k.tobytes() for k in key_fn(retained_triangles))
+    after_counts = Counter(k.tobytes() for k in key_fn(after_triangles))
+    representative = {}
+    for tri, key in zip(
+        np.asarray(after_triangles).reshape(-1, 3, 3), key_fn(after_triangles)
+    ):
+        representative.setdefault(key.tobytes(), tri)
+    for key_bytes, count in after_counts.items():
+        if count <= before_counts.get(key_bytes, 0):
+            continue
+        tri = representative[key_bytes]
+        if not _target_triangle_approved(tri, spec["holes"], mesh_name, spec):
+            raise ValueError(
+                f"unapproved target geometry outside repair region: {slug}/{mesh_name}"
+            )
+
+
 def verify_scope(source_root: Path, repaired_root: Path, manifest: dict) -> dict:
     """Prove retained triangles, contact IDs, and embedded images are unchanged."""
 
@@ -235,6 +284,9 @@ def verify_scope(source_root: Path, repaired_root: Path, manifest: dict) -> dict
                 raise ValueError(
                     f"geometry outside repair region changed: {slug}/{name}"
                 )
+            _check_no_unapproved_target_triangles(
+                slug, name, triangles[retained], after, spec, keys
+            )
             retained_count += int(retained.sum())
 
         def images(path):

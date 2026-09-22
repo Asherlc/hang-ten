@@ -141,7 +141,8 @@ grip/finger cue.
     {"planID":"method.intermediate-hangboarding.repeaters","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"method.intermediate-hangboarding.emom","sourceType":"coach","sourceLabel":"Method Climbing · Intermediate Hangboarding","sourceURL":"https://methodclimb.com/intermediate-hangboarding/"},
     {"planID":"rei.hangboard-sample-workout","sourceType":"retailer","sourceLabel":"REI Expert Advice · How to Use a Hangboard to Train for Rock Climbing","sourceURL":"https://www.rei.com/learn/expert-advice/how-to-use-a-hangboard-to-train-for-rock-climbing.html"},
-    {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"}
+    {"planID":"rptc.seven-three-repeaters","sourceType":"manufacturer","sourceLabel":"Rock Prodigy Training Center Use Instructions","sourceURL":"https://cdn.shopify.com/s/files/1/0282/7557/2841/files/RPTC_Use_Instructions.pdf?v=1588608155"},
+    {"planID":"metolius.rock-rings.ten-minute","sourceType":"manufacturer","sourceLabel":"Metolius Rock Ring Training Guide","sourceURL":"https://www.metoliusclimbing.com/pages/rock-ring-training-guide"}
   ],
   "planFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","fields":["title","instruction","count","target"],"decision":"keep","sourcePrescription":true},
@@ -245,7 +246,9 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","fields":["gripType"],"decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rei.hangboard-sample-workout","fields":["warmUp","cooldown","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
     {"planID":"rptc.seven-three-repeaters","fields":["title","subtitle","instruction","accessory","count","duration","interval"],"decision":"keep","sourcePrescription":true},
-    {"planID":"rptc.seven-three-repeaters","fields":["warmUp","cooldown","target","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
+    {"planID":"rptc.seven-three-repeaters","fields":["warmUp","cooldown","target","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false},
+    {"planID":"metolius.rock-rings.ten-minute","fields":["title","subtitle","instruction","accessory","target","count","duration","interval"],"decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.rock-rings.ten-minute","fields":["warmUp","cooldown","gripType","fingerConfiguration"],"decision":"remove","sourcePrescription":false}
   ],
   "stepFieldRules": [
     {"planID":"metolius.generic-ten-minute.entry","stepIDPattern":".*task-.*","field":"instruction","decision":"keep","sourcePrescription":true},
@@ -318,7 +321,9 @@ grip/finger cue.
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"accessory","decision":"adapt","sourcePrescription":false,"adaptationType":"wording"},
     {"planID":"rei.hangboard-sample-workout","stepIDPattern":".*","field":"gripType","decision":"adapt","sourcePrescription":false,"adaptationType":"cue"},
     {"planID":"rptc.seven-three-repeaters","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
-    {"planID":"rptc.seven-three-repeaters","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true}
+    {"planID":"rptc.seven-three-repeaters","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.rock-rings.ten-minute","stepIDPattern":".*","field":"instruction","decision":"keep","sourcePrescription":true},
+    {"planID":"metolius.rock-rings.ten-minute","stepIDPattern":".*","field":"accessory","decision":"keep","sourcePrescription":true}
   ]
 }
 ```

@@ -1,0 +1,199 @@
+{
+  "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/trango-rock-prodigy-forge/trango-rock-prodigy-forge.glb",
+  "sourceSHA256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "preparedSHA256": "4ea061f406b1a37a983940a1a865bbad233cb1a822b27cd81ba1d832387da13c",
+  "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/trango-rock-prodigy-forge.blend",
+  "blenderVersion": "5.2.0 LTS",
+  "removedTransformOnlyNodes": [
+    "world",
+    "SOURCE-ZUP_to_GLTF-YUP"
+  ],
+  "maximumWorldVertexDeltaMetres": 0.0,
+  "geometryChanged": true,
+  "authoredGeometrySHA256": "a42c0d24cb7da0fc1d26c1c9dc87a5ac83bd2ec973d18600ae3ee1782527c72a",
+  "authoringSHA256": {
+    "author_trango.py": "0b9cc125c4be79c76d12e39d049c3848ff2613e23c777785cad25ea9c35bc579",
+    "authored_geometry.py": "1d6d9c82c89b78d947df8195da1ff04928247b4608f5623a94b78affb5d970d4",
+    "geometry.py": "d5f87ec64a01bb8be90ebb5c7c554d9956d9aebb2652bc315de02d4034ddafea"
+  },
+  "geometryAuthoring": "trango-authoring/author_trango.py; explicit drafted cavity, crimp/shoulder, jaw/brow corrections and screw omissions. Original GLB retained immutable.",
+  "contactOwnershipEdits": [
+    {
+      "originalNode": "hold--left-imr",
+      "cutLocalXMillimetres": 153,
+      "deep": "outer half",
+      "shallow": "inner half",
+      "overlappingMeshes": false
+    },
+    {
+      "originalNode": "hold--right-imr",
+      "cutLocalXMillimetres": 153,
+      "deep": "outer half",
+      "shallow": "inner half",
+      "overlappingMeshes": false
+    }
+  ],
+  "mountingOpeningsRemoved": 8,
+  "preservedLargePassages": 2,
+  "coordinatePreparation": "Native GLB world bake checked once; derivative uses same native Blender Z-up/front -Y metres basis; no additional axis/scale transform.",
+  "materialConversions": {
+    "substrate": {
+      "format": "PNG RGBA8 sRGB",
+      "encodedSRGB8": [
+        59,
+        170,
+        75,
+        255
+      ],
+      "decodedLinearRGBA": [
+        0.043735029256973465,
+        0.4019777798321958,
+        0.07036009569659588,
+        1.0
+      ],
+      "maximumLinearChannelError": 0.0019777738717313142,
+      "linearChannelTolerance": 0.004,
+      "textureSHA256": "26ba7b54573193c51561f5a08762761d418ce66ef8a2323ff5f444becc3c0b8b"
+    }
+  },
+  "sourceMaterialLinearRGBA": {
+    "substrate": [
+      0.04313725605607033,
+      0.4000000059604645,
+      0.07058823853731155,
+      1.0
+    ]
+  },
+  "meshInventory": [
+    {
+      "name": "body--left",
+      "vertices": 36556,
+      "polygons": 70466
+    },
+    {
+      "name": "body--right",
+      "vertices": 36556,
+      "polygons": 70466
+    },
+    {
+      "name": "hold--left-closed-crimp",
+      "vertices": 9730,
+      "polygons": 18863
+    },
+    {
+      "name": "hold--left-flat-edge",
+      "vertices": 231,
+      "polygons": 339
+    },
+    {
+      "name": "hold--left-im-deep",
+      "vertices": 294,
+      "polygons": 520
+    },
+    {
+      "name": "hold--left-im-shallow",
+      "vertices": 294,
+      "polygons": 520
+    },
+    {
+      "name": "hold--left-mr-deep",
+      "vertices": 462,
+      "polygons": 832
+    },
+    {
+      "name": "hold--left-mr-shallow",
+      "vertices": 490,
+      "polygons": 884
+    },
+    {
+      "name": "hold--left-pinch-medium",
+      "vertices": 14718,
+      "polygons": 28751
+    },
+    {
+      "name": "hold--left-pinch-narrow",
+      "vertices": 4488,
+      "polygons": 8604
+    },
+    {
+      "name": "hold--left-rail",
+      "vertices": 1204,
+      "polygons": 2210
+    },
+    {
+      "name": "hold--left-sloper-30",
+      "vertices": 154,
+      "polygons": 223
+    },
+    {
+      "name": "hold--left-sloper-40",
+      "vertices": 211,
+      "polygons": 309
+    },
+    {
+      "name": "hold--left-slopey-crimper",
+      "vertices": 7650,
+      "polygons": 15015
+    },
+    {
+      "name": "hold--right-closed-crimp",
+      "vertices": 9730,
+      "polygons": 18863
+    },
+    {
+      "name": "hold--right-flat-edge",
+      "vertices": 231,
+      "polygons": 339
+    },
+    {
+      "name": "hold--right-im-deep",
+      "vertices": 294,
+      "polygons": 520
+    },
+    {
+      "name": "hold--right-im-shallow",
+      "vertices": 294,
+      "polygons": 520
+    },
+    {
+      "name": "hold--right-mr-deep",
+      "vertices": 462,
+      "polygons": 832
+    },
+    {
+      "name": "hold--right-mr-shallow",
+      "vertices": 490,
+      "polygons": 884
+    },
+    {
+      "name": "hold--right-pinch-medium",
+      "vertices": 14718,
+      "polygons": 28751
+    },
+    {
+      "name": "hold--right-pinch-narrow",
+      "vertices": 4488,
+      "polygons": 8604
+    },
+    {
+      "name": "hold--right-rail",
+      "vertices": 1204,
+      "polygons": 2210
+    },
+    {
+      "name": "hold--right-sloper-30",
+      "vertices": 154,
+      "polygons": 223
+    },
+    {
+      "name": "hold--right-sloper-40",
+      "vertices": 211,
+      "polygons": 309
+    },
+    {
+      "name": "hold--right-slopey-crimper",
+      "vertices": 7650,
+      "polygons": 15015
+    }
+  ]
+}

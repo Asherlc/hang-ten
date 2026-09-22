@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "mounting": "Doorway clamp system. Export contains the wooden board and observed central opening/channel only. Clamp, pads and other external mounting components omitted.",
+  "cordMarkersApplicable": false,
+  "openings": [
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.0,
+        0.0,
+        0.011
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 7,
+      "radiusZMm": 10,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "unknownHiddenRoutingNotInvented": true
+}

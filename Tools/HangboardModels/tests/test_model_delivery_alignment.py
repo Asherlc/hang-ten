@@ -31,8 +31,11 @@ def fixture(root):
 def test_committed_models_match_delivery_lock():
     lock = json.loads((ROOT / "docs/source-audits/2026-09-22-model-delivery-lock.json").read_text())
     result = module().verify(ROOT, lock)
-    assert result["models"] == 40
-    assert result["files"] == 120
+    # Derived from the lock rather than hardcoded: the count rotted silently
+    # when PR #452 added six model-media boards, because this module is not
+    # executed by CI (the pytest job's working-directory is Tools/HangboardPackages).
+    assert result["models"] == len(lock["modelPackages"])
+    assert result["files"] == len(lock["modelPackages"]) * 3
 
 
 def test_changed_bytes_are_rejected(tmp_path):

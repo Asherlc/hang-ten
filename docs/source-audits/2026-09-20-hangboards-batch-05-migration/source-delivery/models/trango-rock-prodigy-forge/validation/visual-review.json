@@ -1,0 +1,15 @@
+{
+  "assetFile": "trango-rock-prodigy-forge.glb",
+  "assetSha256": "cb905fe6eaac9161b40e8e0f5d972343e424925316bf15d76e59e4e033adeaba",
+  "reviewedAtUTC": "2026-09-20T18:32:32.703659+00:00",
+  "scope": "Visual inspection of the five final genuine GLB render panels in this conversation, separate from structural and evidence tests.",
+  "notes": "Reviewed all five final views. Two independent halves, 22 contacts and observed openings are preserved. The outer sloper junction height discontinuity is blended; flat rear shading is restored. Fine faceting and approximate sculpted transitions remain visible in close-up and are not certified as a photographic replica.",
+  "renderHashes": {
+    "renders/01-front.png": "0da43c1599ff1d2c62f3ff3308cbb09627d8f316370037cc0f02a02e389f0246",
+    "renders/02-reverse.png": "bb39c2cc16232005c738677ceb92adf3c177faa443a349082f6f6babb1dd0c1e",
+    "renders/03-oblique.png": "d2fa016040ae27e9bc10e5096ea11aadbe7a82973321ce47c9a8ae96e971c935",
+    "renders/04-contact-detail.png": "94321b3898835c05e0a61200c26765c05a1cf6f94c51625179445436e7926973",
+    "renders/05-material-closeup.png": "6e2766809c9759d6ae046d7fbda62061506942177479297930c5784c491e3f66"
+  },
+  "manufacturerAccuracyCertified": false
+}

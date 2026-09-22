@@ -1,0 +1,197 @@
+{
+  "product": "natural",
+  "artifactSHA256": "e713ed92f0825f12168c98efaa03a6e37e831b47e5271234a38514cd257f29ad",
+  "mountingOpenings": [
+    {
+      "unitId": "left",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        -0.212,
+        0.0,
+        -0.056
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.3,
+      "radiusZMm": 6.3,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        0.212,
+        0.0,
+        -0.056
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.3,
+      "radiusZMm": 6.3,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "probes": [
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.145,
+        -0.0381,
+        0.047
+      ],
+      "targetDepthMm": 26.5,
+      "actualDepthMm": 26.5,
+      "holdIds": [
+        "left-rail-upper"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.145,
+        -0.0381,
+        0.015
+      ],
+      "targetDepthMm": 17.0,
+      "actualDepthMm": 17.0,
+      "holdIds": [
+        "left-rail-lower"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.098,
+        -0.0381,
+        -0.018
+      ],
+      "targetDepthMm": 38.0,
+      "actualDepthMm": 38.0,
+      "holdIds": [
+        "left-pocket-3finger"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.126,
+        -0.0381,
+        -0.057
+      ],
+      "targetDepthMm": 27.0,
+      "actualDepthMm": 27.0,
+      "holdIds": [
+        "left-pocket-2finger"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "left",
+      "cavityCenterSourceMeters": [
+        -0.195,
+        -0.0381,
+        -0.057
+      ],
+      "targetDepthMm": 28.5,
+      "actualDepthMm": 28.5,
+      "holdIds": [
+        "left-pocket-supported"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.145,
+        -0.0381,
+        0.047
+      ],
+      "targetDepthMm": 26.5,
+      "actualDepthMm": 26.5,
+      "holdIds": [
+        "right-rail-upper"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.145,
+        -0.0381,
+        0.015
+      ],
+      "targetDepthMm": 17.0,
+      "actualDepthMm": 17.0,
+      "holdIds": [
+        "right-rail-lower"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.098,
+        -0.0381,
+        -0.018
+      ],
+      "targetDepthMm": 38.0,
+      "actualDepthMm": 38.0,
+      "holdIds": [
+        "right-pocket-3finger"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.126,
+        -0.0381,
+        -0.057
+      ],
+      "targetDepthMm": 27.0,
+      "actualDepthMm": 27.0,
+      "holdIds": [
+        "right-pocket-2finger"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    },
+    {
+      "unitId": "right",
+      "cavityCenterSourceMeters": [
+        0.195,
+        -0.0381,
+        -0.057
+      ],
+      "targetDepthMm": 28.5,
+      "actualDepthMm": 28.5,
+      "holdIds": [
+        "right-pocket-supported"
+      ],
+      "openingIsRealRecess": true,
+      "nestedBackWallPocket": false
+    }
+  ],
+  "vertices": 60432,
+  "triangles": 120864,
+  "watertight": true,
+  "windingConsistent": true,
+  "geometryIsDisplayEstimate": true
+}

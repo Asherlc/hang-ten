@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "logicalContactIDs": [
+    "top-jug",
+    "edge-35-left",
+    "edge-35-right",
+    "mixed-25-pocket-left",
+    "mixed-25-pocket-right",
+    "hold-6",
+    "hold-7",
+    "hold-8",
+    "hold-9",
+    "hold-10",
+    "hold-11",
+    "hold-12",
+    "hold-13"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body--board",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--jug",
+      "role": "contact",
+      "contactID": "top-jug"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-35",
+      "role": "contact",
+      "contactID": "edge-35-left"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-35",
+      "role": "contact",
+      "contactID": "edge-35-right"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-25",
+      "role": "contact",
+      "contactID": "mixed-25-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-25",
+      "role": "contact",
+      "contactID": "mixed-25-pocket-right"
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-2finger",
+      "role": "contact",
+      "contactID": "hold-7"
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-2finger",
+      "role": "contact",
+      "contactID": "hold-6"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-20",
+      "role": "contact",
+      "contactID": "hold-12"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-20",
+      "role": "contact",
+      "contactID": "hold-13"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-15",
+      "role": "contact",
+      "contactID": "hold-11"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-15",
+      "role": "contact",
+      "contactID": "hold-8"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-10",
+      "role": "contact",
+      "contactID": "hold-10"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-10",
+      "role": "contact",
+      "contactID": "hold-9"
+    }
+  ],
+  "sourceAuthority": "D1/D2/D3/D4 (lower Pro 7 only)",
+  "ruling": "Explicit physical region mapping; stable IDs preserved. Megalith separately selects nested two-finger pockets without assigning undocumented depth. Source M4 references not used.",
+  "packageID": "frictitious.doormount-pro-7"
+}

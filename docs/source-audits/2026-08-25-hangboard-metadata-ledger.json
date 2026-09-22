@@ -26669,6 +26669,102 @@
         "top-sloper-3",
         "top-sloper-4"
       ]
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "kind",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "value": "pocket"
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "fingerCapacity",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "value": 2
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "depth",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "reason": "M1 identifies a two-finger pocket on the40mm edge but publishes no pocket depth; the40mm number belongs to the surrounding ledge."
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "handCapacity",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "reason": "M1 does not state maximum simultaneous hand capacity for these exact pockets."
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "gripType",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "reason": "M1 identifies physical two-finger capacity but prescribes no exact grip posture or finger combination."
+    },
+    {
+      "boardID": "frictitious.megalith",
+      "field": "shape",
+      "outcome": "unavailable",
+      "reviewedAt": "2026-09-20",
+      "source": {
+        "kind": "manufacturer",
+        "url": "https://frictitiousclimbing.com/products/megalith",
+        "label": "M1 explicit two-finger pocket on40mm edge; retained approved Batch05 evidence"
+      },
+      "contactIDs": [
+        "pocket-2finger-left",
+        "pocket-2finger-right"
+      ],
+      "reason": "The normalized shape enum has no source-backed shape classification for the nested pockets."
     }
   ]
 }

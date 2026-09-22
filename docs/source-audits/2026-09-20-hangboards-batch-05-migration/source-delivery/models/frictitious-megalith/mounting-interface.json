@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "mounting": "Fixed wall board. Six observed mounting openings; external screws and optional doorway mount omitted.",
+  "cordMarkersApplicable": false,
+  "openings": [
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.29,
+        0.0,
+        0.008
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.13,
+        0.0,
+        -0.043
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.062,
+        0.0,
+        0.011
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.29,
+        0.0,
+        0.008
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.13,
+        0.0,
+        -0.043
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "board",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.062,
+        0.0,
+        0.011
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.8,
+      "radiusZMm": 3.8,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "unknownHiddenRoutingNotInvented": true
+}

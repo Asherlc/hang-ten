@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 1,
+  "logicalContactIDs": [
+    "top-jug",
+    "center-edge-25",
+    "mono-left",
+    "mono-right",
+    "edge-8-left",
+    "edge-10-left",
+    "edge-12-left",
+    "edge-12-right",
+    "edge-10-right",
+    "edge-8-right",
+    "edge-30-left",
+    "edge-40-pocket-left",
+    "edge-40-pocket-right",
+    "edge-30-right",
+    "edge-15-left",
+    "edge-20-left",
+    "edge-20-right",
+    "edge-15-right",
+    "pocket-2finger-left",
+    "pocket-2finger-right"
+  ],
+  "objects": [
+    {
+      "sourceNodeID": "body--board",
+      "role": "body"
+    },
+    {
+      "sourceNodeID": "hold--jug",
+      "role": "contact",
+      "contactID": "top-jug"
+    },
+    {
+      "sourceNodeID": "hold--center-edge-25",
+      "role": "contact",
+      "contactID": "center-edge-25"
+    },
+    {
+      "sourceNodeID": "hold--left-mono",
+      "role": "contact",
+      "contactID": "mono-left"
+    },
+    {
+      "sourceNodeID": "hold--right-mono",
+      "role": "contact",
+      "contactID": "mono-right"
+    },
+    {
+      "sourceNodeID": "hold--left-pocket-2finger",
+      "role": "contact",
+      "contactID": "pocket-2finger-left"
+    },
+    {
+      "sourceNodeID": "hold--right-pocket-2finger",
+      "role": "contact",
+      "contactID": "pocket-2finger-right"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-8",
+      "role": "contact",
+      "contactID": "edge-8-left"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-10",
+      "role": "contact",
+      "contactID": "edge-10-left"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-12",
+      "role": "contact",
+      "contactID": "edge-12-left"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-15",
+      "role": "contact",
+      "contactID": "edge-15-left"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-20",
+      "role": "contact",
+      "contactID": "edge-20-left"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-30",
+      "role": "contact",
+      "contactID": "edge-30-left"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-8",
+      "role": "contact",
+      "contactID": "edge-8-right"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-10",
+      "role": "contact",
+      "contactID": "edge-10-right"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-12",
+      "role": "contact",
+      "contactID": "edge-12-right"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-15",
+      "role": "contact",
+      "contactID": "edge-15-right"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-20",
+      "role": "contact",
+      "contactID": "edge-20-right"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-30",
+      "role": "contact",
+      "contactID": "edge-30-right"
+    },
+    {
+      "sourceNodeID": "hold--left-edge-40",
+      "role": "contact",
+      "contactID": "edge-40-pocket-left"
+    },
+    {
+      "sourceNodeID": "hold--right-edge-40",
+      "role": "contact",
+      "contactID": "edge-40-pocket-right"
+    }
+  ],
+  "sourceAuthority": "M1/M2/M3 (M3 side profile)",
+  "ruling": "Explicit physical region mapping; stable IDs preserved. Megalith separately selects nested two-finger pockets without assigning undocumented depth. Source M4 references not used.",
+  "packageID": "frictitious.megalith"
+}

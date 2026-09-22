@@ -1,0 +1,143 @@
+{
+  "sourcePath": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/source-delivery/models/frictitious-doormount-pro-7/frictitious-doormount-pro-7.glb",
+  "sourceSHA256": "8b639807ff660566dca2fd313f00abfadaae0bfbaf0c28ecbc82477f2732113f",
+  "preparedSHA256": "8959d232f6f92a026c0cd7400502efc8c8d1030699e364e9ff894722e6b67acb",
+  "preparedPath": ".context/hangboards-batch-05-astra-migration/prepared/frictitious-doormount-pro-7.blend",
+  "blenderVersion": "5.2.0 LTS",
+  "removedTransformOnlyNodes": [
+    "world",
+    "SOURCE-ZUP_to_GLTF-YUP"
+  ],
+  "maximumWorldVertexDeltaMetres": 0.0,
+  "geometryChanged": true,
+  "contactOwnershipEdits": [],
+  "mountingOpeningsRemoved": 1,
+  "mountingEdits": [
+    {
+      "centerSourceMetres": [
+        0.0,
+        0,
+        0.011
+      ],
+      "frontSupportYMetres": -0.02615,
+      "removedTubeTriangles": 96,
+      "addedCapTriangles": 96,
+      "authority": "source-delivery mounting-interface.json and original analytic products.py; mounting omission required by native migration contract"
+    }
+  ],
+  "maximumContactVertexDeltaMetres": 0.0,
+  "coordinatePreparation": "GLB native import + root world matrix bake only; Blender +Z up, front -Y, metres. Compiler transports to +Y up, front +Z.",
+  "materialAdaptation": "One constant PNG RGBA8 sRGB image per source material, explicitly encoded from linear GLB factor with <=0.004 linear-channel error; no generated grain or source image use.",
+  "sourceMaterialLinearRGBA": {
+    "substrate": [
+      0.6901960968971252,
+      0.501960813999176,
+      0.2980392277240753,
+      1.0
+    ]
+  },
+  "materialConversions": {
+    "substrate": {
+      "format": "PNG RGBA8 sRGB",
+      "encodedSRGB8": [
+        216,
+        188,
+        148,
+        255
+      ],
+      "decodedLinearRGBA": [
+        0.6866853124353135,
+        0.5028864580325687,
+        0.2961382707983211,
+        1.0
+      ],
+      "maximumLinearChannelError": 0.0035107844618117445,
+      "linearChannelTolerance": 0.004,
+      "textureSHA256": "26850ba25f77f8a54c0e284a94934ace1b4f33b27b3ee0160f4ca85cd14f8555"
+    }
+  },
+  "mountingOmission": "Only the mounting-interface authored body tubes are omitted, closing exact front/rear loops at their analytic support planes. Actual central relief, contact cavities, nested pockets and stepped depths remain unchanged. Physical products retain their mounting openings.",
+  "meshInventory": [
+    {
+      "name": "body--board",
+      "vertices": 67523,
+      "polygons": 88729
+    },
+    {
+      "name": "hold--jug",
+      "vertices": 3129,
+      "polygons": 3981
+    },
+    {
+      "name": "hold--left-edge-10",
+      "vertices": 609,
+      "polygons": 720
+    },
+    {
+      "name": "hold--left-edge-15",
+      "vertices": 510,
+      "polygons": 594
+    },
+    {
+      "name": "hold--left-edge-20",
+      "vertices": 653,
+      "polygons": 756
+    },
+    {
+      "name": "hold--left-edge-25",
+      "vertices": 1239,
+      "polygons": 1386
+    },
+    {
+      "name": "hold--left-edge-35",
+      "vertices": 832,
+      "polygons": 954
+    },
+    {
+      "name": "hold--left-pocket-2finger",
+      "vertices": 475,
+      "polygons": 504
+    },
+    {
+      "name": "hold--right-edge-10",
+      "vertices": 610,
+      "polygons": 720
+    },
+    {
+      "name": "hold--right-edge-15",
+      "vertices": 516,
+      "polygons": 594
+    },
+    {
+      "name": "hold--right-edge-20",
+      "vertices": 677,
+      "polygons": 756
+    },
+    {
+      "name": "hold--right-edge-25",
+      "vertices": 1269,
+      "polygons": 1386
+    },
+    {
+      "name": "hold--right-edge-35",
+      "vertices": 832,
+      "polygons": 954
+    },
+    {
+      "name": "hold--right-pocket-2finger",
+      "vertices": 475,
+      "polygons": 504
+    }
+  ],
+  "reconstructedMeshTextureCoordinates": {
+    "sourceNodeIDs": [
+      "body--board"
+    ],
+    "uvLayer": "st",
+    "everyLoopUV": [
+      0.5,
+      0.5
+    ],
+    "purpose": "Explicit center-pixel sampling of the unchanged constant substrate texture after mesh reconstruction; no geometry, normal or material change."
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "mounting": "Eight small screw openings, four per half, plus one larger observed through-opening in each IMR pocket; the latter purpose is not established. No screws/backer/wall. Authored clear separation 152.4 mm (6 inches) within manual suggested initial range.",
+  "cordMarkersApplicable": false,
+  "openings": [
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.1162,
+        0.0,
+        0.028111854582115306
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.4,
+      "radiusZMm": 3.4,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        -0.2332,
+        0.0,
+        -0.046976754804297666
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.5,
+      "radiusZMm": 6.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.15519999999999998,
+        0.0,
+        -0.024950762717616523
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.2902,
+        0.0,
+        0.00208113666149215
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.2932,
+        0.0,
+        0.03111539895757183
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.1162,
+        0.0,
+        0.028111854582115306
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.4,
+      "radiusZMm": 3.4,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "observed-through-opening-purpose-unresolved",
+      "centerSourceMeters": [
+        0.2332,
+        0.0,
+        -0.046976754804297666
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.5,
+      "radiusZMm": 6.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.15519999999999998,
+        0.0,
+        -0.024950762717616523
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.2902,
+        0.0,
+        0.00208113666149215
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.2932,
+        0.0,
+        0.03111539895757183
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.5,
+      "radiusZMm": 3.5,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "unknownHiddenRoutingNotInvented": true
+}

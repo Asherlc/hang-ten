@@ -5,11 +5,14 @@ Original normal channels and USD sidedness are used; textures and app suspension
 are deliberately not simulated. The output is not a native SceneKit screenshot.
 """
 from __future__ import annotations
-import argparse, hashlib, json, math
+import argparse, hashlib, json, math, sys
 from pathlib import Path
 import numpy as np
 from numba import njit
 from PIL import Image, ImageDraw, ImageFont
+_models_dir = str(Path(__file__).resolve().parent.parent / "Tools" / "HangboardModels")
+if _models_dir not in sys.path:
+    sys.path.insert(0, _models_dir)
 from verify_mounting_bores import read_scene
 
 import os
@@ -77,8 +80,12 @@ def render_one(root: Path, slug: str):
     if title.lower().count(board.get('manufacturer','').lower())>1:
         title=board.get('name',slug)
     target=root/'Previews'/slug;target.mkdir(parents=True,exist_ok=True)
-    title_font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',25)
-    small_font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
+    try:
+        title_font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',25)
+        small_font=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf',14)
+    except OSError:
+        title_font=ImageFont.load_default()
+        small_font=ImageFont.load_default()
     report={'board':slug,'modelPath':model.relative_to(root).as_posix(),'modelSHA256':before,
       'descriptorSHA256':sha(model.with_suffix('.model.json')),'commit':COMMIT,
       'triangleCount':len(tris),'renderer':'CPU depth buffer; neutral geometry-only shading',

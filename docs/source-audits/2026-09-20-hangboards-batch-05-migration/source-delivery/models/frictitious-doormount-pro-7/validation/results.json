@@ -1,0 +1,179 @@
+{
+  "assetFile": "frictitious-doormount-pro-7.glb",
+  "sha256": "8b639807ff660566dca2fd313f00abfadaae0bfbaf0c28ecbc82477f2732113f",
+  "bytes": 3774284,
+  "triangles": 102538,
+  "vertices": 79347,
+  "contactCount": 13,
+  "checks": {
+    "clean_trimesh_and_VTK_import": {
+      "pass": true,
+      "detail": null
+    },
+    "unique_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "exact_hold_mapping": {
+      "pass": true,
+      "detail": null
+    },
+    "hold_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "body_extras": {
+      "pass": true,
+      "detail": null
+    },
+    "only_production_nodes": {
+      "pass": true,
+      "detail": null
+    },
+    "root_coordinate_conversion": {
+      "pass": true,
+      "detail": null
+    },
+    "applied_mesh_transforms": {
+      "pass": true,
+      "detail": null
+    },
+    "self_contained": {
+      "pass": true,
+      "detail": null
+    },
+    "no_environment": {
+      "pass": true,
+      "detail": null
+    },
+    "material_on_every_primitive": {
+      "pass": true,
+      "detail": null
+    },
+    "assembled_watertight": {
+      "pass": true,
+      "detail": null
+    },
+    "consistent_winding": {
+      "pass": true,
+      "detail": null
+    },
+    "positive_volume": {
+      "pass": true,
+      "detail": 0.0029689905485615416
+    },
+    "finite_nondegenerate": {
+      "pass": true,
+      "detail": null
+    },
+    "no_duplicate_triangles": {
+      "pass": true,
+      "detail": null
+    },
+    "one_connected_patch_per_contact": {
+      "pass": true,
+      "detail": {
+        "hold--jug": 1,
+        "hold--left-edge-10": 1,
+        "hold--left-edge-15": 1,
+        "hold--left-edge-20": 1,
+        "hold--left-edge-25": 1,
+        "hold--left-edge-35": 1,
+        "hold--left-pocket-2finger": 1,
+        "hold--right-edge-10": 1,
+        "hold--right-edge-15": 1,
+        "hold--right-edge-20": 1,
+        "hold--right-edge-25": 1,
+        "hold--right-edge-35": 1,
+        "hold--right-pocket-2finger": 1
+      }
+    },
+    "physical_unit_count": {
+      "pass": true,
+      "detail": null
+    },
+    "metric_bounds": {
+      "pass": true,
+      "detail": {
+        "master": [
+          [
+            -0.32385,
+            -0.05715,
+            -0.05715
+          ],
+          [
+            0.32385,
+            -0.0,
+            0.05715
+          ]
+        ],
+        "export": [
+          [
+            -0.32385000586509705,
+            -0.05714999884366989,
+            -0.05714999884366989
+          ],
+          [
+            0.32385000586509705,
+            -0.0,
+            0.05714999884366989
+          ]
+        ]
+      }
+    },
+    "normalized_finite_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "shared_contact_boundary_normals": {
+      "pass": true,
+      "detail": null
+    },
+    "indexed_vertex_efficiency": {
+      "pass": true,
+      "detail": {
+        "vertices": 79347,
+        "triangles": 102538
+      }
+    },
+    "meaningful_size_reduction": {
+      "pass": true,
+      "detail": null
+    },
+    "UV0_finite_unit_square": {
+      "pass": true,
+      "detail": null
+    },
+    "UV_local_stretch": {
+      "pass": true,
+      "detail": null
+    },
+    "locked_contact_boundaries": {
+      "pass": true,
+      "detail": null
+    },
+    "sampled_surface_deviation": {
+      "pass": true,
+      "detail": null
+    }
+  },
+  "structuralPass": true,
+  "sourceBoundsMetres": [
+    [
+      -0.32385000586509705,
+      -0.05714999884366989,
+      -0.05714999884366989
+    ],
+    [
+      0.32385000586509705,
+      -0.0,
+      0.05714999884366989
+    ]
+  ],
+  "software": {
+    "trimesh": "4.11.1",
+    "VTK": "9.6.2"
+  },
+  "photoFidelityCertified": false,
+  "targetPhoneTested": false
+}

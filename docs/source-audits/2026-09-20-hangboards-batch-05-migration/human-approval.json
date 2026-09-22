@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "approved": true,
+  "reviewer": "user (explicit chat approval)",
+  "reviewedAt": "2026-09-20",
+  "scope": "Exact 24 manufacturer captures, 12 full-page PDF review views and all six cord exclusions in REVIEW.md approved as the basis for evidence-led migration.",
+  "modelAcceptance": false,
+  "limitations": "No acceptance of delivered geometry, mappings, disputed measurements, native rendering or picking.",
+  "originals": [
+    {
+      "id": "D1",
+      "path": "evidence/originals/D1.html",
+      "sha256": "451edefb80b74ec186eb1d25b375223ec42cad53639e8222efc7d55634cb1155"
+    },
+    {
+      "id": "D2",
+      "path": "evidence/originals/D2.jpg",
+      "sha256": "7a0cac1eb62e018398f243f498114ea261ae99ceb94965c64a9021123495781f"
+    },
+    {
+      "id": "D3",
+      "path": "evidence/originals/D3.jpg",
+      "sha256": "a67b16b6a84d2aa25c734990e43f56129ace1189a8291b3c4787ae35fd10497d"
+    },
+    {
+      "id": "D4",
+      "path": "evidence/originals/D4.jpg",
+      "sha256": "481c817bc43c6d45e989329095fb7e7d7c65157eaa70e0d7573a9ba590c92879"
+    },
+    {
+      "id": "M1",
+      "path": "evidence/originals/M1.html",
+      "sha256": "33faf609270b05dc54b4f0161bc46d6a20732f12370e467bb797140935e64d8b"
+    },
+    {
+      "id": "M2",
+      "path": "evidence/originals/M2.jpg",
+      "sha256": "93d9089def4eaf45b58e9805540fbef2c7fb5fe84b278d4a03143a0243c9ef19"
+    },
+    {
+      "id": "M3",
+      "path": "evidence/originals/M3.jpg",
+      "sha256": "a524a3e675f760c8ecf1b206c754800112115ce9e063c745bc083e8a1573cd35"
+    },
+    {
+      "id": "F1",
+      "path": "evidence/originals/F1.html",
+      "sha256": "8367909a9b8c629f51f0efefff1f9139fe257d6d59fcbe52a44486baa5786da5"
+    },
+    {
+      "id": "F2",
+      "path": "evidence/originals/F2.pdf",
+      "sha256": "1603ceaf2f4bedbf2698235eea075b90a78c8115020f23248e1a8bf0466ddf5b"
+    },
+    {
+      "id": "F3",
+      "path": "evidence/originals/F3.pdf",
+      "sha256": "9d56bd2fa27908a2a96ded090f3cacf0278e4be0ea659191eea7c582ae6efff3"
+    },
+    {
+      "id": "F4",
+      "path": "evidence/originals/F4.pdf",
+      "sha256": "727878d0f50931bb6c65afe4d17e114478beb9cae0c706bd169a5471b2df40b5"
+    },
+    {
+      "id": "F5",
+      "path": "evidence/originals/F5.jpg",
+      "sha256": "ff7bb2862cabcc7b86288db6f45afa08d23a30d8987f464c25b27b0533e8e8e5"
+    },
+    {
+      "id": "F6",
+      "path": "evidence/originals/F6.png",
+      "sha256": "a8f8a0e49f7582a4b825c66e0f45b601fd1426c4009963d6514c1aef78296ef6"
+    },
+    {
+      "id": "F7",
+      "path": "evidence/originals/F7.png",
+      "sha256": "a067c64f8c21146675da2f22f5ef8361a42647889fe95df7d3a30d0a43ea5f1a"
+    },
+    {
+      "id": "N1",
+      "path": "evidence/originals/N1.html",
+      "sha256": "430189672d2440e5ce78bec0670f6faa6e2fffa01d30cb0b7af102cd9d3cbc1f"
+    },
+    {
+      "id": "N2",
+      "path": "evidence/originals/N2.pdf",
+      "sha256": "e327e052058a7725a9d5e13c1df19a0a721674008a4fa330de724890873d9279"
+    },
+    {
+      "id": "N3",
+      "path": "evidence/originals/N3.jpg",
+      "sha256": "b160bcd89fb90c1f2ec07449fe34af85ecd6a135693058beabf9a27496936bcf"
+    },
+    {
+      "id": "N4",
+      "path": "evidence/originals/N4.jpg",
+      "sha256": "522224db80386765b10ee324c2a007ba007f4051f5d2076151606b9dace73217"
+    },
+    {
+      "id": "E1",
+      "path": "evidence/originals/E1.html",
+      "sha256": "c1ccf4c71588fa82744a122308a4469841472f31973f75a4adfaf363759cbf1b"
+    },
+    {
+      "id": "E2",
+      "path": "evidence/originals/E2.png",
+      "sha256": "00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10"
+    },
+    {
+      "id": "E3",
+      "path": "evidence/originals/E3.png",
+      "sha256": "fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f"
+    },
+    {
+      "id": "P2",
+      "path": "evidence/originals/P2.png",
+      "sha256": "af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d"
+    },
+    {
+      "id": "P3",
+      "path": "evidence/originals/P3.png",
+      "sha256": "8011f7e115f3707e78d58c5b3587d3a15fd82b009c421a6c6dbc9f560e50dc1b"
+    },
+    {
+      "id": "N5",
+      "path": "evidence/originals/N5.jpg",
+      "sha256": "d603d3b3dd31f53be1f5a3cf1ac09e8a12b414c050af2ea5baeb4e55140daa19"
+    }
+  ],
+  "reviewRenders": [
+    {
+      "path": "evidence/review-renders/F2-page-01.png",
+      "sha256": "b363661ff2a4b424e1da77166cdb4f191c92ea70ba70bbd5a20c48e7d3135c4f"
+    },
+    {
+      "path": "evidence/review-renders/F3-page-01.png",
+      "sha256": "a7831b4a2b7596162a4942ad00303c33753ce7ed8ef0cd28de22b44c8fbd5d76"
+    },
+    {
+      "path": "evidence/review-renders/F4-page-03.png",
+      "sha256": "589fbbaebffa739b301add26b15af17fd068c6de9476f708532713b39c58adfe"
+    },
+    {
+      "path": "evidence/review-renders/F4-page-04.png",
+      "sha256": "6274b0123278d4814b8869a9d96ed3ebaadacb6bc1c233bcc67f02fabb8827f1"
+    },
+    {
+      "path": "evidence/review-renders/F4-page-05.png",
+      "sha256": "7501004977d1cd830f4475a7b44fdce4ba759683bd3cad6051cdf23330027a5f"
+    },
+    {
+      "path": "evidence/review-renders/F4-page-06.png",
+      "sha256": "5e4365fc387330f130189686b6705e70971a5861e2f69b3db7fe962d73897890"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-03.png",
+      "sha256": "cc3bdbb18cc2e296a7f00eb67165881f4287831370fc827384a01a6569bb74ea"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-04.png",
+      "sha256": "d3a8e30d926da522beb76fbcad7e80e6f61f79f8fafcd59e05b35fd08e6b1407"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-05.png",
+      "sha256": "58c030e610d3b8bbf0786e4f774510592003a69a4f26058349b684c862e6e8d6"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-06.png",
+      "sha256": "6b0fa94c0e5f9fcffec22f88a8173c4c8a1680c4638a039a77f9db6a3b3b3a31"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-07.png",
+      "sha256": "5c41ff544f1f9e3547183017e6cee1142a0f217ed0ddd90ae606574e726f48db"
+    },
+    {
+      "path": "evidence/review-renders/N2-page-12.png",
+      "sha256": "a0b0e6d7918d31688fe8a6c8960bf6ffbe9b6868c6e9561128982ec0d304e491"
+    }
+  ],
+  "cordExclusions": [
+    {
+      "sourceBoard": "frictitious-doormount-pro-7",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    },
+    {
+      "sourceBoard": "frictitious-megalith",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    },
+    {
+      "sourceBoard": "trango-rock-prodigy-forge",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    },
+    {
+      "sourceBoard": "trango-rock-prodigy-natural",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    },
+    {
+      "sourceBoard": "zlagboard-evo",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    },
+    {
+      "sourceBoard": "zlagboard-pro-2-0",
+      "sourceFact": "noDocumentedSuspension",
+      "decision": "excluded",
+      "topology": null
+    }
+  ]
+}

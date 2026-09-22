@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "runtimeCompoundRelationshipsAdded": false,
+  "reason": "PhysicalContact has no compound-grip relationship; body-only opposition patches must not appear as independent complete pinch contacts.",
+  "boards": {
+    "trango.rock-prodigy-natural": {
+      "evidence": [
+        "N2 p6",
+        "N3",
+        "N4",
+        "N5"
+      ],
+      "compoundUses": [
+        {
+          "sourceName": "Wide pinch",
+          "fingerSurface": "top-variable-rail-{side}",
+          "oppositionBodyNode": "hold--{side}-pinch-thumb"
+        },
+        {
+          "sourceName": "Medium pinch",
+          "fingerSurface": "bottom-variable-rail-{side}",
+          "oppositionBodyNode": "hold--{side}-pinch-thumb"
+        }
+      ],
+      "trainingInstructionsAdded": false
+    },
+    "trango.rock-prodigy-forge": {
+      "evidence": [
+        "F2",
+        "F3",
+        "F6",
+        "F7"
+      ],
+      "compoundUses": [
+        {
+          "sourceName": "Wide / medium / narrow pinch",
+          "physicalSurfaces": "Outer block jaws and sloper block; delivered pinch-medium/pinch-narrow are body partitions, reused surfaces rather than duplicated grips.",
+          "bodyNodes": [
+            "hold--{side}-pinch-medium",
+            "hold--{side}-pinch-narrow"
+          ]
+        }
+      ],
+      "trainingInstructionsAdded": false
+    }
+  },
+  "sideExpansion": [
+    "left",
+    "right"
+  ]
+}

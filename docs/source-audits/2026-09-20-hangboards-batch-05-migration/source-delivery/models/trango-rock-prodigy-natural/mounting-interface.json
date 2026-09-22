@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 1,
+  "mounting": "Fixed-facing removable sliding cleat mount. External board/wall cleats and screws omitted; observed board openings retained. Authored pair gap 100 mm.",
+  "cordMarkersApplicable": false,
+  "openings": [
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.085,
+        0.0,
+        0.048
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.142,
+        0.0,
+        0.046
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.2,
+        0.0,
+        0.043
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "left",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        -0.201,
+        0.0,
+        -0.056
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.3,
+      "radiusZMm": 6.3,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.085,
+        0.0,
+        0.048
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.142,
+        0.0,
+        0.046
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.2,
+        0.0,
+        0.043
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 3.2,
+      "radiusZMm": 3.2,
+      "placementClassification": "photo-derived-estimate"
+    },
+    {
+      "unitId": "right",
+      "kind": "mounting-opening-not-hold",
+      "centerSourceMeters": [
+        0.201,
+        0.0,
+        -0.056
+      ],
+      "axis": [
+        0,
+        1,
+        0
+      ],
+      "radiusMm": 6.3,
+      "radiusZMm": 6.3,
+      "placementClassification": "photo-derived-estimate"
+    }
+  ],
+  "unknownHiddenRoutingNotInvented": true
+}

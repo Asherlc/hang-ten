@@ -1,0 +1,71 @@
+{
+  "attemptResult": "BLOCKED: container network/DNS unavailable and download bridge failed on viewed originals",
+  "originalFilesRetained": 0,
+  "sources": [
+    {
+      "id": "E1",
+      "url": "https://zlagboard.com/hangboards",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Exact Evo identity, lime wood, separate metal mounting components.",
+      "doesNotEstablish": "No board-only dimensions published on this page.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E2",
+      "url": "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Evo-specific diagram: two rows of seven recesses, seven top regions; all depth/angle labels.",
+      "doesNotEstablish": "Diagram is not scaled CAD; unspecified sloper/incut angles remain unknown.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E3",
+      "url": "https://zlagboard.com/assets/web/Zlagboard_EVO-newscreen2x-fb153e0817b3e2ffc54e8fabd042ed5e7fffa804ef80388787da3b777004da3f.png",
+      "publisher": "Vertical-Life / Zlagboard",
+      "evidenceTier": "manufacturer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Original Evo front; two rows, stepped upper lip, attached external frame.",
+      "doesNotEstablish": "No reverse view; mounting frame/phone excluded.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E4",
+      "url": "https://chalkr.de/vertical-life-zlagboard-evo-trainingsboard.html",
+      "publisher": "Chalkr",
+      "evidenceTier": "retailer",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "SKU111463 / EAN8068020470854; 70.5/23/8 cm assembled/listed dimensions; alder claim.",
+      "doesNotEstablish": "Axis labels and scope unclear; material conflicts with manufacturer lime.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    },
+    {
+      "id": "E5",
+      "url": "https://www.oliunid.com/zlagboard-zlagboard-evo-climbing-hangboard",
+      "publisher": "Oliunid",
+      "evidenceTier": "retailer-index-only",
+      "viewInspected": "text/photo",
+      "accessDate": "2026-09-19/20 UTC",
+      "supportedFacts": "Indexed dimension listing 70 x 23 x 6 cm.",
+      "doesNotEstablish": "Full page fetch failed; low confidence. Not used as bare-wood height/depth.",
+      "originalLocalFilename": null,
+      "retentionStatus": "VIEWED-ONLINE; original binary download failed",
+      "localFeatureNotes": "evidence/feature-to-evidence.json"
+    }
+  ]
+}

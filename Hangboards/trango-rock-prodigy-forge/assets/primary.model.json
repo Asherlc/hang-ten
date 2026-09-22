@@ -1,0 +1,525 @@
+{
+  "contacts": {
+    "closed-crimp-left": {
+      "center": [
+        0.207369299,
+        0.376785019
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.282938177,
+          0.497777686
+        ],
+        "min": [
+          0.131800422,
+          0.255792353
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_closed_crimp_002"
+      ]
+    },
+    "closed-crimp-right": {
+      "center": [
+        0.7926307,
+        0.376785019
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.868199578,
+          0.497777686
+        ],
+        "min": [
+          0.717061823,
+          0.255792353
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_closed_crimp_002"
+      ]
+    },
+    "im-deep-left": {
+      "center": [
+        0.192913395,
+        0.112001063
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.213535811,
+          0.177547809
+        ],
+        "min": [
+          0.172290978,
+          0.046454318
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_im_deep_001"
+      ]
+    },
+    "im-deep-right": {
+      "center": [
+        0.807086605,
+        0.112001063
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.827709022,
+          0.177547809
+        ],
+        "min": [
+          0.786464189,
+          0.046454318
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_im_deep_001"
+      ]
+    },
+    "im-shallow-left": {
+      "center": [
+        0.234158237,
+        0.107256882
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.254780663,
+          0.168059446
+        ],
+        "min": [
+          0.213535811,
+          0.046454318
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_im_shallow_001"
+      ]
+    },
+    "im-shallow-right": {
+      "center": [
+        0.765841763,
+        0.107256882
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.786464189,
+          0.168059446
+        ],
+        "min": [
+          0.745219337,
+          0.046454318
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_im_shallow_001"
+      ]
+    },
+    "large-flat-edge-left": {
+      "center": [
+        0.333792494,
+        0.809208027
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.404761907,
+          0.936271097
+        ],
+        "min": [
+          0.262823081,
+          0.682144956
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_flat_edge_002"
+      ]
+    },
+    "large-flat-edge-right": {
+      "center": [
+        0.666207506,
+        0.809208027
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.737176919,
+          0.936271097
+        ],
+        "min": [
+          0.595238093,
+          0.682144956
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_flat_edge_002"
+      ]
+    },
+    "mr-deep-left": {
+      "center": [
+        0.353518317,
+        0.436498104
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.382889644,
+          0.488008415
+        ],
+        "min": [
+          0.324146991,
+          0.384987794
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_mr_deep_002"
+      ]
+    },
+    "mr-deep-right": {
+      "center": [
+        0.646481682,
+        0.436498104
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.675853009,
+          0.488008415
+        ],
+        "min": [
+          0.617110356,
+          0.384987794
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_mr_deep_002"
+      ]
+    },
+    "mr-shallow-left": {
+      "center": [
+        0.353518313,
+        0.205489527
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.383514567,
+          0.25544173
+        ],
+        "min": [
+          0.323522059,
+          0.155537324
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_mr_shallow_002"
+      ]
+    },
+    "mr-shallow-right": {
+      "center": [
+        0.646481687,
+        0.205489527
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.676477941,
+          0.25544173
+        ],
+        "min": [
+          0.616485433,
+          0.155537324
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_mr_shallow_002"
+      ]
+    },
+    "sloper-30-left": {
+      "center": [
+        0.059317812,
+        0.835648965
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.111990575,
+          0.988602418
+        ],
+        "min": [
+          0.00664505,
+          0.682695512
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_sloper_30_002"
+      ]
+    },
+    "sloper-30-right": {
+      "center": [
+        0.940682187,
+        0.835648965
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.99335495,
+          0.988602418
+        ],
+        "min": [
+          0.888009425,
+          0.682695512
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_sloper_30_002"
+      ]
+    },
+    "sloper-40-left": {
+      "center": [
+        0.186607556,
+        0.953885755
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.262823081,
+          0.995758942
+        ],
+        "min": [
+          0.11039203,
+          0.912012568
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_sloper_40_002"
+      ]
+    },
+    "sloper-40-right": {
+      "center": [
+        0.813392445,
+        0.953885755
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.88960797,
+          0.995758942
+        ],
+        "min": [
+          0.737176919,
+          0.912012568
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_sloper_40_002"
+      ]
+    },
+    "slopey-crimper-left": {
+      "center": [
+        0.317550508,
+        0.818942661
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.374461837,
+          0.87354802
+        ],
+        "min": [
+          0.260639179,
+          0.764337303
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_slopey_crimper_002"
+      ]
+    },
+    "slopey-crimper-right": {
+      "center": [
+        0.682449492,
+        0.818942661
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.739360821,
+          0.87354802
+        ],
+        "min": [
+          0.625538163,
+          0.764337303
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_slopey_crimper_002"
+      ]
+    },
+    "variable-edge-rail-left": {
+      "center": [
+        0.258530193,
+        0.648616419
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.367891517,
+          0.726202093
+        ],
+        "min": [
+          0.149168869,
+          0.571030744
+        ]
+      },
+      "nodeIDs": [
+        "hold__left_rail_002"
+      ]
+    },
+    "variable-edge-rail-right": {
+      "center": [
+        0.741469807,
+        0.648616419
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.850831131,
+          0.726202093
+        ],
+        "min": [
+          0.632108483,
+          0.571030744
+        ]
+      },
+      "nodeIDs": [
+        "hold__right_rail_002"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.400050014,
+      0.066251293,
+      0.089000002
+    ],
+    "min": [
+      -0.400050014,
+      -0.066675,
+      0.0
+    ]
+  },
+  "modelSHA256": "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
+  "nodes": [
+    {
+      "nodeID": "body__left_002",
+      "role": "body"
+    },
+    {
+      "nodeID": "body__right_002",
+      "role": "body"
+    },
+    {
+      "contactID": "closed-crimp-left",
+      "nodeID": "hold__left_closed_crimp_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "large-flat-edge-left",
+      "nodeID": "hold__left_flat_edge_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "im-deep-left",
+      "nodeID": "hold__left_im_deep_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "im-shallow-left",
+      "nodeID": "hold__left_im_shallow_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mr-deep-left",
+      "nodeID": "hold__left_mr_deep_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "mr-shallow-left",
+      "nodeID": "hold__left_mr_shallow_002",
+      "role": "contact"
+    },
+    {
+      "nodeID": "hold__left_pinch_medium_002",
+      "role": "body"
+    },
+    {
+      "nodeID": "hold__left_pinch_narrow_002",
+      "role": "body"
+    },
+    {
+      "contactID": "variable-edge-rail-left",
+      "nodeID": "hold__left_rail_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-30-left",
+      "nodeID": "hold__left_sloper_30_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-40-left",
+      "nodeID": "hold__left_sloper_40_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "slopey-crimper-left",
+      "nodeID": "hold__left_slopey_crimper_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "closed-crimp-right",
+      "nodeID": "hold__right_closed_crimp_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "large-flat-edge-right",
+      "nodeID": "hold__right_flat_edge_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "im-deep-right",
+      "nodeID": "hold__right_im_deep_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "im-shallow-right",
+      "nodeID": "hold__right_im_shallow_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "mr-deep-right",
+      "nodeID": "hold__right_mr_deep_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "mr-shallow-right",
+      "nodeID": "hold__right_mr_shallow_002",
+      "role": "contact"
+    },
+    {
+      "nodeID": "hold__right_pinch_medium_002",
+      "role": "body"
+    },
+    {
+      "nodeID": "hold__right_pinch_narrow_002",
+      "role": "body"
+    },
+    {
+      "contactID": "variable-edge-rail-right",
+      "nodeID": "hold__right_rail_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-30-right",
+      "nodeID": "hold__right_sloper_30_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "sloper-40-right",
+      "nodeID": "hold__right_sloper_40_002",
+      "role": "contact"
+    },
+    {
+      "contactID": "slopey-crimper-right",
+      "nodeID": "hold__right_slopey_crimper_002",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
+}
