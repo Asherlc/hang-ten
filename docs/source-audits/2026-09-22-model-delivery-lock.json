@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "assetCommit": "f1edda9882aaec6d0759c4df7cb85129c8b71d91",
+  "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
   "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung native FreeCAD migration; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
@@ -14,6 +14,8 @@
     "escape-beta-22",
     "escape-unlimited",
     "evolv-kilter-basic-long",
+    "frictitious-doormount-pro-7",
+    "frictitious-megalith",
     "j-bryant-ftg-32",
     "lattice-mxedge-lift-large",
     "lattice-mxedge-lift-small",
@@ -39,26 +41,33 @@
     "target10a-linebreaker-base",
     "tension-flash-board",
     "the-hangboard",
+    "trango-rock-prodigy-forge",
+    "trango-rock-prodigy-natural",
     "trango-rock-prodigy-pivot",
     "trango-rock-prodigy-training-center",
     "yy-baguette-evo",
-    "yy-penta-evo"
+    "yy-penta-evo",
+    "zlagboard-evo",
+    "zlagboard-pro"
   ],
-  "sha256Manifest": "7590b5bc0db7d40da35357730cb6e884aa1477b51b3cbe60c6a144d6dc4ca9f4",
+  "sha256Manifest": "1f38ef680d79a7ff6c93cbe87285d119925ae1d64d4dc95bac08d9ecfaf869af",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "ca8f2df613bd0b017eacd5fe7f22d7f70bdf7249174ff09f3ccdcc0bd98bde3b",
+  "supersededSha256Manifest": "4d574061024a0cec6f25aea55d09baa482e5bc5217deaa54c3d9ede9a1548f80",
   "migratedPackages": {
     "lattice-triple-rung": {
-      "source": "ModelSources/lattice-triple-rung.FCStd",
-      "sourceSHA256": "161d64f662f16d014a35b22f6400e333306ac7b5dbe371085713cc4829b9ac37",
+      "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "sourceSHA256": "55b2f392ec170e70eb443f6c19ed989d85f9281601f37c2fc2771a8a95e97cf6",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
       "assetSHA256": "813585ba50319e4c80219176133aa7481d2121c4c559904aaf90f53240cc520c",
       "descriptorSHA256": "e573a2006d41d004126f33694c8a1bfebf02c0905c187438fd2db537e0c01331",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, edit propagation)",
-      "nativeAppValidation": "not run"
+      "nativeAppValidation": "not run",
+      "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py"
     }
-  }
+  },
+  "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."
 }
