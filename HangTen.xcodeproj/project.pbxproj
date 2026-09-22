@@ -7,96 +7,27 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D10000000000000000000001 /* beastmaker-1000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* beastmaker-1000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-1000", ); }; };
-		D10000000000000000000002 /* beastmaker-2000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* beastmaker-2000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-2000", ); }; };
-		D10000000000000000000003 /* captain-fingerfood-dual Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000003 /* captain-fingerfood-dual Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-dual", ); }; };
-		D10000000000000000000004 /* captain-fingerfood-pocket Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000004 /* captain-fingerfood-pocket Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-pocket", ); }; };
-		D10000000000000000000005 /* captain-fingerfood-unlevel Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000005 /* captain-fingerfood-unlevel Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-unlevel", ); }; };
-		D10000000000000000000006 /* lattice-mxedge-lift-large Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-large", ); }; };
-		D10000000000000000000007 /* lattice-mxedge-lift-small Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-small", ); }; };
-		D10000000000000000000008 /* lattice-triple-rung Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000008 /* lattice-triple-rung Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-triple-rung", ); }; };
-		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
-		D10000000000000000000010 /* metolius-contact Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000010 /* metolius-contact Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-contact", ); }; };
-		D10000000000000000000009 /* metolius-prime-rib Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000009 /* metolius-prime-rib Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-prime-rib", ); }; };
-		D1000000000000000000000A /* metolius-project Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000A /* metolius-project Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-project", ); }; };
-		D10000000000000000000011 /* metolius-simulator-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000011 /* metolius-simulator-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-simulator-3d", ); }; };
-		D1000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-compact-ii", ); }; };
-		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
-		D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000012 /* soill-training-tiles Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-training-tiles", ); }; };
-		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
-		D10000000000000000000013 /* the-hangboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000013 /* the-hangboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-the-hangboard", ); }; };
-		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
-		D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* clavellium-training-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-clavellium-training-block", ); }; };
-		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
-		D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000021 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
-		D10000000000000000000022 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000022 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
-		D10000000000000000000016 /* escape-unlimited Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000016 /* escape-unlimited Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-unlimited", ); }; };
-		D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-evolv-kilter-basic-long", ); }; };
-		D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-deluxe-ii", ); }; };
-		D10000000000000000000019 /* moon-armstrong Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000019 /* moon-armstrong Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-moon-armstrong", ); }; };
-		D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001A /* target10a-linebreaker-base Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-target10a-linebreaker-base", ); }; };
-		D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001B /* escape-beta-22 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-beta-22", ); }; };
-		D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001C /* mammut-diamond-finger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-mammut-diamond-finger", ); }; };
-		D1000000000000000000001D /* metolius-foundry Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001D /* metolius-foundry Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-foundry", ); }; };
-		D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001E /* nature-stoak-board-iii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stoak-board-iii", ); }; };
-		D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001F /* soill-iron-palm-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-iron-palm-2", ); }; };
-		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
-		D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-crimptonite-helium-mobile", ); }; };
-		D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000029 /* metolius-light-rail-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-light-rail-2", ); }; };
-		D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-rock-rings-3d", ); }; };
-		D1000000000000000000002B /* yy-penta-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002B /* yy-penta-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-penta-evo", ); }; };
-		D1000000000000000000002C /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002C /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
-		D1000000000000000000002D /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
-		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
+		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023 /* DeepLinkManager.swift */; settings = {ATTRIBUTES = (); }; };
+		559CF313346BCC6820A8CEB4 /* FreeWorkoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F0B160A405C176BB933091 /* FreeWorkoutUITests.swift */; };
+		657AB2421605583B8E5B5BFC /* FreeWorkoutBuilderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
-        E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
-        E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
-        E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
-        E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
-        E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
-        E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */; };
-		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
+		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
 		AA0000000000000000000003 /* TrainingModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000003 /* TrainingModels.swift */; };
 		AA0000000000000000000004 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000004 /* DesignSystem.swift */; };
 		AA0000000000000000000005 /* BoardMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000005 /* BoardMapView.swift */; };
 		AA0000000000000000000006 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000006 /* RootView.swift */; };
-		AA0000000000000000000091 /* TrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000091 /* TrainView.swift */; };
-		AA0000000000000000000092 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000092 /* AppSettingsView.swift */; };
 		AA0000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000007 /* Assets.xcassets */; };
 		AA0000000000000000000008 /* GripDiagramView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000008 /* GripDiagramView.swift */; };
 		AA0000000000000000000009 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000009 /* HealthKitService.swift */; };
-		AA0000000000000000000014 /* PlanStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000016 /* PlanStorage.swift */; };
-		AA0000000000000000000015 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
-		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
-		C10000000000000000000001 /* CountdownAudio in Resources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000001 /* CountdownAudio */; };
 		AA0000000000000000000010 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000012 /* HealthKit.framework */; };
 		AA0000000000000000000013 /* WorkoutAudioCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000015 /* WorkoutAudioCoach.swift */; };
-		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
-		AA0000000000000000000094 /* BoardEditorSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000094 /* BoardEditorSession.swift */; };
-		AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000095 /* HoldEditorCanvasView.swift */; };
-		AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000096 /* BoardEditorScreen.swift */; };
-		AA0000000000000000000097 /* HoldInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000097 /* HoldInspectorView.swift */; };
-		AA0000000000000000000098 /* BoardEditorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000098 /* BoardEditorListView.swift */; };
-		AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000099 /* GitHubEditorSyncViews.swift */; };
-		AA0000000000000000000101 /* BoardEditorLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000101 /* BoardEditorLoadingView.swift */; };
-		AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000100 /* BoardEditorSessionTests.swift */; };
+		AA0000000000000000000014 /* PlanStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000016 /* PlanStorage.swift */; };
+		AA0000000000000000000015 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
 		AA0000000000000000000016 /* TestTargetSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000018 /* TestTargetSmokeTests.swift */; };
 		AA0000000000000000000017 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA0000000000000000000018 /* MotherboardModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000021 /* MotherboardModelsTests.swift */; };
-		AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000074 /* ForceSensorModelsTests.swift */; };
-		AA0000000000000000000075 /* ForceSensorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000075 /* ForceSensorModels.swift */; };
-		AA0000000000000000000076 /* ProgressorProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000076 /* ProgressorProtocolTests.swift */; };
-		AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000077 /* ProgressorProtocol.swift */; };
-		AA0000000000000000000078 /* PitchSixProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000078 /* PitchSixProtocolTests.swift */; };
-		AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000079 /* PitchSixProtocol.swift */; };
-		AA0000000000000000000080 /* WHC06ProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000080 /* WHC06ProtocolTests.swift */; };
-		AA0000000000000000000081 /* WHC06Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000081 /* WHC06Protocol.swift */; };
-		AA0000000000000000000082 /* EntralpiProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000082 /* EntralpiProtocolTests.swift */; };
-		AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000083 /* EntralpiProtocol.swift */; };
-		AA0000000000000000000084 /* ClimbroProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000084 /* ClimbroProtocolTests.swift */; };
-		AA0000000000000000000085 /* ClimbroProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000085 /* ClimbroProtocol.swift */; };
 		AA0000000000000000000019 /* MotherboardModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000022 /* MotherboardModels.swift */; };
 		AA0000000000000000000020 /* MotherboardProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000023 /* MotherboardProtocolTests.swift */; };
 		AA0000000000000000000021 /* MotherboardProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000024 /* MotherboardProtocol.swift */; };
@@ -121,17 +52,11 @@
 		AA0000000000000000000043 /* PlanFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000043 /* PlanFilters.swift */; };
 		AA0000000000000000000044 /* PlanFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000044 /* PlanFiltersTests.swift */; };
 		AA0000000000000000000045 /* WorkoutSegmentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000045 /* WorkoutSegmentTests.swift */; };
-		AA00000000000000000000D1 /* WorkoutSegmentTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */; };
 		AA0000000000000000000046 /* PlanStorageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000046 /* PlanStorageTests.swift */; };
 		AA0000000000000000000047 /* WorkoutActivityRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000047 /* WorkoutActivityRecording.swift */; };
 		AA0000000000000000000048 /* WorkoutActivityRecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */; };
-		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
 		AA0000000000000000000049 /* WorkoutStopwatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000049 /* WorkoutStopwatch.swift */; };
 		AA0000000000000000000050 /* WorkoutStopwatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000050 /* WorkoutStopwatchTests.swift */; };
-		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
-		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
-		AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000004 /* PurchaseManagerTests.swift */; };
-		AF0000000000000000000003 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000003 /* PurchaseManager.swift */; };
 		AA0000000000000000000051 /* AppStoreFavoritesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000051 /* AppStoreFavoritesTests.swift */; };
 		AA0000000000000000000052 /* WorkoutHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000052 /* WorkoutHistory.swift */; };
 		AA0000000000000000000053 /* LocalWorkoutHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */; };
@@ -148,33 +73,37 @@
 		AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000064 /* CustomRoutineDraft.swift */; };
 		AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000065 /* CustomRoutineDraftTests.swift */; };
 		AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000066 /* CustomRoutineEditorView.swift */; };
+		AA0000000000000000000068 /* PlanLibrary.json in Resources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000017 /* PlanLibrary.json */; };
+		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
+		AA0000000000000000000074 /* ForceSensorModelsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000074 /* ForceSensorModelsTests.swift */; };
+		AA0000000000000000000075 /* ForceSensorModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000075 /* ForceSensorModels.swift */; };
+		AA0000000000000000000076 /* ProgressorProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000076 /* ProgressorProtocolTests.swift */; };
+		AA0000000000000000000077 /* ProgressorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000077 /* ProgressorProtocol.swift */; };
+		AA0000000000000000000078 /* PitchSixProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000078 /* PitchSixProtocolTests.swift */; };
+		AA0000000000000000000079 /* PitchSixProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000079 /* PitchSixProtocol.swift */; };
+		AA0000000000000000000080 /* WHC06ProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000080 /* WHC06ProtocolTests.swift */; };
+		AA0000000000000000000081 /* WHC06Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000081 /* WHC06Protocol.swift */; };
+		AA0000000000000000000082 /* EntralpiProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000082 /* EntralpiProtocolTests.swift */; };
+		AA0000000000000000000083 /* EntralpiProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000083 /* EntralpiProtocol.swift */; };
+		AA0000000000000000000084 /* ClimbroProtocolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000084 /* ClimbroProtocolTests.swift */; };
+		AA0000000000000000000085 /* ClimbroProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000085 /* ClimbroProtocol.swift */; };
 		AA0000000000000000000086 /* BoardPackageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000086 /* BoardPackageStore.swift */; };
 		AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000087 /* BoardPackageStoreTests.swift */; };
 		AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */; };
 		AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */; };
-		AA0000000000000000000071 /* BoardStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000071 /* BoardStorage.swift */; };
+		AA0000000000000000000090 /* BoardTargetSubstitutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */; };
+		AA0000000000000000000091 /* TrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000091 /* TrainView.swift */; };
+		AA0000000000000000000092 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000092 /* AppSettingsView.swift */; };
+		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
+		AA0000000000000000000094 /* BoardEditorSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000094 /* BoardEditorSession.swift */; };
+		AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000095 /* HoldEditorCanvasView.swift */; };
+		AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000096 /* BoardEditorScreen.swift */; };
+		AA0000000000000000000097 /* HoldInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000097 /* HoldInspectorView.swift */; };
+		AA0000000000000000000098 /* BoardEditorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000098 /* BoardEditorListView.swift */; };
+		AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000099 /* GitHubEditorSyncViews.swift */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
 		AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */; };
 		AA00000000000000000000A3 /* DeepLinkManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A3 /* DeepLinkManagerTests.swift */; };
-		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
-		AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */; };
-		AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* SentryDiagnostics.swift */; };
-		AB0000000000000000000009 /* SentryUserReports.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000006 /* SentryUserReports.swift */; };
-		AA00000000000000000000E8 /* ReportProblemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000E8 /* ReportProblemView.swift */; };
-		AB0000000000000000000004 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* AmplitudeSwift */; };
-		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
-		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
-		AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000004 /* GripHandOrbitTests.swift */; };
-		AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */; };
-		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
-		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
-		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
-		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
-		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
-		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
-		AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000009 /* StoreKitTest.framework */; };
-		AF0000000000000000000009 /* HangTen.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000007 /* HangTen.storekit */; };
-		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
 		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
 		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
 		AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B3 /* BoardEditorStore.swift */; };
@@ -182,120 +111,142 @@
 		AA00000000000000000000C1 /* HoldPathEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C1 /* HoldPathEngineTests.swift */; };
 		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
 		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
-		AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */; };
-		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
 		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
+		AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */; };
+		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
+		AA00000000000000000000D1 /* WorkoutSegmentTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */; };
+		AA00000000000000000000E8 /* ReportProblemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000E8 /* ReportProblemView.swift */; };
 		AA00000000000000000000F1 /* FreeWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000F1 /* FreeWorkoutTests.swift */; };
 		AA00000000000000000000F2 /* FreeWorkoutDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000F2 /* FreeWorkoutDraft.swift */; };
+		AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000100 /* BoardEditorSessionTests.swift */; };
+		AA0000000000000000000101 /* BoardEditorLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000101 /* BoardEditorLoadingView.swift */; };
+		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
+		AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */; };
+		AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* SentryDiagnostics.swift */; };
+		AB0000000000000000000004 /* AmplitudeSwift in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000001 /* AmplitudeSwift */; };
+		AB0000000000000000000008 /* Sentry in Frameworks */ = {isa = PBXBuildFile; productRef = GG0000000000000000000005 /* Sentry */; };
+		AB0000000000000000000009 /* SentryUserReports.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000006 /* SentryUserReports.swift */; };
+		AD0000000000000000000001 /* GripHandCueCardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000002 /* GripHandCueCardTests.swift */; };
+		AD0000000000000000000003 /* GripHandOrbitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000004 /* GripHandOrbitTests.swift */; };
+		AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */; };
+		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
+		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
+		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
+		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
+		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
+		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
+		AF0000000000000000000003 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000003 /* PurchaseManager.swift */; };
+		AF0000000000000000000004 /* PurchaseManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000004 /* PurchaseManagerTests.swift */; };
+		AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000005 /* WorkoutPaywallUITests.swift */; };
+		AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000006 /* WorkoutAccessGate.swift */; };
+		AF0000000000000000000007 /* LiveStoreKitConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */; };
+		AF0000000000000000000008 /* StoreKitTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000009 /* StoreKitTest.framework */; };
+		AF0000000000000000000009 /* HangTen.storekit in Resources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000007 /* HangTen.storekit */; };
+		C10000000000000000000001 /* CountdownAudio in Resources */ = {isa = PBXBuildFile; fileRef = C20000000000000000000001 /* CountdownAudio */; };
+		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
+		D10000000000000000000001 /* beastmaker-1000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* beastmaker-1000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-1000", ); }; };
+		D10000000000000000000002 /* beastmaker-2000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* beastmaker-2000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-2000", ); }; };
+		D10000000000000000000003 /* captain-fingerfood-dual Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000003 /* captain-fingerfood-dual Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-dual", ); }; };
+		D10000000000000000000004 /* captain-fingerfood-pocket Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000004 /* captain-fingerfood-pocket Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-pocket", ); }; };
+		D10000000000000000000005 /* captain-fingerfood-unlevel Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000005 /* captain-fingerfood-unlevel Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-captain-fingerfood-unlevel", ); }; };
+		D10000000000000000000006 /* lattice-mxedge-lift-large Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-large", ); }; };
+		D10000000000000000000007 /* lattice-mxedge-lift-small Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-mxedge-lift-small", ); }; };
+		D10000000000000000000008 /* lattice-triple-rung Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000008 /* lattice-triple-rung Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-lattice-triple-rung", ); }; };
+		D10000000000000000000009 /* metolius-prime-rib Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000009 /* metolius-prime-rib Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-prime-rib", ); }; };
+		D1000000000000000000000A /* metolius-project Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000A /* metolius-project Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-project", ); }; };
+		D1000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-compact-ii", ); }; };
+		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
+		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
+		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
+		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
+		D10000000000000000000010 /* metolius-contact Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000010 /* metolius-contact Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-contact", ); }; };
+		D10000000000000000000011 /* metolius-simulator-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000011 /* metolius-simulator-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-simulator-3d", ); }; };
+		D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000012 /* soill-training-tiles Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-training-tiles", ); }; };
+		D10000000000000000000013 /* the-hangboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000013 /* the-hangboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-the-hangboard", ); }; };
+		D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-training-center", ); }; };
+		D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000015 /* clavellium-training-block Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-clavellium-training-block", ); }; };
+		D10000000000000000000016 /* escape-unlimited Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000016 /* escape-unlimited Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-unlimited", ); }; };
+		D10000000000000000000017 /* evolv-kilter-basic-long Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-evolv-kilter-basic-long", ); }; };
+		D10000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-deluxe-ii", ); }; };
+		D10000000000000000000019 /* moon-armstrong Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000019 /* moon-armstrong Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-moon-armstrong", ); }; };
+		D1000000000000000000001A /* target10a-linebreaker-base Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001A /* target10a-linebreaker-base Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-target10a-linebreaker-base", ); }; };
+		D1000000000000000000001B /* escape-beta-22 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001B /* escape-beta-22 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-escape-beta-22", ); }; };
+		D1000000000000000000001C /* mammut-diamond-finger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001C /* mammut-diamond-finger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-mammut-diamond-finger", ); }; };
+		D1000000000000000000001D /* metolius-foundry Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001D /* metolius-foundry Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-foundry", ); }; };
+		D1000000000000000000001E /* nature-stoak-board-iii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001E /* nature-stoak-board-iii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stoak-board-iii", ); }; };
+		D1000000000000000000001F /* soill-iron-palm-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000001F /* soill-iron-palm-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-iron-palm-2", ); }; };
+		D10000000000000000000020 /* soill-split-palm Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000020 /* soill-split-palm Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-soill-split-palm", ); }; };
+		D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000021 /* dewoodstok-woodbord Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-dewoodstok-woodbord", ); }; };
+		D10000000000000000000022 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000022 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
+		D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-crimptonite-helium-mobile", ); }; };
+		D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000029 /* metolius-light-rail-2 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-light-rail-2", ); }; };
+		D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-rock-rings-3d", ); }; };
+		D1000000000000000000002B /* yy-penta-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002B /* yy-penta-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-penta-evo", ); }; };
+		D1000000000000000000002C /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002C /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
+		D1000000000000000000002D /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
+		E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
+		E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
+		E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
+		E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */; };
+		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
+		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
+/* End PBXBuildFile section */
 
-		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023; settings = {ATTRIBUTES = (); }; };/* End PBXBuildFile section */
+/* Begin PBXContainerItemProxy section */
+		990000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE0000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE0000000000000000000001;
+			remoteInfo = HangTen;
+		};
+		AE0000000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE0000000000000000000010 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EE0000000000000000000001;
+			remoteInfo = HangTen;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D20000000000000000000001 /* beastmaker-1000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-1000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-1000/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000002 /* beastmaker-2000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-2000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-2000/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000003 /* captain-fingerfood-dual Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-dual Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-dual/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000004 /* captain-fingerfood-pocket Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-pocket Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-pocket/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000005 /* captain-fingerfood-unlevel Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-unlevel Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-unlevel/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-large Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-large/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-small Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-small/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000008 /* lattice-triple-rung Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-triple-rung Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-triple-rung/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000010 /* metolius-contact Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-contact Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-contact/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000009 /* metolius-prime-rib Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-prime-rib Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-prime-rib/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000A /* metolius-project Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-project Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-project/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000011 /* metolius-simulator-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-simulator-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-simulator-3d/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-compact-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-compact-ii/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000012 /* soill-training-tiles Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-training-tiles Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-training-tiles/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000013 /* the-hangboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "the-hangboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/the-hangboard/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000015 /* clavellium-training-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "clavellium-training-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/clavellium-training-block/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000021 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000022 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000016 /* escape-unlimited Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-unlimited Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-unlimited/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "evolv-kilter-basic-long Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/evolv-kilter-basic-long/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-deluxe-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-deluxe-ii/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000019 /* moon-armstrong Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "moon-armstrong Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/moon-armstrong/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001A /* target10a-linebreaker-base Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "target10a-linebreaker-base Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/target10a-linebreaker-base/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001B /* escape-beta-22 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-beta-22 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-beta-22/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001C /* mammut-diamond-finger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mammut-diamond-finger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/mammut-diamond-finger/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001D /* metolius-foundry Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-foundry Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-foundry/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001E /* nature-stoak-board-iii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stoak-board-iii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stoak-board-iii/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000001F /* soill-iron-palm-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-iron-palm-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-iron-palm-2/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "crimptonite-helium-mobile Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/crimptonite-helium-mobile/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000029 /* metolius-light-rail-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-light-rail-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-light-rail-2/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-rock-rings-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-rock-rings-3d/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000002B /* yy-penta-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-penta-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-penta-evo/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000002C /* owl-climb-poker Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "owl-climb-poker Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/owl-climb-poker/Hangboards"; sourceTree = "<absolute>"; };
-		D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-pivot Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-pivot/Hangboards"; sourceTree = "<absolute>"; };
-		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = HangTen/Resources/GripHand/hand-mesh.json; sourceTree = SOURCE_ROOT; };
+		63F0B160A405C176BB933091 /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
+		9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FreeWorkoutBuilderView.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
-        E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
-        E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
-        E32000000000000000000005 /* SuspensionProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionProfiles.swift; sourceTree = "<group>"; };
-        E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
-        E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
-        E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentationTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HangTen/Resources/GripHand/hand-mesh.json"; sourceTree = SOURCE_ROOT; };
+		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
+		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
+		AC0000000000000000000003 /* SentryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryDiagnostics.swift; sourceTree = "<group>"; };
+		AC0000000000000000000004 /* Analytics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.xcconfig; sourceTree = "<group>"; };
+		AC0000000000000000000005 /* Analytics.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.local.xcconfig.example; sourceTree = "<group>"; };
+		AC0000000000000000000006 /* SentryUserReports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryUserReports.swift; sourceTree = "<group>"; };
+		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
+		AD0000000000000000000004 /* GripHandOrbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandOrbitTests.swift; sourceTree = "<group>"; };
+		AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanArbitrationTests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000004 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		BB0000000000000000000005 /* BoardMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardMapView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000006 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000091 /* TrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000092 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB0000000000000000000008 /* GripDiagramView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripDiagramView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000009 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		BB0000000000000000000010 /* HangTen.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HangTen.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000011 /* HangTen.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = HangTen.entitlements; sourceTree = "<group>"; };
 		BB0000000000000000000012 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000015 /* WorkoutAudioCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAudioCoach.swift; sourceTree = "<group>"; };
-		BB0000000000000000000093 /* CountdownAudioScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownAudioScheduler.swift; sourceTree = "<group>"; };
-		BB0000000000000000000094 /* BoardEditorSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSession.swift; path = BoardEditor/BoardEditorSession.swift; sourceTree = "<group>"; };
-		BB0000000000000000000095 /* HoldEditorCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldEditorCanvasView.swift; path = BoardEditor/HoldEditorCanvasView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000096 /* BoardEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorScreen.swift; path = BoardEditor/BoardEditorScreen.swift; sourceTree = "<group>"; };
-		BB0000000000000000000097 /* HoldInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldInspectorView.swift; path = BoardEditor/HoldInspectorView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000098 /* BoardEditorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorListView.swift; path = BoardEditor/BoardEditorListView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000099 /* GitHubEditorSyncViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubEditorSyncViews.swift; path = BoardEditor/GitHubEditorSyncViews.swift; sourceTree = "<group>"; };
-		BB0000000000000000000101 /* BoardEditorLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorLoadingView.swift; path = BoardEditor/BoardEditorLoadingView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000016 /* PlanStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorage.swift; sourceTree = "<group>"; };
 		BB0000000000000000000017 /* PlanLibrary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = PlanLibrary.json; sourceTree = "<group>"; };
-		C20000000000000000000001 /* CountdownAudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CountdownAudio; sourceTree = "<group>"; };
 		BB0000000000000000000018 /* TestTargetSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTargetSmokeTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000019 /* HangTenTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB0000000000000000000020 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = System/Library/Frameworks/XCTest.framework; sourceTree = SDKROOT; };
 		BB0000000000000000000021 /* MotherboardModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModelsTests.swift; sourceTree = "<group>"; };
-		AD0000000000000000000002 /* GripHandCueCardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandCueCardTests.swift; sourceTree = "<group>"; };
-		AD0000000000000000000004 /* GripHandOrbitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandOrbitTests.swift; sourceTree = "<group>"; };
-		AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanArbitrationTests.swift; sourceTree = "<group>"; };
-		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
-		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
-		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
-		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
-		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
-		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
-		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
-		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
-		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
-		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
-		BB0000000000000000000076 /* ProgressorProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressorProtocolTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000077 /* ProgressorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressorProtocol.swift; sourceTree = "<group>"; };
-		BB0000000000000000000078 /* PitchSixProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchSixProtocolTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000079 /* PitchSixProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchSixProtocol.swift; sourceTree = "<group>"; };
-		BB0000000000000000000080 /* WHC06ProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06ProtocolTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000081 /* WHC06Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06Protocol.swift; sourceTree = "<group>"; };
-		BB0000000000000000000082 /* EntralpiProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocolTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000083 /* EntralpiProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocol.swift; sourceTree = "<group>"; };
-		BB0000000000000000000084 /* ClimbroProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimbroProtocolTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000085 /* ClimbroProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimbroProtocol.swift; sourceTree = "<group>"; };
 		BB0000000000000000000022 /* MotherboardModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardModels.swift; sourceTree = "<group>"; };
 		BB0000000000000000000023 /* MotherboardProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocolTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000024 /* MotherboardProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotherboardProtocol.swift; sourceTree = "<group>"; };
@@ -320,17 +271,11 @@
 		BB0000000000000000000043 /* PlanFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFilters.swift; sourceTree = "<group>"; };
 		BB0000000000000000000044 /* PlanFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanFiltersTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000045 /* WorkoutSegmentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTargetTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000046 /* PlanStorageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanStorageTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000047 /* WorkoutActivityRecording.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecording.swift; sourceTree = "<group>"; };
 		BB0000000000000000000048 /* WorkoutActivityRecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutActivityRecordingTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000049 /* WorkoutStopwatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatch.swift; sourceTree = "<group>"; };
 		BB0000000000000000000050 /* WorkoutStopwatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutStopwatchTests.swift; sourceTree = "<group>"; };
-		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
-		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
-		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
-		BF0000000000000000000004 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000051 /* AppStoreFavoritesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreFavoritesTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000052 /* WorkoutHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutHistory.swift; sourceTree = "<group>"; };
 		BB0000000000000000000053 /* LocalWorkoutHistoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalWorkoutHistoryStore.swift; sourceTree = "<group>"; };
@@ -348,20 +293,35 @@
 		BB0000000000000000000065 /* CustomRoutineDraftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineDraftTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000066 /* CustomRoutineEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutineEditorView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000071 /* BoardStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardStorage.swift; sourceTree = "<group>"; };
+		BB0000000000000000000074 /* ForceSensorModelsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModelsTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000075 /* ForceSensorModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceSensorModels.swift; sourceTree = "<group>"; };
+		BB0000000000000000000076 /* ProgressorProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressorProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000077 /* ProgressorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressorProtocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000078 /* PitchSixProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchSixProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000079 /* PitchSixProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PitchSixProtocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000080 /* WHC06ProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06ProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000081 /* WHC06Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WHC06Protocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000082 /* EntralpiProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000083 /* EntralpiProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntralpiProtocol.swift; sourceTree = "<group>"; };
+		BB0000000000000000000084 /* ClimbroProtocolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimbroProtocolTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000085 /* ClimbroProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClimbroProtocol.swift; sourceTree = "<group>"; };
 		BB0000000000000000000086 /* BoardPackageStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000087 /* BoardPackageStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageStoreTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryTests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSourceBoundaryAudit.swift; sourceTree = "<group>"; };
+		BB0000000000000000000090 /* BoardTargetSubstitutionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardTargetSubstitutionTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000091 /* TrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000092 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000093 /* CountdownAudioScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownAudioScheduler.swift; sourceTree = "<group>"; };
+		BB0000000000000000000094 /* BoardEditorSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSession.swift; path = BoardEditor/BoardEditorSession.swift; sourceTree = "<group>"; };
+		BB0000000000000000000095 /* HoldEditorCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldEditorCanvasView.swift; path = BoardEditor/HoldEditorCanvasView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000096 /* BoardEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorScreen.swift; path = BoardEditor/BoardEditorScreen.swift; sourceTree = "<group>"; };
+		BB0000000000000000000097 /* HoldInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldInspectorView.swift; path = BoardEditor/HoldInspectorView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000098 /* BoardEditorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorListView.swift; path = BoardEditor/BoardEditorListView.swift; sourceTree = "<group>"; };
+		BB0000000000000000000099 /* GitHubEditorSyncViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubEditorSyncViews.swift; path = BoardEditor/GitHubEditorSyncViews.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPickerFiltersTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A3 /* DeepLinkManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkManagerTests.swift; sourceTree = "<group>"; };
-		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
-		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
-		AC0000000000000000000003 /* SentryDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryDiagnostics.swift; sourceTree = "<group>"; };
-		AC0000000000000000000006 /* SentryUserReports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentryUserReports.swift; sourceTree = "<group>"; };
-		BB00000000000000000000E8 /* ReportProblemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportProblemView.swift; sourceTree = "<group>"; };
-		AC0000000000000000000004 /* Analytics.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.xcconfig; sourceTree = "<group>"; };
-		AC0000000000000000000005 /* Analytics.local.xcconfig.example */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Analytics.local.xcconfig.example; sourceTree = "<group>"; };
 		BB00000000000000000000B1 /* HoldPathEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngine.swift; sourceTree = "<group>"; };
 		BB00000000000000000000B2 /* BoardPackageWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriter.swift; sourceTree = "<group>"; };
 		BB00000000000000000000B3 /* BoardEditorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStore.swift; sourceTree = "<group>"; };
@@ -369,16 +329,85 @@
 		BB00000000000000000000C1 /* HoldPathEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngineTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorLoadingTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorLoadingTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
+		BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTargetTests.swift; sourceTree = "<group>"; };
+		BB00000000000000000000E8 /* ReportProblemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportProblemView.swift; sourceTree = "<group>"; };
 		BB00000000000000000000F1 /* FreeWorkoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeWorkoutTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000F2 /* FreeWorkoutDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeWorkoutDraft.swift; sourceTree = "<group>"; };
-
-		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HangTen/Models/DeepLinkManager.swift"; sourceTree = "<group>"; };/* End PBXFileReference section */
+		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
+		BB0000000000000000000101 /* BoardEditorLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorLoadingView.swift; path = BoardEditor/BoardEditorLoadingView.swift; sourceTree = "<group>"; };
+		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
+		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		BF0000000000000000000004 /* PurchaseManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManagerTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000005 /* WorkoutPaywallUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutPaywallUITests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000006 /* WorkoutAccessGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessGate.swift; sourceTree = "<group>"; };
+		BF0000000000000000000007 /* HangTen.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = HangTen.storekit; sourceTree = "<group>"; };
+		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
+		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
+		C20000000000000000000001 /* CountdownAudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CountdownAudio; sourceTree = "<group>"; };
+		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
+		D20000000000000000000001 /* beastmaker-1000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-1000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-1000/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000002 /* beastmaker-2000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-2000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-2000/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000003 /* captain-fingerfood-dual Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-dual Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-dual/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000004 /* captain-fingerfood-pocket Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-pocket Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-pocket/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000005 /* captain-fingerfood-unlevel Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-unlevel Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-unlevel/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000006 /* lattice-mxedge-lift-large Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-large Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-large/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000007 /* lattice-mxedge-lift-small Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-mxedge-lift-small Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-mxedge-lift-small/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000008 /* lattice-triple-rung Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "lattice-triple-rung Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/lattice-triple-rung/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000009 /* metolius-prime-rib Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-prime-rib Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-prime-rib/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000A /* metolius-project Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-project Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-project/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-compact-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-compact-ii/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000010 /* metolius-contact Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-contact Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-contact/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000011 /* metolius-simulator-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-simulator-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-simulator-3d/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000012 /* soill-training-tiles Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-training-tiles Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-training-tiles/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000013 /* the-hangboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "the-hangboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/the-hangboard/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-training-center Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-training-center/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000015 /* clavellium-training-block Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "clavellium-training-block Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/clavellium-training-block/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000016 /* escape-unlimited Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-unlimited Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-unlimited/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000017 /* evolv-kilter-basic-long Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "evolv-kilter-basic-long Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/evolv-kilter-basic-long/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000018 /* metolius-wood-grips-deluxe-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-deluxe-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-deluxe-ii/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000019 /* moon-armstrong Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "moon-armstrong Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/moon-armstrong/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001A /* target10a-linebreaker-base Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "target10a-linebreaker-base Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/target10a-linebreaker-base/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001B /* escape-beta-22 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "escape-beta-22 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/escape-beta-22/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001C /* mammut-diamond-finger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "mammut-diamond-finger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/mammut-diamond-finger/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001D /* metolius-foundry Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-foundry Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-foundry/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001E /* nature-stoak-board-iii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stoak-board-iii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stoak-board-iii/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000001F /* soill-iron-palm-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-iron-palm-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-iron-palm-2/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000020 /* soill-split-palm Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "soill-split-palm Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/soill-split-palm/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000021 /* dewoodstok-woodbord Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "dewoodstok-woodbord Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/dewoodstok-woodbord/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000022 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "crimptonite-helium-mobile Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/crimptonite-helium-mobile/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000029 /* metolius-light-rail-2 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-light-rail-2 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-light-rail-2/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000002A /* metolius-rock-rings-3d Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-rock-rings-3d Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-rock-rings-3d/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000002B /* yy-penta-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-penta-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-penta-evo/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000002C /* owl-climb-poker Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "owl-climb-poker Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/owl-climb-poker/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "trango-rock-prodigy-pivot Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/trango-rock-prodigy-pivot/Hangboards"; sourceTree = "<absolute>"; };
+		E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
+		E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
+		E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
+		E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentationTests.swift; sourceTree = "<group>"; };
+		E32000000000000000000005 /* SuspensionProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionProfiles.swift; sourceTree = "<group>"; };
+		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
+		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTen/Models/DeepLinkManager.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AE0000000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE0000000000000000000003 /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC0000000000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -389,7 +418,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		CC0000000000000000000004 /* HangTenTests Frameworks */ = {
+		CC0000000000000000000004 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -398,26 +427,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AE0000000000000000000005 /* HangTenUITests Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AE0000000000000000000003 /* XCTest.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DD0000000000000000000001 = {
+		AE0000000000000000000006 /* HangTenUITests */ = {
 			isa = PBXGroup;
 			children = (
-				DD0000000000000000000002 /* HangTen */,
-				D30000000000000000000001 /* On-Demand Model Resources */,
-				DD0000000000000000000007 /* HangTenTests */,
-				AE0000000000000000000006 /* HangTenUITests */,
-				DD0000000000000000000003 /* Products */,
+				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
+				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
+				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
+				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
+				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
+				63F0B160A405C176BB933091 /* FreeWorkoutUITests.swift */,
 			);
+			path = HangTenUITests;
 			sourceTree = "<group>";
 		};
 		D30000000000000000000001 /* On-Demand Model Resources */ = {
@@ -453,6 +476,17 @@
 				D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */,
 			);
 			name = "On-Demand Model Resources";
+			sourceTree = "<group>";
+		};
+		DD0000000000000000000001 = {
+			isa = PBXGroup;
+			children = (
+				DD0000000000000000000002 /* HangTen */,
+				D30000000000000000000001 /* On-Demand Model Resources */,
+				DD0000000000000000000007 /* HangTenTests */,
+				AE0000000000000000000006 /* HangTenUITests */,
+				DD0000000000000000000003 /* Products */,
+			);
 			sourceTree = "<group>";
 		};
 		DD0000000000000000000002 /* HangTen */ = {
@@ -528,23 +562,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		DD0000000000000000000008 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				AC0000000000000000000004 /* Analytics.xcconfig */,
-				AC0000000000000000000005 /* Analytics.local.xcconfig.example */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
 		DD0000000000000000000005 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000004 /* DesignSystem.swift */,
 				BB0000000000000000000005 /* BoardMapView.swift */,
-                E32000000000000000000001 /* BoardModelView.swift */,
-                E32000000000000000000002 /* SuspendedBoardPresentation.swift */,
-                E32000000000000000000006 /* OrbitPanGestureDelegate.swift */,
+				E32000000000000000000001 /* BoardModelView.swift */,
+				E32000000000000000000002 /* SuspendedBoardPresentation.swift */,
+				E32000000000000000000006 /* OrbitPanGestureDelegate.swift */,
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB00000000000000000000E8 /* ReportProblemView.swift */,
@@ -565,6 +590,7 @@
 				BB0000000000000000000008 /* GripDiagramView.swift */,
 				A3D000000000000000000002 /* GripHandModelView.swift */,
 				A3D000000000000000000004 /* hand-mesh.json */,
+				9B5CDFBD2C41DA2070861EE5 /* FreeWorkoutBuilderView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -630,7 +656,7 @@
 				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
 				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
-                E32000000000000000000003 /* BoardModelTests.swift */,
+				E32000000000000000000003 /* BoardModelTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -643,51 +669,35 @@
 			path = HangTenTests;
 			sourceTree = "<group>";
 		};
-		AE0000000000000000000006 /* HangTenUITests */ = {
+		DD0000000000000000000008 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
-				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
-				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
-				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
-				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
+				AC0000000000000000000004 /* Analytics.xcconfig */,
+				AC0000000000000000000005 /* Analytics.local.xcconfig.example */,
 			);
-			path = HangTenUITests;
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
-/* Begin PBXContainerItemProxy section */
-		990000000000000000000001 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE0000000000000000000010 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EE0000000000000000000001;
-			remoteInfo = HangTen;
-		};
-		AE0000000000000000000007 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = EE0000000000000000000010 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = EE0000000000000000000001;
-			remoteInfo = HangTen;
-		};
-/* End PBXContainerItemProxy section */
-
-/* Begin PBXTargetDependency section */
-		990000000000000000000002 /* HangTen target dependency */ = {
-			isa = PBXTargetDependency;
-			target = EE0000000000000000000001 /* HangTen */;
-			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
-		};
-		AE0000000000000000000008 /* HangTen target dependency */ = {
-			isa = PBXTargetDependency;
-			target = EE0000000000000000000001 /* HangTen */;
-			targetProxy = AE0000000000000000000007 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXNativeTarget section */
+		AE0000000000000000000009 /* HangTenUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */;
+			buildPhases = (
+				AE0000000000000000000011 /* Sources */,
+				AE0000000000000000000005 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AE0000000000000000000008 /* PBXTargetDependency */,
+			);
+			name = HangTenUITests;
+			productName = HangTenUITests;
+			productReference = AE0000000000000000000004 /* HangTenUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		EE0000000000000000000001 /* HangTen */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = FF0000000000000000000002 /* Build configuration list for PBXNativeTarget "HangTen" */;
@@ -715,36 +725,19 @@
 			buildConfigurationList = FF0000000000000000000003 /* Build configuration list for PBXNativeTarget "HangTenTests" */;
 			buildPhases = (
 				CC0000000000000000000008 /* Verify Board Source Boundary Manifest */,
-				CC0000000000000000000005 /* HangTenTests Sources */,
-				CC0000000000000000000004 /* HangTenTests Frameworks */,
+				CC0000000000000000000005 /* Sources */,
+				CC0000000000000000000004 /* Frameworks */,
 				CC0000000000000000000006 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				990000000000000000000002 /* HangTen target dependency */,
+				990000000000000000000002 /* PBXTargetDependency */,
 			);
 			name = HangTenTests;
 			productName = HangTenTests;
 			productReference = BB0000000000000000000019 /* HangTenTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		AE0000000000000000000009 /* HangTenUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */;
-			buildPhases = (
-				AE0000000000000000000011 /* HangTenUITests Sources */,
-				AE0000000000000000000005 /* HangTenUITests Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				AE0000000000000000000008 /* HangTen target dependency */,
-			);
-			name = HangTenUITests;
-			productName = HangTenUITests;
-			productReference = AE0000000000000000000004 /* HangTenUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -756,14 +749,14 @@
 				LastSwiftUpdateCheck = 2660;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
+					AE0000000000000000000009 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = EE0000000000000000000001;
+					};
 					EE0000000000000000000001 = {
 						CreatedOnToolsVersion = 26.6;
 					};
 					EE0000000000000000000002 = {
-						CreatedOnToolsVersion = 26.6;
-						TestTargetID = EE0000000000000000000001;
-					};
-					AE0000000000000000000009 = {
 						CreatedOnToolsVersion = 26.6;
 						TestTargetID = EE0000000000000000000001;
 					};
@@ -778,14 +771,14 @@
 				Base,
 			);
 			mainGroup = DD0000000000000000000001;
-			productRefGroup = DD0000000000000000000003 /* Products */;
-			projectDirPath = "";
-			projectRoot = "";
 			packageReferences = (
 				HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */,
 				HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */,
 			);
-				targets = (
+			productRefGroup = DD0000000000000000000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
 				EE0000000000000000000001 /* HangTen */,
 				EE0000000000000000000002 /* HangTenTests */,
 				AE0000000000000000000009 /* HangTenUITests */,
@@ -857,22 +850,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		CC0000000000000000000008 /* Verify Board Source Boundary Manifest */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
-				"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh",
-			);
-			name = "Verify Board Source Boundary Manifest";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh\"\n";
-		};
 		CC0000000000000000000007 /* Stage Board Packages */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -891,22 +868,51 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/scripts/run-supported-python.sh\" \\\n  \"${SRCROOT}/scripts/stage-board-packages.py\" \\\n  --repository-root \"${SRCROOT}\" \\\n  --destination \"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards\"\n";
 		};
+		CC0000000000000000000008 /* Verify Board Source Boundary Manifest */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/HangTenTests/BoardSourceBoundaryTrackedPaths.txt",
+				"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh",
+			);
+			name = "Verify Board Source Boundary Manifest";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/scripts/verify-board-source-boundary-manifest.sh\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AE0000000000000000000011 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
+				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
+				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
+				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
+				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
+				559CF313346BCC6820A8CEB4 /* FreeWorkoutUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CC0000000000000000000002 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-AA0000000000000000000001 /* HangTenApp.swift in Sources */,
+				AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA0000000000000000000002 /* AppStore.swift in Sources */,
 				AA0000000000000000000003 /* TrainingModels.swift in Sources */,
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
-                E31000000000000000000001 /* BoardModelView.swift in Sources */,
-                E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
-                E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
-                E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
+				E31000000000000000000001 /* BoardModelView.swift in Sources */,
+				E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
+				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
+				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
@@ -963,10 +969,11 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
-			00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
+				00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
 				AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */,
 				AB0000000000000000000009 /* SentryUserReports.swift in Sources */,
 				AA00000000000000000000E8 /* ReportProblemView.swift in Sources */,
+				657AB2421605583B8E5B5BFC /* FreeWorkoutBuilderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1020,7 +1027,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 				AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */,
 				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
-                E31000000000000000000003 /* BoardModelTests.swift in Sources */,
+				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
@@ -1033,53 +1040,64 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AE0000000000000000000011 /* HangTenUITests Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
-				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
-				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
-				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
-				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.15.0;
-			};
+/* Begin PBXTargetDependency section */
+		990000000000000000000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE0000000000000000000001 /* HangTen */;
+			targetProxy = 990000000000000000000001 /* PBXContainerItemProxy */;
 		};
-		HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 8.0.0;
-			};
+		AE0000000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EE0000000000000000000001 /* HangTen */;
+			targetProxy = AE0000000000000000000007 /* PBXContainerItemProxy */;
 		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		GG0000000000000000000001 /* AmplitudeSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
-			productName = AmplitudeSwift;
-		};
-		GG0000000000000000000005 /* Sentry */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
-			productName = Sentry;
-		};
-/* End XCSwiftPackageProductDependency section */
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AE0000000000000000000012 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HangTen;
+			};
+			name = Debug;
+		};
+		AE0000000000000000000013 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = HangTen;
+			};
+			name = Release;
+		};
 		FF0000000000000000000011 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1161,26 +1179,27 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 		};
 		FF0000000000000000000021 /* Debug */ = {
 			isa = XCBuildConfiguration;
-				baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
+			baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
-				ENABLE_ON_DEMAND_RESOURCES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				EMBED_ASSET_PACKS_IN_PRODUCT_BUNDLE = YES;
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = HangTen/Info.plist;
-				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
-				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1193,8 +1212,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1204,27 +1222,28 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 		};
 		FF0000000000000000000022 /* Release */ = {
 			isa = XCBuildConfiguration;
-				baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
+			baseConfigurationReference = AC0000000000000000000004 /* Analytics.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ENABLE_ON_DEMAND_RESOURCES = YES;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "$(HANGTEN_DEVELOPMENT_TEAM)";
+				ENABLE_ON_DEMAND_RESOURCES = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = HangTen/Info.plist;
-				INFOPLIST_KEY_CFBundleIconName = AppIcon;
+				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
+				INFOPLIST_KEY_CFBundleIconName = AppIcon;
 				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hang Ten reads your Apple Health workout history to restore your progress on a new device.";
 				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hang Ten saves completed hangboard sessions to Apple Health.";
-				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
-				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_SENTRY_DSN = "$(SENTRY_DSN)";
-				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -1237,8 +1256,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0.1;
-				CODE_SIGN_ENTITLEMENTS = HangTen/HangTen.entitlements;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "$(HANGTEN_PROVISIONING_PROFILE_SPECIFIER)";
 				SDKROOT = iphoneos;
@@ -1250,8 +1268,8 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 		FF0000000000000000000023 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				BUNDLE_EXECUTABLE_FOLDER_PATH = HangTen;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1261,7 +1279,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.tests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1274,8 +1292,8 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 		FF0000000000000000000024 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
 				BUNDLE_EXECUTABLE_FOLDER_PATH = HangTen;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1285,7 +1303,7 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.tests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hangten.training.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1295,51 +1313,18 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 			};
 			name = Release;
 		};
-		AE0000000000000000000012 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.uitests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = HangTen;
-			};
-			name = Debug;
-		};
-		AE0000000000000000000013 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hangten.training.uitests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = HangTen;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AE0000000000000000000012 /* Debug */,
+				AE0000000000000000000013 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		FF0000000000000000000001 /* Build configuration list for PBXProject "HangTen" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1367,16 +1352,39 @@ AA0000000000000000000001 /* HangTenApp.swift in Sources */,
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		AE0000000000000000000010 /* Build configuration list for PBXNativeTarget "HangTenUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				AE0000000000000000000012 /* Debug */,
-				AE0000000000000000000013 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amplitude/Amplitude-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.15.0;
+			};
+		};
+		HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/getsentry/sentry-cocoa.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		GG0000000000000000000001 /* AmplitudeSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000001 /* XCRemoteSwiftPackageReference "Amplitude-Swift" */;
+			productName = AmplitudeSwift;
+		};
+		GG0000000000000000000005 /* Sentry */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = HH0000000000000000000004 /* XCRemoteSwiftPackageReference "sentry-cocoa" */;
+			productName = Sentry;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EE0000000000000000000010 /* Project object */;
 }
