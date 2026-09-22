@@ -1,4 +1,4 @@
-"""One-off migration: author ModelSources/lattice-triple-rung.FCStd natively.
+"""One-off migration: author Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd natively.
 
 This script is a MIGRATION TOOL, not a build input. The saved FCStd must stand
 alone: the shared compiler never runs this file, and nothing here is required to
@@ -42,6 +42,8 @@ sys.path[:0] = [
     for part in os.environ.get("HANGTEN_CAD_PYTHONPATH", "").split(os.pathsep)
     if part
 ]
+# Shared helpers live one level up, next to compile_board.py.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import FreeCAD as App  # noqa: E402
 import Part  # noqa: E402
@@ -58,8 +60,7 @@ PACKAGE = "lattice-triple-rung"
 # migration compare against itself.
 REFERENCE_PATH = f"Hangboards/{PACKAGE}/assets/primary.usdz"
 BOARD_JSON = REPOSITORY / "Hangboards" / PACKAGE / "board.json"
-DESTINATION = REPOSITORY / "ModelSources" / f"{PACKAGE}.FCStd"
-PROVENANCE = REPOSITORY / "ModelSources" / f"{PACKAGE}.provenance.json"
+DESTINATION = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
 BODY_PRIM = "/root/LatticeBody/LatticeBody_editable_surface_001"
 BAND_PRIMS = {
     "edge-10": "/root/edge_10/edge_10_editable_surface_001",
@@ -269,14 +270,12 @@ def main() -> int:
     document.addProperty("App::PropertyString", "HangTenSourceKind", "HangTen")
     document.addProperty("App::PropertyString", "HangTenCoordinateFrame", "HangTen")
     document.addProperty("App::PropertyFloat", "HangTenTessellationDeflection", "HangTen")
-    document.addProperty("App::PropertyString", "HangTenProvenance", "HangTen")
     document.HangTenBoardID = board["id"]
     document.HangTenPresentationID = board["presentations"][0]["id"]
     document.HangTenSchemaVersion = 1
     document.HangTenSourceKind = "native-parametric-measured-profile"
     document.HangTenCoordinateFrame = "freecad-mm-z-up-front-negative-y"
     document.HangTenTessellationDeflection = 0.08
-    document.HangTenProvenance = f"ModelSources/{PACKAGE}.provenance.json"
 
     body = document.addObject("PartDesign::Body", "Body")
     sketch = body.newObject("Sketcher::SketchObject", "Profile")
@@ -434,39 +433,6 @@ def main() -> int:
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
     document.saveAs(str(DESTINATION))
 
-    PROVENANCE.write_text(
-        json.dumps(
-            {
-                "package": PACKAGE,
-                "boardID": board["id"],
-                "reference": REFERENCE_PATH,
-                "referenceCommit": reference_module.REFERENCE_COMMIT,
-                "referenceSHA256": reference_digest,
-                "referenceTexture": texture_member,
-                "referenceTextureSHA256": texture_digest,
-                "method": "ordered end-cap boundary loop; native (x, y, z) = (X, -Z, Y)",
-                "publishedFacts": {
-                    "source": f"Hangboards/{PACKAGE}/board.json",
-                    "dimensions": board["dimensions"],
-                    "gripDepthsMM": GRIP_DEPTH_MM,
-                },
-                "measuredMM": {key: round(value, 4) for key, value in measured.items()},
-                "reductionToleranceMM": REDUCTION_TOLERANCE_MM,
-                "achievedMaxDeviationMM": round(deviation, 4),
-                "authoredVertexCount": len(vertices),
-                "measuredVertexCount": len(outline),
-                "contactBandDepthSpansMM": depth_spans,
-                "notes": (
-                    "Measured approximation of an approved display mesh. Not recovered "
-                    "manufacturing geometry. Contact regions are native SubShapeBinder "
-                    "runs of the profile sketch extruded along X, so they follow profile "
-                    "dimension edits."
-                ),
-            },
-            indent=1,
-        )
-        + "\n"
-    )
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"measured {len(outline)} -> authored {len(vertices)} vertices, max deviation {deviation:.4f} mm")
     for contact_id, span in sorted(depth_spans.items()):

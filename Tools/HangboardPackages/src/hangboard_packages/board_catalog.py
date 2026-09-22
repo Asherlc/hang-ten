@@ -34,7 +34,11 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
+# Entries every board package must contain.
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
+# The self-contained CAD authoring source is permitted alongside them, and must
+# be named after its own package so a package cannot accumulate stray documents.
+_PACKAGE_SOURCE_SUFFIX = ".FCStd"
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _GRIP_TYPES = frozenset(
     {
@@ -2476,7 +2480,8 @@ def _validate_finished_shape(
 ) -> Mapping[tuple[str, str], NormalizedFrame]:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
-    unknown = entries - _PACKAGE_ENTRIES
+    permitted = _PACKAGE_ENTRIES | {f"{root.name}{_PACKAGE_SOURCE_SUFFIX}"}
+    unknown = entries - permitted
     missing = _PACKAGE_ENTRIES - entries
     if unknown:
         raise ValueError(f"unknown package entry: {sorted(unknown)[0]}")

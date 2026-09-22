@@ -6,9 +6,10 @@ Do not read this as a finished catalogue migration.
 
 ## What this provides
 
-One self-contained native FreeCAD document per board:
+One self-contained native FreeCAD document per board, kept inside the board's own
+package:
 
-    ModelSources/<package-directory>.FCStd
+    Hangboards/<package-directory>/<package-directory>.FCStd
 
 plus the existing logical metadata at `Hangboards/<package-directory>/board.json`.
 One shared command turns those two inputs into the existing runtime pair
@@ -63,20 +64,24 @@ region matching the approved reference to 0.0000 mm in both directions.
 
 ## Pilot: lattice-triple-rung
 
-`ModelSources/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
+`Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
 constrained 170-vertex Sketcher profile and a symmetric 550 mm pad. The three
 grip regions are `PartDesign::SubShapeBinder` runs of the profile's own sketch
 edges, extruded with a length expression on the pad.
 
-Provenance, recorded in `ModelSources/lattice-triple-rung.provenance.json`:
+Provenance of the authored numbers. There is deliberately no per-board
+provenance sidecar; these facts live here instead.
 
 * Published facts come from `board.json`: overall 550 x 130 x 50 mm and grip
   depths 45 / 20 / 10 mm.
 * The cross-section is **measured** from the approved reference asset at the
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.
-* The 267 measured points were reduced to 170 authored vertices, with a recorded
-  maximum deviation of 0.1899 mm.
+* The 267 measured points were reduced to 170 authored vertices, with a maximum
+  deviation of 0.1899 mm. `include/tolerance` details are in the migration
+  script, which records the reduction criterion.
+* The reference is resolved from commit `6b828e15`
+  (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
 
 ## In-app verification
 

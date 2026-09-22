@@ -57,14 +57,15 @@
   "supersededSha256Manifest": "3218214a12da04efe68729de13bd1f2e453764f44d29abc87e88c0fd8df4c0e5",
   "migratedPackages": {
     "lattice-triple-rung": {
-      "source": "ModelSources/lattice-triple-rung.FCStd",
-      "sourceSHA256": "161d64f662f16d014a35b22f6400e333306ac7b5dbe371085713cc4829b9ac37",
+      "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
+      "sourceSHA256": "55b2f392ec170e70eb443f6c19ed989d85f9281601f37c2fc2771a8a95e97cf6",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
       "assetSHA256": "813585ba50319e4c80219176133aa7481d2121c4c559904aaf90f53240cc520c",
       "descriptorSHA256": "e573a2006d41d004126f33694c8a1bfebf02c0905c187438fd2db537e0c01331",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, edit propagation)",
-      "nativeAppValidation": "not run"
+      "nativeAppValidation": "not run",
+      "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md"
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."

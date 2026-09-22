@@ -643,7 +643,7 @@ def build(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True, help="Hangboards/<package-directory>")
-    parser.add_argument("--source", help="defaults to ModelSources/<package>.FCStd")
+    parser.add_argument("--source", help="defaults to Hangboards/<package>/<package>.FCStd")
     parser.add_argument("--board", help="defaults to Hangboards/<package>/board.json")
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
@@ -656,7 +656,8 @@ def main(argv: list[str] | None = None) -> int:
     arguments = parser.parse_args(argv)
 
     package = arguments.package
-    source = Path(arguments.source) if arguments.source else REPOSITORY / "ModelSources" / f"{package}.FCStd"
+    source = (Path(arguments.source) if arguments.source
+              else REPOSITORY / "Hangboards" / package / f"{package}.FCStd")
     board_path = Path(arguments.board) if arguments.board else REPOSITORY / "Hangboards" / package / "board.json"
     assets = Path(arguments.assets) if arguments.assets else REPOSITORY / "Hangboards" / package / "assets"
     for path in (source, board_path):

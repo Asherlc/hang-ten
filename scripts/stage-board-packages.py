@@ -214,11 +214,19 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
         _validate_regular_tree(package_source)
 
     model_asset_paths_by_slug: dict[str, frozenset[Path]] = {}
+    # The CAD authoring source is neither a runtime resource nor an ODR asset: it
+    # must be excluded from the bundle and must NOT be routed to ODR.
+    authoring_source_paths_by_slug: dict[str, frozenset[Path]] = {}
     for package in inventory.packages:
+        package_root = package.root
         model_asset_paths_by_slug[package.root.name] = frozenset(
             Path(presentation.media.asset_path)
             for presentation in package.board.presentations
             if isinstance(presentation.media, package_module.PresentationMediaModel)
+        )
+        authoring_source_paths_by_slug[package.root.name] = frozenset(
+            path.relative_to(package_root)
+            for path in package_root.rglob("*.FCStd")
         )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -237,7 +245,8 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
             _copy_regular_tree(
                 package_source,
                 package_destination,
-                excluded_paths=model_asset_paths,
+                excluded_paths=model_asset_paths
+                | authoring_source_paths_by_slug[package.root.name],
             )
             for model_asset_path in sorted(model_asset_paths):
                 odr_model_destination = (

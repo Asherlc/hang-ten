@@ -32,7 +32,7 @@ import FreeCAD as App  # noqa: E402
 import compile_board  # noqa: E402
 
 PACKAGE = "lattice-triple-rung"
-SOURCE = REPOSITORY / "ModelSources" / f"{PACKAGE}.FCStd"
+SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
 BOARD = REPOSITORY / "Hangboards" / PACKAGE / "board.json"
 
 FAILURES: list[str] = []
