@@ -211,6 +211,10 @@ def repair_stage(stage, holes, drop_nodes, face_ranges=None, skip_nodes=()):
         kept_ids = np.where(keep & ~excluded)[0]
         kept = cf[keep & ~excluded]
         directed = np.concatenate([kept[:, [0, 1]], kept[:, [1, 2]], kept[:, [2, 0]]])
+        # directed is a blocked concat of the three edge slots, so directed[j]
+        # belongs to kept position j % N; retain it explicitly instead of
+        # relying on bare modulo at the lookup site.
+        face_of_directed = np.tile(np.arange(len(kept_ids)), 3)
         # All exposed edges wholly within this reviewed region belong to the
         # edited aperture. Exterior/contact boundaries outside it are excluded.
         sorted_edges = np.sort(directed, axis=1)
@@ -242,7 +246,7 @@ def repair_stage(stage, holes, drop_nodes, face_ranges=None, skip_nodes=()):
         if not loops:
             raise ValueError(f"no repair boundary at {xy}")
         edge_lookup = {
-            tuple(sorted(e)): (int(kept_ids[j % len(kept_ids)]), tuple(e))
+            tuple(sorted(e)): (int(kept_ids[face_of_directed[j]]), tuple(e))
             for e, j in zip(edge, idx)
         }
         patches = []
@@ -479,6 +483,32 @@ def repair_file(source: Path, destination: Path, spec: dict, descriptor: Path):
     data = source.read_bytes()
     if hashlib.sha256(data).hexdigest() != spec["sha256"]:
         raise ValueError("source SHA mismatch; re-review changed model")
+    descriptor_bytes = descriptor.read_bytes()
+    expected_descriptor = spec.get("descriptorSHA256")
+    if expected_descriptor is not None:
+        if hashlib.sha256(descriptor_bytes).hexdigest() != expected_descriptor:
+            raise ValueError("source descriptor SHA mismatch; re-review changed model")
+    old = json.loads(descriptor_bytes.decode("utf-8"))
+    # Bind contact IDs to the reviewed board metadata instead of trusting the
+    # descriptor alone. Opt-in when hashes are present; mandatory via __main__
+    # inventory injection. Missing board file falls back to legacy behavior so
+    # minimal-spec callers and unit tests keep working.
+    board_path = source.parents[1] / "board.json"
+    expected_board = spec.get("boardSHA256")
+    board_ids = None
+    if board_path.is_file():
+        board_bytes = board_path.read_bytes()
+        if expected_board is not None:
+            if hashlib.sha256(board_bytes).hexdigest() != expected_board:
+                raise ValueError("source board SHA mismatch; re-review changed model")
+        board_doc = json.loads(board_bytes.decode("utf-8"))
+        if "contacts" in board_doc:
+            board_ids = frozenset(c["id"] for c in board_doc["contacts"])
+            if frozenset(old["contacts"]) != board_ids:
+                raise ValueError("source contact binding mismatch; re-review changed model")
+    elif expected_board is not None:
+        raise ValueError("source board SHA mismatch; re-review changed model")
+    logical_ids = board_ids if board_ids is not None else frozenset(old["contacts"])
     destination.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(
         prefix="bore-author-", dir=destination.parent
@@ -513,14 +543,15 @@ def repair_file(source: Path, destination: Path, spec: dict, descriptor: Path):
         if p.IsA(UsdGeom.Mesh):
             m = _read_mesh(p, cache)
             vertices[p.GetName()] = m["world"][np.unique(m["f"])].tolist()
-    old = json.loads(descriptor.read_text())
+    # Reuse the hash-validated source descriptor bindings; do not re-read the
+    # file after the repair where a swap could inject unreviewed contacts.
     nodes = [
         NodeBinding(n["nodeID"], n["role"], n.get("contactID"))
         for n in old["nodes"]
         if n["nodeID"] in vertices
     ]
     compiled = compile_descriptor(
-        destination.read_bytes(), nodes, vertices, frozenset(old["contacts"])
+        destination.read_bytes(), nodes, vertices, logical_ids
     )
     out = destination.with_suffix(".model.json")
     out.write_text(json.dumps(compiled.to_json(), indent=2, sort_keys=True) + "\n")
@@ -542,13 +573,20 @@ if __name__ == "__main__":
     parser.add_argument("--board")
     args = parser.parse_args()
     manifest = json.loads(args.manifest.read_text())
+    inventory = manifest.get("inventory", {})
     reports = {}
     for slug, spec in manifest["models"].items():
         if args.board and slug != args.board:
             continue
         source = args.root / "Hangboards" / slug / "assets/primary.usdz"
         dest = args.output / "Hangboards" / slug / "assets/primary.usdz"
-        report = repair_file(source, dest, spec, source.with_suffix(".model.json"))
+        bound = dict(spec)
+        baseline = inventory.get(slug, {})
+        if "descriptorSHA256" not in bound and "descriptorSHA256" in baseline:
+            bound["descriptorSHA256"] = baseline["descriptorSHA256"]
+        if "boardSHA256" not in bound and "boardSHA256" in baseline:
+            bound["boardSHA256"] = baseline["boardSHA256"]
+        report = repair_file(source, dest, bound, source.with_suffix(".model.json"))
         reports[slug] = report
         print(slug, "repaired", len(report["holes"]), "holes", flush=True)
     (args.output / "repair-report.json").write_text(

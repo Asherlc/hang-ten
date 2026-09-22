@@ -108,3 +108,250 @@ def test_inline_overwrite_is_rejected(tmp_path):
     path = tmp_path / "primary.usdz"
     with pytest.raises(ValueError, match="separate output"):
         repair.repair_file(path, path, {}, tmp_path / "primary.model.json")
+
+
+def test_boundary_edge_lookup_maps_to_true_source_face():
+    """Boundary edges must map to their true source face.
+
+    Regression for Sourcery comment on remove_mounting_bores.py:245-246.
+    ``directed`` is built as a blocked concat of the three edge slots::
+
+        directed = concat([kept[:, [0, 1]], kept[:, [1, 2]], kept[:, [2, 0]]])
+
+    so the true kept-position for directed index ``j`` is ``j % N``,
+    equivalently ``np.tile(np.arange(N), 3)[j]`` -- NOT ``j // 3``
+    (which would only hold for a per-face interleaved layout).
+    """
+    N = 4
+    kept = np.array(
+        [[10, 11, 12], [20, 21, 22], [30, 31, 32], [40, 41, 42]]
+    )
+    kept_ids = np.array([100, 101, 102, 103])
+    directed = np.concatenate([kept[:, [0, 1]], kept[:, [1, 2]], kept[:, [2, 0]]])
+    face_of_directed = np.tile(np.arange(N), 3)
+
+    # Ground truth: each directed edge comes from kept[face_of_directed[j]].
+    for j in range(3 * N):
+        assert int(face_of_directed[j]) == j % N
+        slot = j // N
+        assert directed[j].tolist() == kept[j % N, [slot, (slot + 1) % 3]].tolist()
+
+    # j // 3 diverges from the true owner on most indices and must not be used.
+    assert any((j // 3) != int(face_of_directed[j]) for j in range(3 * N))
+    # Concrete divergence: directed[1] belongs to face position 1, not 0.
+    assert int(face_of_directed[1]) == 1
+    assert 1 // 3 == 0
+
+    # Production-equivalent lookup maps every boundary edge to its true face.
+    idx = np.arange(3 * N)
+    edge_lookup = {
+        tuple(sorted(e)): (int(kept_ids[face_of_directed[j]]), tuple(e))
+        for e, j in zip(directed, idx)
+    }
+    for j in range(3 * N):
+        key = tuple(sorted(directed[j]))
+        fid, _ = edge_lookup[key]
+        assert fid == int(kept_ids[j % N])
+        # j // 3 would mis-attribute whenever it diverges (ids are distinct).
+        if (j // 3) != (j % N):
+            assert fid != int(kept_ids[j // 3])
+    # Spot check: directed[1] = [20, 21] from kept position 1 -> global 101.
+    assert edge_lookup[tuple(sorted(directed[1]))][0] == 101
+
+
+def test_edge_lookup_retains_explicit_face_index():
+    """Production code must retain the face index explicitly per Sourcery."""
+    src = Path(__file__).resolve().parents[1].joinpath(
+        "remove_mounting_bores.py"
+    ).read_text()
+    assert "j % len(kept_ids)" not in src
+
+
+def test_tampered_descriptor_is_rejected(tmp_path):
+    import hashlib
+    import json
+    import remove_mounting_bores as repair
+
+    source = tmp_path / "original.usdz"
+    data = b"reviewed bytes"
+    source.write_bytes(data)
+    descriptor = tmp_path / "descriptor.json"
+    descriptor.write_text(json.dumps({"nodes": [], "contacts": []}))
+    spec = {
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "descriptorSHA256": "0" * 64,
+        "holes": [],
+    }
+    with pytest.raises(ValueError, match="source descriptor SHA mismatch"):
+        repair.repair_file(
+            source, tmp_path / "out" / "primary.usdz", spec, descriptor
+        )
+
+
+def test_tampered_board_is_rejected(tmp_path):
+    import hashlib
+    import json
+    import remove_mounting_bores as repair
+
+    source = tmp_path / "Hangboards" / "slug" / "assets" / "primary.usdz"
+    source.parent.mkdir(parents=True)
+    data = b"reviewed bytes"
+    source.write_bytes(data)
+    board = tmp_path / "Hangboards" / "slug" / "board.json"
+    board.write_text(json.dumps({"contacts": [{"id": "a"}]}))
+    descriptor = tmp_path / "descriptor.json"
+    descriptor.write_text(json.dumps({"nodes": [], "contacts": []}))
+    spec = {
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "boardSHA256": "0" * 64,
+        "holes": [],
+    }
+    with pytest.raises(ValueError, match="source board SHA mismatch"):
+        repair.repair_file(
+            source, tmp_path / "out" / "primary.usdz", spec, descriptor
+        )
+
+
+def test_descriptor_contacts_must_match_board(tmp_path):
+    import hashlib
+    import json
+    import remove_mounting_bores as repair
+
+    source = tmp_path / "Hangboards" / "slug" / "assets" / "primary.usdz"
+    source.parent.mkdir(parents=True)
+    data = b"reviewed bytes"
+    source.write_bytes(data)
+    board = tmp_path / "Hangboards" / "slug" / "board.json"
+    board.write_text(json.dumps({"contacts": [{"id": "real"}]}))
+    descriptor = tmp_path / "descriptor.json"
+    descriptor_payload = {"nodes": [], "contacts": ["tampered"]}
+    descriptor.write_text(json.dumps(descriptor_payload))
+    spec = {
+        "sha256": hashlib.sha256(data).hexdigest(),
+        "descriptorSHA256": hashlib.sha256(descriptor.read_bytes()).hexdigest(),
+        "boardSHA256": hashlib.sha256(board.read_bytes()).hexdigest(),
+        "holes": [],
+    }
+    with pytest.raises(ValueError, match="contact binding mismatch"):
+        repair.repair_file(
+            source, tmp_path / "out" / "primary.usdz", spec, descriptor
+        )
+
+
+def test_extra_target_triangle_far_from_holes_is_rejected(tmp_path, monkeypatch):
+    import hashlib
+    import json
+    import sys
+    import types
+    import zipfile
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import verify_mounting_bores as verify
+
+    slug = "slug"
+    source_root = tmp_path / "src"
+    repaired_root = tmp_path / "dst"
+    for root in (source_root, repaired_root):
+        assets = root / "Hangboards" / slug / "assets"
+        assets.mkdir(parents=True)
+        with zipfile.ZipFile(assets / "primary.usdz", "w"):
+            pass
+        (assets / "primary.model.json").write_text(
+            json.dumps({"nodes": [], "contacts": []})
+        )
+    data = (source_root / "Hangboards" / slug / "assets" / "primary.usdz").read_bytes()
+    manifest = {
+        "models": {
+            slug: {
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "holes": [{"center": [0.0, 0.0], "radius": 0.008}],
+            }
+        }
+    }
+
+    class FakePrim:
+        def __init__(self, name):
+            self._name = name
+
+        def GetName(self):
+            return self._name
+
+    world = np.array(
+        [[0.05, 0.05, 0.0], [0.06, 0.05, 0.0], [0.05, 0.06, 0.0]], float
+    )
+    faces = np.array([[0, 1, 2]])
+    far = np.array([[[5.0, 5.0, 0.0], [5.001, 5.0, 0.0], [5.0, 5.001, 0.0]]])
+
+    def fake_read_scene(path):
+        text = str(path)
+        if text.startswith(str(source_root)):
+            meshes = [{"prim": FakePrim("body"), "world": world, "f": faces}]
+        else:
+            world2 = np.concatenate([world, far.reshape(-1, 3)])
+            faces2 = np.array([[0, 1, 2], [3, 4, 5]])
+            meshes = [{"prim": FakePrim("body"), "world": world2, "f": faces2}]
+        return (None, meshes)
+
+    monkeypatch.setattr(verify, "read_scene", fake_read_scene)
+    with pytest.raises(ValueError, match="outside repair region|unapproved target"):
+        verify.verify_scope(source_root, repaired_root, manifest)
+
+
+def test_legitimate_patch_inside_hole_passes(tmp_path, monkeypatch):
+    import hashlib
+    import json
+    import sys
+    import zipfile
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import verify_mounting_bores as verify
+
+    slug = "slug"
+    source_root = tmp_path / "src"
+    repaired_root = tmp_path / "dst"
+    for root in (source_root, repaired_root):
+        assets = root / "Hangboards" / slug / "assets"
+        assets.mkdir(parents=True)
+        with zipfile.ZipFile(assets / "primary.usdz", "w"):
+            pass
+        (assets / "primary.model.json").write_text(
+            json.dumps({"nodes": [], "contacts": []})
+        )
+    data = (source_root / "Hangboards" / slug / "assets" / "primary.usdz").read_bytes()
+    manifest = {
+        "models": {
+            slug: {
+                "sha256": hashlib.sha256(data).hexdigest(),
+                "holes": [{"center": [0.0, 0.0], "radius": 0.008}],
+            }
+        }
+    }
+
+    class FakePrim:
+        def __init__(self, name):
+            self._name = name
+
+        def GetName(self):
+            return self._name
+
+    world = np.array(
+        [[0.05, 0.05, 0.0], [0.06, 0.05, 0.0], [0.05, 0.06, 0.0]], float
+    )
+    faces = np.array([[0, 1, 2]])
+    patch = np.array(
+        [[[0.0, 0.0, 0.001], [0.001, 0.0, 0.001], [0.0, 0.001, 0.001]]]
+    )
+
+    def fake_read_scene(path):
+        text = str(path)
+        if text.startswith(str(source_root)):
+            meshes = [{"prim": FakePrim("body"), "world": world, "f": faces}]
+        else:
+            world2 = np.concatenate([world, patch.reshape(-1, 3)])
+            faces2 = np.array([[0, 1, 2], [3, 4, 5]])
+            meshes = [{"prim": FakePrim("body"), "world": world2, "f": faces2}]
+        return (None, meshes)
+
+    monkeypatch.setattr(verify, "read_scene", fake_read_scene)
+    reports = verify.verify_scope(source_root, repaired_root, manifest)
+    assert reports[slug]["retainedTriangles"] == 1
