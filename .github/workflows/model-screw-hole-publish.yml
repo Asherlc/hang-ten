@@ -1,19 +1,13 @@
 name: Publish reviewed mounting-bore repairs
-
 on:
   push:
-    branches:
-      - fix/remove-model-screw-holes-20260921
-    paths:
-      - .github/workflows/model-screw-hole-publish.yml
-
+    branches: [fix/remove-model-screw-holes-20260921]
+    paths: [.github/workflows/model-screw-hole-publish.yml]
 permissions:
   contents: write
-
 concurrency:
   group: remove-model-screw-holes-20260921-publish
   cancel-in-progress: false
-
 jobs:
   repair-and-verify:
     runs-on: ubuntu-latest
@@ -104,6 +98,13 @@ jobs:
           text = text.replace('        "bore_free_body_caps_001",\n', '')
           path.write_text(text)
           changed.append(path.relative_to(root).as_posix())
+          path = root / 'Tools/HangboardPackages/tests/test_hard_cut_audit.py'
+          text = path.read_text()
+          anchor = '        "clean_model_meshes.py",\n'
+          assert text.count(anchor) == 1
+          text = text.replace(anchor, anchor + '        "remove_mounting_bores.py",\n        "verify_mounting_bores.py",\n        "mounting_bore_repairs.json",\n        "mounting_bore_requirements.txt",\n')
+          path.write_text(text)
+          changed.append(path.relative_to(root).as_posix())
           (scratch / 'changed-sources.json').write_text(json.dumps(changed))
           PY
       - name: Install pinned non-Blender dependencies
@@ -148,14 +149,18 @@ jobs:
           set -euo pipefail
           test "$GITHUB_REF_NAME" = "$REPAIR_BRANCH"
           python - <<'PY'
-          import json, os, pathlib, subprocess
+          import json, os, pathlib, shutil, subprocess
           root = pathlib.Path.cwd()
           scratch = root / os.environ['SCRATCH']
           paths = json.loads((scratch / 'changed-sources.json').read_text())
+          paths.append('docs/source-audits/2026-09-22-mounting-bore-verification.json')
+          for name in paths:
+              dest = scratch / 'reviewed-sources' / name
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(root / name, dest)
           manifest = json.loads((root / 'Tools/HangboardModels/mounting_bore_repairs.json').read_text())
           for slug in manifest['models']:
               paths.extend(f'Hangboards/{slug}/assets/{name}' for name in ('primary.usdz', 'primary.model.json'))
-          paths.append('docs/source-audits/2026-09-22-mounting-bore-verification.json')
           subprocess.run(['git', 'add', '--', *paths], check=True)
           staged = subprocess.check_output(['git', 'diff', '--cached', '--name-only'], text=True).splitlines()
           assert set(staged) == set(paths), (set(paths) - set(staged), set(staged) - set(paths))
@@ -166,7 +171,7 @@ jobs:
           git lfs push origin HEAD
           git push origin "HEAD:refs/heads/$REPAIR_BRANCH"
           git rev-parse HEAD | tee "$SCRATCH/published-commit.txt"
-      - name: Upload verification evidence
+      - name: Upload verification evidence and exact reviewed exports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
@@ -174,7 +179,8 @@ jobs:
           path: |
             .context/remove-model-screw-holes-20260921/*.log
             .context/remove-model-screw-holes-20260921/published-commit.txt
-            .context/remove-model-screw-holes-20260921/repaired/repair-report.json
+            .context/remove-model-screw-holes-20260921/repaired/
+            .context/remove-model-screw-holes-20260921/reviewed-sources/
             docs/source-audits/2026-09-22-mounting-bore-verification.json
           include-hidden-files: true
           if-no-files-found: warn
