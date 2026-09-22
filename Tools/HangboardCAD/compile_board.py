@@ -75,6 +75,15 @@ class BuildError(RuntimeError):
     """A source, export, or package invariant failed."""
 
 
+def _display(path: Path) -> str:
+    """Report a path relative to the repository when it is inside it."""
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPOSITORY).as_posix()
+    except ValueError:
+        return str(resolved)
+
+
 def _digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -114,7 +123,7 @@ def _node_specification(obj) -> dict:
     return spec
 
 
-def _embedded_texture(document, source: Path, staging: Path, member: str) -> tuple[str, Path]:
+def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Path]:
     """Extract an FCStd-included file and stage it under ``textures/``."""
     import zipfile
 
@@ -131,7 +140,7 @@ def _embedded_texture(document, source: Path, staging: Path, member: str) -> tup
     return f"textures/{basename}", destination
 
 
-def _material_registry(objects, document, source: Path, staging: Path) -> dict:
+def _material_registry(objects, source: Path, staging: Path) -> dict:
     """Collect one material definition per MaterialName across all bound nodes.
 
     A node without ``TextureFile`` inherits the texture declared by another node
@@ -158,7 +167,7 @@ def _material_registry(objects, document, source: Path, staging: Path) -> dict:
         }
         member = str(getattr(obj, "TextureFile", "")) if "TextureFile" in obj.PropertiesList else ""
         if member:
-            entry["texture"] = _embedded_texture(document, source, staging, member)
+            entry["texture"] = _embedded_texture(source, staging, member)
         existing = declared.get(name)
         if existing is None:
             declared[name] = entry
@@ -276,12 +285,11 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
 
     points, facets = body_shape.tessellate(deflection)
     assignment: dict[int, int] = {}
+    contested: dict[int, list[int]] = {}
     for position, shape in enumerate(contact_shapes):
         box = shape.BoundBox
         margin = 0.25
         for index, facet in enumerate(facets):
-            if index in assignment:
-                continue
             centroid = (points[facet[0]] + points[facet[1]] + points[facet[2]]) / 3.0
             if not (
                 box.XMin - margin <= centroid.x <= box.XMax + margin
@@ -290,7 +298,18 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
             ):
                 continue
             if shape.distToShape(Part.Vertex(centroid))[0] < 1e-4:
-                assignment[index] = position
+                if index in assignment:
+                    contested.setdefault(index, [assignment[index]]).append(position)
+                else:
+                    assignment[index] = position
+    if contested:
+        detail = ", ".join(
+            f"triangle {index} claimed by regions {sorted(set(claims))}"
+            for index, claims in sorted(contested.items())[:5]
+        )
+        raise BuildError(
+            f"{len(contested)} body triangle(s) belong to more than one contact region: {detail}"
+        )
     return points, facets, assignment
 
 
@@ -310,12 +329,68 @@ def _subset_mesh(points, facets, indices):
     return out_points, out_triangles
 
 
-def _tessellate(shape, deflection: float):
-    points, facets = shape.tessellate(deflection)
-    triangles = [tuple(int(i) for i in facet) for facet in facets]
-    if not triangles:
-        raise BuildError("tessellation produced no triangles")
-    return points, triangles
+def _triangle_area(points, facets, indices) -> float:
+    total = 0.0
+    for index in indices:
+        a, b, c = (points[corner] for corner in facets[index])
+        total += float((b - a).cross(c - a).Length) / 2.0
+    return total
+
+
+def _validate_partition(body_shape, body_points, body_facets, triangles_by_node, contact_objects, deflection):
+    """Assert the exported nodes are a true partition of the board surface.
+
+    Two failure modes would otherwise ship silently: a region that double-covers
+    an area another region also covers, and a gap where nothing was assigned.
+    Both leave a plausible-looking asset.
+    """
+    total = float(body_shape.Area)
+    exported = sum(
+        _triangle_area(body_points, body_facets, indices)
+        for indices in triangles_by_node.values()
+    )
+    # Tessellation of these planar faces is exact, so the allowance is tied to
+    # the pinned deflection rather than hand-tuned.
+    tolerance = max(0.05, 4.0 * deflection)
+    if abs(exported - total) > tolerance:
+        raise BuildError(
+            f"exported surface area {exported:.4f} mm^2 does not match the body surface "
+            f"{total:.4f} mm^2; the regions leave a gap or overlap larger than "
+            f"{tolerance:.3f} mm^2"
+        )
+    for obj in contact_objects:
+        if not triangles_by_node[obj.NodeID]:
+            raise BuildError(f"{obj.NodeID} received no surface triangles")
+
+
+def _validate_published_depths(contact_objects, board, deflection) -> dict:
+    """Check each authored region against the grip depth the board declares.
+
+    ``board.json`` owns the published depth for a contact whose range is a single
+    value. The authored region's extent along the native depth axis must agree;
+    this is what catches a region that silently re-bound to another surface.
+    """
+    declared = {}
+    for contact in board.get("contacts", []):
+        span = ((contact.get("depth") or {}).get("range") or {})
+        low, high = span.get("minimum"), span.get("maximum")
+        if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
+            declared[contact["id"]] = float(low)
+
+    measured = {}
+    for obj in contact_objects:
+        contact_id = getattr(obj, "ContactID", "")
+        measured[contact_id] = round(float(obj.Shape.BoundBox.YLength), 3)
+        if contact_id not in declared:
+            continue
+        tolerance = max(0.25, 3.0 * deflection)
+        if abs(measured[contact_id] - declared[contact_id]) > tolerance:
+            raise BuildError(
+                f"{contact_id} region depth {measured[contact_id]:.3f} mm disagrees with the "
+                f"published depth {declared[contact_id]:.3f} mm (tolerance {tolerance:.3f} mm); "
+                "the region has probably bound to the wrong surface"
+            )
+    return measured
 
 
 def _planar_uvs(points, bounds) -> list[tuple[float, float]]:
@@ -328,7 +403,14 @@ def _planar_uvs(points, bounds) -> list[tuple[float, float]]:
     ]
 
 
-def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: bool) -> dict:
+def build(
+    package: str,
+    source: Path,
+    board_path: Path,
+    out_dir: Path,
+    publish: bool,
+    allow_faceted_import: bool = False,
+) -> dict:
     board = json.loads(board_path.read_text())
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
         raise BuildError("board.json must be schema version 3")
@@ -371,6 +453,12 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
         raise BuildError("source declares an unexpected coordinate frame")
     if properties["HangTenSourceKind"] not in {SOURCE_KIND_NATIVE, SOURCE_KIND_FACETED}:
         raise BuildError("source declares an unexpected HangTenSourceKind")
+    if properties["HangTenSourceKind"] == SOURCE_KIND_FACETED and not allow_faceted_import:
+        raise BuildError(
+            "source is labelled faceted-import. Such a document must not be published as if it "
+            "carried native parametric history; re-run with --allow-faceted-import to "
+            "acknowledge that explicitly."
+        )
     deflection = float(properties["HangTenTessellationDeflection"])
     if not (0.0 < deflection <= 1.0):
         raise BuildError("source tessellation deflection is out of range")
@@ -392,6 +480,7 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
         )
     contract.validate_bindings(specifications, board, version, slots)
 
+    out_dir.mkdir(parents=True, exist_ok=True)
     print("[4/10] tessellating with pinned quality")
     body_object = next((obj for obj in objects if obj.NodeRole == "body"), None)
     if body_object is None:
@@ -414,7 +503,7 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
 
     print("[5/10] partitioning the surface and preserving normals and materials")
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
-    materials = _material_registry(objects, document, source, staging)
+    materials = _material_registry(objects, source, staging)
     body_points, body_facets, assignment = _partition_body_triangles(
         body_object.Shape, [obj.Shape for obj in contact_objects], deflection
     )
@@ -428,11 +517,14 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
         )
         triangles_by_node[target].append(index)
 
+    _validate_partition(
+        body_object.Shape, body_points, body_facets, triangles_by_node, contact_objects, deflection
+    )
+    measured_depths = _validate_published_depths(contact_objects, board, deflection)
+
     meshes = []
     for obj in [body_object] + contact_objects:
         indices = triangles_by_node[obj.NodeID]
-        if not indices:
-            raise BuildError(f"{obj.NodeID} received no surface triangles")
         points, triangles = _subset_mesh(body_points, body_facets, indices)
         points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
         meshes.append(
@@ -496,7 +588,7 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
 
         result = {
             "package": package,
-            "source": str(source.relative_to(REPOSITORY)),
+            "source": _display(source),
             "sourceSHA256": source_digest,
             "sourceUnchanged": _digest(source) == source_digest,
             "schemaVersion": version,
@@ -507,6 +599,7 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
             "modelSHA256": descriptor_json["modelSHA256"],
             "assetBytes": len(model_bytes),
             "contacts": sorted(descriptor_json.get("contacts", descriptor_json.get("contactSlots", {}))),
+            "measuredRegionDepthsMM": measured_depths,
         }
 
         if not publish:
@@ -524,14 +617,22 @@ def build(package: str, source: Path, board_path: Path, out_dir: Path, publish: 
         asset_temp = assets / f".{asset_target.name}.staged"
         shutil.copyfile(descriptor_path, descriptor_temp)
         shutil.copyfile(asset, asset_temp)
-        # The descriptor is hash-bound to the asset, so it is moved last: an
-        # interruption between the two moves leaves a detectable mismatch
-        # rather than a silently stale pairing.
+        # Two files cannot be replaced in one atomic step. The descriptor is
+        # hash-bound to the asset and is moved last, so an interruption between
+        # the two moves leaves a detectable mismatch rather than a silently
+        # stale pairing; the delivered pair is re-verified immediately after.
         os.replace(asset_temp, asset_target)
         os.replace(descriptor_temp, descriptor_target)
+        delivered = json.loads(descriptor_target.read_text())
+        delivered_digest = _digest(asset_target)
+        if delivered.get("modelSHA256") != delivered_digest:
+            raise BuildError(
+                "published descriptor does not match the published asset; the pair is "
+                "inconsistent and must be rebuilt"
+            )
         result["published"] = True
-        result["asset"] = str(asset_target.relative_to(REPOSITORY))
-        result["descriptor"] = str(descriptor_target.relative_to(REPOSITORY))
+        result["asset"] = _display(asset_target)
+        result["descriptor"] = _display(descriptor_target)
         result["assetSHA256"] = _digest(asset_target)
         return result
     finally:
@@ -546,6 +647,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--board", help="defaults to Hangboards/<package>/board.json")
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
+    parser.add_argument(
+        "--allow-faceted-import",
+        action="store_true",
+        help="publish a document explicitly labelled faceted-import",
+    )
     parser.add_argument("--report", help="write the JSON build report here")
     arguments = parser.parse_args(argv)
 
@@ -557,7 +663,14 @@ def main(argv: list[str] | None = None) -> int:
         if not path.is_file():
             raise BuildError(f"missing required input: {path}")
 
-    result = build(package, source, board_path, assets, publish=not arguments.check)
+    result = build(
+        package,
+        source,
+        board_path,
+        assets,
+        publish=not arguments.check,
+        allow_faceted_import=arguments.allow_faceted_import,
+    )
     print(json.dumps(result, indent=2, sort_keys=True))
     if arguments.report:
         Path(arguments.report).write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

@@ -11,6 +11,7 @@ Run under FreeCAD's interpreter; exit status is non-zero if the check fails.
 
 from __future__ import annotations
 
+import json
 import os
 import shutil
 import sys
@@ -98,6 +99,58 @@ def main() -> int:
             not any(p.name.startswith(".hangten-build-") for p in assets.iterdir()),
         )
         check("the stale shape was non-empty (the trap was live)", volume_before > 0)
+
+        # A guard that never fires is not proven. Mis-declare one published grip
+        # depth and require the build to refuse it.
+        print("\ncase 2: published grip depth disagrees with the authored region", flush=True)
+        board = json.loads(BOARD.read_text())
+        for contact in board["contacts"]:
+            if contact["id"] == "edge-10":
+                contact["depth"] = {"range": {"minimum": 25.0, "maximum": 25.0}}
+        bad_board = scratch / "board.json"
+        bad_board.write_text(json.dumps(board))
+        assets2 = scratch / "assets2"
+        assets2.mkdir(parents=True, exist_ok=True)
+        raised2 = None
+        try:
+            compile_board.build(PACKAGE, SOURCE, bad_board, assets2, publish=True)
+        except compile_board.BuildError as error:
+            raised2 = error
+        check(
+            "the build rejects a region that disagrees with the published depth",
+            isinstance(raised2, compile_board.BuildError) and "edge-10" in str(raised2),
+            str(raised2),
+        )
+        check(
+            "the depth guard published nothing",
+            not (assets2 / "primary.usdz").exists(),
+        )
+
+        # An unacknowledged faceted-import must never be published as native.
+        print("\ncase 3: faceted-import without acknowledgement", flush=True)
+        faceted = scratch / "faceted.FCStd"
+        shutil.copyfile(SOURCE, faceted)
+        document = App.openDocument(str(faceted))
+        document.HangTenSourceKind = "faceted-import"
+        document.save()
+        App.closeDocument(document.Name)
+        assets3 = scratch / "assets3"
+        assets3.mkdir(parents=True, exist_ok=True)
+        raised3 = None
+        try:
+            compile_board.build(PACKAGE, faceted, BOARD, assets3, publish=True)
+        except compile_board.BuildError as error:
+            raised3 = error
+        check(
+            "an unacknowledged faceted-import is refused",
+            isinstance(raised3, compile_board.BuildError)
+            and "faceted-import" in str(raised3),
+            str(raised3),
+        )
+        check(
+            "the faceted gate published nothing",
+            not (assets3 / "primary.usdz").exists(),
+        )
     finally:
         shutil.rmtree(scratch, ignore_errors=True)
 
