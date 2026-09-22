@@ -348,9 +348,10 @@ def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
 
 def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
     board = json.loads((SIMULATOR_3D_ROOT / "board.json").read_text(encoding="utf-8"))
-    descriptor = _assert_model_descriptor(
-        SIMULATOR_3D_ROOT, board, {"board_body_001", "mounting_hardware_omission_caps_001"}
-    )
+    # The mounting openings are now closed in `board_body_001` itself, so the
+    # separate floating `mounting_hardware_omission_caps_001` plane is gone and
+    # the board has exactly one body node.
+    descriptor = _assert_model_descriptor(SIMULATOR_3D_ROOT, board, "board_body_001")
     contacts = {contact["id"]: contact for contact in board["contacts"]}
 
     assert {"flat-sloper-2-left", "round-sloper-3-center", "flat-sloper-2-right"} <= set(contacts)

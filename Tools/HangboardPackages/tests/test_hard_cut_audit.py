@@ -60,6 +60,7 @@ def test_only_contact_native_model_and_suspension_clearance_tools_remain() -> No
         "verify_the_hangboard.py",
         "verify_trango_rock_prodigy_training_center.py",
         "verify_yy_baguette_evo.py",
+        "find_holes_raycast.py",
         "test_contact_model_descriptor.py",
         "test_contact_model_package.py",
         "test_import_contact_model_source.py",
