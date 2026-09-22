@@ -523,11 +523,11 @@
     ],
     "min": [
       -0.289999992,
-      0.0,
+      -0.0,
       0.0
     ]
   },
-  "modelSHA256": "7272258e4e414fd771a8b3c2995c640707d84c8130880eb9c196896564fc9dde",
+  "modelSHA256": "f234f39e672c776fb98b0df7c835642e54f9b2e43c3ffad05ec68fae3cee159f",
   "nodes": [
     {
       "nodeID": "BoardBody_surface_001_001_001_001",

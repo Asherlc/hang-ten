@@ -296,10 +296,10 @@
     "min": [
       -0.298449993,
       -0.079374999,
-      -1e-05
+      -0.0
     ]
   },
-  "modelSHA256": "212a6353427244fd881c66f7cbc456b1e91a108b50a132730fe8e6dbdb4f4d4f",
+  "modelSHA256": "7666ef014e2fd5be4af874d56caced26ba1202c8c18978f9fd8ff737ae23ff42",
   "nodes": [
     {
       "nodeID": "body_001",
@@ -374,10 +374,6 @@
       "contactID": "jug-right",
       "nodeID": "jug_right_001",
       "role": "contact"
-    },
-    {
-      "nodeID": "mounting_hardware_omission_caps_001",
-      "role": "body"
     },
     {
       "contactID": "sloper-40-center",

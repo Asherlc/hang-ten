@@ -1,0 +1,5559 @@
+{
+  "boresRemoved": 106,
+  "models": {
+    "beastmaker-2000": {
+      "archiveAligned": true,
+      "boreCount": 6,
+      "contactCount": 27,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "489df7dbdc0920e8b14df903182bb077e4266ddcdf681ddd28e00de25b6c2ded",
+      "modelSHA256": "f234f39e672c776fb98b0df7c835642e54f9b2e43c3ffad05ec68fae3cee159f",
+      "nodeCount": 28,
+      "rayCount": 30,
+      "rays": [
+        {
+          "frontNode": "front_lower_1_surface_001_001_002_002",
+          "frontZ": 0.021999999880790717,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            -0.24,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_1_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            -0.23965,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_1_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            -0.24034999999999998,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_1_surface_001_001_002_002",
+          "frontZ": 0.021999999880790717,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.295763827461997e-18,
+          "xy": [
+            -0.24,
+            0.02385
+          ]
+        },
+        {
+          "frontNode": "front_lower_1_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.140332604014475e-18,
+          "xy": [
+            -0.24,
+            0.02315
+          ]
+        },
+        {
+          "frontNode": "front_lower_9_surface_001_001_002_002",
+          "frontZ": 0.021999999880790717,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            0.24,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_9_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            0.24034999999999998,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_9_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.218048215738236e-18,
+          "xy": [
+            0.23965,
+            0.0235
+          ]
+        },
+        {
+          "frontNode": "front_lower_9_surface_001_001_002_002",
+          "frontZ": 0.021999999880790717,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.295763827461997e-18,
+          "xy": [
+            0.24,
+            0.02385
+          ]
+        },
+        {
+          "frontNode": "front_lower_9_surface_001_001_002_002",
+          "frontZ": 0.021999999880790714,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 5.140332604014475e-18,
+          "xy": [
+            0.24,
+            0.02315
+          ]
+        },
+        {
+          "frontNode": "front_middle_1_surface_001_001_002_002",
+          "frontZ": 0.02500000037252905,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527284e-17,
+          "xy": [
+            -0.24,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_1_surface_001_001_002_002",
+          "frontZ": 0.025000000372529044,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527284e-17,
+          "xy": [
+            -0.23965,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_1_surface_001_001_002_002",
+          "frontZ": 0.02500000037252905,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527284e-17,
+          "xy": [
+            -0.24034999999999998,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_1_surface_001_001_002_002",
+          "frontZ": 0.025000000372529044,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6286971771251046e-17,
+          "xy": [
+            -0.24,
+            0.07335
+          ]
+        },
+        {
+          "frontNode": "front_middle_1_surface_001_001_002_002",
+          "frontZ": 0.02500000037252905,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6131540547803523e-17,
+          "xy": [
+            -0.24,
+            0.07264999999999999
+          ]
+        },
+        {
+          "frontNode": "front_middle_9_surface_001_001_002_002",
+          "frontZ": 0.025000000372529047,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527288e-17,
+          "xy": [
+            0.24,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_9_surface_001_001_002_002",
+          "frontZ": 0.025000000372529047,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527284e-17,
+          "xy": [
+            0.24034999999999998,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_9_surface_001_001_002_002",
+          "frontZ": 0.02500000037252905,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6209256159527284e-17,
+          "xy": [
+            0.23965,
+            0.073
+          ]
+        },
+        {
+          "frontNode": "front_middle_9_surface_001_001_002_002",
+          "frontZ": 0.025000000372529047,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6286971771251046e-17,
+          "xy": [
+            0.24,
+            0.07335
+          ]
+        },
+        {
+          "frontNode": "front_middle_9_surface_001_001_002_002",
+          "frontZ": 0.025000000372529044,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 1.6131540547803523e-17,
+          "xy": [
+            0.24,
+            0.07264999999999999
+          ]
+        },
+        {
+          "frontNode": "front_upper_1_surface_001_001_002_002",
+          "frontZ": 0.017999999225139642,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.3980817331903378e-17,
+          "xy": [
+            -0.041,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_1_surface_001_001_002_002",
+          "frontZ": 0.017999999225139642,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.3980817331903378e-17,
+          "xy": [
+            -0.04065,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_1_surface_001_001_002_002",
+          "frontZ": 0.017999999225139642,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.398081733190338e-17,
+          "xy": [
+            -0.041350000000000005,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_1_surface_001_001_002_002",
+          "frontZ": 0.017999999225139642,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.4058532943627143e-17,
+          "xy": [
+            -0.041,
+            0.10835
+          ]
+        },
+        {
+          "frontNode": "front_upper_1_surface_001_001_002_002",
+          "frontZ": 0.017999999225139642,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.390310172017962e-17,
+          "xy": [
+            -0.041,
+            0.10765
+          ]
+        },
+        {
+          "frontNode": "front_upper_2_surface_001_001_002_002",
+          "frontZ": 0.0379999987781048,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.398081733190338e-17,
+          "xy": [
+            0.041,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_2_surface_001_001_002_002",
+          "frontZ": 0.0379999987781048,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.398081733190338e-17,
+          "xy": [
+            0.041350000000000005,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_2_surface_001_001_002_002",
+          "frontZ": 0.03799999877810481,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.3980817331903384e-17,
+          "xy": [
+            0.04065,
+            0.108
+          ]
+        },
+        {
+          "frontNode": "front_upper_2_surface_001_001_002_002",
+          "frontZ": 0.0379999987781048,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.4058532943627143e-17,
+          "xy": [
+            0.041,
+            0.10835
+          ]
+        },
+        {
+          "frontNode": "front_upper_2_surface_001_001_002_002",
+          "frontZ": 0.03799999877810481,
+          "rearNode": "BoardBody_surface_001_001_001_001",
+          "rearZ": 2.390310172017962e-17,
+          "xy": [
+            0.041,
+            0.10765
+          ]
+        }
+      ]
+    },
+    "lattice-triple-rung": {
+      "archiveAligned": true,
+      "boreCount": 6,
+      "contactCount": 3,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "a8b404db8cd23cfba1200e8ec2ca70228412625b77043f00d5a82354b1d61419",
+      "modelSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
+      "nodeCount": 4,
+      "rayCount": 30,
+      "rays": [
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584728662531434,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.225,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881195173467,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            -0.22465000000000002,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881196621539,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.22535,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03604309792463494,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            -0.225,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03565147532599375,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.0309088572266775e-18,
+          "xy": [
+            -0.225,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584728519555085,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.075,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881187539786,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.07465,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.035848811868148193,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.07535,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.036043096348100344,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.186340080674199e-18,
+          "xy": [
+            -0.075,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03565147404300137,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.030908857226677e-18,
+          "xy": [
+            -0.075,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.035847286614433135,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.075,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881196773525,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.07535,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.0358488119749756,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504388e-18,
+          "xy": [
+            0.07465,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.036043097913753736,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            0.075,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03565147531511254,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.0309088572266775e-18,
+          "xy": [
+            0.075,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584728662531434,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.225,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881196621538,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.22535,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03584881195173467,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            0.22465000000000002,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.036043097924634934,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            0.225,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.03565147532599375,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 3.030908857226677e-18,
+          "xy": [
+            0.225,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.02092029829421375,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            -0.225,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.02092029829421375,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            -0.22465000000000002,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.020920298294213747,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            -0.22535,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.0209940978011047,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.139399768452677e-17,
+          "xy": [
+            -0.225,
+            0.09635
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.020846498787322795,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1238566461079244e-17,
+          "xy": [
+            -0.225,
+            0.09565
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.02092029829421375,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            0.225,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.020920298294213747,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            0.22535,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.020920298294213747,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1316282072803006e-17,
+          "xy": [
+            0.22465000000000002,
+            0.096
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.0209940978011047,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1393997684526768e-17,
+          "xy": [
+            0.225,
+            0.09635
+          ]
+        },
+        {
+          "frontNode": "LatticeBody_editable_surface_001",
+          "frontZ": 0.020846498787322795,
+          "rearNode": "LatticeBody_editable_surface_001",
+          "rearZ": 2.1238566461079244e-17,
+          "xy": [
+            0.225,
+            0.09565
+          ]
+        }
+      ]
+    },
+    "metolius-climbers-edge": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 15,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "cda6b9a7969a64f5656d2c650e1ecc079b65309d7092315f24c669f0352cd646",
+      "modelSHA256": "046e977317dc1883c5cd09a552761753e58fc7b440c2df188cec4e8cfcf0264a",
+      "nodeCount": 16,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            -0.244,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            -0.24365,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            -0.24434999999999998,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.5243362128103397e-17,
+          "xy": [
+            -0.244,
+            -0.06865
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.5398793351550923e-17,
+          "xy": [
+            -0.244,
+            -0.06935000000000001
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            0.0,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            0.00035,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            -0.00035,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.52433621281034e-17,
+          "xy": [
+            0.0,
+            -0.06865
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.539879335155092e-17,
+          "xy": [
+            0.0,
+            -0.06935000000000001
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            0.244,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            0.24434999999999998,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.532107773982716e-17,
+          "xy": [
+            0.24365,
+            -0.069
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.5243362128103397e-17,
+          "xy": [
+            0.244,
+            -0.06865
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_001",
+          "rearZ": -1.5398793351550923e-17,
+          "xy": [
+            0.244,
+            -0.06935000000000001
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            -0.26,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            -0.25965,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            -0.26035,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.674838211509268e-18,
+          "xy": [
+            -0.26,
+            -0.01655
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.8302694349567896e-18,
+          "xy": [
+            -0.26,
+            -0.017249999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.046999998390674584,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            0.26,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            0.26035,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.752553823233029e-18,
+          "xy": [
+            0.25965,
+            -0.0169
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0469999983906746,
+          "rearNode": "body_001",
+          "rearZ": -3.674838211509269e-18,
+          "xy": [
+            0.26,
+            -0.01655
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04699999839067459,
+          "rearNode": "body_001",
+          "rearZ": -3.8302694349567896e-18,
+          "xy": [
+            0.26,
+            -0.017249999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.93649607039515e-18,
+          "xy": [
+            -0.279,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.936496070395149e-18,
+          "xy": [
+            -0.27865,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.93649607039515e-18,
+          "xy": [
+            -0.27935000000000004,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 1.0014211682118912e-17,
+          "xy": [
+            -0.279,
+            0.0451
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.858780458671389e-18,
+          "xy": [
+            -0.279,
+            0.044399999999999995
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.93649607039515e-18,
+          "xy": [
+            0.0,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.936496070395152e-18,
+          "xy": [
+            0.00035,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.93649607039515e-18,
+          "xy": [
+            -0.00035,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 1.0014211682118912e-17,
+          "xy": [
+            0.0,
+            0.0451
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.858780458671389e-18,
+          "xy": [
+            0.0,
+            0.044399999999999995
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.936496070395152e-18,
+          "xy": [
+            0.279,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 9.936496070395149e-18,
+          "xy": [
+            0.27935000000000004,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.93649607039515e-18,
+          "xy": [
+            0.27865,
+            0.04475
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197679,
+          "rearNode": "body_001",
+          "rearZ": 1.0014211682118912e-17,
+          "xy": [
+            0.279,
+            0.0451
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05499999970197678,
+          "rearNode": "body_001",
+          "rearZ": 9.858780458671389e-18,
+          "xy": [
+            0.279,
+            0.044399999999999995
+          ]
+        }
+      ]
+    },
+    "metolius-contact": {
+      "archiveAligned": true,
+      "boreCount": 10,
+      "contactCount": 33,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "c5d5b3b3d266f755d7a1499d9fa84eaf6ae0e7d932dc8ea44714580dbc798a2c",
+      "modelSHA256": "f081a9557cec2887739a62a69d6c434ed0e988c035234900c231530727e407d7",
+      "nodeCount": 34,
+      "rayCount": 50,
+      "rays": [
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013891019062075016,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.068,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013686027643042473,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.06765,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013863795520954535,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.06835000000000001,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01393659287824462,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.068,
+            0.03835
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01384544524590541,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.068,
+            0.037649999999999996
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.051824364537582907,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.32,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05166748588571507,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.31965,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05198124318945074,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.32035,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0519938791190699,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.32,
+            -0.10164999999999999
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0516425668858828,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.32,
+            -0.10235
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024989751568203177,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.07,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024990317994953534,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.06965,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02498918514145282,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.07035000000000001,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02498974473005313,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.07,
+            -0.07415
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024989758406353212,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.07,
+            -0.07485
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04644686069062916,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.163,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04639353760300097,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.16265000000000002,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04650018377825736,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.16335,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.046508329058247457,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.163,
+            0.018349999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.046385392323010866,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.163,
+            0.01765
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013891019062075016,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.068,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01384606334309407,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.06835000000000001,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013686027643042472,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.06765,
+            0.038
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01393659287824462,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.068,
+            0.03835
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.013845445245905412,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.068,
+            0.037649999999999996
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04661366826367877,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.163,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04664777959344585,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.16335,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04657955693391169,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.16265000000000002,
+            0.018
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04665821174214022,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.163,
+            0.018349999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.046569124785217325,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.163,
+            0.01765
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.051959601747437315,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.32,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05205417746444101,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.32035,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05186502603043362,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.31965,
+            -0.102
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05222945023308787,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.32,
+            -0.10164999999999999
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05168975326178675,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.32,
+            -0.10235
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024989742029620732,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.07,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024989177367389773,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.07035000000000001,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02499030693625707,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.06965,
+            -0.0745
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.024989734862691015,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.07,
+            -0.07415
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02498975216144344,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.07,
+            -0.07485
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04870129421318013,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.265,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048755901990663805,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.26465,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048646686435696446,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.26535000000000003,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04877282149752926,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.265,
+            0.02235
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048629766928831,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            -0.265,
+            0.02165
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048427472094153545,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.265,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04832092676334836,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.26535000000000003,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048534017424958734,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.26465,
+            0.022
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048445938493457325,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.265,
+            0.02235
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.048409005694849766,
+          "rearNode": "body_001",
+          "rearZ": 0.0,
+          "xy": [
+            0.265,
+            0.02165
+          ]
+        }
+      ]
+    },
+    "metolius-prime-rib": {
+      "archiveAligned": true,
+      "boreCount": 4,
+      "contactCount": 3,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "cdcf802a18cab4c808c09014c1a118a41b8c21c66aeed4cb05404dd3d5cc0822",
+      "modelSHA256": "ddfb6f8fde38026e2e77e0b6b66e0682b9a788c6eff9c86b26646438808f8026",
+      "nodeCount": 4,
+      "rayCount": 20,
+      "rays": [
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            -0.223,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            -0.22265000000000001,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            -0.22335,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.02309999987483025,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.405986852087153e-18,
+          "xy": [
+            -0.223,
+            0.02885
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.250555628639632e-18,
+          "xy": [
+            -0.223,
+            0.02815
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173226,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            -0.223,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173227,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            -0.22265000000000001,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173227,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            -0.22335,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173226,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5620837956475955e-17,
+          "xy": [
+            -0.223,
+            0.07035000000000001
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173224,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5465406733028428e-17,
+          "xy": [
+            -0.223,
+            0.06965
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            0.223,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830256,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            0.22335,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.3282712403633925e-18,
+          "xy": [
+            0.22265000000000001,
+            0.0285
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.02309999987483025,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.405986852087153e-18,
+          "xy": [
+            0.223,
+            0.02885
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.023099999874830253,
+          "rearNode": "body_mesh_001",
+          "rearZ": 6.250555628639632e-18,
+          "xy": [
+            0.223,
+            0.02815
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173226,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            0.223,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173226,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            0.22335,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173224,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5543122344752193e-17,
+          "xy": [
+            0.22265000000000001,
+            0.07
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173226,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5620837956475955e-17,
+          "xy": [
+            0.223,
+            0.07035000000000001
+          ]
+        },
+        {
+          "frontNode": "body_mesh_001",
+          "frontZ": 0.015100000426173227,
+          "rearNode": "body_mesh_001",
+          "rearZ": 1.5465406733028434e-17,
+          "xy": [
+            0.223,
+            0.06965
+          ]
+        }
+      ]
+    },
+    "metolius-project": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 17,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "236155523eededd6f332c8c053a792a3896732d306e2d1b14361c78631d0229b",
+      "modelSHA256": "aa5dbc42663aa69a7c971c10a7031b22bf311148b439d5106607751b07a7a1c6",
+      "nodeCount": 18,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "pocket_3_left_partition_mesh_001",
+          "frontZ": 0.029443508014082936,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.55351295663786e-17,
+          "xy": [
+            -0.26,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_left_partition_mesh_001",
+          "frontZ": 0.029443508014082933,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.55351295663786e-17,
+          "xy": [
+            -0.25965,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_left_partition_mesh_001",
+          "frontZ": 0.02944350801408293,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5535129566378605e-17,
+          "xy": [
+            -0.26035,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_left_partition_mesh_001",
+          "frontZ": 0.02944350801408293,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5612845178102363e-17,
+          "xy": [
+            -0.26,
+            0.11535000000000001
+          ]
+        },
+        {
+          "frontNode": "pocket_3_left_partition_mesh_001",
+          "frontZ": 0.029443508014082933,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.545741395465484e-17,
+          "xy": [
+            -0.26,
+            0.11465
+          ]
+        },
+        {
+          "frontNode": "pocket_3_right_partition_mesh_001",
+          "frontZ": 0.029443508014082933,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.55351295663786e-17,
+          "xy": [
+            0.26,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_right_partition_mesh_001",
+          "frontZ": 0.029443508014082936,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5535129566378605e-17,
+          "xy": [
+            0.26035,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_right_partition_mesh_001",
+          "frontZ": 0.029443508014082933,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5535129566378605e-17,
+          "xy": [
+            0.25965,
+            0.115
+          ]
+        },
+        {
+          "frontNode": "pocket_3_right_partition_mesh_001",
+          "frontZ": 0.029443508014082936,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5612845178102363e-17,
+          "xy": [
+            0.26,
+            0.11535000000000001
+          ]
+        },
+        {
+          "frontNode": "pocket_3_right_partition_mesh_001",
+          "frontZ": 0.029443508014082936,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 2.5457413954654837e-17,
+          "xy": [
+            0.26,
+            0.11465
+          ]
+        },
+        {
+          "frontNode": "pocket_6_left_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900877e-18,
+          "xy": [
+            -0.22,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_left_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900876e-18,
+          "xy": [
+            -0.21965,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_left_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900876e-18,
+          "xy": [
+            -0.22035,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_left_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.294964549624638e-18,
+          "xy": [
+            -0.22,
+            0.02835
+          ]
+        },
+        {
+          "frontNode": "pocket_6_left_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.139533326177115e-18,
+          "xy": [
+            -0.22,
+            0.02765
+          ]
+        },
+        {
+          "frontNode": "pocket_6_right_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900876e-18,
+          "xy": [
+            0.22,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_right_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900877e-18,
+          "xy": [
+            0.22035,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_right_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.217248937900877e-18,
+          "xy": [
+            0.21965,
+            0.028
+          ]
+        },
+        {
+          "frontNode": "pocket_6_right_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.294964549624638e-18,
+          "xy": [
+            0.22,
+            0.02835
+          ]
+        },
+        {
+          "frontNode": "pocket_6_right_partition_mesh_001",
+          "frontZ": 0.02456845715641976,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 6.139533326177115e-18,
+          "xy": [
+            0.22,
+            0.02765
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415812,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.65973959207622e-18,
+          "xy": [
+            -0.076,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415812,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.659739592076223e-18,
+          "xy": [
+            -0.07565,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.03105623275041581,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.659739592076221e-18,
+          "xy": [
+            -0.07635,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.03105623275041581,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.737455203799983e-18,
+          "xy": [
+            -0.076,
+            0.03935
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415812,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.58202398035246e-18,
+          "xy": [
+            -0.076,
+            0.03865
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.03105623275041581,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.65973959207622e-18,
+          "xy": [
+            0.076,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415812,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.659739592076221e-18,
+          "xy": [
+            0.07635,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.03105623275041581,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.659739592076221e-18,
+          "xy": [
+            0.07565,
+            0.039
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415816,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.737455203799983e-18,
+          "xy": [
+            0.076,
+            0.03935
+          ]
+        },
+        {
+          "frontNode": "edge_10_center_partition_mesh_001",
+          "frontZ": 0.031056232750415812,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 8.58202398035246e-18,
+          "xy": [
+            0.076,
+            0.03865
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752962,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            -0.086,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            -0.08564999999999999,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752962,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            -0.08635,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.939559624020148e-17,
+          "xy": [
+            -0.086,
+            0.08735
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9240165016753958e-17,
+          "xy": [
+            -0.086,
+            0.08664999999999999
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752962,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            0.086,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752962,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            0.08635,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9317880628477722e-17,
+          "xy": [
+            0.08564999999999999,
+            0.087
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.9395596240201484e-17,
+          "xy": [
+            0.086,
+            0.08735
+          ]
+        },
+        {
+          "frontNode": "edge_9_center_partition_mesh_001",
+          "frontZ": 0.017581406980752966,
+          "rearNode": "project_body_partition_mesh_001",
+          "rearZ": 1.924016501675396e-17,
+          "xy": [
+            0.086,
+            0.08664999999999999
+          ]
+        }
+      ]
+    },
+    "metolius-simulator-3d": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 30,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "0fe273812d55167ea4e7425f5e5c95c4c40b2c8b60be3009a86ecc1bdffc0969",
+      "modelSHA256": "19d5fd2da38786fcdf87cb8452789fb47ed2209c628421dd745d30c5b4f7b24e",
+      "nodeCount": 32,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "hold_04_left_001",
+          "frontZ": 0.034065998559067764,
+          "rearNode": "board_body_001",
+          "rearZ": 1.2483841825517793e-08,
+          "xy": [
+            -0.2982,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_left_001",
+          "frontZ": 0.034061026593109556,
+          "rearNode": "board_body_001",
+          "rearZ": 1.3025984461849266e-08,
+          "xy": [
+            -0.29785,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_left_001",
+          "frontZ": 0.034070970525025966,
+          "rearNode": "board_body_001",
+          "rearZ": 1.1941699189186324e-08,
+          "xy": [
+            -0.29855000000000004,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_left_001",
+          "frontZ": 0.034249947779523685,
+          "rearNode": "board_body_001",
+          "rearZ": 1.1944145475314015e-08,
+          "xy": [
+            -0.2982,
+            0.13740999999999998
+          ]
+        },
+        {
+          "frontNode": "hold_04_left_001",
+          "frontZ": 0.033882049338611844,
+          "rearNode": "board_body_001",
+          "rearZ": 1.3023538175721575e-08,
+          "xy": [
+            -0.2982,
+            0.13671
+          ]
+        },
+        {
+          "frontNode": "hold_04_right_001",
+          "frontZ": 0.034087594746087926,
+          "rearNode": "board_body_001",
+          "rearZ": 2.9600977706126274e-08,
+          "xy": [
+            0.2983,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_right_001",
+          "frontZ": 0.03409225029419366,
+          "rearNode": "board_body_001",
+          "rearZ": 3.030111515219469e-08,
+          "xy": [
+            0.29865,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_right_001",
+          "frontZ": 0.03408293919798218,
+          "rearNode": "board_body_001",
+          "rearZ": 2.890084026005786e-08,
+          "xy": [
+            0.29795,
+            0.13706
+          ]
+        },
+        {
+          "frontNode": "hold_04_right_001",
+          "frontZ": 0.034265537944901524,
+          "rearNode": "board_body_001",
+          "rearZ": 3.0180674495578886e-08,
+          "xy": [
+            0.2983,
+            0.13740999999999998
+          ]
+        },
+        {
+          "frontNode": "hold_04_right_001",
+          "frontZ": 0.03390965154727432,
+          "rearNode": "board_body_001",
+          "rearZ": 2.9021280916673656e-08,
+          "xy": [
+            0.2983,
+            0.13671
+          ]
+        },
+        {
+          "frontNode": "hold_06_left_001",
+          "frontZ": 0.029272645567729627,
+          "rearNode": "board_body_001",
+          "rearZ": 2.7102173765890813e-08,
+          "xy": [
+            -0.1657,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_left_001",
+          "frontZ": 0.029284808238709117,
+          "rearNode": "board_body_001",
+          "rearZ": 2.6627714895771203e-08,
+          "xy": [
+            -0.16535,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_left_001",
+          "frontZ": 0.02926048289675013,
+          "rearNode": "board_body_001",
+          "rearZ": 2.7576632636010426e-08,
+          "xy": [
+            -0.16604999999999998,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_left_001",
+          "frontZ": 0.029337763579262727,
+          "rearNode": "board_body_001",
+          "rearZ": 2.6539819708595024e-08,
+          "xy": [
+            -0.1657,
+            0.11808
+          ]
+        },
+        {
+          "frontNode": "hold_06_left_001",
+          "frontZ": 0.02920752755619653,
+          "rearNode": "board_body_001",
+          "rearZ": 2.766452782318661e-08,
+          "xy": [
+            -0.1657,
+            0.11738
+          ]
+        },
+        {
+          "frontNode": "hold_06_right_001",
+          "frontZ": 0.029223785703294945,
+          "rearNode": "board_body_001",
+          "rearZ": 2.7107407897427133e-08,
+          "xy": [
+            0.1658,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_right_001",
+          "frontZ": 0.029227636727435252,
+          "rearNode": "board_body_001",
+          "rearZ": 2.6632949577188246e-08,
+          "xy": [
+            0.16615,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_right_001",
+          "frontZ": 0.029219934679154635,
+          "rearNode": "board_body_001",
+          "rearZ": 2.7581866217666026e-08,
+          "xy": [
+            0.16545,
+            0.11773
+          ]
+        },
+        {
+          "frontNode": "hold_06_right_001",
+          "frontZ": 0.029287789249343457,
+          "rearNode": "board_body_001",
+          "rearZ": 2.6545053214532777e-08,
+          "xy": [
+            0.1658,
+            0.11808
+          ]
+        },
+        {
+          "frontNode": "hold_06_right_001",
+          "frontZ": 0.029159782157246433,
+          "rearNode": "board_body_001",
+          "rearZ": 2.766976258032149e-08,
+          "xy": [
+            0.1658,
+            0.11738
+          ]
+        },
+        {
+          "frontNode": "hold_11_left_001",
+          "frontZ": 0.021181103511830675,
+          "rearNode": "board_body_001",
+          "rearZ": 2.275962925843422e-08,
+          "xy": [
+            -0.20808,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_left_001",
+          "frontZ": 0.021172017988712228,
+          "rearNode": "board_body_001",
+          "rearZ": 2.2720891738392677e-08,
+          "xy": [
+            -0.20773,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_left_001",
+          "frontZ": 0.021190189034949125,
+          "rearNode": "board_body_001",
+          "rearZ": 2.2798366778475762e-08,
+          "xy": [
+            -0.20842999999999998,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_left_001",
+          "frontZ": 0.021236477193947667,
+          "rearNode": "board_body_001",
+          "rearZ": 2.3905808350705952e-08,
+          "xy": [
+            -0.20808,
+            0.03194
+          ]
+        },
+        {
+          "frontNode": "hold_11_left_001",
+          "frontZ": 0.021128804967528392,
+          "rearNode": "board_body_001",
+          "rearZ": 2.16134501661625e-08,
+          "xy": [
+            -0.20808,
+            0.03124
+          ]
+        },
+        {
+          "frontNode": "hold_11_right_001",
+          "frontZ": 0.021148198121475052,
+          "rearNode": "board_body_001",
+          "rearZ": 3.23969166205869e-09,
+          "xy": [
+            0.20819,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_right_001",
+          "frontZ": 0.021148748643400536,
+          "rearNode": "board_body_001",
+          "rearZ": 3.920568639838635e-09,
+          "xy": [
+            0.20853999999999998,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_right_001",
+          "frontZ": 0.021155225638327693,
+          "rearNode": "board_body_001",
+          "rearZ": 2.558814684278744e-09,
+          "xy": [
+            0.20784,
+            0.03159
+          ]
+        },
+        {
+          "frontNode": "hold_11_right_001",
+          "frontZ": 0.021216314204680682,
+          "rearNode": "board_body_001",
+          "rearZ": 5.314774324527929e-09,
+          "xy": [
+            0.20819,
+            0.03194
+          ]
+        },
+        {
+          "frontNode": "hold_11_right_001",
+          "frontZ": 0.02109095988542938,
+          "rearNode": "board_body_001",
+          "rearZ": 1.164608999589472e-09,
+          "xy": [
+            0.20819,
+            0.03124
+          ]
+        },
+        {
+          "frontNode": "hold_15_center_001",
+          "frontZ": 0.03728076060653667,
+          "rearNode": "board_body_001",
+          "rearZ": 2.645637177084073e-08,
+          "xy": [
+            4e-05,
+            0.16603
+          ]
+        },
+        {
+          "frontNode": "hold_15_center_001",
+          "frontZ": 0.037289653337266804,
+          "rearNode": "board_body_001",
+          "rearZ": 2.5862762881305252e-08,
+          "xy": [
+            0.00039,
+            0.16603
+          ]
+        },
+        {
+          "frontNode": "hold_15_center_001",
+          "frontZ": 0.03727186787580654,
+          "rearNode": "board_body_001",
+          "rearZ": 2.704998066037621e-08,
+          "xy": [
+            -0.00031,
+            0.16603
+          ]
+        },
+        {
+          "frontNode": "hold_15_center_001",
+          "frontZ": 0.03746963810593854,
+          "rearNode": "board_body_001",
+          "rearZ": 2.4949654425767487e-08,
+          "xy": [
+            4e-05,
+            0.16638
+          ]
+        },
+        {
+          "frontNode": "hold_15_center_001",
+          "frontZ": 0.03709188310713481,
+          "rearNode": "board_body_001",
+          "rearZ": 2.796308911591398e-08,
+          "xy": [
+            4e-05,
+            0.16568000000000002
+          ]
+        },
+        {
+          "frontNode": "hold_18_center_001",
+          "frontZ": 0.02030792157914076,
+          "rearNode": "board_body_001",
+          "rearZ": 7.029331623149111e-09,
+          "xy": [
+            4e-05,
+            0.04126
+          ]
+        },
+        {
+          "frontNode": "hold_18_center_001",
+          "frontZ": 0.020316544867430127,
+          "rearNode": "board_body_001",
+          "rearZ": 7.332533971789511e-09,
+          "xy": [
+            0.00039,
+            0.04126
+          ]
+        },
+        {
+          "frontNode": "hold_18_center_001",
+          "frontZ": 0.02029929829085139,
+          "rearNode": "board_body_001",
+          "rearZ": 6.726129274508708e-09,
+          "xy": [
+            -0.00031,
+            0.04126
+          ]
+        },
+        {
+          "frontNode": "hold_18_center_001",
+          "frontZ": 0.020368316112658116,
+          "rearNode": "board_body_001",
+          "rearZ": 6.68438054980444e-09,
+          "xy": [
+            4e-05,
+            0.04161
+          ]
+        },
+        {
+          "frontNode": "hold_18_center_001",
+          "frontZ": 0.020247527045623395,
+          "rearNode": "board_body_001",
+          "rearZ": 7.37428269649378e-09,
+          "xy": [
+            4e-05,
+            0.040909999999999995
+          ]
+        }
+      ]
+    },
+    "metolius-wood-grips-deluxe-ii": {
+      "archiveAligned": true,
+      "boreCount": 6,
+      "contactCount": 26,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "2196e13c039516cacd125ed69698089ae8c4b017a56f0b75a9dfcb0de1ea870a",
+      "modelSHA256": "d0d4436f93a8a0c67104d33605d65747e83ef463ce823793ee6a6c8e35c0bcdd",
+      "nodeCount": 27,
+      "rayCount": 30,
+      "rays": [
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04290730332593628,
+          "rearNode": "body_001",
+          "rearZ": 2.822876013064413e-07,
+          "xy": [
+            -0.215,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04290730332593628,
+          "rearNode": "body_001",
+          "rearZ": 2.822876013064413e-07,
+          "xy": [
+            -0.21465,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04290730332593628,
+          "rearNode": "body_001",
+          "rearZ": 2.822876013064413e-07,
+          "xy": [
+            -0.21534999999999999,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04292267709678432,
+          "rearNode": "body_001",
+          "rearZ": 2.82287601306519e-07,
+          "xy": [
+            -0.215,
+            0.05535
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.042891929555088235,
+          "rearNode": "body_001",
+          "rearZ": 2.8228760130636356e-07,
+          "xy": [
+            -0.215,
+            0.05465
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054874189411449,
+          "rearNode": "body_001",
+          "rearZ": 2.185554651427974e-05,
+          "xy": [
+            -0.215,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054888961774487356,
+          "rearNode": "body_001",
+          "rearZ": 2.0888823168491955e-05,
+          "xy": [
+            -0.21465,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05486802612330684,
+          "rearNode": "body_001",
+          "rearZ": 2.2822269860067526e-05,
+          "xy": [
+            -0.21534999999999999,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05486690157678809,
+          "rearNode": "body_001",
+          "rearZ": 2.596697657613814e-05,
+          "xy": [
+            -0.215,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05488147724610991,
+          "rearNode": "body_001",
+          "rearZ": 1.7744116452421336e-05,
+          "xy": [
+            -0.215,
+            0.11565
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06994530008050134,
+          "rearNode": "body_001",
+          "rearZ": 2.1855608286364102e-05,
+          "xy": [
+            -0.215,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0699458398606107,
+          "rearNode": "body_001",
+          "rearZ": 2.0888849816798387e-05,
+          "xy": [
+            -0.21465,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06994530008050133,
+          "rearNode": "body_001",
+          "rearZ": 2.2822366755929825e-05,
+          "xy": [
+            -0.21534999999999999,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06993866767316784,
+          "rearNode": "body_001",
+          "rearZ": 2.5967024880311137e-05,
+          "xy": [
+            -0.215,
+            0.18034999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06995193248783482,
+          "rearNode": "body_001",
+          "rearZ": 1.774419169241707e-05,
+          "xy": [
+            -0.215,
+            0.17965
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.042892555869121336,
+          "rearNode": "body_001",
+          "rearZ": 1.1407375781433017e-05,
+          "xy": [
+            0.215,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.042886979360611775,
+          "rearNode": "body_001",
+          "rearZ": 9.752017561292385e-06,
+          "xy": [
+            0.21534999999999999,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0428981323776309,
+          "rearNode": "body_001",
+          "rearZ": 1.3062734001573653e-05,
+          "xy": [
+            0.21465,
+            0.055
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04290193123503813,
+          "rearNode": "body_001",
+          "rearZ": 1.264887613918945e-05,
+          "xy": [
+            0.215,
+            0.05535
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.04288318050320454,
+          "rearNode": "body_001",
+          "rearZ": 1.0165875423676587e-05,
+          "xy": [
+            0.215,
+            0.05465
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05494195697752295,
+          "rearNode": "body_001",
+          "rearZ": 1.721333603200243e-05,
+          "xy": [
+            0.215,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05494404096994751,
+          "rearNode": "body_001",
+          "rearZ": 1.746777765111523e-05,
+          "xy": [
+            0.21534999999999999,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493987298509839,
+          "rearNode": "body_001",
+          "rearZ": 1.695889441288964e-05,
+          "xy": [
+            0.21465,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05494960841222031,
+          "rearNode": "body_001",
+          "rearZ": 1.5072507055858752e-05,
+          "xy": [
+            0.215,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493430554282559,
+          "rearNode": "body_001",
+          "rearZ": 1.9354165008146112e-05,
+          "xy": [
+            0.215,
+            0.11565
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06995376850035379,
+          "rearNode": "body_001",
+          "rearZ": 1.7213373242597595e-05,
+          "xy": [
+            0.215,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.0699480154237346,
+          "rearNode": "body_001",
+          "rearZ": 1.7467823756500296e-05,
+          "xy": [
+            0.21534999999999999,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06995952157697294,
+          "rearNode": "body_001",
+          "rearZ": 1.6958922728694887e-05,
+          "xy": [
+            0.21465,
+            0.18
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06994908534929341,
+          "rearNode": "body_001",
+          "rearZ": 1.5072555141054671e-05,
+          "xy": [
+            0.215,
+            0.18034999999999998
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.06995845165141416,
+          "rearNode": "body_001",
+          "rearZ": 1.935419134414051e-05,
+          "xy": [
+            0.215,
+            0.17965
+          ]
+        }
+      ]
+    },
+    "moon-armstrong": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 21,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "7146162c3cbf7655cc7ec2a502e1972f6f0488bc5d04c22836607a20ab5c56ae",
+      "modelSHA256": "26e916d54b39f1f6afcf78b53bdc883a584dae0ff6e78d67fb8823ee1daf8e6a",
+      "nodeCount": 22,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05495361273689587,
+          "rearNode": "body_001",
+          "rearZ": 6.206366746970949e-05,
+          "xy": [
+            -0.205,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05494806530631689,
+          "rearNode": "body_001",
+          "rearZ": 5.370175729245752e-05,
+          "xy": [
+            -0.20465,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054962184500113004,
+          "rearNode": "body_001",
+          "rearZ": 7.042557764696146e-05,
+          "xy": [
+            -0.20534999999999998,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05495008449685043,
+          "rearNode": "body_001",
+          "rearZ": 6.206366746970957e-05,
+          "xy": [
+            -0.205,
+            0.01735
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05495714097694129,
+          "rearNode": "body_001",
+          "rearZ": 6.20636674697094e-05,
+          "xy": [
+            -0.205,
+            0.01665
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05492171474439753,
+          "rearNode": "body_001",
+          "rearZ": 2.8275513485466728e-05,
+          "xy": [
+            -0.205,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05492146905001251,
+          "rearNode": "body_001",
+          "rearZ": 2.607669446167554e-05,
+          "xy": [
+            -0.20465,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05492196043878257,
+          "rearNode": "body_001",
+          "rearZ": 3.047433250925792e-05,
+          "xy": [
+            -0.20534999999999998,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05492171216480995,
+          "rearNode": "body_001",
+          "rearZ": 3.0607842987045186e-05,
+          "xy": [
+            -0.205,
+            0.058350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05492171732398513,
+          "rearNode": "body_001",
+          "rearZ": 2.594318398388827e-05,
+          "xy": [
+            -0.205,
+            0.05765
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05488648812334967,
+          "rearNode": "body_001",
+          "rearZ": 2.4962012861284617e-05,
+          "xy": [
+            -0.205,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054891984311693884,
+          "rearNode": "body_001",
+          "rearZ": 2.5860146292291655e-05,
+          "xy": [
+            -0.20465,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05488099193500544,
+          "rearNode": "body_001",
+          "rearZ": 2.4063879430277576e-05,
+          "xy": [
+            -0.20534999999999998,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05489871367905386,
+          "rearNode": "body_001",
+          "rearZ": 2.8351767389393024e-05,
+          "xy": [
+            -0.205,
+            0.12335
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05487426256764547,
+          "rearNode": "body_001",
+          "rearZ": 2.1572258333176217e-05,
+          "xy": [
+            -0.205,
+            0.12265
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05495211197354069,
+          "rearNode": "body_001",
+          "rearZ": 8.329693983220986e-05,
+          "xy": [
+            0.195,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054945950098398366,
+          "rearNode": "body_001",
+          "rearZ": 8.569808239910348e-05,
+          "xy": [
+            0.19535,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05496117796015422,
+          "rearNode": "body_001",
+          "rearZ": 8.089579726531623e-05,
+          "xy": [
+            0.19465000000000002,
+            0.017
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05495550055277914,
+          "rearNode": "body_001",
+          "rearZ": 9.256346048811894e-05,
+          "xy": [
+            0.195,
+            0.01735
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054948723394302235,
+          "rearNode": "body_001",
+          "rearZ": 7.403041917630079e-05,
+          "xy": [
+            0.195,
+            0.01665
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493705954021508,
+          "rearNode": "body_001",
+          "rearZ": 3.588111621609676e-05,
+          "xy": [
+            0.195,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054944087765721336,
+          "rearNode": "body_001",
+          "rearZ": 3.937474910299496e-05,
+          "xy": [
+            0.19535,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493003131470882,
+          "rearNode": "body_001",
+          "rearZ": 3.238748332919855e-05,
+          "xy": [
+            0.19465000000000002,
+            0.058
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493974134533637,
+          "rearNode": "body_001",
+          "rearZ": 3.2387450792252465e-05,
+          "xy": [
+            0.195,
+            0.058350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05493437773509377,
+          "rearNode": "body_001",
+          "rearZ": 3.7752820584839296e-05,
+          "xy": [
+            0.195,
+            0.05765
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05487140587696736,
+          "rearNode": "body_001",
+          "rearZ": 2.2686235226722116e-05,
+          "xy": [
+            0.195,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05488007279250565,
+          "rearNode": "body_001",
+          "rearZ": 2.4856836205842255e-05,
+          "xy": [
+            0.19535,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054862738961429056,
+          "rearNode": "body_001",
+          "rearZ": 2.0515634247601978e-05,
+          "xy": [
+            0.19465000000000002,
+            0.123
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.05487140479041913,
+          "rearNode": "body_001",
+          "rearZ": 2.630389229455118e-05,
+          "xy": [
+            0.195,
+            0.12335
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.054871406963515584,
+          "rearNode": "body_001",
+          "rearZ": 1.906857815889306e-05,
+          "xy": [
+            0.195,
+            0.12265
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021999923268913934,
+          "rearNode": "body_001",
+          "rearZ": 5.7113382010858487e-05,
+          "xy": [
+            -0.068,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021999891023650568,
+          "rearNode": "body_001",
+          "rearZ": 3.2100852571288376e-05,
+          "xy": [
+            -0.06765,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02199993693685265,
+          "rearNode": "body_001",
+          "rearZ": 6.997514176402914e-05,
+          "xy": [
+            -0.06835000000000001,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021999928219012997,
+          "rearNode": "body_001",
+          "rearZ": 5.71138588129972e-05,
+          "xy": [
+            -0.068,
+            0.10735
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021999880981683945,
+          "rearNode": "body_001",
+          "rearZ": 5.711290520871978e-05,
+          "xy": [
+            -0.068,
+            0.10665
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021998579615384893,
+          "rearNode": "body_001",
+          "rearZ": 1.3902338958480972e-05,
+          "xy": [
+            0.067,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021998740966293236,
+          "rearNode": "body_001",
+          "rearZ": 1.54129890030054e-05,
+          "xy": [
+            0.06735000000000001,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021998418264476544,
+          "rearNode": "body_001",
+          "rearZ": 1.239168891395654e-05,
+          "xy": [
+            0.06665,
+            0.107
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.021998579615384886,
+          "rearNode": "body_001",
+          "rearZ": 1.4783754941194266e-05,
+          "xy": [
+            0.067,
+            0.10735
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02199857961538489,
+          "rearNode": "body_001",
+          "rearZ": 1.3020922975767675e-05,
+          "xy": [
+            0.067,
+            0.10665
+          ]
+        }
+      ]
+    },
+    "soill-training-tiles": {
+      "archiveAligned": true,
+      "boreCount": 20,
+      "contactCount": 20,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "6661d83206f6182943de5dc0e33bc425a58d7e97281977475268a14bd5f9fc8e",
+      "modelSHA256": "5e1b61195a560fc895ecd17956bef73303f73cda47c6b6b9e0467e2efebb0b7b",
+      "nodeCount": 23,
+      "rayCount": 100,
+      "rays": [
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_L_001",
+          "rearZ": 3.885023491951616e-07,
+          "xy": [
+            -0.14691,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_L_001",
+          "rearZ": 4.0341091892264777e-07,
+          "xy": [
+            -0.14656000000000002,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_L_001",
+          "rearZ": 3.7359377946767537e-07,
+          "xy": [
+            -0.14726,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_L_001",
+          "rearZ": 4.018094882806501e-07,
+          "xy": [
+            -0.14691,
+            0.01277
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_L_001",
+          "rearZ": 4.0693067369784626e-07,
+          "xy": [
+            -0.14691,
+            0.01207
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.022720823000927884,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0200843930359356e-06,
+          "xy": [
+            -0.05448,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.0226757626142517,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0632074538066308e-06,
+          "xy": [
+            -0.05413,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.022765883387604068,
+          "rearNode": "body_L_001",
+          "rearZ": 9.769613322652402e-07,
+          "xy": [
+            -0.054830000000000004,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.022734460635356685,
+          "rearNode": "body_L_001",
+          "rearZ": 1.005015925443043e-06,
+          "xy": [
+            -0.05448,
+            0.01456
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.022707185366499082,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0351528606288283e-06,
+          "xy": [
+            -0.05448,
+            0.01386
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.028676181822837397,
+          "rearNode": "body_L_001",
+          "rearZ": 1.9259211007542303e-07,
+          "xy": [
+            -0.25924,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.028721847412828967,
+          "rearNode": "body_L_001",
+          "rearZ": 1.77644734706644e-07,
+          "xy": [
+            -0.25889,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.028630516232845828,
+          "rearNode": "body_L_001",
+          "rearZ": 2.0367351248253805e-07,
+          "xy": [
+            -0.25959000000000004,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.02876601965024765,
+          "rearNode": "body_L_001",
+          "rearZ": 1.729769638356882e-07,
+          "xy": [
+            -0.25924,
+            0.02247
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.028586343995427144,
+          "rearNode": "body_L_001",
+          "rearZ": 2.1220725631515784e-07,
+          "xy": [
+            -0.25924,
+            0.02177
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.034576551768325726,
+          "rearNode": "body_L_001",
+          "rearZ": 2.393226873489135e-06,
+          "xy": [
+            -0.3592,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.034629110808947816,
+          "rearNode": "body_L_001",
+          "rearZ": 1.3113034056025646e-06,
+          "xy": [
+            -0.35885,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.03452399272770363,
+          "rearNode": "body_L_001",
+          "rearZ": 3.4751503413757065e-06,
+          "xy": [
+            -0.35955000000000004,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.03459099573524631,
+          "rearNode": "body_L_001",
+          "rearZ": 4.0386773809514216e-07,
+          "xy": [
+            -0.3592,
+            0.03245
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.034562107801405145,
+          "rearNode": "body_L_001",
+          "rearZ": 4.4534120656723185e-06,
+          "xy": [
+            -0.3592,
+            0.031749999999999994
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.024255224894178803,
+          "rearNode": "body_L_001",
+          "rearZ": 6.507488029832354e-07,
+          "xy": [
+            -0.16945,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.02426817407521948,
+          "rearNode": "body_L_001",
+          "rearZ": 6.994501422757812e-07,
+          "xy": [
+            -0.1691,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.024242275713138126,
+          "rearNode": "body_L_001",
+          "rearZ": 6.020474636906893e-07,
+          "xy": [
+            -0.16979999999999998,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.024198519661770813,
+          "rearNode": "body_L_001",
+          "rearZ": 6.806138852339831e-07,
+          "xy": [
+            -0.16945,
+            0.04621
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.024311930126586792,
+          "rearNode": "body_L_001",
+          "rearZ": 6.208837207324873e-07,
+          "xy": [
+            -0.16945,
+            0.045509999999999995
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.039986526249184126,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0000384421387506e-06,
+          "xy": [
+            -0.27866,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.04003762448887879,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0532358256439155e-06,
+          "xy": [
+            -0.27831,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.03993542800948946,
+          "rearNode": "body_L_001",
+          "rearZ": 9.468410586335857e-07,
+          "xy": [
+            -0.27901000000000004,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.040241037758486906,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0593607749554879e-06,
+          "xy": [
+            -0.27866,
+            0.09342
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.03973201473988134,
+          "rearNode": "body_L_001",
+          "rearZ": 9.407161093220134e-07,
+          "xy": [
+            -0.27866,
+            0.09272
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.016995969320675618,
+          "rearNode": "body_L_001",
+          "rearZ": 0.0001271362509181728,
+          "xy": [
+            -0.07941,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.017018706147033442,
+          "rearNode": "body_L_001",
+          "rearZ": 8.545040448334115e-05,
+          "xy": [
+            -0.07905999999999999,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.016971919602428172,
+          "rearNode": "body_L_001",
+          "rearZ": 0.00016882209735300432,
+          "xy": [
+            -0.07976,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.01708142804276787,
+          "rearNode": "body_L_001",
+          "rearZ": 9.791887012750436e-05,
+          "xy": [
+            -0.07941,
+            0.09404
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.016901445479284648,
+          "rearNode": "body_L_001",
+          "rearZ": 0.00015635363170884124,
+          "xy": [
+            -0.07941,
+            0.09333999999999999
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05504160561865154,
+          "rearNode": "body_L_001",
+          "rearZ": 8.449431525786374e-07,
+          "xy": [
+            -0.11405,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.055103686588179754,
+          "rearNode": "body_L_001",
+          "rearZ": 8.542585135577223e-07,
+          "xy": [
+            -0.1137,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05497952464912331,
+          "rearNode": "body_L_001",
+          "rearZ": 8.356277915995527e-07,
+          "xy": [
+            -0.1144,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05510454960872828,
+          "rearNode": "body_L_001",
+          "rearZ": 7.62543720673482e-07,
+          "xy": [
+            -0.11405,
+            0.13978
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05497866162857479,
+          "rearNode": "body_L_001",
+          "rearZ": 9.27342584483793e-07,
+          "xy": [
+            -0.11405,
+            0.13908
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_left_001",
+          "frontZ": 0.027219510733214686,
+          "rearNode": "body_L_001",
+          "rearZ": 4.400356910488163e-07,
+          "xy": [
+            -0.31982,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_left_001",
+          "frontZ": 0.026837387627535646,
+          "rearNode": "body_L_001",
+          "rearZ": 4.588867131676666e-07,
+          "xy": [
+            -0.31947,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_left_001",
+          "frontZ": 0.027601633838893726,
+          "rearNode": "body_L_001",
+          "rearZ": 4.211846689299659e-07,
+          "xy": [
+            -0.32017,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_left_001",
+          "frontZ": 0.02721840577173196,
+          "rearNode": "body_L_001",
+          "rearZ": 4.5410311971736216e-07,
+          "xy": [
+            -0.31982,
+            0.14526999999999998
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_left_001",
+          "frontZ": 0.027220615694697414,
+          "rearNode": "body_L_001",
+          "rearZ": 4.2596826238027024e-07,
+          "xy": [
+            -0.31982,
+            0.14457
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05093959944151241,
+          "rearNode": "body_L_001",
+          "rearZ": 9.84701130839426e-07,
+          "xy": [
+            -0.23259,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.04838145598369475,
+          "rearNode": "body_L_001",
+          "rearZ": 1.0350022968755594e-06,
+          "xy": [
+            -0.23224,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.0531875390233816,
+          "rearNode": "body_L_001",
+          "rearZ": 9.343999648032924e-07,
+          "xy": [
+            -0.23293999999999998,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05085846860256239,
+          "rearNode": "body_L_001",
+          "rearZ": 9.802744846368986e-07,
+          "xy": [
+            -0.23259,
+            0.15378999999999998
+          ]
+        },
+        {
+          "frontNode": "body_L_001",
+          "frontZ": 0.05102073028046245,
+          "rearNode": "body_L_001",
+          "rearZ": 9.891277770419534e-07,
+          "xy": [
+            -0.23259,
+            0.15309
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_R_001",
+          "rearZ": 7.521765909901964e-07,
+          "xy": [
+            0.14691,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.02309530725545097,
+          "rearNode": "body_R_001",
+          "rearZ": 6.89959415088106e-07,
+          "xy": [
+            0.14726,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_R_001",
+          "rearZ": 8.143937668922866e-07,
+          "xy": [
+            0.14656000000000002,
+            0.01242
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.023164731704380926,
+          "rearNode": "body_R_001",
+          "rearZ": 7.785462763458974e-07,
+          "xy": [
+            0.14691,
+            0.01277
+          ]
+        },
+        {
+          "frontNode": "mounting_hardware_omission_caps_001",
+          "frontZ": 0.07625000178813934,
+          "rearNode": "body_R_001",
+          "rearZ": 7.258069056344953e-07,
+          "xy": [
+            0.14691,
+            0.01207
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.022537625546211637,
+          "rearNode": "body_R_001",
+          "rearZ": 1.1959841731932365e-06,
+          "xy": [
+            0.05448,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.0225874387415158,
+          "rearNode": "body_R_001",
+          "rearZ": 1.2041218080059516e-06,
+          "xy": [
+            0.054830000000000004,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.022487812350907473,
+          "rearNode": "body_R_001",
+          "rearZ": 1.1878465383805214e-06,
+          "xy": [
+            0.05413,
+            0.01421
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.022565315376269844,
+          "rearNode": "body_R_001",
+          "rearZ": 1.1760402662504884e-06,
+          "xy": [
+            0.05448,
+            0.01456
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.022509935716153437,
+          "rearNode": "body_R_001",
+          "rearZ": 1.2159280801359847e-06,
+          "xy": [
+            0.05448,
+            0.01386
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.028676181822837397,
+          "rearNode": "body_R_001",
+          "rearZ": 9.784588980848021e-08,
+          "xy": [
+            0.25924,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.028630516232845828,
+          "rearNode": "body_R_001",
+          "rearZ": 1.0599980019777618e-07,
+          "xy": [
+            0.25959000000000004,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.028721847412828964,
+          "rearNode": "body_R_001",
+          "rearZ": 9.268623475369636e-08,
+          "xy": [
+            0.25889,
+            0.02212
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.028766019650247648,
+          "rearNode": "body_R_001",
+          "rearZ": 1.5108314515751202e-07,
+          "xy": [
+            0.25924,
+            0.02247
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.028586343995427144,
+          "rearNode": "body_R_001",
+          "rearZ": 1.0455043330007462e-07,
+          "xy": [
+            0.25924,
+            0.02177
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.03457655176832572,
+          "rearNode": "body_R_001",
+          "rearZ": 3.7711065774302447e-06,
+          "xy": [
+            0.3592,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.03452399272770362,
+          "rearNode": "body_R_001",
+          "rearZ": 4.747539195920875e-06,
+          "xy": [
+            0.35955000000000004,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.034629110808947816,
+          "rearNode": "body_R_001",
+          "rearZ": 2.7946739589396165e-06,
+          "xy": [
+            0.35885,
+            0.0321
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.03459099573524631,
+          "rearNode": "body_R_001",
+          "rearZ": 1.7125302699918412e-06,
+          "xy": [
+            0.3592,
+            0.03245
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.034562107801405145,
+          "rearNode": "body_R_001",
+          "rearZ": 5.829682884868648e-06,
+          "xy": [
+            0.3592,
+            0.031749999999999994
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.024255224894178806,
+          "rearNode": "body_R_001",
+          "rearZ": 7.018657929028783e-07,
+          "xy": [
+            0.16945,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.024242275713138126,
+          "rearNode": "body_R_001",
+          "rearZ": 7.0810064192443e-07,
+          "xy": [
+            0.16979999999999998,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.02426817407521948,
+          "rearNode": "body_R_001",
+          "rearZ": 6.596065599207001e-07,
+          "xy": [
+            0.1691,
+            0.04586
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.024198519661770813,
+          "rearNode": "body_R_001",
+          "rearZ": 7.360300739284916e-07,
+          "xy": [
+            0.16945,
+            0.04621
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.024311930126586796,
+          "rearNode": "body_R_001",
+          "rearZ": 6.67701511877265e-07,
+          "xy": [
+            0.16945,
+            0.045509999999999995
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.039986526249184126,
+          "rearNode": "body_R_001",
+          "rearZ": 6.494061712149283e-07,
+          "xy": [
+            0.27866,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.03993542800948946,
+          "rearNode": "body_R_001",
+          "rearZ": 5.910958396626872e-07,
+          "xy": [
+            0.27901000000000004,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.04003762448887879,
+          "rearNode": "body_R_001",
+          "rearZ": 7.077165027671689e-07,
+          "xy": [
+            0.27831,
+            0.09307
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.040241037758486906,
+          "rearNode": "body_R_001",
+          "rearZ": 7.324028980255442e-07,
+          "xy": [
+            0.27866,
+            0.09342
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.03973201473988135,
+          "rearNode": "body_R_001",
+          "rearZ": 5.664094444043122e-07,
+          "xy": [
+            0.27866,
+            0.09272
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.016995969320675618,
+          "rearNode": "body_R_001",
+          "rearZ": 1.4583570631055129e-06,
+          "xy": [
+            0.07941,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.01697104082979627,
+          "rearNode": "body_R_001",
+          "rearZ": 3.1691277512296155e-05,
+          "xy": [
+            0.07976,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.017018706147033442,
+          "rearNode": "body_R_001",
+          "rearZ": 1.4498781812721803e-06,
+          "xy": [
+            0.07905999999999999,
+            0.09369
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.01708142804276787,
+          "rearNode": "body_R_001",
+          "rearZ": 1.439912023186247e-06,
+          "xy": [
+            0.07941,
+            0.09404
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.016895377821461752,
+          "rearNode": "body_R_001",
+          "rearZ": 3.5364538089569845e-05,
+          "xy": [
+            0.07941,
+            0.09333999999999999
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05504160561865154,
+          "rearNode": "body_R_001",
+          "rearZ": 4.366348382459032e-07,
+          "xy": [
+            0.11405,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05497952464912331,
+          "rearNode": "body_R_001",
+          "rearZ": 4.6013990420747623e-07,
+          "xy": [
+            0.1144,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.055103686588179754,
+          "rearNode": "body_R_001",
+          "rearZ": 4.1312977228433023e-07,
+          "xy": [
+            0.1137,
+            0.13943
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05510454960872828,
+          "rearNode": "body_R_001",
+          "rearZ": 4.3034084381959857e-07,
+          "xy": [
+            0.11405,
+            0.13978
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05497866162857479,
+          "rearNode": "body_R_001",
+          "rearZ": 4.4292883267220784e-07,
+          "xy": [
+            0.11405,
+            0.13908
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_right_001",
+          "frontZ": 0.02721951073321469,
+          "rearNode": "body_R_001",
+          "rearZ": 6.276568352484468e-07,
+          "xy": [
+            0.31982,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_right_001",
+          "frontZ": 0.027601633838893722,
+          "rearNode": "body_R_001",
+          "rearZ": 6.444580777224579e-07,
+          "xy": [
+            0.32017,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_right_001",
+          "frontZ": 0.02683738762753565,
+          "rearNode": "body_R_001",
+          "rearZ": 6.108555927744357e-07,
+          "xy": [
+            0.31947,
+            0.14492
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_right_001",
+          "frontZ": 0.02721840577173196,
+          "rearNode": "body_R_001",
+          "rearZ": 6.17549402102136e-07,
+          "xy": [
+            0.31982,
+            0.14526999999999998
+          ]
+        },
+        {
+          "frontNode": "top_pocket_inner_right_001",
+          "frontZ": 0.027220615694697414,
+          "rearNode": "body_R_001",
+          "rearZ": 6.377642683947572e-07,
+          "xy": [
+            0.31982,
+            0.14457
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05093959944151241,
+          "rearNode": "body_R_001",
+          "rearZ": 1.2415720043185625e-06,
+          "xy": [
+            0.23259,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05318753902338161,
+          "rearNode": "body_R_001",
+          "rearZ": 1.2261076323007926e-06,
+          "xy": [
+            0.23293999999999998,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.04838145598369474,
+          "rearNode": "body_R_001",
+          "rearZ": 1.2570363763363325e-06,
+          "xy": [
+            0.23224,
+            0.15344
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05085846860256239,
+          "rearNode": "body_R_001",
+          "rearZ": 1.3197270917007639e-06,
+          "xy": [
+            0.23259,
+            0.15378999999999998
+          ]
+        },
+        {
+          "frontNode": "body_R_001",
+          "frontZ": 0.05102073028046245,
+          "rearNode": "body_R_001",
+          "rearZ": 1.1634169169363612e-06,
+          "xy": [
+            0.23259,
+            0.15309
+          ]
+        }
+      ]
+    },
+    "target10a-linebreaker-base": {
+      "archiveAligned": true,
+      "boreCount": 6,
+      "contactCount": 23,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "05a6aecf8ba9aba75aa2686ac9648ce92b12301fa6ba0007554296bcd4fe9f47",
+      "modelSHA256": "dd0f0c629ef7a9dd5672e4ea76186f9c676376c08ed0f6d157f2272eafb0bf75",
+      "nodeCount": 24,
+      "rayCount": 30,
+      "rays": [
+        {
+          "frontNode": "hold_lower_inner_two_finger_left_001",
+          "frontZ": 0.004942208986933454,
+          "rearNode": "body_001",
+          "rearZ": 0.00015763982476135738,
+          "xy": [
+            -0.201,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_left_001",
+          "frontZ": 0.0049364921884016266,
+          "rearNode": "body_001",
+          "rearZ": 0.0001516862634547245,
+          "xy": [
+            -0.20065000000000002,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_left_001",
+          "frontZ": 0.004947925785465281,
+          "rearNode": "body_001",
+          "rearZ": 0.00016359338606799026,
+          "xy": [
+            -0.20135,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_left_001",
+          "frontZ": 0.004932630101301634,
+          "rearNode": "body_001",
+          "rearZ": 0.00014655574721595364,
+          "xy": [
+            -0.201,
+            0.02635
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_left_001",
+          "frontZ": 0.004951787872565273,
+          "rearNode": "body_001",
+          "rearZ": 0.00016872390230676115,
+          "xy": [
+            -0.201,
+            0.02565
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_right_001",
+          "frontZ": 0.004872434524631291,
+          "rearNode": "body_001",
+          "rearZ": 4.402728205568794e-05,
+          "xy": [
+            0.201,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_right_001",
+          "frontZ": 0.004874253863075573,
+          "rearNode": "body_001",
+          "rearZ": 4.4628814696846694e-05,
+          "xy": [
+            0.20135,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_right_001",
+          "frontZ": 0.004870615186187009,
+          "rearNode": "body_001",
+          "rearZ": 4.342574941452919e-05,
+          "xy": [
+            0.20065000000000002,
+            0.026
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_right_001",
+          "frontZ": 0.0048852312627807384,
+          "rearNode": "body_001",
+          "rearZ": 3.31313608264362e-05,
+          "xy": [
+            0.201,
+            0.02635
+          ]
+        },
+        {
+          "frontNode": "hold_lower_inner_two_finger_right_001",
+          "frontZ": 0.004859637786481843,
+          "rearNode": "body_001",
+          "rearZ": 6.195078347061624e-05,
+          "xy": [
+            0.201,
+            0.02565
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_left_001",
+          "frontZ": 0.01799980493669966,
+          "rearNode": "body_001",
+          "rearZ": 0.0001727596045033479,
+          "xy": [
+            -0.233,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_left_001",
+          "frontZ": 0.01799982148561352,
+          "rearNode": "body_001",
+          "rearZ": 0.0001728576533128374,
+          "xy": [
+            -0.23265000000000002,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_left_001",
+          "frontZ": 0.0179997883877858,
+          "rearNode": "body_001",
+          "rearZ": 0.0001726615556938584,
+          "xy": [
+            -0.23335,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_left_001",
+          "frontZ": 0.01799980769485197,
+          "rearNode": "body_001",
+          "rearZ": 0.0001818109232392515,
+          "xy": [
+            -0.233,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_left_001",
+          "frontZ": 0.017999802178547353,
+          "rearNode": "body_001",
+          "rearZ": 0.00016370828576744428,
+          "xy": [
+            -0.233,
+            0.11565
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_left_001",
+          "frontZ": 0.00999983415907273,
+          "rearNode": "body_001",
+          "rearZ": 7.89948499654516e-05,
+          "xy": [
+            -0.04,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_left_001",
+          "frontZ": 0.00999985069948896,
+          "rearNode": "body_001",
+          "rearZ": 8.411831810357438e-05,
+          "xy": [
+            -0.03965,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_left_001",
+          "frontZ": 0.009999813264941817,
+          "rearNode": "body_001",
+          "rearZ": 7.387138182732884e-05,
+          "xy": [
+            -0.040350000000000004,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_left_001",
+          "frontZ": 0.009999821919151566,
+          "rearNode": "body_001",
+          "rearZ": 8.924184588681777e-05,
+          "xy": [
+            -0.04,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_left_001",
+          "frontZ": 0.009999846398993897,
+          "rearNode": "body_001",
+          "rearZ": 6.874785404408545e-05,
+          "xy": [
+            -0.04,
+            0.11565
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_right_001",
+          "frontZ": 0.009999682849276579,
+          "rearNode": "body_001",
+          "rearZ": 3.17153711769987e-05,
+          "xy": [
+            0.04,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_right_001",
+          "frontZ": 0.009999684776850636,
+          "rearNode": "body_001",
+          "rearZ": 2.862673853354398e-05,
+          "xy": [
+            0.040350000000000004,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_right_001",
+          "frontZ": 0.009999680921702527,
+          "rearNode": "body_001",
+          "rearZ": 3.480400382045343e-05,
+          "xy": [
+            0.03965,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_right_001",
+          "frontZ": 0.009999695354972669,
+          "rearNode": "body_001",
+          "rearZ": 3.336996911220813e-05,
+          "xy": [
+            0.04,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "hold_upper_three_finger_right_001",
+          "frontZ": 0.009999670343580494,
+          "rearNode": "body_001",
+          "rearZ": 2.862674812190811e-05,
+          "xy": [
+            0.04,
+            0.11565
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_right_001",
+          "frontZ": 0.017999897710984838,
+          "rearNode": "body_001",
+          "rearZ": 4.8309339573921114e-05,
+          "xy": [
+            0.233,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_right_001",
+          "frontZ": 0.017999896081165135,
+          "rearNode": "body_001",
+          "rearZ": 4.798007188493946e-05,
+          "xy": [
+            0.23335,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_right_001",
+          "frontZ": 0.017999899340804544,
+          "rearNode": "body_001",
+          "rearZ": 4.8638607262902755e-05,
+          "xy": [
+            0.23265000000000002,
+            0.116
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_right_001",
+          "frontZ": 0.017999879783008182,
+          "rearNode": "body_001",
+          "rearZ": 6.938135780494966e-05,
+          "xy": [
+            0.233,
+            0.11635000000000001
+          ]
+        },
+        {
+          "frontNode": "hold_upper_four_finger_right_001",
+          "frontZ": 0.017999910138331528,
+          "rearNode": "body_001",
+          "rearZ": 3.443061375512011e-05,
+          "xy": [
+            0.233,
+            0.11565
+          ]
+        }
+      ]
+    },
+    "the-hangboard": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 15,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "1708b5952623838dbd67001769e5d2079bf3078f96f2bfd602a3006ba8be340d",
+      "modelSHA256": "7666ef014e2fd5be4af874d56caced26ba1202c8c18978f9fd8ff737ae23ff42",
+      "nodeCount": 16,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01700000092387198,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            -0.259,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            -0.25865,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851317e-18,
+          "xy": [
+            -0.25935,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.248157795127554e-18,
+          "xy": [
+            -0.259,
+            -0.04165
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.403589018575077e-18,
+          "xy": [
+            -0.259,
+            -0.042350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141832,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            -0.259,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.25865,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.01080000028014183,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            -0.25935,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            -0.259,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.030908857226677e-18,
+          "xy": [
+            -0.259,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02700000070035457,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851317e-18,
+          "xy": [
+            -0.031,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02700000070035457,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851314e-18,
+          "xy": [
+            -0.03065,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02700000070035457,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            -0.03135,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02700000070035457,
+          "rearNode": "body_001",
+          "rearZ": -9.248157795127555e-18,
+          "xy": [
+            -0.031,
+            -0.04165
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02700000070035457,
+          "rearNode": "body_001",
+          "rearZ": -9.403589018575079e-18,
+          "xy": [
+            -0.031,
+            -0.042350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02580000087618828,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            -0.031,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.025800000876188278,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            -0.03065,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02580000087618828,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            -0.03135,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.025800000876188278,
+          "rearNode": "body_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            -0.031,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02580000087618828,
+          "rearNode": "body_001",
+          "rearZ": 3.0309088572266775e-18,
+          "xy": [
+            -0.031,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851317e-18,
+          "xy": [
+            0.031,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            0.03135,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            0.03065,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871987,
+          "rearNode": "body_001",
+          "rearZ": -9.248157795127554e-18,
+          "xy": [
+            0.031,
+            -0.04165
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.017000000923871984,
+          "rearNode": "body_001",
+          "rearZ": -9.403589018575077e-18,
+          "xy": [
+            0.031,
+            -0.042350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141832,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504388e-18,
+          "xy": [
+            0.031,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            0.03135,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141832,
+          "rearNode": "body_001",
+          "rearZ": 3.108624468950438e-18,
+          "xy": [
+            0.03065,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.1863400806741996e-18,
+          "xy": [
+            0.031,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.010800000280141834,
+          "rearNode": "body_001",
+          "rearZ": 3.030908857226677e-18,
+          "xy": [
+            0.031,
+            0.01365
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.027000000700354566,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            0.259,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.027000000700354566,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851316e-18,
+          "xy": [
+            0.25935,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.027000000700354566,
+          "rearNode": "body_001",
+          "rearZ": -9.325873406851317e-18,
+          "xy": [
+            0.25865,
+            -0.042
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.027000000700354566,
+          "rearNode": "body_001",
+          "rearZ": -9.248157795127554e-18,
+          "xy": [
+            0.259,
+            -0.04165
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.027000000700354562,
+          "rearNode": "body_001",
+          "rearZ": -9.403589018575077e-18,
+          "xy": [
+            0.259,
+            -0.042350000000000006
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02580000087618828,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.259,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.025800000876188278,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.25935,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.02580000087618828,
+          "rearNode": "body_001",
+          "rearZ": 3.1086244689504384e-18,
+          "xy": [
+            0.25865,
+            0.014
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.025800000876188278,
+          "rearNode": "body_001",
+          "rearZ": 3.1863400806741993e-18,
+          "xy": [
+            0.259,
+            0.01435
+          ]
+        },
+        {
+          "frontNode": "body_001",
+          "frontZ": 0.025800000876188285,
+          "rearNode": "body_001",
+          "rearZ": 3.030908857226678e-18,
+          "xy": [
+            0.259,
+            0.01365
+          ]
+        }
+      ]
+    },
+    "trango-rock-prodigy-training-center": {
+      "archiveAligned": true,
+      "boreCount": 8,
+      "contactCount": 24,
+      "descriptorMatchesReopenedUSDZ": true,
+      "descriptorSHA256": "5aac6d73f0ecea11a311645fa5eb779da327a50336c1c4ad32302effd60fe7ae",
+      "modelSHA256": "05830a75724af20aa9d21765263ec71c8ac35365cb6810e11bdf1584995d1cf1",
+      "nodeCount": 26,
+      "rayCount": 40,
+      "rays": [
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3261414189003064e-17,
+          "xy": [
+            -0.2520144,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.05000000074505807,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3261414189003064e-17,
+          "xy": [
+            -0.2516644,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.05000000074505807,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3261414189003063e-17,
+          "xy": [
+            -0.25236440000000004,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3339129800726826e-17,
+          "xy": [
+            -0.2520144,
+            0.060074100000000005
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.05000000074505807,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3183698577279304e-17,
+          "xy": [
+            -0.2520144,
+            0.0593741
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_left_001",
+          "rearZ": -1.3778089780203118e-17,
+          "xy": [
+            -0.1656724,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_left_001",
+          "rearZ": -1.377808978020312e-17,
+          "xy": [
+            -0.1653224,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_left_001",
+          "rearZ": -1.3778089780203117e-17,
+          "xy": [
+            -0.1660224,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_left_001",
+          "rearZ": -1.3700374168479356e-17,
+          "xy": [
+            -0.1656724,
+            -0.061701
+          ]
+        },
+        {
+          "frontNode": "body_left_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_left_001",
+          "rearZ": -1.3855805391926881e-17,
+          "xy": [
+            -0.1656724,
+            -0.062401000000000005
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.028179789082130646,
+          "rearNode": "body_left_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            -0.2062156,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.028149659315780794,
+          "rearNode": "body_left_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            -0.2058656,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.02820991653362158,
+          "rearNode": "body_left_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            -0.2065656,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.028177396069928626,
+          "rearNode": "body_left_001",
+          "rearZ": 1.2133538618286366e-17,
+          "xy": [
+            -0.2062156,
+            0.0546446
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.02818218209433266,
+          "rearNode": "body_left_001",
+          "rearZ": 1.1978107394838843e-17,
+          "xy": [
+            -0.2062156,
+            0.053944599999999995
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.019078728161066892,
+          "rearNode": "body_left_001",
+          "rearZ": 1.377808978020312e-17,
+          "xy": [
+            -0.1011036,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.019048599978957803,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3778089780203117e-17,
+          "xy": [
+            -0.1007536,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.019108855339695995,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3778089780203118e-17,
+          "xy": [
+            -0.1014536,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.01907633529702983,
+          "rearNode": "body_left_001",
+          "rearZ": 1.385580539192688e-17,
+          "xy": [
+            -0.1011036,
+            0.062401000000000005
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_left_001",
+          "frontZ": 0.019081121025103953,
+          "rearNode": "body_left_001",
+          "rearZ": 1.3700374168479356e-17,
+          "xy": [
+            -0.1011036,
+            0.061701
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3261414189003063e-17,
+          "xy": [
+            0.2520144,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3261414189003063e-17,
+          "xy": [
+            0.25236440000000004,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3261414189003063e-17,
+          "xy": [
+            0.2516644,
+            0.0597241
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3339129800726824e-17,
+          "xy": [
+            0.2520144,
+            0.060074100000000005
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.050000000745058074,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3183698577279301e-17,
+          "xy": [
+            0.2520144,
+            0.0593741
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_right_001",
+          "rearZ": -1.377808978020312e-17,
+          "xy": [
+            0.1656724,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_right_001",
+          "rearZ": -1.3778089780203117e-17,
+          "xy": [
+            0.1660224,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_right_001",
+          "rearZ": -1.3778089780203118e-17,
+          "xy": [
+            0.1653224,
+            -0.062051
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_right_001",
+          "rearZ": -1.3700374168479356e-17,
+          "xy": [
+            0.1656724,
+            -0.061701
+          ]
+        },
+        {
+          "frontNode": "body_right_001",
+          "frontZ": 0.04100000113248824,
+          "rearNode": "body_right_001",
+          "rearZ": -1.3855805391926881e-17,
+          "xy": [
+            0.1656724,
+            -0.062401000000000005
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.028179789082112924,
+          "rearNode": "body_right_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            0.2062156,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.02820991614841389,
+          "rearNode": "body_right_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            0.2065656,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.028149659701006323,
+          "rearNode": "body_right_001",
+          "rearZ": 1.2055823006562605e-17,
+          "xy": [
+            0.2058656,
+            0.0542946
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.028177396069910904,
+          "rearNode": "body_right_001",
+          "rearZ": 1.2133538618286366e-17,
+          "xy": [
+            0.2062156,
+            0.0546446
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.028182182094314945,
+          "rearNode": "body_right_001",
+          "rearZ": 1.1978107394838843e-17,
+          "xy": [
+            0.2062156,
+            0.053944599999999995
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.019078728161089954,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3778089780203117e-17,
+          "xy": [
+            0.1011036,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.019108855339695995,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3778089780203118e-17,
+          "xy": [
+            0.1014536,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.019048599978957803,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3778089780203117e-17,
+          "xy": [
+            0.1007536,
+            0.062051
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.01907633529705289,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3855805391926881e-17,
+          "xy": [
+            0.1011036,
+            0.062401000000000005
+          ]
+        },
+        {
+          "frontNode": "upper_variable_rail_right_001",
+          "frontZ": 0.019081121025127018,
+          "rearNode": "body_right_001",
+          "rearZ": 1.3700374168479356e-17,
+          "xy": [
+            0.1011036,
+            0.061701
+          ]
+        }
+      ]
+    }
+  },
+  "modelsAudited": 40,
+  "modelsRepaired": 13,
+  "scope": {
+    "beastmaker-2000": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 22618
+    },
+    "lattice-triple-rung": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 2011
+    },
+    "metolius-climbers-edge": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 71137
+    },
+    "metolius-contact": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 147387
+    },
+    "metolius-prime-rib": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 8673
+    },
+    "metolius-project": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 124006
+    },
+    "metolius-simulator-3d": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 511527
+    },
+    "metolius-wood-grips-deluxe-ii": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 63343
+    },
+    "moon-armstrong": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 44538
+    },
+    "soill-training-tiles": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 373277
+    },
+    "target10a-linebreaker-base": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 45138
+    },
+    "the-hangboard": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 76600
+    },
+    "trango-rock-prodigy-training-center": {
+      "contactBindingsUnchanged": true,
+      "identicalEmbeddedImages": 1,
+      "retainedTriangles": 127242
+    }
+  },
+  "unchangedModels": [
+    "beastmaker-1000",
+    "captain-fingerfood-dual",
+    "captain-fingerfood-pocket",
+    "captain-fingerfood-unlevel",
+    "clavellium-training-block",
+    "crimptonite-helium-mobile",
+    "dewoodstok-woodbord",
+    "escape-beta-22",
+    "escape-unlimited",
+    "evolv-kilter-basic-long",
+    "j-bryant-ftg-32",
+    "lattice-mxedge-lift-large",
+    "lattice-mxedge-lift-small",
+    "mammut-diamond-finger",
+    "metolius-foundry",
+    "metolius-light-rail-2",
+    "metolius-rock-rings-3d",
+    "metolius-wood-grips-compact-ii",
+    "nature-stoak-board-iii",
+    "nature-stone-hanger",
+    "owl-climb-poker",
+    "soill-iron-palm-2",
+    "soill-split-palm",
+    "tension-flash-board",
+    "trango-rock-prodigy-pivot",
+    "yy-baguette-evo",
+    "yy-penta-evo"
+  ]
+}

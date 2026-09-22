@@ -28,20 +28,20 @@ MOUNTING_CAP_CENTERS_METERS = (
     (-0.258, 0.014), (-0.030, 0.014), (0.030, 0.014), (0.258, 0.014),
     (-0.258, -0.042), (-0.030, -0.042), (0.030, -0.042), (0.258, -0.042),
 )
-EXPECTED_CAP_NODE_ID = "mounting_hardware_omission_caps_001"
+EXPECTED_BODY_NODE_ID = "body_001"
 
 
 def require_hardware_free_results(results: Sequence[Mapping[str, object]]) -> None:
-    """Require every reviewed hardware location to resolve to the body cap."""
+    """Require every reviewed hardware location to resolve to the repaired body surface."""
     if len(results) != len(MOUNTING_CAP_CENTERS_METERS):
         raise ValueError("expected exactly eight mounting-cap ray results")
     if {(item.get("x"), item.get("z")) for item in results} != set(MOUNTING_CAP_CENTERS_METERS):
         raise ValueError("mounting-cap ray results do not match reviewed centers")
     for result in results:
         if result.get("intersects") is not True:
-            raise ValueError("a shipped USDZ mounting-hardware cover is missing")
-        if result.get("nodeID") != EXPECTED_CAP_NODE_ID:
-            raise ValueError("a shipped USDZ mounting-hardware ray did not hit the cap node")
+            raise ValueError("a shipped USDZ mounting-repaired body surface is missing")
+        if result.get("nodeID") != EXPECTED_BODY_NODE_ID:
+            raise ValueError("a shipped USDZ mounting-hardware ray did not hit the body surface")
 
 
 def verify_shipped_package(package_root: Path) -> dict[str, object]:

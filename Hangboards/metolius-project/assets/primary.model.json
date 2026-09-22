@@ -1,110 +1,4 @@
 {
-  "coordinateFrame": "hang-ten-board-v1",
-  "modelBounds": {
-    "max": [
-      0.311150014,
-      0.152400002,
-      0.075999998
-    ],
-    "min": [
-      -0.311150014,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "ce6538bea4ffe8cb9251156fad728dd14d6b1d731f0c39d00edd505354c9bb92",
-  "nodes": [
-    {
-      "nodeID": "edge_10_center_partition_mesh_001",
-      "role": "contact",
-      "contactID": "edge-10-center"
-    },
-    {
-      "nodeID": "edge_4_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "edge-4-left"
-    },
-    {
-      "nodeID": "edge_4_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "edge-4-right"
-    },
-    {
-      "nodeID": "edge_9_center_partition_mesh_001",
-      "role": "contact",
-      "contactID": "edge-9-center"
-    },
-    {
-      "nodeID": "flat_sloper_2_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "flat-sloper-2-left"
-    },
-    {
-      "nodeID": "flat_sloper_2_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "flat-sloper-2-right"
-    },
-    {
-      "nodeID": "jug_1_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "jug-1-left"
-    },
-    {
-      "nodeID": "jug_1_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "jug-1-right"
-    },
-    {
-      "nodeID": "pocket_3_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-3-left"
-    },
-    {
-      "nodeID": "pocket_3_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-3-right"
-    },
-    {
-      "nodeID": "pocket_5_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-5-left"
-    },
-    {
-      "nodeID": "pocket_5_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-5-right"
-    },
-    {
-      "nodeID": "pocket_6_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-6-left"
-    },
-    {
-      "nodeID": "pocket_6_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-6-right"
-    },
-    {
-      "nodeID": "pocket_7_left_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-7-left"
-    },
-    {
-      "nodeID": "pocket_7_right_partition_mesh_001",
-      "role": "contact",
-      "contactID": "pocket-7-right"
-    },
-    {
-      "nodeID": "project_body_partition_mesh_001",
-      "role": "body"
-    },
-    {
-      "nodeID": "round_sloper_8_center_partition_mesh_001",
-      "role": "contact",
-      "contactID": "round-sloper-8-center"
-    }
-  ],
-  "schemaVersion": 1,
   "contacts": {
     "edge-10-center": {
       "center": [
@@ -429,5 +323,111 @@
         "round_sloper_8_center_partition_mesh_001"
       ]
     }
-  }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.311150014,
+      0.152400002,
+      0.075999998
+    ],
+    "min": [
+      -0.311150014,
+      -0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "aa5dbc42663aa69a7c971c10a7031b22bf311148b439d5106607751b07a7a1c6",
+  "nodes": [
+    {
+      "contactID": "edge-10-center",
+      "nodeID": "edge_10_center_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-4-left",
+      "nodeID": "edge_4_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-4-right",
+      "nodeID": "edge_4_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-9-center",
+      "nodeID": "edge_9_center_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "flat-sloper-2-left",
+      "nodeID": "flat_sloper_2_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "flat-sloper-2-right",
+      "nodeID": "flat_sloper_2_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-1-left",
+      "nodeID": "jug_1_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-1-right",
+      "nodeID": "jug_1_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-3-left",
+      "nodeID": "pocket_3_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-3-right",
+      "nodeID": "pocket_3_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-5-left",
+      "nodeID": "pocket_5_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-5-right",
+      "nodeID": "pocket_5_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-6-left",
+      "nodeID": "pocket_6_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-6-right",
+      "nodeID": "pocket_6_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-7-left",
+      "nodeID": "pocket_7_left_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "pocket-7-right",
+      "nodeID": "pocket_7_right_partition_mesh_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "project_body_partition_mesh_001",
+      "role": "body"
+    },
+    {
+      "contactID": "round-sloper-8-center",
+      "nodeID": "round_sloper_8_center_partition_mesh_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
 }
