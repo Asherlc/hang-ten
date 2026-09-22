@@ -1,0 +1,29 @@
+name: CAD source session
+on:
+  push:
+    branches: [feat/single-file-freecad-sources-20260922]
+    paths: [.github/workflows/cad-source-session.yml]
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          persist-credentials: false
+      - name: Capture model tooling and selected source inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .context/cad-source-session
+          git rev-parse HEAD > .context/cad-source-session/commit.txt
+          tar --exclude='*/node_modules' --exclude='*/.build' -czf .context/cad-source-session/source.tar.gz Tools/HangboardModels Tools/HangboardPackages scripts Hangboards AGENTS.md README.md .gitattributes .gitignore .codex/skills/migrate-hangboard-to-3d docs/source-audits/2026-09-22-model-simplification-pilot.md docs/source-audits/2026-09-22-model-simplification-verification.json docs/source-audits/2026-09-22-model-delivery-lock.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cad-source-session-inputs
+          path: .context/cad-source-session/
+          retention-days: 7
+          if-no-files-found: error
