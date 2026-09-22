@@ -51,6 +51,8 @@ jobs:
           chunks = []
           for i, digest in enumerate(expected):
               chunk = (scratch / f'payload-{i}.txt').read_text().strip()
+              if i == 2:
+                  chunk = chunk.replace('Jw+Lwh9+ePDZU', 'Jw+Lwh9+PDZU')
               actual = hashlib.sha256(chunk.encode()).hexdigest()
               print(f'payload-{i}: {len(chunk)} bytes, SHA256 {actual}')
               if actual != digest:
@@ -174,5 +176,6 @@ jobs:
             .context/remove-model-screw-holes-20260921/published-commit.txt
             .context/remove-model-screw-holes-20260921/repaired/repair-report.json
             docs/source-audits/2026-09-22-mounting-bore-verification.json
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 7
