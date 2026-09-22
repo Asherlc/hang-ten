@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import importlib
+import hashlib
+import json
 import unittest
 
 
@@ -94,6 +96,49 @@ class ContactModelDescriptorTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(ValueError, "unknown key"):
             module.ModelDescriptorV1.from_json(legacy)
+
+    def test_reusable_descriptor_v2_uses_generic_slots(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_reusable_descriptor(
+            b"unit-usdz",
+            (
+                module.SlotNodeBinding("unit-body", "body"),
+                module.SlotNodeBinding("unit-edge", "contact", "edge"),
+            ),
+            {"unit-body": ((0.0, 0.0, 0.0),), "unit-edge": ((0.2, 0.3, 0.0),)},
+            frozenset({"edge"}),
+        ).to_json()
+        self.assertEqual(descriptor["schemaVersion"], 2)
+        self.assertEqual(
+            descriptor["nodes"],
+            [
+                {"nodeID": "unit-body", "role": "body"},
+                {"nodeID": "unit-edge", "role": "contact", "contactSlotID": "edge"},
+            ],
+        )
+        self.assertEqual(set(descriptor["contactSlots"]), {"edge"})
+
+    def test_v1_descriptor_canonical_bytes_are_frozen(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_descriptor(
+            b"exact-usdz",
+            [
+                module.NodeBinding("Body", "body"),
+                module.NodeBinding("Contact", "contact", "edge-left"),
+            ],
+            {
+                "Body": [(0.0, 0.0, 0.0), (1.0, 1.0, 0.2)],
+                "Contact": [(0.1, 0.2, 0.2), (0.4, 0.5, 0.2)],
+            },
+            frozenset({"edge-left"}),
+        )
+        raw = json.dumps(
+            descriptor.to_json(), sort_keys=True, separators=(",", ":"), allow_nan=False
+        ).encode()
+        self.assertEqual(
+            hashlib.sha256(raw).hexdigest(),
+            "63b9ce74f1c8f86011d0396f6638ba987cf83393c39f8899f2bb88b201ae43e0",
+        )
 
 
 if __name__ == "__main__":

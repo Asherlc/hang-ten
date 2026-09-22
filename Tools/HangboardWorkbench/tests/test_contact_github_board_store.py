@@ -24,30 +24,30 @@ def _package_files(slug: str) -> dict[str, bytes]:
 
 
 def test_github_store_opens_and_saves_native_v3_contact_documents() -> None:
-    client = FakeGitHubClient({"main": _package_files("trango-rock-prodigy-pivot")})
+    client = FakeGitHubClient({"main": _package_files("lattice-mini-bar")})
     store = GitHubBoardStore(client)
     try:
         listings = store.discover_packages("token", "main")
         assert [(item.board_id, item.editor_available) for item in listings] == [
-            ("trango.rock-prodigy-pivot", True)
+            ("lattice.mini-bar", True)
         ]
         opened = store.open_presentation(
-            "token", "main", "trango.rock-prodigy-pivot", "orientation-1"
+            "token", "main", "lattice.mini-bar", "edge-10"
         )
-        document = board_package.editor_document(opened, "orientation-1")
+        document = board_package.editor_document(opened, "edge-10")
         document["contacts"][0]["name"] += " reviewed"
         document["regions"][0]["displayPath"] = "M 5 5 L 25 5 L 25 25 L 5 25 Z"
         document["regions"][0].pop("shapeConstraint", None)
 
         saved, commit = store.save_board_editor_document(
-            "token", "main", "trango.rock-prodigy-pivot", document
+            "token", "main", "lattice.mini-bar", document
         )
 
         assert commit
         assert saved.board["schemaVersion"] == 3
         stored = json.loads(
             client.file_bytes(
-                "main", "Hangboards/trango-rock-prodigy-pivot/board.json"
+                "main", "Hangboards/lattice-mini-bar/board.json"
             )
         )
         assert stored["contacts"][0]["name"].endswith(" reviewed")
@@ -71,8 +71,8 @@ def test_github_store_lists_models_as_read_only_without_compatibility() -> None:
 
 
 def test_github_store_rejects_schema_v2_catalog_entries() -> None:
-    files = _package_files("trango-rock-prodigy-pivot")
-    board_path = "Hangboards/trango-rock-prodigy-pivot/board.json"
+    files = _package_files("lattice-mini-bar")
+    board_path = "Hangboards/lattice-mini-bar/board.json"
     board = json.loads(files[board_path])
     board["schemaVersion"] = 2
     files[board_path] = (json.dumps(board) + "\n").encode()
@@ -85,13 +85,13 @@ def test_github_store_rejects_schema_v2_catalog_entries() -> None:
 
 
 def test_github_store_reports_conflict_instead_of_overwriting_newer_board() -> None:
-    client = FakeGitHubClient({"main": _package_files("trango-rock-prodigy-pivot")})
+    client = FakeGitHubClient({"main": _package_files("lattice-mini-bar")})
     store = GitHubBoardStore(client)
     try:
-        opened = store.open_package("token", "main", "trango.rock-prodigy-pivot")
+        opened = store.open_package("token", "main", "lattice.mini-bar")
         document = board_package.editor_document(opened)
         document["contacts"][0]["name"] += " reviewed"
-        board_path = "Hangboards/trango-rock-prodigy-pivot/board.json"
+        board_path = "Hangboards/lattice-mini-bar/board.json"
         concurrent = json.loads(client.file_bytes("main", board_path))
         concurrent["contacts"][0]["name"] += " concurrent"
         client.put_file(
@@ -101,27 +101,27 @@ def test_github_store_reports_conflict_instead_of_overwriting_newer_board() -> N
 
         with pytest.raises(board_package.BoardSaveConflictError, match="file changed"):
             store.save_board_editor_document(
-                "token", "main", "trango.rock-prodigy-pivot", document
+                "token", "main", "lattice.mini-bar", document
             )
     finally:
         store.close()
 
 
 def test_github_store_deletes_a_presentation_and_its_unshared_asset_atomically() -> None:
-    client = FakeGitHubClient({"main": _package_files("trango-rock-prodigy-pivot")})
+    client = FakeGitHubClient({"main": _package_files("lattice-mini-bar")})
     store = GitHubBoardStore(client)
     try:
         deleted, commit = store.delete_board_presentation(
-            "token", "main", "trango.rock-prodigy-pivot", "orientation-4"
+            "token", "main", "lattice.mini-bar", "mini-pinch"
         )
 
         assert commit
-        assert "orientation-4" not in {item.id for item in deleted.presentations}
+        assert "mini-pinch" not in {item.id for item in deleted.presentations}
         paths = {entry.path for entry in client.get_tree("token", "main") if isinstance(entry, TreeEntry)}
-        assert "Hangboards/trango-rock-prodigy-pivot/assets/orientation-4.png" not in paths
+        assert "Hangboards/lattice-mini-bar/assets/mini-pinch.png" not in paths
         stored = json.loads(client.file_bytes(
-            "main", "Hangboards/trango-rock-prodigy-pivot/board.json"
+            "main", "Hangboards/lattice-mini-bar/board.json"
         ))
-        assert "orientation-4" not in {item["id"] for item in stored["presentations"]}
+        assert "mini-pinch" not in {item["id"] for item in stored["presentations"]}
     finally:
         store.close()

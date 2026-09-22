@@ -1,0 +1,82 @@
+{
+  "sources": [
+    {
+      "id": "RR1",
+      "publisher": "Metolius",
+      "tier": "manufacturer specification",
+      "url": "https://www.metoliusclimbing.com/collections/training-equipment/products/rock-rings-3d",
+      "facts": "Rock Rings 3D: two independent units with flexible single-point suspension, 184 \u00d7 146 \u00d7 57 mm and 1.9 kg per set.",
+      "notEstablished": "No dimensioned reverse cross-section, mouth widths, passage path or nominal chemistry."
+    },
+    {
+      "id": "RR2",
+      "publisher": "Metolius",
+      "tier": "manufacturer numbered hold guide; visually inspected 1000 \u00d7 1000",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Ring-Depts.jpg?v=1762201543",
+      "facts": "Numbered guide identifies 1 jug, 2 40 mm four-finger pocket, 3 32 mm three-finger pocket, 4 25 mm two-finger pocket. Shows tapered silhouette, upper ears, rounded jug and successively smaller lower recesses.",
+      "notEstablished": "Guide is a manufacturer CAD illustration rather than metrology. Does not resolve hidden cord passage routing or rear geometry."
+    },
+    {
+      "id": "RR3",
+      "publisher": "Metolius",
+      "tier": "manufacturer original photograph; visually inspected 1000 \u00d7 1000",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123",
+      "facts": "Original photograph corroborates the three front recesses plus jug. Two top cord exits on each unit, small light-transmitting hole through the upper-pocket back, resin swirl pattern.",
+      "notEstablished": "Hidden cord tunnels, rear profile and depth of small bore are not photographed. Swirl texture rights were not established."
+    },
+    {
+      "id": "RR4",
+      "publisher": "Wilderness Supply",
+      "tier": "retailer specification",
+      "url": "https://www.wildernesssupply.ca/training/metolius/rock-rings-3d",
+      "facts": "Text calls material polyester resin, mentions suspension holes running deeper, and describes four-finger flat edge / three-finger pocket labels that differ from current primary guide.",
+      "notEstablished": "No measured routing diagram or proof of same hold-label convention."
+    },
+    {
+      "id": "RR5",
+      "publisher": "Brack",
+      "tier": "retailer specification",
+      "url": "https://www.brack.ch/fr/metolius-trainingsring-rock-rings-3d-noir-blanc-1804523",
+      "facts": "Calls material polyurethane, in conflict with retailer polyester-resin description. Metric envelope agrees.",
+      "notEstablished": "Exact resin chemistry is not independently tested."
+    },
+    {
+      "id": "RR6",
+      "publisher": "Owner resale photograph hosted on eBay image CDN",
+      "tier": "secondary original photograph, 1056 x 1408 retained",
+      "url": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
+      "facts": "Front and full reverse of black/white Rock Rings 3D. Rear has no central through-hole; rounded rear perimeter. Top cord exits and side access can be seen.",
+      "notEstablished": "Exact production year and calibration; matching molded shape does not prove every historical batch is identical."
+    },
+    {
+      "id": "RR7",
+      "publisher": "Same owner resale photography",
+      "tier": "secondary original close-up, 1056 x 1408 retained",
+      "url": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
+      "facts": "Large oval lateral access opening with cord visible inside. Shows side-wall thickness and rounded rear edge.",
+      "notEstablished": "Hidden path, exact opening dimensions, cross-sectional factory drawing."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "Retailers call lower pockets 4-finger flat and 3-finger versus primary numbered 3-finger and 2-finger.",
+      "ruling": "Use current manufacturer numbered guide: eight physical contacts for the pair; no duplicate contacts from different finger-count terminology."
+    },
+    {
+      "conflict": "Polyester versus polyurethane in retailer material listings.",
+      "ruling": "Use neutral resin PBR approximation; exact polymer is recorded unknown, not arbitrarily selected."
+    },
+    {
+      "conflict": "Single-point suspension wording but two photographed exits per unit.",
+      "ruling": "Single point describes the overhead attachment. Preserve two ordered unit-associated exit markers per unit; do not collapse them to one board opening or invent the overhead cord junction."
+    },
+    {
+      "conflict": "Some inch parentheticals imply 63.5 mm depth, whereas metric values state 57 mm.",
+      "ruling": "Use the consistent 57 mm metric manufacturer envelope."
+    },
+    {
+      "conflict": "Earlier model inferred a small central front-to-rear bore from a low-resolution bright spot. Full rear shows uninterrupted resin.",
+      "ruling": "Remove the unsupported central bore; retain observed lateral cord-access windows. Owner evidence supports a matching exterior, not all possible molding revisions."
+    }
+  ]
+}

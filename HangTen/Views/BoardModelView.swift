@@ -369,6 +369,14 @@ private enum BoardModelLoadGate {
 
 @MainActor
 enum BoardModelLoader {
+    #if DEBUG
+    private(set) static var debugSourceSceneDecodeCount = 0
+
+    static func resetDebugSourceSceneDecodeCount() {
+        debugSourceSceneDecodeCount = 0
+    }
+    #endif
+
     static func load(
         board: BoardRevision,
         presentation: BoardPresentation,
@@ -395,6 +403,9 @@ enum BoardModelLoader {
         ), !Task.isCancelled else {
             return nil
         }
+        #if DEBUG
+        debugSourceSceneDecodeCount += 1
+        #endif
         return BoardModelScene(
             source: source.scene,
             descriptor: media.descriptor,
@@ -404,7 +415,8 @@ enum BoardModelLoader {
             allowedPositionIDs: Set(board.positions.filter {
                 $0.presentationID == presentation.id
             }.map(\.id)),
-            resourceLease: source.resourceLease
+            resourceLease: source.resourceLease,
+            instances: media.instances
         )
     }
 }
@@ -534,6 +546,29 @@ struct BoardModelUnavailableView: View {
 }
 
 @MainActor
+final class BoardModelInstanceScene {
+    let instance: BoardModelInstance
+    let container: SCNNode
+    fileprivate let sourceTransform: simd_float4x4
+    var contactNodes: [String: [SCNNode]] = [:]
+    var sourceSlotNodes: [String: [SCNNode]] = [:]
+    var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
+    var transientCordNodes: [SCNNode] = []
+    var verifiedPresentations: [String: BoardModelSolvedSuspension] = [:]
+    var highlightedContactIDs: Set<String> = []
+    fileprivate var highlightMode: BoardHighlightMode?
+    fileprivate var geometryByNodeID: [String: SCNNode] = [:]
+    fileprivate var contactIDsByNode: [ObjectIdentifier: String] = [:]
+    fileprivate var cordNodesByPosition: [String: SCNNode] = [:]
+
+    init(instance: BoardModelInstance, container: SCNNode) {
+        self.instance = instance
+        self.container = container
+        sourceTransform = container.simdTransform
+    }
+}
+
+@MainActor
 final class BoardModelScene {
     static let modelPickCategory = 1
     static let cordCategory = 2
@@ -559,6 +594,7 @@ final class BoardModelScene {
     private let projectedWidth: Float
     private let projectedHeight: Float
     private(set) var contactNodes: [String: [SCNNode]] = [:]
+    private(set) var instanceScenes: [BoardModelInstanceScene] = []
     private var contactIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
     private var lastHighlights: Set<String> = []
@@ -580,15 +616,19 @@ final class BoardModelScene {
     private let allowedPositionIDs: Set<String>
     private let resourceLease: BoardModelResourceLease?
 
-    init?(
+    private struct PreparedModel {
+        let root: SCNNode
+        let geometryByNodeID: [String: SCNNode]
+        let geometryNodes: [SCNNode]
+        let contactNodes: [String: [SCNNode]]
+        let contactIDsByNode: [ObjectIdentifier: String]
+        let originalMaterials: [ObjectIdentifier: [SCNMaterial]]
+    }
+
+    private static func prepareModel(
         source: SCNScene,
-        descriptor: BoardModelDescriptor,
-        display: BoardModelDisplay,
-        suspension: BoardModelSuspension? = nil,
-        orientation: BoardModelOrientation? = nil,
-        allowedPositionIDs: Set<String>? = nil,
-        resourceLease: BoardModelResourceLease? = nil
-    ) {
+        descriptor: BoardModelDescriptor
+    ) -> PreparedModel? {
         let modelRoot = source.rootNode.clone()
         let descriptorIDs = descriptor.nodes.map(\.nodeID)
         guard !descriptorIDs.isEmpty,
@@ -620,7 +660,7 @@ final class BoardModelScene {
                   geometryByNodeID[nodeID] == nil,
                   !geometry.materials.isEmpty,
                   geometry.sources(for: .vertex).contains(where: { $0.vectorCount > 0 }),
-                  let copiedGeometry = geometry.copy() as? SCNGeometry else {
+                  let snapshot = geometry.copy() as? SCNGeometry else {
                 invalidGeometry = true
                 return
             }
@@ -629,6 +669,29 @@ final class BoardModelScene {
                 invalidGeometry = true
                 return
             }
+            // Preserve the original copy/material path first: procedural
+            // geometries materialize their sized sources on this snapshot.
+            snapshot.materials = copiedMaterials
+            // SCNGeometry.copy() still shares mutable elements. Rebuild those
+            // for every mesh, including unreflected clones and crease topology.
+            let elements = snapshot.elements.map(Self.copyElement)
+            let copiedGeometry: SCNGeometry
+            if let channels = snapshot.geometrySourceChannels {
+                copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements, sourceChannels: channels)
+            } else {
+                // Preserve the implicit single-channel representation.
+                copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements)
+            }
+            copiedGeometry.name = snapshot.name
+            copiedGeometry.boundingBox = snapshot.boundingBox
+            copiedGeometry.levelsOfDetail = snapshot.levelsOfDetail
+            copiedGeometry.tessellator = snapshot.tessellator?.copy() as? SCNGeometryTessellator
+            copiedGeometry.subdivisionLevel = snapshot.subdivisionLevel
+            copiedGeometry.wantsAdaptiveSubdivision = snapshot.wantsAdaptiveSubdivision
+            copiedGeometry.edgeCreasesSource = snapshot.edgeCreasesSource
+            copiedGeometry.edgeCreasesElement = snapshot.edgeCreasesElement.map(Self.copyElement)
+            copiedGeometry.program = snapshot.program
+            copiedGeometry.shaderModifiers = snapshot.shaderModifiers
             copiedGeometry.materials = copiedMaterials
             node.geometry = copiedGeometry
             geometryByNodeID[nodeID] = node
@@ -671,7 +734,88 @@ final class BoardModelScene {
             return nil
         }
 
-        geometryNodes = clonedGeometryNodes
+        return PreparedModel(root: modelRoot, geometryByNodeID: geometryByNodeID,
+            geometryNodes: clonedGeometryNodes, contactNodes: boundContactNodes,
+            contactIDsByNode: boundContactIDsByNode, originalMaterials: originals)
+    }
+
+    init?(
+        source: SCNScene,
+        descriptor: BoardModelDescriptor,
+        display: BoardModelDisplay,
+        suspension: BoardModelSuspension? = nil,
+        orientation: BoardModelOrientation? = nil,
+        allowedPositionIDs: Set<String>? = nil,
+        resourceLease: BoardModelResourceLease? = nil,
+        instances: [BoardModelInstance]? = nil
+    ) {
+        guard instances.map({ !$0.isEmpty }) ?? true else { return nil }
+        let modelContainer = SCNNode()
+        modelContainer.name = "board.model"
+        var preparedModels: [PreparedModel] = []
+        var preparedInstances: [BoardModelInstanceScene] = []
+        var boundContacts: [String: [SCNNode]] = [:]
+        var boundIDs: [ObjectIdentifier: String] = [:]
+        for index in 0..<(instances?.count ?? 1) {
+            let bindingDescriptor: BoardModelDescriptor
+            if let instance = instances?[index] {
+                // The validated v2 contract expands contacts to physical IDs.
+                // Recover this unit's source slots from that instance's map;
+                // v2 mesh entries intentionally have no physical contactID.
+                var slots: [String: BoardModelContactDescriptor] = [:]
+                var slotByNodeID: [String: String] = [:]
+                for (slotID, contactID) in instance.contactIDsBySlotID {
+                    guard let contact = descriptor.contacts[contactID] else { return nil }
+                    slots[slotID] = contact
+                    for nodeID in contact.nodeIDs {
+                        guard slotByNodeID.updateValue(slotID, forKey: nodeID) == nil else { return nil }
+                    }
+                }
+                bindingDescriptor = BoardModelDescriptor(schemaVersion: descriptor.schemaVersion,
+                    coordinateFrame: descriptor.coordinateFrame, modelSHA256: descriptor.modelSHA256,
+                    modelBounds: descriptor.modelBounds,
+                    nodes: descriptor.nodes.map {
+                        BoardModelNodeDescriptor(nodeID: $0.nodeID, role: $0.role,
+                            contactID: $0.role == .contact ? slotByNodeID[$0.nodeID] : nil)
+                    }, contacts: slots)
+            } else {
+                bindingDescriptor = descriptor
+            }
+            guard let prepared = Self.prepareModel(source: source, descriptor: bindingDescriptor) else { return nil }
+            preparedModels.append(prepared)
+            if let instance = instances?[index] {
+                let unit = BoardModelInstanceScene(instance: instance, container: prepared.root)
+                unit.sourceSlotNodes = prepared.contactNodes
+                unit.originalMaterials = prepared.originalMaterials
+                unit.geometryByNodeID = prepared.geometryByNodeID
+                for (slot, nodes) in prepared.contactNodes {
+                    guard let contactID = instance.contactIDsBySlotID[slot] else { return nil }
+                    unit.contactNodes[contactID, default: []].append(contentsOf: nodes)
+                    boundContacts[contactID, default: []].append(contentsOf: nodes)
+                    for node in nodes { unit.contactIDsByNode[ObjectIdentifier(node)] = contactID }
+                }
+                if instance.baseTransform.reflection == .x {
+                    for node in prepared.geometryNodes {
+                        guard let geometry = node.geometry,
+                              let reflected = Self.reflectingGeometry(geometry,
+                                localTransform: node.simdWorldTransform.inverse
+                                    * Self.sourceReflection(center: Self.boundsCenter(descriptor.modelBounds))
+                                    * node.simdWorldTransform) else { return nil }
+                        node.geometry = reflected
+                    }
+                }
+                guard let transform = try? Self.reusableMatrix(instance: instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: nil) else { return nil }
+                unit.container.simdTransform = transform * unit.container.simdTransform
+                preparedInstances.append(unit)
+            } else {
+                boundContacts = prepared.contactNodes
+                boundIDs = prepared.contactIDsByNode
+            }
+            modelContainer.addChildNode(prepared.root)
+        }
+        guard let first = preparedModels.first else { return nil }
+        geometryNodes = preparedModels.flatMap(\.geometryNodes)
         self.descriptor = descriptor
         self.display = display
         self.suspension = suspension
@@ -679,30 +823,485 @@ final class BoardModelScene {
         self.allowedPositionIDs = allowedPositionIDs
             ?? suspension.map { Set($0.canonicalPoses.keys) }
             ?? orientation.map { Set($0.rotations.keys) }
+            ?? instances.map { Set($0.flatMap { $0.positionTransforms.map { Array($0.keys) } ?? $0.suspension.map { Array($0.canonicalPoses.keys) } ?? [] }) }
             ?? []
         self.resourceLease = resourceLease
 
-        self.geometryByNodeID = geometryByNodeID
-        contactNodes = boundContactNodes
-        contactIDsByNode = boundContactIDsByNode
-        originalMaterials = originals
-        guard let framing = Self.framing(descriptor: descriptor, display: display) else {
+        self.geometryByNodeID = first.geometryByNodeID
+        instanceScenes = preparedInstances
+        contactNodes = boundContacts
+        contactIDsByNode = boundIDs
+        originalMaterials = instances == nil ? first.originalMaterials : [:]
+        let bounds = instances == nil ? descriptor.modelBounds : Self.reusableBounds(
+            descriptor.modelBounds, transforms: preparedInstances.compactMap {
+                try? Self.reusableMatrix(instance: $0.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: nil, includingReflection: true)
+            })
+        guard let framing = Self.framing(bounds: bounds, display: display) else {
             return nil
         }
         projectedWidth = framing.width
         projectedHeight = framing.height
         boardTransform = matrix_identity_float4x4
-        let modelContainer = SCNNode()
-        modelContainer.name = "board.model"
-        modelContainer.addChildNode(modelRoot)
         scene.rootNode.addChildNode(modelContainer)
         boardContainer = modelContainer
         configureCameraAndLighting(framing: framing)
     }
 
+    private enum ReusableTransformError: Error {
+        case invalidTransform
+    }
+
+    static func reusableTransform(
+        point: SIMD3<Float>, center: SIMD3<Float>, reflection: BoardModelTransform.Reflection?,
+        baseRotation: simd_quatf, baseTranslation: SIMD3<Float>,
+        positionRotation: simd_quatf, positionTranslation: SIMD3<Float>
+    ) throws -> SIMD3<Float> {
+        var f = point
+        if reflection == .x { f.x = 2 * center.x - point.x }
+        let b = center + baseRotation.act(f - center) + baseTranslation
+        let ci = center + baseRotation.act(center - center) + baseTranslation
+        let w = ci + positionRotation.act(b - ci) + positionTranslation
+        guard [f, b, ci, w].allSatisfy({ $0.x.isFinite && $0.y.isFinite && $0.z.isFinite }) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        return w
+    }
+
+    private static func reusableMatrix(
+        instance: BoardModelInstance, center: SIMD3<Float>, positionID: String?,
+        includingReflection: Bool = false
+    ) throws -> simd_float4x4 {
+        let base = instance.baseTransform
+        let position: BoardModelTransform?
+        if let positionID, let suspension = instance.suspension {
+            guard instance.positionTransforms == nil,
+                  let pose = suspension.canonicalPoses[positionID], pose.rotation.count == 4 else {
+                throw ReusableTransformError.invalidTransform
+            }
+            position = BoardModelTransform(translation: pose.translation, rotation: SIMD4(pose.rotation), reflection: nil)
+        } else {
+            position = positionID.flatMap { instance.positionTransforms?[$0] }
+        }
+        guard base.translation.count == 3,
+              let baseRotation = quaternion(from: base.rotation),
+              position.map({ $0.translation.count == 3 && $0.reflection == nil }) ?? true,
+              let positionRotation = quaternion(from: position?.rotation ?? SIMD4<Double>(0, 0, 0, 1)) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        let baseTranslation = SIMD3<Float>(Float(base.translation[0]), Float(base.translation[1]), Float(base.translation[2]))
+        let translation = position?.translation ?? [0, 0, 0]
+        let positionTranslation = SIMD3<Float>(Float(translation[0]), Float(translation[1]), Float(translation[2]))
+        // F is baked into each copied mesh: SceneKit's CPU back-face hit test
+        // does not account for a negative node-transform determinant. Bounds
+        // still use the full F -> B -> W matrix on the original source box.
+        let reflection = includingReflection && base.reflection == .x
+            ? sourceReflection(center: center) : matrix_identity_float4x4
+        var baseMatrix = transform(rotating: baseRotation, about: center)
+        baseMatrix.columns.3 += SIMD4<Float>(baseTranslation, 0)
+        var positionMatrix = transform(rotating: positionRotation, about: center + baseTranslation)
+        positionMatrix.columns.3 += SIMD4<Float>(positionTranslation, 0)
+        let matrix = positionMatrix * baseMatrix * reflection
+        _ = try reusableTransform(point: center, center: center, reflection: base.reflection,
+            baseRotation: baseRotation, baseTranslation: baseTranslation,
+            positionRotation: positionRotation, positionTranslation: positionTranslation)
+        guard (0..<4).allSatisfy({ column in (0..<4).allSatisfy { matrix[column][$0].isFinite } }) else {
+            throw ReusableTransformError.invalidTransform
+        }
+        return matrix
+    }
+
+    private static func sourceReflection(center: SIMD3<Float>) -> simd_float4x4 {
+        var reflection = matrix_identity_float4x4
+        reflection.columns.0.x = -1
+        reflection.columns.3.x = 2 * center.x
+        return reflection
+    }
+
+    private static func reusableBounds(
+        _ bounds: BoardModelBounds, transforms: [simd_float4x4]
+    ) -> BoardModelBounds {
+        let points = transforms.flatMap { matrix in boundsCorners(bounds).map { matrix * SIMD4<Float>($0, 1) } }
+        return BoardModelBounds(
+            minimum: (0..<3).map { axis in Double(points.map { $0[axis] }.min() ?? .nan) },
+            maximum: (0..<3).map { axis in Double(points.map { $0[axis] }.max() ?? .nan) }
+        )
+    }
+
+    private func selectReusable(positionID: String) -> Bool {
+        do {
+            let solutions = try instanceScenes.map { unit -> BoardModelSolvedSuspension? in
+                guard unit.instance.suspension != nil else { return nil }
+                return try solveInstanceSuspension(instance: unit, positionID: positionID)
+            }
+            let transforms = try instanceScenes.map { unit in
+                if let positions = unit.instance.positionTransforms, positions[positionID] == nil {
+                    throw ReusableTransformError.invalidTransform
+                }
+                return try Self.reusableMatrix(instance: unit.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID)
+            }
+            let boundTransforms = try instanceScenes.map {
+                try Self.reusableMatrix(instance: $0.instance,
+                    center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID, includingReflection: true)
+            }
+            let boardBounds = Self.reusableBounds(descriptor.modelBounds, transforms: boundTransforms)
+            let cordPoints = solutions.compactMap { $0 }.flatMap { solved in
+                let radius: Float
+                switch solved {
+                case .single(let value): radius = value.tubeRadius
+                case .pairedLead(let value): radius = value.tubeRadius
+                case .twoBranch(let value): radius = value.tubeRadius
+                }
+                return solved.cameraFraming.includedPoints.flatMap { [$0 - SIMD3(repeating: radius), $0 + SIMD3(repeating: radius)] }
+            }
+            let points = Self.boundsCorners(boardBounds) + cordPoints
+            let bounds = BoardModelBounds(
+                minimum: (0..<3).map { axis in Double(points.map { $0[axis] }.min()!) },
+                maximum: (0..<3).map { axis in Double(points.map { $0[axis] }.max()!) })
+            guard let framing = Self.framing(bounds: bounds, display: display) else {
+                throw ReusableTransformError.invalidTransform
+            }
+            let fixedFraming = Self.fixedFraming(from: framing)
+            guard let cameraState = preparedCanonicalCameraState(for: fixedFraming) else {
+                throw ReusableTransformError.invalidTransform
+            }
+            let cords = zip(instanceScenes, solutions).map { unit, solved -> SCNNode? in
+                guard let solved else { return nil }
+                if let cached = unit.cordNodesByPosition[positionID] { return cached }
+                let cord = makeCordNode(for: solved)
+                unit.cordNodesByPosition[positionID] = cord
+                return cord
+            }
+            SCNTransaction.begin()
+            SCNTransaction.disableActions = true
+            for (index, unit) in instanceScenes.enumerated() {
+                let transform = transforms[index]
+                unit.container.simdTransform = transform * unit.sourceTransform
+                unit.transientCordNodes.forEach { $0.removeFromParentNode() }
+                unit.transientCordNodes = cords[index].map { [$0] } ?? []
+                unit.transientCordNodes.forEach { scene.rootNode.addChildNode($0) }
+            }
+            applyPreparedCameraState(cameraState)
+            SCNTransaction.commit()
+            orbitAzimuth = 0
+            orbitElevation = 0
+            orbitZoom = 1
+            canonicalFraming = fixedFraming
+            currentFraming = fixedFraming
+            activePositionID = positionID
+            isUnavailable = false
+            return true
+        } catch {
+            enterUnavailable()
+            return false
+        }
+    }
+
+    func solveInstanceSuspension(
+        instance: BoardModelInstanceScene, positionID: String
+    ) throws -> BoardModelSolvedSuspension {
+        guard instanceScenes.contains(where: { $0 === instance }),
+              let suspension = instance.instance.suspension,
+              let pose = suspension.canonicalPoses[positionID],
+              hasDeclaredAttachmentBindings(for: suspension, geometry: instance.geometryByNodeID) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        if let cached = instance.verifiedPresentations[positionID] { return cached }
+        let transform = try Self.reusableMatrix(instance: instance.instance,
+            center: Self.boundsCenter(descriptor.modelBounds), positionID: positionID, includingReflection: true)
+        let solved = try SuspendedBoardPresentation.solveInstance(pose: pose, suspension: suspension,
+            bounds: descriptor.modelBounds, transform: transform)
+        // Reflection is baked into cloned meshes, so remove F from the node
+        // transform while retaining it in solved attachment and passage points.
+        let reflection = instance.instance.baseTransform.reflection == .x
+            ? Self.sourceReflection(center: Self.boundsCenter(descriptor.modelBounds)) : matrix_identity_float4x4
+        guard hasClearance(for: solved, suspension: suspension, geometryByNodeID: instance.geometryByNodeID,
+            boardContainer: instance.container, containerTransform: solved.boardTransform * reflection * instance.sourceTransform) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        instance.verifiedPresentations[positionID] = solved
+        return solved
+    }
+
+    private static func triangleIndices(_ element: SCNGeometryElement) -> [UInt32]? {
+        // Single-channel helper used by debug inspection and strip expansion.
+        // Multi-channel elements must go through reverseWindingPreservingChannels.
+        guard element.indicesChannelCount <= 1 else { return nil }
+        let count: Int
+        switch element.primitiveType {
+        case .triangles: count = element.primitiveCount * 3
+        case .triangleStrip: count = element.primitiveCount + 2
+        default: return nil
+        }
+        guard [1, 2, 4].contains(element.bytesPerIndex),
+              element.data.count >= count * element.bytesPerIndex else { return nil }
+        var indices: [UInt32] = []
+        indices.reserveCapacity(count)
+        element.data.withUnsafeBytes { bytes in
+            for index in 0..<count {
+                let offset = index * element.bytesPerIndex
+                switch element.bytesPerIndex {
+                case 1:
+                    indices.append(UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self)))
+                case 2:
+                    indices.append(UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self)))
+                default:
+                    indices.append(bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self))
+                }
+            }
+        }
+        if element.primitiveType == .triangles { return indices }
+        var triangles: [UInt32] = []
+        triangles.reserveCapacity(element.primitiveCount * 3)
+        for index in 0..<element.primitiveCount {
+            if index.isMultiple(of: 2) {
+                triangles.append(indices[index])
+                triangles.append(indices[index + 1])
+                triangles.append(indices[index + 2])
+            } else {
+                triangles.append(indices[index + 1])
+                triangles.append(indices[index])
+                triangles.append(indices[index + 2])
+            }
+        }
+        return triangles
+    }
+
+    private static func copyElement(_ element: SCNGeometryElement) -> SCNGeometryElement {
+        let copy = SCNGeometryElement(data: element.data, primitiveType: element.primitiveType,
+            primitiveCount: element.primitiveCount, indicesChannelCount: element.indicesChannelCount,
+            interleavedIndicesChannels: element.hasInterleavedIndicesChannels,
+            bytesPerIndex: element.bytesPerIndex)
+        copyElementConfiguration(from: element, to: copy)
+        return copy
+    }
+
+    private static func copyElementConfiguration(from source: SCNGeometryElement, to target: SCNGeometryElement) {
+        target.primitiveRange = source.primitiveRange
+        target.pointSize = source.pointSize
+        target.minimumPointScreenSpaceRadius = source.minimumPointScreenSpaceRadius
+        target.maximumPointScreenSpaceRadius = source.maximumPointScreenSpaceRadius
+    }
+
+    /// Reverse triangle winding while preserving multi-channel USDZ index layouts.
+    /// Returns nil for unsupported primitives or channel layouts rather than flattening.
+    private static func reverseWindingPreservingChannels(
+        _ element: SCNGeometryElement
+    ) -> SCNGeometryElement? {
+        let channelCount = max(element.indicesChannelCount, 1)
+        guard [1, 2, 4].contains(element.bytesPerIndex) else { return nil }
+
+        if element.primitiveType == .triangleStrip {
+            // Strip expansion cannot preserve independent attribute channels.
+            guard channelCount == 1, var indices = triangleIndices(element) else { return nil }
+            for index in stride(from: 0, to: indices.count, by: 3) {
+                indices.swapAt(index + 1, index + 2)
+            }
+            let reversed = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+            copyElementConfiguration(from: element, to: reversed)
+            return reversed
+        }
+
+        guard element.primitiveType == .triangles else { return nil }
+        let vertexIndexCount = element.primitiveCount * 3
+        let scalarCount = vertexIndexCount * channelCount
+        guard scalarCount > 0,
+              element.data.count >= scalarCount * element.bytesPerIndex else { return nil }
+
+        var scalars = [UInt32](repeating: 0, count: scalarCount)
+        element.data.withUnsafeBytes { bytes in
+            for index in 0..<scalarCount {
+                let offset = index * element.bytesPerIndex
+                switch element.bytesPerIndex {
+                case 1:
+                    scalars[index] = UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
+                case 2:
+                    scalars[index] = UInt32(bytes.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
+                default:
+                    scalars[index] = bytes.loadUnaligned(fromByteOffset: offset, as: UInt32.self)
+                }
+            }
+        }
+
+        for triangle in 0..<element.primitiveCount {
+            let baseVertex = triangle * 3
+            // Swap complete per-vertex channel tuples (verts 1 and 2), not a
+            // flattened position-only stream.
+            if element.hasInterleavedIndicesChannels || channelCount == 1 {
+                let stride = channelCount
+                let first = (baseVertex + 1) * stride
+                let second = (baseVertex + 2) * stride
+                for channel in 0..<stride {
+                    scalars.swapAt(first + channel, second + channel)
+                }
+            } else {
+                for channel in 0..<channelCount {
+                    let channelBase = channel * vertexIndexCount
+                    scalars.swapAt(channelBase + baseVertex + 1, channelBase + baseVertex + 2)
+                }
+            }
+        }
+
+        var data = Data(count: scalarCount * element.bytesPerIndex)
+        data.withUnsafeMutableBytes { bytes in
+            for index in 0..<scalarCount {
+                let offset = index * element.bytesPerIndex
+                let value = scalars[index]
+                switch element.bytesPerIndex {
+                case 1:
+                    bytes.storeBytes(of: UInt8(truncatingIfNeeded: value), toByteOffset: offset, as: UInt8.self)
+                case 2:
+                    bytes.storeBytes(of: UInt16(truncatingIfNeeded: value), toByteOffset: offset, as: UInt16.self)
+                default:
+                    bytes.storeBytes(of: value, toByteOffset: offset, as: UInt32.self)
+                }
+            }
+        }
+
+        let reversed = SCNGeometryElement(
+            data: data,
+            primitiveType: .triangles,
+            primitiveCount: element.primitiveCount,
+            indicesChannelCount: element.indicesChannelCount,
+            interleavedIndicesChannels: element.hasInterleavedIndicesChannels,
+            bytesPerIndex: element.bytesPerIndex
+        )
+        copyElementConfiguration(from: element, to: reversed)
+        return reversed
+    }
+
+    private static func reflectingGeometry(
+        _ geometry: SCNGeometry, localTransform: simd_float4x4
+    ) -> SCNGeometry? {
+        let linear = simd_float3x3(columns: (
+            SIMD3<Float>(localTransform.columns.0.x, localTransform.columns.0.y, localTransform.columns.0.z),
+            SIMD3<Float>(localTransform.columns.1.x, localTransform.columns.1.y, localTransform.columns.1.z),
+            SIMD3<Float>(localTransform.columns.2.x, localTransform.columns.2.y, localTransform.columns.2.z)))
+        let normalTransform = linear.inverse.transpose
+        var sources: [SCNGeometrySource] = []
+        for source in geometry.sources {
+            guard [.vertex, .normal, .tangent].contains(source.semantic) else {
+                sources.append(source)
+                continue
+            }
+            guard source.usesFloatComponents, [4, 8].contains(source.bytesPerComponent),
+                  source.componentsPerVector >= 3 else { return nil }
+            var components: [Float] = []
+            for index in 0..<source.vectorCount {
+                let offset = source.dataOffset + index * source.dataStride
+                guard offset >= 0,
+                      offset + source.componentsPerVector * source.bytesPerComponent <= source.data.count else { return nil }
+                var values: [Float] = source.data.withUnsafeBytes { bytes in
+                    (0..<source.componentsPerVector).map { axis in
+                        let address = offset + axis * source.bytesPerComponent
+                        return source.bytesPerComponent == 4
+                            ? bytes.loadUnaligned(fromByteOffset: address, as: Float.self)
+                            : Float(bytes.loadUnaligned(fromByteOffset: address, as: Double.self))
+                    }
+                }
+                let vector = SIMD3<Float>(values[0], values[1], values[2])
+                let transformed: SIMD3<Float>
+                if source.semantic == .vertex {
+                    let point = localTransform * SIMD4<Float>(vector, 1)
+                    transformed = SIMD3<Float>(point.x, point.y, point.z)
+                } else {
+                    transformed = simd_normalize((source.semantic == .normal ? normalTransform : linear) * vector)
+                    if source.semantic == .tangent, values.count == 4 { values[3] = -values[3] }
+                }
+                guard transformed.x.isFinite, transformed.y.isFinite, transformed.z.isFinite else { return nil }
+                values[0] = transformed.x
+                values[1] = transformed.y
+                values[2] = transformed.z
+                components.append(contentsOf: values)
+            }
+            let data = components.withUnsafeBufferPointer { Data(buffer: $0) }
+            sources.append(SCNGeometrySource(data: data, semantic: source.semantic,
+                vectorCount: source.vectorCount, usesFloatComponents: true,
+                componentsPerVector: source.componentsPerVector, bytesPerComponent: MemoryLayout<Float>.size,
+                dataOffset: 0, dataStride: source.componentsPerVector * MemoryLayout<Float>.size))
+        }
+        var elements: [SCNGeometryElement] = []
+        for element in geometry.elements {
+            guard let reversed = reverseWindingPreservingChannels(element) else { return nil }
+            elements.append(reversed)
+        }
+        // Materials already belong exclusively to this clone. The reflected
+        // sources and reversed winding preserve outward single-sided faces.
+        let result: SCNGeometry
+        if let channels = geometry.geometrySourceChannels {
+            result = SCNGeometry(sources: sources, elements: elements, sourceChannels: channels)
+        } else {
+            result = SCNGeometry(sources: sources, elements: elements)
+        }
+        result.name = geometry.name
+        result.materials = geometry.materials
+        result.subdivisionLevel = geometry.subdivisionLevel
+        result.edgeCreasesSource = geometry.edgeCreasesSource
+        result.edgeCreasesElement = geometry.edgeCreasesElement
+        return result
+    }
+
+    #if DEBUG
+    private func reusableTriangle(instanceIndex: Int) -> (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)? {
+        guard instanceScenes.indices.contains(instanceIndex) else { return nil }
+        let root = instanceScenes[instanceIndex].container
+        var result: (SIMD3<Float>, SIMD3<Float>, SIMD3<Float>, SIMD3<Float>)?
+        root.enumerateChildNodes { node, stop in
+            guard let geometry = node.geometry,
+                  let vertices = geometry.sources(for: .vertex).first,
+                  let normals = geometry.sources(for: .normal).first,
+                  let element = geometry.elements.first,
+                  let indices = Self.triangleIndices(element), indices.count >= 3 else { return }
+            func vector(_ source: SCNGeometrySource, _ index: UInt32) -> SIMD3<Float>? {
+                guard source.usesFloatComponents, source.componentsPerVector >= 3,
+                      [4, 8].contains(source.bytesPerComponent), Int(index) < source.vectorCount else { return nil }
+                let offset = source.dataOffset + Int(index) * source.dataStride
+                guard offset + 3 * source.bytesPerComponent <= source.data.count else { return nil }
+                return source.data.withUnsafeBytes { bytes in
+                    let values = (0..<3).map { axis -> Float in
+                        let address = offset + axis * source.bytesPerComponent
+                        return source.bytesPerComponent == 4
+                            ? bytes.loadUnaligned(fromByteOffset: address, as: Float.self)
+                            : Float(bytes.loadUnaligned(fromByteOffset: address, as: Double.self))
+                    }
+                    return SIMD3<Float>(values[0], values[1], values[2])
+                }
+            }
+            guard let a = vector(vertices, indices[0]), let b = vector(vertices, indices[1]),
+                  let c = vector(vertices, indices[2]), let normal = vector(normals, indices[0]) else { return }
+            let matrix = node.simdWorldTransform
+            func point(_ value: SIMD3<Float>) -> SIMD3<Float> {
+                let world = matrix * SIMD4<Float>(value, 1)
+                return SIMD3<Float>(world.x, world.y, world.z)
+            }
+            let linear = simd_float3x3(columns: (
+                SIMD3<Float>(matrix.columns.0.x, matrix.columns.0.y, matrix.columns.0.z),
+                SIMD3<Float>(matrix.columns.1.x, matrix.columns.1.y, matrix.columns.1.z),
+                SIMD3<Float>(matrix.columns.2.x, matrix.columns.2.y, matrix.columns.2.z)))
+            result = (point(a), point(b), point(c), linear.inverse.transpose * normal)
+            stop.pointee = true
+        }
+        return result
+    }
+
+    func reusableTriangleSignedArea(instanceIndex: Int) -> Float {
+        guard let (a, b, c, _) = reusableTriangle(instanceIndex: instanceIndex) else { return .nan }
+        return simd_cross(b - a, c - a).z / 2
+    }
+
+    func reusableNormalDotOutward(instanceIndex: Int) -> Float {
+        guard let (a, b, c, normal) = reusableTriangle(instanceIndex: instanceIndex) else { return .nan }
+        return simd_dot(simd_cross(b - a, c - a), normal)
+    }
+    #endif
+
     func contactID(for node: SCNNode) -> String? {
         var candidate: SCNNode? = node
         while let current = candidate {
+            for unit in instanceScenes {
+                if let contactID = unit.contactIDsByNode[ObjectIdentifier(current)] { return contactID }
+            }
             if let contactID = contactIDsByNode[ObjectIdentifier(current)] { return contactID }
             candidate = current.parent
         }
@@ -715,9 +1314,13 @@ final class BoardModelScene {
         // applyHighlights call always repaints materials for the posed nodes.
         lastHighlights = []
         lastMode = nil
+        instanceScenes.forEach { $0.highlightMode = nil }
         guard let positionID, allowedPositionIDs.contains(positionID) else {
             enterUnavailable()
             return false
+        }
+        if !instanceScenes.isEmpty {
+            return selectReusable(positionID: positionID)
         }
         if suspension == nil, let orientation {
             guard let components = orientation.rotations[positionID],
@@ -792,7 +1395,8 @@ final class BoardModelScene {
         }
     }
 
-    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension) -> Bool {
+    private func hasDeclaredAttachmentBindings(for suspension: BoardModelSuspension, geometry: [String: SCNNode]? = nil) -> Bool {
+        let geometryByNodeID = geometry ?? self.geometryByNodeID
         let nodeIDs: [String]
         switch suspension {
         case .singleCord(let single):
@@ -901,6 +1505,10 @@ final class BoardModelScene {
     }
 
     private func enterUnavailable() {
+        for unit in instanceScenes {
+            unit.transientCordNodes.forEach { $0.removeFromParentNode() }
+            unit.transientCordNodes = []
+        }
         transientCordNode?.removeFromParentNode()
         transientCordNode = nil
         isTransientCordAccessible = false
@@ -1133,7 +1741,12 @@ final class BoardModelScene {
         return root
     }
 
-    private func hasClearance(for solved: BoardModelSolvedSuspension) -> Bool {
+    private func hasClearance(for solved: BoardModelSolvedSuspension,
+        suspension: BoardModelSuspension? = nil, geometryByNodeID: [String: SCNNode]? = nil,
+        boardContainer: SCNNode? = nil, containerTransform: simd_float4x4? = nil) -> Bool {
+        let suspension = suspension ?? self.suspension
+        let geometryByNodeID = geometryByNodeID ?? self.geometryByNodeID
+        let boardContainer = boardContainer ?? self.boardContainer
         struct IntentionalContact {
             let pathIndex: Int
             let segmentIndex: Int
@@ -1230,7 +1843,7 @@ final class BoardModelScene {
         let previousTransform = boardContainer.simdTransform
         SCNTransaction.begin()
         SCNTransaction.disableActions = true
-        boardContainer.simdTransform = solved.boardTransform
+        boardContainer.simdTransform = containerTransform ?? solved.boardTransform
         defer {
             boardContainer.simdTransform = previousTransform
             SCNTransaction.commit()
@@ -1340,16 +1953,19 @@ final class BoardModelScene {
             return nil
         }
 
+        // Reconstructed SceneKit buffers can copy when bridged to Data.
+        // Snapshot once per buffer, not once per vertex/index component.
+        let sourceData = source.data
         let vertices = (0..<source.vectorCount).compactMap { index -> SIMD3<Float>? in
             let offset = source.dataOffset + index * source.dataStride
             guard offset >= 0,
-                  offset + 3 * MemoryLayout<Float>.size <= source.data.count else {
+                  offset + 3 * MemoryLayout<Float>.size <= sourceData.count else {
                 return nil
             }
             let local = SIMD3<Float>(
-                float32(in: source.data, at: offset),
-                float32(in: source.data, at: offset + 4),
-                float32(in: source.data, at: offset + 8)
+                float32(in: sourceData, at: offset),
+                float32(in: sourceData, at: offset + 4),
+                float32(in: sourceData, at: offset + 8)
             )
             let world = node.simdWorldTransform * SIMD4<Float>(local.x, local.y, local.z, 1)
             guard world.x.isFinite, world.y.isFinite, world.z.isFinite else { return nil }
@@ -1359,6 +1975,7 @@ final class BoardModelScene {
 
         var result: [Triangle] = []
         for element in geometry.elements {
+            let elementData = element.data
             guard element.primitiveType == .triangles,
                   element.indicesChannelCount > vertexChannel,
                   element.bytesPerIndex == 1 || element.bytesPerIndex == 2 || element.bytesPerIndex == 4,
@@ -1367,13 +1984,13 @@ final class BoardModelScene {
             }
             let indexCount = element.primitiveCount * 3
             guard indexCount >= 0,
-                  indexCount * element.indicesChannelCount * element.bytesPerIndex <= element.data.count else {
+                  indexCount * element.indicesChannelCount * element.bytesPerIndex <= elementData.count else {
                 return nil
             }
             for offset in stride(from: 0, to: indexCount, by: 3) {
-                guard let first = index(in: element, at: offset, channel: vertexChannel),
-                      let second = index(in: element, at: offset + 1, channel: vertexChannel),
-                      let third = index(in: element, at: offset + 2, channel: vertexChannel),
+                guard let first = index(in: element, data: elementData, at: offset, channel: vertexChannel),
+                      let second = index(in: element, data: elementData, at: offset + 1, channel: vertexChannel),
+                      let third = index(in: element, data: elementData, at: offset + 2, channel: vertexChannel),
                       vertices.indices.contains(first),
                       vertices.indices.contains(second),
                       vertices.indices.contains(third) else {
@@ -1393,15 +2010,15 @@ final class BoardModelScene {
         return Float(bitPattern: bitPattern)
     }
 
-    private static func index(in element: SCNGeometryElement, at index: Int, channel: Int) -> Int? {
+    private static func index(in element: SCNGeometryElement, data: Data, at index: Int, channel: Int) -> Int? {
         // Imported USDZs can index positions, normals and UVs independently.
         // Read the geometry's declared position channel, in either layout.
         let scalarIndex = element.hasInterleavedIndicesChannels
             ? index * element.indicesChannelCount + channel
             : channel * element.primitiveCount * 3 + index
         let offset = scalarIndex * element.bytesPerIndex
-        guard offset >= 0, offset + element.bytesPerIndex <= element.data.count else { return nil }
-        let value = element.data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
+        guard offset >= 0, offset + element.bytesPerIndex <= data.count else { return nil }
+        let value = data[offset..<(offset + element.bytesPerIndex)].enumerated().reduce(UInt32.zero) {
             $0 | UInt32($1.element) << UInt32($1.offset * 8)
         }
         return Int(value)
@@ -1598,8 +2215,25 @@ final class BoardModelScene {
     }
 
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
+        if !instanceScenes.isEmpty {
+            for unit in instanceScenes {
+                let validIDs = contactIDs.intersection(Set(unit.contactNodes.keys))
+                guard validIDs != unit.highlightedContactIDs || mode != unit.highlightMode else { continue }
+                Self.applyHighlights(validIDs, mode: mode, contactNodes: unit.contactNodes, originalMaterials: unit.originalMaterials)
+                unit.highlightedContactIDs = validIDs
+                unit.highlightMode = mode
+            }
+            return
+        }
         let validIDs = contactIDs.intersection(Set(contactNodes.keys))
         guard validIDs != lastHighlights || mode != lastMode else { return }
+        Self.applyHighlights(validIDs, mode: mode, contactNodes: contactNodes, originalMaterials: originalMaterials)
+        lastHighlights = validIDs
+        lastMode = mode
+    }
+
+    private static func applyHighlights(_ validIDs: Set<String>, mode: BoardHighlightMode,
+        contactNodes: [String: [SCNNode]], originalMaterials: [ObjectIdentifier: [SCNMaterial]]) {
         let color = UIColor(mode == .active ? Color.holdActive : Color.restBlue)
         for (id, nodes) in contactNodes {
             for node in nodes {
@@ -1618,8 +2252,6 @@ final class BoardModelScene {
                 }
             }
         }
-        lastHighlights = validIDs
-        lastMode = mode
     }
 
     private static func nodeID(for node: SCNNode, beneath root: SCNNode) -> String? {

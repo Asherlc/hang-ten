@@ -28,20 +28,6 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
     assert "soill-iron-palm-2" not in module._ENCLOSED_BACKGROUND_SEEDS
 
 
-def test_manually_transparent_trango_pivot_is_not_reprocessed_by_legacy_seed_fill() -> None:
-    module = _load_script()
-    path = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot" / "assets" / "primary.png"
-    with Image.open(path) as source_image:
-        source = source_image.convert("RGBA")
-    opaque_mask = Image.new("L", source.size, color=255)
-
-    corrected = module._clear_known_enclosed_backgrounds(
-        source, opaque_mask, "trango-rock-prodigy-pivot"
-    )
-
-    assert corrected.getextrema() == (255, 255)
-
-
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
@@ -50,10 +36,6 @@ def test_manually_transparent_trango_pivot_is_not_reprocessed_by_legacy_seed_fil
         ("yy-travelboard", (1348, 625), (768, 512)),
         ("yy-verticalboard-evo", (887, 500), (887, 443)),
         ("yy-verticalboard-one", (887, 500), (887, 443)),
-        ("yy-penta-evo", (145, 595), (768, 900)),
-        ("yy-penta-evo", (1385, 595), (768, 900)),
-        ("yy-penta-evo", (180, 720), (768, 900)),
-        ("yy-penta-evo", (1355, 720), (768, 900)),
     ],
 )
 def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
@@ -75,7 +57,7 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
 
 @pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles")
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
     assets = HANGBOARDS_ROOT / package / "assets"

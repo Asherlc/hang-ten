@@ -1,0 +1,129 @@
+{
+  "contacts": {
+    "edge-15": {
+      "center": [
+        0.5,
+        0.672697859
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.934225718,
+          0.703947372
+        ],
+        "min": [
+          0.065774282,
+          0.641448346
+        ]
+      },
+      "nodeIDs": [
+        "lr_recess_upper_15_001"
+      ]
+    },
+    "edge-20": {
+      "center": [
+        0.5,
+        0.24835477
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.934225718,
+          0.279604295
+        ],
+        "min": [
+          0.065774282,
+          0.217105244
+        ]
+      },
+      "nodeIDs": [
+        "lr_recess_lower_20_001"
+      ]
+    },
+    "jug-40-15mm-side": {
+      "center": [
+        0.5,
+        0.032894731
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.986870903,
+          0.065789462
+        ],
+        "min": [
+          0.013129097,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "lr_bottom_jug_40_001"
+      ]
+    },
+    "jug-40-20mm-side": {
+      "center": [
+        0.5,
+        0.967105269
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.986870903,
+          1.0
+        ],
+        "min": [
+          0.013129097,
+          0.934210538
+        ]
+      },
+      "nodeIDs": [
+        "lr_top_jug_40_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.228499994,
+      0.037999999,
+      0.018999999
+    ],
+    "min": [
+      -0.228499994,
+      -0.037999999,
+      -0.018999999
+    ]
+  },
+  "modelSHA256": "e217c2268fe3ef1ff4fb6ecce464223b5958cec3a34afcdd217994b13558dcd5",
+  "nodes": [
+    {
+      "nodeID": "left_upper_entry_001",
+      "role": "attachment"
+    },
+    {
+      "nodeID": "light_rail_body_001",
+      "role": "body"
+    },
+    {
+      "contactID": "jug-40-15mm-side",
+      "nodeID": "lr_bottom_jug_40_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20",
+      "nodeID": "lr_recess_lower_20_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-15",
+      "nodeID": "lr_recess_upper_15_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "jug-40-20mm-side",
+      "nodeID": "lr_top_jug_40_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "right_upper_entry_001",
+      "role": "attachment"
+    }
+  ],
+  "schemaVersion": 1
+}

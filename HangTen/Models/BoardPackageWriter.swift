@@ -291,7 +291,7 @@ enum BoardEditablePresentationMedia: Equatable, Decodable {
     )
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances
     }
 
     var assetPath: String {
@@ -315,7 +315,7 @@ enum BoardEditablePresentationMedia: Equatable, Decodable {
             )
         case "model":
             try decoder.rejectUnknownEditorKeys([
-                "type", "assetPath", "descriptorPath", "display", "suspension", "orientation"
+                "type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances"
             ])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),

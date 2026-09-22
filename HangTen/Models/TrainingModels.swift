@@ -342,6 +342,24 @@ struct BoardModelOrientation: Hashable {
     let rotations: [String: SIMD4<Double>]
 }
 
+struct BoardModelTransform: Hashable {
+    enum Reflection: String, Hashable {
+        case x
+    }
+
+    let translation: [Double]
+    let rotation: SIMD4<Double>
+    let reflection: Reflection?
+}
+
+struct BoardModelInstance: Hashable {
+    let equipmentObjectID: String
+    let baseTransform: BoardModelTransform
+    let contactIDsBySlotID: [String: String]
+    let suspension: BoardModelSuspension?
+    let positionTransforms: [String: BoardModelTransform]?
+}
+
 struct BoardModelMedia: Hashable {
     let assetPath: String
     let descriptorPath: String
@@ -349,6 +367,7 @@ struct BoardModelMedia: Hashable {
     let display: BoardModelDisplay
     let suspension: BoardModelSuspension?
     let orientation: BoardModelOrientation?
+    let instances: [BoardModelInstance]?
 
     init(
         assetPath: String,
@@ -356,7 +375,8 @@ struct BoardModelMedia: Hashable {
         descriptor: BoardModelDescriptor,
         display: BoardModelDisplay,
         suspension: BoardModelSuspension? = nil,
-        orientation: BoardModelOrientation? = nil
+        orientation: BoardModelOrientation? = nil,
+        instances: [BoardModelInstance]? = nil
     ) {
         self.assetPath = assetPath
         self.descriptorPath = descriptorPath
@@ -364,6 +384,7 @@ struct BoardModelMedia: Hashable {
         self.display = display
         self.suspension = suspension
         self.orientation = orientation
+        self.instances = instances
     }
 }
 

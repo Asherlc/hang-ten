@@ -1,0 +1,50 @@
+{
+  "sources": [
+    {
+      "id": "LR1",
+      "publisher": "Metolius",
+      "tier": "manufacturer specification",
+      "url": "https://www.metoliusclimbing.com/products/light-rail",
+      "facts": "Exact title Light Rail 2.0; reversible with four holds. Metric outline 457 \u00d7 76 \u00d7 38 mm, 0.54 kg, FSC wood. Text lists depths 15, 20, 40 mm.",
+      "notEstablished": "The specification does not measure mouth width, lip radii, cord bore diameter or detailed cross-section; no wood species."
+    },
+    {
+      "id": "LR2",
+      "publisher": "Metolius",
+      "tier": "manufacturer original photograph; visually inspected at 1000 \u00d7 1000",
+      "url": "https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616",
+      "facts": "Front photo shows one continuous long recess with closed rounded ends, rounded outer beam, two end cord entry regions and labels 40/20 upright and 15/40 inverted. No old-model face screw holes visible.",
+      "notEstablished": "Reverse and end-on measured profile absent. The two 40 mm labels are nominal, not proof of an exact 40 mm Y thickness."
+    },
+    {
+      "id": "LR3",
+      "publisher": "Metolius",
+      "tier": "manufacturer instructions Rev.01/2022",
+      "url": "https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826",
+      "facts": "The shared instructions explicitly classify Light Rails and Rock Rings as suspended devices.",
+      "notEstablished": "Not a dimensioned or revision-specific Light Rail 2.0 drawing; no hidden passage path."
+    },
+    {
+      "id": "LR4",
+      "publisher": "REI",
+      "tier": "retailer specification",
+      "url": "https://www.rei.com/product/255212/metolius-light-rail-20",
+      "facts": "Exact 2.0 title and 18 \u00d7 3 \u00d7 1.5 in dimensions. Listed depths 40,26,19,15 mm disagree with the manufacturer photograph and current text.",
+      "notEstablished": "No corroborating drawing establishes the claimed 26 mm contact."
+    }
+  ],
+  "conflicts": [
+    {
+      "conflict": "REI lists 40/26/19/15 while current manufacturer text and picture show 40/20/40/15.",
+      "ruling": "Use the currently pictured manufacturer revision and the visible labels. Preserve retailer conflict, do not invent a 26 mm fifth contact."
+    },
+    {
+      "conflict": "40 mm nominal jug versus body thickness 38 mm.",
+      "ruling": "Keep published 38 mm overall thickness and treat 40 as manufacturer nominal grip depth. Do not enlarge the whole asset to reconcile a label."
+    },
+    {
+      "conflict": "15 mm is paired with 0.71 inch in manufacturer text, which is arithmetically inconsistent.",
+      "ruling": "Use explicit metric 15 mm confirmed by photograph; do not use the parenthetical inch figure."
+    }
+  ]
+}

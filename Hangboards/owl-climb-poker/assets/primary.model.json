@@ -1,0 +1,841 @@
+{
+  "contacts": {
+    "face-a-center-pull-up-slot": {
+      "center": [
+        0.5,
+        0.249999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.570454544,
+          0.375
+        ],
+        "min": [
+          0.429545456,
+          0.124999991
+        ]
+      },
+      "nodeIDs": [
+        "face_a_center_pull_up_slot_001"
+      ]
+    },
+    "face-a-left-dual-pocket": {
+      "center": [
+        0.13030303,
+        0.299999994
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.165909093,
+          0.419999997
+        ],
+        "min": [
+          0.094696966,
+          0.17999999
+        ]
+      },
+      "nodeIDs": [
+        "face_a_left_dual_pocket_001"
+      ]
+    },
+    "face-a-left-outer-slot": {
+      "center": [
+        0.098484875,
+        0.639999997
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.171212145,
+          0.774999994
+        ],
+        "min": [
+          0.025757604,
+          0.505
+        ]
+      },
+      "nodeIDs": [
+        "face_a_left_outer_slot_001"
+      ]
+    },
+    "face-a-left-single-pocket": {
+      "center": [
+        0.043939413,
+        0.299999994
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.062121223,
+          0.419999997
+        ],
+        "min": [
+          0.025757604,
+          0.17999999
+        ]
+      },
+      "nodeIDs": [
+        "face_a_left_single_pocket_001"
+      ]
+    },
+    "face-a-right-dual-pocket": {
+      "center": [
+        0.933333314,
+        0.299999994
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.968939389,
+          0.419999997
+        ],
+        "min": [
+          0.897727239,
+          0.17999999
+        ]
+      },
+      "nodeIDs": [
+        "face_a_right_dual_pocket_001"
+      ]
+    },
+    "face-a-right-outer-slot": {
+      "center": [
+        0.901515126,
+        0.639999997
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.974242396,
+          0.774999994
+        ],
+        "min": [
+          0.828787855,
+          0.505
+        ]
+      },
+      "nodeIDs": [
+        "face_a_right_outer_slot_001"
+      ]
+    },
+    "face-a-right-single-pocket": {
+      "center": [
+        0.846969676,
+        0.299999994
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.865151496,
+          0.419999997
+        ],
+        "min": [
+          0.828787855,
+          0.17999999
+        ]
+      },
+      "nodeIDs": [
+        "face_a_right_single_pocket_001"
+      ]
+    },
+    "face-b-center-pull-up-slot": {
+      "center": [
+        0.5,
+        0.904999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.570454544,
+          1.0
+        ],
+        "min": [
+          0.429545456,
+          0.80999999
+        ]
+      },
+      "nodeIDs": [
+        "face_b_center_pull_up_slot_001"
+      ]
+    },
+    "face-b-left-deep-sloper": {
+      "center": [
+        0.299495254,
+        0.796466505
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.402020805,
+          1.0
+        ],
+        "min": [
+          0.196969704,
+          0.592933009
+        ]
+      },
+      "nodeIDs": [
+        "face_b_left_deep_sloper_001"
+      ]
+    },
+    "face-b-left-dual-pocket": {
+      "center": [
+        0.13030303,
+        0.904999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.165909093,
+          1.0
+        ],
+        "min": [
+          0.094696966,
+          0.80999999
+        ]
+      },
+      "nodeIDs": [
+        "face_b_left_dual_pocket_001"
+      ]
+    },
+    "face-b-left-outer-slot": {
+      "center": [
+        0.098484875,
+        0.910000005
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.171212145,
+          1.0
+        ],
+        "min": [
+          0.025757604,
+          0.82000001
+        ]
+      },
+      "nodeIDs": [
+        "face_b_left_outer_slot_001"
+      ]
+    },
+    "face-b-left-single-pocket": {
+      "center": [
+        0.043939413,
+        0.904999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.062121223,
+          1.0
+        ],
+        "min": [
+          0.025757604,
+          0.80999999
+        ]
+      },
+      "nodeIDs": [
+        "face_b_left_single_pocket_001"
+      ]
+    },
+    "face-b-right-deep-sloper": {
+      "center": [
+        0.699495243,
+        0.796466505
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.802020787,
+          1.0
+        ],
+        "min": [
+          0.596969698,
+          0.592933009
+        ]
+      },
+      "nodeIDs": [
+        "face_b_right_deep_sloper_001"
+      ]
+    },
+    "face-b-right-dual-pocket": {
+      "center": [
+        0.933333314,
+        0.904999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.968939389,
+          1.0
+        ],
+        "min": [
+          0.897727239,
+          0.80999999
+        ]
+      },
+      "nodeIDs": [
+        "face_b_right_dual_pocket_001"
+      ]
+    },
+    "face-b-right-outer-slot": {
+      "center": [
+        0.901515126,
+        0.910000005
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.974242396,
+          1.0
+        ],
+        "min": [
+          0.828787855,
+          0.82000001
+        ]
+      },
+      "nodeIDs": [
+        "face_b_right_outer_slot_001"
+      ]
+    },
+    "face-b-right-single-pocket": {
+      "center": [
+        0.846969676,
+        0.904999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.865151496,
+          1.0
+        ],
+        "min": [
+          0.828787855,
+          0.80999999
+        ]
+      },
+      "nodeIDs": [
+        "face_b_right_single_pocket_001"
+      ]
+    },
+    "face-c-center-pull-up-slot": {
+      "center": [
+        0.5,
+        0.749999944
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.570454539,
+          0.874999935
+        ],
+        "min": [
+          0.429545461,
+          0.624999953
+        ]
+      },
+      "nodeIDs": [
+        "face_c_center_pull_up_slot_001"
+      ]
+    },
+    "face-c-left-dual-pocket": {
+      "center": [
+        0.13030303,
+        0.699999946
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.165909093,
+          0.819999936
+        ],
+        "min": [
+          0.094696966,
+          0.579999956
+        ]
+      },
+      "nodeIDs": [
+        "face_c_left_dual_pocket_001"
+      ]
+    },
+    "face-c-left-outer-slot": {
+      "center": [
+        0.098484875,
+        0.359999962
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.171212145,
+          0.494999956
+        ],
+        "min": [
+          0.025757604,
+          0.224999968
+        ]
+      },
+      "nodeIDs": [
+        "face_c_left_outer_slot_001"
+      ]
+    },
+    "face-c-left-shallow-half-round": {
+      "center": [
+        0.300000015,
+        0.276779007
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.397599371,
+          0.553558014
+        ],
+        "min": [
+          0.202400658,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_c_left_shallow_half_round_001"
+      ]
+    },
+    "face-c-left-single-pocket": {
+      "center": [
+        0.043939413,
+        0.699999946
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.062121223,
+          0.819999936
+        ],
+        "min": [
+          0.025757604,
+          0.579999956
+        ]
+      },
+      "nodeIDs": [
+        "face_c_left_single_pocket_001"
+      ]
+    },
+    "face-c-right-dual-pocket": {
+      "center": [
+        0.933333314,
+        0.699999946
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.968939389,
+          0.819999936
+        ],
+        "min": [
+          0.897727239,
+          0.579999956
+        ]
+      },
+      "nodeIDs": [
+        "face_c_right_dual_pocket_001"
+      ]
+    },
+    "face-c-right-outer-slot": {
+      "center": [
+        0.901515126,
+        0.359999962
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.974242396,
+          0.494999956
+        ],
+        "min": [
+          0.828787855,
+          0.224999968
+        ]
+      },
+      "nodeIDs": [
+        "face_c_right_outer_slot_001"
+      ]
+    },
+    "face-c-right-shallow-half-round": {
+      "center": [
+        0.699999986,
+        0.276779007
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.797599342,
+          0.553558014
+        ],
+        "min": [
+          0.602400629,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_c_right_shallow_half_round_001"
+      ]
+    },
+    "face-c-right-single-pocket": {
+      "center": [
+        0.846969676,
+        0.699999946
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.865151496,
+          0.819999936
+        ],
+        "min": [
+          0.828787855,
+          0.579999956
+        ]
+      },
+      "nodeIDs": [
+        "face_c_right_single_pocket_001"
+      ]
+    },
+    "face-d-center-pull-up-slot": {
+      "center": [
+        0.5,
+        0.089999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.570454539,
+          0.17999999
+        ],
+        "min": [
+          0.429545461,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_center_pull_up_slot_001"
+      ]
+    },
+    "face-d-left-deep-rounded-recess": {
+      "center": [
+        0.300000004,
+        0.13
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.3987655,
+          0.260000001
+        ],
+        "min": [
+          0.201234507,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_left_deep_rounded_recess_001"
+      ]
+    },
+    "face-d-left-dual-pocket": {
+      "center": [
+        0.13030303,
+        0.089999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.165909093,
+          0.17999999
+        ],
+        "min": [
+          0.094696966,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_left_dual_pocket_001"
+      ]
+    },
+    "face-d-left-outer-slot": {
+      "center": [
+        0.098484875,
+        0.050000007
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.171212145,
+          0.100000015
+        ],
+        "min": [
+          0.025757604,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_left_outer_slot_001"
+      ]
+    },
+    "face-d-left-single-pocket": {
+      "center": [
+        0.043939413,
+        0.089999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.062121223,
+          0.17999999
+        ],
+        "min": [
+          0.025757604,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_left_single_pocket_001"
+      ]
+    },
+    "face-d-right-deep-rounded-recess": {
+      "center": [
+        0.699999996,
+        0.13
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.798765493,
+          0.260000001
+        ],
+        "min": [
+          0.6012345,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_right_deep_rounded_recess_001"
+      ]
+    },
+    "face-d-right-dual-pocket": {
+      "center": [
+        0.933333314,
+        0.089999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.968939389,
+          0.17999999
+        ],
+        "min": [
+          0.897727239,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_right_dual_pocket_001"
+      ]
+    },
+    "face-d-right-outer-slot": {
+      "center": [
+        0.901515126,
+        0.050000007
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.974242396,
+          0.100000015
+        ],
+        "min": [
+          0.828787855,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_right_outer_slot_001"
+      ]
+    },
+    "face-d-right-single-pocket": {
+      "center": [
+        0.846969676,
+        0.089999995
+      ],
+      "facePlaneAABB": {
+        "max": [
+          0.865151496,
+          0.17999999
+        ],
+        "min": [
+          0.828787855,
+          0.0
+        ]
+      },
+      "nodeIDs": [
+        "face_d_right_single_pocket_001"
+      ]
+    }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.330000013,
+      0.050000001,
+      0.050000001
+    ],
+    "min": [
+      -0.330000013,
+      -0.050000001,
+      -0.050000001
+    ]
+  },
+  "modelSHA256": "636a0f721edb42b3810280088f9d03ed83b037c9d2b616830a77754e75accc5c",
+  "nodes": [
+    {
+      "contactID": "face-a-center-pull-up-slot",
+      "nodeID": "face_a_center_pull_up_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-left-dual-pocket",
+      "nodeID": "face_a_left_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-left-outer-slot",
+      "nodeID": "face_a_left_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-left-single-pocket",
+      "nodeID": "face_a_left_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-right-dual-pocket",
+      "nodeID": "face_a_right_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-right-outer-slot",
+      "nodeID": "face_a_right_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-a-right-single-pocket",
+      "nodeID": "face_a_right_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-center-pull-up-slot",
+      "nodeID": "face_b_center_pull_up_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-left-deep-sloper",
+      "nodeID": "face_b_left_deep_sloper_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-left-dual-pocket",
+      "nodeID": "face_b_left_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-left-outer-slot",
+      "nodeID": "face_b_left_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-left-single-pocket",
+      "nodeID": "face_b_left_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-right-deep-sloper",
+      "nodeID": "face_b_right_deep_sloper_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-right-dual-pocket",
+      "nodeID": "face_b_right_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-right-outer-slot",
+      "nodeID": "face_b_right_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-b-right-single-pocket",
+      "nodeID": "face_b_right_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-center-pull-up-slot",
+      "nodeID": "face_c_center_pull_up_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-left-dual-pocket",
+      "nodeID": "face_c_left_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-left-outer-slot",
+      "nodeID": "face_c_left_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-left-shallow-half-round",
+      "nodeID": "face_c_left_shallow_half_round_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-left-single-pocket",
+      "nodeID": "face_c_left_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-right-dual-pocket",
+      "nodeID": "face_c_right_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-right-outer-slot",
+      "nodeID": "face_c_right_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-right-shallow-half-round",
+      "nodeID": "face_c_right_shallow_half_round_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-c-right-single-pocket",
+      "nodeID": "face_c_right_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-center-pull-up-slot",
+      "nodeID": "face_d_center_pull_up_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-left-deep-rounded-recess",
+      "nodeID": "face_d_left_deep_rounded_recess_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-left-dual-pocket",
+      "nodeID": "face_d_left_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-left-outer-slot",
+      "nodeID": "face_d_left_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-left-single-pocket",
+      "nodeID": "face_d_left_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-right-deep-rounded-recess",
+      "nodeID": "face_d_right_deep_rounded_recess_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-right-dual-pocket",
+      "nodeID": "face_d_right_dual_pocket_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-right-outer-slot",
+      "nodeID": "face_d_right_outer_slot_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "face-d-right-single-pocket",
+      "nodeID": "face_d_right_single_pocket_001",
+      "role": "contact"
+    },
+    {
+      "nodeID": "poker_body_001",
+      "role": "body"
+    }
+  ],
+  "schemaVersion": 1
+}

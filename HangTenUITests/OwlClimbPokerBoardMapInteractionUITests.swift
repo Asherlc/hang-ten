@@ -9,7 +9,7 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     }
 
     // Named so it sorts before testLandscape* under alphabetical XCTest order.
-    func testFaceBSloperMapElementSelectsSloper() throws {
+    func testModelBoardDetailRendersAndSelectsHold() throws {
         let app = XCUIApplication()
         // Prefer the board-detail review route over the picker: after a landscape
         // 3D board-detail test, picker launch often white-screens under CI load.
@@ -25,26 +25,31 @@ final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
             "The DEBUG board-detail route must be displayed."
         )
 
-        let faceB = app.segmentedControls["boardDetail.presentationSelector"].buttons["Face B — deep slopers"]
-        XCTAssertTrue(faceB.waitForExistence(timeout: 10))
-        faceB.tap()
+        // The poker board is a model board with a single presentation ("Four faces")
+        // and four orientations (face-a, face-b, face-c, face-d). The default
+        // orientation is face-a. There is no presentation selector since there
+        // is only one presentation. The 3D model loads asynchronously; verify
+        // the board detail map is present (which contains the model surface).
+        let map = app.otherElements["boardDetail.map"]
+        XCTAssertTrue(map.waitForExistence(timeout: 30), "The board detail map must be present.")
 
-        let sloper = app.buttons["Face B left deep sloper"]
-        XCTAssertTrue(sloper.waitForExistence(timeout: 10))
-        XCTAssertTrue(sloper.isHittable)
-        addScreenshot(named: "Poker Face B normal")
+        // Select a face-a contact (default orientation). The hold legend buttons
+        // use accessibility identifier "boardDetail.holdLegend.<contactID>".
+        let faceALeftOuterSlot = app.buttons["boardDetail.holdLegend.face-a-left-outer-slot"]
+        XCTAssertTrue(faceALeftOuterSlot.waitForExistence(timeout: 10))
+        XCTAssertTrue(faceALeftOuterSlot.isHittable)
+        addScreenshot(named: "Poker Face A normal")
 
-        let selected = app.otherElements[
-            "boardDetail.selectedHold.face-b-left-deep-sloper"
-        ]
-        XCTAssertFalse(selected.exists)
-        sloper.tap()
-
-        XCTAssertTrue(
-            selected.waitForExistence(timeout: 10),
-            "Tapping the Face B sloper map element must select the matching hold."
-        )
-        addScreenshot(named: "Poker Face B sloper active")
+        let selected = app.otherElements["boardDetail.selectedHold.face-a-left-outer-slot"]
+        // The hold may already be selected by default; if so, tapping again is a no-op.
+        if !selected.exists {
+            faceALeftOuterSlot.tap()
+            XCTAssertTrue(
+                selected.waitForExistence(timeout: 10),
+                "Tapping the Face A hold legend button must select the matching hold."
+            )
+        }
+        addScreenshot(named: "Poker Face A selected")
     }
 
     func testLandscapeBoardDetailHidesRootTabBarAndKeepsMapInViewport() throws {

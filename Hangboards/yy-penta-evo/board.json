@@ -9,1181 +9,645 @@
   "aspectRatio": 1.5,
   "equipmentObjects": [
     {
-      "id": "primary"
+      "id": "left-penta"
+    },
+    {
+      "id": "right-penta"
     }
   ],
   "presentations": [
     {
       "id": "front-pair",
-      "name": "Paired front",
+      "name": "Paired Penta Evo",
       "aspectRatio": 1.5,
       "isDefault": true,
       "derivation": {
         "type": "original"
       },
       "media": {
-        "type": "raster",
-        "assetPath": "assets/primary.png",
-        "contactGeometry": {
-          "edge-25-left": [
-            {
-              "frame": {
-                "x": 0.116,
-                "y": 0.35,
-                "width": 0.121,
-                "height": 0.122
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.74,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.85,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.93,
-                      0.0
+        "type": "model",
+        "assetPath": "assets/primary.usdz",
+        "descriptorPath": "assets/primary.model.json",
+        "display": {
+          "camera": {
+            "type": "orthographic",
+            "viewDirection": [
+              0,
+              -0.08,
+              -1
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "fitPadding": 0.08
+          }
+        },
+        "instances": [
+          {
+            "equipmentObjectID": "left-penta",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "edge-25": "edge-25-left",
+              "edge-20": "edge-20-left",
+              "edge-15": "edge-15-left",
+              "edge-10": "edge-10-left",
+              "mono": "mono-left",
+              "duo": "duo-left",
+              "tray": "tray-left"
+            },
+            "suspension": {
+              "type": "pairedLeadCord",
+              "attachments": [
+                {
+                  "id": "left-penta-front-lead",
+                  "nodeID": "central_ring_001",
+                  "pointInModel": [
+                    0,
+                    0.061,
+                    0.004
+                  ],
+                  "contactPointsInModel": [
+                    [
+                      0,
+                      0.117,
+                      0.0185
                     ],
-                    "control2": [
-                      1.0,
-                      0.07
-                    ],
-                    "to": [
-                      1.0,
-                      0.16
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.23
-                    ],
-                    "control2": [
-                      0.98,
-                      0.28
-                    ],
-                    "to": [
-                      0.91,
-                      0.34
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.25,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.15,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
+                    [
+                      0,
                       0.07,
-                      1.0
+                      0.0185
                     ],
-                    "control2": [
-                      0.0,
-                      0.93
+                    [
+                      0,
+                      0.066,
+                      0.0185
                     ],
-                    "to": [
-                      0.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.79
+                    [
+                      0,
+                      0.063,
+                      0.014
                     ],
-                    "control2": [
-                      0.0,
-                      0.75
+                    [
+                      0,
+                      0.061,
+                      0.009
+                    ]
+                  ],
+                  "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                },
+                {
+                  "id": "left-penta-rear-lead",
+                  "nodeID": "central_ring_001",
+                  "pointInModel": [
+                    0,
+                    0.061,
+                    -0.004
+                  ],
+                  "contactPointsInModel": [
+                    [
+                      0,
+                      0.117,
+                      -0.0185
                     ],
-                    "to": [
-                      0.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": -28
-              }
-            }
-          ],
-          "edge-20-left": [
-            {
-              "frame": {
-                "x": 0.28,
-                "y": 0.35,
-                "width": 0.116,
-                "height": 0.122
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.26,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.15,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
+                    [
+                      0,
                       0.07,
-                      0.0
+                      -0.0185
                     ],
-                    "control2": [
-                      0.0,
-                      0.07
+                    [
+                      0,
+                      0.066,
+                      -0.0185
                     ],
-                    "to": [
-                      0.0,
-                      0.16
+                    [
+                      0,
+                      0.063,
+                      -0.014
+                    ],
+                    [
+                      0,
+                      0.061,
+                      -0.009
                     ]
-                  },
+                  ],
+                  "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                }
+              ],
+              "passages": {
+                "left": [
                   {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.23
+                    "id": "left-penta-left-ring",
+                    "nodeID": "central_ring_001",
+                    "pointInModel": [
+                      0,
+                      0.061,
+                      0.004
                     ],
-                    "control2": [
-                      0.02,
-                      0.28
-                    ],
-                    "to": [
-                      0.09,
-                      0.34
-                    ]
-                  },
+                    "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                  }
+                ],
+                "right": [
                   {
-                    "command": "line",
-                    "to": [
-                      0.75,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.85,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.93,
-                      1.0
+                    "id": "left-penta-right-ring",
+                    "nodeID": "central_ring_001",
+                    "pointInModel": [
+                      0,
+                      0.061,
+                      -0.004
                     ],
-                    "control2": [
-                      1.0,
-                      0.93
-                    ],
-                    "to": [
-                      1.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.79
-                    ],
-                    "control2": [
-                      1.0,
-                      0.75
-                    ],
-                    "to": [
-                      1.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "close"
+                    "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
                   }
                 ]
               },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 28
+              "anchor": {
+                "offsetFromBoardBounds": [
+                  -0.15,
+                  0.21,
+                  0
+                ],
+                "visibility": "invisible",
+                "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
+              },
+              "cord": {
+                "restLength": 0.3,
+                "radius": 0.002,
+                "material": "matteCord",
+                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot."
+              },
+              "canonicalPoses": {
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    -0.15,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.08,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  },
+                  "cordContactPoints": {
+                    "left-penta-front-lead": [
+                      [
+                        0,
+                        0.117,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        0.009
+                      ]
+                    ],
+                    "left-penta-rear-lead": [
+                      [
+                        0,
+                        0.117,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        -0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        -0.009
+                      ]
+                    ]
+                  }
+                },
+                "reverse": {
+                  "rotation": [
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "translation": [
+                    -0.15,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.08,
+                      -1
+                    ],
+                    "fitPadding": 0.1
+                  },
+                  "cordContactPoints": {
+                    "left-penta-front-lead": [
+                      [
+                        0,
+                        0.117,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        0.009
+                      ]
+                    ],
+                    "left-penta-rear-lead": [
+                      [
+                        0,
+                        0.117,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        -0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        -0.009
+                      ]
+                    ]
+                  }
+                }
               }
             }
-          ],
-          "mono-left": [
-            {
-              "frame": {
-                "x": 0.071,
-                "y": 0.535,
-                "width": 0.055,
-                "height": 0.072
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.5,
-                      0.0
+          },
+          {
+            "equipmentObjectID": "right-penta",
+            "baseTransform": {
+              "rotation": [
+                0,
+                0,
+                0,
+                1
+              ],
+              "translation": [
+                0.000000000,
+                0.000000000,
+                0.000000000
+              ]
+            },
+            "contactIDsBySlotID": {
+              "edge-25": "edge-25-right",
+              "edge-20": "edge-20-right",
+              "edge-15": "edge-15-right",
+              "edge-10": "edge-10-right",
+              "mono": "mono-right",
+              "duo": "duo-right",
+              "tray": "tray-right"
+            },
+            "suspension": {
+              "type": "pairedLeadCord",
+              "attachments": [
+                {
+                  "id": "right-penta-front-lead",
+                  "nodeID": "central_ring_001",
+                  "pointInModel": [
+                    0,
+                    0.061,
+                    0.004
+                  ],
+                  "contactPointsInModel": [
+                    [
+                      0,
+                      0.117,
+                      0.0185
+                    ],
+                    [
+                      0,
+                      0.07,
+                      0.0185
+                    ],
+                    [
+                      0,
+                      0.066,
+                      0.0185
+                    ],
+                    [
+                      0,
+                      0.063,
+                      0.014
+                    ],
+                    [
+                      0,
+                      0.061,
+                      0.009
                     ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.82,
-                      0.0
+                  ],
+                  "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                },
+                {
+                  "id": "right-penta-rear-lead",
+                  "nodeID": "central_ring_001",
+                  "pointInModel": [
+                    0,
+                    0.061,
+                    -0.004
+                  ],
+                  "contactPointsInModel": [
+                    [
+                      0,
+                      0.117,
+                      -0.0185
                     ],
-                    "control2": [
-                      1.0,
-                      0.23
+                    [
+                      0,
+                      0.07,
+                      -0.0185
                     ],
-                    "to": [
-                      1.0,
-                      0.5
+                    [
+                      0,
+                      0.066,
+                      -0.0185
+                    ],
+                    [
+                      0,
+                      0.063,
+                      -0.014
+                    ],
+                    [
+                      0,
+                      0.061,
+                      -0.009
                     ]
-                  },
+                  ],
+                  "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                }
+              ],
+              "passages": {
+                "left": [
                   {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.77
+                    "id": "right-penta-left-ring",
+                    "nodeID": "central_ring_001",
+                    "pointInModel": [
+                      0,
+                      0.061,
+                      0.004
                     ],
-                    "control2": [
-                      0.82,
-                      1.0
-                    ],
-                    "to": [
-                      0.5,
-                      1.0
-                    ]
-                  },
+                    "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
+                  }
+                ],
+                "right": [
                   {
-                    "command": "curve",
-                    "control1": [
-                      0.18,
-                      1.0
+                    "id": "right-penta-right-ring",
+                    "nodeID": "central_ring_001",
+                    "pointInModel": [
+                      0,
+                      0.061,
+                      -0.004
                     ],
-                    "control2": [
-                      0.0,
-                      0.77
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.23
-                    ],
-                    "control2": [
-                      0.18,
-                      0.0
-                    ],
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
+                    "provenance": "PE-RESTORED front/reverse photographs and PE5 manufacturer installation article establish an exterior loop around the upper band through the existing central ring. Coordinates are authored-display-estimate in importer basis (x,z,-y); no small passages, hidden channel, knot or inter-unit connection."
                   }
                 ]
               },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "duo-left": [
-            {
-              "frame": {
-                "x": 0.076,
-                "y": 0.638,
-                "width": 0.057,
-                "height": 0.132
+              "anchor": {
+                "offsetFromBoardBounds": [
+                  0.15,
+                  0.21,
+                  0
+                ],
+                "visibility": "invisible",
+                "provenance": "authored-display-estimate: independent fixed overhead display anchor with canonical pose-owned spacing. All unit dimensions except sourced contact depths, wood color, rounding, camera and placement are display estimates."
               },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
+              "cord": {
+                "restLength": 0.3,
+                "radius": 0.002,
+                "material": "matteCord",
+                "provenance": "authored-display-estimate: 300 mm allowance per exterior lead and 2 mm radius. The manufacturer's 60 cm loop is assembly evidence only; this is not a measured lead or a modeled knot."
+              },
+              "canonicalPoses": {
+                "primary": {
+                  "rotation": [
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "translation": [
+                    0.15,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.08,
+                      -1
+                    ],
+                    "fitPadding": 0.1
                   },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.82,
-                      0.0
+                  "cordContactPoints": {
+                    "right-penta-front-lead": [
+                      [
+                        0,
+                        0.117,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        0.009
+                      ]
                     ],
-                    "control2": [
-                      1.0,
-                      0.12
-                    ],
-                    "to": [
-                      1.0,
-                      0.25
+                    "right-penta-rear-lead": [
+                      [
+                        0,
+                        0.117,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        -0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        -0.009
+                      ]
                     ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.75
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.88
-                    ],
-                    "control2": [
-                      0.82,
-                      1.0
-                    ],
-                    "to": [
-                      0.5,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.18,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.88
-                    ],
-                    "to": [
-                      0.0,
-                      0.75
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.25
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.12
-                    ],
-                    "control2": [
-                      0.18,
-                      0.0
-                    ],
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
                   }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 90
-              }
-            }
-          ],
-          "edge-15-left": [
-            {
-              "frame": {
-                "x": 0.331,
-                "y": 0.544,
-                "width": 0.053,
-                "height": 0.1
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
+                },
+                "reverse": {
+                  "rotation": [
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "translation": [
+                    0.15,
+                    0,
+                    0
+                  ],
+                  "camera": {
+                    "viewDirection": [
+                      0,
+                      -0.08,
+                      -1
+                    ],
+                    "fitPadding": 0.1
                   },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
+                  "cordContactPoints": {
+                    "right-penta-front-lead": [
+                      [
+                        0,
+                        0.117,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        0.009
+                      ]
+                    ],
+                    "right-penta-rear-lead": [
+                      [
+                        0,
+                        0.117,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.07,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.066,
+                        -0.0185
+                      ],
+                      [
+                        0,
+                        0.063,
+                        -0.014
+                      ],
+                      [
+                        0,
+                        0.061,
+                        -0.009
+                      ]
                     ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
                   }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0
+                }
               }
             }
-          ],
-          "edge-10-left": [
-            {
-              "frame": {
-                "x": 0.331,
-                "y": 0.644,
-                "width": 0.053,
-                "height": 0.105
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "tray-left": [
-            {
-              "frame": {
-                "x": 0.15,
-                "y": 0.707,
-                "width": 0.182,
-                "height": 0.076
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "edge-20-right": [
-            {
-              "frame": {
-                "x": 0.604,
-                "y": 0.35,
-                "width": 0.116,
-                "height": 0.122
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.74,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.85,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.9299999999999999,
-                      0.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.07
-                    ],
-                    "to": [
-                      1.0,
-                      0.16
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.23
-                    ],
-                    "control2": [
-                      0.98,
-                      0.28
-                    ],
-                    "to": [
-                      0.91,
-                      0.34
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.25,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.15000000000000002,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.06999999999999995,
-                      1.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.93
-                    ],
-                    "to": [
-                      0.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.79
-                    ],
-                    "control2": [
-                      0.0,
-                      0.75
-                    ],
-                    "to": [
-                      0.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 28
-              }
-            }
-          ],
-          "edge-25-right": [
-            {
-              "frame": {
-                "x": 0.763,
-                "y": 0.35,
-                "width": 0.121,
-                "height": 0.122
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.26,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.15000000000000002,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.06999999999999995,
-                      0.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.07
-                    ],
-                    "to": [
-                      0.0,
-                      0.16
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.23
-                    ],
-                    "control2": [
-                      0.020000000000000018,
-                      0.28
-                    ],
-                    "to": [
-                      0.08999999999999997,
-                      0.34
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.75,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.85,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.9299999999999999,
-                      1.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.93
-                    ],
-                    "to": [
-                      1.0,
-                      0.84
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.79
-                    ],
-                    "control2": [
-                      1.0,
-                      0.75
-                    ],
-                    "to": [
-                      1.0,
-                      0.72
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": -28
-              }
-            }
-          ],
-          "edge-10-right": [
-            {
-              "frame": {
-                "x": 0.616,
-                "y": 0.644,
-                "width": 0.053,
-                "height": 0.105
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "edge-15-right": [
-            {
-              "frame": {
-                "x": 0.616,
-                "y": 0.544,
-                "width": 0.053,
-                "height": 0.1
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "rectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "mono-right": [
-            {
-              "frame": {
-                "x": 0.874,
-                "y": 0.535,
-                "width": 0.055,
-                "height": 0.072
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.18000000000000005,
-                      0.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.23
-                    ],
-                    "to": [
-                      0.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.77
-                    ],
-                    "control2": [
-                      0.18000000000000005,
-                      1.0
-                    ],
-                    "to": [
-                      0.5,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.8200000000000001,
-                      1.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.77
-                    ],
-                    "to": [
-                      1.0,
-                      0.5
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.23
-                    ],
-                    "control2": [
-                      0.8200000000000001,
-                      0.0
-                    ],
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "oval",
-                "rotationDegrees": 0
-              }
-            }
-          ],
-          "duo-right": [
-            {
-              "frame": {
-                "x": 0.867,
-                "y": 0.638,
-                "width": 0.057,
-                "height": 0.132
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.18000000000000005,
-                      0.0
-                    ],
-                    "control2": [
-                      0.0,
-                      0.12
-                    ],
-                    "to": [
-                      0.0,
-                      0.25
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.75
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.0,
-                      0.88
-                    ],
-                    "control2": [
-                      0.18000000000000005,
-                      1.0
-                    ],
-                    "to": [
-                      0.5,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      0.8200000000000001,
-                      1.0
-                    ],
-                    "control2": [
-                      1.0,
-                      0.88
-                    ],
-                    "to": [
-                      1.0,
-                      0.75
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      0.25
-                    ]
-                  },
-                  {
-                    "command": "curve",
-                    "control1": [
-                      1.0,
-                      0.12
-                    ],
-                    "control2": [
-                      0.8200000000000001,
-                      0.0
-                    ],
-                    "to": [
-                      0.5,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "shapeConstraint": {
-                "shape": "pill",
-                "rotationDegrees": 90
-              }
-            }
-          ],
-          "tray-right": [
-            {
-              "frame": {
-                "x": 0.6679999999999999,
-                "y": 0.707,
-                "width": 0.182,
-                "height": 0.076
-              },
-              "shape": {
-                "type": "path",
-                "commands": [
-                  {
-                    "command": "move",
-                    "to": [
-                      1.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      0.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      0.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "line",
-                    "to": [
-                      1.0,
-                      1.0
-                    ]
-                  },
-                  {
-                    "command": "close"
-                  }
-                ]
-              },
-              "treatment": {
-                "type": "surface"
-              },
-              "shapeConstraint": {
-                "shape": "roundedRectangle",
-                "rotationDegrees": 0
-              }
-            }
-          ]
-        }
+          }
+        ]
       }
     }
   ],
@@ -1191,7 +655,7 @@
   "contacts": [
     {
       "id": "edge-25-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit 25 mm edge",
       "kind": "edge",
       "depth": {
@@ -1204,7 +668,7 @@
     },
     {
       "id": "edge-20-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit 20 mm edge",
       "kind": "edge",
       "depth": {
@@ -1217,7 +681,7 @@
     },
     {
       "id": "mono-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit mono",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -1225,7 +689,7 @@
     },
     {
       "id": "duo-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit duo",
       "kind": "pocket",
       "fingerCapacity": 2,
@@ -1235,7 +699,7 @@
     },
     {
       "id": "edge-15-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit 15 mm edge",
       "kind": "edge",
       "depth": {
@@ -1248,7 +712,7 @@
     },
     {
       "id": "edge-10-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit 10 mm edge",
       "kind": "edge",
       "depth": {
@@ -1261,14 +725,14 @@
     },
     {
       "id": "tray-left",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "left-penta",
       "name": "Left unit tray",
       "kind": "jug",
       "gripTypes": []
     },
     {
       "id": "edge-20-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit 20 mm edge",
       "kind": "edge",
       "depth": {
@@ -1281,7 +745,7 @@
     },
     {
       "id": "edge-25-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit 25 mm edge",
       "kind": "edge",
       "depth": {
@@ -1294,7 +758,7 @@
     },
     {
       "id": "edge-10-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit 10 mm edge",
       "kind": "edge",
       "depth": {
@@ -1307,7 +771,7 @@
     },
     {
       "id": "edge-15-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit 15 mm edge",
       "kind": "edge",
       "depth": {
@@ -1320,7 +784,7 @@
     },
     {
       "id": "mono-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit mono",
       "kind": "pocket",
       "fingerCapacity": 1,
@@ -1328,7 +792,7 @@
     },
     {
       "id": "duo-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit duo",
       "kind": "pocket",
       "fingerCapacity": 2,
@@ -1338,10 +802,44 @@
     },
     {
       "id": "tray-right",
-      "equipmentObjectID": "primary",
+      "equipmentObjectID": "right-penta",
       "name": "Right unit tray",
       "kind": "jug",
       "gripTypes": []
+    }
+  ],
+  "positions": [
+    {
+      "id": "primary",
+      "presentationID": "front-pair",
+      "contactIDs": [
+        "edge-25-left",
+        "edge-20-left",
+        "mono-left",
+        "duo-left",
+        "edge-15-left",
+        "tray-left",
+        "edge-20-right",
+        "edge-25-right",
+        "edge-15-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ]
+    },
+    {
+      "id": "reverse",
+      "presentationID": "front-pair",
+      "contactIDs": [
+        "mono-left",
+        "duo-left",
+        "edge-10-left",
+        "tray-left",
+        "edge-10-right",
+        "mono-right",
+        "duo-right",
+        "tray-right"
+      ]
     }
   ]
 }

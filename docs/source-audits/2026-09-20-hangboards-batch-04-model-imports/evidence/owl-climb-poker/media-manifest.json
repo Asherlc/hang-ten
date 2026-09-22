@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "1.0",
+  "assets": [
+    {
+      "file": "evidence/originals/61cd4a213f-owlclimb_poker19_0.jpg",
+      "sha256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+      "pixelDimensions": [
+        1920,
+        1080
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "OP-PHOTO-0"
+      ],
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+      "publisher": "Owl Climb",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "source URL retained from earlier research",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/originals/d8dc16e362-owlclimb_poker19_1.jpg",
+      "sha256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+      "pixelDimensions": [
+        1920,
+        1080
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "OP-PHOTO-1"
+      ],
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+      "publisher": "Owl Climb",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "source URL retained from earlier research",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/originals/3231a07015-owlclimb_poker19_2.jpg",
+      "sha256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+      "pixelDimensions": [
+        1920,
+        1080
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "OP-PHOTO-2"
+      ],
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+      "publisher": "Owl Climb",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "source URL retained from earlier research",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/originals/340a73e020-owlclimb_poker19_3.jpg",
+      "sha256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+      "pixelDimensions": [
+        1920,
+        1080
+      ],
+      "kind": "original-reference",
+      "sourceIds": [
+        "OP-PHOTO-3"
+      ],
+      "sourceURL": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+      "publisher": "Owl Climb",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "source URL retained from earlier research",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    },
+    {
+      "file": "evidence/derived-review/owl-climb-poker-0.jpg",
+      "sha256": "ebcd75721660837ddf6c5570f1055581498deedf8cc573dc954c6de42dfc3c3d",
+      "pixelDimensions": [
+        1500,
+        1200
+      ],
+      "kind": "derived-review",
+      "sourceIds": [
+        "OP1"
+      ],
+      "sourceURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
+      "publisher": "Earlier assembled research contact sheet; original publishers indicated by source register",
+      "accessDate": "2026-09-20",
+      "retention": "Recovered actual image bytes from the earlier conversation; not an AI reconstruction.",
+      "urlProvenance": "Derivative reduced-size collage, NOT an original full-resolution source file. Page URL is a reference, not the collage origin.",
+      "license": "Third-party reference only; commercial redistribution or application-texture rights not established.",
+      "applicationTexture": false,
+      "presentInThisBuild": true
+    }
+  ],
+  "sourceImagePolicy": "Original-reference files are distinct from derivative review collages and from application textures. No original PDFs/videos are supplied. Unknown binary URL provenance is expressly marked."
+}

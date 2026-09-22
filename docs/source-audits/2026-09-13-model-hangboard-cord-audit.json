@@ -2,6 +2,37 @@
   "schemaVersion": 1,
   "records": [
     {
+      "packageID": "yy.penta-evo",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent paired exterior loops through the existing central ring; no invented channel or knot.",
+      "evidence": [
+        {
+          "view": "PE-RESTORED full front/reverse original: two exterior strands around top band and through central ring; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "83b95adc297d634659654f6f27bb43ebae1c53b171b747568ac5e022754e6571",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-front-reverse.webp"
+        },
+        {
+          "view": "PE-RESTORED intact close-up original: uninterrupted lower band and retaining concavities; binary URL unknown, product URL is reference only",
+          "url": "https://www.yyvertical.com/en/products/penta-evo",
+          "exactRevisionID": "yy-penta-evo-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "1107039ef6d2877cd68a293683c72ec93f3166633199d45484f58c13b48aa2fc",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/yy-penta-evo-close-up.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed both exact approved intact originals and independently rechecked YY product and installation article. Seven enumerated and pictured contacts per unit prevail over the eight-grip headline. The actual asymmetric unit is reused identically without reflection; rear 10 mm recess shares the front 15 mm physical band. Each instance has its own two-sided exterior wrap through the existing central ring and independent invisible anchor. No retired small passage, hidden channel, knot, hardware or inter-unit route is modeled. Original binary URLs remain null/unhashed in the source register; these product-page references do not claim download provenance. Unsurveyed outline, radii, rear, color, guide/endpoints, rest length and poses are authored-display-estimate."
+      }
+    },
+    {
       "packageID": "beastmaker-1000",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
@@ -853,6 +884,201 @@
         "reviewer": "hang-ten-cord-audit",
         "reviewedAt": "2026-09-16",
         "notes": "Reviewed the retained exact-revision manufacturer product; it does not establish a supplied or integral cord."
+      }
+    },
+    {
+      "packageID": "metolius.light-rail-2",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord upper-entry exterior leads only; no underside mouth or hidden vertical bore.",
+      "evidence": [
+        {
+          "view": "LR2 exact-revision manufacturer product view",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Light-Rail-2-PT.jpg?v=1767727616",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7b263d3e31773efe6abdb4dcaeee7e9fcea532696427dbbabfefbb5ba72bb272",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-product.jpg"
+        },
+        {
+          "view": "Approved Treeline exact-revision field view, exact archive replay 2026-01-29T01:24:02Z",
+          "url": "https://web.archive.org/web/20260129012402id_/https://images.squarespace-cdn.com/content/v1/5b4544e485ede17941bc95fc/452f6e96-37f1-454d-a405-e801658501a5/metolius-light-rail-1.jpg",
+          "exactRevisionID": "metolius-light-rail-2-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "93cc83c29d011c0b1b84aa02b51f8f1df4e167805ab27bffde48938c83c7fa4a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-light-rail-2-field.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed the exact approved manufacturer product and archived Treeline field originals retained by Task 7. One reversible rail has one continuous front recess and current manufacturer 40/20/40/15 contacts. Approve only the two visible upper exterior entry regions and independent exterior leads. Source underside markers 3/4, hidden vertical bores, connecting routes and old face screws are omitted. Entry clipping, unsurveyed cross-section, radii, rear, material and suspension display values are authored-display-estimate; clipping does not claim physical blind bores."
+      }
+    },
+    {
+      "packageID": "crimptonite.helium-mobile",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "pairedLeadCord exterior leads only; no inferred interior route or twoBranchCord.",
+      "evidence": [
+        {
+          "view": "HE2 exact-revision front",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_06.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "9f5dea470c326d32c6bde1dd5427f2bfb95a81b99ae258c320ae9deec0384a40",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-front.jpg"
+        },
+        {
+          "view": "HE6 exact-revision reverse",
+          "url": "https://9cbouldering.com/cdn/shop/products/Helium--mobile-hangboard-by-Crimptonite_08.jpg?v=1704979580",
+          "exactRevisionID": "crimptonite-helium-mobile-current",
+          "sourceTier": "retailer",
+          "snapshotSHA256": "5d5c18d45ae6d30e6e951aa158a30b303d42d4583d18d4a6d82075ff5de50f6a",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/crimptonite-helium-mobile-reverse.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Inspected exact HE2/HE6 original Crimptonite photographs retained by Task 7 and the manual analytic candidate. Front and reverse each show two end mouths, three recesses occur only on the front, and the rear is continuous. Approve two independent exterior front leads; clipped mouth display geometry makes no claim about hidden connection. HE1 manufacturer 24 mm thickness wins the retailer conflict. Unmeasured mouth/pose/anchor/rest-length/material/camera values are authored-display-estimate."
+      }
+    },
+    {
+      "packageID": "metolius.rock-rings-3d",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "pairedLeadCord",
+      "ruling": "two independent pairedLeadCord systems; no inter-unit connection or central through-bore.",
+      "evidence": [
+        {
+          "view": "RR3 exact manufacturer black/white product and two roof exits per unit",
+          "url": "https://www.metoliusclimbing.com/cdn/shop/files/Rock-Rings-black-white.jpg?v=1759460123",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d92a0f25dab857eae2ee9b8581651fa9162452c38e32a7955e23c74de4a3d77c",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-product.jpg"
+        },
+        {
+          "view": "RR6 approved owner front/rear; uninterrupted rear disproves central through-bore",
+          "url": "https://i.ebayimg.com/images/g/xaEAAOSwFtFmDzoB/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "b510bd192bb6fe54c6e4dcfa98c9d684a2db7582cbfd3682cebb6e031494a8f0",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-front-rear.webp"
+        },
+        {
+          "view": "RR7 approved owner lateral opening; no claimed hidden route",
+          "url": "https://i.ebayimg.com/images/g/KQkAAOSwjmJmDzoE/s-l1600.webp",
+          "exactRevisionID": "metolius-rock-rings-3d-current",
+          "sourceTier": "independent",
+          "snapshotSHA256": "df263e67395aa17a2f4df263ca74e4cbbfb7bfcf9c75e0dfa611d352ad3d3cba",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/metolius-rock-rings-3d-lateral.webp"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed exact approved manufacturer black/white and retained owner front/rear/lateral originals. One canonical physical unit is rendered twice, identical and unreflected. Four generic contact slots map uniquely to eight preserved contacts. Each instance has its own pairedLeadCord and fixed invisible world anchor. Visible leads terminate at two roof exits; lateral windows are non-route attachment geometry. No central bore, concealed connection, inter-unit route, screw/mounting hole or hardware is modeled. Shallow aperture clipping is an authored-display-estimate, not proof of a physical blind cavity. Owner revision/year and CDN provenance caveats remain in the original source register; exact chemistry is unknown and source textures are not used."
+      }
+    },
+    {
+      "packageID": "owl-climb.poker",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "noDocumentedSuspension; excluded.",
+      "evidence": [
+        {
+          "view": "OP-PHOTO-0 exact manufacturer face A",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_0.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "4bae58b408b3f3a82c524b1101079eafa01cd062c398cb203d4803fce9850eab",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-a.jpg"
+        },
+        {
+          "view": "OP-PHOTO-1 exact manufacturer face B",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_1.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "0c1d54cb2bc4d8e7fa285f3053b927d7c1a1b3fbafdf0b5d7aface9c82d0dbad",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-b.jpg"
+        },
+        {
+          "view": "OP-PHOTO-2 exact manufacturer face C",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_2.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "5fbff79f31db8e85d078a74eb629abd069fc276ac128b3d85a84fc15ad9f1c4e",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-c.jpg"
+        },
+        {
+          "view": "OP-PHOTO-3 exact manufacturer face D",
+          "url": "https://owlclimb.com/wp-content/uploads/2019/03/owlclimb_poker19_3.jpg",
+          "exactRevisionID": "owl-climb-poker-2019-four-face",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "ae39598fbf75c0e4e4dfbb599c724ff1e2531ef12ecca84b3504805e7bc3af13",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/owl-climb-poker-face-d.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-20",
+        "notes": "Reviewed all four exact approved Owl manufacturer originals. One 660 x 100 x 100 mm beam has 34 unchanged same-face contacts, including exactly the two approved Face D deep rounded recess restores. Manufacturer mounting brackets are external hardware and are omitted, along with screws and mounting holes. No evidence establishes board suspension; no cord, anchor, passage or suspension metadata is promoted. Cyclic face order, unsurveyed depth assignments, relief transitions, edge radii, material and camera are authored-display-estimate. The mono/duo sequence is identical at both ends in every source view, not mirrored."
+      }
+    },
+    {
+      "packageID": "trango.rock-prodigy-pivot",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "noDocumentedSuspension; pulley-kit ropes are not Pivot suspension.",
+      "evidence": [
+        {
+          "view": "PV2 exact manufacturer front pair",
+          "url": "https://trango.com/cdn/shop/products/22840-501_RockProdigyPivotGrey_MainImage.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "339f743c7e5fff0b0619314cf6781d8f602c1545975390f4ab4424aa7461bf5d",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-front.jpg"
+        },
+        {
+          "view": "PV3 exact manufacturer dual-half oblique",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage4_DualBoard.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "e05deb5c0ea6d3361122926d7b3efee6b72bb9aad0a75fc09663bf599731e3e4",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-dual-oblique.jpg"
+        },
+        {
+          "view": "PV8 exact manufacturer single-half oblique",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage3_SingleBoard.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "7aa2556dec24293e62c2be110fa7dfb6bcf118333ff35693e455a8a7babc67f7",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-single-oblique.jpg"
+        },
+        {
+          "view": "PV7 exact manufacturer supported-crimp close-up",
+          "url": "https://trango.com/cdn/shop/products/22840_RockProdigyPivot_AltImage2_CloseUp.jpg?v=1755037446&width=1946",
+          "exactRevisionID": "trango-rock-prodigy-pivot-2020-quad-cleat",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "26cf8d599a1a08bbcbbf688e14c9806d5f2381dc2aecdb608998ab22cee2c1b3",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/trango-rock-prodigy-pivot-close-up.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "Astra",
+        "reviewedAt": "2026-09-21",
+        "notes": "Reviewed all four exact approved Trango manufacturer originals plus the manufacturer Quick Start and depth guide facts in the closed Batch 04 source register. Nothing in that evidence establishes a suspended Pivot presentation: the product mounts on external Quad Cleat hardware, and the separately sold pulley kit's ropes are training accessories, not board suspension. No cord, anchor, passage or suspension metadata is promoted. One canonical resin half carries nine physical contacts and is rendered twice, the right instance reflected about the unit bounds centre. The only retained openings are the genuine two-finger through opening and the three-finger end window; all six delivered fastener holes, every bolt counterbore and set-screw bore, and the Quad Cleat, rail/backer and bracket hardware are omitted from the display model without implying the physical product lacks them. Sourced PV5 depths are preserved; the overall envelope, rear surface, silhouette radii, scallop count, wing section, rail depth gradient direction, material and camera remain authored-display-estimate."
       }
     }
   ]

@@ -15,6 +15,54 @@ private func XCTAssertMalformedJSON(
 
 final class BoardPackageStoreTests: XCTestCase {
 
+    func testReusableModelMediaDecodesTwoInstances() throws {
+        let board = try reusableFixtureBoard(named: "reusable-valid")
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("fixture must decode model media")
+        }
+        XCTAssertEqual(media.instances?.count, 2)
+        XCTAssertEqual(media.instances?[1].baseTransform.reflection, .x)
+    }
+
+    func testReusableModelDescriptorRejectsDuplicateContactSlotMember() throws {
+        let fixture = try reusableFixtureBundle(named: "reusable-valid") { descriptorJSON in
+            descriptorJSON.replacingOccurrences(
+                of: #""contactSlots":{"#,
+                with: #""contactSlots":{"edge":{"nodeIDs":["UnitEdge"],"facePlaneAABB":{"min":[0.1,0.2],"max":[0.4,0.6]},"center":[0.25,0.4]},"#
+            )
+        }
+        addTeardownBlock { fixture.remove() }
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalid reusable descriptor rejection, got \(error)")
+            }
+        }
+    }
+
+    func testReusablePositionTransformsRejectReflection() throws {
+        let fixture = try reusableFixtureBundle(named: "reusable-valid") { $0 }
+        addTeardownBlock { fixture.remove() }
+        let boardURL = fixture.rootURL
+            .appendingPathComponent("Hangboards/fixture-model/board.json")
+        var boardJSON = try String(contentsOf: boardURL, encoding: .utf8)
+        let needle = #""positionTransforms":{"primary":{"rotation":[0,0,0,1],"translation":[0.000000000,0.000000000,0.000000000]}"#
+        let replacement = #""positionTransforms":{"primary":{"reflection":"x","rotation":[0,0,0,1],"translation":[0.000000000,0.000000000,0.000000000]}"#
+        XCTAssertTrue(boardJSON.contains(needle), "expected sortedKeys positionTransforms shape in fixture board.json")
+        boardJSON = boardJSON.replacingOccurrences(of: needle, with: replacement)
+        try Data(boardJSON.utf8).write(to: boardURL)
+
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage(_, let reason) = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalidPackage, got \(error)")
+            }
+            XCTAssertTrue(
+                reason.contains("positionTransforms must omit reflection"),
+                "unexpected reason: \(reason)"
+            )
+        }
+    }
+
     func testOnDemandStoreLoadsEveryCorrectedBundledSuspensionPackage() throws {
         let store = try BoardPackageStore(bundle: .main, modelAssetMode: .onDemand)
         let expected: [(id: String, slug: String)] = [
@@ -3917,6 +3965,56 @@ final class BoardPackageStoreTests: XCTestCase {
         return try XCTUnwrap(
             JSONSerialization.jsonObject(with: Data(contentsOf: fixtureURL)) as? [String: Any]
         )
+    }
+
+    private func reusableFixtureBoard(named name: String) throws -> BoardRevision {
+        let fixture = try reusableFixtureBundle(named: name)
+        addTeardownBlock { fixture.remove() }
+        return try XCTUnwrap(BoardPackageStore(bundle: fixture.bundle).boards.first)
+    }
+
+    private func reusableFixtureBundle(
+        named name: String,
+        descriptorRawMutation: @escaping (String) -> String = { $0 }
+    ) throws -> FixtureBundle {
+        let fixtures = try validationFixtures()
+        let reusableFixtures = try XCTUnwrap(fixtures["reusableModelFixtures"] as? [String: Any])
+        let reusableFixture = try XCTUnwrap(reusableFixtures[name] as? [String: Any])
+        let board = try XCTUnwrap(reusableFixture["board"] as? [String: Any])
+        let descriptor = try XCTUnwrap(reusableFixture["descriptor"] as? [String: Any])
+        let assetBase64 = try XCTUnwrap(reusableFixture["assetBase64"] as? String)
+        let modelBytes = try XCTUnwrap(Data(base64Encoded: assetBase64))
+
+        let fixture = try makeFixtureBundle { hangboardsURL in
+            let packageURL = hangboardsURL.appendingPathComponent("fixture-model")
+            let assetsURL = packageURL.appendingPathComponent("assets")
+            try FileManager.default.removeItem(at: assetsURL.appendingPathComponent("primary.png"))
+            var boardJSON = String(
+                decoding: try JSONSerialization.data(withJSONObject: board, options: [.sortedKeys]),
+                as: UTF8.self
+            )
+            boardJSON = boardJSON.replacingOccurrences(
+                of: #""translation":[-0.12,0,0]"#,
+                with: #""translation":[-0.120000000,0.000000000,0.000000000]"#
+            )
+            boardJSON = boardJSON.replacingOccurrences(
+                of: #""translation":[0,0,0]"#,
+                with: #""translation":[0.000000000,0.000000000,0.000000000]"#
+            )
+            boardJSON = boardJSON.replacingOccurrences(
+                of: #""translation":[0.12,0,0]"#,
+                with: #""translation":[0.120000000,0.000000000,0.000000000]"#
+            )
+            try Data(boardJSON.utf8).write(to: packageURL.appendingPathComponent("board.json"))
+            try modelBytes.write(to: assetsURL.appendingPathComponent("primary.usdz"))
+            let descriptorJSON = String(
+                decoding: try JSONSerialization.data(withJSONObject: descriptor, options: [.sortedKeys]),
+                as: UTF8.self
+            )
+            try Data(descriptorRawMutation(descriptorJSON).utf8)
+                .write(to: assetsURL.appendingPathComponent("primary.model.json"))
+        }
+        return fixture
     }
 
     private func pngFixture(named name: String) throws -> Data {

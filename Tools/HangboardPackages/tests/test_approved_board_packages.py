@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import shutil
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -32,7 +34,183 @@ TRAINING_TILES_ROOT = HANGBOARDS_ROOT / "soill-training-tiles"
 MAMMUT_DIAMOND_ROOT = HANGBOARDS_ROOT / "mammut-diamond-finger"
 PIVOT_ROOT = HANGBOARDS_ROOT / "trango-rock-prodigy-pivot"
 SIMULATOR_3D_ROOT = HANGBOARDS_ROOT / "metolius-simulator-3d"
+HELIUM_ROOT = HANGBOARDS_ROOT / "crimptonite-helium-mobile"
+POKER_ROOT = HANGBOARDS_ROOT / "owl-climb-poker"
 J_BRYANT_FTG32_ROOT = HANGBOARDS_ROOT / "j-bryant-ftg-32"
+
+
+def test_poker_four_faces_keep_all_34_contacts_on_one_hash_bound_model() -> None:
+    """Catch a dropped Face D restore, cross-face selection, or raster fallback."""
+    board = json.loads((POKER_ROOT / "board.json").read_text())
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary" and presentation["isDefault"] is True
+    media = presentation["media"]
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "orientation"}
+    assert media["type"] == "model"
+    assert {p.relative_to(POKER_ROOT).as_posix() for p in POKER_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    base = {
+        "left-outer-slot", "left-single-pocket", "left-dual-pocket", "center-pull-up-slot",
+        "right-dual-pocket", "right-single-pocket", "right-outer-slot",
+    }
+    face_contacts = {
+        "face-a": {"face-a-" + suffix for suffix in base},
+        "face-b": {"face-b-" + suffix for suffix in base | {"left-deep-sloper", "right-deep-sloper"}},
+        "face-c": {"face-c-" + suffix for suffix in base | {"left-shallow-half-round", "right-shallow-half-round"}},
+        "face-d": {"face-d-" + suffix for suffix in base | {"left-deep-rounded-recess", "right-deep-rounded-recess"}},
+    }
+    expected = set().union(*face_contacts.values())
+    assert len(expected) == 34
+    assert {c["id"] for c in board["contacts"]} == expected
+    assert {p["id"]: set(p["contactIDs"]) for p in board["positions"]} == face_contacts
+    assert all(p["presentationID"] == "primary" for p in board["positions"])
+    assert media["orientation"] == {"pivot": "modelBoundsCenter", "rotations": {
+        "face-a": [0, 0, 0, 1], "face-b": [0.707106781, 0, 0, 0.707106781],
+        "face-c": [1, 0, 0, 0], "face-d": [-0.707106781, 0, 0, 0.707106781],
+    }}
+    descriptor = json.loads((POKER_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256((POKER_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    assert set(descriptor["contacts"]) == expected
+    assert {n.get("contactID") for n in descriptor["nodes"] if n["role"] == "contact"} == expected
+    for node in descriptor["nodes"]:
+        assert node["role"] in {"body", "contact"}
+        assert not any(word in node["nodeID"].lower() for word in ("screw", "mount", "bracket", "fastener", "cleat", "cord", "anchor"))
+    assert descriptor["modelBounds"]["min"] == pytest.approx([-.33, -.05, -.05], abs=1e-6)
+    assert descriptor["modelBounds"]["max"] == pytest.approx([.33, .05, .05], abs=1e-6)
+    with zipfile.ZipFile(POKER_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+    package = load_board_catalog_module().load_board_package(POKER_ROOT)
+    assert package.board.id == "owl-climb.poker"
+
+
+def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:
+    """Catch lost lip merges, extra contacts, stale rasters, or an unbound model."""
+    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["derivation"] == {"type": "original"}
+    media = presentation["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "suspension"}
+    assert {path.relative_to(HELIUM_ROOT).as_posix() for path in HELIUM_ROOT.rglob("*") if path.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    assert media["assetPath"] == "assets/primary.usdz"
+    assert media["descriptorPath"] == "assets/primary.model.json"
+    descriptor = json.loads((HELIUM_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256((HELIUM_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    with zipfile.ZipFile(HELIUM_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    expected = {
+        "edge-14": {"he-L-lower-14", "he-R-lower-14"},
+        "edge-22": {"he-L-upper-22", "he-R-upper-22"},
+        "center-edge-10": {"he-C-lower-10"},
+        "center-edge-18": {"he-C-upper-18"},
+        "top-jug": {"he-outer-top-jug"},
+        "back-jug-sloper": {"he-rear-jug-sloper"},
+    }
+    assert {contact["id"] for contact in board["contacts"]} == set(expected)
+    assert len(board["contacts"]) == 6
+    assert set(descriptor["contacts"]) == set(expected)
+    # USD identifiers sanitize hyphens; Blender's mesh child may add _001.
+    def source_name(node_id: str) -> str:
+        return node_id.removesuffix("_001").replace("_", "-")
+
+    assert {contact_id: {source_name(node) for node in contact["nodeIDs"]}
+            for contact_id, contact in descriptor["contacts"].items()} == expected
+    assert {contact_id: {source_name(node["nodeID"]) for node in descriptor["nodes"]
+                         if node.get("contactID") == contact_id}
+            for contact_id in expected} == expected
+    assert board["positions"] == [{"id": "primary", "presentationID": "primary", "contactIDs": [
+        "edge-14", "center-edge-18", "edge-22", "center-edge-10", "back-jug-sloper", "top-jug"
+    ]}]
+    bounds = descriptor["modelBounds"]
+    assert [bounds["max"][i] - bounds["min"][i] for i in range(3)] == pytest.approx([0.4, 0.058, 0.024], abs=0.000001)
+    nodes = {source_name(node["nodeID"]): node for node in descriptor["nodes"]}
+    assert {"front-lead-mouth", "reverse-lead-mouth"} <= set(nodes)
+    assert nodes["front-lead-mouth"]["role"] == nodes["reverse-lead-mouth"]["role"] == "attachment"
+    assert not any(token in name.lower() for name in nodes for token in ("mount", "screw", "fastener", "cleat", "bracket", "hardware", "cord", "anchor"))
+
+
+def test_helium_represents_only_two_exterior_cord_leads() -> None:
+    """Catch fabricated interior routing and attachments bound to selectable lips."""
+    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    suspension = media["suspension"]
+    assert suspension["type"] == "pairedLeadCord"
+    assert set(suspension["passages"]) == {"left", "right"}
+    for side in ("left", "right"):
+        # Schema requires one point-only mouth per lead; no entry/exit route.
+        assert len(suspension["passages"][side]) == 1
+        mouth = suspension["passages"][side][0]
+        assert set(mouth) == {"id", "nodeID", "pointInModel", "provenance"}
+        lead = next(item for item in suspension["attachments"] if item["id"] == f"{side}-lead")
+        assert mouth["nodeID"] == lead["nodeID"]
+        assert mouth["pointInModel"] == lead["pointInModel"]
+    assert len(suspension["attachments"]) == 2
+    descriptor = json.loads((HELIUM_ROOT / media["descriptorPath"]).read_text())
+    node_roles = {node["nodeID"]: node["role"] for node in descriptor["nodes"]}
+    assert {tuple(lead["pointInModel"]) for lead in suspension["attachments"]} == {
+        (-0.186, 0, 0.012), (0.186, 0, 0.012)
+    }
+    for lead in suspension["attachments"]:
+        assert node_roles[lead["nodeID"]] == "attachment"
+        assert "contactPointsInModel" not in lead
+        assert "authored-display-estimate" in lead["provenance"]
+    assert suspension["anchor"]["visibility"] == "invisible"
+    assert set(suspension["canonicalPoses"]) == {"primary"}
+    assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+    assert "authored-display-estimate" in suspension["cord"]["provenance"]
+
+
+def test_light_rail_inversion_preserves_entry_identity_and_exposes_the_other_grips() -> None:
+    """Catch lost reversibility or a pose that silently invents underside mouths."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    assert board.get("positions") == [
+        {"id": "20mm-side", "presentationID": "primary", "contactIDs": ["jug-40-20mm-side", "edge-20"]},
+        {"id": "15mm-side", "presentationID": "primary", "contactIDs": ["jug-40-15mm-side", "edge-15"]},
+    ]
+    suspension = board["presentations"][0]["media"]["suspension"]
+    poses = suspension["canonicalPoses"]
+    assert set(poses) == {"20mm-side", "15mm-side"}
+    assert poses["20mm-side"]["rotation"] == [0, 0, 0, 1]
+    assert poses["15mm-side"]["rotation"] == [0, 0, 1, 0]
+    assert all("attachmentPoints" not in pose for pose in poses.values())
+    routes = poses["15mm-side"]["cordContactPoints"]
+    assert set(routes) == {"left-lead", "right-lead"}
+    # Each route must approach its original physical entry from above in model
+    # coordinates; inversion rotates that same entry underneath the model.
+    for lead in suspension["attachments"]:
+        route = routes[lead["id"]]
+        assert route[-1][0] == lead["pointInModel"][0]
+        assert route[-1][1] > lead["pointInModel"][1]
+        assert any(abs(point[0]) > .2285 for point in route)
+
+
+def test_light_rail_inverted_guides_stay_close_to_the_existing_end_silhouette() -> None:
+    """Catch floating end hooks that pass clearance but misrepresent flexible cord."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    descriptor = json.loads((LIGHT_RAIL_ROOT / media["descriptorPath"]).read_text())
+    suspension = media["suspension"]
+    bounds = descriptor["modelBounds"]
+    for route in suspension["canonicalPoses"]["15mm-side"]["cordContactPoints"].values():
+        for point in route:
+            # Existing native clearance tests enforce the minimum gap. The
+            # maximum should stay within two tube radii of the real envelope.
+            envelope_gap = max(max(bounds["min"][i] - point[i], point[i] - bounds["max"][i], 0)
+                               for i in range(3))
+            assert envelope_gap <= 2 * suspension["cord"]["radius"]
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
@@ -186,6 +364,203 @@ def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
         "hold_03_left_001", "hold_03_right_001"
     ]
     assert descriptor["contacts"]["flat-sloper-2-right"]["nodeIDs"] == ["hold_02_right_001"]
+
+
+SOURCE_REGISTER = (
+    REPO_ROOT / "docs/source-audits/2026-09-20-batch-04-3d-source-register.json"
+)
+
+PIVOT_SLOTS = (
+    "upper-sloped-crimp",
+    "outer-sloped-crimp",
+    "variable-edge",
+    "medium-crimp",
+    "large-crimp",
+    "two-finger-pocket",
+    "three-finger-pocket",
+    "outer-wedge-pinch",
+    "lower-sloper",
+)
+
+PIVOT_APERTURES = ("three-finger-end-window", "two-finger-opening")
+
+HARDWARE_TOKENS = (
+    "fastener",
+    "screw",
+    "mount",
+    "cleat",
+    "bracket",
+    "hardware",
+    "bolt",
+    "counterbore",
+    "set-screw",
+    "rail-backer",
+    "anchor",
+    "cord",
+)
+
+
+def _source_node_name(node_id: str) -> str:
+    """USD identifiers sanitize hyphens; Blender's mesh child may add _001."""
+    return node_id.removesuffix("_001").replace("_", "-")
+
+
+def test_batch04_model_geometry_retains_only_documented_attachment_openings() -> None:
+    """Catch a lost finger opening, an invented fastener bore, or a stray p4."""
+    source_boards = json.loads(SOURCE_REGISTER.read_text())["boards"]
+    expected = {
+        "crimptonite-helium-mobile": {
+            "boardID": "crimptonite.helium-mobile",
+            "apertures": {"front-lead-mouth", "reverse-lead-mouth"},
+        },
+        "metolius-light-rail-2": {
+            "boardID": "metolius.light-rail-2",
+            "apertures": {"left-upper-entry", "right-upper-entry"},
+        },
+        "metolius-rock-rings-3d": {
+            "boardID": "metolius.rock-rings-3d",
+            "apertures": {"roof-exit", "lateral-window"},
+        },
+        "owl-climb-poker": {"boardID": "owl-climb.poker", "apertures": set()},
+        "yy-penta-evo": {
+            "boardID": "yy.penta-evo",
+            "apertures": {"central-ring", "upper-band-exterior"},
+        },
+        "trango-rock-prodigy-pivot": {
+            "boardID": "trango.rock-prodigy-pivot",
+            "apertures": {"two-finger-opening", "three-finger-end-window"},
+        },
+    }
+    for slug, requirement in expected.items():
+        descriptor = json.loads(
+            (HANGBOARDS_ROOT / slug / "assets/primary.model.json").read_text()
+        )
+        node_ids = {_source_node_name(node["nodeID"]) for node in descriptor["nodes"]}
+        attachments = {
+            _source_node_name(node["nodeID"])
+            for node in descriptor["nodes"]
+            if node["role"] == "attachment"
+        }
+        assert requirement["apertures"] <= node_ids, slug
+        assert attachments == requirement["apertures"], slug
+        assert not any(
+            token in node_id
+            for node_id in node_ids
+            for token in HARDWARE_TOKENS
+        ), slug
+        assert source_boards[requirement["boardID"]]["approvedApertures"] == sorted(
+            requirement["apertures"]
+        ), slug
+    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    assert [position["id"] for position in board["positions"]] == ["p1", "p2", "p3", "p5"]
+
+
+def test_pivot_renders_one_reflected_half_with_eighteen_physical_contacts() -> None:
+    """Catch a duplicated right half, a retained raster record, or a lost slot map."""
+    raw_board = (PIVOT_ROOT / "board.json").read_text()
+    board = json.loads(raw_board)
+    assert board["schemaVersion"] == 3
+    assert board["id"] == "trango.rock-prodigy-pivot"
+    assert [item["id"] for item in board["equipmentObjects"]] == ["left-half", "right-half"]
+    assert {
+        path.relative_to(PIVOT_ROOT).as_posix()
+        for path in PIVOT_ROOT.rglob("*")
+        if path.is_file()
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+
+    assert len(board["contacts"]) == 18
+    expected_contacts = {f"{slot}-{side}" for slot in PIVOT_SLOTS for side in ("left", "right")}
+    assert {contact["id"] for contact in board["contacts"]} == expected_contacts
+    for contact in board["contacts"]:
+        side = contact["id"].rsplit("-", 1)[1]
+        assert contact["equipmentObjectID"] == f"{side}-half", contact["id"]
+    assert not any(
+        "orientation-" in contact["id"] for contact in board["contacts"]
+    )
+
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["isDefault"] is True
+    media = presentation["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert "orientation" not in media and "suspension" not in media
+    assert "contactGeometry" not in raw_board
+    assert "raster" not in raw_board
+
+    instances = media["instances"]
+    assert len(instances) == 2
+    left, right = instances
+    assert [item["equipmentObjectID"] for item in instances] == ["left-half", "right-half"]
+    assert "reflection" not in left["baseTransform"]
+    assert right["baseTransform"]["reflection"] == "x"
+    for instance in instances:
+        assert instance["baseTransform"]["rotation"] == [0, 0, 0, 1]
+        assert instance["baseTransform"]["translation"] == [0, 0, 0]
+        assert "suspension" not in instance
+        side = instance["equipmentObjectID"].split("-", 1)[0]
+        assert instance["contactIDsBySlotID"] == {
+            slot: f"{slot}-{side}" for slot in PIVOT_SLOTS
+        }
+        transforms = instance["positionTransforms"]
+        assert list(transforms) == ["p1", "p2", "p3", "p5"]
+        for position_id, transform in transforms.items():
+            assert set(transform) == {"translation", "rotation"}, position_id
+            assert len(transform["translation"]) == 3
+            assert len(transform["rotation"]) == 4
+
+    # Nine-decimal lexemes are a raw-text contract, not a decoded-float one.
+    lexemes = re.findall(r'"translation"\s*:\s*\[([^\]]*)\]', raw_board)
+    expected_translation_count = sum(
+        1 + len(instance["positionTransforms"]) for instance in instances
+    )
+    assert len(lexemes) == expected_translation_count
+    for lexeme in lexemes:
+        for component in lexeme.replace("\n", " ").split(","):
+            assert re.fullmatch(r"-?(?:0|[1-9][0-9]*)\.[0-9]{9}", component.strip())
+
+    assert [position["id"] for position in board["positions"]] == ["p1", "p2", "p3", "p5"]
+    for position in board["positions"]:
+        assert position["presentationID"] == presentation["id"]
+    assert "p4" not in raw_board
+
+    # The right half is mirrored metadata, never a second baked mesh.
+    descriptor = json.loads((PIVOT_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
+    assert set(descriptor["contactSlots"]) == set(PIVOT_SLOTS)
+    nodes = {_source_node_name(node["nodeID"]): node for node in descriptor["nodes"]}
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    assert sorted(
+        name for name, node in nodes.items() if node["role"] == "attachment"
+    ) == list(PIVOT_APERTURES)
+    assert not any(
+        token in name for name in nodes for token in HARDWARE_TOKENS
+    )
+    assert not any("left" in name or "right" in name for name in nodes)
+    assert (
+        hashlib.sha256((PIVOT_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+        == descriptor["modelSHA256"]
+    )
+
+
+def test_pivot_retires_all_72_presentation_ids_through_the_tracked_map() -> None:
+    """Catch a retired orientation ID resurrected as a physical contact."""
+    register = json.loads(SOURCE_REGISTER.read_text())["boards"]["trango.rock-prodigy-pivot"]
+    retired = register["retiredPresentationIDToContactID"]
+    assert len(retired) == 72
+    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    contact_ids = {contact["id"] for contact in board["contacts"]}
+    assert set(retired.values()) == contact_ids
+    assert set(retired) >= contact_ids
+    assert {
+        retired_id for retired_id in retired if "orientation-" in retired_id
+    } == set(retired) - contact_ids
+    assert register["selectablePositions"] == ["p1", "p2", "p3", "p5"]
+    assert register["transitionOnlyPositions"] == ["p4"]
+    assert set(register["pivotPatchMappings"].values()) == set(PIVOT_SLOTS)
+    assert len(register["pivotPatchMappings"]) == 14
+    assert len(register["pivotPatchMappingsByDeliveredID"]) == 28
 
 
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
@@ -750,35 +1125,23 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 
     assert board["id"] == "metolius.light-rail-2"
     assert board["dimensions"] == "18 × 3 × 1.5 in"
-    assert _presentation_summary(board) == [
-        (
-            "20mm-side",
-            "40 mm jug and 20 mm edge",
-            "assets/primary.png",
-            1.0,
-            True,
-            None,
-            False,
-        ),
-        (
-            "15mm-side",
-            "40 mm jug and 15 mm edge",
-            "assets/15mm-surface.png",
-            1.0,
-            False,
-            None,
-            False,
-        ),
-    ]
-
-    owners = _original_contact_owners(board)
+    assert board["schemaVersion"] == 3
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["derivation"] == {"type": "original"}
+    media = presentation["media"]
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "suspension"}
+    assert media["type"] == "model"
+    descriptor = _assert_model_descriptor(LIGHT_RAIL_ROOT, board, "light_rail_body_001")
     assert tuple(
         (
             contact["id"],
             contact["name"],
             contact["kind"],
             _scalar_depth(contact),
-            owners[contact["id"]],
+            contact["equipmentObjectID"],
         )
         for contact in board["contacts"]
     ) == (
@@ -787,35 +1150,63 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
             "40 mm rounded jug on 20 mm side",
             "jug",
             40,
-            "20mm-side",
+            "primary",
         ),
-        ("edge-20", "20 mm edge", "edge", 20, "20mm-side"),
+        ("edge-20", "20 mm edge", "edge", 20, "primary"),
         (
             "jug-40-15mm-side",
             "40 mm rounded jug on 15 mm side",
             "jug",
             40,
-            "15mm-side",
+            "primary",
         ),
-        ("edge-15", "15 mm edge", "edge", 15, "15mm-side"),
+        ("edge-15", "15 mm edge", "edge", 15, "primary"),
     )
-    geometry = document_contact_geometry(board)
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shapeConstraint"] == {
-            "shape": "roundedRectangle",
-            "rotationDegrees": 0,
-        }
-        for contact in board["contacts"]
-    )
+    assert {contact: value["nodeIDs"] for contact, value in descriptor["contacts"].items()} == {
+        "jug-40-20mm-side": ["lr_top_jug_40_001"],
+        "edge-20": ["lr_recess_lower_20_001"],
+        "jug-40-15mm-side": ["lr_bottom_jug_40_001"],
+        "edge-15": ["lr_recess_upper_15_001"],
+    }
+    assert {contact for position in board["positions"] for contact in position["contactIDs"]} == {
+        "jug-40-20mm-side", "edge-20", "jug-40-15mm-side", "edge-15"
+    }
+    with zipfile.ZipFile(LIGHT_RAIL_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    assert not any(token in node["nodeID"].lower() for node in descriptor["nodes"]
+                   for token in ("screw", "mount", "fastener", "hardware", "cleat", "bracket", "underside", "bore", "anchor"))
 
-    for asset_path, expected_size in {
-        "assets/primary.png": (1254, 1254),
-        "assets/15mm-surface.png": (1254, 1254),
-    }.items():
-        with Image.open(LIGHT_RAIL_ROOT / asset_path) as image:
-            assert image.format == "PNG"
-            assert image.size == expected_size
+
+def test_light_rail_cord_uses_only_two_upper_exterior_entries() -> None:
+    """Catch invented underside/through routes and selectable cord bindings."""
+    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    suspension = media["suspension"]
+    assert suspension["type"] == "pairedLeadCord"
+    assert len(suspension["attachments"]) == 2
+    expected_points = {"left_upper_entry_001": [-0.213, 0.038, 0],
+                       "right_upper_entry_001": [0.213, 0.038, 0]}
+    assert {lead["nodeID"] for lead in suspension["attachments"]} == set(expected_points)
+    for lead in suspension["attachments"]:
+        # Export float32 bounds may move the upper surface inward by 1 nm.
+        assert lead["pointInModel"] == pytest.approx(expected_points[lead["nodeID"]], abs=1e-8)
+    descriptor = json.loads((LIGHT_RAIL_ROOT / media["descriptorPath"]).read_text())
+    assert {node["nodeID"] for node in descriptor["nodes"] if node["role"] == "attachment"} == {
+        "left_upper_entry_001", "right_upper_entry_001"
+    }
+    for lead, side in zip(suspension["attachments"], ("left", "right"), strict=True):
+        assert "contactPointsInModel" not in lead
+        assert "authored-display-estimate" in lead["provenance"]
+        assert len(suspension["passages"][side]) == 1
+        passage = suspension["passages"][side][0]
+        assert set(passage) == {"id", "nodeID", "pointInModel", "provenance"}
+        assert passage["nodeID"] == lead["nodeID"]
+        assert passage["pointInModel"] == lead["pointInModel"]
+    assert suspension["anchor"]["visibility"] == "invisible"
+    assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+    assert "authored-display-estimate" in suspension["cord"]["provenance"]
 
 
 def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
@@ -824,10 +1215,10 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
     assert board["id"] == "metolius.rock-rings-3d"
     assert board["dimensions"] == "184 × 146 × 57 mm"
     assert _presentation_summary(board) == [
-        ("front-pair", "Front pair", "assets/primary.png", 1.5, True, None, False)
+        ("primary", "Front pair", "assets/primary.usdz", 1.5, True, None, False)
     ]
 
-    owners = _original_contact_owners(board)
+    owners = {contact["id"]: contact["equipmentObjectID"] for contact in board["contacts"]}
     assert tuple(
         (
             contact["id"],
@@ -839,14 +1230,14 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
         )
         for contact in board["contacts"]
     ) == (
-        ("jug-left", "Left unit jug", "jug", None, None, "front-pair"),
+        ("jug-left", "Left unit jug", "jug", None, None, "left-ring"),
         (
             "pocket-40-four-left",
             "Left unit 40 mm four-finger pocket",
             "pocket",
             40,
             4,
-            "front-pair",
+            "left-ring",
         ),
         (
             "pocket-32-three-left",
@@ -854,7 +1245,7 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             32,
             3,
-            "front-pair",
+            "left-ring",
         ),
         (
             "pocket-25-two-left",
@@ -862,16 +1253,16 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             25,
             2,
-            "front-pair",
+            "left-ring",
         ),
-        ("jug-right", "Right unit jug", "jug", None, None, "front-pair"),
+        ("jug-right", "Right unit jug", "jug", None, None, "right-ring"),
         (
             "pocket-40-four-right",
             "Right unit 40 mm four-finger pocket",
             "pocket",
             40,
             4,
-            "front-pair",
+            "right-ring",
         ),
         (
             "pocket-32-three-right",
@@ -879,7 +1270,7 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             32,
             3,
-            "front-pair",
+            "right-ring",
         ),
         (
             "pocket-25-two-right",
@@ -887,54 +1278,89 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
             "pocket",
             25,
             2,
-            "front-pair",
+            "right-ring",
         ),
     )
-    geometry = document_contact_geometry(board)
-    assert all(len(geometry[contact["id"]]) == 1 for contact in board["contacts"])
-    assert all(
-        geometry[contact["id"]][0]["shape"]["type"] == "path"
-        for contact in board["contacts"]
-    )
-    assert all(
-        geometry[contact["id"]][0]["shapeConstraint"]
-        == {"shape": "roundedRectangle", "rotationDegrees": 0}
-        for contact in board["contacts"]
-        if contact["kind"] == "pocket"
-    )
-
-    with Image.open(ROCK_RINGS_ROOT / "assets" / "primary.png") as image:
-        assert image.format == "PNG"
-        assert image.size == (1536, 1024)
+    assert board["equipmentObjects"] == [{"id": "left-ring"}, {"id": "right-ring"}]
+    assert all(contact["equipmentObjectID"] == f"{contact['id'].rsplit('-', 1)[1]}-ring"
+               for contact in board["contacts"])
 
 
-def test_rock_rings_paired_contacts_use_exact_horizontal_mirrors() -> None:
+def test_rock_rings_has_one_four_slot_asset_and_two_unreflected_instances() -> None:
+    """Catch baked duplicates, reflected units, lost ownership, or raster fallback."""
     board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
+    assert len(board["presentations"]) == 1
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert {p.relative_to(ROCK_RINGS_ROOT).as_posix() for p in ROCK_RINGS_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["modelSHA256"] == hashlib.sha256((ROCK_RINGS_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    assert "contacts" not in descriptor
+    assert set(descriptor["contactSlots"]) == {"jug", "pocket-40", "pocket-32", "pocket-25"}
+    assert all("contactID" not in node for node in descriptor["nodes"])
+    bounds = descriptor["modelBounds"]
+    assert [bounds["max"][i] - bounds["min"][i] for i in range(3)] == pytest.approx([.146, .184, .057], abs=.000001)
+    # A source asset has unit-local bounds and one body, never a baked pair.
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    with zipfile.ZipFile(ROCK_RINGS_ROOT / media["assetPath"]) as archive:
+        assert len(archive.namelist()) == 1
+        assert Path(archive.namelist()[0]).suffix in {".usda", ".usdc"}
+    assert len(media["instances"]) == 2
+    mapped = []
+    for side, instance in zip(("left", "right"), media["instances"], strict=True):
+        assert instance["equipmentObjectID"] == f"{side}-ring"
+        assert instance["contactIDsBySlotID"] == {
+            "jug": f"jug-{side}", "pocket-40": f"pocket-40-four-{side}",
+            "pocket-32": f"pocket-32-three-{side}", "pocket-25": f"pocket-25-two-{side}"
+        }
+        mapped.extend(instance["contactIDsBySlotID"].values())
+        assert "reflection" not in instance["baseTransform"]
+        assert instance["baseTransform"]["rotation"] == [0, 0, 0, 1]
+        assert "positionTransforms" not in instance
+    assert len(mapped) == len(set(mapped)) == 8
+    assert set(mapped) == {c["id"] for c in board["contacts"]}
+    assert board["positions"] == [{"id": "primary", "presentationID": "primary", "contactIDs": [c["id"] for c in board["contacts"]]}]
+    catalog = load_board_catalog_module()
+    assert catalog.load_board_package(ROCK_RINGS_ROOT).board.id == board["id"]
 
-    for left_id, right_id in (
-        ("jug-left", "jug-right"),
-        ("pocket-40-four-left", "pocket-40-four-right"),
-        ("pocket-32-three-left", "pocket-32-three-right"),
-        ("pocket-25-two-left", "pocket-25-two-right"),
-    ):
-        left = geometry[left_id][0]
-        right = geometry[right_id][0]
-        left_frame = left["frame"]
-        right_frame = right["frame"]
 
-        assert right_frame["x"] == pytest.approx(
-            1 - left_frame["x"] - left_frame["width"]
-        )
-        assert right_frame["y"] == left_frame["y"]
-        assert right_frame["width"] == left_frame["width"]
-        assert right_frame["height"] == left_frame["height"]
-        assert right["shape"]["type"] == left["shape"]["type"] == "path"
-        _assert_global_paths_are_horizontal_mirrors(left, right)
-        assert [
-            command.get("bendable") for command in right["shape"]["commands"]
-        ] == [command.get("bendable") for command in left["shape"]["commands"]]
-        assert right.get("shapeConstraint") == left.get("shapeConstraint")
+def test_rock_rings_cords_have_independent_anchors_and_only_evidenced_openings() -> None:
+    """Catch a shared anchor, inter-unit route, fake central bore or contact binding."""
+    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
+    roles = {node["nodeID"].removesuffix("_001").replace("_", "-"): node["role"] for node in descriptor["nodes"]}
+    assert roles["roof-exit"] == roles["lateral-window"] == "attachment"
+    assert not any(token in name for name in roles for token in (
+        "mount", "screw", "fastener", "cleat", "bracket", "hardware", "central", "bore", "cord", "anchor"
+    ))
+    anchors = []
+    attachment_ids = []
+    for instance in media["instances"]:
+        suspension = instance["suspension"]
+        assert suspension["type"] == "pairedLeadCord"
+        assert len(suspension["attachments"]) == 2
+        assert set(suspension["passages"]) == {"left", "right"}
+        assert all(len(v) == 1 for v in suspension["passages"].values())
+        for passage in suspension["passages"].values():
+            assert set(passage[0]) == {"id", "nodeID", "pointInModel", "provenance"}
+        for attachment in suspension["attachments"]:
+            assert roles[attachment["nodeID"].removesuffix("_001").replace("_", "-")] == "attachment"
+            assert "contactPointsInModel" not in attachment
+            attachment_ids.append(attachment["id"])
+        assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
+        assert suspension["anchor"]["visibility"] == "invisible"
+        anchors.append(tuple(suspension["anchor"]["offsetFromBoardBounds"]))
+        assert set(suspension["canonicalPoses"]) == {"primary"}
+        assert "authored-display-estimate" in suspension["anchor"]["provenance"]
+        assert "authored-display-estimate" in suspension["cord"]["provenance"]
+    assert len(set(anchors)) == 2
+    assert len(set(attachment_ids)) == 4
 
 
 def test_deluxe_model_package_freezes_the_independent_official_inventory() -> None:
@@ -1455,30 +1881,86 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
             ("jug", None, None),
         ]
     )
-    assert _original_contact_owners(board) == {
-        contact["id"]: "front-pair" for contact in board["contacts"]
-    }
-
-    geometry = document_contact_geometry(board)
-    assert geometry["edge-25-left"][0]["frame"] == {
-        "x": 0.116,
-        "y": 0.350,
-        "width": 0.121,
-        "height": 0.122,
-    }
-    assert geometry["edge-20-left"][0]["frame"] == {
-        "x": 0.280,
-        "y": 0.350,
-        "width": 0.116,
-        "height": 0.122,
+    assert board["equipmentObjects"] == [{"id": "left-penta"}, {"id": "right-penta"}]
+    assert {contact["id"]: contact["equipmentObjectID"] for contact in board["contacts"]} == {
+        f"{slot}-{side}": f"{side}-penta"
+        for side in ("left", "right")
+        for slot in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray")
     }
 
 
-def test_yy_penta_evo_pair_uses_exact_horizontal_path_mirrors() -> None:
+def test_yy_penta_evo_pair_reuses_one_asymmetric_unit_without_reflection() -> None:
+    """Catch baked pairs or the old raster's incorrectly mirrored right unit."""
     board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
-    geometry = document_contact_geometry(board)
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
+    assert {p.relative_to(YY_PENTA_EVO_ROOT).as_posix() for p in YY_PENTA_EVO_ROOT.rglob("*") if p.is_file()} == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor = json.loads((YY_PENTA_EVO_ROOT / media["descriptorPath"]).read_text())
+    assert descriptor["schemaVersion"] == 2
+    assert descriptor["modelSHA256"] == hashlib.sha256((YY_PENTA_EVO_ROOT / media["assetPath"]).read_bytes()).hexdigest()
+    slots = {"edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"}
+    assert set(descriptor["contactSlots"]) == slots
+    assert "contacts" not in descriptor
+    assert sum(node["role"] == "body" for node in descriptor["nodes"]) == 1
+    assert len(media["instances"]) == 2
+    for side, instance in zip(("left", "right"), media["instances"], strict=True):
+        assert instance["equipmentObjectID"] == f"{side}-penta"
+        assert instance["contactIDsBySlotID"] == {slot: f"{slot}-{side}" for slot in slots}
+        assert instance["baseTransform"] == {"translation": [0, 0, 0], "rotation": [0, 0, 0, 1]}
+        assert "positionTransforms" not in instance
+    assert load_board_catalog_module().load_board_package(YY_PENTA_EVO_ROOT).board.id == "yy.penta-evo"
 
-    for prefix in ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray"):
-        left = geometry[f"{prefix}-left"][0]
-        right = geometry[f"{prefix}-right"][0]
-        _assert_global_paths_are_horizontal_mirrors(left, right)
+
+def test_yy_penta_evo_cords_use_existing_ring_and_independent_exterior_routes() -> None:
+    """Catch false small passage holes, contact-bound leads or joined pair cords."""
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    assert media["type"] == "model"
+    descriptor = json.loads((YY_PENTA_EVO_ROOT / media["descriptorPath"]).read_text())
+    roles = {n["nodeID"].removesuffix("_001").replace("_", "-"): n["role"] for n in descriptor["nodes"]}
+    assert roles["central-ring"] == roles["upper-band-exterior"] == "attachment"
+    assert not any(token in name for name in roles for token in (
+        "mount", "screw", "fastener", "cleat", "bracket", "hardware", "passage", "bore", "cord", "anchor"
+    ))
+    anchors, lead_ids = [], []
+    for instance in media["instances"]:
+        suspension = instance["suspension"]
+        assert suspension["type"] == "pairedLeadCord"
+        assert len(suspension["attachments"]) == 2
+        assert set(suspension["passages"]) == {"left", "right"}
+        assert all(len(route) == 1 for route in suspension["passages"].values())
+        for lead in suspension["attachments"]:
+            assert roles[lead["nodeID"].removesuffix("_001").replace("_", "-")] == "attachment"
+            assert len(lead["contactPointsInModel"]) >= 2
+            assert "authored-display-estimate" in lead["provenance"]
+            lead_ids.append(lead["id"])
+        assert len({tuple(a["pointInModel"]) for a in suspension["attachments"]}) == 2
+        assert suspension["anchor"]["visibility"] == "invisible"
+        anchors.append(tuple(suspension["anchor"]["offsetFromBoardBounds"]))
+        assert "authored-display-estimate" in suspension["cord"]["provenance"]
+        assert set(suspension["canonicalPoses"]) == {p["id"] for p in board["positions"]}
+    assert len(set(anchors)) == 2
+    assert len(set(lead_ids)) == 4
+
+
+def test_yy_penta_evo_positions_expose_only_contacts_reachable_on_that_face() -> None:
+    """Keep workout resolution from selecting the hidden rear 10mm on primary."""
+    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    positions = {position["id"]: set(position["contactIDs"]) for position in board["positions"]}
+    assert positions == {
+        "primary": {f"{slot}-{side}" for side in ("left", "right")
+                    for slot in ("edge-25", "edge-20", "edge-15", "mono", "duo", "tray")},
+        "reverse": {f"{slot}-{side}" for side in ("left", "right")
+                    for slot in ("edge-10", "mono", "duo", "tray")},
+    }
+    for instance in board["presentations"][0]["media"]["instances"]:
+        suspension = instance["suspension"]
+        for pose in suspension["canonicalPoses"].values():
+            # The runtime uses explicit pose routes for surface wraps; default
+            # contactPoints alone describe only the last approach stub.
+            assert pose["cordContactPoints"] == {
+                lead["id"]: lead["contactPointsInModel"] for lead in suspension["attachments"]
+            }

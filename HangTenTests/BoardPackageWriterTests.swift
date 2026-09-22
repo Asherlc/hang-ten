@@ -165,6 +165,41 @@ final class BoardPackageWriterTests: XCTestCase {
         }
     }
 
+    func testEditorDecoderAcceptsReusableInstancesBeforeRejectingModelOnlyPackage() throws {
+        var payload = try jsonObject(for: makeDocument())
+        payload["presentations"] = [[
+            "id": "front",
+            "name": "Front",
+            "aspectRatio": 2,
+            "isDefault": true,
+            "derivation": ["type": "original"],
+            "media": [
+                "type": "model",
+                "assetPath": "assets/primary.usdz",
+                "descriptorPath": "assets/primary.model.json",
+                "display": [
+                    "camera": [
+                        "type": "orthographic",
+                        "viewDirection": [0, 0, -1],
+                        "up": [0, 1, 0],
+                        "fitPadding": 0.08,
+                    ],
+                ],
+                "instances": [[
+                    "equipmentObjectID": "primary",
+                    "baseTransform": ["translation": [0, 0, 0], "rotation": [0, 0, 0, 1]],
+                    "contactIDsBySlotID": ["edge": "hold-one"],
+                    "positionTransforms": [
+                        "front": ["translation": [0, 0, 0], "rotation": [0, 0, 0, 1]],
+                    ],
+                ]],
+            ],
+        ]]
+
+        let document = try decode(payload)
+        XCTAssertThrowsError(try BoardPackageWriter.data(for: document))
+    }
+
     func testWriterAcceptsReciprocalNonGastonPairs() throws {
         var document = makeDocument()
         document.contacts[0].kind = .edge

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import functools
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -8,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from conftest import load_board_catalog_module
-from test_model_first_packages import write_model_package
+from test_model_first_packages import _write_reusable_model_package, write_model_package
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
@@ -27,6 +28,7 @@ MODEL_PACKAGE_IDS = {
     "captain-fingerfood.dual",
     "captain-fingerfood.pocket",
     "captain-fingerfood.unlevel",
+    "crimptonite.helium-mobile",
     "dewoodstok-woodbord",
     "escape-beta-22",
     "escape.unlimited",
@@ -37,6 +39,10 @@ MODEL_PACKAGE_IDS = {
     "lattice.mxedge-lift-small",
     "mammut.diamond-finger",
     "metolius.foundry",
+    "metolius.light-rail-2",
+    "metolius.rock-rings-3d",
+    "owl-climb.poker",
+    "yy.penta-evo",
     "metolius.prime-rib",
     "metolius.project",
     "metolius.climbers-edge",
@@ -53,6 +59,7 @@ MODEL_PACKAGE_IDS = {
     "soill.split-palm",
     "soill.training-tiles",
     "the-hangboard.the-hangboard",
+    "trango.rock-prodigy-pivot",
     "trango.rock-prodigy-training-center",
     "yy.baguette-evo",
     "clavellium-training-block",
@@ -139,6 +146,16 @@ def test_legacy_model_positions_materialize_complete_inventory(tmp_path: Path) -
     ])
     board = BOARD_CATALOG.load_board_package(package).board
     assert board.positions[0].contact_ids == ("hold-left", "hold-right")
+
+
+def test_reusable_model_instances_are_the_only_pose_mechanism(tmp_path: Path) -> None:
+    media = BOARD_CATALOG.load_board_package(
+        _write_reusable_model_package(tmp_path)
+    ).board.presentations[0].media
+
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
 
 
 @pytest.mark.parametrize(
@@ -383,6 +400,315 @@ def test_flash_board_uses_suspension_with_corrected_small_crimp_contacts() -> No
     assert set(positions["three-edge-upright"].contact_ids).isdisjoint(
         positions["two-edge-upright"].contact_ids
     )
+
+
+def test_rock_rings_uses_two_identical_unreflected_units_with_independent_cords() -> None:
+    board = _discovered_model_packages()["metolius.rock-rings-3d"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
+    assert len(media.instances) == 2
+
+    expected_slots = ("jug", "pocket-40", "pocket-32", "pocket-25")
+    expected_maps = (
+        {
+            "jug": "jug-left",
+            "pocket-40": "pocket-40-four-left",
+            "pocket-32": "pocket-32-three-left",
+            "pocket-25": "pocket-25-two-left",
+        },
+        {
+            "jug": "jug-right",
+            "pocket-40": "pocket-40-four-right",
+            "pocket-32": "pocket-32-three-right",
+            "pocket-25": "pocket-25-two-right",
+        },
+    )
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-ring",
+        "right-ring",
+    ]
+    for instance, expected_map in zip(media.instances, expected_maps):
+        assert set(instance.contact_ids_by_slot_id) == set(expected_slots)
+        assert dict(instance.contact_ids_by_slot_id) == expected_map
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.reflection is None
+        assert instance.position_transforms is None
+        assert instance.suspension is not None
+        assert len(instance.suspension.attachments) == 2
+        assert instance.suspension.anchor.visibility == "invisible"
+
+    # Each unit owns its own paired lead cord and anchor state.
+    left_suspension = media.instances[0].suspension
+    right_suspension = media.instances[1].suspension
+    assert left_suspension is not right_suspension
+    assert left_suspension is not None and right_suspension is not None
+    assert left_suspension.attachments is not right_suspension.attachments
+
+
+def test_penta_evo_uses_two_identical_unreflected_units_with_exact_slot_maps() -> None:
+    board = _discovered_model_packages()["yy.penta-evo"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None
+    assert media.orientation is None
+    assert media.suspension is None
+    assert len(media.instances) == 2
+
+    slots = ("edge-25", "edge-20", "edge-15", "edge-10", "mono", "duo", "tray")
+    expected_maps = (
+        {slot: f"{slot}-left" for slot in slots},
+        {slot: f"{slot}-right" for slot in slots},
+    )
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-penta", "right-penta"
+    ]
+    left_instance, right_instance = media.instances
+    for instance, expected_map in zip(media.instances, expected_maps, strict=True):
+        assert dict(instance.contact_ids_by_slot_id) == expected_map
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.reflection is None
+        assert instance.position_transforms is None
+        assert instance.suspension is not None
+        assert len(instance.suspension.attachments) == 2
+        assert instance.suspension.anchor.visibility == "invisible"
+        assert set(instance.suspension.canonical_poses) == {"primary", "reverse"}
+    assert left_instance.suspension is not None
+    assert right_instance.suspension is not None
+    for position_id, expected_rotation in {
+        "primary": (0, 0, 0, 1),
+        "reverse": (0, 1, 0, 0),
+    }.items():
+        left_pose = left_instance.suspension.canonical_poses[position_id]
+        right_pose = right_instance.suspension.canonical_poses[position_id]
+        assert left_pose.rotation == right_pose.rotation
+        assert left_pose.rotation == expected_rotation
+    assert media.instances[0].suspension is not media.instances[1].suspension
+    assert {position.id for position in board.positions} == {"primary", "reverse"}
+    assert all(position.presentation_id == presentation.id for position in board.positions)
+    expected_position_contacts = {
+        "primary": {
+            contact.id for contact in board.contacts
+            if contact.id not in {"edge-10-left", "edge-10-right"}
+        },
+        "reverse": {
+            contact.id for contact in board.contacts
+            if contact.id.rsplit("-", 1)[0] in {"edge-10", "mono", "duo", "tray"}
+        },
+    }
+    assert {position.id: set(position.contact_ids) for position in board.positions} == expected_position_contacts
+    assert {len(position.contact_ids) for position in board.positions} == {8, 12}
+    for position in board.positions:
+        expected_order = tuple(
+            contact.id for contact in board.contacts
+            if contact.id in expected_position_contacts[position.id]
+        )
+        assert position.contact_ids == expected_order
+
+
+def test_pivot_uses_one_reflected_half_with_four_selectable_positions() -> None:
+    """Catch a lost reflection, an incomplete pose map, or a selectable p4."""
+    board = _discovered_model_packages()["trango.rock-prodigy-pivot"].board
+    presentation = next(
+        presentation
+        for presentation in board.presentations
+        if isinstance(presentation.media, BOARD_CATALOG.PresentationMediaModel)
+    )
+    media = presentation.media
+    assert media.instances is not None and len(media.instances) == 2
+    assert media.orientation is None
+    assert media.suspension is None
+
+    slots = (
+        "upper-sloped-crimp",
+        "outer-sloped-crimp",
+        "variable-edge",
+        "medium-crimp",
+        "large-crimp",
+        "two-finger-pocket",
+        "three-finger-pocket",
+        "outer-wedge-pinch",
+        "lower-sloper",
+    )
+    left_instance, right_instance = media.instances
+    assert [instance.equipment_object_id for instance in media.instances] == [
+        "left-half", "right-half"
+    ]
+    assert left_instance.base_transform.reflection is None
+    assert right_instance.base_transform.reflection == "x"
+    for instance, side in ((left_instance, "left"), (right_instance, "right")):
+        assert instance.suspension is None
+        assert instance.base_transform.rotation == (0, 0, 0, 1)
+        assert instance.base_transform.translation == (0, 0, 0)
+        assert dict(instance.contact_ids_by_slot_id) == {
+            slot: f"{slot}-{side}" for slot in slots
+        }
+        assert instance.position_transforms is not None
+        assert set(instance.position_transforms) == {"p1", "p2", "p3", "p5"}
+        for transform in instance.position_transforms.values():
+            assert transform.reflection is None
+            assert all(math.isfinite(value) for value in transform.translation)
+            assert math.isclose(
+                math.sqrt(sum(value * value for value in transform.rotation)),
+                1.0,
+                abs_tol=1e-6,
+            )
+
+    # Both halves keep the same key set; the right one mirrors every quarter turn.
+    assert set(left_instance.position_transforms) == set(right_instance.position_transforms)
+    for position_id in ("p1", "p2", "p3", "p5"):
+        left = left_instance.position_transforms[position_id]
+        right = right_instance.position_transforms[position_id]
+        assert left.rotation[0] == right.rotation[0] == 0
+        assert left.rotation[1] == right.rotation[1] == 0
+        assert left.rotation[2] == pytest.approx(-right.rotation[2], abs=1e-12)
+        assert left.rotation[3] == pytest.approx(right.rotation[3], abs=1e-12)
+        assert left.translation == pytest.approx(
+            tuple(-value for value in right.translation), abs=1e-12
+        )
+    # p5 exchanges the physical halves; p1 through p3 keep them in place.
+    assert left_instance.position_transforms["p1"].translation[0] < 0
+    assert left_instance.position_transforms["p2"].translation[0] < 0
+    assert left_instance.position_transforms["p3"].translation[0] < 0
+    assert left_instance.position_transforms["p5"].translation[0] > 0
+
+    assert [position.id for position in board.positions] == ["p1", "p2", "p3", "p5"]
+    assert all(position.presentation_id == presentation.id for position in board.positions)
+    assert {contact.id for contact in board.contacts} == {
+        f"{slot}-{side}" for slot in slots for side in ("left", "right")
+    }
+
+
+def test_poker_is_one_model_with_four_source_face_orientations() -> None:
+    """Pin the four-face model contract before Astra replaces the raster package."""
+    package_root = HANGBOARDS_ROOT / "owl-climb-poker"
+    board_path = package_root / "board.json"
+    board = json.loads(board_path.read_text(encoding="utf-8"))
+
+    assert board["schemaVersion"] == 3
+    assert board["id"] == "owl-climb.poker"
+    assert board["equipmentObjects"] == [{"id": "primary"}]
+    assert len(board["contacts"]) == 34
+    contact_ids = [contact["id"] for contact in board["contacts"]]
+    assert len(contact_ids) == len(set(contact_ids))
+    assert {
+        face: [contact_id for contact_id in contact_ids if contact_id.startswith(f"{face}-")]
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    } == {
+        "face-a": [
+            "face-a-left-outer-slot",
+            "face-a-left-single-pocket",
+            "face-a-left-dual-pocket",
+            "face-a-center-pull-up-slot",
+            "face-a-right-dual-pocket",
+            "face-a-right-single-pocket",
+            "face-a-right-outer-slot",
+        ],
+        "face-b": [
+            "face-b-left-outer-slot",
+            "face-b-left-single-pocket",
+            "face-b-left-dual-pocket",
+            "face-b-left-deep-sloper",
+            "face-b-center-pull-up-slot",
+            "face-b-right-deep-sloper",
+            "face-b-right-dual-pocket",
+            "face-b-right-single-pocket",
+            "face-b-right-outer-slot",
+        ],
+        "face-c": [
+            "face-c-left-outer-slot",
+            "face-c-left-single-pocket",
+            "face-c-left-dual-pocket",
+            "face-c-left-shallow-half-round",
+            "face-c-center-pull-up-slot",
+            "face-c-right-shallow-half-round",
+            "face-c-right-dual-pocket",
+            "face-c-right-single-pocket",
+            "face-c-right-outer-slot",
+        ],
+        "face-d": [
+            "face-d-left-outer-slot",
+            "face-d-left-single-pocket",
+            "face-d-left-dual-pocket",
+            "face-d-left-deep-rounded-recess",
+            "face-d-center-pull-up-slot",
+            "face-d-right-deep-rounded-recess",
+            "face-d-right-dual-pocket",
+            "face-d-right-single-pocket",
+            "face-d-right-outer-slot",
+        ],
+    }
+
+    assert len(board["presentations"]) == 1
+    presentation = board["presentations"][0]
+    assert presentation["id"] == "primary"
+    assert presentation["isDefault"] is True
+    assert presentation["media"]["type"] == "model"
+    assert set(presentation["media"]) == {
+        "type", "assetPath", "descriptorPath", "display", "orientation"
+    }
+    assert presentation["media"]["assetPath"] == "assets/primary.usdz"
+    assert presentation["media"]["descriptorPath"] == "assets/primary.model.json"
+    assert "contactGeometry" not in json.dumps(board)
+    assert not any(
+        token in json.dumps(board).casefold()
+        for token in ("suspension", "screw", "fastener", "bracket", "cleat", "hardware")
+    )
+
+    expected_positions = {
+        face: [contact_id for contact_id in contact_ids if contact_id.startswith(f"{face}-")]
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    }
+    assert board["positions"] == [
+        {"id": face, "presentationID": "primary", "contactIDs": expected_positions[face]}
+        for face in ("face-a", "face-b", "face-c", "face-d")
+    ]
+    orientation = presentation["media"]["orientation"]
+    assert orientation == {
+        "pivot": "modelBoundsCenter",
+        "rotations": {
+            "face-a": [0, 0, 0, 1],
+            "face-b": [0.707106781, 0, 0, 0.707106781],
+            "face-c": [1, 0, 0, 0],
+            "face-d": [-0.707106781, 0, 0, 0.707106781],
+        },
+    }
+
+    model_files = {
+        path.relative_to(package_root).as_posix()
+        for path in package_root.rglob("*")
+        if path.is_file()
+    }
+    assert model_files == {
+        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+    }
+    descriptor_path = package_root / presentation["media"]["descriptorPath"]
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    assert descriptor["schemaVersion"] == 1
+    assert descriptor["modelSHA256"] == hashlib.sha256(
+        (package_root / presentation["media"]["assetPath"]).read_bytes()
+    ).hexdigest()
+    assert set(descriptor["contacts"]) == set(contact_ids)
+    assert not any(
+        token in json.dumps(descriptor).casefold()
+        for token in ("screw", "fastener", "bracket", "cleat", "hardware")
+    )
+
+    project = (REPOSITORY_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
+        encoding="utf-8"
+    )
+    assert "HangTenModelODR/owl-climb-poker/Hangboards" in project
+    assert 'ASSET_TAGS = ("hang-ten-model-owl-climb-poker", );' in project
 
 
 @pytest.mark.parametrize(

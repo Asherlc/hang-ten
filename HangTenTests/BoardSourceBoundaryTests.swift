@@ -289,6 +289,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "captain-fingerfood.pocket",
             "captain-fingerfood.unlevel",
             "clavellium-training-block",
+            "crimptonite.helium-mobile",
             "dewoodstok-woodbord",
             "escape-beta-22",
             "escape.unlimited",
@@ -299,14 +300,18 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "lattice.mxedge-lift-small",
             "mammut.diamond-finger",
             "metolius.foundry",
+            "metolius.light-rail-2",
             "metolius.prime-rib",
             "metolius.project",
+            "metolius.rock-rings-3d",
             "metolius.wood-grips-compact-ii",
             "metolius.wood-grips-deluxe-ii",
             "moon.armstrong",
             "nature.stoak-board-iii",
             "nature.stone-hanger",
+            "owl-climb.poker",
             "tension.flash-board",
+            "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
             "metolius.contact",
             "metolius.simulator-3d",
@@ -316,7 +321,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "the-hangboard.the-hangboard",
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
-            "yy.baguette-evo"
+            "yy.baguette-evo",
+            "yy.penta-evo"
         ]
 
         XCTAssertFalse(
