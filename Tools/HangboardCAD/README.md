@@ -78,6 +78,26 @@ Provenance, recorded in `ModelSources/lattice-triple-rung.provenance.json`:
 * The 267 measured points were reduced to 170 authored vertices, with a recorded
   maximum deviation of 0.1899 mm.
 
+## In-app verification
+
+Built for the iOS simulator (Debug, `iPhone 17 Pro`) and launched through the
+repository's board-detail review route
+(`HANGTEN_REVIEW_BOARD_ID=lattice-triple-rung`, `HANGTEN_REVIEW_BOARD_DETAIL=1`).
+The app loads the migrated USDZ and descriptor, renders the board with its wood
+texture, and selects and highlights the `45 mm upper edge` contact, so the
+descriptor's node IDs resolve to the exported meshes and the contact hit-testing
+works. The reference asset was staged by a second build and captured the same
+way, so the comparison below is a real staged A/B rather than a swapped file.
+
+The migrated asset renders a smoother surface than the reference, which shows
+banding artifacts. The reference also carries twelve 3.44 mm circular mounting
+passages (measured boundary loops at x = +/-75 mm and +/-225 mm, y = 14 mm and
+96 mm); this migration deliberately omits them, consistent with the repository
+screw-hole/hardware omission policy.
+
+Not verified in the app: suspension and cord clearance, accessibility, and
+performance. Those remain open.
+
 ## Known limitations and open interface question
 
 * **Only one of 40 model-media boards is migrated.** The other 39 still ship
@@ -97,9 +117,9 @@ Provenance, recorded in `ModelSources/lattice-triple-rung.provenance.json`:
 * CPU previews are neutral geometry renders with an explicit planar UV
   projection. They are not native SceneKit screenshots and do not establish
   native materials, picking, accessibility, suspension, or performance.
-* The migrated asset has not been validated in the iOS app or in Workbench.
-  Descriptor validation and the existing package suites pass, but that is not
-  native visual acceptance.
+* The migrated asset was validated in the iOS simulator board-detail route (see
+  above). Workbench, suspension, accessibility, and performance checks were not
+  run, so this is not complete native acceptance.
 
 ## Tests
 

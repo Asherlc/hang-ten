@@ -30,5 +30,10 @@
   "edge-20": 20.0,
   "edge-45": 45.0
  },
- "notes": "Measured approximation of an approved display mesh. Not recovered manufacturing geometry. Contact regions are native SubShapeBinder runs of the profile sketch extruded along X, so they follow profile dimension edits."
+ "notes": "Measured approximation of an approved display mesh. Not recovered manufacturing geometry. Contact regions are native SubShapeBinder runs of the profile sketch extruded along X, so they follow profile dimension edits. Mounting holes in the reference are deliberately omitted.",
+ "omittedFeatures": {
+  "mountingHoles": "intentionally omitted",
+  "evidence": "The approved reference body mesh contains twelve 3.44 mm diameter circular passages at x = +/-75 mm and +/-225 mm, y = 14 mm and y = 96 mm (measured boundary loops in Hangboards/lattice-triple-rung/assets/primary.usdz at the pre-migration commit). This migration deliberately does not reproduce them, consistent with the repository screw-hole/hardware omission policy.",
+  "scope": "Display asset only; this is not a claim about the physical product."
+ }
 }
