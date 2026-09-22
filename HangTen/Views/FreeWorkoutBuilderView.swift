@@ -26,6 +26,7 @@ struct FreeWorkoutBuilderView: View {
                         draft.exercises.move(fromOffsets: offsets, toOffset: destination)
                         persist()
                     }
+                    .onChange(of: draft.exercises) { _, _ in persist() }
                 }
                 Section("Add") {
                     Button {
@@ -51,6 +52,9 @@ struct FreeWorkoutBuilderView: View {
                     .accessibilityIdentifier("freeWorkout.addRest")
                 }
                 Section("Finish") {
+                    Text("Saved routines use generic hold types. They do not retain exact board contacts.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                     Toggle("Save as reusable routine", isOn: $saveAsPlan)
                         .accessibilityIdentifier("freeWorkout.saveAsPlan")
                     Button("Start workout", action: start)
@@ -60,10 +64,20 @@ struct FreeWorkoutBuilderView: View {
                         .accessibilityIdentifier("freeWorkout.start")
                 }
             }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { dismiss() }
+                }
+            }
             .navigationTitle("Free workout")
             .navigationDestination(item: $sessionPlan) { plan in
                 if let sessionDraft {
-                    FreeWorkoutSessionView(plan: plan, draft: sessionDraft, saveAsPlan: saveAsPlan)
+                    FreeWorkoutSessionView(
+                        plan: plan,
+                        draft: sessionDraft,
+                        saveAsPlan: saveAsPlan,
+                        onDismiss: { dismiss() }
+                    )
                 }
             }
         }

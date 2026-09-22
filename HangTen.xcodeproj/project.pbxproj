@@ -220,11 +220,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0038AAE3CB9315489D4E8A96 /* FreeWorkoutSaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSaver.swift; path = HangTen/Models/FreeWorkoutSaver.swift; sourceTree = "<group>"; };
-		31CE4E1BD670F0AA5EF4658E /* FreeWorkoutBuilderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutBuilderView.swift; path = HangTen/Views/FreeWorkoutBuilderView.swift; sourceTree = "<group>"; };
-		6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutUITests.swift; path = HangTenUITests/FreeWorkoutUITests.swift; sourceTree = "<group>"; };
-		68E06C128343412E8EFABA7F /* FreeWorkoutSaverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSaverTests.swift; path = HangTenTests/FreeWorkoutSaverTests.swift; sourceTree = "<group>"; };
-		801AC6B93430776627E62D1F /* FreeWorkoutSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSessionView.swift; path = HangTen/Views/FreeWorkoutSessionView.swift; sourceTree = "<group>"; };
+		0038AAE3CB9315489D4E8A96 /* FreeWorkoutSaver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSaver.swift; path = FreeWorkoutSaver.swift; sourceTree = "<group>"; };
+		31CE4E1BD670F0AA5EF4658E /* FreeWorkoutBuilderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutBuilderView.swift; path = FreeWorkoutBuilderView.swift; sourceTree = "<group>"; };
+		6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutUITests.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
+		68E06C128343412E8EFABA7F /* FreeWorkoutSaverTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSaverTests.swift; path = FreeWorkoutSaverTests.swift; sourceTree = "<group>"; };
+		801AC6B93430776627E62D1F /* FreeWorkoutSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutSessionView.swift; path = FreeWorkoutSessionView.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HangTen/Resources/GripHand/hand-mesh.json"; sourceTree = SOURCE_ROOT; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
@@ -359,9 +359,9 @@
 		BF0000000000000000000008 /* LiveStoreKitConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveStoreKitConfigurationTests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000009 /* StoreKitTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKitTest.framework; path = Developer/Library/Frameworks/StoreKitTest.framework; sourceTree = SDKROOT; };
 		C20000000000000000000001 /* CountdownAudio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CountdownAudio; sourceTree = "<group>"; };
-		C3230C10F7BBC83F3F9EB919 /* FreeWorkoutDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDraft.swift; path = HangTen/Models/FreeWorkoutDraft.swift; sourceTree = "<group>"; };
+		C3230C10F7BBC83F3F9EB919 /* FreeWorkoutDraft.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDraft.swift; path = FreeWorkoutDraft.swift; sourceTree = "<group>"; };
 		C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OwlClimbPokerBoardMapInteractionUITests.swift; sourceTree = "<group>"; };
-		C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutTests.swift; path = HangTenTests/FreeWorkoutTests.swift; sourceTree = "<group>"; };
+		C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutTests.swift; path = FreeWorkoutTests.swift; sourceTree = "<group>"; };
 		D20000000000000000000001 /* beastmaker-1000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-1000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-1000/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000002 /* beastmaker-2000 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "beastmaker-2000 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/beastmaker-2000/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000003 /* captain-fingerfood-dual Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "captain-fingerfood-dual Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/captain-fingerfood-dual/Hangboards"; sourceTree = "<absolute>"; };

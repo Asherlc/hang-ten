@@ -409,7 +409,7 @@ struct WorkoutTimeline {
             side: old.side,
             action: old.action,
             repetitions: updates.repetitions ?? old.repetitions,
-            externalLoadKGF: updates.externalLoadKGF ?? old.externalLoadKGF,
+            externalLoadKGF: updates.externalLoadKGF.map { $0 <= 0 ? nil : $0 } ?? old.externalLoadKGF,
             timedWorkDuration: newTimedWork
         )
         var cursor: TimeInterval = 0

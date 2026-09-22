@@ -1,5 +1,9 @@
 import SwiftUI
 
+private struct EditingStep: Identifiable {
+    let id: String
+}
+
 struct FreeWorkoutSessionView: View {
     @EnvironmentObject private var store: AppStore
     @Environment(\.dismiss) private var dismiss
@@ -7,6 +11,7 @@ struct FreeWorkoutSessionView: View {
     let plan: TrainingPlan
     let draft: FreeWorkoutDraft
     let saveAsPlan: Bool
+    let onDismiss: (() -> Void)?
 
     @State private var steps: [WorkoutStep]
     @State private var timeline: WorkoutTimeline
@@ -14,14 +19,15 @@ struct FreeWorkoutSessionView: View {
     @State private var liftCompletion = WorkoutLiftCompletion()
     @State private var startedAt = Date()
     @State private var isPaused = false
-    @State private var editingStepID: String?
+    @State private var editingStep: EditingStep?
     @State private var didFinish = false
     @State private var saveError: String?
 
-    init(plan: TrainingPlan, draft: FreeWorkoutDraft, saveAsPlan: Bool) {
+    init(plan: TrainingPlan, draft: FreeWorkoutDraft, saveAsPlan: Bool, onDismiss: (() -> Void)? = nil) {
         self.plan = plan
         self.draft = draft
         self.saveAsPlan = saveAsPlan
+        self.onDismiss = onDismiss
         _steps = State(initialValue: plan.steps)
         _timeline = State(initialValue: WorkoutTimeline(steps: plan.steps))
     }
@@ -37,13 +43,13 @@ struct FreeWorkoutSessionView: View {
         .navigationTitle(plan.title)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: startIfNeeded)
-        .sheet(item: $editingStepID) { stepID in
-            if let step = steps.first(where: { $0.id == stepID }) {
+        .sheet(item: $editingStep) { edit in
+            if let step = steps.first(where: { $0.id == edit.id }) {
                 FreeWorkoutStepEditSheet(
                     step: step,
                     liftCompletion: liftCompletion
                 ) { updates in
-                    apply(updates, to: stepID)
+                    apply(updates, to: edit.id)
                 }
             }
         }
@@ -79,7 +85,7 @@ struct FreeWorkoutSessionView: View {
     private func currentSetCard(step: WorkoutStep, elapsed: TimeInterval, isComplete: Bool) -> some View {
         let remaining = max(0, step.duration - timeline.elapsedInStep(at: elapsed))
         return Button {
-            editingStepID = step.id
+            editingStep = EditingStep(id: step.id)
         } label: {
             VStack(alignment: .leading, spacing: 6) {
                 SectionLabel(title: isComplete ? "Finished" : "Current set · tap to edit")
@@ -117,9 +123,9 @@ struct FreeWorkoutSessionView: View {
                     })
                 }
                 adjustGroup(title: "Time", down: {
-                    nudge(step, FreeWorkoutStepUpdates(duration: step.duration - 5))
+                    adjustWorkTime(step, by: -5)
                 }, up: {
-                    nudge(step, FreeWorkoutStepUpdates(duration: step.duration + 5))
+                    adjustWorkTime(step, by: 5)
                 })
                 if step.action == .loadedLift {
                     adjustGroup(title: "Reps", down: {
@@ -188,7 +194,23 @@ struct FreeWorkoutSessionView: View {
         apply(updates, to: step.id)
     }
 
+    private func adjustWorkTime(_ step: WorkoutStep, by delta: TimeInterval) {
+        let workDuration = max(1, step.activeDuration + delta)
+        nudge(
+            step,
+            FreeWorkoutStepUpdates(
+                duration: step.restDuration + workDuration,
+                timedWorkDuration: step.timedWorkDuration == nil ? nil : workDuration
+            )
+        )
+    }
+
     private func apply(_ updates: FreeWorkoutStepUpdates, to stepID: String) {
+        guard steps.contains(where: { $0.id == stepID }) else { return }
+        if clock.isRunning {
+            let currentStepID = timeline.step(at: clock.elapsed)?.id
+            guard stepID == currentStepID || currentStepID == nil else { return }
+        }
         timeline.updateStep(id: stepID, updates)
         steps = timeline.currentSteps
     }
@@ -246,14 +268,39 @@ struct FreeWorkoutSessionView: View {
         )
         if saveAsPlan {
             do {
-                let definition = try FreeWorkoutSaver.routineDefinition(from: draft, title: plan.title)
+                let executedDraft = buildDraft(from: steps, title: draft.title)
+                let definition = try FreeWorkoutSaver.routineDefinition(from: executedDraft, title: plan.title)
                 try store.saveCustomRoutine(definition)
             } catch {
                 saveError = error.localizedDescription
                 return
             }
         }
-        dismiss()
+        if let onDismiss { onDismiss() } else { dismiss() }
+    }
+
+    private func buildDraft(from steps: [WorkoutStep], title: String) -> FreeWorkoutDraft {
+        let exercises = steps.map { step -> FreeWorkoutExerciseDraft in
+            let kind: FreeWorkoutExerciseKind
+            if step.isRestStep {
+                kind = .rest
+            } else if step.action == .loadedLift {
+                kind = .pull
+            } else {
+                kind = .hang
+            }
+            return FreeWorkoutExerciseDraft(
+                id: step.id.replacingOccurrences(of: "free.", with: ""),
+                kind: kind,
+                title: step.title,
+                workDuration: step.activeDuration,
+                restDuration: max(0, step.duration - step.activeDuration),
+                externalLoadKGF: step.externalLoadKGF,
+                repetitions: step.repetitions,
+                gripType: step.gripType
+            )
+        }
+        return FreeWorkoutDraft(title: title, exercises: exercises)
     }
 
     private var saveAlertBinding: Binding<Bool> {
@@ -262,7 +309,7 @@ struct FreeWorkoutSessionView: View {
             set: { isPresented in
                 if !isPresented {
                     saveError = nil
-                    dismiss()
+                    if let onDismiss { onDismiss() } else { dismiss() }
                 }
             }
         )
@@ -324,8 +371,4 @@ private struct FreeWorkoutStepEditSheet: View {
         }
         .accessibilityIdentifier("freeWorkout.editSheet")
     }
-}
-
-extension String: Identifiable {
-    public var id: String { self }
 }

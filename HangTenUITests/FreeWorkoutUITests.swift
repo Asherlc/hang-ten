@@ -17,6 +17,10 @@ final class FreeWorkoutUITests: XCTestCase {
         app.launch()
         app.buttons["train.freeWorkout"].tap()
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
+        // Ensure there's at least one exercise
+        if !app.buttons["freeWorkout.start"].isEnabled {
+            app.buttons["freeWorkout.addHang"].tap()
+        }
         app.buttons["freeWorkout.start"].tap()
         XCTAssertTrue(app.otherElements["freeWorkout.session"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.completeSet"].exists)
