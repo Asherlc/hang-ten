@@ -1,40 +1,4 @@
 {
-  "coordinateFrame": "hang-ten-board-v1",
-  "modelBounds": {
-    "max": [
-      0.275000006,
-      0.129999995,
-      0.050000001
-    ],
-    "min": [
-      -0.275000006,
-      0.0,
-      0.0
-    ]
-  },
-  "modelSHA256": "08e1361c8838c22a3ee72bafe38ac4d52e2d5464279fa6117970fddb14c4e447",
-  "nodes": [
-    {
-      "nodeID": "LatticeBody_editable_surface_001",
-      "role": "body"
-    },
-    {
-      "nodeID": "edge_10_editable_surface_001",
-      "role": "contact",
-      "contactID": "edge-10"
-    },
-    {
-      "nodeID": "edge_20_editable_surface_001",
-      "role": "contact",
-      "contactID": "edge-20"
-    },
-    {
-      "nodeID": "edge_45_editable_surface_001",
-      "role": "contact",
-      "contactID": "edge-45"
-    }
-  ],
-  "schemaVersion": 1,
   "contacts": {
     "edge-10": {
       "center": [
@@ -93,5 +57,41 @@
         "edge_45_editable_surface_001"
       ]
     }
-  }
+  },
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelBounds": {
+    "max": [
+      0.275000006,
+      0.129999995,
+      0.050000001
+    ],
+    "min": [
+      -0.275000006,
+      -0.0,
+      0.0
+    ]
+  },
+  "modelSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
+  "nodes": [
+    {
+      "nodeID": "LatticeBody_editable_surface_001",
+      "role": "body"
+    },
+    {
+      "contactID": "edge-10",
+      "nodeID": "edge_10_editable_surface_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-20",
+      "nodeID": "edge_20_editable_surface_001",
+      "role": "contact"
+    },
+    {
+      "contactID": "edge-45",
+      "nodeID": "edge_45_editable_surface_001",
+      "role": "contact"
+    }
+  ],
+  "schemaVersion": 1
 }

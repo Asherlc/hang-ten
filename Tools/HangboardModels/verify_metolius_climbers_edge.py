@@ -26,11 +26,11 @@ BORE_CENTERS_METERS = (
     (-0.260, -0.0169), (0.260, -0.0169),
     (-0.279, 0.04475), (0.0, 0.04475), (0.279, 0.04475),
 )
-EXPECTED_CAP_NODE_ID = "bore_free_body_caps_001"
+EXPECTED_BODY_NODE_ID = "body_001"
 
 
 def require_bore_free_results(results: Sequence[Mapping[str, object]]) -> None:
-    """Require exactly the audited rays to hit the imported cap node."""
+    """Require exactly the audited rays to hit the imported body surface."""
     if len(results) != len(BORE_CENTERS_METERS):
         raise ValueError("expected exactly eight bore-ray results")
     expected_centers = set(BORE_CENTERS_METERS)
@@ -43,8 +43,8 @@ def require_bore_free_results(results: Sequence[Mapping[str, object]]) -> None:
     for result in results:
         if result.get("intersects") is not True:
             raise ValueError("a shipped USDZ bore ray remains open")
-        if result.get("nodeID") != EXPECTED_CAP_NODE_ID:
-            raise ValueError("a shipped USDZ bore ray did not hit the cap node")
+        if result.get("nodeID") != EXPECTED_BODY_NODE_ID:
+            raise ValueError("a shipped USDZ bore ray did not hit the body surface")
 
 
 def verify_shipped_package(package_root: Path) -> dict[str, object]:
@@ -118,7 +118,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     result = verify_shipped_package(arguments.package_root)
     if arguments.report:
         arguments.report.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(f"verified {len(BORE_CENTERS_METERS)} shipped Climber's Edge bore rays hit {EXPECTED_CAP_NODE_ID}")
+    print(f"verified {len(BORE_CENTERS_METERS)} shipped Climber's Edge bore rays hit {EXPECTED_BODY_NODE_ID}")
     return 0
 
 
