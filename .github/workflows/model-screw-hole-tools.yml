@@ -1,0 +1,36 @@
+name: Prepare non-Blender model tools
+
+on:
+  push:
+    branches:
+      - fix/remove-model-screw-holes-20260921
+    paths:
+      - .github/workflows/model-screw-hole-tools.yml
+
+permissions:
+  contents: read
+
+jobs:
+  prepare-reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download binary USD and geometry tools for the isolated renderer
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .context/remove-model-screw-holes-20260921/wheels
+          python3 -m pip download --disable-pip-version-check --only-binary=:all: --no-deps \
+            --python-version 3.13 --implementation cp --abi cp313 \
+            --platform manylinux_2_28_x86_64 --platform manylinux_2_27_x86_64 \
+            --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 \
+            --dest .context/remove-model-screw-holes-20260921/wheels usd-core manifold3d rtree
+          sha256sum .context/remove-model-screw-holes-20260921/wheels/* > .context/remove-model-screw-holes-20260921/wheels/SHA256SUMS
+      - name: Upload isolated inspection dependencies
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: remove-model-screw-holes-20260921-tools
+          path: .context/remove-model-screw-holes-20260921/wheels/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
