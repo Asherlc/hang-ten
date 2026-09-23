@@ -6,6 +6,7 @@ struct FreeWorkoutBuilderView: View {
     @State private var draft: FreeWorkoutDraft = FreeWorkoutDraftStore.load() ?? .starter
     @State private var sessionPlan: TrainingPlan?
     @State private var sessionDraft: FreeWorkoutDraft?
+    @State private var showsSession = false
     @State private var saveAsPlan = false
 
     var body: some View {
@@ -70,10 +71,10 @@ struct FreeWorkoutBuilderView: View {
                 }
             }
             .navigationTitle("Free workout")
-            .navigationDestination(item: $sessionPlan) { plan in
-                if let sessionDraft {
+            .navigationDestination(isPresented: $showsSession) {
+                if let sessionPlan, let sessionDraft {
                     FreeWorkoutSessionView(
-                        plan: plan,
+                        plan: sessionPlan,
                         draft: sessionDraft,
                         saveAsPlan: saveAsPlan,
                         onDismiss: { dismiss() }
@@ -97,6 +98,7 @@ struct FreeWorkoutBuilderView: View {
         persist()
         sessionDraft = draft
         sessionPlan = draft.trainingPlan()
+        showsSession = true
     }
 }
 
