@@ -11,56 +11,57 @@ struct FreeWorkoutBuilderView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("Workout") {
-                    TextField("Name", text: $draft.title)
-                        .accessibilityIdentifier("freeWorkout.name")
-                        .onChange(of: draft.title) { _, _ in persist() }
-                    ForEach($draft.exercises) { $exercise in
-                        FreeWorkoutExerciseEditor(
-                            exercise: $exercise,
-                            board: store.selectedBoard,
-                            onDelete: { delete(exercise) }
-                        )
+            VStack(spacing: 0) {
+                List {
+                    Section("Workout") {
+                        TextField("Name", text: $draft.title)
+                            .accessibilityIdentifier("freeWorkout.name")
+                            .onChange(of: draft.title) { _, _ in persist() }
+                        ForEach($draft.exercises) { $exercise in
+                            FreeWorkoutExerciseEditor(
+                                exercise: $exercise,
+                                board: store.selectedBoard,
+                                onDelete: { delete(exercise) }
+                            )
+                        }
+                        .onMove { offsets, destination in
+                            draft.exercises.move(fromOffsets: offsets, toOffset: destination)
+                            persist()
+                        }
+                        .onChange(of: draft.exercises) { _, _ in persist() }
                     }
-                    .onMove { offsets, destination in
-                        draft.exercises.move(fromOffsets: offsets, toOffset: destination)
-                        persist()
+                    Section("Add") {
+                        Button {
+                            draft.exercises.append(.hang())
+                            persist()
+                        } label: {
+                            Label("Add hang", systemImage: "plus")
+                        }
+                        .accessibilityIdentifier("freeWorkout.addHang")
+                        Button {
+                            draft.exercises.append(.pull())
+                            persist()
+                        } label: {
+                            Label("Add pull-ups", systemImage: "plus")
+                        }
+                        .accessibilityIdentifier("freeWorkout.addPull")
+                        Button {
+                            draft.exercises.append(.rest())
+                            persist()
+                        } label: {
+                            Label("Add rest", systemImage: "plus")
+                        }
+                        .accessibilityIdentifier("freeWorkout.addRest")
                     }
-                    .onChange(of: draft.exercises) { _, _ in persist() }
+                    Section("Finish") {
+                        Text("Saved routines use generic hold types. They do not retain exact board contacts.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                        Toggle("Save as reusable routine", isOn: $saveAsPlan)
+                            .accessibilityIdentifier("freeWorkout.saveAsPlan")
+                    }
                 }
-                Section("Add") {
-                    Button {
-                        draft.exercises.append(.hang())
-                        persist()
-                    } label: {
-                        Label("Add hang", systemImage: "plus")
-                    }
-                    .accessibilityIdentifier("freeWorkout.addHang")
-                    Button {
-                        draft.exercises.append(.pull())
-                        persist()
-                    } label: {
-                        Label("Add pull-ups", systemImage: "plus")
-                    }
-                    .accessibilityIdentifier("freeWorkout.addPull")
-                    Button {
-                        draft.exercises.append(.rest())
-                        persist()
-                    } label: {
-                        Label("Add rest", systemImage: "plus")
-                    }
-                    .accessibilityIdentifier("freeWorkout.addRest")
-                }
-                Section("Finish") {
-                    Text("Saved routines use generic hold types. They do not retain exact board contacts.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                    Toggle("Save as reusable routine", isOn: $saveAsPlan)
-                        .accessibilityIdentifier("freeWorkout.saveAsPlan")
-                }
-            }
-            .safeAreaInset(edge: .bottom) {
+                Divider()
                 Button("Start workout", action: start)
                     .buttonStyle(.borderedProminent)
                     .tint(.hangGreenDark)
