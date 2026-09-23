@@ -271,6 +271,32 @@ def _resample_closed(points, count):
     return result
 
 
+def _project_outline(points):
+    """Ordered front-plane outline of a set of (x, z) points (star-shaped)."""
+    projected = list({(round(x, 3), round(z, 3)) for x, z in points})
+    cx = sum(p[0] for p in projected) / len(projected)
+    cz = sum(p[1] for p in projected) / len(projected)
+    bins = 180
+    outline = []
+    for bin_index in range(bins):
+        low = -math.pi + 2 * math.pi * bin_index / bins
+        high = low + 2 * math.pi / bins
+        best = None
+        best_radius = -1.0
+        for x, z in projected:
+            angle = math.atan2(z - cz, x - cx)
+            if low <= angle < high:
+                radius = math.hypot(x - cx, z - cz)
+                if radius > best_radius:
+                    best_radius, best = radius, (x, z)
+        if best is not None:
+            outline.append(best)
+    outline.sort(key=lambda p: math.atan2(p[1] - cz, p[0] - cx))
+    outline = _merge_short(outline, 1.0)
+    keep = _reduce_closed(outline, 0.3)
+    return [outline[i] for i in keep]
+
+
 def _rim_profile(points, y):
     selected = [point for point in points if abs(point[1] - y) < 0.05]
     if len(selected) < 3:
@@ -321,6 +347,7 @@ def _extract(stage, cache):
     jug = {
         "x": (min(p[0] for p in jug_points), max(p[0] for p in jug_points)),
         "z": (min(p[2] for p in jug_points), max(p[2] for p in jug_points)),
+        "outline": _project_outline([(p[0], p[2]) for p in jug_points]),
     }
     return mid, deviation, pockets, attachments, jug
 
@@ -416,7 +443,7 @@ def _sketch(document, name, plane_points, frame, shift, depth=None):
     return sketch
 
 
-def _bind(obj, node_id, role, slot=None):
+def _bind(obj, node_id, role, slot=None, outline=None):
     obj.addProperty("App::PropertyString", "NodeID", "HangTen")
     obj.addProperty("App::PropertyString", "NodeRole", "HangTen")
     obj.NodeID = node_id
@@ -424,6 +451,12 @@ def _bind(obj, node_id, role, slot=None):
     if slot is not None:
         obj.addProperty("App::PropertyString", "ContactSlotID", "HangTen")
         obj.ContactSlotID = slot
+    if outline is not None:
+        # The CAD document is the source of truth for hold geometry: the
+        # compiler reads this front-plane polygon (native XZ millimetres) and
+        # emits it as the descriptor's hold region.
+        obj.addProperty("App::PropertyString", "HangTenHoldOutline", "HangTen")
+        obj.HangTenHoldOutline = json.dumps([[round(x, 4), round(z, 4)] for x, z in outline])
     obj.addProperty("App::PropertyString", "MaterialName", "HangTen")
     obj.addProperty("App::PropertyString", "BaseColor", "HangTen")
     obj.addProperty("App::PropertyFloat", "Roughness", "HangTen")
@@ -579,7 +612,8 @@ def main() -> int:
 
     _bind(cut_chain, "ring_body_001", "body")
     for slot, obj in contact_objects.items():
-        _bind(obj, SLOT_PRIMS[slot].rsplit("/", 1)[-1], "contact", slot)
+        outline = jug["outline"] if slot == "jug" else pockets[slot]["opening"]
+        _bind(obj, SLOT_PRIMS[slot].rsplit("/", 1)[-1], "contact", slot, outline)
     for node_id, obj in attachment_objects.items():
         _bind(obj, node_id, "attachment")
 

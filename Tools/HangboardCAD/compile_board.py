@@ -123,6 +123,39 @@ def _node_specification(obj) -> dict:
     return spec
 
 
+def _hold_outlines(contact_objects, version: int) -> dict:
+    """Read each contact's CAD-authored front-plane hold outline.
+
+    ``HangTenHoldOutline`` is a JSON array of ``[x, z]`` native-millimetre points
+    in the source document: the CAD is the source of truth for hold geometry.
+    Convert to the runtime front-plane space (metres) the descriptor normalizes
+    against. A contact with no outline falls back to its mesh-derived region.
+    """
+    outlines: dict[str, tuple] = {}
+    for obj in contact_objects:
+        if "HangTenHoldOutline" not in obj.PropertiesList:
+            continue
+        raw = str(getattr(obj, "HangTenHoldOutline", "")).strip()
+        if not raw:
+            continue
+        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        if not key:
+            raise BuildError(f"{obj.Name} declares a hold outline without a contact binding")
+        try:
+            points = json.loads(raw)
+        except json.JSONDecodeError as error:
+            raise BuildError(f"{obj.Name} hold outline is not valid JSON: {error}") from error
+        if not isinstance(points, list) or len(points) < 3:
+            raise BuildError(f"{obj.Name} hold outline needs at least three points")
+        try:
+            outlines[key] = tuple(
+                (float(point[0]) / 1000.0, float(point[1]) / 1000.0) for point in points
+            )
+        except (TypeError, IndexError, ValueError) as error:
+            raise BuildError(f"{obj.Name} hold outline points must be [x, z] pairs") from error
+    return outlines
+
+
 def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Path]:
     """Extract an FCStd-included file and stage it under ``textures/``."""
     import zipfile
@@ -587,6 +620,11 @@ def build(
 
         print("[8/10] deriving the descriptor from the exported bytes")
         model_bytes = asset.read_bytes()
+        # The CAD source owns hold geometry: a contact object may carry its
+        # front-plane hold outline as native-millimetre XZ points. When present
+        # it defines the descriptor region, so the app never has to derive a
+        # hold from the exported mesh silhouette.
+        outlines = _hold_outlines(contact_objects, version)
         if version == 2:
             descriptor = compile_reusable_descriptor(
                 model_bytes,
@@ -598,6 +636,7 @@ def build(
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},
                 frozenset(slots),
+                outlines,
             )
         else:
             descriptor = compile_descriptor(
@@ -608,6 +647,7 @@ def build(
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},
                 frozenset(contacts),
+                outlines,
             )
         descriptor_json = descriptor.to_json()
         if descriptor_json["modelSHA256"] != hashlib.sha256(model_bytes).hexdigest():

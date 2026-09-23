@@ -625,6 +625,49 @@ final class BoardModelScene {
         let originalMaterials: [ObjectIdentifier: [SCNMaterial]]
     }
 
+    private static func holdOutlineNode(
+        outline: [[Double]],
+        bounds: BoardModelBounds,
+        contactID: String
+    ) -> SCNNode? {
+        guard outline.count >= 3, bounds.minimum.count >= 3, bounds.maximum.count >= 3 else { return nil }
+        let spanX = bounds.maximum[0] - bounds.minimum[0]
+        let spanY = bounds.maximum[1] - bounds.minimum[1]
+        guard spanX > 0, spanY > 0 else { return nil }
+        // Front is +Z in the runtime frame; sit just proud of the front faces.
+        let z = Float(bounds.maximum[2] + 0.0005)
+        let points = outline.map {
+            SIMD3<Float>(
+                Float(bounds.minimum[0] + $0[0] * spanX),
+                Float(bounds.minimum[1] + $0[1] * spanY),
+                z
+            )
+        }
+        let centroid = points.reduce(SIMD3<Float>(repeating: 0), +) / Float(points.count)
+        var vertices = [centroid]
+        vertices.append(contentsOf: points)
+        var indices: [Int32] = []
+        for i in 0..<points.count {
+            indices.append(contentsOf: [0, Int32(1 + i), Int32(1 + (i + 1) % points.count)])
+        }
+        let source = SCNGeometrySource(vertices: vertices.map { SCNVector3($0.x, $0.y, $0.z) })
+        let element = SCNGeometryElement(indices: indices, primitiveType: .triangles)
+        let geometry = SCNGeometry(sources: [source], elements: [element])
+        geometry.name = "\(contactID).outline"
+        let material = SCNMaterial()
+        material.lightingModel = .constant
+        material.diffuse.contents = UIColor.clear
+        material.emission.contents = UIColor.clear
+        material.transparency = 0
+        material.isDoubleSided = true
+        material.readsFromDepthBuffer = true
+        material.writesToDepthBuffer = false
+        geometry.materials = [material]
+        let node = SCNNode(geometry: geometry)
+        node.name = "\(contactID).outline"
+        return node
+    }
+
     private static func prepareModel(
         source: SCNScene,
         descriptor: BoardModelDescriptor
@@ -722,6 +765,22 @@ final class BoardModelScene {
                 guard binding.contactID == nil else { return nil }
                 node.categoryBitMask = Self.modelVisibleCategory
             }
+        }
+
+        // The CAD source owns hold geometry. When a contact declares an authored
+        // outline, draw it as one smooth flat region on the front plane and use
+        // that for highlight and picking, rather than recoloring the sculpted
+        // cavity mesh (which reads as a fragmented, self-occluding surface).
+        for (contactID, contact) in descriptor.contacts where !contact.outline.isEmpty {
+            guard let overlay = Self.holdOutlineNode(
+                outline: contact.outline, bounds: descriptor.modelBounds, contactID: contactID
+            ) else { return nil }
+            modelRoot.addChildNode(overlay)
+            clonedGeometryNodes.append(overlay)
+            boundContactNodes[contactID] = [overlay]
+            boundContactIDsByNode[ObjectIdentifier(overlay)] = contactID
+            originals[ObjectIdentifier(overlay)] = overlay.geometry?.materials
+            overlay.categoryBitMask = Self.modelPickCategory
         }
 
         guard descriptor.nodes.contains(where: { $0.role == .body }),
@@ -2285,6 +2344,9 @@ final class BoardModelScene {
                         material.emission.contents = color.withAlphaComponent(0.18)
                         material.emission.intensity = 0.18
                         material.roughness.contents = 0.8
+                        // Authored-outline overlays start fully transparent and
+                        // become opaque when their contact is selected.
+                        material.transparency = 1.0
                         return material
                     }
                 } else {

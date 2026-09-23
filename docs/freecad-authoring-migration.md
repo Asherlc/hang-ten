@@ -114,6 +114,26 @@ attachments, so an aperture such as a cord window is a region of the body solid
 silently dropped attachment nodes; if you see a descriptor missing a declared
 attachment, that is the bug to fix, not a reason to omit the node.
 
+### Hold geometry is CAD-owned (the descriptor `outline`)
+
+**The CAD file is the source of truth for hold geometry.** Each contact object in
+the source may carry `HangTenHoldOutline`: an `App::PropertyString` holding a
+JSON array of `[x, z]` **native-millimetre** points, the front-plane outline of
+the hold in draw order. The compiler reads it and emits it as the descriptor's
+`outline` (normalized to the model face) for both v1 `contacts` and v2
+`contactSlots`; `facePlaneAABB` and `center` are then derived from that outline.
+A contact without the property falls back to the exported-mesh silhouette.
+
+Author the outline deliberately, as the region an operator would select: for a
+pocket it is the opening profile, for a band it is the band's front-plane
+footprint. This matters because the exported mesh is a sculpted surface, and a
+highlight that recolors it follows faceted, self-occluding cavity topology and
+reads as a fragmented, ragged patch. The authored outline lets the app draw one
+smooth region and hit-test it directly. Because the outline drives
+`facePlaneAABB`, an authored outline is also the right fix for a coarse
+mesh-derived region (for example a hold whose planar face tessellates into a
+handful of large triangles): the region becomes exactly what the source says.
+
 ### Measuring a sculpted (non-extruded) board
 
 Not every board is a swept profile. Before committing to a pad, measure whether

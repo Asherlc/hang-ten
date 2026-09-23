@@ -50,34 +50,36 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c9fdf97a0d5d048d03272db27a41a8a626ac1fffcd987d7d2739d0c9b0d3d2d0",
+  "sha256Manifest": "7b8bea8a4cdc06333956d82178dd9deef728770ada42ea645319b2fd383c1b79",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "36238866c5b6fd474839178f5b4454fb051767ff5e8c5837301d6d4aa0a33fc1",
+  "supersededSha256Manifest": "c9fdf97a0d5d048d03272db27a41a8a626ac1fffcd987d7d2739d0c9b0d3d2d0",
   "migratedPackages": {
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
-      "sourceSHA256": "55b2f392ec170e70eb443f6c19ed989d85f9281601f37c2fc2771a8a95e97cf6",
+      "sourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
       "assetSHA256": "813585ba50319e4c80219176133aa7481d2121c4c559904aaf90f53240cc520c",
-      "descriptorSHA256": "e573a2006d41d004126f33694c8a1bfebf02c0905c187438fd2db537e0c01331",
+      "descriptorSHA256": "114c4db16c2a2585d1067067e29fe5669857bd63851f7a82ebbddf81a71e71ee",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, edit propagation)",
       "nativeAppValidation": "not run",
       "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md",
-      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py"
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center; asset bytes unchanged"
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "dabaa8ad77dc5f1e1a46425b3e9ad131abd5fcb945cb0d7a515717ca4da5e85a",
+      "sourceSHA256": "cd80a7c0d107ad31d50eaa250c41a9ed52c902f19da13cd789a55c8d07cd2b1f",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
       "assetSHA256": "21a3cda54886c07670db3646ba00505ff42783441926434d2acd528c6e2fef5a",
-      "descriptorSHA256": "612b860ae5ebb25a33a5a0d4154f2d3f06e1edbc84d8f93ead3f5231dc28922c",
+      "descriptorSHA256": "969e8028609bb82be1e512d4723c8703bd2ae15eb93ce788b45c9359184f6814",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, depth edit propagation, slot/instance)",
-      "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail review route; all 8 physical contacts selected by hangten://board/metolius.rock-rings-3d/hold/<contactID> and boardDetail.selectedHold.<contactID> confirmed; 40/32/25 mm pocket highlights land on the correct pocket; jug highlight on the top edge)",
-      "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)"
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail route; 8/8 contacts selected by deep link and confirmed via boardDetail.selectedHold.<contactID>; CAD-authored outlines render as smooth hold regions)",
+      "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center"
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."

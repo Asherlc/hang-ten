@@ -141,5 +141,77 @@ class ContactModelDescriptorTests(unittest.TestCase):
         )
 
 
+    def test_authored_outline_defines_the_v2_slot_region(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_reusable_descriptor(
+            b"unit-usdz",
+            (
+                module.SlotNodeBinding("unit-body", "body"),
+                module.SlotNodeBinding("unit-edge", "contact", "edge"),
+            ),
+            {"unit-body": ((0.0, 0.0, 0.0), (1.0, 1.0, 0.2)), "unit-edge": ((0.2, 0.3, 0.2),)},
+            frozenset({"edge"}),
+            {"edge": [(0.25, 0.6), (0.75, 0.6), (0.75, 0.8), (0.25, 0.8)]},
+        ).to_json()
+        slot = descriptor["contactSlots"]["edge"]
+        self.assertEqual(slot["outline"], [[0.25, 0.6], [0.75, 0.6], [0.75, 0.8], [0.25, 0.8]])
+        self.assertEqual(slot["facePlaneAABB"], {"min": [0.25, 0.6], "max": [0.75, 0.8]})
+        self.assertEqual(slot["center"], [0.5, 0.7])
+
+    def test_authored_outline_defines_the_v1_contact_region(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_descriptor(
+            b"board-usdz",
+            [
+                module.NodeBinding("Body", "body"),
+                module.NodeBinding("Contact", "contact", "edge-left"),
+            ],
+            {"Body": [(0.0, 0.0, 0.0), (1.0, 1.0, 0.2)], "Contact": [(0.1, 0.2, 0.2), (0.4, 0.5, 0.2)]},
+            frozenset({"edge-left"}),
+            {"edge-left": [(0.1, 0.2), (0.4, 0.2), (0.4, 0.5), (0.1, 0.5)]},
+        ).to_json()
+        contact = descriptor["contacts"]["edge-left"]
+        self.assertEqual(contact["outline"], [[0.1, 0.2], [0.4, 0.2], [0.4, 0.5], [0.1, 0.5]])
+        self.assertEqual(contact["facePlaneAABB"], {"min": [0.1, 0.2], "max": [0.4, 0.5]})
+
+    def test_descriptor_without_an_outline_omits_the_key(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_descriptor(
+            b"board-usdz",
+            [
+                module.NodeBinding("Body", "body"),
+                module.NodeBinding("Contact", "contact", "edge-left"),
+            ],
+            {"Body": [(0.0, 0.0, 0.0), (1.0, 1.0, 0.2)], "Contact": [(0.1, 0.2, 0.2), (0.4, 0.5, 0.2)]},
+            frozenset({"edge-left"}),
+        ).to_json()
+        self.assertNotIn("outline", descriptor["contacts"]["edge-left"])
+
+    def test_outline_parser_rejects_an_aabb_that_does_not_derive_from_the_outline(self) -> None:
+        module = self.descriptor_module()
+        value = {
+            "schemaVersion": 2,
+            "coordinateFrame": "hang-ten-board-v1",
+            "modelSHA256": "0" * 64,
+            "modelBounds": {"min": [0.0, 0.0, 0.0], "max": [1.0, 1.0, 0.2]},
+            "nodes": [
+                {"nodeID": "unit-body", "role": "body"},
+                {"nodeID": "unit-edge", "role": "contact", "contactSlotID": "edge"},
+            ],
+            "contactSlots": {
+                "edge": {
+                    "nodeIDs": ["unit-edge"],
+                    "facePlaneAABB": {"min": [0.1, 0.1], "max": [0.5, 0.6]},
+                    "center": [0.3, 0.35],
+                    "outline": [[0.1, 0.2], [0.4, 0.2], [0.4, 0.5], [0.1, 0.5]],
+                }
+            },
+        }
+        with self.assertRaisesRegex(ValueError, "facePlaneAABB must derive"):
+            module.ModelDescriptorV2.from_json(value)
+
+
+
+
 if __name__ == "__main__":
     unittest.main()
