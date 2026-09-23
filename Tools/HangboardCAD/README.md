@@ -134,8 +134,8 @@ performance. Those remain open.
   projection. They are not native SceneKit screenshots and do not establish
   native materials, picking, accessibility, suspension, or performance.
 * The migrated asset was validated in the iOS simulator board-detail route (see
-  above). Workbench, suspension, accessibility, and performance checks were not
-  run, so this is not complete native acceptance.
+  above). Suspension, accessibility, and performance checks were not run, so this
+  is not complete native acceptance.
 
 ## Tests
 
