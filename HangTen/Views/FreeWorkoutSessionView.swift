@@ -23,6 +23,7 @@ struct FreeWorkoutSessionView: View {
     @State private var resumeAfterEdit = false
     @State private var didFinish = false
     @State private var saveError: String?
+    @State private var saveNotice: String?
 
     init(plan: TrainingPlan, draft: FreeWorkoutDraft, saveAsPlan: Bool, onDismiss: (() -> Void)? = nil) {
         self.plan = plan
@@ -59,6 +60,14 @@ struct FreeWorkoutSessionView: View {
         } message: {
             Text(saveError ?? "An unknown error occurred.")
         }
+        .alert("Routine saved", isPresented: saveNoticeBinding) {
+            Button("OK", role: .cancel) {
+                saveNotice = nil
+                if let onDismiss { onDismiss() } else { dismiss() }
+            }
+        } message: {
+            Text(saveNotice ?? "")
+        }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.session")
     }
@@ -76,7 +85,7 @@ struct FreeWorkoutSessionView: View {
             }
             BoardMapView(board: board, highlightedHoldIDs: highlightedIDs)
                 .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-            quickAdjustBar(step: step)
+            quickAdjustBar(step: step, isComplete: isComplete)
             controlBar(step: step, elapsed: elapsed, isComplete: isComplete)
             Spacer(minLength: 0)
         }
@@ -123,8 +132,8 @@ struct FreeWorkoutSessionView: View {
     }
 
     @ViewBuilder
-    private func quickAdjustBar(step: WorkoutStep?) -> some View {
-        if let step, !step.isRestStep {
+    private func quickAdjustBar(step: WorkoutStep?, isComplete: Bool) -> some View {
+        if !isComplete, let step, !step.isRestStep {
             HStack(spacing: 10) {
                 if step.externalLoadKGF != nil || step.action == .loadedLift || step.phase == .hang {
                     adjustGroup(title: "Weight", down: {
@@ -288,8 +297,13 @@ struct FreeWorkoutSessionView: View {
         if saveAsPlan {
             do {
                 let executedDraft = FreeWorkoutSaver.executedDraft(from: steps, title: draft.title)
+                let omitted = FreeWorkoutSaver.omittedHoldlessTitles(in: executedDraft)
                 let definition = try FreeWorkoutSaver.routineDefinition(from: executedDraft, title: plan.title)
                 try store.saveCustomRoutine(definition)
+                if !omitted.isEmpty {
+                    saveNotice = "Skipped exercises without a hold: \(omitted.joined(separator: ", "))."
+                    return
+                }
             } catch {
                 saveError = error.localizedDescription
                 return
@@ -322,6 +336,15 @@ struct FreeWorkoutSessionView: View {
                     saveError = nil
                     if let onDismiss { onDismiss() } else { dismiss() }
                 }
+            }
+        )
+    }
+
+    private var saveNoticeBinding: Binding<Bool> {
+        Binding(
+            get: { saveNotice != nil },
+            set: { isPresented in
+                if !isPresented { saveNotice = nil }
             }
         )
     }
@@ -385,7 +408,7 @@ private struct FreeWorkoutStepEditSheet: View {
                             updates = FreeWorkoutStepUpdates(
                                 duration: rest + work,
                                 timedWorkDuration: step.timedWorkDuration == nil ? nil : work,
-                                externalLoadKGF: Double(loadText),
+                                externalLoadKGF: loadText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0 : Double(loadText),
                                 repetitions: step.action == .loadedLift ? reps : nil
                             )
                         }

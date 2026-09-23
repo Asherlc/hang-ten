@@ -21,7 +21,7 @@ final class FreeWorkoutSaverTests: XCTestCase {
             FreeWorkoutExerciseDraft(kind: .hang, holdKind: nil, workDuration: 10, restDuration: 0),
         ])
         XCTAssertThrowsError(try FreeWorkoutSaver.routineDefinition(from: draft, title: "Empty")) { error in
-            XCTAssertEqual(error as? FreeWorkoutSaverError, .missingHolds(exercises: ["Hang"]))
+            XCTAssertEqual(error as? FreeWorkoutSaverError, .noSavableSteps)
         }
     }
 
@@ -63,13 +63,14 @@ final class FreeWorkoutSaverTests: XCTestCase {
         XCTAssertNotEqual(definition.steps.last?.phase, .rest)
     }
 
-    func testMissingHoldThrowsWithExerciseNames() {
+    func testHoldlessExercisesAreOmittedOnSave() throws {
         let draft = FreeWorkoutDraft(title: "Mixed", exercises: [
             FreeWorkoutExerciseDraft(kind: .hang, title: "Jug hang", holdKind: .jug, workDuration: 10, restDuration: 0),
             FreeWorkoutExerciseDraft(kind: .hang, title: "Mystery hang", holdKind: nil, workDuration: 10, restDuration: 0),
         ])
-        XCTAssertThrowsError(try FreeWorkoutSaver.routineDefinition(from: draft, title: "Mixed")) { error in
-            XCTAssertEqual(error as? FreeWorkoutSaverError, .missingHolds(exercises: ["Mystery hang"]))
-        }
+        XCTAssertEqual(FreeWorkoutSaver.omittedHoldlessTitles(in: draft), ["Mystery hang"])
+        let definition = try FreeWorkoutSaver.routineDefinition(from: draft, title: "Mixed")
+        XCTAssertEqual(definition.steps.count, 1)
+        XCTAssertEqual(definition.steps.first?.title, "Jug hang")
     }
 }

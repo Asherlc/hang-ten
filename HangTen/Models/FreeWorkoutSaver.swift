@@ -2,26 +2,14 @@ import Foundation
 
 enum FreeWorkoutSaverError: Error, Equatable, LocalizedError {
     case noSavableSteps
-    case missingHolds(exercises: [String])
 
     var errorDescription: String? {
-        switch self {
-        case .noSavableSteps:
-            return "Add at least one hang or pull-up before saving as a routine."
-        case let .missingHolds(exercises):
-            return "Choose a hold for these exercises before saving: \(exercises.joined(separator: ", "))."
-        }
+        "Add at least one hang or pull-up with a hold before saving as a routine."
     }
 }
 
 enum FreeWorkoutSaver {
     static func routineDefinition(from draft: FreeWorkoutDraft, title: String) throws -> CustomRoutineDefinition {
-        let missingHoldTitles = draft.exercises
-            .filter { $0.kind != .rest && $0.holdKind == nil && $0.contactKind == nil }
-            .map(\.title)
-        guard missingHoldTitles.isEmpty else {
-            throw FreeWorkoutSaverError.missingHolds(exercises: missingHoldTitles)
-        }
         var steps = draft.exercises.flatMap(stepDefinitions(for:))
         // Custom routines cannot end with a rest step, so strip trailing rests.
         while let last = steps.last, last.phase == .rest {
@@ -41,6 +29,14 @@ enum FreeWorkoutSaver {
             targetMode: .generic,
             steps: steps
         )
+    }
+
+    /// Non-rest exercises the builder allowed with no hold ("Any hold"); these
+    /// are omitted from a saved routine rather than inventing a target.
+    static func omittedHoldlessTitles(in draft: FreeWorkoutDraft) -> [String] {
+        draft.exercises
+            .filter { $0.kind != .rest && $0.holdKind == nil && $0.contactKind == nil }
+            .map(\.title)
     }
 
     /// Reconstructs a draft from the steps actually executed in a session, so a
