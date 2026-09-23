@@ -363,8 +363,12 @@ private struct FreeWorkoutStepEditSheet: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
+                        let newWork: TimeInterval? = step.timedWorkDuration != nil
+                            ? min(step.activeDuration, duration)
+                            : nil
                         onSave(FreeWorkoutStepUpdates(
                             duration: duration,
+                            timedWorkDuration: newWork,
                             externalLoadKGF: Double(loadText),
                             repetitions: step.action == .loadedLift ? reps : nil
                         ))
