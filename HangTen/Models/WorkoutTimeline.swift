@@ -402,7 +402,11 @@ struct WorkoutTimeline {
             accessory: old.accessory,
             duration: newDuration,
             phase: old.phase,
-            segments: old.segments,
+            segments: Self.remappedSegments(
+                old,
+                workDuration: newTimedWork ?? newDuration,
+                totalDuration: newDuration
+            ),
             gripType: old.gripType,
             fingerConfiguration: old.fingerConfiguration,
             handUse: old.handUse,
@@ -419,6 +423,36 @@ struct WorkoutTimeline {
         }
         duration = cursor
         return true
+    }
+
+    /// Keeps fixed work/rest segment durations summing to the step's edited
+    /// duration. Non-fixed segments (undefined / stopwatch) carry no duration
+    /// and pass through unchanged.
+    private static func remappedSegments(
+        _ step: WorkoutStep,
+        workDuration: TimeInterval,
+        totalDuration: TimeInterval
+    ) -> [WorkoutSegment] {
+        let restDuration = max(0, totalDuration - workDuration)
+        return step.segments.map { segment in
+            guard segment.timing == .fixed else { return segment }
+            switch segment.kind {
+            case .work:
+                return WorkoutSegment(
+                    kind: .work,
+                    target: segment.target,
+                    timing: .fixed,
+                    duration: workDuration
+                )
+            case .rest:
+                return WorkoutSegment(
+                    kind: .rest,
+                    target: segment.target,
+                    timing: .fixed,
+                    duration: restDuration
+                )
+            }
+        }
     }
 
     static func labels(for step: WorkoutStep) -> [String] {

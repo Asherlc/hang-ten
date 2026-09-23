@@ -86,21 +86,29 @@ struct FreeWorkoutSessionView: View {
     }
 
     private func currentSetCard(step: WorkoutStep, elapsed: TimeInterval, isComplete: Bool) -> some View {
-        let remaining = max(0, step.duration - timeline.elapsedInStep(at: elapsed))
+        let stepElapsed = timeline.elapsedInStep(at: elapsed)
+        let isResting = step.isRestStep || (step.hasRestInterval && stepElapsed >= step.activeDuration)
+        let remaining: TimeInterval = isResting
+            ? max(0, step.duration - stepElapsed)
+            : max(0, step.activeDuration - stepElapsed)
+        let title = isResting && !step.isRestStep ? "Rest" : step.title
+
         return Button {
             beginEdit(step.id)
         } label: {
             VStack(alignment: .leading, spacing: 6) {
-                SectionLabel(title: isComplete ? "Finished" : "Current set · tap to edit")
-                Text(step.title)
+                SectionLabel(title: isComplete
+                    ? "Finished"
+                    : (isResting ? "Rest · tap to edit" : "Current set · tap to edit"))
+                Text(title)
                     .font(.system(size: 21, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.hangInk)
                 HStack(spacing: 12) {
                     Text(FreeWorkoutDraft.durationLabel(remaining) + " left")
-                    if let load = step.externalLoadKGF {
+                    if !isResting, let load = step.externalLoadKGF {
                         Text("+\(load.formatted()) kg")
                     }
-                    if let reps = step.repetitions {
+                    if !isResting, let reps = step.repetitions {
                         let done = liftCompletion.completedRepetitions(for: step)
                         Text("\(done)/\(reps) reps")
                     }

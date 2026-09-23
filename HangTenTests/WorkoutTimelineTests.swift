@@ -4344,4 +4344,29 @@ final class FreeWorkoutTimelineUpdateTests: XCTestCase {
         XCTAssertFalse(timeline.updateStep(id: "missing", FreeWorkoutStepUpdates(duration: 30)))
         XCTAssertEqual(timeline.duration, 10)
     }
+
+    func testUpdateStepKeepsCompoundSegmentDurationsConsistent() {
+        let step = WorkoutStep(
+            id: "a",
+            number: 1,
+            title: "Hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 60,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50),
+            ],
+            timedWorkDuration: 10
+        )
+        var timeline = WorkoutTimeline(steps: [step])
+        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 30, timedWorkDuration: 20)))
+        let updated = timeline.currentSteps[0]
+        XCTAssertEqual(updated.duration, 30)
+        XCTAssertEqual(updated.timedWorkDuration, 20)
+        XCTAssertEqual(updated.segments[0].duration, 20)
+        XCTAssertEqual(updated.segments[1].duration, 10)
+        XCTAssertEqual(updated.segments.compactMap(\.duration).reduce(0, +), 30)
+    }
 }
