@@ -337,57 +337,85 @@ def _triangle_area(points, facets, indices) -> float:
     return total
 
 
-def _validate_partition(body_shape, body_points, body_facets, triangles_by_node, contact_objects, deflection):
+def _validate_partition(body_points, body_facets, triangles_by_node, region_objects):
     """Assert the exported nodes are a true partition of the board surface.
 
     Two failure modes would otherwise ship silently: a region that double-covers
     an area another region also covers, and a gap where nothing was assigned.
     Both leave a plausible-looking asset.
+
+    The comparison is against the *tessellated* body area, not the exact OCCT
+    area: native curved surfaces (fillets, ruled lofts, cylinders) tessellate to
+    slightly less area than the analytic face, so an analytic total would flag
+    every legitimately curved board. Every tessellated triangle must still be
+    assigned exactly once, which is the property this guards.
     """
-    total = float(body_shape.Area)
+    total = _triangle_area(body_points, body_facets, range(len(body_facets)))
     exported = sum(
         _triangle_area(body_points, body_facets, indices)
         for indices in triangles_by_node.values()
     )
-    # Tessellation of these planar faces is exact, so the allowance is tied to
-    # the pinned deflection rather than hand-tuned.
-    tolerance = max(0.05, 4.0 * deflection)
+    # The partition is over one tessellation, so the only allowance needed is
+    # floating-point summation error.
+    tolerance = max(1e-6, 1e-6 * total)
     if abs(exported - total) > tolerance:
         raise BuildError(
-            f"exported surface area {exported:.4f} mm^2 does not match the body surface "
-            f"{total:.4f} mm^2; the regions leave a gap or overlap larger than "
-            f"{tolerance:.3f} mm^2"
+            f"exported surface area {exported:.4f} mm^2 does not match the tessellated body "
+            f"surface {total:.4f} mm^2; the regions leave a gap or overlap larger than "
+            f"{tolerance:.6f} mm^2"
         )
-    for obj in contact_objects:
+    for obj in region_objects:
         if not triangles_by_node[obj.NodeID]:
             raise BuildError(f"{obj.NodeID} received no surface triangles")
 
 
-def _validate_published_depths(contact_objects, board, deflection) -> dict:
+def _declared_depths(board, version: int) -> dict:
+    """Published grip depth keyed by region identity (contact id or slot id).
+
+    v1 names a physical contact directly; v2 names a reusable slot that each
+    presentation instance maps to a physical contact. Every instance of a slot
+    must agree on the published depth, or the slot is ambiguous and the build
+    must fail rather than silently pick one.
+    """
+    declared: dict[str, float] = {}
+    if version == 1:
+        for contact in board.get("contacts", []):
+            span = ((contact.get("depth") or {}).get("range") or {})
+            low, high = span.get("minimum"), span.get("maximum")
+            if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
+                declared[contact["id"]] = float(low)
+        return declared
+    by_id = {contact["id"]: contact for contact in board.get("contacts", [])}
+    for presentation in board.get("presentations", []):
+        for instance in presentation.get("media", {}).get("instances", []):
+            for slot, contact_id in instance.get("contactIDsBySlotID", {}).items():
+                span = ((by_id.get(contact_id) or {}).get("depth") or {}).get("range") or {}
+                low, high = span.get("minimum"), span.get("maximum")
+                if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
+                    if slot in declared and abs(declared[slot] - low) > 1e-6:
+                        raise BuildError(f"slot {slot} declares conflicting published depths")
+                    declared[slot] = float(low)
+    return declared
+
+
+def _validate_published_depths(contact_objects, declared, version: int, deflection) -> dict:
     """Check each authored region against the grip depth the board declares.
 
-    ``board.json`` owns the published depth for a contact whose range is a single
-    value. The authored region's extent along the native depth axis must agree;
-    this is what catches a region that silently re-bound to another surface.
+    The authored region's extent along the native depth axis must agree with the
+    published depth; this is what catches a region that silently re-bound to
+    another surface. Attachments have no published grip depth and are skipped.
     """
-    declared = {}
-    for contact in board.get("contacts", []):
-        span = ((contact.get("depth") or {}).get("range") or {})
-        low, high = span.get("minimum"), span.get("maximum")
-        if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
-            declared[contact["id"]] = float(low)
-
     measured = {}
     for obj in contact_objects:
-        contact_id = getattr(obj, "ContactID", "")
-        measured[contact_id] = round(float(obj.Shape.BoundBox.YLength), 3)
-        if contact_id not in declared:
+        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
+        if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
-        if abs(measured[contact_id] - declared[contact_id]) > tolerance:
+        if abs(measured[key] - declared[key]) > tolerance:
             raise BuildError(
-                f"{contact_id} region depth {measured[contact_id]:.3f} mm disagrees with the "
-                f"published depth {declared[contact_id]:.3f} mm (tolerance {tolerance:.3f} mm); "
+                f"{key} region depth {measured[key]:.3f} mm disagrees with the "
+                f"published depth {declared[key]:.3f} mm (tolerance {tolerance:.3f} mm); "
                 "the region has probably bound to the wrong surface"
             )
     return measured
@@ -486,6 +514,11 @@ def build(
     if body_object is None:
         raise BuildError("source declares no body node")
     contact_objects = [obj for obj in objects if obj.NodeRole == "contact"]
+    attachment_objects = [obj for obj in objects if obj.NodeRole == "attachment"]
+    # Contacts and attachments are both regions of the body surface; the
+    # partition assigns each body triangle to at most one of them, so a
+    # non-pickable cord aperture is exported exactly like a grip region.
+    region_objects = contact_objects + attachment_objects
     model_box = None
     for obj in objects:
         box = obj.Shape.BoundBox
@@ -505,25 +538,25 @@ def build(
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
     materials = _material_registry(objects, source, staging)
     body_points, body_facets, assignment = _partition_body_triangles(
-        body_object.Shape, [obj.Shape for obj in contact_objects], deflection
+        body_object.Shape, [obj.Shape for obj in region_objects], deflection
     )
     triangles_by_node: dict[str, list] = {body_object.NodeID: []}
-    for obj in contact_objects:
+    for obj in region_objects:
         triangles_by_node[obj.NodeID] = []
     for index, facet in enumerate(body_facets):
         owner = assignment.get(index)
         target = (
-            body_object.NodeID if owner is None else contact_objects[owner].NodeID
+            body_object.NodeID if owner is None else region_objects[owner].NodeID
         )
         triangles_by_node[target].append(index)
 
-    _validate_partition(
-        body_object.Shape, body_points, body_facets, triangles_by_node, contact_objects, deflection
+    _validate_partition(body_points, body_facets, triangles_by_node, region_objects)
+    measured_depths = _validate_published_depths(
+        contact_objects, _declared_depths(board, version), version, deflection
     )
-    measured_depths = _validate_published_depths(contact_objects, board, deflection)
 
     meshes = []
-    for obj in [body_object] + contact_objects:
+    for obj in [body_object] + region_objects:
         indices = triangles_by_node[obj.NodeID]
         points, triangles = _subset_mesh(body_points, body_facets, indices)
         points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)

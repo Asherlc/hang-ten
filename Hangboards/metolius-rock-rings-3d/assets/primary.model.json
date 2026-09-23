@@ -1,96 +1,19 @@
 {
-  "contactSlots": {
-    "jug": {
-      "center": [
-        0.5,
-        0.915760861
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.844843264,
-          0.972826072
-        ],
-        "min": [
-          0.155156736,
-          0.85869565
-        ]
-      },
-      "nodeIDs": [
-        "unit_jug_001"
-      ]
-    },
-    "pocket-25": {
-      "center": [
-        0.5,
-        0.168478258
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.671232882,
-          0.244565227
-        ],
-        "min": [
-          0.328767118,
-          0.092391289
-        ]
-      },
-      "nodeIDs": [
-        "unit_pocket_25_001"
-      ]
-    },
-    "pocket-32": {
-      "center": [
-        0.5,
-        0.39673913
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.760273968,
-          0.483695652
-        ],
-        "min": [
-          0.239726032,
-          0.309782608
-        ]
-      },
-      "nodeIDs": [
-        "unit_pocket_32_001"
-      ]
-    },
-    "pocket-40": {
-      "center": [
-        0.5,
-        0.690217397
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.849315067,
-          0.793478268
-        ],
-        "min": [
-          0.150684933,
-          0.586956526
-        ]
-      },
-      "nodeIDs": [
-        "unit_pocket_40_001"
-      ]
-    }
-  },
+  "schemaVersion": 2,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "21a3cda54886c07670db3646ba00505ff42783441926434d2acd528c6e2fef5a",
   "modelBounds": {
-    "max": [
-      0.072999999,
-      0.092,
-      0.0285
-    ],
     "min": [
       -0.072999999,
       -0.092,
       -0.0285
+    ],
+    "max": [
+      0.072999999,
+      0.092,
+      0.0285
     ]
   },
-  "modelSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
   "nodes": [
     {
       "nodeID": "lateral_window_001",
@@ -105,25 +28,102 @@
       "role": "attachment"
     },
     {
-      "contactSlotID": "jug",
       "nodeID": "unit_jug_001",
-      "role": "contact"
+      "role": "contact",
+      "contactSlotID": "jug"
     },
     {
-      "contactSlotID": "pocket-25",
       "nodeID": "unit_pocket_25_001",
-      "role": "contact"
+      "role": "contact",
+      "contactSlotID": "pocket-25"
     },
     {
-      "contactSlotID": "pocket-32",
       "nodeID": "unit_pocket_32_001",
-      "role": "contact"
+      "role": "contact",
+      "contactSlotID": "pocket-32"
     },
     {
-      "contactSlotID": "pocket-40",
       "nodeID": "unit_pocket_40_001",
-      "role": "contact"
+      "role": "contact",
+      "contactSlotID": "pocket-40"
     }
   ],
-  "schemaVersion": 2
+  "contactSlots": {
+    "jug": {
+      "nodeIDs": [
+        "unit_jug_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.154532112,
+          0.793159938
+        ],
+        "max": [
+          0.845467888,
+          0.963200003
+        ]
+      },
+      "center": [
+        0.5,
+        0.87817997
+      ]
+    },
+    "pocket-25": {
+      "nodeIDs": [
+        "unit_pocket_25_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.328772681,
+          0.092625861
+        ],
+        "max": [
+          0.670648037,
+          0.244565227
+        ]
+      },
+      "center": [
+        0.499710359,
+        0.168595544
+      ]
+    },
+    "pocket-32": {
+      "nodeIDs": [
+        "unit_pocket_32_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.240438736,
+          0.310050667
+        ],
+        "max": [
+          0.759185954,
+          0.483672413
+        ]
+      },
+      "center": [
+        0.499812345,
+        0.39686154
+      ]
+    },
+    "pocket-40": {
+      "nodeIDs": [
+        "unit_pocket_40_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.152238558,
+          0.587274836
+        ],
+        "max": [
+          0.847760192,
+          0.793159938
+        ]
+      },
+      "center": [
+        0.499999375,
+        0.690217387
+      ]
+    }
+  }
 }

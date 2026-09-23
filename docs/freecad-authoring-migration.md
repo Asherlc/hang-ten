@@ -85,6 +85,50 @@ without `NodeID` — sketches, datums, construction features — are never expor
 objects, external `XLink` references, and missing embedded files, so a document
 that opens locally can still fail the contract.
 
+### Reusable slots (descriptor schema v2)
+
+A schema-v2 source models **one unit**, not the pair. `board.json` declares two
+`equipmentObjects` and two media `instances`; each instance maps the same
+generic slot IDs (`jug`, `pocket-40`, …) to different physical contact IDs. The
+USDZ therefore carries one node per slot (`unit_jug_001`) and the app
+deep-clones the unit per instance. Do not author both rings into the source —
+"render a pair" is two instances of one model, and a second copy in the source
+would double the geometry and break the descriptor.
+
+The v2 authoring contract:
+
+- the document's `HangTenSchemaVersion` is `2`;
+- every contact object carries `ContactSlotID`, not `ContactID`, and the slot
+  set must be exactly the union of every instance's `contactIDsBySlotID` keys;
+- a slot's published grip depth is the value every instance of that slot agrees
+  on. `compile_board` derives it from `contactIDsBySlotID` and fails the build
+  if two instances of one slot disagree, because a slot is then ambiguous;
+- the descriptor is `contactSlots` (not `contacts`), and a slot's `nodeIDs`
+  lists the one node that serves all of its physical contacts.
+
+The `attachment` role is ordinary geometry in the source but is neither pickable
+nor highlightable at runtime. It is exported exactly like a contact region: the
+compiler partitions the body surface between the body, the contacts, **and** the
+attachments, so an aperture such as a cord window is a region of the body solid
+(coincident classification geometry), not floating geometry. The v1 compiler
+silently dropped attachment nodes; if you see a descriptor missing a declared
+attachment, that is the bug to fix, not a reason to omit the node.
+
+### Measuring a sculpted (non-extruded) board
+
+Not every board is a swept profile. Before committing to a pad, measure whether
+the cross-section is constant along the intended extrusion axis (see step 1). A
+genuinely sculpted display mesh — a rounded lip over an open back, scooped
+pockets, a domed face — is a closed shell of open surfaces, not a solid of
+constant section. A native pad-and-fillet model is then a *measured
+approximation*: it can carry real sketches, dimensions and pockets, and it will
+exercise the whole binding contract, but its surface will deviate where the
+reference is sculpted, and `compare_exports` will report that deviation. Report
+the achieved deviation; do not relax the comparison limit to hide it. If the
+approved geometry must be matched exactly, it can only honestly be a faceted
+import (`HangTenSourceKind` `faceted-import`), which the build refuses to publish
+without `--allow-faceted-import`.
+
 ## Procedure
 
 ### 0. Census before you choose
@@ -307,6 +351,25 @@ which is the part a CPU render cannot check.
    `pytest tests` never reaches `Tools/HangboardModels/tests`. That is how the
    delivery lock sat stale while six boards were added. Check which suite a test
    actually belongs to before assuming CI protects it.
+
+10. **The v2 path and the attachment role were not exercised by the pilot.**
+    Two defects shipped because nothing tested them. First, `compile_board`
+    partitioned only `contact` nodes, so a declared `attachment` node was
+    validated and then silently dropped from the exported asset and descriptor.
+    Contacts and attachments are both regions of the body surface; the
+    partition must cover both. Second, `_validate_published_depths` read
+    `ContactID`, which a v2 object does not have, so the published-depth guard
+    passed vacuously. It must key on `ContactSlotID` and map the slot to the
+    published depth through each instance's `contactIDsBySlotID`. Both are now
+    covered by `Tools/HangboardCAD/tests/metolius_native.py`.
+
+11. **A ruled loft twists when its two sections are independently ordered.**
+    A pocket floor measured as its own loop does not share vertex order with the
+    opening, so `Part::Loft` connects vertex *i* to vertex *i* and the pocket
+    collapses into a wedge. Resample both sections by arc length from the same
+    start vertex and the same direction. A uniform inward offset also fails when
+    a corner radius is smaller than the inset; resampling the measured floor
+    avoids both.
 
 ## Reproducibility and the USDZ as a build output
 
