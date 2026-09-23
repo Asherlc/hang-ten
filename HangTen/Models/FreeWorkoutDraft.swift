@@ -12,14 +12,6 @@ enum FreeWorkoutExerciseKind: String, Codable, CaseIterable, Hashable {
         case .rest: "Rest"
         }
     }
-
-    var defaultTitle: String {
-        switch self {
-        case .hang: "Hang"
-        case .pull: "Pull-ups"
-        case .rest: "Rest"
-        }
-    }
 }
 
 struct FreeWorkoutExerciseDraft: Codable, Hashable, Identifiable {
@@ -57,7 +49,7 @@ struct FreeWorkoutExerciseDraft: Codable, Hashable, Identifiable {
     ) {
         self.id = id
         self.kind = kind
-        self.title = title ?? kind.defaultTitle
+        self.title = title ?? kind.label
         self.holdKind = holdKind
         self.contactID = contactID
         self.contactKind = contactKind

@@ -20,6 +20,7 @@ struct FreeWorkoutSessionView: View {
     @State private var startedAt = Date()
     @State private var isPaused = false
     @State private var editingStep: EditingStep?
+    @State private var resumeAfterEdit = false
     @State private var didFinish = false
     @State private var saveError: String?
 
@@ -43,7 +44,7 @@ struct FreeWorkoutSessionView: View {
         .navigationTitle(plan.title)
         .navigationBarTitleDisplayMode(.inline)
         .onAppear(perform: startIfNeeded)
-        .sheet(item: $editingStep) { edit in
+        .sheet(item: $editingStep, onDismiss: endEdit) { edit in
             if let step = steps.first(where: { $0.id == edit.id }) {
                 FreeWorkoutStepEditSheet(
                     step: step,
@@ -66,7 +67,8 @@ struct FreeWorkoutSessionView: View {
         let elapsed = clock.elapsed
         let isComplete = elapsed >= timeline.duration
         let step = timeline.step(at: elapsed)
-        let highlightedIDs = Set(step.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? [])
+        let highlightStep = timeline.holdPreviewStep(at: elapsed)
+        let highlightedIDs = Set(highlightStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? [])
 
         return VStack(alignment: .leading, spacing: 16) {
             if let step {
@@ -86,7 +88,7 @@ struct FreeWorkoutSessionView: View {
     private func currentSetCard(step: WorkoutStep, elapsed: TimeInterval, isComplete: Bool) -> some View {
         let remaining = max(0, step.duration - timeline.elapsedInStep(at: elapsed))
         return Button {
-            editingStep = EditingStep(id: step.id)
+            beginEdit(step.id)
         } label: {
             VStack(alignment: .leading, spacing: 6) {
                 SectionLabel(title: isComplete ? "Finished" : "Current set · tap to edit")
@@ -168,11 +170,14 @@ struct FreeWorkoutSessionView: View {
             .buttonStyle(.bordered)
             .tint(.hangGreenDark)
             Button("Complete set") {
-                clock.seek(to: timeline.skipTarget(from: elapsed) ?? timeline.duration)
+                let stepEnd = timeline.skipTarget(from: elapsed) ?? timeline.duration
+                let stepElapsed = timeline.elapsedInStep(at: elapsed)
+                let workEnd = elapsed + max(0, (step?.activeDuration ?? 0) - stepElapsed)
+                clock.seek(to: min(workEnd, stepEnd))
             }
             .buttonStyle(.borderedProminent)
             .tint(.hangGreenDark)
-            .disabled(step == nil || isComplete)
+            .disabled(step == nil || isComplete || step?.isRestStep == true)
             .accessibilityIdentifier("freeWorkout.completeSet")
             Button("Skip") {
                 clock.seek(to: timeline.skipTarget(from: elapsed) ?? timeline.duration)
@@ -269,7 +274,7 @@ struct FreeWorkoutSessionView: View {
         )
         if saveAsPlan {
             do {
-                let executedDraft = buildDraft(from: steps, title: draft.title)
+                let executedDraft = FreeWorkoutSaver.executedDraft(from: steps, title: draft.title)
                 let definition = try FreeWorkoutSaver.routineDefinition(from: executedDraft, title: plan.title)
                 try store.saveCustomRoutine(definition)
             } catch {
@@ -280,32 +285,20 @@ struct FreeWorkoutSessionView: View {
         if let onDismiss { onDismiss() } else { dismiss() }
     }
 
-    private func buildDraft(from steps: [WorkoutStep], title: String) -> FreeWorkoutDraft {
-        let exercises = steps.map { step -> FreeWorkoutExerciseDraft in
-            let kind: FreeWorkoutExerciseKind
-            if step.isRestStep {
-                kind = .rest
-            } else if step.action == .loadedLift {
-                kind = .pull
-            } else {
-                kind = .hang
-            }
-            return FreeWorkoutExerciseDraft(
-                id: step.id.replacingOccurrences(of: "free.", with: ""),
-                kind: kind,
-                title: step.title,
-                holdKind: step.workRequirements.first(where: { $0.contactID == nil })?.kind,
-                contactKind: step.workRequirements.first(where: { $0.contactID != nil })?.kind,
-                workDuration: step.activeDuration,
-                restDuration: step.isRestStep
-                    ? step.duration
-                    : max(0, step.duration - step.activeDuration),
-                externalLoadKGF: step.externalLoadKGF,
-                repetitions: step.repetitions,
-                gripType: step.gripType
-            )
+    private func beginEdit(_ stepID: String) {
+        resumeAfterEdit = clock.isRunning
+        if clock.isRunning {
+            clock.pause()
+            isPaused = true
         }
-        return FreeWorkoutDraft(title: title, exercises: exercises)
+        editingStep = EditingStep(id: stepID)
+    }
+
+    private func endEdit() {
+        guard resumeAfterEdit else { return }
+        resumeAfterEdit = false
+        clock.start(initialCountdown: 0)
+        isPaused = false
     }
 
     private var saveAlertBinding: Binding<Bool> {
@@ -339,7 +332,7 @@ private struct FreeWorkoutStepEditSheet: View {
         self.step = step
         self.liftCompletion = liftCompletion
         self.onSave = onSave
-        _duration = State(initialValue: step.duration)
+        _duration = State(initialValue: step.isRestStep ? step.duration : step.activeDuration)
         let load = step.action == .loadedLift
             ? (liftCompletion.externalLoadKGF(for: step) ?? step.externalLoadKGF)
             : step.externalLoadKGF
@@ -350,8 +343,14 @@ private struct FreeWorkoutStepEditSheet: View {
     var body: some View {
         NavigationStack {
             Form {
-                Stepper("Duration: \(Int(duration))s", value: $duration, in: 1...3600, step: 5)
-                if !step.isRestStep {
+                if step.isRestStep {
+                    Stepper("Rest: \(Int(duration))s", value: $duration, in: 1...3600, step: 5)
+                } else {
+                    Stepper("Work: \(Int(duration))s", value: $duration, in: 1...3600, step: 5)
+                    if step.timedWorkDuration != nil {
+                        Text("Rest after: \(Int(step.restDuration))s")
+                            .foregroundStyle(.secondary)
+                    }
                     TextField("Added weight (kg)", text: $loadText)
                         .keyboardType(.numbersAndPunctuation)
                     if step.action == .loadedLift {
@@ -364,15 +363,20 @@ private struct FreeWorkoutStepEditSheet: View {
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
-                        let newWork: TimeInterval? = step.timedWorkDuration != nil
-                            ? min(step.activeDuration, duration)
-                            : nil
-                        onSave(FreeWorkoutStepUpdates(
-                            duration: duration,
-                            timedWorkDuration: newWork,
-                            externalLoadKGF: Double(loadText),
-                            repetitions: step.action == .loadedLift ? reps : nil
-                        ))
+                        let updates: FreeWorkoutStepUpdates
+                        if step.isRestStep {
+                            updates = FreeWorkoutStepUpdates(duration: max(1, duration))
+                        } else {
+                            let work = max(1, duration)
+                            let rest = step.timedWorkDuration == nil ? 0 : step.restDuration
+                            updates = FreeWorkoutStepUpdates(
+                                duration: rest + work,
+                                timedWorkDuration: step.timedWorkDuration == nil ? nil : work,
+                                externalLoadKGF: Double(loadText),
+                                repetitions: step.action == .loadedLift ? reps : nil
+                            )
+                        }
+                        onSave(updates)
                         dismiss()
                     }
                 }

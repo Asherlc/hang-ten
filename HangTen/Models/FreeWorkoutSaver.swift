@@ -1,11 +1,27 @@
 import Foundation
 
-enum FreeWorkoutSaverError: Error, Equatable {
+enum FreeWorkoutSaverError: Error, Equatable, LocalizedError {
     case noSavableSteps
+    case missingHolds(exercises: [String])
+
+    var errorDescription: String? {
+        switch self {
+        case .noSavableSteps:
+            return "Add at least one hang or pull-up before saving as a routine."
+        case let .missingHolds(exercises):
+            return "Choose a hold for these exercises before saving: \(exercises.joined(separator: ", "))."
+        }
+    }
 }
 
 enum FreeWorkoutSaver {
     static func routineDefinition(from draft: FreeWorkoutDraft, title: String) throws -> CustomRoutineDefinition {
+        let missingHoldTitles = draft.exercises
+            .filter { $0.kind != .rest && $0.holdKind == nil && $0.contactKind == nil }
+            .map(\.title)
+        guard missingHoldTitles.isEmpty else {
+            throw FreeWorkoutSaverError.missingHolds(exercises: missingHoldTitles)
+        }
         var steps = draft.exercises.flatMap(stepDefinitions(for:))
         // Custom routines cannot end with a rest step, so strip trailing rests.
         while let last = steps.last, last.phase == .rest {
@@ -25,6 +41,36 @@ enum FreeWorkoutSaver {
             targetMode: .generic,
             steps: steps
         )
+    }
+
+    /// Reconstructs a draft from the steps actually executed in a session, so a
+    /// "save as routine" captures the athlete's live edits.
+    static func executedDraft(from steps: [WorkoutStep], title: String) -> FreeWorkoutDraft {
+        let exercises = steps.map { step -> FreeWorkoutExerciseDraft in
+            let kind: FreeWorkoutExerciseKind
+            if step.isRestStep {
+                kind = .rest
+            } else if step.action == .loadedLift {
+                kind = .pull
+            } else {
+                kind = .hang
+            }
+            return FreeWorkoutExerciseDraft(
+                id: step.id.replacingOccurrences(of: "free.", with: ""),
+                kind: kind,
+                title: step.title,
+                holdKind: step.workRequirements.first(where: { $0.contactID == nil })?.kind,
+                contactKind: step.workRequirements.first(where: { $0.contactID != nil })?.kind,
+                workDuration: step.activeDuration,
+                restDuration: step.isRestStep
+                    ? step.duration
+                    : max(0, step.duration - step.activeDuration),
+                externalLoadKGF: step.externalLoadKGF,
+                repetitions: step.repetitions,
+                gripType: step.gripType
+            )
+        }
+        return FreeWorkoutDraft(title: title, exercises: exercises)
     }
 
     private static func stepDefinitions(for exercise: FreeWorkoutExerciseDraft) -> [WorkoutStepDefinition] {
