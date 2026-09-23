@@ -88,7 +88,6 @@ _INDEPENDENT_KINDS = frozenset({"retailer", "review", "ownerPhoto"})
 _PHASE1_CHECKS = frozenset(
     {"manifestValidation", "packageValidation", "packageTestSuite", "hangboardsDiff"}
 )
-_WORKBENCH_CHECKS = frozenset({"normal", "allActive", "individualHolds"})
 _VALIDATION_CHECKS = frozenset(
     {
         "packageValidation",
@@ -170,8 +169,8 @@ _SINGULAR_COMPARATOR_REASON = (
     "texture frequency, smoothing, and edge treatment only; no product geometry."
 )
 _COHORT_BASELINE_REASON = (
-    "Accepted cohort bootstrap baseline after direct evidence, Workbench, package, "
-    "and visual review; style-only for downstream use, no geometry."
+    "Accepted cohort bootstrap baseline after direct evidence, package, and visual "
+    "review; style-only for downstream use, no geometry."
 )
 _BOOTSTRAP_SHARED_RENDER_CONTRACT = (
     "Common off-white studio background; centered orthographic working-surface view; "
@@ -441,7 +440,6 @@ class PresentationFinalState:
     accepted_asset_sha256: str | None
     final_dimensions: tuple[int, int] | None
     visual_reviewer_decision: str
-    workbench_review: Mapping[str, PresentationCheck]
     validation: Mapping[str, PresentationCheck]
 
 
@@ -558,7 +556,6 @@ class BootstrapComparatorAxis:
 class BootstrapReviewChecks:
     evidence_review: PresentationCheck
     visual_review: PresentationCheck
-    workbench_review: PresentationCheck
     package_validation: PresentationCheck
 
 
@@ -1141,7 +1138,6 @@ def _load_record(
             "acceptedAssetSHA256",
             "finalDimensions",
             "visualReviewerDecision",
-            "workbenchReview",
             "validation",
         },
         f"{source}.final",
@@ -1162,11 +1158,9 @@ def _load_record(
                 dims["heightPixels"], f"{source}.final.finalDimensions.heightPixels"
             ),
         )
-    review_payload, validation_payload = (
-        _mapping(final_payload["workbenchReview"], f"{source}.final.workbenchReview"),
-        _mapping(final_payload["validation"], f"{source}.final.validation"),
+    validation_payload = _mapping(
+        final_payload["validation"], f"{source}.final.validation"
     )
-    _closed(review_payload, _WORKBENCH_CHECKS, f"{source}.final.workbenchReview")
     _closed(validation_payload, _VALIDATION_CHECKS, f"{source}.final.validation")
     final = PresentationFinalState(
         None
@@ -1179,12 +1173,6 @@ def _load_record(
             final_payload["visualReviewerDecision"],
             f"{source}.final.visualReviewerDecision",
         ),
-        {
-            key: _load_check(
-                review_payload[key], f"{source}.final.workbenchReview.{key}"
-            )
-            for key in _WORKBENCH_CHECKS
-        },
         {
             key: _load_check(
                 validation_payload[key], f"{source}.final.validation.{key}"
@@ -1406,7 +1394,7 @@ def _load_bootstrap_set(value: Any, source: str) -> BootstrapComparatorSet:
     payload = _mapping(value, source)
     _closed(payload, {"cohortID", "seedRecordKey", "status", "compositionFramingScale", "materialTextureLighting", "absentAxes", "officialEvidenceInputIDs", "independentEvidenceInputIDs", "sharedRenderContract", "selectionRule", "selectedAt", "acceptedAt", "reviewChecks", "blockedReason"}, source)
     checks = _mapping(payload["reviewChecks"], f"{source}.reviewChecks")
-    _closed(checks, {"evidenceReview", "visualReview", "workbenchReview", "packageValidation"}, f"{source}.reviewChecks")
+    _closed(checks, {"evidenceReview", "visualReview", "packageValidation"}, f"{source}.reviewChecks")
     cohort = _string(payload["cohortID"], f"{source}.cohortID")
     if cohort not in _BOOTSTRAP_SEEDS:
         raise PresentationRemediationAuditError(f"{source}.cohortID is not supported")
@@ -1423,7 +1411,7 @@ def _load_bootstrap_set(value: Any, source: str) -> BootstrapComparatorSet:
         _string(payload["selectionRule"], f"{source}.selectionRule"),
         _instant(payload["selectedAt"], f"{source}.selectedAt"),
         _optional_instant(payload["acceptedAt"], f"{source}.acceptedAt"),
-        BootstrapReviewChecks(*(_load_phase2_check(checks[key], f"{source}.reviewChecks.{key}") for key in ("evidenceReview", "visualReview", "workbenchReview", "packageValidation"))),
+        BootstrapReviewChecks(*(_load_phase2_check(checks[key], f"{source}.reviewChecks.{key}") for key in ("evidenceReview", "visualReview", "packageValidation"))),
         _optional_string(payload["blockedReason"], f"{source}.blockedReason"),
     )
 
@@ -1492,17 +1480,14 @@ def _load_simulator_review(value: Any, source: str) -> SimulatorReview:
 
 def _load_phase2_final(value: Any, source: str) -> PresentationFinalState:
     payload = _mapping(value, source)
-    _closed(payload, {"acceptedAssetSHA256", "finalDimensions", "visualReviewerDecision", "workbenchReview", "validation"}, source)
+    _closed(payload, {"acceptedAssetSHA256", "finalDimensions", "visualReviewerDecision", "validation"}, source)
     dimensions = None if payload["finalDimensions"] is None else _load_required_canvas(payload["finalDimensions"], f"{source}.finalDimensions")
-    workbench = _mapping(payload["workbenchReview"], f"{source}.workbenchReview")
-    _closed(workbench, {"normal", "allActive", "individualHolds", "hitTest"}, f"{source}.workbenchReview")
     validation = _mapping(payload["validation"], f"{source}.validation")
     _closed(validation, _VALIDATION_CHECKS, f"{source}.validation")
     return PresentationFinalState(
         None if payload["acceptedAssetSHA256"] is None else _sha256(payload["acceptedAssetSHA256"], f"{source}.acceptedAssetSHA256"),
         None if dimensions is None else (dimensions.width_pixels, dimensions.height_pixels),
         _string(payload["visualReviewerDecision"], f"{source}.visualReviewerDecision"),
-        {key: _load_phase2_check(workbench[key], f"{source}.workbenchReview.{key}") for key in ("normal", "allActive", "individualHolds", "hitTest")},
         {
             **{key: _load_phase2_check(validation[key], f"{source}.validation.{key}") for key in ("packageValidation", "focusedTests", "fullPackageSuite", "buildForTesting")},
             "simulatorReview": _load_simulator_review(validation["simulatorReview"], f"{source}.validation.simulatorReview"),
@@ -1529,7 +1514,6 @@ def _load_phase2_record(value: Any, source: str, review_date: date) -> Presentat
         "acceptedAssetSHA256": final_payload.get("acceptedAssetSHA256"),
         "finalDimensions": final_payload.get("finalDimensions"),
         "visualReviewerDecision": final_payload.get("visualReviewerDecision"),
-        "workbenchReview": {name: {"status": "pending", "evidence": None} for name in ("normal", "allActive", "individualHolds")},
         "validation": {name: {"status": "pending", "evidence": None} for name in _VALIDATION_CHECKS},
     }
     for key in ("repairBatchID", "phase2Action", "phase2EvidenceReview", "phase2Comparator"):
@@ -2165,10 +2149,7 @@ def _all_findings_conform(record: PresentationRemediationRecord) -> bool:
 def _checks_are_pending(record: PresentationRemediationRecord) -> bool:
     return all(
         check.status == "pending" and check.evidence is None
-        for check in (
-            *record.final.workbench_review.values(),
-            *record.final.validation.values(),
-        )
+        for check in record.final.validation.values()
     )
 
 
@@ -2892,11 +2873,6 @@ def _validate_generation_and_final(
                 raise PresentationRemediationAuditError("keep accepted hash/dimensions must equal unchanged on-disk bytes")
         elif record.final.accepted_asset_sha256 is not None or record.final.final_dimensions is not None:
             raise PresentationRemediationAuditError("evidence-blocked keep must preserve null accepted hash/dimensions")
-        if any(not _check_pending(record.final.workbench_review[name]) for name in ("normal", "allActive", "individualHolds")):
-            raise PresentationRemediationAuditError("keeps retain pending Phase 1 Workbench checks")
-        hit_test = record.final.workbench_review["hitTest"]
-        if hit_test.status != "notRequired" or hit_test.evidence is None:
-            raise PresentationRemediationAuditError("keep hitTest must be factually notRequired")
         if any(not _check_pending(record.final.validation[name]) for name in ("packageValidation", "focusedTests", "fullPackageSuite", "buildForTesting")):
             raise PresentationRemediationAuditError("keeps retain pending Phase 1 validation fields")
         simulator = record.final.validation["simulatorReview"]
@@ -2979,8 +2955,6 @@ def _validate_generation_and_final(
         else:
             if on_disk_facts is not None or record.final.accepted_asset_sha256 is not None or record.final.final_dimensions is not None or record.final.visual_reviewer_decision != "removedUnsupportedPresentation":
                 raise PresentationRemediationAuditError("completed removal requires absent presentation and removedUnsupportedPresentation")
-        if any(not _check_passed(check) for check in record.final.workbench_review.values()):
-            raise PresentationRemediationAuditError("completed Phase 2 action requires four passed Workbench checks")
         if not _check_passed(package_check) or not _check_passed(focused_check):
             raise PresentationRemediationAuditError("completed Phase 2 action requires package and focused validation")
     else:
@@ -2995,13 +2969,6 @@ def _validate_generation_and_final(
         ):
             raise PresentationRemediationAuditError(
                 "only completed actions may promote accepted candidate or final bytes"
-            )
-        if any(
-            not _check_pending(check)
-            for check in record.final.workbench_review.values()
-        ):
-            raise PresentationRemediationAuditError(
-                "non-completed action cannot prewrite Workbench results"
             )
         if any(
             not _check_pending(check)
@@ -3211,25 +3178,23 @@ def _validate_bootstrap_set(
         raise PresentationRemediationAuditError("bootstrap selection requires confirmed record evidence review")
     if bootstrap.status == "blocked" and record.phase2_evidence_review.result != "blocked":
         raise PresentationRemediationAuditError("blocked bootstrap requires blocked record evidence review")
-    all_four = all(_check_passed(check) for check in (checks.evidence_review, checks.visual_review, checks.workbench_review, checks.package_validation))
+    all_three = all(_check_passed(check) for check in (checks.evidence_review, checks.visual_review, checks.package_validation))
     if bootstrap.status == "acceptedCohortBaseline":
         package_check = record.final.validation["packageValidation"]
         assert isinstance(package_check, PresentationCheck)
         record_reviews_pass = (
             record.final.visual_reviewer_decision == "acceptedPhase2"
-            and all(_check_passed(check) for check in record.final.workbench_review.values())
             and _check_passed(package_check)
         )
-        if not all_four or not record_reviews_pass or bootstrap.accepted_at is None or bootstrap.blocked_reason is not None:
+        if not all_three or not record_reviews_pass or bootstrap.accepted_at is None or bootstrap.blocked_reason is not None:
             raise PresentationRemediationAuditError(
-                "bootstrap acceptance requires passed evidence, visual, Workbench, and package review"
+                "bootstrap acceptance requires passed evidence, visual, and package review"
             )
     elif bootstrap.status == "selected":
         if (
             bootstrap.accepted_at is not None
             or bootstrap.blocked_reason is not None
             or not _check_pending(checks.visual_review)
-            or not _check_pending(checks.workbench_review)
             or not _check_pending(checks.package_validation)
         ):
             raise PresentationRemediationAuditError("selected bootstrap cannot claim acceptance or block")
@@ -3245,7 +3210,6 @@ def _validate_bootstrap_set(
                 for check in (
                     checks.evidence_review,
                     checks.visual_review,
-                    checks.workbench_review,
                     checks.package_validation,
                 )
             )
@@ -3254,7 +3218,6 @@ def _validate_bootstrap_set(
                 for check in (
                     checks.evidence_review,
                     checks.visual_review,
-                    checks.workbench_review,
                     checks.package_validation,
                 )
             )
