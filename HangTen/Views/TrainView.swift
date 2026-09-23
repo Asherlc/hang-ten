@@ -37,6 +37,7 @@ struct TrainView: View {
     @State private var reviewDestination = TrainReviewDestination.initial(
         environment: ProcessInfo.processInfo.environment
     )
+    @State private var showsFreeWorkout = false
 
     init(onBrowsePlans: @escaping () -> Void) {
         self.onBrowsePlans = onBrowsePlans
@@ -121,6 +122,10 @@ struct TrainView: View {
                 showsDeepLinkedWorkout = true
                 deepLinkManager.clearPending()
             }
+            .sheet(isPresented: $showsFreeWorkout) {
+                FreeWorkoutBuilderView()
+                    .environmentObject(store)
+            }
         }
     }
 
@@ -184,6 +189,12 @@ struct TrainView: View {
                     .buttonStyle(.borderedProminent)
                     .tint(.hangGreenDark)
                     .accessibilityIdentifier("train.browsePlans")
+                Button("Start Free Workout") {
+                    showsFreeWorkout = true
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.hangGreenDark)
+                .accessibilityIdentifier("train.freeWorkout")
             }
             .hangCard()
         } else {
@@ -200,6 +211,12 @@ struct TrainView: View {
                         store.toggleFavorite(plan)
                     }
                 }
+                Button("Start Free Workout") {
+                    showsFreeWorkout = true
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.hangGreenDark)
+                .accessibilityIdentifier("train.freeWorkout")
             }
         }
     }

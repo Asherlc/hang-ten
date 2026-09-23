@@ -1804,6 +1804,7 @@ struct TrainingPlan: Identifiable, Hashable {
     let provenance: RoutineProvenance
     let boardID: String?
     let steps: [WorkoutStep]
+    var isFreeWorkout: Bool = false
 
     var duration: TimeInterval {
         steps.reduce(0) { $0 + $1.duration }
