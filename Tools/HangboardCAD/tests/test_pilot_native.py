@@ -100,6 +100,31 @@ def test_compiler_check_mode_reports_a_consistent_package(tmp_path):
     assert payload["modelSHA256"] and len(payload["modelSHA256"]) == 64
 
 
+@requires_freecad
+def test_committed_asset_rebuilds_byte_identically():
+    """The committed runtime asset must provably come from the committed source.
+
+    This is the guard that lets the USDZ be treated as a build output: the app
+    hash-checks delivered bytes against the descriptor, so a platform that cannot
+    reproduce these bytes cannot be trusted to compile them for delivery.
+    """
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(TOOLS / "verify_reproducible.py"),
+            "--freecad",
+            str(FREECAD_CMD),
+            "--extra-python-path",
+            str(EXTRA_PATH),
+        ],
+        capture_output=True,
+        text=True,
+        cwd=str(REPOSITORY),
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "rebuild byte-identically" in result.stdout
+
+
 @pytest.mark.skipif(not ASSET.is_file(), reason="pilot asset is not built")
 def test_pilot_asset_matches_the_approved_reference_geometry(tmp_path):
     """Compare against the reference resolved from Git, not a copied artifact."""
