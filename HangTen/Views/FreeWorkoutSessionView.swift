@@ -177,7 +177,12 @@ struct FreeWorkoutSessionView: View {
             }
             .buttonStyle(.borderedProminent)
             .tint(.hangGreenDark)
-            .disabled(step == nil || isComplete || step?.isRestStep == true)
+            .disabled(
+                step == nil
+                    || isComplete
+                    || step?.isRestStep == true
+                    || timeline.elapsedInStep(at: elapsed) >= (step?.activeDuration ?? 0)
+            )
             .accessibilityIdentifier("freeWorkout.completeSet")
             Button("Skip") {
                 clock.seek(to: timeline.skipTarget(from: elapsed) ?? timeline.duration)
