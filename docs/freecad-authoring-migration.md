@@ -114,25 +114,39 @@ attachments, so an aperture such as a cord window is a region of the body solid
 silently dropped attachment nodes; if you see a descriptor missing a declared
 attachment, that is the bug to fix, not a reason to omit the node.
 
-### Hold geometry is CAD-owned (the descriptor `outline`)
+### Hold geometry is CAD-owned
 
-**The CAD file is the source of truth for hold geometry.** Each contact object in
-the source may carry `HangTenHoldOutline`: an `App::PropertyString` holding a
-JSON array of `[x, z]` **native-millimetre** points, the front-plane outline of
-the hold in draw order. The compiler reads it and emits it as the descriptor's
-`outline` (normalized to the model face) for both v1 `contacts` and v2
-`contactSlots`; `facePlaneAABB` and `center` are then derived from that outline.
-A contact without the property falls back to the exported-mesh silhouette.
+**The CAD file is the source of truth for hold geometry.** A contact or
+attachment object's **own Shape is the hold's exported surface**: the compiler
+tessellates that object directly and ships it as the node mesh, and partitions
+the body around the same surface so the two never overlap. Author each region as
+an **open surface** (a shell), not a solid:
 
-Author the outline deliberately, as the region an operator would select: for a
-pocket it is the opening profile, for a band it is the band's front-plane
-footprint. This matters because the exported mesh is a sculpted surface, and a
-highlight that recolors it follows faceted, self-occluding cavity topology and
-reads as a fragmented, ragged patch. The authored outline lets the app draw one
-smooth region and hit-test it directly. Because the outline drives
-`facePlaneAABB`, an authored outline is also the right fix for a coarse
-mesh-derived region (for example a hold whose planar face tessellates into a
-handful of large triangles): the region becomes exactly what the source says.
+- a band is a `Part::Extrusion` of its profile run, as the pilot does;
+- a pocket is a `Part::Loft` with `Solid = False` (the lateral surface, no
+  opening cap) fused with a `Part::Face` on its floor sketch;
+- a cord aperture is an extrusion with `Solid = False`;
+- a region that is a sub-region of a larger body face (a jug band) can be the
+  `Part::Common` of the body and a bounding solid.
+
+A solid region is wrong: its tessellation carries the opening cap (the body has
+a hole there, so the hold would render flush and hide the cavity) and, for a
+`Part::Common`, interior cut planes. If a region's construction extends beyond
+the board — a boolean tool that starts outside it — wrap it in
+`Part::Common(region, body)` so the exported surface is clipped to the body and
+cannot inflate `modelBounds`. Keep the solid form only as the boolean tool.
+
+The object may also carry `HangTenHoldOutline`: an `App::PropertyString` of
+`[x, z]` **native-millimetre** points, the hold's front-plane outline in draw
+order. The compiler emits it as the descriptor's `outline` (normalized) for both
+v1 `contacts` and v2 `contactSlots`, and `facePlaneAABB`/`center` derive from it,
+so the tap target and hold frame are exact regardless of how the surface
+tessellates. Author it as the region an operator would select: a pocket's
+opening profile, a band's front-plane footprint.
+
+This combination is what makes the highlight smooth and 3D on both a flat-front
+board and an extruded one: the surface is the CAD geometry, and the outline is
+the CAD region.
 
 ### Measuring a sculpted (non-extruded) board
 

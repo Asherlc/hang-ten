@@ -17,7 +17,7 @@ BUILTIN_TYPES = frozenset({
     "App::Point",
     "Part::Feature", "Part::Box", "Part::Cylinder", "Part::Cone", "Part::Sphere",
     "Part::Torus", "Part::Ellipsoid", "Part::Prism", "Part::Extrusion", "Part::Cut",
-    "Part::Fuse", "Part::MultiFuse", "Part::Common", "Part::MultiCommon",
+    "Part::Fuse", "Part::MultiFuse", "Part::Common", "Part::MultiCommon", "Part::Face",
     "Part::Fillet", "Part::Chamfer", "Part::Loft", "Part::RuledSurface", "Part::Sweep",
     "Part::Compound", "Part::Refine", "Part::Thickness", "Part::Mirroring",
     "PartDesign::Body", "PartDesign::Feature", "PartDesign::Pad", "PartDesign::Pocket",

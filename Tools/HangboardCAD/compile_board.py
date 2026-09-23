@@ -123,36 +123,37 @@ def _node_specification(obj) -> dict:
     return spec
 
 
-def _hold_outlines(contact_objects, version: int) -> dict:
-    """Read each contact's CAD-authored front-plane hold outline.
+def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
+    """Read a CAD-authored front-plane hold polygon property.
 
-    ``HangTenHoldOutline`` is a JSON array of ``[x, z]`` native-millimetre points
-    in the source document: the CAD is the source of truth for hold geometry.
-    Convert to the runtime front-plane space (metres) the descriptor normalizes
-    against. A contact with no outline falls back to its mesh-derived region.
+    ``HangTenHoldOutline`` / ``HangTenHoldFloorOutline`` are JSON arrays of
+    ``[x, z]`` native-millimetre points in the source document: the CAD is the
+    source of truth for hold geometry. Convert to the runtime front-plane space
+    (metres) the descriptor normalizes against. A contact without a property is
+    omitted.
     """
     outlines: dict[str, tuple] = {}
     for obj in contact_objects:
-        if "HangTenHoldOutline" not in obj.PropertiesList:
+        if property_name not in obj.PropertiesList:
             continue
-        raw = str(getattr(obj, "HangTenHoldOutline", "")).strip()
+        raw = str(getattr(obj, property_name, "")).strip()
         if not raw:
             continue
         key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
         if not key:
-            raise BuildError(f"{obj.Name} declares a hold outline without a contact binding")
+            raise BuildError(f"{obj.Name} declares {property_name} without a contact binding")
         try:
             points = json.loads(raw)
         except json.JSONDecodeError as error:
-            raise BuildError(f"{obj.Name} hold outline is not valid JSON: {error}") from error
+            raise BuildError(f"{obj.Name} {property_name} is not valid JSON: {error}") from error
         if not isinstance(points, list) or len(points) < 3:
-            raise BuildError(f"{obj.Name} hold outline needs at least three points")
+            raise BuildError(f"{obj.Name} {property_name} needs at least three points")
         try:
             outlines[key] = tuple(
                 (float(point[0]) / 1000.0, float(point[1]) / 1000.0) for point in points
             )
         except (TypeError, IndexError, ValueError) as error:
-            raise BuildError(f"{obj.Name} hold outline points must be [x, z] pairs") from error
+            raise BuildError(f"{obj.Name} {property_name} points must be [x, z] pairs") from error
     return outlines
 
 
@@ -370,6 +371,18 @@ def _triangle_area(points, facets, indices) -> float:
     return total
 
 
+def _build_mesh(node_id, points, triangles, material, model_box):
+    points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
+    return usdz_writer.Mesh(
+        node_id=node_id,
+        points_mm=[(p.x, p.y, p.z) for p in points],
+        triangles=triangles,
+        material=material,
+        uvs=_planar_uvs(points, model_box),
+        normals_mm=[(n.x, n.y, n.z) for n in normals],
+    )
+
+
 def _validate_partition(body_points, body_facets, triangles_by_node, region_objects):
     """Assert the exported nodes are a true partition of the board surface.
 
@@ -573,37 +586,50 @@ def build(
     body_points, body_facets, assignment = _partition_body_triangles(
         body_object.Shape, [obj.Shape for obj in region_objects], deflection
     )
-    triangles_by_node: dict[str, list] = {body_object.NodeID: []}
-    for obj in region_objects:
-        triangles_by_node[obj.NodeID] = []
-    for index, facet in enumerate(body_facets):
-        owner = assignment.get(index)
-        target = (
-            body_object.NodeID if owner is None else region_objects[owner].NodeID
-        )
-        triangles_by_node[target].append(index)
+    body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
-    _validate_partition(body_points, body_facets, triangles_by_node, region_objects)
+    meshes = [
+        _build_mesh(
+            body_object.NodeID,
+            *_subset_mesh(body_points, body_facets, body_indices),
+            material=materials[body_object.MaterialName],
+            model_box=model_box,
+        )
+    ]
+    print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
+
+    for obj in region_objects:
+        # Each region object's own CAD surface is its exported mesh — the CAD is
+        # the source of truth for hold geometry. The body was partitioned around
+        # the same surface, so the two never overlap.
+        points, facets = obj.Shape.tessellate(deflection)
+        if not facets:
+            raise BuildError(f"{obj.NodeID} has no surface")
+        meshes.append(
+            _build_mesh(
+                obj.NodeID,
+                points,
+                facets,
+                material=materials[obj.MaterialName],
+                model_box=model_box,
+            )
+        )
+        print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
+
+    # Every body triangle is still claimed by exactly one region, and every
+    # region is a CAD surface on the body; the partition remains complete.
+    _validate_partition(
+        body_points,
+        body_facets,
+        {body_object.NodeID: body_indices, **{
+            obj.NodeID: [i for i, owner in assignment.items() if owner == index]
+            for index, obj in enumerate(region_objects)
+        }},
+        region_objects,
+    )
     measured_depths = _validate_published_depths(
         contact_objects, _declared_depths(board, version), version, deflection
     )
-
-    meshes = []
-    for obj in [body_object] + region_objects:
-        indices = triangles_by_node[obj.NodeID]
-        points, triangles = _subset_mesh(body_points, body_facets, indices)
-        points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
-        meshes.append(
-            usdz_writer.Mesh(
-                node_id=obj.NodeID,
-                points_mm=[(p.x, p.y, p.z) for p in points],
-                triangles=triangles,
-                material=materials[obj.MaterialName],
-                uvs=_planar_uvs(points, model_box),
-                normals_mm=[(n.x, n.y, n.z) for n in normals],
-            )
-        )
-        print(f"      {obj.NodeID}: {len(triangles)} triangles, role={obj.NodeRole}")
 
     try:
         print("[6/10] writing the USDZ directly")
@@ -624,7 +650,7 @@ def build(
         # front-plane hold outline as native-millimetre XZ points. When present
         # it defines the descriptor region, so the app never has to derive a
         # hold from the exported mesh silhouette.
-        outlines = _hold_outlines(contact_objects, version)
+        outlines = _hold_polygons(contact_objects, version, "HangTenHoldOutline")
         if version == 2:
             descriptor = compile_reusable_descriptor(
                 model_bytes,

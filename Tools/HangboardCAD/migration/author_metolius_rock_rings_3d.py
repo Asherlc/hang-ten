@@ -530,7 +530,7 @@ def main() -> int:
     rounded.Edges = perimeter
 
     cut_chain = rounded
-    contact_objects = {}
+    region_surfaces = {}
     for slot in sorted(pockets):
         depth = published_depths.get(slot)
         if depth is None:
@@ -552,11 +552,23 @@ def main() -> int:
         solid.Sections = [opening_sketch, floor_sketch]
         solid.Solid = True
         solid.Ruled = True
-        cut = document.addObject("Part::Cut", f"Cut_{slot.replace('-', '_')}")
+        # The exported hold region is the pocket's cap-free CAD surface: the
+        # loft's lateral surface (Solid=False) plus its floor face. The solid is
+        # only the boolean tool, so the opening cap never becomes a hold.
+        tag = slot.replace("-", "_")
+        surface_loft = document.addObject("Part::Loft", f"PocketSurface_{tag}")
+        surface_loft.Sections = [opening_sketch, floor_sketch]
+        surface_loft.Solid = False
+        surface_loft.Ruled = True
+        floor_face = document.addObject("Part::Face", f"FloorFace_{tag}")
+        floor_face.Sources = [floor_sketch]
+        surface = document.addObject("Part::MultiFuse", f"PocketRegion_{tag}")
+        surface.Shapes = [surface_loft, floor_face]
+        cut = document.addObject("Part::Cut", f"Cut_{tag}")
         cut.Base = cut_chain
         cut.Tool = solid
         cut_chain = cut
-        contact_objects[slot] = solid
+        region_surfaces[slot] = (surface, "contact", slot)
 
     jug_box = document.addObject("Part::Box", "JugBand")
     jug_box.Length = jug["x"][1] - jug["x"][0]
@@ -566,13 +578,13 @@ def main() -> int:
     jug_object = document.addObject("Part::Common", "Jug")
     jug_object.Base = cut_chain
     jug_object.Tool = jug_box
-    contact_objects["jug"] = jug_object
+    region_surfaces["jug"] = (jug_object, "contact", "jug")
 
-    attachment_objects = {}
     for node_id, sides in sorted(attachments.items()):
         is_lateral = node_id == "lateral_window_001"
         axes = (1, 2) if is_lateral else (0, 1)
-        parts = []
+        solid_parts = []
+        surface_parts = []
         for side in ("right", "left"):
             if is_lateral:
                 frame = LATERAL_RIGHT_FRAME if side == "right" else LATERAL_LEFT_FRAME
@@ -586,20 +598,30 @@ def main() -> int:
                 shift = (57.5, -4.5)
             profile = _ordered(sides[side], axes, 0.3)
             sketch = _sketch(document, f"{node_id}_{side}", profile, frame, shift)
+            # The cut needs a solid; the exported hold surface is cap-free.
             extrusion = document.addObject("Part::Extrusion", f"{node_id}_{side}_solid")
             extrusion.Base = sketch
             extrusion.DirMode = "Custom"
             extrusion.Dir = direction
             extrusion.LengthFwd = length
             extrusion.Solid = True
-            parts.append(extrusion)
-        fused = document.addObject("Part::MultiFuse", node_id)
-        fused.Shapes = parts
+            solid_parts.append(extrusion)
+            surface = document.addObject("Part::Extrusion", f"{node_id}_{side}_surface")
+            surface.Base = sketch
+            surface.DirMode = "Custom"
+            surface.Dir = direction
+            surface.LengthFwd = length
+            surface.Solid = False
+            surface_parts.append(surface)
+        fused = document.addObject("Part::MultiFuse", f"{node_id}_solid")
+        fused.Shapes = solid_parts
         cut = document.addObject("Part::Cut", f"Cut_{node_id}")
         cut.Base = cut_chain
         cut.Tool = fused
         cut_chain = cut
-        attachment_objects[node_id] = fused
+        fused_surface = document.addObject("Part::MultiFuse", node_id)
+        fused_surface.Shapes = surface_parts
+        region_surfaces[node_id] = (fused_surface, "attachment", None)
 
     document.recompute()
     stale = [
@@ -611,11 +633,21 @@ def main() -> int:
         raise ValueError("document did not recompute cleanly: " + "; ".join(stale))
 
     _bind(cut_chain, "ring_body_001", "body")
-    for slot, obj in contact_objects.items():
-        outline = jug["outline"] if slot == "jug" else pockets[slot]["opening"]
-        _bind(obj, SLOT_PRIMS[slot].rsplit("/", 1)[-1], "contact", slot, outline)
-    for node_id, obj in attachment_objects.items():
-        _bind(obj, node_id, "attachment")
+    # The exported hold is the region surface clipped to the body, so a cut
+    # tool that starts outside the board never extends the descriptor bounds.
+    clipped_objects = []
+    for region_id, (surface, role, slot) in region_surfaces.items():
+        clipped = document.addObject("Part::Common", f"Region_{region_id.replace('-', '_')}")
+        clipped.Base = surface
+        clipped.Tool = cut_chain
+        clipped_objects.append((clipped, region_id, role, slot))
+    document.recompute()
+    for clipped, region_id, role, slot in clipped_objects:
+        if role == "contact":
+            outline = jug["outline"] if region_id == "jug" else pockets[region_id]["opening"]
+            _bind(clipped, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot, outline)
+        else:
+            _bind(clipped, region_id, "attachment")
 
     document.saveAs(str(DESTINATION))
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
