@@ -58,12 +58,19 @@ struct FreeWorkoutBuilderView: View {
                         .foregroundStyle(.secondary)
                     Toggle("Save as reusable routine", isOn: $saveAsPlan)
                         .accessibilityIdentifier("freeWorkout.saveAsPlan")
-                    Button("Start workout", action: start)
-                        .buttonStyle(.borderedProminent)
-                        .tint(.hangGreenDark)
-                        .disabled(draft.exercises.isEmpty)
-                        .accessibilityIdentifier("freeWorkout.start")
                 }
+            }
+            .safeAreaInset(edge: .bottom) {
+                Button("Start workout", action: start)
+                    .buttonStyle(.borderedProminent)
+                    .tint(.hangGreenDark)
+                    .disabled(draft.exercises.isEmpty)
+                    .accessibilityIdentifier("freeWorkout.start")
+                    .controlSize(.large)
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                    .background(Color.hangBackground)
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

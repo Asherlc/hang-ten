@@ -19,13 +19,7 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
         app.buttons["freeWorkout.addHang"].tap()
         let startButton = app.buttons["freeWorkout.start"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 5))
-        // Scroll to Start button in case it's off-screen in the List
-        var attempts = 0
-        while !startButton.isHittable && attempts < 5 {
-            app.swipeUp()
-            attempts += 1
-        }
+        XCTAssertTrue(startButton.waitForExistence(timeout: 10))
         startButton.tap()
         XCTAssertTrue(app.buttons["freeWorkout.completeSet"].waitForExistence(timeout: 15))
         XCTAssertTrue(app.buttons["freeWorkout.skip"].exists)
