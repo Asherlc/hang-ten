@@ -3,14 +3,21 @@ from __future__ import annotations
 import json
 import math
 import re
-import sys
 import time
 from pathlib import Path
 
 import pytest
 
+from hangboard_packages import board_geometry
+from hangboard_packages.board_geometry import (
+    GeometryError,
+    NormalizedFrame,
+    display_path_for_shape,
+    normalized_frame_for_path,
+    parse_closed_path,
+    shape_for_path,
+)
 
-WORKBENCH_ROOT = Path(__file__).resolve().parents[1]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 VALIDATION_FIXTURES = json.loads(
     (
@@ -19,17 +26,6 @@ VALIDATION_FIXTURES = json.loads(
         / "Fixtures"
         / "BoardPackageValidationFixtures.json"
     ).read_text(encoding="utf-8")
-)
-sys.path.insert(0, str(WORKBENCH_ROOT))
-
-import board_geometry  # noqa: E402
-from board_geometry import (  # noqa: E402
-    GeometryError,
-    NormalizedFrame,
-    display_path_for_shape,
-    normalized_frame_for_path,
-    parse_closed_path,
-    shape_for_path,
 )
 
 

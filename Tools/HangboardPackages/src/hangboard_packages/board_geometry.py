@@ -1,4 +1,4 @@
-"""Exact, single-contour geometry used by the direct Workbench contact editor."""
+"""Exact, single-contour board geometry shared by package tooling."""
 
 from __future__ import annotations
 
