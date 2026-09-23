@@ -27,4 +27,22 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(app.buttons["freeWorkout.skip"].exists)
         XCTAssertTrue(app.buttons["freeWorkout.finish"].exists)
     }
+
+    func testFreeWorkoutLiveEditAndFinishReturnsToTrain() {
+        let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
+        app.launch()
+        app.buttons["train.freeWorkout"].tap()
+        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
+        let start = app.buttons["freeWorkout.start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+        let adjustUp = app.buttons["freeWorkout.adjustUp.Time"]
+        XCTAssertTrue(adjustUp.waitForExistence(timeout: 15))
+        adjustUp.tap()
+        let finish = app.buttons["freeWorkout.finish"]
+        XCTAssertTrue(finish.waitForExistence(timeout: 10))
+        finish.tap()
+        XCTAssertTrue(app.buttons["train.freeWorkout"].waitForExistence(timeout: 15))
+    }
 }

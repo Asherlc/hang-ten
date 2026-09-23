@@ -79,7 +79,6 @@ final class FreeWorkoutDraftTests: XCTestCase {
         XCTAssertEqual(step.phase, .pull)
         XCTAssertEqual(step.action, .loadedLift)
         XCTAssertEqual(step.repetitions, 5)
-        XCTAssertNil(step.repetitions.flatMap { $0 > 0 ? nil : $0 })
         XCTAssertTrue(WorkoutStepSemantics.hasValidActionAndRepetitions(step.action, step.repetitions))
         XCTAssertEqual(step.duration, 25)
         XCTAssertNil(step.timedWorkDuration)
