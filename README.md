@@ -248,8 +248,8 @@ schema-v3 validation. Remote model editing is unsupported; the app treats model
 packages as read-only and uses their mesh and descriptor as the presentation
 source.
 
-For raster packages, board-editor edits are explicit operator changes to
-canonical package geometry; the saved paths remain the exact rendering and
+For raster packages, edits in the board editor are explicit operator changes
+to canonical package geometry; the saved paths remain the exact rendering and
 hit-testing source of truth.
 
 Regenerate the bundled routine document after an audited plan change:
