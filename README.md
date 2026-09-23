@@ -120,10 +120,8 @@ the ignored `HangTen/Config/Analytics.local.xcconfig` file and set
 `GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
 build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
 Device Flow uses only the public client ID. Keep the public
-`GITHUB_OAUTH_CLIENT_ID` in the iOS app's Info.plist. This iOS-only restriction
-does not apply to the browser-hosted Workbench, whose server-side OAuth flow
-retains its separately hosted `GITHUB_CLIENT_SECRET` configuration. The app
-requests `repo read:org` and no longer accepts personal access tokens.
+`GITHUB_OAUTH_CLIENT_ID` in the iOS app's Info.plist. The app requests
+`repo read:org` and no longer accepts personal access tokens.
 
 ## Maintainer-generated countdown audio
 
@@ -246,18 +244,13 @@ The compiler reimports the exact USDZ export and generates the read-only,
 hash-bound contact descriptor; it does not repair or redesign geometry. A model
 package contains only its declared USDZ and descriptor media, with no raster
 fallback. See the [package contract](Tools/HangboardPackages/README.md) for
-schema-v3 validation. Remote model editing is unsupported; iOS and Workbench
-treat model packages as read-only, while raster Workbench editing remains
-contact-native.
+schema-v3 validation. Remote model editing is unsupported; the app treats model
+packages as read-only and uses their mesh and descriptor as the presentation
+source.
 
-Use the packaged macOS Hangboard Workbench for direct local visual editing.
-Browser-hosted Workbench deployments must use the GitHub-backed
-`--allow-remote` server mode.
-
-For raster packages, Workbench edits are explicit operator changes to canonical
-package geometry; the saved paths remain the exact rendering and hit-testing
-source of truth. Model packages are read-only for geometry editing and use
-their mesh and descriptor as the presentation source.
+For raster packages, board-editor edits are explicit operator changes to
+canonical package geometry; the saved paths remain the exact rendering and
+hit-testing source of truth.
 
 Regenerate the bundled routine document after an audited plan change:
 
