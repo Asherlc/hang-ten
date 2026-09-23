@@ -70,6 +70,7 @@ ATTACHMENT_PRIMS = {
 MID_TOLERANCE_MM = 0.15
 PROFILE_TOLERANCE_MM = 0.1
 PERIMETER_ROUND_MM = 6.0
+TOP_EDGE_FILLET_CUTOFF_Z = 80.0
 LATERAL_DEPTH_MM = 9.0
 ROOF_DEPTH_MM = 10.0
 PUBLISHED_MM = {"width": 146.0, "height": 184.0}
@@ -171,6 +172,50 @@ def _merge_short(points, threshold):
                 index += 1
         polygon = merged
     return polygon
+
+
+def _fill_top_notch(points):
+    """Smooth the concave top-center notch into a shallow U.
+
+    The measured mid-depth outline can pick up a lower point on the rounded top
+    lip, producing a long flat top edge that renders as a bright up-facing
+    facet. Replacing that flat bottom with a smooth quadratic arc keeps the
+    shoulders at full height while removing the broad horizontal surface.
+    """
+    if not points:
+        return points
+    count = len(points)
+    # Highest point on each half gives the left/right shoulder of the top edge.
+    right_idx = max(
+        range(count),
+        key=lambda i: points[i][1] if points[i][0] >= 0 else -1e18,
+    )
+    left_idx = max(
+        range(count),
+        key=lambda i: points[i][1] if points[i][0] <= 0 else -1e18,
+    )
+    if right_idx == left_idx:
+        return points
+    span = (left_idx - right_idx) % count
+    rotated = points[right_idx:] + points[:right_idx]
+    if not rotated[1:span]:
+        return points
+    if sum(p[1] for p in rotated[1:span]) / len(rotated[1:span]) < 50:
+        # The selected arc goes the long way around the bottom; bail out safely.
+        return points
+    p0 = points[right_idx]
+    p2 = points[left_idx]
+    # Control point at the centerline, dropped to the original notch depth.
+    min_z = min(p[1] for p in rotated[1:span])
+    p1 = (0.0, min_z)
+    fill = []
+    n = max(5, span)
+    for k in range(1, n):
+        t = k / n
+        x = (1.0 - t) * (1.0 - t) * p0[0] + 2.0 * t * (1.0 - t) * p1[0] + t * t * p2[0]
+        z = (1.0 - t) * (1.0 - t) * p0[1] + 2.0 * t * (1.0 - t) * p1[1] + t * t * p2[1]
+        fill.append((x, z))
+    return rotated[:1] + fill + rotated[span:]
 
 
 def _mid_outline(points, triangles):
@@ -484,6 +529,7 @@ def main() -> int:
     stage = Usd.Stage.Open(str(reference))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
     mid, deviation, pockets, attachments, jug = _extract(stage, cache)
+    mid = _fill_top_notch(mid)
 
     if DESTINATION.exists():
         DESTINATION.unlink()
@@ -521,10 +567,17 @@ def main() -> int:
     for index, edge in enumerate(base.Shape.Edges):
         start = edge.Vertexes[0].Point
         end = edge.Vertexes[-1].Point
-        if (abs(start.y + 28.5) < 1e-6 and abs(end.y + 28.5) < 1e-6) or (
+        is_front_or_back = (abs(start.y + 28.5) < 1e-6 and abs(end.y + 28.5) < 1e-6) or (
             abs(start.y - 28.5) < 1e-6 and abs(end.y - 28.5) < 1e-6
-        ):
-            perimeter.append((index + 1, PERIMETER_ROUND_MM, PERIMETER_ROUND_MM))
+        )
+        if not is_front_or_back:
+            continue
+        # Skip filleting the top rim: a round on the flat top creates the
+        # up-facing bright facet. Side and bottom edges below the top keep the
+        # measured perimeter radius.
+        if max(start.z, end.z) > TOP_EDGE_FILLET_CUTOFF_Z:
+            continue
+        perimeter.append((index + 1, PERIMETER_ROUND_MM, PERIMETER_ROUND_MM))
     if not perimeter:
         raise ValueError("no front/back perimeter edges found to round")
     rounded.Edges = perimeter
