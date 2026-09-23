@@ -575,10 +575,8 @@ def main() -> int:
     jug_box.Width = 70.0
     jug_box.Height = jug["z"][1] - jug["z"][0]
     jug_box.Placement.Base = App.Vector(jug["x"][0], -35.0, jug["z"][0])
-    jug_object = document.addObject("Part::Common", "Jug")
-    jug_object.Base = cut_chain
-    jug_object.Tool = jug_box
-    region_surfaces["jug"] = (jug_object, "contact", "jug")
+    # The jug is authored after the body is final, as a clean shell surface.
+    region_surfaces["jug"] = (None, "contact", "jug")
 
     for node_id, sides in sorted(attachments.items()):
         is_lateral = node_id == "lateral_window_001"
@@ -637,9 +635,18 @@ def main() -> int:
     # tool that starts outside the board never extends the descriptor bounds.
     clipped_objects = []
     for region_id, (surface, role, slot) in region_surfaces.items():
-        clipped = document.addObject("Part::Common", f"Region_{region_id.replace('-', '_')}")
-        clipped.Base = surface
-        clipped.Tool = cut_chain
+        if region_id == "jug":
+            # The body's shell within the jug band: a clean surface, no interior
+            # cut planes that a solid Common would carry.
+            shell = document.addObject("Part::Feature", "BodyShell")
+            shell.Shape = Part.makeShell(cut_chain.Shape.Faces)
+            clipped = document.addObject("Part::Common", "Jug")
+            clipped.Base = shell
+            clipped.Tool = jug_box
+        else:
+            clipped = document.addObject("Part::Common", f"Region_{region_id.replace('-', '_')}")
+            clipped.Base = surface
+            clipped.Tool = cut_chain
         clipped_objects.append((clipped, region_id, role, slot))
     document.recompute()
     for clipped, region_id, role, slot in clipped_objects:

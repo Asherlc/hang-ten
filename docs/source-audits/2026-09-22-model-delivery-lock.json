@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "121b2bf309b7d437b81dae5d38efba97a270b6d2278db66ad7457c206d865997",
+  "sha256Manifest": "ca8697766974a620d7a9db363f6a5610b7d5ff1a31fea54f44cef98b41895324",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "7b8bea8a4cdc06333956d82178dd9deef728770ada42ea645319b2fd383c1b79",
+  "supersededSha256Manifest": "121b2bf309b7d437b81dae5d38efba97a270b6d2278db66ad7457c206d865997",
   "migratedPackages": {
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
@@ -71,10 +71,10 @@
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "0807dd5876a2bfab24b91982c136810e56da16068bd6d4a7bf7df1883d8aa667",
+      "sourceSHA256": "a91f5bb4fb5b63a2cec2ca4e8070d09bc1a65656adb2ec6d61d76b6cd2abc816",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
-      "assetSHA256": "10c2d512495c429f7743bee5530fc48a5c5ae0cf5603c1035b6b0a585746f64f",
-      "descriptorSHA256": "bd99c38617edb5d8bd5cb4d853194fcc3c7ca7761e0848c1b7399bf5ac9ab904",
+      "assetSHA256": "9b108e6bfa9948aac2ef98ce81ef794386605cae3e4af92bc0795b77fc4bb409",
+      "descriptorSHA256": "0237650b309e205701b4844165caf2a1626ae28317704aafd441bfe29d1ee990",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, depth edit propagation, slot/instance)",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail route; 8/8 contacts selected by deep link and confirmed via boardDetail.selectedHold.<contactID>; CAD-authored outlines render as smooth hold regions)",
