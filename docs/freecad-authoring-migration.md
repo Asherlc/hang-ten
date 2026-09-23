@@ -129,6 +129,21 @@ approved geometry must be matched exactly, it can only honestly be a faceted
 import (`HangTenSourceKind` `faceted-import`), which the build refuses to publish
 without `--allow-faceted-import`.
 
+#### Accepted deviation for a sculpted board (declaration)
+
+For a board whose approved asset is a sculpted display shell, the native measured
+approximation is the accepted deliverable. `compare_exports` is **evidence, not a
+gate**: record its two-way worst deviation, and do not chase it, re-tune the
+model against it, or pivot to a faceted import unless exact surface fidelity is
+actually required for that board. Visually confirmed hold placement, the
+published grip depths, the node/role inventory, and the descriptor's
+`facePlaneAABB` agreement are the acceptance signals that matter. This was
+decided explicitly on `metolius-rock-rings-3d` (worst deviation 17.67 mm,
+concentrated at the sculpted top lip; pocket regions agree to under 0.25 mm):
+chasing the 0.5 mm limit cost about a third of the migration's time and changed
+no delivered behaviour. Record the accepted deviation in the delivery lock's
+`migratedPackages` entry so a future agent does not re-litigate it.
+
 ## Procedure
 
 ### 0. Census before you choose

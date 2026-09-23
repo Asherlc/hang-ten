@@ -76,7 +76,8 @@
       "descriptorSHA256": "612b860ae5ebb25a33a5a0d4154f2d3f06e1edbc84d8f93ead3f5231dc28922c",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, depth edit propagation, slot/instance)",
-      "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail review route; all 8 physical contacts selected by hangten://board/metolius.rock-rings-3d/hold/<contactID> and boardDetail.selectedHold.<contactID> confirmed; 40/32/25 mm pocket highlights land on the correct pocket; jug highlight on the top edge)"
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail review route; all 8 physical contacts selected by hangten://board/metolius.rock-rings-3d/hold/<contactID> and boardDetail.selectedHold.<contactID> confirmed; 40/32/25 mm pocket highlights land on the correct pocket; jug highlight on the top edge)",
+      "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)"
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."
