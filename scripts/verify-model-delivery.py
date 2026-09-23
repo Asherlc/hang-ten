@@ -9,6 +9,24 @@ import re
 
 LOCK_PATH = "docs/source-audits/2026-09-22-model-delivery-lock.json"
 SUFFIXES = ("assets/primary.model.json", "assets/primary.usdz", "board.json")
+COMPILED_SUFFIXES = ("assets/primary.model.json", "board.json")
+
+
+def is_source_backed(root: Path, package: str) -> bool:
+    """True when a package carries its own CAD source and compiles its asset.
+
+    Such a package commits its source instead of the compiled USDZ. The delivered
+    bytes are still pinned: the descriptor's modelSHA256 is checked against the
+    compiled asset by Tools/HangboardCAD/prepare_assets.py, and again on device by
+    BoardPackageStore.
+    """
+    return (root / "Hangboards" / package / f"{package}.FCStd").is_file()
+
+
+def package_suffixes(root: Path, package: str) -> tuple[str, ...]:
+    if is_source_backed(root, package):
+        return COMPILED_SUFFIXES + (f"{package}.FCStd",)
+    return SUFFIXES
 
 
 def checksum_manifest(root: Path, packages: list[str]) -> str:
@@ -18,7 +36,9 @@ def checksum_manifest(root: Path, packages: list[str]) -> str:
         raise ValueError("invalid or duplicate package names")
     root = root.resolve()
     lines = []
-    for relative in sorted(f"Hangboards/{p}/{s}" for p in packages for s in SUFFIXES):
+    for relative in sorted(
+        f"Hangboards/{p}/{s}" for p in packages for s in package_suffixes(root, p)
+    ):
         path = root / relative
         if (not path.is_file() or any(p.is_symlink() for p in (path, *path.parents))
                 or not path.resolve().is_relative_to(root)):
@@ -33,18 +53,30 @@ def verify(root: Path, lock: dict) -> dict:
     if lock.get("schemaVersion") != 1:
         raise ValueError("unsupported delivery lock")
     packages = lock.get("modelPackages")
+    root = root.resolve()
     text = checksum_manifest(root, packages)
-    expected = {f"Hangboards/{p}/assets/primary.usdz" for p in packages}
-    actual = {p.relative_to(root).as_posix()
-              for p in (root / "Hangboards").glob("*/assets/*.usdz")}
-    if actual != expected:
+    expected = {
+        f"Hangboards/{p}/assets/primary.usdz"
+        for p in packages
+        if not is_source_backed(root, p)
+    }
+    compiled = {
+        p.relative_to(root).as_posix()
+        for p in (root / "Hangboards").glob("*/assets/*.usdz")
+        if not is_source_backed(root, p.relative_to(root).parts[1])
+    }
+    if compiled != expected:
         raise ValueError("model inventory differs from delivery lock")
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
     if digest != lock.get("sha256Manifest"):
         raise ValueError("model/descriptor/metadata checksum mismatch")
-    return {"passed": True, "models": len(packages), "files": len(packages) * 3,
+    sourced = sorted(p for p in packages if is_source_backed(root, p))
+    return {"passed": True, "models": len(packages),
+            "files": sum(len(package_suffixes(root, p)) for p in packages),
+            "sourceBacked": sourced,
             "sha256Manifest": digest, "assetCommit": lock.get("assetCommit"),
-            "scope": "exact-file identity; not native visual or application validation"}
+            "scope": "exact-file identity for committed files; a source-backed board pins "
+                     "its compiled asset through the descriptor modelSHA256 instead"}
 
 
 def main() -> None:
