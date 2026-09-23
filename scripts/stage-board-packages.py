@@ -187,7 +187,36 @@ def _replace_destination(staging: Path, destination: Path) -> None:
             pass
 
 
-def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path, ...]:
+def _resolve_model_asset(
+    package_source: Path,
+    model_asset_path: Path,
+    compiled_assets: Path | None,
+    package: str,
+) -> Path:
+    """Locate a model asset, preferring the committed copy.
+
+    A board whose runtime asset is compiled rather than committed (it has a CAD
+    authoring source) will not have the file in its package, so fall back to a
+    directory of assets produced by Tools/HangboardCAD/prepare_assets.py.
+    """
+    committed = package_source / model_asset_path
+    if committed.is_file():
+        return committed
+    if compiled_assets is not None:
+        prepared = compiled_assets / package / model_asset_path
+        if prepared.is_file():
+            return prepared
+    raise ValueError(
+        f"missing model asset for {package}: {model_asset_path} is neither committed "
+        "in the package nor present in --compiled-assets"
+    )
+
+
+def stage_board_packages(
+    repository_root: Path,
+    destination: Path,
+    compiled_assets: Path | None = None,
+) -> tuple[Path, ...]:
     """Copy every validated direct-child package tree into *destination*."""
     repository_root = _absolute_lexical(Path(repository_root))
     destination = _absolute_lexical(Path(destination))
@@ -214,11 +243,19 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
         _validate_regular_tree(package_source)
 
     model_asset_paths_by_slug: dict[str, frozenset[Path]] = {}
+    # The CAD authoring source is neither a runtime resource nor an ODR asset: it
+    # must be excluded from the bundle and must NOT be routed to ODR.
+    authoring_source_paths_by_slug: dict[str, frozenset[Path]] = {}
     for package in inventory.packages:
+        package_root = package.root
         model_asset_paths_by_slug[package.root.name] = frozenset(
             Path(presentation.media.asset_path)
             for presentation in package.board.presentations
             if isinstance(presentation.media, package_module.PresentationMediaModel)
+        )
+        authoring_source_paths_by_slug[package.root.name] = frozenset(
+            path.relative_to(package_root)
+            for path in package_root.rglob("*.FCStd")
         )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -237,7 +274,8 @@ def stage_board_packages(repository_root: Path, destination: Path) -> tuple[Path
             _copy_regular_tree(
                 package_source,
                 package_destination,
-                excluded_paths=model_asset_paths,
+                excluded_paths=model_asset_paths
+                | authoring_source_paths_by_slug[package.root.name],
             )
             for model_asset_path in sorted(model_asset_paths):
                 odr_model_destination = (
@@ -268,12 +306,23 @@ def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository-root", type=Path, required=True)
     parser.add_argument("--destination", type=Path, required=True)
+    parser.add_argument(
+        "--compiled-assets",
+        type=Path,
+        default=None,
+        help="directory produced by Tools/HangboardCAD/prepare_assets.py, used for "
+        "boards whose runtime asset is compiled instead of committed",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     arguments = parse_arguments()
-    stage_board_packages(arguments.repository_root, arguments.destination)
+    stage_board_packages(
+        arguments.repository_root,
+        arguments.destination,
+        arguments.compiled_assets,
+    )
     return 0
 
 

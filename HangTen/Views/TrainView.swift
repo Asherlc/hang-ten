@@ -241,12 +241,8 @@ struct BoardDetailView: View {
         var resolvedHoldID = board.contacts.first(where: {
             board.defaultPresentation.containsContact(id: $0.id)
         })?.id
-        #if DEBUG
-        if let reviewHoldID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOLD_ID"],
-           board.contacts.contains(where: { $0.id == reviewHoldID }) {
-            resolvedHoldID = reviewHoldID
-        }
-        #endif
+        // Select a specific hold with the deep link
+        // `hangten://board/<boardID>/hold/<contactID>`; see DeepLinkManager.
         if let initialHoldID, board.contacts.contains(where: { $0.id == initialHoldID }) {
             resolvedHoldID = initialHoldID
         }

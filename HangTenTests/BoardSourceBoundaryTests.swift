@@ -352,7 +352,15 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            XCTAssertEqual(packageEntries, ["assets", "board.json"])
+            // A package that carries its own CAD authoring source has exactly one
+            // extra entry, named after its own directory. Anything else is still
+            // an unexpected package entry. Mirrors the board_catalog allowlist.
+            let authoringSource = "\(packagePath).FCStd"
+            let extraEntries = packageEntries.subtracting(["assets", "board.json"])
+            XCTAssertTrue(
+                extraEntries.isEmpty || extraEntries == [authoringSource],
+                "unexpected package entries: \(extraEntries.sorted())"
+            )
             XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 3)
             XCTAssertNil(boardDocument["presentation"])
             let presentations = try XCTUnwrap(
