@@ -293,8 +293,12 @@ struct FreeWorkoutSessionView: View {
                 id: step.id.replacingOccurrences(of: "free.", with: ""),
                 kind: kind,
                 title: step.title,
+                holdKind: step.workRequirements.first(where: { $0.contactID == nil })?.kind,
+                contactKind: step.workRequirements.first(where: { $0.contactID != nil })?.kind,
                 workDuration: step.activeDuration,
-                restDuration: max(0, step.duration - step.activeDuration),
+                restDuration: step.isRestStep
+                    ? step.duration
+                    : max(0, step.duration - step.activeDuration),
                 externalLoadKGF: step.externalLoadKGF,
                 repetitions: step.repetitions,
                 gripType: step.gripType
