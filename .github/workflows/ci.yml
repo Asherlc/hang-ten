@@ -35,6 +35,7 @@ jobs:
       contents: read
       pull-requests: read
     outputs:
+      cad: ${{ steps.filter.outputs.cad }}
       ios: ${{ steps.filter.outputs.ios }}
       python: ${{ steps.filter.outputs.python }}
       workbench_web: ${{ steps.filter.outputs.workbench_web }}
