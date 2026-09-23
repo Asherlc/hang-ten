@@ -233,6 +233,12 @@ enum FreeWorkoutDraftStore {
     static let lastDraftKey = "HangTen.freeWorkout.lastDraft.v1"
 
     static func load(defaults: UserDefaults = .standard) -> FreeWorkoutDraft? {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] == "1" {
+            defaults.removeObject(forKey: lastDraftKey)
+            return nil
+        }
+        #endif
         guard let data = defaults.data(forKey: lastDraftKey) else { return nil }
         return try? JSONDecoder().decode(FreeWorkoutDraft.self, from: data)
     }

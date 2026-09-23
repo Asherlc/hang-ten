@@ -3,6 +3,7 @@ import XCTest
 final class FreeWorkoutUITests: XCTestCase {
     func testFreeWorkoutBuilderOpensFromTrain() {
         let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         app.launch()
         let entry = app.buttons["train.freeWorkout"]
         XCTAssertTrue(entry.waitForExistence(timeout: 10))
@@ -14,6 +15,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
     func testFreeWorkoutSessionStartsAndShowsControls() {
         let app = XCUIApplication()
+        app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         app.launch()
         app.buttons["train.freeWorkout"].tap()
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
