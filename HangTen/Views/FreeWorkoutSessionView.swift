@@ -58,6 +58,7 @@ struct FreeWorkoutSessionView: View {
         } message: {
             Text(saveError ?? "An unknown error occurred.")
         }
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.session")
     }
 
