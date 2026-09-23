@@ -561,29 +561,11 @@ def main() -> int:
     base.Solid = True
 
     document.recompute()
-    rounded = document.addObject("Part::Fillet", "BodyRounded")
-    rounded.Base = base
-    perimeter = []
-    for index, edge in enumerate(base.Shape.Edges):
-        start = edge.Vertexes[0].Point
-        end = edge.Vertexes[-1].Point
-        is_front_or_back = (abs(start.y + 28.5) < 1e-6 and abs(end.y + 28.5) < 1e-6) or (
-            abs(start.y - 28.5) < 1e-6 and abs(end.y - 28.5) < 1e-6
-        )
-        if not is_front_or_back:
-            continue
-        # Skip filleting the top rim: a round on the flat top creates the
-        # up-facing bright facet. Side and bottom edges below the top keep the
-        # measured perimeter radius.
-        if max(start.z, end.z) > TOP_EDGE_FILLET_CUTOFF_Z:
-            continue
-        perimeter.append((index + 1, PERIMETER_ROUND_MM, PERIMETER_ROUND_MM))
-    if not perimeter:
-        raise ValueError("no front/back perimeter edges found to round")
-    rounded.Edges = perimeter
-
-    cut_chain = rounded
+    # POC: use the unrounded extrusion directly to avoid perimeter fillet
+    # facets on the top surface.
+    cut_chain = base
     region_surfaces = {}
+    """Pocket lofts and boolean cuts are intentionally disabled for this POC.
     for slot in sorted(pockets):
         depth = published_depths.get(slot)
         if depth is None:
@@ -628,7 +610,9 @@ def main() -> int:
         # be a degenerate boolean and fragments the surface. The raw surface is
         # reversed during binding so the cavity-facing side is front-facing.
         region_surfaces[slot] = (surface_fuse, "contact", slot, False)
+    """
 
+    """The jug band is intentionally disabled; only the body shape is needed.
     # The jug band is the front-facing region of the body only. A deep bounding
     # box pulled in the rounded top edge and back face, causing stray triangles;
     # a thin slab on the front side of the body surface captures just the planar
@@ -640,6 +624,7 @@ def main() -> int:
     jug_box.Placement.Base = App.Vector(jug["x"][0], -29.0, jug["z"][0])
     # The jug needs shell body ∩ box; encode that in the binding pass.
     region_surfaces["jug"] = (jug_box, "contact", "jug", True)
+    """
 
     for node_id, sides in sorted(attachments.items()):
         is_lateral = node_id == "lateral_window_001"
@@ -697,23 +682,11 @@ def main() -> int:
         raise ValueError("document did not recompute cleanly: " + "; ".join(stale))
 
     _bind(cut_chain, "ring_body_001", "body")
-    # Contacts whose cap-free surfaces already lie on the body are exported
-    # directly; the jug and attachments need a Part::Common against the body to
-    # extract only the portions of their tools that intersect the body surface.
-    body_shell = None
+    # Attachments need a Part::Common against the body to extract only the
+    # portions of their tools that intersect the body surface.
     bound_objects = []
     for region_id, (surface, role, slot, needs_clip) in region_surfaces.items():
-        if region_id == "jug":
-            # The jug band is the body shell within the thin front slab: no
-            # solid Common, so no interior cut planes or back/top faces.
-            if body_shell is None:
-                body_shell = document.addObject("Part::Feature", "BodyShell")
-                body_shell.Shape = Part.makeShell(cut_chain.Shape.Faces)
-            clipped = document.addObject("Part::Common", "Jug")
-            clipped.Base = body_shell
-            clipped.Tool = surface
-            bound_objects.append((clipped, region_id, role, slot))
-        elif needs_clip:
+        if needs_clip:
             clipped = document.addObject(
                 "Part::Common", f"Region_{region_id.replace('-', '_')}"
             )
@@ -732,18 +705,7 @@ def main() -> int:
     document.recompute()
     for obj, region_id, role, slot in bound_objects:
         if role == "contact":
-            if region_id == "jug":
-                # The jug mesh is the front-facing patch bounded by the box
-                # footprint; keep the outline coincident with that patch.
-                outline = [
-                    (jug["x"][0], jug["z"][0]),
-                    (jug["x"][1], jug["z"][0]),
-                    (jug["x"][1], jug["z"][1]),
-                    (jug["x"][0], jug["z"][1]),
-                ]
-            else:
-                outline = pockets[region_id]["opening"]
-            _bind(obj, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot, outline)
+            _bind(obj, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot)
         else:
             _bind(obj, region_id, "attachment")
 
