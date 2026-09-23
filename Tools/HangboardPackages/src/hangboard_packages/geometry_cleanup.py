@@ -12,23 +12,41 @@ from typing import Any, Mapping
 
 # Add parent directories to path using repository root relative to this file
 REPO_ROOT = Path(__file__).resolve().parents[4]
-WORKBENCH_ROOT = REPO_ROOT / "Tools" / "HangboardWorkbench"
 PACKAGES_ROOT = REPO_ROOT / "Tools" / "HangboardPackages" / "src"
-sys.path.insert(0, str(WORKBENCH_ROOT))
 sys.path.insert(0, str(PACKAGES_ROOT))
 
-from board_geometry import (
-    ClosedPath,
-    GeometryError,
-    NormalizedFrame,
-    display_path_for_shape,
-    flattened_shape_bounds,
-    normalized_frame_for_path,
-    parse_closed_path,
-    shape_for_path,
-    union_normalized_frames,
-)
-from board_geometry_schema import BoardShapeDocument, NormalizedFrame as SchemaNormalizedFrame
+try:  # Standard package import, plus direct-file execution.
+    from .board_geometry import (
+        ClosedPath,
+        GeometryError,
+        NormalizedFrame,
+        display_path_for_shape,
+        flattened_shape_bounds,
+        normalized_frame_for_path,
+        parse_closed_path,
+        shape_for_path,
+        union_normalized_frames,
+    )
+    from .board_geometry_schema import (
+        BoardShapeDocument,
+        NormalizedFrame as SchemaNormalizedFrame,
+    )
+except ImportError:  # pragma: no cover - exercised when run as a direct script
+    from board_geometry import (
+        ClosedPath,
+        GeometryError,
+        NormalizedFrame,
+        display_path_for_shape,
+        flattened_shape_bounds,
+        normalized_frame_for_path,
+        parse_closed_path,
+        shape_for_path,
+        union_normalized_frames,
+    )
+    from board_geometry_schema import (
+        BoardShapeDocument,
+        NormalizedFrame as SchemaNormalizedFrame,
+    )
 
 
 @dataclass

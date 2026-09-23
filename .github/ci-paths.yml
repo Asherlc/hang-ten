@@ -7,33 +7,9 @@ ios:
   - 'HangTen/Resources/CountdownAudio/**'
 python:
   - 'Tools/HangboardPackages/**'
-  - 'Tools/HangboardWorkbench/**/*.py'
-  - 'Tools/HangboardWorkbench/tests/**/*.py'
   - 'HangTenUITests/**'
   - 'scripts/hangboard-packages.sh'
   - 'scripts/run-supported-python.sh'
-workbench_web:
-  - 'Tools/HangboardWorkbench/**/*.html'
-  - 'Tools/HangboardWorkbench/**/*.css'
-  - 'Tools/HangboardWorkbench/**/*.js'
-  - 'Tools/HangboardWorkbench/**/*.ts'
-  - 'Tools/HangboardWorkbench/**/*.tsx'
-  - 'Tools/HangboardWorkbench/*.js'
-  - 'Tools/HangboardWorkbench/package.json'
-  - 'Tools/HangboardWorkbench/package-lock.json'
-  - 'Tools/HangboardWorkbench/tsconfig.json'
-workbench_native:
-  - 'Tools/HangboardWorkbench/macos/**'
-  - 'Tools/HangboardWorkbench/packaging/**'
-workbench:
-  - 'Tools/HangboardPackages/**'
-  - 'Tools/HangboardWorkbench/**'
-  - 'Hangboards/**'
-  - 'scripts/stage-board-packages.py'
-  - 'scripts/run-supported-python.sh'
-  - '.github/workflows/**'
-  - '.github/ci-paths.yml'
-  - '.github/actions/**'
 shared_board_content:
   - 'Tools/HangboardPackages/**'
   - 'Hangboards/**'
@@ -53,4 +29,3 @@ workflow:
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
   - '.github/actions/**'
-  - 'Tools/HangboardWorkbench/pyproject.toml'

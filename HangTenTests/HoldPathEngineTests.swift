@@ -239,7 +239,7 @@ final class HoldPathEngineTests: XCTestCase {
         }
     }
 
-    func testOutlinePresetGenerationMatchesWorkbenchSerialization() throws {
+    func testOutlinePresetGenerationMatchesCanonicalSerialization() throws {
         let source = parse("M 10 20 L 50 20 L 50 40 L 10 40 Z")
         let expectedPaths: [OutlinePreset: String] = [
             .oval: "M 30 20 C 41.045695 20 50 24.477153 50 30 C 50 35.522847 41.045695 40 30 40 C 18.954305 40 10 35.522847 10 30 C 10 24.477153 18.954305 20 30 20 Z",

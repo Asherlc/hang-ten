@@ -33,7 +33,7 @@ optional: cite them when supported and omit them when unknown.
 ## Direct geometry authoring
 
 Author each normalized closed path deliberately in `board.json`, then refine it
-in Workbench against the primary evidence. Mirror a reviewed side exactly when
+against the primary evidence. Mirror a reviewed side exactly when
 the product is symmetric. If the current schema supports constraints, select a
 regular preset only when the hold is genuinely regular; otherwise keep the path
 freeform. Constraints are human-selected editing metadata, and the canonical
@@ -54,13 +54,12 @@ Hangboards/<slug>/
 ```
 
 Record package-validator output and the visual reviewer/date. Inspect normal
-paths in Workbench and active/highlight alignment in the app on an owned
-simulator.
+paths and active/highlight alignment in the app on an owned simulator.
 
 ```sh
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh status --root Hangboards
 ```
 
-| package slug | validator result | Workbench review | app highlight review | unresolved omissions |
+| package slug | validator result | visual review | app highlight review | unresolved omissions |
 | --- | --- | --- | --- | --- |

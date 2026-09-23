@@ -2858,9 +2858,8 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
     }
 
-    /// Swift's discovery sort must agree with the Workbench's directory
-    /// discovery order on the same shared non-ASCII fixture cases, so the
-    /// two independent sort implementations can't silently diverge.
+    /// Swift's discovery sort must match the shared non-ASCII ordering
+    /// fixtures' expected package order.
     func testStoreUsesSharedNonASCIIOrderingContract() throws {
         let fixtures = try validationFixtures()
         let ordering = try XCTUnwrap(fixtures["ordering"] as? [String: Any])

@@ -733,43 +733,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
         )
     }
 
-    func testPackageDiscoveryAllowsOnlySafeWorkbenchLockOperationalFile() throws {
-        let repositoryRoot = FileManager.default.temporaryDirectory
-            .appendingPathComponent(UUID().uuidString, isDirectory: true)
-        let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
-        let packageURL = hangboardsURL.appendingPathComponent("fixture-board", isDirectory: true)
-        let lockURL = hangboardsURL.appendingPathComponent(".workbench.lock")
-        let unexpectedFileURL = hangboardsURL.appendingPathComponent("unexpected.txt")
-        let outsideLockURL = repositoryRoot.appendingPathComponent("outside-lock")
-        try FileManager.default.createDirectory(at: packageURL, withIntermediateDirectories: true)
-        try Data(#"{"id":"fixture.board"}"#.utf8).write(
-            to: packageURL.appendingPathComponent("board.json")
-        )
-        defer { try? FileManager.default.removeItem(at: repositoryRoot) }
-
-        try Data().write(to: lockURL)
-        XCTAssertEqual(
-            try discoveredPackagePaths(at: repositoryRoot),
-            ["fixture.board": "fixture-board"]
-        )
-
-        try FileManager.default.removeItem(at: lockURL)
-        try Data().write(to: outsideLockURL)
-        try FileManager.default.createSymbolicLink(
-            at: lockURL,
-            withDestinationURL: outsideLockURL
-        )
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: lockURL)
-        try FileManager.default.createDirectory(at: lockURL, withIntermediateDirectories: false)
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-
-        try FileManager.default.removeItem(at: lockURL)
-        try Data().write(to: unexpectedFileURL)
-        XCTAssertThrowsError(try discoveredPackagePaths(at: repositoryRoot))
-    }
-
     func testBoundaryAuditIgnoresUntrackedAppScratchFiles() throws {
         let repositoryRoot = repositoryRootURL()
         let scratchRelativePath = "HangTen/BoundaryAuditUntrackedScratch.swift"
@@ -886,12 +849,6 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 .isRegularFileKey,
                 .isSymbolicLinkKey
             ])
-            if child.lastPathComponent == ".workbench.lock" {
-                guard values.isRegularFile == true, values.isSymbolicLink != true else {
-                    throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
-                }
-                continue
-            }
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }
