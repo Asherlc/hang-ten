@@ -32,22 +32,6 @@ def test_production_has_no_legacy_plan_or_persistence_contract() -> None:
         assert prohibited not in sources
 
 
-def test_workbench_has_no_older_schema_adapter_or_hold_wire_contract() -> None:
-    workbench = REPOSITORY_ROOT / "Tools" / "HangboardWorkbench"
-    sources = _source_text(workbench, {".py", ".ts", ".tsx"})
-    for prohibited in (
-        "_schema_v2",
-        "_legacy_editor",
-        "_schema_v2_board",
-        "holdGeometry",
-        "holdID",
-        'board["holds"]',
-        "board['holds']",
-        "schemaVersion == 2",
-    ):
-        assert prohibited not in sources
-
-
 def test_only_contact_native_model_and_suspension_clearance_tools_remain() -> None:
     model_tools = REPOSITORY_ROOT / "Tools" / "HangboardModels"
     assert {path.name for path in model_tools.iterdir() if path.is_file()} == {

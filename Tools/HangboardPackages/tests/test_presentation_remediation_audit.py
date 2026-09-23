@@ -641,7 +641,7 @@ def test_comparator_cannot_target_a_keep_with_nonconforming_findings(
 
 @pytest.mark.parametrize(
     ("section", "check_name"),
-    [("workbenchReview", "normal"), ("validation", "packageValidation")],
+    [("validation", "packageValidation")],
 )
 def test_source_reclassification_keep_cannot_claim_phase_2_checks(
     tmp_path: Path, section: str, check_name: str
@@ -661,7 +661,7 @@ def test_source_reclassification_keep_cannot_claim_phase_2_checks(
 
 def test_presentation_check_rejects_unknown_status(tmp_path: Path) -> None:
     boards, inventory, record = _single_board_fixture(tmp_path)
-    record["final"]["workbenchReview"]["normal"]["status"] = "invented"
+    record["final"]["validation"]["packageValidation"]["status"] = "invented"
 
     with pytest.raises(
         PresentationRemediationAuditError,
@@ -1754,10 +1754,10 @@ def test_preflight_rejects_untracked_comparator_input(tmp_path: Path) -> None:
             "regenerate requires builtInGenerate",
         ),
         (
-            lambda d: d["records"][1]["final"]["workbenchReview"].pop(
-                "hitTest"
+            lambda d: d["records"][1]["final"]["validation"].pop(
+                "simulatorReview"
             ),
-            "workbenchReview is missing keys",
+            "validation is missing keys",
         ),
         (
             lambda d: d["records"][1]["phase2Comparator"].update(

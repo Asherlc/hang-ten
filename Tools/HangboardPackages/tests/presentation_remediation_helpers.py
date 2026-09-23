@@ -113,10 +113,6 @@ def record(
             "acceptedAssetSHA256": digest,
             "finalDimensions": {"widthPixels": width, "heightPixels": height},
             "visualReviewerDecision": "acceptedCurrentAsset",
-            "workbenchReview": {
-                name: {"status": "pending", "evidence": None}
-                for name in ("normal", "allActive", "individualHolds")
-            },
             "validation": {
                 name: {"status": "pending", "evidence": None}
                 for name in (
