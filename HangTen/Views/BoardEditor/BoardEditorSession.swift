@@ -153,7 +153,7 @@ final class BoardEditorSession: ObservableObject {
     // MARK: - Board space conversion
 
     /// Canonical piece-local commands mapped into board-normalized space,
-    /// where all interactive editing happens (Workbench display-path parity).
+    /// where all interactive editing happens.
     func boardCommands(for piece: BoardEditablePiece) throws -> [BoardPathCommand] {
         guard let commandDocuments = piece.shape.commands else {
             throw SessionError.pieceNotEditable
@@ -171,8 +171,8 @@ final class BoardEditorSession: ObservableObject {
 
     /// Converts edited board-space commands back into canonical piece storage:
     /// the frame becomes the tight anchor bounds and every point renormalizes
-    /// into it, mirroring the Workbench display-path save pipeline. Control
-    /// points may legitimately fall outside the unit square after this.
+    /// into it. Control points may legitimately fall outside the unit
+    /// square after this.
     private func canonicalWriteBack(
         _ boardPath: [BoardPathCommand],
         bendableFlags: [Bool]? = nil,

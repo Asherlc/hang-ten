@@ -47,19 +47,19 @@ precedent. An operator must deliberately draw and review every canonical hold
 path in `board.json`; exact left/right mirroring is preferred when the product
 is actually symmetric.
 
-When the checked-out schema and Workbench support shape constraints, prefer an
-operator-selected constraint for holds that are genuinely circles, ovals,
-pills, rounded rectangles, or rectangles. Freeform paths remain valid for
-irregular holds. A constraint is editing metadata only: the saved path remains
-the sole rendering, highlighting, and hit-testing source of truth. Never infer
-a constraint from pixels.
+When the checked-out schema and the board editor support shape constraints,
+prefer an operator-selected constraint for holds that are genuinely circles,
+ovals, pills, rounded rectangles, or rectangles. Freeform paths remain valid
+for irregular holds. A constraint is editing metadata only: the saved path
+remains the sole rendering, highlighting, and hit-testing source of truth.
+Never infer a constraint from pixels.
 
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path
 simplification, automatic cropping, or proposal/refine/promote geometry
 workflows. Do not reintroduce tooling or guidance for those approaches. The
 accepted process is direct path authoring, package validation, and human visual
-review in Workbench and the app.
+review in the app.
 
 ## 3D suspension and On-Demand Resources
 

@@ -3,7 +3,7 @@
 These galleries collect manual geometry review screenshots for PR #246. The
 translucent overlays show the canonical hold paths authored and visually
 reviewed against each board image. Newer galleries pair each normal overlay
-with a compact Workbench inspection capture from the same final review set.
+with a compact inspection capture from the same final review set.
 
 The production constraint audit covers all 249 constrained pieces in the final
 catalog: 143 zero-distance saves are canonical byte-exact and 106 only

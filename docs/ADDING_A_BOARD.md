@@ -75,13 +75,13 @@ into it.
 For model media, declare only the USDZ asset, descriptor, display, and any
 audited orientation/suspension configuration. The descriptor binds source
 contacts to actual model nodes and cached measurements. A model package has no
-raster fallback and is read-only in Workbench.
+raster fallback and is read-only in the in-app board editor.
 
 ## 4. Author raster paths directly
 
-Open the completed raster package in Hangboard Workbench. Deliberately draw and
-review every canonical path against manufacturer evidence. Prefer exact
-left/right mirroring only when the product is actually symmetric. Use a
+Open the completed raster package in the in-app board editor. Deliberately
+draw and review every canonical path against manufacturer evidence. Prefer
+exact left/right mirroring only when the product is actually symmetric. Use a
 human-selected circle, oval, pill, rounded rectangle, or rectangle constraint
 for a genuinely regular contact; use freeform paths otherwise.
 
