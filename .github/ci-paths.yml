@@ -40,6 +40,10 @@ shared_board_content:
   - 'scripts/hangboard-packages.sh'
   - 'scripts/stage-board-packages.py'
   - 'scripts/run-supported-python.sh'
+cad:
+  - 'Tools/HangboardCAD/**'
+  - 'Hangboards/**/*.FCStd'
+  - 'scripts/hangboard-packages.sh'
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'
