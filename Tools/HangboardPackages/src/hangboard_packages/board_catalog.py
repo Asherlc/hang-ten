@@ -2214,7 +2214,13 @@ def _load_reusable_model_descriptor(
     try:
         actual_hash = hashlib.sha256(asset_path.read_bytes()).hexdigest()
     except OSError as error:
-        raise ValueError("model asset must be readable for SHA-256 validation") from error
+        # A source-backed package compiles this asset at build time, so it is not
+        # in the repository and cannot be hashed here. The descriptor's
+        # modelSHA256 remains the contract: prepare_assets.py verifies the
+        # compiled bytes against it, and BoardPackageStore re-checks it on device.
+        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+            raise ValueError("model asset must be readable for SHA-256 validation") from error
+        actual_hash = declared_hash
     if declared_hash != actual_hash:
         raise ValueError("model descriptor SHA-256 does not match USDZ bytes")
     bounds = _mapping(descriptor["modelBounds"], "model descriptor modelBounds")
@@ -2351,7 +2357,13 @@ def _load_model_descriptor(
     try:
         actual_hash = hashlib.sha256(asset_path.read_bytes()).hexdigest()
     except OSError as error:
-        raise ValueError("model asset must be readable for SHA-256 validation") from error
+        # A source-backed package compiles this asset at build time, so it is not
+        # in the repository and cannot be hashed here. The descriptor's
+        # modelSHA256 remains the contract: prepare_assets.py verifies the
+        # compiled bytes against it, and BoardPackageStore re-checks it on device.
+        if not _is_compiled_model_asset(asset_path.parent.parent, "assets/primary.usdz"):
+            raise ValueError("model asset must be readable for SHA-256 validation") from error
+        actual_hash = declared_hash
     if declared_hash != actual_hash:
         raise ValueError("model descriptor SHA-256 does not match USDZ bytes")
 
@@ -2475,6 +2487,18 @@ def _load_model_descriptor(
     return MappingProxyType(frames)
 
 
+def _is_compiled_model_asset(root: Path, asset: str) -> bool:
+    """True when `asset` is the runtime asset of a source-backed package.
+
+    Only the exact expected path qualifies, and only when the package carries its
+    CAD authoring source. Every other missing asset is still an error, so this
+    cannot be used to drop an arbitrary asset.
+    """
+    if asset != "assets/primary.usdz":
+        return False
+    return (root / f"{root.name}{_PACKAGE_SOURCE_SUFFIX}").is_file()
+
+
 def _validate_finished_shape(
     root: Path, board: BoardRevision
 ) -> Mapping[tuple[str, str], NormalizedFrame]:
@@ -2505,6 +2529,14 @@ def _validate_finished_shape(
     missing_assets = expected_assets - actual_assets
     if unknown_assets:
         raise ValueError(f"undeclared presentation asset: {sorted(unknown_assets)[0]}")
+    # A package that carries its own CAD authoring source compiles its runtime
+    # asset at build time (Tools/HangboardCAD/prepare_assets.py), so that asset is
+    # legitimately absent from the repository. The descriptor is still required
+    # and pins the expected bytes through its modelSHA256.
+    if missing_assets:
+        missing_assets = {
+            asset for asset in missing_assets if not _is_compiled_model_asset(root, asset)
+        }
     if missing_assets:
         raise ValueError(
             f"missing declared presentation asset: {sorted(missing_assets)[0]}"
