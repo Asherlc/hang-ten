@@ -557,26 +557,36 @@ def main() -> int:
         # only the boolean tool, so the opening cap never becomes a hold.
         tag = slot.replace("-", "_")
         surface_loft = document.addObject("Part::Loft", f"PocketSurface_{tag}")
-        surface_loft.Sections = [opening_sketch, floor_sketch]
+        # Lofting from floor to opening reverses the lateral surface normals so
+        # the cavity-facing side is front-facing in the rendered highlight.
+        surface_loft.Sections = [floor_sketch, opening_sketch]
         surface_loft.Solid = False
         surface_loft.Ruled = True
         floor_face = document.addObject("Part::Face", f"FloorFace_{tag}")
         floor_face.Sources = [floor_sketch]
-        surface = document.addObject("Part::MultiFuse", f"PocketRegion_{tag}")
-        surface.Shapes = [surface_loft, floor_face]
+        surface_fuse = document.addObject("Part::MultiFuse", f"PocketRegionRaw_{tag}")
+        surface_fuse.Shapes = [surface_loft, floor_face]
         cut = document.addObject("Part::Cut", f"Cut_{tag}")
         cut.Base = cut_chain
         cut.Tool = solid
         cut_chain = cut
-        region_surfaces[slot] = (surface, "contact", slot)
+        # The pocket's cap-free lateral surface and floor are already inside the
+        # body; clipping them with Part::Common against the body boundary would
+        # be a degenerate boolean and fragments the surface. The raw surface is
+        # reversed during binding so the cavity-facing side is front-facing.
+        region_surfaces[slot] = (surface_fuse, "contact", slot, False)
 
+    # The jug band is the front-facing region of the body only. A deep bounding
+    # box pulled in the rounded top edge and back face, causing stray triangles;
+    # a thin slab on the front side of the body surface captures just the planar
+    # front-facing band and avoids the fillet wrap.
     jug_box = document.addObject("Part::Box", "JugBand")
     jug_box.Length = jug["x"][1] - jug["x"][0]
-    jug_box.Width = 70.0
+    jug_box.Width = 0.5
     jug_box.Height = jug["z"][1] - jug["z"][0]
-    jug_box.Placement.Base = App.Vector(jug["x"][0], -35.0, jug["z"][0])
-    # The jug is authored after the body is final, as a clean shell surface.
-    region_surfaces["jug"] = (None, "contact", "jug")
+    jug_box.Placement.Base = App.Vector(jug["x"][0], -29.0, jug["z"][0])
+    # The jug needs shell body ∩ box; encode that in the binding pass.
+    region_surfaces["jug"] = (jug_box, "contact", "jug", True)
 
     for node_id, sides in sorted(attachments.items()):
         is_lateral = node_id == "lateral_window_001"
@@ -619,7 +629,10 @@ def main() -> int:
         cut_chain = cut
         fused_surface = document.addObject("Part::MultiFuse", node_id)
         fused_surface.Shapes = surface_parts
-        region_surfaces[node_id] = (fused_surface, "attachment", None)
+        # The attachment surfaces start outside the body envelope and must be
+        # clipped to it, but only the cap-free surfaces (not their solids) are
+        # exported as nodes.
+        region_surfaces[node_id] = (fused_surface, "attachment", None, True)
 
     document.recompute()
     stale = [
@@ -631,30 +644,55 @@ def main() -> int:
         raise ValueError("document did not recompute cleanly: " + "; ".join(stale))
 
     _bind(cut_chain, "ring_body_001", "body")
-    # The exported hold is the region surface clipped to the body, so a cut
-    # tool that starts outside the board never extends the descriptor bounds.
-    clipped_objects = []
-    for region_id, (surface, role, slot) in region_surfaces.items():
+    # Contacts whose cap-free surfaces already lie on the body are exported
+    # directly; the jug and attachments need a Part::Common against the body to
+    # extract only the portions of their tools that intersect the body surface.
+    body_shell = None
+    bound_objects = []
+    for region_id, (surface, role, slot, needs_clip) in region_surfaces.items():
         if region_id == "jug":
-            # The body's shell within the jug band: a clean surface, no interior
-            # cut planes that a solid Common would carry.
-            shell = document.addObject("Part::Feature", "BodyShell")
-            shell.Shape = Part.makeShell(cut_chain.Shape.Faces)
+            # The jug band is the body shell within the thin front slab: no
+            # solid Common, so no interior cut planes or back/top faces.
+            if body_shell is None:
+                body_shell = document.addObject("Part::Feature", "BodyShell")
+                body_shell.Shape = Part.makeShell(cut_chain.Shape.Faces)
             clipped = document.addObject("Part::Common", "Jug")
-            clipped.Base = shell
-            clipped.Tool = jug_box
-        else:
-            clipped = document.addObject("Part::Common", f"Region_{region_id.replace('-', '_')}")
+            clipped.Base = body_shell
+            clipped.Tool = surface
+            bound_objects.append((clipped, region_id, role, slot))
+        elif needs_clip:
+            clipped = document.addObject(
+                "Part::Common", f"Region_{region_id.replace('-', '_')}"
+            )
             clipped.Base = surface
             clipped.Tool = cut_chain
-        clipped_objects.append((clipped, region_id, role, slot))
-    document.recompute()
-    for clipped, region_id, role, slot in clipped_objects:
-        if role == "contact":
-            outline = jug["outline"] if region_id == "jug" else pockets[region_id]["opening"]
-            _bind(clipped, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot, outline)
+            bound_objects.append((clipped, region_id, role, slot))
         else:
-            _bind(clipped, region_id, "attachment")
+            # Reverse the cap-free shell so its cavity-facing side (floor toward
+            # the camera, walls inward) is front-facing in the highlight.
+            # Part::Reverse is parametric, so the region still follows edits.
+            reversed_region = document.addObject(
+                "Part::Reverse", f"Region_{region_id.replace('-', '_')}"
+            )
+            reversed_region.Source = surface
+            bound_objects.append((reversed_region, region_id, role, slot))
+    document.recompute()
+    for obj, region_id, role, slot in bound_objects:
+        if role == "contact":
+            if region_id == "jug":
+                # The jug mesh is the front-facing patch bounded by the box
+                # footprint; keep the outline coincident with that patch.
+                outline = [
+                    (jug["x"][0], jug["z"][0]),
+                    (jug["x"][1], jug["z"][0]),
+                    (jug["x"][1], jug["z"][1]),
+                    (jug["x"][0], jug["z"][1]),
+                ]
+            else:
+                outline = pockets[region_id]["opening"]
+            _bind(obj, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot, outline)
+        else:
+            _bind(obj, region_id, "attachment")
 
     document.saveAs(str(DESTINATION))
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
