@@ -420,6 +420,33 @@ which is the part a CPU render cannot check.
     a corner radius is smaller than the inset; resampling the measured floor
     avoids both.
 
+## Lessons for the next board
+
+See [`freecad-authoring-lessons.md`](freecad-authoring-lessons.md) for the full
+write-up. The durable points:
+
+- **Decide goal and acceptance bar first.** A sculpted display shell cannot be
+  matched by a solid native model; either accept a measured approximation up
+  front or ship a faceted import. Do not chase an unreachable `compare_exports`
+  limit.
+- **A prismatic extrusion flattens any local silhouette extremum.** Where the
+  outline has a zero-slope segment, its extruded side wall faces straight up for
+  the whole depth and renders as one over-lit facet; fillets cannot fix it. Bow
+  the segment into a shallow arc. (Board-specific: the lattice profile is fine.)
+- **Holds are open surfaces, not solids.** `Part::Loft`/`Part::Extrusion` with
+  `Solid = False` give cap-free shells; a solid leaks an opening cap that hides
+  the cavity. Reverse a shell's orientation paramechanically with
+  `Part::Reverse` so the cavity-facing side is front-facing.
+- **Region mesh vs body partition.** A region may export its own surface only if
+  its boundary matches the body area the partition removed. A hold that is a
+  sub-region of a large flat body face fails this; author it as a shallow recess
+  (a pocket) instead, or the partition leaves a ragged hole.
+- **Never overlay a coincident patch.** A flat patch a hair proud of the face
+  z-fights under the app's depth buffer; make it a real recess.
+- **Closed schema.** A new descriptor field needs the Python descriptor, the
+  Swift decoder, and the package validator changed together.
+- **Single writer per worktree; run the suites once at the end.**
+
 ## Reproducibility and the USDZ as a build output
 
 `Tools/HangboardCAD/verify_reproducible.py` recompiles each source-backed board

@@ -70,7 +70,6 @@ ATTACHMENT_PRIMS = {
 MID_TOLERANCE_MM = 0.15
 PROFILE_TOLERANCE_MM = 0.1
 PERIMETER_ROUND_MM = 6.0
-TOP_EDGE_FILLET_CUTOFF_Z = 80.0
 LATERAL_DEPTH_MM = 9.0
 ROOF_DEPTH_MM = 10.0
 PUBLISHED_MM = {"width": 146.0, "height": 184.0}
@@ -172,50 +171,6 @@ def _merge_short(points, threshold):
                 index += 1
         polygon = merged
     return polygon
-
-
-def _fill_top_notch(points):
-    """Smooth the concave top-center notch into a shallow U.
-
-    The measured mid-depth outline can pick up a lower point on the rounded top
-    lip, producing a long flat top edge that renders as a bright up-facing
-    facet. Replacing that flat bottom with a smooth quadratic arc keeps the
-    shoulders at full height while removing the broad horizontal surface.
-    """
-    if not points:
-        return points
-    count = len(points)
-    # Highest point on each half gives the left/right shoulder of the top edge.
-    right_idx = max(
-        range(count),
-        key=lambda i: points[i][1] if points[i][0] >= 0 else -1e18,
-    )
-    left_idx = max(
-        range(count),
-        key=lambda i: points[i][1] if points[i][0] <= 0 else -1e18,
-    )
-    if right_idx == left_idx:
-        return points
-    span = (left_idx - right_idx) % count
-    rotated = points[right_idx:] + points[:right_idx]
-    if not rotated[1:span]:
-        return points
-    if sum(p[1] for p in rotated[1:span]) / len(rotated[1:span]) < 50:
-        # The selected arc goes the long way around the bottom; bail out safely.
-        return points
-    p0 = points[right_idx]
-    p2 = points[left_idx]
-    # Control point at the centerline, dropped to the original notch depth.
-    min_z = min(p[1] for p in rotated[1:span])
-    p1 = (0.0, min_z)
-    fill = []
-    n = max(5, span)
-    for k in range(1, n):
-        t = k / n
-        x = (1.0 - t) * (1.0 - t) * p0[0] + 2.0 * t * (1.0 - t) * p1[0] + t * t * p2[0]
-        z = (1.0 - t) * (1.0 - t) * p0[1] + 2.0 * t * (1.0 - t) * p1[1] + t * t * p2[1]
-        fill.append((x, z))
-    return rotated[:1] + fill + rotated[span:]
 
 
 def _mid_outline(points, triangles):
@@ -353,9 +308,38 @@ def _rim_profile(points, y):
     return [selected[i] for i in keep]
 
 
+def _smooth_top_notch(points, dip=3.0, segments=8):
+    """Bow the straight top-center chord into a shallow arc.
+
+    The measured silhouette has no vertices between the ears, so the pad's top
+    is one straight horizontal chord spanning the depth: its side wall faces
+    straight up for the full 57 mm and renders as a single over-lit facet.
+    Bowing the chord into a shallow arc gives that wall depth-varying normals,
+    so the top reads as a rounded notch (the design intent) without modelling
+    the sculpted lip.
+    """
+    count = len(points)
+    for index in range(count):
+        a = points[index]
+        b = points[(index + 1) % count]
+        if a[0] * b[0] < 0.0 and a[1] > 75.0 and b[1] > 75.0:
+            arc = []
+            for step in range(1, segments):
+                t = step / segments
+                arc.append(
+                    (
+                        float(a[0] + t * (b[0] - a[0])),
+                        float(a[1] + t * (b[1] - a[1]) - dip * 4.0 * t * (1.0 - t)),
+                    )
+                )
+            return points[: index + 1] + arc + points[index + 1 :]
+    return points
+
+
 def _extract(stage, cache):
     body_points, body_triangles = _world_points(stage, cache, BODY_PRIM)
     mid, deviation = _mid_outline(body_points, body_triangles)
+    mid = _smooth_top_notch(mid)
     xs = [p[0] for p in mid]
     zs = [p[1] for p in mid]
     for key, measured in (("width", max(xs) - min(xs)), ("height", max(zs) - min(zs))):
@@ -529,7 +513,6 @@ def main() -> int:
     stage = Usd.Stage.Open(str(reference))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
     mid, deviation, pockets, attachments, jug = _extract(stage, cache)
-    mid = _fill_top_notch(mid)
 
     if DESTINATION.exists():
         DESTINATION.unlink()
@@ -561,11 +544,22 @@ def main() -> int:
     base.Solid = True
 
     document.recompute()
-    # POC: use the unrounded extrusion directly to avoid perimeter fillet
-    # facets on the top surface.
-    cut_chain = base
+    rounded = document.addObject("Part::Fillet", "BodyRounded")
+    rounded.Base = base
+    perimeter = []
+    for index, edge in enumerate(base.Shape.Edges):
+        start = edge.Vertexes[0].Point
+        end = edge.Vertexes[-1].Point
+        if (abs(start.y + 28.5) < 1e-6 and abs(end.y + 28.5) < 1e-6) or (
+            abs(start.y - 28.5) < 1e-6 and abs(end.y - 28.5) < 1e-6
+        ):
+            perimeter.append((index + 1, PERIMETER_ROUND_MM, PERIMETER_ROUND_MM))
+    if not perimeter:
+        raise ValueError("no front/back perimeter edges found to round")
+    rounded.Edges = perimeter
+
+    cut_chain = rounded
     region_surfaces = {}
-    """Pocket lofts and boolean cuts are intentionally disabled for this POC.
     for slot in sorted(pockets):
         depth = published_depths.get(slot)
         if depth is None:
@@ -610,21 +604,38 @@ def main() -> int:
         # be a degenerate boolean and fragments the surface. The raw surface is
         # reversed during binding so the cavity-facing side is front-facing.
         region_surfaces[slot] = (surface_fuse, "contact", slot, False)
-    """
 
-    """The jug band is intentionally disabled; only the body shape is needed.
-    # The jug band is the front-facing region of the body only. A deep bounding
-    # box pulled in the rounded top edge and back face, causing stray triangles;
-    # a thin slab on the front side of the body surface captures just the planar
-    # front-facing band and avoids the fillet wrap.
-    jug_box = document.addObject("Part::Box", "JugBand")
-    jug_box.Length = jug["x"][1] - jug["x"][0]
-    jug_box.Width = 0.5
-    jug_box.Height = jug["z"][1] - jug["z"][0]
-    jug_box.Placement.Base = App.Vector(jug["x"][0], -29.0, jug["z"][0])
-    # The jug needs shell body ∩ box; encode that in the binding pass.
-    region_surfaces["jug"] = (jug_box, "contact", "jug", True)
-    """
+    # The jug is a sub-region of the flat front face. A flat patch z-fights the
+    # face and a centroid partition of that face is ragged, so author it as a
+    # shallow recess exactly like a pocket: the body takes a clean cut, the
+    # partition claims that cut's surface, and the region mesh matches it.
+    jug_rect = [
+        (jug["x"][0], jug["z"][0]),
+        (jug["x"][1], jug["z"][0]),
+        (jug["x"][1], jug["z"][1]),
+        (jug["x"][0], jug["z"][1]),
+    ]
+    jug_opening = _sketch(document, "JugOpening", jug_rect, OUTLINE_FRAME, (-73.0, -92.0))
+    jug_opening.Placement.Base.y = -28.5
+    jug_floor = _sketch(document, "JugFloor", jug_rect, OUTLINE_FRAME, (-73.0, -92.0))
+    jug_floor.Placement.Base.y = -27.5
+    jug_solid = document.addObject("Part::Loft", "JugSolid")
+    jug_solid.Sections = [jug_opening, jug_floor]
+    jug_solid.Solid = True
+    jug_solid.Ruled = True
+    jug_cut = document.addObject("Part::Cut", "Cut_jug")
+    jug_cut.Base = cut_chain
+    jug_cut.Tool = jug_solid
+    cut_chain = jug_cut
+    jug_surface_loft = document.addObject("Part::Loft", "JugSurface")
+    jug_surface_loft.Sections = [jug_opening, jug_floor]
+    jug_surface_loft.Solid = False
+    jug_surface_loft.Ruled = True
+    jug_floor_face = document.addObject("Part::Face", "JugFloorFace")
+    jug_floor_face.Sources = [jug_floor]
+    jug_surface = document.addObject("Part::MultiFuse", "JugSurfaceFused")
+    jug_surface.Shapes = [jug_surface_loft, jug_floor_face]
+    region_surfaces["jug"] = (jug_surface, "contact", "jug", False)
 
     for node_id, sides in sorted(attachments.items()):
         is_lateral = node_id == "lateral_window_001"
@@ -682,8 +693,8 @@ def main() -> int:
         raise ValueError("document did not recompute cleanly: " + "; ".join(stale))
 
     _bind(cut_chain, "ring_body_001", "body")
-    # Attachments need a Part::Common against the body to extract only the
-    # portions of their tools that intersect the body surface.
+    # Pockets export their cap-free surface directly; attachments are clipped to
+    # the body; the jug is already a clean proud patch.
     bound_objects = []
     for region_id, (surface, role, slot, needs_clip) in region_surfaces.items():
         if needs_clip:
@@ -705,7 +716,18 @@ def main() -> int:
     document.recompute()
     for obj, region_id, role, slot in bound_objects:
         if role == "contact":
-            _bind(obj, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot)
+            if region_id == "jug":
+                # The jug mesh is the front-facing patch bounded by the box
+                # footprint; keep the outline coincident with that patch.
+                outline = [
+                    (jug["x"][0], jug["z"][0]),
+                    (jug["x"][1], jug["z"][0]),
+                    (jug["x"][1], jug["z"][1]),
+                    (jug["x"][0], jug["z"][1]),
+                ]
+            else:
+                outline = pockets[region_id]["opening"]
+            _bind(obj, SLOT_PRIMS[region_id].rsplit("/", 1)[-1], "contact", slot, outline)
         else:
             _bind(obj, region_id, "attachment")
 

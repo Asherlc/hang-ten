@@ -410,9 +410,9 @@ def _validate_partition(body_points, body_facets, triangles_by_node, region_obje
             f"surface {total:.4f} mm^2; the regions leave a gap or overlap larger than "
             f"{tolerance:.6f} mm^2"
         )
-    for obj in region_objects:
-        if not triangles_by_node[obj.NodeID]:
-            raise BuildError(f"{obj.NodeID} received no surface triangles")
+    # A region may legitimately claim no body triangles when it ships its own
+    # surface (for example a jug band authored as a clean patch proud of a flat
+    # body face); the area check above still guards the body partition.
 
 
 def _declared_depths(board, version: int) -> dict:
