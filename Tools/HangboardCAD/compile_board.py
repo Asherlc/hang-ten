@@ -109,6 +109,34 @@ def _bound_objects(document) -> list:
     ]
 
 
+def _source_meshes(document) -> dict:
+    """Raw source meshes stored beside faceted-import nodes.
+
+    A faceted import is an approved display mesh. Rebuilding it through a Part
+    shape and re-tessellating introduces slivers and T-junction cracks at curved
+    seats, so when the author stores the mesh as a ``<NodeID>_source``
+    ``Mesh::Feature`` it is shipped as-is: same triangles as the approved asset,
+    no extra geometry.
+    """
+    meshes: dict = {}
+    for obj in document.Objects:
+        if obj.TypeId != "Mesh::Feature":
+            continue
+        name = obj.Name
+        if not name.endswith("_source"):
+            continue
+        node_id = name[: -len("_source")]
+        points = list(obj.Mesh.Topology[0])
+        facets = list(obj.Mesh.Topology[1])
+        if not points or not facets:
+            continue
+        placement = getattr(obj, "Placement", None)
+        if placement is not None:
+            points = [placement.multVec(point) for point in points]
+        meshes[node_id] = (points, facets)
+    return meshes
+
+
 def _node_specification(obj) -> dict:
     role = getattr(obj, "NodeRole", "")
     if role not in {"body", "contact", "attachment"}:
@@ -591,15 +619,22 @@ def build(
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
     try:
         materials = _material_registry(objects, source, staging)
-        # Faceted imports keep a tight surface_tol: a looser gate removes body
-        # lip triangles the contact shells do not fully cover, opening black
-        # holes at rail ends. Overlap z-fighting is handled in the author by
-        # nudging contact shells slightly toward the front.
-        body_points, body_facets, assignment = _partition_body_triangles(
-            body_object.Shape,
-            [obj.Shape for obj in region_objects],
-            deflection,
-        )
+        faceted = properties["HangTenSourceKind"] == SOURCE_KIND_FACETED
+        source_meshes = _source_meshes(document)
+        if faceted and body_object.NodeID in source_meshes:
+            body_points, body_facets = source_meshes[body_object.NodeID]
+            assignment = {}
+            print("      faceted-import body: shipping the stored source mesh")
+        else:
+            # Faceted imports keep a tight surface_tol: a looser gate removes body
+            # lip triangles the contact shells do not fully cover, opening black
+            # holes at rail ends. Overlap z-fighting is handled in the author by
+            # nudging contact shells slightly toward the front.
+            body_points, body_facets, assignment = _partition_body_triangles(
+                body_object.Shape,
+                [obj.Shape for obj in region_objects],
+                deflection,
+            )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
         meshes = [
@@ -617,7 +652,10 @@ def build(
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
-            points, facets = obj.Shape.tessellate(deflection)
+            if faceted and obj.NodeID in source_meshes:
+                points, facets = source_meshes[obj.NodeID]
+            else:
+                points, facets = obj.Shape.tessellate(deflection)
             if not facets:
                 raise BuildError(f"{obj.NodeID} has no surface")
             region_surface_areas[obj.NodeID] = _triangle_area(

@@ -63,20 +63,20 @@ NODE_MAP = {
 }
 
 # Nodes authored as native Part geometry this piece (not full mesh-import).
-# Sphere centre/R from least-squares fit on reference bulb points (Y < -25 mm),
-# mirrored. The reference blend collar (faces near the board) stays faceted so
-# the bulb stays molded into the board instead of floating.
+# Sphere centre from a least-squares fit on the reference bulb (Y < -25 mm),
+# mirrored; the radius is the reference silhouette, not the mid-fit, so the ball
+# covers the board's seat. `free_y_mm` is where the cap stops behind the front.
 NATIVE_SLOPERS = {
     "left_large_sloper_001": {
         "center_mm": (-244.49, -23.10, 71.17),
-        "radius_mm": 77.05,
-        "blend_y_mm": -28.0,
+        "radius_mm": 79.0,
+        "free_y_mm": -16.0,
         "contact": "sloper-left",
     },
     "right_large_sloper_001": {
         "center_mm": (244.49, -23.10, 71.17),
-        "radius_mm": 77.05,
-        "blend_y_mm": -28.0,
+        "radius_mm": 79.0,
+        "free_y_mm": -16.0,
         "contact": "sloper-right",
     },
 }
@@ -109,11 +109,13 @@ NATIVE_TOP_JUG = {
 
 NATIVE_NODES = set(NATIVE_SLOPERS) | {"top_jug_001"}
 
-# Faceted remainder — keep shell-critical meshes denser.
+# Faceted remainder — keep shell-critical meshes denser. Pinches ship at their
+# reference triangle count: decimating them spiked a sliver that poked through
+# the ball seat and rendered as a black tick.
 TARGET_TRIS = {
     "body_board_001": 14166,
-    "left_pinch_001": 2500,
-    "right_pinch_001": 2500,
+    "left_pinch_001": 13997,
+    "right_pinch_001": 14250,
     "rail_15_001": 7952,
     "rail_35_001": 919,
     "rail_40_001": 3510,
@@ -192,7 +194,7 @@ def _apply_material(obj, texture_source: Path | None) -> None:
         obj.TextureFile = str(texture_source)
 
 
-def _build_mesh(points, facets) -> Mesh.Mesh:
+def _build_mesh(points, facets, harmonize: bool = True) -> Mesh.Mesh:
     mesh = Mesh.Mesh()
     # FreeCAD addFacets wants flat list of Vector triplets or (p1,p2,p3) points.
     triples = []
@@ -203,7 +205,10 @@ def _build_mesh(points, facets) -> Mesh.Mesh:
     mesh.addFacets(triples)
     mesh.removeDuplicatedPoints()
     mesh.removeDuplicatedFacets()
-    mesh.harmonizeNormals()
+    if harmonize:
+        # Only for meshes we construct: harmonizeNormals can flip a triangle on
+        # an open imported shell, which then renders as a black sliver.
+        mesh.harmonizeNormals()
     return mesh
 
 
@@ -262,171 +267,30 @@ def _mesh_to_shape(mesh: Mesh.Mesh) -> Part.Shape:
 
 
 
-def _snap_mesh_to_spheres(
-    mesh: Mesh.Mesh,
-    specs: dict,
-    *,
-    band_mm: float = 4.0,
-) -> Mesh.Mesh:
-    """Project vertices near fitted spheres onto those surfaces.
-
-    Used for the top jug so its ends meet the analytic sloper bulbs instead of
-    floating a millimetre off the faceted reference join.
-    """
-    import math
-
-    points = list(mesh.Topology[0])
-    facets = list(mesh.Topology[1])
-    spheres = [
-        (
-            float(s["center_mm"][0]),
-            float(s["center_mm"][1]),
-            float(s["center_mm"][2]),
-            float(s["radius_mm"]),
-        )
-        for s in specs.values()
-    ]
-    snapped = 0
-    new_points = []
-    for p in points:
-        x, y, z = float(p.x), float(p.y), float(p.z)
-        best = None
-        best_err = band_mm
-        for sx, sy, sz, radius in spheres:
-            dx, dy, dz = x - sx, y - sy, z - sz
-            dist = math.sqrt(dx * dx + dy * dy + dz * dz)
-            err = abs(dist - radius)
-            if err <= best_err and dist > 1.0e-6:
-                scale = radius / dist
-                best = (sx + dx * scale, sy + dy * scale, sz + dz * scale)
-                best_err = err
-        if best is not None:
-            new_points.append(App.Vector(*best))
-            snapped += 1
-        else:
-            new_points.append(App.Vector(x, y, z))
-    out = Mesh.Mesh()
-    triples = []
-    for a, b, c in facets:
-        triples.append(new_points[a])
-        triples.append(new_points[b])
-        triples.append(new_points[c])
-    out.addFacets(triples)
-    out.removeDuplicatedPoints()
-    out.removeDuplicatedFacets()
-    out.harmonizeNormals()
-    print(f"    snap to spheres: {snapped}/{len(points)} verts (band {band_mm} mm)")
-    return out
-
-
-def _carve_mesh_for_slopers(mesh: Mesh.Mesh, specs: dict, inflate_mm: float = 4.0) -> Mesh.Mesh:
-    """Remove body triangles that sit inside a native sloper sphere.
-
-    Leaves a seat so the analytic bulb is not fighting the faceted front shell.
-    """
-    points = list(mesh.Topology[0])
-    facets = list(mesh.Topology[1])
-    spheres = [
-        (
-            float(s["center_mm"][0]),
-            float(s["center_mm"][1]),
-            float(s["center_mm"][2]),
-            float(s["radius_mm"]) + inflate_mm,
-        )
-        for s in specs.values()
-    ]
-    kept = []
-    for a, b, c in facets:
-        cx = (points[a].x + points[b].x + points[c].x) / 3.0
-        cy = (points[a].y + points[b].y + points[c].y) / 3.0
-        cz = (points[a].z + points[b].z + points[c].z) / 3.0
-        inside = False
-        for sx, sy, sz, radius in spheres:
-            dx, dy, dz = cx - sx, cy - sy, cz - sz
-            if dx * dx + dy * dy + dz * dz <= radius * radius:
-                inside = True
-                break
-        if not inside:
-            kept.append((a, b, c))
-    if len(kept) < 100:
-        raise ValueError(f"sloper carve left only {len(kept)} body triangles")
-    out = Mesh.Mesh()
-    triples = []
-    for a, b, c in kept:
-        triples.append(points[a])
-        triples.append(points[b])
-        triples.append(points[c])
-    out.addFacets(triples)
-    out.removeDuplicatedPoints()
-    out.removeDuplicatedFacets()
-    out.harmonizeNormals()
-    print(
-        f"    carve sloper seats: {len(facets)} → {out.CountFacets} tris "
-        f"(inflate {inflate_mm} mm)"
-    )
-    return out
-
-
 def _native_sloper(spec: dict, points, facets) -> Part.Shape:
-    """Smooth fitted bulb mesh + reference blend collar, as one mesh shell.
+    """Analytic ball, clipped to the board.
 
-    Sphere centre/R from LS fit on the free bulb. Collar faces near the board
-    stay from the reference so the hold keeps its molded attachment. Merged to
-    a single mesh before Part conversion so compile stays responsive.
+    The sculpted reference bulb carries a molded rim and collar; projecting that
+    shell onto a fitted sphere still left a lip around the outline, so the bulb
+    is authored as a clean sphere instead. The radius tracks the reference
+    silhouette (not the least-squares mid-fit) so the ball reaches the board's
+    seat without a seam. The cap stops behind the front so the solid never runs
+    out the back of the board.
     """
-    import math
-
     cx, cy, cz = (float(v) for v in spec["center_mm"])
     radius = float(spec["radius_mm"])
-    blend_y = float(spec.get("blend_y_mm", -28.0))
-    bulb_deflection = float(spec.get("bulb_deflection_mm", 0.6))
+    free_y = float(spec.get("free_y_mm", -16.0))
 
     sphere = Part.makeSphere(radius)
     sphere.translate(App.Vector(cx, cy, cz))
-    extent = radius * 4.0
-    clip = Part.makeBox(extent, extent + 2.0, extent)
-    clip.translate(App.Vector(cx - extent / 2.0, -extent, cz - extent / 2.0))
-    bulb = sphere.common(clip)
-    if bulb.isNull() or not bulb.Faces:
-        raise ValueError(f"sloper bulb at ({cx},{cy},{cz}) is empty")
-    bulb_pts, bulb_faces = bulb.tessellate(bulb_deflection)
-    if not bulb_faces:
-        raise ValueError(f"sloper bulb tessellation empty at ({cx},{cy},{cz})")
-
-    collar_facets = []
-    for a, b, c in facets:
-        pa, pb, pc = points[a], points[b], points[c]
-        mx = (pa[0] + pb[0] + pc[0]) / 3.0
-        my = (pa[1] + pb[1] + pc[1]) / 3.0
-        mz = (pa[2] + pb[2] + pc[2]) / 3.0
-        dist = math.sqrt((mx - cx) ** 2 + (my - cy) ** 2 + (mz - cz) ** 2)
-        if my >= blend_y or dist > radius + 1.5:
-            collar_facets.append((a, b, c))
-    if len(collar_facets) < 50:
-        raise ValueError(
-            f"sloper collar at x={cx} kept only {len(collar_facets)} faces"
-        )
-    collar_mesh = _build_mesh(points, collar_facets)
-    collar_mesh = _simplify(collar_mesh, 2000)
-
-    merged = Mesh.Mesh()
-    triples = []
-    for face in bulb_faces:
-        triples.append(bulb_pts[face[0]])
-        triples.append(bulb_pts[face[1]])
-        triples.append(bulb_pts[face[2]])
-    # Collar topology points are FreeCAD Vectors from _build_mesh path — use mesh API.
-    collar_pts = list(collar_mesh.Topology[0])
-    for a, b, c in collar_mesh.Topology[1]:
-        triples.append(collar_pts[a])
-        triples.append(collar_pts[b])
-        triples.append(collar_pts[c])
-    merged.addFacets(triples)
-    merged.removeDuplicatedPoints()
-    merged.removeDuplicatedFacets()
-    merged.harmonizeNormals()
-    print(f"bulb+collar tris≈{merged.CountFacets} ", end="")
-    return _mesh_to_shape(merged)
+    depth = radius * 4.0
+    clip = Part.makeBox(depth, depth, depth)
+    clip.translate(App.Vector(cx - depth / 2.0, free_y - depth, cz - depth / 2.0))
+    cap = sphere.common(clip)
+    if cap.isNull() or not cap.Faces:
+        raise ValueError(f"sloper cap at ({cx},{cy},{cz}) is empty")
+    print(f"sphere cap faces={len(cap.Faces)} ", end="")
+    return cap
 
 
 def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
@@ -574,10 +438,8 @@ def main() -> int:
         role, contact_id = NODE_MAP[name]
         points, facets = _world_mesh(stage, cache, prim)
         print(f"  import {name}: {len(points)} pts, {len(facets)} tris →", end=" ")
-        mesh = _build_mesh(points, facets)
+        mesh = _build_mesh(points, facets, harmonize=False)
         mesh = _simplify(mesh, TARGET_TRIS.get(name, 2000))
-        if name == "body_board_001":
-            mesh = _carve_mesh_for_slopers(mesh, NATIVE_SLOPERS, inflate_mm=4.0)
         shape = _mesh_to_shape(mesh)
         feature = document.addObject("Part::Feature", name)
         feature.Shape = shape
@@ -592,6 +454,15 @@ def main() -> int:
                 App.Vector(0.0, CONTACT_NUDGE_Y_MM, 0.0), App.Rotation()
             )
         _apply_material(feature, texture_source if role == "body" else None)
+        # Store the approved display mesh alongside the B-rep so compile can
+        # ship the exact source triangles instead of re-tessellating a Part
+        # shape (which opens slivers at the curved ball seats).
+        source_feature = document.addObject("Mesh::Feature", f"{name}_source")
+        source_feature.Mesh = mesh
+        if contact_id is not None:
+            source_feature.Placement = App.Placement(
+                App.Vector(0.0, CONTACT_NUDGE_Y_MM, 0.0), App.Rotation()
+            )
         imported.append((name, role, contact_id, mesh.CountFacets, len(shape.Faces)))
         print(f"Part faces={len(shape.Faces)}")
 
