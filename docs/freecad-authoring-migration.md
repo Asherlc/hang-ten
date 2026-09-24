@@ -308,6 +308,112 @@ which is the part a CPU render cannot check.
    delivery lock sat stale while six boards were added. Check which suite a test
    actually belongs to before assuming CI protects it.
 
+10. **The v2 path and the attachment role were not exercised by the pilot.**
+    Two defects shipped because nothing tested them. First, `compile_board`
+    partitioned only `contact` nodes, so a declared `attachment` node was
+    validated and then silently dropped from the exported asset and descriptor.
+    Contacts and attachments are both regions of the body surface; the
+    partition must cover both. Second, `_validate_published_depths` read
+    `ContactID`, which a v2 object does not have, so the published-depth guard
+    passed vacuously. It must key on `ContactSlotID` and map the slot to the
+    published depth through each instance's `contactIDsBySlotID`. Both are now
+    covered by `Tools/HangboardCAD/tests/metolius_native.py`.
+
+11. **A ruled loft twists when its two sections are independently ordered.**
+    A pocket floor measured as its own loop does not share vertex order with the
+    opening, so `Part::Loft` connects vertex *i* to vertex *i* and the pocket
+    collapses into a wedge. Resample both sections by arc length from the same
+    start vertex and the same direction. A uniform inward offset also fails when
+    a corner radius is smaller than the inset; resampling the measured floor
+    avoids both.
+
+## Lessons for the next board
+
+See [`freecad-authoring-lessons.md`](freecad-authoring-lessons.md) for the full
+write-up. The durable points:
+
+- **Decide goal and acceptance bar first.** A sculpted display shell cannot be
+  matched by a solid native model; either accept a measured approximation up
+  front or ship a faceted import. Do not chase an unreachable `compare_exports`
+  limit.
+- **A prismatic extrusion flattens any local silhouette extremum.** Where the
+  outline has zero slope, its extruded side wall faces straight up for the whole
+  depth and renders as one over-lit facet; fillets cannot fix it. Author a
+  swept lip (congruent cross-sections lofted along the span) instead. Flat tops
+  and rounded crests still show up-facing facets — compare `preview.py`'s metric
+  to the reference, not against zero. (Board-specific: the lattice profile is
+  fine.)
+- **Holds are open surfaces, not solids.** `Part::Loft`/`Part::Extrusion` with
+  `Solid = False` give cap-free shells; a solid leaks an opening cap that hides
+  the cavity. Reverse a shell's orientation parametrically with
+  `Part::Reverse` so the cavity-facing side is front-facing.
+- **Region mesh vs body partition.** A region may export its own surface only if
+  its boundary matches the body area the partition removed. A hold that is a
+  sub-region of a large flat body face fails this; author it as a shallow recess
+  (a pocket) instead, or the partition leaves a ragged hole.
+- **Never overlay a coincident patch.** A flat patch a hair proud of the face
+  z-fights under the app's depth buffer; make it a real recess.
+- **Closed schema.** A new descriptor field needs the Python descriptor, the
+  Swift decoder, and the package validator changed together.
+- **Single writer per worktree; run the suites once at the end.**
+
+## Fast loop and definition of done
+
+**Decision tree.** Measure the reference before authoring anything:
+
+- **Constant cross-section along the intended axis? → swept profile.** Clone the
+  pilot (`lattice-triple-rung`): a fully constrained sketch, a pad, a fillet;
+  holds are extruded runs of the profile. Reproduces closely.
+- **Genuinely sculpted shell (rounded lip, scooped pockets)? → pick the bar up
+  front.** Either a native *measured approximation* (declare the accepted
+  deviation; `compare_exports` is evidence, not a gate) or a *faceted import*.
+  Then author each hold as a cap-free surface: a band is an extruded run; a
+  recess is a pocket (`Part::Loft Solid=False` + floor face, reversed with
+  `Part::Reverse`); a hold that is a sub-region of a flat body face is a
+  **shallow recess** — never a coincident patch (z-fights) and never a proud
+  patch (also z-fights under the app's depth buffer).
+
+**Inner loop (fast, host-side).** After every authoring edit:
+
+```bash
+# Host venv needs numpy, pillow, usd-core (see Toolchain). Workspace example:
+#   .context/<workspace>/venv/bin/python
+# PXRPATH is the directory that *contains* the `pxr` package (same value
+# `run_freecad.py --extra-python-path` takes).
+python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
+  Tools/HangboardCAD/compile_board.py --package <slug>
+
+# Resolve the pre-migration USDZ from Git (never from the live package path —
+# compile overwrites it). `reference.load_reference` writes
+# `<scratch>/<slug>-primary.usdz`.
+.context/<workspace>/venv/bin/python -c "
+import sys
+from pathlib import Path
+sys.path.insert(0, 'Tools/HangboardCAD')
+from reference import load_reference
+print(load_reference('<slug>', 'primary.usdz', Path('.context/<workspace>/ref'))[0])
+"
+.context/<workspace>/venv/bin/python Tools/HangboardCAD/preview.py --package <slug> \
+  --reference .context/<workspace>/ref/<slug>-primary.usdz
+```
+
+`preview.py` is a diagnostic only (never a build input). It renders front/side/top
+with normal shading (and the reference side by side), prints the node inventory
+and bounds, and reports the largest up-facing top facet under the same metric on
+both assets. Flat tops and rounded crests both produce up-facing facets — compare
+to the reference and the front render, not against zero. Read the front render;
+then build the app and screenshot a deep-linked hold. Only run the suites and
+refresh the lock once the shape is right.
+
+**Definition of done.**
+
+- the node inventory and `modelBounds` match the published facts;
+- every hold renders as one cohesive region in the app (deep link + screenshot);
+- `Tools/HangboardCAD/tests/native_source_checks.py` (or the board's variant)
+  passes: reopen, published depths, region-on-surface, edit propagation, and the
+  slot/instance relationship;
+- both pytest suites pass and the delivery lock is refreshed.
+
 ## Reproducibility and the USDZ as a build output
 
 `Tools/HangboardCAD/verify_reproducible.py` recompiles each source-backed board
