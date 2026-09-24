@@ -70,7 +70,7 @@ geometry rather than as a flat cut:
   ends because the wall is depth-scaled by the crown, which is also the published
   behaviour (larger front radius at the ends, smaller at the centre);
 * the upper trough's floor is widened (apex inset 9.5 mm, against a measured 11.2 mm) so
-  each level keeps a readable shelf, and the step riser leans back 2 mm of z between the
+  each level keeps a readable shelf, and the step riser leans back 4 mm of z between the
   levels so it has real projected width in a front view. A riser normal to the front face
   projects to a zero-width line and the two levels cannot be told apart at all.
 
@@ -78,7 +78,7 @@ geometry rather than as a flat cut:
   crowned floor at a z that follows the crown, so its exposed edge wanders in z (0.52 mm
   on the shallow level, 0.91 mm on the deep one) and tessellation turns that wander into a
   visible staircase. The riser is instead the surface **ruled between two constant-z
-  lines** — it meets the 8 mm floor at z = 23 and the 14 mm floor at z = 21 at every x —
+  lines** — it meets the 8 mm floor at z = 23 and the 14 mm floor at z = 19 at every x —
   which is the same rule the walls already follow: the step is authored as a lean in the
   trough's *depth-fraction* coordinate, so depth-scaling by the crown moves the riser's
   depth without moving its z. Both exposed edges are then exactly straight lines.
@@ -783,9 +783,6 @@ def main() -> int:
 
     texture_member, texture_source, texture_digest = _reference_texture(reference)
 
-    if DESTINATION.exists():
-        DESTINATION.unlink()
-
     document = App.newDocument(PACKAGE)
     document.Label = board["name"]
     document.addProperty("App::PropertyString", "HangTenBoardID", "HangTen")
@@ -976,6 +973,8 @@ def main() -> int:
             )
 
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    if DESTINATION.exists():
+        DESTINATION.unlink()
     document.saveAs(str(DESTINATION))
 
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
