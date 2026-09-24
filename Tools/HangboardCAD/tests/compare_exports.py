@@ -104,6 +104,12 @@ def main() -> int:
     parser.add_argument("reference")
     parser.add_argument("candidate")
     parser.add_argument("--limit-mm", type=float, default=0.5)
+    parser.add_argument(
+        "--chunk",
+        type=int,
+        default=2048,
+        help="query points per block; lower it for dense meshes (memory is chunk x triangles)",
+    )
     arguments = parser.parse_args()
 
     reference = read_usdz(Path(arguments.reference))
@@ -111,8 +117,12 @@ def main() -> int:
     reference_tris = triangles(reference)
     candidate_tris = triangles(candidate)
 
-    forward = point_to_triangle_distance(sample_points(candidate), reference_tris)
-    backward = point_to_triangle_distance(sample_points(reference), candidate_tris)
+    forward = point_to_triangle_distance(
+        sample_points(candidate), reference_tris, chunk=arguments.chunk
+    )
+    backward = point_to_triangle_distance(
+        sample_points(reference), candidate_tris, chunk=arguments.chunk
+    )
 
     print(f"reference triangles {len(reference_tris)}, candidate triangles {len(candidate_tris)}")
     print(f"candidate -> reference: {len(forward)} samples, max {forward.max():.4f} mm")

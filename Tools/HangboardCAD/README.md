@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 5 of the 46 model-media boards are migrated** (those with a committed
+**Status: 6 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -44,7 +44,10 @@ Document properties: `HangTenBoardID`, `HangTenPresentationID`,
 
 Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
 `attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`. Objects
+`Roughness`, `Metallic`, and optionally an embedded `TextureFile`.
+Optionally, `HangTenCurvedRegionPartition` (`App::PropertyBool`) opts a
+document into the curved-region partition described below; documents without it
+compile exactly as before. Objects
 without `NodeID` — sketches, datums, construction features — are never exported.
 The `NodeID` becomes the USD mesh prim name, which is what the application binds
 against.
@@ -59,7 +62,17 @@ The approved runtime contract partitions the board surface: the body node holds
 the surface *minus* the contact regions, and each contact node holds its region.
 The compiler assigns every tessellated body triangle to exactly one node using
 the contact regions built from the source document's own sketch edges, so the
-result has no duplicated coplanar geometry and no z-fighting. Verified on the
+result has no duplicated coplanar geometry and no z-fighting. A body triangle
+is assigned by its centroid lying on the region surface. That rule cannot see a
+chord triangle of a *curved* face (arc, B-spline), whose centroid sits up to the
+deflection inside the surface, so the body would keep a duplicate of every
+curved hold. With `HangTenCurvedRegionPartition` set, such a triangle is also
+assigned when all three vertices lie on the region, the centroid is within the
+deflection, and its normal agrees with the surface normal (so an end-cap
+triangle touching the region's boundary edge is never claimed). It is opt-in
+because it changes existing output: on `metolius-rock-rings-3d` it would move
+~3,400 body triangles that currently duplicate curved pocket surfaces, and that
+board's committed bytes must keep reproducing until it is deliberately rebuilt. Verified on the
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
 
@@ -83,6 +96,32 @@ provenance sidecar; these facts live here instead.
   script, which records the reduction criterion.
 * The reference is resolved from commit `6b828e15`
   (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
+
+## Vector profile: metolius-prime-rib
+
+`Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd` is the first source
+whose profile is authored from vector primitives rather than measured vertices:
+one fully constrained Sketcher profile of 11 lines, 12 tangent arcs and two
+cubic Bezier spans (Sketcher B-splines with dimensioned poles), a symmetric
+508 mm pad, and a 1.2 mm `PartDesign::Fillet` round-over on both end
+perimeters. Every joint is tangent (G1), and the profile carries named driving
+dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
+`Edge23Depth` 23, ledge/slot heights, and one named radius per arc).
+
+* Published facts: 20 x 4.2 x 1.5 in and edge depths 38 / 23 / 15 mm, from the
+  manufacturer page and `board.json`. The 38 mm edge is the full 1.5 in
+  (38.1 mm) thickness.
+* The primitives were recovered from the pre-migration reference's end-cap
+  loop, which is exactly lines, arcs and two Beziers with round-number values;
+  the authoring script re-measures the reference and refuses to save if any of
+  its 291 profile vertices is more than 0.01 mm from the sketch (achieved
+  0.00006 mm). No polyline is used.
+* Contacts are sketch-edge runs extruded over the prismatic span
+  (`Pad.Length - 2 * EndRoundover.Radius`); a concave slot fillet in a run is
+  reversed with `Part::Reverse` and combined with `Part::Compound`, so every
+  hold face points out of the board.
+* Provenance and field mappings:
+  `docs/source-audits/2026-09-24-metolius-prime-rib-freecad-source.md`.
 
 ## In-app verification
 
@@ -112,7 +151,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **5 of 46 model-media boards are migrated.** The other 41 still ship their
+* **6 of 46 model-media boards are migrated.** The other 40 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
@@ -158,6 +197,11 @@ performance. Those remain open.
   checks: pad length 550 -> 620 mm propagating to every contact, and a profile
   dimension 50 -> 56 mm moving the edge-45 contact from 45.00 to 55.98 mm while
   the unrelated contacts keep their measured depth.
+* `test_prime_rib_native.py` / `tests/prime_rib_native_source_checks.py` —
+  the vector-profile source: primitive inventory, named dimensions, published
+  envelope and depths, regions on the body surface, a pad-length edit and an
+  `Edge23Depth` 23 -> 26 mm edit that moves only edge-23. `HANGTEN_FREECAD_CMD`
+  points it at a non-default `freecadcmd`.
 * `tests/compare_exports.py` — sampled two-way point-to-triangle distance against
   the approved reference (0.21 mm worst case, limit 0.5 mm). A sampled bound, not
   an exact Hausdorff distance and not a product accuracy claim.

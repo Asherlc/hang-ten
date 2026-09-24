@@ -69,6 +69,10 @@ DOCUMENT_PROPERTIES = (
     "HangTenTessellationDeflection",
 )
 CREASE_DEGREES = 35.0
+# Optional document property (App::PropertyBool). When true, the partition also
+# claims chord triangles of curved region faces; see _partition_body_triangles.
+# Opt-in so boards compiled before it existed keep byte-identical output.
+CURVED_REGION_PARTITION = "HangTenCurvedRegionPartition"
 
 
 class BuildError(RuntimeError):
@@ -302,7 +306,31 @@ def _crease_normals(points, triangles, crease_degrees: float):
     return out_points, out_triangles, out_normals
 
 
-def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
+def _curved_facet_on_region(shape, corners, centroid, deflection: float, on_surface: float) -> bool:
+    """True when a chord triangle of a curved face belongs to ``shape``'s surface."""
+    import Part
+
+    normal = (corners[1] - corners[0]).cross(corners[2] - corners[0])
+    if normal.Length < 1e-12:
+        return False
+    normal.normalize()
+    for corner in corners:
+        if shape.distToShape(Part.Vertex(corner))[0] >= on_surface:
+            return False
+    distance, _pairs, supports = shape.distToShape(Part.Vertex(centroid))
+    if distance > deflection:
+        return False
+    kind, index, parameters = supports[0][0], supports[0][1], supports[0][2]
+    if kind != "Face":
+        return False
+    surface_normal = shape.Faces[index].normalAt(*parameters)
+    # Region shells carry no reliable orientation, so compare lines, not senses.
+    return abs(surface_normal.dot(normal)) >= math.cos(math.radians(CREASE_DEGREES))
+
+
+def _partition_body_triangles(
+    body_shape, contact_shapes, deflection: float, curved_regions: bool = False
+):
     """Assign each body triangle to the contact region it belongs to.
 
     The approved runtime contract partitions the board surface: the body node
@@ -314,12 +342,23 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
     contact region's surface. The regions are built from the source document's
     own sketch edges, so the assignment follows any profile edit; no face or
     triangle index is used.
+
+    A triangle tessellated from a *curved* face (an arc or a B-spline run of the
+    profile) has its vertices on the surface but its centroid inside the chord,
+    up to the tessellation deflection away, so the centroid rule leaves it in the
+    body and the region's own surface then duplicates it. With
+    ``curved_regions`` (the source's ``HangTenCurvedRegionPartition``), such a
+    triangle is also assigned when all three vertices lie on the region surface,
+    the centroid is within the deflection, and the triangle lies along the
+    surface there, so a triangle of an adjacent face (an end cap whose vertices
+    happen to lie on the region's boundary edge) is never claimed.
     """
     import Part
 
     points, facets = body_shape.tessellate(deflection)
     assignment: dict[int, int] = {}
     contested: dict[int, list[int]] = {}
+    on_surface = 1e-4
     for position, shape in enumerate(contact_shapes):
         box = shape.BoundBox
         margin = 0.25
@@ -331,7 +370,12 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
                 and box.ZMin - margin <= centroid.z <= box.ZMax + margin
             ):
                 continue
-            if shape.distToShape(Part.Vertex(centroid))[0] < 1e-4:
+            claimed = shape.distToShape(Part.Vertex(centroid))[0] < on_surface
+            if not claimed and curved_regions:
+                claimed = _curved_facet_on_region(
+                    shape, [points[corner] for corner in facet], centroid, deflection, on_surface
+                )
+            if claimed:
                 if index in assignment:
                     contested.setdefault(index, [assignment[index]]).append(position)
                 else:
@@ -580,7 +624,13 @@ def build(
     try:
         materials = _material_registry(objects, source, staging)
         body_points, body_facets, assignment = _partition_body_triangles(
-            body_object.Shape, [obj.Shape for obj in region_objects], deflection
+            body_object.Shape,
+            [obj.Shape for obj in region_objects],
+            deflection,
+            curved_regions=bool(
+                CURVED_REGION_PARTITION in document.PropertiesList
+                and document.getPropertyByName(CURVED_REGION_PARTITION)
+            ),
         )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 

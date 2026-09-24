@@ -235,7 +235,11 @@ def _single_grip_type(contact: dict[str, object]) -> str | None:
 
 
 def _assert_model_descriptor(
-    root: Path, board: dict[str, object], body_node_ids: str | set[str]
+    root: Path,
+    board: dict[str, object],
+    body_node_ids: str | set[str],
+    *,
+    authoring_source: bool = False,
 ) -> dict[str, object]:
     presentations = board["presentations"]
     assert isinstance(presentations, list)
@@ -248,7 +252,11 @@ def _assert_model_descriptor(
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
         if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"} | (
+        # A migrated package also carries its own CAD authoring source, named
+        # after its directory; it is not a runtime resource.
+        {f"{root.name}.FCStd"} if authoring_source else set()
+    )
     descriptor = json.loads(
         (root / media["descriptorPath"]).read_text(encoding="utf-8")
     )
@@ -1000,7 +1008,7 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
         )
         for contact in board["contacts"]
     ) == PRIME_RIB_HOLDS
-    _assert_model_descriptor(PRIME_RIB_ROOT, board, "body_mesh_001")
+    _assert_model_descriptor(PRIME_RIB_ROOT, board, "body_mesh_001", authoring_source=True)
 
 
 def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
