@@ -71,10 +71,12 @@ OPENINGS = {
     "edge-8": (-57.0, 57.0, _SHARED_Z + _HAIRLINE, 37.0, (0.5, 0.5, 5.0, 5.0)),
 }
 
-# No outer lip expansion: a 3 mm loft bloated AABBs and pinched edge-8/edge-14 into
-# a peanut. Flush measured openings keep contact AABBs within ~0.1 mm of reference.
-# (A ≤0.4 mm lip re-contests the shared divider at compile partition.)
+# No outer lip expansion (bloated AABBs / peanut). Inward-only entry bevel puts
+# tilted faces *inside* the measured opening so the front Lambert preview shows
+# dark troughs without growing contact AABBs past x0/x1/z0/z1.
 LIP_FILLET_R = 0.0
+ENTRY_BEVEL_DEPTH = 2.5  # mm along +Y from the front
+ENTRY_BEVEL_INSET = 2.0  # mm inward in XZ (front wire stays measured)
 # Arc corners approximated with this many planar segments (compile partition stays planar).
 OPENING_CORNER_SEGMENTS = 12
 
@@ -176,14 +178,15 @@ def _pocket_face_filter(
 
 
 def _mono_face_filter(cx: float, cz: float, radius: float):
-    """Planar n-gon walls + floor; no true Cylinder as sole contact surface."""
+    """Planar n-gon walls + floor + inward bevel; no true Cylinder as sole contact."""
 
     def matches(face) -> bool:
         center = face.CenterOfMass
         radial = math.hypot(center.x - cx, center.z - cz)
+        inner = max(radius - ENTRY_BEVEL_INSET - 0.5, radius * 0.4)
         if not (
             Y_FRONT - 0.05 <= center.y <= Y_FRONT + GRIP_DEPTH_MM["mono-25"] + 0.05
-            and radius * 0.55 <= radial <= radius + 0.5
+            and inner <= radial <= radius + 0.5
         ):
             return False
         if isinstance(face.Surface, Part.Plane):
@@ -203,6 +206,20 @@ def _mono_prism_solid(cx: float, cz: float, radius: float, depth: float, sides: 
     ]
     wire = Part.makePolygon(points + [points[0]])
     return Part.Face(wire).extrude(App.Vector(0.0, depth, 0.0))
+
+
+def _inset_corners(corner_r, inset: float):
+    if isinstance(corner_r, (tuple, list)):
+        return tuple(max(0.05, float(value) - inset) for value in corner_r)
+    return max(0.05, float(corner_r) - inset)
+
+
+def _inset_opening(x0: float, x1: float, z0: float, z1: float, corner_r, inset: float):
+    ix0, ix1 = x0 + inset, x1 - inset
+    iz0, iz1 = z0 + inset, z1 - inset
+    if ix1 - ix0 < 2.0 or iz1 - iz0 < 2.0:
+        raise ValueError(f"inset {inset} mm collapses opening ({x0},{x1},{z0},{z1})")
+    return ix0, ix1, iz0, iz1, _inset_corners(corner_r, inset)
 
 
 def _rounded_rect_points(
@@ -310,50 +327,31 @@ def _shell_from_body_faces(body_shape, predicate):
 
 
 def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, corner_r, depth: float):
-    face = _rounded_rect_face(x0, x1, z0, z1, corner_r, Y_FRONT - 0.01)
-    return face.extrude(App.Vector(0.0, depth + 0.02, 0.0))
+    """Measured front opening with inward entry bevel, then inset prism to depth.
 
-
-def _pocket_lip_cutter(
-    x0: float,
-    x1: float,
-    z0: float,
-    z1: float,
-    corner_r,
-    lip_r: float,
-    *,
-    expand_x0: bool = True,
-    expand_x1: bool = True,
-    expand_z0: bool = True,
-    expand_z1: bool = True,
-):
-    """Lofted entry chamfer between congruent polygonal openings (planar ruled faces)."""
-    x0_outer = x0 - lip_r if expand_x0 else x0
-    x1_outer = x1 + lip_r if expand_x1 else x1
-    z0_outer = z0 - lip_r if expand_z0 else z0
-    z1_outer = z1 + lip_r if expand_z1 else z1
-    if isinstance(corner_r, (tuple, list)):
-        outer_corner = tuple(float(v) + lip_r for v in corner_r)
-    else:
-        outer_corner = float(corner_r) + lip_r
-    outer = _rounded_rect_wire(
-        x0_outer,
-        x1_outer,
-        z0_outer,
-        z1_outer,
-        outer_corner,
-        Y_FRONT - 0.01,
+    Do not fuse a full-size prism with the bevel — the prism would swallow the loft
+    and leave flush -Y floors that vanish in the Lambert front preview.
+    """
+    bevel = min(ENTRY_BEVEL_DEPTH, max(depth * 0.35, 1.5))
+    inset = min(ENTRY_BEVEL_INSET, (x1 - x0) * 0.2, (z1 - z0) * 0.2)
+    ix0, ix1, iz0, iz1, ic = _inset_opening(x0, x1, z0, z1, corner_r, inset)
+    outer = _rounded_rect_wire(x0, x1, z0, z1, corner_r, Y_FRONT - 0.01)
+    inner = _rounded_rect_wire(ix0, ix1, iz0, iz1, ic, Y_FRONT + bevel)
+    loft = Part.makeLoft([outer, inner], solid=True, ruled=True)
+    remain = depth - bevel + 0.02
+    if remain <= 0.05:
+        return loft
+    prism = _rounded_rect_face(ix0, ix1, iz0, iz1, ic, Y_FRONT + bevel - 0.01).extrude(
+        App.Vector(0.0, remain + 0.02, 0.0)
     )
-    inner = _rounded_rect_wire(x0, x1, z0, z1, corner_r, Y_FRONT + lip_r)
-    return Part.makeLoft([outer, inner], solid=True, ruled=True)
+    return loft.fuse(prism)
 
 
 def _mono_cutter(cx: float, cz: float, radius: float, depth: float):
-    return _mono_prism_solid(cx, cz, radius + 0.02, depth + 0.02, MONO_SIDES)
-
-
-def _mono_lip_cutter(cx: float, cz: float, radius: float, lip_r: float):
-    """Faceted entry chamfer: loft expanded n-gon → bore n-gon (no Cylinder/torus)."""
+    """Measured front bore with inward entry bevel, then inset prism (no Cylinder)."""
+    bevel = min(ENTRY_BEVEL_DEPTH, max(depth * 0.2, 1.5))
+    inset = min(ENTRY_BEVEL_INSET, radius * 0.35)
+    inner_r = radius - inset
 
     def ngon_wire(rad: float, y: float):
         angles = [2.0 * math.pi * index / MONO_SIDES for index in range(MONO_SIDES)]
@@ -363,11 +361,16 @@ def _mono_lip_cutter(cx: float, cz: float, radius: float, lip_r: float):
         ]
         return Part.makePolygon(points + [points[0]])
 
-    return Part.makeLoft(
-        [ngon_wire(radius + lip_r, Y_FRONT - 0.01), ngon_wire(radius, Y_FRONT + lip_r)],
+    loft = Part.makeLoft(
+        [ngon_wire(radius + 0.02, Y_FRONT - 0.01), ngon_wire(inner_r, Y_FRONT + bevel)],
         solid=True,
         ruled=True,
     )
+    remain = depth - bevel + 0.02
+    if remain <= 0.05:
+        return loft
+    prism = _mono_prism_solid(cx, cz, inner_r, remain + 0.02, MONO_SIDES, y0=Y_FRONT + bevel - 0.01)
+    return loft.fuse(prism)
 
 
 def main() -> int:
@@ -435,20 +438,12 @@ def main() -> int:
     for contact_id, (x0, x1, z0, z1, corner_r) in OPENINGS.items():
         depth = GRIP_DEPTH_MM[contact_id]
         cutters.append(_pocket_cutter(x0, x1, z0, z1, corner_r, depth))
-        if LIP_FILLET_R > 0.0:
-            cutters.append(
-                _pocket_lip_cutter(x0, x1, z0, z1, corner_r, LIP_FILLET_R)
-            )
         contact_predicates.append(
             (contact_id, _pocket_face_filter(x0, x1, z0, z1, depth))
         )
 
     mono_depth = GRIP_DEPTH_MM["mono-25"]
     cutters.append(_mono_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, mono_depth))
-    if LIP_FILLET_R > 0.0:
-        cutters.append(
-            _mono_lip_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, LIP_FILLET_R)
-        )
     contact_predicates.append(
         ("mono-25", _mono_face_filter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS))
     )
@@ -505,7 +500,8 @@ def main() -> int:
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference envelope mm: {measured}")
     print(f"authored contact Y spans mm: {depth_spans} (published {GRIP_DEPTH_MM})")
-    print(f"outer corner R={CORNER_R} mm ({CORNER_SEGMENTS} segs), lip R={LIP_FILLET_R} mm, mono sides={MONO_SIDES}")
+    print(f"outer corner R={CORNER_R} mm ({CORNER_SEGMENTS} segs), "
+          f"entry bevel {ENTRY_BEVEL_DEPTH}/{ENTRY_BEVEL_INSET} mm, mono sides={MONO_SIDES}")
     sys.stdout.flush()
     return 0
 
