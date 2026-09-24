@@ -145,8 +145,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
             "test-ui-misc",
             "\n".join(
                 (
-                    "HangTenUITests/GitHubSignInUITests",
-                    "HangTenUITests/SettingsBoardEditorVisibilityUITests",
+                    "HangTenUITests/SettingsUITests",
                     "HangTenUITests/FreeWorkoutUITests",
                 )
             ),

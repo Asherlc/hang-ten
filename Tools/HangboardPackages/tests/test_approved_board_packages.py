@@ -11,7 +11,12 @@ import pytest
 from PIL import Image
 
 from _board_package_helpers import document_contact_geometry
-from conftest import PRIMARY_PNG_BYTES, load_board_catalog_module
+from conftest import (
+    PRIMARY_PNG_BYTES,
+    load_board_catalog_module,
+    package_board_text,
+    package_roots,
+)
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -41,7 +46,7 @@ J_BRYANT_FTG32_ROOT = HANGBOARDS_ROOT / "j-bryant-ftg-32"
 
 def test_poker_four_faces_keep_all_34_contacts_on_one_hash_bound_model() -> None:
     """Catch a dropped Face D restore, cross-face selection, or raster fallback."""
-    board = json.loads((POKER_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(POKER_ROOT))
     assert board["schemaVersion"] == 3
     assert len(board["presentations"]) == 1
     presentation = board["presentations"][0]
@@ -89,7 +94,7 @@ def test_poker_four_faces_keep_all_34_contacts_on_one_hash_bound_model() -> None
 
 def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:
     """Catch lost lip merges, extra contacts, stale rasters, or an unbound model."""
-    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(HELIUM_ROOT))
     assert board["schemaVersion"] == 3
     assert len(board["presentations"]) == 1
     presentation = board["presentations"][0]
@@ -143,7 +148,7 @@ def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:
 
 def test_helium_represents_only_two_exterior_cord_leads() -> None:
     """Catch fabricated interior routing and attachments bound to selectable lips."""
-    board = json.loads((HELIUM_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(HELIUM_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     suspension = media["suspension"]
@@ -175,7 +180,7 @@ def test_helium_represents_only_two_exterior_cord_leads() -> None:
 
 def test_light_rail_inversion_preserves_entry_identity_and_exposes_the_other_grips() -> None:
     """Catch lost reversibility or a pose that silently invents underside mouths."""
-    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(LIGHT_RAIL_ROOT))
     assert board.get("positions") == [
         {"id": "20mm-side", "presentationID": "primary", "contactIDs": ["jug-40-20mm-side", "edge-20"]},
         {"id": "15mm-side", "presentationID": "primary", "contactIDs": ["jug-40-15mm-side", "edge-15"]},
@@ -199,7 +204,7 @@ def test_light_rail_inversion_preserves_entry_identity_and_exposes_the_other_gri
 
 def test_light_rail_inverted_guides_stay_close_to_the_existing_end_silhouette() -> None:
     """Catch floating end hooks that pass clearance but misrepresent flexible cord."""
-    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(LIGHT_RAIL_ROOT))
     media = board["presentations"][0]["media"]
     descriptor = json.loads((LIGHT_RAIL_ROOT / media["descriptorPath"]).read_text())
     suspension = media["suspension"]
@@ -274,7 +279,7 @@ def _assert_model_descriptor(
 
 
 def test_j_bryant_ftg32_is_one_hash_bound_model_with_exact_half_turn_positions() -> None:
-    board = json.loads((J_BRYANT_FTG32_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(J_BRYANT_FTG32_ROOT))
     descriptor = _assert_model_descriptor(J_BRYANT_FTG32_ROOT, board, "Cube_001")
     assert board["id"] == "j-bryant.ftg-32"
     assert board["revisionID"] == "amazon-b0fzgy19t9-ftg-32-2026-09"
@@ -333,7 +338,7 @@ def test_j_bryant_ftg32_is_one_hash_bound_model_with_exact_half_turn_positions()
 
 
 def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
-    board = json.loads((CLIMBERS_EDGE_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(CLIMBERS_EDGE_ROOT))
     assert len(board["presentations"]) == 1
     descriptor = _assert_model_descriptor(
         CLIMBERS_EDGE_ROOT, board, {"body_001"}
@@ -347,7 +352,7 @@ def test_climbers_edge_is_a_hash_bound_model_only_package() -> None:
 
 
 def test_simulator_3d_models_flat_and_round_sloper_zones_separately() -> None:
-    board = json.loads((SIMULATOR_3D_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(SIMULATOR_3D_ROOT))
     descriptor = _assert_model_descriptor(
         SIMULATOR_3D_ROOT, board, {"board_body_001"}
     )
@@ -451,13 +456,13 @@ def test_batch04_model_geometry_retains_only_documented_attachment_openings() ->
         assert source_boards[requirement["boardID"]]["approvedApertures"] == sorted(
             requirement["apertures"]
         ), slug
-    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(PIVOT_ROOT))
     assert [position["id"] for position in board["positions"]] == ["p1", "p2", "p3", "p5"]
 
 
 def test_pivot_renders_one_reflected_half_with_eighteen_physical_contacts() -> None:
     """Catch a duplicated right half, a retained raster record, or a lost slot map."""
-    raw_board = (PIVOT_ROOT / "board.json").read_text()
+    raw_board = package_board_text(PIVOT_ROOT)
     board = json.loads(raw_board)
     assert board["schemaVersion"] == 3
     assert board["id"] == "trango.rock-prodigy-pivot"
@@ -549,7 +554,7 @@ def test_pivot_retires_all_72_presentation_ids_through_the_tracked_map() -> None
     register = json.loads(SOURCE_REGISTER.read_text())["boards"]["trango.rock-prodigy-pivot"]
     retired = register["retiredPresentationIDToContactID"]
     assert len(retired) == 72
-    board = json.loads((PIVOT_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(PIVOT_ROOT))
     contact_ids = {contact["id"] for contact in board["contacts"]}
     assert set(retired.values()) == contact_ids
     assert set(retired) >= contact_ids
@@ -566,8 +571,9 @@ def test_pivot_retires_all_72_presentation_ids_through_the_tracked_map() -> None
 def test_pivot_is_one_catalog_board_with_orientation_presentations() -> None:
     """A Pivot orientation added as another direct child is a duplicate product."""
     pivot_package_roots = sorted(
-        path.parent
-        for path in HANGBOARDS_ROOT.glob("trango-rock-prodigy-pivot*/board.json")
+        path
+        for path in package_roots(HANGBOARDS_ROOT)
+        if path.name.startswith("trango-rock-prodigy-pivot")
     )
 
     assert pivot_package_roots == [PIVOT_ROOT]
@@ -826,8 +832,8 @@ def _presentation_summary(document: dict[str, object]) -> list[tuple[object, ...
 
 
 def test_every_approved_board_uses_schema_v3_typed_presentations() -> None:
-    for board_path in HANGBOARDS_ROOT.glob("*/board.json"):
-        document = json.loads(board_path.read_text(encoding="utf-8"))
+    for package_root in package_roots(HANGBOARDS_ROOT):
+        document = json.loads(package_board_text(package_root))
 
         assert document["schemaVersion"] == 3
         assert "presentation" not in document
@@ -851,7 +857,7 @@ def test_approved_packages_declare_their_complete_presentation_asset_set() -> No
     inventory = load_board_catalog_module().discover_board_packages(HANGBOARDS_ROOT)
 
     for package in inventory.packages:
-        document = json.loads((package.root / "board.json").read_text(encoding="utf-8"))
+        document = json.loads(package_board_text(package.root))
         actual_assets = {
             path.relative_to(package.root).as_posix()
             for path in (package.root / "assets").rglob("*")
@@ -889,7 +895,7 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
 
 
 def test_mammut_diamond_freezes_the_documented_16_contact_inventory() -> None:
-    board = json.loads((MAMMUT_DIAMOND_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(MAMMUT_DIAMOND_ROOT))
 
     assert board["id"] == "mammut.diamond-finger"
     assert [(contact["id"], contact["kind"], _scalar_depth(contact), contact.get("fingerCapacity"), _single_grip_type(contact)) for contact in board["contacts"]] == [
@@ -941,7 +947,7 @@ def test_mammut_diamond_freezes_the_documented_16_contact_inventory() -> None:
 
 
 def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
-    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(FOUNDRY_ROOT))
 
     assert board["id"] == "metolius.foundry"
     assert _presentation_summary(board) == [
@@ -961,7 +967,7 @@ def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
 
 
 def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
-    board = json.loads((FOUNDRY_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(FOUNDRY_ROOT))
     descriptor = json.loads(
         (
             FOUNDRY_ROOT / board["presentations"][0]["media"]["descriptorPath"]
@@ -984,7 +990,7 @@ def test_foundry_paired_contacts_use_exact_horizontal_mirrors() -> None:
 
 
 def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
-    board = json.loads((PRIME_RIB_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(PRIME_RIB_ROOT))
 
     assert board["id"] == "metolius.prime-rib"
     assert board["dimensions"] == "20 × 4.2 × 1.5 in"
@@ -1004,7 +1010,7 @@ def test_prime_rib_package_freezes_the_official_three_edge_inventory() -> None:
 
 
 def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
-    board = json.loads((FLASH_BOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(FLASH_BOARD_ROOT))
 
     assert board["id"] == "tension.flash-board"
     assert "dimensions" not in board
@@ -1057,7 +1063,7 @@ def test_flash_board_package_freezes_the_official_surface_inventories() -> None:
 
 
 def test_project_package_freezes_the_official_numbered_inventory_as_model() -> None:
-    board = json.loads((PROJECT_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(PROJECT_ROOT))
 
     assert board["id"] == "metolius.project"
     assert board["dimensions"] == "24.5 × 6 in"
@@ -1121,7 +1127,7 @@ def test_project_model_pairs_preserve_mirrored_bounds_and_node_ownership() -> No
 
 
 def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
-    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(LIGHT_RAIL_ROOT))
 
     assert board["id"] == "metolius.light-rail-2"
     assert board["dimensions"] == "18 × 3 × 1.5 in"
@@ -1180,7 +1186,7 @@ def test_light_rail_package_freezes_the_official_reversible_inventory() -> None:
 
 def test_light_rail_cord_uses_only_two_upper_exterior_entries() -> None:
     """Catch invented underside/through routes and selectable cord bindings."""
-    board = json.loads((LIGHT_RAIL_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(LIGHT_RAIL_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     suspension = media["suspension"]
@@ -1210,7 +1216,7 @@ def test_light_rail_cord_uses_only_two_upper_exterior_entries() -> None:
 
 
 def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
-    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(ROCK_RINGS_ROOT))
 
     assert board["id"] == "metolius.rock-rings-3d"
     assert board["dimensions"] == "184 × 146 × 57 mm"
@@ -1288,15 +1294,16 @@ def test_rock_rings_package_freezes_the_official_two_unit_inventory() -> None:
 
 def test_rock_rings_has_one_four_slot_asset_and_two_unreflected_instances() -> None:
     """Catch baked duplicates, reflected units, lost ownership, or raster fallback."""
-    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(ROCK_RINGS_ROOT))
     assert len(board["presentations"]) == 1
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
     assert {p.relative_to(ROCK_RINGS_ROOT).as_posix() for p in ROCK_RINGS_ROOT.rglob("*") if p.is_file()} == {
-        "board.json", "assets/primary.usdz", "assets/primary.model.json",
-        # A package may carry its own CAD authoring source, named after its own
-        # directory. It is not a runtime resource; the compiler consumes it.
+        "assets/primary.usdz", "assets/primary.model.json",
+        # A CAD-backed package carries its own authoring source, named after its
+        # own directory, instead of board.json: board.json is generated from the
+        # FCStd at build time. It is not a runtime resource.
         "metolius-rock-rings-3d.FCStd",
     }
     descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
@@ -1333,7 +1340,7 @@ def test_rock_rings_has_one_four_slot_asset_and_two_unreflected_instances() -> N
 
 def test_rock_rings_cords_have_independent_anchors_and_only_evidenced_openings() -> None:
     """Catch a shared anchor, inter-unit route, fake central bore or contact binding."""
-    board = json.loads((ROCK_RINGS_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(ROCK_RINGS_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
@@ -1367,7 +1374,7 @@ def test_rock_rings_cords_have_independent_anchors_and_only_evidenced_openings()
 
 
 def test_deluxe_model_package_freezes_the_independent_official_inventory() -> None:
-    board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(DELUXE_ROOT))
 
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
@@ -1414,13 +1421,13 @@ def test_deluxe_model_package_freezes_the_independent_official_inventory() -> No
     assert len(board["contacts"]) == 26
     _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
 
-    compact = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    compact = json.loads(package_board_text(COMPACT_ROOT))
     assert board["dimensions"] != compact["dimensions"]
     assert len(board["contacts"]) != len(compact["contacts"])
 
 
 def test_deluxe_descriptor_completely_and_consistently_owns_every_contact() -> None:
-    board = json.loads((DELUXE_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(DELUXE_ROOT))
     descriptor = _assert_model_descriptor(DELUXE_ROOT, board, "body_001")
     contact_ids = {contact["id"] for contact in board["contacts"]}
     descriptor_contacts = descriptor["contacts"]
@@ -1444,7 +1451,7 @@ def test_deluxe_descriptor_completely_and_consistently_owns_every_contact() -> N
 
 
 def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() -> None:
-    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(COMPACT_ROOT))
     contacts = board["contacts"]
     contact_ids = [contact["id"] for contact in contacts]
 
@@ -1465,7 +1472,7 @@ def test_compact_board_keeps_the_literal_hold_inventory_with_model_descriptor() 
 
 
 def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
-    board = json.loads((TRAINING_TILES_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(TRAINING_TILES_ROOT))
 
     assert board["id"] == "soill.training-tiles"
     assert tuple((contact["id"], contact["name"], contact["kind"]) for contact in board["contacts"]) == (
@@ -1504,7 +1511,7 @@ def test_training_tiles_freezes_source_limited_adapted_contact_model() -> None:
 
 
 def test_compact_hold_records_keep_only_source_audited_physical_facts() -> None:
-    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(COMPACT_ROOT))
     contacts = board["contacts"]
     retired_fields = {"frame", "shortLabel", "detail", "cueStyle"}
     supported_fields = {
@@ -1575,7 +1582,7 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
 
 
 def test_contact_is_a_bore_free_model_only_package_with_its_existing_contacts() -> None:
-    board = json.loads((CONTACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(CONTACT_ROOT))
     media = board["presentations"][0]["media"]
 
     assert media["type"] == "model"
@@ -1643,7 +1650,7 @@ def test_target_model_package_rejects_legacy_png_fallback(tmp_path: Path) -> Non
 
 
 def test_compact_model_package_has_no_raster_fallback() -> None:
-    board = json.loads((COMPACT_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(COMPACT_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert not (COMPACT_ROOT / "assets/primary.png").exists()
@@ -1654,7 +1661,7 @@ def test_compact_model_package_has_no_raster_fallback() -> None:
 
 
 def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
-    board = json.loads((YY_TRAVELBOARD_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(YY_TRAVELBOARD_ROOT))
 
     assert board["id"] == "yy.travelboard"
     assert board["dimensions"] == "34 × 10 × 3 cm"
@@ -1686,7 +1693,7 @@ def test_yy_travelboard_freezes_the_official_six_grip_inventory() -> None:
 
 
 def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
-    board = json.loads((YY_BAGUETTE_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(YY_BAGUETTE_ROOT))
 
     assert board["id"] == "yy.baguette"
     assert board["dimensions"] == "47 × 4 × 4 cm"
@@ -1733,7 +1740,7 @@ def test_yy_baguette_freezes_six_documented_grips_across_two_faces() -> None:
 
 
 def test_yy_baguette_evo_freezes_twelve_grip_types_as_nineteen_contacts() -> None:
-    board = json.loads((YY_BAGUETTE_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(YY_BAGUETTE_EVO_ROOT))
 
     assert board["id"] == "yy.baguette-evo"
     assert board["dimensions"] == "52 × 5 × 5 cm"
@@ -1862,7 +1869,7 @@ def test_yy_baguette_evo_model_pairs_preserve_mirrored_bounds_and_node_ownership
 
 
 def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
-    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(YY_PENTA_EVO_ROOT))
 
     assert board["id"] == "yy.penta-evo"
     assert board["dimensions"] == "Not published by YY Vertical"
@@ -1893,7 +1900,7 @@ def test_yy_penta_evo_freezes_seven_contacts_per_official_pair_unit() -> None:
 
 def test_yy_penta_evo_pair_reuses_one_asymmetric_unit_without_reflection() -> None:
     """Catch baked pairs or the old raster's incorrectly mirrored right unit."""
-    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text(encoding="utf-8"))
+    board = json.loads(package_board_text(YY_PENTA_EVO_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
@@ -1918,7 +1925,7 @@ def test_yy_penta_evo_pair_reuses_one_asymmetric_unit_without_reflection() -> No
 
 def test_yy_penta_evo_cords_use_existing_ring_and_independent_exterior_routes() -> None:
     """Catch false small passage holes, contact-bound leads or joined pair cords."""
-    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(YY_PENTA_EVO_ROOT))
     media = board["presentations"][0]["media"]
     assert media["type"] == "model"
     descriptor = json.loads((YY_PENTA_EVO_ROOT / media["descriptorPath"]).read_text())
@@ -1950,7 +1957,7 @@ def test_yy_penta_evo_cords_use_existing_ring_and_independent_exterior_routes() 
 
 def test_yy_penta_evo_positions_expose_only_contacts_reachable_on_that_face() -> None:
     """Keep workout resolution from selecting the hidden rear 10mm on primary."""
-    board = json.loads((YY_PENTA_EVO_ROOT / "board.json").read_text())
+    board = json.loads(package_board_text(YY_PENTA_EVO_ROOT))
     positions = {position["id"]: set(position["contactIDs"]) for position in board["positions"]}
     assert positions == {
         "primary": {f"{slot}-{side}" for side in ("left", "right")

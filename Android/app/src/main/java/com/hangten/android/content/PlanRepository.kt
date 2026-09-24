@@ -96,7 +96,12 @@ class AssetPlanRepository(
         accessory = objectValue.requiredText("accessory", path),
         durationSeconds = nonNegativeFiniteFloat(objectValue.required("duration", path), "$path.duration"),
         phase = objectValue.requiredString("phase", path),
-        targets = decodeTargets(objectValue.required("targets", path).asArray("$path.targets"), "$path.targets"),
+        handUse = objectValue.requiredString("handUse", path).also {
+            if (it !in HAND_USES) fail("$path.handUse is unsupported: $it.")
+        },
+        side = objectValue.requiredString("side", path).also {
+            if (it !in SIDES) fail("$path.side is unsupported: $it.")
+        },
         segments = objectValue.required("segments", path).asArray("$path.segments").mapIndexed { index, value ->
             decodeSegment(value.asObject("$path.segments[$index]"), "$path.segments[$index]")
         },
@@ -133,37 +138,64 @@ class AssetPlanRepository(
         return FingerConfiguration(fingers)
     }
 
-    private fun decodeSegment(objectValue: JsonValue.Object, path: String): TrainingSegment = TrainingSegment(
-        kind = objectValue.requiredString("kind", path),
-        targets = decodeTargets(objectValue.required("targets", path).asArray("$path.targets"), "$path.targets"),
-        timing = objectValue.requiredString("timing", path),
-        durationSeconds = objectValue.optional("duration")?.let { nonNegativeFiniteFloat(it, "$path.duration") },
-    )
+    private fun decodeSegment(objectValue: JsonValue.Object, path: String): TrainingSegment {
+        objectValue.rejectUnknownKeys(path, setOf("kind", "target", "timing", "duration"))
+        val kind = objectValue.requiredString("kind", path)
+        if (kind !in SEGMENT_KINDS) fail("$path.kind is unsupported: $kind.")
+        val target = objectValue.optional("target")?.let { decodeSegmentTarget(it.asObject("$path.target"), "$path.target") }
+        if (kind == "rest" && target != null) fail("$path: rest segments must not define a target.")
+        return TrainingSegment(
+            kind = kind,
+            target = target,
+            timing = objectValue.requiredString("timing", path),
+            durationSeconds = objectValue.optional("duration")?.let { nonNegativeFiniteFloat(it, "$path.duration") },
+        )
+    }
 
-    private fun decodeTargets(values: List<JsonValue>, path: String): List<PlanTarget> =
-        values.mapIndexed { index, value ->
-            val targetPath = "$path[$index]"
-            val objectValue = value.asObject(targetPath)
-            val semantic = objectValue.optional("semantic")?.asString("$targetPath.semantic")
-            val semantics = objectValue.optional("semantics")?.asStringList("$targetPath.semantics")
-            val holdIds = objectValue.optional("holdIDs")?.asStringList("$targetPath.holdIDs")
-            val kind = objectValue.optional("kind")?.asString("$targetPath.kind")
-            val feature = objectValue.optional("feature")?.asString("$targetPath.feature")
-            val primaryCount = listOf(semantic, semantics, holdIds, kind, feature).count { it != null }
-            if (primaryCount != 1) fail("$targetPath must contain exactly one target selector.")
-            PlanTarget(
-                semantic = semantic,
-                semantics = semantics,
-                holdIds = holdIds,
-                kind = kind,
-                feature = feature,
-                fallbackFeatures = objectValue.optional("fallbackFeatures")?.asStringList("$targetPath.fallbackFeatures") ?: emptyList(),
-                fingerCapacity = objectValue.optional("fingerCapacity")?.asPositiveInt("$targetPath.fingerCapacity"),
-            )
+    private fun decodeSegmentTarget(objectValue: JsonValue.Object, path: String): SegmentTarget {
+        objectValue.rejectUnknownKeys(path, setOf("kind", "requirements"))
+        return when (val kind = objectValue.requiredString("kind", path)) {
+            "selfSelected" -> {
+                if (objectValue.optional("requirements") != null) {
+                    fail("$path: self-selected segment targets cannot contain requirements.")
+                }
+                SegmentTarget.SelfSelected
+            }
+            "requirements" -> {
+                val requirements = objectValue.required("requirements", path)
+                    .asArray("$path.requirements")
+                    .mapIndexed { index, value ->
+                        decodeRequirement(value.asObject("$path.requirements[$index]"), "$path.requirements[$index]")
+                    }
+                if (requirements.isEmpty()) fail("$path.requirements must not be empty.")
+                SegmentTarget.Requirements(requirements)
+            }
+            else -> fail("$path.kind is unsupported: $kind.")
         }
+    }
 
-    private fun JsonValue.asStringList(path: String): List<String> = asArray(path).mapIndexed { index, value ->
-        value.asString("$path[$index]").also { requireContentId(it, "$path[$index]") }
+    private fun decodeRequirement(objectValue: JsonValue.Object, path: String): ContactRequirement {
+        objectValue.rejectUnknownKeys(
+            path,
+            setOf("contactID", "kind", "shape", "depth", "fingerCapacity", "handCapacity", "selection"),
+        )
+        val selectionValue = objectValue.requiredString("selection", path)
+        return ContactRequirement(
+            contactId = objectValue.optional("contactID")?.asString("$path.contactID")?.also {
+                requireContentId(it, "$path.contactID")
+            },
+            kind = objectValue.optional("kind")?.asString("$path.kind")?.also {
+                if (it !in CONTACT_KINDS) fail("$path.kind is unsupported: $it.")
+            },
+            shape = objectValue.optional("shape")?.asString("$path.shape")?.also {
+                if (it !in CONTACT_SHAPES) fail("$path.shape is unsupported: $it.")
+            },
+            depth = objectValue.optional("depth")?.let { decodeHoldDepth(it, "$path.depth") },
+            fingerCapacity = objectValue.optional("fingerCapacity")?.asIntegerIn(FINGER_CAPACITY_RANGE, "$path.fingerCapacity"),
+            handCapacity = objectValue.optional("handCapacity")?.asIntegerIn(HAND_CAPACITY_RANGE, "$path.handCapacity"),
+            selection = ContactSelectionPolicy.fromPortable(selectionValue)
+                ?: fail("$path.selection is unsupported: $selectionValue."),
+        )
     }
 
     private fun JsonValue.asPositiveInt(path: String): Int {
@@ -179,5 +211,8 @@ class AssetPlanRepository(
 
     private companion object {
         const val PLAN_LIBRARY_PATH = "PlanLibrary.json"
+        val HAND_USES = setOf("double", "single", "either")
+        val SIDES = setOf("both", "left", "right")
+        val SEGMENT_KINDS = setOf("work", "rest")
     }
 }

@@ -1,4 +1,4 @@
-"""Tests for the fail-closed source archive preflight."""
+"""Tests for the fail-closed source archive preflight and the role bindings."""
 
 from __future__ import annotations
 
@@ -10,6 +10,9 @@ from pathlib import Path
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+import use_hangboard_packages  # noqa: E402,F401
+from hangboard_packages import cad_source  # noqa: E402
 
 import contract  # noqa: E402
 
@@ -35,7 +38,7 @@ def build_archive(path: Path, members, document: str = DOCUMENT) -> Path:
 
 def test_accepts_a_minimal_builtin_document(tmp_path):
     archive = build_archive(tmp_path / "ok.FCStd", [])
-    result = contract.inspect_archive(archive)
+    result = cad_source.inspect_archive(archive)
     assert result["objects"] == {"Body": "PartDesign::Body"}
 
 
@@ -44,13 +47,13 @@ def test_rejects_a_missing_document(tmp_path):
     with zipfile.ZipFile(path, "w") as archive:
         archive.writestr("Other.xml", "<x/>")
     with pytest.raises(ValueError, match="missing Document.xml"):
-        contract.inspect_archive(path)
+        cad_source.inspect_archive(path)
 
 
 def test_rejects_directory_traversal_members(tmp_path):
     archive = build_archive(tmp_path / "trav.FCStd", [("../escape.txt", b"x")])
     with pytest.raises(ValueError, match="unsafe member path"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 def test_rejects_duplicate_case_colliding_members(tmp_path):
@@ -58,14 +61,14 @@ def test_rejects_duplicate_case_colliding_members(tmp_path):
         tmp_path / "dup.FCStd", [("Part.brp", b"a"), ("part.brp", b"b")]
     )
     with pytest.raises(ValueError, match="duplicate or case-colliding"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 def test_rejects_an_unsupported_object_type(tmp_path):
     document = DOCUMENT.replace("PartDesign::Body", "App::FeaturePython")
     archive = build_archive(tmp_path / "py.FCStd", [], document)
     with pytest.raises(ValueError, match="unsupported document object type"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 def test_rejects_an_external_xlink(tmp_path):
@@ -77,7 +80,7 @@ def test_rejects_an_external_xlink(tmp_path):
     )
     archive = build_archive(tmp_path / "xlink.FCStd", [], document)
     with pytest.raises(ValueError, match="external document reference"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 def test_accepts_a_document_local_xlink(tmp_path):
@@ -88,7 +91,7 @@ def test_accepts_a_document_local_xlink(tmp_path):
         "</Property></ObjectData>",
     )
     archive = build_archive(tmp_path / "local.FCStd", [], document)
-    assert contract.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
+    assert cad_source.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
 
 
 NEW_XLINK_TYPES = [
@@ -107,7 +110,7 @@ def test_rejects_external_reference_for_each_xlink_type(tmp_path, xlink_type):
     )
     archive = build_archive(tmp_path / "xlink_variant.FCStd", [], document)
     with pytest.raises(ValueError, match="external document reference"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 @pytest.mark.parametrize("xlink_type", NEW_XLINK_TYPES)
@@ -118,7 +121,7 @@ def test_accepts_document_local_reference_for_each_xlink_type(tmp_path, xlink_ty
         '<XLink file="" name="Profile"/></Property></ObjectData>',
     )
     archive = build_archive(tmp_path / "xlink_local.FCStd", [], document)
-    assert contract.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
+    assert cad_source.inspect_archive(archive)["objects"] == {"Body": "PartDesign::Body"}
 
 
 def test_rejects_an_absent_included_file(tmp_path):
@@ -129,7 +132,7 @@ def test_rejects_an_absent_included_file(tmp_path):
     )
     archive = build_archive(tmp_path / "inc.FCStd", [], document)
     with pytest.raises(ValueError, match="missing included file"):
-        contract.inspect_archive(archive)
+        cad_source.inspect_archive(archive)
 
 
 def test_accepts_a_present_included_file(tmp_path):
@@ -139,7 +142,7 @@ def test_accepts_a_present_included_file(tmp_path):
         '<FileIncluded file="wood.png"/></Property></ObjectData>',
     )
     archive = build_archive(tmp_path / "inc2.FCStd", [("wood.png", b"\x89PNG")], document)
-    assert "wood.png" in contract.inspect_archive(archive)["members"]
+    assert "wood.png" in cad_source.inspect_archive(archive)["members"]
 
 
 def test_rejects_a_git_lfs_pointer(tmp_path):
@@ -150,7 +153,7 @@ def test_rejects_a_git_lfs_pointer(tmp_path):
         b"size 10\n"
     )
     with pytest.raises(ValueError, match="Git LFS pointer"):
-        contract.inspect_archive(path)
+        cad_source.inspect_archive(path)
 
 
 def test_rejects_duplicate_board_contact_ids():
@@ -198,12 +201,12 @@ def test_real_committed_source_document_matches_inventory():
         if stream.read(80).startswith(b"version https://git-lfs.github.com/spec/v1"):
             pytest.skip("Git LFS object not fetched in this checkout")
     try:
-        result = contract.inspect_archive(REAL_SOURCE)
+        result = cad_source.inspect_archive(REAL_SOURCE)
     except ValueError as error:
         if "Git LFS pointer" in str(error):
             pytest.skip("Git LFS object not fetched in this checkout")
         raise
-    assert set(result["objects"].values()) <= contract.BUILTIN_TYPES
+    assert set(result["objects"].values()) <= cad_source.BUILTIN_TYPES
     assert result["objects"] == REAL_OBJECT_INVENTORY
     assert Counter(result["objects"].values()) == {
         "PartDesign::Body": 1,

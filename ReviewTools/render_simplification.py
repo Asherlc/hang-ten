@@ -13,7 +13,8 @@ from PIL import Image, ImageDraw, ImageFont
 _models_dir = str(Path(__file__).resolve().parent.parent / "Tools" / "HangboardModels")
 if _models_dir not in sys.path:
     sys.path.insert(0, _models_dir)
-from verify_mounting_bores import read_scene
+from usdz_readback import read_scene
+from remove_mounting_bores import package_board_bytes
 
 import os
 COMMIT = os.environ.get('RENDER_COMMIT','ef07a5fb04104d5f0a5ed3accc4c6ae918e02529')
@@ -75,7 +76,7 @@ def render_one(root: Path, slug: str):
     face=np.concatenate(face_normals);double=np.concatenate(sidedness)
     centre=(tris.min((0,1))+tris.max((0,1)))/2
     tris=tris-centre
-    board=json.loads((package/'board.json').read_text())
+    board=json.loads(package_board_bytes(package) or b'{}')
     title=f"{board.get('manufacturer','')} {board.get('name',slug)}".strip()
     if title.lower().count(board.get('manufacturer','').lower())>1:
         title=board.get('name',slug)

@@ -7,13 +7,6 @@ struct AppSettingsView: View {
     @EnvironmentObject private var motherboardSettingsStore: MotherboardSettingsStore
     @Environment(\.openURL) private var openURL
     @Environment(\.scenePhase) private var scenePhase
-    @State private var showsEditorReview: Bool = {
-        #if DEBUG
-        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_EDITOR"] == "1"
-        #else
-        return false
-        #endif
-    }()
 
     var body: some View {
         ScrollView(showsIndicators: false) {
@@ -36,13 +29,6 @@ struct AppSettingsView: View {
                     SectionLabel(title: "Apple Health")
                     healthCard
                 }
-
-                #if DEBUG
-                VStack(alignment: .leading, spacing: 12) {
-                    SectionLabel(title: "Board packages")
-                    boardEditorLink
-                }
-                #endif
             }
             .padding(.horizontal, 20)
             .padding(.top, 18)
@@ -51,9 +37,6 @@ struct AppSettingsView: View {
         .background(Color.hangBackground)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .navigationDestination(isPresented: $showsEditorReview) {
-            BoardEditorListView()
-        }
         .onAppear {
             store.refreshHealthAuthorization()
         }
@@ -124,33 +107,6 @@ struct AppSettingsView: View {
         }
         .padding(16)
         .hangCard()
-    }
-
-    private var boardEditorLink: some View {
-        NavigationLink {
-            BoardEditorListView()
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: "square.grid.3x1.down.below.line.5")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(Color.hangGreenDark)
-                    .frame(width: 34, height: 34)
-                    .background(
-                        Color.hangGreen.opacity(0.22),
-                        in: RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    )
-                Text("Board editor")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(Color.hangInk)
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundStyle(Color.hangMuted)
-            }
-        }
-        .buttonStyle(.plain)
-        .hangCard()
-        .accessibilityIdentifier("settings.boardEditor")
     }
 
     private var healthCard: some View {

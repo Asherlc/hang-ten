@@ -94,7 +94,8 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.python == 'true' ||
       needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.cad == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -122,6 +123,15 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
+      # CAD-backed boards do not commit board.json: it is generated at build
+      # time from the FCStd's HangTenBoardManifest (pure host Python, no
+      # FreeCAD). The validator above already generated and validated each one
+      # (and rejects an on-disk copy); this names each generated document so a
+      # failure points at the source. It needs the LFS objects, not pointers.
+      - name: Generate board.json for CAD-backed boards
+        working-directory: ${{ github.workspace }}
+        run: python3 Tools/HangboardCAD/board_manifest.py --all
+
       - name: Install Python package and test dependencies
         run: python -m pip install -e ".[dev]"
 
@@ -136,9 +146,47 @@ jobs:
           python3 scripts/stage-board-packages.py \
             --repository-root "$GITHUB_WORKSPACE" \
             --destination "$resource_root/build/Resources/Hangboards"
+          python3 Tools/HangboardCAD/board_manifest.py --all --output-dir "$resource_root/generated"
+          for generated in "$resource_root"/generated/*/board.json; do
+            slug=$(basename "$(dirname "$generated")")
+            cmp "$generated" "$resource_root/build/Resources/Hangboards/$slug/board.json"
+          done
+          if find "$resource_root/build" -name '*.FCStd' | grep -q .; then
+            echo "error: a CAD authoring source was staged into the app bundle" >&2
+            exit 1
+          fi
+
+      - name: Stage board packages as the Android build does
+        working-directory: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          asset_root="$RUNNER_TEMP/hang-ten-android-stage"
+          scripts/run-supported-python.sh scripts/stage-board-packages.py \
+            --target android \
+            --repository-root "$GITHUB_WORKSPACE" \
+            --destination "$asset_root/Hangboards"
+          for source in Hangboards/*/*.FCStd; do
+            slug=$(basename "$(dirname "$source")")
+            test -s "$asset_root/Hangboards/$slug/board.json"
+            test -s "$asset_root/Hangboards/$slug/assets/primary.usdz"
+          done
+          if find "$asset_root" -name '*.FCStd' | grep -q .; then
+            echo "error: a CAD authoring source was staged into the Android assets" >&2
+            exit 1
+          fi
 
       - name: Run pytest suite
         run: python -m pytest tests -q --junitxml=pytest-results.xml
+
+      - name: Run CAD board-manifest, source-contract, and delivery-lock tests
+        if: ${{ !cancelled() }}
+        run: >-
+          python -m pytest
+          ../HangboardCAD/tests/test_board_manifest.py
+          ../HangboardCAD/tests/test_contract.py
+          ../HangboardModels/tests/test_model_delivery_alignment.py
+          -q
+          --junitxml=pytest-cad-results.xml
 
       # actions/upload-artifact v4.6.2
       - name: Upload pytest report on failure
@@ -146,7 +194,9 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: python-test-results-${{ github.run_id }}
-          path: Tools/HangboardPackages/pytest-results.xml
+          path: |
+            Tools/HangboardPackages/pytest-results.xml
+            Tools/HangboardPackages/pytest-cad-results.xml
           if-no-files-found: ignore
 
   cad-reproducibility:
@@ -932,8 +982,7 @@ jobs:
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
           XCTEST_ONLY_TESTING: >-
-            HangTenUITests/GitHubSignInUITests
-            HangTenUITests/SettingsBoardEditorVisibilityUITests
+            HangTenUITests/SettingsUITests
             HangTenUITests/FreeWorkoutUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages

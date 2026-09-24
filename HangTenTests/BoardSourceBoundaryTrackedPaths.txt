@@ -6,9 +6,7 @@ HangTen/HangTenApp.swift
 HangTen/Info.plist
 HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
-HangTen/Models/BoardEditorStore.swift
 HangTen/Models/BoardPackageStore.swift
-HangTen/Models/BoardPackageWriter.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift
 HangTen/Models/CountdownAudioScheduler.swift
@@ -25,9 +23,7 @@ HangTen/Models/FreeWorkoutGuidedHangCountdown.swift
 HangTen/Models/FreeWorkoutLog.swift
 HangTen/Models/FreeWorkoutLogStore.swift
 HangTen/Models/FreeWorkoutRestTimer.swift
-HangTen/Models/GitHubBoardSyncService.swift
 HangTen/Models/HealthKitService.swift
-HangTen/Models/HoldPathEngine.swift
 HangTen/Models/LocalWorkoutHistoryStore.swift
 HangTen/Models/MotherboardBluetoothService.swift
 HangTen/Models/MotherboardModels.swift
@@ -80,13 +76,6 @@ HangTen/Resources/GripHand/hand-mesh.json
 HangTen/Resources/HangTen.storekit
 HangTen/Resources/PlanLibrary.json
 HangTen/Views/AppSettingsView.swift
-HangTen/Views/BoardEditor/BoardEditorListView.swift
-HangTen/Views/BoardEditor/BoardEditorLoadingView.swift
-HangTen/Views/BoardEditor/BoardEditorScreen.swift
-HangTen/Views/BoardEditor/BoardEditorSession.swift
-HangTen/Views/BoardEditor/GitHubEditorSyncViews.swift
-HangTen/Views/BoardEditor/HoldEditorCanvasView.swift
-HangTen/Views/BoardEditor/HoldInspectorView.swift
 HangTen/Views/BoardMapView.swift
 HangTen/Views/BoardModelView.swift
 HangTen/Views/CustomRoutineEditorView.swift

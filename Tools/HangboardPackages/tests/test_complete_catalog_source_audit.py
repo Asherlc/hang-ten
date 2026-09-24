@@ -3,14 +3,16 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from conftest import package_board_text, package_roots
+
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
 
 def _boards_by_id() -> dict[str, dict[str, object]]:
     boards: dict[str, dict[str, object]] = {}
-    for path in (REPOSITORY_ROOT / "Hangboards").glob("*/board.json"):
-        board = json.loads(path.read_text(encoding="utf-8"))
+    for package_root in package_roots(REPOSITORY_ROOT / "Hangboards"):
+        board = json.loads(package_board_text(package_root))
         boards[board["id"]] = board
     return boards
 
