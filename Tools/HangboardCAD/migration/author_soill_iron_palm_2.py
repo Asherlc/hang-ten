@@ -2,9 +2,12 @@
 
 Piece-by-piece measured approximation over a faceted-import base:
 
-  Piece 1 (current): left/right large slopers → LS-fit analytic sphere for the
-  bulb + retained reference mesh collar for the board blend (no fake necks).
-  Remaining: rails, pinches, top jug stay faceted-import meshes
+  Piece 1: left/right large slopers → LS-fit analytic sphere bulb + reference
+  blend collar.
+  Piece 2 (current): top jug → native rounded rail extruded into the fitted
+  sloper spheres (sphere-cut ends). Reference end-collar mesh merge was dropped
+  — it left open edges and a blacked-out top face.
+  Remaining: rails, pinches stay faceted-import meshes
 
 HangTenSourceKind stays `faceted-import` until every node is native.
 Publish with `--allow-faceted-import`.
@@ -78,6 +81,34 @@ NATIVE_SLOPERS = {
     },
 }
 
+# Piece 2: measured mid-span incut top jug. Reference top_jug_001 spans native
+# z 66..109 (front silhouette sampled below) and reaches into the fitted spheres
+# at the ends; a shorter bar left the top window (z 43..66) open and the bar read
+# as a black strip.
+NATIVE_TOP_JUG = {
+    # Must reach into the fitted spheres (inner tangent at front ≈ ±191 mm).
+    "x_half_mm": 195.0,
+    # YZ closed profile, native (y_front, z_up): back edge, then the measured
+    # front silhouette up to the rounded crown, then back edge again.
+    "profile_yz_mm": [
+        (-0.5, 66.0),
+        (-61.0, 66.0),
+        (-66.5, 70.0),
+        (-69.0, 77.0),
+        (-70.0, 85.0),
+        (-69.9, 91.0),
+        (-69.5, 96.0),
+        (-68.4, 100.0),
+        (-62.6, 104.0),
+        (-52.0, 107.0),
+        (-38.0, 108.5),
+        (-0.5, 108.5),
+    ],
+    "contact": "top-incut-jug",
+}
+
+NATIVE_NODES = set(NATIVE_SLOPERS) | {"top_jug_001"}
+
 # Faceted remainder — keep shell-critical meshes denser.
 TARGET_TRIS = {
     "body_board_001": 14166,
@@ -86,7 +117,6 @@ TARGET_TRIS = {
     "rail_15_001": 7952,
     "rail_35_001": 919,
     "rail_40_001": 3510,
-    "top_jug_001": 200,
 }
 
 MATERIAL_NAME = "neutral_urethane"
@@ -232,6 +262,63 @@ def _mesh_to_shape(mesh: Mesh.Mesh) -> Part.Shape:
 
 
 
+def _snap_mesh_to_spheres(
+    mesh: Mesh.Mesh,
+    specs: dict,
+    *,
+    band_mm: float = 4.0,
+) -> Mesh.Mesh:
+    """Project vertices near fitted spheres onto those surfaces.
+
+    Used for the top jug so its ends meet the analytic sloper bulbs instead of
+    floating a millimetre off the faceted reference join.
+    """
+    import math
+
+    points = list(mesh.Topology[0])
+    facets = list(mesh.Topology[1])
+    spheres = [
+        (
+            float(s["center_mm"][0]),
+            float(s["center_mm"][1]),
+            float(s["center_mm"][2]),
+            float(s["radius_mm"]),
+        )
+        for s in specs.values()
+    ]
+    snapped = 0
+    new_points = []
+    for p in points:
+        x, y, z = float(p.x), float(p.y), float(p.z)
+        best = None
+        best_err = band_mm
+        for sx, sy, sz, radius in spheres:
+            dx, dy, dz = x - sx, y - sy, z - sz
+            dist = math.sqrt(dx * dx + dy * dy + dz * dz)
+            err = abs(dist - radius)
+            if err <= best_err and dist > 1.0e-6:
+                scale = radius / dist
+                best = (sx + dx * scale, sy + dy * scale, sz + dz * scale)
+                best_err = err
+        if best is not None:
+            new_points.append(App.Vector(*best))
+            snapped += 1
+        else:
+            new_points.append(App.Vector(x, y, z))
+    out = Mesh.Mesh()
+    triples = []
+    for a, b, c in facets:
+        triples.append(new_points[a])
+        triples.append(new_points[b])
+        triples.append(new_points[c])
+    out.addFacets(triples)
+    out.removeDuplicatedPoints()
+    out.removeDuplicatedFacets()
+    out.harmonizeNormals()
+    print(f"    snap to spheres: {snapped}/{len(points)} verts (band {band_mm} mm)")
+    return out
+
+
 def _carve_mesh_for_slopers(mesh: Mesh.Mesh, specs: dict, inflate_mm: float = 4.0) -> Mesh.Mesh:
     """Remove body triangles that sit inside a native sloper sphere.
 
@@ -342,6 +429,68 @@ def _native_sloper(spec: dict, points, facets) -> Part.Shape:
     return _mesh_to_shape(merged)
 
 
+def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
+    """Native mid-span rail cut to the sloper spheres.
+
+    Mid-span uses a measured YZ incut profile extruded along X, then boolean-cut
+    by the fitted sloper spheres so the ends sit on the bulbs. Returns the Part
+    solid directly (no mesh round-trip) so compile keeps closed shells and
+    outward normals — meshing + re-import previously blacked out the top face.
+    """
+    x_half = float(spec["x_half_mm"])
+    profile = [(float(y), float(z)) for y, z in spec["profile_yz_mm"]]
+
+    # Closed YZ wire at x=-x_half. Clockwise when looking along +X so a single
+    # +X extrusion yields outward shell normals.
+    ordered = list(reversed(profile))
+    wire_pts = [App.Vector(-x_half, y, z) for y, z in ordered]
+    wire_pts.append(App.Vector(-x_half, ordered[0][0], ordered[0][1]))
+    face = Part.Face(Part.makePolygon(wire_pts))
+    if face.isNull():
+        raise ValueError("top_jug profile face is null")
+    rail = face.extrude(App.Vector(2.0 * x_half, 0.0, 0.0))
+    if rail.isNull() or not rail.Faces:
+        raise ValueError("top_jug extrusion is empty")
+
+    try:
+        sharp = []
+        for edge in rail.Edges:
+            if edge.Length < 1.0:
+                continue
+            tangent = edge.tangentAt(edge.FirstParameter)
+            if abs(tangent.x) > 0.85:
+                sharp.append(edge)
+        if sharp:
+            rail = rail.makeFillet(2.5, sharp[:12])
+    except Exception as error:
+        print(f"    top_jug fillet skipped: {error}")
+
+    for s in sloper_specs.values():
+        sx, sy, sz = (float(v) for v in s["center_mm"])
+        # Slightly oversized cut so end caps sit inside the bulbs and do not
+        # z-fight the sloper surface (reads as a black line on the top bar).
+        radius = float(s["radius_mm"]) + 0.6
+        sphere = Part.makeSphere(radius)
+        sphere.translate(App.Vector(sx, sy, sz))
+        rail = rail.cut(sphere)
+
+    if rail.isNull() or not rail.Faces:
+        raise ValueError("native top_jug rail is empty after sphere cuts")
+    try:
+        rail.fix(0.1, 0.1, 0.1)
+    except Exception:
+        pass
+    if rail.ShapeType == "Compound" and len(rail.Solids) == 1:
+        rail = rail.Solids[0]
+    print(
+        f"rail solid faces={len(rail.Faces)} closed={rail.isClosed()} "
+        f"vol={rail.Volume:.0f} ",
+        end="",
+    )
+    return rail
+
+
+
 def main() -> int:
     board = json.loads(BOARD_JSON.read_text())
     reference, reference_digest = load_reference(PACKAGE, "primary.usdz", SCRATCH / "ref")
@@ -396,12 +545,31 @@ def main() -> int:
             f"faces={len(shape.Faces)}"
         )
 
+    # --- Piece 2: native mid-span top jug cut into sloper spheres ---
+    jug_name = "top_jug_001"
+    role, contact_id = NODE_MAP[jug_name]
+    jug_shape = _native_top_jug(NATIVE_TOP_JUG, NATIVE_SLOPERS)
+    feature = document.addObject("Part::Feature", jug_name)
+    feature.Shape = jug_shape
+    feature.addProperty("App::PropertyString", "NodeID", "HangTen")
+    feature.addProperty("App::PropertyString", "NodeRole", "HangTen")
+    feature.NodeID = jug_name
+    feature.NodeRole = role
+    feature.addProperty("App::PropertyString", "ContactID", "HangTen")
+    feature.ContactID = contact_id
+    feature.Placement = App.Placement(
+        App.Vector(0.0, CONTACT_NUDGE_Y_MM, 0.0), App.Rotation()
+    )
+    _apply_material(feature, None)
+    imported.append((jug_name, role, contact_id, "rail", len(jug_shape.Faces)))
+    print(f"native {jug_name}: faces={len(jug_shape.Faces)}")
+
     # --- Remaining nodes: faceted import from reference ---
     for prim in stage.Traverse():
         if not prim.IsA(UsdGeom.Mesh):
             continue
         name = prim.GetName()
-        if name not in NODE_MAP or name in NATIVE_SLOPERS:
+        if name not in NODE_MAP or name in NATIVE_NODES:
             continue
         role, contact_id = NODE_MAP[name]
         points, facets = _world_mesh(stage, cache, prim)
@@ -440,7 +608,10 @@ def main() -> int:
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference sha256 {reference_digest}")
     print(f"texture sha256 {texture_digest}")
-    print("piece 1: native slopers; sourceKind=faceted-import; --allow-faceted-import")
+    print(
+        "piece 2: native slopers + native top jug (sphere-cut rail); "
+        "sourceKind=faceted-import; --allow-faceted-import"
+    )
     for name, role, contact_id, tris, faces in imported:
         print(f"  {name:28s} role={role:7s} contact={contact_id} geom={tris} faces={faces}")
     sys.stdout.flush()
