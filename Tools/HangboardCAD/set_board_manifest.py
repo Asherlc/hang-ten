@@ -26,7 +26,7 @@ is rewritten with only ``Document.xml`` changed: the property element is
 inserted (or its value replaced) textually, exactly as FreeCAD itself writes a
 document-level ``App::PropertyString``, and every other member's content is
 copied unchanged. The result is verified by re-reading it, by
-``contract.inspect_archive``, and by requiring every other member to be
+``cad_source.inspect_archive``, and by requiring every other member to be
 byte-identical. FreeCAD opens the result normally, and editing the property in
 the FreeCAD GUI is equally valid (it just re-saves the whole document).
 """
@@ -43,13 +43,13 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-if str(Path(__file__).resolve().parent) not in sys.path:
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
+# Puts Tools/HangboardPackages/src on sys.path (host python3 and freecadcmd).
+import use_hangboard_packages  # noqa: F401
+from hangboard_packages import cad_source
 
-import board_manifest  # noqa: E402
-import contract  # noqa: E402
+import board_manifest
 
-PROPERTY = board_manifest.MANIFEST_PROPERTY
+PROPERTY = cad_source.MANIFEST_PROPERTY
 PROPERTY_DOC = (
     "board.json minus id, as compact JSON. board.json is generated from this; "
     "see Tools/HangboardCAD/board_manifest.py"
@@ -80,14 +80,14 @@ def rewrite_document_xml(data: bytes, manifest_text: str) -> bytes:
     """Insert or replace the manifest property in the document-level block only."""
     opening = _PROPERTIES_OPEN.search(data)
     if opening is None:
-        raise board_manifest.ManifestError("Document.xml has no document-level Properties")
+        raise cad_source.ManifestError("Document.xml has no document-level Properties")
     start = opening.end()
     close = data.find(b"</Properties>", start)
     if close < 0:
-        raise board_manifest.ManifestError("unterminated document-level Properties")
+        raise cad_source.ManifestError("unterminated document-level Properties")
     block = data[start:close]
     if b"<Properties" in block:
-        raise board_manifest.ManifestError("unexpected nested Properties block")
+        raise cad_source.ManifestError("unexpected nested Properties block")
 
     existing = re.search(
         rb'<Property name="' + PROPERTY.encode() + rb'" [^>]*>\s*<String value="[^"]*"/>',
@@ -105,7 +105,7 @@ def rewrite_document_xml(data: bytes, manifest_text: str) -> bytes:
     # document-level property whose name sorts after ours.
     entries = list(re.finditer(rb'\n( *)<Property name="([^"]+)"', block))
     if not entries:
-        raise board_manifest.ManifestError("document-level Properties block is empty")
+        raise cad_source.ManifestError("document-level Properties block is empty")
     indent = entries[0].group(1)
     for entry in entries:
         if entry.group(2).decode() > PROPERTY:
@@ -132,15 +132,15 @@ def _copy_info(info: zipfile.ZipInfo) -> zipfile.ZipInfo:
 def embed(source: Path, manifest: dict) -> bool:
     """Write ``manifest`` into ``source`` in place; True when the bytes changed."""
     source = Path(source)
-    contract.inspect_archive(source)
+    cad_source.inspect_archive(source)
     with zipfile.ZipFile(source) as archive:
         infos = archive.infolist()
         members = {info.filename: archive.read(info.filename) for info in infos}
         comment = archive.comment
-    properties = board_manifest.document_properties_from_xml(members["Document.xml"])
-    board_id = (properties.get(board_manifest.ID_PROPERTY) or ("", None))[1]
-    board = board_manifest.manifest_to_board(manifest, board_id)
-    text = board_manifest.render_manifest(board_manifest.board_to_manifest(board))
+    properties = cad_source.document_properties_from_xml(members["Document.xml"])
+    board_id = (properties.get(cad_source.ID_PROPERTY) or ("", None))[1]
+    board = cad_source.manifest_to_board(manifest, board_id)
+    text = cad_source.render_manifest(cad_source.board_to_manifest(board))
     current = properties.get(PROPERTY, ("", None))[1]
     if current == text:
         return False
@@ -157,15 +157,15 @@ def embed(source: Path, manifest: dict) -> bool:
             for info in infos:
                 data = document if info.filename == "Document.xml" else members[info.filename]
                 out.writestr(_copy_info(info), data)
-        contract.inspect_archive(staged)
+        cad_source.inspect_archive(staged)
         with zipfile.ZipFile(staged) as check:
             if [i.filename for i in check.infolist()] != [i.filename for i in infos]:
-                raise board_manifest.ManifestError("rewrite changed the member inventory")
+                raise cad_source.ManifestError("rewrite changed the member inventory")
             for info in infos:
                 if info.filename != "Document.xml" and check.read(info.filename) != members[info.filename]:
-                    raise board_manifest.ManifestError(f"rewrite changed {info.filename}")
-        if board_manifest.load_board(staged) != board:
-            raise board_manifest.ManifestError("rewritten manifest does not read back")
+                    raise cad_source.ManifestError(f"rewrite changed {info.filename}")
+        if cad_source.load_board(staged) != board:
+            raise cad_source.ManifestError("rewritten manifest does not read back")
         os.replace(staged, source)
     finally:
         if staged.exists():
@@ -174,16 +174,16 @@ def embed(source: Path, manifest: dict) -> bool:
 
 
 def read_input(path: Path, board_id: str) -> dict:
-    value = board_manifest.loads(Path(path).read_text(encoding="utf-8"))
+    value = cad_source.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(value, dict):
-        raise board_manifest.ManifestError("input must be a JSON object")
+        raise cad_source.ManifestError("input must be a JSON object")
     if "id" in value:
         if value["id"] != board_id:
-            raise board_manifest.ManifestError(
+            raise cad_source.ManifestError(
                 f"input id {value['id']!r} does not match HangTenBoardID {board_id!r}; "
                 "the id is owned by the CAD source"
             )
-        value = board_manifest.board_to_manifest(value)
+        value = cad_source.board_to_manifest(value)
     return value
 
 
@@ -204,10 +204,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     # read_document_xml runs the archive contract first and reports a corrupt
     # or missing source as a ManifestError.
-    properties = board_manifest.document_properties_from_xml(
-        board_manifest.read_document_xml(source)
+    properties = cad_source.document_properties_from_xml(
+        cad_source.read_document_xml(source)
     )
-    board_id = (properties.get(board_manifest.ID_PROPERTY) or ("", None))[1]
+    board_id = (properties.get(cad_source.ID_PROPERTY) or ("", None))[1]
     changed = embed(source, read_input(arguments.input, board_id))
     print(f"{source}: {PROPERTY} {'updated' if changed else 'unchanged'}")
     return 0
@@ -216,6 +216,6 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (board_manifest.ManifestError, ValueError, OSError) as error:
+    except (cad_source.ManifestError, ValueError, OSError) as error:
         print(f"MANIFEST ERROR: {error}", file=sys.stderr)
         raise SystemExit(1)

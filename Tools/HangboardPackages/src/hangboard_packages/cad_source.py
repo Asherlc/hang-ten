@@ -14,9 +14,11 @@ Android staging (``scripts/stage-board-packages.py``), and every tool that needs
 the board document call :func:`generate_board_json`. An on-disk ``board.json``
 inside a CAD-backed package is rejected as a stale hand edit.
 
-This module is pure host Python (stdlib only) and never imports FreeCAD. It is
-shared by ``Tools/HangboardCAD`` (``contract.py``, ``board_manifest.py``,
-``set_board_manifest.py``, ``compile_board.py``), which re-export it.
+This module is pure host Python (stdlib only) and never imports FreeCAD. The
+``Tools/HangboardCAD`` scripts (``board_manifest.py``, ``set_board_manifest.py``,
+``compile_board.py``) import it directly; ``Tools/HangboardCAD/
+use_hangboard_packages.py`` makes it importable there under host Python and
+FreeCAD's ``freecadcmd``.
 """
 
 from __future__ import annotations

@@ -6,7 +6,7 @@ import trimesh
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from verify_mounting_bores import read_scene, validate_archive, vertical_hits
+from usdz_readback import read_scene, validate_archive, vertical_hits
 from remove_mounting_bores import package_board_bytes
 from simplify_display_models import boundary_edge_positions,_geometric_edges
 from contact_model_descriptor import NodeBinding,compile_descriptor
@@ -61,6 +61,9 @@ def verify(baseline,out,slug):
         r={'node':name,'sourceTopology':ta,'outputTopology':tb,
            'sourceToOutput':distance(ma,mb,1800,i+717),'outputToSource':distance(mb,ma,1800,i+1717)}
         report['meshResults'].append(r)
+    # Read from the pinned baseline checkout (simplification_pilot.json
+    # sourceCommit), where the bore record still lived at this path; at later
+    # commits it is docs/source-audits/2026-09-22-mounting-bore-repairs.json.
     boremanifest=json.loads((baseline/'Tools/HangboardModels/mounting_bore_repairs.json').read_text())
     if slug in boremanifest['models']:
         checks=[]

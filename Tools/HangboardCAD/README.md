@@ -36,7 +36,12 @@ whenever something needs the board document:
   is never staged into either app.
 
 Generation is pure host Python (`hangboard_packages.cad_source`, stdlib only; no
-FreeCAD), so it runs in every build and in CI. An on-disk `board.json` inside a
+FreeCAD), so it runs in every build and in CI. The scripts here import it
+directly; `use_hangboard_packages.py` is the one place that puts
+`Tools/HangboardPackages/src` on `sys.path` for them, because they run as plain
+scripts under host `python3` and under FreeCAD's `freecadcmd` (which does not
+inherit `PYTHONPATH`). `contract.py` holds only the compiler's node role-binding
+check; the archive preflight is `cad_source.inspect_archive`. An on-disk `board.json` inside a
 CAD-backed package is a validation error (it would be a stale hand edit), and
 `.gitignore` lists each CAD package's `board.json` path. Boards without an FCStd
 keep their hand-authored, committed `board.json`. Because the FCStd is Git LFS,
@@ -52,9 +57,14 @@ The metadata lives in two document-level string properties of the FCStd:
   (the package validator reads some number lexemes, such as nine-decimal
   instance translations).
 
-Only `id` is derived. `aspectRatio` stays in the manifest because it is not
-reproducible from the descriptor's `modelBounds` for most boards, and published
-grip depths stay because they are sourced product facts (see `AGENTS.md`,
+Only `id` is derived. `aspectRatio` stays a stored manifest value: it is a
+presentation (viewport) fact, not always the single-unit front ratio. Of the
+five CAD boards, four match the descriptor `modelBounds` x/y ratio to within
+2e-8 relative (float32 export noise against exact ratios such as 5/3 and 12/7),
+but `metolius-rock-rings-3d` presents two ring instances while its descriptor
+bounds cover one ring, so a derived value would be wrong there (see
+[`docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md)).
+Published grip depths stay because they are sourced product facts (see `AGENTS.md`,
 Training-plan Fidelity) that `compile_board.py` validates the geometry against.
 Schema-v2 boards (slots, instances, `contactIDsBySlotID`) are carried the same
 way, which is why the manifest is one JSON document rather than per-object
@@ -99,20 +109,21 @@ changes show up as changed `*.brp` digests). The driver resolves Git LFS
 pointers from the local LFS object store; without it, the diff shows the LFS
 pointer as before.
 
-The one-off migration that moved each committed `board.json` into its FCStd is
-`migration/embed_board_manifest.py` (kept as a historical record; it is not a
-build or CI step, and cannot run at HEAD because the hand-authored `board.json`
-files it read are gone); it required every regenerated `board.json` to be
-token-identical to the hand-authored one (only whitespace and string escaping
-changed, for three packages). The last committed CAD `board.json` files are
-byte-identical to what the build now generates.
+The one-off migration that moved each committed `board.json` into its FCStd
+was applied in commit 3e1653b and then deleted: it cannot run at a later HEAD
+because the hand-authored `board.json` files it read are gone. Read it with
+`git show 3e1653b:Tools/HangboardCAD/migration/embed_board_manifest.py`. It
+required every regenerated `board.json` to be token-identical to the
+hand-authored one (only whitespace and string escaping changed, for three
+packages). The last committed CAD `board.json` files are byte-identical to what
+the build now generates.
 
 ## Authoring a new CAD board
 
 There is no per-board authoring program in the repository. The five retired
-`migration/author_*.py` scripts that created the current FCStd documents were
-one-off, and re-running one would now recreate a document without its embedded
-manifest. Their provenance is preserved in
+`Tools/HangboardCAD/migration/author_*.py` scripts that created the current
+FCStd documents were one-off, and re-running one would now recreate a document
+without its embedded manifest. Their provenance is preserved in
 `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names
 the commit from which the script can still be read with `git show`.
 
@@ -225,7 +236,7 @@ The migrated asset renders a smoother surface than the reference, which shows
 banding and shading artifacts. Those artifacts are the residue of the earlier
 mounting-bore removal: the reference still carries six flat circular cap patches
 at exactly the positions recorded in
-``Tools/HangboardModels/mounting_bore_repairs.json`` (x = +/-75 mm and
+``docs/source-audits/2026-09-22-mounting-bore-repairs.json`` (x = +/-75 mm and
 +/-225 mm at y = 14 mm, and x = +/-225 mm at y = 96 mm). They are essentially
 flush with the surrounding surface - the two-way sampled deviation is 0.21 mm
 worst case - but the rim crease is visible. The migrated asset has a continuous
@@ -268,9 +279,10 @@ performance. Those remain open.
 
     python -m pytest Tools/HangboardCAD/tests -q   # in a venv with Tools/HangboardPackages[dev], numpy, usd-core==26.8
 
-* `test_contract.py` — archive preflight: traversal, case collisions, duplicate
-  members, unsupported object types, external links, missing embedded files,
-  LFS pointers, and binding completeness.
+* `test_contract.py` — archive preflight (`cad_source.inspect_archive`):
+  traversal, case collisions, duplicate members, unsupported object types,
+  external links, missing embedded files, LFS pointers; and binding
+  completeness (`contract.validate_bindings`).
 * `test_board_manifest.py` — the board manifest: round trip to byte-exact
   `board.json`, geometry members untouched by an embed (and the file mode
   kept), in-place replacement, a schema-v2 (slots/instances) board,

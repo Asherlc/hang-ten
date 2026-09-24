@@ -68,9 +68,10 @@ def main() -> int:
     source = Path(sys.argv[1]).resolve()
     original_digest = hashlib.sha256(source.read_bytes()).hexdigest()
     sys.path.insert(0, str(REPOSITORY / "Tools" / "HangboardCAD"))
-    import board_manifest
+    import use_hangboard_packages  # noqa: F401
+    from hangboard_packages import cad_source
 
-    board = json.loads(board_manifest.generate_board_json(BOARD_SOURCE))
+    board = json.loads(cad_source.generate_board_json(BOARD_SOURCE))
     expected_depths = published_depths(board)
 
     document = App.openDocument(str(source))

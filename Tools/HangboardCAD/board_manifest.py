@@ -16,14 +16,18 @@ also lists the current CAD packages' paths). Change the metadata with
 ``set_board_manifest.py``.
 
 Everything that is derivable from the CAD or the build is left out of the
-manifest. Only ``id`` qualifies: ``aspectRatio`` is a presentation fact that is
-not reproducible from the descriptor ``modelBounds`` for most boards, and
-published grip depths are sourced product facts that ``compile_board.py``
-validates the geometry against, so both stay in the manifest.
+manifest. Only ``id`` qualifies. ``aspectRatio`` is a stored presentation fact:
+four of the five CAD boards match the descriptor ``modelBounds`` x/y ratio to
+within 2e-8 relative, but ``metolius-rock-rings-3d`` presents two ring
+instances while its bounds cover one ring
+(``docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md``). Published grip
+depths are sourced product facts that ``compile_board.py`` validates the
+geometry against. Both stay in the manifest.
 
 The generation code is ``hangboard_packages.cad_source`` (pure host Python,
-stdlib only, shared with the package validator); this module re-exports it and
-adds the command line and the ``git diff`` textconv rendering. It never imports
+stdlib only, shared with the package validator); import it from there. This
+module adds package lookup, the command line, and the ``git diff`` textconv
+rendering. It never imports
 FreeCAD, so it runs anywhere, including CI on Linux.
 
     python3 Tools/HangboardCAD/board_manifest.py --package <slug>          # board.json to stdout
@@ -47,33 +51,11 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-REPOSITORY = Path(__file__).resolve().parents[2]
-_PACKAGES_SOURCE = REPOSITORY / "Tools" / "HangboardPackages" / "src"
-if str(_PACKAGES_SOURCE) not in sys.path:
-    sys.path.insert(0, str(_PACKAGES_SOURCE))
+# Puts Tools/HangboardPackages/src on sys.path (host python3 and freecadcmd).
+import use_hangboard_packages  # noqa: F401
+from hangboard_packages import cad_source
 
-from hangboard_packages.cad_source import (  # noqa: E402,F401
-    DERIVED_KEYS,
-    ID_PROPERTY,
-    LFS_POINTER,
-    MANIFEST_PROPERTY,
-    LexemeFloat,
-    ManifestError,
-    _encode,
-    _is_lfs_pointer,
-    board_to_manifest,
-    document_properties_from_xml,
-    generate_board_json,
-    has_manifest,
-    load_board,
-    loads,
-    manifest_from_properties,
-    manifest_to_board,
-    parse_manifest,
-    read_document_xml,
-    render_board,
-    render_manifest,
-)
+REPOSITORY = Path(__file__).resolve().parents[2]
 
 
 # --- packages ---------------------------------------------------------------
@@ -99,11 +81,11 @@ def write_board_json(source: Path, target: Path) -> bool:
     """
     source, target = Path(source), Path(target)
     if target.resolve() == (source.parent / "board.json").resolve():
-        raise ManifestError(
+        raise cad_source.ManifestError(
             f"refusing to write {target}: a CAD-backed package's board.json is generated "
             "at build time and must not exist in the package"
         )
-    expected = generate_board_json(source)
+    expected = cad_source.generate_board_json(source)
     if target.is_file() and target.read_bytes() == expected:
         return False
     target.parent.mkdir(parents=True, exist_ok=True)
@@ -147,7 +129,7 @@ def describe_source(path: Path) -> str:
     """
     path = Path(path)
     lines: list[str] = []
-    if _is_lfs_pointer(path):
+    if cad_source._is_lfs_pointer(path):
         resolved = _resolve_lfs_pointer(path)
         if resolved is None:
             return "Git LFS pointer (object not available locally):\n" + path.read_text(
@@ -163,22 +145,22 @@ def describe_source(path: Path) -> str:
         return f"not an FCStd archive: {error}\n"
     document = dict(members).get("Document.xml", b"")
     try:
-        properties = document_properties_from_xml(document)
-    except (ManifestError, ET.ParseError) as error:
+        properties = cad_source.document_properties_from_xml(document)
+    except (cad_source.ManifestError, ET.ParseError) as error:
         properties = {}
         lines.append(f"# unreadable Document.xml: {error}")
     lines.append("# HangTen document properties")
     for name in sorted(properties):
-        if name.startswith("HangTen") and name != MANIFEST_PROPERTY:
+        if name.startswith("HangTen") and name != cad_source.MANIFEST_PROPERTY:
             lines.append(f"{name} = {properties[name][1]}")
     lines.append("")
-    lines.append(f"# {MANIFEST_PROPERTY}")
-    kind, text = properties.get(MANIFEST_PROPERTY, ("", None))
+    lines.append(f"# {cad_source.MANIFEST_PROPERTY}")
+    kind, text = properties.get(cad_source.MANIFEST_PROPERTY, ("", None))
     if text is None:
         lines.append("(absent)")
     else:
         try:
-            lines.append(_encode(loads(text), 2))
+            lines.append(cad_source._encode(cad_source.loads(text), 2))
         except json.JSONDecodeError:
             lines.append(f"(invalid JSON) {text}")
     lines.append("")
@@ -226,8 +208,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if arguments.dump:
         for package in packages:
-            board = load_board(package_source(root, package))
-            print(_encode(board_to_manifest(board), 2))
+            board = cad_source.load_board(package_source(root, package))
+            print(cad_source._encode(cad_source.board_to_manifest(board), 2))
         return 0
 
     if arguments.output is not None:
@@ -242,11 +224,11 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if len(arguments.package) == 1 and not arguments.all:
         sys.stdout.flush()
-        sys.stdout.buffer.write(generate_board_json(package_source(root, packages[0])))
+        sys.stdout.buffer.write(cad_source.generate_board_json(package_source(root, packages[0])))
         sys.stdout.buffer.flush()
         return 0
     for package in packages:
-        rendered = generate_board_json(package_source(root, package))
+        rendered = cad_source.generate_board_json(package_source(root, package))
         print(f"{package}: sha256 {hashlib.sha256(rendered).hexdigest()} ({len(rendered)} bytes)")
     print(f"generated board.json for {len(packages)} CAD-backed package(s)")
     return 0
@@ -255,6 +237,6 @@ def main(argv: list[str] | None = None) -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except ManifestError as error:
+    except cad_source.ManifestError as error:
         print(f"MANIFEST ERROR: {error}", file=sys.stderr)
         raise SystemExit(1)

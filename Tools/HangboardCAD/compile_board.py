@@ -7,8 +7,8 @@ Run it with FreeCAD's own interpreter, which is the pinned toolchain:
       Tools/HangboardCAD/compile_board.py --package <package-directory>
 
 The board metadata comes from the source itself: the document-level
-``HangTenBoardManifest`` property plus ``HangTenBoardID`` (see
-``board_manifest.py``). ``--board <path>`` overrides it with an explicit JSON
+``HangTenBoardManifest`` property plus ``HangTenBoardID`` (read with
+``hangboard_packages.cad_source``). ``--board <path>`` overrides it with an explicit JSON
 file (used by the guard tests); without it the source must carry the manifest.
 The compiler never writes ``board.json``: for a CAD-backed package that file is
 generated from the manifest at build time (package validation and app staging)
@@ -16,7 +16,7 @@ and is not kept in the repository.
 
 Stages, in order:
 
-1. Validate the board metadata and the source archive (``contract.inspect_archive``).
+1. Validate the board metadata and the source archive (``cad_source.inspect_archive``).
 2. Reopen and recompute the source document without modifying its bytes.
 3. Extract the bound components and semantic regions.
 4. Tessellate with the document's pinned quality setting.
@@ -58,7 +58,10 @@ for _path in (
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-import board_manifest  # noqa: E402
+# Puts Tools/HangboardPackages/src on sys.path (host python3 and freecadcmd).
+import use_hangboard_packages  # noqa: E402,F401
+from hangboard_packages import cad_source  # noqa: E402
+
 import contract  # noqa: E402
 import usdz_writer  # noqa: E402
 from contact_model_descriptor import (  # noqa: E402
@@ -171,7 +174,7 @@ def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Pa
     import zipfile
 
     basename = os.path.basename(member)
-    if not basename or contract.safe_member(basename) != basename:
+    if not basename or cad_source.safe_member(basename) != basename:
         raise BuildError(f"unsafe embedded texture member: {member!r}")
     with zipfile.ZipFile(source) as archive:
         if basename not in archive.namelist():
@@ -490,8 +493,9 @@ def load_board(source: Path, board_path: Path | None) -> tuple[dict, str]:
     if board_path is not None:
         return json.loads(Path(board_path).read_text()), _display(Path(board_path))
     try:
-        return board_manifest.load_board(source), f"{_display(source)}#{board_manifest.MANIFEST_PROPERTY}"
-    except board_manifest.ManifestError as error:
+        board = cad_source.load_board(source)
+        return board, f"{_display(source)}#{cad_source.MANIFEST_PROPERTY}"
+    except cad_source.ManifestError as error:
         raise BuildError(str(error)) from error
 
 
@@ -515,7 +519,7 @@ def build(
 
     print(f"[1/10] validating {source.name}")
     source_digest = _digest(source)
-    contract.inspect_archive(source)
+    cad_source.inspect_archive(source)
 
     print("[2/10] reopening and recomputing the source document")
     document = _open_source(source)
@@ -789,15 +793,15 @@ def main(argv: list[str] | None = None) -> int:
         raise BuildError(f"missing required input: {source}")
     board_path = Path(arguments.board) if arguments.board else None
     if board_path is None:
-        # has_manifest runs the archive contract (contract.inspect_archive)
+        # has_manifest runs the archive contract (cad_source.inspect_archive)
         # before reading Document.xml, so a corrupt source is a BuildError.
         try:
-            embedded = board_manifest.has_manifest(source)
-        except board_manifest.ManifestError as error:
+            embedded = cad_source.has_manifest(source)
+        except cad_source.ManifestError as error:
             raise BuildError(str(error)) from error
         if not embedded:
             raise BuildError(
-                f"{_display(source)} carries no {board_manifest.MANIFEST_PROPERTY}; embed "
+                f"{_display(source)} carries no {cad_source.MANIFEST_PROPERTY}; embed "
                 "one with Tools/HangboardCAD/set_board_manifest.py or pass --board"
             )
     if board_path is not None and not board_path.is_file():

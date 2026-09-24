@@ -91,7 +91,7 @@ this is what the app binds against), `NodeRole` (`body`/`contact`/`attachment`),
 `ContactID` (v1) or `ContactSlotID` (v2), `MaterialName`, `BaseColor`,
 `Roughness`, `Metallic`, and optionally an embedded `TextureFile`. Objects
 without `NodeID` — sketches, datums, construction features — are never exported.
-`contract.inspect_archive` enforces a builtin-type allowlist and rejects Python
+`hangboard_packages.cad_source.inspect_archive` enforces a builtin-type allowlist and rejects Python
 objects, external `XLink` references, and missing embedded files, so a document
 that opens locally can still fail the contract.
 
@@ -275,7 +275,8 @@ scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
 `cmp` only proves byte identity; if the hand-authored layout differed (inline
 arrays, `\u00d7` escapes) compare values, key order, and number spellings
-instead, as `migration/embed_board_manifest.py` did.
+instead, as the one-off migration did (deleted after it ran; read it with
+`git show 3e1653b:Tools/HangboardCAD/migration/embed_board_manifest.py`).
 
 This rewrites only `Document.xml` in the archive; every shape member stays
 byte-identical. Re-running an authoring script that creates the document from
@@ -283,7 +284,7 @@ scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
 commit it. The five boards migrated so far were authored by committed
-`migration/author_*.py` scripts that have since been retired; their provenance
+`Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
 (published versus measured values, tolerances, reference SHAs, stated
 deviations) is preserved in
 `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names

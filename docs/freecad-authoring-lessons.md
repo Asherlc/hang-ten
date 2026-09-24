@@ -51,7 +51,8 @@ avoid repeating the same detours.
   floor-depth edit and passes the native edit-propagation check). `Shape.reversed()`
   on a `Part::Feature` is static and breaks that check.
 - `Part::Reverse` and `Part::Face` are not in the default FCStd allowlist; add
-  them to `Tools/HangboardCAD/contract.py` `BUILTIN_TYPES`.
+  them to `BUILTIN_TYPES` in
+  `Tools/HangboardPackages/src/hangboard_packages/cad_source.py`.
 
 ## 4. Region mesh vs body partition — the boundary-matching rule
 
@@ -215,7 +216,7 @@ coincident-surface trap in lesson 5:
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
 - Committed one-off per-board authoring scripts and per-board duplicate
   native-check scripts are maintenance overhead. The five
-  `migration/author_*.py` scripts were retired for that reason (and because
+  `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
   manifest); their provenance lives in
   `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, each naming the

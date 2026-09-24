@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 _models_dir = str(Path(__file__).resolve().parent.parent / "Tools" / "HangboardModels")
 if _models_dir not in sys.path:
     sys.path.insert(0, _models_dir)
-from verify_mounting_bores import read_scene
+from usdz_readback import read_scene
 from remove_mounting_bores import package_board_bytes
 
 import os

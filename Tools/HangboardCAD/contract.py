@@ -1,29 +1,12 @@
-"""Fail-closed, read-only validation before restoring a native FCStd document.
+"""Explicit role bindings of a native FCStd source, checked before compiling.
 
-The archive contract (``inspect_archive``) is pure host Python shared with the
-package validator, which generates CAD-backed packages' ``board.json`` from the
-FCStd; it lives in ``hangboard_packages.cad_source`` and is re-exported here.
+The archive preflight (``inspect_archive``) is pure host Python shared with the
+package validator; it lives in ``hangboard_packages.cad_source``.
 """
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from pathlib import Path
 import re
-import sys
-
-_PACKAGES_SOURCE = Path(__file__).resolve().parents[1] / "HangboardPackages" / "src"
-if str(_PACKAGES_SOURCE) not in sys.path:
-    sys.path.insert(0, str(_PACKAGES_SOURCE))
-
-from hangboard_packages.cad_source import (  # noqa: E402,F401
-    BUILTIN_TYPES,
-    MAX_ARCHIVE_BYTES,
-    MAX_XML_BYTES,
-    REJECTED_TYPES,
-    XLINK_TYPES,
-    inspect_archive,
-    safe_member,
-)
 
 NODE_ID = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 
