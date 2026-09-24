@@ -14,15 +14,18 @@ hold prim's own mesh:
   (and with the manufacturer 20–33 / 10–24 mm rail ranges).
 
 Measured footprints are vectorized: each closed XZ ring is Chaikin-smoothed
-and fit with a FreeCAD `Part.BSplineCurve.approximate`, then discretized at
-``OUTLINE_DEFLECTION_MM`` into a dense, smooth polygon that is extruded/lofted
-as the CAD prism. The B-spline fit removes the ragged mesh sampling; the dense
-polygon keeps OCCT tessellation linear in the point count. Do not export the
-B-spline *surface* itself: at this deflection OCCT meshes a VDegree=1
-BSplineSurface into millions of triangles per hold (measured: 1.66M triangles /
-89 s for one pocket), which stalls the compiler. Rail depth/z profiles are
-densely sampled then linearly resampled to a few loft stations so the taper
-reads smooth rather than stair-stepped. Still mesh-derived — not photo-traced.
+and fit with a low-degree `Part.BSplineCurve.approximate` (C2, DegMax=5,
+``OUTLINE_FIT_TOLERANCE_MM``), then discretized at ``OUTLINE_DEFLECTION_MM``
+and resampled to ``OUTLINE_SAMPLES`` evenly spaced points for the exported
+polygon/prism. A low-degree *approximation* keeps the fit from chasing measured
+noise into tens of poles: too many poles both wiggles the silhouette and makes
+OCCT mesh the extruded surface into hundreds of thousands of triangles per hold
+(measured: a 168-pole VDegree=1 BSplineSurface meshes into 1.66M triangles /
+89 s at 0.02 mm, and still 266k at 0.5 mm). The polygon prism keeps the mesh
+linear in the point count while the fitted curve keeps the silhouette smooth.
+Rail depth/z profiles are densely sampled then linearly resampled to a few loft
+stations so the taper reads smooth rather than stair-stepped. Still mesh-derived
+— not photo-traced.
 
 `compare_exports` is evidence, not a gate — see docs/freecad-authoring-migration.md
 "Accepted deviation for a sculpted board".
@@ -89,6 +92,17 @@ EDGE_ROLL_SEGMENTS = 6
 # exported polygon. Fine enough to read smooth, coarse enough that the prism
 # tessellates in a few hundred triangles instead of millions.
 OUTLINE_DEFLECTION_MM = 0.05
+# Even vertex count for the exported outline. The fit is resampled to this many
+# equally-spaced points so the silhouette reads as a regular curve, not a set of
+# uneven facet edges.
+OUTLINE_SAMPLES = 120
+# Low-degree approximation tolerance. A tight fit chases measured noise into
+# tens of poles (which both wiggles the silhouette and makes OCCT explode the
+# surface mesh); a loose fit gives one smooth low-order curve.
+OUTLINE_FIT_TOLERANCE_MM = 0.8
+# Pull the top-jug footprint this far inside the board's top edge so the
+# partition seam does not coincide with the rim.
+TOP_JUG_EDGE_INSET = 1.0
 
 # Bottom-inner-corner notch (left-half). Keeps the L / flag outline from the
 # manufacturer top-down photo. Measured against the body mesh's rising bottom
@@ -226,16 +240,54 @@ def _smooth_open(points, passes: int = 2):
     return current
 
 
-def _vectorize_closed(points_xz, tol_mm: float = 0.35):
-    """Fit a closed B-spline to a measured XZ footprint, then discretize it.
+def _resample_closed(points, count: int):
+    """Resample a closed polyline to ``count`` evenly spaced (arc-length) points."""
+    total_count = len(points)
+    if total_count < 3 or count < 3:
+        return list(points)
+    lengths = [
+        math.hypot(
+            points[(index + 1) % total_count][0] - points[index][0],
+            points[(index + 1) % total_count][1] - points[index][1],
+        )
+        for index in range(total_count)
+    ]
+    total = sum(lengths)
+    if total <= 1e-9:
+        return list(points)
+    step = total / count
+    result = []
+    index = 0
+    travelled = 0.0
+    for position in range(count):
+        target = position * step
+        while travelled + lengths[index] < target:
+            travelled += lengths[index]
+            index = (index + 1) % total_count
+        segment = lengths[index]
+        fraction = (target - travelled) / segment if segment > 1e-12 else 0.0
+        start = points[index]
+        end = points[(index + 1) % total_count]
+        result.append(
+            (
+                start[0] + fraction * (end[0] - start[0]),
+                start[1] + fraction * (end[1] - start[1]),
+            )
+        )
+    return result
 
-    Returns ``(curve, outline_xz)`` where ``curve`` is a periodic
-    ``Part.BSplineCurve`` in the y=0 plane (the vector fit of the measured
-    outline), and ``outline_xz`` is that curve discretized at
-    ``OUTLINE_DEFLECTION_MM`` — a dense, smooth polygon. The polygon is what
-    gets extruded/lofted and written to ``HangTenHoldOutline``: exporting the
-    B-spline *surface* instead makes OCCT tessellate it into millions of
-    triangles at this deflection (see module docstring).
+
+def _vectorize_closed(points_xz, tol_mm: float = 0.35):
+    """Fit a smooth low-degree closed curve to a measured XZ footprint.
+
+    Returns ``(curve, outline_xz)``. ``curve`` is a periodic-ish
+    ``Part.BSplineCurve`` in the y=0 plane fitted by *approximation* with a low
+    maximum degree: a tight interpolation through every reduced point chases
+    measurement noise into tens of poles, which both wiggles the silhouette and
+    makes OCCT mesh the extruded surface into hundreds of thousands of triangles.
+    ``outline_xz`` is that curve discretized at ``OUTLINE_DEFLECTION_MM`` and
+    then resampled to ``OUTLINE_SAMPLES`` evenly spaced points, so the exported
+    polygon reads as a regular curve rather than uneven facet edges.
     """
     points = _ensure_ccw(points_xz)
     if len(points) < 4:
@@ -245,21 +297,18 @@ def _vectorize_closed(points_xz, tol_mm: float = 0.35):
     smoothed = _ensure_ccw(smoothed)
     vectors = [App.Vector(x, 0.0, z) for x, z in smoothed]
     curve = Part.BSplineCurve()
-    try:
-        curve.interpolate(vectors, PeriodicFlag=True)
-    except Exception:
-        curve.approximate(
-            Points=vectors + [vectors[0]],
-            DegMin=2,
-            DegMax=3,
-            Tolerance=tol_mm,
-            Continuity="C1",
-        )
+    curve.approximate(
+        Points=vectors + [vectors[0]],
+        DegMin=3,
+        DegMax=5,
+        Tolerance=OUTLINE_FIT_TOLERANCE_MM,
+        Continuity="C2",
+    )
     discrete = curve.discretize(Deflection=OUTLINE_DEFLECTION_MM)
     outline = [(float(p.x), float(p.z)) for p in discrete]
     if math.hypot(outline[0][0] - outline[-1][0], outline[0][1] - outline[-1][1]) < 1e-6:
         outline = outline[:-1]
-    return curve, _ensure_ccw(outline)
+    return curve, _resample_closed(_ensure_ccw(outline), OUTLINE_SAMPLES)
 
 
 def _angular_outline(points_xz, bins: int = 180, tol: float = 0.8):
@@ -279,22 +328,28 @@ def _angular_outline(points_xz, bins: int = 180, tol: float = 0.8):
     return _vectorize_closed(_reduce_closed(outline, tol), tol_mm=0.4)
 
 
-def _floor_envelope_outline(points, bin_mm: float = 2.5, floor_band: float = 0.6, tol: float = 1.2):
-    """Closed XZ curve from min/max-z of floor-band points along x.
+def _envelope_outline(points_xz, bin_mm: float = 2.5, tol: float = 1.2):
+    """Closed XZ curve from min/max-z per x bin.
 
-    Captures concave wedge+tab footprints (closed-crimp). Upper/lower envelopes
-    are smoothed independently, then fit as one closed B-spline.
+    Suited to elongated holds (the top jug) where a radius-from-centroid outline
+    degenerates into a bowtie. Upper and lower envelopes are smoothed
+    independently, then fit as one closed curve.
     """
-    floor_y = max(p[1] for p in points)
-    floor = [(p[0], p[2]) for p in points if p[1] > floor_y - floor_band]
     bins: dict[float, list[float]] = defaultdict(list)
-    for x, z in floor:
+    for x, z in points_xz:
         bins[round(x / bin_mm) * bin_mm].append(z)
     xs = sorted(bins)
     upper = _smooth_open([(x, max(bins[x])) for x in xs], passes=3)
     lower = _smooth_open([(x, min(bins[x])) for x in xs], passes=3)
     raw = upper + list(reversed(lower))
     return _vectorize_closed(_reduce_closed(raw, tol), tol_mm=0.5)
+
+
+def _floor_envelope_outline(points, bin_mm: float = 2.5, floor_band: float = 0.6, tol: float = 1.2):
+    """Envelope of the floor-band points — the closed-crimp wedge+tab footprint."""
+    floor_y = max(p[1] for p in points)
+    floor = [(p[0], p[2]) for p in points if p[1] > floor_y - floor_band]
+    return _envelope_outline(floor, bin_mm=bin_mm, tol=tol)
 
 
 def _x_sections(points, triangles, n: int = 5):
@@ -519,10 +574,14 @@ def _extrude_contact(outline_xz, depth, kind):
     floor_wire = _wire_at_y(outline_xz, floor_y)
     opening_face = Part.Face(opening_wire)
     solid_tool = opening_face.extrude(App.Vector(0.0, floor_y - opening_y, 0.0))
-    # Contact region: lateral ruled surface + floor face (metolius pattern).
+    # Contact region: lateral ruled surface, plus a floor face for a recess.
+    # A protrusion's "floor" would be the board's back plane, coplanar with the
+    # body back face — leave it off so the back stays a single clean surface.
     lateral = Part.makeLoft([floor_wire, opening_wire], False, True)
-    floor_face = Part.Face(floor_wire)
-    surface = lateral.fuse(floor_face)
+    if kind == "protrusion":
+        surface = lateral
+    else:
+        surface = lateral.fuse(Part.Face(floor_wire))
     opening_ring = _ring_from_outline(outline_xz, opening_y)
     return solid_tool, surface, opening_ring
 
@@ -568,6 +627,14 @@ def _measure_holds(stage, cache):
         if base == "closed-crimp":
             _curve, outline = _floor_envelope_outline(points)
             depth = 10.0
+        elif base == "top-jug":
+            # Elongated strip: radial binning degenerates, so use an envelope.
+            # Keep the footprint just inside the board's top edge so the body /
+            # region partition seam does not land on the shared top rim (which
+            # tears into a ragged band there).
+            projected = [(p[0], min(p[2], HALF_Z - TOP_JUG_EDGE_INSET)) for p in points]
+            _curve, outline = _envelope_outline(projected)
+            depth = 40.0
         elif strategy == "taper":
             _curve, outline = _angular_outline([(p[0], p[2]) for p in points], bins=120, tol=1.0)
             sections = _x_sections(points, triangles, n=5)
