@@ -70,10 +70,20 @@ geometry rather than as a flat cut:
   ends because the wall is depth-scaled by the crown, which is also the published
   behaviour (larger front radius at the ends, smaller at the centre);
 * the upper trough's floor is widened (apex inset 9.5 mm, against a measured 11.2 mm) so
-  each level keeps a readable shelf. The step is a **vertical plane at z = 23** (one CAD
-  face, a straight horizontal line in the front view). An earlier leaning riser made the
-  two levels easier to shade in a lambert front render but tessellated into a jagged
-  divider — rejected. The lower trough keeps its measured apex inset.
+  each level keeps a readable shelf, and the step riser leans back 2 mm of z between the
+  levels so it has real projected width in a front view. A riser normal to the front face
+  projects to a zero-width line and the two levels cannot be told apart at all.
+
+  The riser is **not a plane**. No plane can do this job: a plane swept along x meets a
+  crowned floor at a z that follows the crown, so its exposed edge wanders in z (0.52 mm
+  on the shallow level, 0.91 mm on the deep one) and tessellation turns that wander into a
+  visible staircase. The riser is instead the surface **ruled between two constant-z
+  lines** — it meets the 8 mm floor at z = 23 and the 14 mm floor at z = 21 at every x —
+  which is the same rule the walls already follow: the step is authored as a lean in the
+  trough's *depth-fraction* coordinate, so depth-scaling by the crown moves the riser's
+  depth without moving its z. Both exposed edges are then exactly straight lines.
+
+  The lower trough keeps its measured apex inset.
 
     edge-8   upper trough above z = 23: wall + 8 mm floor    y [-17, -9]   span  8
     edge-14  upper trough below z = 23: step riser, 14 mm
@@ -160,6 +170,10 @@ TROUGHS = {
         # publishes for the grip on that side of it.
         "step_z": 23.0,
         "step_depth": GRIP_DEPTH_MM["edge-8"],
+        # z the riser leans back between the two floors, giving it projected width in a
+        # front view. It is constant along the trough: the riser meets the shallow floor
+        # at `step_z` and the deep floor at `step_z - step_run` at every x.
+        "step_run": 2.0,
     },
     "lower": {
         "z_center": -20.5,
@@ -179,6 +193,10 @@ WALL_FACE_SEGMENTS = 3
 WALL_BACK_SEGMENTS = 3
 # Cutters start this far in front of the board so no boolean face is coplanar with it.
 PROUD_MM = 0.3
+# Stations across the trough's straight run at which the step riser's two exposed edges
+# are checked for being straight. Beyond the straight run the floor is the stadium's end
+# arc and pinches away from the riser's z band, so the shelf tapers out there.
+STEP_EDGE_PROBES = 24
 
 # Partition boundaries measured on the reference's own contact nodes.
 CONTACT_X_LIMIT = 57.0
@@ -517,26 +535,126 @@ def _trough_cutter(spec: dict):
     return _triangle_solid(triangles)
 
 
-def _step_half_space(spec: dict, *, above: bool):
-    """Block on one side of the vertical step plane at `step_z` (constant z)."""
-    span = 4.0 * BODY_Z
-    z_min = spec["step_z"] if above else spec["step_z"] - span
-    return Part.makeBox(
-        4.0 * BODY_X,
-        4.0 * BODY_Y,
-        span,
-        App.Vector(-2.0 * BODY_X, Y_FRONT - 2.0 * BODY_Y, z_min),
+def _step_levels(spec: dict, x: float) -> tuple[float, float]:
+    """(shallow, deep) floor y at `x` — the two lines the step riser is ruled between."""
+    core_x = max(-TROUGH_HALF_LEN, min(TROUGH_HALF_LEN, x))
+    return (
+        Y_FRONT + _trough_depth(dict(spec, depth=spec["step_depth"]), core_x),
+        Y_FRONT + _trough_depth(spec, core_x),
     )
+
+
+def _step_surface_z(spec: dict, x: float, y: float) -> float:
+    """z of the trough's step divider at (x, y).
+
+    The divider leans back `step_run` mm of z, but it leans in the trough's *depth
+    fraction* rather than in absolute depth: it sits at `step_z` wherever the material is
+    shallower than the shallow floor, at `step_z - step_run` wherever it is deeper than
+    the deep floor, and interpolates between. Since both floors are the same crown scaled
+    by their published depth, the divider therefore meets each of them on a line of
+    constant z, and the two edges the front view draws are straight.
+
+    A plane cannot do that. Swept along x it crosses a crowned floor wherever the floor
+    has risen to meet it, so its edge follows the crown; that is what read as a jagged
+    divider rather than a shelf.
+    """
+    shallow_y, deep_y = _step_levels(spec, x)
+    z_high = spec["step_z"]
+    z_low = z_high - spec["step_run"]
+    if y <= shallow_y:
+        return z_high
+    if y >= deep_y:
+        return z_low
+    return z_high + (z_low - z_high) * (y - shallow_y) / (deep_y - shallow_y)
+
+
+def _step_offset(spec: dict, x: float, y: float, z: float) -> float:
+    """Signed z distance from the trough's step divider; positive on the shallow side."""
+    return z - _step_surface_z(spec, x, y)
+
+
+def _step_x_samples():
+    """x stations of the step divider.
+
+    These are the trough template's own straight-run samples, so the divider's
+    piecewise-linear crown *is* the floor's piecewise-linear crown and the two meet
+    exactly on the constant-z line rather than a chord of it. Beyond the straight run the
+    floor is flat at its |x| = TROUGH_HALF_LEN depth, and `_step_levels` clamps to match.
+    """
+    inner = sorted(
+        TROUGH_HALF_LEN - 2.0 * TROUGH_HALF_LEN * index / TROUGH_STRAIGHT_SEGMENTS
+        for index in range(TROUGH_STRAIGHT_SEGMENTS + 1)
+    )
+    return [-2.0 * BODY_X] + inner + [2.0 * BODY_X]
+
+
+def _step_half_space(spec: dict, *, above: bool):
+    """Block filling everything on one side of the trough's step divider.
+
+    The shallow trough never reaches past its own floor, which is exactly where the
+    divider's lean begins, so on the shallow side the divider and the plane z = `step_z`
+    cut it identically and the block is a plain box. The deep side needs the divider
+    itself, swept along x as planar triangles: the ruled band between the two floors is
+    non-planar, and `compile_board`'s surface-area partition assumes exact tessellation.
+    """
+    z_high = spec["step_z"]
+    if above:
+        span = 4.0 * BODY_Z
+        return Part.makeBox(
+            4.0 * BODY_X,
+            4.0 * BODY_Y,
+            span,
+            App.Vector(-2.0 * BODY_X, Y_FRONT - 2.0 * BODY_Y, z_high),
+        )
+
+    z_low = z_high - spec["step_run"]
+    z_far = -2.0 * BODY_Z
+    y_front, y_back = Y_FRONT - 2.0 * BODY_Y, Y_BACK + 2.0 * BODY_Y
+    sections = []
+    for x in _step_x_samples():
+        shallow_y, deep_y = _step_levels(spec, x)
+        sections.append(
+            [
+                App.Vector(x, y_front, z_high),
+                App.Vector(x, shallow_y, z_high),
+                App.Vector(x, deep_y, z_low),
+                App.Vector(x, y_back, z_low),
+                App.Vector(x, y_back, z_far),
+                App.Vector(x, y_front, z_far),
+            ]
+        )
+
+    # The section is star-shaped about its last corner, so fanning from there triangulates
+    # it without leaving the block. Fanning from the first corner would cut across the
+    # lean.
+    def cap(section, *, flip: bool):
+        apex = section[-1]
+        fan = [
+            (apex, section[index], section[index + 1])
+            for index in range(len(section) - 2)
+        ]
+        return [(a, c, b) for a, b, c in fan] if flip else fan
+
+    triangles = cap(sections[0], flip=True)
+    for near, far in zip(sections, sections[1:]):
+        for index in range(len(near)):
+            following = (index + 1) % len(near)
+            triangles.append((near[index], near[following], far[following]))
+            triangles.append((near[index], far[following], far[index]))
+    triangles += cap(sections[-1], flip=False)
+    return _triangle_solid(triangles)
 
 
 def _stepped_trough_cutter(spec: dict):
     """One stadium opening carrying two crowned floor levels, split at `step_z`.
 
-    Both levels share the rim and differ only in published depth. Each is clipped to one
-    side of a **vertical** plane at `step_z` and fused, leaving that plane as the riser —
-    a single flat face whose front-view silhouette is a straight horizontal line. A
-    leaning riser was tried so the step would shade as a band; tessellation made the
-    divider jagged, which is worse than a thin clean line.
+    Both levels are the same trough at their own published depth, so they share the rim
+    outline exactly and differ in how steep the wall's straight face has to be to reach
+    the floor. Each is clipped to its own side of the step divider and the two are fused,
+    which leaves the divider itself exposed between the levels: that band is the shelf
+    edge you see inside the pocket. Clipping both (rather than fusing a whole shallow
+    trough into a deep one, which the deep trough would simply swallow) also means the two
+    solids meet only on the divider.
     """
     shallow = dict(spec, depth=spec["step_depth"])
     if spec["step_depth"] >= spec["depth"]:
@@ -582,15 +700,18 @@ def _is_front_plane(face) -> bool:
 def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
     """Match trough faces on one side of the split line, no deeper than `y_max`.
 
-    A stepped trough splits on its vertical step plane, an unstepped one on its centre
-    line. The side test is on the face's whole extent, not its centroid. Each x strip of
-    the floor is one plane, so the boolean hands it back as a single face spanning the
-    full apex width, and a centroid test would assign it by whichever side a rounding
-    error fell on. A face that straddles the split line belongs to neither side and stays
-    with the body, which is also where the reference's own node split leaves it.
+    A stepped trough splits on its step divider, an unstepped one on its centre line. The
+    side test is on the face's whole extent, not its centroid. Each x strip of the floor is
+    one plane, so the boolean hands it back as a single face spanning the full apex width,
+    and a centroid test would assign it by whichever side a rounding error fell on. A face
+    that straddles the split line belongs to neither side and stays with the body, which is
+    also where the reference's own node split leaves it.
 
-    The vertical riser lies on the step plane (ZLength ≈ 0, Z ≈ step_z) and is the rise
-    to the deeper level's floor, so it goes to that level.
+    The riser is the exception: it is the rise to the deeper level's floor, so it goes to
+    that level by lying on the divider rather than by its z extent. It has to be named
+    explicitly because it does cross the split line — it spans `step_run` mm of z — and so
+    do the slivers the divider's flat upper part leaves near the trough's ends, where the
+    shallow level's floor has already tapered out.
     """
     split_z = spec.get("step_z", spec["z_center"])
     stepped = "step_z" in spec
@@ -606,7 +727,9 @@ def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: 
             return False
         if not x_min <= center.x <= x_max:
             return False
-        if stepped and box.ZLength < 0.05 and abs(box.ZMin - split_z) < 0.05:
+        if stepped and all(
+            abs(_step_offset(spec, v.X, v.Y, v.Z)) < 0.05 for v in face.Vertexes
+        ):
             return not above
         return box.ZMin >= split_z - 0.05 if above else box.ZMax <= split_z + 0.05
 
@@ -768,33 +891,57 @@ def main() -> int:
         raise ValueError("cut body failed to produce a solid")
 
     # The shelf between the upper trough's two levels is the whole point of the step, so
-    # assert it survived the cut at the depth it is supposed to bridge — a single vertical
-    # face at constant z.
+    # assert it survived the cut at the depth it is supposed to bridge.
     step_faces = [
         face
         for face in body_shape.Faces
-        if face.BoundBox.ZLength < 0.05 and abs(face.BoundBox.ZMin - upper["step_z"]) < 0.05
+        if all(abs(_step_offset(upper, v.X, v.Y, v.Z)) < 0.05 for v in face.Vertexes)
     ]
     if not step_faces:
         raise ValueError(f"upper trough has no step riser at z = {upper['step_z']}")
-    # The riser pinches shut at the trough ends; measure the rise on a centre slice.
-    probe = Part.makeBox(
-        1.0,
-        4.0 * BODY_Y,
-        4.0 * BODY_Z,
-        App.Vector(-0.5, Y_FRONT - 2.0 * BODY_Y, -2.0 * BODY_Z),
-    )
-    step_box = Part.makeCompound(step_faces).common(probe).BoundBox
-    step_rise = step_box.YLength
+    riser = Part.makeCompound(step_faces)
+
+    def slice_riser(x_center: float, width: float = 1.0):
+        probe = Part.makeBox(
+            width,
+            4.0 * BODY_Y,
+            4.0 * BODY_Z,
+            App.Vector(
+                x_center - 0.5 * width, Y_FRONT - 2.0 * BODY_Y, -2.0 * BODY_Z
+            ),
+        )
+        return riser.common(probe).BoundBox
+
+    # The riser pinches shut where the two levels meet the front face at the trough's
+    # ends, so its bounding box spans the whole trough; measure the rise on a centre
+    # slice instead, where both levels are at their published depth.
+    step_box = slice_riser(0.0)
+    step_rise, step_run = step_box.YLength, step_box.ZLength
     expected_rise = upper["depth"] - upper["step_depth"]
     if abs(step_rise - expected_rise) > 0.05:
         raise ValueError(
             f"step riser spans {step_rise:.3f} mm, expected {expected_rise:.3f} mm"
         )
-    if step_box.ZLength > 0.05:
+    # A riser that lost its lean is a riser that cannot be seen in a front view.
+    if abs(step_run - upper["step_run"]) > 0.05:
         raise ValueError(
-            f"step riser is not a vertical plane (ZLength={step_box.ZLength:.3f} mm)"
+            f"step riser leans back {step_run:.3f} mm of z, "
+            f"expected {upper['step_run']:.3f} mm"
         )
+    # And a riser whose edges wander in z is a divider that reads as a jagged polyline
+    # rather than a shelf, which is what a *planar* riser does against a crowned floor.
+    # Both edges have to be the same z at every station of the trough's straight run.
+    z_high = upper["step_z"]
+    z_low = z_high - upper["step_run"]
+    for index in range(STEP_EDGE_PROBES + 1):
+        probe_x = -TROUGH_HALF_LEN + 2.0 * TROUGH_HALF_LEN * index / STEP_EDGE_PROBES
+        edges = slice_riser(probe_x)
+        if abs(edges.ZMax - z_high) > 0.01 or abs(edges.ZMin - z_low) > 0.01:
+            raise ValueError(
+                f"step riser edges at x = {probe_x:.2f} span z "
+                f"[{edges.ZMin:.3f}, {edges.ZMax:.3f}], expected [{z_low:.3f}, "
+                f"{z_high:.3f}]; the divider is not a straight line in a front view"
+            )
 
     regions = {}
     for contact_id, predicate in contact_predicates:
@@ -848,8 +995,9 @@ def main() -> int:
             )
         if "step_depth" in spec:
             print(
-                f"  {name} trough step at z={spec['step_z']:.1f}: "
-                f"vertical riser {step_rise:.2f} mm over {len(step_faces)} face(s)"
+                f"  {name} trough step at z={spec['step_z']:.1f}: riser {step_rise:.2f} mm "
+                f"rise leaning {step_run:.2f} mm of z over {len(step_faces)} face(s); "
+                f"edges straight at z={z_high:.1f} / {z_low:.1f}"
             )
     for contact_id, info in regions.items():
         print(
