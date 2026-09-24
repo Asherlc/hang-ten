@@ -1,8 +1,9 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: pilot complete for one board; 39 of the 40 model-media boards are not
-migrated yet.** The pipeline below is implemented, executed, and reproducible.
-Do not read this as a finished catalogue migration.
+**Status: 2 of the 46 model-media boards are migrated** (those with a committed
+`Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
+pipeline below is implemented, executed, and reproducible. Do not read this as a
+finished catalogue migration.
 
 ## What this provides
 
@@ -111,16 +112,17 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **Only one of 40 model-media boards is migrated.** The other 39 still ship
-  their existing runtime assets, which are unchanged by this work.
+* **2 of 46 model-media boards are migrated.** The other 44 still ship their
+  existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
   and must not be presented as recovered parametric history.
 * The compiler refuses a source it cannot recompute cleanly, a contact region
   whose depth disagrees with the published grip depth in `board.json`, a body
-  triangle claimed by two contact regions, an exported area that does not match
-  the body surface, and a document labelled `faceted-import` unless
-  `--allow-faceted-import` acknowledges it. Each guard has a failing test.
+  triangle claimed by two contact regions, a region that claims more body
+  surface than its own exported surface, and a document labelled
+  `faceted-import` unless `--allow-faceted-import` acknowledges it. Each guard
+  has a failing test.
 * FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
   value in this pinned build. The authored sketch stores negated local
   coordinates with positive driving dimensions and negates them back through an

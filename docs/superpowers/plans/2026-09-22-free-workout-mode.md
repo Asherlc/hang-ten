@@ -1,5 +1,8 @@
 # Free Workout Mode Implementation Plan
 
+> **Superseded 2026-09-23** by [`2026-09-23-free-workout-log-mode.md`](2026-09-23-free-workout-log-mode.md) (Strong-style live set log).
+> Keep this file only as historical record of the timeline-driven free mode implementation.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add a Strong-like free workout mode: build custom hang/pull/rest workouts on the fly, run them with a timer plus manual override, edit weight/time/reps mid-session, log to history, optionally save as a reusable custom routine.

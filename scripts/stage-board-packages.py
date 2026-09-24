@@ -287,7 +287,12 @@ def stage_board_packages(
                 )
                 odr_model_destination.parent.mkdir(parents=True, exist_ok=True)
                 _copy_regular_file(
-                    package_source / model_asset_path,
+                    _resolve_model_asset(
+                        package_source,
+                        model_asset_path,
+                        compiled_assets,
+                        package.root.name,
+                    ),
                     odr_model_destination,
                 )
             staged_paths.append(destination / package.root.name)

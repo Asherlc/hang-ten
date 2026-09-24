@@ -1312,6 +1312,12 @@ struct BoardPackageStore {
             try validateDescriptorVector(contact.facePlaneAABB.minimum, length: 2, boardID: boardID)
             try validateDescriptorVector(contact.facePlaneAABB.maximum, length: 2, boardID: boardID)
             try validateDescriptorVector(contact.center, length: 2, boardID: boardID)
+            try validateDescriptorOutline(
+                contact.outline,
+                minimum: contact.facePlaneAABB.minimum,
+                maximum: contact.facePlaneAABB.maximum,
+                boardID: boardID
+            )
             guard zip(contact.facePlaneAABB.minimum, contact.facePlaneAABB.maximum).allSatisfy({
                 $0 >= 0 && $0 <= $1 && $1 <= 1
             }) else {
@@ -1329,7 +1335,8 @@ struct BoardPackageStore {
                     minimum: contact.facePlaneAABB.minimum,
                     maximum: contact.facePlaneAABB.maximum
                 ),
-                center: contact.center
+                center: contact.center,
+                outline: contact.outline ?? []
             )
         }
         return (
@@ -1455,6 +1462,12 @@ struct BoardPackageStore {
             try validateDescriptorVector(slot.facePlaneAABB.minimum, length: 2, boardID: boardID)
             try validateDescriptorVector(slot.facePlaneAABB.maximum, length: 2, boardID: boardID)
             try validateDescriptorVector(slot.center, length: 2, boardID: boardID)
+            try validateDescriptorOutline(
+                slot.outline,
+                minimum: slot.facePlaneAABB.minimum,
+                maximum: slot.facePlaneAABB.maximum,
+                boardID: boardID
+            )
             guard zip(slot.facePlaneAABB.minimum, slot.facePlaneAABB.maximum).allSatisfy({ $0 >= 0 && $0 <= $1 && $1 <= 1 }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor facePlaneAABB must be normalized")
             }
@@ -1470,7 +1483,8 @@ struct BoardPackageStore {
                     minimum: slot.facePlaneAABB.minimum,
                     maximum: slot.facePlaneAABB.maximum
                 ),
-                center: slot.center
+                center: slot.center,
+                outline: slot.outline ?? []
             )
         }
 
@@ -1571,6 +1585,44 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "model descriptor vectors must be finite, fixed-size, and rounded to nine decimals"
+            )
+        }
+    }
+
+    private static func validateDescriptorOutline(
+        _ outline: [[Double]]?,
+        minimum: [Double],
+        maximum: [Double],
+        boardID: String
+    ) throws {
+        guard let outline else { return }
+        guard outline.count >= 3 else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "model descriptor outline needs at least three points"
+            )
+        }
+        for point in outline {
+            try validateDescriptorVector(point, length: 2, boardID: boardID)
+            guard point[0] >= 0, point[0] <= 1, point[1] >= 0, point[1] <= 1 else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID,
+                    reason: "model descriptor outline must be normalized"
+                )
+            }
+        }
+        let derivedMinimum = [
+            outline.map { $0[0] }.min() ?? 0,
+            outline.map { $0[1] }.min() ?? 0
+        ]
+        let derivedMaximum = [
+            outline.map { $0[0] }.max() ?? 0,
+            outline.map { $0[1] }.max() ?? 0
+        ]
+        guard derivedMinimum == minimum, derivedMaximum == maximum else {
+            throw BoardPackageStoreError.invalidPackage(
+                boardID: boardID,
+                reason: "model descriptor facePlaneAABB must derive from its outline"
             )
         }
     }
@@ -3314,13 +3366,15 @@ private struct BoardPackageModelContactDocument: Decodable {
     let nodeIDs: [String]
     let facePlaneAABB: BoardPackageModelBoundsDocument
     let center: [Double]
-    private enum CodingKeys: String, CodingKey { case nodeIDs, facePlaneAABB, center }
+    let outline: [[Double]]?
+    private enum CodingKeys: String, CodingKey { case nodeIDs, facePlaneAABB, center, outline }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["nodeIDs", "facePlaneAABB", "center"])
+        try decoder.rejectUnknownKeys(["nodeIDs", "facePlaneAABB", "center", "outline"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         nodeIDs = try container.decode([String].self, forKey: .nodeIDs)
         facePlaneAABB = try container.decode(BoardPackageModelBoundsDocument.self, forKey: .facePlaneAABB)
         center = try container.decode([Double].self, forKey: .center)
+        outline = container.contains(.outline) ? try container.decode([[Double]].self, forKey: .outline) : nil
     }
 }
 

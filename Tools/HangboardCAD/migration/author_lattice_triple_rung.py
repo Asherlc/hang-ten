@@ -420,6 +420,16 @@ def main() -> int:
         extrusion.NodeID = f"{contact_id.replace('-', '_')}_surface"
         extrusion.NodeRole = "contact"
         extrusion.ContactID = contact_id
+        # The CAD document is the source of truth for hold geometry: author the
+        # contact band's front-plane (XZ) outline so the compiler emits it as the
+        # descriptor region rather than deriving it from the exported mesh.
+        extrusion.addProperty("App::PropertyString", "HangTenHoldOutline", "HangTen")
+        extrusion.HangTenHoldOutline = json.dumps([
+            [round(box.XMin, 4), round(box.ZMin, 4)],
+            [round(box.XMax, 4), round(box.ZMin, 4)],
+            [round(box.XMax, 4), round(box.ZMax, 4)],
+            [round(box.XMin, 4), round(box.ZMax, 4)],
+        ])
         _apply_material(extrusion, None)
 
     pad.addProperty("App::PropertyString", "NodeID", "HangTen")
