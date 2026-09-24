@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "c5ba7ddcd3a28d2bcdbc2f2ac5c2b1213db4934334d0e5f4b4aa65be9ae401dd",
+  "modelSHA256": "bd00147c6bf074271d4eb6542ca803ef8badcf37ca8d4978f0685f1c760bb399",
   "modelBounds": {
     "min": [
       -0.055,
@@ -84,7 +84,7 @@
       ],
       "facePlaneAABB": {
         "min": [
-          0.256363635,
+          0.186545453,
           0.154545453
         ],
         "max": [
@@ -93,12 +93,12 @@
         ]
       },
       "center": [
-        0.568181819,
+        0.533272727,
         0.327272726
       ],
       "outline": [
         [
-          0.256363635,
+          0.186545453,
           0.154545453
         ],
         [
@@ -110,7 +110,7 @@
           0.5
         ],
         [
-          0.256363635,
+          0.186545453,
           0.5
         ]
       ]

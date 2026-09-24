@@ -236,14 +236,18 @@ def _lip_stations(floor_depth: float):
     A station lands on DEPTH_15 so the upper (+Z) contact can own a published
     15 mm wall band before the lower half continues to 20 mm.
     """
-    stations = [(-0.05, 0.0)]
+    # Explicit (0, 0) keeps the measured opening at Y_FRONT; (-0.05, 0) alone
+    # sits outside the body and would shrink the front face via interpolation.
+    stations = [(-0.05, 0.0), (0.0, 0.0)]
     for index in range(1, LIP_SEGMENTS + 1):
         angle = 0.5 * math.pi * index / LIP_SEGMENTS
         depth = LIP_R * (1.0 - math.cos(angle))
-        inset = LIP_R * (1.0 - math.sin(angle))
+        # Convex entry lip: inset grows with depth (cutter shrinks into the body).
+        inset = LIP_R * math.sin(angle)
         stations.append((depth, inset))
-    inset_15 = LIP_R * 0.12 + FLOOR_INSET * 0.7
-    inset_20 = LIP_R * 0.12 + FLOOR_INSET
+    # Floor insets begin after the full lip radius so the cavity stays monotonic.
+    inset_15 = LIP_R + FLOOR_INSET * 0.7
+    inset_20 = LIP_R + FLOOR_INSET
     if floor_depth > DEPTH_15 + 0.5:
         # Keep stations strictly deepening.
         if stations[-1][0] < DEPTH_15 - 0.2:
@@ -312,17 +316,40 @@ def _half_opening_points(half_x: float, half_z: float, corner_r: float, y: float
     return [App.Vector(x, y, z) for x, z in cleaned]
 
 
+def _floor_insets():
+    """DEPTH_15 / DEPTH_20 radial insets from the trough station list."""
+    stations = _lip_stations(DEPTH_20)
+    insets = []
+    for target in (DEPTH_15, DEPTH_20):
+        matches = [
+            inset
+            for depth, inset in stations
+            if math.isclose(depth, target, abs_tol=1e-6)
+        ]
+        if len(matches) != 1:
+            raise ValueError(f"missing unique trough station at depth {target}")
+        insets.append(matches[0])
+    return insets
+
+
 def _upper_floor_filler():
-    """Fill the +Z half between 15 mm and 20 mm so that half reads as a 15 mm edge."""
-    inset = LIP_R * 0.15 + FLOOR_INSET
+    """Fill the +Z half between 15 mm and 20 mm so that half reads as a 15 mm edge.
+
+    Section insets come from the trough's DEPTH_15 / DEPTH_20 stations with a
+    small radial overlap so the fuse bonds into the cavity wall.
+    """
     y0 = Y_FRONT + DEPTH_15
     y1 = Y_FRONT + DEPTH_20 + 0.05
-    hx = OPEN_HALF_X - inset
-    hz = OPEN_HALF_Z - inset
-    cr = max(OPEN_CORNER_R - inset, 2.0)
+    overlap = 0.3
     sections = [
-        _half_opening_points(hx, hz, cr, y0, upper=True),
-        _half_opening_points(hx, hz, cr, y1, upper=True),
+        _half_opening_points(
+            OPEN_HALF_X - inset + overlap,
+            OPEN_HALF_Z - inset + overlap,
+            max(OPEN_CORNER_R - inset + overlap, 2.0),
+            y,
+            upper=True,
+        )
+        for y, inset in zip((y0, y1), _floor_insets())
     ]
     return _loft_solid(sections)
 
@@ -474,9 +501,6 @@ def main() -> int:
 
     _member, texture_source, texture_digest = _reference_texture(reference)
 
-    if DESTINATION.exists():
-        DESTINATION.unlink()
-
     document = App.newDocument(PACKAGE)
     document.Label = board["name"]
     document.addProperty("App::PropertyString", "HangTenBoardID", "HangTen")
@@ -587,6 +611,9 @@ def main() -> int:
             )
 
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    # Unlink only after validation so a failed author leaves the prior FCStd.
+    if DESTINATION.exists():
+        DESTINATION.unlink()
     document.saveAs(str(DESTINATION))
 
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")

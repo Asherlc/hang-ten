@@ -61,7 +61,7 @@
           "canonicalPoses": {
             "edge-20-front": {"rotation": [0.199367862, 0, 0, 0.979924719], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "edge-15-inverted": {"rotation": [9e-9, 0.199367862, -0.979924719, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "pocket-short-end": {"rotation": [0.14097438, -0.14097438, 0.692911411, 0.692911411], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [0.031, 0.009, -0.001], "right-lead": [0.031, -0.009, -0.001]}, "cordContactPoints": {"left-lead": [[0.06, 0.009, 0.0195], [0.043, 0.009, 0.0195], [0.031, 0.009, 0.0195]], "right-lead": [[0.06, -0.009, 0.0195], [0.043, -0.009, 0.0195], [0.031, -0.009, 0.0195]]}},
+            "pocket-short-end": {"rotation": [0.14097438, -0.14097438, 0.692911411, 0.692911411], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [0.028, 0.005, 0.001], "right-lead": [0.028, -0.005, 0.001]}, "cordContactPoints": {"left-lead": [[0.06, 0.005, 0.0195], [0.043, 0.005, 0.0195], [0.028, 0.005, 0.0195]], "right-lead": [[0.06, -0.005, 0.0195], [0.043, -0.005, 0.0195], [0.028, -0.005, 0.0195]]}},
             "jug-reverse": {"rotation": [9e-9, 0.979924719, 0.199367862, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
           }
         },
