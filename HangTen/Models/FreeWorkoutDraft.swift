@@ -1,5 +1,8 @@
 import Foundation
 
+/// Legacy free-workout draft shape retained for one-shot migration into `FreeWorkoutLog`
+/// (`FreeWorkoutDraftMigration` / `FreeWorkoutLog.migrating(from:)`). Not used as a live session model.
+
 enum FreeWorkoutExerciseKind: String, Codable, CaseIterable, Hashable {
     case hang
     case pull

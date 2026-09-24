@@ -220,10 +220,15 @@ coincident-surface trap in lesson 5:
 ### Measure topology before inventing pockets
 
 `board.json` contacts are a **logical partition**, not a pocket count. MXEdge
-Small has four grips but the front mesh is **two stadium troughs**: edge-8/14
-share the upper trough's walls, edge-18/mono share the lower (mono nests in the
-right end). Authoring four separate openings looked "reasonable" and was wrong
-for a long stretch of the session.
+Small has four grips but the front mesh is **two stadium troughs**. The upper
+trough is **one** stadium opening with **one** crowned floor — no artificial
+8/14 stepped shelf: edge-8 is the upper-wall lip only; edge-14 takes the rest of
+that trough including the single floor. edge-18/mono share the lower trough
+(mono nests in the right end). Authoring four separate openings, or inventing a
+dual-floor step in the upper trough, looked "reasonable" and was wrong for a
+long stretch of the session. This model widens stadium openings to rim radius
+**18 mm** (reference rim was 14 mm) and uses a **~9.9 mm** front wall roll — the
+largest ≤10 mm that still leaves a straight face inside the inset budget.
 
 **First measurement pass, before any cutter:**
 
@@ -265,9 +270,10 @@ triangle count.
   it arbitrarily when it straddles a region boundary.
 - **Published grip depths may not match reference node depths.** The reference
   Small nodes span whole troughs; the published-depth gate wants 8/14/18/25 mm.
-  Satisfy the gate deliberately (e.g. lip band of published depth; floor at
-  published centre depth with measured crown) and document the tradeoff — do not
-  blindly copy reference AABB depth extents.
+  Satisfy the gate with a **lip-only** band for the shallow upper partition and a
+  **single crowned floor** at the published centre depth for the deeper one — do
+  not invent a second floor or stepped shelf, and do not blindly copy reference
+  AABB depth extents.
 
 ### Construction habits that paid off on Small
 
@@ -289,6 +295,45 @@ triangle count.
   blocks; that wipes the venv mid-loop. Clean up exact owned resources at
   session end instead.
 - Prefer the sibling author script
-  (`migration/author_lattice_mxedge_lift_small.py`) and its AUTHORING notes as
-  the structural precedent for MXEdge Large / similar partitioned troughs —
-  not the constant-section `lattice-triple-rung` pad clone.
+  (`migration/author_lattice_mxedge_lift_small.py`, and Large’s
+  `author_lattice_mxedge_lift_large.py`) and its AUTHORING notes as the
+  structural precedent for partitioned troughs — not the constant-section
+  `lattice-triple-rung` pad clone. Large-specific measurement traps are in §11.
+
+## 11. What Large added
+(`lattice-mxedge-lift-large`; same sculpted brick as Small)
+
+Large’s committed descriptor claimed a ±49 mm front. The mesh is the Small
+brick: 168 × 34 × 98 mm. Catalogue “20 × 11 × 5 cm” is the shared rounded
+string. Measure the mesh before trusting either.
+
+The depth map must ignore the front skin and the perimeter roll. Minimum Y in
+a cell is the lip, so pockets vanish; take the deepest front-half sample.
+`|z| ≈ 49` is the roll and looks like a ~29 mm recess — ignore `|z| > 44` when
+counting troughs. Large was still two stadiums: edge-16 / edge-12 on the upper,
+edge-22 / mono-28 on the lower.
+
+Published and measured floors diverge per trough. Upper matched 16 mm. Lower
+measured 20 mm and was authored at the published 22 mm so the region-depth
+gate passes. Crown was `c ≈ 0.134` on Small’s stadium (arc centres `x = ±48`,
+radius 14 mm). A shallow lip station must stay shallower than the crowned end;
+12 mm versus 13.9 mm only just fit.
+
+Fit the mono on its own circle. The contact node includes the trough end, so a
+radius over the whole node is the stadium wall. Large tapered 13.6 mm to
+11.8 mm; Small’s 10.7 / 9.2 bore is the wrong hole. Put the left-hand split at
+`center − rim radius` or the edge and the mono claim the same faces.
+
+Cord dots on the top view were mouths, not through-holes: radius 3.4 mm,
+3 mm deep. `board.json` already said the interior was omitted. A dark lambert
+top hides them; confirm with a point query. Keep them n-gons.
+
+Once an `FCStd` exists, the delivery lock hashes descriptor + `board.json` +
+source, not the USDZ, and the file count stays three. Park the old digest in
+`supersededSha256Manifest`. That alignment test is not on the CI pytest path.
+Do not claim `native_source_checks` edit propagation for a cut-body source;
+that suite is the sketch-and-pad checker.
+
+In the app, tap the hold map. `hangten://board/…/hold/…` stops on the system
+“Open in Hang Ten?” dialog. The owned-simulator trap deletes DerivedData, so
+a second screenshot pass is a full rebuild.
