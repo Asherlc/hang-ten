@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "685f63d9953dd6d8266bc8e7e6b57598e1605903b7f38e26c3c568efd801356d",
+  "sha256Manifest": "3bac2dfa72e2c01f04413b4e390565736f7a0b99e4cc269c00dd6cd086d4b046",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "4af6ea74eff516f0ed5218a3bb39cdfb360e68e7145ba14345045f647120427c",
+  "supersededSha256Manifest": "685f63d9953dd6d8266bc8e7e6b57598e1605903b7f38e26c3c568efd801356d",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -126,17 +126,20 @@
     },
     "trango-rock-prodigy-natural": {
       "source": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
-      "sourceSHA256": "5039d21833bb5c4f53e112420b4d01e354c835c1c71e52607b30279fd05818c9",
+      "sourceSHA256": "fac0b0a4f6f39d03d1bdf9d996604fcff6e434b82d326e79f1f83da3f5a72269",
       "referenceSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
       "assetSHA256": "debb87aabd18678bb398ae00d88dd8a17debee90b4255ba7be572108dc6ff187",
       "descriptorSHA256": "3a233f3ea9d241665653f4616d14195976fba35a29c4594345d3cbe23854ac80",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile_board published depths top-jug=40, upper-pocket=38; 14/14 contacts partitioned; scripts/verify-model-delivery.py clean for updated lock; scripts/hangboard-packages.sh validate --root Hangboards; no dedicated native_source_checks variant authored for this one-off, per docs/freecad-authoring-lessons.md item 9)",
+      "nativeValidation": "compile reopen and published-depth gate passed (top-jug 40, upper-pocket 38); 14/14 contacts partitioned; scripts/verify-model-delivery.py clean; scripts/hangboard-packages.sh validate --root Hangboards; no dedicated native_source_checks variant authored for this one-off",
       "nativeAppValidation": "passed (dedicated workspace simulator 'Hang Ten Paseo trango-natural-cad Review', iPhone 17 Pro / iOS 26.5; DEBUG board-detail route HANGTEN_REVIEW_BOARD_DETAIL=1 with HANGTEN_REVIEW_BOARD_ID=trango.rock-prodigy-natural; migrated 3D model rendered both halves and the first hold (Left 40 mm top jug) highlighted; hold map listed 14/14 contacts; portrait and landscape captured; simulator archived, workspace artifacts removed)",
       "comparison": "accepted deviation: reference mesh is a genuinely sculpted shell (16,842 body points per half); native measured approximation drives each contact from its reference hold prim \u2014 constant-depth holds extrude mesh-derived XZ footprints; variable rails and outer-supported-pocket loft measured YZ cross-sections so depth tapers with the reference (rail_upper ~20.8\u219232.2 mm, rail_lower ~10.8\u219223.2 mm, matching manufacturer 20\u201333 / 10\u201324 mm); closed-crimp uses the floor-envelope wedge+tab footprint (not an invented swoosh). compare_exports evidence only per docs/freecad-authoring-migration.md; see .context/trango-natural-cad/trango-rock-prodigy-natural/cross-ref.md",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center",
       "supersedesBatch05Audit": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/native/trango-rock-prodigy-natural/geometry-verification.json (modelSHA256 b2bdbd9b...) is preserved unmodified as historical record of the retired GLB-import pipeline; Tools/HangboardPackages/tests/test_trango_batch05_model_migration.py no longer parametrizes 'natural'",
-      "shapeRevision": "mesh-derived, regular holds authored as clean primitives from the measured opening bounds: the two variable rails and center-lower pocket use a stadium, the outer-supported-pocket an ellipse, and the 3-finger upper pocket the union of three overlapping circular bores (scalloped 3-lobe opening, per the manufacturer photo; the reference mesh had flattened it to a slot). Labeled visual adaptation, not a traced measurement; rail depth still follows the measured taper. Irregular holds keep the measured envelope (closed-crimp sloper/wedge, elongated top jug). Region surfaces are reoriented from the recess floor normal so both halves face the front (single-sided material); back is flat."
+      "supersededSourceSHA256": "5039d21833bb5c4f53e112420b4d01e354c835c1c71e52607b30279fd05818c9",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry authored per the retired migration script",
+      "provenanceSidecar": "docs/source-audits/2026-09-24-trango-rock-prodigy-natural-cad-provenance.md (retired script recoverable with git show 6666ccde3:Tools/HangboardCAD/migration/author_trango_rock_prodigy_natural.py)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",

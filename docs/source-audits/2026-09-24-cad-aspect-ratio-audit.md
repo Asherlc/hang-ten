@@ -1,12 +1,12 @@
 # CAD board `aspectRatio` audit (2026-09-24)
 
-Scope: the five FreeCAD-backed packages whose `board.json` is generated from the
+Scope: the six FreeCAD-backed packages whose `board.json` is generated from the
 `HangTenBoardManifest` property of `Hangboards/<slug>/<slug>.FCStd`. The question
 was whether each manifest `aspectRatio` (top level and the single model
-presentation, which are equal on all five) is correct, should be corrected, or
-should be derived from the CAD geometry at build time.
+presentation, which are equal on five of the six) is correct, should be
+corrected, or should be derived from the CAD geometry at build time.
 
-Result: **all five values are kept unchanged. No FCStd, descriptor, lock or
+Result: **all six values are kept unchanged. No FCStd, descriptor, lock or
 generator change was made.**
 
 ## What `aspectRatio` means for model media
@@ -28,7 +28,7 @@ generator change was made.**
   `BoardPresentation.aspectRatio(for:)` replaces the stored value with the
   geometry framing when the media has `orientation` metadata.
 * Android: `BoardCanvas` uses the top-level `aspectRatio` for its canvas box.
-* Catalog convention (measured over all 46 model presentations, the five CAD
+* Catalog convention (measured over all 46 model presentations, the six CAD
   boards included): 19 store the descriptor x-span / y-span bit-exactly, 14 store
   a rounded or exact-rational value within 1.2e-7 relative (for example
   `1.7142857` = 12/7 on `captain-fingerfood-dual`), and 13 store a deliberate
@@ -49,6 +49,7 @@ generator change was made.**
 | `lattice-mxedge-lift-small` | `1.7142857142857142` | `1.714285728862974` (same brick) | 8.5e-9 | (a) keep |
 | `lattice-triple-rung` | `4.2307694857988265` | `4.2307694857988265` | 0 | (a) keep |
 | `metolius-rock-rings-3d` | `1.5` | `0.79347825` (0.146 / 0.184, one ring) | n/a (pair layout) | (a) keep |
+| `trango-rock-prodigy-natural` | top `1.5`; presentation `3.156167976953176` | `3.15616798` (0.481 / 0.1524, both halves) | 1.0e-9 (presentation) | (a) keep |
 
 ### captain-fingerfood-pocket — keep `1.6666667`
 
@@ -109,28 +110,44 @@ generator change was made.**
   computes into the 1.5 box, so there is no correctness defect to fix and no
   source that would justify a different number.
 
+### trango-rock-prodigy-natural — keep top-level `1.5` and presentation `3.156167976953176`
+
+* The two-piece board is `7.5 × 6 × 1.5 in (each board)` = 190.5 × 152.4 mm per
+  half, presented as both halves side by side: descriptor `modelBounds`
+  0.481 × 0.1524 m, ratio `3.15616798` (`productURL`
+  <https://trango.com/products/rock-prodigy-natural>`). The presentation value
+  reproduces it to 1.0e-9.
+* The top-level value is a deliberate `1.5` (a single square-ish half, the shape
+  Android's `BoardCanvas` box uses); it is not the paired front ratio, so a
+  build-time derivation from `modelBounds` would change it. Both values were
+  authored in the manifest, not derived.
+* Form provenance (primitives for the regular holds, the measured envelope for
+  the sloper/wedge and jug) is in
+  `2026-09-24-trango-rock-prodigy-natural-cad-provenance.md`.
+
 ## Why not derive `aspectRatio` at build time
 
-* It is not safe for all five: for `metolius-rock-rings-3d` the single-unit
+* It is not safe for all six: for `metolius-rock-rings-3d` the single-unit
   `modelBounds` ratio (0.793) is wrong for the paired layout, and a pair-aware
   derivation would depend on display-estimate spacing and cord/anchor geometry.
-* For the other four it would only replace exact or sourced ratios
-  (5/3, 12/7) with float32-noise ratios, a change of ≤ 2e-8 with no visible
-  effect, while altering generated `board.json` bytes and the FCStd-locked
-  delivery inventory for no benefit.
+* For the other four presentations it would only replace exact or sourced ratios
+  (5/3, 12/7, and the paired `3.156…`) with float32-noise ratios, a change of
+  ≤ 2e-8 with no visible effect, while altering generated `board.json` bytes and
+  the FCStd-locked delivery inventory for no benefit; for `trango-rock-prodigy-natural`
+  it would also overwrite the deliberate top-level `1.5`.
 * Therefore `aspectRatio` stays an authored manifest field, as documented in
   `Tools/HangboardCAD/README.md`. Note that the README's reason ("not reproducible
   from the descriptor's `modelBounds` for most boards") is accurate for the
-  whole model catalog but, among the five CAD boards, the only non-reproducible
-  one is the paired `metolius-rock-rings-3d`; the other four reproduce within
-  2e-8.
+  whole model catalog but, among the six CAD boards, the non-reproducible ones
+  are the paired `metolius-rock-rings-3d` and `trango-rock-prodigy-natural`'s
+  top-level value; the rest reproduce within 2e-8.
 
 ## App rendering and tests
 
 No value changed, so camera fit, snapshots and fixtures are unaffected. Tests
 that read these values: `HangTenTests/BoardModelTests.swift` sizes test
 viewports from `defaultPresentation.aspectRatio`; no Swift, Kotlin or Python
-test pins any of the five CAD boards' ratios.
+test pins any of the six CAD boards' ratios.
 
 ## Verification (2026-09-24)
 
@@ -140,5 +157,5 @@ test pins any of the five CAD boards' ratios.
 * `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory` →
   exit 0, 64 boards, 0 drafts.
 * `scripts/stage-board-packages.py --target android` into a scratch
-  `Hangboards` directory → exit 0; staged `board.json` for the five boards
+  `Hangboards` directory → exit 0; staged `board.json` for the six boards
   carries the values in the table above (top level and presentation).
