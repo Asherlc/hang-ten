@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung and metolius-rock-rings-3d native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, and captain-fingerfood-pocket native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,12 +50,24 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "3bc95dc535532d731879c6805d61cc6525d5d05a8593668838474efa97634b2c",
+  "sha256Manifest": "2614f098588a86753016b1f6c542f079732b4fdf7c390a15e331ff38f844c0ce",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "7a6e27d58a68cf4b4a4f3ba203fd83a2a2f805c4458478432c43a601a8dc9834",
+  "supersededSha256Manifest": "3bc95dc535532d731879c6805d61cc6525d5d05a8593668838474efa97634b2c",
   "migratedPackages": {
+    "captain-fingerfood-pocket": {
+      "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
+      "sourceSHA256": "0ef6b2a672989013054bef075017055c10575e90e651463b163047a1511edb14",
+      "referenceSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
+      "assetSHA256": "c5ba7ddcd3a28d2bcdbc2f2ac5c2b1213db4934334d0e5f4b4aa65be9ae401dd",
+      "descriptorSHA256": "af685a8773eb251145cd71a40c14697a196c8aa52cfd5f830b8da4fc5ea70245",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeAppValidation": "not run",
+      "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
+    },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
       "sourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
