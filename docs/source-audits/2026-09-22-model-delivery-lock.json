@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "18b0ba4d2232362e528fed0fc6ea0deedc16fc54642071f244f30c68becdf466",
+  "sha256Manifest": "7ea372f8c995e089645711ae6fdd9a56d76aff17d8e48457bdc9ac5485bbb49d",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "f776e4d0da832484515995fdad2c5ebc5ee12cd8c464d2953429e73d549b0aaf",
+  "supersededSha256Manifest": "18b0ba4d2232362e528fed0fc6ea0deedc16fc54642071f244f30c68becdf466",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -116,17 +116,17 @@
     },
     "trango-rock-prodigy-natural": {
       "source": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
-      "sourceSHA256": "f4f9ce22850827b29f11375b3e1cc0273d5d117d200d3376fe67ff831c651a43",
+      "sourceSHA256": "c9949c44fe263b193ee7c53439b0fbeb3174f1d187d015e9f2d9d278287f2fa0",
       "referenceSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
-      "assetSHA256": "a1683676b7b71aa79674f0fece7d7ec8a1858b7c3f52bfd75c6aed1e2833a7ff",
-      "descriptorSHA256": "63143953a55853525b580e2a3376a0ac2f9aa0211bf8fceae823f5b29559f25a",
+      "assetSHA256": "28310ce8720d37e96d5bd74060afa871046d3268716ee1f2b24bbff2716a35f7",
+      "descriptorSHA256": "2206ab1d67fadc2f73181c1f7d634990326a8e9b73ee9e4137232a52711d49d9",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (compile_board published depths top-jug=40, upper-pocket=38; 14/14 contacts partitioned; scripts/verify-model-delivery.py clean for updated lock; scripts/hangboard-packages.sh validate --root Hangboards; no dedicated native_source_checks variant authored for this one-off, per docs/freecad-authoring-lessons.md item 9)",
       "nativeAppValidation": "passed (dedicated workspace simulator 'Hang Ten Paseo trango-natural-cad Review', iPhone 17 Pro / iOS 26.5; DEBUG board-detail route HANGTEN_REVIEW_BOARD_DETAIL=1 with HANGTEN_REVIEW_BOARD_ID=trango.rock-prodigy-natural; migrated 3D model rendered both halves and the first hold (Left 40 mm top jug) highlighted; hold map listed 14/14 contacts; portrait and landscape captured; simulator archived, workspace artifacts removed)",
       "comparison": "accepted deviation: reference mesh is a genuinely sculpted shell (16,842 body points per half); native measured approximation drives each contact from its reference hold prim \u2014 constant-depth holds extrude mesh-derived XZ footprints; variable rails and outer-supported-pocket loft measured YZ cross-sections so depth tapers with the reference (rail_upper ~20.8\u219232.2 mm, rail_lower ~10.8\u219223.2 mm, matching manufacturer 20\u201333 / 10\u201324 mm); closed-crimp uses the floor-envelope wedge+tab footprint (not an invented swoosh). compare_exports evidence only per docs/freecad-authoring-migration.md; see .context/trango-natural-cad/trango-rock-prodigy-natural/cross-ref.md",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center",
       "supersedesBatch05Audit": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/native/trango-rock-prodigy-natural/geometry-verification.json (modelSHA256 b2bdbd9b...) is preserved unmodified as historical record of the retired GLB-import pipeline; Tools/HangboardPackages/tests/test_trango_batch05_model_migration.py no longer parametrizes 'natural'",
-      "shapeRevision": "mesh-derived vector fit, revised: each measured footprint is Chaikin-smoothed and fit with a low-degree Part.BSplineCurve.approximate (C2, DegMax=5, 0.8 mm), then discretized at 0.05 mm and evenly resampled to 120 points. Interpolating every reduced point chased noise into tens of poles (wiggled silhouette + 1.66M-triangle surfaces); the low-degree fit gives mean turning < 8 deg and a few-hundred-triangle prism. The elongated top jug uses a min/max-z envelope (a radial outline degenerates into a bowtie on a 185x12 mm strip) and is inset 1 mm from the top rim so the partition seam does not tear on the shared edge. Protrusions no longer carry a back-plane floor face, so the board back is a single flat surface (no coplanar z-fighting band). Still mesh-derived."
+      "shapeRevision": "mesh-derived vector fit, revised: each measured footprint is Chaikin-smoothed and fit with a low-degree Part.BSplineCurve.approximate (C2, DegMax=5, 0.8 mm), discretized at 0.05 mm and evenly resampled to 120 points; the elongated top jug uses a min/max-z envelope and is inset 1 mm from the top rim; protrusions carry no back-plane floor, so the back is one flat surface. Region surfaces are reoriented deterministically from the recess floor normal so both halves face the front: mirroring the outline had flipped one half's winding, and the single-sided material culled it (white holes in the app, hidden by the double-sided offline renderer). Still mesh-derived."
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."

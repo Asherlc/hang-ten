@@ -414,7 +414,37 @@ def _x_sections(points, triangles, n: int = 5):
 def _mirror_xz(points, side: str):
     if side == "left":
         return list(points)
-    return [(-x, z) for x, z in points]
+    # Negating x flips the winding; restore it so a mirrored region surface has
+    # the same orientation as the unmirrored one. Otherwise one half's recess
+    # normals point backward and the single-sided material culls it (white holes
+    # in the app, which the double-sided offline renderer hides).
+    return _ensure_ccw([(-x, z) for x, z in points])
+
+
+def _orient_region(shape):
+    """Orient a recess region so its floor faces the board front (-Y).
+
+    Mirroring the outline can leave the shell reversed, and the material is
+    single-sided, so an inverted half is culled in the app (white holes) even
+    though the double-sided offline render hides it. The floor is the deepest
+    planar face with a +/-Y normal; it must face the front.
+    """
+    deepest_y = None
+    floor_normal_y = None
+    for face in shape.Faces:
+        try:
+            u, v = face.Surface.parameter(face.CenterOfMass)
+            normal = face.normalAt(u, v)
+        except Exception:
+            continue
+        if abs(normal.y) > 0.9 and (deepest_y is None or face.CenterOfMass.y > deepest_y):
+            deepest_y = face.CenterOfMass.y
+            floor_normal_y = normal.y
+    # Front is -Y in the native frame; the floor must face it. (runtime maps
+    # +nz_usd to -ny_native, so a correct floor has native normal.y < 0.)
+    if floor_normal_y is not None and floor_normal_y > 0:
+        return shape.reversed()
+    return shape
 
 
 def _mirror_sections(rows, side: str):
@@ -754,17 +784,22 @@ def main() -> int:
                 continue
             base = _base_id(contact_id)
             spec = holds[base]
+            # Build the region surface from the canonical (left) spec, then
+            # mirror the shape for the right side so both halves share one
+            # orientation. The cutter solid is rebuilt from mirrored inputs so
+            # it stays a valid solid for the boolean.
             if spec["strategy"] == "taper":
                 sections = _mirror_sections(spec["sections"], side)
                 outline = _mirror_xz(spec["outline"], side)
-                solid_tool, surface, opening_ring = _taper_contact(
+                solid_tool, raw_surface, opening_ring = _taper_contact(
                     sections, spec["kind"], outline_xz=outline
                 )
             else:
                 outline = _mirror_xz(spec["outline"], side)
-                solid_tool, surface, opening_ring = _extrude_contact(
+                solid_tool, raw_surface, opening_ring = _extrude_contact(
                     outline, spec["depth"], spec["kind"]
                 )
+            region_shape = _orient_region(raw_surface.reversed())
             tag = contact_id.replace("-", "_")
             solid_obj = document.addObject("Part::Feature", f"Cutter_{tag}")
             solid_obj.Shape = solid_tool
@@ -778,7 +813,7 @@ def main() -> int:
                 cut_chain = cut_obj
             else:
                 fuse_tools.append(solid_obj)
-            pending_surfaces.append((contact_id, surface, opening_ring, spec))
+            pending_surfaces.append((contact_id, region_shape, opening_ring, spec))
 
         if fuse_tools:
             fuse_obj = document.addObject("Part::MultiFuse", f"Fuse_{side}")
@@ -793,11 +828,11 @@ def main() -> int:
         document.recompute()
         half_bodies[side] = half
 
-        for contact_id, surface, opening_ring, spec in pending_surfaces:
+        for contact_id, region_shape, opening_ring, spec in pending_surfaces:
             base = _base_id(contact_id)
             tag = contact_id.replace("-", "_")
             region = document.addObject("Part::Feature", f"Region_{tag}")
-            region.Shape = surface.reversed()
+            region.Shape = region_shape
             region.addProperty("App::PropertyString", "NodeID", "HangTen")
             region.addProperty("App::PropertyString", "NodeRole", "HangTen")
             region.addProperty("App::PropertyString", "ContactID", "HangTen")
