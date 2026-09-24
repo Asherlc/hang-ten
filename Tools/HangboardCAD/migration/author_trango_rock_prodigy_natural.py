@@ -13,19 +13,27 @@ hold prim's own mesh:
   measured YZ cross-sections along X so depth tapers with the reference
   (and with the manufacturer 20–33 / 10–24 mm rail ranges).
 
-Measured footprints are vectorized: each closed XZ ring is Chaikin-smoothed
-and fit with a low-degree `Part.BSplineCurve.approximate` (C2, DegMax=5,
-``OUTLINE_FIT_TOLERANCE_MM``), then discretized at ``OUTLINE_DEFLECTION_MM``
-and resampled to ``OUTLINE_SAMPLES`` evenly spaced points for the exported
-polygon/prism. A low-degree *approximation* keeps the fit from chasing measured
-noise into tens of poles: too many poles both wiggles the silhouette and makes
-OCCT mesh the extruded surface into hundreds of thousands of triangles per hold
+Holds whose measured footprint is genuinely a regular shape are authored as a
+clean primitive built from the measured opening bounds — a stadium (the two
+variable rails and the center-lower pocket) or an ellipse (the
+outer-supported-pocket). This is a deliberate, labeled visual adaptation for
+fidelity of form, not a traced measurement: the openings come from a fitted
+primitive so the silhouette reads crisp and regular. The measured envelope is
+kept only where the shape is genuinely irregular — the keyhole upper pocket,
+the closed-crimp wedge, and the elongated top jug. Rail depth still follows the
+measured profile, so the variable rails keep their taper.
+
+Irregular measured footprints are vectorized: each closed XZ ring is
+Chaikin-smoothed and fit with a low-degree `Part.BSplineCurve.approximate` (C2,
+DegMax=5, ``OUTLINE_FIT_TOLERANCE_MM``), then discretized at
+``OUTLINE_DEFLECTION_MM`` and resampled to ``OUTLINE_SAMPLES`` evenly spaced
+points. A low-degree *approximation* keeps the fit from chasing measured noise
+into tens of poles: too many poles both wiggles the silhouette and makes OCCT
+mesh the extruded surface into hundreds of thousands of triangles per hold
 (measured: a 168-pole VDegree=1 BSplineSurface meshes into 1.66M triangles /
-89 s at 0.02 mm, and still 266k at 0.5 mm). The polygon prism keeps the mesh
-linear in the point count while the fitted curve keeps the silhouette smooth.
-Rail depth/z profiles are densely sampled then linearly resampled to a few loft
-stations so the taper reads smooth rather than stair-stepped. Still mesh-derived
-— not photo-traced.
+89 s at 0.02 mm, and still 266k at 0.5 mm). Rail depth/z profiles are densely
+sampled then linearly resampled so the taper reads smooth rather than
+stair-stepped. Still mesh-derived — not photo-traced.
 
 `compare_exports` is evidence, not a gate — see docs/freecad-authoring-migration.md
 "Accepted deviation for a sculpted board".
@@ -135,6 +143,18 @@ HOLD_KIND = {
 }
 
 GRIP_DEPTH_MM = {"top-jug": 40.0, "upper-pocket": 38.0}
+
+# Holds whose measured footprint is genuinely a regular shape are authored as a
+# clean primitive built from the measured bounds (a deliberate, labeled visual
+# adaptation — see module docstring), not a noisy mesh-derived contour. Holds
+# left out of this table keep the measured envelope: the keyhole upper pocket,
+# the closed-crimp wedge, and the elongated top jug.
+PRIMITIVE_SHAPE = {
+    "top-variable-rail": "stadium",
+    "bottom-variable-rail": "stadium",
+    "center-lower-pocket": "stadium",
+    "outer-supported-pocket": "ellipse",
+}
 
 NODE_SUFFIX = {
     "closed-crimp": "closed_crimp_001",
@@ -422,12 +442,13 @@ def _mirror_xz(points, side: str):
 
 
 def _orient_region(shape):
-    """Orient a recess region so its floor faces the board front (-Y).
+    """Orient a recess region so its floor faces the board front.
 
     Mirroring the outline can leave the shell reversed, and the material is
     single-sided, so an inverted half is culled in the app (white holes) even
     though the double-sided offline render hides it. The floor is the deepest
-    planar face with a +/-Y normal; it must face the front.
+    planar face with a +/-Y normal; its native normal must have y > 0, which the
+    runtime maps to a front-facing +z.
     """
     deepest_y = None
     floor_normal_y = None
@@ -440,8 +461,6 @@ def _orient_region(shape):
         if abs(normal.y) > 0.9 and (deepest_y is None or face.CenterOfMass.y > deepest_y):
             deepest_y = face.CenterOfMass.y
             floor_normal_y = normal.y
-    # Front is -Y in the native frame; the floor must face it. (runtime maps
-    # +nz_usd to -ny_native, so a correct floor has native normal.y < 0.)
     if floor_normal_y is not None and floor_normal_y > 0:
         return shape.reversed()
     return shape
@@ -648,12 +667,139 @@ def _taper_contact(sections_xz_depth, kind, outline_xz=None):
     return solid_tool, surface, opening_ring
 
 
+def _opening_bounds(points, band: float = 1.0):
+    """Bounds of the opening rim: the points at the front plane.
+
+    The reference hold prim includes its walls, so its raw x/z extent overshoots
+    the opening. Restrict to the front band to recover the actual footprint.
+    """
+    front = min(p[1] for p in points)
+    rim = [p for p in points if p[1] <= front + band]
+    xs = [p[0] for p in rim]
+    zs = [p[2] for p in rim]
+    return min(xs), max(xs), min(zs), max(zs)
+
+
+def _primitive_outline(shape: str, x0, x1, z0, z1):
+    """A clean stadium or ellipse outline from measured bounds, evenly sampled."""
+    cx = (x0 + x1) / 2.0
+    cz = (z0 + z1) / 2.0
+    a = (x1 - x0) / 2.0
+    b = (z1 - z0) / 2.0
+    if shape == "ellipse":
+        points = [
+            (
+                cx + a * math.cos(2.0 * math.pi * index / OUTLINE_SAMPLES),
+                cz + b * math.sin(2.0 * math.pi * index / OUTLINE_SAMPLES),
+            )
+            for index in range(OUTLINE_SAMPLES)
+        ]
+    else:  # stadium: rounded rectangle with semicircular caps
+        flat = max(a - b, 0.0)
+        radius = b if flat > 1e-6 else min(a, b)
+        segments = OUTLINE_SAMPLES // 2
+        points = []
+        for index in range(segments + 1):
+            angle = -math.pi / 2.0 + math.pi * index / segments
+            points.append(
+                (cx + flat + radius * math.cos(angle), cz + radius * math.sin(angle))
+            )
+        for index in range(segments + 1):
+            angle = math.pi / 2.0 + math.pi * index / segments
+            points.append(
+                (cx - flat + radius * math.cos(angle), cz + radius * math.sin(angle))
+            )
+    return _resample_closed(_ensure_ccw(points), OUTLINE_SAMPLES)
+
+
+def _depth_at(x, sections):
+    """Interpolate the measured depth profile at ``x`` (clamped at the ends)."""
+    xs = [row["x"] for row in sections]
+    if x <= xs[0]:
+        return sections[0]["depth"]
+    if x >= xs[-1]:
+        return sections[-1]["depth"]
+    for index in range(len(sections) - 1):
+        if xs[index] <= x <= xs[index + 1]:
+            span = xs[index + 1] - xs[index]
+            fraction = 0.0 if span == 0 else (x - xs[index]) / span
+            return sections[index]["depth"] + fraction * (
+                sections[index + 1]["depth"] - sections[index]["depth"]
+            )
+    return sections[-1]["depth"]
+
+
+def _primitive_taper_sections(shape: str, bounds, depth_sections, n: int = 140):
+    """Cross-sections of a clean primitive, with the measured depth taper.
+
+    Each row is (x, z0, z1, depth): the z-range follows the primitive outline so
+    the opening stays a regular stadium/ellipse, and the depth follows the
+    measured profile so a variable rail keeps its taper. These feed the same
+    loft the measured rails use.
+    """
+    x0, x1, z0, z1 = bounds
+    cx = (x0 + x1) / 2.0
+    cz = (z0 + z1) / 2.0
+    a = (x1 - x0) / 2.0
+    b = (z1 - z0) / 2.0
+    flat = max(a - b, 0.0)
+    radius = b if flat > 1e-6 else min(a, b)
+    rows = []
+    for index in range(n):
+        fraction = 0.005 + 0.99 * index / (n - 1)
+        x = x0 + (x1 - x0) * fraction
+        if shape == "ellipse":
+            t = (x - cx) / a if a else 0.0
+            half = b * math.sqrt(max(0.0, 1.0 - t * t))
+        else:
+            offset = abs(x - cx) - flat
+            if offset <= 0.0:
+                half = radius
+            elif offset <= radius:
+                half = math.sqrt(max(0.0, radius * radius - offset * offset))
+            else:
+                half = 0.0
+        if half <= 1e-6:
+            continue
+        rows.append(
+            {"x": x, "z0": cz - half, "z1": cz + half, "depth": _depth_at(x, depth_sections)}
+        )
+    return rows
+
+
 def _measure_holds(stage, cache):
     measured = {}
     for base, path in LEFT_HOLD_PATHS.items():
         points, triangles = _world_points_and_tris(stage, cache, path)
         strategy, kind = HOLD_KIND[base]
         depth_mesh = max(p[1] for p in points) - min(p[1] for p in points)
+        shape_kind = PRIMITIVE_SHAPE.get(base)
+        if shape_kind is not None:
+            x0, x1, z0, z1 = _opening_bounds(points)
+            outline = _primitive_outline(shape_kind, x0, x1, z0, z1)
+            if strategy == "taper":
+                depth_sections = _x_sections(points, triangles, n=5)
+                sections = _primitive_taper_sections(shape_kind, (x0, x1, z0, z1), depth_sections)
+                measured[base] = {
+                    "strategy": strategy,
+                    "kind": kind,
+                    "primitive": True,
+                    "outline": outline,
+                    "sections": sections,
+                    "depth": max(s["depth"] for s in sections),
+                    "depth_mesh": depth_mesh,
+                }
+            else:
+                depth = 27.0 if base == "center-lower-pocket" else depth_mesh
+                measured[base] = {
+                    "strategy": strategy,
+                    "kind": kind,
+                    "primitive": True,
+                    "outline": outline,
+                    "depth": depth,
+                    "depth_mesh": depth_mesh,
+                }
+            continue
         if base == "closed-crimp":
             _curve, outline = _floor_envelope_outline(points)
             depth = 10.0
@@ -784,22 +930,20 @@ def main() -> int:
                 continue
             base = _base_id(contact_id)
             spec = holds[base]
-            # Build the region surface from the canonical (left) spec, then
-            # mirror the shape for the right side so both halves share one
-            # orientation. The cutter solid is rebuilt from mirrored inputs so
-            # it stays a valid solid for the boolean.
+            outline = _mirror_xz(spec["outline"], side)
             if spec["strategy"] == "taper":
                 sections = _mirror_sections(spec["sections"], side)
-                outline = _mirror_xz(spec["outline"], side)
                 solid_tool, raw_surface, opening_ring = _taper_contact(
                     sections, spec["kind"], outline_xz=outline
                 )
             else:
-                outline = _mirror_xz(spec["outline"], side)
                 solid_tool, raw_surface, opening_ring = _extrude_contact(
                     outline, spec["depth"], spec["kind"]
                 )
-            region_shape = _orient_region(raw_surface.reversed())
+            if spec["kind"] == "recess":
+                region_shape = _orient_region(raw_surface.reversed())
+            else:
+                region_shape = raw_surface.reversed()
             tag = contact_id.replace("-", "_")
             solid_obj = document.addObject("Part::Feature", f"Cutter_{tag}")
             solid_obj.Shape = solid_tool
