@@ -21,9 +21,10 @@ Provenance:
   - measured centre floors are 16.0 mm (upper) and 20.0 mm (lower). Upper uses the
     published 16 mm. Lower uses the published 22 mm so the edge-22 region depth matches
     board.json. Stated deviation: lower floor 2 mm deeper than measured;
-  - mono bore placed at the lower trough's right end (x 48.4, z -22). Reference mono
-    node reaches y = +10.5 (27.5 mm from the front). Floor is the published 28 mm.
-    Rim radii are the Small bore, shifted to this centre — a measured approximation.
+  - mono bore centred at (x 48, z -22). Radius tapers from 13.6 mm at the lip to
+    11.7 mm at the published 28 mm floor (reference floor y = +10.5, r about 11.8);
+  - two external cord mouths on the top edge, r 3.4 mm, 3 mm deep, at x = +/-69.75,
+    y = 1. The reference omits the passage interior.
 * Display material texture embedded from the same reference package.
 * Measured approximation of a sculpted display mesh — not manufacturing geometry.
   compare_exports is evidence, not a gate.
@@ -123,14 +124,22 @@ PROUD_MM = 0.3
 
 # Partition boundaries measured on the reference's own contact nodes.
 CONTACT_X_LIMIT = 63.0
-MONO_X_MIN = 36.0
+MONO_X_MIN = 34.4
 
-MONO_CENTER_X = 48.4
+MONO_CENTER_X = 48.0
 MONO_CENTER_Z = -22.0
-MONO_RIM_R = 10.7
-MONO_TAPER_R = 10.2
-MONO_FLOOR_R = 9.2
-MONO_TAPER_DEPTH = 4.0
+# Measured on the mono node around that centre: r 13.6 mm at y = -16, r 11.8 mm at
+# y = 10 (the reference floor). The exported floor sits at the published 28 mm
+# (y = 11), where the same taper is 11.7 mm.
+MONO_RIM_R = 13.6
+MONO_FLOOR_R = 11.7
+# External cord mouths on the top edge. The reference only models the mouth
+# (board.json: interior omitted): r 3.4 mm, 3 mm deep, centred at x = +/-69.75, y = 1.
+HOLE_X = 69.75
+HOLE_Y = 1.0
+HOLE_RADIUS = 3.4
+HOLE_DEPTH = 3.0
+HOLE_SIDES = 24
 # Planar n-gon only — a true Cylinder fails compile_board partition (distToShape 1e-4).
 MONO_SIDES = 48
 
@@ -428,11 +437,14 @@ def _trough_cutter(spec: dict, absolute_depths=()):
     return _triangle_solid(triangles)
 
 
+def _mono_radius(y: float, floor_y: float) -> float:
+    t = min(max((y - Y_FRONT) / (floor_y - Y_FRONT), 0.0), 1.0)
+    return MONO_RIM_R + (MONO_FLOOR_R - MONO_RIM_R) * t
+
+
 def _mono_cutter():
-    """Bore inside the lower trough's right end; no Cylinder, planar n-gon only."""
+    """Tapered bore in the lower trough's right end; planar n-gon, no Cylinder."""
     lower = TROUGHS["lower"]
-    # Stay cylindrical until below the crowned trough floor across the whole bore mouth,
-    # so the taper starts in solid material rather than part way across the floor.
     deepest = max(
         _trough_depth(lower, min(abs(MONO_CENTER_X - MONO_RIM_R), TROUGH_HALF_LEN)),
         _trough_depth(lower, min(abs(MONO_CENTER_X + MONO_RIM_R), TROUGH_HALF_LEN)),
@@ -441,11 +453,29 @@ def _mono_cutter():
     floor_y = Y_FRONT + GRIP_DEPTH_MM["mono-28"]
     sections = [
         _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_RIM_R, Y_FRONT - PROUD_MM),
-        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_RIM_R, apex_y),
-        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_TAPER_R, apex_y + MONO_TAPER_DEPTH),
+        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, _mono_radius(apex_y, floor_y), apex_y),
         _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_FLOOR_R, floor_y),
     ]
     return _loft_solid(sections)
+
+
+def _hole_cutter(sign: float):
+    """Shallow vertical mouth in the top edge. Circle in XY, lofted in Z, n-gon only."""
+    cx = sign * HOLE_X
+    z_open = HALF_Z + PROUD_MM
+    z_floor = HALF_Z - HOLE_DEPTH
+
+    def ring(z: float):
+        return [
+            App.Vector(
+                cx + HOLE_RADIUS * math.cos(2.0 * math.pi * index / HOLE_SIDES),
+                HOLE_Y + HOLE_RADIUS * math.sin(2.0 * math.pi * index / HOLE_SIDES),
+                z,
+            )
+            for index in range(HOLE_SIDES)
+        ]
+
+    return _loft_solid([ring(z_open), ring(z_floor)])
 
 
 def _in_trough(spec: dict, x: float, z: float, slack: float = 0.2) -> bool:
@@ -572,6 +602,8 @@ def main() -> int:
         _trough_cutter(upper, absolute_depths=(GRIP_DEPTH_MM["edge-12"],)),
         _trough_cutter(lower),
         _mono_cutter(),
+        _hole_cutter(1.0),
+        _hole_cutter(-1.0),
     ]
 
     contact_predicates = [
