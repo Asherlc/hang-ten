@@ -5,24 +5,35 @@ Migration tool only — not a build input.
 Provenance:
 * Overall envelope 168 x 34 x 98 mm and grip depths 18 / 14 / 8 / 25 mm from board.json.
 * Front geometry measured from the Git-resolved reference USDZ (pre-migration commit via
-  reference.load_reference), by depth-mapping its front surface on a 0.5 mm grid and
-  sectioning it at x = 10 mm:
-  - the front carries **two stadium troughs**, not four flush pockets: arc centres at
-    x = +/-48 mm, end radius 14 mm (half the opening height), openings z [8.5, 36.5]
-    and z [-34.5, -6.5], widest at x = +/-62 mm;
-  - each trough wall is an ogee tangent to the front face at the rim and to the trough
-    floor. A smoothstep in the wall inset tracks the measured wall to ~0.3 mm, so the
-    wall is authored as a loft of uniformly offset stadium sections;
+  reference.load_reference) by depth-mapping its front surface on a 0.5 mm grid:
+  - the front carries **two stadium troughs**, not four separate openings. Every x column
+    of the reference front has exactly two recessed runs, z [10.5, 34.5] and
+    z [-32.5, -8.5], both spanning the full width. The four published grips are a
+    *partition of those two troughs*, not four pockets: edge-8 and edge-14 are the upper
+    and lower walls of the upper trough (their reference AABBs meet at z = 23), and
+    edge-18 and mono-25 split the lower one;
+  - each trough is a stadium: arc centres at x = +/-48 mm, rim radius 14 mm, centred at
+    z = 22.5 (upper) and z = -20.5 (lower);
+  - each trough wall is an ogee tangent to the front face at the rim and to the floor.
+    A smoothstep in the wall inset tracks the measured wall to ~0.3 mm;
   - the walls are what the reference renders as one dark band (upper wall, facing down)
     and one bright band (lower wall, facing up) per trough;
-  - measured trough depths are 12.5 mm (upper) and 16.5 mm (lower). This model uses the
-    published 14 mm / 18 mm instead, so each exported region's depth equals the depth
-    board.json publishes. Stated deviation: floors 1.5 mm deeper than measured;
+  - **the floor is crowned along the trough's length** — deepest at the centre and
+    shallower toward the ends, which is the published MXEdge behaviour ("true depth
+    varies along length"). The reference wall is one uniform depth scaling of its centre
+    profile: at every z the measured depth is depth(x = 0) * (1 - c * (x/48)^2), holding
+    to 0.03 mm for c = 0.1952 (upper) and c = 0.1885 (lower). The rim outline itself does
+    not change along x. Cutters therefore scale depth by that parabola and leave the
+    inset profile alone;
+  - measured trough centre depths are 12.5 mm (upper) and 16.5 mm (lower). This model
+    uses the published 14 mm / 18 mm instead, so each exported region's depth equals the
+    depth board.json publishes. Stated deviation: floors 1.5 mm deeper than measured;
   - the mono is a bore inside the lower trough's right end: measured rim r 10.7 mm at
     (x 48.4, z -20.3), near-cylindrical to a floor of r 9.2 mm. The floor is placed at
     the published 25 mm (measured 27.2 mm);
   - front and back perimeter roll r 4 mm (the measured front face is flat only to
-    |z| <= 45 mm), outer corner radius 12 mm.
+    |z| <= 45 mm), outer corner radius 15 mm. Both come from the reference silhouette:
+    a 15 mm corner reproduces its measured max |x| at |z| = 36/40/44/46/48 to 0.25 mm.
 * Display material texture embedded from the same reference package.
 * Measured approximation of a sculpted display mesh — not manufacturing geometry.
 
@@ -36,6 +47,9 @@ front 8 mm of the upper trough's upper wall — the lip actually gripped:
     edge-8   upper trough, upper wall, front 8 mm        y [-17, -9]   span  8
     edge-18  lower trough, lower wall, full depth        y [-17, +1]   span 18
     mono-25  lower trough right end + bore incl. floor   y [-17, +8]   span 25
+
+Because the floor is crowned, a region's deepest face is the one at x = 0; each of those
+spans reaches the published depth there and no deeper.
 """
 
 from __future__ import annotations
@@ -75,10 +89,10 @@ HALF_X = BODY_X / 2.0
 HALF_Z = BODY_Z / 2.0
 Y_BACK = Y_FRONT + BODY_Y
 
-# Outer envelope: 12 mm XZ corners plus a 4 mm roll into the front and back faces.
+# Outer envelope: 15 mm XZ corners plus a 4 mm roll into the front and back faces.
 # Planar facets throughout — an OCCT fillet leaves a tessellation-vs-Area gap at compile.
-CORNER_R = 12.0
-CORNER_SEGMENTS = 8
+CORNER_R = 15.0
+CORNER_SEGMENTS = 12
 CORNER_CENTER_X = HALF_X - CORNER_R
 CORNER_CENTER_Z = HALF_Z - CORNER_R
 EDGE_ROLL_R = 4.0
@@ -91,17 +105,35 @@ GRIP_DEPTH_MM = {
     "mono-25": 25.0,
 }
 
-# Measured stadium openings: arc centres at x = +/-48, end radius = half the opening height.
+# Measured stadium openings: arc centres at x = +/-48, rim radius = half the opening height.
 TROUGH_HALF_LEN = 48.0
 TROUGH_RADIUS = 14.0
-TROUGH_SEGMENTS = 10  # planar facets per stadium end arc
-# Depth is the published grip depth of the trough's lower wall (see module docstring).
+# Even, so a vertex lands exactly on z = z_center and no facet straddles the wall that
+# divides the trough's two regions.
+TROUGH_ARC_SEGMENTS = 14
+# Chords of the crowned floor parabola; 10 holds it to under 0.01 mm.
+TROUGH_STRAIGHT_SEGMENTS = 10
 TROUGHS = {
-    "upper": {"z_center": 22.5, "depth": GRIP_DEPTH_MM["edge-14"], "apex_inset": 11.5},
-    "lower": {"z_center": -20.5, "depth": GRIP_DEPTH_MM["edge-18"], "apex_inset": 11.0},
+    "upper": {
+        "z_center": 22.5,
+        "depth": GRIP_DEPTH_MM["edge-14"],
+        "crown_fraction": 0.1952,
+        "apex_inset": 11.5,
+    },
+    "lower": {
+        "z_center": -20.5,
+        "depth": GRIP_DEPTH_MM["edge-18"],
+        "crown_fraction": 0.1885,
+        "apex_inset": 11.0,
+    },
 }
-# Depth fractions of the lofted wall stations; the inset follows the inverse smoothstep.
-WALL_FRACTIONS = (0.0, 0.03, 0.08, 0.15, 0.25, 0.37, 0.5, 0.62, 0.73, 0.83, 0.91, 0.97, 1.0)
+# Depth fractions of the wall stations; the inset follows the inverse smoothstep. The gap
+# between 0.52 and 0.76 is where the upper trough's absolute 8 mm station sweeps as the
+# floor crowns — see `_stations`.
+WALL_FRACTIONS = (
+    0.0, 0.02, 0.05, 0.09, 0.14, 0.20, 0.27, 0.35, 0.43, 0.52, 0.76, 0.85, 0.92, 0.97, 1.0
+)
+STATION_MARGIN = 0.02
 # Cutters start this far in front of the board so no boolean face is coplanar with it.
 PROUD_MM = 0.3
 
@@ -116,7 +148,7 @@ MONO_TAPER_R = 10.2
 MONO_FLOOR_R = 9.2
 MONO_TAPER_DEPTH = 4.0
 # Planar n-gon only — a true Cylinder fails compile_board partition (distToShape 1e-4).
-MONO_SIDES = 32
+MONO_SIDES = 48
 
 NODE_IDS = {
     "body": "Body_actual_surface_001",
@@ -173,12 +205,8 @@ def _apply_material(obj, texture_source: Path | None) -> None:
         obj.TextureFile = str(texture_source)
 
 
-def _smoothstep(t: float) -> float:
-    return t * t * (3.0 - 2.0 * t)
-
-
 def _inverse_smoothstep(fraction: float) -> float:
-    """Wall inset parameter for a depth fraction (exact inverse of `_smoothstep`)."""
+    """Wall inset parameter for a depth fraction (exact inverse of a smoothstep)."""
     clamped = min(max(fraction, 0.0), 1.0)
     return 0.5 - math.sin(math.asin(1.0 - 2.0 * clamped) / 3.0)
 
@@ -191,6 +219,36 @@ def _loft_solid(sections):
     """
     wires = [Part.makePolygon(list(points) + [points[0]]) for points in sections]
     return Part.makeLoft(wires, True, True)
+
+
+def _triangle_solid(triangles):
+    """Closed solid from an explicit triangle soup, outward-oriented.
+
+    The crowned trough floor makes a quad between two wall stations non-planar, and a
+    non-planar face would break `compile_board`'s surface-area partition check, which
+    assumes tessellation is exact. Triangles are planar by construction, so the cutter is
+    authored as triangles rather than lofted through polygon wires.
+    """
+    volume = 0.0
+    for a, b, c in triangles:
+        volume += (
+            a.x * (b.y * c.z - b.z * c.y)
+            - a.y * (b.x * c.z - b.z * c.x)
+            + a.z * (b.x * c.y - b.y * c.x)
+        )
+    if volume < 0.0:
+        triangles = [(a, c, b) for a, b, c in triangles]
+    faces = [
+        Part.Face(Part.makePolygon([a, b, c, a]))
+        for a, b, c in triangles
+    ]
+    shell = Part.makeShell(faces)
+    if not shell.isClosed():
+        raise ValueError("triangulated cutter shell is not closed")
+    solid = Part.makeSolid(shell)
+    if solid.Volume <= 0.0:
+        raise ValueError(f"triangulated cutter has non-positive volume {solid.Volume}")
+    return solid
 
 
 def _rounded_rect_points(radius: float, y: float, segments: int = CORNER_SEGMENTS):
@@ -211,21 +269,6 @@ def _rounded_rect_points(radius: float, y: float, segments: int = CORNER_SEGMENT
     return points
 
 
-def _stadium_points(z_center: float, radius: float, y: float, segments: int = TROUGH_SEGMENTS):
-    """CCW XZ stadium outline; arc centres stay at x = +/-TROUGH_HALF_LEN."""
-    points = []
-    for cx, start, end in (
-        (TROUGH_HALF_LEN, -math.pi / 2.0, math.pi / 2.0),
-        (-TROUGH_HALF_LEN, math.pi / 2.0, 1.5 * math.pi),
-    ):
-        for index in range(segments + 1):
-            angle = start + (end - start) * index / segments
-            points.append(
-                App.Vector(cx + radius * math.cos(angle), y, z_center + radius * math.sin(angle))
-            )
-    return points
-
-
 def _ngon_points(cx: float, cz: float, radius: float, y: float, sides: int = MONO_SIDES):
     return [
         App.Vector(
@@ -238,7 +281,7 @@ def _ngon_points(cx: float, cz: float, radius: float, y: float, sides: int = MON
 
 
 def _body_solid():
-    """Envelope with 12 mm XZ corners and a 4 mm roll into the front and back faces."""
+    """Envelope with 15 mm XZ corners and a 4 mm roll into the front and back faces."""
     sections = []
     roll = []
     for index in range(EDGE_ROLL_SEGMENTS + 1):
@@ -253,27 +296,164 @@ def _body_solid():
     return _loft_solid(sections)
 
 
-def _wall_stations(spec: dict, extra_fractions=()):
-    """(y, inset) stations of one trough wall, rim first."""
-    fractions = sorted(set(WALL_FRACTIONS) | set(extra_fractions))
-    return [
-        (Y_FRONT + spec["depth"] * fraction, spec["apex_inset"] * _inverse_smoothstep(fraction))
-        for fraction in fractions
+def _trough_depth(spec: dict, core_x: float) -> float:
+    """Local trough depth at a station on the stadium core segment.
+
+    The reference wall is one uniform depth scaling of its centre profile, so the whole
+    wall — not just the floor — follows this parabola.
+    """
+    t = core_x / TROUGH_HALF_LEN
+    return spec["depth"] * (1.0 - spec["crown_fraction"] * t * t)
+
+
+def _stadium_template():
+    """CCW ring of (core_x, outward normal) samples of the stadium's core segment.
+
+    A point of the outline inset by `s` is `(core_x + (R - s)*nx, z_center + (R - s)*nz)`,
+    so every station reuses one template and corresponding samples stay aligned. The
+    straight runs are subdivided because that is where the crowned floor bends.
+    """
+    template = []
+    for index in range(TROUGH_ARC_SEGMENTS + 1):
+        angle = -math.pi / 2.0 + math.pi * index / TROUGH_ARC_SEGMENTS
+        template.append((TROUGH_HALF_LEN, math.cos(angle), math.sin(angle)))
+    for index in range(1, TROUGH_STRAIGHT_SEGMENTS):
+        span = 2.0 * TROUGH_HALF_LEN * index / TROUGH_STRAIGHT_SEGMENTS
+        template.append((TROUGH_HALF_LEN - span, 0.0, 1.0))
+    for index in range(TROUGH_ARC_SEGMENTS + 1):
+        angle = math.pi / 2.0 + math.pi * index / TROUGH_ARC_SEGMENTS
+        template.append((-TROUGH_HALF_LEN, math.cos(angle), math.sin(angle)))
+    for index in range(1, TROUGH_STRAIGHT_SEGMENTS):
+        span = 2.0 * TROUGH_HALF_LEN * index / TROUGH_STRAIGHT_SEGMENTS
+        template.append((-TROUGH_HALF_LEN + span, 0.0, -1.0))
+    return template
+
+
+def _stations(spec: dict, absolute_depths=()):
+    """Ordered wall stations of one trough, rim first.
+
+    A ``fraction`` station rides the local trough depth, which is what keeps the wall a
+    uniform scaling of the centre profile. An ``absolute`` station holds one constant y so
+    a region boundary can land exactly on a published grip depth. Because the floor
+    crowns, an absolute station sweeps across a band of fractions along the trough, and
+    any fraction inside that band would cross it and fold the surface — so those are
+    dropped and the ordering is then asserted at both ends of the sweep.
+    """
+    depth_center = spec["depth"]
+    depth_end = _trough_depth(spec, TROUGH_HALF_LEN)
+    bands = [
+        (depth / depth_center - STATION_MARGIN, depth / depth_end + STATION_MARGIN)
+        for depth in absolute_depths
     ]
-
-
-def _trough_cutter(spec: dict, extra_fractions=()):
-    stations = _wall_stations(spec, extra_fractions)
-    sections = [_stadium_points(spec["z_center"], TROUGH_RADIUS, Y_FRONT - PROUD_MM)]
-    sections.extend(
-        _stadium_points(spec["z_center"], TROUGH_RADIUS - inset, y) for y, inset in stations
+    for depth in absolute_depths:
+        if depth >= depth_end:
+            raise ValueError(f"absolute station {depth} mm is deeper than the trough end")
+    stations = [
+        ("fraction", fraction)
+        for fraction in WALL_FRACTIONS
+        if all(not low < fraction < high for low, high in bands)
+    ]
+    stations += [("absolute", depth) for depth in absolute_depths]
+    stations.sort(
+        key=lambda station: (
+            station[1] * depth_center if station[0] == "fraction" else station[1]
+        )
     )
-    return _loft_solid(sections)
+    for core_x in (0.0, TROUGH_HALF_LEN):
+        depths = [_station_depth(spec, station, core_x) for station in stations]
+        if any(b - a <= 1e-6 for a, b in zip(depths, depths[1:])):
+            raise ValueError(f"wall stations are not ordered at core x {core_x}: {depths}")
+    return stations
+
+
+def _station_depth(spec: dict, station, core_x: float) -> float:
+    kind, value = station
+    if kind == "fraction":
+        return _trough_depth(spec, core_x) * value
+    return value
+
+
+def _ring(spec: dict, template, station, *, y_override: float | None = None):
+    """One closed ring of cutter vertices, one per template sample."""
+    points = []
+    for core_x, normal_x, normal_z in template:
+        depth_local = _trough_depth(spec, core_x)
+        if station is None:
+            depth, inset = 0.0, 0.0
+        else:
+            depth = _station_depth(spec, station, core_x)
+            inset = spec["apex_inset"] * _inverse_smoothstep(depth / depth_local)
+        radius = TROUGH_RADIUS - inset
+        points.append(
+            App.Vector(
+                core_x + radius * normal_x,
+                Y_FRONT + depth if y_override is None else y_override,
+                spec["z_center"] + radius * normal_z,
+            )
+        )
+    return points
+
+
+def _cap_triangles(spec: dict, ring, *, flip: bool):
+    """Close a stadium ring with facets that follow the crowned floor.
+
+    A fan from one centre point would replace the parabolic floor with a cone, so the
+    straight run is bridged strip by strip between its top and bottom samples, which pair
+    up by x. Each end arc's samples all share one core x and therefore one y, so an arc
+    is flat and can be fanned from its own axis point.
+    """
+    arc = TROUGH_ARC_SEGMENTS
+    straight = TROUGH_STRAIGHT_SEGMENTS
+    top = [arc] + list(range(arc + 1, arc + straight)) + [arc + straight]
+    bottom = [2 * arc + straight] + list(
+        range(2 * arc + straight + 1, 2 * arc + 2 * straight)
+    ) + [0]
+    bottom = list(reversed(bottom))  # now aligned with `top` by x
+
+    triangles = []
+    for index in range(straight):
+        a, b = ring[top[index]], ring[top[index + 1]]
+        c, d = ring[bottom[index + 1]], ring[bottom[index]]
+        triangles.append((a, b, c))
+        triangles.append((a, c, d))
+
+    for start, axis_x in ((0, TROUGH_HALF_LEN), (arc + straight, -TROUGH_HALF_LEN)):
+        axis = App.Vector(axis_x, ring[start].y, spec["z_center"])
+        for index in range(start, start + arc):
+            triangles.append((axis, ring[index], ring[index + 1]))
+
+    if flip:
+        triangles = [(a, c, b) for a, b, c in triangles]
+    return triangles
+
+
+def _trough_cutter(spec: dict, absolute_depths=()):
+    """Stadium trough with a parabolically crowned floor, as planar triangles."""
+    template = _stadium_template()
+    rings = [_ring(spec, template, None, y_override=Y_FRONT - PROUD_MM)]
+    rings += [_ring(spec, template, station) for station in _stations(spec, absolute_depths)]
+
+    triangles = _cap_triangles(spec, rings[0], flip=True)
+    count = len(template)
+    for near, far in zip(rings, rings[1:]):
+        for index in range(count):
+            following = (index + 1) % count
+            triangles.append((near[index], near[following], far[following]))
+            triangles.append((near[index], far[following], far[index]))
+    triangles += _cap_triangles(spec, rings[-1], flip=False)
+    return _triangle_solid(triangles)
 
 
 def _mono_cutter():
     """Bore inside the lower trough's right end; no Cylinder, planar n-gon only."""
-    apex_y = Y_FRONT + TROUGHS["lower"]["depth"]
+    lower = TROUGHS["lower"]
+    # Stay cylindrical until below the crowned trough floor across the whole bore mouth,
+    # so the taper starts in solid material rather than part way across the floor.
+    deepest = max(
+        _trough_depth(lower, min(abs(MONO_CENTER_X - MONO_RIM_R), TROUGH_HALF_LEN)),
+        _trough_depth(lower, min(abs(MONO_CENTER_X + MONO_RIM_R), TROUGH_HALF_LEN)),
+    )
+    apex_y = Y_FRONT + deepest
     floor_y = Y_FRONT + GRIP_DEPTH_MM["mono-25"]
     sections = [
         _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_RIM_R, Y_FRONT - PROUD_MM),
@@ -295,7 +475,15 @@ def _is_front_plane(face) -> bool:
 
 
 def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
-    """Match trough-wall faces on one side of the apex, no deeper than `y_max`."""
+    """Match trough-wall faces on one side of the apex, no deeper than `y_max`.
+
+    The side test is on the face's whole extent, not its centroid. Each x strip of the
+    floor is one plane, so the boolean hands it back as a single face spanning the full
+    apex width, and a centroid test would assign it by whichever side a rounding error
+    fell on. A face that straddles the centre line belongs to neither wall and stays with
+    the body, which is also where the reference's own node split leaves it.
+    """
+    z_center = spec["z_center"]
 
     def matches(face) -> bool:
         box = face.BoundBox
@@ -308,7 +496,7 @@ def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: 
             return False
         if not x_min <= center.x <= x_max:
             return False
-        return (center.z > spec["z_center"]) if above else (center.z < spec["z_center"])
+        return box.ZMin >= z_center - 0.05 if above else box.ZMax <= z_center + 0.05
 
     return matches
 
@@ -396,10 +584,8 @@ def main() -> int:
 
     upper = TROUGHS["upper"]
     lower = TROUGHS["lower"]
-    # Station exactly at the published 8 mm so the edge-8 region's depth extent is 8.000.
-    edge_8_fraction = GRIP_DEPTH_MM["edge-8"] / upper["depth"]
     cutters = [
-        _trough_cutter(upper, extra_fractions=(edge_8_fraction,)),
+        _trough_cutter(upper, absolute_depths=(GRIP_DEPTH_MM["edge-8"],)),
         _trough_cutter(lower),
         _mono_cutter(),
     ]
@@ -504,6 +690,11 @@ def main() -> int:
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference envelope mm: {measured}")
     print(f"body faces: {len(body_shape.Faces)}  volume {body_shape.Volume:.0f} mm^3")
+    for name, spec in TROUGHS.items():
+        print(
+            f"  {name} trough floor: {spec['depth']:.2f} mm at x=0, "
+            f"{_trough_depth(spec, TROUGH_HALF_LEN):.2f} mm at x=+/-{TROUGH_HALF_LEN:.0f}"
+        )
     for contact_id, info in regions.items():
         print(
             f"  {contact_id:8s} faces={info['faces']:3d} x={info['x']} z={info['z']} "
