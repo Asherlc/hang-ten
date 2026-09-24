@@ -169,6 +169,7 @@ struct FreeWorkoutLogSessionView: View {
             Button("Save") {
                 saveTemplateAndDismiss()
             }
+            .disabled(templateName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .accessibilityIdentifier("freeWorkout.template.save")
             Button("Skip", role: .cancel) {
                 dismissAfterFinish()

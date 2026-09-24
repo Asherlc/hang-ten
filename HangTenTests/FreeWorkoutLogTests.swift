@@ -980,4 +980,26 @@ final class FreeWorkoutFinishTests: XCTestCase {
         XCTAssertNil(FreeWorkoutFinish.saveTemplate(name: "   ", finished: finished, defaults: defaults))
         XCTAssertTrue(FreeWorkoutTemplateStore.load(defaults: defaults).isEmpty)
     }
+
+    func testDecimalTextParsesCommaLocale() {
+        let de = Locale(identifier: "de_DE")
+        XCTAssertEqual(FreeWorkoutDecimalText.parse("12,5", locale: de), 12.5)
+        XCTAssertEqual(FreeWorkoutDecimalText.parse(" 12,5 ", locale: de), 12.5)
+        XCTAssertNil(FreeWorkoutDecimalText.parse("   ", locale: de))
+        XCTAssertNil(FreeWorkoutDecimalText.parse("", locale: de))
+    }
+
+    func testDecimalTextParsesDotLocale() {
+        let en = Locale(identifier: "en_US")
+        XCTAssertEqual(FreeWorkoutDecimalText.parse("12.5", locale: en), 12.5)
+        XCTAssertEqual(FreeWorkoutDecimalText.format(12.5, locale: en), "12.5")
+        XCTAssertEqual(FreeWorkoutDecimalText.format(12, locale: en), "12")
+        XCTAssertEqual(FreeWorkoutDecimalText.format(nil, locale: en), "")
+    }
+
+    func testDecimalTextFormatsCommaLocale() {
+        let de = Locale(identifier: "de_DE")
+        XCTAssertEqual(FreeWorkoutDecimalText.format(12.5, locale: de), "12,5")
+        XCTAssertEqual(FreeWorkoutDecimalText.format(12, locale: de), "12")
+    }
 }

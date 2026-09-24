@@ -30,13 +30,13 @@ struct FreeWorkoutLogSetSheet: View {
         self.initialReps = initialReps
         self.onSave = onSave
         self.onCancel = onCancel
-        _weightText = State(initialValue: Self.formatOptional(initialWeightKGF))
+        _weightText = State(initialValue: FreeWorkoutDecimalText.format(initialWeightKGF))
         _durationText = State(
-            initialValue: Self.formatOptional(
+            initialValue: FreeWorkoutDecimalText.format(
                 initialDuration ?? FreeWorkoutGuidedHangCountdown.defaultDuration
             )
         )
-        _repsText = State(initialValue: Self.formatOptional(initialReps.map(Double.init)))
+        _repsText = State(initialValue: FreeWorkoutDecimalText.format(initialReps.map(Double.init)))
     }
 
     var body: some View {
@@ -84,23 +84,15 @@ struct FreeWorkoutLogSetSheet: View {
     }
 
     private func save() {
-        let weight = Double(weightText.trimmingCharacters(in: .whitespacesAndNewlines))
+        let weight = FreeWorkoutDecimalText.parse(weightText)
         switch exerciseType {
         case .hang:
-            let durationValue = Double(durationText.trimmingCharacters(in: .whitespacesAndNewlines))
+            let durationValue = FreeWorkoutDecimalText.parse(durationText)
             let duration = FreeWorkoutGuidedHangCountdown.resolvedDuration(durationValue)
             onSave(weight, duration, nil)
         case .pullUp:
             let repsValue = Int(repsText.trimmingCharacters(in: .whitespacesAndNewlines))
             onSave(weight, nil, repsValue)
         }
-    }
-
-    private static func formatOptional(_ value: Double?) -> String {
-        guard let value else { return "" }
-        if value.rounded() == value {
-            return String(Int(value))
-        }
-        return String(value)
     }
 }

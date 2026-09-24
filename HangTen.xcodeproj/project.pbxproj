@@ -155,6 +155,7 @@
 		F1A2B3C4D5E6F708192A3B52 /* FreeWorkoutGuidedHangView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B53 /* FreeWorkoutGuidedHangView.swift */; };
 		F1A2B3C4D5E6F708192A3B54 /* FreeWorkoutLogSetSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B55 /* FreeWorkoutLogSetSheet.swift */; };
 		F1A2B3C4D5E6F708192A3B56 /* FreeWorkoutGuidedHangCountdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B57 /* FreeWorkoutGuidedHangCountdown.swift */; };
+		F1A2B3C4D5E6F708192A3B5A /* FreeWorkoutDecimalText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */; };
 		C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */; };
 		D10000000000000000000001 /* beastmaker-1000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000001 /* beastmaker-1000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-1000", ); }; };
 		D10000000000000000000002 /* beastmaker-2000 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000002 /* beastmaker-2000 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-beastmaker-2000", ); }; };
@@ -234,6 +235,7 @@
 		F1A2B3C4D5E6F708192A3B53 /* FreeWorkoutGuidedHangView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutGuidedHangView.swift; path = FreeWorkoutGuidedHangView.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B55 /* FreeWorkoutLogSetSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutLogSetSheet.swift; path = FreeWorkoutLogSetSheet.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B57 /* FreeWorkoutGuidedHangCountdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutGuidedHangCountdown.swift; path = FreeWorkoutGuidedHangCountdown.swift; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDecimalText.swift; path = FreeWorkoutDecimalText.swift; sourceTree = "<group>"; };
 		6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutUITests.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HangTen/Resources/GripHand/hand-mesh.json"; sourceTree = SOURCE_ROOT; };
@@ -599,6 +601,7 @@
 				E5B9F2D30A7C5E1B9F4D6E82 /* FreeWorkoutRestTimer.swift */,
 				F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */,
 				F1A2B3C4D5E6F708192A3B57 /* FreeWorkoutGuidedHangCountdown.swift */,
+				F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1037,6 +1040,7 @@
 				F1A2B3C4D5E6F708192A3B52 /* FreeWorkoutGuidedHangView.swift in Sources */,
 				F1A2B3C4D5E6F708192A3B54 /* FreeWorkoutLogSetSheet.swift in Sources */,
 				F1A2B3C4D5E6F708192A3B56 /* FreeWorkoutGuidedHangCountdown.swift in Sources */,
+				F1A2B3C4D5E6F708192A3B5A /* FreeWorkoutDecimalText.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
