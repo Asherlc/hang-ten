@@ -170,6 +170,19 @@ partitions the board surface, writes the USDZ directly, reopens the exported
 bytes, derives the descriptor from those bytes, and publishes the pair. It never
 writes `board.json`.
 
+**Without the pinned toolchain.** A USDZ compiled anywhere else (for example
+Linux conda-forge FreeCAD, which links OCCT 7.9.3) fails the macOS
+`cad-reproducibility` CI job. When that job fails, it uploads the pinned-toolchain
+rebuild as the `cad-rebuilt-assets` artifact (kept 7 days), laid out like
+`Hangboards/`: `<slug>/assets/primary.usdz` and `primary.model.json` for every
+source-backed board (`verify_reproducible.py --keep-rebuild <dir>`). Download it
+from the failing run, copy the mismatched boards' pairs over
+`Hangboards/<slug>/assets/`, review the `git diff` (only the reported boards should
+change, and the descriptor's `modelSHA256` must hash the new USDZ), refresh the
+delivery lock for the changed descriptors (see "Refresh the delivery lock" in
+`docs/freecad-authoring-migration.md`), then commit and push; the job must then
+pass on the new bytes.
+
 ## Source document contract
 
 Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),

@@ -14,6 +14,11 @@ Run with the host interpreter; FreeCAD is invoked as a subprocess.
 
     python3 Tools/HangboardCAD/verify_reproducible.py            # all source-backed boards
     python3 Tools/HangboardCAD/verify_reproducible.py --package lattice-triple-rung
+    python3 Tools/HangboardCAD/verify_reproducible.py --keep-rebuild <dir>
+
+`--keep-rebuild` copies every rebuilt pair to `<dir>/<package>/assets/`
+(`primary.usdz`, `primary.model.json`), mirroring `Hangboards/`, whether or not it
+matched. It never changes the verdict or the exit status.
 """
 
 from __future__ import annotations
@@ -22,6 +27,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -87,7 +93,9 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def verify(package: str, freecad: Path, extra_path: str) -> dict:
+def verify(
+    package: str, freecad: Path, extra_path: str, keep: Path | None = None
+) -> dict:
     committed_dir = REPOSITORY / "Hangboards" / package / "assets"
     committed_asset = committed_dir / "primary.usdz"
     committed_descriptor = committed_dir / "primary.model.json"
@@ -101,6 +109,12 @@ def verify(package: str, freecad: Path, extra_path: str) -> dict:
         rebuilt_descriptor = destination / "primary.model.json"
         if not rebuilt_asset.is_file() or not rebuilt_descriptor.is_file():
             raise RuntimeError(f"{package}: the rebuild produced no asset/descriptor pair")
+
+        if keep is not None:
+            kept = keep / package / "assets"
+            kept.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(rebuilt_asset, kept / "primary.usdz")
+            shutil.copyfile(rebuilt_descriptor, kept / "primary.model.json")
 
         committed_sha = sha256(committed_asset)
         rebuilt_sha = sha256(rebuilt_asset)
@@ -135,6 +149,12 @@ def main(argv: list[str] | None = None) -> int:
         default=os.environ.get("HANGTEN_CAD_PYTHONPATH", ""),
         help="site directory containing pxr, supplied to FreeCAD's interpreter",
     )
+    parser.add_argument(
+        "--keep-rebuild",
+        type=Path,
+        default=None,
+        help="copy each rebuilt asset/descriptor pair to <dir>/<package>/assets/",
+    )
     arguments = parser.parse_args(argv)
 
     packages = arguments.package or source_backed_packages()
@@ -149,7 +169,12 @@ def main(argv: list[str] | None = None) -> int:
     failures = []
     for package in packages:
         try:
-            report = verify(package, arguments.freecad, arguments.extra_python_path)
+            report = verify(
+                package,
+                arguments.freecad,
+                arguments.extra_python_path,
+                arguments.keep_rebuild,
+            )
         except RuntimeError as error:
             failures.append(f"{package}: {error}")
             continue
