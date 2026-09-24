@@ -47,6 +47,39 @@ def check(label: str, condition: bool, detail: str = "") -> None:
 def main() -> int:
     scratch = Path(tempfile.mkdtemp(prefix="hangten-broken-"))
     try:
+        # The partition guard must reject a region that claims more body area
+        # than its own exported surface covers; a guard that never fires is not
+        # proven. Synthetic facets keep this independent of any source document.
+        print("case 0: a region that over-claims body area", flush=True)
+        points = [
+            App.Vector(0.0, 0.0, 0.0),
+            App.Vector(1.0, 0.0, 0.0),
+            App.Vector(1.0, 1.0, 0.0),
+            App.Vector(0.0, 1.0, 0.0),
+        ]
+        facets = [(0, 1, 2), (0, 2, 3)]
+        triangles_by_node = {"Body": [1], "Region": [0]}
+        over_claimed = None
+        try:
+            compile_board._validate_partition(
+                points, facets, triangles_by_node, {"Region": 0.1}
+            )
+        except compile_board.BuildError as error:
+            over_claimed = error
+        check(
+            "the partition guard rejects a region that claims more than it exports",
+            isinstance(over_claimed, compile_board.BuildError) and "Region" in str(over_claimed),
+            str(over_claimed),
+        )
+        matched = True
+        try:
+            compile_board._validate_partition(
+                points, facets, triangles_by_node, {"Region": 0.5}
+            )
+        except compile_board.BuildError:
+            matched = False
+        check("the partition guard accepts a region that matches its surface", matched)
+
         broken = scratch / f"{PACKAGE}.FCStd"
         shutil.copyfile(SOURCE, broken)
 

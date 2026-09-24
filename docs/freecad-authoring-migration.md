@@ -126,8 +126,12 @@ an **open surface** (a shell), not a solid:
 - a pocket is a `Part::Loft` with `Solid = False` (the lateral surface, no
   opening cap) fused with a `Part::Face` on its floor sketch;
 - a cord aperture is an extrusion with `Solid = False`;
-- a region that is a sub-region of a larger body face (a jug band) can be the
-  `Part::Common` of the body and a bounding solid.
+- a jug band, a sub-region of a larger body face, is a shallow recess cut from
+  the body like a pocket, so the partition claims the cut and the region's own
+  surface matches it (see
+  `Tools/HangboardCAD/migration/author_metolius_rock_rings_3d.py`); a
+  `Part::Common` of the body and a bounding solid is superseded — it leaves a
+  ragged hole.
 
 A solid region is wrong: its tessellation carries the opening cap (the body has
 a hole there, so the hold would render flush and hide the cavity) and, for a
@@ -374,8 +378,8 @@ which is the part a CPU render cannot check.
    board surface: the body node carries the surface *minus* the contact regions.
    Emitting the body whole and laying contact patches on top duplicates coplanar
    geometry and flickers. Assign every body triangle to exactly one node, refuse
-   a triangle claimed by two regions, and refuse an exported area that does not
-   match the body surface.
+   a triangle claimed by two regions, and refuse a region that claims more body
+   area than its own exported surface covers.
 
 5. **Normals are directions, not positions.** See the frame section.
 
@@ -410,7 +414,7 @@ which is the part a CPU render cannot check.
     `ContactID`, which a v2 object does not have, so the published-depth guard
     passed vacuously. It must key on `ContactSlotID` and map the slot to the
     published depth through each instance's `contactIDsBySlotID`. Both are now
-    covered by `Tools/HangboardCAD/tests/metolius_native.py`.
+    covered by `Tools/HangboardCAD/tests/test_metolius_native.py`.
 
 11. **A ruled loft twists when its two sections are independently ordered.**
     A pocket floor measured as its own loop does not share vertex order with the
@@ -422,8 +426,7 @@ which is the part a CPU render cannot check.
 
 ## Lessons for the next board
 
-See [`freecad-authoring-lessons.md`](freecad-authoring-lessons.md) for the full
-write-up. The durable points:
+The durable points:
 
 - **Decide goal and acceptance bar first.** A sculpted display shell cannot be
   matched by a solid native model; either accept a measured approximation up

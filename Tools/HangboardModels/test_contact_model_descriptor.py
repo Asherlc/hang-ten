@@ -187,6 +187,35 @@ class ContactModelDescriptorTests(unittest.TestCase):
         ).to_json()
         self.assertNotIn("outline", descriptor["contacts"]["edge-left"])
 
+    def test_outline_outside_the_model_face_is_rejected(self) -> None:
+        module = self.descriptor_module()
+        with self.assertRaisesRegex(ValueError, "outside the model face envelope"):
+            module.compile_descriptor(
+                b"board-usdz",
+                [
+                    module.NodeBinding("Body", "body"),
+                    module.NodeBinding("Contact", "contact", "edge-left"),
+                ],
+                {"Body": [(0.0, 0.0, 0.0), (1.0, 1.0, 0.2)], "Contact": [(0.1, 0.2, 0.2), (0.4, 0.5, 0.2)]},
+                frozenset({"edge-left"}),
+                {"edge-left": [(10.0, 20.0), (40.0, 20.0), (40.0, 50.0), (10.0, 50.0)]},
+            )
+
+    def test_outline_rounding_at_the_model_envelope_is_clamped(self) -> None:
+        module = self.descriptor_module()
+        descriptor = module.compile_descriptor(
+            b"board-usdz",
+            [
+                module.NodeBinding("Body", "body"),
+                module.NodeBinding("Contact", "contact", "edge-left"),
+            ],
+            {"Body": [(0.0, 0.0, 0.0), (1.0, 1.0, 0.2)], "Contact": [(0.1, 0.2, 0.2), (0.4, 0.5, 0.2)]},
+            frozenset({"edge-left"}),
+            {"edge-left": [(-1e-9, -1e-9), (1.0, -1e-9), (1.0, 1.0), (-1e-9, 1.0)]},
+        ).to_json()
+        contact = descriptor["contacts"]["edge-left"]
+        self.assertEqual(contact["facePlaneAABB"], {"min": [0.0, 0.0], "max": [1.0, 1.0]})
+
     def test_outline_parser_rejects_an_aabb_that_does_not_derive_from_the_outline(self) -> None:
         module = self.descriptor_module()
         value = {

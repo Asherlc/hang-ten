@@ -383,36 +383,31 @@ def _build_mesh(node_id, points, triangles, material, model_box):
     )
 
 
-def _validate_partition(body_points, body_facets, triangles_by_node, region_objects):
-    """Assert the exported nodes are a true partition of the board surface.
+def _validate_partition(body_points, body_facets, triangles_by_node, region_surface_areas):
+    """Assert no region claims more body area than the surface it exports.
 
-    Two failure modes would otherwise ship silently: a region that double-covers
-    an area another region also covers, and a gap where nothing was assigned.
-    Both leave a plausible-looking asset.
+    Each region ships its own tessellated CAD surface, and the body node carries
+    the body surface *minus* the triangles that surface claims. If a region were
+    assigned more body triangles than its own exported surface covers, removing
+    them would leave a gap the region cannot fill. The region's own tessellation
+    is the yardstick, so curved native surfaces (fillets, ruled lofts) are
+    measured on the same footing as the body, unlike an analytic area.
 
-    The comparison is against the *tessellated* body area, not the exact OCCT
-    area: native curved surfaces (fillets, ruled lofts, cylinders) tessellate to
-    slightly less area than the analytic face, so an analytic total would flag
-    every legitimately curved board. Every tessellated triangle must still be
-    assigned exactly once, which is the property this guards.
+    Both meshes tessellate the same source at the same deflection, so the only
+    allowance needed is floating-point and tessellation error.
     """
     total = _triangle_area(body_points, body_facets, range(len(body_facets)))
-    exported = sum(
-        _triangle_area(body_points, body_facets, indices)
-        for indices in triangles_by_node.values()
-    )
-    # The partition is over one tessellation, so the only allowance needed is
-    # floating-point summation error.
     tolerance = max(1e-6, 1e-6 * total)
-    if abs(exported - total) > tolerance:
-        raise BuildError(
-            f"exported surface area {exported:.4f} mm^2 does not match the tessellated body "
-            f"surface {total:.4f} mm^2; the regions leave a gap or overlap larger than "
-            f"{tolerance:.6f} mm^2"
+    for node_id, region_area in region_surface_areas.items():
+        claimed = _triangle_area(
+            body_points, body_facets, triangles_by_node.get(node_id, ())
         )
-    # A region may legitimately claim no body triangles when it ships its own
-    # surface (for example a jug band authored as a clean patch proud of a flat
-    # body face); the area check above still guards the body partition.
+        if claimed - region_area > tolerance:
+            raise BuildError(
+                f"{node_id} claims {claimed:.4f} mm^2 of body surface but its own "
+                f"exported surface is only {region_area:.4f} mm^2; the region leaves "
+                f"a gap larger than {tolerance:.6f} mm^2"
+            )
 
 
 def _declared_depths(board, version: int) -> dict:
@@ -582,56 +577,61 @@ def build(
 
     print("[5/10] partitioning the surface and preserving normals and materials")
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
-    materials = _material_registry(objects, source, staging)
-    body_points, body_facets, assignment = _partition_body_triangles(
-        body_object.Shape, [obj.Shape for obj in region_objects], deflection
-    )
-    body_indices = [index for index in range(len(body_facets)) if index not in assignment]
-
-    meshes = [
-        _build_mesh(
-            body_object.NodeID,
-            *_subset_mesh(body_points, body_facets, body_indices),
-            material=materials[body_object.MaterialName],
-            model_box=model_box,
+    try:
+        materials = _material_registry(objects, source, staging)
+        body_points, body_facets, assignment = _partition_body_triangles(
+            body_object.Shape, [obj.Shape for obj in region_objects], deflection
         )
-    ]
-    print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
+        body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
-    for obj in region_objects:
-        # Each region object's own CAD surface is its exported mesh — the CAD is
-        # the source of truth for hold geometry. The body was partitioned around
-        # the same surface, so the two never overlap.
-        points, facets = obj.Shape.tessellate(deflection)
-        if not facets:
-            raise BuildError(f"{obj.NodeID} has no surface")
-        meshes.append(
+        meshes = [
             _build_mesh(
-                obj.NodeID,
-                points,
-                facets,
-                material=materials[obj.MaterialName],
+                body_object.NodeID,
+                *_subset_mesh(body_points, body_facets, body_indices),
+                material=materials[body_object.MaterialName],
                 model_box=model_box,
             )
+        ]
+        print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
+
+        region_surface_areas = {}
+        for obj in region_objects:
+            # Each region object's own CAD surface is its exported mesh — the CAD is
+            # the source of truth for hold geometry. The body was partitioned around
+            # the same surface, so the two never overlap.
+            points, facets = obj.Shape.tessellate(deflection)
+            if not facets:
+                raise BuildError(f"{obj.NodeID} has no surface")
+            region_surface_areas[obj.NodeID] = _triangle_area(
+                points, facets, range(len(facets))
+            )
+            meshes.append(
+                _build_mesh(
+                    obj.NodeID,
+                    points,
+                    facets,
+                    material=materials[obj.MaterialName],
+                    model_box=model_box,
+                )
+            )
+            print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
+
+        # Every region ships its own CAD surface; a region may claim no body
+        # triangles (a proud patch), but it must not claim more body area than it
+        # exports, or the body partition would leave a gap it cannot fill.
+        _validate_partition(
+            body_points,
+            body_facets,
+            {body_object.NodeID: body_indices, **{
+                obj.NodeID: [i for i, owner in assignment.items() if owner == index]
+                for index, obj in enumerate(region_objects)
+            }},
+            region_surface_areas,
         )
-        print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
+        measured_depths = _validate_published_depths(
+            contact_objects, _declared_depths(board, version), version, deflection
+        )
 
-    # Every body triangle is still claimed by exactly one region, and every
-    # region is a CAD surface on the body; the partition remains complete.
-    _validate_partition(
-        body_points,
-        body_facets,
-        {body_object.NodeID: body_indices, **{
-            obj.NodeID: [i for i, owner in assignment.items() if owner == index]
-            for index, obj in enumerate(region_objects)
-        }},
-        region_objects,
-    )
-    measured_depths = _validate_published_depths(
-        contact_objects, _declared_depths(board, version), version, deflection
-    )
-
-    try:
         print("[6/10] writing the USDZ directly")
         asset = staging / "primary.usdz"
         usdz_writer.write_usdz(asset, meshes)

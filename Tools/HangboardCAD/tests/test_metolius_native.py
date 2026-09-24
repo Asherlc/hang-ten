@@ -17,13 +17,14 @@ REPOSITORY = Path(__file__).resolve().parents[3]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
 FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources")
 FREECAD_CMD = FREECAD / "bin" / "freecadcmd"
-EXTRA_PATH = REPOSITORY / ".context" / "rock-rings-3d" / "fcpy"
+EXTRA_PATH = os.environ.get("HANGTEN_CAD_PYTHONPATH")
 PACKAGE = "metolius-rock-rings-3d"
 SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
 ASSET = REPOSITORY / "Hangboards" / PACKAGE / "assets" / "primary.usdz"
 
 requires_freecad = pytest.mark.skipif(
-    not FREECAD_CMD.is_file(), reason="pinned FreeCAD toolchain is not installed"
+    not FREECAD_CMD.is_file() or not EXTRA_PATH,
+    reason="pinned FreeCAD toolchain or HANGTEN_CAD_PYTHONPATH is unavailable",
 )
 
 
@@ -47,7 +48,7 @@ def run_under_freecad(script: Path, *arguments: str, wrapper_dir: Path | None = 
         "    raise SystemExit(3)\n"
     )
     env = dict(os.environ)
-    env["HANGTEN_CAD_PYTHONPATH"] = str(EXTRA_PATH)
+    env["HANGTEN_CAD_PYTHONPATH"] = EXTRA_PATH
     return subprocess.run(
         [str(FREECAD_CMD), str(wrapper)],
         capture_output=True,

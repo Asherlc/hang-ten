@@ -29,6 +29,11 @@ _DESCRIPTOR_V2_KEYS = frozenset(
     {"schemaVersion", "coordinateFrame", "modelSHA256", "modelBounds", "nodes", "contactSlots"}
 )
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+# An authored outline lies on the model face, so a normalized coordinate is in
+# [0, 1]. Float rounding at the envelope can push an edge a few ulps outside it;
+# anything further is a wrong outline (for example millimetres, not metres) and
+# must fail the build rather than silently clamp into a zero-width AABB.
+_OUTLINE_ENVELOPE_TOLERANCE = 1e-6
 
 
 @dataclass(frozen=True)
@@ -500,7 +505,11 @@ def _outline_region(
     def clamp(value: float) -> float:
         # The authored outline lies on the model face; float rounding at the
         # envelope can push a normalized edge a few ulps outside [0, 1].
-        return 0.0 if value < 0.0 else (1.0 if value > 1.0 else value)
+        if -_OUTLINE_ENVELOPE_TOLERANCE <= value <= 1.0 + _OUTLINE_ENVELOPE_TOLERANCE:
+            return 0.0 if value < 0.0 else (1.0 if value > 1.0 else value)
+        raise ValueError(
+            f"outline coordinate {value} is outside the model face envelope"
+        )
 
     outline = tuple(
         (
