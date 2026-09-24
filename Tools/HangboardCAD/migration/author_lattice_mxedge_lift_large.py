@@ -76,7 +76,7 @@ HALF_X = BODY_X / 2.0
 HALF_Z = BODY_Z / 2.0
 Y_BACK = Y_FRONT + BODY_Y
 
-# Outer envelope: 15 mm XZ corners plus a 4 mm roll into the front and back faces.
+# Outer envelope: 15 mm XZ corners plus a 4 mm roll into the front face only.
 # Planar facets throughout — an OCCT fillet leaves a tessellation-vs-Area gap at compile.
 CORNER_R = 15.0
 CORNER_SEGMENTS = 12
@@ -280,7 +280,11 @@ def _ngon_points(cx: float, cz: float, radius: float, y: float, sides: int = MON
 
 
 def _body_solid():
-    """Envelope with 15 mm XZ corners and a 4 mm roll into the front and back faces."""
+    """Envelope with 15 mm XZ corners and a 4 mm roll into the front face only.
+
+    The back is a flat plane at Y_BACK — the manufacturer back is not rolled, and a
+    mirrored back roll read as false indents in FreeCAD.
+    """
     sections = []
     roll = []
     for index in range(EDGE_ROLL_SEGMENTS + 1):
@@ -290,8 +294,8 @@ def _body_solid():
         roll.append((offset, inset))
     for offset, inset in roll:
         sections.append(_rounded_rect_points(CORNER_R - inset, Y_FRONT + offset))
-    for offset, inset in reversed(roll):
-        sections.append(_rounded_rect_points(CORNER_R - inset, Y_BACK - offset))
+    # Flat back: full corner radius, no roll inset.
+    sections.append(_rounded_rect_points(CORNER_R, Y_BACK))
     return _loft_solid(sections)
 
 
