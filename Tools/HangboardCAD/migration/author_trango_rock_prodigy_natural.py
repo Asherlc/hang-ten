@@ -15,13 +15,12 @@ hold prim's own mesh:
 
 Holds whose measured footprint is genuinely a regular shape are authored as a
 clean primitive built from the measured opening bounds — a stadium (the two
-variable rails and the center-lower pocket) or an ellipse (the
-outer-supported-pocket). This is a deliberate, labeled visual adaptation for
-fidelity of form, not a traced measurement: the openings come from a fitted
-primitive so the silhouette reads crisp and regular. The measured envelope is
-kept only where the shape is genuinely irregular — the keyhole upper pocket,
-the closed-crimp wedge, and the elongated top jug. Rail depth still follows the
-measured profile, so the variable rails keep their taper.
+variable rails, the center-lower pocket, the 3-finger upper pocket) or an
+ellipse (the outer-supported-pocket). This is a deliberate, labeled visual
+adaptation for fidelity of form, not a traced measurement. The measured
+envelope is kept only where the shape is genuinely irregular — the closed-crimp
+sloper/wedge and the elongated top jug. Rail depth still follows the measured
+profile, so the variable rails keep their taper.
 
 Irregular measured footprints are vectorized: each closed XZ ring is
 Chaikin-smoothed and fit with a low-degree `Part.BSplineCurve.approximate` (C2,
@@ -153,8 +152,13 @@ PRIMITIVE_SHAPE = {
     "top-variable-rail": "stadium",
     "bottom-variable-rail": "stadium",
     "center-lower-pocket": "stadium",
+    "upper-pocket": "lobes3",
     "outer-supported-pocket": "ellipse",
 }
+# Spacing between the overlapping bores of a multi-finger pocket, as a multiple
+# of the bore radius. Below 2 the circles overlap, giving the scalloped 3-finger
+# opening the manufacturer photo shows.
+LOBE_SPACING_FACTOR = 1.55
 
 NODE_SUFFIX = {
     "closed-crimp": "closed_crimp_001",
@@ -680,8 +684,41 @@ def _opening_bounds(points, band: float = 1.0):
     return min(xs), max(xs), min(zs), max(zs)
 
 
+def _lobed_outline(x0, x1, z0, z1, count: int, samples: int = 400):
+    """Union outline of ``count`` overlapping circular bores along x.
+
+    The manufacturer's multi-finger pockets are drilled/bores that overlap, so
+    the opening is scalloped (e.g. the 3-finger pocket is three overlapping
+    circles). Width matches the measured opening; the circle radius follows from
+    ``LOBE_SPACING_FACTOR``.
+    """
+    cx = (x0 + x1) / 2.0
+    cz = (z0 + z1) / 2.0
+    width = x1 - x0
+    radius = width / ((count - 1) * LOBE_SPACING_FACTOR + 2.0)
+    spacing = LOBE_SPACING_FACTOR * radius
+    centers = [cx + (index - (count - 1) / 2.0) * spacing for index in range(count)]
+    top = []
+    bottom = []
+    for index in range(samples + 1):
+        x = x0 + width * index / samples
+        heights = [
+            math.sqrt(radius * radius - (x - center) ** 2)
+            for center in centers
+            if abs(x - center) <= radius
+        ]
+        if not heights:
+            continue
+        half = max(heights)
+        top.append((x, cz + half))
+        bottom.append((x, cz - half))
+    return _resample_closed(_ensure_ccw(top + list(reversed(bottom))), OUTLINE_SAMPLES)
+
+
 def _primitive_outline(shape: str, x0, x1, z0, z1):
-    """A clean stadium or ellipse outline from measured bounds, evenly sampled."""
+    """A clean stadium, ellipse, or lobed outline from measured bounds."""
+    if shape == "lobes3":
+        return _lobed_outline(x0, x1, z0, z1, 3)
     cx = (x0 + x1) / 2.0
     cz = (z0 + z1) / 2.0
     a = (x1 - x0) / 2.0
@@ -790,7 +827,7 @@ def _measure_holds(stage, cache):
                     "depth_mesh": depth_mesh,
                 }
             else:
-                depth = 27.0 if base == "center-lower-pocket" else depth_mesh
+                depth = {"center-lower-pocket": 27.0, "upper-pocket": 38.0}.get(base, depth_mesh)
                 measured[base] = {
                     "strategy": strategy,
                     "kind": kind,
