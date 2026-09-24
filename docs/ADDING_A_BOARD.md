@@ -75,12 +75,18 @@ into it.
 For model media, declare only the USDZ asset, descriptor, display, and any
 audited orientation/suspension configuration. The descriptor binds source
 contacts to actual model nodes and cached measurements. A model package has no
-raster fallback and is read-only in the in-app board editor.
+raster fallback and is read-only in the apps.
+
+A model package with a native CAD source (`Hangboards/<slug>/<slug>.FCStd`) is
+different: its `board.json` is a generated, committed build output of the FCStd's
+`HangTenBoardManifest` property. Do not hand-edit it; follow "Board metadata" in
+`Tools/HangboardCAD/README.md` and regenerate. CI fails on a stale file.
 
 ## 4. Author raster paths directly
 
-Open the completed raster package in the in-app board editor. Deliberately
-draw and review every canonical path against manufacturer evidence. Prefer
+Author every canonical path directly in the package's `board.json`; the apps
+only read packages and have no in-app editor. Deliberately draw and review
+every canonical path against manufacturer evidence. Prefer
 exact left/right mirroring only when the product is actually symmetric. Use a
 human-selected circle, oval, pill, rounded rectangle, or rectangle constraint
 for a genuinely regular contact; use freeform paths otherwise.

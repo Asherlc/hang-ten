@@ -94,7 +94,8 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.python == 'true' ||
       needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.shared_board_content == 'true' ||
+      needs.changes.outputs.cad == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -122,6 +123,12 @@ jobs:
         working-directory: ${{ github.workspace }}
         run: scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 
+      # CAD-backed boards commit board.json as a build output generated from
+      # the FCStd's HangTenBoardManifest; pure host Python, no FreeCAD needed.
+      - name: Check generated board.json is fresh for CAD-backed boards
+        working-directory: ${{ github.workspace }}
+        run: python3 Tools/HangboardCAD/board_manifest.py --check --all
+
       - name: Install Python package and test dependencies
         run: python -m pip install -e ".[dev]"
 
@@ -139,6 +146,13 @@ jobs:
 
       - name: Run pytest suite
         run: python -m pytest tests -q --junitxml=pytest-results.xml
+
+      - name: Run CAD board-manifest and source-contract tests
+        run: >-
+          python -m pytest
+          ../HangboardCAD/tests/test_board_manifest.py
+          ../HangboardCAD/tests/test_contract.py
+          -q
 
       # actions/upload-artifact v4.6.2
       - name: Upload pytest report on failure
@@ -932,8 +946,7 @@ jobs:
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
           XCTEST_ONLY_TESTING: >-
-            HangTenUITests/GitHubSignInUITests
-            HangTenUITests/SettingsBoardEditorVisibilityUITests
+            HangTenUITests/SettingsUITests
             HangTenUITests/FreeWorkoutUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages

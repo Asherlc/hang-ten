@@ -48,9 +48,6 @@ import com.hangten.android.health.WorkoutHealthStore
 import com.hangten.android.health.CompletedHealthWorkout
 import com.hangten.android.workout.SessionHistoryRepository
 import com.hangten.android.sensors.SensorConnectionController
-import com.hangten.android.editor.BoardEditorListScreen
-import com.hangten.android.editor.BoardEditorScreen
-import com.hangten.android.editor.BoardEditorServices
 import com.hangten.android.telemetry.AppTab
 import com.hangten.android.telemetry.HangTenTelemetryEvent
 import com.hangten.android.telemetry.NoOpTelemetry
@@ -70,7 +67,6 @@ private enum class HangTenDestination(
     Plans("plans", "Plans"),
     History("history", "History"),
     Settings("settings", "Settings"),
-    BoardEditor("board-editor", "Board editor"),
     Workout("workout", "Workout"),
 }
 
@@ -95,7 +91,6 @@ fun HangTenApp(
     audioCoach: WorkoutAudioCoach,
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
     sensorController: SensorConnectionController? = null,
-    boardEditorServices: BoardEditorServices? = null,
     telemetry: TelemetryDependencies = noOpTelemetryDependencies(),
     modifier: Modifier = Modifier,
 ) {
@@ -111,7 +106,6 @@ fun HangTenApp(
         accessStore = accessStore,
         healthStore = healthStore,
         sensorController = sensorController,
-        boardEditorServices = boardEditorServices,
         telemetry = telemetry,
         modifier = modifier,
     )
@@ -127,7 +121,6 @@ fun HangTenApp(
     accessStore: WorkoutAccessStore,
     healthStore: WorkoutHealthStore = UnavailableHealthStore,
     sensorController: SensorConnectionController? = null,
-    boardEditorServices: BoardEditorServices? = null,
     telemetry: TelemetryDependencies = noOpTelemetryDependencies(),
     modifier: Modifier = Modifier,
 ) {
@@ -161,7 +154,6 @@ fun HangTenApp(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
     DisposableEffect(purchaseManager) { onDispose(purchaseManager::close) }
-    DisposableEffect(boardEditorServices) { onDispose { boardEditorServices?.close() } }
 
     MaterialTheme {
         Scaffold(
@@ -206,7 +198,6 @@ fun HangTenApp(
                 purchaseManager = purchaseManager,
                 accessStore = accessStore,
                 sensorController = sensorController,
-                boardEditorServices = boardEditorServices,
                 telemetry = telemetry,
                 onBoardSelected = { board ->
                     boardFamilyForTelemetry(board.id)?.let { family ->
@@ -271,7 +262,6 @@ private fun HangTenNavHost(
     purchaseManager: PurchaseManager,
     accessStore: WorkoutAccessStore,
     sensorController: SensorConnectionController?,
-    boardEditorServices: BoardEditorServices?,
     telemetry: TelemetryDependencies,
     onBoardSelected: (Board) -> Unit,
     onPlanSelected: (TrainingPlan) -> Unit,
@@ -331,7 +321,6 @@ private fun HangTenNavHost(
                 purchaseManager = purchaseManager,
                 healthViewModel = healthViewModel,
                 sensorController = sensorController,
-                onOpenBoardEditor = boardEditorServices?.let { { navController.navigate(HangTenDestination.BoardEditor.route) } },
                 onHealthAuthorizationFinished = { outcome ->
                     telemetry.tracking.track(HangTenTelemetryEvent.HealthAuthorizationFinished(outcome))
                 },
@@ -340,31 +329,6 @@ private fun HangTenNavHost(
                 },
                 contentPadding = padding,
             )
-        }
-        composable(HangTenDestination.BoardEditor.route) {
-            boardEditorServices?.let { services ->
-                BoardEditorListScreen(
-                    boards = boards,
-                    session = services.syncSession,
-                    onOpenBoard = { slug -> navController.navigate("${HangTenDestination.BoardEditor.route}/$slug") },
-                    contentPadding = padding,
-                )
-            }
-        }
-        composable("${HangTenDestination.BoardEditor.route}/{slug}") { entry ->
-            val slug = entry.arguments?.getString("slug")
-            if (slug == null || boardEditorServices == null) {
-                navController.popBackStack()
-            } else {
-                BoardEditorScreen(
-                    slug = slug,
-                    store = boardEditorServices.store,
-                    tokenStore = boardEditorServices.tokenStore,
-                    packageSync = boardEditorServices.packageSync,
-                    contentPadding = padding,
-                    onSaveFailure = telemetry::recordPersistenceSaveDiagnostic,
-                )
-            }
         }
         composable(HangTenDestination.Workout.route) {
             val plan = selectedPlan

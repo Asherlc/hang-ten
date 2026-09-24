@@ -5,10 +5,7 @@ enum BoardSourceBoundaryAudit {
     private static let planRequirementOwnerDeclaration = "enum BundledPlanContactRequirements {"
     private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
         "HangTen/Models/BoardPackageStore.swift",
-        "HangTen/Models/BoardPackageWriter.swift",
-        "HangTen/Models/BoardEditorStore.swift",
-        "HangTen/Models/TrainingModels.swift",
-        "HangTen/Views/BoardEditor/BoardEditorSession.swift"
+        "HangTen/Models/TrainingModels.swift"
     ]
     private static let genericCanonicalPresentationLiterals: Set<String> = [
         "assets/primary.png",

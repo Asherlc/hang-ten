@@ -153,19 +153,6 @@ enum RootTab: Hashable, CaseIterable {
     }
 }
 
-enum RootReviewDestination: Equatable {
-    case boardEditor
-
-    static func initial(environment: [String: String]) -> Self? {
-        #if DEBUG
-        if environment["HANGTEN_REVIEW_BOARD_EDITOR"] == "1" {
-            return .boardEditor
-        }
-        #endif
-        return nil
-    }
-}
-
 enum WorkoutLandscapeControlLayoutPolicy {
     static func usesCompactControls(
         isFirstStart: Bool,
@@ -207,35 +194,24 @@ struct RootView: View {
     @State private var selectedTab = RootTab.initial(
         environment: ProcessInfo.processInfo.environment
     )
-    private let reviewDestination = RootReviewDestination.initial(
-        environment: ProcessInfo.processInfo.environment
-    )
 
     var body: some View {
-		Group {
-			if reviewDestination == .boardEditor {
-				NavigationStack {
-					BoardEditorListView()
-				}
-			} else {
-				TabView(selection: $selectedTab) {
-					TrainView { selectedTab = .plans }
-						.tabItem { Label("Train", systemImage: "figure.climbing") }
-						.tag(RootTab.train)
+		TabView(selection: $selectedTab) {
+			TrainView { selectedTab = .plans }
+				.tabItem { Label("Train", systemImage: "figure.climbing") }
+				.tag(RootTab.train)
 
-					PlansView()
-						.tabItem {
-							Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
-						}
-						.tag(RootTab.plans)
-
-					HistoryView()
-						.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
-						.tag(RootTab.history)
+			PlansView()
+				.tabItem {
+					Label("Plans", systemImage: "list.bullet.rectangle.portrait.fill")
 				}
-				.tint(.hangGreenDark)
-			}
+				.tag(RootTab.plans)
+
+			HistoryView()
+				.tabItem { Label("History", systemImage: "clock.arrow.circlepath") }
+				.tag(RootTab.history)
 		}
+		.tint(.hangGreenDark)
 		.environmentObject(workoutAudioCoach)
 		.environmentObject(deepLinkManager)
 		.onReceive(NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification)) { _ in
