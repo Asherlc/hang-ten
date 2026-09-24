@@ -233,8 +233,7 @@ def test_required_debug_build_check_is_reported_when_ios_build_is_skipped() -> N
     expected_predicate = (
         "github.event_name != 'pull_request' || "
         "needs.changes.outputs.ios == 'true' || "
-        "needs.changes.outputs.workflow == 'true' || "
-        "needs.changes.outputs.shared_board_content == 'true'"
+        "needs.changes.outputs.workflow == 'true'"
     )
     for path_gated_job in (
         unit_test_job,
