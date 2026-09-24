@@ -78,6 +78,24 @@ def _closed(
         raise ValueError(f"{source} is missing keys: {sorted(missing)}")
 
 
+def _validate_hold_outline(
+    outline: object,
+    face_min: tuple[float, ...],
+    face_max: tuple[float, ...],
+    source: str,
+) -> None:
+    """Validate a CAD-authored hold outline and that it derives the AABB."""
+    if not isinstance(outline, list) or len(outline) < 3:
+        raise ValueError(f"{source}.outline needs at least three points")
+    points = [_descriptor_vector(point, 2, f"{source}.outline") for point in outline]
+    if any(coordinate < 0 or coordinate > 1 for point in points for coordinate in point):
+        raise ValueError(f"{source}.outline must be normalized")
+    derived_min = tuple(round(min(point[axis] for point in points), 9) for axis in range(2))
+    derived_max = tuple(round(max(point[axis] for point in points), 9) for axis in range(2))
+    if derived_min != tuple(face_min) or derived_max != tuple(face_max):
+        raise ValueError(f"{source}.facePlaneAABB must derive from outline")
+
+
 def _canonical_member_order(
     payload: Mapping[str, Any], expected: tuple[str, ...], source: str
 ) -> None:
@@ -2266,7 +2284,7 @@ def _load_reusable_model_descriptor(
     for slot_id, raw_slot in raw_slots.items():
         source = f"model descriptor contactSlots[{slot_id}]"
         slot = _mapping(raw_slot, source)
-        _closed(slot, {"nodeIDs", "facePlaneAABB", "center"}, source)
+        _closed(slot, {"nodeIDs", "facePlaneAABB", "center"}, source, optional={"outline"})
         node_ids_for_slot = slot["nodeIDs"]
         if not isinstance(node_ids_for_slot, list) or node_ids_for_slot != sorted(node_ids_by_slot[slot_id]):
             raise ValueError(f"{source}.nodeIDs must exactly match bound nodes")
@@ -2280,6 +2298,8 @@ def _load_reusable_model_descriptor(
         expected_center = tuple(round(face_min[index] + (face_max[index] - face_min[index]) / 2, 9) for index in range(2))
         if center != expected_center:
             raise ValueError(f"{source}.center must derive from facePlaneAABB")
+        if "outline" in slot:
+            _validate_hold_outline(slot["outline"], face_min, face_max, source)
         frames_by_slot[slot_id] = NormalizedFrame(face_min[0], face_min[1], round(face_max[0] - face_min[0], 9), round(face_max[1] - face_min[1], 9))
     _validate_reusable_instances(
         instances, set(frames_by_slot), contacts, equipment_objects, position_ids,
@@ -2432,7 +2452,7 @@ def _load_model_descriptor(
     for contact_id, raw_contact in raw_contacts.items():
         source = f"model descriptor contacts[{contact_id}]"
         contact = _mapping(raw_contact, source)
-        _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source)
+        _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source, optional={"outline"})
         contact_node_ids = contact["nodeIDs"]
         if (
             not isinstance(contact_node_ids, list)
@@ -2467,6 +2487,8 @@ def _load_model_descriptor(
         )
         if center != expected_center:
             raise ValueError(f"{source}.center must derive from facePlaneAABB")
+        if "outline" in contact:
+            _validate_hold_outline(contact["outline"], face_min, face_max, source)
         frames[contact_id] = NormalizedFrame(
             face_min[0],
             face_min[1],

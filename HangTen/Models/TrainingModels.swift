@@ -314,6 +314,22 @@ struct BoardModelContactDescriptor: Hashable {
     let nodeIDs: [String]
     let facePlaneAABB: BoardModelFacePlaneAABB
     let center: [Double]
+    /// The CAD-authored front-plane hold polygon (normalized [x, y] points).
+    /// Empty when the source declared no outline, in which case the app falls
+    /// back to the mesh region and `facePlaneAABB`.
+    let outline: [[Double]]
+
+    init(
+        nodeIDs: [String],
+        facePlaneAABB: BoardModelFacePlaneAABB,
+        center: [Double],
+        outline: [[Double]] = []
+    ) {
+        self.nodeIDs = nodeIDs
+        self.facePlaneAABB = facePlaneAABB
+        self.center = center
+        self.outline = outline
+    }
 }
 
 struct BoardModelDescriptor: Hashable {

@@ -85,6 +85,103 @@ without `NodeID` — sketches, datums, construction features — are never expor
 objects, external `XLink` references, and missing embedded files, so a document
 that opens locally can still fail the contract.
 
+### Reusable slots (descriptor schema v2)
+
+A schema-v2 source models **one unit**, not the pair. `board.json` declares two
+`equipmentObjects` and two media `instances`; each instance maps the same
+generic slot IDs (`jug`, `pocket-40`, …) to different physical contact IDs. The
+USDZ therefore carries one node per slot (`unit_jug_001`) and the app
+deep-clones the unit per instance. Do not author both rings into the source —
+"render a pair" is two instances of one model, and a second copy in the source
+would double the geometry and break the descriptor.
+
+The v2 authoring contract:
+
+- the document's `HangTenSchemaVersion` is `2`;
+- every contact object carries `ContactSlotID`, not `ContactID`, and the slot
+  set must be exactly the union of every instance's `contactIDsBySlotID` keys;
+- a slot's published grip depth is the value every instance of that slot agrees
+  on. `compile_board` derives it from `contactIDsBySlotID` and fails the build
+  if two instances of one slot disagree, because a slot is then ambiguous;
+- the descriptor is `contactSlots` (not `contacts`), and a slot's `nodeIDs`
+  lists the one node that serves all of its physical contacts.
+
+The `attachment` role is ordinary geometry in the source but is neither pickable
+nor highlightable at runtime. It is exported exactly like a contact region: the
+compiler partitions the body surface between the body, the contacts, **and** the
+attachments, so an aperture such as a cord window is a region of the body solid
+(coincident classification geometry), not floating geometry. The v1 compiler
+silently dropped attachment nodes; if you see a descriptor missing a declared
+attachment, that is the bug to fix, not a reason to omit the node.
+
+### Hold geometry is CAD-owned
+
+**The CAD file is the source of truth for hold geometry.** A contact or
+attachment object's **own Shape is the hold's exported surface**: the compiler
+tessellates that object directly and ships it as the node mesh, and partitions
+the body around the same surface so the two never overlap. Author each region as
+an **open surface** (a shell), not a solid:
+
+- a band is a `Part::Extrusion` of its profile run, as the pilot does;
+- a pocket is a `Part::Loft` with `Solid = False` (the lateral surface, no
+  opening cap) fused with a `Part::Face` on its floor sketch;
+- a cord aperture is an extrusion with `Solid = False`;
+- a jug band, a sub-region of a larger body face, is a shallow recess cut from
+  the body like a pocket, so the partition claims the cut and the region's own
+  surface matches it (see
+  `Tools/HangboardCAD/migration/author_metolius_rock_rings_3d.py`); a
+  `Part::Common` of the body and a bounding solid is superseded — it leaves a
+  ragged hole.
+
+A solid region is wrong: its tessellation carries the opening cap (the body has
+a hole there, so the hold would render flush and hide the cavity) and, for a
+`Part::Common`, interior cut planes. If a region's construction extends beyond
+the board — a boolean tool that starts outside it — wrap it in
+`Part::Common(region, body)` so the exported surface is clipped to the body and
+cannot inflate `modelBounds`. Keep the solid form only as the boolean tool.
+
+The object may also carry `HangTenHoldOutline`: an `App::PropertyString` of
+`[x, z]` **native-millimetre** points, the hold's front-plane outline in draw
+order. The compiler emits it as the descriptor's `outline` (normalized) for both
+v1 `contacts` and v2 `contactSlots`, and `facePlaneAABB`/`center` derive from it,
+so the tap target and hold frame are exact regardless of how the surface
+tessellates. Author it as the region an operator would select: a pocket's
+opening profile, a band's front-plane footprint.
+
+This combination is what makes the highlight smooth and 3D on both a flat-front
+board and an extruded one: the surface is the CAD geometry, and the outline is
+the CAD region.
+
+### Measuring a sculpted (non-extruded) board
+
+Not every board is a swept profile. Before committing to a pad, measure whether
+the cross-section is constant along the intended extrusion axis (see step 1). A
+genuinely sculpted display mesh — a rounded lip over an open back, scooped
+pockets, a domed face — is a closed shell of open surfaces, not a solid of
+constant section. A native pad-and-fillet model is then a *measured
+approximation*: it can carry real sketches, dimensions and pockets, and it will
+exercise the whole binding contract, but its surface will deviate where the
+reference is sculpted, and `compare_exports` will report that deviation. Report
+the achieved deviation; do not relax the comparison limit to hide it. If the
+approved geometry must be matched exactly, it can only honestly be a faceted
+import (`HangTenSourceKind` `faceted-import`), which the build refuses to publish
+without `--allow-faceted-import`.
+
+#### Accepted deviation for a sculpted board (declaration)
+
+For a board whose approved asset is a sculpted display shell, the native measured
+approximation is the accepted deliverable. `compare_exports` is **evidence, not a
+gate**: record its two-way worst deviation, and do not chase it, re-tune the
+model against it, or pivot to a faceted import unless exact surface fidelity is
+actually required for that board. Visually confirmed hold placement, the
+published grip depths, the node/role inventory, and the descriptor's
+`facePlaneAABB` agreement are the acceptance signals that matter. This was
+decided explicitly on `metolius-rock-rings-3d` (worst deviation 17.67 mm,
+concentrated at the sculpted top lip; pocket regions agree to under 0.25 mm):
+chasing the 0.5 mm limit cost about a third of the migration's time and changed
+no delivered behaviour. Record the accepted deviation in the delivery lock's
+`migratedPackages` entry so a future agent does not re-litigate it.
+
 ## Procedure
 
 ### 0. Census before you choose
@@ -281,8 +378,8 @@ which is the part a CPU render cannot check.
    board surface: the body node carries the surface *minus* the contact regions.
    Emitting the body whole and laying contact patches on top duplicates coplanar
    geometry and flickers. Assign every body triangle to exactly one node, refuse
-   a triangle claimed by two regions, and refuse an exported area that does not
-   match the body surface.
+   a triangle claimed by two regions, and refuse a region that claims more body
+   area than its own exported surface covers.
 
 5. **Normals are directions, not positions.** See the frame section.
 
@@ -317,7 +414,7 @@ which is the part a CPU render cannot check.
     `ContactID`, which a v2 object does not have, so the published-depth guard
     passed vacuously. It must key on `ContactSlotID` and map the slot to the
     published depth through each instance's `contactIDsBySlotID`. Both are now
-    covered by `Tools/HangboardCAD/tests/metolius_native.py`.
+    covered by `Tools/HangboardCAD/tests/test_metolius_native.py`.
 
 11. **A ruled loft twists when its two sections are independently ordered.**
     A pocket floor measured as its own loop does not share vertex order with the

@@ -1294,7 +1294,10 @@ def test_rock_rings_has_one_four_slot_asset_and_two_unreflected_instances() -> N
     assert media["type"] == "model"
     assert set(media) == {"type", "assetPath", "descriptorPath", "display", "instances"}
     assert {p.relative_to(ROCK_RINGS_ROOT).as_posix() for p in ROCK_RINGS_ROOT.rglob("*") if p.is_file()} == {
-        "board.json", "assets/primary.usdz", "assets/primary.model.json"
+        "board.json", "assets/primary.usdz", "assets/primary.model.json",
+        # A package may carry its own CAD authoring source, named after its own
+        # directory. It is not a runtime resource; the compiler consumes it.
+        "metolius-rock-rings-3d.FCStd",
     }
     descriptor = json.loads((ROCK_RINGS_ROOT / media["descriptorPath"]).read_text())
     assert descriptor["schemaVersion"] == 2
