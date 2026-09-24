@@ -11,8 +11,10 @@ Measured facts (Git reference, native mm, +X right +Z up front -Y):
 
 * Envelope 110 × 29 × 66 (x × y × z). Catalogue "110 × 66 × 29 mm" agrees;
   descriptor ±55/±33/±14.5 m matches the mesh.
-* One continuous front cavity (stadium trough), not four separate pockets.
-  Contacts are a logical partition of that cavity plus the outer rim.
+* One continuous front cavity (rounded-rect trough with ~15 mm corners and a
+  6.5 mm entry lip), not four separate pockets. Contacts partition that cavity
+  plus the outer rim.
+* Outer envelope corners ~10 mm (measured); perimeter roll ~3.5 mm.
 * edge-15 / edge-20: opposing long lips with a **stepped floor** (15 mm on +Z,
   20 mm on −Z) per manufacturer “15 sowie 20 mm tiefe Griffleiste” and the
   reference floor (~y 0.7 / 5.3). Published depths 15 / 20 mm.
@@ -21,9 +23,9 @@ Measured facts (Git reference, native mm, +X right +Z up front -Y):
   not a separate pinch.
 * Cord through-holes at x=±22, z=0: ~3 mm radius n-gon, floor through back.
 
-Construction: rolled rounded-rect envelope, one stadium trough cut with
-bevelled walls, two through-hole n-gon cord bores, contacts as faces of the cut
-body (extent-based filters, no Cylinder, no separate Common shells).
+Construction: rolled rounded-rect envelope (~10 mm corners), one rounded-rect
+cavity with a 6.5 mm entry lip and stepped 15/20 mm floors, through-hole n-gon
+cord bores cut last, contacts as faces of the cut body.
 """
 
 from __future__ import annotations
@@ -69,24 +71,27 @@ BODY_X = 110.0
 BODY_Y = 29.0
 BODY_Z = 66.0
 
-CORNER_R = 6.5
+CORNER_R = 11.0  # manufacturer photos: heavily rounded outer corners
 CORNER_CENTER_X = HALF_X - CORNER_R
 CORNER_CENTER_Z = HALF_Z - CORNER_R
-CORNER_SEGMENTS = 8
-EDGE_ROLL_R = 3.0
-EDGE_ROLL_SEGMENTS = 6
+CORNER_SEGMENTS = 10
+EDGE_ROLL_R = 4.0  # soft outer roll-over visible in product shots
+EDGE_ROLL_SEGMENTS = 8
 
-# Stadium cavity — measured opening ≈ ±42 × ±23 (half_len + R, R).
-TROUGH_HALF_LEN = 19.0
-TROUGH_RADIUS = 23.0
+# Cavity is a rounded rectangle (not a full-end stadium). Measured opening
+# ≈ ±41.8 × ±22.8 with ~15 mm corners; manufacturer lip radius 6.5 mm.
+OPEN_HALF_X = 41.8
+OPEN_HALF_Z = 22.8
+OPEN_CORNER_R = 15.0  # LINESGriffe / mesh: generous cavity corners
+OPEN_SEGMENTS = 10
 TROUGH_Z_CENTER = 0.0
-# Floor depths from front: satisfy published 15/20 on the lip bands.
 DEPTH_15 = 15.0
 DEPTH_20 = 20.0
-FLOOR_Y = Y_FRONT + DEPTH_20  # deeper floor owned by edge-20 / pocket end
+FLOOR_Y = Y_FRONT + DEPTH_20
 LIP_15_Y = Y_FRONT + DEPTH_15
-WALL_BEVEL = 2.2
-STADIUM_SEGMENTS = 16  # even so a vertex sits on centreline
+LIP_R = 6.5  # published Griffkante radius
+LIP_SEGMENTS = 8
+FLOOR_INSET = 1.6  # slight shrink from opening to floor after the lip
 
 # Cord through-holes at x=±22, z=0 (n-gon loft, no Cylinder). Visible on the
 # cavity floor and the back face.
@@ -186,20 +191,28 @@ def _rounded_rect_points(radius: float, y: float, segments: int = CORNER_SEGMENT
     return points
 
 
-def _stadium_xz(half_len: float, radius: float, segments: int = STADIUM_SEGMENTS):
-    """CCW (x, z) stadium outline centred on the origin."""
+def _opening_xz(half_x: float, half_z: float, corner_r: float, segments: int = OPEN_SEGMENTS):
+    """CCW (x, z) rounded-rect cavity outline centred on the origin."""
+    cx = half_x - corner_r
+    cz = half_z - corner_r
+    corners = (
+        (cx, -cz, -math.pi / 2.0, 0.0),
+        (cx, cz, 0.0, math.pi / 2.0),
+        (-cx, cz, math.pi / 2.0, math.pi),
+        (-cx, -cz, math.pi, 1.5 * math.pi),
+    )
     points = []
-    for index in range(segments + 1):
-        angle = -math.pi / 2.0 + math.pi * index / segments
-        points.append((half_len + radius * math.cos(angle), radius * math.sin(angle)))
-    for index in range(segments + 1):
-        angle = math.pi / 2.0 + math.pi * index / segments
-        points.append((-half_len + radius * math.cos(angle), radius * math.sin(angle)))
+    for ox, oz, start, end in corners:
+        for index in range(segments + 1):
+            angle = start + (end - start) * index / segments
+            points.append(
+                (ox + corner_r * math.cos(angle), oz + corner_r * math.sin(angle))
+            )
     return points
 
 
-def _stadium_points(half_len: float, radius: float, y: float, segments: int = STADIUM_SEGMENTS):
-    return [App.Vector(x, y, z) for x, z in _stadium_xz(half_len, radius, segments)]
+def _opening_points(half_x: float, half_z: float, corner_r: float, y: float):
+    return [App.Vector(x, y, z) for x, z in _opening_xz(half_x, half_z, corner_r)]
 
 
 def _body_solid():
@@ -217,17 +230,42 @@ def _body_solid():
     return _loft_solid(sections)
 
 
+def _lip_stations(floor_depth: float):
+    """(depth_from_front, radial_inset) — 6.5 mm entry lip, then floors.
+
+    A station lands on DEPTH_15 so the upper (+Z) contact can own a published
+    15 mm wall band before the lower half continues to 20 mm.
+    """
+    stations = [(-0.05, 0.0)]
+    for index in range(1, LIP_SEGMENTS + 1):
+        angle = 0.5 * math.pi * index / LIP_SEGMENTS
+        depth = LIP_R * (1.0 - math.cos(angle))
+        inset = LIP_R * (1.0 - math.sin(angle))
+        stations.append((depth, inset))
+    inset_15 = LIP_R * 0.12 + FLOOR_INSET * 0.7
+    inset_20 = LIP_R * 0.12 + FLOOR_INSET
+    if floor_depth > DEPTH_15 + 0.5:
+        # Keep stations strictly deepening.
+        if stations[-1][0] < DEPTH_15 - 0.2:
+            stations.append((DEPTH_15, inset_15))
+        stations.append((floor_depth, inset_20))
+    elif abs(floor_depth - stations[-1][0]) > 0.2:
+        stations.append((floor_depth, inset_15))
+    return stations
+
+
 def _station_ring(depth: float, inset: float):
-    """Stadium ring at Y_FRONT + depth with radial inset (planar trapezoid walls)."""
-    return _stadium_points(
-        TROUGH_HALF_LEN - inset,
-        TROUGH_RADIUS - inset,
+    """Opening ring at Y_FRONT + depth, inset from the measured opening."""
+    return _opening_points(
+        OPEN_HALF_X - inset,
+        OPEN_HALF_Z - inset,
+        max(OPEN_CORNER_R - inset, 2.0),
         Y_FRONT + depth,
     )
 
 
 def _cap_fan(ring, flip: bool):
-    """Planar triangle fan closing a stadium ring (flat floor — no crown)."""
+    """Planar triangle fan closing a ring (flat floor)."""
     center = App.Vector(0.0, ring[0].y, TROUGH_Z_CENTER)
     triangles = []
     count = len(ring)
@@ -257,12 +295,12 @@ def _triangle_solid(triangles):
     return solid
 
 
-def _half_stadium_points(half_len: float, radius: float, y: float, *, upper: bool):
-    """Closed half-stadium in XZ at depth y, diameter along z=0."""
-    full = _stadium_xz(half_len, radius)
+def _half_opening_points(half_x: float, half_z: float, corner_r: float, y: float, *, upper: bool):
+    """Closed half rounded-rect at depth y, diameter along z=0."""
+    full = _opening_xz(half_x, half_z, corner_r)
     kept = [(x, z) for x, z in full if (z >= -1e-9 if upper else z <= 1e-9)]
-    left = (-half_len - radius, 0.0)
-    right = (half_len + radius, 0.0)
+    left = (-half_x, 0.0)
+    right = (half_x, 0.0)
     if upper:
         pts = [right] + [(x, z) for x, z in kept if abs(z) > 1e-9] + [left]
     else:
@@ -275,38 +313,23 @@ def _half_stadium_points(half_len: float, radius: float, y: float, *, upper: boo
 
 
 def _upper_floor_filler():
-    """Fill the +Z half between 15 mm and 20 mm so that half reads as a 15 mm edge.
-
-    Cut the full cavity to 20 mm, then fuse this pad back into the upper half.
-    """
-    inset = WALL_BEVEL * 0.85
+    """Fill the +Z half between 15 mm and 20 mm so that half reads as a 15 mm edge."""
+    inset = LIP_R * 0.15 + FLOOR_INSET
     y0 = Y_FRONT + DEPTH_15
     y1 = Y_FRONT + DEPTH_20 + 0.05
+    hx = OPEN_HALF_X - inset
+    hz = OPEN_HALF_Z - inset
+    cr = max(OPEN_CORNER_R - inset, 2.0)
     sections = [
-        _half_stadium_points(
-            TROUGH_HALF_LEN - inset,
-            TROUGH_RADIUS - inset,
-            y0,
-            upper=True,
-        ),
-        _half_stadium_points(
-            TROUGH_HALF_LEN - inset,
-            TROUGH_RADIUS - inset,
-            y1,
-            upper=True,
-        ),
+        _half_opening_points(hx, hz, cr, y0, upper=True),
+        _half_opening_points(hx, hz, cr, y1, upper=True),
     ]
     return _loft_solid(sections)
 
 
 def _trough_cutter():
-    """Full stadium to the deeper (20 mm) floor — closed triangle solid."""
-    stations = [
-        (-0.05, 0.0),
-        (4.0, WALL_BEVEL * 0.25),
-        (DEPTH_15, WALL_BEVEL * 0.7),
-        (DEPTH_20, WALL_BEVEL),
-    ]
+    """Rounded-rect cavity to 20 mm with a 6.5 mm entry lip (triangle soup)."""
+    stations = _lip_stations(DEPTH_20)
     rings = [_station_ring(depth, inset) for depth, inset in stations]
     triangles = _cap_fan(rings[0], flip=True)
     count = len(rings[0])
@@ -343,9 +366,18 @@ def _cord_mouth(sign: float):
     return _loft_solid(sections)
 
 
-def _in_trough(x: float, z: float, slack: float = 0.35) -> bool:
-    radial = math.hypot(max(abs(x) - TROUGH_HALF_LEN, 0.0), z - TROUGH_Z_CENTER)
-    return radial <= TROUGH_RADIUS + slack
+def _in_trough(x: float, z: float, slack: float = 0.5) -> bool:
+    """True if (x, z) lies inside the opening rounded-rect (plus slack)."""
+    ax, az = abs(x), abs(z)
+    hx, hz, r = OPEN_HALF_X + slack, OPEN_HALF_Z + slack, OPEN_CORNER_R
+    if ax <= hx - r and az <= hz:
+        return True
+    if az <= hz - r and ax <= hx:
+        return True
+    cx, cz = hx - r, hz - r
+    if ax >= cx and az >= cz:
+        return math.hypot(ax - cx, az - cz) <= r + slack
+    return False
 
 
 def _is_front_plane(face) -> bool:
@@ -372,7 +404,7 @@ def _edge_15_filter(face) -> bool:
     center = face.CenterOfMass
     if not _in_trough(center.x, center.z):
         return False
-    if center.x < -TROUGH_HALF_LEN + 1.0:
+    if center.x < -OPEN_HALF_X + OPEN_CORNER_R:
         return False
     if box.YLength < 0.05 and abs(box.YMin - LIP_15_Y) < 0.25:
         return box.ZMin >= TROUGH_Z_CENTER - 0.05
@@ -389,7 +421,7 @@ def _edge_20_filter(face) -> bool:
     center = face.CenterOfMass
     if not _in_trough(center.x, center.z):
         return False
-    if center.x < -TROUGH_HALF_LEN + 1.0:
+    if center.x < -OPEN_HALF_X + OPEN_CORNER_R:
         return False
     if box.YLength < 0.05 and abs(box.YMin - FLOOR_Y) < 0.25:
         return box.ZMax <= TROUGH_Z_CENTER + 0.05
@@ -404,10 +436,9 @@ def _pocket_end_filter(face) -> bool:
     if box.YMin < Y_FRONT - 0.08 or box.YMax > FLOOR_Y + 0.2:
         return False
     center = face.CenterOfMass
-    if not _in_trough(center.x, center.z, slack=0.5):
+    if not _in_trough(center.x, center.z, slack=0.8):
         return False
-    # Left/right split at stadium core (−half_len), not the outer rim.
-    return box.XMax <= -TROUGH_HALF_LEN + 0.5
+    return box.XMax <= -OPEN_HALF_X + OPEN_CORNER_R + 0.5
 
 
 def _jug_filter(face) -> bool:
