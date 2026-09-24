@@ -59,7 +59,7 @@ The metadata lives in two document-level string properties of the FCStd:
 
 Only `id` is derived. `aspectRatio` stays a stored manifest value: it is a
 presentation (viewport) fact, not always the single-unit front ratio. Of the
-five CAD boards, four match the descriptor `modelBounds` x/y ratio to within
+six CAD boards, five match the descriptor `modelBounds` x/y ratio to within
 2e-8 relative (float32 export noise against exact ratios such as 5/3 and 12/7),
 but `metolius-rock-rings-3d` presents two ring instances while its descriptor
 bounds cover one ring, so a derived value would be wrong there (see
@@ -120,7 +120,7 @@ the build now generates.
 
 ## Authoring a new CAD board
 
-There is no per-board authoring program in the repository. The five retired
+There is no per-board authoring program in the repository. The six retired
 `Tools/HangboardCAD/migration/author_*.py` scripts that created the current
 FCStd documents were one-off, and re-running one would now recreate a document
 without its embedded manifest. Their provenance is preserved in
@@ -245,19 +245,21 @@ dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
 `Edge23Depth` 23, ledge/slot heights, and one named radius per arc).
 
 * Published facts: 20 x 4.2 x 1.5 in and edge depths 38 / 23 / 15 mm, from the
-  manufacturer page and `board.json`. The 38 mm edge is the full 1.5 in
+  manufacturer page and the board manifest. The 38 mm edge is the full 1.5 in
   (38.1 mm) thickness.
 * The primitives were recovered from the pre-migration reference's end-cap
   loop, which is exactly lines, arcs and two Beziers with round-number values;
-  the authoring script re-measures the reference and refuses to save if any of
-  its 291 profile vertices is more than 0.01 mm from the sketch (achieved
-  0.00006 mm). No polyline is used.
+  the retired authoring script re-measured the reference and refused to save if
+  any of its 291 profile vertices was more than 0.01 mm from the sketch
+  (achieved 0.00006 mm). No polyline is used.
+* The source sets `HangTenCurvedRegionPartition` (see the partition section
+  above); it is the only committed source that does.
 * Contacts are sketch-edge runs extruded over the prismatic span
   (`Pad.Length - 2 * EndRoundover.Radius`); a concave slot fillet in a run is
   reversed with `Part::Reverse` and combined with `Part::Compound`, so every
   hold face points out of the board.
-* Provenance and field mappings:
-  `docs/source-audits/2026-09-24-metolius-prime-rib-freecad-source.md`.
+* Provenance, field mappings, and the retired authoring script's recovery
+  commit: `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`.
 
 ## In-app verification
 

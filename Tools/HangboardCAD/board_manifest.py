@@ -17,7 +17,7 @@ also lists the current CAD packages' paths). Change the metadata with
 
 Everything that is derivable from the CAD or the build is left out of the
 manifest. Only ``id`` qualifies. ``aspectRatio`` is a stored presentation fact:
-four of the five CAD boards match the descriptor ``modelBounds`` x/y ratio to
+five of the six CAD boards match the descriptor ``modelBounds`` x/y ratio to
 within 2e-8 relative, but ``metolius-rock-rings-3d`` presents two ring
 instances while its bounds cover one ring
 (``docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md``). Published grip

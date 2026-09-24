@@ -301,7 +301,7 @@ byte-identical. Re-running an authoring script that creates the document from
 scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
-commit it. The five boards migrated so far were authored by committed
+commit it. The six boards migrated so far were authored by committed
 `Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
 (published versus measured values, tolerances, reference SHAs, stated
 deviations) is preserved in
@@ -570,7 +570,7 @@ write-up. The durable points:
   holds are extruded runs of the profile. Reproduces closely. Before
   reducing the section to a polyline, fit circles and cubic Beziers to its runs;
   when they fit (as on `metolius-prime-rib`), author those primitives instead
-  (`migration/author_metolius_prime_rib.py`).
+  (see `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`).
 - **Genuinely sculpted shell (rounded lip, scooped pockets)? → pick the bar up
   front.** Either a native *measured approximation* (declare the accepted
   deviation; `compare_exports` is evidence, not a gate) or a *faceted import*.

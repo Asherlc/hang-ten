@@ -216,7 +216,7 @@ coincident-surface trap in lesson 5:
   the model tier. Reserve any big-model budget for one bounded, specific question.
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
 - Committed one-off per-board authoring scripts and per-board duplicate
-  native-check scripts are maintenance overhead. The five
+  native-check scripts are maintenance overhead. The six
   `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
   manifest); their provenance lives in
