@@ -456,6 +456,10 @@ write-up. The durable points:
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
   mono circle fit, cord mouths, source-backed lock). See lessons §11.
+- **Compact II** reused the deleted Blender authoring script from Git as its
+  dimension source. It also showed that a sculpted body gets exact contact
+  partitions only when every face is planar: station-stacked quads and
+  triangles, not curved lofts. See lessons §12.
 
 ## Fast loop and definition of done
 

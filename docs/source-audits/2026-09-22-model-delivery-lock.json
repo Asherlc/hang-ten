@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, and lattice-mxedge-lift-small native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, and metolius-wood-grips-compact-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "abfe9228834424e5f4c8ee843ee5460775fa671756498d979086ebe2aa1aae0c",
+  "sha256Manifest": "53d35be9c6a5a5b95186cb708af644a96691f4495a2eccfa73ff524983d86ee5",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "5f3304a2d1d0a3a2147ab63974413a7aa65710a10c658f796a028a30e78094ba",
+  "supersededSha256Manifest": "abfe9228834424e5f4c8ee843ee5460775fa671756498d979086ebe2aa1aae0c",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -113,6 +113,20 @@
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail route; 8/8 contacts selected by deep link and confirmed via boardDetail.selectedHold.<contactID>; CAD-authored outlines render as smooth hold regions)",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center"
+    },
+    "metolius-wood-grips-compact-ii": {
+      "source": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
+      "sourceSHA256": "8599506fd6f2762ac519770f4defb5c785002179d7f31036683338a376308498",
+      "referenceSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
+      "assetSHA256": "fd4a02477c0ea81f4d863ae839f2e144a0a2ff7b3f8993a7238ef562b9e8b181",
+      "descriptorSHA256": "d21c03846539f080e7b8b3000e4cd37f0fb0cdad81e51f88c6f6caed6921e4b6",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
+      "nativeAppValidation": "not run",
+      "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
+      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_metolius_wood_grips_compact_ii.py",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules; bounding rectangles for edges, jugs and slopers"
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."
