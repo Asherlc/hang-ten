@@ -14,8 +14,19 @@ Provenance:
     edge-18 and mono-25 split the lower one;
   - each trough is a stadium: arc centres at x = +/-48 mm, rim radius 14 mm, centred at
     z = 22.5 (upper) and z = -20.5 (lower);
-  - each trough wall is an ogee tangent to the front face at the rim and to the floor.
-    A smoothstep in the wall inset tracks the measured wall to ~0.3 mm;
+  - each trough wall is a **front roll, a straight face, then a roll into the floor** —
+    the published MXEdge cross-section (front radius, top face, back radius), not one
+    continuous ogee. Sections cut at 0.1 mm through the reference give a face that
+    plateaus at 56-58 deg (upper trough) and 65-66 deg (lower), with each roll spanning
+    3.5-4 mm of inset:
+
+        upper, x = 0.3   apex 12.50 mm   roll 0->3.5   face 56-58 deg   roll 7.5->11.2
+        upper, x = 48    apex 10.06 mm   roll 0->4.0   face 51-55 deg   roll 7.5->11.0
+        lower, x = 0.3   apex 16.60 mm   roll 0->4.0   face 65-66 deg   roll 6.5->10.7
+
+    The rolls are progressive rather than circular: the sculpt's osculating radius at the
+    rim is under 1.5 mm and grows along the roll, so the rim reaches 30 deg within 1.0 mm
+    of inset and reads as a knife edge rather than a bevel;
   - the walls are what the reference renders as one dark band (upper wall, facing down)
     and one bright band (lower wall, facing up) per trough;
   - **the floor is crowned along the trough's length** — deepest at the centre and
@@ -24,7 +35,9 @@ Provenance:
     profile: at every z the measured depth is depth(x = 0) * (1 - c * (x/48)^2), holding
     to 0.03 mm for c = 0.1952 (upper) and c = 0.1885 (lower). The rim outline itself does
     not change along x. Cutters therefore scale depth by that parabola and leave the
-    inset profile alone;
+    inset profile alone. Measured on the upper trough, each half of the z = 23 split
+    crowns by the same parabola (c = 0.1950 above and below), so both of this model's
+    upper floor levels use one crown;
   - measured trough centre depths are 12.5 mm (upper) and 16.5 mm (lower). This model
     uses the published 14 mm / 18 mm instead, so each exported region's depth equals the
     depth board.json publishes. Stated deviation: floors 1.5 mm deeper than measured;
@@ -37,16 +50,37 @@ Provenance:
 * Display material texture embedded from the same reference package.
 * Measured approximation of a sculpted display mesh — not manufacturing geometry.
 
-Region partition. `compile_board` requires each region's extent along the depth axis to
-equal the published grip depth, and the reference's own nodes do not satisfy that (its
-edge-8 node spans the full 12.5 mm trough). Each authored region is therefore the run of
-trough-wall faces whose depth extent *is* the published depth, which for edge-8 is the
-front 8 mm of the upper trough's upper wall — the lip actually gripped:
+Region partition. The published grips are two per trough and the reference's own node
+AABBs say where each one starts and stops, but the reference *sculpt* does not carry the
+published depths: its upper trough is one floor 12.5 mm deep for both edge-8 and edge-14
+(measured: flat y = -4.5 across z 19.5..26 at x = 0, no step anywhere along z), while
+board.json publishes 8 mm and 14 mm. This model therefore gives the upper trough **one
+stadium opening and two crowned floor levels**, stepping at the z = 23 line the
+reference's nodes already split on — 8 mm above it, 14 mm below — so each grip's geometry
+is the depth the board publishes and the step is visible as a shelf inside the pocket.
+Stated deviation: the reference upper trough has no step.
 
-    edge-14  upper trough, lower wall, full depth        y [-17, -3]   span 14
-    edge-8   upper trough, upper wall, front 8 mm        y [-17, -9]   span  8
-    edge-18  lower trough, lower wall, full depth        y [-17, +1]   span 18
-    mono-25  lower trough right end + bore incl. floor   y [-17, +8]   span 25
+Two deliberate departures from the measured sculpt make the wall and the step read as
+geometry rather than as a flat cut:
+
+* the authored front roll is a 6 mm radius, against the sculpt's sub-1.5 mm rim
+  curvature. Lattice publishes a ~10 mm front radius on the physical edge, so a defined
+  front radius is the product's cross-section; 6 mm is the largest that still leaves a
+  straight face inside this trough's inset budget. The roll opens toward the trough's
+  ends because the wall is depth-scaled by the crown, which is also the published
+  behaviour (larger front radius at the ends, smaller at the centre);
+* the upper trough's floor is widened (apex inset 9.5 mm, against a measured 11.2 mm) and
+  its step plane leans back 2 mm of z across the rise. A step plane normal to the front
+  face projects to a zero-width line in a front view, and a 2.8 mm apex half-width leaves
+  no shelf on either side of it, so the two published levels were invisible. At 9.5 mm the
+  upper trough carries a 4.0 mm shelf at 8 mm, a 2.0 mm leaning riser and a 3.0 mm shelf
+  at 14 mm. The lower trough keeps its measured apex inset.
+
+    edge-8   upper trough above z = 23: wall + 8 mm floor    y [-17, -9]   span  8
+    edge-14  upper trough below z = 23: step riser, 14 mm
+             floor, wall                                     y [-17, -3]   span 14
+    edge-18  lower trough, lower wall, full depth            y [-17, +1]   span 18
+    mono-25  lower trough right end + bore incl. floor       y [-17, +8]   span 25
 
 Because the floor is crowned, a region's deepest face is the one at x = 0; each of those
 spans reaches the published depth there and no deeper.
@@ -118,7 +152,18 @@ TROUGHS = {
         "z_center": 22.5,
         "depth": GRIP_DEPTH_MM["edge-14"],
         "crown_fraction": 0.1952,
-        "apex_inset": 11.5,
+        # Measured apex half-width is 2.8 mm (inset 11.2). Widened here because this
+        # trough carries two floor levels: at 9.5 mm each level keeps a shelf wide enough
+        # to read either side of the riser. Stated deviation.
+        "apex_inset": 9.5,
+        # Two floor levels in the one opening. The split is the z the reference's own
+        # edge-8 and edge-14 nodes meet on; each level's depth is what board.json
+        # publishes for the grip on that side of it.
+        "step_z": 23.0,
+        "step_depth": GRIP_DEPTH_MM["edge-8"],
+        # z the riser leans back over the whole rise. A riser normal to the front face
+        # projects to a zero-width line in a front view and the step cannot be seen.
+        "step_run": 2.0,
     },
     "lower": {
         "z_center": -20.5,
@@ -127,13 +172,15 @@ TROUGHS = {
         "apex_inset": 11.0,
     },
 }
-# Depth fractions of the wall stations; the inset follows the inverse smoothstep. The gap
-# between 0.52 and 0.76 is where the upper trough's absolute 8 mm station sweeps as the
-# floor crowns — see `_stations`.
-WALL_FRACTIONS = (
-    0.0, 0.02, 0.05, 0.09, 0.14, 0.20, 0.27, 0.35, 0.43, 0.52, 0.76, 0.85, 0.92, 0.97, 1.0
-)
-STATION_MARGIN = 0.02
+# Wall cross-section: front roll, straight face, roll into the floor. The radii are of the
+# centre profile; depth-scaling by the crown opens both rolls toward the trough's ends.
+WALL_FRONT_RADIUS = 6.0
+WALL_BACK_RADIUS = 2.0
+# Segment counts per profile zone. The front roll carries the most because it is the band
+# whose shading gradient is what reads as the bevel.
+WALL_FRONT_SEGMENTS = 9
+WALL_FACE_SEGMENTS = 3
+WALL_BACK_SEGMENTS = 3
 # Cutters start this far in front of the board so no boolean face is coplanar with it.
 PROUD_MM = 0.3
 
@@ -205,10 +252,82 @@ def _apply_material(obj, texture_source: Path | None) -> None:
         obj.TextureFile = str(texture_source)
 
 
-def _inverse_smoothstep(fraction: float) -> float:
-    """Wall inset parameter for a depth fraction (exact inverse of a smoothstep)."""
-    clamped = min(max(fraction, 0.0), 1.0)
-    return 0.5 - math.sin(math.asin(1.0 - 2.0 * clamped) / 3.0)
+def _wall_face_angle(
+    inset_max: float, depth: float, front_radius: float, back_radius: float
+) -> float:
+    """Angle of the wall's straight face from the front face plane.
+
+    The wall leaves the rim tangent to the front face, turns through `front_radius` to the
+    face angle t, runs straight, then turns back through `back_radius` tangent to the
+    floor. Each roll displaces the profile by r*(sin t, 1 - cos t), so
+
+        inset_max = (front_radius + back_radius) sin t + straight cos t
+        depth     = (front_radius + back_radius) (1 - cos t) + straight sin t
+
+    and eliminating `straight` leaves one equation in t, increasing on (0, pi/2):
+
+        inset_max sin t - depth cos t = (front_radius + back_radius) (1 - cos t)
+    """
+    blend = front_radius + back_radius
+    if blend >= inset_max or blend > depth:
+        raise ValueError(
+            f"wall rolls {blend} mm do not fit an inset of {inset_max} mm "
+            f"and a depth of {depth} mm"
+        )
+    low, high = 0.0, 0.5 * math.pi
+    for _ in range(80):
+        middle = 0.5 * (low + high)
+        residual = (
+            inset_max * math.sin(middle)
+            - depth * math.cos(middle)
+            - blend * (1.0 - math.cos(middle))
+        )
+        if residual < 0.0:
+            low = middle
+        else:
+            high = middle
+    return 0.5 * (low + high)
+
+
+def _wall_stations(spec: dict, depth: float):
+    """(inset mm, depth fraction) stations down one wall of a trough.
+
+    The inset is authored in millimetres and the depth is carried as a fraction, so a
+    station off the trough's centre takes the same fraction of its own crowned depth.
+    That keeps the wall one uniform depth scaling of its centre profile, which is what the
+    reference measures as, and it opens the rolls toward the trough's ends.
+    """
+    inset_max = spec["apex_inset"]
+    blend = WALL_FRONT_RADIUS + WALL_BACK_RADIUS
+    angle = _wall_face_angle(inset_max, depth, WALL_FRONT_RADIUS, WALL_BACK_RADIUS)
+    straight = (inset_max - blend * math.sin(angle)) / math.cos(angle)
+
+    stations = []
+    for index in range(WALL_FRONT_SEGMENTS + 1):
+        turn = angle * index / WALL_FRONT_SEGMENTS
+        stations.append(
+            (WALL_FRONT_RADIUS * math.sin(turn), WALL_FRONT_RADIUS * (1.0 - math.cos(turn)))
+        )
+    roll_inset, roll_depth = stations[-1]
+    for index in range(1, WALL_FACE_SEGMENTS + 1):
+        run = straight * index / WALL_FACE_SEGMENTS
+        stations.append(
+            (roll_inset + run * math.cos(angle), roll_depth + run * math.sin(angle))
+        )
+    face_inset, face_depth = stations[-1]
+    for index in range(1, WALL_BACK_SEGMENTS + 1):
+        turn = angle * index / WALL_BACK_SEGMENTS
+        stations.append(
+            (
+                face_inset + WALL_BACK_RADIUS * (math.sin(angle) - math.sin(angle - turn)),
+                face_depth + WALL_BACK_RADIUS * (math.cos(angle - turn) - math.cos(angle)),
+            )
+        )
+    if abs(stations[-1][0] - inset_max) > 1e-6 or abs(stations[-1][1] - depth) > 1e-6:
+        raise ValueError(
+            f"wall profile ends at {stations[-1]}, expected ({inset_max}, {depth})"
+        )
+    return [(inset, level / depth) for inset, level in stations], angle
 
 
 def _loft_solid(sections):
@@ -329,60 +448,17 @@ def _stadium_template():
     return template
 
 
-def _stations(spec: dict, absolute_depths=()):
-    """Ordered wall stations of one trough, rim first.
-
-    A ``fraction`` station rides the local trough depth, which is what keeps the wall a
-    uniform scaling of the centre profile. An ``absolute`` station holds one constant y so
-    a region boundary can land exactly on a published grip depth. Because the floor
-    crowns, an absolute station sweeps across a band of fractions along the trough, and
-    any fraction inside that band would cross it and fold the surface — so those are
-    dropped and the ordering is then asserted at both ends of the sweep.
-    """
-    depth_center = spec["depth"]
-    depth_end = _trough_depth(spec, TROUGH_HALF_LEN)
-    bands = [
-        (depth / depth_center - STATION_MARGIN, depth / depth_end + STATION_MARGIN)
-        for depth in absolute_depths
-    ]
-    for depth in absolute_depths:
-        if depth >= depth_end:
-            raise ValueError(f"absolute station {depth} mm is deeper than the trough end")
-    stations = [
-        ("fraction", fraction)
-        for fraction in WALL_FRACTIONS
-        if all(not low < fraction < high for low, high in bands)
-    ]
-    stations += [("absolute", depth) for depth in absolute_depths]
-    stations.sort(
-        key=lambda station: (
-            station[1] * depth_center if station[0] == "fraction" else station[1]
-        )
-    )
-    for core_x in (0.0, TROUGH_HALF_LEN):
-        depths = [_station_depth(spec, station, core_x) for station in stations]
-        if any(b - a <= 1e-6 for a, b in zip(depths, depths[1:])):
-            raise ValueError(f"wall stations are not ordered at core x {core_x}: {depths}")
-    return stations
-
-
-def _station_depth(spec: dict, station, core_x: float) -> float:
-    kind, value = station
-    if kind == "fraction":
-        return _trough_depth(spec, core_x) * value
-    return value
-
-
 def _ring(spec: dict, template, station, *, y_override: float | None = None):
-    """One closed ring of cutter vertices, one per template sample."""
+    """One closed ring of cutter vertices at one station of the wall profile.
+
+    A station fixes the inset in millimetres and the depth as a *fraction* of the local
+    trough depth rather than as an absolute y, which is what keeps the wall a uniform
+    scaling of the centre profile as the floor crowns.
+    """
+    inset, fraction = (0.0, 0.0) if station is None else station
     points = []
     for core_x, normal_x, normal_z in template:
-        depth_local = _trough_depth(spec, core_x)
-        if station is None:
-            depth, inset = 0.0, 0.0
-        else:
-            depth = _station_depth(spec, station, core_x)
-            inset = spec["apex_inset"] * _inverse_smoothstep(depth / depth_local)
+        depth = _trough_depth(spec, core_x) * fraction
         radius = TROUGH_RADIUS - inset
         points.append(
             App.Vector(
@@ -427,11 +503,12 @@ def _cap_triangles(spec: dict, ring, *, flip: bool):
     return triangles
 
 
-def _trough_cutter(spec: dict, absolute_depths=()):
+def _trough_cutter(spec: dict):
     """Stadium trough with a parabolically crowned floor, as planar triangles."""
     template = _stadium_template()
+    stations, _ = _wall_stations(spec, spec["depth"])
     rings = [_ring(spec, template, None, y_override=Y_FRONT - PROUD_MM)]
-    rings += [_ring(spec, template, station) for station in _stations(spec, absolute_depths)]
+    rings += [_ring(spec, template, station) for station in stations]
 
     triangles = _cap_triangles(spec, rings[0], flip=True)
     count = len(template)
@@ -442,6 +519,66 @@ def _trough_cutter(spec: dict, absolute_depths=()):
             triangles.append((near[index], far[following], far[index]))
     triangles += _cap_triangles(spec, rings[-1], flip=False)
     return _triangle_solid(triangles)
+
+
+def _step_plane(spec: dict):
+    """(run, rise, y, z) of the trough's step plane: `run` mm of z across the whole rise.
+
+    The plane passes through the step line on the shallow floor and leans back as it goes
+    deeper, so the shelf the two levels expose between them is a sloped band with real
+    width in a front view. A plane normal to the front face projects to a line.
+    """
+    rise = spec["depth"] - spec["step_depth"]
+    return spec["step_run"], rise, Y_FRONT + spec["step_depth"], spec["step_z"]
+
+
+def _step_offset(spec: dict, y: float, z: float) -> float:
+    """Signed distance from the trough's step plane; positive on the shallow level's side."""
+    run, rise, y_step, z_step = _step_plane(spec)
+    return (run * (y - y_step) + rise * (z - z_step)) / math.hypot(run, rise)
+
+
+def _step_half_space(spec: dict, *, above: bool):
+    """Block filling everything on one side of the trough's step plane."""
+    run, rise, y_step, z_step = _step_plane(spec)
+    norm = math.hypot(run, rise)
+    normal_y, normal_z = run / norm, rise / norm
+    if not above:
+        normal_y, normal_z = -normal_y, -normal_z
+    along_y, along_z = -normal_z, normal_y
+    span = 4.0 * BODY_Z
+    corners = [
+        App.Vector(
+            -2.0 * BODY_X,
+            y_step + along * span * along_y + out * span * normal_y,
+            z_step + along * span * along_z + out * span * normal_z,
+        )
+        for along, out in ((-1.0, 0.0), (1.0, 0.0), (1.0, 1.0), (-1.0, 1.0))
+    ]
+    face = Part.Face(Part.makePolygon(corners + [corners[0]]))
+    return face.extrude(App.Vector(4.0 * BODY_X, 0.0, 0.0))
+
+
+def _stepped_trough_cutter(spec: dict):
+    """One stadium opening carrying two crowned floor levels, split at `step_z`.
+
+    Both levels are the same trough at their own published depth, so they share the rim
+    outline exactly and differ in how steep the wall's straight face has to be to reach
+    the floor. Each is clipped to its own side of the step plane and the two are
+    fused, which leaves the plane itself exposed between the levels: that face is the
+    shelf you see inside the pocket. Clipping both (rather than fusing a whole shallow
+    trough into a deep one, which the deep trough would simply swallow) also means the
+    two solids meet only on that plane.
+    """
+    shallow = dict(spec, depth=spec["step_depth"])
+    if spec["step_depth"] >= spec["depth"]:
+        raise ValueError("the step's shallow level must be shallower than the trough")
+    above = _trough_cutter(shallow).common(_step_half_space(spec, above=True))
+    below = _trough_cutter(spec).common(_step_half_space(spec, above=False))
+    solid = above.fuse(below)
+    if solid.isNull() or solid.Volume <= 0.0:
+        raise ValueError("stepped trough cutter is empty")
+    return solid
 
 
 def _mono_cutter():
@@ -475,15 +612,22 @@ def _is_front_plane(face) -> bool:
 
 
 def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
-    """Match trough-wall faces on one side of the apex, no deeper than `y_max`.
+    """Match trough faces on one side of the split line, no deeper than `y_max`.
 
-    The side test is on the face's whole extent, not its centroid. Each x strip of the
-    floor is one plane, so the boolean hands it back as a single face spanning the full
-    apex width, and a centroid test would assign it by whichever side a rounding error
-    fell on. A face that straddles the centre line belongs to neither wall and stays with
-    the body, which is also where the reference's own node split leaves it.
+    A stepped trough splits on its step plane, an unstepped one on its centre line. The
+    side test is on the face's whole extent, not its centroid. Each x strip of the floor
+    is one plane, so the boolean hands it back as a single face spanning the full apex
+    width, and a centroid test would assign it by whichever side a rounding error fell
+    on. A face that straddles the split line belongs to neither side and stays with the
+    body, which is also where the reference's own node split leaves it.
+
+    The riser is the exception: it is the rise to the deeper level's floor, so it goes to
+    that level by lying on the step plane rather than by its z extent. It has to be named
+    explicitly because it does cross the split line — the plane climbs toward the rim near
+    the trough's ends, where the shallow level's floor has tapered out.
     """
-    z_center = spec["z_center"]
+    split_z = spec.get("step_z", spec["z_center"])
+    stepped = "step_z" in spec
 
     def matches(face) -> bool:
         box = face.BoundBox
@@ -496,7 +640,9 @@ def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: 
             return False
         if not x_min <= center.x <= x_max:
             return False
-        return box.ZMin >= z_center - 0.05 if above else box.ZMax <= z_center + 0.05
+        if stepped and all(abs(_step_offset(spec, v.Y, v.Z)) < 0.05 for v in face.Vertexes):
+            return not above
+        return box.ZMin >= split_z - 0.05 if above else box.ZMax <= split_z + 0.05
 
     return matches
 
@@ -585,13 +731,14 @@ def main() -> int:
     upper = TROUGHS["upper"]
     lower = TROUGHS["lower"]
     cutters = [
-        _trough_cutter(upper, absolute_depths=(GRIP_DEPTH_MM["edge-8"],)),
+        _stepped_trough_cutter(upper),
         _trough_cutter(lower),
         _mono_cutter(),
     ]
 
     contact_predicates = [
         (
+            # Below the step: the riser, the 14 mm floor and the wall back up to the rim.
             "edge-14",
             _wall_filter(
                 upper,
@@ -602,11 +749,12 @@ def main() -> int:
             ),
         ),
         (
+            # Above the step: the upper wall and the 8 mm floor it lands on.
             "edge-8",
             _wall_filter(
                 upper,
                 above=True,
-                y_max=Y_FRONT + GRIP_DEPTH_MM["edge-8"],
+                y_max=Y_FRONT + upper["step_depth"],
                 x_min=-CONTACT_X_LIMIT,
                 x_max=CONTACT_X_LIMIT,
             ),
@@ -653,6 +801,38 @@ def main() -> int:
     if body_shape.isNull() or body_shape.Volume < 1.0:
         raise ValueError("cut body failed to produce a solid")
 
+    # The shelf between the upper trough's two levels is the whole point of the step, so
+    # assert it survived the cut at the depth it is supposed to bridge.
+    step_faces = [
+        face
+        for face in body_shape.Faces
+        if all(abs(_step_offset(upper, v.Y, v.Z)) < 0.05 for v in face.Vertexes)
+    ]
+    if not step_faces:
+        raise ValueError(f"upper trough has no step riser at z = {upper['step_z']}")
+    # The riser pinches shut where the two levels meet the front face at the trough's
+    # ends, so its bounding box spans the whole trough; measure the rise on a centre
+    # slice instead, where both levels are at their published depth.
+    probe = Part.makeBox(
+        1.0,
+        4.0 * BODY_Y,
+        4.0 * BODY_Z,
+        App.Vector(-0.5, Y_FRONT - 2.0 * BODY_Y, -2.0 * BODY_Z),
+    )
+    step_box = Part.makeCompound(step_faces).common(probe).BoundBox
+    step_rise, step_run = step_box.YLength, step_box.ZLength
+    expected_rise = upper["depth"] - upper["step_depth"]
+    if abs(step_rise - expected_rise) > 0.05:
+        raise ValueError(
+            f"step riser spans {step_rise:.3f} mm, expected {expected_rise:.3f} mm"
+        )
+    # A riser that lost its lean is a riser that cannot be seen in a front view.
+    if abs(step_run - upper["step_run"]) > 0.05:
+        raise ValueError(
+            f"step riser leans back {step_run:.3f} mm of z, "
+            f"expected {upper['step_run']:.3f} mm"
+        )
+
     regions = {}
     for contact_id, predicate in contact_predicates:
         feature = document.addObject("Part::Feature", f"Contact_{contact_id.replace('-', '_')}")
@@ -691,10 +871,23 @@ def main() -> int:
     print(f"reference envelope mm: {measured}")
     print(f"body faces: {len(body_shape.Faces)}  volume {body_shape.Volume:.0f} mm^3")
     for name, spec in TROUGHS.items():
-        print(
-            f"  {name} trough floor: {spec['depth']:.2f} mm at x=0, "
-            f"{_trough_depth(spec, TROUGH_HALF_LEN):.2f} mm at x=+/-{TROUGH_HALF_LEN:.0f}"
-        )
+        levels = [spec["depth"]]
+        if "step_depth" in spec:
+            levels.insert(0, spec["step_depth"])
+        for depth in levels:
+            level = dict(spec, depth=depth)
+            _, angle = _wall_stations(level, depth)
+            print(
+                f"  {name} trough floor: {depth:.2f} mm at x=0, "
+                f"{_trough_depth(level, TROUGH_HALF_LEN):.2f} mm at x=+/-{TROUGH_HALF_LEN:.0f}"
+                f"; wall face {math.degrees(angle):.1f} deg over"
+                f" front roll r{WALL_FRONT_RADIUS:.1f} / back roll r{WALL_BACK_RADIUS:.1f}"
+            )
+        if "step_depth" in spec:
+            print(
+                f"  {name} trough step at z={spec['step_z']:.1f}: riser {step_rise:.2f} mm "
+                f"rise leaning {step_run:.2f} mm of z over {len(step_faces)} face(s)"
+            )
     for contact_id, info in regions.items():
         print(
             f"  {contact_id:8s} faces={info['faces']:3d} x={info['x']} z={info['z']} "
