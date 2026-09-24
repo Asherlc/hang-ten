@@ -14,7 +14,9 @@ Provenance:
     edge-22 is the lower trough's lower wall and mono-28 is the right-end bore;
   - stadium matches Small: arc centres x = +/-48 mm, rim radius 14 mm. Centres measured
     at z = 22 (upper; contact split) and z = -22 (lower; depth peak);
-  - ogee walls via the same smoothstep inset as Small (apex inset 11.5 / 11.0 mm);
+  - trough walls are **flat / vertical** (constant stadium radius, no ogee or entry
+    bevel). MX grips are flat edges; the earlier Small-style smoothstep inset was a
+    lambert readability choice and is intentionally omitted here;
   - floor crown c = 0.134 on depth(x) = depth(0) * (1 - c * (x/48)^2), fit on the upper
     floor (16.00, 15.87, 15.46, 14.79, 13.86 mm at x = 0, 12, 24, 36, 48) and the lower
     floor left of the mono (20.00, 19.83, 19.33 mm at x = 0, 12, 24);
@@ -103,26 +105,30 @@ TROUGHS = {
         "z_center": 22.0,
         "depth": GRIP_DEPTH_MM["edge-16"],
         "crown_fraction": 0.134,
-        "apex_inset": 11.5,
+        # Flat vertical walls — no inward ogee/bevel.
+        "apex_inset": 0.0,
     },
     "lower": {
         "z_center": -22.0,
         "depth": GRIP_DEPTH_MM["edge-22"],
         "crown_fraction": 0.134,
-        "apex_inset": 11.0,
+        "apex_inset": 0.0,
     },
 }
-# Depth fractions of the wall stations; the inset follows the inverse smoothstep. The gap
-# between 0.52 and 0.76 is where the upper trough's absolute 8 mm station sweeps as the
-# floor crowns — see `_stations`.
+# Depth fractions of the wall stations. With apex_inset 0 the rings share one
+# stadium outline (flat walls); fractions still space the crowned floor and the
+# absolute lip station for edge-12.
 WALL_FRACTIONS = (
-    0.0, 0.02, 0.05, 0.09, 0.14, 0.20, 0.27, 0.35, 0.43, 0.52, 0.76, 0.85, 0.92, 0.97, 1.0
+    0.0, 0.15, 0.35, 0.55, 0.75, 0.9, 1.0
 )
+# Micro inward ledge (mm) only at absolute lip stations. Flat vertical walls are
+# otherwise coplanar and OCCT merges them into one face, which breaks the
+# published-depth split (edge-12 = front 12 mm of the upper wall). This step is
+# not an ogee/bevel; it is a hairline face break.
+LIP_FACE_BREAK_MM = 0.25
 STATION_MARGIN = 0.02
 # Cutters start this far in front of the board so no boolean face is coplanar with it.
 PROUD_MM = 0.3
-
-# Partition boundaries measured on the reference's own contact nodes.
 CONTACT_X_LIMIT = 63.0
 MONO_X_MIN = 34.4
 
@@ -367,15 +373,26 @@ def _station_depth(spec: dict, station, core_x: float) -> float:
 
 
 def _ring(spec: dict, template, station, *, y_override: float | None = None):
-    """One closed ring of cutter vertices, one per template sample."""
+    """One closed ring of cutter vertices, one per template sample.
+
+    Walls stay at the stadium rim radius (flat / vertical). Absolute lip
+    stations take a `LIP_FACE_BREAK_MM` inward step so OCCT cannot merge the
+    front lip band with the deeper wall into one coplanar face.
+    """
     points = []
     for core_x, normal_x, normal_z in template:
-        depth_local = _trough_depth(spec, core_x)
         if station is None:
             depth, inset = 0.0, 0.0
         else:
             depth = _station_depth(spec, station, core_x)
-            inset = spec["apex_inset"] * _inverse_smoothstep(depth / depth_local)
+            kind, _value = station
+            if kind == "absolute":
+                inset = LIP_FACE_BREAK_MM
+            elif spec["apex_inset"] > 0.0:
+                depth_local = _trough_depth(spec, core_x)
+                inset = spec["apex_inset"] * _inverse_smoothstep(depth / depth_local)
+            else:
+                inset = 0.0
         radius = TROUGH_RADIUS - inset
         points.append(
             App.Vector(

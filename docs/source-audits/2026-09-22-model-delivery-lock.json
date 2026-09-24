@@ -50,20 +50,20 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "7963a04159b3a838bed4d8c5697704dae4e75e18fc5b6722f6dc9cc88508cb1a",
+  "sha256Manifest": "36bea410a1d053535269e0d4148ada7df19f0ff5c091aa067969f8f96e5a4307",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "3bc95dc535532d731879c6805d61cc6525d5d05a8593668838474efa97634b2c",
+  "supersededSha256Manifest": "7963a04159b3a838bed4d8c5697704dae4e75e18fc5b6722f6dc9cc88508cb1a",
   "migratedPackages": {
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
-      "sourceSHA256": "bf82e02b2392cd73de7186168e6b1cca0d0e1f3820f9e6134c12b7fa8e22b1af",
+      "sourceSHA256": "7b22685c9b93096644edfd56f6ad17dc10f0614fa8d0d07d74e869a317331e5e",
       "referenceSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
-      "assetSHA256": "1cbed0d7471db00ad8d7ca4ef22dd7ae34074cc62cd5d259abc6483647b9c6ea",
-      "descriptorSHA256": "75ddbae288c97f195ec6d1677969be87b8d206edbcaca3270255f41df5205bda",
+      "assetSHA256": "460300faa6e912a6d802992d8cd0bd846b475b8c8d82369bda50d6d6365fb001",
+      "descriptorSHA256": "5ac9b923cdd4ef88cb20336b972e59d534f9babb6afde306067fa0d0ef131d17",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed; edit-propagation suite is the sketch-pad checker and was not run",
+      "nativeValidation": "compile reopen and published-depth gate passed; flat vertical trough walls (no ogee); edit-propagation suite not run",
       "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
       "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_large.py",
       "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
