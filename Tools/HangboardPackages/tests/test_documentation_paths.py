@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 
@@ -13,6 +14,8 @@ README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
 ANDROID_APP_BUILD = REPO_ROOT / "Android/app/build.gradle.kts"
+CAD_README = REPO_ROOT / "Tools/HangboardCAD/README.md"
+DELIVERY_LOCK = REPO_ROOT / "docs/source-audits/2026-09-22-model-delivery-lock.json"
 
 
 def _shell_function_body(script: str, function_name: str) -> str:
@@ -317,3 +320,15 @@ def test_testing_guidance_uses_direct_discovery_not_lifecycle_inventory_terms() 
     assert "status: approved" not in testing
     assert "review inventory" not in testing
     assert "direct-child packages" in testing
+
+
+def test_cad_readme_reports_the_derived_migration_count() -> None:
+    """The migrated count must track the committed sources, not a frozen number."""
+    readme = CAD_README.read_text(encoding="utf-8")
+    migrated = len(list((REPO_ROOT / "Hangboards").glob("*/*.FCStd")))
+    total = len(json.loads(DELIVERY_LOCK.read_text(encoding="utf-8"))["modelPackages"])
+
+    assert 0 < migrated < total
+    assert f"**Status: {migrated} of the {total} model-media boards are migrated**" in readme
+    assert f"**{migrated} of {total} model-media boards are migrated.**" in readme
+    assert f"The other {total - migrated} still ship" in readme

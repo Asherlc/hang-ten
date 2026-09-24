@@ -309,6 +309,48 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     assert odr_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
 
 
+def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A board with an FCStd but no committed USDZ stages from --compiled-assets."""
+    repository_root = tmp_path / "repository"
+    shutil.copytree(
+        REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        repository_root
+        / "Tools"
+        / "HangboardPackages"
+        / "src"
+        / "hangboard_packages",
+    )
+    package = make_v3_model_package(repository_root / "Hangboards" / "source-model")
+    (package / "assets" / "primary.usdz").unlink()
+    (package / f"{package.name}.FCStd").write_bytes(b"freecad source bytes")
+
+    compiled_assets = tmp_path / "compiled-assets"
+    (compiled_assets / package.name / "assets").mkdir(parents=True)
+    (compiled_assets / package.name / "assets" / "primary.usdz").write_bytes(
+        MODEL_BYTES
+    )
+
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    staged = load_staging_module().stage_board_packages(
+        repository_root, destination, compiled_assets
+    )
+
+    assert staged == (destination / package.name,)
+    assert not (destination / package.name / f"{package.name}.FCStd").exists()
+    odr_model = (
+        odr_staging_root(destination)
+        / package.name
+        / "Hangboards"
+        / package.name
+        / "assets"
+        / "primary.usdz"
+    )
+    assert odr_model.read_bytes() == MODEL_BYTES
+
+
 def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
