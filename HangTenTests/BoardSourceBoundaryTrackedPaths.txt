@@ -17,6 +17,7 @@ HangTen/Models/CustomRoutineStore.swift
 HangTen/Models/DeepLinkManager.swift
 HangTen/Models/EntralpiProtocol.swift
 HangTen/Models/ForceSensorModels.swift
+HangTen/Models/FreeWorkoutDecimalText.swift
 HangTen/Models/FreeWorkoutDraft.swift
 HangTen/Models/FreeWorkoutDraftMigration.swift
 HangTen/Models/FreeWorkoutFinish.swift
