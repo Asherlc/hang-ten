@@ -130,10 +130,15 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 JSONSerialization.jsonObject(with: Data(contentsOf: bundledDocumentURL)) as? [String: Any]
             )
             XCTAssertEqual(bundledDocument["id"] as? String, board.id)
-            let documentURL = repositoryRoot
+            let sourcePackageURL = repositoryRoot
                 .appendingPathComponent("Hangboards", isDirectory: true)
                 .appendingPathComponent(packagePath, isDirectory: true)
-                .appendingPathComponent("board.json")
+            // A CAD-backed package has no checked-in board.json; its document is
+            // the one staging generated from the FCStd (verified byte-exact by
+            // the Python staging tests).
+            let documentURL = try XCTUnwrap(
+                BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: sourcePackageURL)
+            )
             let document = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: documentURL)) as? [String: Any]
             )
@@ -172,7 +177,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     ).standardizedFileURL,
                     expectedDescriptorURL
                 )
-                let sourceDescriptorURL = documentURL.deletingLastPathComponent()
+                let sourceDescriptorURL = sourcePackageURL
                     .appendingPathComponent(descriptorPath)
                 XCTAssertEqual(
                     try Data(contentsOf: expectedDescriptorURL),
@@ -343,7 +348,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 .appendingPathComponent(packagePath, isDirectory: true)
             let boardDocument = try XCTUnwrap(
                 JSONSerialization.jsonObject(
-                    with: Data(contentsOf: packageURL.appendingPathComponent("board.json"))
+                    with: Data(contentsOf: try XCTUnwrap(
+                        BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: packageURL)
+                    ))
                 ) as? [String: Any]
             )
             let holds = try XCTUnwrap(boardDocument["contacts"] as? [[String: Any]])
@@ -355,12 +362,20 @@ final class BoardSourceBoundaryTests: XCTestCase {
             // A package that carries its own CAD authoring source has exactly one
             // extra entry, named after its own directory. Anything else is still
             // an unexpected package entry. Mirrors the board_catalog allowlist.
+            // Its board.json is generated from that source at build time, so a
+            // CAD-backed package must not also carry one.
             let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
                 extraEntries.isEmpty || extraEntries == [authoringSource],
                 "unexpected package entries: \(extraEntries.sorted())"
             )
+            if packageEntries.contains(authoringSource) {
+                XCTAssertFalse(
+                    packageEntries.contains("board.json"),
+                    "CAD-backed package \(packagePath) must not commit board.json"
+                )
+            }
             XCTAssertEqual(boardDocument["schemaVersion"] as? Int, 3)
             XCTAssertNil(boardDocument["presentation"])
             let presentations = try XCTUnwrap(
@@ -768,7 +783,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
             identifiers.insert(boardID)
 
             let packageURL = hangboardsRoot.appendingPathComponent(packagePath, isDirectory: true)
-            let boardURL = packageURL.appendingPathComponent("board.json")
+            let boardURL = try XCTUnwrap(
+                BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: packageURL)
+            )
             let boardObject = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
             )
@@ -852,8 +869,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 throw PackageDiscoveryError.invalidRootChild(child.lastPathComponent)
             }
-            let boardURL = child.appendingPathComponent("board.json")
-            guard FileManager.default.fileExists(atPath: boardURL.path) else { continue }
+            guard let boardURL = BoardSourceBoundaryAudit.boardDocumentURL(forPackageAt: child),
+                  FileManager.default.fileExists(atPath: boardURL.path) else { continue }
             let document = try XCTUnwrap(
                 JSONSerialization.jsonObject(with: Data(contentsOf: boardURL)) as? [String: Any]
             )

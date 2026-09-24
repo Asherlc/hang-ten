@@ -23,7 +23,7 @@ from numba import njit
 from pxr import Usd, UsdGeom, UsdShade, Vt, Sdf, Work
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from remove_mounting_bores import _read_mesh
+from remove_mounting_bores import _read_mesh, package_board_bytes
 from contact_model_package import _canonicalize_usdz
 from contact_model_descriptor import NodeBinding, compile_descriptor
 
@@ -338,7 +338,9 @@ def main():
         if args.board and slug!=args.board:continue
         source=args.root/'Hangboards'/slug/'assets/primary.usdz';dest=args.output/'Hangboards'/slug/'assets/primary.usdz'
         r=optimize_file(source,dest,spec,args.profile)
-        shutil.copyfile(source.parents[1]/'board.json',dest.parents[1]/'board.json')
+        # A CAD-backed package commits no board.json; write the generated one.
+        board_bytes=package_board_bytes(source.parents[1])
+        if board_bytes is not None:(dest.parents[1]/'board.json').write_bytes(board_bytes)
         results[slug]=r
         print(slug,r['beforeTriangles'],'->',r['afterTriangles'],'triangles;',r['inputBytes'],'->',r['outputBytes'],'bytes',flush=True)
     args.output.mkdir(parents=True,exist_ok=True)

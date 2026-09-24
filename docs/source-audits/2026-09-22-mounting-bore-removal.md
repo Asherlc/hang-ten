@@ -1,5 +1,41 @@
 # Mounting-bore removal — 2026-09-22
 
+## Status: historical record (retired 2026-09-24)
+
+This one-time repair was applied in commit
+`e89ad99` (`fix(models): remove 106 mounting bores from 13 shipped models`).
+Its reviewed repair regions are retained unchanged in
+[`2026-09-22-mounting-bore-repairs.json`](2026-09-22-mounting-bore-repairs.json)
+(formerly `Tools/HangboardModels/mounting_bore_repairs.json`). The repair-time
+verifier, `Tools/HangboardModels/verify_mounting_bores.py`, was removed on
+2026-09-24 because it can no longer describe the committed catalogue: its
+inventory is a snapshot of the 40 models at source commit `c9daec6`, and since
+then six models were added (`frictitious-doormount-pro-7`,
+`frictitious-megalith`, `trango-rock-prodigy-forge`,
+`trango-rock-prodigy-natural`, `zlagboard-evo`, `zlagboard-pro`) and the five
+FreeCAD-backed packages (`lattice-triple-rung`, `captain-fingerfood-pocket`,
+`lattice-mxedge-lift-large`, `lattice-mxedge-lift-small`,
+`metolius-rock-rings-3d`) were rebuilt from their CAD sources, which changed
+their model and descriptor bytes (and, for three of them, the generated
+`board.json` bytes).
+`lattice-triple-rung` was one of the 13 repaired models; its current asset is
+compiled from the FCStd, not derived from the repaired mesh, so the repair
+region no longer applies to it. The other 12 repaired models still passed the
+verifier's per-model checks (descriptor rebuilt from the reopened USDZ,
+five closure rays per bore) at `db04185`. Refreshing the inventory
+would record hashes this audit never reviewed, so it was retired instead.
+Committed model bytes are now governed by the model delivery lock
+(`scripts/verify-model-delivery.py`, enforced in CI by
+`Tools/HangboardModels/tests/test_model_delivery_alignment.py`) and, for
+CAD-backed packages, by the CAD reproducibility check.
+
+Read the retired verifier with
+`git show db04185b4541ef469d0a2e8ca9b5eb87bfa53253:Tools/HangboardModels/verify_mounting_bores.py`.
+The repair program, `Tools/HangboardModels/remove_mounting_bores.py`, is still
+in the repository (other model tools share its mesh helpers); it only accepts
+the hash-bound source revision, so it runs only against a checkout of
+`c9daec6`.
+
 ## Scope and source boundary
 
 Reviewed all 40 shipped USDZ models at commit
@@ -11,7 +47,7 @@ contact-node binding, and embedded texture image. Archived delivery/evidence
 models are immutable provenance, not alternate runtime assets, and are unchanged.
 
 These are display-only omissions. The physical boards still have mounting holes.
-The cylinder centres and radii in `Tools/HangboardModels/mounting_bore_repairs.json`
+The cylinder centres and radii in `2026-09-22-mounting-bore-repairs.json`
 are reviewed repair regions in the existing mesh frame, not manufacturer CAD
 measurements. The operation does not trace or infer geometry from images.
 
@@ -67,19 +103,21 @@ and `2026-09-13-model-hangboard-cord-audit.md`.
 
 ## Reproduction and verification
 
-Use an isolated Python 3.13 environment, then:
+As run at repair time (historical; see the status note above), in an isolated
+Python 3.13 environment:
 
 ```sh
 python -m pip install -r Tools/HangboardModels/mounting_bore_requirements.txt
 python Tools/HangboardModels/remove_mounting_bores.py \
   --root SOURCE_CHECKOUT \
-  --manifest Tools/HangboardModels/mounting_bore_repairs.json \
+  --manifest docs/source-audits/2026-09-22-mounting-bore-repairs.json \
   --output REPAIR_OUTPUT
 ```
 
 The source hashes intentionally reject already-repaired or changed input.
 Never overwrite the retained inputs. Promote only reviewed exports and their
-recompiled descriptors. To verify the promoted catalogue:
+recompiled descriptors. The promoted catalogue was verified with the
+since-retired `verify_mounting_bores.py` (read it at `db04185`, above):
 
 ```sh
 OPENBLAS_NUM_THREADS=1 python Tools/HangboardModels/verify_mounting_bores.py \

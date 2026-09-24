@@ -50,15 +50,17 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "cec466399747af765cbf1291dcdc10d41e1aec2e017e7f388683090a58221ca6",
-  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
+  "sha256Manifest": "685f63d9953dd6d8266bc8e7e6b57598e1605903b7f38e26c3c568efd801356d",
+  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "abfe9228834424e5f4c8ee843ee5460775fa671756498d979086ebe2aa1aae0c",
+  "supersededSha256Manifest": "4af6ea74eff516f0ed5218a3bb39cdfb360e68e7145ba14345045f647120427c",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
-      "sourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
+      "sourceSHA256": "dc967c62fb7d1ea5ee7ff808a53994ddefff6b635bd0865794d7f8e30f708ac7",
+      "supersededSourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
       "assetSHA256": "bd00147c6bf074271d4eb6542ca803ef8badcf37ca8d4978f0685f1c760bb399",
       "descriptorSHA256": "0be3ea489e27b91b786de8fa1481b62ac5903fd7f4e7004eb4f0d657db09d264",
@@ -70,28 +72,34 @@
     },
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
-      "sourceSHA256": "bfd4cf9c1e85f7096d8f0373ca6aecd14ba34060e4f31187c23c97fb6e619af1",
+      "sourceSHA256": "c747f4ca1f9bcb4140d6c8bb792cf5bae6ebf02ee59e8db42c6aa091fe530ecc",
+      "supersededSourceSHA256": "bfd4cf9c1e85f7096d8f0373ca6aecd14ba34060e4f31187c23c97fb6e619af1",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
       "assetSHA256": "c053badb2335b81ab56514fa5e742badbf9bfeddb5ad9d29a8ec422c3078777e",
       "descriptorSHA256": "6a87c72750179cbe543bbc1c8955d532367a606db7b84edf0e61f90d95c7e8db",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed; flat vertical trough walls (no ogee); edit-propagation suite not run",
       "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
-      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_large.py",
-      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
+      "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-large-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     },
     "lattice-mxedge-lift-small": {
       "source": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
-      "sourceSHA256": "df02a018567547fe802b41314c12bc0570c0526507516733f8f29f0fe7ec3788",
+      "sourceSHA256": "2212a257fad8180143fb80304ecfaa3eb8f970d605d931e2af0affa4695bc006",
+      "supersededSourceSHA256": "98460711b54b10b82db418ceedbc8f28c02c5e2800c61fc1abf1d065111359fc",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed on the Small authoring branch carried into this PR",
       "nativeAppValidation": "not re-run on this merge",
-      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_small.py",
-      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
+      "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
-      "sourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
+      "sourceSHA256": "82430ff72c483f5444412fe5530abcd5ffebee935867b82df662dcc020a960b0",
+      "supersededSourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
       "assetSHA256": "c397938ba6257105fefc455607fa797a9d6fbcba62d2da2771b16b72dc85deb6",
       "descriptorSHA256": "9ad48c7c6feac8c1bacdc80c5060885acd1903c40ea8cb06cf343a1008fd26c4",
@@ -99,7 +107,7 @@
       "nativeValidation": "passed (reopen, recompute, edit propagation)",
       "nativeAppValidation": "not run",
       "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md",
-      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center; asset bytes unchanged"
     },
     "metolius-prime-rib": {
@@ -119,7 +127,9 @@
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "a96d59d132f532966bdacb138b01cf00d0ba6ab9993b2ebd87e8f6d50bf7a119",
+      "sourceSHA256": "f503582e8ff9c590507ace5b108293f7c70c5c72960cb0c0a840026e1ede0329",
+      "supersededSourceSHA256": "a96d59d132f532966bdacb138b01cf00d0ba6ab9993b2ebd87e8f6d50bf7a119",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
       "assetSHA256": "724318e1fd7a6cf5c111550c01f8f163bd363cb0c00d37ff9b69d45b83f6245b",
       "descriptorSHA256": "c94d1b2ec2cb6e3cbddfb5f665d1fa4af3d50624fee4a75cd27392742cd865a3",
@@ -130,5 +140,7 @@
       "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center"
     }
   },
+  "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
+  "buildTimeBoardJSONNote": "2026-09-24: CAD-backed board.json is no longer committed; it is generated from the locked FCStd at build time (package validation, iOS and Android staging). sha256Manifest now covers descriptor + FCStd for the five source-backed packages instead of descriptor + board.json + FCStd; the previous manifest 4af6ea74... moved to supersededSha256Manifest (which previously held abfe9228...). The generated board.json bytes are identical to the last committed ones.",
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."
 }

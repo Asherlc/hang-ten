@@ -17,9 +17,14 @@ A model presentation crosses two different delivery paths:
 
 `scripts/stage-board-packages.py` copies each validated regular-file package
 tree into the app resources while excluding only each model presentation's
-`assetPath`. It stages those excluded USDZ files for ODR separately. Therefore
-`board.json` and the descriptor remain ordinary bundled metadata; the cord is
-not part of the downloaded model asset.
+`assetPath` (and a CAD package's `<slug>.FCStd` authoring source, which is never
+bundled). It stages those excluded USDZ files for ODR separately. For a CAD
+package it writes the `board.json` generated from the FCStd's
+`HangTenBoardManifest` into the staged package, since none is committed.
+Therefore `board.json` and the descriptor remain ordinary bundled metadata; the
+cord is not part of the downloaded model asset. Android stages with the same
+script (`--target android`), which keeps the USDZ inline instead of splitting it
+out for ODR.
 
 `BoardPackageStore` parses and validates bundled package metadata, registers an
 ODR `BoardModelResource` for an on-demand USDZ, and passes the parsed suspension
@@ -167,7 +172,12 @@ attachment just to explain the presentation.
    or runtime behavior rather than by the test fixture.
 4. Prefer the smallest approved correction. When model geometry and node
    bindings are unchanged, edit `board.json` suspension metadata only and
-   preserve the USDZ and descriptor bytes. Runtime changes belong in
+   preserve the USDZ and descriptor bytes. For a package with a native
+   `<slug>.FCStd` source, there is no committed `board.json`; it is generated
+   from the FCStd at build time. Change the suspension in the FCStd's
+   `HangTenBoardManifest` with `Tools/HangboardCAD/set_board_manifest.py`
+   (which leaves every geometry member byte-identical); inspect the result
+   with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
 5. Re-run the focused test, package/audit validation, relevant native tests,

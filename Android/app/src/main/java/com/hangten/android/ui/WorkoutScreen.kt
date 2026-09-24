@@ -33,7 +33,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.lifecycle.createSavedStateHandle
 import com.hangten.android.audio.WorkoutAudioCoach
 import com.hangten.android.board.BoardCanvas
-import com.hangten.android.board.resolveTargets
+import com.hangten.android.board.ContactResolver
 import com.hangten.android.content.Board
 import com.hangten.android.content.TrainingPlan
 import com.hangten.android.content.TrainingStep
@@ -126,12 +126,12 @@ fun WorkoutScreen(
             Box(
                 modifier = Modifier.fillMaxWidth().semantics {
                     contentDescription = "Active board holds"
-                    stateDescription = activeStep?.targets.orEmpty().joinToString { it.semantic ?: it.kind ?: "hold" }
+                    stateDescription = activeStep?.contactRequirements.orEmpty().joinToString { it.kind ?: "hold" }
                 },
             ) {
                 BoardCanvas(
                     board = board,
-                    activeHoldIDs = activeStep?.let { resolveTargets(it.targets, board) }.orEmpty(),
+                    activeHoldIDs = activeStep?.let { ContactResolver.resolve(it, board) }.orEmpty(),
                     onHoldTap = {},
                 )
             }

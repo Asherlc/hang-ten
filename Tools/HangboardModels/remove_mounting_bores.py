@@ -7,7 +7,7 @@ metres in the existing board frame. No image-derived geometry or hole discovery
 is performed. Genuine contact openings and suspension apertures are out of scope.
 """
 from __future__ import annotations
-import argparse, hashlib, json, tempfile, zipfile
+import argparse, hashlib, json, sys, tempfile, zipfile
 from pathlib import Path
 import numpy as np
 from pxr import Usd, UsdGeom, Vt
@@ -477,6 +477,26 @@ def refresh_local_normals(v, f, old, matrix, holes):
     return result.reshape(old.shape)
 
 
+
+def package_board_bytes(package: Path) -> bytes | None:
+    """A package's board.json bytes, or None when it has none.
+
+    A CAD-backed package (``<slug>.FCStd``) commits no board.json; its document
+    is generated from the FCStd's HangTenBoardManifest, exactly as the package
+    validator and app staging generate it.
+    """
+    package = Path(package)
+    source = package / f"{package.name}.FCStd"
+    if source.is_file():
+        packages_src = Path(__file__).resolve().parents[1] / "HangboardPackages" / "src"
+        if str(packages_src) not in sys.path:
+            sys.path.insert(0, str(packages_src))
+        from hangboard_packages import cad_source
+
+        return cad_source.generate_board_json(source)
+    board = package / "board.json"
+    return board.read_bytes() if board.is_file() else None
+
 def repair_file(source: Path, destination: Path, spec: dict, descriptor: Path):
     if source.resolve() == destination.resolve():
         raise ValueError("author into a separate output directory")
@@ -493,11 +513,10 @@ def repair_file(source: Path, destination: Path, spec: dict, descriptor: Path):
     # descriptor alone. Opt-in when hashes are present; mandatory via __main__
     # inventory injection. Missing board file falls back to legacy behavior so
     # minimal-spec callers and unit tests keep working.
-    board_path = source.parents[1] / "board.json"
+    board_bytes = package_board_bytes(source.parents[1])
     expected_board = spec.get("boardSHA256")
     board_ids = None
-    if board_path.is_file():
-        board_bytes = board_path.read_bytes()
+    if board_bytes is not None:
         if expected_board is not None:
             if hashlib.sha256(board_bytes).hexdigest() != expected_board:
                 raise ValueError("source board SHA mismatch; re-review changed model")
