@@ -432,10 +432,12 @@ def test_staging_splits_every_live_model_package_without_duplication(
             for path in odr_package_root.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
+        # A package's own CAD authoring source (<slug>.FCStd) is consumed by
+        # the compiler and is deliberately never staged.
         assert staged_base_files == {
             relative: contents
             for relative, contents in source_files.items()
-            if relative != "assets/primary.usdz"
+            if relative != "assets/primary.usdz" and relative != f"{slug}.FCStd"
         }
         assert staged_odr_files == {
             "assets/primary.usdz": source_files["assets/primary.usdz"]

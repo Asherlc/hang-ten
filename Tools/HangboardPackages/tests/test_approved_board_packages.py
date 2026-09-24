@@ -885,6 +885,8 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
         "assets/primary.usdz",
         "assets/primary.model.json",
         "board.json",
+        # The package's own CAD authoring source; the compiler consumes it.
+        "metolius-wood-grips-compact-ii.FCStd",
     }
 
 
@@ -1567,8 +1569,8 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
 
     model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
     descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
-    assert model_sha == "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a"
-    assert descriptor_sha == "903c9e87fbf305f3184437d346bf6d25e44c51ebd787a426d533ea21dbfa57cf"
+    assert model_sha == "fd4a02477c0ea81f4d863ae839f2e144a0a2ff7b3f8993a7238ef562b9e8b181"
+    assert descriptor_sha == "d21c03846539f080e7b8b3000e4cd37f0fb0cdad81e51f88c6f6caed6921e4b6"
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
