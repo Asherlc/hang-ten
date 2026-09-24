@@ -171,9 +171,10 @@ TROUGHS = {
         "step_z": 23.0,
         "step_depth": GRIP_DEPTH_MM["edge-8"],
         # z the riser leans back between the two floors, giving it projected width in a
-        # front view. It is constant along the trough: the riser meets the shallow floor
-        # at `step_z` and the deep floor at `step_z - step_run` at every x.
-        "step_run": 2.0,
+        # front view. Constant along the trough (shallow edge at step_z, deep at
+        # step_z - step_run). 4 mm reads as a clear shelf band in the lambert preview;
+        # 2 mm was geometrically correct but nearly invisible.
+        "step_run": 4.0,
     },
     "lower": {
         "z_center": -20.5,
