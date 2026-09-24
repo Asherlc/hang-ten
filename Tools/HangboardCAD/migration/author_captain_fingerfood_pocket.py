@@ -13,8 +13,9 @@ Measured facts (Git reference, native mm, +X right +Z up front -Y):
   descriptor ±55/±33/±14.5 m matches the mesh.
 * One continuous front cavity (stadium trough), not four separate pockets.
   Contacts are a logical partition of that cavity plus the outer rim.
-* edge-15 / edge-20: opposing long lips; published depths 15 / 20 mm.
-  Reference node Y extents ~15.3 / 19.8 mm; floors authored at published depth.
+* edge-15 / edge-20: opposing long lips with a **stepped floor** (15 mm on +Z,
+  20 mm on −Z) per manufacturer “15 sowie 20 mm tiefe Griffleiste” and the
+  reference floor (~y 0.7 / 5.3). Published depths 15 / 20 mm.
 * pocket-end-wall-15-20: left short end of the same cavity (no fixed depth gate).
 * jug-outer-rim: continuous top exterior band (U), full body depth — one contact,
   not a separate pinch.
@@ -185,29 +186,20 @@ def _rounded_rect_points(radius: float, y: float, segments: int = CORNER_SEGMENT
     return points
 
 
-def _stadium_points(half_len: float, radius: float, y: float, segments: int = STADIUM_SEGMENTS):
-    """CCW stadium centred on (0, z=0) in the XZ plane at depth y."""
+def _stadium_xz(half_len: float, radius: float, segments: int = STADIUM_SEGMENTS):
+    """CCW (x, z) stadium outline centred on the origin."""
     points = []
-    # Right semicircle (+X), then left (−X).
     for index in range(segments + 1):
         angle = -math.pi / 2.0 + math.pi * index / segments
-        points.append(
-            App.Vector(
-                half_len + radius * math.cos(angle),
-                y,
-                radius * math.sin(angle),
-            )
-        )
+        points.append((half_len + radius * math.cos(angle), radius * math.sin(angle)))
     for index in range(segments + 1):
         angle = math.pi / 2.0 + math.pi * index / segments
-        points.append(
-            App.Vector(
-                -half_len + radius * math.cos(angle),
-                y,
-                radius * math.sin(angle),
-            )
-        )
+        points.append((-half_len + radius * math.cos(angle), radius * math.sin(angle)))
     return points
+
+
+def _stadium_points(half_len: float, radius: float, y: float, segments: int = STADIUM_SEGMENTS):
+    return [App.Vector(x, y, z) for x, z in _stadium_xz(half_len, radius, segments)]
 
 
 def _body_solid():
@@ -236,11 +228,7 @@ def _station_ring(depth: float, inset: float):
 
 def _cap_fan(ring, flip: bool):
     """Planar triangle fan closing a stadium ring (flat floor — no crown)."""
-    center = App.Vector(
-        0.0,
-        ring[0].y,
-        TROUGH_Z_CENTER,
-    )
+    center = App.Vector(0.0, ring[0].y, TROUGH_Z_CENTER)
     triangles = []
     count = len(ring)
     for index in range(count):
@@ -269,19 +257,55 @@ def _triangle_solid(triangles):
     return solid
 
 
-def _trough_cutter():
-    """Stadium trough with depth stations so lip bands own discrete Y strips.
+def _half_stadium_points(half_len: float, radius: float, y: float, *, upper: bool):
+    """Closed half-stadium in XZ at depth y, diameter along z=0."""
+    full = _stadium_xz(half_len, radius)
+    kept = [(x, z) for x, z in full if (z >= -1e-9 if upper else z <= 1e-9)]
+    left = (-half_len - radius, 0.0)
+    right = (half_len + radius, 0.0)
+    if upper:
+        pts = [right] + [(x, z) for x, z in kept if abs(z) > 1e-9] + [left]
+    else:
+        pts = [left] + [(x, z) for x, z in kept if abs(z) > 1e-9] + [right]
+    cleaned = [pts[0]]
+    for point in pts[1:]:
+        if math.hypot(point[0] - cleaned[-1][0], point[1] - cleaned[-1][1]) > 1e-6:
+            cleaned.append(point)
+    return [App.Vector(x, y, z) for x, z in cleaned]
 
-    Absolute station at DEPTH_15 lands the published edge-15 boundary; floor at
-    DEPTH_20. Wall strips between stations are planar triangles (no non-planar
-    quads). Opening is slightly proud of the front face for a clean boolean.
+
+def _upper_floor_filler():
+    """Fill the +Z half between 15 mm and 20 mm so that half reads as a 15 mm edge.
+
+    Cut the full cavity to 20 mm, then fuse this pad back into the upper half.
     """
-    # (depth from front, radial inset)
+    inset = WALL_BEVEL * 0.85
+    y0 = Y_FRONT + DEPTH_15
+    y1 = Y_FRONT + DEPTH_20 + 0.05
+    sections = [
+        _half_stadium_points(
+            TROUGH_HALF_LEN - inset,
+            TROUGH_RADIUS - inset,
+            y0,
+            upper=True,
+        ),
+        _half_stadium_points(
+            TROUGH_HALF_LEN - inset,
+            TROUGH_RADIUS - inset,
+            y1,
+            upper=True,
+        ),
+    ]
+    return _loft_solid(sections)
+
+
+def _trough_cutter():
+    """Full stadium to the deeper (20 mm) floor — closed triangle solid."""
     stations = [
-        ( -0.05, 0.0),
-        ( 4.0, WALL_BEVEL * 0.25),
-        ( DEPTH_15, WALL_BEVEL * 0.7),
-        ( DEPTH_20, WALL_BEVEL),
+        (-0.05, 0.0),
+        (4.0, WALL_BEVEL * 0.25),
+        (DEPTH_15, WALL_BEVEL * 0.7),
+        (DEPTH_20, WALL_BEVEL),
     ]
     rings = [_station_ring(depth, inset) for depth, inset in stations]
     triangles = _cap_fan(rings[0], flip=True)
@@ -296,10 +320,10 @@ def _trough_cutter():
 
 
 def _cord_mouth(sign: float):
-    """Through-hole n-gon from cavity floor through the back face (no Cylinder)."""
+    """Through-hole n-gon from the shallower floor through the back face."""
     cx = sign * CORD_X
-    y0 = FLOOR_Y - 0.5  # proud of floor so the boolean clears the floor face
-    y1 = Y_BACK + 0.5  # past the back face
+    y0 = LIP_15_Y - 0.5  # clear both the 15 mm and 20 mm floor levels
+    y1 = Y_BACK + 0.5
     sections = []
     for y in (y0, y1):
         sections.append(
@@ -335,7 +359,7 @@ def _shell_from_body_faces(body_shape, predicate):
 
 
 def _edge_15_filter(face) -> bool:
-    """Upper lip: wall strips no deeper than DEPTH_15 (whole-face extent)."""
+    """Upper (+Z) lip and 15 mm floor — manufacturer 15 mm Griffleiste."""
     box = face.BoundBox
     if _is_front_plane(face) or box.YLength < 0.02:
         return False
@@ -346,11 +370,13 @@ def _edge_15_filter(face) -> bool:
         return False
     if center.x < -TROUGH_HALF_LEN + 1.0:
         return False
+    if box.YLength < 0.05 and abs(box.YMin - LIP_15_Y) < 0.25:
+        return box.ZMin >= TROUGH_Z_CENTER - 0.05
     return box.ZMin >= TROUGH_Z_CENTER - 0.05
 
 
 def _edge_20_filter(face) -> bool:
-    """Lower lip + floor band: Z below centre; claim full DEPTH_20."""
+    """Lower (−Z) lip and 20 mm floor — manufacturer 20 mm Griffleiste."""
     box = face.BoundBox
     if _is_front_plane(face) or box.YLength < 0.02:
         return False
@@ -361,7 +387,6 @@ def _edge_20_filter(face) -> bool:
         return False
     if center.x < -TROUGH_HALF_LEN + 1.0:
         return False
-    # Floor faces (near-constant Y at FLOOR_Y): lower half only.
     if box.YLength < 0.05 and abs(box.YMin - FLOOR_Y) < 0.25:
         return box.ZMax <= TROUGH_Z_CENTER + 0.05
     return box.ZMax <= TROUGH_Z_CENTER + 0.05
@@ -450,8 +475,18 @@ def main() -> int:
     if body_cut.Shape.isNull() or body_cut.Shape.Volume < 1.0:
         raise ValueError("boolean cut failed")
 
+    # Raise the +Z floor to the published 15 mm depth (manufacturer dual lip).
+    filler_obj = document.addObject("Part::Feature", "UpperFloorFiller")
+    filler_obj.Shape = _upper_floor_filler()
+    body_fused = document.addObject("Part::Fuse", "BodyWithStep")
+    body_fused.Base = body_cut
+    body_fused.Tool = filler_obj
+    document.recompute()
+    if body_fused.Shape.isNull() or body_fused.Shape.Volume < 1.0:
+        raise ValueError("upper floor filler fuse failed")
+
     body = document.addObject("Part::Feature", "BodySolid")
-    body.Shape = body_cut.Shape
+    body.Shape = body_fused.Shape
     body.addProperty("App::PropertyString", "NodeID", "HangTen")
     body.addProperty("App::PropertyString", "NodeRole", "HangTen")
     body.NodeID = NODE_IDS["body"]

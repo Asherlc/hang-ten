@@ -29,6 +29,10 @@ avoid repeating the same detours.
   a hole. Check the actual triangle normals before concluding.
 - Fastest repro: read the compiled `.usdz`, project the node, print normals for
   triangles in the suspect region. The iOS rebuild is ~3 min; don't loop on it.
+- **Also use an off-the-shelf Hydra render** (`usdrecord` / Storm) of the compiled
+  USDZ. It is very useful for development verification: depth steps, through-holes,
+  and overall silhouette read more honestly than the custom `preview.py` alone.
+  Diagnostic only — never a build input.
 
 ## 3. The CAD is the source of truth for hold geometry — use surfaces, not solids
 

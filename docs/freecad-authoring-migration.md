@@ -502,6 +502,15 @@ to the reference and the front render, not against zero. Read the front render;
 then build the app and screenshot a deep-linked hold. Only run the suites and
 refresh the lock once the shape is right.
 
+**Off-the-shelf Hydra render (`usdrecord`).** After compile, also render the
+committed USDZ with the OpenUSD `usdrecord` CLI (Hydra Storm — not FreeCAD, not
+`preview.py`). Framed front / side / top / three-quarter views catch depth steps,
+through-holes, and silhouette issues that the custom lambert preview can
+understate. Keep cameras in a scratch USDA that references the package asset;
+never treat those renders as a build input. This check proved useful on
+`captain-fingerfood-pocket` (flat vs stepped 15/20 mm floor, blind vs through
+cords).
+
 **Definition of done.**
 
 - the node inventory and `modelBounds` match the published facts;
