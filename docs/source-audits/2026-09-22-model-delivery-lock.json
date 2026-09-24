@@ -50,12 +50,33 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "3bc95dc535532d731879c6805d61cc6525d5d05a8593668838474efa97634b2c",
+  "sha256Manifest": "421fac14f9528cfa9986d8feeb3080f32d035c714a2b4da12fbf4dc88a16ac3b",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "7a6e27d58a68cf4b4a4f3ba203fd83a2a2f805c4458478432c43a601a8dc9834",
+  "supersededSha256Manifest": "36bea410a1d053535269e0d4148ada7df19f0ff5c091aa067969f8f96e5a4307",
   "migratedPackages": {
+    "lattice-mxedge-lift-large": {
+      "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "sourceSHA256": "bfd4cf9c1e85f7096d8f0373ca6aecd14ba34060e4f31187c23c97fb6e619af1",
+      "referenceSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
+      "assetSHA256": "c053badb2335b81ab56514fa5e742badbf9bfeddb5ad9d29a8ec422c3078777e",
+      "descriptorSHA256": "6a87c72750179cbe543bbc1c8955d532367a606db7b84edf0e61f90d95c7e8db",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed; flat vertical trough walls (no ogee); edit-propagation suite not run",
+      "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
+      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_large.py",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
+    },
+    "lattice-mxedge-lift-small": {
+      "source": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "sourceSHA256": "df02a018567547fe802b41314c12bc0570c0526507516733f8f29f0fe7ec3788",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed on the Small authoring branch carried into this PR",
+      "nativeAppValidation": "not re-run on this merge",
+      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_small.py",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
+    },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
       "sourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",

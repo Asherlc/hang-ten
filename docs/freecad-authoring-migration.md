@@ -453,6 +453,9 @@ write-up. The durable points:
 - **Closed schema.** A new descriptor field needs the Python descriptor, the
   Swift decoder, and the package validator changed together.
 - **Single writer per worktree; run the suites once at the end.**
+- **MXEdge Large** confirmed the Small trough pattern and added measurement
+  traps (descriptor bounds, depth-map sampling, per-trough published depth,
+  mono circle fit, cord mouths, source-backed lock). See lessons §11.
 
 ## Fast loop and definition of done
 
@@ -468,7 +471,9 @@ write-up. The durable points:
   recess is a pocket (`Part::Loft Solid=False` + floor face, reversed with
   `Part::Reverse`); a hold that is a sub-region of a flat body face is a
   **shallow recess** — never a coincident patch (z-fights) and never a proud
-  patch (also z-fights under the app's depth buffer).
+  patch (also z-fights under the app's depth buffer). For MXEdge-style
+  partitioned troughs, measure topology first (AABBs + front depth map) —
+  see `docs/freecad-authoring-lessons.md` §10 before inventing separate pockets.
 
 **Inner loop (fast, host-side).** After every authoring edit:
 
