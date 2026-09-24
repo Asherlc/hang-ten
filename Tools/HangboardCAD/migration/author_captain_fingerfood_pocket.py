@@ -18,11 +18,10 @@ Measured facts (Git reference, native mm, +X right +Z up front -Y):
 * pocket-end-wall-15-20: left short end of the same cavity (no fixed depth gate).
 * jug-outer-rim: continuous top exterior band (U), full body depth — one contact,
   not a separate pinch.
-* Cord mouths at x=±22, z=0: ~3 mm radius, shallow from the back face
-  (board.json omits the through-hole interior).
+* Cord through-holes at x=±22, z=0: ~3 mm radius n-gon, floor through back.
 
 Construction: rolled rounded-rect envelope, one stadium trough cut with
-bevelled walls, two shallow n-gon cord mouths, contacts as faces of the cut
+bevelled walls, two through-hole n-gon cord bores, contacts as faces of the cut
 body (extent-based filters, no Cylinder, no separate Common shells).
 """
 
@@ -88,13 +87,11 @@ LIP_15_Y = Y_FRONT + DEPTH_15
 WALL_BEVEL = 2.2
 STADIUM_SEGMENTS = 16  # even so a vertex sits on centreline
 
-# Cord mouths on the cavity floor (runtime attachment y≈2.5 → native),
-# shallow toward the back; interior route omitted per board.json.
+# Cord through-holes at x=±22, z=0 (n-gon loft, no Cylinder). Visible on the
+# cavity floor and the back face.
 CORD_X = 22.0
 CORD_R = 3.0
-CORD_DEPTH = 4.0
 CORD_SIDES = 16
-CORD_Y = 2.5  # floor mouth centre depth (native)
 
 GRIP_DEPTH_MM = {"edge-15": DEPTH_15, "edge-20": DEPTH_20}
 
@@ -299,18 +296,18 @@ def _trough_cutter():
 
 
 def _cord_mouth(sign: float):
-    """Shallow n-gon blind bore from the cavity floor toward the back."""
+    """Through-hole n-gon from cavity floor through the back face (no Cylinder)."""
     cx = sign * CORD_X
-    y0 = FLOOR_Y - 0.3  # slightly proud of floor so the boolean clears
-    y1 = min(FLOOR_Y + CORD_DEPTH, Y_BACK - 1.0)
+    y0 = FLOOR_Y - 0.5  # proud of floor so the boolean clears the floor face
+    y1 = Y_BACK + 0.5  # past the back face
     sections = []
-    for y, radius in ((y0, CORD_R), (y1, CORD_R * 0.92)):
+    for y in (y0, y1):
         sections.append(
             [
                 App.Vector(
-                    cx + radius * math.cos(2.0 * math.pi * i / CORD_SIDES),
+                    cx + CORD_R * math.cos(2.0 * math.pi * i / CORD_SIDES),
                     y,
-                    radius * math.sin(2.0 * math.pi * i / CORD_SIDES),
+                    CORD_R * math.sin(2.0 * math.pi * i / CORD_SIDES),
                 )
                 for i in range(CORD_SIDES)
             ]
