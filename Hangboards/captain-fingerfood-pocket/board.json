@@ -45,15 +45,15 @@
         "suspension": {
           "type": "pairedLeadCord",
           "attachments": [
-            {"id": "left-lead", "nodeID": "body_skin_001", "pointInModel": [-0.022, 0, -0.0025], "contactPointsInModel": [[-0.022, 0.036, 0.0205], [-0.022, 0, 0.0205]], "provenance": "Measured from primary.usdz: 6 mm cord bore in body_skin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"},
-            {"id": "right-lead", "nodeID": "body_skin_001", "pointInModel": [0.022, 0, -0.0025], "contactPointsInModel": [[0.022, 0.036, 0.0205], [0.022, 0, 0.0205]], "provenance": "Measured from primary.usdz: 6 mm cord bore in body_skin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+            {"id": "left-lead", "nodeID": "body_skin_001", "pointInModel": [-0.022, 0, -0.0025], "contactPointsInModel": [[-0.022, 0.033, 0.0145], [-0.022, 0, 0.0145]], "provenance": "displayEstimate; FreeCAD-remeshed 110x66x29 mm envelope (+/-0.055/+/-0.033/+/-0.0145); pairedLeadCord terminals at cord through-holes x=+/-0.022 (cavity floor through back); ordered upper-lip-to-recess contactPointsInModel for front poses; pocket-short-end pose attachmentPoints/cordContactPoints are clipped upper-channel display endpoints on the +X short end (not additional physical mouths or twoBranchCord)"},
+            {"id": "right-lead", "nodeID": "body_skin_001", "pointInModel": [0.022, 0, -0.0025], "contactPointsInModel": [[0.022, 0.033, 0.0145], [0.022, 0, 0.0145]], "provenance": "displayEstimate; FreeCAD-remeshed 110x66x29 mm envelope (+/-0.055/+/-0.033/+/-0.0145); pairedLeadCord terminals at cord through-holes x=+/-0.022 (cavity floor through back); ordered upper-lip-to-recess contactPointsInModel for front poses; pocket-short-end pose attachmentPoints/cordContactPoints are clipped upper-channel display endpoints on the +X short end (not additional physical mouths or twoBranchCord)"}
           ],
           "passages": {
             "left": [
-              {"id": "left-lip-mouth", "nodeID": "body_skin_001", "pointInModel": [-0.022, 0, -0.0025], "provenance": "Measured from primary.usdz: 6 mm cord bore in body_skin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+              {"id": "left-lip-mouth", "nodeID": "body_skin_001", "pointInModel": [-0.022, 0, -0.0025], "provenance": "displayEstimate; FreeCAD-remeshed 110x66x29 mm envelope (+/-0.055/+/-0.033/+/-0.0145); pairedLeadCord terminals at cord through-holes x=+/-0.022 (cavity floor through back); ordered upper-lip-to-recess contactPointsInModel for front poses; pocket-short-end pose attachmentPoints/cordContactPoints are clipped upper-channel display endpoints on the +X short end (not additional physical mouths or twoBranchCord)"}
             ],
             "right": [
-              {"id": "right-lip-mouth", "nodeID": "body_skin_001", "pointInModel": [0.022, 0, -0.0025], "provenance": "Measured from primary.usdz: 6 mm cord bore in body_skin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+              {"id": "right-lip-mouth", "nodeID": "body_skin_001", "pointInModel": [0.022, 0, -0.0025], "provenance": "displayEstimate; FreeCAD-remeshed 110x66x29 mm envelope (+/-0.055/+/-0.033/+/-0.0145); pairedLeadCord terminals at cord through-holes x=+/-0.022 (cavity floor through back); ordered upper-lip-to-recess contactPointsInModel for front poses; pocket-short-end pose attachmentPoints/cordContactPoints are clipped upper-channel display endpoints on the +X short end (not additional physical mouths or twoBranchCord)"}
             ]
           },
           "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
@@ -61,7 +61,7 @@
           "canonicalPoses": {
             "edge-20-front": {"rotation": [0.199367862, 0, 0, 0.979924719], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
             "edge-15-inverted": {"rotation": [9e-9, 0.199367862, -0.979924719, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "pocket-short-end": {"rotation": [0.14097438, -0.14097438, 0.692911411, 0.692911411], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
+            "pocket-short-end": {"rotation": [0.14097438, -0.14097438, 0.692911411, 0.692911411], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}, "attachmentPoints": {"left-lead": [0.031, 0.009, -0.001], "right-lead": [0.031, -0.009, -0.001]}, "cordContactPoints": {"left-lead": [[0.06, 0.009, 0.0195], [0.043, 0.009, 0.0195], [0.031, 0.009, 0.0195]], "right-lead": [[0.06, -0.009, 0.0195], [0.043, -0.009, 0.0195], [0.031, -0.009, 0.0195]]}},
             "jug-reverse": {"rotation": [9e-9, 0.979924719, 0.199367862, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
           }
         },
