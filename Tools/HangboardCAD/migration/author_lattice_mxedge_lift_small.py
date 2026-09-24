@@ -3,7 +3,11 @@
 Migration tool only — not a build input.
 
 Provenance:
-* Overall envelope 168 x 34 x 98 mm and grip depths 18 / 14 / 8 / 25 mm from board.json.
+* Overall envelope 168 x 34 x 98 mm (±84 / ±17 / ±49) and grip depths 18 / 14 / 8 / 25 mm
+  from board.json / reference mesh packaging. Catalogue copy "20 × 11 × 5 cm" is rounded
+  marketing and is **not** used to rescale the body.
+* MXSMALL grips (Lattice MXEdge Lift): MX18, MX14, MX8 + 25 mm mono — area-equivalent
+  labels; true depth varies along length (crowned floors).
 * Front geometry measured from the Git-resolved reference USDZ (pre-migration commit via
   reference.load_reference) by depth-mapping its front surface on a 0.5 mm grid:
   - the front carries **two stadium troughs**, not four separate openings. Every x column
@@ -12,10 +16,24 @@ Provenance:
     *partition of those two troughs*, not four pockets: edge-8 and edge-14 are the upper
     and lower walls of the upper trough (their reference AABBs meet at z = 23), and
     edge-18 and mono-25 split the lower one;
-  - each trough is a stadium: arc centres at x = +/-48 mm, rim radius 14 mm, centred at
-    z = 22.5 (upper) and z = -20.5 (lower);
-  - each trough wall is an ogee tangent to the front face at the rim and to the floor.
-    A smoothstep in the wall inset tracks the measured wall to ~0.3 mm;
+  - each trough is a stadium: arc centres at x = +/-48 mm. The reference rim radius is
+    14 mm (opening height 28 mm); this model widens openings to rim radius **18 mm**
+    (opening height 36 mm) so the stadiums read as usable pockets rather than thin
+    slots. Centres at z = 23.5 (upper) and z = -21.5 (lower) keep a clear front bar
+    between troughs and stay inside |z| <= 49;
+  - each trough wall is a **front roll, a straight face, then a roll into the floor** —
+    the published MXEdge cross-section (front radius, top face, back radius), not one
+    continuous ogee. Sections cut at 0.1 mm through the reference give a face that
+    plateaus at 56-58 deg (upper trough) and 65-66 deg (lower), with each roll spanning
+    3.5-4 mm of inset:
+
+        upper, x = 0.3   apex 12.50 mm   roll 0->3.5   face 56-58 deg   roll 7.5->11.2
+        upper, x = 48    apex 10.06 mm   roll 0->4.0   face 51-55 deg   roll 7.5->11.0
+        lower, x = 0.3   apex 16.60 mm   roll 0->4.0   face 65-66 deg   roll 6.5->10.7
+
+    The rolls are progressive rather than circular: the sculpt's osculating radius at the
+    rim is under 1.5 mm and grows along the roll, so the rim reaches 30 deg within 1.0 mm
+    of inset and reads as a knife edge rather than a bevel;
   - the walls are what the reference renders as one dark band (upper wall, facing down)
     and one bright band (lower wall, facing up) per trough;
   - **the floor is crowned along the trough's length** — deepest at the centre and
@@ -24,7 +42,8 @@ Provenance:
     profile: at every z the measured depth is depth(x = 0) * (1 - c * (x/48)^2), holding
     to 0.03 mm for c = 0.1952 (upper) and c = 0.1885 (lower). The rim outline itself does
     not change along x. Cutters therefore scale depth by that parabola and leave the
-    inset profile alone;
+    inset profile alone. The physical / reference upper trough is **one** stadium opening
+    with **one** floor (no stepped shelf); MX8 and MX14 are partitions of that trough;
   - measured trough centre depths are 12.5 mm (upper) and 16.5 mm (lower). This model
     uses the published 14 mm / 18 mm instead, so each exported region's depth equals the
     depth board.json publishes. Stated deviation: floors 1.5 mm deeper than measured;
@@ -38,15 +57,32 @@ Provenance:
 * Measured approximation of a sculpted display mesh — not manufacturing geometry.
 
 Region partition. `compile_board` requires each region's extent along the depth axis to
-equal the published grip depth, and the reference's own nodes do not satisfy that (its
-edge-8 node spans the full 12.5 mm trough). Each authored region is therefore the run of
-trough-wall faces whose depth extent *is* the published depth, which for edge-8 is the
-front 8 mm of the upper trough's upper wall — the lip actually gripped:
+equal the published grip depth, and the reference's own nodes do not (its edge-8 node
+spans the full upper trough). The upper trough is authored as **one stadium opening with
+one crowned floor** at the published 14 mm (x = 0). edge-8 / edge-14 split on z = 24
+(0.5 mm above the widened upper centre, same relative placement as the reference meet
+line at z = 23 on the measured centre 22.5):
 
-    edge-14  upper trough, lower wall, full depth        y [-17, -3]   span 14
-    edge-8   upper trough, upper wall, front 8 mm        y [-17, -9]   span  8
-    edge-18  lower trough, lower wall, full depth        y [-17, +1]   span 18
-    mono-25  lower trough right end + bore incl. floor   y [-17, +8]   span 25
+    edge-8   upper trough above z = 24: upper-wall lip only     y [-17, -9]  span  8
+    edge-14  upper trough below z = 24: wall + single floor     y [-17, -3]  span 14
+    edge-18  lower trough, lower wall, full depth               y [-17, +1]  span 18
+    mono-25  lower trough right end + bore incl. floor          y [-17, +8]  span 25
+
+edge-8 is therefore the front 8 mm of the upper wall (the lip actually gripped), not a
+second floor. The single upper floor belongs to edge-14.
+
+Floor half-width and wall front radius. Measured apex insets (upper 11.2 mm, lower
+11.0 mm) on the reference's r = 14 rim leave a floor half-width of only ~2.8 mm — visually
+thin slots. This model sets apex inset **12.0 mm** on both troughs so floor half-width
+is **6.0 mm** (TROUGH_RADIUS 18 − inset 12) at the rim — roomier pocket floors in the
+5–7 mm target band. Lattice publishes ~10 mm front radius on the physical edge. With
+inset 12.0 mm and a 2 mm back roll, a 10 mm front roll does not leave a measurable
+straight face on the upper trough. This model uses **9.9 mm** — the largest front radius
+≤ 10 mm that still leaves a measurable straight face on both troughs (≥ 2.6 mm upper,
+≥ 6.3 mm lower). Stated residual vs Lattice ~10 mm: **0.1 mm**. Preferring the roomier
+floor over maximising front radius if the inset budget tightens further. The roll opens
+toward the trough's ends under crown depth-scaling (published behaviour: larger front
+radius at the ends, smaller at the centre).
 
 Because the floor is crowned, a region's deepest face is the one at x = 0; each of those
 spans reaches the published depth there and no deeper.
@@ -105,9 +141,10 @@ GRIP_DEPTH_MM = {
     "mono-25": 25.0,
 }
 
-# Measured stadium openings: arc centres at x = +/-48, rim radius = half the opening height.
+# Stadium openings: arc centres at x = +/-48. Reference rim radius 14 mm; authored 18 mm
+# widens each opening to 36 mm tall so pockets read as usable troughs, not thin slots.
 TROUGH_HALF_LEN = 48.0
-TROUGH_RADIUS = 14.0
+TROUGH_RADIUS = 18.0
 # Even, so a vertex lands exactly on z = z_center and no facet straddles the wall that
 # divides the trough's two regions.
 TROUGH_ARC_SEGMENTS = 14
@@ -115,25 +152,36 @@ TROUGH_ARC_SEGMENTS = 14
 TROUGH_STRAIGHT_SEGMENTS = 10
 TROUGHS = {
     "upper": {
-        "z_center": 22.5,
+        # Nudged +1 mm from measured 22.5 so the r=18 rim keeps a clear front bar vs lower.
+        "z_center": 23.5,
         "depth": GRIP_DEPTH_MM["edge-14"],
         "crown_fraction": 0.1952,
-        "apex_inset": 11.5,
+        # Floor half-width = TROUGH_RADIUS - apex_inset = 6.0 mm (target 5–7). Measured
+        # insets on r=14 left only ~2.8 mm — deliberately widened for usable pocket floors.
+        "apex_inset": 12.0,
+        # 0.5 mm above z_center (same offset as reference meet line 23 on centre 22.5);
+        # partitions the one opening (wall lip vs wall+floor), not two floor levels.
+        "split_z": 24.0,
     },
     "lower": {
-        "z_center": -20.5,
+        # Nudged -1 mm from measured -20.5; pairs with upper centre for a clear front bar.
+        "z_center": -21.5,
         "depth": GRIP_DEPTH_MM["edge-18"],
         "crown_fraction": 0.1885,
-        "apex_inset": 11.0,
+        "apex_inset": 12.0,
     },
 }
-# Depth fractions of the wall stations; the inset follows the inverse smoothstep. The gap
-# between 0.52 and 0.76 is where the upper trough's absolute 8 mm station sweeps as the
-# floor crowns — see `_stations`.
-WALL_FRACTIONS = (
-    0.0, 0.02, 0.05, 0.09, 0.14, 0.20, 0.27, 0.35, 0.43, 0.52, 0.76, 0.85, 0.92, 0.97, 1.0
-)
-STATION_MARGIN = 0.02
+# Wall cross-section: front roll, straight face, roll into the floor. The radii are of the
+# centre profile; depth-scaling by the crown opens both rolls toward the trough's ends.
+# Lattice publishes ~10 mm front; 9.9 mm is the largest ≤10 that still leaves a straight
+# face inside the 12.0 mm inset budget with the 2 mm back roll (see module docstring).
+WALL_FRONT_RADIUS = 9.9
+WALL_BACK_RADIUS = 2.0
+# Segment counts per profile zone. The front roll carries the most because it is the band
+# whose shading gradient is what reads as the bevel.
+WALL_FRONT_SEGMENTS = 9
+WALL_FACE_SEGMENTS = 3
+WALL_BACK_SEGMENTS = 3
 # Cutters start this far in front of the board so no boolean face is coplanar with it.
 PROUD_MM = 0.3
 
@@ -205,10 +253,108 @@ def _apply_material(obj, texture_source: Path | None) -> None:
         obj.TextureFile = str(texture_source)
 
 
-def _inverse_smoothstep(fraction: float) -> float:
-    """Wall inset parameter for a depth fraction (exact inverse of a smoothstep)."""
-    clamped = min(max(fraction, 0.0), 1.0)
-    return 0.5 - math.sin(math.asin(1.0 - 2.0 * clamped) / 3.0)
+def _wall_face_angle(
+    inset_max: float, depth: float, front_radius: float, back_radius: float
+) -> float:
+    """Angle of the wall's straight face from the front face plane.
+
+    The wall leaves the rim tangent to the front face, turns through `front_radius` to the
+    face angle t, runs straight, then turns back through `back_radius` tangent to the
+    floor. Each roll displaces the profile by r*(sin t, 1 - cos t), so
+
+        inset_max = (front_radius + back_radius) sin t + straight cos t
+        depth     = (front_radius + back_radius) (1 - cos t) + straight sin t
+
+    and eliminating `straight` leaves one equation in t, increasing on (0, pi/2):
+
+        inset_max sin t - depth cos t = (front_radius + back_radius) (1 - cos t)
+    """
+    blend = front_radius + back_radius
+    if blend >= inset_max or blend > depth:
+        raise ValueError(
+            f"wall rolls {blend} mm do not fit an inset of {inset_max} mm "
+            f"and a depth of {depth} mm"
+        )
+    low, high = 0.0, 0.5 * math.pi
+    for _ in range(80):
+        middle = 0.5 * (low + high)
+        residual = (
+            inset_max * math.sin(middle)
+            - depth * math.cos(middle)
+            - blend * (1.0 - math.cos(middle))
+        )
+        if residual < 0.0:
+            low = middle
+        else:
+            high = middle
+    return 0.5 * (low + high)
+
+
+def _wall_stations(spec: dict, depth: float, *, lip_depth: float | None = None):
+    """(inset mm, depth fraction) stations down one wall of a trough.
+
+    The inset is authored in millimetres and the depth is carried as a fraction, so a
+    station off the trough's centre takes the same fraction of its own crowned depth.
+    That keeps the wall one uniform depth scaling of its centre profile, which is what the
+    reference measures as, and it opens the rolls toward the trough's ends.
+
+    When `lip_depth` is set, a station is inserted at fraction lip_depth/depth so a
+    contact boundary can land exactly on a published grip depth at x = 0.
+    """
+    inset_max = spec["apex_inset"]
+    blend = WALL_FRONT_RADIUS + WALL_BACK_RADIUS
+    angle = _wall_face_angle(inset_max, depth, WALL_FRONT_RADIUS, WALL_BACK_RADIUS)
+    straight = (inset_max - blend * math.sin(angle)) / math.cos(angle)
+
+    stations = []
+    for index in range(WALL_FRONT_SEGMENTS + 1):
+        turn = angle * index / WALL_FRONT_SEGMENTS
+        stations.append(
+            (WALL_FRONT_RADIUS * math.sin(turn), WALL_FRONT_RADIUS * (1.0 - math.cos(turn)))
+        )
+    roll_inset, roll_depth = stations[-1]
+    for index in range(1, WALL_FACE_SEGMENTS + 1):
+        run = straight * index / WALL_FACE_SEGMENTS
+        stations.append(
+            (roll_inset + run * math.cos(angle), roll_depth + run * math.sin(angle))
+        )
+    face_inset, face_depth = stations[-1]
+    for index in range(1, WALL_BACK_SEGMENTS + 1):
+        turn = angle * index / WALL_BACK_SEGMENTS
+        stations.append(
+            (
+                face_inset + WALL_BACK_RADIUS * (math.sin(angle) - math.sin(angle - turn)),
+                face_depth + WALL_BACK_RADIUS * (math.cos(angle - turn) - math.cos(angle)),
+            )
+        )
+    if abs(stations[-1][0] - inset_max) > 1e-6 or abs(stations[-1][1] - depth) > 1e-6:
+        raise ValueError(
+            f"wall profile ends at {stations[-1]}, expected ({inset_max}, {depth})"
+        )
+    fractions = [(inset, level / depth) for inset, level in stations]
+    if lip_depth is not None:
+        if not 0.0 < lip_depth < depth:
+            raise ValueError(f"lip depth {lip_depth} mm is outside (0, {depth})")
+        fractions = _insert_fraction(fractions, lip_depth / depth)
+    return fractions, angle
+
+
+def _insert_fraction(stations, target_fraction: float):
+    """Insert a wall station at `target_fraction` by interpolating inset."""
+    for index, (inset, fraction) in enumerate(stations):
+        if abs(fraction - target_fraction) < 1e-9:
+            return stations
+        if fraction > target_fraction:
+            if index == 0:
+                raise ValueError(f"lip fraction {target_fraction} is before the rim")
+            prev_inset, prev_fraction = stations[index - 1]
+            span = fraction - prev_fraction
+            if span <= 0.0:
+                raise ValueError("wall stations are not ordered by fraction")
+            t = (target_fraction - prev_fraction) / span
+            inserted = (prev_inset + t * (inset - prev_inset), target_fraction)
+            return stations[:index] + [inserted] + stations[index:]
+    raise ValueError(f"lip fraction {target_fraction} is past the floor")
 
 
 def _loft_solid(sections):
@@ -329,60 +475,17 @@ def _stadium_template():
     return template
 
 
-def _stations(spec: dict, absolute_depths=()):
-    """Ordered wall stations of one trough, rim first.
-
-    A ``fraction`` station rides the local trough depth, which is what keeps the wall a
-    uniform scaling of the centre profile. An ``absolute`` station holds one constant y so
-    a region boundary can land exactly on a published grip depth. Because the floor
-    crowns, an absolute station sweeps across a band of fractions along the trough, and
-    any fraction inside that band would cross it and fold the surface — so those are
-    dropped and the ordering is then asserted at both ends of the sweep.
-    """
-    depth_center = spec["depth"]
-    depth_end = _trough_depth(spec, TROUGH_HALF_LEN)
-    bands = [
-        (depth / depth_center - STATION_MARGIN, depth / depth_end + STATION_MARGIN)
-        for depth in absolute_depths
-    ]
-    for depth in absolute_depths:
-        if depth >= depth_end:
-            raise ValueError(f"absolute station {depth} mm is deeper than the trough end")
-    stations = [
-        ("fraction", fraction)
-        for fraction in WALL_FRACTIONS
-        if all(not low < fraction < high for low, high in bands)
-    ]
-    stations += [("absolute", depth) for depth in absolute_depths]
-    stations.sort(
-        key=lambda station: (
-            station[1] * depth_center if station[0] == "fraction" else station[1]
-        )
-    )
-    for core_x in (0.0, TROUGH_HALF_LEN):
-        depths = [_station_depth(spec, station, core_x) for station in stations]
-        if any(b - a <= 1e-6 for a, b in zip(depths, depths[1:])):
-            raise ValueError(f"wall stations are not ordered at core x {core_x}: {depths}")
-    return stations
-
-
-def _station_depth(spec: dict, station, core_x: float) -> float:
-    kind, value = station
-    if kind == "fraction":
-        return _trough_depth(spec, core_x) * value
-    return value
-
-
 def _ring(spec: dict, template, station, *, y_override: float | None = None):
-    """One closed ring of cutter vertices, one per template sample."""
+    """One closed ring of cutter vertices at one station of the wall profile.
+
+    A station fixes the inset in millimetres and the depth as a *fraction* of the local
+    trough depth rather than as an absolute y, which is what keeps the wall a uniform
+    scaling of the centre profile as the floor crowns.
+    """
+    inset, fraction = (0.0, 0.0) if station is None else station
     points = []
     for core_x, normal_x, normal_z in template:
-        depth_local = _trough_depth(spec, core_x)
-        if station is None:
-            depth, inset = 0.0, 0.0
-        else:
-            depth = _station_depth(spec, station, core_x)
-            inset = spec["apex_inset"] * _inverse_smoothstep(depth / depth_local)
+        depth = _trough_depth(spec, core_x) * fraction
         radius = TROUGH_RADIUS - inset
         points.append(
             App.Vector(
@@ -427,11 +530,12 @@ def _cap_triangles(spec: dict, ring, *, flip: bool):
     return triangles
 
 
-def _trough_cutter(spec: dict, absolute_depths=()):
+def _trough_cutter(spec: dict, *, lip_depth: float | None = None):
     """Stadium trough with a parabolically crowned floor, as planar triangles."""
     template = _stadium_template()
+    stations, _ = _wall_stations(spec, spec["depth"], lip_depth=lip_depth)
     rings = [_ring(spec, template, None, y_override=Y_FRONT - PROUD_MM)]
-    rings += [_ring(spec, template, station) for station in _stations(spec, absolute_depths)]
+    rings += [_ring(spec, template, station) for station in stations]
 
     triangles = _cap_triangles(spec, rings[0], flip=True)
     count = len(template)
@@ -474,20 +578,40 @@ def _is_front_plane(face) -> bool:
     return box.YLength < 0.01 and abs(box.YMin - Y_FRONT) < 0.05
 
 
-def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
-    """Match trough-wall faces on one side of the apex, no deeper than `y_max`.
+def _is_trough_floor(face, spec: dict) -> bool:
+    """True if `face` lies on the crowned trough floor rather than a wall.
 
-    The side test is on the face's whole extent, not its centroid. Each x strip of the
-    floor is one plane, so the boolean hands it back as a single face spanning the full
-    apex width, and a centroid test would assign it by whichever side a rounding error
-    fell on. A face that straddles the centre line belongs to neither wall and stays with
-    the body, which is also where the reference's own node split leaves it.
+    Floor facets sit in the apex band around z_center and at the local floor depth band.
+    They must go to the deep-side contact (edge-14 / edge-18): a single floor spans the
+    full apex in z and would otherwise straddle the wall split line.
     """
-    z_center = spec["z_center"]
+    box = face.BoundBox
+    shallowest = Y_FRONT + _trough_depth(spec, TROUGH_HALF_LEN) - 0.3
+    deepest = Y_FRONT + spec["depth"] + 0.3
+    if box.YMin < shallowest or box.YMax > deepest:
+        return False
+    apex = TROUGH_RADIUS - spec["apex_inset"]
+    center = face.CenterOfMass
+    return abs(center.z - spec["z_center"]) <= apex + 0.5
+
+
+def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
+    """Match trough faces on one side of the split line, no deeper than `y_max`.
+
+    The side test is on the face's whole extent, not its centroid. Each x strip of a
+    wall band is one plane, so the boolean can hand back a face spanning a wide z run,
+    and a centroid test would assign it by whichever side a rounding error fell on. A
+    wall face that straddles the split line belongs to neither side and stays with the
+    body, which is also where the reference's own node split leaves it.
+
+    The single crowned floor is the exception: it spans the apex across the split and
+    belongs to the deep side (the published deeper grip that owns the floor).
+    """
+    split_z = spec.get("split_z", spec["z_center"])
 
     def matches(face) -> bool:
         box = face.BoundBox
-        if _is_front_plane(face) or box.YLength < 0.01:
+        if _is_front_plane(face):
             return False
         if box.YMin < Y_FRONT - 0.05 or box.YMax > y_max + 0.05:
             return False
@@ -496,7 +620,11 @@ def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: 
             return False
         if not x_min <= center.x <= x_max:
             return False
-        return box.ZMin >= z_center - 0.05 if above else box.ZMax <= z_center + 0.05
+        if _is_trough_floor(face, spec):
+            return not above
+        if box.YLength < 0.01:
+            return False
+        return box.ZMin >= split_z - 0.05 if above else box.ZMax <= split_z + 0.05
 
     return matches
 
@@ -547,9 +675,6 @@ def main() -> int:
 
     texture_member, texture_source, texture_digest = _reference_texture(reference)
 
-    if DESTINATION.exists():
-        DESTINATION.unlink()
-
     document = App.newDocument(PACKAGE)
     document.Label = board["name"]
     document.addProperty("App::PropertyString", "HangTenBoardID", "HangTen")
@@ -585,13 +710,14 @@ def main() -> int:
     upper = TROUGHS["upper"]
     lower = TROUGHS["lower"]
     cutters = [
-        _trough_cutter(upper, absolute_depths=(GRIP_DEPTH_MM["edge-8"],)),
+        _trough_cutter(upper, lip_depth=GRIP_DEPTH_MM["edge-8"]),
         _trough_cutter(lower),
         _mono_cutter(),
     ]
 
     contact_predicates = [
         (
+            # Below z = 24: lower wall of the upper trough plus the single crowned floor.
             "edge-14",
             _wall_filter(
                 upper,
@@ -602,6 +728,7 @@ def main() -> int:
             ),
         ),
         (
+            # Above z = 24: front 8 mm of the upper wall — the lip actually gripped.
             "edge-8",
             _wall_filter(
                 upper,
@@ -685,16 +812,28 @@ def main() -> int:
             )
 
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
+    if DESTINATION.exists():
+        DESTINATION.unlink()
     document.saveAs(str(DESTINATION))
 
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference envelope mm: {measured}")
     print(f"body faces: {len(body_shape.Faces)}  volume {body_shape.Volume:.0f} mm^3")
     for name, spec in TROUGHS.items():
+        _, angle = _wall_stations(spec, spec["depth"])
         print(
             f"  {name} trough floor: {spec['depth']:.2f} mm at x=0, "
             f"{_trough_depth(spec, TROUGH_HALF_LEN):.2f} mm at x=+/-{TROUGH_HALF_LEN:.0f}"
+            f"; wall face {math.degrees(angle):.1f} deg over"
+            f" front roll r{WALL_FRONT_RADIUS:.1f} / back roll r{WALL_BACK_RADIUS:.1f}"
+            f"; apex inset {spec['apex_inset']:.1f} mm"
         )
+        if "split_z" in spec:
+            print(
+                f"  {name} trough partition at z={spec['split_z']:.1f}: "
+                f"edge-8 lip {GRIP_DEPTH_MM['edge-8']:.0f} mm / "
+                f"edge-14 floor {spec['depth']:.0f} mm (single crowned floor)"
+            )
     for contact_id, info in regions.items():
         print(
             f"  {contact_id:8s} faces={info['faces']:3d} x={info['x']} z={info['z']} "

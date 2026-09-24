@@ -224,10 +224,15 @@ coincident-surface trap in lesson 5:
 ### Measure topology before inventing pockets
 
 `board.json` contacts are a **logical partition**, not a pocket count. MXEdge
-Small has four grips but the front mesh is **two stadium troughs**: edge-8/14
-share the upper trough's walls, edge-18/mono share the lower (mono nests in the
-right end). Authoring four separate openings looked "reasonable" and was wrong
-for a long stretch of the session.
+Small has four grips but the front mesh is **two stadium troughs**. The upper
+trough is **one** stadium opening with **one** crowned floor — no artificial
+8/14 stepped shelf: edge-8 is the upper-wall lip only; edge-14 takes the rest of
+that trough including the single floor. edge-18/mono share the lower trough
+(mono nests in the right end). Authoring four separate openings, or inventing a
+dual-floor step in the upper trough, looked "reasonable" and was wrong for a
+long stretch of the session. This model widens stadium openings to rim radius
+**18 mm** (reference rim was 14 mm) and uses a **~9.9 mm** front wall roll — the
+largest ≤10 mm that still leaves a straight face inside the inset budget.
 
 **First measurement pass, before any cutter:**
 
@@ -269,9 +274,10 @@ triangle count.
   it arbitrarily when it straddles a region boundary.
 - **Published grip depths may not match reference node depths.** The reference
   Small nodes span whole troughs; the published-depth gate wants 8/14/18/25 mm.
-  Satisfy the gate deliberately (e.g. lip band of published depth; floor at
-  published centre depth with measured crown) and document the tradeoff — do not
-  blindly copy reference AABB depth extents.
+  Satisfy the gate with a **lip-only** band for the shallow upper partition and a
+  **single crowned floor** at the published centre depth for the deeper one — do
+  not invent a second floor or stepped shelf, and do not blindly copy reference
+  AABB depth extents.
 
 ### Construction habits that paid off on Small
 
