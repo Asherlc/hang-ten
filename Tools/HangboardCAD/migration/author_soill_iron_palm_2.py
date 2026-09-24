@@ -72,15 +72,15 @@ NATIVE_SLOPERS = {
     "left_large_sloper_001": {
         "center_mm": (-244.49, -23.10, 71.17),
         "radius_mm": 80.5,
-        "front_y_mm": -36.8,
-        "fillet_mm": 2.0,
+        "front_y_mm": -26.0,
+        "fillet_mm": 5.0,
         "contact": "sloper-left",
     },
     "right_large_sloper_001": {
         "center_mm": (244.49, -23.10, 71.17),
         "radius_mm": 80.5,
-        "front_y_mm": -36.8,
-        "fillet_mm": 2.0,
+        "front_y_mm": -26.0,
+        "fillet_mm": 5.0,
         "contact": "sloper-right",
     },
 }
