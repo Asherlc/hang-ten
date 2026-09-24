@@ -16,8 +16,11 @@ Provenance:
     *partition of those two troughs*, not four pockets: edge-8 and edge-14 are the upper
     and lower walls of the upper trough (their reference AABBs meet at z = 23), and
     edge-18 and mono-25 split the lower one;
-  - each trough is a stadium: arc centres at x = +/-48 mm, rim radius 14 mm, centred at
-    z = 22.5 (upper) and z = -20.5 (lower);
+  - each trough is a stadium: arc centres at x = +/-48 mm. The reference rim radius is
+    14 mm (opening height 28 mm); this model widens openings to rim radius **18 mm**
+    (opening height 36 mm) so the stadiums read as usable pockets rather than thin
+    slots. Centres at z = 23.5 (upper) and z = -21.5 (lower) keep a clear front bar
+    between troughs and stay inside |z| <= 49;
   - each trough wall is a **front roll, a straight face, then a roll into the floor** —
     the published MXEdge cross-section (front radius, top face, back radius), not one
     continuous ogee. Sections cut at 0.1 mm through the reference give a face that
@@ -56,24 +59,30 @@ Provenance:
 Region partition. `compile_board` requires each region's extent along the depth axis to
 equal the published grip depth, and the reference's own nodes do not (its edge-8 node
 spans the full upper trough). The upper trough is authored as **one stadium opening with
-one crowned floor** at the published 14 mm (x = 0). edge-8 / edge-14 split on the z = 23
-line the reference nodes already meet on:
+one crowned floor** at the published 14 mm (x = 0). edge-8 / edge-14 split on z = 24
+(0.5 mm above the widened upper centre, same relative placement as the reference meet
+line at z = 23 on the measured centre 22.5):
 
-    edge-8   upper trough above z = 23: upper-wall lip only     y [-17, -9]  span  8
-    edge-14  upper trough below z = 23: wall + single floor     y [-17, -3]  span 14
+    edge-8   upper trough above z = 24: upper-wall lip only     y [-17, -9]  span  8
+    edge-14  upper trough below z = 24: wall + single floor     y [-17, -3]  span 14
     edge-18  lower trough, lower wall, full depth               y [-17, +1]  span 18
     mono-25  lower trough right end + bore incl. floor          y [-17, +8]  span 25
 
 edge-8 is therefore the front 8 mm of the upper wall (the lip actually gripped), not a
 second floor. The single upper floor belongs to edge-14.
 
-Wall front radius. Lattice publishes ~10 mm on the physical edge. With the measured apex
-insets (upper 11.2 mm, lower 11.0 mm) and a 2 mm back roll, a 10 mm front roll does not
-leave a straight face (front + back would meet or exceed the inset). This model uses
-**8.9 mm** — the largest front radius ≤ 10 mm that still leaves a measurable straight
-face on both troughs (≥ 3.7 mm upper, ≥ 7.2 mm lower). Stated residual vs Lattice ~10 mm:
-1.1 mm. The roll opens toward the trough's ends under crown depth-scaling (published
-behaviour: larger front radius at the ends, smaller at the centre).
+Floor half-width and wall front radius. Measured apex insets (upper 11.2 mm, lower
+11.0 mm) on the reference's r = 14 rim leave a floor half-width of only ~2.8 mm — visually
+thin slots. This model sets apex inset **12.0 mm** on both troughs so floor half-width
+is **6.0 mm** (TROUGH_RADIUS 18 − inset 12) at the rim — roomier pocket floors in the
+5–7 mm target band. Lattice publishes ~10 mm front radius on the physical edge. With
+inset 12.0 mm and a 2 mm back roll, a 10 mm front roll does not leave a measurable
+straight face on the upper trough. This model uses **9.9 mm** — the largest front radius
+≤ 10 mm that still leaves a measurable straight face on both troughs (≥ 2.6 mm upper,
+≥ 6.3 mm lower). Stated residual vs Lattice ~10 mm: **0.1 mm**. Preferring the roomier
+floor over maximising front radius if the inset budget tightens further. The roll opens
+toward the trough's ends under crown depth-scaling (published behaviour: larger front
+radius at the ends, smaller at the centre).
 
 Because the floor is crowned, a region's deepest face is the one at x = 0; each of those
 spans reaches the published depth there and no deeper.
@@ -132,9 +141,10 @@ GRIP_DEPTH_MM = {
     "mono-25": 25.0,
 }
 
-# Measured stadium openings: arc centres at x = +/-48, rim radius = half the opening height.
+# Stadium openings: arc centres at x = +/-48. Reference rim radius 14 mm; authored 18 mm
+# widens each opening to 36 mm tall so pockets read as usable troughs, not thin slots.
 TROUGH_HALF_LEN = 48.0
-TROUGH_RADIUS = 14.0
+TROUGH_RADIUS = 18.0
 # Even, so a vertex lands exactly on z = z_center and no facet straddles the wall that
 # divides the trough's two regions.
 TROUGH_ARC_SEGMENTS = 14
@@ -142,28 +152,30 @@ TROUGH_ARC_SEGMENTS = 14
 TROUGH_STRAIGHT_SEGMENTS = 10
 TROUGHS = {
     "upper": {
-        "z_center": 22.5,
+        # Nudged +1 mm from measured 22.5 so the r=18 rim keeps a clear front bar vs lower.
+        "z_center": 23.5,
         "depth": GRIP_DEPTH_MM["edge-14"],
         "crown_fraction": 0.1952,
-        # Measured apex inset 11.2 mm (half-width 2.8). Restored now that the upper
-        # trough is a single floor again — no shelf-widening.
-        "apex_inset": 11.2,
-        # Reference edge-8 / edge-14 node AABBs meet on this line; partitions the one
-        # opening (wall lip vs wall+floor), not two floor levels.
-        "split_z": 23.0,
+        # Floor half-width = TROUGH_RADIUS - apex_inset = 6.0 mm (target 5–7). Measured
+        # insets on r=14 left only ~2.8 mm — deliberately widened for usable pocket floors.
+        "apex_inset": 12.0,
+        # 0.5 mm above z_center (same offset as reference meet line 23 on centre 22.5);
+        # partitions the one opening (wall lip vs wall+floor), not two floor levels.
+        "split_z": 24.0,
     },
     "lower": {
-        "z_center": -20.5,
+        # Nudged -1 mm from measured -20.5; pairs with upper centre for a clear front bar.
+        "z_center": -21.5,
         "depth": GRIP_DEPTH_MM["edge-18"],
         "crown_fraction": 0.1885,
-        "apex_inset": 11.0,
+        "apex_inset": 12.0,
     },
 }
 # Wall cross-section: front roll, straight face, roll into the floor. The radii are of the
 # centre profile; depth-scaling by the crown opens both rolls toward the trough's ends.
-# Lattice publishes ~10 mm front; 8.9 mm is the largest ≤10 that still leaves a straight
-# face inside the measured inset budget with the 2 mm back roll (see module docstring).
-WALL_FRONT_RADIUS = 8.9
+# Lattice publishes ~10 mm front; 9.9 mm is the largest ≤10 that still leaves a straight
+# face inside the 12.0 mm inset budget with the 2 mm back roll (see module docstring).
+WALL_FRONT_RADIUS = 9.9
 WALL_BACK_RADIUS = 2.0
 # Segment counts per profile zone. The front roll carries the most because it is the band
 # whose shading gradient is what reads as the bevel.
@@ -705,7 +717,7 @@ def main() -> int:
 
     contact_predicates = [
         (
-            # Below z = 23: lower wall of the upper trough plus the single crowned floor.
+            # Below z = 24: lower wall of the upper trough plus the single crowned floor.
             "edge-14",
             _wall_filter(
                 upper,
@@ -716,7 +728,7 @@ def main() -> int:
             ),
         ),
         (
-            # Above z = 23: front 8 mm of the upper wall — the lip actually gripped.
+            # Above z = 24: front 8 mm of the upper wall — the lip actually gripped.
             "edge-8",
             _wall_filter(
                 upper,
