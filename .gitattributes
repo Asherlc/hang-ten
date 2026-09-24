@@ -1,4 +1,7 @@
 Hangboards/*/assets/*.usdz filter=lfs diff=lfs merge=lfs -text
 
-# Self-contained FreeCAD authoring sources (native CAD, not text)
-Hangboards/*/*.FCStd filter=lfs diff=lfs merge=lfs -text
+# Self-contained FreeCAD authoring sources (native CAD, not text). For a
+# readable diff of their board manifest and archive members, enable the textconv
+# driver once per clone (see Tools/HangboardCAD/README.md):
+#   git config diff.hangten-fcstd.textconv "python3 Tools/HangboardCAD/board_manifest.py --dump-file"
+Hangboards/*/*.FCStd filter=lfs diff=hangten-fcstd merge=lfs -text

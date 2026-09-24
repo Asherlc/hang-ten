@@ -103,26 +103,6 @@ purchase and Restore Purchases on a signed build. The product has not been
 created by this repository change; App Store Connect and Sandbox setup are an
 external release handoff.
 
-## GitHub Device Flow release setup
-
-Before distributing a build with board-package GitHub sync, enable Device Flow
-in the existing GitHub OAuth App. Add its public client ID as the
-`HANGTEN_GITHUB_OAUTH_CLIENT_ID` variable in the `app-store-connect` GitHub
-Actions environment (a repository variable with the same name may also supply
-trusted non-release workflows). GitHub reserves the `GITHUB_` prefix for its
-own configuration-variable names, so the release job maps that value to the
-iOS `GITHUB_OAUTH_CLIENT_ID` build setting. It writes the setting to its
-temporary mode-`0600` xcconfig and verifies that the archived app's Info.plist
-contains a nonempty client ID.
-
-For local Xcode builds, copy `HangTen/Config/Analytics.local.xcconfig.example` to
-the ignored `HangTen/Config/Analytics.local.xcconfig` file and set
-`GITHUB_OAUTH_CLIENT_ID` there. Do not create a `GITHUB_CLIENT_SECRET` iOS app
-build setting, `app-store-connect` Actions secret, or bundled Info.plist key:
-Device Flow uses only the public client ID. Keep the public
-`GITHUB_OAUTH_CLIENT_ID` in the iOS app's Info.plist. The app requests
-`repo read:org` and no longer accepts personal access tokens.
-
 ## Maintainer-generated countdown audio
 
 Hang Ten ships reviewed audio files and never stores an ElevenLabs API key or
@@ -150,7 +130,7 @@ Android's optional Amplitude and Sentry adapters use the same typed event
 names/properties as iOS and remain inert without configured keys. They never
 transmit personal workout content. The Android gate also builds a candidate
 Release AAB and validates GitHub Actions syntax with actionlint; the physical
-Play Billing, Health Connect, BLE, and GitHub Device Flow checks remain explicit
+Play Billing, Health Connect, and BLE checks remain explicit
 release gates in the Android operations guide.
 
 The release workflow uses a GitHub environment named `app-store-connect`.
@@ -167,10 +147,7 @@ Add these environment variables:
 - `APPLE_TEAM_ID`: the 10-character Apple Developer Team ID.
 - `APPSTORE_API_KEY_ID`: the App Store Connect API key ID.
 - `APPSTORE_ISSUER_ID`: the App Store Connect API issuer ID.
-- `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the existing GitHub OAuth App's public
-  client ID; its Device Flow option must be enabled. The workflow maps it to
-  the app's `GITHUB_OAUTH_CLIENT_ID` build setting. Do not configure a client
-  secret.
+
 ## Analytics CI configuration
 
 The app runs without analytics when its API key is absent. This is intentional
@@ -248,9 +225,10 @@ schema-v3 validation. Remote model editing is unsupported; the app treats model
 packages as read-only and uses their mesh and descriptor as the presentation
 source.
 
-For raster packages, edits in the board editor are explicit operator changes
-to canonical package geometry; the saved paths remain the exact rendering and
-hit-testing source of truth.
+The apps only read bundled `Hangboards/*/board.json` packages; there is no
+in-app board editor or package sync. Raster package geometry is edited directly
+in `board.json`, and the saved paths remain the exact rendering and hit-testing
+source of truth.
 
 Regenerate the bundled routine document after an audited plan change:
 

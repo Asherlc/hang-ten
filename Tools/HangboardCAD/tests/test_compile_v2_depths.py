@@ -74,9 +74,10 @@ def test_v1_depths_are_keyed_directly_by_contact_id() -> None:
 
 
 def test_shipped_metolius_board_declares_its_slot_depths() -> None:
-    board = json.loads(
-        (REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "board.json").read_text()
-    )
+    source = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "metolius-rock-rings-3d.FCStd"
+    if compile_board.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    board = json.loads(compile_board.cad_source.generate_board_json(source))
     assert compile_board._declared_depths(board, 2) == {
         "pocket-25": 25.0,
         "pocket-32": 32.0,

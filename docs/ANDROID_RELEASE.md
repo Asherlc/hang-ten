@@ -7,12 +7,19 @@ and a JDK 17. Open the `Android` directory in Android Studio, or use the
 checked-in Gradle wrapper from the repository root. Keep local Android SDK
 configuration in the ignored `Android/local.properties` file; do not commit it.
 
+The build also needs Python 3.10 or newer on `PATH` (or `HANGTEN_PYTHON`) and
+the Git LFS objects (`git lfs pull`): `:app:stageCanonicalAssets` runs
+`scripts/stage-board-packages.py --target android`, which validates every board
+package, keeps model USDZ files inline, generates each CAD-backed board's
+`board.json` from its `<slug>.FCStd` (that file is never committed), and leaves
+the FCStd out of the APK.
+
 Run the local checks that CI runs before packaging:
 
 ```sh
 rtk ./Android/gradlew -p Android check
 rtk ./Android/gradlew -p Android :app:stageCanonicalAssets :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
-rtk ./Android/gradlew -p Android -PGITHUB_OAUTH_CLIENT_ID=your_public_client_id :app:bundleRelease
+rtk ./Android/gradlew -p Android :app:bundleRelease
 ```
 
 Start an API 35 emulator in Android Studio, then run the instrumented test
@@ -62,12 +69,12 @@ Record the Play Console order IDs, tester account, build version code, and the
 pass/fail result of each step in the release ticket. Do not include purchase
 tokens, service-account keys, or other credentials in the ticket.
 
-## Health, sensor, and GitHub release gates
+## Health and sensor release gates
 
 These checks require physical devices or external services and are not
 substituted by emulator fakes. Record the model/OS, candidate version code, and
-pass/fail result in the release ticket; never record OAuth tokens, GitHub device
-codes, sensor identifiers, or raw workout/sensor data.
+pass/fail result in the release ticket; never record sensor identifiers or raw
+workout/sensor data.
 
 1. On an API 36+ device with Health Connect installed, open **Settings > Connect
    Health**. Confirm the app does not request Health permission at launch, asks
@@ -83,14 +90,6 @@ codes, sensor identifiers, or raw workout/sensor data.
    reconnect. Confirm a malformed/disconnected stream fails visibly without
    losing local workout completion. This is the required real-transport check;
    deterministic fake-transport tests do not replace it.
-3. In **Settings > Board editor**, sign in with the registered public GitHub
-   Device Flow client. Complete browser verification, cancel one attempt, and
-   verify sign-out removes local authorization. Pull a package, make a direct
-   geometry edit, validate/save it, push the allowed `board.json` plus its
-   referenced image to a draft branch, and confirm the pull request. Make a
-   competing remote change and confirm the Android client reports a conflict
-   rather than overwriting it. Never enter a personal access token or client
-   secret in the app.
 
 ## Optional diagnostics configuration
 
@@ -98,7 +97,7 @@ Android telemetry emits only the typed iOS-compatible event names/properties:
 tab/source/outcome, a coarse duration bucket, approved board-family values, and
 typed diagnostic category/operation/error-kind. It never sends plan or board
 identifiers, canonical geometry, instructions, health records, raw timing,
-sensor measurements, OAuth data, purchase tokens, or error text. Amplitude
+sensor measurements, purchase tokens, or error text. Amplitude
 autocapture and device/location fields are disabled; Sentry receives only the
 typed `app diagnostic` message and tags.
 
@@ -121,9 +120,8 @@ the Android validation job when Android code, `Hangboards`, the canonical plan
 library, countdown audio, shared board content, or CI wiring changes. For
 unrelated pull requests, the stable check reports that the path is skipped
 successfully rather than remaining pending. It runs JVM tests, Debug lint and
-APK assembly, a Release AAB candidate build using a synthetic public Device
-Flow client ID, API 35 instrumented tests, and a pinned `actionlint` workflow
-syntax check. Each run uploads an `android-verification-<run-id>` artifact
+APK assembly, a Release AAB candidate build, API 35 instrumented tests, and a
+pinned `actionlint` workflow syntax check. Each run uploads an `android-verification-<run-id>` artifact
 containing the Debug APK, candidate AAB, and available test/lint reports.
 
 ## One-time Google Play operator handoff
@@ -156,19 +154,13 @@ before the release workflow can publish anything.
 5. Add this **environment variable** exactly as named:
 
    - `GOOGLE_PLAY_PACKAGE_NAME`: `com.hangten.training`.
-   - `HANGTEN_GITHUB_OAUTH_CLIENT_ID`: the registered GitHub OAuth App's
-     public Device Flow client ID. Enable Device Flow for that app before
-     release. This is intentionally a GitHub environment **variable**, not a
-     secret: Android embeds the public client ID in `BuildConfig`.
    - `HANGTEN_SENTRY_DSN` (optional): HTTPS Sentry DSN used for typed Android
      diagnostics only.
 
-Never provide `GITHUB_CLIENT_SECRET`, an OAuth client secret, or a personal
-access token to the Android Gradle build, release environment, app settings,
-or source tree. For a local Release build, pass only the same public value:
+For a local Release build, run:
 
 ```sh
-rtk ./Android/gradlew -p Android -PGITHUB_OAUTH_CLIENT_ID=your_public_client_id :app:bundleRelease
+rtk ./Android/gradlew -p Android :app:bundleRelease
 ```
 
 Treat the five required secrets and local keystore as credentials. The workflow

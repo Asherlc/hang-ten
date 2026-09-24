@@ -20,6 +20,7 @@ from conftest import (
     SECONDARY_PNG_BYTES,
     write_board_package,
     write_multi_presentation_board_package,
+    write_cad_source,
     write_primary_only_draft,
 )
 
@@ -324,7 +325,8 @@ def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
     )
     package = make_v3_model_package(repository_root / "Hangboards" / "source-model")
     (package / "assets" / "primary.usdz").unlink()
-    (package / f"{package.name}.FCStd").write_bytes(b"freecad source bytes")
+    authored_board = (package / "board.json").read_bytes()
+    source = write_cad_source(package)
 
     compiled_assets = tmp_path / "compiled-assets"
     (compiled_assets / package.name / "assets").mkdir(parents=True)
@@ -340,6 +342,14 @@ def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
 
     assert staged == (destination / package.name,)
     assert not (destination / package.name / f"{package.name}.FCStd").exists()
+    # board.json is not in the source package; staging writes the one generated
+    # from the FCStd manifest.
+    assert not (package / "board.json").exists()
+    staged_board = (destination / package.name / "board.json").read_bytes()
+    assert json.loads(staged_board) == json.loads(authored_board)
+    assert staged_board == load_staging_module().load_board_package_module(
+        repository_root
+    ).cad_source.generate_board_json(source)
     odr_model = (
         odr_staging_root(destination)
         / package.name
@@ -349,6 +359,74 @@ def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
         / "primary.usdz"
     )
     assert odr_model.read_bytes() == MODEL_BYTES
+
+
+def test_android_staging_keeps_models_inline_and_generates_cad_board_json(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """--target android needs no Xcode environment and splits no ODR assets."""
+    for variable in ("TARGET_BUILD_DIR", "UNLOCALIZED_RESOURCES_FOLDER_PATH", "DERIVED_FILE_DIR"):
+        monkeypatch.delenv(variable, raising=False)
+    repository_root = tmp_path / "repository"
+    shutil.copytree(
+        REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+    )
+    cad = make_v3_model_package(repository_root / "Hangboards" / "cad-model")
+    source = write_cad_source(cad)
+    plain = make_v3_model_package(repository_root / "Hangboards" / "plain-model")
+    plain_board = json.loads((plain / "board.json").read_text(encoding="utf-8"))
+    plain_board["id"] = "plain.model"
+    (plain / "board.json").write_text(json.dumps(plain_board, indent=2) + "\n", encoding="utf-8")
+    destination = tmp_path / "generated" / "assets" / "Hangboards"
+
+    module = load_staging_module()
+    staged = module.stage_board_packages(
+        repository_root, destination, target=module.TARGET_ANDROID
+    )
+
+    assert staged == (destination / "cad-model", destination / "plain-model")
+    for package in (cad, plain):
+        files = {
+            path.relative_to(destination / package.name).as_posix()
+            for path in (destination / package.name).rglob("*")
+            if path.is_file()
+        }
+        assert files == {"assets/primary.model.json", "assets/primary.usdz", "board.json"}
+        assert (destination / package.name / "assets" / "primary.usdz").read_bytes() == (
+            package / "assets" / "primary.usdz"
+        ).read_bytes()
+    assert (destination / "plain-model" / "board.json").read_bytes() == (
+        plain / "board.json"
+    ).read_bytes()
+    assert (destination / "cad-model" / "board.json").read_bytes() == (
+        module.load_board_package_module(repository_root).cad_source.generate_board_json(source)
+    )
+    assert not list(tmp_path.rglob("HangTenModelODR"))
+
+    with pytest.raises(ValueError, match="must not write into the checkout"):
+        module.stage_board_packages(
+            repository_root,
+            repository_root / "Hangboards" / "cad-model" / "Hangboards",
+            target=module.TARGET_ANDROID,
+        )
+
+
+def test_staging_rejects_an_on_disk_board_json_in_a_cad_package(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository_root = tmp_path / "repository"
+    shutil.copytree(
+        REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+    )
+    package = make_v3_model_package(repository_root / "Hangboards" / "cad-model")
+    write_cad_source(package, remove_board_json=False)
+    destination = tmp_path / "generated" / "Hangboards"
+    module = load_staging_module()
+    with pytest.raises(ValueError, match="board.json must not exist"):
+        module.stage_board_packages(repository_root, destination, target=module.TARGET_ANDROID)
+    assert not destination.exists()
 
 
 def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(

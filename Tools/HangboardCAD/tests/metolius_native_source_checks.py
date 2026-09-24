@@ -30,7 +30,8 @@ import FreeCAD as App  # noqa: E402
 import Part  # noqa: E402
 
 REPOSITORY = Path(__file__).resolve().parents[3]
-BOARD_JSON = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "board.json"
+# board.json is generated from the FCStd's HangTenBoardManifest (never committed).
+BOARD_SOURCE = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "metolius-rock-rings-3d.FCStd"
 
 FAILURES: list[str] = []
 
@@ -66,7 +67,11 @@ def published_depths(board):
 def main() -> int:
     source = Path(sys.argv[1]).resolve()
     original_digest = hashlib.sha256(source.read_bytes()).hexdigest()
-    board = json.loads(BOARD_JSON.read_text())
+    sys.path.insert(0, str(REPOSITORY / "Tools" / "HangboardCAD"))
+    import use_hangboard_packages  # noqa: F401
+    from hangboard_packages import cad_source
+
+    board = json.loads(cad_source.generate_board_json(BOARD_SOURCE))
     expected_depths = published_depths(board)
 
     document = App.openDocument(str(source))

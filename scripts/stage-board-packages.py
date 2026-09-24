@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
-"""Stage validated direct-child hangboard packages into an app resource bundle."""
+"""Stage validated direct-child hangboard packages into an app resource bundle.
+
+Two targets share one loader (``board_catalog.discover_board_packages``):
+
+* ``--target xcode`` (default, the Xcode "Stage Board Packages" phase): the
+  destination must be the Xcode resource ``Hangboards`` directory, and each
+  package's model asset (``assets/primary.usdz``) is split out into the
+  On-Demand Resource staging directory under ``DERIVED_FILE_DIR``.
+* ``--target android`` (the Gradle ``stageCanonicalAssets`` task): no Xcode
+  environment and no ODR split; model assets stay inline in the package, as the
+  Android app bundles them.
+
+For both, a CAD-backed package's FCStd authoring source is never staged, and
+its ``board.json`` (generated from the FCStd manifest at build time, never
+committed) is written into the staged package.
+"""
 
 from __future__ import annotations
 
@@ -81,13 +96,21 @@ def _xcode_odr_staging_root() -> Path:
     return root / "HangTenModelODR"
 
 
-def _validate_destination(repository_root: Path, destination: Path) -> None:
-    resource_root = _xcode_resource_root()
-    _reject_symlinked_ancestors(resource_root, "Xcode resource root")
+TARGET_XCODE = "xcode"
+TARGET_ANDROID = "android"
+TARGETS = (TARGET_XCODE, TARGET_ANDROID)
+
+
+def _validate_destination(repository_root: Path, destination: Path, target: str) -> None:
     _reject_symlinked_ancestors(destination, "destination")
-    expected_destination = resource_root / "Hangboards"
-    if destination != expected_destination:
-        raise ValueError(f"destination must equal the Xcode resource Hangboards directory: {expected_destination}")
+    if target == TARGET_XCODE:
+        resource_root = _xcode_resource_root()
+        _reject_symlinked_ancestors(resource_root, "Xcode resource root")
+        expected_destination = resource_root / "Hangboards"
+        if destination != expected_destination:
+            raise ValueError(f"destination must equal the Xcode resource Hangboards directory: {expected_destination}")
+    elif destination.name != "Hangboards":
+        raise ValueError(f"destination must be a directory named Hangboards: {destination}")
     for checkout_path in (repository_root / "Hangboards", repository_root / "HangTen"):
         if _is_within(destination, checkout_path):
             raise ValueError(f"destination must not write into the checkout: {destination}")
@@ -212,22 +235,37 @@ def _resolve_model_asset(
     )
 
 
+def _write_generated_board_json(package_destination: Path, document: bytes) -> None:
+    """Write a CAD-backed package's generated board.json into its staged copy."""
+    board_destination = package_destination / "board.json"
+    if board_destination.exists() or board_destination.is_symlink():
+        raise ValueError(f"staged CAD package already has a board.json: {board_destination}")
+    board_destination.write_bytes(document)
+    _regular_file(board_destination)
+
+
 def stage_board_packages(
     repository_root: Path,
     destination: Path,
     compiled_assets: Path | None = None,
+    target: str = TARGET_XCODE,
 ) -> tuple[Path, ...]:
     """Copy every validated direct-child package tree into *destination*."""
+    if target not in TARGETS:
+        raise ValueError(f"unknown staging target: {target!r}")
+    split_model_assets = target == TARGET_XCODE
     repository_root = _absolute_lexical(Path(repository_root))
     destination = _absolute_lexical(Path(destination))
     _reject_symlinked_ancestors(repository_root, "repository root")
     _regular_directory(repository_root)
-    _validate_destination(repository_root, destination)
-    odr_destination = _xcode_odr_staging_root()
-    _reject_symlinked_ancestors(odr_destination, "ODR staging destination")
-    for checkout_path in (repository_root / "Hangboards", repository_root / "HangTen"):
-        if _is_within(odr_destination, checkout_path):
-            raise ValueError(f"ODR staging must not write into source paths: {odr_destination}")
+    _validate_destination(repository_root, destination, target)
+    odr_destination: Path | None = None
+    if split_model_assets:
+        odr_destination = _xcode_odr_staging_root()
+        _reject_symlinked_ancestors(odr_destination, "ODR staging destination")
+        for checkout_path in (repository_root / "Hangboards", repository_root / "HangTen"):
+            if _is_within(odr_destination, checkout_path):
+                raise ValueError(f"ODR staging must not write into source paths: {odr_destination}")
 
     hangboards_root = repository_root / "Hangboards"
     _reject_symlinked_ancestors(hangboards_root, "Hangboards source root")
@@ -259,33 +297,43 @@ def stage_board_packages(
         )
 
     destination.parent.mkdir(parents=True, exist_ok=True)
-    odr_destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
-    odr_staging = odr_destination.with_name(
-        f".{odr_destination.name}.staging-{uuid.uuid4().hex}"
-    )
+    odr_staging: Path | None = None
+    if odr_destination is not None:
+        odr_destination.parent.mkdir(parents=True, exist_ok=True)
+        odr_staging = odr_destination.with_name(
+            f".{odr_destination.name}.staging-{uuid.uuid4().hex}"
+        )
     try:
         staging.mkdir()
-        odr_staging.mkdir()
+        if odr_staging is not None:
+            odr_staging.mkdir()
         staged_paths: list[Path] = []
         for package, package_source in zip(inventory.packages, package_sources, strict=True):
             package_destination = staging / package.root.name
             model_asset_paths = model_asset_paths_by_slug[package.root.name]
+            # Model assets are copied separately below: into the ODR staging
+            # tree for Xcode, inline (committed or compiled) for Android.
             _copy_regular_tree(
                 package_source,
                 package_destination,
                 excluded_paths=model_asset_paths
                 | authoring_source_paths_by_slug[package.root.name],
             )
+            if package.generated_board_json is not None:
+                _write_generated_board_json(package_destination, package.generated_board_json)
             for model_asset_path in sorted(model_asset_paths):
-                odr_model_destination = (
-                    odr_staging
-                    / package.root.name
-                    / "Hangboards"
-                    / package.root.name
-                    / model_asset_path
-                )
-                odr_model_destination.parent.mkdir(parents=True, exist_ok=True)
+                if odr_staging is not None:
+                    model_destination = (
+                        odr_staging
+                        / package.root.name
+                        / "Hangboards"
+                        / package.root.name
+                        / model_asset_path
+                    )
+                else:
+                    model_destination = package_destination / model_asset_path
+                model_destination.parent.mkdir(parents=True, exist_ok=True)
                 _copy_regular_file(
                     _resolve_model_asset(
                         package_source,
@@ -293,16 +341,17 @@ def stage_board_packages(
                         compiled_assets,
                         package.root.name,
                     ),
-                    odr_model_destination,
+                    model_destination,
                 )
             staged_paths.append(destination / package.root.name)
         _replace_destination(staging, destination)
-        _replace_destination(odr_staging, odr_destination)
+        if odr_staging is not None and odr_destination is not None:
+            _replace_destination(odr_staging, odr_destination)
         return tuple(staged_paths)
     except BaseException:
         if staging.exists():
             shutil.rmtree(staging)
-        if odr_staging.exists():
+        if odr_staging is not None and odr_staging.exists():
             shutil.rmtree(odr_staging)
         raise
 
@@ -318,6 +367,13 @@ def parse_arguments() -> argparse.Namespace:
         help="directory produced by Tools/HangboardCAD/prepare_assets.py, used for "
         "boards whose runtime asset is compiled instead of committed",
     )
+    parser.add_argument(
+        "--target",
+        choices=TARGETS,
+        default=TARGET_XCODE,
+        help="xcode (default): Xcode resource bundle with the On-Demand Resource model "
+        "split; android: plain asset directory with model assets inline",
+    )
     return parser.parse_args()
 
 
@@ -327,6 +383,7 @@ def main() -> int:
         arguments.repository_root,
         arguments.destination,
         arguments.compiled_assets,
+        arguments.target,
     )
     return 0
 

@@ -17,6 +17,7 @@ from conftest import (
     load_board_catalog_module,
     multi_presentation_board_document,
     write_board_package,
+    write_cad_source,
     write_multi_presentation_board_package,
     write_primary_only_draft,
 )
@@ -1071,3 +1072,77 @@ def test_package_loader_rejects_unknown_board_hold_and_geometry_keys(
 
         with pytest.raises(ValueError, match="unknown keys"):
             module.load_board_package(package)
+
+
+def test_a_cad_backed_package_validates_its_generated_board_json(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "cad-model")
+    authored = json.loads((package_root / "board.json").read_text(encoding="utf-8"))
+    source = write_cad_source(package_root)
+
+    inventory = module.discover_board_packages(tmp_path, require_complete_inventory=True)
+
+    (package,) = inventory.packages
+    assert package.board.id == authored["id"]
+    assert package.generated_board_json == module.cad_source.generate_board_json(source)
+    assert json.loads(package.generated_board_json) == authored
+    assert module.read_board_json(package_root) == package.generated_board_json
+    assert not (package_root / "board.json").exists()
+
+
+def test_a_hand_authored_package_has_no_generated_board_json(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "plain-model")
+    package = module.load_board_package(package_root)
+    assert package.generated_board_json is None
+    assert module.read_board_json(package_root) == (package_root / "board.json").read_bytes()
+
+
+def test_a_cad_backed_package_rejects_an_on_disk_board_json(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "cad-model")
+    write_cad_source(package_root, remove_board_json=False)
+
+    with pytest.raises(ValueError, match=r"cad-model/board.json must not exist.*generated from cad-model\.FCStd"):
+        module.discover_board_packages(tmp_path)
+
+
+def test_a_cad_backed_package_needs_a_generatable_source(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = write_board_package(tmp_path / "cad-model")
+    source = write_cad_source(package_root)
+    source.write_text(
+        "version https://git-lfs.github.com/spec/v1\noid sha256:" + "0" * 64 + "\nsize 1\n"
+    )
+    with pytest.raises(ValueError, match="cannot generate board.json.*LFS pointer"):
+        module.load_board_package(package_root)
+
+
+def test_the_generated_document_is_validated_with_its_exact_number_spelling() -> None:
+    """Rock Rings' nine-decimal instance translations survive generation."""
+    module = load_board_catalog_module()
+    root = Path(__file__).resolve().parents[3] / "Hangboards" / "metolius-rock-rings-3d"
+    source = module.cad_source.package_source_path(root)
+    if module.cad_source._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    package = module.load_board_package(root)
+    assert package.generated_board_json is not None
+    assert b"                0.000000000,\n" in package.generated_board_json
+    module._validate_instance_translation_lexemes(package.generated_board_json.decode())
+
+
+def test_every_cad_backed_package_board_json_is_gitignored() -> None:
+    module = load_board_catalog_module()
+    repository = Path(__file__).resolve().parents[3]
+    ignored = {
+        line.strip()
+        for line in (repository / ".gitignore").read_text(encoding="utf-8").splitlines()
+    }
+    cad_packages = sorted(
+        path.name
+        for path in (repository / "Hangboards").iterdir()
+        if path.is_dir() and module.cad_source.is_cad_package(path)
+    )
+    assert cad_packages
+    listed = {line for line in ignored if line.startswith("/Hangboards/")}
+    assert listed == {f"/Hangboards/{slug}/board.json" for slug in cad_packages}
