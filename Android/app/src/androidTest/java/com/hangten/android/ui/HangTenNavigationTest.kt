@@ -69,8 +69,18 @@ internal fun fixturePlan() = TrainingPlan(
             accessory = "",
             durationSeconds = 10f,
             phase = "hang",
-            targets = listOf(com.hangten.android.content.PlanTarget(holdIds = listOf("fixture-edge"))),
-            segments = emptyList(),
+            handUse = "double",
+            side = "both",
+            segments = listOf(
+                com.hangten.android.content.TrainingSegment(
+                    kind = "work",
+                    target = com.hangten.android.content.SegmentTarget.Requirements(
+                        listOf(com.hangten.android.content.ContactRequirement(kind = "edge")),
+                    ),
+                    timing = "fixed",
+                    durationSeconds = 10f,
+                ),
+            ),
             activeDurationSeconds = null,
             gripType = null,
             fingerConfiguration = null,

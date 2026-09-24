@@ -33,7 +33,8 @@ import compile_board  # noqa: E402
 
 PACKAGE = "lattice-triple-rung"
 SOURCE = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
-BOARD = REPOSITORY / "Hangboards" / PACKAGE / "board.json"
+# board.json is generated from the source's HangTenBoardManifest (never committed).
+BOARD_BYTES = compile_board.cad_source.generate_board_json(SOURCE)
 
 FAILURES: list[str] = []
 
@@ -100,11 +101,13 @@ def main() -> int:
             "the broken source really is broken",
             any(state != ["Up-to-date"] for state in states.values()),
         )
+        board_file = scratch / "generated-board.json"
+        board_file.write_bytes(BOARD_BYTES)
         assets = scratch / "assets"
         assets.mkdir(parents=True, exist_ok=True)
         raised = None
         try:
-            compile_board.build(PACKAGE, broken, BOARD, assets, publish=True)
+            compile_board.build(PACKAGE, broken, board_file, assets, publish=True)
         except compile_board.BuildError as error:
             raised = error
         except Exception as error:  # noqa: BLE001 - report the unexpected type
@@ -136,7 +139,7 @@ def main() -> int:
         # A guard that never fires is not proven. Mis-declare one published grip
         # depth and require the build to refuse it.
         print("\ncase 2: published grip depth disagrees with the authored region", flush=True)
-        board = json.loads(BOARD.read_text())
+        board = json.loads(BOARD_BYTES)
         for contact in board["contacts"]:
             if contact["id"] == "edge-10":
                 contact["depth"] = {"range": {"minimum": 25.0, "maximum": 25.0}}
@@ -171,7 +174,7 @@ def main() -> int:
         assets3.mkdir(parents=True, exist_ok=True)
         raised3 = None
         try:
-            compile_board.build(PACKAGE, faceted, BOARD, assets3, publish=True)
+            compile_board.build(PACKAGE, faceted, board_file, assets3, publish=True)
         except compile_board.BuildError as error:
             raised3 = error
         check(

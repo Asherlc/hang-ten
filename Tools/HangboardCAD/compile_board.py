@@ -1,4 +1,4 @@
-"""The one shared Hang Ten board build command: FCStd + board.json -> runtime set.
+"""The one shared Hang Ten board build command: FCStd -> runtime asset set.
 
 Run it with FreeCAD's own interpreter, which is the pinned toolchain:
 
@@ -6,9 +6,17 @@ Run it with FreeCAD's own interpreter, which is the pinned toolchain:
       /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \\
       Tools/HangboardCAD/compile_board.py --package <package-directory>
 
+The board metadata comes from the source itself: the document-level
+``HangTenBoardManifest`` property plus ``HangTenBoardID`` (read with
+``hangboard_packages.cad_source``). ``--board <path>`` overrides it with an explicit JSON
+file (used by the guard tests); without it the source must carry the manifest.
+The compiler never writes ``board.json``: for a CAD-backed package that file is
+generated from the manifest at build time (package validation and app staging)
+and is not kept in the repository.
+
 Stages, in order:
 
-1. Validate ``board.json`` and the source archive (``contract.inspect_archive``).
+1. Validate the board metadata and the source archive (``cad_source.inspect_archive``).
 2. Reopen and recompute the source document without modifying its bytes.
 3. Extract the bound components and semantic regions.
 4. Tessellate with the document's pinned quality setting.
@@ -49,6 +57,10 @@ for _path in (
 ):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
+
+# Puts Tools/HangboardPackages/src on sys.path (host python3 and freecadcmd).
+import use_hangboard_packages  # noqa: E402,F401
+from hangboard_packages import cad_source  # noqa: E402
 
 import contract  # noqa: E402
 import usdz_writer  # noqa: E402
@@ -190,7 +202,7 @@ def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Pa
     import zipfile
 
     basename = os.path.basename(member)
-    if not basename or contract.safe_member(basename) != basename:
+    if not basename or cad_source.safe_member(basename) != basename:
         raise BuildError(f"unsafe embedded texture member: {member!r}")
     with zipfile.ZipFile(source) as archive:
         if basename not in archive.namelist():
@@ -512,15 +524,30 @@ def _planar_uvs(points, bounds) -> list[tuple[float, float]]:
     ]
 
 
+def load_board(source: Path, board_path: Path | None) -> tuple[dict, str]:
+    """Board metadata and a label for where it came from.
+
+    An explicit ``board_path`` wins; otherwise the source's own manifest is the
+    single source of truth.
+    """
+    if board_path is not None:
+        return json.loads(Path(board_path).read_text()), _display(Path(board_path))
+    try:
+        board = cad_source.load_board(source)
+        return board, f"{_display(source)}#{cad_source.MANIFEST_PROPERTY}"
+    except cad_source.ManifestError as error:
+        raise BuildError(str(error)) from error
+
+
 def build(
     package: str,
     source: Path,
-    board_path: Path,
+    board_path: Path | None,
     out_dir: Path,
     publish: bool,
     allow_faceted_import: bool = False,
 ) -> dict:
-    board = json.loads(board_path.read_text())
+    board, board_origin = load_board(source, board_path)
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
         raise BuildError("board.json must be schema version 3")
     presentations = [item.get("id") for item in board.get("presentations", [])]
@@ -532,7 +559,7 @@ def build(
 
     print(f"[1/10] validating {source.name}")
     source_digest = _digest(source)
-    contract.inspect_archive(source)
+    cad_source.inspect_archive(source)
 
     print("[2/10] reopening and recomputing the source document")
     document = _open_source(source)
@@ -762,6 +789,7 @@ def build(
         result = {
             "package": package,
             "source": _display(source),
+            "board": board_origin,
             "sourceSHA256": source_digest,
             "sourceUnchanged": _digest(source) == source_digest,
             "schemaVersion": version,
@@ -817,7 +845,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True, help="Hangboards/<package-directory>")
     parser.add_argument("--source", help="defaults to Hangboards/<package>/<package>.FCStd")
-    parser.add_argument("--board", help="defaults to Hangboards/<package>/board.json")
+    parser.add_argument(
+        "--board",
+        help="explicit board metadata JSON; defaults to the source's HangTenBoardManifest",
+    )
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
     parser.add_argument(
@@ -831,11 +862,24 @@ def main(argv: list[str] | None = None) -> int:
     package = arguments.package
     source = (Path(arguments.source) if arguments.source
               else REPOSITORY / "Hangboards" / package / f"{package}.FCStd")
-    board_path = Path(arguments.board) if arguments.board else REPOSITORY / "Hangboards" / package / "board.json"
     assets = Path(arguments.assets) if arguments.assets else REPOSITORY / "Hangboards" / package / "assets"
-    for path in (source, board_path):
-        if not path.is_file():
-            raise BuildError(f"missing required input: {path}")
+    if not source.is_file():
+        raise BuildError(f"missing required input: {source}")
+    board_path = Path(arguments.board) if arguments.board else None
+    if board_path is None:
+        # has_manifest runs the archive contract (cad_source.inspect_archive)
+        # before reading Document.xml, so a corrupt source is a BuildError.
+        try:
+            embedded = cad_source.has_manifest(source)
+        except cad_source.ManifestError as error:
+            raise BuildError(str(error)) from error
+        if not embedded:
+            raise BuildError(
+                f"{_display(source)} carries no {cad_source.MANIFEST_PROPERTY}; embed "
+                "one with Tools/HangboardCAD/set_board_manifest.py or pass --board"
+            )
+    if board_path is not None and not board_path.is_file():
+        raise BuildError(f"missing required input: {board_path}")
 
     result = build(
         package,

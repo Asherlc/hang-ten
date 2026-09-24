@@ -8,22 +8,20 @@ import org.junit.Test
 
 class BoardRepositoryTest {
     @Test
-    fun decodesAPathHoldAndAConstrainedRoundedRectangle() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to boardJson(),
-                    "Hangboards/demo/assets/primary.png" to "png",
-                ),
-            ),
-        ).loadBoards()
+    fun decodesAPathContactAndAConstrainedRoundedRectangle() {
+        val board = loadRaster(rasterBoardJson()).getOrThrow().single()
 
-        val board = result.getOrThrow().single()
         assertEquals("demo.board", board.id)
         assertEquals("demo", board.packageSlug)
-        assertEquals("path-hold", board.holds[0].id)
-        assertEquals(setOf("mediumEdge"), board.holds[0].features)
-        assertTrue(board.holds[0].geometry.single().shape is HoldShape.Path)
+        assertEquals("assets/primary.png", board.presentations.single().assetPath)
+        assertTrue(board.presentations.single().isDefault)
+        assertEquals(listOf("path-edge", "rounded-pocket"), board.holds.map { it.id })
+
+        val edge = board.holds[0]
+        assertEquals("edge", edge.kind)
+        assertEquals("primary", edge.presentationId)
+        assertEquals(HoldDepth.Range(20.0, 20.0), edge.depth)
+        assertEquals(setOf(GripType.HALF_CRIMP, GripType.OPEN_HAND), edge.gripTypes)
         assertEquals(
             listOf(
                 PathCommand.Move(Point(0f, 0f)),
@@ -31,20 +29,20 @@ class BoardRepositoryTest {
                 PathCommand.Line(Point(1f, 1f)),
                 PathCommand.Close,
             ),
-            (board.holds[0].geometry.single().shape as HoldShape.Path).commands,
+            (edge.geometry.single().shape as HoldShape.Path).commands,
         )
-        assertEquals("rounded-hold", board.holds[1].id)
-        assertEquals(2, board.holds[1].fingerCapacity)
-        assertEquals(
-            HoldShape.RoundedRect(0.25f),
-            board.holds[1].geometry.single().shape,
-        )
+
+        val pocket = board.holds[1]
+        assertEquals(2, pocket.fingerCapacity)
+        assertEquals(HoldDepth.Category(HoldSize.MEDIUM), pocket.depth)
+        assertEquals("round", pocket.shape)
+        assertEquals(HoldShape.RoundedRect(0.25f), pocket.geometry.single().shape)
     }
 
     @Test
     fun rejectsBoardWhosePresentationAssetIsAbsent() {
         val result = AssetBoardRepository(
-            FixtureAssets(mapOf("Hangboards/demo/board.json" to boardJson())),
+            FixtureAssets(mapOf("Hangboards/demo/board.json" to rasterBoardJson())),
         ).loadBoards()
 
         assertTrueFailureContaining(result, "assets/primary.png")
@@ -60,95 +58,133 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun attachesValidatedCanonicalSemanticMappingsToTheirBoard() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to boardJson(),
-                    "Hangboards/demo/assets/primary.png" to "png",
-                    "PlanLibrary.json" to
-                        """
-                        {
-                          "boardMappings": [
-                            {
-                              "boardID": "demo.board",
-                              "semanticHolds": {
-                                "outer-edge": { "holdIDs": ["path-hold"] },
-                                "pockets": { "kind": "pocket" }
-                              }
-                            }
-                          ]
-                        }
-                        """.trimIndent(),
-                ),
-            ),
-        ).loadBoards()
+    fun rejectsSupersededSchemaVersions() {
+        val result = loadRaster(rasterBoardJson().replaceOnce("\"schemaVersion\": 3", "\"schemaVersion\": 2"))
 
-        assertEquals(
-            SemanticHoldMapping(holdIds = listOf("path-hold")),
-            result.getOrThrow().single().semanticHolds["outer-edge"],
-        )
-        assertEquals(
-            SemanticHoldMapping(kind = "pocket"),
-            result.getOrThrow().single().semanticHolds["pockets"],
-        )
+        assertTrueFailureContaining(result, "schemaVersion must be 3")
     }
 
     @Test
-    fun rejectsOutOfRangeCanonicalFingerCapacity() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to boardJson().replace("\"fingerCapacity\": 2", "\"fingerCapacity\": 5"),
-                    "Hangboards/demo/assets/primary.png" to "png",
-                ),
-            ),
-        ).loadBoards()
+    fun rejectsLegacyHoldInventory() {
+        val result = loadRaster(
+            rasterBoardJson().replaceOnce("\"contacts\": [", "\"holds\": [],\n  \"contacts\": ["),
+        )
+
+        assertTrueFailureContaining(result, "unknown key holds")
+    }
+
+    @Test
+    fun rejectsOutOfRangeContactFingerCapacity() {
+        val result = loadRaster(rasterBoardJson().replaceOnce("\"fingerCapacity\": 2", "\"fingerCapacity\": 5"))
 
         assertTrueFailureContaining(result, "fingerCapacity")
     }
 
     @Test
-    fun decodesSchemaV2RasterMediaIntoTheExistingCanvasModel() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to schemaV2RasterBoardJson(),
-                    "Hangboards/demo/assets/primary.png" to "png",
-                ),
-            ),
-        ).loadBoards()
+    fun rejectsUnsupportedContactGripType() {
+        val result = loadRaster(rasterBoardJson().replaceOnce("\"openHand\"", "\"crimpish\""))
 
-        val board = result.getOrThrow().single()
-        assertEquals("demo.board", board.id)
-        assertEquals("assets/primary.png", board.presentations.single().assetPath)
-        assertTrue(board.presentations.single().isDefault)
-        assertEquals("path-hold", board.holds.single().id)
-        assertEquals("primary", board.holds.single().presentationId)
-        assertTrue(board.holds.single().geometry.single().shape is HoldShape.Path)
+        assertTrueFailureContaining(result, "gripTypes")
     }
 
     @Test
-    fun materializesLegacySchemaV2PositionsWithTheCompleteHoldInventory() {
+    fun rejectsContactOnUnknownEquipmentObject() {
+        val result = loadRaster(
+            rasterBoardJson().replaceOnce("\"equipmentObjects\": [{ \"id\": \"primary\" }]", "\"equipmentObjects\": [{ \"id\": \"frame\" }]"),
+        )
+
+        assertTrueFailureContaining(result, "contact path-edge references unknown equipment object primary")
+    }
+
+    @Test
+    fun rejectsGeometryForAnUnknownContact() {
+        val result = loadRaster(rasterBoardJson().replaceOnce("\"rounded-pocket\": [", "\"unknown-contact\": ["))
+
+        assertTrueFailureContaining(result, "unknown contact unknown-contact")
+    }
+
+    @Test
+    fun materializesPositionsWithoutContactIDsWithTheCompleteContactInventory() {
+        val board = loadRaster(
+            rasterBoardJson().replaceOnce(
+                "\"presentations\": [",
+                "\"positions\": [{\"id\": \"primary-position\", \"presentationID\": \"primary\"}],\n  \"presentations\": [",
+            ),
+        ).getOrThrow().single()
+
+        assertEquals(listOf("primary-position"), board.positions.map { it.id })
+        assertEquals(listOf("path-edge", "rounded-pocket"), board.positions.single().contactIds)
+    }
+
+    @Test
+    fun drawsEachContactOnItsOriginalPresentationAndIgnoresDerivedGeometry() {
+        val withInvertedPresentation = rasterBoardJson().replaceOnce(
+            "  ]\n}",
+            """
+              ,
+                {
+                  "id": "inverted",
+                  "name": "Inverted",
+                  "aspectRatio": 2.0,
+                  "isDefault": false,
+                  "derivation": { "type": "derived", "sourcePresentationID": "primary", "isInverted": true },
+                  "media": {
+                    "type": "raster",
+                    "assetPath": "assets/inverted.png",
+                    "contactGeometry": {
+                      "path-edge": [
+                        { "frame": { "x": 0.5, "y": 0.5, "width": 0.1, "height": 0.1 }, "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.1 } }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+            """.trimIndent(),
+        )
         val board = AssetBoardRepository(
             FixtureAssets(
                 mapOf(
-                    "Hangboards/demo/board.json" to schemaV2RasterBoardJson()
-                        .replace(
-                            "          \"presentations\": [",
-                            "          \"positions\": [{\"id\": \"primary-position\", \"presentationID\": \"primary\"}],\n          \"presentations\": [",
-                        ),
+                    "Hangboards/demo/board.json" to withInvertedPresentation,
                     "Hangboards/demo/assets/primary.png" to "png",
+                    "Hangboards/demo/assets/inverted.png" to "png",
                 ),
             ),
         ).loadBoards().getOrThrow().single()
 
-        assertEquals(listOf("primary-position"), board.positions.map { it.id })
-        assertEquals(listOf("path-hold"), board.positions.single().holdIds)
+        assertEquals(listOf("primary", "inverted"), board.presentations.map { it.id })
+        assertEquals(listOf("primary", "primary"), board.holds.map { it.presentationId })
+        assertTrue(board.holds[0].geometry.single().shape is HoldShape.Path)
     }
 
     @Test
-    fun acceptsValidModelOrientationBeforeReturningTheExplicitUnavailableModelResult() {
+    fun rejectsRasterOrientationInsteadOfIgnoringIt() {
+        val result = loadRaster(
+            rasterBoardJson().replaceOnce("\"type\": \"raster\",", "\"type\": \"raster\",\n\"orientation\": {},"),
+        )
+
+        assertTrueFailureContaining(result, "unknown key")
+        assertTrueFailureContaining(result, "orientation")
+    }
+
+    @Test
+    fun rejectsUnknownRasterMediaKeys() {
+        val result = loadRaster(
+            rasterBoardJson().replaceOnce("\"type\": \"raster\",", "\"type\": \"raster\",\n\"unexpected\": true,"),
+        )
+
+        assertTrueFailureContaining(result, "unknown key unexpected")
+    }
+
+    @Test
+    fun rejectsLegacyRasterHoldGeometry() {
+        val result = loadRaster(rasterBoardJson().replaceOnce("\"contactGeometry\"", "\"holdGeometry\""))
+
+        assertTrueFailureContaining(result, "unknown key holdGeometry")
+    }
+
+    @Test
+    fun acceptsValidModelOrientationBeforeOmittingTheModelOnlyBoard() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
         )
@@ -168,53 +204,20 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun rejectsModelHoldGeometryInsteadOfTreatingItAsRasterData() {
-        // The model media decoder has a closed key set; holdGeometry belongs
+    fun rejectsModelContactGeometryInsteadOfTreatingItAsRasterData() {
+        // The model media decoder has a closed key set; contactGeometry belongs
         // only to raster media and must never be consulted for model assets.
-        val modelWithRasterGeometry = schemaV2ModelOnlyBoardJson(
-            orientation = "\"orientation\": {\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"primary\": [0, 0, 0, 1]}}, \"holdGeometry\": {}",
-        )
-        val geometryResult = AssetBoardRepository(
-            FixtureAssets(mapOf("Hangboards/model/board.json" to modelWithRasterGeometry)),
-        ).loadBoards()
-        assertTrueFailureContaining(geometryResult, "unknown key")
-    }
-
-    @Test
-    fun rejectsRasterOrientationInsteadOfIgnoringIt() {
-        val rasterWithOrientation = schemaV2RasterBoardJson().replace(
-            "                \"type\": \"raster\",",
-            "                \"type\": \"raster\",\n                \"orientation\": {},",
-        )
         val result = AssetBoardRepository(
             FixtureAssets(
                 mapOf(
-                    "Hangboards/demo/board.json" to rasterWithOrientation,
-                    "Hangboards/demo/assets/primary.png" to "png",
+                    "Hangboards/model/board.json" to modelOnlyBoardJson(
+                        mediaExtras = "\"contactGeometry\": {}",
+                    ),
                 ),
             ),
         ).loadBoards()
 
-        assertTrueFailureContaining(result, "unknown key")
-        assertTrueFailureContaining(result, "orientation")
-    }
-
-    @Test
-    fun rejectsUnknownRasterMediaKeys() {
-        val rasterWithUnknownKey = schemaV2RasterBoardJson().replace(
-            "                \"type\": \"raster\",",
-            "                \"type\": \"raster\",\n                \"unexpected\": true,",
-        )
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/demo/board.json" to rasterWithUnknownKey,
-                    "Hangboards/demo/assets/primary.png" to "png",
-                ),
-            ),
-        ).loadBoards()
-
-        assertTrueFailureContaining(result, "unknown key")
+        assertTrueFailureContaining(result, "unknown key contactGeometry")
     }
 
     @Test
@@ -285,7 +288,7 @@ class BoardRepositoryTest {
     fun rejectsDuplicatePositionIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug\"]}, {\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug\"]}]",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\", \"jug-reverse\"]}, {\"id\": \"front\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\", \"jug-reverse\"]}]",
         )
 
         assertTrueFailureContaining(result, "unique positions")
@@ -295,39 +298,37 @@ class BoardRepositoryTest {
     fun rejectsBlankPositionIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1]}}",
-            positionsJSON = "\"positions\": [{\"id\": \" \", \"presentationID\": \"primary\", \"holdIDs\": [\"jug\"]}]",
+            positionsJSON = "\"positions\": [{\"id\": \" \", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\"]}]",
         )
 
         assertTrueFailureContaining(result, "positions[0].id")
     }
 
     @Test
-    fun rejectsEmptyExplicitModelHoldIDs() {
+    fun rejectsEmptyExplicitModelContactIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": []}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
-            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"contactIDs\": []}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-reverse\"]}]",
         )
 
-        assertTrueFailureContaining(result, "holdIDs must not be empty")
+        assertTrueFailureContaining(result, "contactIDs must not be empty")
     }
 
     @Test
-    fun rejectsModelPositionHoldIDsWithoutUnionCoverage() {
+    fun rejectsModelPositionContactIDsWithoutUnionCoverage() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
-            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}, {\"id\": \"jug-extra\", \"equipmentObjectID\": \"primary\", \"name\": \"Extra jug\", \"kind\": \"jug\"}",
+            contactsJSON = defaultModelContactsJSON + ", " + contactJson("jug-extra", "Extra jug", "jug"),
         )
 
         assertTrueFailureContaining(result, "union coverage")
     }
 
     @Test
-    fun acceptsIdenticalOverlappingModelPositionHoldIDs() {
+    fun acceptsIdenticalOverlappingModelPositionContactIDs() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\", \"jug-reverse\"]}]",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\", \"jug-reverse\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\", \"jug-reverse\"]}]",
         )
 
         assertTrue(result.isSuccess)
@@ -335,11 +336,10 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun rejectsMixedLegacyAndExplicitModelPositions() {
+    fun rejectsMixedImplicitAndExplicitModelPositions() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\"}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]",
-            holdsJSON = "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}",
+            positionsJSON = "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\"}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-reverse\"]}]",
         )
 
         assertTrueFailureContaining(result, "explicitly provided for every model position")
@@ -349,7 +349,7 @@ class BoardRepositoryTest {
     fun retainsOrientationAndSuspensionTogether() {
         val result = loadModelWithOrientation(
             "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
-            suspension = "{\"type\": \"singleCord\", \"attachment\": {}, \"anchor\": {}, \"cord\": {}, \"canonicalPoses\": {}}",
+            suspension = "{\"type\": \"twoBranchCord\", \"passages\": {}, \"branches\": {}, \"anchor\": {}, \"canonicalPoses\": {}}",
         )
 
         assertTrue(result.isSuccess)
@@ -357,12 +357,22 @@ class BoardRepositoryTest {
     }
 
     @Test
+    fun rejectsSupersededSingleCordSuspension() {
+        val result = loadModelWithOrientation(
+            "{\"pivot\": \"modelBoundsCenter\", \"rotations\": {\"front\": [0, 0, 0, 1], \"reverse\": [0, 1, 0, 0]}}",
+            suspension = "{\"type\": \"singleCord\", \"attachment\": {}, \"anchor\": {}, \"cord\": {}, \"canonicalPoses\": {}}",
+        )
+
+        assertTrueFailureContaining(result, "suspension.type is unsupported: singleCord")
+    }
+
+    @Test
     fun preservesPackageSlugForTheCanvasAssetLookupWhenItDiffersFromTheLogicalBoardId() {
         val board = AssetBoardRepository(
             FixtureAssets(
                 mapOf(
-                    "Hangboards/asset-package-slug/board.json" to schemaV2RasterBoardJson()
-                        .replace("\"id\": \"demo.board\"", "\"id\": \"canonical.board-id\""),
+                    "Hangboards/asset-package-slug/board.json" to rasterBoardJson()
+                        .replaceOnce("\"id\": \"demo.board\"", "\"id\": \"canonical.board-id\""),
                     "Hangboards/asset-package-slug/assets/primary.png" to "png",
                 ),
             ),
@@ -377,55 +387,19 @@ class BoardRepositoryTest {
     }
 
     @Test
-    fun omitsSchemaV2ModelOnlyPackagesWithoutTryingToLoadARasterFallback() {
-        val result = AssetBoardRepository(
-            FixtureAssets(
-                mapOf(
-                    "Hangboards/raster/board.json" to schemaV2RasterBoardJson(),
-                    "Hangboards/raster/assets/primary.png" to "png",
-                    "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(),
-                    "PlanLibrary.json" to
-                        """
-                        {
-                          "boardMappings": [
-                            { "boardID": "model.only", "semanticHolds": { "jugs": { "kind": "jug" } } }
-                          ]
-                        }
-                        """.trimIndent(),
-                ),
-            ),
-        ).loadBoards()
-
-        val boards = result.getOrThrow()
-        assertEquals(listOf("demo.board"), boards.map { it.id })
-        assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
-    }
-
-    @Test
-    fun omitsFlashModelOnlyPackageWithoutPngFallbackWhileKeepingRasterNeighbor() {
+    fun omitsModelOnlyPackageWithoutPngFallbackWhileKeepingRasterNeighbor() {
         val accessedPaths = mutableListOf<String>()
         val assets = FixtureAssets(
             mapOf(
-                "Hangboards/raster-neighbor/board.json" to schemaV2RasterBoardJson()
-                    .replace("demo.board", "raster.neighbor")
-                    .replace("Demo Board", "Raster Neighbor"),
+                "Hangboards/raster-neighbor/board.json" to rasterBoardJson()
+                    .replaceOnce("demo.board", "raster.neighbor")
+                    .replaceOnce("Demo Board", "Raster Neighbor"),
                 "Hangboards/raster-neighbor/assets/primary.png" to "png",
-                "Hangboards/tension-flash-board/board.json" to schemaV2ModelOnlyBoardJson()
-                    .replace("model.only", "tension.flash-board")
-                    .replace("Model only", "Flash Board"),
+                "Hangboards/tension-flash-board/board.json" to modelOnlyBoardJson()
+                    .replaceOnce("model.only", "tension.flash-board")
+                    .replaceOnce("Model only", "Flash Board"),
                 "Hangboards/tension-flash-board/assets/primary.usdz" to "usdz",
                 "Hangboards/tension-flash-board/assets/primary.model.json" to "descriptor",
-                "PlanLibrary.json" to
-                    """
-                    {
-                      "boardMappings": [
-                        {
-                          "boardID": "tension.flash-board",
-                          "semanticHolds": { "jugs": { "kind": "jug" } }
-                        }
-                      ]
-                    }
-                    """.trimIndent(),
             ),
             accessedPaths = accessedPaths,
         )
@@ -438,74 +412,21 @@ class BoardRepositoryTest {
         assertFalse("Hangboards/tension-flash-board/assets/primary.png" in accessedPaths)
         assertFalse("Hangboards/tension-flash-board/assets/primary.usdz" in accessedPaths)
         assertFalse("Hangboards/tension-flash-board/assets/primary.model.json" in accessedPaths)
-        assertEquals(emptyMap<String, SemanticHoldMapping>(), boards.single().semanticHolds)
     }
 
-    private fun boardJson(): String =
-        """
-        {
-          "id": "demo.board",
-          "manufacturer": "Demo",
-          "name": "Demo Board",
-          "subtitle": "A test board.",
-          "productURL": "https://example.com/demo",
-          "aspectRatio": 2.0,
-          "presentations": [
-            {
-              "id": "primary",
-              "name": "Primary",
-              "assetPath": "assets/primary.png",
-              "aspectRatio": 2.0,
-              "default": true
-            }
-          ],
-          "holds": [
-            {
-              "id": "path-hold",
-              "name": "Path hold",
-              "kind": "edge",
-              "features": ["mediumEdge"],
-              "presentationID": "primary",
-              "geometry": [
-                {
-                  "frame": { "x": 0.1, "y": 0.2, "width": 0.3, "height": 0.4 },
-                  "shape": {
-                    "type": "path",
-                    "commands": [
-                      { "command": "move", "to": [0.0, 0.0] },
-                      { "command": "line", "to": [1.0, 0.0] },
-                      { "command": "line", "to": [1.0, 1.0] },
-                      { "command": "close" }
-                    ]
-                  }
-                }
-              ]
-            },
-            {
-              "id": "rounded-hold",
-              "name": "Rounded hold",
-              "kind": "pocket",
-              "fingerCapacity": 2,
-              "presentationID": "primary",
-              "geometry": [
-                {
-                  "frame": { "x": 0.5, "y": 0.2, "width": 0.3, "height": 0.4 },
-                  "shape": {
-                    "type": "roundedRect",
-                    "cornerRadiusFraction": 0.25
-                  },
-                  "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0.0 }
-                }
-              ]
-            }
-          ]
-        }
-        """.trimIndent()
+    private fun loadRaster(boardJson: String): Result<List<Board>> = AssetBoardRepository(
+        FixtureAssets(
+            mapOf(
+                "Hangboards/demo/board.json" to boardJson,
+                "Hangboards/demo/assets/primary.png" to "png",
+            ),
+        ),
+    ).loadBoards()
 
-    private fun schemaV2RasterBoardJson(): String =
+    private fun rasterBoardJson(): String =
         """
         {
-          "schemaVersion": 2,
+          "schemaVersion": 3,
           "id": "demo.board",
           "manufacturer": "Demo",
           "name": "Demo Board",
@@ -513,13 +434,25 @@ class BoardRepositoryTest {
           "productURL": "https://example.com/demo",
           "aspectRatio": 2.0,
           "equipmentObjects": [{ "id": "primary" }],
-          "holds": [
+          "revisionID": "demo-revision",
+          "contacts": [
             {
-              "id": "path-hold",
+              "id": "path-edge",
               "equipmentObjectID": "primary",
-              "name": "Path hold",
+              "name": "Path edge",
               "kind": "edge",
-              "features": ["mediumEdge"]
+              "depth": { "range": { "minimum": 20, "maximum": 20 } },
+              "gripTypes": ["halfCrimp", "openHand"]
+            },
+            {
+              "id": "rounded-pocket",
+              "equipmentObjectID": "primary",
+              "name": "Rounded pocket",
+              "kind": "pocket",
+              "shape": "round",
+              "depth": { "category": "medium" },
+              "fingerCapacity": 2,
+              "gripTypes": []
             }
           ],
           "presentations": [
@@ -532,8 +465,8 @@ class BoardRepositoryTest {
               "media": {
                 "type": "raster",
                 "assetPath": "assets/primary.png",
-                "holdGeometry": {
-                  "path-hold": [
+                "contactGeometry": {
+                  "path-edge": [
                     {
                       "frame": { "x": 0.1, "y": 0.2, "width": 0.3, "height": 0.4 },
                       "shape": {
@@ -546,6 +479,13 @@ class BoardRepositoryTest {
                         ]
                       }
                     }
+                  ],
+                  "rounded-pocket": [
+                    {
+                      "frame": { "x": 0.5, "y": 0.2, "width": 0.3, "height": 0.4 },
+                      "shape": { "type": "roundedRect", "cornerRadiusFraction": 0.25 },
+                      "shapeConstraint": { "shape": "roundedRectangle", "rotationDegrees": 0.0 }
+                    }
                   ]
                 }
               }
@@ -554,23 +494,32 @@ class BoardRepositoryTest {
         }
         """.trimIndent()
 
-    private fun schemaV2ModelOnlyBoardJson(
+    private fun contactJson(id: String, name: String, kind: String): String =
+        "{\"id\": \"$id\", \"equipmentObjectID\": \"primary\", \"name\": \"$name\", \"kind\": \"$kind\", \"gripTypes\": []}"
+
+    private val defaultModelContactsJSON =
+        contactJson("jug-front", "Front jug", "jug") + ", " + contactJson("jug-reverse", "Reverse jug", "jug")
+
+    private val defaultModelPositionsJSON =
+        "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"contactIDs\": [\"jug-reverse\"]}]"
+
+    private fun modelOnlyBoardJson(
         positions: String? = null,
-        holds: String = "{\"id\": \"jug\", \"equipmentObjectID\": \"primary\", \"name\": \"Jug\", \"kind\": \"jug\"}",
-        orientation: String? = null,
-        suspension: String? = null,
+        contacts: String = contactJson("jug", "Jug", "jug"),
+        mediaExtras: String? = null,
     ): String =
         """
         {
-          "schemaVersion": 2,
+          "schemaVersion": 3,
           "id": "model.only",
+          "revisionID": "model-revision",
           "manufacturer": "Demo",
           "name": "Model only",
           "subtitle": "A model-only board.",
           "productURL": "https://example.com/model",
           "aspectRatio": 2.0,
           "equipmentObjects": [{ "id": "primary" }],
-          "holds": [$holds],
+          "contacts": [$contacts],
           ${positions?.let { "$it," }.orEmpty()}
           "presentations": [
             {
@@ -582,31 +531,29 @@ class BoardRepositoryTest {
               "media": {
                 "type": "model",
                 "assetPath": "assets/primary.usdz",
-                "descriptorPath": "assets/primary.model.json"${orientation?.let { ",\n                $it" }.orEmpty()}${suspension?.let { ",\n                \"suspension\": $it" }.orEmpty()}
+                "descriptorPath": "assets/primary.model.json",
+                "display": {}${mediaExtras?.let { ",\n                $it" }.orEmpty()}
               }
             }
           ]
         }
         """.trimIndent()
 
-    private val defaultModelPositionsJSON =
-        "\"positions\": [{\"id\": \"front\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-front\"]}, {\"id\": \"reverse\", \"presentationID\": \"primary\", \"holdIDs\": [\"jug-reverse\"]}]"
-    private val defaultModelHoldsJSON =
-        "{\"id\": \"jug-front\", \"equipmentObjectID\": \"primary\", \"name\": \"Front jug\", \"kind\": \"jug\"}, {\"id\": \"jug-reverse\", \"equipmentObjectID\": \"primary\", \"name\": \"Reverse jug\", \"kind\": \"jug\"}"
-
     private fun loadModelWithOrientation(
         orientation: String,
         positionsJSON: String? = defaultModelPositionsJSON,
-        holdsJSON: String = defaultModelHoldsJSON,
+        contactsJSON: String = defaultModelContactsJSON,
         suspension: String? = null,
     ): Result<List<Board>> = AssetBoardRepository(
         FixtureAssets(
             mapOf(
-                "Hangboards/model/board.json" to schemaV2ModelOnlyBoardJson(
+                "Hangboards/model/board.json" to modelOnlyBoardJson(
                     positions = positionsJSON,
-                    holds = holdsJSON,
-                    orientation = "\"orientation\": $orientation",
-                    suspension = suspension,
+                    contacts = contactsJSON,
+                    mediaExtras = listOfNotNull(
+                        "\"orientation\": $orientation",
+                        suspension?.let { "\"suspension\": $it" },
+                    ).joinToString(",\n                "),
                 ),
             ),
         ),
@@ -637,7 +584,19 @@ class FixtureAssets(
     }
 }
 
+/**
+ * Replaces exactly one occurrence, failing loudly when the fixture text is
+ * absent so a stale fixture edit can never silently test the unmodified JSON.
+ */
+internal fun String.replaceOnce(oldValue: String, newValue: String): String {
+    val index = indexOf(oldValue)
+    check(index >= 0) { "Fixture does not contain: $oldValue" }
+    check(indexOf(oldValue, index + oldValue.length) < 0) { "Fixture contains more than one: $oldValue" }
+    return replaceRange(index, index + oldValue.length, newValue)
+}
+
 private fun assertTrueFailureContaining(result: Result<*>, expected: String) {
     assertFalse(result.isSuccess)
-    assertEquals(true, result.exceptionOrNull()?.message?.contains(expected))
+    val message = result.exceptionOrNull()?.message
+    assertTrue("Expected failure containing \"$expected\" but was: $message", message?.contains(expected) == true)
 }

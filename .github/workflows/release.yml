@@ -112,7 +112,6 @@ jobs:
       - name: Archive signed release
         env:
           APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
-          GITHUB_OAUTH_CLIENT_ID: ${{ vars.HANGTEN_GITHUB_OAUTH_CLIENT_ID }}
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
         run: |
           set -euo pipefail
@@ -123,14 +122,9 @@ jobs:
           # shellcheck disable=SC2016
           trap 'rm -f "$build_settings_xcconfig"' EXIT
           umask 077
-          : "${GITHUB_OAUTH_CLIENT_ID:?Configure the public HANGTEN_GITHUB_OAUTH_CLIENT_ID variable in the app-store-connect environment}"
-          case "$GITHUB_OAUTH_CLIENT_ID" in
-            *[!A-Za-z0-9_-]*) echo "GITHUB_OAUTH_CLIENT_ID contains unsupported characters" >&2; exit 1 ;;
-          esac
-          printf 'ANALYTICS_API_KEY = %s\nGITHUB_OAUTH_CLIENT_ID = %s\n' \
-            "$ANALYTICS_API_KEY" "$GITHUB_OAUTH_CLIENT_ID" > "$build_settings_xcconfig"
+          printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$build_settings_xcconfig"
           chmod 600 "$build_settings_xcconfig"
-          unset ANALYTICS_API_KEY GITHUB_OAUTH_CLIENT_ID
+          unset ANALYTICS_API_KEY
           xcodebuild \
             -project HangTen.xcodeproj \
             -scheme HangTen \
@@ -158,21 +152,11 @@ jobs:
             in_rpath && $1 == "cmd" { in_rpath = 0 }
             END { exit !found }
           ' || { echo "Archived HangTen executable is missing @executable_path/Frameworks" >&2; exit 1; }
-          github_oauth_client_id="$(/usr/libexec/PlistBuddy -c 'Print :GITHUB_OAUTH_CLIENT_ID' "$app_path/Info.plist")"
-          test -n "$github_oauth_client_id"
-          case "$github_oauth_client_id" in
-            *[!A-Za-z0-9_-]*) echo "Archived GITHUB_OAUTH_CLIENT_ID is invalid" >&2; exit 1 ;;
-          esac
-          if /usr/libexec/PlistBuddy -c 'Print :GITHUB_CLIENT_SECRET' "$app_path/Info.plist" >/dev/null 2>&1; then
-            echo "Archived bundle must not contain GITHUB_CLIENT_SECRET" >&2
-            exit 1
-          fi
           archived_marketing_version="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app_path/Info.plist")"
           [[ "$archived_marketing_version" == "$MARKETING_VERSION" ]] || {
             echo "Archived version $archived_marketing_version does not match selected version $MARKETING_VERSION" >&2
             exit 1
           }
-          echo "GitHub OAuth client ID: configured"
           echo "Version: $archived_marketing_version"
           echo "Build: $(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app_path/Info.plist")"
           codesign --verify --deep --strict --verbose=2 "$app_path"

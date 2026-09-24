@@ -31,12 +31,14 @@ sys.path[:0] = [
     if part
 ]
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+sys.path.insert(0, str(REPOSITORY / "Tools" / "HangboardPackages" / "src"))
 
 import FreeCAD as App  # noqa: E402
 import Mesh  # noqa: E402
 import Part  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
 
+from hangboard_packages import cad_source  # noqa: E402
 from reference import load_reference  # noqa: E402
 
 PACKAGE = "soill-iron-palm-2"
@@ -413,7 +415,14 @@ def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
 
 
 def main() -> int:
-    board = json.loads(BOARD_JSON.read_text())
+    # A CAD-backed package keeps its board metadata in the FCStd manifest; the
+    # hand-authored board.json is only present before the first embed.
+    if BOARD_JSON.is_file():
+        board = json.loads(BOARD_JSON.read_text())
+    elif DESTINATION.is_file():
+        board = cad_source.load_board(DESTINATION)
+    else:
+        raise SystemExit("no board.json and no embedded board manifest")
     reference, reference_digest = load_reference(PACKAGE, "primary.usdz", SCRATCH / "ref")
     stage = Usd.Stage.Open(str(reference))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
@@ -435,6 +444,12 @@ def main() -> int:
     # Analytic spheres tessellate finely enough at 0.2; tighter values stall when
     # compounded with dense reference collars.
     document.HangTenTessellationDeflection = 0.2
+    # The FCStd owns the board metadata; board.json is generated from this at
+    # build time and must not exist in the package.
+    document.addProperty("App::PropertyString", "HangTenBoardManifest", "HangTen")
+    document.HangTenBoardManifest = cad_source.render_manifest(
+        cad_source.board_to_manifest(board)
+    )
 
     imported = []
     # Index reference meshes by name for native pieces that keep a collar.
