@@ -30,17 +30,52 @@ data class BoardGeometry(
     val shape: HoldShape,
 )
 
-data class SemanticHoldMapping(
-    val holdIds: List<String> = emptyList(),
-    val kind: String? = null,
-)
+enum class HoldSize(
+    val portableValue: String,
+    /** Community-convention depth range in millimeters, matching iOS `HoldSize.depthRange`. */
+    val depthRangeMillimeters: ClosedFloatingPointRange<Double>,
+) {
+    TINY("tiny", 0.0..8.0),
+    SMALL("small", 8.0..15.0),
+    MEDIUM("medium", 15.0..25.0),
+    LARGE("large", 25.0..50.0),
+    ;
 
+    companion object {
+        internal fun fromPortable(value: String): HoldSize? = entries.firstOrNull { it.portableValue == value }
+    }
+}
+
+/** A contact or requirement depth: exactly one of a size category or a millimeter range. */
+sealed interface HoldDepth {
+    data class Category(val size: HoldSize) : HoldDepth
+    data class Range(val minimum: Double, val maximum: Double) : HoldDepth
+
+    /** Whether this requirement depth has enough evidence to match [contactDepth] (iOS `HoldDepth.matches`). */
+    fun matches(contactDepth: HoldDepth?): Boolean = when {
+        contactDepth == null -> false
+        this is Category && contactDepth is Category -> size == contactDepth.size
+        this is Category && contactDepth is Range ->
+            size.depthRangeMillimeters.start <= contactDepth.maximum &&
+                size.depthRangeMillimeters.endInclusive >= contactDepth.minimum
+        this is Range && contactDepth is Range -> minimum <= contactDepth.maximum && maximum >= contactDepth.minimum
+        else -> false
+    }
+}
+
+/**
+ * A physical contact from a schema v3 board package. On Android a contact is
+ * drawn on the one original raster presentation whose `contactGeometry` owns it.
+ */
 data class BoardHold(
     val id: String,
     val name: String,
     val kind: String,
-    val features: Set<String> = emptySet(),
     val fingerCapacity: Int? = null,
+    val handCapacity: Int? = null,
+    val shape: String? = null,
+    val depth: HoldDepth? = null,
+    val gripTypes: Set<GripType> = emptySet(),
     val presentationId: String,
     val geometry: List<BoardGeometry>,
 )
@@ -58,7 +93,7 @@ data class BoardPresentation(
 data class BoardPosition(
     val id: String,
     val presentationId: String,
-    val holdIds: List<String>,
+    val contactIds: List<String>,
 )
 
 data class BoardOrientation(
@@ -83,9 +118,9 @@ data class Board(
     val productUrl: String,
     val aspectRatio: Float,
     val presentations: List<BoardPresentation>,
+    /** Physical contacts (schema v3 `contacts`) in canonical board order. */
     val holds: List<BoardHold>,
     val positions: List<BoardPosition> = emptyList(),
-    val semanticHolds: Map<String, SemanticHoldMapping> = emptyMap(),
     /** Asset package identity; deliberately separate from the public logical board ID. */
     val packageSlug: String = id,
 )
@@ -301,4 +336,44 @@ internal fun JsonValue.Object.rejectUnknownKeys(path: String, allowed: Set<Strin
 
 internal fun requireContentId(value: String, path: String) {
     if (value.isBlank()) throw ContentDecodingException("$path must not be blank.")
+}
+
+internal val CONTACT_KINDS = setOf("jug", "edge", "pocket", "pinch", "sloper", "gaston")
+internal val CONTACT_SHAPES = setOf("flat", "round", "incut", "slot")
+internal val FINGER_CAPACITY_RANGE = 1..4
+internal val HAND_CAPACITY_RANGE = 1..2
+
+internal fun JsonValue.asIntegerIn(range: IntRange, path: String): Int {
+    val value = (this as? JsonValue.Number)?.value ?: throw ContentDecodingException("$path must be a number.")
+    if (!value.isFinite() || value != value.toInt().toDouble() || value.toInt() !in range) {
+        throw ContentDecodingException("$path must be an integer within $range.")
+    }
+    return value.toInt()
+}
+
+/** Decodes `{"category": size}` or `{"range": {"minimum", "maximum"}}`, exactly one of the two. */
+internal fun decodeHoldDepth(value: JsonValue, path: String): HoldDepth {
+    val objectValue = value.asObject(path)
+    objectValue.rejectUnknownKeys(path, setOf("category", "range"))
+    val category = objectValue.optional("category")
+    val range = objectValue.optional("range")
+    if ((category == null) == (range == null)) {
+        throw ContentDecodingException("$path must contain exactly one of category or range.")
+    }
+    if (category != null) {
+        val size = category.asString("$path.category")
+        return HoldDepth.Category(
+            HoldSize.fromPortable(size) ?: throw ContentDecodingException("$path.category is unsupported: $size."),
+        )
+    }
+    val rangeObject = range!!.asObject("$path.range")
+    rangeObject.rejectUnknownKeys("$path.range", setOf("minimum", "maximum"))
+    val minimum = (rangeObject.required("minimum", "$path.range") as? JsonValue.Number)?.value
+        ?: throw ContentDecodingException("$path.range.minimum must be a number.")
+    val maximum = (rangeObject.required("maximum", "$path.range") as? JsonValue.Number)?.value
+        ?: throw ContentDecodingException("$path.range.maximum must be a number.")
+    if (minimum < 0 || minimum > maximum) {
+        throw ContentDecodingException("$path.range must be non-negative and ordered.")
+    }
+    return HoldDepth.Range(minimum, maximum)
 }

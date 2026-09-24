@@ -11,6 +11,10 @@ import androidx.compose.ui.test.performTouchInput
 import com.hangten.android.content.Board
 import com.hangten.android.content.BoardHold
 import com.hangten.android.content.BoardPresentation
+import com.hangten.android.content.ContactRequirement
+import com.hangten.android.content.SegmentTarget
+import com.hangten.android.content.TrainingSegment
+import com.hangten.android.content.TrainingStep
 import com.hangten.android.content.HoldShape
 import com.hangten.android.content.BoardGeometry
 import com.hangten.android.content.NormalizedFrame
@@ -23,7 +27,7 @@ class BoardCanvasTest {
     val composeRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun selectedSemanticTargetIsExposedAsActiveBoardSemantics() {
+    fun resolvedContactRequirementIsExposedAsActiveBoardSemantics() {
         val board = Board(
             id = "fixture-board",
             manufacturer = "Fixture",
@@ -56,10 +60,32 @@ class BoardCanvasTest {
             ),
         )
 
+        val jugStep = TrainingStep(
+            id = "jug-step",
+            title = "Jug hang",
+            instruction = "",
+            accessory = "",
+            durationSeconds = 10f,
+            phase = "hang",
+            handUse = "double",
+            side = "both",
+            segments = listOf(
+                TrainingSegment(
+                    kind = "work",
+                    target = SegmentTarget.Requirements(listOf(ContactRequirement(kind = "jug"))),
+                    timing = "fixed",
+                    durationSeconds = 10f,
+                ),
+            ),
+            activeDurationSeconds = null,
+            gripType = null,
+            fingerConfiguration = null,
+        )
+
         composeRule.setContent {
             BoardCanvas(
                 board = board,
-                activeHoldIDs = resolveTargets(listOf(HoldTarget(kind = "jug")), board),
+                activeHoldIDs = ContactResolver.resolve(jugStep, board),
                 onHoldTap = {},
             )
         }
