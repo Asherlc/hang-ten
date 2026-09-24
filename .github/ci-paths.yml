@@ -18,6 +18,7 @@ shared_board_content:
   - 'scripts/run-supported-python.sh'
 cad:
   - 'Tools/HangboardCAD/**'
+  - 'Tools/HangboardModels/contact_model_descriptor.py'
   - 'Hangboards/**/*.FCStd'
   - 'scripts/hangboard-packages.sh'
 metadata:

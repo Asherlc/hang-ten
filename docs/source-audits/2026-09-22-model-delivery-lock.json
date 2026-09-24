@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung native FreeCAD migration; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung and metolius-rock-rings-3d native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,23 +50,36 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "1f38ef680d79a7ff6c93cbe87285d119925ae1d64d4dc95bac08d9ecfaf869af",
+  "sha256Manifest": "3bc95dc535532d731879c6805d61cc6525d5d05a8593668838474efa97634b2c",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "4d574061024a0cec6f25aea55d09baa482e5bc5217deaa54c3d9ede9a1548f80",
+  "supersededSha256Manifest": "7a6e27d58a68cf4b4a4f3ba203fd83a2a2f805c4458478432c43a601a8dc9834",
   "migratedPackages": {
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
-      "sourceSHA256": "55b2f392ec170e70eb443f6c19ed989d85f9281601f37c2fc2771a8a95e97cf6",
+      "sourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
-      "assetSHA256": "813585ba50319e4c80219176133aa7481d2121c4c559904aaf90f53240cc520c",
-      "descriptorSHA256": "e573a2006d41d004126f33694c8a1bfebf02c0905c187438fd2db537e0c01331",
+      "assetSHA256": "c397938ba6257105fefc455607fa797a9d6fbcba62d2da2771b16b72dc85deb6",
+      "descriptorSHA256": "9ad48c7c6feac8c1bacdc80c5060885acd1903c40ea8cb06cf343a1008fd26c4",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (reopen, recompute, edit propagation)",
       "nativeAppValidation": "not run",
       "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md",
-      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py"
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center; asset bytes unchanged"
+    },
+    "metolius-rock-rings-3d": {
+      "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
+      "sourceSHA256": "a96d59d132f532966bdacb138b01cf00d0ba6ab9993b2ebd87e8f6d50bf7a119",
+      "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
+      "assetSHA256": "724318e1fd7a6cf5c111550c01f8f163bd363cb0c00d37ff9b69d45b83f6245b",
+      "descriptorSHA256": "c94d1b2ec2cb6e3cbddfb5f665d1fa4af3d50624fee4a75cd27392742cd865a3",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "passed (reopen, recompute, depth edit propagation, slot/instance)",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail route; 8/8 contacts selected by deep link and confirmed via boardDetail.selectedHold.<contactID>; CAD-authored outlines render as smooth hold regions)",
+      "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center"
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."

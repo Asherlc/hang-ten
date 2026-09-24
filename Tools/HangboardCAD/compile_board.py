@@ -123,6 +123,40 @@ def _node_specification(obj) -> dict:
     return spec
 
 
+def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
+    """Read a CAD-authored front-plane hold polygon property.
+
+    ``HangTenHoldOutline`` / ``HangTenHoldFloorOutline`` are JSON arrays of
+    ``[x, z]`` native-millimetre points in the source document: the CAD is the
+    source of truth for hold geometry. Convert to the runtime front-plane space
+    (metres) the descriptor normalizes against. A contact without a property is
+    omitted.
+    """
+    outlines: dict[str, tuple] = {}
+    for obj in contact_objects:
+        if property_name not in obj.PropertiesList:
+            continue
+        raw = str(getattr(obj, property_name, "")).strip()
+        if not raw:
+            continue
+        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        if not key:
+            raise BuildError(f"{obj.Name} declares {property_name} without a contact binding")
+        try:
+            points = json.loads(raw)
+        except json.JSONDecodeError as error:
+            raise BuildError(f"{obj.Name} {property_name} is not valid JSON: {error}") from error
+        if not isinstance(points, list) or len(points) < 3:
+            raise BuildError(f"{obj.Name} {property_name} needs at least three points")
+        try:
+            outlines[key] = tuple(
+                (float(point[0]) / 1000.0, float(point[1]) / 1000.0) for point in points
+            )
+        except (TypeError, IndexError, ValueError) as error:
+            raise BuildError(f"{obj.Name} {property_name} points must be [x, z] pairs") from error
+    return outlines
+
+
 def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Path]:
     """Extract an FCStd-included file and stage it under ``textures/``."""
     import zipfile
@@ -337,57 +371,92 @@ def _triangle_area(points, facets, indices) -> float:
     return total
 
 
-def _validate_partition(body_shape, body_points, body_facets, triangles_by_node, contact_objects, deflection):
-    """Assert the exported nodes are a true partition of the board surface.
-
-    Two failure modes would otherwise ship silently: a region that double-covers
-    an area another region also covers, and a gap where nothing was assigned.
-    Both leave a plausible-looking asset.
-    """
-    total = float(body_shape.Area)
-    exported = sum(
-        _triangle_area(body_points, body_facets, indices)
-        for indices in triangles_by_node.values()
+def _build_mesh(node_id, points, triangles, material, model_box):
+    points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
+    return usdz_writer.Mesh(
+        node_id=node_id,
+        points_mm=[(p.x, p.y, p.z) for p in points],
+        triangles=triangles,
+        material=material,
+        uvs=_planar_uvs(points, model_box),
+        normals_mm=[(n.x, n.y, n.z) for n in normals],
     )
-    # Tessellation of these planar faces is exact, so the allowance is tied to
-    # the pinned deflection rather than hand-tuned.
-    tolerance = max(0.05, 4.0 * deflection)
-    if abs(exported - total) > tolerance:
-        raise BuildError(
-            f"exported surface area {exported:.4f} mm^2 does not match the body surface "
-            f"{total:.4f} mm^2; the regions leave a gap or overlap larger than "
-            f"{tolerance:.3f} mm^2"
+
+
+def _validate_partition(body_points, body_facets, triangles_by_node, region_surface_areas):
+    """Assert no region claims more body area than the surface it exports.
+
+    Each region ships its own tessellated CAD surface, and the body node carries
+    the body surface *minus* the triangles that surface claims. If a region were
+    assigned more body triangles than its own exported surface covers, removing
+    them would leave a gap the region cannot fill. The region's own tessellation
+    is the yardstick, so curved native surfaces (fillets, ruled lofts) are
+    measured on the same footing as the body, unlike an analytic area.
+
+    Both meshes tessellate the same source at the same deflection, so the only
+    allowance needed is floating-point and tessellation error.
+    """
+    total = _triangle_area(body_points, body_facets, range(len(body_facets)))
+    tolerance = max(1e-6, 1e-6 * total)
+    for node_id, region_area in region_surface_areas.items():
+        claimed = _triangle_area(
+            body_points, body_facets, triangles_by_node.get(node_id, ())
         )
-    for obj in contact_objects:
-        if not triangles_by_node[obj.NodeID]:
-            raise BuildError(f"{obj.NodeID} received no surface triangles")
+        if claimed - region_area > tolerance:
+            raise BuildError(
+                f"{node_id} claims {claimed:.4f} mm^2 of body surface but its own "
+                f"exported surface is only {region_area:.4f} mm^2; the region leaves "
+                f"a gap larger than {tolerance:.6f} mm^2"
+            )
 
 
-def _validate_published_depths(contact_objects, board, deflection) -> dict:
+def _declared_depths(board, version: int) -> dict:
+    """Published grip depth keyed by region identity (contact id or slot id).
+
+    v1 names a physical contact directly; v2 names a reusable slot that each
+    presentation instance maps to a physical contact. Every instance of a slot
+    must agree on the published depth, or the slot is ambiguous and the build
+    must fail rather than silently pick one.
+    """
+    declared: dict[str, float] = {}
+    if version == 1:
+        for contact in board.get("contacts", []):
+            span = ((contact.get("depth") or {}).get("range") or {})
+            low, high = span.get("minimum"), span.get("maximum")
+            if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
+                declared[contact["id"]] = float(low)
+        return declared
+    by_id = {contact["id"]: contact for contact in board.get("contacts", [])}
+    for presentation in board.get("presentations", []):
+        for instance in presentation.get("media", {}).get("instances", []):
+            for slot, contact_id in instance.get("contactIDsBySlotID", {}).items():
+                span = ((by_id.get(contact_id) or {}).get("depth") or {}).get("range") or {}
+                low, high = span.get("minimum"), span.get("maximum")
+                if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
+                    if slot in declared and abs(declared[slot] - low) > 1e-6:
+                        raise BuildError(f"slot {slot} declares conflicting published depths")
+                    declared[slot] = float(low)
+    return declared
+
+
+def _validate_published_depths(contact_objects, declared, version: int, deflection) -> dict:
     """Check each authored region against the grip depth the board declares.
 
-    ``board.json`` owns the published depth for a contact whose range is a single
-    value. The authored region's extent along the native depth axis must agree;
-    this is what catches a region that silently re-bound to another surface.
+    The authored region's extent along the native depth axis must agree with the
+    published depth; this is what catches a region that silently re-bound to
+    another surface. Attachments have no published grip depth and are skipped.
     """
-    declared = {}
-    for contact in board.get("contacts", []):
-        span = ((contact.get("depth") or {}).get("range") or {})
-        low, high = span.get("minimum"), span.get("maximum")
-        if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
-            declared[contact["id"]] = float(low)
-
     measured = {}
     for obj in contact_objects:
-        contact_id = getattr(obj, "ContactID", "")
-        measured[contact_id] = round(float(obj.Shape.BoundBox.YLength), 3)
-        if contact_id not in declared:
+        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
+        if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
-        if abs(measured[contact_id] - declared[contact_id]) > tolerance:
+        if abs(measured[key] - declared[key]) > tolerance:
             raise BuildError(
-                f"{contact_id} region depth {measured[contact_id]:.3f} mm disagrees with the "
-                f"published depth {declared[contact_id]:.3f} mm (tolerance {tolerance:.3f} mm); "
+                f"{key} region depth {measured[key]:.3f} mm disagrees with the "
+                f"published depth {declared[key]:.3f} mm (tolerance {tolerance:.3f} mm); "
                 "the region has probably bound to the wrong surface"
             )
     return measured
@@ -486,6 +555,11 @@ def build(
     if body_object is None:
         raise BuildError("source declares no body node")
     contact_objects = [obj for obj in objects if obj.NodeRole == "contact"]
+    attachment_objects = [obj for obj in objects if obj.NodeRole == "attachment"]
+    # Contacts and attachments are both regions of the body surface; the
+    # partition assigns each body triangle to at most one of them, so a
+    # non-pickable cord aperture is exported exactly like a grip region.
+    region_objects = contact_objects + attachment_objects
     model_box = None
     for obj in objects:
         box = obj.Shape.BoundBox
@@ -503,43 +577,61 @@ def build(
 
     print("[5/10] partitioning the surface and preserving normals and materials")
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
-    materials = _material_registry(objects, source, staging)
-    body_points, body_facets, assignment = _partition_body_triangles(
-        body_object.Shape, [obj.Shape for obj in contact_objects], deflection
-    )
-    triangles_by_node: dict[str, list] = {body_object.NodeID: []}
-    for obj in contact_objects:
-        triangles_by_node[obj.NodeID] = []
-    for index, facet in enumerate(body_facets):
-        owner = assignment.get(index)
-        target = (
-            body_object.NodeID if owner is None else contact_objects[owner].NodeID
-        )
-        triangles_by_node[target].append(index)
-
-    _validate_partition(
-        body_object.Shape, body_points, body_facets, triangles_by_node, contact_objects, deflection
-    )
-    measured_depths = _validate_published_depths(contact_objects, board, deflection)
-
-    meshes = []
-    for obj in [body_object] + contact_objects:
-        indices = triangles_by_node[obj.NodeID]
-        points, triangles = _subset_mesh(body_points, body_facets, indices)
-        points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
-        meshes.append(
-            usdz_writer.Mesh(
-                node_id=obj.NodeID,
-                points_mm=[(p.x, p.y, p.z) for p in points],
-                triangles=triangles,
-                material=materials[obj.MaterialName],
-                uvs=_planar_uvs(points, model_box),
-                normals_mm=[(n.x, n.y, n.z) for n in normals],
-            )
-        )
-        print(f"      {obj.NodeID}: {len(triangles)} triangles, role={obj.NodeRole}")
-
     try:
+        materials = _material_registry(objects, source, staging)
+        body_points, body_facets, assignment = _partition_body_triangles(
+            body_object.Shape, [obj.Shape for obj in region_objects], deflection
+        )
+        body_indices = [index for index in range(len(body_facets)) if index not in assignment]
+
+        meshes = [
+            _build_mesh(
+                body_object.NodeID,
+                *_subset_mesh(body_points, body_facets, body_indices),
+                material=materials[body_object.MaterialName],
+                model_box=model_box,
+            )
+        ]
+        print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
+
+        region_surface_areas = {}
+        for obj in region_objects:
+            # Each region object's own CAD surface is its exported mesh — the CAD is
+            # the source of truth for hold geometry. The body was partitioned around
+            # the same surface, so the two never overlap.
+            points, facets = obj.Shape.tessellate(deflection)
+            if not facets:
+                raise BuildError(f"{obj.NodeID} has no surface")
+            region_surface_areas[obj.NodeID] = _triangle_area(
+                points, facets, range(len(facets))
+            )
+            meshes.append(
+                _build_mesh(
+                    obj.NodeID,
+                    points,
+                    facets,
+                    material=materials[obj.MaterialName],
+                    model_box=model_box,
+                )
+            )
+            print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
+
+        # Every region ships its own CAD surface; a region may claim no body
+        # triangles (a proud patch), but it must not claim more body area than it
+        # exports, or the body partition would leave a gap it cannot fill.
+        _validate_partition(
+            body_points,
+            body_facets,
+            {body_object.NodeID: body_indices, **{
+                obj.NodeID: [i for i, owner in assignment.items() if owner == index]
+                for index, obj in enumerate(region_objects)
+            }},
+            region_surface_areas,
+        )
+        measured_depths = _validate_published_depths(
+            contact_objects, _declared_depths(board, version), version, deflection
+        )
+
         print("[6/10] writing the USDZ directly")
         asset = staging / "primary.usdz"
         usdz_writer.write_usdz(asset, meshes)
@@ -554,6 +646,11 @@ def build(
 
         print("[8/10] deriving the descriptor from the exported bytes")
         model_bytes = asset.read_bytes()
+        # The CAD source owns hold geometry: a contact object may carry its
+        # front-plane hold outline as native-millimetre XZ points. When present
+        # it defines the descriptor region, so the app never has to derive a
+        # hold from the exported mesh silhouette.
+        outlines = _hold_polygons(contact_objects, version, "HangTenHoldOutline")
         if version == 2:
             descriptor = compile_reusable_descriptor(
                 model_bytes,
@@ -565,6 +662,7 @@ def build(
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},
                 frozenset(slots),
+                outlines,
             )
         else:
             descriptor = compile_descriptor(
@@ -575,6 +673,7 @@ def build(
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},
                 frozenset(contacts),
+                outlines,
             )
         descriptor_json = descriptor.to_json()
         if descriptor_json["modelSHA256"] != hashlib.sha256(model_bytes).hexdigest():
