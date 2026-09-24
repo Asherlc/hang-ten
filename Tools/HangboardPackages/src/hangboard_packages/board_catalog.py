@@ -31,14 +31,28 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     BoardShapeDocument = _module.BoardShapeDocument
     NormalizedFrame = _module.NormalizedFrame
 
+try:  # The CAD source reader is stdlib only; same direct-file fallback as above.
+    from . import cad_source
+except ImportError:  # pragma: no cover - exercised by direct module consumers
+    _cad_path = Path(__file__).with_name("cad_source.py")
+    _cad_spec = importlib.util.spec_from_file_location("hangboard_cad_source", _cad_path)
+    assert _cad_spec and _cad_spec.loader
+    cad_source = importlib.util.module_from_spec(_cad_spec)
+    import sys
+
+    sys.modules[_cad_spec.name] = cad_source
+    _cad_spec.loader.exec_module(cad_source)
+
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
-# Entries every board package must contain.
+# Entries every hand-authored board package must contain.
 _PACKAGE_ENTRIES = frozenset({"board.json", "assets"})
-# The self-contained CAD authoring source is permitted alongside them, and must
-# be named after its own package so a package cannot accumulate stray documents.
-_PACKAGE_SOURCE_SUFFIX = ".FCStd"
+# A CAD-backed package instead carries its self-contained CAD authoring source,
+# named after its own package so a package cannot accumulate stray documents.
+# Its board.json is generated from that source (cad_source) at build time and
+# must not exist on disk, so a stale hand edit can never shadow the source.
+_PACKAGE_SOURCE_SUFFIX = cad_source.SOURCE_SUFFIX
 _HOLD_KINDS = frozenset({"jug", "edge", "pocket", "pinch", "sloper", "gaston"})
 _GRIP_TYPES = frozenset(
     {
@@ -1450,6 +1464,9 @@ class BoardRevision:
 class BoardPackage:
     root: Path
     board: BoardRevision
+    # The generated board.json bytes of a CAD-backed package (None for a
+    # hand-authored package, whose board.json is on disk). Staging writes these.
+    generated_board_json: bytes | None = field(default=None, compare=False, repr=False)
 
 
 @dataclass(frozen=True)
@@ -2526,16 +2543,21 @@ def _validate_finished_shape(
 ) -> Mapping[tuple[str, str], NormalizedFrame]:
     _require_no_symlinks(root)
     entries = {item.name for item in root.iterdir()}
-    permitted = _PACKAGE_ENTRIES | {f"{root.name}{_PACKAGE_SOURCE_SUFFIX}"}
-    unknown = entries - permitted
-    missing = _PACKAGE_ENTRIES - entries
+    cad_source_name = cad_source.package_source_path(root).name
+    required = (
+        (_PACKAGE_ENTRIES - {"board.json"}) | {cad_source_name}
+        if cad_source.is_cad_package(root)
+        else _PACKAGE_ENTRIES
+    )
+    unknown = entries - (required | {cad_source_name})
+    missing = required - entries
     if unknown:
         raise ValueError(f"unknown package entry: {sorted(unknown)[0]}")
     if missing:
         raise ValueError(f"board package is missing: {sorted(missing)[0]}")
     board_path = root / "board.json"
     assets = root / "assets"
-    if board_path.is_symlink() or not board_path.is_file():
+    if "board.json" in required and (board_path.is_symlink() or not board_path.is_file()):
         raise ValueError("board.json must be a regular non-symlink file")
     if assets.is_symlink() or not assets.is_dir():
         raise ValueError("assets must be a regular non-symlink directory")
@@ -2915,24 +2937,79 @@ def load_board_package(package_root: Path) -> BoardPackage:
         raise ValueError(f"board package does not exist as a regular directory: {root}")
     _require_no_symlinks(root)
     board_path = root / "board.json"
-    if board_path.is_symlink() or not board_path.is_file():
-        raise ValueError(f"board.json does not exist as a regular file: {board_path}")
-    try:
-        raw_board = board_path.read_text(encoding="utf-8")
-    except OSError as error:
-        raise ValueError(f"board.json must be readable: {board_path}") from error
+    generated: bytes | None = None
+    if cad_source.is_cad_package(root):
+        raw_board, generated = _generated_board_document(root)
+        label = f"{root.name}/board.json (generated from {cad_source.package_source_path(root).name})"
+    else:
+        if board_path.is_symlink() or not board_path.is_file():
+            raise ValueError(f"board.json does not exist as a regular file: {board_path}")
+        try:
+            raw_board = board_path.read_text(encoding="utf-8")
+        except OSError as error:
+            raise ValueError(f"board.json must be readable: {board_path}") from error
+        label = str(board_path)
     try:
         _validate_instance_translation_lexemes(raw_board)
     except ValueError as error:
         if "reusable instance translations" in str(error):
             raise
-        raise ValueError(f"board.json is invalid JSON: {board_path}") from error
-    board = _load_board(_load_json(board_path, "board.json"))
+        raise ValueError(f"board.json is invalid JSON: {label}") from error
+    board = _load_board(_parse_board_document(raw_board, label))
     board = replace(
         board,
         model_contact_frames=_validate_finished_shape(root, board),
     )
-    return BoardPackage(root.resolve(), board)
+    return BoardPackage(root.resolve(), board, generated)
+
+
+def _parse_board_document(raw: str, label: str) -> Mapping[str, Any]:
+    try:
+        return _mapping(
+            json.loads(raw, object_pairs_hook=_reject_duplicate_json_keys), "board.json"
+        )
+    except (json.JSONDecodeError, ValueError) as error:
+        raise ValueError(f"board.json is invalid JSON: {label}") from error
+
+
+def _generated_board_document(root: Path) -> tuple[str, bytes]:
+    """Generate a CAD-backed package's board.json from its FCStd manifest.
+
+    The exact generated bytes are validated (not a re-serialization), so the
+    number spelling the validator reads, such as nine-decimal instance
+    translations, is checked as it will be staged.
+    """
+    board_path = root / "board.json"
+    source = cad_source.package_source_path(root)
+    if board_path.exists() or board_path.is_symlink():
+        raise ValueError(
+            f"Hangboards/{root.name}/board.json must not exist: this CAD-backed package's "
+            f"board.json is generated from {source.name} at build time. Delete the file "
+            "and change the metadata with Tools/HangboardCAD/set_board_manifest.py"
+        )
+    if source.is_symlink() or not source.is_file():
+        raise ValueError(f"CAD source must be a regular non-symlink file: {source}")
+    try:
+        generated = cad_source.generate_board_json(source)
+    except (cad_source.ManifestError, OSError) as error:
+        raise ValueError(
+            f"cannot generate board.json for Hangboards/{root.name}: {error}"
+        ) from error
+    return generated.decode("utf-8"), generated
+
+
+def read_board_json(package_root: Path) -> bytes:
+    """The board.json bytes of a package: generated for a CAD-backed package,
+    read from disk otherwise. Use this instead of reading ``board.json``."""
+    root = Path(package_root)
+    if cad_source.is_cad_package(root):
+        return _generated_board_document(root)[1]
+    return (root / "board.json").read_bytes()
+
+
+def load_board_json(package_root: Path) -> Any:
+    """``json.loads`` of :func:`read_board_json` (plain floats)."""
+    return json.loads(read_board_json(package_root).decode("utf-8"))
 
 
 def is_primary_only_draft(root: Path) -> bool:
@@ -2986,7 +3063,7 @@ def discover_board_packages(
         if not is_board_package_slug(entry.name):
             raise ValueError(f"Hangboards directory name is invalid: {entry.name}")
         board_path = entry / "board.json"
-        if board_path.exists() or board_path.is_symlink():
+        if board_path.exists() or board_path.is_symlink() or cad_source.is_cad_package(entry):
             package = load_board_package(entry)
             if package.board.id in identifiers:
                 raise ValueError(f"duplicate board id: {package.board.id}")

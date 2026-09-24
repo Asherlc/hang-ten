@@ -102,30 +102,11 @@
 		AA0000000000000000000091 /* TrainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000091 /* TrainView.swift */; };
 		AA0000000000000000000092 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000092 /* AppSettingsView.swift */; };
 		AA0000000000000000000093 /* CountdownAudioScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000093 /* CountdownAudioScheduler.swift */; };
-		AA0000000000000000000094 /* BoardEditorSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000094 /* BoardEditorSession.swift */; };
-		AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000095 /* HoldEditorCanvasView.swift */; };
-		AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000096 /* BoardEditorScreen.swift */; };
-		AA0000000000000000000097 /* HoldInspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000097 /* HoldInspectorView.swift */; };
-		AA0000000000000000000098 /* BoardEditorListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000098 /* BoardEditorListView.swift */; };
-		AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000099 /* GitHubEditorSyncViews.swift */; };
 		AA00000000000000000000A1 /* TelemetryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A1 /* TelemetryTests.swift */; };
 		AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */; };
 		AA00000000000000000000A3 /* DeepLinkManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000A3 /* DeepLinkManagerTests.swift */; };
-		AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B1 /* HoldPathEngine.swift */; };
-		AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B2 /* BoardPackageWriter.swift */; };
-		AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B3 /* BoardEditorStore.swift */; };
-		AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000B4 /* GitHubBoardSyncService.swift */; };
-		AA00000000000000000000C1 /* HoldPathEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C1 /* HoldPathEngineTests.swift */; };
-		AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C2 /* BoardPackageWriterTests.swift */; };
-		AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C3 /* BoardEditorStoreTests.swift */; };
-		AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */; };
-		AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */; };
-		AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */; };
-		AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */; };
 		AA00000000000000000000D1 /* WorkoutSegmentTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */; };
 		AA00000000000000000000E8 /* ReportProblemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB00000000000000000000E8 /* ReportProblemView.swift */; };
-		AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000100 /* BoardEditorSessionTests.swift */; };
-		AA0000000000000000000101 /* BoardEditorLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000101 /* BoardEditorLoadingView.swift */; };
 		AB0000000000000000000001 /* Telemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000001 /* Telemetry.swift */; };
 		AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */; };
 		AB0000000000000000000003 /* SentryDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000003 /* SentryDiagnostics.swift */; };
@@ -137,8 +118,7 @@
 		AD0000000000000000000005 /* OrbitPanArbitrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */; };
 		AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000002 /* GripCueSnapshotUITests.swift */; };
 		AE0000000000000000000003 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000020 /* XCTest.framework */; };
-		AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000015 /* GitHubSignInUITests.swift */; };
-		AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */; };
+		AE0000000000000000000016 /* SettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE0000000000000000000017 /* SettingsUITests.swift */; };
 		AF0000000000000000000001 /* WorkoutAccessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000001 /* WorkoutAccessStore.swift */; };
 		AF0000000000000000000002 /* WorkoutAccessStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */; };
 		AF0000000000000000000003 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF0000000000000000000003 /* PurchaseManager.swift */; };
@@ -250,8 +230,7 @@
 		AD0000000000000000000006 /* OrbitPanArbitrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanArbitrationTests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000002 /* GripCueSnapshotUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripCueSnapshotUITests.swift; sourceTree = "<group>"; };
 		AE0000000000000000000004 /* HangTenUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HangTenUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AE0000000000000000000015 /* GitHubSignInUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSignInUITests.swift; sourceTree = "<group>"; };
-		AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsBoardEditorVisibilityUITests.swift; sourceTree = "<group>"; };
+		AE0000000000000000000017 /* SettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsUITests.swift; sourceTree = "<group>"; };
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
@@ -337,30 +316,11 @@
 		BB0000000000000000000091 /* TrainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000092 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000093 /* CountdownAudioScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountdownAudioScheduler.swift; sourceTree = "<group>"; };
-		BB0000000000000000000094 /* BoardEditorSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSession.swift; path = BoardEditor/BoardEditorSession.swift; sourceTree = "<group>"; };
-		BB0000000000000000000095 /* HoldEditorCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldEditorCanvasView.swift; path = BoardEditor/HoldEditorCanvasView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000096 /* BoardEditorScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorScreen.swift; path = BoardEditor/BoardEditorScreen.swift; sourceTree = "<group>"; };
-		BB0000000000000000000097 /* HoldInspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = HoldInspectorView.swift; path = BoardEditor/HoldInspectorView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000098 /* BoardEditorListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorListView.swift; path = BoardEditor/BoardEditorListView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000099 /* GitHubEditorSyncViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubEditorSyncViews.swift; path = BoardEditor/GitHubEditorSyncViews.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A1 /* TelemetryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A2 /* BoardPickerFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPickerFiltersTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000A3 /* DeepLinkManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepLinkManagerTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000B1 /* HoldPathEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngine.swift; sourceTree = "<group>"; };
-		BB00000000000000000000B2 /* BoardPackageWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriter.swift; sourceTree = "<group>"; };
-		BB00000000000000000000B3 /* BoardEditorStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStore.swift; sourceTree = "<group>"; };
-		BB00000000000000000000B4 /* GitHubBoardSyncService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncService.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C1 /* HoldPathEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoldPathEngineTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C2 /* BoardPackageWriterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardPackageWriterTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C3 /* BoardEditorStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorStoreTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubBoardSyncServiceTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GitHubSyncSessionTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorLoadingTests.swift; sourceTree = "<group>"; };
-		BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardEditorTestFixtures.swift; sourceTree = "<group>"; };
 		BB00000000000000000000D1 /* WorkoutSegmentTargetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutSegmentTargetTests.swift; sourceTree = "<group>"; };
 		BB00000000000000000000E8 /* ReportProblemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportProblemView.swift; sourceTree = "<group>"; };
-		BB0000000000000000000100 /* BoardEditorSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorSessionTests.swift; path = BoardEditorSessionTests.swift; sourceTree = "<group>"; };
-		BB0000000000000000000101 /* BoardEditorLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = BoardEditorLoadingView.swift; path = BoardEditor/BoardEditorLoadingView.swift; sourceTree = "<group>"; };
 		BF0000000000000000000001 /* WorkoutAccessStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStore.swift; sourceTree = "<group>"; };
 		BF0000000000000000000002 /* WorkoutAccessStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutAccessStoreTests.swift; sourceTree = "<group>"; };
 		BF0000000000000000000003 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
@@ -470,8 +430,7 @@
 			isa = PBXGroup;
 			children = (
 				AE0000000000000000000002 /* GripCueSnapshotUITests.swift */,
-				AE0000000000000000000015 /* GitHubSignInUITests.swift */,
-				AE0000000000000000000017 /* SettingsBoardEditorVisibilityUITests.swift */,
+				AE0000000000000000000017 /* SettingsUITests.swift */,
 				BF0000000000000000000005 /* WorkoutPaywallUITests.swift */,
 				C80000000000000000000002 /* OwlClimbPokerBoardMapInteractionUITests.swift */,
 				6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */,
@@ -586,10 +545,6 @@
 				BB0000000000000000000071 /* BoardStorage.swift */,
 				BB0000000000000000000086 /* BoardPackageStore.swift */,
 				E32000000000000000000005 /* SuspensionProfiles.swift */,
-				BB00000000000000000000B1 /* HoldPathEngine.swift */,
-				BB00000000000000000000B2 /* BoardPackageWriter.swift */,
-				BB00000000000000000000B3 /* BoardEditorStore.swift */,
-				BB00000000000000000000B4 /* GitHubBoardSyncService.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -617,13 +572,6 @@
 				BB0000000000000000000006 /* RootView.swift */,
 				BB0000000000000000000091 /* TrainView.swift */,
 				BB00000000000000000000E8 /* ReportProblemView.swift */,
-				BB0000000000000000000094 /* BoardEditorSession.swift */,
-				BB0000000000000000000095 /* HoldEditorCanvasView.swift */,
-				BB0000000000000000000096 /* BoardEditorScreen.swift */,
-				BB0000000000000000000097 /* HoldInspectorView.swift */,
-				BB0000000000000000000098 /* BoardEditorListView.swift */,
-				BB0000000000000000000099 /* GitHubEditorSyncViews.swift */,
-				BB0000000000000000000101 /* BoardEditorLoadingView.swift */,
 				BF0000000000000000000006 /* WorkoutAccessGate.swift */,
 				BB0000000000000000000092 /* AppSettingsView.swift */,
 				BB0000000000000000000066 /* CustomRoutineEditorView.swift */,
@@ -695,14 +643,6 @@
 				BB0000000000000000000065 /* CustomRoutineDraftTests.swift */,
 				BB0000000000000000000087 /* BoardPackageStoreTests.swift */,
 				E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */,
-				BB00000000000000000000C1 /* HoldPathEngineTests.swift */,
-				BB00000000000000000000C2 /* BoardPackageWriterTests.swift */,
-				BB00000000000000000000C3 /* BoardEditorStoreTests.swift */,
-				BB00000000000000000000C6 /* BoardEditorLoadingTests.swift */,
-				BB00000000000000000000C7 /* BoardEditorTestFixtures.swift */,
-				BB0000000000000000000100 /* BoardEditorSessionTests.swift */,
-				BB00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift */,
-				BB00000000000000000000C5 /* GitHubSyncSessionTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				E32000000000000000000003 /* BoardModelTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
@@ -948,8 +888,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AE0000000000000000000001 /* GripCueSnapshotUITests.swift in Sources */,
-				AE0000000000000000000014 /* GitHubSignInUITests.swift in Sources */,
-				AE0000000000000000000016 /* SettingsBoardEditorVisibilityUITests.swift in Sources */,
+				AE0000000000000000000016 /* SettingsUITests.swift in Sources */,
 				AF0000000000000000000005 /* WorkoutPaywallUITests.swift in Sources */,
 				C80000000000000000000001 /* OwlClimbPokerBoardMapInteractionUITests.swift in Sources */,
 				5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */,
@@ -1010,18 +949,7 @@
 				AA0000000000000000000064 /* CustomRoutineDraft.swift in Sources */,
 				AA0000000000000000000066 /* CustomRoutineEditorView.swift in Sources */,
 				AA0000000000000000000086 /* BoardPackageStore.swift in Sources */,
-				AA00000000000000000000B1 /* HoldPathEngine.swift in Sources */,
-				AA0000000000000000000094 /* BoardEditorSession.swift in Sources */,
-				AA0000000000000000000095 /* HoldEditorCanvasView.swift in Sources */,
-				AA0000000000000000000096 /* BoardEditorScreen.swift in Sources */,
-				AA0000000000000000000097 /* HoldInspectorView.swift in Sources */,
-				AA0000000000000000000098 /* BoardEditorListView.swift in Sources */,
-				AA0000000000000000000099 /* GitHubEditorSyncViews.swift in Sources */,
-				AA0000000000000000000101 /* BoardEditorLoadingView.swift in Sources */,
 				AF0000000000000000000006 /* WorkoutAccessGate.swift in Sources */,
-				AA00000000000000000000B2 /* BoardPackageWriter.swift in Sources */,
-				AA00000000000000000000B3 /* BoardEditorStore.swift in Sources */,
-				AA00000000000000000000B4 /* GitHubBoardSyncService.swift in Sources */,
 				AB0000000000000000000001 /* Telemetry.swift in Sources */,
 				AB0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift in Sources */,
 				00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */,
@@ -1085,14 +1013,6 @@
 				AA0000000000000000000065 /* CustomRoutineDraftTests.swift in Sources */,
 				AA0000000000000000000087 /* BoardPackageStoreTests.swift in Sources */,
 				E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */,
-				AA00000000000000000000C1 /* HoldPathEngineTests.swift in Sources */,
-				AA00000000000000000000C2 /* BoardPackageWriterTests.swift in Sources */,
-				AA00000000000000000000C3 /* BoardEditorStoreTests.swift in Sources */,
-				AA00000000000000000000C6 /* BoardEditorLoadingTests.swift in Sources */,
-				AA00000000000000000000C7 /* BoardEditorTestFixtures.swift in Sources */,
-				AA00000000000000000000C4 /* GitHubBoardSyncServiceTests.swift in Sources */,
-				AA00000000000000000000C5 /* GitHubSyncSessionTests.swift in Sources */,
-				AA0000000000000000000100 /* BoardEditorSessionTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
@@ -1261,7 +1181,6 @@
 				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
-				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";
@@ -1305,7 +1224,6 @@
 				INFOPLIST_KEY_ANALYTICS_API_KEY = "$(ANALYTICS_API_KEY)";
 				INFOPLIST_KEY_CFBundleDisplayName = "Hang Ten";
 				INFOPLIST_KEY_CFBundleIconName = AppIcon;
-				INFOPLIST_KEY_GITHUB_OAUTH_CLIENT_ID = "$(GITHUB_OAUTH_CLIENT_ID)";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.sports";
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Hang Ten uses Bluetooth to receive live force measurements from compatible force sensors.";

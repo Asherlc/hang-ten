@@ -40,7 +40,7 @@ Read the live schema-v3 `board.json` and use `contacts[].id` as the only logical
 identity inventory. A model presentation owns one USDZ and one descriptor. Its
 descriptor binds importer-visible nodes to physical contact IDs; disconnected
 mesh pieces may share a contact ID. Model packages are model-only and
-Workbench-read-only. Remote model editing is unsupported.
+read-only in the apps. Remote model editing is unsupported.
 
 Use only the retained native tools:
 
@@ -53,6 +53,15 @@ Use only the retained native tools:
   source model using an explicit contact mapping; it does not infer bindings.
 - `Tools/HangboardModels/verify_yy_baguette_evo.py` verifies the shipped YY
   Baguette Evo package’s exact model, descriptor, bindings, and hashes.
+- `Tools/HangboardCAD/compile_board.py` compiles a native FreeCAD source
+  (`Hangboards/<slug>/<slug>.FCStd`) directly into the USDZ and descriptor. For
+  such a package, `board.json` is generated from the FCStd's embedded
+  `HangTenBoardManifest` at build time and is not committed: embed the reviewed
+  `board.json` with `set_board_manifest.py`, then `git rm` it and add its path
+  to `.gitignore`. Follow
+  `docs/freecad-authoring-migration.md` and "Authoring a new CAD board" in
+  `Tools/HangboardCAD/README.md`; any authoring script is a throwaway under
+  `.context/`, and its provenance goes in a dated `docs/source-audits/` record.
 
 Do not recreate removed schema-v2 compilers, migration manifests, baseline
 wrappers, gallery generators, raster converters, or compatibility aliases.

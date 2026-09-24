@@ -12,8 +12,8 @@ avoid repeating the same detours.
   right" vs "ship a board into the app". The app renders from a *compiled* asset
   with a hash-bound descriptor, so shipping needs the whole pipeline — but only
   **once**, at the end.
-- **Lean inner loop:** edit the FCStd-authoring script -> compile -> render /
-  screenshot -> decide. Run the pytest suites, the delivery lock, and
+- **Lean inner loop:** edit the throwaway FCStd-authoring script (under
+  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run the pytest suites, the delivery lock, and
   `compare_exports` as a release gate, not per tweak.
 - Triage the reference **first**: is it a constant cross-section (extruded
   profile -> reproduces exactly) or a genuinely sculpted closed shell (rounded
@@ -51,7 +51,8 @@ avoid repeating the same detours.
   floor-depth edit and passes the native edit-propagation check). `Shape.reversed()`
   on a `Part::Feature` is static and breaks that check.
 - `Part::Reverse` and `Part::Face` are not in the default FCStd allowlist; add
-  them to `Tools/HangboardCAD/contract.py` `BUILTIN_TYPES`.
+  them to `BUILTIN_TYPES` in
+  `Tools/HangboardPackages/src/hangboard_packages/cad_source.py`.
 
 ## 4. Region mesh vs body partition — the boundary-matching rule
 
@@ -213,8 +214,15 @@ coincident-surface trap in lesson 5:
 - Give a worker a tight brief and the exact commands; the brief matters more than
   the model tier. Reserve any big-model budget for one bounded, specific question.
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
-- One-off `migration/author_*.py` scripts and per-board duplicate native-check
-  scripts are maintenance overhead; a one-off board can be a throwaway script.
+- Committed one-off per-board authoring scripts and per-board duplicate
+  native-check scripts are maintenance overhead. The five
+  `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
+  re-running one would now recreate a document without its embedded board
+  manifest); their provenance lives in
+  `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, each naming the
+  commit the script can be recovered from. A new board's authoring script is a
+  throwaway under `.context/`; the committed FCStd, its embedded manifest, and
+  a dated provenance record are what survive.
   The framework is justified only by the repo's hard contracts (hash-pinned
   bytes, exact package schema, cross-platform reproducibility, ODR).
 
@@ -298,11 +306,13 @@ triangle count.
 - Do not attach an `EXIT` trap that deletes `.context/` to one-shot shell
   blocks; that wipes the venv mid-loop. Clean up exact owned resources at
   session end instead.
-- Prefer the sibling author script
-  (`migration/author_lattice_mxedge_lift_small.py`, and Large’s
-  `author_lattice_mxedge_lift_large.py`) and its AUTHORING notes as the
-  structural precedent for partitioned troughs — not the constant-section
-  `lattice-triple-rung` pad clone. Large-specific measurement traps are in §11.
+- Prefer the retired sibling author scripts for Small and Large, and their
+  authoring notes, as the structural precedent for partitioned troughs — not
+  the constant-section `lattice-triple-rung` pad clone. The notes are preserved
+  in `docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md`
+  and `…-lattice-mxedge-lift-large-cad-provenance.md`, which also give the
+  commit to `git show` the code from. Large-specific measurement traps are in
+  §11.
 
 ## 11. What Large added
 (`lattice-mxedge-lift-large`; same sculpted brick as Small)
@@ -332,12 +342,44 @@ Cord dots on the top view were mouths, not through-holes: radius 3.4 mm,
 3 mm deep. `board.json` already said the interior was omitted. A dark lambert
 top hides them; confirm with a point query. Keep them n-gons.
 
-Once an `FCStd` exists, the delivery lock hashes descriptor + `board.json` +
-source, not the USDZ, and the file count stays three. Park the old digest in
-`supersededSha256Manifest`. That alignment test is not on the CI pytest path.
+Once an `FCStd` exists, the delivery lock hashes descriptor + source, not the
+USDZ or `board.json` (which is generated from the source at build time), so the
+package contributes two files. Park the old digest in
+`supersededSha256Manifest`. That alignment test now runs in CI's Python job.
 Do not claim `native_source_checks` edit propagation for a cut-body source;
 that suite is the sketch-and-pad checker.
 
 In the app, tap the hold map. `hangten://board/…/hold/…` stops on the system
 “Open in Hang Ten?” dialog. The owned-simulator trap deletes DerivedData, so
 a second screenshot pass is a full rebuild.
+
+## 12. Board metadata lives in the FCStd; board.json is generated at build time
+
+- A CAD board's `board.json` is generated from the FCStd's document-level
+  `HangTenBoardManifest` property (`hangboard_packages.cad_source`, with
+  `Tools/HangboardCAD/board_manifest.py` as its command line) whenever the
+  package is validated or staged into the iOS or Android app. It is never
+  committed: an earlier design committed it and checked it for freshness in
+  CI, which left a hand-editable second copy of the metadata. The validator now
+  rejects an on-disk `board.json` in a CAD package. Edit the manifest with
+  `set_board_manifest.py`.
+- The FCStd is Git LFS. Every job that validates, stages, or builds the apps
+  must check out LFS objects; a pointer fails generation with a fetch hint.
+- **Do not re-save a source through FreeCAD just to change metadata.** A FreeCAD
+  1.1.3 save re-serializes every `*.brp`, element map, and placement with
+  last-ulp differences (and flipped one enum), even with no geometry edit.
+  `set_board_manifest.py` rewrites only `Document.xml` and proves every other
+  member byte-identical.
+- **Number spelling is part of the package contract.** The package validator
+  requires nine-decimal instance translations (`0.000000000`), so a plain
+  `json.loads`/`json.dumps` round trip (`0.0`) breaks validation; the generator
+  keeps every float's source lexeme, and the validator checks the exact
+  generated bytes that staging writes.
+- **FreeCAD 1.1.3 on Linux (AppImage) does not reproduce the macOS-built USDZ
+  bytes.** The same unchanged sources compiled on Linux differ from the
+  committed assets for all five boards. Linux is fine for before/after
+  comparisons on one platform (the manifest migration compiled byte-identically
+  before and after), but committed assets must be compiled on the pinned macOS
+  toolchain, which CI's `cad-reproducibility` job enforces.
+- FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
+  pointers and every CAD tool (and the freshness check) refuses them.
