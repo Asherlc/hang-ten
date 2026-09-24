@@ -62,21 +62,23 @@ NODE_MAP = {
     "top_jug_001": ("contact", "top-incut-jug"),
 }
 
-# Nodes authored as native Part geometry this piece (not full mesh-import).
+# Slopers authored as a generated ball plus a bespoke tangent base blend.
 # Sphere centre from a least-squares fit on the reference bulb (Y < -25 mm),
-# mirrored; the radius is the reference silhouette, not the mid-fit, so the ball
-# covers the board's seat. `free_y_mm` is where the cap stops behind the front.
+# mirrored; radius covers the board's seat. `front_y_mm` is the board face the
+# blend lands on, `fillet_mm` the blend radius.
 NATIVE_SLOPERS = {
     "left_large_sloper_001": {
         "center_mm": (-244.49, -23.10, 71.17),
-        "radius_mm": 79.0,
-        "free_y_mm": -16.0,
+        "radius_mm": 80.5,
+        "front_y_mm": -36.8,
+        "fillet_mm": 2.0,
         "contact": "sloper-left",
     },
     "right_large_sloper_001": {
         "center_mm": (244.49, -23.10, 71.17),
-        "radius_mm": 79.0,
-        "free_y_mm": -16.0,
+        "radius_mm": 80.5,
+        "front_y_mm": -36.8,
+        "fillet_mm": 2.0,
         "contact": "sloper-right",
     },
 }
@@ -107,7 +109,7 @@ NATIVE_TOP_JUG = {
     "contact": "top-incut-jug",
 }
 
-NATIVE_NODES = set(NATIVE_SLOPERS) | {"top_jug_001"}
+NATIVE_NODES = {"top_jug_001"}
 
 # Faceted remainder — keep shell-critical meshes denser. Pinches ship at their
 # reference triangle count: decimating them spiked a sliver that poked through
@@ -267,30 +269,85 @@ def _mesh_to_shape(mesh: Mesh.Mesh) -> Part.Shape:
 
 
 
-def _native_sloper(spec: dict, points, facets) -> Part.Shape:
-    """Analytic ball, clipped to the board.
+def _sloper_mesh(spec: dict) -> Mesh.Mesh:
+    """Analytic ball generated directly, with a bespoke tangent base blend.
 
-    The sculpted reference bulb carries a molded rim and collar; projecting that
-    shell onto a fitted sphere still left a lip around the outline, so the bulb
-    is authored as a clean sphere instead. The radius tracks the reference
-    silhouette (not the least-squares mid-fit) so the ball reaches the board's
-    seat without a seam. The cap stops behind the front so the solid never runs
-    out the back of the board.
+    The reference bulb's collar is replaced by a clean ball plus a small profile
+    blend that is tangent to the sphere and to the board face, so the ball meets
+    the board without a crease. Generated here (not tessellated from a Part
+    solid) because OCCT tessellates a boolean'd sphere at its own default density
+    regardless of deflection.
     """
+    import math
+
     cx, cy, cz = (float(v) for v in spec["center_mm"])
     radius = float(spec["radius_mm"])
-    free_y = float(spec.get("free_y_mm", -16.0))
+    front_y = float(spec.get("front_y_mm", -36.8))
+    fillet_r = float(spec.get("fillet_mm", 2.0))
+    n_phi = int(spec.get("phi_segments", 72))
+    n_cap = int(spec.get("cap_segments", 28))
+    n_blend = int(spec.get("blend_segments", 8))
 
-    sphere = Part.makeSphere(radius)
-    sphere.translate(App.Vector(cx, cy, cz))
-    depth = radius * 4.0
-    clip = Part.makeBox(depth, depth, depth)
-    clip.translate(App.Vector(cx - depth / 2.0, free_y - depth, cz - depth / 2.0))
-    cap = sphere.common(clip)
-    if cap.isNull() or not cap.Faces:
-        raise ValueError(f"sloper cap at ({cx},{cy},{cz}) is empty")
-    print(f"sphere cap faces={len(cap.Faces)} ", end="")
-    return cap
+    cos_rim = max(-1.0, min(1.0, (cy - front_y) / radius))
+    rim_alpha = math.acos(cos_rim)
+
+    # Blend arc tube centre: in the void corner, tangent to sphere and face.
+    centre_y = front_y - fillet_r
+    centre_r = math.sqrt(
+        max(1.0, (radius + fillet_r) ** 2 - (centre_y - cy) ** 2)
+    )
+    reach = radius + fillet_r
+    tan_r = radius * centre_r / reach
+    tan_y = cy + radius * (centre_y - cy) / reach
+    beta_start = math.atan2(tan_y - centre_y, tan_r - centre_r)
+    beta_end = math.atan2(front_y - centre_y, 0.0)
+
+    rows = [("cap", rim_alpha * step / n_cap) for step in range(n_cap + 1)]
+    rows += [
+        ("blend", beta_start + (beta_end - beta_start) * step / n_blend)
+        for step in range(1, n_blend + 1)
+    ]
+
+    vertices = []
+    rings = []
+    for kind, value in rows:
+        row = []
+        for index in range(n_phi):
+            phi = 2.0 * math.pi * index / n_phi
+            if kind == "cap":
+                point = (
+                    cx + radius * math.sin(value) * math.cos(phi),
+                    cy - radius * math.cos(value),
+                    cz + radius * math.sin(value) * math.sin(phi),
+                )
+            else:
+                radial = centre_r + fillet_r * math.cos(value)
+                depth = centre_y + fillet_r * math.sin(value)
+                point = (cx + radial * math.cos(phi), depth, cz + radial * math.sin(phi))
+            row.append(len(vertices))
+            vertices.append(point)
+        rings.append(row)
+
+    triangles = []
+    for index in range(len(rings) - 1):
+        lower, upper = rings[index], rings[index + 1]
+        for j in range(n_phi):
+            k = (j + 1) % n_phi
+            triangles.append((lower[j], upper[j], upper[k]))
+            triangles.append((lower[j], upper[k], lower[k]))
+
+    mesh = Mesh.Mesh()
+    triples = []
+    for a, b, c in triangles:
+        triples.append(App.Vector(*vertices[a]))
+        triples.append(App.Vector(*vertices[b]))
+        triples.append(App.Vector(*vertices[c]))
+    mesh.addFacets(triples)
+    mesh.removeDuplicatedPoints()
+    mesh.removeDuplicatedFacets()
+    mesh.harmonizeNormals()
+    print(f"sloper mesh {mesh.CountFacets} tris ", end="")
+    return mesh
 
 
 def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
@@ -386,29 +443,6 @@ def main() -> int:
         if prim.IsA(UsdGeom.Mesh) and prim.GetName() in NODE_MAP:
             ref_meshes[prim.GetName()] = _world_mesh(stage, cache, prim)
 
-    # --- Piece 1: LS-fit smooth bulb + reference blend collar ---
-    for name, spec in NATIVE_SLOPERS.items():
-        role, contact_id = NODE_MAP[name]
-        points, facets = ref_meshes[name]
-        shape = _native_sloper(spec, points, facets)
-        feature = document.addObject("Part::Feature", name)
-        feature.Shape = shape
-        feature.addProperty("App::PropertyString", "NodeID", "HangTen")
-        feature.addProperty("App::PropertyString", "NodeRole", "HangTen")
-        feature.NodeID = name
-        feature.NodeRole = role
-        feature.addProperty("App::PropertyString", "ContactID", "HangTen")
-        feature.ContactID = contact_id
-        feature.Placement = App.Placement(
-            App.Vector(0.0, CONTACT_NUDGE_Y_MM, 0.0), App.Rotation()
-        )
-        _apply_material(feature, None)
-        imported.append((name, role, contact_id, "bulb+collar", len(shape.Faces)))
-        print(
-            f"native {name}: R={spec['radius_mm']} at {spec['center_mm']} "
-            f"faces={len(shape.Faces)}"
-        )
-
     # --- Piece 2: native mid-span top jug cut into sloper spheres ---
     jug_name = "top_jug_001"
     role, contact_id = NODE_MAP[jug_name]
@@ -436,10 +470,13 @@ def main() -> int:
         if name not in NODE_MAP or name in NATIVE_NODES:
             continue
         role, contact_id = NODE_MAP[name]
-        points, facets = _world_mesh(stage, cache, prim)
-        print(f"  import {name}: {len(points)} pts, {len(facets)} tris →", end=" ")
-        mesh = _build_mesh(points, facets, harmonize=False)
-        mesh = _simplify(mesh, TARGET_TRIS.get(name, 2000))
+        if name in NATIVE_SLOPERS:
+            mesh = _sloper_mesh(NATIVE_SLOPERS[name])
+        else:
+            points, facets = _world_mesh(stage, cache, prim)
+            print(f"  import {name}: {len(points)} pts, {len(facets)} tris →", end=" ")
+            mesh = _build_mesh(points, facets, harmonize=False)
+            mesh = _simplify(mesh, TARGET_TRIS.get(name, 2000))
         shape = _mesh_to_shape(mesh)
         feature = document.addObject("Part::Feature", name)
         feature.Shape = shape
