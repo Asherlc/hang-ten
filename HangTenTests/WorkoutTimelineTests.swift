@@ -4288,3 +4288,85 @@ final class WorkoutSessionStateTests: XCTestCase {
     }
 
 }
+
+final class FreeWorkoutTimelineUpdateTests: XCTestCase {
+    private func makeStep(id: String, duration: TimeInterval) -> WorkoutStep {
+        WorkoutStep(
+            id: id,
+            number: 1,
+            title: "Hang",
+            instruction: "Hang.",
+            accessory: "10s hang",
+            duration: duration,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: duration)
+            ]
+        )
+    }
+
+    func testUpdateStepDurationShiftsLaterOffsets() {
+        var timeline = WorkoutTimeline(steps: [
+            makeStep(id: "a", duration: 10),
+            makeStep(id: "b", duration: 20),
+        ])
+        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 30)))
+        XCTAssertEqual(timeline.duration, 50)
+        XCTAssertEqual(timeline.startOffset(for: "b"), 30)
+        XCTAssertEqual(timeline.currentSteps.first?.duration, 30)
+    }
+
+    func testUpdateStepWeightAndReps() {
+        var timeline = WorkoutTimeline(steps: [makeStep(id: "a", duration: 10)])
+        XCTAssertTrue(timeline.updateStep(
+            id: "a",
+            FreeWorkoutStepUpdates(externalLoadKGF: 10, repetitions: 5)
+        ))
+        XCTAssertEqual(timeline.currentSteps.first?.externalLoadKGF, 10)
+        XCTAssertEqual(timeline.currentSteps.first?.repetitions, 5)
+    }
+
+    func testUpdateStepClampsTimedWorkToDuration() {
+        var step = makeStep(id: "a", duration: 60)
+        step = WorkoutStep(
+            id: step.id, number: step.number, title: step.title,
+            instruction: step.instruction, accessory: step.accessory,
+            duration: step.duration, phase: step.phase, segments: step.segments,
+            timedWorkDuration: 10
+        )
+        var timeline = WorkoutTimeline(steps: [step])
+        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 5)))
+        XCTAssertEqual(timeline.currentSteps.first?.timedWorkDuration, 5)
+    }
+
+    func testUpdateUnknownStepReturnsFalse() {
+        var timeline = WorkoutTimeline(steps: [makeStep(id: "a", duration: 10)])
+        XCTAssertFalse(timeline.updateStep(id: "missing", FreeWorkoutStepUpdates(duration: 30)))
+        XCTAssertEqual(timeline.duration, 10)
+    }
+
+    func testUpdateStepKeepsCompoundSegmentDurationsConsistent() {
+        let step = WorkoutStep(
+            id: "a",
+            number: 1,
+            title: "Hang",
+            instruction: "Hang.",
+            accessory: "",
+            duration: 60,
+            phase: .hang,
+            segments: [
+                WorkoutSegment(kind: .work, target: .selfSelected, timing: .fixed, duration: 10),
+                WorkoutSegment(kind: .rest, target: nil, timing: .fixed, duration: 50),
+            ],
+            timedWorkDuration: 10
+        )
+        var timeline = WorkoutTimeline(steps: [step])
+        XCTAssertTrue(timeline.updateStep(id: "a", FreeWorkoutStepUpdates(duration: 30, timedWorkDuration: 20)))
+        let updated = timeline.currentSteps[0]
+        XCTAssertEqual(updated.duration, 30)
+        XCTAssertEqual(updated.timedWorkDuration, 20)
+        XCTAssertEqual(updated.segments[0].duration, 20)
+        XCTAssertEqual(updated.segments[1].duration, 10)
+        XCTAssertEqual(updated.segments.compactMap(\.duration).reduce(0, +), 30)
+    }
+}
