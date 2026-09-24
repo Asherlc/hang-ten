@@ -1,121 +1,121 @@
 {
-  "contacts": {
-    "edge-14": {
-      "center": [
-        0.5,
-        0.655612248
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.839285719,
-          0.734693884
-        ],
-        "min": [
-          0.160714281,
-          0.576530613
-        ]
-      },
-      "nodeIDs": [
-        "edge_14_actual_surface_001"
-      ]
-    },
-    "edge-18": {
-      "center": [
-        0.446428573,
-        0.220408156
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.732142865,
-          0.295918367
-        ],
-        "min": [
-          0.160714281,
-          0.144897945
-        ]
-      },
-      "nodeIDs": [
-        "edge_18_actual_surface_001"
-      ]
-    },
-    "edge-8": {
-      "center": [
-        0.5,
-        0.80612246
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.839285719,
-          0.877551035
-        ],
-        "min": [
-          0.160714281,
-          0.734693884
-        ]
-      },
-      "nodeIDs": [
-        "edge_8_actual_surface_001"
-      ]
-    },
-    "mono-25": {
-      "center": [
-        0.799999993,
-        0.295918368
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.873809515,
-          0.43673469
-        ],
-        "min": [
-          0.726190472,
-          0.155102047
-        ]
-      },
-      "nodeIDs": [
-        "mono_25_actual_surface_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "3ab890a142560626c9b40f5e1641163ebbf09be237f21b07ff0623c8dcaebcfb",
   "modelBounds": {
-    "max": [
-      0.083999999,
-      0.048999999,
-      0.017000001
-    ],
     "min": [
       -0.083999999,
       -0.048999999,
       -0.017000001
+    ],
+    "max": [
+      0.083999999,
+      0.048999999,
+      0.017000001
     ]
   },
-  "modelSHA256": "4aa20d7e13b754c1e96ee7f9dd151c8153191c40f0b42e5940d81816eaad696b",
   "nodes": [
     {
       "nodeID": "Body_actual_surface_001",
       "role": "body"
     },
     {
-      "contactID": "edge-14",
       "nodeID": "edge_14_actual_surface_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-14"
     },
     {
-      "contactID": "edge-18",
       "nodeID": "edge_18_actual_surface_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-18"
     },
     {
-      "contactID": "edge-8",
       "nodeID": "edge_8_actual_surface_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-8"
     },
     {
-      "contactID": "mono-25",
       "nodeID": "mono_25_actual_surface_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "mono-25"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "edge-14": {
+      "nodeIDs": [
+        "edge_14_actual_surface_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.160714281,
+          0.576530613
+        ],
+        "max": [
+          0.839285719,
+          0.877551035
+        ]
+      },
+      "center": [
+        0.5,
+        0.727040824
+      ]
+    },
+    "edge-18": {
+      "nodeIDs": [
+        "edge_18_actual_surface_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.160714281,
+          0.144897945
+        ],
+        "max": [
+          0.732142865,
+          0.295918367
+        ]
+      },
+      "center": [
+        0.446428573,
+        0.220408156
+      ]
+    },
+    "edge-8": {
+      "nodeIDs": [
+        "edge_8_actual_surface_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.160714281,
+          0.734693884
+        ],
+        "max": [
+          0.839285719,
+          0.877551035
+        ]
+      },
+      "center": [
+        0.5,
+        0.80612246
+      ]
+    },
+    "mono-25": {
+      "nodeIDs": [
+        "mono_25_actual_surface_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.72607144,
+          0.169183683
+        ],
+        "max": [
+          0.873928591,
+          0.422653059
+        ]
+      },
+      "center": [
+        0.800000015,
+        0.295918371
+      ]
+    }
+  }
 }
