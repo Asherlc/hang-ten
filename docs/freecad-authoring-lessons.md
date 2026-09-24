@@ -12,8 +12,8 @@ avoid repeating the same detours.
   right" vs "ship a board into the app". The app renders from a *compiled* asset
   with a hash-bound descriptor, so shipping needs the whole pipeline — but only
   **once**, at the end.
-- **Lean inner loop:** edit the FCStd-authoring script -> compile -> render /
-  screenshot -> decide. Run the pytest suites, the delivery lock, and
+- **Lean inner loop:** edit the throwaway FCStd-authoring script (under
+  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run the pytest suites, the delivery lock, and
   `compare_exports` as a release gate, not per tweak.
 - Triage the reference **first**: is it a constant cross-section (extruded
   profile -> reproduces exactly) or a genuinely sculpted closed shell (rounded
@@ -213,8 +213,15 @@ coincident-surface trap in lesson 5:
 - Give a worker a tight brief and the exact commands; the brief matters more than
   the model tier. Reserve any big-model budget for one bounded, specific question.
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
-- One-off `migration/author_*.py` scripts and per-board duplicate native-check
-  scripts are maintenance overhead; a one-off board can be a throwaway script.
+- Committed one-off per-board authoring scripts and per-board duplicate
+  native-check scripts are maintenance overhead. The five
+  `migration/author_*.py` scripts were retired for that reason (and because
+  re-running one would now recreate a document without its embedded board
+  manifest); their provenance lives in
+  `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, each naming the
+  commit the script can be recovered from. A new board's authoring script is a
+  throwaway under `.context/`; the committed FCStd, its embedded manifest, and
+  a dated provenance record are what survive.
   The framework is justified only by the repo's hard contracts (hash-pinned
   bytes, exact package schema, cross-platform reproducibility, ODR).
 
@@ -298,11 +305,13 @@ triangle count.
 - Do not attach an `EXIT` trap that deletes `.context/` to one-shot shell
   blocks; that wipes the venv mid-loop. Clean up exact owned resources at
   session end instead.
-- Prefer the sibling author script
-  (`migration/author_lattice_mxedge_lift_small.py`, and Large’s
-  `author_lattice_mxedge_lift_large.py`) and its AUTHORING notes as the
-  structural precedent for partitioned troughs — not the constant-section
-  `lattice-triple-rung` pad clone. Large-specific measurement traps are in §11.
+- Prefer the retired sibling author scripts for Small and Large, and their
+  authoring notes, as the structural precedent for partitioned troughs — not
+  the constant-section `lattice-triple-rung` pad clone. The notes are preserved
+  in `docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md`
+  and `…-lattice-mxedge-lift-large-cad-provenance.md`, which also give the
+  commit to `git show` the code from. Large-specific measurement traps are in
+  §11.
 
 ## 11. What Large added
 (`lattice-mxedge-lift-large`; same sculpted brick as Small)

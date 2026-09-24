@@ -18,6 +18,10 @@ For every source-backed package this:
    string escaping may change: the generator's canonical ``indent=2``/UTF-8
    layout replaces hand formatting such as inline arrays or ``\\u00d7``.
 
+Historical record: this migration was applied in commit 3e1653b and is not
+part of any build or CI step. Edit an embedded manifest with
+``Tools/HangboardCAD/set_board_manifest.py`` instead.
+
 Host Python only; FreeCAD is not needed.
 
     python3 Tools/HangboardCAD/migration/embed_board_manifest.py [--package <slug>]

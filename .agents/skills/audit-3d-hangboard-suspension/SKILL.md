@@ -22,6 +22,10 @@ evidence rather than relying on an older design note.
 - An older installed/prebuilt app is evidence only when its commit provenance
   includes the suspension renderer and current bundled metadata.
 
+For a package with a native `<slug>.FCStd`, `board.json` is generated from the
+FCStd's `HangTenBoardManifest`; make suspension metadata edits there with
+`Tools/HangboardCAD/set_board_manifest.py`, never in the generated file.
+
 Do not bake a cord, anchor, or fallback into the USDZ. Do not infer a hidden
 route, through-bore, knot, supplied accessory, or safety property.
 

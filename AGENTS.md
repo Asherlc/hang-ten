@@ -47,12 +47,18 @@ precedent. An operator must deliberately draw and review every canonical hold
 path in `board.json`; exact left/right mirroring is preferred when the product
 is actually symmetric.
 
-When the checked-out schema and the board editor support shape constraints,
-prefer an operator-selected constraint for holds that are genuinely circles,
+The apps only read bundled packages; there is no in-app board editor. When
+the checked-out schema supports shape constraints, author an operator-selected
+constraint directly in `board.json` for holds that are genuinely circles,
 ovals, pills, rounded rectangles, or rectangles. Freeform paths remain valid
 for irregular holds. A constraint is editing metadata only: the saved path
 remains the sole rendering, highlighting, and hit-testing source of truth.
 Never infer a constraint from pixels.
+
+A model package with a native FreeCAD source (`Hangboards/<slug>/<slug>.FCStd`)
+is different: its `board.json` is generated from the FCStd's
+`HangTenBoardManifest` property and must never be hand-edited. Change it with
+`Tools/HangboardCAD/set_board_manifest.py`; see `Tools/HangboardCAD/README.md`.
 
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path

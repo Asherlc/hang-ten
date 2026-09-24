@@ -136,8 +136,9 @@ an **open surface** (a shell), not a solid:
 - a cord aperture is an extrusion with `Solid = False`;
 - a jug band, a sub-region of a larger body face, is a shallow recess cut from
   the body like a pocket, so the partition claims the cut and the region's own
-  surface matches it (see
-  `Tools/HangboardCAD/migration/author_metolius_rock_rings_3d.py`); a
+  surface matches it (see the `main()` notes preserved from the retired
+  authoring script in
+  `docs/source-audits/2026-09-24-metolius-rock-rings-3d-cad-provenance.md`); a
   `Part::Common` of the body and a bounding solid is superseded — it leaves a
   ragged hole.
 
@@ -250,7 +251,7 @@ Keep published facts separate from measurements:
 
 The result is a measured approximation of a display mesh. It is **not** recovered
 manufacturing geometry, and nothing here supports a product-accuracy or
-load-bearing claim. Say so in the doc comment.
+load-bearing claim. Say so in the board's dated provenance record (below).
 
 Author native features: a fully constrained Sketcher profile and a pad. Bind each
 contact region to **runs of the profile's own sketch edges**, extruded with a
@@ -269,6 +270,15 @@ python3 Tools/HangboardCAD/board_manifest.py --check --package <slug>
 This rewrites only `Document.xml` in the archive; every shape member stays
 byte-identical. Re-running an authoring script that creates the document from
 scratch drops the property, so embed again afterwards.
+
+The authoring script itself is a throwaway: keep it under `.context/` and do not
+commit it. The five boards migrated so far were authored by committed
+`migration/author_*.py` scripts that have since been retired; their provenance
+(published versus measured values, tolerances, reference SHAs, stated
+deviations) is preserved in
+`docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names
+the commit to `git show` the script from. Record a new board's provenance the
+same way, in a dated `docs/source-audits/` file, before discarding its script.
 
 ### 4. Write the native checks before trusting anything
 

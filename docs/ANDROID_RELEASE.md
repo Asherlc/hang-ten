@@ -113,9 +113,8 @@ the Android validation job when Android code, `Hangboards`, the canonical plan
 library, countdown audio, shared board content, or CI wiring changes. For
 unrelated pull requests, the stable check reports that the path is skipped
 successfully rather than remaining pending. It runs JVM tests, Debug lint and
-APK assembly, a Release AAB candidate build using a synthetic public Device
-Flow client ID, API 35 instrumented tests, and a pinned `actionlint` workflow
-syntax check. Each run uploads an `android-verification-<run-id>` artifact
+APK assembly, a Release AAB candidate build, API 35 instrumented tests, and a
+pinned `actionlint` workflow syntax check. Each run uploads an `android-verification-<run-id>` artifact
 containing the Debug APK, candidate AAB, and available test/lint reports.
 
 ## One-time Google Play operator handoff

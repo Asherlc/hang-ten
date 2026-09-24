@@ -6,8 +6,11 @@ for the repository's schema-v3 hangboard packages.
 ## Package contract
 
 Every completed package is a direct child of `Hangboards/` containing exactly
-`board.json` and its declared files below `assets/`. A package may contain one
-or more presentations, but exactly one is the default.
+`board.json` and its declared files below `assets/`, plus, for a model package
+with a native CAD source, `<package-directory>.FCStd`. A package may contain one
+or more presentations, but exactly one is the default. A CAD-backed package's
+`board.json` is generated from that source (see `Tools/HangboardCAD/README.md`)
+and must not be hand-edited.
 
 `contacts[]` is the only physical-fact inventory. Each contact has a stable ID,
 an equipment object, a sourced name and kind, and only those optional facts that
@@ -108,9 +111,11 @@ hashes without changing either input.
 
 ## Model workflow
 
-The only model compiler is contact-native. It consumes a human-reviewed Blender
-file and the exact `contacts[]` inventory, then writes only a USDZ and its
-hash-bound contact descriptor:
+A package with a native FreeCAD source is compiled by
+`Tools/HangboardCAD/compile_board.py`; see `Tools/HangboardCAD/README.md`.
+Otherwise the model compiler is contact-native. It consumes a human-reviewed
+Blender file and the exact `contacts[]` inventory, then writes only a USDZ and
+its hash-bound contact descriptor:
 
 ```sh
 rtk proxy blender --background --factory-startup --python-exit-code 1 \

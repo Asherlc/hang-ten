@@ -81,7 +81,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed; flat vertical trough walls (no ogee); edit-propagation suite not run",
       "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
-      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_large.py",
+      "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-large-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
       "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
     },
     "lattice-mxedge-lift-small": {
@@ -92,7 +92,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed on the Small authoring branch carried into this PR",
       "nativeAppValidation": "not re-run on this merge",
-      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_small.py",
+      "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
       "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
     },
     "lattice-triple-rung": {

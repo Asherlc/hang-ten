@@ -79,11 +79,39 @@ pointers from the local LFS object store; without it, the diff shows the LFS
 pointer as before.
 
 The one-off migration that moved each committed `board.json` into its FCStd is
-`migration/embed_board_manifest.py`; it required every regenerated `board.json`
-to be token-identical to the hand-authored one (only whitespace and string
-escaping changed, for three packages). A new CAD board embeds its manifest the
-same way: author the FCStd, then run `set_board_manifest.py --package <slug>`
-on the package's reviewed `board.json` once.
+`migration/embed_board_manifest.py` (kept as a historical record; it is not a
+build or CI step); it required every regenerated `board.json` to be
+token-identical to the hand-authored one (only whitespace and string escaping
+changed, for three packages).
+
+## Authoring a new CAD board
+
+There is no per-board authoring program in the repository. The five retired
+`migration/author_*.py` scripts that created the current FCStd documents were
+one-off, and re-running one would now recreate a document without its embedded
+manifest. Their provenance is preserved in
+`docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names
+the commit from which the script can still be read with `git show`.
+
+1. Create the FCStd. Drawing it in the FreeCAD GUI or writing a throwaway script
+   under `.context/` (run with `run_freecad.py`) are both fine; the script is
+   not committed and the saved document must stand alone. Set the document
+   properties and per-object bindings in
+   [Source document contract](#source-document-contract).
+2. Write the board metadata as a manifest (`board.json` fields minus `id`, or a
+   full `board.json`-shaped object whose `id` equals `HangTenBoardID`), with
+   source URLs and audit mappings for every field per `AGENTS.md`. Embed it and
+   generate the package `board.json`:
+
+       python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> <manifest.json>
+
+3. Compile the runtime pair with `compile_board.py` (below; `--check` first),
+   then run the native source checks and the package validator.
+4. Record the provenance of every authored number (published versus measured,
+   tolerances, reference SHAs, source URLs) in a dated
+   `docs/source-audits/` record, and refresh the delivery lock.
+
+`board_manifest.py --check --all` then keeps the committed `board.json` fresh.
 
 ## Running it
 
@@ -150,8 +178,9 @@ provenance sidecar; these facts live here instead.
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.
 * The 267 measured points were reduced to 170 authored vertices, with a maximum
-  deviation of 0.1899 mm. `include/tolerance` details are in the migration
-  script, which records the reduction criterion.
+  deviation of 0.1899 mm. The reduction criterion and tolerance from the retired
+  authoring script are preserved in
+  `docs/source-audits/2026-09-24-lattice-triple-rung-cad-provenance.md`.
 * The reference is resolved from commit `6b828e15`
   (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
 

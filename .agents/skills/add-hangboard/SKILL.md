@@ -31,17 +31,18 @@ geometry, and validation contract.
    Rock Prodigy Pivot only as a structural and path-style precedent; do not
    copy its product-specific geometry.
 5. Deliberately author each normalized closed path, then refine it directly in
-   Workbench. Mirror one reviewed side exactly when official evidence shows
-   symmetry. Keep one logical hold with multiple pieces when a single physical
-   contact is visually disconnected.
+   `board.json` (the apps only read packages; there is no in-app editor).
+   Mirror one reviewed side exactly when official evidence shows symmetry.
+   Keep one logical hold with multiple pieces when a single physical contact
+   is visually disconnected.
 6. If the checked-out schema supports shape constraints, select one manually
-   for a genuinely regular hold; otherwise use a freeform path. The canonical
-   path is always the rendering, highlighting, and hit-testing truth.
+   in `board.json` for a genuinely regular hold; otherwise use a freeform
+   path. The canonical path is always the rendering, highlighting, and hit-testing truth.
 7. Run `rtk scripts/hangboard-packages.sh validate --root Hangboards
    --final-inventory` and `rtk scripts/hangboard-packages.sh status --root
-   Hangboards`. Inspect normal paths in Workbench and active/highlight alignment
-   in the app on an owned simulator. Capture representative app-rendered normal
-   and active/highlight screenshots and include them in the PR evidence.
+   Hangboards`. Inspect normal paths and active/highlight alignment in the app
+   on an owned simulator. Capture representative app-rendered normal and
+   active/highlight screenshots and include them in the PR evidence.
 
 ## Non-negotiable rules
 

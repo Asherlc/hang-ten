@@ -167,7 +167,12 @@ attachment just to explain the presentation.
    or runtime behavior rather than by the test fixture.
 4. Prefer the smallest approved correction. When model geometry and node
    bindings are unchanged, edit `board.json` suspension metadata only and
-   preserve the USDZ and descriptor bytes. Runtime changes belong in
+   preserve the USDZ and descriptor bytes. For a package with a native
+   `<slug>.FCStd` source, `board.json` is generated: change the suspension in
+   the FCStd's `HangTenBoardManifest` with
+   `Tools/HangboardCAD/set_board_manifest.py` (which regenerates `board.json`
+   and leaves every geometry member byte-identical), never by hand-editing the
+   generated file. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
 5. Re-run the focused test, package/audit validation, relevant native tests,
