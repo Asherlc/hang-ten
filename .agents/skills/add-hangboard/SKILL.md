@@ -63,6 +63,10 @@ geometry, and validation contract.
   unsupported image detail into board metadata or geometry.
 - Do not hand-author both sides of a symmetric board unless evidence establishes
   asymmetry.
+- This flow creates a hand-authored `board.json`. A board with a native
+  `Hangboards/<slug>/<slug>.FCStd` source has no committed `board.json` (it is
+  generated from the FCStd at build time and the validator rejects an on-disk
+  copy); use `migrate-hangboard-to-3d` and `Tools/HangboardCAD/README.md`.
 - Do not finish with missing geometry, extra geometry, unsupported facts, or a
   highlight that drifts from its physical contact surface. Include app-rendered
   normal and highlighted-hold screenshots in PR review evidence.

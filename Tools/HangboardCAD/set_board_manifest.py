@@ -1,4 +1,4 @@
-"""Set or replace a CAD source's board manifest, then regenerate ``board.json``.
+"""Set or replace a CAD source's board manifest.
 
 A CAD-backed board's logical metadata lives in its FCStd as the document-level
 ``HangTenBoardManifest`` string property (see ``board_manifest.py``). This is
@@ -7,8 +7,14 @@ the supported way to change it:
     # 1. start from the current metadata
     python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/m.json
     # 2. edit /tmp/m.json (board.json fields minus "id"); cite sources per AGENTS.md
-    # 3. write it into the FCStd and regenerate Hangboards/<slug>/board.json
+    # 3. write it into the FCStd
     python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/m.json
+    # 4. validate the package (board.json is generated from the FCStd in memory)
+    scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
+
+``board.json`` is not written anywhere: for a CAD-backed package it is generated
+at build time and must not exist in the package. ``board_manifest.py --package
+<slug> [--output <path>]`` prints or writes the generated file for inspection.
 
 The input may be a manifest (no ``id``) or a full ``board.json``-shaped object
 whose ``id`` equals the source's ``HangTenBoardID``.
@@ -31,6 +37,7 @@ import argparse
 import json
 import os
 import re
+import stat
 import sys
 import tempfile
 import zipfile
@@ -46,7 +53,7 @@ PROPERTY = board_manifest.MANIFEST_PROPERTY
 PROPERTY_DOC = (
     "board.json minus id, as compact JSON. board.json is generated from this; "
     "see Tools/HangboardCAD/board_manifest.py"
-)
+)  # Unchanged wording: it is stored in every embedded FCStd.
 _PROPERTIES_OPEN = re.compile(rb'<Properties Count="(\d+)"( TransientCount="\d+")?>')
 _ESCAPES = {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;",
@@ -142,6 +149,8 @@ def embed(source: Path, manifest: dict) -> bool:
     handle, staged_name = tempfile.mkstemp(prefix=".manifest-", suffix=".FCStd", dir=source.parent)
     os.close(handle)
     staged = Path(staged_name)
+    # mkstemp creates 0600; keep the source's own mode across the replace.
+    os.chmod(staged, stat.S_IMODE(source.stat().st_mode))
     try:
         with zipfile.ZipFile(staged, "w") as out:
             out.comment = comment
@@ -183,7 +192,7 @@ def main(argv: list[str] | None = None) -> int:
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     target = parser.add_mutually_exclusive_group(required=True)
-    target.add_argument("--package", help="Hangboards/<slug>; also regenerates board.json")
+    target.add_argument("--package", help="Hangboards/<slug>")
     target.add_argument("--source", type=Path, help="an FCStd outside a package")
     parser.add_argument("input", type=Path, help="manifest or board.json-shaped JSON")
     arguments = parser.parse_args(argv)
@@ -193,21 +202,20 @@ def main(argv: list[str] | None = None) -> int:
         board_manifest.package_source(root, arguments.package)
         if arguments.package else arguments.source
     )
+    # read_document_xml runs the archive contract first and reports a corrupt
+    # or missing source as a ManifestError.
     properties = board_manifest.document_properties_from_xml(
         board_manifest.read_document_xml(source)
     )
     board_id = (properties.get(board_manifest.ID_PROPERTY) or ("", None))[1]
     changed = embed(source, read_input(arguments.input, board_id))
     print(f"{source}: {PROPERTY} {'updated' if changed else 'unchanged'}")
-    if arguments.package:
-        regenerated = board_manifest.write_package(root, arguments.package)
-        print(f"{arguments.package}: board.json {'regenerated' if regenerated else 'already fresh'}")
     return 0
 
 
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (board_manifest.ManifestError, ValueError) as error:
+    except (board_manifest.ManifestError, ValueError, OSError) as error:
         print(f"MANIFEST ERROR: {error}", file=sys.stderr)
         raise SystemExit(1)

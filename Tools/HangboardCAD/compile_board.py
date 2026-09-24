@@ -1,4 +1,4 @@
-"""The one shared Hang Ten board build command: FCStd -> runtime set + board.json.
+"""The one shared Hang Ten board build command: FCStd -> runtime asset set.
 
 Run it with FreeCAD's own interpreter, which is the pinned toolchain:
 
@@ -9,10 +9,10 @@ Run it with FreeCAD's own interpreter, which is the pinned toolchain:
 The board metadata comes from the source itself: the document-level
 ``HangTenBoardManifest`` property plus ``HangTenBoardID`` (see
 ``board_manifest.py``). ``--board <path>`` overrides it with an explicit JSON
-file (used by the guard tests); a source that predates the manifest falls back
-to ``Hangboards/<package>/board.json``. Publishing into the package also
-regenerates ``Hangboards/<package>/board.json`` from the manifest, because that
-file is a committed build output for CAD-backed boards.
+file (used by the guard tests); without it the source must carry the manifest.
+The compiler never writes ``board.json``: for a CAD-backed package that file is
+generated from the manifest at build time (package validation and app staging)
+and is not kept in the repository.
 
 Stages, in order:
 
@@ -25,7 +25,7 @@ Stages, in order:
 7. Reopen the exported asset.
 8. Derive the descriptor from the reopened bytes and node vertices.
 9. Validate the complete staged package.
-10. Publish the asset and descriptor set (and the generated ``board.json``).
+10. Publish the asset and descriptor set.
 
 Nothing here reads a previous runtime asset: existing USDZ files are regression
 references only, and ``--check`` never writes.
@@ -502,7 +502,6 @@ def build(
     out_dir: Path,
     publish: bool,
     allow_faceted_import: bool = False,
-    board_out: Path | None = None,
 ) -> dict:
     board, board_origin = load_board(source, board_path)
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
@@ -754,14 +753,6 @@ def build(
                 "published descriptor does not match the published asset; the pair is "
                 "inconsistent and must be rebuilt"
             )
-        if board_out is not None:
-            # CAD-backed boards commit board.json as a generated build output.
-            rendered = board_manifest.render_board(board)
-            if not board_out.is_file() or board_out.read_bytes() != rendered:
-                board_temp = board_out.with_name(f".{board_out.name}.staged")
-                board_temp.write_bytes(rendered)
-                os.replace(board_temp, board_out)
-            result["boardJSON"] = _display(board_out)
         result["published"] = True
         result["asset"] = _display(asset_target)
         result["descriptor"] = _display(descriptor_target)
@@ -793,23 +784,22 @@ def main(argv: list[str] | None = None) -> int:
     package = arguments.package
     source = (Path(arguments.source) if arguments.source
               else REPOSITORY / "Hangboards" / package / f"{package}.FCStd")
-    package_board = REPOSITORY / "Hangboards" / package / "board.json"
     assets = Path(arguments.assets) if arguments.assets else REPOSITORY / "Hangboards" / package / "assets"
     if not source.is_file():
         raise BuildError(f"missing required input: {source}")
     board_path = Path(arguments.board) if arguments.board else None
-    board_out = None
     if board_path is None:
+        # has_manifest runs the archive contract (contract.inspect_archive)
+        # before reading Document.xml, so a corrupt source is a BuildError.
         try:
             embedded = board_manifest.has_manifest(source)
         except board_manifest.ManifestError as error:
             raise BuildError(str(error)) from error
         if not embedded:
-            # A source that predates HangTenBoardManifest: the hand-authored
-            # package board.json is still its metadata.
-            board_path = package_board
-        elif not arguments.assets:
-            board_out = package_board
+            raise BuildError(
+                f"{_display(source)} carries no {board_manifest.MANIFEST_PROPERTY}; embed "
+                "one with Tools/HangboardCAD/set_board_manifest.py or pass --board"
+            )
     if board_path is not None and not board_path.is_file():
         raise BuildError(f"missing required input: {board_path}")
 
@@ -820,7 +810,6 @@ def main(argv: list[str] | None = None) -> int:
         assets,
         publish=not arguments.check,
         allow_faceted_import=arguments.allow_faceted_import,
-        board_out=board_out,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     if arguments.report:

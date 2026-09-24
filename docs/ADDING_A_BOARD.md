@@ -78,11 +78,12 @@ contacts to actual model nodes and cached measurements. A model package has no
 raster fallback and is read-only in the apps.
 
 A model package with a native CAD source (`Hangboards/<slug>/<slug>.FCStd`) is
-different: its `board.json` is a generated, committed build output of the FCStd's
-`HangTenBoardManifest` property. Do not hand-edit it; follow "Board metadata" in
-`Tools/HangboardCAD/README.md` and regenerate. CI fails on a stale file. To
-author a new CAD-backed board, follow "Authoring a new CAD board" in that README
-and `docs/freecad-authoring-migration.md`.
+different: it has no committed `board.json`. The board document is generated from
+the FCStd's `HangTenBoardManifest` property at build time (package validation,
+iOS and Android staging), and the validator rejects an on-disk copy. Change the
+metadata as in "Board metadata" in `Tools/HangboardCAD/README.md`. To author a
+new CAD-backed board, follow "Authoring a new CAD board" in that README and
+`docs/freecad-authoring-migration.md`.
 
 ## 4. Author raster paths directly
 

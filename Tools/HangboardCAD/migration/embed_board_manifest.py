@@ -19,8 +19,10 @@ For every source-backed package this:
    layout replaces hand formatting such as inline arrays or ``\\u00d7``.
 
 Historical record: this migration was applied in commit 3e1653b and is not
-part of any build or CI step. Edit an embedded manifest with
-``Tools/HangboardCAD/set_board_manifest.py`` instead.
+part of any build or CI step. It cannot run at a later HEAD: CAD-backed
+packages no longer carry a ``board.json`` (it is generated at build time), and
+``board_manifest.write_package`` was removed with it. Read it at 3e1653b. Edit
+an embedded manifest with ``Tools/HangboardCAD/set_board_manifest.py`` instead.
 
 Host Python only; FreeCAD is not needed.
 

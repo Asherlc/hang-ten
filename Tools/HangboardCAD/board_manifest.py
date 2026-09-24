@@ -8,10 +8,12 @@ its geometry. The metadata lives in two document-level string properties:
 * ``HangTenBoardManifest`` -- compact JSON of ``board.json`` *minus* ``id``, in
   the key order ``board.json`` is emitted in.
 
-``board.json`` is then a generated, committed build output: Xcode bundles
-``Hangboards/<slug>`` directly and cannot run FreeCAD, so the file stays in the
-repository and CI checks it is fresh. Never hand-edit a generated ``board.json``;
-change the manifest with ``set_board_manifest.py`` and regenerate.
+``board.json`` is generated at build time and is **not committed**: the package
+validator, ``scripts/stage-board-packages.py`` (iOS and Android), and the
+verifiers generate it in memory from the FCStd, and an on-disk ``board.json``
+inside a CAD-backed package is rejected as a stale hand edit (``.gitignore``
+also lists the current CAD packages' paths). Change the metadata with
+``set_board_manifest.py``.
 
 Everything that is derivable from the CAD or the build is left out of the
 manifest. Only ``id`` qualifies: ``aspectRatio`` is a presentation fact that is
@@ -19,11 +21,15 @@ not reproducible from the descriptor ``modelBounds`` for most boards, and
 published grip depths are sourced product facts that ``compile_board.py``
 validates the geometry against, so both stay in the manifest.
 
-This module is pure host Python (stdlib only). It never imports FreeCAD, so the
-freshness check runs anywhere, including CI on Linux.
+The generation code is ``hangboard_packages.cad_source`` (pure host Python,
+stdlib only, shared with the package validator); this module re-exports it and
+adds the command line and the ``git diff`` textconv rendering. It never imports
+FreeCAD, so it runs anywhere, including CI on Linux.
 
-    python3 Tools/HangboardCAD/board_manifest.py --package <slug>          # write
-    python3 Tools/HangboardCAD/board_manifest.py --check --all             # CI
+    python3 Tools/HangboardCAD/board_manifest.py --package <slug>          # board.json to stdout
+    python3 Tools/HangboardCAD/board_manifest.py --package <slug> --output <path>
+    python3 Tools/HangboardCAD/board_manifest.py --all                     # generate every CAD board
+    python3 Tools/HangboardCAD/board_manifest.py --all --output-dir <dir>  # <dir>/<slug>/board.json
     python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug>   # manifest
     python3 Tools/HangboardCAD/board_manifest.py --dump-file <path.FCStd>  # textconv
 """
@@ -41,206 +47,33 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-if str(Path(__file__).resolve().parent) not in sys.path:
-    sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-import contract  # noqa: E402
-
 REPOSITORY = Path(__file__).resolve().parents[2]
-MANIFEST_PROPERTY = "HangTenBoardManifest"
-ID_PROPERTY = "HangTenBoardID"
-DERIVED_KEYS = ("id",)
-LFS_POINTER = b"version https://git-lfs.github.com/spec/v1"
+_PACKAGES_SOURCE = REPOSITORY / "Tools" / "HangboardPackages" / "src"
+if str(_PACKAGES_SOURCE) not in sys.path:
+    sys.path.insert(0, str(_PACKAGES_SOURCE))
 
-
-class ManifestError(ValueError):
-    """The source's board manifest is missing, malformed, or inconsistent."""
-
-
-# --- document properties ----------------------------------------------------
-
-
-def _parse_document(data: bytes) -> ET.Element:
-    if len(data) > contract.MAX_XML_BYTES:
-        raise ManifestError("CAD document XML exceeds size limit")
-    upper = data.upper()
-    if b"<!DOCTYPE" in upper or b"<!ENTITY" in upper:
-        raise ManifestError("unsupported XML declaration")
-    root = ET.fromstring(data)
-    if root.tag != "Document":
-        raise ManifestError("invalid CAD document XML root")
-    return root
-
-
-def document_properties_from_xml(data: bytes) -> dict[str, tuple[str, str | None]]:
-    """Document-level properties as ``name -> (type, scalar value or None)``."""
-    root = _parse_document(data)
-    properties: dict[str, tuple[str, str | None]] = {}
-    for prop in root.findall("./Properties/Property"):
-        name, kind = prop.get("name", ""), prop.get("type", "")
-        value = None
-        child = next(iter(prop), None)
-        if child is not None and "value" in child.attrib:
-            value = child.get("value")
-        properties[name] = (kind, value)
-    return properties
-
-
-def read_document_xml(source: Path) -> bytes:
-    with zipfile.ZipFile(source) as archive:
-        return archive.read("Document.xml")
-
-
-def _is_lfs_pointer(path: Path) -> bool:
-    with Path(path).open("rb") as stream:
-        return stream.read(len(LFS_POINTER)) == LFS_POINTER
-
-
-# --- JSON with preserved number spelling -----------------------------------
-
-
-class LexemeFloat(float):
-    """A float that remembers how it was written.
-
-    Number spelling is part of the package contract, not just formatting: the
-    package validator requires reusable instance translations to be written
-    with exactly nine decimal places (``0.000000000``), which a plain float
-    round trip would rewrite as ``0.0``. Every float keeps its source lexeme.
-    """
-
-    lexeme: str
-
-    def __new__(cls, lexeme: str):
-        value = super().__new__(cls, lexeme)
-        value.lexeme = lexeme
-        return value
-
-
-def loads(text: str):
-    """Parse JSON keeping key order and every float's original spelling."""
-    return json.loads(text, parse_float=LexemeFloat)
-
-
-def _encode(value, indent: int | None, level: int = 0) -> str:
-    if isinstance(value, LexemeFloat):
-        return value.lexeme
-    if isinstance(value, dict) or isinstance(value, list):
-        items = list(value.items()) if isinstance(value, dict) else list(value)
-        opening, closing = ("{", "}") if isinstance(value, dict) else ("[", "]")
-        if not items:
-            return opening + closing
-
-        def item(entry) -> str:
-            if isinstance(value, dict):
-                key, member = entry
-                separator = ": " if indent is not None else ":"
-                return json.dumps(key, ensure_ascii=False) + separator + _encode(
-                    member, indent, level + 1
-                )
-            return _encode(entry, indent, level + 1)
-
-        if indent is None:
-            return opening + ",".join(item(entry) for entry in items) + closing
-        inner = "\n" + " " * (indent * (level + 1))
-        return (
-            opening + inner + ("," + inner).join(item(entry) for entry in items)
-            + "\n" + " " * (indent * level) + closing
-        )
-    return json.dumps(value, ensure_ascii=False)
-
-
-# --- manifest <-> board -----------------------------------------------------
-
-
-def render_manifest(manifest: dict) -> str:
-    """The exact string stored in ``HangTenBoardManifest``.
-
-    Compact and single-line so the XML attribute never carries a newline; key
-    order and number spelling are preserved because ``board.json`` is emitted
-    from it.
-    """
-    return _encode(manifest, None)
-
-
-def render_board(board: dict) -> bytes:
-    """The canonical ``board.json`` bytes: ``json.dumps(indent=2)`` layout,
-    literal UTF-8, and each number spelled as it was authored."""
-    return (_encode(board, 2) + "\n").encode("utf-8")
-
-
-def board_to_manifest(board: dict) -> dict:
-    if not isinstance(board, dict) or board.get("schemaVersion") != 3:
-        raise ManifestError("board metadata must be a schema-v3 object")
-    if list(board)[:2] != ["schemaVersion", "id"]:
-        raise ManifestError("board.json must start with schemaVersion then id")
-    return {key: value for key, value in board.items() if key not in DERIVED_KEYS}
-
-
-def manifest_to_board(manifest: dict, board_id: str) -> dict:
-    """Rebuild ``board.json``: ``id`` is inserted directly after ``schemaVersion``."""
-    if not isinstance(manifest, dict) or manifest.get("schemaVersion") != 3:
-        raise ManifestError(f"{MANIFEST_PROPERTY} must be a schema-v3 object")
-    if list(manifest)[:1] != ["schemaVersion"]:
-        raise ManifestError(f"{MANIFEST_PROPERTY} must start with schemaVersion")
-    for key in DERIVED_KEYS:
-        if key in manifest:
-            raise ManifestError(f"{MANIFEST_PROPERTY} must not carry derived key {key!r}")
-    if not isinstance(board_id, str) or not board_id:
-        raise ManifestError(f"{ID_PROPERTY} is missing or empty")
-    board: dict = {}
-    for key, value in manifest.items():
-        board[key] = value
-        if key == "schemaVersion":
-            board["id"] = board_id
-    return board
-
-
-def parse_manifest(text: str) -> dict:
-    try:
-        manifest = loads(text)
-    except json.JSONDecodeError as error:
-        raise ManifestError(f"{MANIFEST_PROPERTY} is not valid JSON: {error}") from error
-    if not isinstance(manifest, dict):
-        raise ManifestError(f"{MANIFEST_PROPERTY} must be a JSON object")
-    return manifest
-
-
-def manifest_from_properties(properties: dict) -> tuple[str, dict] | None:
-    """``(board id, manifest)`` from parsed document properties, or None if absent."""
-    if MANIFEST_PROPERTY not in properties:
-        return None
-    kind, text = properties[MANIFEST_PROPERTY]
-    if kind != "App::PropertyString" or text is None:
-        raise ManifestError(f"{MANIFEST_PROPERTY} must be an App::PropertyString")
-    id_kind, board_id = properties.get(ID_PROPERTY, ("", None))
-    if id_kind != "App::PropertyString" or not board_id:
-        raise ManifestError(f"source carries {MANIFEST_PROPERTY} but no {ID_PROPERTY}")
-    return board_id, parse_manifest(text)
-
-
-def has_manifest(source: Path) -> bool:
-    source = Path(source)
-    if _is_lfs_pointer(source):
-        raise ManifestError(f"{source} is a Git LFS pointer; fetch its LFS object first")
-    return MANIFEST_PROPERTY in document_properties_from_xml(read_document_xml(source))
-
-
-def load_board(source: Path) -> dict:
-    """Validate the source archive and return the board it defines."""
-    source = Path(source)
-    try:
-        contract.inspect_archive(source)
-    except ValueError as error:
-        raise ManifestError(f"{source}: {error}") from error
-    found = manifest_from_properties(document_properties_from_xml(read_document_xml(source)))
-    if found is None:
-        raise ManifestError(f"{source} carries no {MANIFEST_PROPERTY} property")
-    board_id, manifest = found
-    return manifest_to_board(manifest, board_id)
-
-
-def generate_board_json(source: Path) -> bytes:
-    return render_board(load_board(source))
+from hangboard_packages.cad_source import (  # noqa: E402,F401
+    DERIVED_KEYS,
+    ID_PROPERTY,
+    LFS_POINTER,
+    MANIFEST_PROPERTY,
+    LexemeFloat,
+    ManifestError,
+    _encode,
+    _is_lfs_pointer,
+    board_to_manifest,
+    document_properties_from_xml,
+    generate_board_json,
+    has_manifest,
+    load_board,
+    loads,
+    manifest_from_properties,
+    manifest_to_board,
+    parse_manifest,
+    read_document_xml,
+    render_board,
+    render_manifest,
+)
 
 
 # --- packages ---------------------------------------------------------------
@@ -258,34 +91,22 @@ def source_backed_packages(root: Path) -> list[str]:
     )
 
 
-def check_package(root: Path, package: str) -> str | None:
-    """None when ``board.json`` is fresh, otherwise a human-readable problem."""
-    source = package_source(root, package)
-    target = root / "Hangboards" / package / "board.json"
-    if not source.is_file():
-        return f"{package}: missing source {source.relative_to(root)}"
-    try:
-        expected = generate_board_json(source)
-    except ManifestError as error:
-        return f"{package}: {error}"
-    if not target.is_file():
-        return f"{package}: board.json is missing; regenerate it from the FCStd"
-    if target.read_bytes() != expected:
-        return (
-            f"{package}: board.json is stale or hand-edited; it is generated from "
-            f"{MANIFEST_PROPERTY} in {source.name}. Edit the manifest with "
-            "Tools/HangboardCAD/set_board_manifest.py, then run "
-            f"`python3 Tools/HangboardCAD/board_manifest.py --package {package}`"
+def write_board_json(source: Path, target: Path) -> bool:
+    """Write the generated ``board.json`` to ``target``; True when it changed.
+
+    ``target`` must not be the package's own ``board.json``: that file is never
+    kept on disk for a CAD-backed package.
+    """
+    source, target = Path(source), Path(target)
+    if target.resolve() == (source.parent / "board.json").resolve():
+        raise ManifestError(
+            f"refusing to write {target}: a CAD-backed package's board.json is generated "
+            "at build time and must not exist in the package"
         )
-    return None
-
-
-def write_package(root: Path, package: str) -> bool:
-    """Regenerate ``board.json``; True when the file changed."""
-    expected = generate_board_json(package_source(root, package))
-    target = root / "Hangboards" / package / "board.json"
+    expected = generate_board_json(source)
     if target.is_file() and target.read_bytes() == expected:
         return False
+    target.parent.mkdir(parents=True, exist_ok=True)
     staged = target.with_name(f".{target.name}.staged")
     staged.write_bytes(expected)
     os.replace(staged, target)
@@ -376,7 +197,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--package", action="append", default=[], help="Hangboards/<slug>")
     parser.add_argument("--all", action="store_true", help="every source-backed package")
-    parser.add_argument("--check", action="store_true", help="fail if board.json is stale")
+    parser.add_argument("--output", type=Path, help="write one package's board.json here")
+    parser.add_argument(
+        "--output-dir", type=Path, help="write <dir>/<slug>/board.json for each package"
+    )
     parser.add_argument("--dump", action="store_true", help="print the manifest JSON")
     parser.add_argument("--dump-file", type=Path, help="textconv rendering of an FCStd path")
     parser.add_argument("--root", type=Path, default=REPOSITORY, help=argparse.SUPPRESS)
@@ -387,14 +211,18 @@ def main(argv: list[str] | None = None) -> int:
         sys.stdout.write(describe_source(arguments.dump_file))
         return 0
 
+    if not arguments.package and not arguments.all:
+        parser.error("name --package <slug> or --all")
     packages = list(arguments.package)
     if arguments.all:
         packages = source_backed_packages(root)
-    if not packages:
-        parser.error("name --package <slug> or --all")
     for package in packages:
         if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", package):
             parser.error(f"invalid package name: {package!r}")
+    if arguments.output is not None and (
+        len(packages) != 1 or arguments.all or arguments.output_dir is not None
+    ):
+        parser.error("--output takes exactly one --package and no --output-dir")
 
     if arguments.dump:
         for package in packages:
@@ -402,18 +230,25 @@ def main(argv: list[str] | None = None) -> int:
             print(_encode(board_to_manifest(board), 2))
         return 0
 
-    if arguments.check:
-        problems = [problem for p in packages if (problem := check_package(root, p))]
-        for problem in problems:
-            print(f"STALE: {problem}", file=sys.stderr)
-        if problems:
-            return 1
-        print(f"board.json is fresh for {len(packages)} CAD-backed package(s)")
+    if arguments.output is not None:
+        write_board_json(package_source(root, packages[0]), arguments.output)
         return 0
-
+    if arguments.output_dir is not None:
+        for package in packages:
+            write_board_json(
+                package_source(root, package), arguments.output_dir / package / "board.json"
+            )
+        print(f"generated board.json for {len(packages)} CAD-backed package(s)")
+        return 0
+    if len(arguments.package) == 1 and not arguments.all:
+        sys.stdout.flush()
+        sys.stdout.buffer.write(generate_board_json(package_source(root, packages[0])))
+        sys.stdout.buffer.flush()
+        return 0
     for package in packages:
-        changed = write_package(root, package)
-        print(f"{package}: board.json {'regenerated' if changed else 'already fresh'}")
+        rendered = generate_board_json(package_source(root, package))
+        print(f"{package}: sha256 {hashlib.sha256(rendered).hexdigest()} ({len(rendered)} bytes)")
+    print(f"generated board.json for {len(packages)} CAD-backed package(s)")
     return 0
 
 

@@ -1,11 +1,14 @@
 """The FCStd board manifest is the source of truth for a CAD board's board.json.
 
-Pure host Python: no FreeCAD, so CI runs this on Linux.
+board.json is generated from it at build time and is never committed. Pure host
+Python: no FreeCAD, so CI runs this on Linux.
 """
 
 from __future__ import annotations
 
 import json
+import re
+import stat
 import sys
 import zipfile
 from pathlib import Path
@@ -23,7 +26,7 @@ import set_board_manifest  # noqa: E402
 # then the persistent properties sorted by name, then one object.
 DOCUMENT = """<?xml version='1.0' encoding='utf-8'?>
 <Document SchemaVersion="4" ProgramVersion="1.1R20260725 (Git shallow)" FileVersion="1" StringHasher="1">
-    <Properties Count="6" TransientCount="2">
+    <Properties Count="4" TransientCount="2">
         <_Property name="FileName" type="App::PropertyString" status="50331649"/>
         <_Property name="Tip" type="App::PropertyLink" status="33554433"/>
         <Property name="Comment" type="App::PropertyString">
@@ -82,6 +85,26 @@ def make_package(root: Path, package: str = "example", board_id: str = "example"
     return source
 
 
+def document_level_counts(document: str) -> tuple[int, int, int, int]:
+    """(declared Count, declared TransientCount, <Property> children,
+    <_Property> children) of the document-level Properties block."""
+    header = re.search(r'<Properties Count="(\d+)" TransientCount="(\d+)">', document)
+    block = document[header.end(): document.index("</Properties>", header.end())]
+    return (
+        int(header.group(1)),
+        int(header.group(2)),
+        block.count("<Property "),
+        block.count("<_Property "),
+    )
+
+
+def committed_source(package: str) -> Path:
+    source = board_manifest.package_source(REPOSITORY, package)
+    if board_manifest._is_lfs_pointer(source):
+        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
+    return source
+
+
 def members(path: Path) -> dict[str, bytes]:
     with zipfile.ZipFile(path) as archive:
         return {info.filename: archive.read(info.filename) for info in archive.infolist()}
@@ -106,7 +129,8 @@ def test_round_trip_regenerates_board_json_and_leaves_geometry_untouched(tmp_pat
     # FreeCAD's own layout: inserted between HangTenBoardID and
     # HangTenCoordinateFrame, and the document-level count grows by one only.
     document = after["Document.xml"].decode()
-    assert '<Properties Count="7" TransientCount="2">' in document
+    assert document_level_counts(before["Document.xml"].decode()) == (4, 2, 4, 2)
+    assert document_level_counts(document) == (5, 2, 5, 2)
     assert '<Properties Count="1" TransientCount="0">' in document
     order = [document.index(name) for name in (
         'name="HangTenBoardID"', 'name="HangTenBoardManifest"', 'name="HangTenCoordinateFrame"'
@@ -126,14 +150,22 @@ def test_embedding_is_idempotent_and_replaces_in_place(tmp_path):
     assert set_board_manifest.embed(source, changed)
     document = members(source)["Document.xml"].decode()
     assert document.count('name="HangTenBoardManifest"') == 1
-    assert '<Properties Count="7" TransientCount="2">' in document
+    assert document_level_counts(document) == (5, 2, 5, 2)
     assert board_manifest.load_board(source)["subtitle"] == "A different subtitle."
 
 
+def test_embedding_keeps_the_source_file_mode(tmp_path):
+    source = make_package(tmp_path)
+    source.chmod(0o644)
+    assert set_board_manifest.embed(source, board_manifest.board_to_manifest(V1_BOARD))
+    assert stat.S_IMODE(source.stat().st_mode) == 0o644
+
+
 def test_v2_reusable_slot_board_round_trips():
-    """The committed Metolius Rock Rings board is schema v2: slots and instances."""
-    committed = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "board.json"
-    board = json.loads(committed.read_text(encoding="utf-8"))
+    """The Metolius Rock Rings board is schema v2: slots and instances."""
+    board = board_manifest.loads(
+        board_manifest.generate_board_json(committed_source("metolius-rock-rings-3d")).decode()
+    )
     instances = board["presentations"][0]["media"]["instances"]
     assert all("contactIDsBySlotID" in instance for instance in instances)
 
@@ -147,40 +179,65 @@ def test_v2_reusable_slot_board_round_trips():
 
 
 def test_v2_board_embeds_into_a_source(tmp_path):
-    committed = REPOSITORY / "Hangboards" / "metolius-rock-rings-3d" / "board.json"
-    board = json.loads(committed.read_text(encoding="utf-8"))
+    board = board_manifest.load_board(committed_source("metolius-rock-rings-3d"))
     source = make_package(tmp_path, board_id=board["id"])
     set_board_manifest.embed(source, board_manifest.board_to_manifest(board))
     assert board_manifest.generate_board_json(source) == board_manifest.render_board(board)
 
 
-def test_stale_and_hand_edited_board_json_is_detected(tmp_path):
+def test_generated_board_json_is_written_only_outside_the_package(tmp_path):
     source = make_package(tmp_path)
     set_board_manifest.embed(source, board_manifest.board_to_manifest(V1_BOARD))
-    target = source.parent / "board.json"
+    expected = board_manifest.render_board(V1_BOARD)
 
-    assert board_manifest.check_package(tmp_path, "example") is not None  # missing
-    assert board_manifest.write_package(tmp_path, "example")
-    assert not board_manifest.write_package(tmp_path, "example")
-    assert board_manifest.check_package(tmp_path, "example") is None
-    assert board_manifest.main(["--check", "--all", "--root", str(tmp_path)]) == 0
+    with pytest.raises(board_manifest.ManifestError, match="must not exist in the package"):
+        board_manifest.write_board_json(source, source.parent / "board.json")
+    assert not (source.parent / "board.json").exists()
 
-    edited = json.loads(target.read_text(encoding="utf-8"))
-    edited["subtitle"] = "hand edit"
-    target.write_text(json.dumps(edited, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    assert "stale or hand-edited" in board_manifest.check_package(tmp_path, "example")
-    assert board_manifest.main(["--check", "--all", "--root", str(tmp_path)]) == 1
+    output = tmp_path / "out" / "board.json"
+    assert board_manifest.write_board_json(source, output)
+    assert not board_manifest.write_board_json(source, output)
+    assert output.read_bytes() == expected
 
-    # Formatting drift alone is also stale: the file is a generated output.
-    target.write_text(json.dumps(V1_BOARD, indent=4) + "\n", encoding="utf-8")
-    assert board_manifest.check_package(tmp_path, "example") is not None
-    assert board_manifest.main(["--package", "example", "--root", str(tmp_path)]) == 0
-    assert board_manifest.check_package(tmp_path, "example") is None
+    root = ["--root", str(tmp_path)]
+    other = tmp_path / "cli.json"
+    assert board_manifest.main(["--package", "example", "--output", str(other), *root]) == 0
+    assert other.read_bytes() == expected
+    assert board_manifest.main(["--all", "--output-dir", str(tmp_path / "all"), *root]) == 0
+    assert (tmp_path / "all" / "example" / "board.json").read_bytes() == expected
+    assert board_manifest.main(["--all", *root]) == 0
 
 
-def test_a_source_without_a_manifest_fails_the_check(tmp_path):
-    make_package(tmp_path)
-    assert "carries no HangTenBoardManifest" in board_manifest.check_package(tmp_path, "example")
+def test_all_with_no_cad_packages_is_a_no_op(tmp_path, capsys):
+    (tmp_path / "Hangboards").mkdir()
+    assert board_manifest.main(["--all", "--root", str(tmp_path)]) == 0
+    assert "0 CAD-backed package(s)" in capsys.readouterr().out
+
+
+def test_a_source_without_a_manifest_does_not_generate(tmp_path):
+    source = make_package(tmp_path)
+    with pytest.raises(board_manifest.ManifestError, match="carries no HangTenBoardManifest"):
+        board_manifest.generate_board_json(source)
+
+
+def test_a_corrupt_source_is_a_manifest_error(tmp_path):
+    source = make_package(tmp_path)
+    source.write_bytes(b"not a zip archive")
+    with pytest.raises(board_manifest.ManifestError):
+        board_manifest.has_manifest(source)
+    with pytest.raises(board_manifest.ManifestError):
+        board_manifest.load_board(source)
+    # main raises; its __main__ wrapper reports MANIFEST ERROR and exits 1.
+    with pytest.raises(board_manifest.ManifestError):
+        set_board_manifest.main(["--source", str(source), str(tmp_path / "missing.json")])
+
+
+def test_duplicate_manifest_keys_are_rejected():
+    with pytest.raises(board_manifest.ManifestError, match="duplicate JSON key: 'name'"):
+        board_manifest.parse_manifest('{"schemaVersion":3,"name":"a","name":"b"}')
+    with pytest.raises(board_manifest.ManifestError, match="duplicate JSON key"):
+        board_manifest.loads('{"a":{"b":1,"b":2}}')
+    assert list(board_manifest.loads('{"b":1,"a":2}')) == ["b", "a"]
 
 
 def test_the_manifest_may_not_carry_the_derived_id(tmp_path):
@@ -206,7 +263,8 @@ def test_an_lfs_pointer_is_rejected_with_a_fetch_hint(tmp_path):
     (directory / "example.FCStd").write_text(
         "version https://git-lfs.github.com/spec/v1\noid sha256:" + "0" * 64 + "\nsize 1\n"
     )
-    assert "LFS" in board_manifest.check_package(tmp_path, "example")
+    with pytest.raises(board_manifest.ManifestError, match="LFS"):
+        board_manifest.generate_board_json(directory / "example.FCStd")
     rendering = board_manifest.describe_source(directory / "example.FCStd")
     assert rendering.startswith("Git LFS pointer")
 
@@ -220,14 +278,15 @@ def test_textconv_rendering_shows_the_manifest_and_member_digests(tmp_path):
     assert "Body.Shape.brp" in rendering
 
 
-def test_committed_cad_packages_have_fresh_generated_board_json():
+def test_committed_cad_packages_generate_board_json_and_commit_none():
     packages = board_manifest.source_backed_packages(REPOSITORY)
     assert packages
-    sources = [board_manifest.package_source(REPOSITORY, p) for p in packages]
-    if any(board_manifest._is_lfs_pointer(source) for source in sources):
-        pytest.skip("FCStd sources are Git LFS pointers; run `git lfs pull` first")
-    problems = [problem for p in packages if (problem := board_manifest.check_package(REPOSITORY, p))]
-    assert not problems
+    for package in packages:
+        board = board_manifest.load_board(committed_source(package))
+        assert board["id"] and board["schemaVersion"] == 3
+        assert not (REPOSITORY / "Hangboards" / package / "board.json").exists(), (
+            f"{package}: board.json is generated at build time and must not exist"
+        )
 
 
 def test_number_spelling_survives_the_manifest(tmp_path):

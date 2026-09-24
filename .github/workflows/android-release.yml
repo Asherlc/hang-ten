@@ -37,6 +37,18 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
+          # Model USDZ assets and the CAD authoring sources (FCStd) are Git LFS
+          # objects; the Gradle build stages the USDZ into the bundle and
+          # generates CAD boards' board.json from the FCStd.
+          lfs: true
+
+      # stageCanonicalAssets runs scripts/stage-board-packages.py, which
+      # generates CAD-backed boards' board.json (Python 3.10+).
+      # actions/setup-python v7.0.0
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
 
       # actions/setup-java v4.7.1
       - name: Set up JDK 17

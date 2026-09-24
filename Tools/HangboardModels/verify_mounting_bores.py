@@ -19,7 +19,7 @@ import numpy as np
 from pxr import Usd, UsdGeom
 
 from contact_model_descriptor import NodeBinding, compile_descriptor
-from remove_mounting_bores import _read_mesh
+from remove_mounting_bores import _read_mesh, package_board_bytes
 
 
 def sha256(path: Path) -> str:
@@ -105,7 +105,7 @@ def verify_package(package: Path, spec: dict) -> dict:
     model = package / "assets/primary.usdz"
     descriptor_path = model.with_suffix(".model.json")
     descriptor = json.loads(descriptor_path.read_text())
-    board = json.loads((package / "board.json").read_text())
+    board = json.loads(package_board_bytes(package) or b"null")
     validate_archive(model)
     stage, meshes = read_scene(model)
     vertices = {
@@ -179,7 +179,8 @@ def verify_catalog(root: Path, manifest: dict) -> dict:
         raise ValueError("shipped model inventory changed; review the new catalogue")
     for slug, baseline in inventory.items():
         package = root / "Hangboards" / slug
-        if sha256(package / "board.json") != baseline["boardSHA256"]:
+        board_bytes = package_board_bytes(package) or b""
+        if hashlib.sha256(board_bytes).hexdigest() != baseline["boardSHA256"]:
             raise ValueError(f"board metadata changed: {slug}")
         if slug not in reports:
             if sha256(package / baseline["modelPath"]) != baseline["modelSHA256"]:

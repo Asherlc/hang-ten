@@ -56,7 +56,9 @@ Use only the retained native tools:
 - `Tools/HangboardCAD/compile_board.py` compiles a native FreeCAD source
   (`Hangboards/<slug>/<slug>.FCStd`) directly into the USDZ and descriptor. For
   such a package, `board.json` is generated from the FCStd's embedded
-  `HangTenBoardManifest`; never hand-edit it. Follow
+  `HangTenBoardManifest` at build time and is not committed: embed the reviewed
+  `board.json` with `set_board_manifest.py`, then `git rm` it and add its path
+  to `.gitignore`. Follow
   `docs/freecad-authoring-migration.md` and "Authoring a new CAD board" in
   `Tools/HangboardCAD/README.md`; any authoring script is a throwaway under
   `.context/`, and its provenance goes in a dated `docs/source-audits/` record.

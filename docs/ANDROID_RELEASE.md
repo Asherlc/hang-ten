@@ -7,6 +7,13 @@ and a JDK 17. Open the `Android` directory in Android Studio, or use the
 checked-in Gradle wrapper from the repository root. Keep local Android SDK
 configuration in the ignored `Android/local.properties` file; do not commit it.
 
+The build also needs Python 3.10 or newer on `PATH` (or `HANGTEN_PYTHON`) and
+the Git LFS objects (`git lfs pull`): `:app:stageCanonicalAssets` runs
+`scripts/stage-board-packages.py --target android`, which validates every board
+package, keeps model USDZ files inline, generates each CAD-backed board's
+`board.json` from its `<slug>.FCStd` (that file is never committed), and leaves
+the FCStd out of the APK.
+
 Run the local checks that CI runs before packaging:
 
 ```sh

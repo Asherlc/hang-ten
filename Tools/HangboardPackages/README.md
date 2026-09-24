@@ -6,11 +6,16 @@ for the repository's schema-v3 hangboard packages.
 ## Package contract
 
 Every completed package is a direct child of `Hangboards/` containing exactly
-`board.json` and its declared files below `assets/`, plus, for a model package
-with a native CAD source, `<package-directory>.FCStd`. A package may contain one
-or more presentations, but exactly one is the default. A CAD-backed package's
-`board.json` is generated from that source (see `Tools/HangboardCAD/README.md`)
-and must not be hand-edited.
+`board.json` and its declared files below `assets/`. A model package with a
+native CAD source instead contains `<package-directory>.FCStd` and its assets,
+and **no** `board.json`: its board document is generated from the FCStd's
+`HangTenBoardManifest` at build time (`hangboard_packages.cad_source`; see
+`Tools/HangboardCAD/README.md`). The validator validates the exact generated
+bytes with the same checks as a committed `board.json`, and rejects an on-disk
+`board.json` in a CAD-backed package as a stale hand edit. Use
+`board_catalog.read_board_json(package_root)` (or `BoardPackage.generated_board_json`)
+rather than reading `board.json` from disk. A package may contain one or more
+presentations, but exactly one is the default.
 
 `contacts[]` is the only physical-fact inventory. Each contact has a stable ID,
 an equipment object, a sourced name and kind, and only those optional facts that

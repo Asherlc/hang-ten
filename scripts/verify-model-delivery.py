@@ -9,16 +9,20 @@ import re
 
 LOCK_PATH = "docs/source-audits/2026-09-22-model-delivery-lock.json"
 SUFFIXES = ("assets/primary.model.json", "assets/primary.usdz", "board.json")
-COMPILED_SUFFIXES = ("assets/primary.model.json", "board.json")
+# A source-backed (CAD) package locks its FCStd instead of board.json: board.json
+# is generated from the FCStd's HangTenBoardManifest at build time and is never
+# committed, so the source pins the metadata as well as the geometry.
+COMPILED_SUFFIXES = ("assets/primary.model.json",)
 
 
 def is_source_backed(root: Path, package: str) -> bool:
     """True when a package carries its own CAD source and compiles its asset.
 
-    Such a package commits its source instead of the compiled USDZ. The delivered
-    bytes are still pinned: the descriptor's modelSHA256 is checked against the
-    compiled asset by Tools/HangboardCAD/prepare_assets.py, and again on device by
-    BoardPackageStore.
+    Such a package's lock covers its source instead of the compiled USDZ and
+    the generated board.json. The delivered bytes are still pinned: the
+    descriptor's modelSHA256 is checked against the compiled asset by
+    Tools/HangboardCAD/prepare_assets.py, and again on device by
+    BoardPackageStore; board.json is generated from the locked source.
     """
     return (root / "Hangboards" / package / f"{package}.FCStd").is_file()
 
@@ -67,6 +71,16 @@ def verify(root: Path, lock: dict) -> dict:
     }
     if compiled != expected:
         raise ValueError("model inventory differs from delivery lock")
+    stale = sorted(
+        p for p in packages
+        if is_source_backed(root, p)
+        and ((root / "Hangboards" / p / "board.json").exists()
+             or (root / "Hangboards" / p / "board.json").is_symlink())
+    )
+    if stale:
+        raise ValueError(
+            f"source-backed package has an on-disk board.json (generated at build time): {stale[0]}"
+        )
     digest = hashlib.sha256(text.encode("utf-8")).hexdigest()
     if digest != lock.get("sha256Manifest"):
         raise ValueError("model/descriptor/metadata checksum mismatch")
@@ -76,7 +90,8 @@ def verify(root: Path, lock: dict) -> dict:
             "sourceBacked": sourced,
             "sha256Manifest": digest, "assetCommit": lock.get("assetCommit"),
             "scope": "exact-file identity for committed files; a source-backed board pins "
-                     "its compiled asset through the descriptor modelSHA256 instead"}
+                     "its compiled asset through the descriptor modelSHA256 and its "
+                     "build-time board.json through the locked FCStd instead"}
 
 
 def main() -> None:

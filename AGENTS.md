@@ -56,9 +56,12 @@ remains the sole rendering, highlighting, and hit-testing source of truth.
 Never infer a constraint from pixels.
 
 A model package with a native FreeCAD source (`Hangboards/<slug>/<slug>.FCStd`)
-is different: its `board.json` is generated from the FCStd's
-`HangTenBoardManifest` property and must never be hand-edited. Change it with
-`Tools/HangboardCAD/set_board_manifest.py`; see `Tools/HangboardCAD/README.md`.
+is different: the FCStd is its only source. Its `board.json` is generated from
+the FCStd's `HangTenBoardManifest` property at build time (package validation,
+iOS and Android staging) and is never committed; the validator rejects an
+on-disk copy. Change the metadata with `Tools/HangboardCAD/set_board_manifest.py`;
+see `Tools/HangboardCAD/README.md`. Building or validating packages needs the
+FCStd Git LFS objects, not pointers.
 
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path
