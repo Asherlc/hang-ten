@@ -4,10 +4,38 @@ Migration tool only — not a build input.
 
 Provenance:
 * Overall envelope 168 x 34 x 98 mm and grip depths 18 / 14 / 8 / 25 mm from board.json.
-* Hold openings and outer rounded-rectangle envelope measured from the Git-resolved
-  reference USDZ (pre-migration commit via reference.load_reference).
+* Front geometry measured from the Git-resolved reference USDZ (pre-migration commit via
+  reference.load_reference), by depth-mapping its front surface on a 0.5 mm grid and
+  sectioning it at x = 10 mm:
+  - the front carries **two stadium troughs**, not four flush pockets: arc centres at
+    x = +/-48 mm, end radius 14 mm (half the opening height), openings z [8.5, 36.5]
+    and z [-34.5, -6.5], widest at x = +/-62 mm;
+  - each trough wall is an ogee tangent to the front face at the rim and to the trough
+    floor. A smoothstep in the wall inset tracks the measured wall to ~0.3 mm, so the
+    wall is authored as a loft of uniformly offset stadium sections;
+  - the walls are what the reference renders as one dark band (upper wall, facing down)
+    and one bright band (lower wall, facing up) per trough;
+  - measured trough depths are 12.5 mm (upper) and 16.5 mm (lower). This model uses the
+    published 14 mm / 18 mm instead, so each exported region's depth equals the depth
+    board.json publishes. Stated deviation: floors 1.5 mm deeper than measured;
+  - the mono is a bore inside the lower trough's right end: measured rim r 10.7 mm at
+    (x 48.4, z -20.3), near-cylindrical to a floor of r 9.2 mm. The floor is placed at
+    the published 25 mm (measured 27.2 mm);
+  - front and back perimeter roll r 4 mm (the measured front face is flat only to
+    |z| <= 45 mm), outer corner radius 12 mm.
 * Display material texture embedded from the same reference package.
 * Measured approximation of a sculpted display mesh — not manufacturing geometry.
+
+Region partition. `compile_board` requires each region's extent along the depth axis to
+equal the published grip depth, and the reference's own nodes do not satisfy that (its
+edge-8 node spans the full 12.5 mm trough). Each authored region is therefore the run of
+trough-wall faces whose depth extent *is* the published depth, which for edge-8 is the
+front 8 mm of the upper trough's upper wall — the lip actually gripped:
+
+    edge-14  upper trough, lower wall, full depth        y [-17, -3]   span 14
+    edge-8   upper trough, upper wall, front 8 mm        y [-17, -9]   span  8
+    edge-18  lower trough, lower wall, full depth        y [-17, +1]   span 18
+    mono-25  lower trough right end + bore incl. floor   y [-17, +8]   span 25
 """
 
 from __future__ import annotations
@@ -43,11 +71,18 @@ Y_FRONT = -17.0
 BODY_X = 168.0
 BODY_Y = 34.0
 BODY_Z = 98.0
-CORNER_R = 12.0
-# Planar corner facets (true OCCT fillets leave a tessellation-vs-Area gap at compile).
-CORNER_SEGMENTS = 24
 HALF_X = BODY_X / 2.0
 HALF_Z = BODY_Z / 2.0
+Y_BACK = Y_FRONT + BODY_Y
+
+# Outer envelope: 12 mm XZ corners plus a 4 mm roll into the front and back faces.
+# Planar facets throughout — an OCCT fillet leaves a tessellation-vs-Area gap at compile.
+CORNER_R = 12.0
+CORNER_SEGMENTS = 8
+CORNER_CENTER_X = HALF_X - CORNER_R
+CORNER_CENTER_Z = HALF_Z - CORNER_R
+EDGE_ROLL_R = 4.0
+EDGE_ROLL_SEGMENTS = 4
 
 GRIP_DEPTH_MM = {
     "edge-18": 18.0,
@@ -56,35 +91,32 @@ GRIP_DEPTH_MM = {
     "mono-25": 25.0,
 }
 
-# Opening rectangles measured on the reference front (native mm, x/z).
-# Corner radii: (bottom-left, bottom-right, top-right, top-left).
-# Reference silhouettes are full-width at the shared z=23 edge (sharp there) and
-# only round on the outer ends — uniform half-height stadiums pinch into a peanut.
-_SHARED_Z = 23.0
-_HAIRLINE = 0.1
-OPENINGS = {
-    # edge-18: measured end radius ~5 mm
-    "edge-18": (-57.0, 39.0, -34.8, -20.0, (5.0, 5.0, 5.0, 5.0)),
-    # edge-14: round bottom only; sharp at shared top
-    "edge-14": (-57.0, 57.0, 7.5, _SHARED_Z - _HAIRLINE, (5.0, 5.0, 0.5, 0.5)),
-    # edge-8: round top only; sharp at shared bottom
-    "edge-8": (-57.0, 57.0, _SHARED_Z + _HAIRLINE, 37.0, (0.5, 0.5, 5.0, 5.0)),
+# Measured stadium openings: arc centres at x = +/-48, end radius = half the opening height.
+TROUGH_HALF_LEN = 48.0
+TROUGH_RADIUS = 14.0
+TROUGH_SEGMENTS = 10  # planar facets per stadium end arc
+# Depth is the published grip depth of the trough's lower wall (see module docstring).
+TROUGHS = {
+    "upper": {"z_center": 22.5, "depth": GRIP_DEPTH_MM["edge-14"], "apex_inset": 11.5},
+    "lower": {"z_center": -20.5, "depth": GRIP_DEPTH_MM["edge-18"], "apex_inset": 11.0},
 }
+# Depth fractions of the lofted wall stations; the inset follows the inverse smoothstep.
+WALL_FRACTIONS = (0.0, 0.03, 0.08, 0.15, 0.25, 0.37, 0.5, 0.62, 0.73, 0.83, 0.91, 0.97, 1.0)
+# Cutters start this far in front of the board so no boolean face is coplanar with it.
+PROUD_MM = 0.3
 
-# No outer lip expansion (bloated AABBs / peanut). Inward-only entry bevel puts
-# tilted faces *inside* the measured opening so the front Lambert preview shows
-# dark troughs without growing contact AABBs past x0/x1/z0/z1.
-LIP_FILLET_R = 0.0
-ENTRY_BEVEL_DEPTH = 2.5  # mm along +Y from the front
-ENTRY_BEVEL_INSET = 2.0  # mm inward in XZ (front wire stays measured)
-# Arc corners approximated with this many planar segments (compile partition stays planar).
-OPENING_CORNER_SEGMENTS = 12
+# Partition boundaries measured on the reference's own contact nodes.
+CONTACT_X_LIMIT = 57.0
+MONO_X_MIN = 37.5
 
-MONO_CENTER_X = 50.4
-MONO_CENTER_Z = -20.0
-MONO_RADIUS = 12.4
+MONO_CENTER_X = 48.4
+MONO_CENTER_Z = -20.3
+MONO_RIM_R = 10.7
+MONO_TAPER_R = 10.2
+MONO_FLOOR_R = 9.2
+MONO_TAPER_DEPTH = 4.0
 # Planar n-gon only — a true Cylinder fails compile_board partition (distToShape 1e-4).
-MONO_SIDES = 64
+MONO_SIDES = 32
 
 NODE_IDS = {
     "body": "Body_actual_surface_001",
@@ -141,180 +173,163 @@ def _apply_material(obj, texture_source: Path | None) -> None:
         obj.TextureFile = str(texture_source)
 
 
-def _outer_brick_solid():
-    """Rounded-rectangle brick with planar corner facets (baked before pocket cuts)."""
-    face = _rounded_rect_face(-HALF_X, HALF_X, -HALF_Z, HALF_Z, CORNER_R, Y_FRONT, CORNER_SEGMENTS)
-    return face.extrude(App.Vector(0.0, BODY_Y, 0.0))
+def _smoothstep(t: float) -> float:
+    return t * t * (3.0 - 2.0 * t)
 
 
-def _pocket_face_filter(
-    x0: float,
-    x1: float,
-    z0: float,
-    z1: float,
-    depth: float,
-):
-    """Match pocket walls, floor, and ends by CoM (flush measured openings)."""
-    y1 = Y_FRONT + depth
-
-    def matches(face) -> bool:
-        center = face.CenterOfMass
-        if center.y < Y_FRONT - 0.05 or center.y > y1 + 0.05:
-            return False
-        if face.BoundBox.YMax > y1 + 0.15:
-            return False
-        radial = math.hypot(center.x - MONO_CENTER_X, center.z - MONO_CENTER_Z)
-        if radial <= MONO_RADIUS + 0.75:
-            return False
-        if not (x0 - 0.25 <= center.x <= x1 + 0.25 and z0 - 0.05 <= center.z <= z1 + 0.05):
-            return False
-        if isinstance(face.Surface, Part.Plane):
-            normal = face.Surface.Axis
-            if abs(normal.y + 1.0) < 0.05 and abs(center.y - Y_FRONT) < 0.2:
-                return False
-        return True
-
-    return matches
+def _inverse_smoothstep(fraction: float) -> float:
+    """Wall inset parameter for a depth fraction (exact inverse of `_smoothstep`)."""
+    clamped = min(max(fraction, 0.0), 1.0)
+    return 0.5 - math.sin(math.asin(1.0 - 2.0 * clamped) / 3.0)
 
 
-def _mono_face_filter(cx: float, cz: float, radius: float):
-    """Planar n-gon walls + floor + inward bevel; no true Cylinder as sole contact."""
+def _loft_solid(sections):
+    """Ruled loft through polygonal sections, capped.
 
-    def matches(face) -> bool:
-        center = face.CenterOfMass
-        radial = math.hypot(center.x - cx, center.z - cz)
-        inner = max(radius - ENTRY_BEVEL_INSET - 0.5, radius * 0.4)
-        if not (
-            Y_FRONT - 0.05 <= center.y <= Y_FRONT + GRIP_DEPTH_MM["mono-25"] + 0.05
-            and inner <= radial <= radius + 0.5
-        ):
-            return False
-        if isinstance(face.Surface, Part.Plane):
-            normal = face.Surface.Axis
-            if abs(normal.y + 1.0) < 0.05 and abs(center.y - Y_FRONT) < 0.2:
-                return False
-        return True
-
-    return matches
-
-
-def _mono_prism_solid(cx: float, cz: float, radius: float, depth: float, sides: int, y0: float = Y_FRONT):
-    angles = [2.0 * math.pi * index / sides for index in range(sides)]
-    points = [
-        App.Vector(cx + radius * math.cos(angle), y0, cz + radius * math.sin(angle))
-        for angle in angles
-    ]
-    wire = Part.makePolygon(points + [points[0]])
-    return Part.Face(wire).extrude(App.Vector(0.0, depth, 0.0))
-
-
-def _inset_corners(corner_r, inset: float):
-    if isinstance(corner_r, (tuple, list)):
-        return tuple(max(0.05, float(value) - inset) for value in corner_r)
-    return max(0.05, float(corner_r) - inset)
-
-
-def _inset_opening(x0: float, x1: float, z0: float, z1: float, corner_r, inset: float):
-    ix0, ix1 = x0 + inset, x1 - inset
-    iz0, iz1 = z0 + inset, z1 - inset
-    if ix1 - ix0 < 2.0 or iz1 - iz0 < 2.0:
-        raise ValueError(f"inset {inset} mm collapses opening ({x0},{x1},{z0},{z1})")
-    return ix0, ix1, iz0, iz1, _inset_corners(corner_r, inset)
-
-
-def _rounded_rect_points(
-    x0: float,
-    x1: float,
-    z0: float,
-    z1: float,
-    corner_r,
-    y: float,
-    segments: int,
-):
-    """CCW XZ rounded-rect vertices (planar) at plane y = const.
-
-    corner_r is a single radius or (bl, br, tr, tl) per-corner radii.
+    Every section shares its arc centres with the others and differs only in radius, so
+    each lateral face is a planar trapezoid and tessellates exactly.
     """
-    width = x1 - x0
-    height = z1 - z0
-    if isinstance(corner_r, (tuple, list)):
-        bl, br, tr, tl = (float(v) for v in corner_r)
-    else:
-        bl = br = tr = tl = float(corner_r)
-    max_r = min(width / 2.0 - 0.05, height / 2.0 - 0.05)
-    bl = min(max(bl, 0.0), max_r)
-    br = min(max(br, 0.0), max_r)
-    tr = min(max(tr, 0.0), max_r)
-    tl = min(max(tl, 0.0), max_r)
+    wires = [Part.makePolygon(list(points) + [points[0]]) for points in sections]
+    return Part.makeLoft(wires, True, True)
 
-    def corner_arc(cx: float, cz: float, radius: float, a0: float, a1: float, include_end: bool):
-        if radius < 0.05:
-            # Degenerate: emit the sharp corner once.
-            return [App.Vector(cx, y, cz)]
-        count = segments if include_end else segments
-        # Sample exclusive of start (caller already placed prior edge end); include end
-        # when include_end else omit last (shared with next edge start).
-        points = []
-        last = count if include_end else count - 1
-        for index in range(1, last + 1):
-            angle = a0 + (a1 - a0) * (index / segments)
+
+def _rounded_rect_points(radius: float, y: float, segments: int = CORNER_SEGMENTS):
+    """CCW XZ envelope outline whose corner radius is `radius` (corner centres fixed)."""
+    corners = (
+        (CORNER_CENTER_X, -CORNER_CENTER_Z, -math.pi / 2.0, 0.0),
+        (CORNER_CENTER_X, CORNER_CENTER_Z, 0.0, math.pi / 2.0),
+        (-CORNER_CENTER_X, CORNER_CENTER_Z, math.pi / 2.0, math.pi),
+        (-CORNER_CENTER_X, -CORNER_CENTER_Z, math.pi, 1.5 * math.pi),
+    )
+    points = []
+    for cx, cz, start, end in corners:
+        for index in range(segments + 1):
+            angle = start + (end - start) * index / segments
             points.append(
                 App.Vector(cx + radius * math.cos(angle), y, cz + radius * math.sin(angle))
             )
-        return points
-
-    points: list = []
-    # Start at bottom edge after BL corner.
-    points.append(App.Vector(x0 + bl, y, z0))
-    points.append(App.Vector(x1 - br, y, z0))
-    # Bottom-right corner (center at x1-br, z0+br): -90° → 0°
-    if br >= 0.05:
-        points.extend(corner_arc(x1 - br, z0 + br, br, -math.pi / 2.0, 0.0, include_end=True))
-    else:
-        points.append(App.Vector(x1, y, z0))
-    points.append(App.Vector(x1, y, z1 - tr))
-    # Top-right: 0° → 90°
-    if tr >= 0.05:
-        points.extend(corner_arc(x1 - tr, z1 - tr, tr, 0.0, math.pi / 2.0, include_end=True))
-    else:
-        points.append(App.Vector(x1, y, z1))
-    points.append(App.Vector(x0 + tl, y, z1))
-    # Top-left: 90° → 180°
-    if tl >= 0.05:
-        points.extend(corner_arc(x0 + tl, z1 - tl, tl, math.pi / 2.0, math.pi, include_end=True))
-    else:
-        points.append(App.Vector(x0, y, z1))
-    points.append(App.Vector(x0, y, z0 + bl))
-    # Bottom-left: 180° → 270°; omit final sample (coincides with points[0]).
-    if bl >= 0.05:
-        points.extend(corner_arc(x0 + bl, z0 + bl, bl, math.pi, 1.5 * math.pi, include_end=False))
     return points
 
 
-def _rounded_rect_face(
-    x0: float,
-    x1: float,
-    z0: float,
-    z1: float,
-    corner_r,
-    y: float,
-    segments: int = OPENING_CORNER_SEGMENTS,
-):
-    points = _rounded_rect_points(x0, x1, z0, z1, corner_r, y, segments)
-    wire = Part.makePolygon(points + [points[0]])
-    return Part.Face(wire)
+def _stadium_points(z_center: float, radius: float, y: float, segments: int = TROUGH_SEGMENTS):
+    """CCW XZ stadium outline; arc centres stay at x = +/-TROUGH_HALF_LEN."""
+    points = []
+    for cx, start, end in (
+        (TROUGH_HALF_LEN, -math.pi / 2.0, math.pi / 2.0),
+        (-TROUGH_HALF_LEN, math.pi / 2.0, 1.5 * math.pi),
+    ):
+        for index in range(segments + 1):
+            angle = start + (end - start) * index / segments
+            points.append(
+                App.Vector(cx + radius * math.cos(angle), y, z_center + radius * math.sin(angle))
+            )
+    return points
 
 
-def _rounded_rect_wire(
-    x0: float,
-    x1: float,
-    z0: float,
-    z1: float,
-    corner_r,
-    y: float,
-    segments: int = OPENING_CORNER_SEGMENTS,
-):
-    return _rounded_rect_face(x0, x1, z0, z1, corner_r, y, segments).OuterWire
+def _ngon_points(cx: float, cz: float, radius: float, y: float, sides: int = MONO_SIDES):
+    return [
+        App.Vector(
+            cx + radius * math.cos(2.0 * math.pi * index / sides),
+            y,
+            cz + radius * math.sin(2.0 * math.pi * index / sides),
+        )
+        for index in range(sides)
+    ]
+
+
+def _body_solid():
+    """Envelope with 12 mm XZ corners and a 4 mm roll into the front and back faces."""
+    sections = []
+    roll = []
+    for index in range(EDGE_ROLL_SEGMENTS + 1):
+        angle = 0.5 * math.pi * index / EDGE_ROLL_SEGMENTS
+        inset = EDGE_ROLL_R * (1.0 - math.sin(angle))
+        offset = EDGE_ROLL_R * (1.0 - math.cos(angle))
+        roll.append((offset, inset))
+    for offset, inset in roll:
+        sections.append(_rounded_rect_points(CORNER_R - inset, Y_FRONT + offset))
+    for offset, inset in reversed(roll):
+        sections.append(_rounded_rect_points(CORNER_R - inset, Y_BACK - offset))
+    return _loft_solid(sections)
+
+
+def _wall_stations(spec: dict, extra_fractions=()):
+    """(y, inset) stations of one trough wall, rim first."""
+    fractions = sorted(set(WALL_FRACTIONS) | set(extra_fractions))
+    return [
+        (Y_FRONT + spec["depth"] * fraction, spec["apex_inset"] * _inverse_smoothstep(fraction))
+        for fraction in fractions
+    ]
+
+
+def _trough_cutter(spec: dict, extra_fractions=()):
+    stations = _wall_stations(spec, extra_fractions)
+    sections = [_stadium_points(spec["z_center"], TROUGH_RADIUS, Y_FRONT - PROUD_MM)]
+    sections.extend(
+        _stadium_points(spec["z_center"], TROUGH_RADIUS - inset, y) for y, inset in stations
+    )
+    return _loft_solid(sections)
+
+
+def _mono_cutter():
+    """Bore inside the lower trough's right end; no Cylinder, planar n-gon only."""
+    apex_y = Y_FRONT + TROUGHS["lower"]["depth"]
+    floor_y = Y_FRONT + GRIP_DEPTH_MM["mono-25"]
+    sections = [
+        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_RIM_R, Y_FRONT - PROUD_MM),
+        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_RIM_R, apex_y),
+        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_TAPER_R, apex_y + MONO_TAPER_DEPTH),
+        _ngon_points(MONO_CENTER_X, MONO_CENTER_Z, MONO_FLOOR_R, floor_y),
+    ]
+    return _loft_solid(sections)
+
+
+def _in_trough(spec: dict, x: float, z: float, slack: float = 0.2) -> bool:
+    radial = math.hypot(max(abs(x) - TROUGH_HALF_LEN, 0.0), z - spec["z_center"])
+    return radial <= TROUGH_RADIUS + slack
+
+
+def _is_front_plane(face) -> bool:
+    box = face.BoundBox
+    return box.YLength < 0.01 and abs(box.YMin - Y_FRONT) < 0.05
+
+
+def _wall_filter(spec: dict, *, above: bool, y_max: float, x_min: float, x_max: float):
+    """Match trough-wall faces on one side of the apex, no deeper than `y_max`."""
+
+    def matches(face) -> bool:
+        box = face.BoundBox
+        if _is_front_plane(face) or box.YLength < 0.01:
+            return False
+        if box.YMin < Y_FRONT - 0.05 or box.YMax > y_max + 0.05:
+            return False
+        center = face.CenterOfMass
+        if not _in_trough(spec, center.x, center.z):
+            return False
+        if not x_min <= center.x <= x_max:
+            return False
+        return (center.z > spec["z_center"]) if above else (center.z < spec["z_center"])
+
+    return matches
+
+
+def _mono_filter(spec: dict):
+    """Match the lower trough's right end plus the bore walls and floor."""
+    floor_y = Y_FRONT + GRIP_DEPTH_MM["mono-25"]
+
+    def matches(face) -> bool:
+        box = face.BoundBox
+        if _is_front_plane(face):
+            return False
+        if box.YMin < Y_FRONT - 0.05 or box.YMax > floor_y + 0.05:
+            return False
+        center = face.CenterOfMass
+        if center.x < MONO_X_MIN:
+            return False
+        bore_radial = math.hypot(center.x - MONO_CENTER_X, center.z - MONO_CENTER_Z)
+        return _in_trough(spec, center.x, center.z) or bore_radial <= MONO_RIM_R + 0.2
+
+    return matches
 
 
 def _shell_from_body_faces(body_shape, predicate):
@@ -324,53 +339,6 @@ def _shell_from_body_faces(body_shape, predicate):
     if len(faces) == 1:
         return faces[0]
     return Part.makeCompound(faces)
-
-
-def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, corner_r, depth: float):
-    """Measured front opening with inward entry bevel, then inset prism to depth.
-
-    Do not fuse a full-size prism with the bevel — the prism would swallow the loft
-    and leave flush -Y floors that vanish in the Lambert front preview.
-    """
-    bevel = min(ENTRY_BEVEL_DEPTH, max(depth * 0.35, 1.5))
-    inset = min(ENTRY_BEVEL_INSET, (x1 - x0) * 0.2, (z1 - z0) * 0.2)
-    ix0, ix1, iz0, iz1, ic = _inset_opening(x0, x1, z0, z1, corner_r, inset)
-    outer = _rounded_rect_wire(x0, x1, z0, z1, corner_r, Y_FRONT - 0.01)
-    inner = _rounded_rect_wire(ix0, ix1, iz0, iz1, ic, Y_FRONT + bevel)
-    loft = Part.makeLoft([outer, inner], solid=True, ruled=True)
-    remain = depth - bevel + 0.02
-    if remain <= 0.05:
-        return loft
-    prism = _rounded_rect_face(ix0, ix1, iz0, iz1, ic, Y_FRONT + bevel - 0.01).extrude(
-        App.Vector(0.0, remain + 0.02, 0.0)
-    )
-    return loft.fuse(prism)
-
-
-def _mono_cutter(cx: float, cz: float, radius: float, depth: float):
-    """Measured front bore with inward entry bevel, then inset prism (no Cylinder)."""
-    bevel = min(ENTRY_BEVEL_DEPTH, max(depth * 0.2, 1.5))
-    inset = min(ENTRY_BEVEL_INSET, radius * 0.35)
-    inner_r = radius - inset
-
-    def ngon_wire(rad: float, y: float):
-        angles = [2.0 * math.pi * index / MONO_SIDES for index in range(MONO_SIDES)]
-        points = [
-            App.Vector(cx + rad * math.cos(angle), y, cz + rad * math.sin(angle))
-            for angle in angles
-        ]
-        return Part.makePolygon(points + [points[0]])
-
-    loft = Part.makeLoft(
-        [ngon_wire(radius + 0.02, Y_FRONT - 0.01), ngon_wire(inner_r, Y_FRONT + bevel)],
-        solid=True,
-        ruled=True,
-    )
-    remain = depth - bevel + 0.02
-    if remain <= 0.05:
-        return loft
-    prism = _mono_prism_solid(cx, cz, inner_r, remain + 0.02, MONO_SIDES, y0=Y_FRONT + bevel - 0.01)
-    return loft.fuse(prism)
 
 
 def main() -> int:
@@ -409,19 +377,12 @@ def main() -> int:
     document.HangTenCoordinateFrame = "freecad-mm-z-up-front-negative-y"
     document.HangTenTessellationDeflection = 0.05
 
-    brick = document.addObject("Part::Feature", "OuterBrick")
-    # Rounded envelope is authored into the brick solid (not a post-cut Shape assign on Part::Cut).
-    brick.Shape = _outer_brick_solid()
+    brick = document.addObject("Part::Feature", "OuterEnvelope")
+    # Rolled envelope is authored into the solid (not a post-cut Shape assign on Part::Cut).
+    brick.Shape = _body_solid()
     document.recompute()
     brick_box = brick.Shape.BoundBox
-    expected = (
-        -HALF_X,
-        Y_FRONT,
-        -HALF_Z,
-        HALF_X,
-        Y_FRONT + BODY_Y,
-        HALF_Z,
-    )
+    expected = (-HALF_X, Y_FRONT, -HALF_Z, HALF_X, Y_BACK, HALF_Z)
     actual = (
         brick_box.XMin,
         brick_box.YMin,
@@ -430,28 +391,58 @@ def main() -> int:
         brick_box.YMax,
         brick_box.ZMax,
     )
-    if any(abs(a - b) > 1.0 for a, b in zip(actual, expected)):
-        raise ValueError(f"brick bbox {actual} != expected {expected}")
+    if any(abs(a - b) > 0.2 for a, b in zip(actual, expected)):
+        raise ValueError(f"envelope bbox {actual} != expected {expected}")
 
-    cutters = []
-    contact_predicates = []
-    for contact_id, (x0, x1, z0, z1, corner_r) in OPENINGS.items():
-        depth = GRIP_DEPTH_MM[contact_id]
-        cutters.append(_pocket_cutter(x0, x1, z0, z1, corner_r, depth))
-        contact_predicates.append(
-            (contact_id, _pocket_face_filter(x0, x1, z0, z1, depth))
-        )
+    upper = TROUGHS["upper"]
+    lower = TROUGHS["lower"]
+    # Station exactly at the published 8 mm so the edge-8 region's depth extent is 8.000.
+    edge_8_fraction = GRIP_DEPTH_MM["edge-8"] / upper["depth"]
+    cutters = [
+        _trough_cutter(upper, extra_fractions=(edge_8_fraction,)),
+        _trough_cutter(lower),
+        _mono_cutter(),
+    ]
 
-    mono_depth = GRIP_DEPTH_MM["mono-25"]
-    cutters.append(_mono_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, mono_depth))
-    contact_predicates.append(
-        ("mono-25", _mono_face_filter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS))
-    )
+    contact_predicates = [
+        (
+            "edge-14",
+            _wall_filter(
+                upper,
+                above=False,
+                y_max=Y_FRONT + upper["depth"],
+                x_min=-CONTACT_X_LIMIT,
+                x_max=CONTACT_X_LIMIT,
+            ),
+        ),
+        (
+            "edge-8",
+            _wall_filter(
+                upper,
+                above=True,
+                y_max=Y_FRONT + GRIP_DEPTH_MM["edge-8"],
+                x_min=-CONTACT_X_LIMIT,
+                x_max=CONTACT_X_LIMIT,
+            ),
+        ),
+        (
+            # The reference hands the lower trough's right end to the mono, not to edge-18.
+            "edge-18",
+            _wall_filter(
+                lower,
+                above=False,
+                y_max=Y_FRONT + lower["depth"],
+                x_min=-CONTACT_X_LIMIT,
+                x_max=MONO_X_MIN,
+            ),
+        ),
+        ("mono-25", _mono_filter(lower)),
+    ]
 
     fused_shape = cutters[0]
     for cutter in cutters[1:]:
         fused_shape = fused_shape.fuse(cutter)
-    cutter_obj = document.addObject("Part::Feature", "PocketCutters")
+    cutter_obj = document.addObject("Part::Feature", "TroughCutters")
     cutter_obj.Shape = fused_shape
 
     body_cut = document.addObject("Part::Cut", "BodyCut")
@@ -474,9 +465,9 @@ def main() -> int:
     document.recompute()
     body_shape = body.Shape
     if body_shape.isNull() or body_shape.Volume < 1.0:
-        raise ValueError("filleted body failed to produce a solid")
+        raise ValueError("cut body failed to produce a solid")
 
-    depth_spans = {}
+    regions = {}
     for contact_id, predicate in contact_predicates:
         feature = document.addObject("Part::Feature", f"Contact_{contact_id.replace('-', '_')}")
         feature.Shape = _shell_from_body_faces(body_shape, predicate)
@@ -487,21 +478,37 @@ def main() -> int:
         feature.NodeRole = "contact"
         feature.ContactID = contact_id
         _apply_material(feature, None)
-        depth_spans[contact_id] = round(feature.Shape.BoundBox.YLength, 3)
+        box = feature.Shape.BoundBox
+        regions[contact_id] = {
+            "faces": len(feature.Shape.Faces),
+            "x": (round(box.XMin, 2), round(box.XMax, 2)),
+            "z": (round(box.ZMin, 2), round(box.ZMax, 2)),
+            "depth": round(box.YLength, 3),
+        }
 
     document.recompute()
     stale = [obj.Name for obj in document.Objects if "Invalid" in obj.State or "Error" in obj.State]
     if stale:
         raise ValueError(f"document failed recompute: {stale}")
 
+    for contact_id, published in GRIP_DEPTH_MM.items():
+        measured_depth = regions[contact_id]["depth"]
+        if abs(measured_depth - published) > 0.25:
+            raise ValueError(
+                f"{contact_id} region depth {measured_depth} mm != published {published} mm"
+            )
+
     DESTINATION.parent.mkdir(parents=True, exist_ok=True)
     document.saveAs(str(DESTINATION))
 
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference envelope mm: {measured}")
-    print(f"authored contact Y spans mm: {depth_spans} (published {GRIP_DEPTH_MM})")
-    print(f"outer corner R={CORNER_R} mm ({CORNER_SEGMENTS} segs), "
-          f"entry bevel {ENTRY_BEVEL_DEPTH}/{ENTRY_BEVEL_INSET} mm, mono sides={MONO_SIDES}")
+    print(f"body faces: {len(body_shape.Faces)}  volume {body_shape.Volume:.0f} mm^3")
+    for contact_id, info in regions.items():
+        print(
+            f"  {contact_id:8s} faces={info['faces']:3d} x={info['x']} z={info['z']} "
+            f"depth={info['depth']} (published {GRIP_DEPTH_MM[contact_id]})"
+        )
     sys.stdout.flush()
     return 0
 
