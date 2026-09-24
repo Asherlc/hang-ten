@@ -56,17 +56,25 @@ GRIP_DEPTH_MM = {
     "mono-25": 25.0,
 }
 
-# Opening rectangles measured on the reference front lip (native mm, x/z).
-# Corner radii from reference end curvature (stadium-ish for edge-14/8; tighter for edge-18).
-# edge-14 / edge-8 are inset 0.3 mm from the shared z=23 line so the cuts stay separate.
+# Opening rectangles measured on the reference front (native mm, x/z).
+# Corner radii: (bottom-left, bottom-right, top-right, top-left).
+# Reference silhouettes are full-width at the shared z=23 edge (sharp there) and
+# only round on the outer ends — uniform half-height stadiums pinch into a peanut.
+_SHARED_Z = 23.0
+_HAIRLINE = 0.1
 OPENINGS = {
-    "edge-18": (-57.0, 39.0, -34.8, -20.0, 5.0),
-    "edge-14": (-57.0, 57.0, 7.5, 22.7, 7.5),
-    "edge-8": (-57.0, 57.0, 23.3, 37.0, 7.0),
+    # edge-18: measured end radius ~5 mm
+    "edge-18": (-57.0, 39.0, -34.8, -20.0, (5.0, 5.0, 5.0, 5.0)),
+    # edge-14: round bottom only; sharp at shared top
+    "edge-14": (-57.0, 57.0, 7.5, _SHARED_Z - _HAIRLINE, (5.0, 5.0, 0.5, 0.5)),
+    # edge-8: round top only; sharp at shared bottom
+    "edge-8": (-57.0, 57.0, _SHARED_Z + _HAIRLINE, 37.0, (0.5, 0.5, 5.0, 5.0)),
 }
 
-# Front-entry lip chamfer measured ~2.3 mm on the mono; 3 mm reads for edge openings.
-LIP_FILLET_R = 3.0
+# No outer lip expansion: a 3 mm loft bloated AABBs and pinched edge-8/edge-14 into
+# a peanut. Flush measured openings keep contact AABBs within ~0.1 mm of reference.
+# (A ≤0.4 mm lip re-contests the shared divider at compile partition.)
+LIP_FILLET_R = 0.0
 # Arc corners approximated with this many planar segments (compile partition stays planar).
 OPENING_CORNER_SEGMENTS = 12
 
@@ -143,34 +151,20 @@ def _pocket_face_filter(
     z0: float,
     z1: float,
     depth: float,
-    *,
-    expand_x0: bool = True,
-    expand_x1: bool = True,
-    expand_z0: bool = True,
-    expand_z1: bool = True,
 ):
-    """Match pocket walls, floor, stadium ends, and front lip faces by CoM."""
+    """Match pocket walls, floor, and ends by CoM (flush measured openings)."""
     y1 = Y_FRONT + depth
-    x0_lip = x0 - LIP_FILLET_R - 0.25 if expand_x0 else x0 - 0.25
-    x1_lip = x1 + LIP_FILLET_R + 0.25 if expand_x1 else x1 + 0.25
-    z0_lip = z0 - LIP_FILLET_R - 0.25 if expand_z0 else z0 - 0.25
-    z1_lip = z1 + LIP_FILLET_R + 0.25 if expand_z1 else z1 + 0.25
 
     def matches(face) -> bool:
         center = face.CenterOfMass
         if center.y < Y_FRONT - 0.05 or center.y > y1 + 0.05:
             return False
-        # Never claim the mono bore from an edge pocket (openings nearly touch in X).
-        radial = math.hypot(center.x - MONO_CENTER_X, center.z - MONO_CENTER_Z)
-        if radial <= MONO_RADIUS + LIP_FILLET_R + 0.75:
+        if face.BoundBox.YMax > y1 + 0.15:
             return False
-        in_core = x0 - 0.25 <= center.x <= x1 + 0.25 and z0 - 0.25 <= center.z <= z1 + 0.25
-        in_lip = (
-            center.y <= Y_FRONT + LIP_FILLET_R + 0.75
-            and x0_lip <= center.x <= x1_lip
-            and z0_lip <= center.z <= z1_lip
-        )
-        if not (in_core or in_lip):
+        radial = math.hypot(center.x - MONO_CENTER_X, center.z - MONO_CENTER_Z)
+        if radial <= MONO_RADIUS + 0.75:
+            return False
+        if not (x0 - 0.25 <= center.x <= x1 + 0.25 and z0 - 0.05 <= center.z <= z1 + 0.05):
             return False
         if isinstance(face.Surface, Part.Plane):
             normal = face.Surface.Axis
@@ -182,14 +176,14 @@ def _pocket_face_filter(
 
 
 def _mono_face_filter(cx: float, cz: float, radius: float):
-    """Planar n-gon walls + floor + lip; no true Cylinder as sole contact surface."""
+    """Planar n-gon walls + floor; no true Cylinder as sole contact surface."""
 
     def matches(face) -> bool:
         center = face.CenterOfMass
         radial = math.hypot(center.x - cx, center.z - cz)
         if not (
             Y_FRONT - 0.05 <= center.y <= Y_FRONT + GRIP_DEPTH_MM["mono-25"] + 0.05
-            and radius * 0.55 <= radial <= radius + LIP_FILLET_R + 0.5
+            and radius * 0.55 <= radial <= radius + 0.5
         ):
             return False
         if isinstance(face.Surface, Part.Plane):
@@ -216,43 +210,67 @@ def _rounded_rect_points(
     x1: float,
     z0: float,
     z1: float,
-    corner_r: float,
+    corner_r,
     y: float,
     segments: int,
 ):
-    """CCW XZ rounded-rect vertices (planar) at plane y = const."""
+    """CCW XZ rounded-rect vertices (planar) at plane y = const.
+
+    corner_r is a single radius or (bl, br, tr, tl) per-corner radii.
+    """
     width = x1 - x0
     height = z1 - z0
-    radius = min(corner_r, width / 2.0 - 0.05, height / 2.0 - 0.05)
-    if radius < 0.05:
-        return [
-            App.Vector(x0, y, z0),
-            App.Vector(x1, y, z0),
-            App.Vector(x1, y, z1),
-            App.Vector(x0, y, z1),
-        ]
-    cx0, cx1 = x0 + radius, x1 - radius
-    cz0, cz1 = z0 + radius, z1 - radius
+    if isinstance(corner_r, (tuple, list)):
+        bl, br, tr, tl = (float(v) for v in corner_r)
+    else:
+        bl = br = tr = tl = float(corner_r)
+    max_r = min(width / 2.0 - 0.05, height / 2.0 - 0.05)
+    bl = min(max(bl, 0.0), max_r)
+    br = min(max(br, 0.0), max_r)
+    tr = min(max(tr, 0.0), max_r)
+    tl = min(max(tl, 0.0), max_r)
+
+    def corner_arc(cx: float, cz: float, radius: float, a0: float, a1: float, include_end: bool):
+        if radius < 0.05:
+            # Degenerate: emit the sharp corner once.
+            return [App.Vector(cx, y, cz)]
+        count = segments if include_end else segments
+        # Sample exclusive of start (caller already placed prior edge end); include end
+        # when include_end else omit last (shared with next edge start).
+        points = []
+        last = count if include_end else count - 1
+        for index in range(1, last + 1):
+            angle = a0 + (a1 - a0) * (index / segments)
+            points.append(
+                App.Vector(cx + radius * math.cos(angle), y, cz + radius * math.sin(angle))
+            )
+        return points
+
     points: list = []
-    # Bottom edge, then bottom-right corner, right, top-right, top, top-left, left, bottom-left.
-    points.append(App.Vector(cx0, y, z0))
-    points.append(App.Vector(cx1, y, z0))
-    for index in range(1, segments + 1):
-        angle = -math.pi / 2.0 + (math.pi / 2.0) * (index / segments)
-        points.append(App.Vector(cx1 + radius * math.cos(angle), y, cz0 + radius * math.sin(angle)))
-    points.append(App.Vector(x1, y, cz1))
-    for index in range(1, segments + 1):
-        angle = 0.0 + (math.pi / 2.0) * (index / segments)
-        points.append(App.Vector(cx1 + radius * math.cos(angle), y, cz1 + radius * math.sin(angle)))
-    points.append(App.Vector(cx0, y, z1))
-    for index in range(1, segments + 1):
-        angle = math.pi / 2.0 + (math.pi / 2.0) * (index / segments)
-        points.append(App.Vector(cx0 + radius * math.cos(angle), y, cz1 + radius * math.sin(angle)))
-    points.append(App.Vector(x0, y, cz0))
-    # Final corner: omit the last sample — it coincides with points[0].
-    for index in range(1, segments):
-        angle = math.pi + (math.pi / 2.0) * (index / segments)
-        points.append(App.Vector(cx0 + radius * math.cos(angle), y, cz0 + radius * math.sin(angle)))
+    # Start at bottom edge after BL corner.
+    points.append(App.Vector(x0 + bl, y, z0))
+    points.append(App.Vector(x1 - br, y, z0))
+    # Bottom-right corner (center at x1-br, z0+br): -90° → 0°
+    if br >= 0.05:
+        points.extend(corner_arc(x1 - br, z0 + br, br, -math.pi / 2.0, 0.0, include_end=True))
+    else:
+        points.append(App.Vector(x1, y, z0))
+    points.append(App.Vector(x1, y, z1 - tr))
+    # Top-right: 0° → 90°
+    if tr >= 0.05:
+        points.extend(corner_arc(x1 - tr, z1 - tr, tr, 0.0, math.pi / 2.0, include_end=True))
+    else:
+        points.append(App.Vector(x1, y, z1))
+    points.append(App.Vector(x0 + tl, y, z1))
+    # Top-left: 90° → 180°
+    if tl >= 0.05:
+        points.extend(corner_arc(x0 + tl, z1 - tl, tl, math.pi / 2.0, math.pi, include_end=True))
+    else:
+        points.append(App.Vector(x0, y, z1))
+    points.append(App.Vector(x0, y, z0 + bl))
+    # Bottom-left: 180° → 270°; omit final sample (coincides with points[0]).
+    if bl >= 0.05:
+        points.extend(corner_arc(x0 + bl, z0 + bl, bl, math.pi, 1.5 * math.pi, include_end=False))
     return points
 
 
@@ -261,7 +279,7 @@ def _rounded_rect_face(
     x1: float,
     z0: float,
     z1: float,
-    corner_r: float,
+    corner_r,
     y: float,
     segments: int = OPENING_CORNER_SEGMENTS,
 ):
@@ -275,7 +293,7 @@ def _rounded_rect_wire(
     x1: float,
     z0: float,
     z1: float,
-    corner_r: float,
+    corner_r,
     y: float,
     segments: int = OPENING_CORNER_SEGMENTS,
 ):
@@ -291,7 +309,7 @@ def _shell_from_body_faces(body_shape, predicate):
     return Part.makeCompound(faces)
 
 
-def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, corner_r: float, depth: float):
+def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, corner_r, depth: float):
     face = _rounded_rect_face(x0, x1, z0, z1, corner_r, Y_FRONT - 0.01)
     return face.extrude(App.Vector(0.0, depth + 0.02, 0.0))
 
@@ -301,7 +319,7 @@ def _pocket_lip_cutter(
     x1: float,
     z0: float,
     z1: float,
-    corner_r: float,
+    corner_r,
     lip_r: float,
     *,
     expand_x0: bool = True,
@@ -314,9 +332,10 @@ def _pocket_lip_cutter(
     x1_outer = x1 + lip_r if expand_x1 else x1
     z0_outer = z0 - lip_r if expand_z0 else z0
     z1_outer = z1 + lip_r if expand_z1 else z1
-    outer_height = z1_outer - z0_outer
-    outer_width = x1_outer - x0_outer
-    outer_corner = min(corner_r + lip_r, outer_width / 2.0 - 0.05, outer_height / 2.0 - 0.05)
+    if isinstance(corner_r, (tuple, list)):
+        outer_corner = tuple(float(v) + lip_r for v in corner_r)
+    else:
+        outer_corner = float(corner_r) + lip_r
     outer = _rounded_rect_wire(
         x0_outer,
         x1_outer,
@@ -413,51 +432,23 @@ def main() -> int:
 
     cutters = []
     contact_predicates = []
-    # Asymmetric lip expansion avoids eating the edge-14/edge-8 divider and the mono.
-    # Flags: expand_x0, expand_x1, expand_z0, expand_z1
-    lip_expand = {
-        "edge-18": (True, False, True, True),
-        "edge-14": (True, True, True, False),
-        "edge-8": (True, True, False, True),
-    }
     for contact_id, (x0, x1, z0, z1, corner_r) in OPENINGS.items():
         depth = GRIP_DEPTH_MM[contact_id]
-        expand_x0, expand_x1, expand_z0, expand_z1 = lip_expand[contact_id]
         cutters.append(_pocket_cutter(x0, x1, z0, z1, corner_r, depth))
-        cutters.append(
-            _pocket_lip_cutter(
-                x0,
-                x1,
-                z0,
-                z1,
-                corner_r,
-                LIP_FILLET_R,
-                expand_x0=expand_x0,
-                expand_x1=expand_x1,
-                expand_z0=expand_z0,
-                expand_z1=expand_z1,
+        if LIP_FILLET_R > 0.0:
+            cutters.append(
+                _pocket_lip_cutter(x0, x1, z0, z1, corner_r, LIP_FILLET_R)
             )
-        )
         contact_predicates.append(
-            (
-                contact_id,
-                _pocket_face_filter(
-                    x0,
-                    x1,
-                    z0,
-                    z1,
-                    depth,
-                    expand_x0=expand_x0,
-                    expand_x1=expand_x1,
-                    expand_z0=expand_z0,
-                    expand_z1=expand_z1,
-                ),
-            )
+            (contact_id, _pocket_face_filter(x0, x1, z0, z1, depth))
         )
 
     mono_depth = GRIP_DEPTH_MM["mono-25"]
     cutters.append(_mono_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, mono_depth))
-    cutters.append(_mono_lip_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, LIP_FILLET_R))
+    if LIP_FILLET_R > 0.0:
+        cutters.append(
+            _mono_lip_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, LIP_FILLET_R)
+        )
     contact_predicates.append(
         ("mono-25", _mono_face_filter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS))
     )
