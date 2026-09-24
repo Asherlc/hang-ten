@@ -1,7 +1,8 @@
 # Lessons from the FreeCAD hold-authoring migration
 
 Hard-won, board-agnostic lessons from migrating hangboards to native FreeCAD
-sources (pilot: `lattice-triple-rung`; then `metolius-rock-rings-3d`). Read with
+sources (pilot: `lattice-triple-rung`; then `metolius-rock-rings-3d`; then
+sculpted `lattice-mxedge-lift-small`). Read with
 `docs/freecad-authoring-migration.md`. The point of writing these down is to
 avoid repeating the same detours.
 
@@ -212,3 +213,82 @@ coincident-surface trap in lesson 5:
   scripts are maintenance overhead; a one-off board can be a throwaway script.
   The framework is justified only by the repo's hard contracts (hash-pinned
   bytes, exact package schema, cross-platform reproducibility, ODR).
+
+## 10. Sculpted lift-blocks and partitioned troughs
+(`lattice-mxedge-lift-small`; applies to sibling MXEdge / similar scooped shells)
+
+### Measure topology before inventing pockets
+
+`board.json` contacts are a **logical partition**, not a pocket count. MXEdge
+Small has four grips but the front mesh is **two stadium troughs**: edge-8/14
+share the upper trough's walls, edge-18/mono share the lower (mono nests in the
+right end). Authoring four separate openings looked "reasonable" and was wrong
+for a long stretch of the session.
+
+**First measurement pass, before any cutter:**
+
+1. Dump reference node AABBs from the Git-resolved USDZ.
+2. Build a front depth map (0.5 mm grid is enough) and count recessed runs per
+   column — that tells you trough count vs pocket count.
+3. Only then decide cutters and region face selection.
+
+Scratch diagnostics under `.context/<slug>/scratch/` (depth map, layout, floor
+profile, AABB dump, candidate-vs-ref depth diff) beat eyeballing alone. Keep
+them; they are not build inputs.
+
+### Product copy is not millimetre truth
+
+Catalogue strings like "20 × 11 × 5 cm" are rounded. Compile against
+**descriptor / mesh bounds** (for Small: ±84 / ±17 / ±49 mm). MX edge labels
+can be **area-equivalent** with depth varying along length — measure the crown
+rather than assuming a constant floor.
+
+### Walls matter more than floors for lambert
+
+Flush pocket floors read as a blank brick under `preview.py`'s lambert light.
+Recesses read from **wall normals** (ogee / bevel / lip). If the front looks
+flat or "cattywompus," fix entry / wall geometry before chasing texture or
+triangle count.
+
+### Compile partition traps (hard)
+
+- Contacts must be **faces of the boolean-cut body**, not separate shells
+  `Common`'d onto the body (degenerate coincident boolean → fragments / holes).
+- **Never export a true `Cylinder` as a contact.** Curved tessellation fails the
+  compiler's `distToShape < 1e-4` check; use an n-gon prism / loft instead.
+- **No non-planar quads** for crowned floors. A lofted/ruled quad between
+  stations along a parabola is non-planar and breaks `compile_board`'s
+  surface-area partition check; author a **triangle soup** (planar by
+  construction) instead.
+- Floor / wall splits: decide ownership by a face's **whole extent**, not its
+  centroid. One boolean face can span a full apex strip; a centroid test assigns
+  it arbitrarily when it straddles a region boundary.
+- **Published grip depths may not match reference node depths.** The reference
+  Small nodes span whole troughs; the published-depth gate wants 8/14/18/25 mm.
+  Satisfy the gate deliberately (e.g. lip band of published depth; floor at
+  published centre depth with measured crown) and document the tradeoff — do not
+  blindly copy reference AABB depth extents.
+
+### Construction habits that paid off on Small
+
+- Bake the outer body to a `Part::Feature` before further cuts when a prior
+  fillet / loft would otherwise be wiped by `Part::Cut` dependency quirks.
+- Prefer even arc segment counts so a vertex lands on trough centreline.
+- Subdivide long straight wall runs when a single face would make a contact AABB
+  overrun (one face spanning x ±48 put edge-18 out to 48 instead of ~39).
+- Sample wall stations from one stadium template of (core x, outward normal)
+  pairs so corresponding samples stay aligned under depth scaling.
+
+### Acceptance and process reminders specific to this class
+
+- Declare sculpted → measured approximation **before** iterating; do not use
+  `compare_exports` as a per-tweak gate.
+- Resolve the reference only via `reference.load_reference` into
+  `.context/<worktree-slug>/ref/` — never read live `assets/primary.usdz`.
+- Do not attach an `EXIT` trap that deletes `.context/` to one-shot shell
+  blocks; that wipes the venv mid-loop. Clean up exact owned resources at
+  session end instead.
+- Prefer the sibling author script
+  (`migration/author_lattice_mxedge_lift_small.py`) and its AUTHORING notes as
+  the structural precedent for MXEdge Large / similar partitioned troughs —
+  not the constant-section `lattice-triple-rung` pad clone.

@@ -371,7 +371,9 @@ write-up. The durable points:
   recess is a pocket (`Part::Loft Solid=False` + floor face, reversed with
   `Part::Reverse`); a hold that is a sub-region of a flat body face is a
   **shallow recess** — never a coincident patch (z-fights) and never a proud
-  patch (also z-fights under the app's depth buffer).
+  patch (also z-fights under the app's depth buffer). For MXEdge-style
+  partitioned troughs, measure topology first (AABBs + front depth map) —
+  see `docs/freecad-authoring-lessons.md` §10 before inventing separate pockets.
 
 **Inner loop (fast, host-side).** After every authoring edit:
 
