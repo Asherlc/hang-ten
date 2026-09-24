@@ -320,10 +320,14 @@ def _trough_cutter():
 
 
 def _cord_mouth(sign: float):
-    """Through-hole n-gon from the shallower floor through the back face."""
+    """Through-hole n-gon from the cavity floors through the back face.
+
+    Opens on both the 15 mm and 20 mm floor levels (z≈0 sits on the step), so
+    the start plane is slightly proud of the shallower floor.
+    """
     cx = sign * CORD_X
-    y0 = LIP_15_Y - 0.5  # clear both the 15 mm and 20 mm floor levels
-    y1 = Y_BACK + 0.5
+    y0 = LIP_15_Y - 0.8
+    y1 = Y_BACK + 0.8
     sections = []
     for y in (y0, y1):
         sections.append(
@@ -461,21 +465,17 @@ def main() -> int:
     brick.Shape = _body_solid()
     document.recompute()
 
-    cutters = [_trough_cutter(), _cord_mouth(1.0), _cord_mouth(-1.0)]
-    fused = cutters[0]
-    for cutter in cutters[1:]:
-        fused = fused.fuse(cutter)
-    cutter_obj = document.addObject("Part::Feature", "CavityCutters")
-    cutter_obj.Shape = fused
-
+    # Deep cavity first, then raise the +Z floor to 15 mm, then punch cords
+    # through the finished body so the filler cannot plug the holes.
+    trough_obj = document.addObject("Part::Feature", "TroughCutter")
+    trough_obj.Shape = _trough_cutter()
     body_cut = document.addObject("Part::Cut", "BodyCut")
     body_cut.Base = brick
-    body_cut.Tool = cutter_obj
+    body_cut.Tool = trough_obj
     document.recompute()
     if body_cut.Shape.isNull() or body_cut.Shape.Volume < 1.0:
         raise ValueError("boolean cut failed")
 
-    # Raise the +Z floor to the published 15 mm depth (manufacturer dual lip).
     filler_obj = document.addObject("Part::Feature", "UpperFloorFiller")
     filler_obj.Shape = _upper_floor_filler()
     body_fused = document.addObject("Part::Fuse", "BodyWithStep")
@@ -485,8 +485,18 @@ def main() -> int:
     if body_fused.Shape.isNull() or body_fused.Shape.Volume < 1.0:
         raise ValueError("upper floor filler fuse failed")
 
+    cord_fused = _cord_mouth(1.0).fuse(_cord_mouth(-1.0))
+    cord_obj = document.addObject("Part::Feature", "CordCutters")
+    cord_obj.Shape = cord_fused
+    body_holed = document.addObject("Part::Cut", "BodyCordCut")
+    body_holed.Base = body_fused
+    body_holed.Tool = cord_obj
+    document.recompute()
+    if body_holed.Shape.isNull() or body_holed.Shape.Volume < 1.0:
+        raise ValueError("cord through-hole cut failed")
+
     body = document.addObject("Part::Feature", "BodySolid")
-    body.Shape = body_fused.Shape
+    body.Shape = body_holed.Shape
     body.addProperty("App::PropertyString", "NodeID", "HangTen")
     body.addProperty("App::PropertyString", "NodeRole", "HangTen")
     body.NodeID = NODE_IDS["body"]
