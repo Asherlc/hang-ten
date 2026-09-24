@@ -609,11 +609,14 @@ def main() -> int:
     # face and a centroid partition of that face is ragged, so author it as a
     # shallow recess exactly like a pocket: the body takes a clean cut, the
     # partition claims that cut's surface, and the region mesh matches it.
+    # Keep the band on the flat front face: above ~z84 the face has curved back
+    # into the top fillet, so a straight recess there would poke off the body.
+    jug_top = min(jug["z"][1], 77.0)
     jug_rect = [
         (jug["x"][0], jug["z"][0]),
         (jug["x"][1], jug["z"][0]),
-        (jug["x"][1], jug["z"][1]),
-        (jug["x"][0], jug["z"][1]),
+        (jug["x"][1], jug_top),
+        (jug["x"][0], jug_top),
     ]
     jug_opening = _sketch(document, "JugOpening", jug_rect, OUTLINE_FRAME, (-73.0, -92.0))
     jug_opening.Placement.Base.y = -28.5
