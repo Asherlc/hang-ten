@@ -12,11 +12,78 @@ package:
 
     Hangboards/<package-directory>/<package-directory>.FCStd
 
-plus the existing logical metadata at `Hangboards/<package-directory>/board.json`.
-One shared command turns those two inputs into the existing runtime pair
-(`assets/primary.usdz` and `assets/primary.model.json`). There is no required
-Blender, GLB, STEP, OBJ, or STL step, and no board-specific Python program in the
-build path.
+The FCStd is the single source of truth for the board: its geometry *and* its
+logical metadata. One shared command turns it into the runtime pair
+(`assets/primary.usdz` and `assets/primary.model.json`), and the package's
+`board.json` is generated from it (see [Board metadata](#board-metadata-boardjson-is-generated)).
+There is no required Blender, GLB, STEP, OBJ, or STL step, and no board-specific
+Python program in the build path.
+
+## Board metadata: board.json is generated
+
+For a CAD-backed package, `Hangboards/<package>/board.json` is a **committed
+build output**, not an input. Xcode bundles `Hangboards/<package>` directly and
+cannot run FreeCAD, so the file stays in the repository, and CI fails if it is
+stale. **Never hand-edit a CAD board's `board.json`.** (Boards without an FCStd
+keep their hand-authored `board.json`.) The app schemas are closed, so the file
+carries no "generated" marker key; this README and the CI check are the guard.
+
+The metadata lives in two document-level string properties of the FCStd:
+
+* `HangTenBoardID` — the board `id`;
+* `HangTenBoardManifest` — `board.json` minus `id`, as compact single-line JSON
+  in the order `board.json` is emitted, with every number spelled as authored
+  (the package validator reads some number lexemes, such as nine-decimal
+  instance translations).
+
+Only `id` is derived. `aspectRatio` stays in the manifest because it is not
+reproducible from the descriptor's `modelBounds` for most boards, and published
+grip depths stay because they are sourced product facts (see `AGENTS.md`,
+Training-plan Fidelity) that `compile_board.py` validates the geometry against.
+Schema-v2 boards (slots, instances, `contactIDsBySlotID`) are carried the same
+way, which is why the manifest is one JSON document rather than per-object
+properties.
+
+`board_manifest.py` is pure host Python (no FreeCAD):
+
+    python3 Tools/HangboardCAD/board_manifest.py --check --all          # CI freshness check
+    python3 Tools/HangboardCAD/board_manifest.py --package <slug>       # regenerate board.json
+    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> # print the manifest
+
+To change a CAD board's metadata, edit the manifest and regenerate in one step
+(host Python; source URLs and audit mappings for any changed field are still
+required, per `AGENTS.md`):
+
+    python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/manifest.json
+    $EDITOR /tmp/manifest.json
+    python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/manifest.json
+
+`set_board_manifest.py` rewrites only `Document.xml` inside the archive (it
+inserts or replaces the property exactly as FreeCAD writes it) and verifies that
+every other member — shapes, element maps, textures — is byte-identical, so a
+metadata edit can never perturb the compiled geometry. It deliberately does not
+re-save through FreeCAD: a FreeCAD save re-serializes every shape with last-ulp
+differences. Editing the property in the FreeCAD GUI is also valid, but then
+treat it like any geometry edit (recompile and refresh the lock). After either
+route, refresh the delivery lock for the changed FCStd and `board.json` bytes.
+
+Readable diffs: `.gitattributes` routes `Hangboards/*/*.FCStd` through the
+`hangten-fcstd` diff driver. Enable it once per clone:
+
+    git config diff.hangten-fcstd.textconv "python3 Tools/HangboardCAD/board_manifest.py --dump-file"
+
+`git diff`/`git log -p` then show the HangTen document properties, the
+pretty-printed manifest, and one digest line per archive member (so geometry
+changes show up as changed `*.brp` digests). The driver resolves Git LFS
+pointers from the local LFS object store; without it, the diff shows the LFS
+pointer as before.
+
+The one-off migration that moved each committed `board.json` into its FCStd is
+`migration/embed_board_manifest.py`; it required every regenerated `board.json`
+to be token-identical to the hand-authored one (only whitespace and string
+escaping changed, for three packages). A new CAD board embeds its manifest the
+same way: author the FCStd, then run `set_board_manifest.py --package <slug>`
+on the package's reviewed `board.json` once.
 
 ## Running it
 
@@ -29,16 +96,20 @@ does not inherit `PYTHONPATH`:
       Tools/HangboardCAD/compile_board.py --package lattice-triple-rung
 
 Add `--check` to validate and stage without publishing, and `--report <path>` to
-write the JSON build report. The command validates `board.json` and the source
-archive, reopens and recomputes the document without modifying its bytes,
+write the JSON build report. The command reads the board metadata from the
+source's `HangTenBoardManifest` (`--board <path>` overrides it with an explicit
+file; a source without a manifest falls back to the package `board.json`),
+validates it and the source archive, reopens and recomputes the document without
+modifying its bytes,
 extracts the bound components, tessellates at the document's pinned deflection,
 partitions the board surface, writes the USDZ directly, reopens the exported
-bytes, derives the descriptor from those bytes, and publishes the pair.
+bytes, derives the descriptor from those bytes, and publishes the pair. Publishing
+into the package (no `--assets`) also regenerates the package `board.json`.
 
 ## Source document contract
 
-Document properties: `HangTenBoardID`, `HangTenPresentationID`,
-`HangTenSchemaVersion` (1 or 2), `HangTenSourceKind`,
+Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
+`HangTenPresentationID`, `HangTenSchemaVersion` (1 or 2), `HangTenSourceKind`,
 `HangTenCoordinateFrame` (`freecad-mm-z-up-front-negative-y`), and
 `HangTenTessellationDeflection`.
 
@@ -73,8 +144,8 @@ edges, extruded with a length expression on the pad.
 Provenance of the authored numbers. There is deliberately no per-board
 provenance sidecar; these facts live here instead.
 
-* Published facts come from `board.json`: overall 550 x 130 x 50 mm and grip
-  depths 45 / 20 / 10 mm.
+* Published facts come from the board manifest (generated `board.json`): overall
+  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm.
 * The cross-section is **measured** from the approved reference asset at the
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.
@@ -118,7 +189,7 @@ performance. Those remain open.
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
   and must not be presented as recovered parametric history.
 * The compiler refuses a source it cannot recompute cleanly, a contact region
-  whose depth disagrees with the published grip depth in `board.json`, a body
+  whose depth disagrees with the published grip depth in the board manifest, a body
   triangle claimed by two contact regions, a region that claims more body
   surface than its own exported surface, and a document labelled
   `faceted-import` unless `--allow-faceted-import` acknowledges it. Each guard
@@ -146,6 +217,12 @@ performance. Those remain open.
 * `test_contract.py` — archive preflight: traversal, case collisions, duplicate
   members, unsupported object types, external links, missing embedded files,
   LFS pointers, and binding completeness.
+* `test_board_manifest.py` — the board manifest: round trip to byte-exact
+  `board.json`, geometry members untouched by an embed, in-place replacement,
+  a schema-v2 (slots/instances) board, number-spelling preservation, stale and
+  hand-edited `board.json` detection, LFS pointers, and the textconv rendering.
+  This and `test_contract.py` run in CI's Linux Python job, next to
+  `board_manifest.py --check --all`.
 * `test_usdz_writer.py` — real round trips including an asymmetric basis fixture
   that catches scale, reflection, and axis-swap errors, embedded textures,
   normals and UVs, and byte reproducibility.

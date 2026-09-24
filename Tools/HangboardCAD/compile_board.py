@@ -1,4 +1,4 @@
-"""The one shared Hang Ten board build command: FCStd + board.json -> runtime set.
+"""The one shared Hang Ten board build command: FCStd -> runtime set + board.json.
 
 Run it with FreeCAD's own interpreter, which is the pinned toolchain:
 
@@ -6,9 +6,17 @@ Run it with FreeCAD's own interpreter, which is the pinned toolchain:
       /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \\
       Tools/HangboardCAD/compile_board.py --package <package-directory>
 
+The board metadata comes from the source itself: the document-level
+``HangTenBoardManifest`` property plus ``HangTenBoardID`` (see
+``board_manifest.py``). ``--board <path>`` overrides it with an explicit JSON
+file (used by the guard tests); a source that predates the manifest falls back
+to ``Hangboards/<package>/board.json``. Publishing into the package also
+regenerates ``Hangboards/<package>/board.json`` from the manifest, because that
+file is a committed build output for CAD-backed boards.
+
 Stages, in order:
 
-1. Validate ``board.json`` and the source archive (``contract.inspect_archive``).
+1. Validate the board metadata and the source archive (``contract.inspect_archive``).
 2. Reopen and recompute the source document without modifying its bytes.
 3. Extract the bound components and semantic regions.
 4. Tessellate with the document's pinned quality setting.
@@ -17,7 +25,7 @@ Stages, in order:
 7. Reopen the exported asset.
 8. Derive the descriptor from the reopened bytes and node vertices.
 9. Validate the complete staged package.
-10. Publish the asset and descriptor set.
+10. Publish the asset and descriptor set (and the generated ``board.json``).
 
 Nothing here reads a previous runtime asset: existing USDZ files are regression
 references only, and ``--check`` never writes.
@@ -50,6 +58,7 @@ for _path in (
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+import board_manifest  # noqa: E402
 import contract  # noqa: E402
 import usdz_writer  # noqa: E402
 from contact_model_descriptor import (  # noqa: E402
@@ -472,15 +481,30 @@ def _planar_uvs(points, bounds) -> list[tuple[float, float]]:
     ]
 
 
+def load_board(source: Path, board_path: Path | None) -> tuple[dict, str]:
+    """Board metadata and a label for where it came from.
+
+    An explicit ``board_path`` wins; otherwise the source's own manifest is the
+    single source of truth.
+    """
+    if board_path is not None:
+        return json.loads(Path(board_path).read_text()), _display(Path(board_path))
+    try:
+        return board_manifest.load_board(source), f"{_display(source)}#{board_manifest.MANIFEST_PROPERTY}"
+    except board_manifest.ManifestError as error:
+        raise BuildError(str(error)) from error
+
+
 def build(
     package: str,
     source: Path,
-    board_path: Path,
+    board_path: Path | None,
     out_dir: Path,
     publish: bool,
     allow_faceted_import: bool = False,
+    board_out: Path | None = None,
 ) -> dict:
-    board = json.loads(board_path.read_text())
+    board, board_origin = load_board(source, board_path)
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
         raise BuildError("board.json must be schema version 3")
     presentations = [item.get("id") for item in board.get("presentations", [])]
@@ -688,6 +712,7 @@ def build(
         result = {
             "package": package,
             "source": _display(source),
+            "board": board_origin,
             "sourceSHA256": source_digest,
             "sourceUnchanged": _digest(source) == source_digest,
             "schemaVersion": version,
@@ -729,6 +754,14 @@ def build(
                 "published descriptor does not match the published asset; the pair is "
                 "inconsistent and must be rebuilt"
             )
+        if board_out is not None:
+            # CAD-backed boards commit board.json as a generated build output.
+            rendered = board_manifest.render_board(board)
+            if not board_out.is_file() or board_out.read_bytes() != rendered:
+                board_temp = board_out.with_name(f".{board_out.name}.staged")
+                board_temp.write_bytes(rendered)
+                os.replace(board_temp, board_out)
+            result["boardJSON"] = _display(board_out)
         result["published"] = True
         result["asset"] = _display(asset_target)
         result["descriptor"] = _display(descriptor_target)
@@ -743,7 +776,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True, help="Hangboards/<package-directory>")
     parser.add_argument("--source", help="defaults to Hangboards/<package>/<package>.FCStd")
-    parser.add_argument("--board", help="defaults to Hangboards/<package>/board.json")
+    parser.add_argument(
+        "--board",
+        help="explicit board metadata JSON; defaults to the source's HangTenBoardManifest",
+    )
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
     parser.add_argument(
@@ -757,11 +793,25 @@ def main(argv: list[str] | None = None) -> int:
     package = arguments.package
     source = (Path(arguments.source) if arguments.source
               else REPOSITORY / "Hangboards" / package / f"{package}.FCStd")
-    board_path = Path(arguments.board) if arguments.board else REPOSITORY / "Hangboards" / package / "board.json"
+    package_board = REPOSITORY / "Hangboards" / package / "board.json"
     assets = Path(arguments.assets) if arguments.assets else REPOSITORY / "Hangboards" / package / "assets"
-    for path in (source, board_path):
-        if not path.is_file():
-            raise BuildError(f"missing required input: {path}")
+    if not source.is_file():
+        raise BuildError(f"missing required input: {source}")
+    board_path = Path(arguments.board) if arguments.board else None
+    board_out = None
+    if board_path is None:
+        try:
+            embedded = board_manifest.has_manifest(source)
+        except board_manifest.ManifestError as error:
+            raise BuildError(str(error)) from error
+        if not embedded:
+            # A source that predates HangTenBoardManifest: the hand-authored
+            # package board.json is still its metadata.
+            board_path = package_board
+        elif not arguments.assets:
+            board_out = package_board
+    if board_path is not None and not board_path.is_file():
+        raise BuildError(f"missing required input: {board_path}")
 
     result = build(
         package,
@@ -770,6 +820,7 @@ def main(argv: list[str] | None = None) -> int:
         assets,
         publish=not arguments.check,
         allow_faceted_import=arguments.allow_faceted_import,
+        board_out=board_out,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     if arguments.report:

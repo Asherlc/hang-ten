@@ -9,14 +9,20 @@ executed on this repository; commands are real.
 ## End state for a migrated board
 
 ```
-Hangboards/<package>/<package>.FCStd      the canonical geometry source
-Hangboards/<package>/board.json           logical/product metadata (unchanged)
+Hangboards/<package>/<package>.FCStd      the canonical source: geometry + board metadata
+Hangboards/<package>/board.json           generated from the FCStd (committed build output)
 Hangboards/<package>/assets/primary.model.json   descriptor, hash-bound
 Hangboards/<package>/assets/primary.usdz  runtime asset (build output)
 ```
 
-One shared command reads the FCStd plus `board.json` and writes the USDZ and the
-descriptor. There must be no board-specific Python program in the build path, no
+One shared command reads the FCStd and writes the USDZ and the descriptor. The
+board's logical metadata is embedded in the FCStd as the document-level
+`HangTenBoardManifest` property (`board.json` minus `id`), and `board.json` is
+generated from it by `Tools/HangboardCAD/board_manifest.py`. The generated file
+stays committed because Xcode bundles the package directory directly and cannot
+run FreeCAD; CI fails when it is stale. Never hand-edit a CAD board's
+`board.json` — see "Board metadata" in `Tools/HangboardCAD/README.md` for the
+edit-and-regenerate workflow. There must be no board-specific Python program in the build path, no
 Blender/GLB/STEP/OBJ/STL step, and no hidden second geometry source. A temporary
 script may *create* the document; the saved document must then stand alone.
 
@@ -71,7 +77,9 @@ renderers hide by renormalising, so it will not show up visually.
 
 Document properties (`App::PropertyString` / `Integer` / `Float`):
 
-`HangTenBoardID`, `HangTenPresentationID`, `HangTenSchemaVersion` (1 or 2),
+`HangTenBoardID`, `HangTenBoardManifest` (compact JSON of `board.json` minus
+`id`; see `Tools/HangboardCAD/board_manifest.py`), `HangTenPresentationID`,
+`HangTenSchemaVersion` (1 or 2),
 `HangTenSourceKind` (`native-parametric-measured-profile` or `faceted-import`),
 `HangTenCoordinateFrame` (`freecad-mm-z-up-front-negative-y`),
 `HangTenTessellationDeflection` (linear deflection in mm).
@@ -235,7 +243,8 @@ measured points reduced to 170 authored vertices, maximum deviation 0.1899 mm.
 
 Keep published facts separate from measurements:
 
-- overall dimensions and grip depths come from `board.json` (published);
+- overall dimensions and grip depths come from the board manifest (published
+  facts, with their sources; `board.json` is generated from it);
 - the outline is measured from the approved display mesh;
 - every display choice (UV projection, material) is stated as a choice.
 
@@ -246,6 +255,20 @@ load-bearing claim. Say so in the doc comment.
 Author native features: a fully constrained Sketcher profile and a pad. Bind each
 contact region to **runs of the profile's own sketch edges**, extruded with a
 length expression on the pad. Do not bind to the pad's faces — see traps.
+
+### 3b. Embed the board metadata
+
+Once the document is saved, move the package's reviewed `board.json` into it.
+From then on the FCStd owns it and `board.json` is generated:
+
+```bash
+python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> Hangboards/<slug>/board.json
+python3 Tools/HangboardCAD/board_manifest.py --check --package <slug>
+```
+
+This rewrites only `Document.xml` in the archive; every shape member stays
+byte-identical. Re-running an authoring script that creates the document from
+scratch drops the property, so embed again afterwards.
 
 ### 4. Write the native checks before trusting anything
 
@@ -297,7 +320,9 @@ python3 -m pytest Tools/HangboardModels/tests/test_model_delivery_alignment.py -
 ```
 
 A source-backed board is locked as descriptor + `board.json` + source, not as a
-compiled asset; `verify-model-delivery.py` reports which boards those are.
+compiled asset; `verify-model-delivery.py` reports which boards those are. A
+metadata-only change (a new `HangTenBoardManifest`) changes both the FCStd and
+the generated `board.json`, so it needs a lock refresh too.
 
 ### 7. Verify in the app, with the hold selected
 
@@ -584,6 +609,13 @@ python3 -m pytest Tools/HangboardCAD/tests -q
 
 # model, package, and delivery-lock suites
 python3 -m pytest Tools/HangboardModels Tools/HangboardPackages -q
+
+# generated board.json freshness for every CAD-backed package (no FreeCAD)
+python3 Tools/HangboardCAD/board_manifest.py --check --all
+
+# change a CAD board's metadata, then regenerate board.json
+python3 Tools/HangboardCAD/board_manifest.py --dump --package <slug> > /tmp/manifest.json
+python3 Tools/HangboardCAD/set_board_manifest.py --package <slug> /tmp/manifest.json
 
 # package validation across the catalogue
 scripts/hangboard-packages.sh validate --root Hangboards --final-inventory

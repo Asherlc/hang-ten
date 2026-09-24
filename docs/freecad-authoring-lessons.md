@@ -341,3 +341,27 @@ that suite is the sketch-and-pad checker.
 In the app, tap the hold map. `hangten://board/…/hold/…` stops on the system
 “Open in Hang Ten?” dialog. The owned-simulator trap deletes DerivedData, so
 a second screenshot pass is a full rebuild.
+
+## 12. Board metadata lives in the FCStd; board.json is generated
+
+- A CAD board's `board.json` is generated from the FCStd's document-level
+  `HangTenBoardManifest` property (`Tools/HangboardCAD/board_manifest.py`) and
+  checked for freshness in CI. Edit the manifest with
+  `set_board_manifest.py`; never hand-edit the generated file.
+- **Do not re-save a source through FreeCAD just to change metadata.** A FreeCAD
+  1.1.3 save re-serializes every `*.brp`, element map, and placement with
+  last-ulp differences (and flipped one enum), even with no geometry edit.
+  `set_board_manifest.py` rewrites only `Document.xml` and proves every other
+  member byte-identical.
+- **Number spelling is part of the package contract.** The package validator
+  requires nine-decimal instance translations (`0.000000000`), so a plain
+  `json.loads`/`json.dumps` round trip (`0.0`) breaks validation; the generator
+  keeps every float's source lexeme.
+- **FreeCAD 1.1.3 on Linux (AppImage) does not reproduce the macOS-built USDZ
+  bytes.** The same unchanged sources compiled on Linux differ from the
+  committed assets for all five boards. Linux is fine for before/after
+  comparisons on one platform (the manifest migration compiled byte-identically
+  before and after), but committed assets must be compiled on the pinned macOS
+  toolchain, which CI's `cad-reproducibility` job enforces.
+- FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
+  pointers and every CAD tool (and the freshness check) refuses them.
