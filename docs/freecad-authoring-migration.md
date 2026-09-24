@@ -283,7 +283,7 @@ byte-identical. Re-running an authoring script that creates the document from
 scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
-commit it. The five boards migrated so far were authored by committed
+commit it. The six boards migrated so far were authored by committed
 `Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
 (published versus measured values, tolerances, reference SHAs, stated
 deviations) is preserved in

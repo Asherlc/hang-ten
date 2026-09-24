@@ -890,8 +890,9 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
         "assets",
         "assets/primary.usdz",
         "assets/primary.model.json",
-        "board.json",
-        # The package's own CAD authoring source; the compiler consumes it.
+        # A CAD-backed package carries its own authoring source, named after its
+        # own directory, instead of board.json: board.json is generated from the
+        # FCStd at build time. It is not a runtime resource.
         "metolius-wood-grips-compact-ii.FCStd",
     }
 

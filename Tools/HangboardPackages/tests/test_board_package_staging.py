@@ -18,6 +18,7 @@ from conftest import (
     PRIMARY_PNG_BYTES,
     PRIMARY_PNG_WIDTH,
     SECONDARY_PNG_BYTES,
+    package_board_text,
     write_board_package,
     write_multi_presentation_board_package,
     write_cad_source,
@@ -510,13 +511,19 @@ def test_staging_splits_every_live_model_package_without_duplication(
             for path in odr_package_root.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
-        # A package's own CAD authoring source (<slug>.FCStd) is consumed by
-        # the compiler and is deliberately never staged.
-        assert staged_base_files == {
+        # A CAD-backed package's own authoring source (<slug>.FCStd) is never
+        # staged; staging writes the board.json generated from it instead.
+        expected_base_files = {
             relative: contents
             for relative, contents in source_files.items()
             if relative != "assets/primary.usdz" and relative != f"{slug}.FCStd"
         }
+        if f"{slug}.FCStd" in source_files:
+            assert "board.json" not in source_files
+            expected_base_files["board.json"] = package_board_text(
+                source_package
+            ).encode("utf-8")
+        assert staged_base_files == expected_base_files
         assert staged_odr_files == {
             "assets/primary.usdz": source_files["assets/primary.usdz"]
         }

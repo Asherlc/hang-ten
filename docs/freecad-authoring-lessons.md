@@ -215,7 +215,7 @@ coincident-surface trap in lesson 5:
   the model tier. Reserve any big-model budget for one bounded, specific question.
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
 - Committed one-off per-board authoring scripts and per-board duplicate
-  native-check scripts are maintenance overhead. The five
+  native-check scripts are maintenance overhead. The six
   `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
   manifest); their provenance lives in
@@ -440,3 +440,14 @@ two-way deviation of 0.39 mm, which passes the 0.5 mm limit because the
 geometry was ported, not re-measured. Start it in the background right after
 the first good compile, or skip it once the descriptor `facePlaneAABB` and the
 renders agree. It is evidence, not a gate.
+
+### A board authored before §12 only needs the manifest embedded
+
+Compact II was authored on a branch that predated §12, with a committed author
+script and a hand-authored `board.json`. Bringing it to the current convention
+needed no FreeCAD run: `set_board_manifest.py` embedded the existing
+`board.json`, `board_manifest.py` regenerated it byte-identically on the first
+try, and only `Document.xml` changed in the FCStd, so the USDZ and descriptor
+bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
+the script's provenance into a dated `docs/source-audits/` record, and delete
+the script.

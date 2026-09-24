@@ -9,6 +9,10 @@ should be derived from the CAD geometry at build time.
 Result: **all five values are kept unchanged. No FCStd, descriptor, lock or
 generator change was made.**
 
+Addendum (same date): `metolius-wood-grips-compact-ii` became the sixth
+CAD-backed package (PR #473) and was audited the same way; its value is also
+kept. See its row and section below.
+
 ## What `aspectRatio` means for model media
 
 * Raster presentations: the package validator
@@ -49,6 +53,7 @@ generator change was made.**
 | `lattice-mxedge-lift-small` | `1.7142857142857142` | `1.714285728862974` (same brick) | 8.5e-9 | (a) keep |
 | `lattice-triple-rung` | `4.2307694857988265` | `4.2307694857988265` | 0 | (a) keep |
 | `metolius-rock-rings-3d` | `1.5` | `0.79347825` (0.146 / 0.184, one ring) | n/a (pair layout) | (a) keep |
+| `metolius-wood-grips-compact-ii` | `3.88` | `3.885350283906042` (0.610000014 / 0.157000005) | 1.4e-3 | (a) keep |
 
 ### captain-fingerfood-pocket — keep `1.6666667`
 
@@ -108,6 +113,25 @@ generator change was made.**
   (≈ 0.95). Neither is a sourced fact, and the renderer fits whichever it
   computes into the 1.5 box, so there is no correctness defect to fix and no
   source that would justify a different number.
+
+### metolius-wood-grips-compact-ii — keep `3.88`
+
+* Evidence: the published face is 610 × 157 mm (24 × 6.2 in,
+  <https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards>;
+  `2026-08-12-metolius-board-packages.md`), ratio 3.8853503. The descriptor
+  bounds (±0.305 × 0.157 m) reproduce it to float32 noise, both before the CAD
+  migration (commit `134f0bf26`) and after it (identical `modelBounds`).
+* Origin of `3.88`: the value predates the 3D migration (present since
+  `c84d556aa`, 2026-08-10). Before `df5ba82ef` (2026-09-09) the package had a
+  raster presentation whose `assets/primary.png` was 1774 × 457 px (read from
+  `df5ba82ef^`), ratio 3.8818, which the raster validator's 0.1% tolerance
+  accepted against 3.88. The model migration kept the value.
+* The stored value is 0.14% narrower than the face. With the model framing
+  described above this only adds a letterbox margin of about 0.14% of the
+  viewport height (about 0.14 pt on a 400 pt wide box); nothing is cropped or
+  distorted. That is not a correctness defect, and changing it would alter the
+  generated `board.json` and the locked FCStd bytes for no visible benefit, so
+  it is kept, matching the decision for the other five.
 
 ## Why not derive `aspectRatio` at build time
 
