@@ -44,6 +44,8 @@ BODY_X = 168.0
 BODY_Y = 34.0
 BODY_Z = 98.0
 CORNER_R = 12.0
+# Planar corner facets (true OCCT fillets leave a tessellation-vs-Area gap at compile).
+CORNER_SEGMENTS = 24
 HALF_X = BODY_X / 2.0
 HALF_Z = BODY_Z / 2.0
 
@@ -55,16 +57,24 @@ GRIP_DEPTH_MM = {
 }
 
 # Opening rectangles measured on the reference front lip (native mm, x/z).
+# Corner radii from reference end curvature (stadium-ish for edge-14/8; tighter for edge-18).
+# edge-14 / edge-8 are inset 0.3 mm from the shared z=23 line so the cuts stay separate.
 OPENINGS = {
-    "edge-18": (-57.0, 39.0, -34.8, -20.0),
-    "edge-14": (-57.0, 57.0, 7.5, 23.0),
-    "edge-8": (-57.0, 57.0, 23.0, 37.0),
+    "edge-18": (-57.0, 39.0, -34.8, -20.0, 5.0),
+    "edge-14": (-57.0, 57.0, 7.5, 22.7, 7.5),
+    "edge-8": (-57.0, 57.0, 23.3, 37.0, 7.0),
 }
+
+# Front-entry lip chamfer measured ~2.3 mm on the mono; 3 mm reads for edge openings.
+LIP_FILLET_R = 3.0
+# Arc corners approximated with this many planar segments (compile partition stays planar).
+OPENING_CORNER_SEGMENTS = 12
 
 MONO_CENTER_X = 50.4
 MONO_CENTER_Z = -20.0
 MONO_RADIUS = 12.4
-MONO_SIDES = 16
+# Planar n-gon only — a true Cylinder fails compile_board partition (distToShape 1e-4).
+MONO_SIDES = 64
 
 NODE_IDS = {
     "body": "Body_actual_surface_001",
@@ -122,68 +132,154 @@ def _apply_material(obj, texture_source: Path | None) -> None:
 
 
 def _outer_brick_solid():
-    """Outer brick envelope; corner radius is a display simplification applied after cut."""
-    return Part.makeBox(BODY_X, BODY_Y, BODY_Z, App.Vector(-HALF_X, Y_FRONT, -HALF_Z))
+    """Rounded-rectangle brick with planar corner facets (baked before pocket cuts)."""
+    face = _rounded_rect_face(-HALF_X, HALF_X, -HALF_Z, HALF_Z, CORNER_R, Y_FRONT, CORNER_SEGMENTS)
+    return face.extrude(App.Vector(0.0, BODY_Y, 0.0))
 
 
-def _pocket_face_filter(x0: float, x1: float, z0: float, z1: float, depth: float):
+def _pocket_face_filter(
+    x0: float,
+    x1: float,
+    z0: float,
+    z1: float,
+    depth: float,
+    *,
+    expand_x0: bool = True,
+    expand_x1: bool = True,
+    expand_z0: bool = True,
+    expand_z1: bool = True,
+):
+    """Match pocket walls, floor, stadium ends, and front lip faces by CoM."""
     y1 = Y_FRONT + depth
-    margin = 0.05
+    x0_lip = x0 - LIP_FILLET_R - 0.25 if expand_x0 else x0 - 0.25
+    x1_lip = x1 + LIP_FILLET_R + 0.25 if expand_x1 else x1 + 0.25
+    z0_lip = z0 - LIP_FILLET_R - 0.25 if expand_z0 else z0 - 0.25
+    z1_lip = z1 + LIP_FILLET_R + 0.25 if expand_z1 else z1 + 0.25
 
     def matches(face) -> bool:
         center = face.CenterOfMass
-        if not (x0 - margin <= center.x <= x1 + margin and z0 - margin <= center.z <= z1 + margin):
+        if center.y < Y_FRONT - 0.05 or center.y > y1 + 0.05:
             return False
-        if center.y < Y_FRONT - margin or center.y > y1 + margin:
+        # Never claim the mono bore from an edge pocket (openings nearly touch in X).
+        radial = math.hypot(center.x - MONO_CENTER_X, center.z - MONO_CENTER_Z)
+        if radial <= MONO_RADIUS + LIP_FILLET_R + 0.75:
             return False
-        if isinstance(face.Surface, Part.Cylinder):
+        in_core = x0 - 0.25 <= center.x <= x1 + 0.25 and z0 - 0.25 <= center.z <= z1 + 0.25
+        in_lip = (
+            center.y <= Y_FRONT + LIP_FILLET_R + 0.75
+            and x0_lip <= center.x <= x1_lip
+            and z0_lip <= center.z <= z1_lip
+        )
+        if not (in_core or in_lip):
             return False
+        if isinstance(face.Surface, Part.Plane):
+            normal = face.Surface.Axis
+            if abs(normal.y + 1.0) < 0.05 and abs(center.y - Y_FRONT) < 0.2:
+                return False
         return True
 
     return matches
 
 
-def _mono_prism_solid(cx: float, cz: float, radius: float, depth: float, sides: int):
+def _mono_face_filter(cx: float, cz: float, radius: float):
+    """Planar n-gon walls + floor + lip; no true Cylinder as sole contact surface."""
+
+    def matches(face) -> bool:
+        center = face.CenterOfMass
+        radial = math.hypot(center.x - cx, center.z - cz)
+        if not (
+            Y_FRONT - 0.05 <= center.y <= Y_FRONT + GRIP_DEPTH_MM["mono-25"] + 0.05
+            and radius * 0.55 <= radial <= radius + LIP_FILLET_R + 0.5
+        ):
+            return False
+        if isinstance(face.Surface, Part.Plane):
+            normal = face.Surface.Axis
+            if abs(normal.y + 1.0) < 0.05 and abs(center.y - Y_FRONT) < 0.2:
+                return False
+        return True
+
+    return matches
+
+
+def _mono_prism_solid(cx: float, cz: float, radius: float, depth: float, sides: int, y0: float = Y_FRONT):
     angles = [2.0 * math.pi * index / sides for index in range(sides)]
     points = [
-        App.Vector(cx + radius * math.cos(angle), Y_FRONT, cz + radius * math.sin(angle))
+        App.Vector(cx + radius * math.cos(angle), y0, cz + radius * math.sin(angle))
         for angle in angles
     ]
     wire = Part.makePolygon(points + [points[0]])
     return Part.Face(wire).extrude(App.Vector(0.0, depth, 0.0))
 
 
-def _mono_face_filter(cx: float, cz: float, radius: float):
-    def matches(face) -> bool:
-        if not isinstance(face.Surface, Part.Plane):
-            return False
-        center = face.CenterOfMass
-        radial = math.hypot(center.x - cx, center.z - cz)
-        return (
-            Y_FRONT - 0.05 <= center.y <= Y_FRONT + GRIP_DEPTH_MM["mono-25"] + 0.05
-            and radius * 0.65 <= radial <= radius * 1.05
-        )
+def _rounded_rect_points(
+    x0: float,
+    x1: float,
+    z0: float,
+    z1: float,
+    corner_r: float,
+    y: float,
+    segments: int,
+):
+    """CCW XZ rounded-rect vertices (planar) at plane y = const."""
+    width = x1 - x0
+    height = z1 - z0
+    radius = min(corner_r, width / 2.0 - 0.05, height / 2.0 - 0.05)
+    if radius < 0.05:
+        return [
+            App.Vector(x0, y, z0),
+            App.Vector(x1, y, z0),
+            App.Vector(x1, y, z1),
+            App.Vector(x0, y, z1),
+        ]
+    cx0, cx1 = x0 + radius, x1 - radius
+    cz0, cz1 = z0 + radius, z1 - radius
+    points: list = []
+    # Bottom edge, then bottom-right corner, right, top-right, top, top-left, left, bottom-left.
+    points.append(App.Vector(cx0, y, z0))
+    points.append(App.Vector(cx1, y, z0))
+    for index in range(1, segments + 1):
+        angle = -math.pi / 2.0 + (math.pi / 2.0) * (index / segments)
+        points.append(App.Vector(cx1 + radius * math.cos(angle), y, cz0 + radius * math.sin(angle)))
+    points.append(App.Vector(x1, y, cz1))
+    for index in range(1, segments + 1):
+        angle = 0.0 + (math.pi / 2.0) * (index / segments)
+        points.append(App.Vector(cx1 + radius * math.cos(angle), y, cz1 + radius * math.sin(angle)))
+    points.append(App.Vector(cx0, y, z1))
+    for index in range(1, segments + 1):
+        angle = math.pi / 2.0 + (math.pi / 2.0) * (index / segments)
+        points.append(App.Vector(cx0 + radius * math.cos(angle), y, cz1 + radius * math.sin(angle)))
+    points.append(App.Vector(x0, y, cz0))
+    # Final corner: omit the last sample — it coincides with points[0].
+    for index in range(1, segments):
+        angle = math.pi + (math.pi / 2.0) * (index / segments)
+        points.append(App.Vector(cx0 + radius * math.cos(angle), y, cz0 + radius * math.sin(angle)))
+    return points
 
-    return matches
+
+def _rounded_rect_face(
+    x0: float,
+    x1: float,
+    z0: float,
+    z1: float,
+    corner_r: float,
+    y: float,
+    segments: int = OPENING_CORNER_SEGMENTS,
+):
+    points = _rounded_rect_points(x0, x1, z0, z1, corner_r, y, segments)
+    wire = Part.makePolygon(points + [points[0]])
+    return Part.Face(wire)
 
 
-def _fillet_outer_vertical(body_shape):
-    edges = []
-    for edge in body_shape.Edges:
-        p0 = edge.Vertexes[0].Point
-        p1 = edge.Vertexes[1].Point
-        if abs(p0.y - p1.y) < BODY_Y * 0.95:
-            continue
-        if abs(p0.x - p1.x) > 0.5 or abs(p0.z - p1.z) > 0.5:
-            continue
-        if max(abs(p0.x), abs(p1.x)) < HALF_X - 0.5:
-            continue
-        if max(abs(p0.z), abs(p1.z)) < HALF_Z - 0.5:
-            continue
-        edges.append(edge)
-    if len(edges) < 4:
-        return body_shape
-    return body_shape.makeFillet(CORNER_R, edges[:4])
+def _rounded_rect_wire(
+    x0: float,
+    x1: float,
+    z0: float,
+    z1: float,
+    corner_r: float,
+    y: float,
+    segments: int = OPENING_CORNER_SEGMENTS,
+):
+    return _rounded_rect_face(x0, x1, z0, z1, corner_r, y, segments).OuterWire
 
 
 def _shell_from_body_faces(body_shape, predicate):
@@ -195,18 +291,64 @@ def _shell_from_body_faces(body_shape, predicate):
     return Part.makeCompound(faces)
 
 
-def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, depth: float):
-    return Part.makeBox(
-        x1 - x0,
-        depth + 0.02,
-        z1 - z0,
-        App.Vector(x0, Y_FRONT - 0.01, z0),
+def _pocket_cutter(x0: float, x1: float, z0: float, z1: float, corner_r: float, depth: float):
+    face = _rounded_rect_face(x0, x1, z0, z1, corner_r, Y_FRONT - 0.01)
+    return face.extrude(App.Vector(0.0, depth + 0.02, 0.0))
+
+
+def _pocket_lip_cutter(
+    x0: float,
+    x1: float,
+    z0: float,
+    z1: float,
+    corner_r: float,
+    lip_r: float,
+    *,
+    expand_x0: bool = True,
+    expand_x1: bool = True,
+    expand_z0: bool = True,
+    expand_z1: bool = True,
+):
+    """Lofted entry chamfer between congruent polygonal openings (planar ruled faces)."""
+    x0_outer = x0 - lip_r if expand_x0 else x0
+    x1_outer = x1 + lip_r if expand_x1 else x1
+    z0_outer = z0 - lip_r if expand_z0 else z0
+    z1_outer = z1 + lip_r if expand_z1 else z1
+    outer_height = z1_outer - z0_outer
+    outer_width = x1_outer - x0_outer
+    outer_corner = min(corner_r + lip_r, outer_width / 2.0 - 0.05, outer_height / 2.0 - 0.05)
+    outer = _rounded_rect_wire(
+        x0_outer,
+        x1_outer,
+        z0_outer,
+        z1_outer,
+        outer_corner,
+        Y_FRONT - 0.01,
     )
+    inner = _rounded_rect_wire(x0, x1, z0, z1, corner_r, Y_FRONT + lip_r)
+    return Part.makeLoft([outer, inner], solid=True, ruled=True)
 
 
 def _mono_cutter(cx: float, cz: float, radius: float, depth: float):
-    prism = _mono_prism_solid(cx, cz, radius + 0.02, depth + 0.02, MONO_SIDES)
-    return prism
+    return _mono_prism_solid(cx, cz, radius + 0.02, depth + 0.02, MONO_SIDES)
+
+
+def _mono_lip_cutter(cx: float, cz: float, radius: float, lip_r: float):
+    """Faceted entry chamfer: loft expanded n-gon → bore n-gon (no Cylinder/torus)."""
+
+    def ngon_wire(rad: float, y: float):
+        angles = [2.0 * math.pi * index / MONO_SIDES for index in range(MONO_SIDES)]
+        points = [
+            App.Vector(cx + rad * math.cos(angle), y, cz + rad * math.sin(angle))
+            for angle in angles
+        ]
+        return Part.makePolygon(points + [points[0]])
+
+    return Part.makeLoft(
+        [ngon_wire(radius + lip_r, Y_FRONT - 0.01), ngon_wire(radius, Y_FRONT + lip_r)],
+        solid=True,
+        ruled=True,
+    )
 
 
 def main() -> int:
@@ -246,6 +388,7 @@ def main() -> int:
     document.HangTenTessellationDeflection = 0.05
 
     brick = document.addObject("Part::Feature", "OuterBrick")
+    # Rounded envelope is authored into the brick solid (not a post-cut Shape assign on Part::Cut).
     brick.Shape = _outer_brick_solid()
     document.recompute()
     brick_box = brick.Shape.BoundBox
@@ -270,15 +413,51 @@ def main() -> int:
 
     cutters = []
     contact_predicates = []
-    for contact_id, (x0, x1, z0, z1) in OPENINGS.items():
+    # Asymmetric lip expansion avoids eating the edge-14/edge-8 divider and the mono.
+    # Flags: expand_x0, expand_x1, expand_z0, expand_z1
+    lip_expand = {
+        "edge-18": (True, False, True, True),
+        "edge-14": (True, True, True, False),
+        "edge-8": (True, True, False, True),
+    }
+    for contact_id, (x0, x1, z0, z1, corner_r) in OPENINGS.items():
         depth = GRIP_DEPTH_MM[contact_id]
-        cutters.append(_pocket_cutter(x0, x1, z0, z1, depth))
+        expand_x0, expand_x1, expand_z0, expand_z1 = lip_expand[contact_id]
+        cutters.append(_pocket_cutter(x0, x1, z0, z1, corner_r, depth))
+        cutters.append(
+            _pocket_lip_cutter(
+                x0,
+                x1,
+                z0,
+                z1,
+                corner_r,
+                LIP_FILLET_R,
+                expand_x0=expand_x0,
+                expand_x1=expand_x1,
+                expand_z0=expand_z0,
+                expand_z1=expand_z1,
+            )
+        )
         contact_predicates.append(
-            (contact_id, _pocket_face_filter(x0, x1, z0, z1, depth))
+            (
+                contact_id,
+                _pocket_face_filter(
+                    x0,
+                    x1,
+                    z0,
+                    z1,
+                    depth,
+                    expand_x0=expand_x0,
+                    expand_x1=expand_x1,
+                    expand_z0=expand_z0,
+                    expand_z1=expand_z1,
+                ),
+            )
         )
 
     mono_depth = GRIP_DEPTH_MM["mono-25"]
     cutters.append(_mono_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, mono_depth))
+    cutters.append(_mono_lip_cutter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS, LIP_FILLET_R))
     contact_predicates.append(
         ("mono-25", _mono_face_filter(MONO_CENTER_X, MONO_CENTER_Z, MONO_RADIUS))
     )
@@ -289,7 +468,7 @@ def main() -> int:
     cutter_obj = document.addObject("Part::Feature", "PocketCutters")
     cutter_obj.Shape = fused_shape
 
-    body_cut = document.addObject("Part::Cut", "BodySolid")
+    body_cut = document.addObject("Part::Cut", "BodyCut")
     body_cut.Base = brick
     body_cut.Tool = cutter_obj
 
@@ -297,16 +476,19 @@ def main() -> int:
     if body_cut.Shape.isNull() or body_cut.Shape.Volume < 1.0:
         raise ValueError("boolean cut failed to produce a solid body")
 
-    body_cut.addProperty("App::PropertyString", "NodeID", "HangTen")
-    body_cut.addProperty("App::PropertyString", "NodeRole", "HangTen")
-    body_cut.NodeID = NODE_IDS["body"]
-    body_cut.NodeRole = "body"
-    _apply_material(body_cut, texture_source)
+    # Bake into Part::Feature so a later recompute cannot wipe the solid (Part::Cut is Base/Tool).
+    body = document.addObject("Part::Feature", "BodySolid")
+    body.Shape = body_cut.Shape
+    body.addProperty("App::PropertyString", "NodeID", "HangTen")
+    body.addProperty("App::PropertyString", "NodeRole", "HangTen")
+    body.NodeID = NODE_IDS["body"]
+    body.NodeRole = "body"
+    _apply_material(body, texture_source)
 
     document.recompute()
-    body_cut.Shape = _fillet_outer_vertical(body_cut.Shape)
-    document.recompute()
-    body_shape = body_cut.Shape
+    body_shape = body.Shape
+    if body_shape.isNull() or body_shape.Volume < 1.0:
+        raise ValueError("filleted body failed to produce a solid")
 
     depth_spans = {}
     for contact_id, predicate in contact_predicates:
@@ -332,6 +514,7 @@ def main() -> int:
     print(f"authored {DESTINATION} ({DESTINATION.stat().st_size} bytes)")
     print(f"reference envelope mm: {measured}")
     print(f"authored contact Y spans mm: {depth_spans} (published {GRIP_DEPTH_MM})")
+    print(f"outer corner R={CORNER_R} mm ({CORNER_SEGMENTS} segs), lip R={LIP_FILLET_R} mm, mono sides={MONO_SIDES}")
     sys.stdout.flush()
     return 0
 
