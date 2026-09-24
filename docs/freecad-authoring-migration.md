@@ -356,6 +356,9 @@ write-up. The durable points:
 - **Closed schema.** A new descriptor field needs the Python descriptor, the
   Swift decoder, and the package validator changed together.
 - **Single writer per worktree; run the suites once at the end.**
+- **MXEdge Large** confirmed the Small trough pattern and added measurement
+  traps (descriptor bounds, depth-map sampling, per-trough published depth,
+  mono circle fit, cord mouths, source-backed lock). See lessons §11.
 
 ## Fast loop and definition of done
 
