@@ -64,6 +64,7 @@ from pxr import Usd, UsdGeom  # noqa: E402
 from reference import load_reference  # noqa: E402
 
 PACKAGE = "lattice-mxedge-lift-large"
+REFERENCE_SHA256 = "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25"
 BOARD_JSON = REPOSITORY / "Hangboards" / PACKAGE / "board.json"
 DESTINATION = REPOSITORY / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
 BODY_PRIM = "/root/body/MXL_body_editable_skin_001"
@@ -568,6 +569,10 @@ def main() -> int:
     board = json.loads(BOARD_JSON.read_text())
     scratch = Path(os.environ.get("HANGTEN_CAD_SCRATCH", "/tmp")) / f"{PACKAGE}-assets"
     reference, reference_digest = load_reference(PACKAGE, "primary.usdz", scratch / "ref")
+    if reference_digest != REFERENCE_SHA256:
+        raise ValueError(
+            f"reference digest {reference_digest} != pinned {REFERENCE_SHA256}"
+        )
     stage = Usd.Stage.Open(str(reference))
     cache = UsdGeom.XformCache(Usd.TimeCode.Default())
     body_points = _world_points(stage, cache, BODY_PRIM)
