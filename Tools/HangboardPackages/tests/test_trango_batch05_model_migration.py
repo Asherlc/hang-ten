@@ -7,8 +7,16 @@ from test_board_package_staging import load_staging_module,configure_xcode_desti
 ROOT=Path(__file__).resolve().parents[3]
 AUDIT=ROOT/'docs/source-audits/2026-09-20-hangboards-batch-05-migration/native'
 IDS={
-'forge':['sloper-30','sloper-40','large-flat-edge','slopey-crimper','variable-edge-rail','closed-crimp','mr-deep','mr-shallow','im-deep','im-shallow'],
-'natural':['top-jug','top-variable-rail','bottom-variable-rail','closed-crimp','upper-pocket','center-lower-pocket','outer-supported-pocket']}
+'forge':['sloper-30','sloper-40','large-flat-edge','slopey-crimper','variable-edge-rail','closed-crimp','mr-deep','mr-shallow','im-deep','im-shallow']}
+# 'natural' (trango-rock-prodigy-natural) is intentionally omitted: it has
+# migrated from this batch-05 GLB-import pipeline to a native FreeCAD source
+# (Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd,
+# see docs/freecad-authoring-migration.md), so it is no longer produced by —
+# or expected to match — the batch-05 import audit fixture this test protects.
+# The superseded batch-05 modelSHA256 is preserved unmodified in
+# docs/source-audits/2026-09-20-hangboards-batch-05-migration/native/
+# trango-rock-prodigy-natural/geometry-verification.json and in the delivery
+# lock's supersededSha256Manifest.
 @pytest.mark.parametrize('product',IDS)
 def test_trango_stable_contacts_bind_exact_native_surfaces(product):
     slug='trango-rock-prodigy-'+product;package=ROOT/'Hangboards'/slug

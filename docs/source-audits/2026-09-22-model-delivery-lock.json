@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "abfe9228834424e5f4c8ee843ee5460775fa671756498d979086ebe2aa1aae0c",
+  "sha256Manifest": "f776e4d0da832484515995fdad2c5ebc5ee12cd8c464d2953429e73d549b0aaf",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "5f3304a2d1d0a3a2147ab63974413a7aa65710a10c658f796a028a30e78094ba",
+  "supersededSha256Manifest": "0ed448fdf8c1e1bb0afad9a98acd799370dbdb136ae59b99f390489d38cefa78",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -113,6 +113,20 @@
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, DEBUG board-detail route; 8/8 contacts selected by deep link and confirmed via boardDetail.selectedHold.<contactID>; CAD-authored outlines render as smooth hold regions)",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports two-way worst 17.67 mm vs 0.5 mm limit, concentrated at the top lip; pocketSlots facePlaneAABB agree < 0.25 mm; declared acceptable per docs/freecad-authoring-migration.md (Accepted deviation for a sculpted board)",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center"
+    },
+    "trango-rock-prodigy-natural": {
+      "source": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
+      "sourceSHA256": "10c93d99d0cc49cfc2f89bf7e1f0e2746d614ffde03226d539d7b83066d3e4a6",
+      "referenceSHA256": "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
+      "assetSHA256": "635ca65353b7ff7a468901d45f132440558efe30ad9bac31dc9b30881efad862",
+      "descriptorSHA256": "42b3e6c961bbc871bdbd790a837b6482a55868c6f296af59a52a3970b0854a32",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "passed (compile_board published depths top-jug=40, upper-pocket=38; 14/14 contacts partitioned; scripts/verify-model-delivery.py clean for updated lock; scripts/hangboard-packages.sh validate --root Hangboards; no dedicated native_source_checks variant authored for this one-off, per docs/freecad-authoring-lessons.md item 9)",
+      "nativeAppValidation": "not run",
+      "comparison": "accepted deviation: reference mesh is a genuinely sculpted shell (16,842 body points per half); native measured approximation drives each contact from its reference hold prim \u2014 constant-depth holds extrude mesh-derived XZ footprints; variable rails and outer-supported-pocket loft measured YZ cross-sections so depth tapers with the reference (rail_upper ~20.8\u219232.2 mm, rail_lower ~10.8\u219223.2 mm, matching manufacturer 20\u201333 / 10\u201324 mm); closed-crimp uses the floor-envelope wedge+tab footprint (not an invented swoosh). compare_exports evidence only per docs/freecad-authoring-migration.md; see .context/trango-natural-cad/trango-rock-prodigy-natural/cross-ref.md",
+      "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center",
+      "supersedesBatch05Audit": "docs/source-audits/2026-09-20-hangboards-batch-05-migration/native/trango-rock-prodigy-natural/geometry-verification.json (modelSHA256 b2bdbd9b...) is preserved unmodified as historical record of the retired GLB-import pipeline; Tools/HangboardPackages/tests/test_trango_batch05_model_migration.py no longer parametrizes 'natural'",
+      "shapeRevision": "mesh-derived vector fit: each measured hold footprint is Chaikin-smoothed, fit as a periodic Part.BSplineCurve, then discretized at 0.05 mm into a dense smooth polygon that is extruded/lofted as the CAD prism. Exporting a B-spline surface instead made OCCT mesh a single hold into 1.66M triangles (89 s); the polygon prism meshes in ~470 triangles, so the compiler stays fast while the silhouette reads smooth. Rail tapers dense-sampled then linearly resampled. Still mesh-derived, not photo-traced."
     }
   },
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages."
