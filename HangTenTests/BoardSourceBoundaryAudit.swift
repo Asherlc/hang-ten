@@ -5,16 +5,34 @@ enum BoardSourceBoundaryAudit {
     private static let planRequirementOwnerDeclaration = "enum BundledPlanContactRequirements {"
     private static let genericPresentationVocabularyOwnerPaths: Set<String> = [
         "HangTen/Models/BoardPackageStore.swift",
-        "HangTen/Models/BoardPackageWriter.swift",
-        "HangTen/Models/BoardEditorStore.swift",
-        "HangTen/Models/TrainingModels.swift",
-        "HangTen/Views/BoardEditor/BoardEditorSession.swift"
+        "HangTen/Models/TrainingModels.swift"
     ]
     private static let genericCanonicalPresentationLiterals: Set<String> = [
         "assets/primary.png",
         "primary.png",
         "primary"
     ]
+
+    /// The board document of the package at `packageURL` in the checkout: the
+    /// checked-in `board.json`, or, for a CAD-backed package (`<slug>.FCStd`,
+    /// whose `board.json` is generated at build time and never committed), the
+    /// copy the Stage Board Packages build phase generated into the app bundle.
+    static func boardDocumentURL(forPackageAt packageURL: URL) -> URL? {
+        let checkedInURL = packageURL.appendingPathComponent("board.json")
+        if FileManager.default.fileExists(atPath: checkedInURL.path) {
+            return checkedInURL
+        }
+        let slug = packageURL.lastPathComponent
+        let authoringSourceURL = packageURL.appendingPathComponent("\(slug).FCStd")
+        guard FileManager.default.fileExists(atPath: authoringSourceURL.path),
+              let resourceURL = Bundle.main.resourceURL else {
+            return nil
+        }
+        return resourceURL
+            .appendingPathComponent("Hangboards", isDirectory: true)
+            .appendingPathComponent(slug, isDirectory: true)
+            .appendingPathComponent("board.json")
+    }
 
     static func bundledBoardDocumentURLs(at repositoryRoot: URL) throws -> [URL] {
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
@@ -28,8 +46,7 @@ enum BoardSourceBoundaryAudit {
             guard values.isDirectory == true, values.isSymbolicLink != true else {
                 return nil
             }
-            let boardURL = packageURL.appendingPathComponent("board.json")
-            return FileManager.default.fileExists(atPath: boardURL.path) ? boardURL : nil
+            return boardDocumentURL(forPackageAt: packageURL)
         }
         .sorted { $0.path < $1.path }
     }

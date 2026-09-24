@@ -45,9 +45,9 @@ enum BoardContactGeometryValidator {
         pieceID: (Int) -> String
     ) -> BoardContactGeometryValidationResult {
         // NOTE: Frame coordinates are intentionally NOT constrained to [0,1].
-        // The board editor supports off-canvas hold geometry (e.g. x = -0.3,
-        // width = 2.0) for editing workflows.  Normalized-frame bounds are
-        // enforced separately by the board package compiler before shipping.
+        // Package geometry may place holds off-canvas (e.g. x = -0.3,
+        // width = 2.0). Normalized-frame bounds are enforced separately by
+        // the board package compiler before shipping.
         BoardContactGeometryValidationResult(
             isEmpty: geometry.isEmpty,
             pieces: geometry.enumerated().map { index, piece in

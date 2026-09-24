@@ -35,7 +35,34 @@ def test_committed_models_match_delivery_lock():
     # when PR #452 added six model-media boards, because this module is not
     # executed by CI (the pytest job's working-directory is Tools/HangboardPackages).
     assert result["models"] == len(lock["modelPackages"])
-    assert result["files"] == len(lock["modelPackages"]) * 3
+    # Three locked files per committed-asset package; two (descriptor + FCStd)
+    # per source-backed package, whose board.json is generated at build time.
+    sourced = len(result["sourceBacked"])
+    assert sourced == len(lock["migratedPackages"])
+    assert result["files"] == (len(lock["modelPackages"]) - sourced) * 3 + sourced * 2
+
+
+def test_source_backed_package_locks_its_source_and_no_board_json(tmp_path):
+    p = tmp_path / "Hangboards/example/assets"
+    p.mkdir(parents=True)
+    (p / "primary.model.json").write_text("{}\n")
+    source = p.parent / "example.FCStd"
+    source.write_bytes(b"cad source")
+    text = module().checksum_manifest(tmp_path, ["example"])
+    assert [line.split("  ")[1] for line in text.splitlines()] == [
+        "Hangboards/example/assets/primary.model.json",
+        "Hangboards/example/example.FCStd",
+    ]
+    lock = {"schemaVersion": 1, "modelPackages": ["example"],
+            "sha256Manifest": hashlib.sha256(text.encode()).hexdigest()}
+    assert module().verify(tmp_path, lock)["files"] == 2
+    source.write_bytes(b"edited cad source")
+    with pytest.raises(ValueError, match="checksum"):
+        module().verify(tmp_path, lock)
+    source.write_bytes(b"cad source")
+    (p.parent / "board.json").write_text("{}\n")
+    with pytest.raises(ValueError, match="on-disk board.json"):
+        module().verify(tmp_path, lock)
 
 
 def test_changed_bytes_are_rejected(tmp_path):
