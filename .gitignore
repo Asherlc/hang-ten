@@ -2,8 +2,6 @@
 
 # Xcode local state and generated output
 build/
-Android/.gradle/
-Android/local.properties
 DerivedData/
 xcuserdata/
 *.xcuserstate

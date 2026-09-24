@@ -6,7 +6,7 @@
 
 **Architecture:** Keep `tension.flash-board` model-only with one `primary.usdz` and one hash-bound descriptor. The typed package contract declares two named end passage pairs, two ordered branch paths sharing one metadata-only anchor, and one canonical pose/camera for each existing position. The renderer applies the selected pose to the one USDZ and builds two transient non-pickable catenary branches; only the seven descriptor-bound hold meshes participate in highlighting, accessibility, and nearest-triangle picking.
 
-**Tech Stack:** Python 3 standard-library package/evidence validators, Blender/USDZ authoring and actual-export verification, Swift/SwiftUI/SceneKit/XCTest, Android JVM tests, Xcode Simulator, and the existing package staging scripts.
+**Tech Stack:** Python 3 standard-library package/evidence validators, Blender/USDZ authoring and actual-export verification, Swift/SwiftUI/SceneKit/XCTest, Xcode Simulator, and the existing package staging scripts.
 
 **Spec:** `docs/superpowers/specs/2026-09-10-flash-board-two-branch-suspension-design.md`
 
@@ -20,7 +20,7 @@
 - Canonical poses use the existing four position IDs: `three-edge-upright`, `three-edge-inverted`, `two-edge-upright`, and `two-edge-inverted`. There is exactly one finite pose per supported position and no unknown pose key.
 - Straight cord spans are valid only when rest length equals endpoint distance within `1e-5 m`; shorter, nonfinite, unsolved, discontinuous, self-intersecting, colliding, or incorrectly framed branches enter the existing explicit model-unavailable/error state with no fallback.
 - The cord is display-only and has no SceneKit node for the anchor, no accessibility element, no hold binding, and no opportunity to become a nearer pick; actual triangle intersections remain the picking proof.
-- Use Luna for evidence, schema, conversion, catenary math, validation, tests, packaging, Android, and routine integration; escalate to Terra only after a bounded Luna attempt exposes an intricate non-geometry issue; Astra alone owns the final physical geometry/fidelity pass.
+- Use Luna for evidence, schema, conversion, catenary math, validation, tests, packaging, and routine integration; escalate to Terra only after a bounded Luna attempt exposes an intricate non-geometry issue; Astra alone owns the final physical geometry/fidelity pass.
 - Preserve the current uncommitted `Tools/HangboardModels/tension_flash_board.py` as user work until the geometry task explicitly reviews/reconciles it. Do not reset, discard, or overwrite it from the controller task.
 - Store owned evidence, Blender source, exports, renders, reports, simulator resources, and cleanup records below `.context/pretty-crocodile-tension-flash-board/`; follow the simulator ownership/cleanup trap and do not touch shared CoreSimulator services.
 - Do not start an HTTP server for this migration.
@@ -46,7 +46,6 @@
 | `Hangboards/tension-flash-board/board.json` | Modify | Replace Flash `singleCord` metadata with the exact two-branch contract while preserving logical IDs, positions, and transitions. |
 | `Hangboards/tension-flash-board/assets/primary.usdz`, `primary.model.json` | Replace with verified bytes | Ship the one final model and descriptor; remove all former Flash raster assets. |
 | `Tools/HangboardPackages/tests/test_approved_board_packages.py`, `test_board_package_staging.py`, `presentation_remediation_audit.py`, remediation manifest | Modify only where needed | Promote model-only package and narrowly supersede historical raster records without weakening raster-board audits. |
-| `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt` | Modify | Prove Android keeps model-only Flash unavailable without raster lookup or fallback. |
 | `.codex/skills/migrate-hangboard-to-3d/SKILL.md` | Modify only for observed reusable failures | Add dated, evidence-backed lessons discovered during this migration, with the failed command, root cause, safe remedy, and regression check. |
 
 ---
@@ -358,33 +357,6 @@ The solver uses the existing fixed 32 samples, gravity vector, `1e-6 m` bisectio
 
 **Review gate:** Verify package bytes against the actual-export report and ensure no historical audit weakening or unintended package changes entered the commit.
 
-### Task 8: Luna — verify Android model-only boundary
-
-**Files:**
-- Modify: `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt`
-- Modify production `Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt` only if the focused test proves an actual incorrect fallback.
-
-**Interfaces:** `AssetBoardRepository` continues to omit/unavailable model-only Flash; it must not look up `assets/primary.png`, derive raster geometry, attach a neighboring board's plan mapping, or create a fake Android USDZ renderer.
-
-- [ ] **Step 1: Add the Flash fixture regression.** Provide only model/descriptor paths and assert omission/unavailable behavior, no PNG access, and unchanged neighboring raster-board loading.
-
-- [ ] **Step 2: Run the focused Android test.**
-
-  ```bash
-  cd Android && ./gradlew test --tests com.hangten.android.content.BoardRepositoryTest
-  ```
-
-- [ ] **Step 3: Run iOS package regressions and commit the Android boundary test.**
-
-  ```bash
-  xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:HangTenTests/BoardPackageStoreTests -only-testing:HangTenTests/BoardModelTests
-  git add Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt
-  git commit -m "Keep Flash Board model-only on Android"
-  git push
-  ```
-
-**Review gate:** Confirm no Android production change is present unless the test demonstrated a real fallback defect; review the exact accessed asset paths.
-
 ### Task 9: Luna — run owned iOS first-migration acceptance and record reusable skill lessons
 
 **Files:**
@@ -422,14 +394,14 @@ The solver uses the existing fixed 32 samples, gravity vector, `1e-6 m` bisectio
   git push
   ```
 
-**Review gate:** Final review checks the evidence packet, geometry renders, actual-export report, staged hashes, Python/Swift/Android tests, native picking diagnostics, and iOS captures. The migration is not accepted while required iOS checks remain blocked by CoreSimulator; retain the blocker report and leave shared services untouched.
+**Review gate:** Final review checks the evidence packet, geometry renders, actual-export report, staged hashes, Python/Swift tests, native picking diagnostics, and iOS captures. The migration is not accepted while required iOS checks remain blocked by CoreSimulator; retain the blocker report and leave shared services untouched.
 
 ## Self-Review
 
-- **Spec coverage:** Tasks 1–2 cover the evidence update, source-versus-estimate ruling, exact closed contract, raw order/scalar/null rejection, common anchor, four passages, and explicit migration from `singleCord`. Task 3 covers deterministic per-branch catenary and failure outcomes. Task 4 covers Astra-only physical shape correction and nonselectable ledges/notches. Task 5 covers actual export materials, node correspondence, per-surface rays/catenaries, ligaments, and diagnostics. Task 6 covers SceneKit two-branch rendering, picking/accessibility, orbit/reset, transitions, and unavailable behavior. Tasks 7–9 cover package promotion, Android boundary, owned iOS acceptance, captures, cleanup, and reusable skill notes.
-- **Placeholder scan:** No `TBD`, `TODO`, “implement later,” or unspecified “appropriate error handling” instructions appear. Runtime simulator UUID is captured by the concrete `xcrun simctl create` command and reused through the shell variable rather than invented in the plan.
+- **Spec coverage:** Tasks 1–2 cover the evidence update, source-versus-estimate ruling, exact closed contract, raw order/scalar/null rejection, common anchor, four passages, and explicit migration from `singleCord`. Task 3 covers deterministic per-branch catenary and failure outcomes. Task 4 covers Astra-only physical shape correction and nonselectable ledges/notches. Task 5 covers actual export materials, node correspondence, per-surface rays/catenaries, ligaments, and diagnostics. Task 6 covers SceneKit two-branch rendering, picking/accessibility, orbit/reset, transitions, and unavailable behavior. Tasks 7–9 cover package promotion, owned iOS acceptance, captures, cleanup, and reusable skill notes.
+- **Placeholder scan:** No `TBD`, `TODO`, "implement later," or unspecified "appropriate error handling" instructions appear. Runtime simulator UUID is captured by the concrete `xcrun simctl create` command and reused through the shell variable rather than invented in the plan.
 - **Type consistency:** `BoardModelPassage`, `BoardModelPassagePairs`, `BoardModelCordBranch`, `BoardModelTwoBranchSuspension`, `BoardModelSuspension`, `SuspendedBranchSolution`, and `SuspendedTwoBranchSolvedPresentation` are defined before later tasks consume them. JSON names `passages`, `branches`, `passageIDs`, `anchor`, and `canonicalPoses` match the Swift members and verifier report keys. Existing `singleCord` is represented as a separate enum case and remains unchanged for unrelated boards.
-- **Cost and ownership check:** Astra is the only geometry author; Luna owns the bounded evidence/schema/math/verifier/package/Android/iOS work; Terra is conditional review escalation only. The plan never asks a lower-cost worker to change physical shape to satisfy a test, and it preserves the existing uncommitted generator before the Astra task.
+- **Cost and ownership check:** Astra is the only geometry author; Luna owns the bounded evidence/schema/math/verifier/package/iOS work; Terra is conditional review escalation only. The plan never asks a lower-cost worker to change physical shape to satisfy a test, and it preserves the existing uncommitted generator before the Astra task.
 
 Plan complete and saved to `docs/superpowers/plans/2026-09-10-flash-board-two-branch-suspension.md`. Two execution options:
 

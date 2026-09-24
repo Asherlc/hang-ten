@@ -287,7 +287,7 @@ On-Demand Resource tag. `board.json` and the descriptor remain ordinary bundled
 metadata; `primary.usdz` is the only ODR asset. Staging must preserve the source
 USDZ bytes, descriptor hash, and package identity exactly.
 
-No Android raster fallback is added. Unsupported, missing, hash-mismatched, or
+No raster fallback is added. Unsupported, missing, hash-mismatched, or
 invalid model/suspension data fails closed to the existing explicit unavailable
 state.
 
