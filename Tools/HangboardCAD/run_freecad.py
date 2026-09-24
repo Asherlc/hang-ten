@@ -45,6 +45,10 @@ def run(script: Path, arguments: list[str], freecad: Path, extra_path: str) -> i
 
     with tempfile.TemporaryDirectory(prefix="hangten-freecad-") as scratch:
         wrapper = Path(scratch) / "run.py"
+        # FreeCAD's embedded interpreter block-buffers stdout when it is a pipe
+        # and discards the buffer when a script exits through SystemExit, so a
+        # script that ends with `raise SystemExit(main())` would report nothing
+        # at all here. Flush both streams before the exit propagates.
         wrapper.write_text(
             "import sys, traceback\n"
             f"path = {str(script)!r}\n"
@@ -57,6 +61,9 @@ def run(script: Path, arguments: list[str], freecad: Path, extra_path: str) -> i
             "except BaseException:\n"
             "    traceback.print_exc()\n"
             "    raise SystemExit(3)\n"
+            "finally:\n"
+            "    sys.stdout.flush()\n"
+            "    sys.stderr.flush()\n"
         )
         environment = dict(os.environ)
         if extra_path:

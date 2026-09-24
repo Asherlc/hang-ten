@@ -20,6 +20,8 @@ cad:
   - 'Tools/HangboardCAD/**'
   - 'Tools/HangboardModels/contact_model_descriptor.py'
   - 'Hangboards/**/*.FCStd'
+  - 'Hangboards/**/assets/primary.usdz'
+  - 'Hangboards/**/assets/primary.model.json'
   - 'scripts/hangboard-packages.sh'
 metadata:
   - 'metadata/**'

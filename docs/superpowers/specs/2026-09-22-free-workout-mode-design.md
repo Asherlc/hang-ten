@@ -1,5 +1,8 @@
 # Free Workout Mode Design
 
+> **Superseded 2026-09-23** by [`2026-09-23-free-workout-log-mode-design.md`](2026-09-23-free-workout-log-mode-design.md).
+> This document described the shipped timeline-driven builder + session (PR-era free mode). The approved redesign is a Strong-style live set log.
+
 ## Overview
 Add a "free workout" mode similar to the Strong app — build custom hangboard workouts on-the-fly, run them with timer-driven guidance plus manual override, edit weight/time/reps during the session, and optionally save as a reusable plan.
 

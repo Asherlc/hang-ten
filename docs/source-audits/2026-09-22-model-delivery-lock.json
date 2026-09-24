@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, and captain-fingerfood-pocket native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, and lattice-mxedge-lift-small native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "78f1f91267025f9562111e7a7c70792d41cdf4451272314d240f1050347fb58e",
+  "sha256Manifest": "5f3304a2d1d0a3a2147ab63974413a7aa65710a10c658f796a028a30e78094ba",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files per package",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -63,10 +63,31 @@
       "assetSHA256": "c5ba7ddcd3a28d2bcdbc2f2ac5c2b1213db4934334d0e5f4b4aa65be9ae401dd",
       "descriptorSHA256": "af685a8773eb251145cd71a40c14697a196c8aa52cfd5f830b8da4fc5ea70245",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
+    },
+    "lattice-mxedge-lift-large": {
+      "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
+      "sourceSHA256": "bfd4cf9c1e85f7096d8f0373ca6aecd14ba34060e4f31187c23c97fb6e619af1",
+      "referenceSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
+      "assetSHA256": "c053badb2335b81ab56514fa5e742badbf9bfeddb5ad9d29a8ec422c3078777e",
+      "descriptorSHA256": "6a87c72750179cbe543bbc1c8955d532367a606db7b84edf0e61f90d95c7e8db",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed; flat vertical trough walls (no ogee); edit-propagation suite not run",
+      "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
+      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_large.py",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
+    },
+    "lattice-mxedge-lift-small": {
+      "source": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
+      "sourceSHA256": "df02a018567547fe802b41314c12bc0570c0526507516733f8f29f0fe7ec3788",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed on the Small authoring branch carried into this PR",
+      "nativeAppValidation": "not re-run on this merge",
+      "provenanceSidecar": "author notes in Tools/HangboardCAD/migration/author_lattice_mxedge_lift_small.py",
+      "assetCoverage": "locked as descriptor + board.json + source; the compiled USDZ is pinned by the descriptor modelSHA256"
     },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",

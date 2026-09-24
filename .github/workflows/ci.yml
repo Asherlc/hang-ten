@@ -156,8 +156,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.cad == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 30
 
@@ -242,7 +241,7 @@ jobs:
           CHANGES_RESULT: ${{ needs.changes.result }}
           UNIT_TEST_RESULT: ${{ needs.test-unit.result }}
           UI_TEST_RESULT: ${{ needs.test-ui.result }}
-          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
@@ -365,8 +364,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     # One soft retry plus result-bundle upload need a little headroom,
     # while each attempt has its own watchdog below.
@@ -507,8 +505,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 70
 
@@ -600,8 +597,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 70
 
@@ -696,8 +692,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 70
 
@@ -792,8 +787,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 70
 
@@ -885,8 +879,7 @@ jobs:
     if: >-
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true' ||
-      needs.changes.outputs.shared_board_content == 'true'
+      needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
     timeout-minutes: 70
 
@@ -996,7 +989,7 @@ jobs:
           GRIP_RESULT: ${{ needs.test-ui-grip.result }}
           PICKER_RESULT: ${{ needs.test-ui-picker.result }}
           MISC_RESULT: ${{ needs.test-ui-misc.result }}
-          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' || needs.changes.outputs.shared_board_content == 'true' }}
+          BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
           if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
