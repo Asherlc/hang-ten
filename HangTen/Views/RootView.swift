@@ -1895,6 +1895,7 @@ struct WorkoutView: View {
 	    @State private var handPreference: WorkoutSessionHandPreference?
 	    /// Preference-expanded steps; source of truth for timeline once set.
 	    @State private var sessionSteps: [WorkoutStep]?
+	    @State private var bothHandsResolvable = true
 
     private var board: BoardRevision {
         store.board(for: plan)
@@ -2137,10 +2138,13 @@ struct WorkoutView: View {
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
 			configureRecorder()
-			if planNeedsHandChoice, handPreference == nil {
-				applyHandPreference(
-					WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
-				)
+			if planNeedsHandChoice {
+				bothHandsResolvable = WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+				if handPreference == nil {
+					applyHandPreference(
+						WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+					)
+				}
 			}
 			#if DEBUG
 			if !didApplyReviewStep {
@@ -2920,7 +2924,8 @@ struct WorkoutView: View {
 				.both,
 				title: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded),
 				accessibilityID: "handSide.both",
-				disabled: !WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+				disabled: !bothHandsResolvable,
+				hint: HandChoiceCopy.bothHandsHint(boardIsOneHanded: boardIsOneHanded)
 			)
 		} label: {
 			HStack(spacing: 6) {
@@ -2932,7 +2937,6 @@ struct WorkoutView: View {
 		}
 		.disabled(!WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt))
 		.accessibilityLabel("Hand choice, \(handChoiceLabel)")
-		.accessibilityHint(HandChoiceCopy.bothHandsHint(boardIsOneHanded: boardIsOneHanded))
 		.accessibilityIdentifier("workout.handPicker")
 	}
 
@@ -2940,7 +2944,8 @@ struct WorkoutView: View {
 		_ preference: WorkoutSessionHandPreference,
 		title: String,
 		accessibilityID: String,
-		disabled: Bool = false
+		disabled: Bool = false,
+		hint: String? = nil
 	) -> some View {
 		Button {
 			applyHandPreference(preference)
@@ -2952,6 +2957,7 @@ struct WorkoutView: View {
 			}
 		}
 		.disabled(disabled)
+		.accessibilityHint(hint ?? "")
 		.accessibilityIdentifier(accessibilityID)
 	}
 

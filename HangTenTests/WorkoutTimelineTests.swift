@@ -1703,6 +1703,12 @@ final class WorkoutTimelineTests: XCTestCase {
             "Expected at least one registered board where Max Hangs resolves its pair"
         )
 
+        let workStep = try XCTUnwrap(plan.steps.first { !$0.isRestStep })
+        XCTAssertEqual(
+            (try ContactResolver.resolve(workStep.workRequirements, step: workStep, board: board)).count,
+            2
+        )
+
         XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
         XCTAssertEqual(
             WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
