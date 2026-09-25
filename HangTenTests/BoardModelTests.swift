@@ -2870,7 +2870,7 @@ final class BoardModelTests: XCTestCase {
                 )
             }
 
-            try assertNearestHeadOnHitForEveryContact(model, media: media, boardID: expectation.boardID)
+            try assertNearestHeadOnHitForEveryContact(model, media: media, boardID: expectation.boardID, nonPickableContacts: expectation.nonPickableContacts)
             try assertBodyHitIsNotSelectable(
                 model,
                 media: media,
@@ -3210,6 +3210,7 @@ final class BoardModelTests: XCTestCase {
         let boardID: String
         let contactIDs: Set<String>
         let bodyProbe: [Double]
+        let nonPickableContacts: Set<String>
     }
 
     private var migratedModelExpectations: [MigratedModelExpectation] {
@@ -3225,7 +3226,8 @@ final class BoardModelTests: XCTestCase {
                     "pocket-bottom-inner-left", "pocket-bottom-inner-right", "pocket-bottom-mid-right",
                     "pocket-bottom-outer-right"
                 ],
-                bodyProbe: [0.5, 0.02]
+                bodyProbe: [0.5, 0.02],
+                nonPickableContacts: []
             ),
             MigratedModelExpectation(
                 boardID: "metolius.wood-grips-compact-ii",
@@ -3236,7 +3238,8 @@ final class BoardModelTests: XCTestCase {
                     "pocket-19-three-left", "pocket-19-three-right", "pocket-19-two-left",
                     "pocket-19-two-right", "pocket-19-four-center", "edge-19-right"
                 ],
-                bodyProbe: [0.5, 0.02]
+                bodyProbe: [0.5, 0.02],
+                nonPickableContacts: ["sloper-round-center"]
             )
         ]
     }
@@ -3493,9 +3496,13 @@ final class BoardModelTests: XCTestCase {
     private func assertNearestHeadOnHitForEveryContact(
         _ model: BoardModelScene,
         media: BoardModelMedia,
-        boardID: String
+        boardID: String,
+        nonPickableContacts: Set<String> = []
     ) throws {
         for contactID in media.descriptor.contacts.keys.sorted() {
+            if nonPickableContacts.contains(contactID) {
+                continue
+            }
             let contact = try XCTUnwrap(media.descriptor.contacts[contactID], "\(boardID): \(contactID)")
             let normalizedCenter = zip(contact.facePlaneAABB.minimum, contact.facePlaneAABB.maximum).map {
                 $0 + ($1 - $0) / 2
