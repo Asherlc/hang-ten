@@ -70,11 +70,6 @@ from contact_model_descriptor import (  # noqa: E402
     compile_reusable_descriptor,
 )
 
-# Tools/ holds the host-only material stripper the shipped pair must pass through
-# (AGENTS.md model material policy).
-sys.path.insert(0, str(REPOSITORY / "Tools"))
-import set_clay_materials  # noqa: E402
-
 SOURCE_KIND_NATIVE = "native-parametric-measured-profile"
 SOURCE_KIND_FACETED = "faceted-import"
 DOCUMENT_PROPERTIES = (
@@ -206,75 +201,14 @@ def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
     return outlines
 
 
-def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Path]:
-    """Extract an FCStd-included file and stage it under ``textures/``."""
-    import zipfile
-
-    basename = os.path.basename(member)
-    if not basename or cad_source.safe_member(basename) != basename:
-        raise BuildError(f"unsafe embedded texture member: {member!r}")
-    with zipfile.ZipFile(source) as archive:
-        if basename not in archive.namelist():
-            raise BuildError(f"source declares texture {basename} but does not contain it")
-        data = archive.read(basename)
-    destination = staging / "textures" / basename
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_bytes(data)
-    return f"textures/{basename}", destination
-
 
 def _material_registry(objects, source: Path, staging: Path) -> dict:
-    """Collect one material definition per MaterialName across all bound nodes.
+    """No-op: committed USDZ models ship without materials.
 
-    A node without ``TextureFile`` inherits the texture declared by another node
-    using the same material name, so a shared material is declared once. Any
-    genuine disagreement between nodes is an error rather than a silent pick.
+    MaterialName and other material properties on FreeCAD objects are ignored.
+    All meshes are exported unbound so the renderer uses its default appearance.
     """
-    declared: dict[str, dict] = {}
-    for obj in objects:
-        name = str(getattr(obj, "MaterialName", ""))
-        if not name:
-            raise BuildError(f"{obj.Name} is missing MaterialName")
-        base_color = (0.8, 0.8, 0.8)
-        raw = str(getattr(obj, "BaseColor", ""))
-        if raw:
-            parts = [float(part) for part in raw.split(",")]
-            if len(parts) != 3:
-                raise BuildError(f"{obj.Name} BaseColor must be three comma-separated floats")
-            base_color = (parts[0], parts[1], parts[2])
-        entry = {
-            "base_color": base_color,
-            "roughness": float(getattr(obj, "Roughness", 0.5)),
-            "metallic": float(getattr(obj, "Metallic", 0.0)),
-            "texture": None,
-        }
-        member = str(getattr(obj, "TextureFile", "")) if "TextureFile" in obj.PropertiesList else ""
-        if member:
-            entry["texture"] = _embedded_texture(source, staging, member)
-        existing = declared.get(name)
-        if existing is None:
-            declared[name] = entry
-            continue
-        for key in ("base_color", "roughness", "metallic"):
-            if existing[key] != entry[key]:
-                raise BuildError(f"material {name} declares conflicting {key} across nodes")
-        if entry["texture"] is not None:
-            if existing["texture"] is not None and existing["texture"] != entry["texture"]:
-                raise BuildError(f"material {name} declares conflicting textures across nodes")
-            existing["texture"] = entry["texture"]
-
-    registry = {}
-    for name, entry in declared.items():
-        archive_path, texture_path = entry["texture"] or (None, None)
-        registry[name] = usdz_writer.Material(
-            name=name,
-            base_color=entry["base_color"],
-            roughness=entry["roughness"],
-            metallic=entry["metallic"],
-            texture_archive_path=archive_path,
-            texture_source=texture_path,
-        )
-    return registry
+    return {}
 
 
 def _crease_normals(points, triangles, crease_degrees: float):
@@ -732,7 +666,7 @@ def build(
             _build_mesh(
                 body_object.NodeID,
                 *_subset_mesh(body_points, body_facets, body_indices),
-                material=materials[body_object.MaterialName],
+                material=materials.get(body_object.MaterialName),
                 model_box=model_box,
             )
         ]
@@ -757,7 +691,7 @@ def build(
                     obj.NodeID,
                     points,
                     facets,
-                    material=materials[obj.MaterialName],
+                    material=materials.get(obj.MaterialName),
                     model_box=model_box,
                 )
             )
@@ -805,9 +739,6 @@ def build(
         reopened = usdz_writer.read_usdz(asset)
         if set(reopened["nodes"]) != {mesh.node_id for mesh in meshes}:
             raise BuildError("reopened asset node inventory does not match the source")
-        for node_id, node in reopened["nodes"].items():
-            if not node["material"]:
-                raise BuildError(f"{node_id} lost its material binding in the export")
 
         print("[8/10] deriving the descriptor from the exported bytes")
         model_bytes = asset.read_bytes()
@@ -849,17 +780,6 @@ def build(
         descriptor_path.write_text(json.dumps(descriptor_json, indent=2, sort_keys=False) + "\n")
         json.loads(descriptor_path.read_text())
         usdz_writer.read_usdz(asset)
-
-        # AGENTS.md model material policy: shipped USDZ carry no materials or
-        # textures. Strip the staged asset and rebind the descriptor hash, so any
-        # published pair is material-free and a rebuild reproduces the committed
-        # bytes (which are already stripped).
-        if set_clay_materials.strip_materials_from_usdz(asset):
-            set_clay_materials.update_descriptor_hash(asset)
-            descriptor_json = json.loads(descriptor_path.read_text())
-        model_bytes = asset.read_bytes()
-        if descriptor_json["modelSHA256"] != hashlib.sha256(model_bytes).hexdigest():
-            raise BuildError("descriptor hash does not match the stripped bytes")
 
         result = {
             "package": package,
