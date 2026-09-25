@@ -25,7 +25,6 @@ enum FreeSetMode: String, Codable, Hashable, CaseIterable {
 
 /// Hold choice for a free-workout exercise (board-agnostic generic or exact contact).
 enum FreeWorkoutHoldSelection: Codable, Hashable {
-    case any
     case generic(HoldKind)
     case exact(ExactContact)
 
@@ -108,6 +107,7 @@ struct FreeExercise: Codable, Hashable, Identifiable {
     var type: FreeExerciseType
     var title: String
     var holdSelection: FreeWorkoutHoldSelection
+    var hand: WorkoutSide
     var restAfterSeconds: TimeInterval
     var sets: [FreeSet]
 
@@ -115,7 +115,8 @@ struct FreeExercise: Codable, Hashable, Identifiable {
         id: UUID = UUID(),
         type: FreeExerciseType,
         title: String? = nil,
-        holdSelection: FreeWorkoutHoldSelection = .any,
+        holdSelection: FreeWorkoutHoldSelection = .generic(.jug),
+        hand: WorkoutSide = .both,
         restAfterSeconds: TimeInterval = FreeExercise.defaultRestAfterSeconds,
         sets: [FreeSet]? = nil
     ) {
@@ -123,6 +124,7 @@ struct FreeExercise: Codable, Hashable, Identifiable {
         self.type = type
         self.title = title ?? type.label
         self.holdSelection = holdSelection
+        self.hand = hand
         self.restAfterSeconds = restAfterSeconds
         self.sets = sets ?? [FreeSet()]
     }
@@ -152,13 +154,15 @@ struct FreeWorkoutLog: Codable, Hashable, Identifiable {
     mutating func addExercise(
         type: FreeExerciseType,
         title: String? = nil,
-        holdSelection: FreeWorkoutHoldSelection = .any,
+        holdSelection: FreeWorkoutHoldSelection = .generic(.jug),
+        hand: WorkoutSide = .both,
         restAfterSeconds: TimeInterval = FreeExercise.defaultRestAfterSeconds
     ) -> UUID {
         let exercise = FreeExercise(
             type: type,
             title: title,
             holdSelection: holdSelection,
+            hand: hand,
             restAfterSeconds: restAfterSeconds
         )
         exercises.append(exercise)
@@ -246,6 +250,7 @@ struct FreeWorkoutLog: Codable, Hashable, Identifiable {
                     type: exercise.type,
                     title: exercise.title,
                     holdSelection: exercise.holdSelection,
+                    hand: exercise.hand,
                     restAfterSeconds: exercise.restAfterSeconds,
                     sets: exercise.sets.map { set in
                         FreeSet(
@@ -346,7 +351,7 @@ struct FreeWorkoutLog: Codable, Hashable, Identifiable {
         if let holdKind = draft.holdKind {
             return .generic(holdKind)
         }
-        return .any
+        return .generic(.jug)
     }
 
     private static func restAfterSeconds(from restDuration: TimeInterval) -> TimeInterval {

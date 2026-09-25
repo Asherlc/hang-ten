@@ -58,7 +58,7 @@ struct FreeWorkoutLogSessionView: View {
 
     private var highlightedHoldIDs: Set<String> {
         guard let exercise = focusedExercise else { return [] }
-        return Self.contactIDs(for: exercise.holdSelection, on: board)
+        return Self.contactIDs(for: exercise.holdSelection, hand: exercise.hand, on: board)
     }
 
     private var showsRestBar: Bool {
@@ -129,8 +129,8 @@ struct FreeWorkoutLogSessionView: View {
         .sheet(isPresented: $showsAddExercise) {
             FreeWorkoutAddExerciseSheet(
                 board: board,
-                onAdd: { type, hold in
-                    addExercise(type: type, holdSelection: hold)
+                onAdd: { type, hold, hand in
+                    addExercise(type: type, holdSelection: hold, hand: hand)
                     showsAddExercise = false
                 },
                 onCancel: { showsAddExercise = false }
@@ -193,7 +193,7 @@ struct FreeWorkoutLogSessionView: View {
                 holdName: holdSubtitle(exercise.holdSelection),
                 weightKGF: set.weightKGF,
                 duration: duration,
-                highlightedHoldIDs: Self.contactIDs(for: exercise.holdSelection, on: board),
+                highlightedHoldIDs: Self.contactIDs(for: exercise.holdSelection, hand: exercise.hand, on: board),
                 onComplete: { elapsed in
                     completeGuidedHang(
                         exerciseID: target.exerciseID,
@@ -587,9 +587,9 @@ struct FreeWorkoutLogSessionView: View {
         ActiveFreeWorkoutStore.save(log)
     }
 
-    private func addExercise(type: FreeExerciseType, holdSelection: FreeWorkoutHoldSelection) {
+    private func addExercise(type: FreeExerciseType, holdSelection: FreeWorkoutHoldSelection, hand: WorkoutSide) {
         mutate { log in
-            log.addExercise(type: type, holdSelection: holdSelection)
+            log.addExercise(type: type, holdSelection: holdSelection, hand: hand)
         }
     }
 
@@ -780,8 +780,6 @@ struct FreeWorkoutLogSessionView: View {
 
     private func holdSubtitle(_ selection: FreeWorkoutHoldSelection) -> String {
         switch selection {
-        case .any:
-            return "Any hold"
         case .generic(let kind):
             return kind.label
         case .exact(let exact):
@@ -794,11 +792,9 @@ struct FreeWorkoutLogSessionView: View {
 
     /// Resolves hold highlight via the same ContactResolver path as timeline sessions,
     /// driven by the focused exercise’s hold — not WorkoutTimeline.
-    static func contactIDs(for selection: FreeWorkoutHoldSelection, on board: BoardRevision) -> Set<String> {
+    static func contactIDs(for selection: FreeWorkoutHoldSelection, hand: WorkoutSide, on board: BoardRevision) -> Set<String> {
         let requirements: [ContactRequirement]
         switch selection {
-        case .any:
-            return []
         case .generic(let kind):
             requirements = [.kind(kind)]
         case .exact(let exact):
@@ -814,6 +810,7 @@ struct FreeWorkoutLogSessionView: View {
                 )
             ]
         }
+        let handUse: WorkoutHandUse = hand == .both ? .double : .single
         let step = WorkoutStep(
             id: "free-log-highlight",
             number: 1,
@@ -830,8 +827,8 @@ struct FreeWorkoutLogSessionView: View {
                     duration: 1
                 )
             ],
-            handUse: .double,
-            side: .both,
+            handUse: handUse,
+            side: hand,
             action: .hang
         )
         return Set(WorkoutHighlightResolver.contactIDs(for: step, on: board))

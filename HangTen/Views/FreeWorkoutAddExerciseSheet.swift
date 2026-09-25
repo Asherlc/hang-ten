@@ -1,13 +1,14 @@
 import SwiftUI
 
-/// Add Hang or Pull-up to the live free-workout log, with hold picker.
+/// Add Hang or Pull-up to the live free-workout log, with hold and hand pickers.
 struct FreeWorkoutAddExerciseSheet: View {
     let board: BoardRevision
-    let onAdd: (FreeExerciseType, FreeWorkoutHoldSelection) -> Void
+    let onAdd: (FreeExerciseType, FreeWorkoutHoldSelection, WorkoutSide) -> Void
     let onCancel: () -> Void
 
     @State private var exerciseType: FreeExerciseType = .hang
-    @State private var holdSelection: FreeWorkoutHoldSelection = .any
+    @State private var holdSelection: FreeWorkoutHoldSelection = .generic(.jug)
+    @State private var hand: WorkoutSide = .both
 
     var body: some View {
         NavigationStack {
@@ -28,9 +29,18 @@ struct FreeWorkoutAddExerciseSheet: View {
                     .accessibilityIdentifier("freeWorkout.addExercise.type")
                 }
 
+                Section("Hand") {
+                    Picker("Hand", selection: $hand) {
+                        Text("Left").tag(WorkoutSide.left)
+                        Text("Right").tag(WorkoutSide.right)
+                        Text("Both").tag(WorkoutSide.both)
+                    }
+                    .pickerStyle(.segmented)
+                    .accessibilityIdentifier("freeWorkout.addExercise.hand")
+                }
+
                 Section("Hold") {
                     Picker("Hold", selection: $holdSelection) {
-                        Text("Any hold").tag(FreeWorkoutHoldSelection.any)
                         ForEach(HoldKind.allCases) { kind in
                             Text(kind.label).tag(FreeWorkoutHoldSelection.generic(kind))
                         }
@@ -50,7 +60,7 @@ struct FreeWorkoutAddExerciseSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") {
-                        onAdd(exerciseType, holdSelection)
+                        onAdd(exerciseType, holdSelection, hand)
                     }
                     .fontWeight(.semibold)
                     .accessibilityIdentifier("freeWorkout.addExercise.confirm")
