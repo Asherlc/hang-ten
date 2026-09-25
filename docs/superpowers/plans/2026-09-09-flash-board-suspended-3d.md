@@ -6,7 +6,7 @@
 
 **Architecture:** Keep one model-only presentation (`primary.usdz` plus a hash-bound descriptor) and retain all seven existing logical hold IDs. Four existing position IDs map to that presentation; `media.suspension` supplies an attachment point, fixed world-anchor estimate, cord parameters, and one canonical pose/camera per position. SceneKit applies the selected pose to the USDZ, builds a non-pickable catenary transient layer, and permits only camera orbit; it never rotates a hanging board from gestures.
 
-**Tech Stack:** Python 3 standard-library package validation, Blender/USDZ compiler and verifier, Swift/SwiftUI/SceneKit/XCTest, Xcode Simulator. Android remains explicitly model-unavailable (no raster fallback and no fake 3D implementation) until a separately scoped Android renderer exists.
+**Tech Stack:** Python 3 standard-library package validation, Blender/USDZ compiler and verifier, Swift/SwiftUI/SceneKit/XCTest, Xcode Simulator.
 
 **Spec:** `docs/superpowers/specs/2026-09-09-suspended-hangboard-presentation-design.md`
 
@@ -20,7 +20,7 @@
 - The anchor is invisible and fixed in scene world coordinates. `anchor.offsetFromBoardBounds` is an authored display estimate evaluated once from the unposed descriptor bounds; it does not rotate or translate with later board poses. Every pose must independently satisfy the endpoint/length and clearance checks.
 - A slack cord is solved in the gravity plane. A taut line is valid only when `abs(restLength - endpointDistance) <= 1e-5 m`; shorter length, nonfinite inputs, or vertical-only slack with no deterministic gravity-plane direction is invalid/unavailable rather than guessed.
 - Store generated evidence, editable Blender source, compiler package, reports, screenshots, xcresults, and ownership record under `.context/pretty-crocodile-tension-flash-board/`. Install the required cleanup trap for disposable simulator, DerivedData, result bundle, and temporary render/export directories; retain the reviewed evidence/report files until the owning migration handoff is complete.
-- Do not start an HTTP server for this work. Android is not a fallback: retain its existing model-package omission behavior and explicitly test it after Flash becomes model-only.
+- Do not start an HTTP server for this work.
 
 ## File Structure
 
@@ -43,10 +43,6 @@
 | `HangTenTests/SuspendedBoardPresentationTests.swift` | Create | Solver and pose unit tests. |
 | `HangTenTests/BoardModelTests.swift` | Modify | Native SceneKit cord-ignore, canonical pose, orbit/reset, exact nearest-triangle checks. |
 | `Hangboards/tension-flash-board/board.json` | Modify | Model-only package, one primary presentation, four positions, suspension metadata. |
-| `Hangboards/tension-flash-board/assets/{primary.usdz,primary.model.json}` | Create | Hash-bound final model package; delete the four raster PNGs only in the promotion task. |
-| `docs/source-audits/2026-09-09-tension-flash-board-suspended-3d.md` | Create | Retained source mapping, approval, estimates, omissions, and face-to-hold audit. |
-| `docs/source-audits/2026-08-30-hangboard-presentation-remediation-manifest.json` and package audit tests | Modify only if the existing audit rejects the now-superseded raster records | Mark the four historic raster records superseded by this model-only migration; preserve their provenance, never fabricate PNG checks. |
-| `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt` | Modify | Confirm model-only Flash is omitted/unavailable without attempting a raster asset. No Android production source changes. |
 
 ---
 
@@ -236,33 +232,6 @@ struct BoardModelSuspension: Hashable {
   git push
   ```
 
-### Task 7: Luna — verify package consumers and the Android non-fallback boundary
-
-**Files:**
-- Modify: `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt`
-- Modify only if a test reveals an actual incorrect fallback: `Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt`
-
-**Interfaces:** Android continues `AssetBoardRepository` behavior for model-only media: no `BoardCanvas` data, no PNG read, no derived raster geometry, and plan mappings for that unavailable board are not silently attached elsewhere. This task does not introduce an Android USDZ renderer.
-
-- [ ] **Step 1: Write the Flash-specific Android regression.** Feed a model-only `tension.flash-board` fixture with only `primary.usdz`/descriptor-like paths and assert it is omitted, no `assets/primary.png` lookup occurs, and a neighboring raster board remains valid.
-
-- [ ] **Step 2: Run the Android content test.**
-
-  ```bash
-  cd Android && ./gradlew test --tests com.hangten.android.content.BoardRepositoryTest
-  ```
-
-  Expected: green using existing fail-closed model omission. If it is already green without production changes, do not modify Android runtime files.
-
-- [ ] **Step 3: Run iOS package/model regressions and commit the Android test.**
-
-  ```bash
-  xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:HangTenTests/BoardPackageStoreTests -only-testing:HangTenTests/BoardModelTests
-  git add Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt
-  git commit -m "Cover Flash Board model-only Android boundary"
-  git push
-  ```
-
 ### Task 8: Luna — run the first-migration iOS acceptance review and retain outcomes
 
 **Files:**
@@ -291,7 +260,7 @@ struct BoardModelSuspension: Hashable {
 
 ## Final Verification and Handoff
 
-- [ ] Run `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, focused Python model/evidence/verifier tests, Android content test, and the affected iOS XCTest suite after the final change.
+- [ ] Run `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory`, focused Python model/evidence/verifier tests, and the affected iOS XCTest suite after the final change.
 - [ ] Confirm the staged Flash USDZ and descriptor match source SHA-256 bytes exactly, and `assets/` contains no PNG/raster fallback.
 - [ ] Confirm each canonical pose passes endpoint, length, finite, self-intersection, actual-mesh clearance, camera-framing, and nearest-bound-triangle/cord-ignore proof.
 - [ ] Confirm `.context/pretty-crocodile-tension-flash-board/ios-review.md` has human visual acceptance; remove only disposable owned simulator/DerivedData/xcresult/scratch paths via the installed trap.

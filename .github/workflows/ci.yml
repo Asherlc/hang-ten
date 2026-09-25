@@ -501,7 +501,7 @@ jobs:
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
           XCTEST_ONLY_TESTING: HangTenTests
-          XCTEST_PARALLEL_WORKERS: "2"
+          XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
           set -euo pipefail
