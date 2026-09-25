@@ -169,6 +169,7 @@ enum FreeWorkoutFinish {
         }
 
         let load = (set.weightKGF ?? 0) == 0 ? nil : set.weightKGF
+        let handUse: WorkoutHandUse = exercise.hand == .both ? .double : .single
         return WorkoutStep(
             id: "free.log.\(set.id.uuidString)",
             number: number,
@@ -185,8 +186,8 @@ enum FreeWorkoutFinish {
                     duration: workDuration
                 )
             ],
-            handUse: .double,
-            side: .both,
+            handUse: handUse,
+            side: exercise.hand,
             action: action,
             repetitions: reps,
             externalLoadKGF: load
@@ -197,8 +198,6 @@ enum FreeWorkoutFinish {
         for selection: FreeWorkoutHoldSelection
     ) -> [ContactRequirement] {
         switch selection {
-        case .any:
-            return []
         case .generic(let kind):
             return [.kind(kind)]
         case .exact(let exact):

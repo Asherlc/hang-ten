@@ -22,7 +22,24 @@ avoid repeating the same detours.
   declare the accepted deviation up front and stop chasing the tolerance; chasing
   an unreachable `compare_exports` limit burned roughly a third of one session.
 
-## 2. Diagnose visually, with normals
+## 2. Web-search is a required cross-reference, not a geometry source
+
+Agents **must** web-search the manufacturer / product pages to cross-check
+overall dimensions, grip depths, and product identity against `board.json` and
+against mesh / Git-reference measurements. Prefer manufacturer pages; clearly
+label commerce and other secondary sources.
+
+This is not optional research and not a primary geometry source. Do not invent
+unsupported numeric facts from search, invent hold geometry from catalogue copy,
+or override mesh-authored shapes without evidence. Still measure the USDZ.
+
+On conflict: record the URL, what that page supports, and what disagrees
+(`board.json` and/or the mesh). Prefer manufacturer pages for identity; do not
+paper over disagreement by inventing numbers. Rounded catalogue strings (e.g.
+"20 × 11 × 5 cm") are especially untrustworthy as millimetre truth — see also
+§11 "Product copy is not millimetre truth".
+
+## 3. Diagnose visually, with normals
 
 - Render the node with **normal-shaded (lambert) fills**, not flat fills. A flat
   fill hides the common failure modes.
@@ -36,7 +53,7 @@ avoid repeating the same detours.
   and overall silhouette read more honestly than the custom `preview.py` alone.
   Diagnostic only — never a build input.
 
-## 3. The CAD is the source of truth for hold geometry — use surfaces, not solids
+## 4. The CAD is the source of truth for hold geometry — use surfaces, not solids
 
 - Author each hold region as an **open surface**:
   - band: `Part::Extrusion` of the profile run (surface);
@@ -55,7 +72,7 @@ avoid repeating the same detours.
   them to `BUILTIN_TYPES` in
   `Tools/HangboardPackages/src/hangboard_packages/cad_source.py`.
 
-## 4. Region mesh vs body partition — the boundary-matching rule
+## 5. Region mesh vs body partition — the boundary-matching rule
 
 The compiler partitions the body: each body triangle whose centroid lies on a
 region's classification shape is assigned to that region. There are two ways to
@@ -78,7 +95,7 @@ triangles before partitioning, or split the face in CAD (a distinct face for the
 band). Do not paper over it with a flat overlay; that is wrong for a board whose
 holds are non-planar.
 
-## 5. OCCT boolean / loft traps
+## 6. OCCT boolean / loft traps
 
 - `Part::Common(shell, body)` where the shell already lies on the body boundary is
   a **degenerate boolean**: OCCT returns fragments. Only clip a region whose
@@ -91,7 +108,7 @@ holds are non-planar.
 - A uniform inward offset **collapses corners** whose radius is smaller than the
   inset; use the measured floor loop resampled to the opening's vertex order.
 
-## 6. The descriptor is a closed schema — touch all three layers
+## 7. The descriptor is a closed schema — touch all three layers
 
 Adding a field (e.g. `outline` to a contact) requires, together:
 - `Tools/HangboardModels/contact_model_descriptor.py` (compile + parse + exact-key
@@ -105,7 +122,7 @@ Miss one and the build, the app, or the validator fails. Also: derive
 `facePlaneAABB`/`center` from the CAD outline so an AABB can't drift when a planar
 face tessellates coarsely (this fixed a jug AABB that was ~12 mm off).
 
-## 7. The v2 / attachment path
+## 8. The v2 / attachment path
 
 - `compile_board` must partition **attachments as well as contacts**; the v1
   compiler silently dropped attachment nodes.
@@ -113,7 +130,7 @@ face tessellates coarsely (this fixed a jug AABB that was ~12 mm off).
   from each instance's `contactIDsBySlotID` (reading `ContactID` there is
   vacuous).
 
-## 8. Prismatic extrusion flattens any local silhouette extremum -- fillets can't fix it, a swept lip can
+## 9. Prismatic extrusion flattens any local silhouette extremum -- fillets can't fix it, a swept lip can
 
 A `Part::Extrusion` of a 2D silhouette has a lateral surface whose normal is
 `(-f'(x), 0, 1)/|.|` -- no dependence at all on the extrusion axis. Wherever the
@@ -184,7 +201,7 @@ fillet:
   synthetic light before picking a value from a metric alone.
 
 **Two more boolean traps specific to this construction**, beyond the
-coincident-surface trap in lesson 5:
+coincident-surface trap in lesson 6:
 - Feeding `Part::Fillet` a base shape that already carries this kind of
   loft/boolean topology can crash OCCT outright (not the graceful
   "command not done" of a normal fillet failure). Apply the ordinary
@@ -195,7 +212,7 @@ coincident-surface trap in lesson 5:
   in, the two results end up with a genuinely overlapping 3D volume, not
   just a shared boundary, once fused. Fusing two solids that fully overlap
   (as opposed to merely touching) is a second flavor of the degenerate
-  coincident-boolean problem from lesson 5, and can inflate an edge's
+  coincident-boolean problem from lesson 6, and can inflate an edge's
   tolerance by 100x+ relative to its length in a way `isValid()` misses
   entirely -- only `shape.check(True)` (the extended BOP check) catches it.
   Clip both tools to the exact same span before the boolean pair, so the two
@@ -208,7 +225,7 @@ coincident-surface trap in lesson 5:
   is actually meant to affect, not the full model bounds, even when it would
   be simpler to write a full-height box.
 
-## 9. Process and cost
+## 10. Process and cost
 
 - One writer per worktree. Do not run the controller and a subagent on the same
   files at once — `git checkout`/commit from either will clobber the other.
@@ -227,7 +244,7 @@ coincident-surface trap in lesson 5:
   The framework is justified only by the repo's hard contracts (hash-pinned
   bytes, exact package schema, cross-platform reproducibility, ODR).
 
-## 10. Sculpted lift-blocks and partitioned troughs
+## 11. Sculpted lift-blocks and partitioned troughs
 (`lattice-mxedge-lift-small`; applies to sibling MXEdge / similar scooped shells)
 
 ### Measure topology before inventing pockets
@@ -315,7 +332,7 @@ triangle count.
   commit to `git show` the code from. Large-specific measurement traps are in
   §11.
 
-## 11. What Large added
+## 12. What Large added
 (`lattice-mxedge-lift-large`; same sculpted brick as Small)
 
 Large’s committed descriptor claimed a ±49 mm front. The mesh is the Small
@@ -354,7 +371,7 @@ In the app, tap the hold map. `hangten://board/…/hold/…` stops on the system
 “Open in Hang Ten?” dialog. The owned-simulator trap deletes DerivedData, so
 a second screenshot pass is a full rebuild.
 
-## 12. Board metadata lives in the FCStd; board.json is generated at build time
+## 13. Board metadata lives in the FCStd; board.json is generated at build time
 
 - A CAD board's `board.json` is generated from the FCStd's document-level
   `HangTenBoardManifest` property (`hangboard_packages.cad_source`, with
@@ -385,7 +402,76 @@ a second screenshot pass is a full rebuild.
 - FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
   pointers and every CAD tool (and the freshness check) refuses them.
 
-## 13. Vector-primitive profiles
+## 14. What Compact II added
+(`metolius-wood-grips-compact-ii`; a wide sculpted wood board with 19 contacts)
+
+### Check Git for a retained authoring script before you measure
+
+The pre-migration Compact II asset came from a hand-authored Blender script,
+`Tools/HangboardModels/wood_grips_compact_ii.py`, deleted in `d7ca9c5c9` and
+still readable at `d7ca9c5c9^`. It holds every number the approved mesh was
+built from: the silhouette's cubic spans, the pocket and edge layout, fillet
+radii, the depth-dependent top profile, and the 64 mm body depth. It also says
+which numbers are estimates. Porting those numbers verbatim reproduced the
+reference with no mesh measurement. Node IDs, `modelBounds`, and every
+`facePlaneAABB` came out within 0.6 mm. Run
+`git log --all -- 'Tools/HangboardModels/*<slug>*'` before you build a depth
+map. Label the ported numbers as retained display estimates, not as
+manufacturer dimensions. On this board Metolius publishes only the
+610 × 157 mm face and the 29 / 19 / 56 mm hold labels.
+
+### A polyhedral body is how you get exact contacts on a sculpted surface
+
+The partition claims a body triangle only when its centroid is within 1e-4 mm
+of a contact face. On a curved face, a chord triangle's centroid sits up to
+the tessellation deflection away from the surface, so the claim fails
+silently. The triangle then stays in the body and z-fights the region mesh.
+(`HangTenCurvedRegionPartition`, §15, now opts a source into claiming such
+triangles.) Compact II avoids this with planar faces only:
+
+- The body is a stack of depth stations. Each station is the silhouette offset
+  along its inward normal by the roll inset, with the top lowered by the
+  depth-dependent profile. A station pair becomes a planar quad where the four
+  corners are coplanar and two triangles where they are not. For the
+  triangles, pick the diagonal from the side of the centreline, so the two
+  mirrored halves facet the same way.
+- Each cutter is a stack of rounded-rectangle stations with the same sampling
+  angles at every station. Matching chords stay parallel, so every side quad
+  is a planar trapezoid. The capsule's zero-length straight side is removed on
+  every station at once, so all stations keep the same vertex count.
+- One `Part::Cut` removes a compound of all 14 cutters. A pocket region is
+  every face of the cut body that lies on its cutter. A top region is every
+  up-facing face above the pocket rows, split at fixed x boundaries. Put a
+  silhouette vertex exactly on each boundary so no face spans two holds, and
+  fail the build if one does.
+
+`removeSplitter()` merged nothing on this construction (10,316 faces before
+and after). The source is 13 MB, mostly the cutter and body BReps. A compile
+takes about 3.5 minutes because it recomputes the boolean. That is heavy, but
+it reproduces byte for byte.
+
+### `compare_exports` does not scale to a dense reference
+
+The reference has about 60k triangles and the candidate about 17k.
+`compare_exports.py` compares every sample with every triangle, so here it ran
+for about 25 minutes and peaked near 23 GB RSS. It reported a worst sampled
+two-way deviation of 0.39 mm, which passes the 0.5 mm limit because the
+geometry was ported, not re-measured. Start it in the background right after
+the first good compile, or skip it once the descriptor `facePlaneAABB` and the
+renders agree. It is evidence, not a gate.
+
+### A board authored before §13 only needs the manifest embedded
+
+Compact II was authored on a branch that predated §13, with a committed author
+script and a hand-authored `board.json`. Bringing it to the current convention
+needed no FreeCAD run: `set_board_manifest.py` embedded the existing
+`board.json`, `board_manifest.py` regenerated it byte-identically on the first
+try, and only `Document.xml` changed in the FCStd, so the USDZ and descriptor
+bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
+the script's provenance into a dated `docs/source-audits/` record, and delete
+the script.
+
+## 15. Vector-primitive profiles
 (`metolius-prime-rib`; applies to any constant-section board)
 
 ### Fit primitives before you reduce vertices

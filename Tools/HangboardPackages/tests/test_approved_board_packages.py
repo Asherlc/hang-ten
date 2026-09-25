@@ -128,6 +128,7 @@ def test_helium_is_one_model_with_six_exact_physical_contacts() -> None:
     assert set(descriptor["contacts"]) == set(expected)
     # USD identifiers sanitize hyphens; Blender's mesh child may add _001.
     def source_name(node_id: str) -> str:
+        """Normalize a USD node ID to the board.json contact naming convention."""
         return node_id.removesuffix("_001").replace("_", "-")
 
     assert {contact_id: {source_name(node) for node in contact["nodeIDs"]}
@@ -219,6 +220,7 @@ def test_light_rail_inverted_guides_stay_close_to_the_existing_end_silhouette() 
 
 
 def _scalar_depth(contact: dict[str, object]) -> int | float | None:
+    """Return the scalar depth value if the contact has a single fixed depth, else None."""
     depth = contact.get("depth")
     if not isinstance(depth, dict):
         return None
@@ -231,6 +233,7 @@ def _scalar_depth(contact: dict[str, object]) -> int | float | None:
 
 
 def _single_grip_type(contact: dict[str, object]) -> str | None:
+    """Return the sole grip type if the contact has exactly one, else None."""
     grip_types = contact.get("gripTypes")
     if not isinstance(grip_types, list) or len(grip_types) != 1:
         return None
@@ -242,6 +245,7 @@ def _single_grip_type(contact: dict[str, object]) -> str | None:
 def _assert_model_descriptor(
     root: Path, board: dict[str, object], body_node_ids: str | set[str]
 ) -> dict[str, object]:
+    """Validate the first presentation is a model asset and return the loaded descriptor."""
     presentations = board["presentations"]
     assert isinstance(presentations, list)
     media = presentations[0]["media"]
@@ -592,6 +596,7 @@ def _global_path_segment_signatures(
     commands = geometry["shape"]["commands"]
 
     def global_point(local: list[float]) -> tuple[float, float]:
+        """Convert local [0,1] coordinates to global with optional horizontal mirror."""
         x = frame["x"] + local[0] * frame["width"]
         if mirror_horizontally:
             x = 1 - x
@@ -601,6 +606,7 @@ def _global_path_segment_signatures(
     def line_signature(
         start: tuple[float, float], end: tuple[float, float]
     ) -> tuple[object, ...]:
+        """Return an order-invariant signature for a line segment."""
         ordered = min((start, end), (end, start))
         return ("line", *ordered)
 
@@ -610,6 +616,7 @@ def _global_path_segment_signatures(
         control2: tuple[float, float],
         end: tuple[float, float],
     ) -> tuple[object, ...]:
+        """Return an order-invariant signature for a cubic Bezier curve."""
         forward = (start, control1, control2, end)
         reverse = (end, control2, control1, start)
         return ("curve", *min(forward, reverse))
@@ -650,6 +657,7 @@ def _global_path_segment_signatures(
 def _assert_global_paths_are_horizontal_mirrors(
     left: dict[str, object], right: dict[str, object]
 ) -> None:
+    """Assert that two contact geometries are horizontal mirrors of each other."""
     assert _global_path_segment_signatures(
         left, mirror_horizontally=True
     ) == _global_path_segment_signatures(right)
@@ -808,6 +816,7 @@ def test_direct_discovery_finds_the_exact_complete_inventory_without_drafts() ->
 
 
 def _original_contact_owners(document: dict[str, object]) -> dict[str, str]:
+    """Map each contact ID to the original raster presentation that owns it."""
     owners: dict[str, str] = {}
     for presentation in document["presentations"]:
         if presentation["derivation"]["type"] != "original":
@@ -822,6 +831,7 @@ def _original_contact_owners(document: dict[str, object]) -> dict[str, str]:
 
 
 def _presentation_summary(document: dict[str, object]) -> list[tuple[object, ...]]:
+    """Return a compact summary tuple for each presentation in the document."""
     return [
         (
             presentation["id"],
@@ -895,7 +905,10 @@ def test_compact_finished_package_has_exactly_one_document_and_primary_asset() -
         "assets",
         "assets/primary.usdz",
         "assets/primary.model.json",
-        "board.json",
+        # A CAD-backed package carries its own authoring source, named after its
+        # own directory, instead of board.json: board.json is generated from the
+        # FCStd at build time. It is not a runtime resource.
+        "metolius-wood-grips-compact-ii.FCStd",
     }
 
 
@@ -1579,8 +1592,8 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
 
     model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
     descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
-    assert model_sha == "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a"
-    assert descriptor_sha == "903c9e87fbf305f3184437d346bf6d25e44c51ebd787a426d533ea21dbfa57cf"
+    assert model_sha == "fd4a02477c0ea81f4d863ae839f2e144a0a2ff7b3f8993a7238ef562b9e8b181"
+    assert descriptor_sha == "d21c03846539f080e7b8b3000e4cd37f0fb0cdad81e51f88c6f6caed6921e4b6"
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"

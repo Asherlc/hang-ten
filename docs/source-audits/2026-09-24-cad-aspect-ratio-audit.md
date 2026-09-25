@@ -2,14 +2,22 @@
 
 Scope: the FreeCAD-backed packages whose `board.json` is generated from the
 `HangTenBoardManifest` property of `Hangboards/<slug>/<slug>.FCStd`: the five
-audited first, and `metolius-prime-rib`, added when its source was merged with
-the build-time generation (see the addendum below). The question was whether each
+audited first, `metolius-prime-rib`, added when its source was merged with
+the build-time generation (see the addendum below), and
+`metolius-wood-grips-compact-ii` (addendum below). The question was whether each
 manifest `aspectRatio` (top level and the single model presentation, which are
-equal on all six) is correct, should be corrected, or should be derived from the
+equal on all seven) is correct, should be corrected, or should be derived from the
 CAD geometry at build time.
 
-Result: **all six values are kept unchanged. No FCStd geometry, descriptor or
+Result: **all seven values are kept unchanged. No FCStd geometry, descriptor or
 generator change was made for this audit.**
+
+Addendum (same date): `metolius-wood-grips-compact-ii` became a
+CAD-backed package (PR #473) and was audited the same way; its value is also
+kept. See its row and section below. `soill-iron-palm-2` also became
+CAD-backed after this audit and is not covered by it; its model presentation
+`aspectRatio` (`2.3226565483816386`) equals its descriptor bounds ratio, while its
+top-level value is `1.5`.
 
 ## What `aspectRatio` means for model media
 
@@ -52,6 +60,7 @@ generator change was made for this audit.**
 | `lattice-triple-rung` | `4.2307694857988265` | `4.2307694857988265` | 0 | (a) keep |
 | `metolius-rock-rings-3d` | `1.5` | `0.79347825` (0.146 / 0.184, one ring) | n/a (pair layout) | (a) keep |
 | `metolius-prime-rib` | `4.7619050011605735` | `4.7619050011605735` (0.508000016 / 0.106679998) | 0 | (a) keep |
+| `metolius-wood-grips-compact-ii` | `3.88` | `3.885350283906042` (0.610000014 / 0.157000005) | 1.4e-3 | (a) keep |
 
 ### captain-fingerfood-pocket — keep `1.6666667`
 
@@ -123,21 +132,41 @@ generator change was made for this audit.**
   length in `2026-09-24-metolius-prime-rib-cad-provenance.md`), so the
   recompiled descriptor keeps the same `modelBounds`. Unchanged since `b5aa7c2`.
 
+### metolius-wood-grips-compact-ii — keep `3.88`
+
+* Evidence: the published face is 610 × 157 mm (24 × 6.2 in,
+  <https://www.metoliusclimbing.com/products/wood-grips-ii-training-boards>;
+  `2026-08-12-metolius-board-packages.md`), ratio 3.8853503. The descriptor
+  bounds (±0.305 × 0.157 m) reproduce it to float32 noise, both before the CAD
+  migration (commit `134f0bf26`) and after it (identical `modelBounds`).
+* Origin of `3.88`: the value predates the 3D migration (present since
+  `c84d556aa`, 2026-08-10). Before `df5ba82ef` (2026-09-09) the package had a
+  raster presentation whose `assets/primary.png` was 1774 × 457 px (read from
+  `df5ba82ef^`), ratio 3.8818, which the raster validator's 0.1% tolerance
+  accepted against 3.88. The model migration kept the value.
+* The stored value is 0.14% narrower than the face. With the model framing
+  described above this only adds a letterbox margin of about 0.14% of the
+  viewport height (about 0.14 pt on a 400 pt wide box); nothing is cropped or
+  distorted. That is not a correctness defect, and changing it would alter the
+  generated `board.json` and the locked FCStd bytes for no visible benefit, so
+  it is kept, matching the decision for the other six.
+
 ## Why not derive `aspectRatio` at build time
 
-* It is not safe for all six: for `metolius-rock-rings-3d` the single-unit
+* It is not safe for all seven: for `metolius-rock-rings-3d` the single-unit
   `modelBounds` ratio (0.793) is wrong for the paired layout, and a pair-aware
   derivation would depend on display-estimate spacing and cord/anchor geometry.
-* For the other five it would only replace exact or sourced ratios
+* For five of the others it would only replace exact or sourced ratios
   (5/3, 12/7) with float32-noise ratios, a change of ≤ 2e-8 with no visible
-  effect, while altering generated `board.json` bytes and the FCStd-locked
+  effect (for `metolius-wood-grips-compact-ii`, a 0.14% change with no visible
+  effect; see its section), while altering generated `board.json` bytes and the FCStd-locked
   delivery inventory for no benefit.
 * Therefore `aspectRatio` stays an authored manifest field, as documented in
   `Tools/HangboardCAD/README.md`. Note that the README's reason ("not reproducible
   from the descriptor's `modelBounds` for most boards") is accurate for the
-  whole model catalog but, among the six CAD boards, the only non-reproducible
-  one is the paired `metolius-rock-rings-3d`; the other five reproduce within
-  2e-8 (`metolius-prime-rib` bit-exactly).
+  whole model catalog but, among the seven audited CAD boards, the paired `metolius-rock-rings-3d` is
+  not reproducible and `metolius-wood-grips-compact-ii` differs by 0.14%; the
+  other five reproduce within 2e-8 (`metolius-prime-rib` bit-exactly).
 
 ## App rendering and tests
 

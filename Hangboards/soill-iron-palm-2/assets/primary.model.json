@@ -1,217 +1,217 @@
 {
-  "contacts": {
-    "flat-edge-15": {
-      "center": [
-        0.499994924,
-        0.203449902
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.831870004,
-          0.283234819
-        ],
-        "min": [
-          0.168119844,
-          0.123664985
-        ]
-      },
-      "nodeIDs": [
-        "rail_15_001"
-      ]
-    },
-    "flat-edge-35": {
-      "center": [
-        0.499994924,
-        0.425855679
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.824559987,
-          0.466604499
-        ],
-        "min": [
-          0.175429861,
-          0.385106859
-        ]
-      },
-      "nodeIDs": [
-        "rail_35_001"
-      ]
-    },
-    "pinch-left": {
-      "center": [
-        0.089907942,
-        0.243489454
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.179815884,
-          0.486978908
-        ],
-        "min": [
-          0.0,
-          0.0
-        ]
-      },
-      "nodeIDs": [
-        "left_pinch_001"
-      ]
-    },
-    "pinch-right": {
-      "center": [
-        0.910086982,
-        0.243489707
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          0.486978908
-        ],
-        "min": [
-          0.820173964,
-          5.06e-07
-        ]
-      },
-      "nodeIDs": [
-        "right_pinch_001"
-      ]
-    },
-    "rounded-edge-40": {
-      "center": [
-        0.499994924,
-        0.599038171
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.796781884,
-          0.643182771
-        ],
-        "min": [
-          0.203207964,
-          0.554893572
-        ]
-      },
-      "nodeIDs": [
-        "rail_40_001"
-      ]
-    },
-    "sloper-left": {
-      "center": [
-        0.136643053,
-        0.74348311
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.249992103,
-          0.99998735
-        ],
-        "min": [
-          0.023294002,
-          0.48697887
-        ]
-      },
-      "nodeIDs": [
-        "left_large_sloper_001"
-      ]
-    },
-    "sloper-right": {
-      "center": [
-        0.863351959,
-        0.743489435
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.976706173,
-          1.0
-        ],
-        "min": [
-          0.749997745,
-          0.48697887
-        ]
-      },
-      "nodeIDs": [
-        "right_large_sloper_001"
-      ]
-    },
-    "top-incut-jug": {
-      "center": [
-        0.499994946,
-        0.794835529
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.749997789,
-          0.868080421
-        ],
-        "min": [
-          0.249992103,
-          0.721590637
-        ]
-      },
-      "nodeIDs": [
-        "top_jug_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "87380f8cdccff35bffab093d8b9808abe7cc0f9cad95e3c5c1530ef3c79d3db1",
   "modelBounds": {
-    "max": [
-      0.34199962,
-      0.148078084,
-      0.101599321
-    ],
     "min": [
       -0.341992676,
       -0.146408975,
       -2.47e-06
+    ],
+    "max": [
+      0.34199962,
+      0.148078084,
+      0.102099322
     ]
   },
-  "modelSHA256": "f4ff71fd010bbf7f43c6a61bdc85ebea2321dbfcd454ca52dd3df6b179c59495",
   "nodes": [
     {
       "nodeID": "body_board_001",
       "role": "body"
     },
     {
-      "contactID": "sloper-left",
       "nodeID": "left_large_sloper_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "sloper-left"
     },
     {
-      "contactID": "pinch-left",
       "nodeID": "left_pinch_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pinch-left"
     },
     {
-      "contactID": "flat-edge-15",
       "nodeID": "rail_15_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "flat-edge-15"
     },
     {
-      "contactID": "flat-edge-35",
       "nodeID": "rail_35_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "flat-edge-35"
     },
     {
-      "contactID": "rounded-edge-40",
       "nodeID": "rail_40_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "rounded-edge-40"
     },
     {
-      "contactID": "sloper-right",
       "nodeID": "right_large_sloper_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "sloper-right"
     },
     {
-      "contactID": "pinch-right",
       "nodeID": "right_pinch_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pinch-right"
     },
     {
-      "contactID": "top-incut-jug",
       "nodeID": "top_jug_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "top-incut-jug"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "flat-edge-15": {
+      "nodeIDs": [
+        "rail_15_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.168119844,
+          0.123664985
+        ],
+        "max": [
+          0.831870004,
+          0.283234819
+        ]
+      },
+      "center": [
+        0.499994924,
+        0.203449902
+      ]
+    },
+    "flat-edge-35": {
+      "nodeIDs": [
+        "rail_35_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.175429861,
+          0.385106859
+        ],
+        "max": [
+          0.824559987,
+          0.466604499
+        ]
+      },
+      "center": [
+        0.499994924,
+        0.425855679
+      ]
+    },
+    "pinch-left": {
+      "nodeIDs": [
+        "left_pinch_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.0
+        ],
+        "max": [
+          0.179815884,
+          0.486978908
+        ]
+      },
+      "center": [
+        0.089907942,
+        0.243489454
+      ]
+    },
+    "pinch-right": {
+      "nodeIDs": [
+        "right_pinch_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.820173964,
+          5.06e-07
+        ],
+        "max": [
+          1.0,
+          0.486978908
+        ]
+      },
+      "center": [
+        0.910086982,
+        0.243489707
+      ]
+    },
+    "rounded-edge-40": {
+      "nodeIDs": [
+        "rail_40_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.203207964,
+          0.554893572
+        ],
+        "max": [
+          0.796781884,
+          0.643182771
+        ]
+      },
+      "center": [
+        0.499994924,
+        0.599038171
+      ]
+    },
+    "sloper-left": {
+      "nodeIDs": [
+        "left_large_sloper_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.023294002,
+          0.48697887
+        ],
+        "max": [
+          0.249992103,
+          0.99998735
+        ]
+      },
+      "center": [
+        0.136643053,
+        0.74348311
+      ]
+    },
+    "sloper-right": {
+      "nodeIDs": [
+        "right_large_sloper_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.749997745,
+          0.48697887
+        ],
+        "max": [
+          0.976706173,
+          1.0
+        ]
+      },
+      "center": [
+        0.863351959,
+        0.743489435
+      ]
+    },
+    "top-incut-jug": {
+      "nodeIDs": [
+        "top_jug_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.249992103,
+          0.721590637
+        ],
+        "max": [
+          0.749997789,
+          0.868080421
+        ]
+      },
+      "center": [
+        0.499994946,
+        0.794835529
+      ]
+    }
+  }
 }

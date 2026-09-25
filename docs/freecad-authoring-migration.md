@@ -258,7 +258,29 @@ path, digest = load_reference("lattice-triple-rung", "primary.usdz", scratch)
 `git lfs smudge`, checking the resolved bytes against the object id the LFS
 pointer declares. Record that commit and digest.
 
-### 3. Measure, then author deliberately
+### 3. Web-search and cross-reference product facts
+
+Manufacturer / product web search is a **required cross-reference step**, not
+optional research and not a primary geometry source. After you have the Git
+reference (and before you measure and author), search for the product. Prefer
+primary manufacturer pages; clearly label commerce listings and other secondary
+pages.
+
+Use the search only to cross-check published overall dimensions, grip depths, and
+product identity against:
+
+1. the published facts already in `board.json`;
+2. measurements from the Git-resolved mesh / USDZ (which you still take next).
+
+Do **not** invent geometry from search results, invent unsupported numeric facts
+the pages do not state, override mesh-authored shapes without evidence, or treat
+a catalogue string as a substitute for measuring the USDZ.
+
+When sources disagree, **record the conflict**: the URL, what that page
+supports, and what disagrees (`board.json` and/or the mesh). Prefer manufacturer
+pages for product identity; still do not invent numbers to paper over a conflict.
+
+### 4. Measure, then author deliberately
 
 Extract the profile as an ordered boundary loop of the reference's cross-section
 and convert to native coordinates. Reduce it to the vertices you will author,
@@ -269,7 +291,13 @@ Keep published facts separate from measurements:
 
 - overall dimensions and grip depths come from the board manifest (published
   facts, with their sources; the build-time `board.json` is generated from it);
-- the outline is measured from the approved display mesh;
+- web search **cross-references** those published facts and product identity
+  against manufacturer (prefer) or clearly labeled secondary sources — it is not
+  a geometry source and must not invent unsupported numbers;
+- the outline and hold surfaces are measured from the approved display mesh;
+- conflicts between web, the manifest (`board.json`), and mesh are recorded
+  (URL + what it supports + what disagrees), not silently resolved by inventing
+  facts;
 - every display choice (UV projection, material) is stated as a choice.
 
 The result is a measured approximation of a display mesh. It is **not** recovered
@@ -328,7 +356,7 @@ saved document in a fresh process and asserts:
 That last group is the part that matters. A binding that silently re-resolves to
 a different surface passes every structural check and fails only a test like this.
 
-### 5. Compile and compare against the reference
+### 6. Compile and compare against the reference
 
 ```bash
 python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
@@ -351,7 +379,7 @@ Also compare the descriptors region by region. Two-way region agreement of
 matches the reference numerically is the strongest cheap signal that the contact
 identity survived.
 
-### 6. Refresh the delivery lock
+### 7. Refresh the delivery lock
 
 `docs/source-audits/2026-09-22-model-delivery-lock.json` pins the committed
 bytes. Refresh it **only after** verifying the changed bytes, and keep the
@@ -367,7 +395,7 @@ reports which boards those are and fails if one has an on-disk `board.json`. A
 metadata-only change (a new `HangTenBoardManifest`) changes the FCStd, so it
 needs a lock refresh too.
 
-### 7. Verify in the app, with the hold selected
+### 8. Verify in the app, with the hold selected
 
 Build and install, then drive the board-detail review route:
 
@@ -408,7 +436,7 @@ Confirm the highlight lands on the right region and that the "Selected hold"
 panel shows the expected depth. That exercises the descriptor's node binding,
 which is the part a CPU render cannot check.
 
-### 8. What you must not claim
+### 9. What you must not claim
 
 - A mesh imported as B-rep is `faceted-import`. The build refuses to publish it
   without `--allow-faceted-import`, precisely so it cannot ship as if it carried
@@ -416,6 +444,8 @@ which is the part a CPU render cannot check.
   parametric migration.
 - Do not present a reconstructed display asset as recovered factory geometry or
   as manufacturing-ready.
+- Do not treat manufacturer or commerce web pages as a primary geometry source,
+  or invent numeric facts from search that the pages do not state.
 - CPU previews are not native SceneKit screenshots and do not establish
   materials, picking, accessibility, suspension, or performance.
 
@@ -452,9 +482,9 @@ which is the part a CPU render cannot check.
 4. **Coincident surfaces z-fight.** The approved runtime contract partitions the
    board surface: the body node carries the surface *minus* the contact regions.
    Emitting the body whole and laying contact patches on top duplicates coplanar
-   geometry and flickers. Assign every body triangle to exactly one node, refuse
-   a triangle claimed by two regions, and refuse a region that claims more body
-   area than its own exported surface covers.
+   geometry and flickers. Assign every body triangle to exactly one node (a
+   triangle within reach of two regions goes to the nearest), and refuse a
+   region that claims more body area than its own exported surface covers.
 
 5. **Normals are directions, not positions.** See the frame section.
 
@@ -537,6 +567,11 @@ write-up. The durable points:
   matched by a solid native model; either accept a measured approximation up
   front or ship a faceted import. Do not chase an unreachable `compare_exports`
   limit.
+- **Web-search to cross-check, not to invent.** Required: cross-reference
+  overall dims, grip depths, and product identity against `board.json` and mesh
+  measurements. Prefer manufacturer pages; label secondary sources. Record
+  conflicts (URL + support + disagreement). Do not invent unsupported numbers or
+  override mesh-authored shapes without evidence. See lessons §2.
 - **A prismatic extrusion flattens any local silhouette extremum.** Where the
   outline has zero slope, its extruded side wall faces straight up for the whole
   depth and renders as one over-lit facet; fillets cannot fix it. Author a
@@ -560,14 +595,20 @@ write-up. The durable points:
 - **Fit primitives before you reduce vertices.** Prime-rib's reference end
   cap was exactly lines, tangent arcs and two cubic Beziers with round-number
   values (fit residual 6e-5 mm). A vector sketch with named dimensions beats a
-  measured polyline wherever that holds. See lessons §13.
+  measured polyline wherever that holds. See lessons §15.
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
-  mono circle fit, cord mouths, source-backed lock). See lessons §11.
+  mono circle fit, cord mouths, source-backed lock). See lessons §12.
+- **Compact II** reused the deleted Blender authoring script from Git as its
+  dimension source. It also showed that a sculpted body gets exact contact
+  partitions only when every face is planar: station-stacked quads and
+  triangles, not curved lofts. See lessons §14.
 
 ## Fast loop and definition of done
 
-**Decision tree.** Measure the reference before authoring anything:
+**Decision tree.** After the Git reference and the required web-search
+cross-reference (procedure steps 2–3), measure the reference before authoring
+anything:
 
 - **Constant cross-section along the intended axis? → swept profile.** Clone the
   pilot (`lattice-triple-rung`): a fully constrained sketch, a pad, a fillet;
@@ -584,7 +625,7 @@ write-up. The durable points:
   **shallow recess** — never a coincident patch (z-fights) and never a proud
   patch (also z-fights under the app's depth buffer). For MXEdge-style
   partitioned troughs, measure topology first (AABBs + front depth map) —
-  see `docs/freecad-authoring-lessons.md` §10 before inventing separate pockets.
+  see `docs/freecad-authoring-lessons.md` §11 before inventing separate pockets.
 
 **Inner loop (fast, host-side).** After every authoring edit:
 
@@ -629,6 +670,9 @@ cords).
 
 **Definition of done.**
 
+- published overall dimensions, grip depths, and product identity have been
+  web-searched and cross-referenced against `board.json` and mesh measurements;
+  conflicts recorded (URL + what it supports + what disagrees);
 - the node inventory and `modelBounds` match the published facts;
 - every hold renders as one cohesive region in the app (deep link + screenshot);
 - `Tools/HangboardCAD/tests/native_source_checks.py` (or the board's variant)

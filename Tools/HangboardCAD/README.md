@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 6 of the 46 model-media boards are migrated** (those with a committed
+**Status: 8 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -59,11 +59,17 @@ The metadata lives in two document-level string properties of the FCStd:
 
 Only `id` is derived. `aspectRatio` stays a stored manifest value: it is a
 presentation (viewport) fact, not always the single-unit front ratio. Of the
-six CAD boards, five match the descriptor `modelBounds` x/y ratio to within
+seven CAD boards covered by the aspect-ratio audit, five match the descriptor
+`modelBounds` x/y ratio to within
 2e-8 relative (float32 export noise against exact ratios such as 5/3 and 12/7),
-but `metolius-rock-rings-3d` presents two ring instances while its descriptor
-bounds cover one ring, so a derived value would be wrong there (see
+`metolius-wood-grips-compact-ii` keeps its pre-migration raster value `3.88`
+(0.14% from its 610 × 157 mm face), and `metolius-rock-rings-3d` presents two
+ring instances while its descriptor bounds cover one ring, so a derived value
+would be wrong there (see
 [`docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md)).
+The eighth CAD board, `soill-iron-palm-2`, was added after that audit and is
+not covered by it: its model presentation `aspectRatio` equals its bounds ratio
+(`2.3226565483816386`), while its top-level value is `1.5`.
 Published grip depths stay because they are sourced product facts (see `AGENTS.md`,
 Training-plan Fidelity) that `compile_board.py` validates the geometry against.
 Schema-v2 boards (slots, instances, `contactIDsBySlotID`) are carried the same
@@ -235,7 +241,10 @@ Provenance of the authored numbers. There is deliberately no per-board
 provenance sidecar; these facts live here instead.
 
 * Published facts come from the board manifest (the build-time `board.json`): overall
-  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm.
+  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm. Cross-reference those (and
+  product identity) against manufacturer / product pages before treating them as
+  settled; web search is a required check, not a geometry source — see
+  `docs/freecad-authoring-migration.md` procedure step 3.
 * The cross-section is **measured** from the approved reference asset at the
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.
@@ -302,17 +311,17 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **6 of 46 model-media boards are migrated.** The other 40 still ship their
+* **8 of 46 model-media boards are migrated.** The other 38 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
   and must not be presented as recovered parametric history.
 * The compiler refuses a source it cannot recompute cleanly, a contact region
-  whose depth disagrees with the published grip depth in the board manifest, a body
-  triangle claimed by two contact regions, a region that claims more body
-  surface than its own exported surface, and a document labelled
+  whose depth disagrees with the published grip depth in the board manifest, a
+  region that claims more body surface than its own exported surface, and a document labelled
   `faceted-import` unless `--allow-faceted-import` acknowledges it. Each guard
-  has a failing test.
+  has a failing test. A body triangle within reach of two contact regions goes
+  to the nearest one.
 * FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
   value in this pinned build. The authored sketch stores negated local
   coordinates with positive driving dimensions and negates them back through an

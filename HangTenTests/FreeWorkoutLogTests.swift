@@ -111,7 +111,7 @@ final class FreeWorkoutLogTests: XCTestCase {
         let exerciseID = log.addExercise(
             type: .pullUp,
             title: "Pull-ups",
-            holdSelection: .any
+            holdSelection: .generic(.jug)
         )
         let setID = log.exercises[0].sets[0].id
         log.completeSet(exerciseID: exerciseID, setID: setID, mode: .manual)
@@ -156,7 +156,7 @@ final class FreeWorkoutLogTests: XCTestCase {
         let emptyID = log.addExercise(
             type: .hang,
             title: "Unused hang",
-            holdSelection: .any
+            holdSelection: .generic(.jug)
         )
         XCTAssertNotNil(emptyID)
 
@@ -176,7 +176,7 @@ final class FreeWorkoutLogTests: XCTestCase {
         let exerciseID = log.addExercise(
             type: .hang,
             title: "Hang",
-            holdSelection: .any
+            holdSelection: .generic(.jug)
         )
         XCTAssertEqual(log.exercises.first(where: { $0.id == exerciseID })?.restAfterSeconds, 180)
 
@@ -193,7 +193,7 @@ final class FreeWorkoutLogTests: XCTestCase {
         let exerciseID = log.addExercise(
             type: .hang,
             title: "Hang",
-            holdSelection: .any
+            holdSelection: .generic(.jug)
         )
         let setID = log.exercises[0].sets[0].id
         log.completeSet(exerciseID: exerciseID, setID: setID, mode: .guided)
@@ -207,9 +207,9 @@ final class FreeWorkoutLogTests: XCTestCase {
 
     func testRemoveAndReorderExercises() {
         var log = FreeWorkoutLog(boardID: nil)
-        let first = log.addExercise(type: .hang, title: "A", holdSelection: .any)
-        let second = log.addExercise(type: .pullUp, title: "B", holdSelection: .any)
-        let third = log.addExercise(type: .hang, title: "C", holdSelection: .any)
+        let first = log.addExercise(type: .hang, title: "A", holdSelection: .generic(.jug))
+        let second = log.addExercise(type: .pullUp, title: "B", holdSelection: .generic(.jug))
+        let third = log.addExercise(type: .hang, title: "C", holdSelection: .generic(.jug))
 
         log.moveExercise(id: third, toOffset: 0)
         XCTAssertEqual(log.exercises.map(\.id), [third, first, second])
@@ -803,7 +803,7 @@ final class FreeWorkoutGuidedHangCountdownTests: XCTestCase {
 
     func testManualLogCompletesWithMode() {
         var log = FreeWorkoutLog()
-        let exerciseID = log.addExercise(type: .pullUp, holdSelection: .any)
+        let exerciseID = log.addExercise(type: .pullUp, holdSelection: .generic(.jug))
         let setID = log.exercises[0].sets[0].id
         log.updateSet(
             exerciseID: exerciseID,
@@ -854,7 +854,7 @@ final class FreeWorkoutFinishTests: XCTestCase {
         )
         log.completeSet(exerciseID: hangID, setID: hangSetID, mode: .guided)
 
-        let pullID = log.addExercise(type: .pullUp, title: "Pulls", holdSelection: .any)
+        let pullID = log.addExercise(type: .pullUp, title: "Pulls", holdSelection: .generic(.jug))
         let pullSetID = log.exercises[1].sets[0].id
         log.updateSet(
             exerciseID: pullID,
@@ -895,7 +895,7 @@ final class FreeWorkoutFinishTests: XCTestCase {
 
     func testPersistToHistoryWithZeroCompletedDoesNotAppendOrClear() {
         var log = FreeWorkoutLog()
-        _ = log.addExercise(type: .hang, holdSelection: .any)
+        _ = log.addExercise(type: .hang, holdSelection: .generic(.jug))
         ActiveFreeWorkoutStore.save(log, defaults: defaults)
 
         XCTAssertNil(FreeWorkoutFinish.persistToHistory(log, defaults: defaults))
@@ -905,7 +905,7 @@ final class FreeWorkoutFinishTests: XCTestCase {
 
     func testDiscardActiveClearsWithoutHistory() {
         var log = FreeWorkoutLog()
-        let exerciseID = log.addExercise(type: .hang, holdSelection: .any)
+        let exerciseID = log.addExercise(type: .hang, holdSelection: .generic(.jug))
         log.completeSet(
             exerciseID: exerciseID,
             setID: log.exercises[0].sets[0].id,
@@ -938,7 +938,7 @@ final class FreeWorkoutFinishTests: XCTestCase {
             setID: log.exercises[0].sets[0].id,
             mode: .guided
         )
-        let pullID = log.addExercise(type: .pullUp, title: "Pull-ups", holdSelection: .any)
+        let pullID = log.addExercise(type: .pullUp, title: "Pull-ups", holdSelection: .generic(.jug))
         log.updateSet(
             exerciseID: pullID,
             setID: log.exercises[1].sets[0].id,
