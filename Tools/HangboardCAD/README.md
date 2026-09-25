@@ -240,6 +240,11 @@ region matching the approved reference to 0.0000 mm in both directions.
 holds are sketched capsules pocketed into the body, so their walls are true
 cylinders and their mouth and floor chamfers are cones.
 
+`beastmaker-1000` sets it too: its top holds are ruled lofts between Bézier
+sections, and its cavities are ruled capsule lofts (planes, cylinders, and
+cones) cut from the body. See
+`docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
