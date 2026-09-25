@@ -37,9 +37,9 @@ evidence.
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `j-bryant-ftg-32.FCStd` (native source, Git LFS) | `f531709ec16f51dd91e12c0e9c8205f3a8a92bbfbd99b3ee93b941d08204dce1` |
-| `assets/primary.usdz` (compiled) | `9d2b92359e981afe15dfad90ec8d93081779def62691615f7d0c20c6d97caa8a` |
-| `assets/primary.model.json` (descriptor, `modelSHA256` equals the USDZ) | `a6c786f16ff05355b8e1c2e0c5b8a22e4fb3018da8e8d604e7e8eaaa5bb0954a` |
+| `j-bryant-ftg-32.FCStd` (native source, Git LFS) | `bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523` |
+| `assets/primary.usdz` (compiled) | `dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a` |
+| `assets/primary.model.json` (descriptor, `modelSHA256` equals the USDZ) | `7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8` |
 
 Document properties: `HangTenBoardID=j-bryant.ftg-32`,
 `HangTenPresentationID=primary`, `HangTenSchemaVersion=1`,
@@ -70,10 +70,10 @@ below (floor 71 wide), matching the upper corners; bores r3 at `(X,Z) =
 DISPLAY ESTIMATES (authored, documented here, not product facts): exterior
 rounding 5.5 mm; sharp recess rim (reference lip rounding 0 mm); contact
 regions as flat horizontal faces recessed 0.05 mm off each ledge, on plain
-`Part::Feature` holders; analytic beech material (`0.62,0.43,0.265`, roughness
-0.52) with the reference texture embedded
-(`textures/nervous_frog_analytic_beech.png`, SHA-256
-`fb36762f79d541032e6357c9e27181434c6a0c1ddc2c31bdb5645fbd66d470ee`).
+`Part::Feature` holders. Per the model material policy the USDZ ships unbound:
+no material or texture is applied (`compile_board.py` ignores any
+`MaterialName`, and the author script no longer sets one), so the renderer uses
+its default appearance.
 
 ## Construction (native mm, +X right, +Z up, front -Y)
 

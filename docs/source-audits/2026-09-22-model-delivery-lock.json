@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "ca6da188d95759a05610a2ffaebef1abeaff300f8a1e953e1d88f912fd5de5b4",
+  "sha256Manifest": "ccf2762f537f272e67fcd54c1e0e979405fa292bfc0027c6ba48bfa225d13004",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -186,6 +186,20 @@
       "provenanceSidecar": "authoring script committed at Tools/HangboardCAD/migration/author_soill_iron_palm_2.py (PR #478, last source change 54b4621)",
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
+    },
+    "j-bryant-ftg-32": {
+      "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "sourceSHA256": "bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523",
+      "supersededSourceSHA256": "b2443ff4b48776b6be30a5b83437746ad52d6e6b4919eeb6ddda6e442af6c073",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
+      "referenceSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
+      "assetSHA256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+      "descriptorSHA256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "passed (compile published depths 16/25; author cut-body source)",
+      "nativeAppValidation": "passed (isolated iPhone 16 Pro / iOS 26.5 Simulator; 7 focused FTG-32 tests and the four affected classes: 152 passed)",
+      "comparison": "compare_exports.py vs the retired Blender reference: 0.0377 mm worst sampled deviation, both directions (limit 0.5 mm)",
+      "holdOutline": "not authored; descriptor region derived from the CAD contact surfaces"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
