@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 5 of the 46 model-media boards are migrated** (those with a committed
+**Status: 6 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -59,10 +59,12 @@ The metadata lives in two document-level string properties of the FCStd:
 
 Only `id` is derived. `aspectRatio` stays a stored manifest value: it is a
 presentation (viewport) fact, not always the single-unit front ratio. Of the
-five CAD boards, four match the descriptor `modelBounds` x/y ratio to within
+six CAD boards, four match the descriptor `modelBounds` x/y ratio to within
 2e-8 relative (float32 export noise against exact ratios such as 5/3 and 12/7),
-but `metolius-rock-rings-3d` presents two ring instances while its descriptor
-bounds cover one ring, so a derived value would be wrong there (see
+`metolius-wood-grips-compact-ii` keeps its pre-migration raster value `3.88`
+(0.14% from its 610 × 157 mm face), and `metolius-rock-rings-3d` presents two
+ring instances while its descriptor bounds cover one ring, so a derived value
+would be wrong there (see
 [`docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md)).
 Published grip depths stay because they are sourced product facts (see `AGENTS.md`,
 Training-plan Fidelity) that `compile_board.py` validates the geometry against.
@@ -120,7 +122,7 @@ the build now generates.
 
 ## Authoring a new CAD board
 
-There is no per-board authoring program in the repository. The five retired
+There is no per-board authoring program in the repository. The six retired
 `Tools/HangboardCAD/migration/author_*.py` scripts that created the current
 FCStd documents were one-off, and re-running one would now recreate a document
 without its embedded manifest. Their provenance is preserved in
@@ -248,7 +250,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **5 of 46 model-media boards are migrated.** The other 41 still ship their
+* **6 of 46 model-media boards are migrated.** The other 40 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

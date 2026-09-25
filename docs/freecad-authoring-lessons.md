@@ -215,7 +215,7 @@ coincident-surface trap in lesson 5:
   the model tier. Reserve any big-model budget for one bounded, specific question.
 - Prefer tests over prose review, and prefer a numeric/visual repro over theory.
 - Committed one-off per-board authoring scripts and per-board duplicate
-  native-check scripts are maintenance overhead. The five
+  native-check scripts are maintenance overhead. The six
   `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
   manifest); their provenance lives in
@@ -383,3 +383,71 @@ a second screenshot pass is a full rebuild.
   toolchain, which CI's `cad-reproducibility` job enforces.
 - FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
   pointers and every CAD tool (and the freshness check) refuses them.
+
+## 13. What Compact II added
+(`metolius-wood-grips-compact-ii`; a wide sculpted wood board with 19 contacts)
+
+### Check Git for a retained authoring script before you measure
+
+The pre-migration Compact II asset came from a hand-authored Blender script,
+`Tools/HangboardModels/wood_grips_compact_ii.py`, deleted in `d7ca9c5c9` and
+still readable at `d7ca9c5c9^`. It holds every number the approved mesh was
+built from: the silhouette's cubic spans, the pocket and edge layout, fillet
+radii, the depth-dependent top profile, and the 64 mm body depth. It also says
+which numbers are estimates. Porting those numbers verbatim reproduced the
+reference with no mesh measurement. Node IDs, `modelBounds`, and every
+`facePlaneAABB` came out within 0.6 mm. Run
+`git log --all -- 'Tools/HangboardModels/*<slug>*'` before you build a depth
+map. Label the ported numbers as retained display estimates, not as
+manufacturer dimensions. On this board Metolius publishes only the
+610 × 157 mm face and the 29 / 19 / 56 mm hold labels.
+
+### A polyhedral body is how you get exact contacts on a sculpted surface
+
+The partition claims a body triangle only when its centroid is within 1e-4 mm
+of a contact face. On a curved face, a chord triangle's centroid sits up to
+the tessellation deflection away from the surface, so the claim fails
+silently. The triangle then stays in the body and z-fights the region mesh.
+Compact II avoids this with planar faces only:
+
+- The body is a stack of depth stations. Each station is the silhouette offset
+  along its inward normal by the roll inset, with the top lowered by the
+  depth-dependent profile. A station pair becomes a planar quad where the four
+  corners are coplanar and two triangles where they are not. For the
+  triangles, pick the diagonal from the side of the centreline, so the two
+  mirrored halves facet the same way.
+- Each cutter is a stack of rounded-rectangle stations with the same sampling
+  angles at every station. Matching chords stay parallel, so every side quad
+  is a planar trapezoid. The capsule's zero-length straight side is removed on
+  every station at once, so all stations keep the same vertex count.
+- One `Part::Cut` removes a compound of all 14 cutters. A pocket region is
+  every face of the cut body that lies on its cutter. A top region is every
+  up-facing face above the pocket rows, split at fixed x boundaries. Put a
+  silhouette vertex exactly on each boundary so no face spans two holds, and
+  fail the build if one does.
+
+`removeSplitter()` merged nothing on this construction (10,316 faces before
+and after). The source is 13 MB, mostly the cutter and body BReps. A compile
+takes about 3.5 minutes because it recomputes the boolean. That is heavy, but
+it reproduces byte for byte.
+
+### `compare_exports` does not scale to a dense reference
+
+The reference has about 60k triangles and the candidate about 17k.
+`compare_exports.py` compares every sample with every triangle, so here it ran
+for about 25 minutes and peaked near 23 GB RSS. It reported a worst sampled
+two-way deviation of 0.39 mm, which passes the 0.5 mm limit because the
+geometry was ported, not re-measured. Start it in the background right after
+the first good compile, or skip it once the descriptor `facePlaneAABB` and the
+renders agree. It is evidence, not a gate.
+
+### A board authored before §12 only needs the manifest embedded
+
+Compact II was authored on a branch that predated §12, with a committed author
+script and a hand-authored `board.json`. Bringing it to the current convention
+needed no FreeCAD run: `set_board_manifest.py` embedded the existing
+`board.json`, `board_manifest.py` regenerated it byte-identically on the first
+try, and only `Document.xml` changed in the FCStd, so the USDZ and descriptor
+bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
+the script's provenance into a dated `docs/source-audits/` record, and delete
+the script.
