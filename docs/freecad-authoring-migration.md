@@ -621,6 +621,15 @@ write-up. The durable points:
   The source sets `HangTenCurvedRegionPartition`, so its cylinder and cone hold
   faces partition out of the body. Toroidal fillets on small arcs
   over-tessellate; prefer chamfers there. See lessons §16.
+- **Beastmaker 1000** is authored as vectors with the Part workbench. Blocked
+  section sketches (lines, arcs, and cubic Béziers) are extruded, and ruled
+  `Part::Loft`s join sections that differ. Give every section one topology,
+  so a mid section with averaged poles splits a loft exactly on a hold
+  boundary. An elliptical front outline trims the body, and each cavity is a
+  ruled loft of four capsule sketches (chamfered mouth and floor) cut from it.
+  When classifying faces, measure distance to a cutter's `Shells[0]`, not the
+  solid: `distToShape` to a solid is 0 for any point inside it. See
+  `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
