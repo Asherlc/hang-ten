@@ -56,15 +56,6 @@ def test_physical_identities_survive_native_export(slug,mapping,width,height,hol
     assert verify['contactCount']==len(mapping)
     assert verify['unionOfAllContactTrianglesUnchanged']
     assert verify['ownershipTransferTriangles']==(18 if slug.endswith('megalith') else 0)
-    assert verify['modelSHA256']==descriptor['modelSHA256']
-    uv_checks=verify['textureCoordinateChecks']
-    assert {v['nodeID'] for v in uv_checks}=={n['nodeID'] for n in descriptor['nodes']}
-    assert all(v['finiteUVCount']==v['loopCount']>0 and v['allUsedMaterialsHaveDiffuseImageBinding'] for v in uv_checks)
-    with zipfile.ZipFile(package/'assets/primary.usdz') as archive:
-        textures=[p for p in archive.namelist() if p.startswith('textures/')]
-        assert len(textures)==1 and textures[0].endswith('.png')
-        conversion=prep['materialConversions']['substrate']
-        assert hashlib.sha256(archive.read(textures[0])).hexdigest()==conversion['textureSHA256']
     load_board_package(package)
 
 

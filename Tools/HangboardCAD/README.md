@@ -210,6 +210,12 @@ Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
 
+**Material policy.** Committed USDZ models ship without materials or textures.
+After compiling a new or updated board, run `Tools/set_clay_materials.py` to
+strip any materials the pipeline added, then update the delivery lock. The
+FreeCAD source still carries `MaterialName`, `BaseColor`, etc. — those
+properties are compile-time metadata, not shipped appearance.
+
 ## Surface partition
 
 The approved runtime contract partitions the board surface: the body node holds
