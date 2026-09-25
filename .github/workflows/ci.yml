@@ -487,6 +487,7 @@ jobs:
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
           XCTEST_ONLY_TESTING: HangTenTests
           XCTEST_PARALLEL_WORKERS: "2"
+          XCTEST_MAX_ATTEMPTS: "3"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
           set -euo pipefail
@@ -547,6 +548,14 @@ jobs:
         with:
           path: ${{ runner.temp }}/hang-ten-test-derived-data
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Reset simulator state
+        if: always()
+        run: |
+          set -euo pipefail
+          xcrun simctl shutdown all || true
+          xcrun simctl delete unavailable "iPhone 17 Pro" || true
+          xcrun simctl create "iPhone 17 Pro" "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro" || true
 
   test-ui-paywall:
     name: "Test (iOS Simulator: HangTenUITests / paywall)"
