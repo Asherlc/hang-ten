@@ -1,21 +1,20 @@
 """Hybrid migration: Hangboards/soill-iron-palm-2/*.FCStd.
 
-Piece-by-piece measured approximation over a faceted-import base:
+All nine nodes ship as faceted imports of the reference presentation at full
+resolution. The earlier native pieces (generated sloper spheres, a measured top
+jug) were dropped because both degraded the sculpted shapes the reference is
+the only evidence for:
 
-  Piece 1: left/right large slopers → faceted import at full reference
-  resolution. An analytic sphere cannot reproduce the reference collar that
-  blends the ball into the body, pinch and rails: the collar is a sculpted
-  surface, so a generated sphere leaves a seat seam, and flaring or pulling
-  the neighbours to hide it produces a chin/lip or a crease. Importing the
-  reference sloper keeps the moulded blend intact (and the model budget is
-  well inside the catalogue range).
-  Piece 2: top jug → native rounded rail extruded into the fitted sloper
-  spheres (sphere-cut ends). Reference end-collar mesh merge was dropped
-  — it left open edges and a blacked-out top face.
-  Remaining: rails, pinches stay faceted-import meshes
+  * The slopers' moulded collar — the blend from each bulb into the body, pinch
+    and rails — is a sculpted surface, not a sphere. A generated sphere left a
+    seat seam; flaring the ball to reach the neighbours made a chin and an
+    outer lip, and pulling the neighbours in made creases.
+  * The top jug is a rounded rail, not the faceted, chisel-ended extrusion the
+    measured YZ profile produced.
 
-HangTenSourceKind stays `faceted-import` until every node is native.
-Publish with `--allow-faceted-import`.
+The FCStd is still the package's single source: it carries the board metadata
+manifest and the imported display meshes. HangTenSourceKind stays
+`faceted-import`; publish with `--allow-faceted-import`.
 
 Cross-ref: .context/fearless-penguin/soill-iron-palm-2/cross-ref.md
 """
@@ -69,52 +68,9 @@ NODE_MAP = {
     "top_jug_001": ("contact", "top-incut-jug"),
 }
 
-# Fitted sloper bulbs, measured from the reference mesh (robust least-squares on
-# the front cap, Y < -55 mm, mirrored left/right; residual ~0.25 mm). Only the
-# sphere is used here — the top jug is boolean-cut by it so its ends sit on the
-# bulbs. The slopers themselves ship as faceted imports (see module docstring).
-SLOPER_SPHERES = {
-    "left_large_sloper_001": {
-        "center_mm": (-244.00, -28.24, 72.20),
-        "radius_mm": 73.32,
-    },
-    "right_large_sloper_001": {
-        "center_mm": (244.00, -28.24, 72.20),
-        "radius_mm": 73.32,
-    },
-}
-
-# Piece 2: measured mid-span incut top jug. Reference top_jug_001 spans native
-# z 66..109 (front silhouette sampled below) and reaches into the fitted spheres
-# at the ends; a shorter bar left the top window (z 43..66) open and the bar read
-# as a black strip.
-NATIVE_TOP_JUG = {
-    # Must reach into the fitted spheres (inner tangent at front ≈ ±188 mm).
-    "x_half_mm": 195.0,
-    # YZ closed profile, native (y_front, z_up): back edge, then the measured
-    # front silhouette up to the rounded crown, then back edge again.
-    "profile_yz_mm": [
-        (-0.5, 66.0),
-        (-61.0, 66.0),
-        (-66.5, 70.0),
-        (-69.0, 77.0),
-        (-70.0, 85.0),
-        (-69.9, 91.0),
-        (-69.5, 96.0),
-        (-68.4, 100.0),
-        (-62.6, 104.0),
-        (-52.0, 107.0),
-        (-38.0, 108.5),
-        (-0.5, 108.5),
-    ],
-    "contact": "top-incut-jug",
-}
-
-NATIVE_NODES = {"top_jug_001"}
-
-# Faceted remainder — keep shell-critical meshes denser. Pinches ship at their
-# reference triangle count: decimating them spiked a sliver that poked through
-# the ball seat and rendered as a black tick.
+# Imported nodes ship at their reference triangle count. Pinches in particular
+# must not be decimated: a spike poked through the ball seat and rendered as a
+# black tick.
 TARGET_TRIS = {
     "body_board_001": 14166,
     "left_large_sloper_001": 20000,
@@ -124,6 +80,7 @@ TARGET_TRIS = {
     "rail_15_001": 7952,
     "rail_35_001": 919,
     "rail_40_001": 3510,
+    "top_jug_001": 4000,
 }
 
 MATERIAL_NAME = "neutral_urethane"
@@ -272,68 +229,6 @@ def _mesh_to_shape(mesh: Mesh.Mesh) -> Part.Shape:
 
 
 
-def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
-    """Native mid-span rail cut to the sloper spheres.
-
-    Mid-span uses a measured YZ incut profile extruded along X, then boolean-cut
-    by the fitted sloper spheres so the ends sit on the bulbs. Returns the Part
-    solid directly (no mesh round-trip) so compile keeps closed shells and
-    outward normals — meshing + re-import previously blacked out the top face.
-    """
-    x_half = float(spec["x_half_mm"])
-    profile = [(float(y), float(z)) for y, z in spec["profile_yz_mm"]]
-
-    # Closed YZ wire at x=-x_half. Clockwise when looking along +X so a single
-    # +X extrusion yields outward shell normals.
-    ordered = list(reversed(profile))
-    wire_pts = [App.Vector(-x_half, y, z) for y, z in ordered]
-    wire_pts.append(App.Vector(-x_half, ordered[0][0], ordered[0][1]))
-    face = Part.Face(Part.makePolygon(wire_pts))
-    if face.isNull():
-        raise ValueError("top_jug profile face is null")
-    rail = face.extrude(App.Vector(2.0 * x_half, 0.0, 0.0))
-    if rail.isNull() or not rail.Faces:
-        raise ValueError("top_jug extrusion is empty")
-
-    try:
-        sharp = []
-        for edge in rail.Edges:
-            if edge.Length < 1.0:
-                continue
-            tangent = edge.tangentAt(edge.FirstParameter)
-            if abs(tangent.x) > 0.85:
-                sharp.append(edge)
-        if sharp:
-            rail = rail.makeFillet(2.5, sharp[:12])
-    except Exception as error:
-        print(f"    top_jug fillet skipped: {error}")
-
-    for s in sloper_specs.values():
-        sx, sy, sz = (float(v) for v in s["center_mm"])
-        # Slightly oversized cut so end caps sit inside the bulbs and do not
-        # z-fight the sloper surface (reads as a black line on the top bar).
-        radius = float(s["radius_mm"]) + 0.6
-        sphere = Part.makeSphere(radius)
-        sphere.translate(App.Vector(sx, sy, sz))
-        rail = rail.cut(sphere)
-
-    if rail.isNull() or not rail.Faces:
-        raise ValueError("native top_jug rail is empty after sphere cuts")
-    try:
-        rail.fix(0.1, 0.1, 0.1)
-    except Exception:
-        pass
-    if rail.ShapeType == "Compound" and len(rail.Solids) == 1:
-        rail = rail.Solids[0]
-    print(
-        f"rail solid faces={len(rail.Faces)} closed={rail.isClosed()} "
-        f"vol={rail.Volume:.0f} ",
-        end="",
-    )
-    return rail
-
-
-
 def main() -> int:
     # A CAD-backed package keeps its board metadata in the FCStd manifest; the
     # hand-authored board.json is only present before the first embed.
@@ -361,8 +256,8 @@ def main() -> int:
     document.HangTenSchemaVersion = 1
     document.HangTenSourceKind = "faceted-import"
     document.HangTenCoordinateFrame = "freecad-mm-z-up-front-negative-y"
-    # Analytic spheres tessellate finely enough at 0.2; tighter values stall when
-    # compounded with dense reference collars.
+    # Display meshes are the imported source triangles; this only bounds the
+    # Part B-rep that makes each mesh solid for the FCStd.
     document.HangTenTessellationDeflection = 0.2
     # The FCStd owns the board metadata; board.json is generated from this at
     # build time and must not exist in the package.
@@ -373,31 +268,12 @@ def main() -> int:
 
     imported = []
 
-    # --- Piece 2: native mid-span top jug cut into sloper spheres ---
-    jug_name = "top_jug_001"
-    role, contact_id = NODE_MAP[jug_name]
-    jug_shape = _native_top_jug(NATIVE_TOP_JUG, SLOPER_SPHERES)
-    feature = document.addObject("Part::Feature", jug_name)
-    feature.Shape = jug_shape
-    feature.addProperty("App::PropertyString", "NodeID", "HangTen")
-    feature.addProperty("App::PropertyString", "NodeRole", "HangTen")
-    feature.NodeID = jug_name
-    feature.NodeRole = role
-    feature.addProperty("App::PropertyString", "ContactID", "HangTen")
-    feature.ContactID = contact_id
-    feature.Placement = App.Placement(
-        App.Vector(0.0, CONTACT_NUDGE_Y_MM, 0.0), App.Rotation()
-    )
-    _apply_material(feature, None)
-    imported.append((jug_name, role, contact_id, "rail", len(jug_shape.Faces)))
-    print(f"native {jug_name}: faces={len(jug_shape.Faces)}")
-
-    # --- Remaining nodes: faceted import from reference ---
+    # --- All nodes: faceted import from the reference presentation ---
     for prim in stage.Traverse():
         if not prim.IsA(UsdGeom.Mesh):
             continue
         name = prim.GetName()
-        if name not in NODE_MAP or name in NATIVE_NODES:
+        if name not in NODE_MAP:
             continue
         role, contact_id = NODE_MAP[name]
         points, facets = _world_mesh(stage, cache, prim)
@@ -444,9 +320,8 @@ def main() -> int:
     print(f"reference sha256 {reference_digest}")
     print(f"texture sha256 {texture_digest}")
     print(
-        "piece 2: native top jug (sphere-cut rail); slopers shipped as "
-        "faceted imports at reference resolution; "
-        "sourceKind=faceted-import; --allow-faceted-import"
+        "all nodes: faceted imports of the reference presentation at full "
+        "resolution; sourceKind=faceted-import; --allow-faceted-import"
     )
     for name, role, contact_id, tris, faces in imported:
         print(f"  {name:28s} role={role:7s} contact={contact_id} geom={tris} faces={faces}")
