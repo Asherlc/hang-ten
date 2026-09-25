@@ -261,7 +261,9 @@ struct ContactRequirement: Codable, Hashable {
     /// A copy of this requirement widened to a two-hand paired selection. Used
     /// when a both-hands choice is materialized on a board that fits two hands:
     /// the step resolves to the board's paired left/right holds. An exact
-    /// contact pin cannot form a pair, so it keeps its single selection.
+    /// contact pin is instead narrowed to a single selection, because a single
+    /// hold cannot form a pair; an already-paired unpinned requirement is
+    /// returned unchanged.
     var bilateralSelection: ContactRequirement {
         guard contactID == nil else { return singleHandSelection }
         guard selection != .bilateralPair else { return self }

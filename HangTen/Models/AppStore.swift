@@ -340,8 +340,9 @@ final class AppStore: ObservableObject {
                 boardIsOneHanded: board.isOneHanded
             ) {
                 // Alternate / left / right need both unilateral sides independently
-                // resolvable. Both-hands (two boards) is also compatible when the
-                // single-hold materialization yields at least one contact.
+                // resolvable. Both hands is also compatible when its materialization
+                // yields at least one contact (paired holds on a two-hand board, one
+                // hold on a one-hand board).
                 let sidesResolve = [WorkoutSide.left, .right].allSatisfy { side in
                     guard let resolved = step.resolvingEitherHand(
                         selectedHandSide: side,
@@ -371,8 +372,10 @@ final class AppStore: ObservableObject {
         }
     }
 
-    /// Left/right unilateral materializations plus both-mode single-hold materialization
-    /// when the step still needs a start-of-session hand preference on this board.
+    /// Left/right unilateral materializations plus the both-mode
+    /// materialization (paired holds on two-hand boards, one hold on one-hand
+    /// boards) when the step still needs a start-of-session hand preference on
+    /// this board.
     private func handResolutionCandidates(
         for step: WorkoutStep,
         on board: BoardRevision

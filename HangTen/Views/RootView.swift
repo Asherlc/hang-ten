@@ -2164,7 +2164,8 @@ struct WorkoutView: View {
 					toggleRunning()
 				}
 			#endif
-			if WorkoutSessionPolicy.shouldAutoStart(
+			if !planNeedsHandChoice,
+			   WorkoutSessionPolicy.shouldAutoStart(
 				didAutoStart: didAutoStart,
 				isRunning: sessionState.activeStartUptime != nil,
 				routineStartedAt: sessionState.routineStartedAt
@@ -2944,6 +2945,7 @@ struct WorkoutView: View {
 		.accessibilityIdentifier("workout.handPicker")
 	}
 
+	@ViewBuilder
 	private func handPreferenceMenuButton(
 		_ preference: WorkoutSessionHandPreference,
 		title: String,
@@ -2951,7 +2953,7 @@ struct WorkoutView: View {
 		disabled: Bool = false,
 		hint: String? = nil
 	) -> some View {
-		Button {
+		let button = Button {
 			applyHandPreference(preference)
 		} label: {
 			if handPreference == preference {
@@ -2961,8 +2963,13 @@ struct WorkoutView: View {
 			}
 		}
 		.disabled(disabled)
-		.accessibilityHint(hint ?? "")
 		.accessibilityIdentifier(accessibilityID)
+
+		if let hint {
+			button.accessibilityHint(Text(hint))
+		} else {
+			button
+		}
 	}
 
 	private var handChoiceLabel: String {
