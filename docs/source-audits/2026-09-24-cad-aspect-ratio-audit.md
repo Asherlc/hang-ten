@@ -1,17 +1,23 @@
 # CAD board `aspectRatio` audit (2026-09-24)
 
-Scope: the five FreeCAD-backed packages whose `board.json` is generated from the
-`HangTenBoardManifest` property of `Hangboards/<slug>/<slug>.FCStd`. The question
-was whether each manifest `aspectRatio` (top level and the single model
-presentation, which are equal on all five) is correct, should be corrected, or
-should be derived from the CAD geometry at build time.
+Scope: the FreeCAD-backed packages whose `board.json` is generated from the
+`HangTenBoardManifest` property of `Hangboards/<slug>/<slug>.FCStd`: the five
+audited first, `metolius-prime-rib`, added when its source was merged with
+the build-time generation (see the addendum below), and
+`metolius-wood-grips-compact-ii` (addendum below). The question was whether each
+manifest `aspectRatio` (top level and the single model presentation, which are
+equal on all seven) is correct, should be corrected, or should be derived from the
+CAD geometry at build time.
 
-Result: **all five values are kept unchanged. No FCStd, descriptor, lock or
-generator change was made.**
+Result: **all seven values are kept unchanged. No FCStd geometry, descriptor or
+generator change was made for this audit.**
 
-Addendum (same date): `metolius-wood-grips-compact-ii` became the sixth
+Addendum (same date): `metolius-wood-grips-compact-ii` became a
 CAD-backed package (PR #473) and was audited the same way; its value is also
-kept. See its row and section below.
+kept. See its row and section below. `soill-iron-palm-2` also became
+CAD-backed after this audit and is not covered by it; its model presentation
+`aspectRatio` (`2.3226565483816386`) equals its descriptor bounds ratio, while its
+top-level value is `1.5`.
 
 ## What `aspectRatio` means for model media
 
@@ -53,6 +59,7 @@ kept. See its row and section below.
 | `lattice-mxedge-lift-small` | `1.7142857142857142` | `1.714285728862974` (same brick) | 8.5e-9 | (a) keep |
 | `lattice-triple-rung` | `4.2307694857988265` | `4.2307694857988265` | 0 | (a) keep |
 | `metolius-rock-rings-3d` | `1.5` | `0.79347825` (0.146 / 0.184, one ring) | n/a (pair layout) | (a) keep |
+| `metolius-prime-rib` | `4.7619050011605735` | `4.7619050011605735` (0.508000016 / 0.106679998) | 0 | (a) keep |
 | `metolius-wood-grips-compact-ii` | `3.88` | `3.885350283906042` (0.610000014 / 0.157000005) | 1.4e-3 | (a) keep |
 
 ### captain-fingerfood-pocket — keep `1.6666667`
@@ -114,6 +121,17 @@ kept. See its row and section below.
   computes into the 1.5 box, so there is no correctness defect to fix and no
   source that would justify a different number.
 
+### metolius-prime-rib — keep `4.7619050011605735`
+
+* Bit-identical to the descriptor ratio (0.508000016 / 0.106679998 m). Published
+  size `20" x 4.2" x 1.5"` (<https://www.metoliusclimbing.com/products/prime-rib>,
+  "Specs & Details"; manifest `dimensions` "20 × 4.2 × 1.5 in") gives
+  20 / 4.2 = 4.7619047619; the stored value is that ratio carried through the
+  float32 bounds (5.0e-8 relative). The native source's envelope is authored to
+  the published 508 × 106.68 mm (`BoardThickness`/`BoardHeight` and the pad
+  length in `2026-09-24-metolius-prime-rib-cad-provenance.md`), so the
+  recompiled descriptor keeps the same `modelBounds`. Unchanged since `b5aa7c2`.
+
 ### metolius-wood-grips-compact-ii — keep `3.88`
 
 * Evidence: the published face is 610 × 157 mm (24 × 6.2 in,
@@ -131,30 +149,34 @@ kept. See its row and section below.
   viewport height (about 0.14 pt on a 400 pt wide box); nothing is cropped or
   distorted. That is not a correctness defect, and changing it would alter the
   generated `board.json` and the locked FCStd bytes for no visible benefit, so
-  it is kept, matching the decision for the other five.
+  it is kept, matching the decision for the other six.
 
 ## Why not derive `aspectRatio` at build time
 
-* It is not safe for all five: for `metolius-rock-rings-3d` the single-unit
+* It is not safe for all seven: for `metolius-rock-rings-3d` the single-unit
   `modelBounds` ratio (0.793) is wrong for the paired layout, and a pair-aware
   derivation would depend on display-estimate spacing and cord/anchor geometry.
-* For the other four it would only replace exact or sourced ratios
+* For five of the others it would only replace exact or sourced ratios
   (5/3, 12/7) with float32-noise ratios, a change of ≤ 2e-8 with no visible
-  effect, while altering generated `board.json` bytes and the FCStd-locked
+  effect (for `metolius-wood-grips-compact-ii`, a 0.14% change with no visible
+  effect; see its section), while altering generated `board.json` bytes and the FCStd-locked
   delivery inventory for no benefit.
 * Therefore `aspectRatio` stays an authored manifest field, as documented in
   `Tools/HangboardCAD/README.md`. Note that the README's reason ("not reproducible
   from the descriptor's `modelBounds` for most boards") is accurate for the
-  whole model catalog but, among the five CAD boards, the only non-reproducible
-  one is the paired `metolius-rock-rings-3d`; the other four reproduce within
-  2e-8.
+  whole model catalog but, among the seven audited CAD boards, the paired `metolius-rock-rings-3d` is
+  not reproducible and `metolius-wood-grips-compact-ii` differs by 0.14%; the
+  other five reproduce within 2e-8 (`metolius-prime-rib` bit-exactly).
 
 ## App rendering and tests
 
 No value changed, so camera fit, snapshots and fixtures are unaffected. Tests
 that read these values: `HangTenTests/BoardModelTests.swift` sizes test
 viewports from `defaultPresentation.aspectRatio`; no Swift, Kotlin or Python
-test pins any of the five CAD boards' ratios.
+test pins any of the first five CAD boards' ratios.
+`test_prime_rib_package_freezes_the_official_three_edge_inventory`
+(`Tools/HangboardPackages/tests/test_approved_board_packages.py`) pins
+`metolius-prime-rib`'s `4.7619050011605735`, as it did before the migration.
 
 ## Verification (2026-09-24)
 
@@ -166,3 +188,14 @@ test pins any of the five CAD boards' ratios.
 * `scripts/stage-board-packages.py --target android` into a scratch
   `Hangboards` directory → exit 0; staged `board.json` for the five boards
   carries the values in the table above (top level and presentation).
+
+### Addendum: metolius-prime-rib (2026-09-24)
+
+* `scripts/stage-board-packages.py` (Xcode layout and `--target android`) into
+  scratch directories → exit 0; the staged `metolius-prime-rib/board.json` is
+  byte-identical to `board_manifest.py --all --output-dir` output and to the
+  `board.json` last committed at `657a303`, carrying `4.7619050011605735` (top
+  level and presentation).
+* `scripts/hangboard-packages.sh validate --root Hangboards --final-inventory` →
+  exit 0; `python scripts/verify-model-delivery.py` → exit 0 with six
+  source-backed packages.

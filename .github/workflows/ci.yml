@@ -248,7 +248,22 @@ jobs:
         run: |
           set -euo pipefail
           python3 Tools/HangboardCAD/verify_reproducible.py \
-            --extra-python-path "$RUNNER_TEMP/cad-extra"
+            --extra-python-path "$RUNNER_TEMP/cad-extra" \
+            --keep-rebuild "$RUNNER_TEMP/cad-rebuilt"
+
+      # On a mismatch, publish the pinned-toolchain rebuild (laid out like
+      # Hangboards/: <slug>/assets/primary.usdz + primary.model.json) so a
+      # contributor without this toolchain can review and commit those bytes.
+      # The verify step above still fails the job.
+      # actions/upload-artifact v4.6.2
+      - name: Upload pinned-toolchain rebuild on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: cad-rebuilt-assets
+          path: ${{ runner.temp }}/cad-rebuilt
+          retention-days: 7
+          if-no-files-found: ignore
 
   workflow-lint:
     name: Lint GitHub Actions workflows

@@ -50,6 +50,18 @@ Nothing in the build path imports FreeCAD from the host interpreter: FreeCAD wor
 always goes through `freecadcmd`, and `Tools/HangboardCAD/usdz_writer.py` never
 imports FreeCAD at all, which is what lets the exporter be tested without it.
 
+**Linux (conda-forge) is not byte-compatible with the pinned build.** FreeCAD
+1.1.3 from conda-forge (`micromamba create -c conda-forge freecad=1.1.3
+python=3.11`) runs every tool here via `--freecad <prefix>/bin/freecadcmd`, but
+it links OCCT 7.9.3, not 7.8.1: rebuilding the five sources migrated before
+`metolius-prime-rib` on it gave five `verify_reproducible` MISMATCHes (same
+node and triangle counts, different vertex bytes). A USDZ compiled there is
+valid and hash-bound, but the macOS `cad` CI job will not reproduce it; recompile
+it on the pinned toolchain before merging. Without a Mac, commit the
+`cad-rebuilt-assets` artifact that the failing `cad-reproducibility` job uploads
+after reviewing it (see "Without the pinned toolchain" in
+`Tools/HangboardCAD/README.md`).
+
 Two launcher quirks cost real time. Both are worked around in the existing
 scripts, so reuse them rather than re-deriving:
 
@@ -162,6 +174,15 @@ opening profile, a band's front-plane footprint.
 This combination is what makes the highlight smooth and 3D on both a flat-front
 board and an extruded one: the surface is the CAD geometry, and the outline is
 the CAD region.
+
+A region whose surface is **curved** (an extruded arc or B-spline run) needs the
+document property `HangTenCurvedRegionPartition = True`. The default partition
+assigns a body triangle by its centroid, and a chord triangle's centroid lies
+inside a curved face, so without it the body silently keeps a duplicate of the
+curved hold and the two z-fight. The opt-in rule also requires every vertex on
+the region, the centroid within the deflection, and matching normals. It is
+opt-in only so older sources keep reproducing byte-for-byte (see
+`Tools/HangboardCAD/README.md`).
 
 ### Measuring a sculpted (non-extruded) board
 
@@ -444,6 +465,13 @@ which is the part a CPU render cannot check.
    back through an explicit sketch placement, then asserts the pad's world
    bounding box so a change in that behaviour fails the build instead of
    silently mirroring the board.
+   *Update (metolius-prime-rib, FreeCAD 1.1.3 conda-forge):* the constraint is
+   signed, and the argument order sets the sign.
+   `DistanceX(g1, p1, g2, p2, d)` solves `x(g2.p2) - x(g1.p1) = d`. The pilot's
+   `DistanceX(point, 1, -1, 1, d)` measures from the point to the origin, so
+   `x = -d` is the documented result. Write every dimension low -> high, or pick
+   a sketch frame where every coordinate is positive (prime-rib maps local
+   `(u, v)` to native `(0, -u, v)`), and no negation is needed.
 
 3. **Face-index bindings are fragile.** Binding contact regions to the pad's
    faces was tried and rejected: after a profile edit FreeCAD lost the face
@@ -454,9 +482,9 @@ which is the part a CPU render cannot check.
 4. **Coincident surfaces z-fight.** The approved runtime contract partitions the
    board surface: the body node carries the surface *minus* the contact regions.
    Emitting the body whole and laying contact patches on top duplicates coplanar
-   geometry and flickers. Assign every body triangle to exactly one node, refuse
-   a triangle claimed by two regions, and refuse a region that claims more body
-   area than its own exported surface covers.
+   geometry and flickers. Assign every body triangle to exactly one node (a
+   triangle within reach of two regions goes to the nearest), and refuse a
+   region that claims more body area than its own exported surface covers.
 
 5. **Normals are directions, not positions.** See the frame section.
 
@@ -501,6 +529,35 @@ which is the part a CPU render cannot check.
     a corner radius is smaller than the inset; resampling the measured floor
     avoids both.
 
+12. **Sketch `Edge<n>` is not geometry `n-1`.** A sketch's sub-element names
+    follow its `Shape.Edges` order, which it re-sorts into wires. Resolve each
+    geometry to its shape edge by position before building a
+    `SubShapeBinder`; FreeCAD then stores the geometry's element-map name and
+    the binding follows that geometry through later edits (prime-rib's
+    `Edge23Depth` check proves it).
+
+13. **An extruded sketch edge's normal follows the edge's stored direction.**
+    Sketch arcs are always stored counter-clockwise, so in one run the convex
+    and concave arcs face opposite ways, and a line faces whichever way it was
+    drawn. Draw lines and B-splines in the convex arcs' sense, reverse the
+    concave pieces with `Part::Reverse`, and combine them with
+    `Part::Compound`. A flipped hold renders dark in `preview.py`'s front view.
+    Assert every region face points out of the body before saving.
+
+14. **`Shape.BoundBox` is loose around fillets and B-splines.** The prime-rib
+    body reports -38.72 / 107.30 mm where the true bounds are -38.1 / 106.68.
+    Use `optimalBoundingBox()` in authoring checks. `compile_board` still takes
+    its UV box from `BoundBox`, which is a display choice and harmless.
+
+15. **OCCT 7.9.3 meshes a small toroidal face into 2,048 triangles at any
+    deflection.** That is every arc edge under a round-over fillet. Prime-rib's
+    1.2 mm end round-over puts ~54k triangles in the body, against 8.8k in the
+    reference (the pinned OCCT 7.8.1 macOS build is similar: 54,222 against
+    54,622 on 7.9.3). `compare_exports` is O(samples x triangles). At the default
+    `--chunk 2048` its reverse pass needs several 2.7 GB blocks and was
+    OOM-killed (exit 137) on a 15 GB host. Pass a smaller `--chunk` (it changes
+    memory, not results) and expect it to take tens of minutes.
+
 ## Lessons for the next board
 
 See [`freecad-authoring-lessons.md`](freecad-authoring-lessons.md) for the full
@@ -535,6 +592,10 @@ write-up. The durable points:
 - **Closed schema.** A new descriptor field needs the Python descriptor, the
   Swift decoder, and the package validator changed together.
 - **Single writer per worktree; run the suites once at the end.**
+- **Fit primitives before you reduce vertices.** Prime-rib's reference end
+  cap was exactly lines, tangent arcs and two cubic Beziers with round-number
+  values (fit residual 6e-5 mm). A vector sketch with named dimensions beats a
+  measured polyline wherever that holds. See lessons §15.
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
   mono circle fit, cord mouths, source-backed lock). See lessons §12.
@@ -551,7 +612,10 @@ anything:
 
 - **Constant cross-section along the intended axis? → swept profile.** Clone the
   pilot (`lattice-triple-rung`): a fully constrained sketch, a pad, a fillet;
-  holds are extruded runs of the profile. Reproduces closely.
+  holds are extruded runs of the profile. Reproduces closely. Before
+  reducing the section to a polyline, fit circles and cubic Beziers to its runs;
+  when they fit (as on `metolius-prime-rib`), author those primitives instead
+  (see `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`).
 - **Genuinely sculpted shell (rounded lip, scooped pockets)? → pick the bar up
   front.** Either a native *measured approximation* (declare the accepted
   deviation; `compare_exports` is evidence, not a gate) or a *faceted import*.

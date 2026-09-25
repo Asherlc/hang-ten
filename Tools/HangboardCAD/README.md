@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 7 of the 46 model-media boards are migrated** (those with a committed
+**Status: 8 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -59,11 +59,17 @@ The metadata lives in two document-level string properties of the FCStd:
 
 Only `id` is derived. `aspectRatio` stays a stored manifest value: it is a
 presentation (viewport) fact, not always the single-unit front ratio. Of the
-five CAD boards, four match the descriptor `modelBounds` x/y ratio to within
+seven CAD boards covered by the aspect-ratio audit, five match the descriptor
+`modelBounds` x/y ratio to within
 2e-8 relative (float32 export noise against exact ratios such as 5/3 and 12/7),
-but `metolius-rock-rings-3d` presents two ring instances while its descriptor
-bounds cover one ring, so a derived value would be wrong there (see
+`metolius-wood-grips-compact-ii` keeps its pre-migration raster value `3.88`
+(0.14% from its 610 × 157 mm face), and `metolius-rock-rings-3d` presents two
+ring instances while its descriptor bounds cover one ring, so a derived value
+would be wrong there (see
 [`docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md)).
+The eighth CAD board, `soill-iron-palm-2`, was added after that audit and is
+not covered by it: its model presentation `aspectRatio` equals its bounds ratio
+(`2.3226565483816386`), while its top-level value is `1.5`.
 Published grip depths stay because they are sourced product facts (see `AGENTS.md`,
 Training-plan Fidelity) that `compile_board.py` validates the geometry against.
 Schema-v2 boards (slots, instances, `contactIDsBySlotID`) are carried the same
@@ -120,7 +126,7 @@ the build now generates.
 
 ## Authoring a new CAD board
 
-There is no per-board authoring program in the repository. The five retired
+There is no per-board authoring program in the repository. The six retired
 `Tools/HangboardCAD/migration/author_*.py` scripts that created the current
 FCStd documents were one-off, and re-running one would now recreate a document
 without its embedded manifest. Their provenance is preserved in
@@ -170,6 +176,19 @@ partitions the board surface, writes the USDZ directly, reopens the exported
 bytes, derives the descriptor from those bytes, and publishes the pair. It never
 writes `board.json`.
 
+**Without the pinned toolchain.** A USDZ compiled anywhere else (for example
+Linux conda-forge FreeCAD, which links OCCT 7.9.3) fails the macOS
+`cad-reproducibility` CI job. When that job fails, it uploads the pinned-toolchain
+rebuild as the `cad-rebuilt-assets` artifact (kept 7 days), laid out like
+`Hangboards/`: `<slug>/assets/primary.usdz` and `primary.model.json` for every
+source-backed board (`verify_reproducible.py --keep-rebuild <dir>`). Download it
+from the failing run, copy the mismatched boards' pairs over
+`Hangboards/<slug>/assets/`, review the `git diff` (only the reported boards should
+change, and the descriptor's `modelSHA256` must hash the new USDZ), refresh the
+delivery lock for the changed descriptors (see "Refresh the delivery lock" in
+`docs/freecad-authoring-migration.md`), then commit and push; the job must then
+pass on the new bytes.
+
 ## Source document contract
 
 Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
@@ -179,7 +198,10 @@ Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
 
 Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
 `attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`. Objects
+`Roughness`, `Metallic`, and optionally an embedded `TextureFile`.
+Optionally, `HangTenCurvedRegionPartition` (`App::PropertyBool`) opts a
+document into the curved-region partition described below; documents without it
+compile exactly as before. Objects
 without `NodeID` — sketches, datums, construction features — are never exported.
 The `NodeID` becomes the USD mesh prim name, which is what the application binds
 against.
@@ -194,7 +216,17 @@ The approved runtime contract partitions the board surface: the body node holds
 the surface *minus* the contact regions, and each contact node holds its region.
 The compiler assigns every tessellated body triangle to exactly one node using
 the contact regions built from the source document's own sketch edges, so the
-result has no duplicated coplanar geometry and no z-fighting. Verified on the
+result has no duplicated coplanar geometry and no z-fighting. A body triangle
+is assigned by its centroid lying on the region surface. That rule cannot see a
+chord triangle of a *curved* face (arc, B-spline), whose centroid sits up to the
+deflection inside the surface, so the body would keep a duplicate of every
+curved hold. With `HangTenCurvedRegionPartition` set, such a triangle is also
+assigned when all three vertices lie on the region, the centroid is within the
+deflection, and its normal agrees with the surface normal (so an end-cap
+triangle touching the region's boundary edge is never claimed). It is opt-in
+because it changes existing output: on `metolius-rock-rings-3d` it would move
+~3,400 body triangles that currently duplicate curved pocket surfaces, and that
+board's committed bytes must keep reproducing until it is deliberately rebuilt. Verified on the
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
 
@@ -209,7 +241,10 @@ Provenance of the authored numbers. There is deliberately no per-board
 provenance sidecar; these facts live here instead.
 
 * Published facts come from the board manifest (the build-time `board.json`): overall
-  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm.
+  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm. Cross-reference those (and
+  product identity) against manufacturer / product pages before treating them as
+  settled; web search is a required check, not a geometry source — see
+  `docs/freecad-authoring-migration.md` procedure step 3.
 * The cross-section is **measured** from the approved reference asset at the
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.
@@ -219,6 +254,34 @@ provenance sidecar; these facts live here instead.
   `docs/source-audits/2026-09-24-lattice-triple-rung-cad-provenance.md`.
 * The reference is resolved from commit `6b828e15`
   (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
+
+## Vector profile: metolius-prime-rib
+
+`Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd` is the first source
+whose profile is authored from vector primitives rather than measured vertices:
+one fully constrained Sketcher profile of 11 lines, 12 tangent arcs and two
+cubic Bezier spans (Sketcher B-splines with dimensioned poles), a symmetric
+508 mm pad, and a 1.2 mm `PartDesign::Fillet` round-over on both end
+perimeters. Every joint is tangent (G1), and the profile carries named driving
+dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
+`Edge23Depth` 23, ledge/slot heights, and one named radius per arc).
+
+* Published facts: 20 x 4.2 x 1.5 in and edge depths 38 / 23 / 15 mm, from the
+  manufacturer page and the board manifest. The 38 mm edge is the full 1.5 in
+  (38.1 mm) thickness.
+* The primitives were recovered from the pre-migration reference's end-cap
+  loop, which is exactly lines, arcs and two Beziers with round-number values;
+  the retired authoring script re-measured the reference and refused to save if
+  any of its 291 profile vertices was more than 0.01 mm from the sketch
+  (achieved 0.00006 mm). No polyline is used.
+* The source sets `HangTenCurvedRegionPartition` (see the partition section
+  above); it is the only committed source that does.
+* Contacts are sketch-edge runs extruded over the prismatic span
+  (`Pad.Length - 2 * EndRoundover.Radius`); a concave slot fillet in a run is
+  reversed with `Part::Reverse` and combined with `Part::Compound`, so every
+  hold face points out of the board.
+* Provenance, field mappings, and the retired authoring script's recovery
+  commit: `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`.
 
 ## In-app verification
 
@@ -248,17 +311,17 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **7 of 46 model-media boards are migrated.** The other 39 still ship their
+* **8 of 46 model-media boards are migrated.** The other 38 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
   and must not be presented as recovered parametric history.
 * The compiler refuses a source it cannot recompute cleanly, a contact region
-  whose depth disagrees with the published grip depth in the board manifest, a body
-  triangle claimed by two contact regions, a region that claims more body
-  surface than its own exported surface, and a document labelled
+  whose depth disagrees with the published grip depth in the board manifest, a
+  region that claims more body surface than its own exported surface, and a document labelled
   `faceted-import` unless `--allow-faceted-import` acknowledges it. Each guard
-  has a failing test.
+  has a failing test. A body triangle within reach of two contact regions goes
+  to the nearest one.
 * FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
   value in this pinned build. The authored sketch stores negated local
   coordinates with positive driving dimensions and negates them back through an
@@ -306,6 +369,11 @@ performance. Those remain open.
   checks: pad length 550 -> 620 mm propagating to every contact, and a profile
   dimension 50 -> 56 mm moving the edge-45 contact from 45.00 to 55.98 mm while
   the unrelated contacts keep their measured depth.
+* `test_prime_rib_native.py` / `tests/prime_rib_native_source_checks.py` —
+  the vector-profile source: primitive inventory, named dimensions, published
+  envelope and depths, regions on the body surface, a pad-length edit and an
+  `Edge23Depth` 23 -> 26 mm edit that moves only edge-23. `HANGTEN_FREECAD_CMD`
+  points it at a non-default `freecadcmd`.
 * `tests/compare_exports.py` — sampled two-way point-to-triangle distance against
   the approved reference (0.21 mm worst case, limit 0.5 mm). A sampled bound, not
   an exact Hausdorff distance and not a product accuracy claim.

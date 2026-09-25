@@ -81,6 +81,10 @@ DOCUMENT_PROPERTIES = (
     "HangTenTessellationDeflection",
 )
 CREASE_DEGREES = 35.0
+# Optional document property (App::PropertyBool). When true, the partition also
+# claims chord triangles of curved region faces; see _partition_body_triangles.
+# Opt-in so boards compiled before it existed keep byte-identical output.
+CURVED_REGION_PARTITION = "HangTenCurvedRegionPartition"
 
 
 class BuildError(RuntimeError):
@@ -342,8 +346,34 @@ def _crease_normals(points, triangles, crease_degrees: float):
     return out_points, out_triangles, out_normals
 
 
+def _curved_facet_on_region(shape, corners, centroid, deflection: float, on_surface: float) -> bool:
+    """True when a chord triangle of a curved face belongs to ``shape``'s surface."""
+    import Part
+
+    normal = (corners[1] - corners[0]).cross(corners[2] - corners[0])
+    if normal.Length < 1e-12:
+        return False
+    normal.normalize()
+    for corner in corners:
+        if shape.distToShape(Part.Vertex(corner))[0] >= on_surface:
+            return False
+    distance, _pairs, supports = shape.distToShape(Part.Vertex(centroid))
+    if distance > deflection:
+        return False
+    kind, index, parameters = supports[0][0], supports[0][1], supports[0][2]
+    if kind != "Face":
+        return False
+    surface_normal = shape.Faces[index].normalAt(*parameters)
+    # Region shells carry no reliable orientation, so compare lines, not senses.
+    return abs(surface_normal.dot(normal)) >= math.cos(math.radians(CREASE_DEGREES))
+
+
 def _partition_body_triangles(
-    body_shape, contact_shapes, deflection: float, surface_tol: float = 1e-4
+    body_shape,
+    contact_shapes,
+    deflection: float,
+    surface_tol: float = 1e-4,
+    curved_regions: bool = False,
 ):
     """Assign each body triangle to the contact region it belongs to.
 
@@ -362,6 +392,16 @@ def _partition_body_triangles(
     imports carry separate shells that sit a fraction of a millimetre off the
     body and need a looser gate or the body lips z-fight with the contacts.
     When multiple contacts fall inside the tolerance, the nearest wins.
+
+    A triangle tessellated from a *curved* face (an arc or a B-spline run of the
+    profile) has its vertices on the surface but its centroid inside the chord,
+    up to the tessellation deflection away, so the centroid rule leaves it in the
+    body and the region's own surface then duplicates it. With
+    ``curved_regions`` (the source's ``HangTenCurvedRegionPartition``), such a
+    triangle is also assigned when all three vertices lie on the region surface,
+    the centroid is within the deflection, and the triangle lies along the
+    surface there, so a triangle of an adjacent face (an end cap whose vertices
+    happen to lie on the region's boundary edge) is never claimed.
     """
     import Part
 
@@ -390,7 +430,12 @@ def _partition_body_triangles(
             ):
                 continue
             distance = shape.distToShape(Part.Vertex(centroid))[0]
-            if distance >= surface_tol:
+            claimed = distance < surface_tol
+            if not claimed and curved_regions:
+                claimed = _curved_facet_on_region(
+                    shape, [points[corner] for corner in facet], centroid, deflection, surface_tol
+                )
+            if not claimed:
                 continue
             prior = best_distance.get(index)
             if prior is None or distance < prior:
@@ -661,6 +706,10 @@ def build(
                 body_object.Shape,
                 [obj.Shape for obj in region_objects],
                 deflection,
+                curved_regions=bool(
+                    CURVED_REGION_PARTITION in document.PropertiesList
+                    and document.getPropertyByName(CURVED_REGION_PARTITION)
+                ),
             )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
