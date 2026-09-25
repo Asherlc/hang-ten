@@ -36,6 +36,7 @@ __pycache__/
 # (a pattern could hide a hand-authored package's board.json).
 /Hangboards/soill-iron-palm-2/board.json
 /Hangboards/captain-fingerfood-pocket/board.json
+/Hangboards/evolv-kilter-basic-long/board.json
 /Hangboards/lattice-mxedge-lift-large/board.json
 /Hangboards/lattice-mxedge-lift-small/board.json
 /Hangboards/lattice-triple-rung/board.json

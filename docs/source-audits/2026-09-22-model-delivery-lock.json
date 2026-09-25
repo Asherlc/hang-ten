@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, and metolius-wood-grips-deluxe-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, and metolius-wood-grips-deluxe-ii native FreeCAD migrations and evolv-kilter-basic-long native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "3575d045437474511787bae54f634dd8cba2e9a75f72e9c3f59cbc64d7895521",
+  "sha256Manifest": "50b36ca3c738fd605b6551f434630d5ff39504be802a791ed68353f8c3bbb8c1",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "864203cf6883cf4a3c9b99fc54ed47fdf5324c90a97228f22b46ae93609f7c21",
+  "supersededSha256Manifest": "3575d045437474511787bae54f634dd8cba2e9a75f72e9c3f59cbc64d7895521",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -186,6 +186,14 @@
       "provenanceSidecar": "authoring script committed at Tools/HangboardCAD/migration/author_soill_iron_palm_2.py (PR #478, last source change 54b4621)",
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
+    },
+    "evolv-kilter-basic-long": {
+      "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sourceSHA256": "c85d780b2e806776ea5ccb02a0df7b4682382afcd7cff901b542df5dbce0f5b3",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
+      "sourceKind": "native-parametric-measured-profile",
+      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 4812009ba567fbc1)",
+      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
