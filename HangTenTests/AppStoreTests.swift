@@ -1922,6 +1922,33 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(sessionStore.asynchronousFlushCount, 0)
     }
 
+    func testTwoHandedLatticePlansResolvePairedHoldsOnAtLeastOneBoard() throws {
+        let store = AppStore(defaults: makeDefaults())
+
+        for planID in ["research.max-hangs", "research.abrahangs"] {
+            let plan = try XCTUnwrap(store.plans.first { $0.id == planID })
+
+            let compatibleBoards = BoardCatalog.all.filter { !store.isIncompatible(plan, on: $0) }
+            XCTAssertFalse(
+                compatibleBoards.isEmpty,
+                "\(planID) must resolve on at least one registered board"
+            )
+
+            let resolvesAPair = compatibleBoards.contains { board in
+                plan.steps.contains { step in
+                    guard !step.isRestStep else { return false }
+                    let contacts = (try? ContactResolver.resolve(
+                        step.workRequirements,
+                        step: step,
+                        board: board
+                    )) ?? []
+                    return contacts.count == 2
+                }
+            }
+            XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")
+        }
+    }
+
     private func makeDefaults() -> UserDefaults {
         let suite = "AppStoreTests-\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!

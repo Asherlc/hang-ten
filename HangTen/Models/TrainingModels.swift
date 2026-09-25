@@ -2850,11 +2850,11 @@ enum LegacyPlanSeedCatalog {
         }
     }
 
-    /// Lattice Half 4 Max Hang names a 20 mm edge. Encoded as a millimeter
-    /// range requirement so board resolvers can light a factual 20 mm contact.
+    /// Lattice Half 4 Max Hang names a 20 mm edge and is a two-handed hang.
+    /// `.bilateralPair` resolves the board's paired left/right 20 mm holds.
     private static let maxHangs20mmEdgeTarget = ContactRequirement.edge(
         depth: .range(.init(minimum: 20, maximum: 20)),
-        selection: .single
+        selection: .bilateralPair
     )
 
     /// Frontiers force-feedback study instrumented hold.
@@ -2964,7 +2964,7 @@ enum LegacyPlanSeedCatalog {
                 targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
-                handUse: .either
+                handUse: .double
             ),
             hangStep(
                 id: "max-hangs-2",
@@ -2976,7 +2976,7 @@ enum LegacyPlanSeedCatalog {
                 targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
-                handUse: .either
+                handUse: .double
             ),
             hangStep(
                 id: "max-hangs-3",
@@ -2988,7 +2988,7 @@ enum LegacyPlanSeedCatalog {
                 targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
-                handUse: .either
+                handUse: .double
             ),
             hangStep(
                 id: "max-hangs-4",
@@ -3000,7 +3000,7 @@ enum LegacyPlanSeedCatalog {
                 targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
-                handUse: .either
+                handUse: .double
             ),
             hangStep(
                 id: "max-hangs-5",
@@ -3012,7 +3012,7 @@ enum LegacyPlanSeedCatalog {
                 targets: [maxHangs20mmEdgeTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
-                handUse: .either
+                handUse: .double
             ),
         ])
     )
@@ -3326,12 +3326,12 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [ContactRequirement(kind: .edge, fingerCapacity: 4)], .halfCrimp, nil),
-                ("F3 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 2)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [ContactRequirement(kind: .edge, fingerCapacity: 2)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [ContactRequirement(kind: .edge, fingerCapacity: 3)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, nil),
+                ("F3 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 
             for (index, grip) in grips.enumerated() {
@@ -3346,7 +3346,7 @@ enum LegacyPlanSeedCatalog {
                         targets: grip.targets,
                         gripType: grip.grip,
                         fingerConfiguration: grip.fingerConfiguration,
-                        handUse: .either
+                        handUse: .double
                     )
                 )
             }

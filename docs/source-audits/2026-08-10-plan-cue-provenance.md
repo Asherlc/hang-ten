@@ -29,19 +29,18 @@ large edge → `edge` + the corresponding categorical `HoldDepth`; large slope
 manufacturer's terms while leaving each board's factual resolver to choose one
 stable contact. No routine embeds a board-specific fallback or contact ID.
 
-## Single-hand capability amendment — 2026-09-15
+## Two-handed capability correction — 2026-09-25
 
-`WorkoutHandUse.either` is an app capability, not a source-prescription field:
-it preserves the source task's grip, duration, intensity, ordering, and rest
-while materializing one athlete-selected hand for session presentation and
-recording. The following are the only new opt-ins. Both sources prescribe
-individual hand/finger positions and do not prescribe a bilateral pair or an
-alternating left/right sequence.
+`research.max-hangs` and `research.abrahangs` are both-handed prescriptions.
+Their work steps previously carried `WorkoutHandUse.either` with the note that
+Hang Ten materializes a single athlete-selected hand. They are recoded to
+`handUse: .double` with `.bilateralPair` targets so both hands resolve to the
+board's paired holds. No one-hand selection remains for these plans.
 
-| Plan ID | Source URL | Newly enabled capability | Adaptation rationale |
+| Plan ID | Source URL | Two-handed encoding | Rationale |
 | --- | --- | --- | --- |
-| `research.max-hangs` | [Lattice Half 4 — Hang — Max](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | Every five work steps uses `either`; recovery remains `.double` / `.both`. | The source describes a 20 mm four-finger half-crimp hang and intensity/load adjustment, but supplies no bilateral or alternating-hand requirement. Hang Ten therefore lets the athlete select one hand without changing the five 7-second tasks or their recoveries. |
-| `research.abrahangs` | [Lattice Abrahangs Protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | Every six work steps uses `either`; the source's low-intensity feet-supported prescription is retained. | The source lists the six individual finger-position exercises and requires low supported loading, but supplies neither a bilateral-pair nor an alternating-side instruction. Hang Ten records the athlete's selected hand while retaining each grip, the 10/50 app timing adaptation, and feet-supported cue. |
+| `research.max-hangs` | [Lattice Half 4 — Hang — Max](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | All five work steps are `double` / `both`; recovery remains `double` / `both`; target is `.bilateralPair` on the 20 mm edge. | The source prescribes a two-handed near-maximal 20 mm four-finger half-crimp hang; the five 7-second tasks and their recoveries are unchanged. |
+| `research.abrahangs` | [Lattice Abrahangs Protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | All six work steps are `double` / `both`; targets are `.bilateralPair` on a generic `edge`. The source finger count is carried by each step's `fingerConfiguration`, not the target's hold capacity, because no registered edge declares a 2-finger capacity. | The source's six two-handed finger-position hangs, low-intensity feet-supported prescription, and the 10/50 app timing adaptation are retained. |
 
 No capability was inferred merely because a step has `.hang` phase. F80 stays
 explicitly both-handed; RPTC stays two-handed; F100 and all source-written
