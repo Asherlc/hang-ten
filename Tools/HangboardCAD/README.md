@@ -211,10 +211,10 @@ Coordinate conversion is applied exactly once: native millimetres
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
 
 **Material policy.** Committed USDZ models ship without materials or textures.
-After compiling a new or updated board, run `Tools/set_clay_materials.py` to
-strip any materials the pipeline added, then update the delivery lock. The
-FreeCAD source still carries `MaterialName`, `BaseColor`, etc. — those
-properties are compile-time metadata, not shipped appearance.
+The compiler produces unbound meshes — objects without `MaterialName` are
+exported without material bindings. The FreeCAD source may still carry
+`MaterialName`, `BaseColor`, etc. as compile-time metadata, but those
+properties are not required and do not affect the shipped appearance.
 
 ## Surface partition
 
