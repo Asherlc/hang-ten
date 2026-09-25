@@ -2,10 +2,15 @@
 
 Piece-by-piece measured approximation over a faceted-import base:
 
-  Piece 1: left/right large slopers → generated LS-fit sphere running back to
-  the board's back plane, closed by a flat back disc.
-  Piece 2 (current): top jug → native rounded rail extruded into the fitted
-  sloper spheres (sphere-cut ends). Reference end-collar mesh merge was dropped
+  Piece 1: left/right large slopers → faceted import at full reference
+  resolution. An analytic sphere cannot reproduce the reference collar that
+  blends the ball into the body, pinch and rails: the collar is a sculpted
+  surface, so a generated sphere leaves a seat seam, and flaring or pulling
+  the neighbours to hide it produces a chin/lip or a crease. Importing the
+  reference sloper keeps the moulded blend intact (and the model budget is
+  well inside the catalogue range).
+  Piece 2: top jug → native rounded rail extruded into the fitted sloper
+  spheres (sphere-cut ends). Reference end-collar mesh merge was dropped
   — it left open edges and a blacked-out top face.
   Remaining: rails, pinches stay faceted-import meshes
 
@@ -64,29 +69,18 @@ NODE_MAP = {
     "top_jug_001": ("contact", "top-incut-jug"),
 }
 
-# Slopers authored as a generated ball. Sphere centre from a least-squares fit
-# on the reference bulb (Y < -25 mm), mirrored. The reference ball reaches from
-# its front pole (native y -101.6) all the way back to the board's back plane
-# (y -0.5), so radius = 101.6 - 23.1 and the ball is closed by a flat back disc
-# at `back_y_mm`. Stopping the ball in front of the board left a floating rim
-# with the body's seat showing behind it. Behind `skirt_y_mm` the ball's radius
-# follows the open edges (body seat, pinch, rails) the reference ball shares
-# wherever they sit outside the sphere, so the ball closes the seat instead of
-# leaving a see-through gap.
-NATIVE_SLOPERS = {
+# Fitted sloper bulbs, measured from the reference mesh (robust least-squares on
+# the front cap, Y < -55 mm, mirrored left/right; residual ~0.25 mm). Only the
+# sphere is used here — the top jug is boolean-cut by it so its ends sit on the
+# bulbs. The slopers themselves ship as faceted imports (see module docstring).
+SLOPER_SPHERES = {
     "left_large_sloper_001": {
-        "center_mm": (-244.49, -23.10, 71.17),
-        "radius_mm": 78.5,
-        "back_y_mm": -0.5,
-        "skirt_y_mm": -65.0,
-        "contact": "sloper-left",
+        "center_mm": (-244.00, -28.24, 72.20),
+        "radius_mm": 73.32,
     },
     "right_large_sloper_001": {
-        "center_mm": (244.49, -23.10, 71.17),
-        "radius_mm": 78.5,
-        "back_y_mm": -0.5,
-        "skirt_y_mm": -65.0,
-        "contact": "sloper-right",
+        "center_mm": (244.00, -28.24, 72.20),
+        "radius_mm": 73.32,
     },
 }
 
@@ -95,7 +89,7 @@ NATIVE_SLOPERS = {
 # at the ends; a shorter bar left the top window (z 43..66) open and the bar read
 # as a black strip.
 NATIVE_TOP_JUG = {
-    # Must reach into the fitted spheres (inner tangent at front ≈ ±191 mm).
+    # Must reach into the fitted spheres (inner tangent at front ≈ ±188 mm).
     "x_half_mm": 195.0,
     # YZ closed profile, native (y_front, z_up): back edge, then the measured
     # front silhouette up to the rounded crown, then back edge again.
@@ -123,6 +117,8 @@ NATIVE_NODES = {"top_jug_001"}
 # the ball seat and rendered as a black tick.
 TARGET_TRIS = {
     "body_board_001": 14166,
+    "left_large_sloper_001": 20000,
+    "right_large_sloper_001": 20000,
     "left_pinch_001": 13997,
     "right_pinch_001": 14250,
     "rail_15_001": 7952,
@@ -276,144 +272,6 @@ def _mesh_to_shape(mesh: Mesh.Mesh) -> Part.Shape:
 
 
 
-def _open_edge_points(points, facets) -> list[tuple[float, float, float]]:
-    """Vertices on the open (single-facet) edges of a triangle soup."""
-    from collections import Counter
-
-    weld = {}
-    ids = []
-    for point in points:
-        ids.append(weld.setdefault(tuple(round(v, 3) for v in point), len(weld)))
-    edges = Counter()
-    for a, b, c in facets:
-        a, b, c = ids[a], ids[b], ids[c]
-        for u, v in ((a, b), (b, c), (c, a)):
-            edges[(u, v) if u < v else (v, u)] += 1
-    welded = list(weld)
-    open_ids = {v for edge, n in edges.items() if n == 1 for v in edge}
-    return [welded[v] for v in open_ids]
-
-
-def _sloper_mesh(spec: dict, seat_points) -> Mesh.Mesh:
-    """Analytic ball generated directly, closed by a flat back disc.
-
-    Behind `skirt_y_mm` each ring widens to cover the neighbouring open edges
-    the reference ball shares (`seat_points`, native mm) where it sits outside the
-    sphere, tapering
-    back to the sphere toward the front. Generated here (not tessellated from a
-    Part solid) because OCCT tessellates a boolean'd sphere at its own default
-    density regardless of deflection.
-    """
-    import math
-
-    cx, cy, cz = (float(v) for v in spec["center_mm"])
-    radius = float(spec["radius_mm"])
-    back_y = float(spec.get("back_y_mm", -0.5))
-    skirt_y = float(spec.get("skirt_y_mm", -65.0))
-    n_phi = int(spec.get("phi_segments", 72))
-    n_cap = int(spec.get("cap_segments", 24))
-    n_skirt = int(spec.get("skirt_segments", 24))
-    overlap = float(spec.get("seat_overlap_mm", 3.0))
-    falloff = float(spec.get("skirt_falloff_mm", 28.0))
-
-    def sphere_r(y: float) -> float:
-        return math.sqrt(max(0.0, radius * radius - (y - cy) ** 2))
-
-    def ring(phi: float, r: float, y: float):
-        return (cx + r * math.cos(phi), y, cz + r * math.sin(phi))
-
-    # Seat edge in the ball's frame: (angle, depth y, in-plane radius).
-    seat = []
-    for x, y, z in seat_points:
-        r = math.hypot(x - cx, z - cz)
-        if r > 0.0 and y >= skirt_y - 5.0:
-            seat.append((math.atan2(z - cz, x - cx), y, r))
-
-    skirt_ys = [skirt_y + (back_y - skirt_y) * k / n_skirt for k in range(n_skirt + 1)]
-    phis = [2.0 * math.pi * j / n_phi for j in range(n_phi)]
-    window = math.radians(8.0)
-    # Excess over the sphere each ring needs to cover the seat edge.
-    excess = []
-    for phi in phis:
-        column = []
-        for y in skirt_ys:
-            base = sphere_r(y)
-            need = 0.0
-            for p_phi, p_y, p_r in seat:
-                gap = abs((p_phi - phi + math.pi) % (2.0 * math.pi) - math.pi)
-                if gap < window and abs(p_y - y) < 5.0:
-                    need = max(need, p_r + overlap - base)
-            column.append(need)
-        excess.append(column)
-    # Fade each flare toward the front with a cosine falloff so it sweeps into
-    # the ball tangentially instead of creasing.
-    for column in excess:
-        faded = []
-        for k, y in enumerate(skirt_ys):
-            best = 0.0
-            for m in range(k, n_skirt + 1):
-                t = (y - skirt_ys[m]) / falloff  # <= 0 in front of the seat point
-                if t > -1.0:
-                    best = max(best, column[m] * 0.5 * (1.0 + math.cos(math.pi * t)))
-            faded.append(best)
-        column[:] = faded
-    # Smooth around the ring, never dropping below what the seat needs.
-    for _ in range(6):
-        excess = [
-            [
-                max(
-                    excess[j][k],
-                    (excess[j - 1][k] + 2.0 * excess[j][k] + excess[(j + 1) % n_phi][k]) / 4.0,
-                )
-                for k in range(n_skirt + 1)
-            ]
-            for j in range(n_phi)
-        ]
-    radii = [[sphere_r(y) + excess[j][k] for k, y in enumerate(skirt_ys)] for j in range(n_phi)]
-
-    skirt_alpha = math.acos(max(-1.0, min(1.0, (cy - skirt_y) / radius)))
-    vertices = [(cx, cy - radius, cz)]
-    rings = []
-    for step in range(1, n_cap + 1):
-        alpha = skirt_alpha * step / n_cap
-        y = cy - radius * math.cos(alpha)
-        r = radius * math.sin(alpha)
-        rings.append([len(vertices) + j for j in range(n_phi)])
-        vertices.extend(ring(phi, r, y) for phi in phis)
-    for k in range(1, n_skirt + 1):
-        rings.append([len(vertices) + j for j in range(n_phi)])
-        vertices.extend(ring(phis[j], radii[j][k], skirt_ys[k]) for j in range(n_phi))
-    back_centre = len(vertices)
-    vertices.append((cx, back_y, cz))
-
-    triangles = []
-    first = rings[0]
-    for j in range(n_phi):
-        triangles.append((0, first[j], first[(j + 1) % n_phi]))
-    for index in range(len(rings) - 1):
-        lower, upper = rings[index], rings[index + 1]
-        for j in range(n_phi):
-            k = (j + 1) % n_phi
-            triangles.append((lower[j], upper[j], upper[k]))
-            triangles.append((lower[j], upper[k], lower[k]))
-    last = rings[-1]
-    for j in range(n_phi):
-        triangles.append((back_centre, last[(j + 1) % n_phi], last[j]))
-
-    mesh = Mesh.Mesh()
-    triples = []
-    for a, b, c in triangles:
-        triples.append(App.Vector(*vertices[a]))
-        triples.append(App.Vector(*vertices[b]))
-        triples.append(App.Vector(*vertices[c]))
-    mesh.addFacets(triples)
-    mesh.removeDuplicatedPoints()
-    mesh.removeDuplicatedFacets()
-    mesh.harmonizeNormals()
-    print(f"sloper mesh {mesh.CountFacets} tris ", end="")
-    return mesh
-
-
 def _native_top_jug(spec: dict, sloper_specs: dict) -> Part.Shape:
     """Native mid-span rail cut to the sloper spheres.
 
@@ -514,32 +372,11 @@ def main() -> int:
     )
 
     imported = []
-    # Index reference meshes by name for native pieces that keep a collar.
-    ref_meshes = {}
-    for prim in stage.Traverse():
-        if prim.IsA(UsdGeom.Mesh) and prim.GetName() in NODE_MAP:
-            ref_meshes[prim.GetName()] = _world_mesh(stage, cache, prim)
-
-    # Each ball seals only the open edges (body seat, pinch, rails) that the
-    # reference ball shares; the rest of those edges are sealed by each other.
-    open_edges = [
-        point
-        for name, mesh in ref_meshes.items()
-        if name not in NATIVE_SLOPERS and name not in NATIVE_NODES
-        for point in _open_edge_points(*mesh)
-    ]
-    seat_points = {}
-    for sloper in NATIVE_SLOPERS:
-        shared = {tuple(round(v, 2) for v in point) for point in ref_meshes[sloper][0]}
-        seat_points[sloper] = [
-            point for point in open_edges if tuple(round(v, 2) for v in point) in shared
-        ]
-        print(f"{sloper}: {len(seat_points[sloper])} shared seat points")
 
     # --- Piece 2: native mid-span top jug cut into sloper spheres ---
     jug_name = "top_jug_001"
     role, contact_id = NODE_MAP[jug_name]
-    jug_shape = _native_top_jug(NATIVE_TOP_JUG, NATIVE_SLOPERS)
+    jug_shape = _native_top_jug(NATIVE_TOP_JUG, SLOPER_SPHERES)
     feature = document.addObject("Part::Feature", jug_name)
     feature.Shape = jug_shape
     feature.addProperty("App::PropertyString", "NodeID", "HangTen")
@@ -563,13 +400,10 @@ def main() -> int:
         if name not in NODE_MAP or name in NATIVE_NODES:
             continue
         role, contact_id = NODE_MAP[name]
-        if name in NATIVE_SLOPERS:
-            mesh = _sloper_mesh(NATIVE_SLOPERS[name], seat_points[name])
-        else:
-            points, facets = _world_mesh(stage, cache, prim)
-            print(f"  import {name}: {len(points)} pts, {len(facets)} tris →", end=" ")
-            mesh = _build_mesh(points, facets, harmonize=False)
-            mesh = _simplify(mesh, TARGET_TRIS.get(name, 2000))
+        points, facets = _world_mesh(stage, cache, prim)
+        print(f"  import {name}: {len(points)} pts, {len(facets)} tris →", end=" ")
+        mesh = _build_mesh(points, facets, harmonize=False)
+        mesh = _simplify(mesh, TARGET_TRIS.get(name, 2000))
         shape = _mesh_to_shape(mesh)
         feature = document.addObject("Part::Feature", name)
         feature.Shape = shape
@@ -610,7 +444,8 @@ def main() -> int:
     print(f"reference sha256 {reference_digest}")
     print(f"texture sha256 {texture_digest}")
     print(
-        "piece 2: native slopers + native top jug (sphere-cut rail); "
+        "piece 2: native top jug (sphere-cut rail); slopers shipped as "
+        "faceted imports at reference resolution; "
         "sourceKind=faceted-import; --allow-faceted-import"
     )
     for name, role, contact_id, tris, faces in imported:
