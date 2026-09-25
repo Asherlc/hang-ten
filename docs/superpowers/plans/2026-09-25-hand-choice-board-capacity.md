@@ -499,7 +499,8 @@ Replace the existing `handPreferenceButton` and `chooseHandPreference` (lines 29
 			handPreferenceMenuButton(
 				.both,
 				title: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded),
-				accessibilityID: "handSide.both"
+				accessibilityID: "handSide.both",
+				disabled: !WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
 			)
 		} label: {
 			HStack(spacing: 6) {
@@ -518,7 +519,8 @@ Replace the existing `handPreferenceButton` and `chooseHandPreference` (lines 29
 	private func handPreferenceMenuButton(
 		_ preference: WorkoutSessionHandPreference,
 		title: String,
-		accessibilityID: String
+		accessibilityID: String,
+		disabled: Bool = false
 	) -> some View {
 		Button {
 			applyHandPreference(preference)
@@ -529,6 +531,7 @@ Replace the existing `handPreferenceButton` and `chooseHandPreference` (lines 29
 				Text(title)
 			}
 		}
+		.disabled(disabled)
 		.accessibilityIdentifier(accessibilityID)
 	}
 
@@ -558,6 +561,27 @@ A capacity-2 default of `.both` must not break custom either-hand routines on a 
 
 ```swift
 extension WorkoutSessionHandResolver {
+    /// True when a both-hands materialization resolves every work requirement
+    /// on this board. A capacity-2 board with no paired target for a step
+    /// cannot satisfy a both-hands choice and must fall back to alternate.
+    static func bothHandsResolve(plan: TrainingPlan, board: BoardRevision) -> Bool {
+        let steps = sessionSteps(
+            from: plan.steps,
+            preference: .both,
+            boardIsOneHanded: board.isOneHanded
+        )
+        return steps.allSatisfy { step in
+            guard !step.isRestStep else { return true }
+            let requirements = step.workRequirements
+            guard !requirements.isEmpty else { return true }
+            return (try? ContactResolver.resolve(
+                requirements,
+                step: step,
+                board: board
+            ))?.isEmpty == false
+        }
+    }
+
     /// The capacity default, downgraded to `.alternate` when a both-hands
     /// materialization cannot resolve every work requirement on this board.
     static func defaultPreference(
@@ -568,22 +592,7 @@ extension WorkoutSessionHandResolver {
             boardHandCapacity: board.handCapacity
         )
         guard capacityDefault == .both else { return capacityDefault }
-        let steps = sessionSteps(
-            from: plan.steps,
-            preference: .both,
-            boardIsOneHanded: board.isOneHanded
-        )
-        let resolvesEveryStep = steps.allSatisfy { step in
-            guard !step.isRestStep else { return true }
-            let requirements = step.workRequirements
-            guard !requirements.isEmpty else { return true }
-            return (try? ContactResolver.resolve(
-                requirements,
-                step: step,
-                board: board
-            ))?.isEmpty == false
-        }
-        return resolvesEveryStep ? .both : .alternate
+        return bothHandsResolve(plan: plan, board: board) ? .both : .alternate
     }
 }
 ```
@@ -631,6 +640,7 @@ func testResolutionAwareDefaultFallsBackToAlternateWhenBothCannotResolve() {
         ]
     )
 
+    XCTAssertFalse(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
     XCTAssertEqual(
         WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
         .alternate
@@ -651,6 +661,7 @@ func testResolutionAwareDefaultKeepsBothWhenAPairResolves() throws {
         "Expected at least one registered board where Max Hangs resolves its pair"
     )
 
+    XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
     XCTAssertEqual(
         WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
         .both
