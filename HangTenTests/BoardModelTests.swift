@@ -739,7 +739,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertNil(media.orientation)
         XCTAssertEqual(
             media.descriptor.modelSHA256,
-            "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524"
+            "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac"
         )
         XCTAssertEqual(media.descriptor.contacts.count, 7)
         guard case .twoBranchCord(let suspension) = media.suspension else {
@@ -759,7 +759,7 @@ final class BoardModelTests: XCTestCase {
     func testFlashBoardNativeSceneBuildsVisibleThreeDCordBranchesForSelectedPosition() async throws {
         let (_, media, model) = try await loadMigratedModel("tension.flash-board")
 
-        XCTAssertEqual(media.descriptor.modelSHA256, "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524")
+        XCTAssertEqual(media.descriptor.modelSHA256, "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac")
         XCTAssertEqual(media.descriptor.contacts.count, 7)
         guard case .twoBranchCord(let suspension) = media.suspension else {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
@@ -2030,8 +2030,8 @@ final class BoardModelTests: XCTestCase {
 
     func testPromotedModelMatchesItsV3PhysicalContactInventory() async throws {
         let (board, media, model) = try await loadMigratedModel("yy.baguette-evo")
-        let approvedModelSHA256 = "a155242e9f1d230eca31c4b5ce855a1eddc82722ca3da7187ce3c3efc8a4c6bc"
-        let approvedDescriptorSHA256 = "1b6f5a4048104a9d0b5b1a1c60002270332ddb54bd0e9a13f057594f34487f47"
+        let approvedModelSHA256 = "6fb799f1b3c793bc687b43443948f7ca8793a6c2e86bc02e39a7e2511c218226"
+        let approvedDescriptorSHA256 = "ac6817926fa21dc953bd033458e93df9347d9e2edf4183e5e66d46e7b3723047"
         let expectedContactIDs = [
             "edge-20-left", "edge-10-left", "edge-25-left", "edge-15-left",
             "edge-15-right", "edge-25-right", "edge-10-right", "edge-20-right",
@@ -2257,8 +2257,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05DoorMountNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "frictitious.doormount-pro-7",
-            modelSHA256: "4fd7671066998f30a5dfbd5146c1b24eb954ab6b6fb50a7ae2788a310f232773",
-            descriptorSHA256: "c766f6759fc58ccbb1d96c05071aae505809a93aba01ecb13bd58fbbeec07b79",
+            modelSHA256: "089f8989ca05e0339e46cc1c6334c21a12409cc2c07c450529934101d664d89b",
+            descriptorSHA256: "3df90e79738ceb52599e90c3ee3180855bf855284e7c04d0d25831aaaf6f37b5",
             contactIDs: [
                 "top-jug",
                 "edge-35-left",
@@ -2296,8 +2296,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05MegalithNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "frictitious.megalith",
-            modelSHA256: "8491e4bde7adafc899b40795e0e044c4969df961156a0237cf7ca221510c0fc9",
-            descriptorSHA256: "4b723f1b105d1262cf6464498af4f79e87ad85bd75aed8220330059e6241cf32",
+            modelSHA256: "f88f4c9cf989af88230b8c0937bfb37ef656e0d3df142b7377e11638363d904f",
+            descriptorSHA256: "262876f0dede4a87738868bb46b80c5b41770973404ae9157b5ab28bc8609a75",
             contactIDs: [
                 "top-jug",
                 "center-edge-25",
@@ -2349,8 +2349,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05ForgeNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "trango.rock-prodigy-forge",
-            modelSHA256: "3f04e28e442ca02de87357663e85258f3e3cc8d138f381b76847e460bcaa044e",
-            descriptorSHA256: "3392817dbcf985ec962cd80be5c010de242171b8f942e86ad5a4846110215fa0",
+            modelSHA256: "b660392fce1b7289e1d0b0dd07a6644ba3824fd1a777fdb25d4c3319bbdae783",
+            descriptorSHA256: "b082e9a64c46707b659937c3cecdfc4dbae214c26391af764d1c581720633898",
             contactIDs: [
                 "sloper-30-left",
                 "sloper-30-right",
@@ -2407,8 +2407,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05NaturalNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "trango.rock-prodigy-natural",
-            modelSHA256: "b2bdbd9bf7c1696c4360059619eee69fb4551c27e49f2ce8defd83a04de53d50",
-            descriptorSHA256: "fb9bc30444fcab8f87d37f900b26fe3c74e9121ef02c08958a4a8fc1a4428144",
+            modelSHA256: "f913ecd901834c9e000ecc660144625c70e453856e150de9dd119b5bf6a0f17e",
+            descriptorSHA256: "7b888ca64b2065530c1953003f5ab662f6075518456879b331e5342d984d2ac8",
             contactIDs: [
                 "top-jug-left",
                 "top-jug-right",
@@ -2451,8 +2451,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05EvoNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "zlagboard.evo",
-            modelSHA256: "380154273fbaca5f8cabe747d68ca29e59a7205554ba6c3c73d67eae84d8b90c",
-            descriptorSHA256: "6acf2aeb88708410bc9cf8778eaac1c7372addfee7d818e1968c420b7c43180f",
+            modelSHA256: "35cabe2a3aa0505b4cca5545b368cca02396a30f826e1186449f546ff2f40884",
+            descriptorSHA256: "0edf804bb442c9d04f5e486aedcd4acd97f2b936c7816f02e4920484e09f5042",
             contactIDs: [
                 "top-jug-left",
                 "top-sloper-32-left",
@@ -2506,8 +2506,8 @@ final class BoardModelTests: XCTestCase {
     func testBatch05ProNativeAcceptance() async throws {
         try await assertBatch05NativeContract(
             boardID: "zlagboard.pro",
-            modelSHA256: "d8170f0fa60249a58123172f93a266a1664c7db047b69b8186a4c6394f54a66c",
-            descriptorSHA256: "2b5456425bc1a89ff8263a0d3c6474fa8419ec8f835cfdf60d844defd5ac17bd",
+            modelSHA256: "c8b740284160de55c5f846c9d11742b5a29a31c0a67c9bb5f43ce1d4873bbd30",
+            descriptorSHA256: "1be45681ce98fcb6fb1eda0f7939f3174a85d3c70c625b2aa8d6f2aed399cb83",
             contactIDs: [
                 "top-jug-left",
                 "top-jug-right",
