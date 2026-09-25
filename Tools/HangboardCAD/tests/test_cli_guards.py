@@ -60,3 +60,11 @@ def test_chunk_accepts_positive_values():
     compare_exports = pytest.importorskip("compare_exports")
     assert compare_exports.positive_int("1") == 1
     assert compare_exports.positive_int("2048") == 2048
+
+
+def test_faceted_import_is_acknowledged_only_where_the_lock_records_it():
+    """The rebuild repeats --allow-faceted-import only for a locked faceted source."""
+    assert verify_reproducible.faceted_import_acknowledged("soill-iron-palm-2")
+    for package in verify_reproducible.source_backed_packages():
+        if package != "soill-iron-palm-2":
+            assert not verify_reproducible.faceted_import_acknowledged(package), package

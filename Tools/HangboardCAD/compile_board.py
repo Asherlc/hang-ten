@@ -374,6 +374,7 @@ def _partition_body_triangles(
     deflection: float,
     surface_tol: float = 1e-4,
     curved_regions: bool = False,
+    skip_mesh_shells: bool = False,
 ):
     """Assign each body triangle to the contact region it belongs to.
 
@@ -402,6 +403,11 @@ def _partition_body_triangles(
     the centroid is within the deflection, and the triangle lies along the
     surface there, so a triangle of an adjacent face (an end cap whose vertices
     happen to lie on the region's boundary edge) is never claimed.
+
+    ``skip_mesh_shells`` (faceted imports only) skips a contact with more than
+    200 faces: an imported mesh shell never lies on the body at the native
+    tolerance, and testing it is too slow. A native source can have a hold with
+    hundreds of planar faces that must still be partitioned.
     """
     import Part
 
@@ -413,12 +419,15 @@ def _partition_body_triangles(
         # surface at the native 1e-4 tolerance, but distToShape against thousands
         # of faces is O(body_tris × contact_faces) and can hang the compile.
         # Skip the exact test when the contact is clearly a heavy mesh shell.
-        try:
-            face_count = len(shape.Faces)
-        except Exception:
-            face_count = 0
-        if face_count > 200 and surface_tol <= 1e-3:
-            continue
+        # Only for faceted imports: native polyhedral holds (Compact II, MXEdge
+        # Small, Captain Fingerfood Pocket) have hundreds of planar faces.
+        if skip_mesh_shells:
+            try:
+                face_count = len(shape.Faces)
+            except Exception:
+                face_count = 0
+            if face_count > 200 and surface_tol <= 1e-3:
+                continue
         box = shape.BoundBox
         margin = max(0.25, surface_tol)
         for index, facet in enumerate(facets):
@@ -710,6 +719,7 @@ def build(
                     CURVED_REGION_PARTITION in document.PropertiesList
                     and document.getPropertyByName(CURVED_REGION_PARTITION)
                 ),
+                skip_mesh_shells=faceted,
             )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
