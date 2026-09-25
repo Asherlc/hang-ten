@@ -46,6 +46,22 @@ def source_backed_packages() -> list[str]:
     )
 
 
+DELIVERY_LOCK = REPOSITORY / "docs" / "source-audits" / "2026-09-22-model-delivery-lock.json"
+
+
+def faceted_import_acknowledged(package: str) -> bool:
+    """True when the delivery lock records this source as a faceted import.
+
+    compile_board refuses a ``faceted-import`` source unless
+    ``--allow-faceted-import`` acknowledges it. That acknowledgement was made
+    when the asset was published and is recorded in the package's lock entry,
+    so the rebuild repeats it only for those packages.
+    """
+    lock = json.loads(DELIVERY_LOCK.read_text(encoding="utf-8"))
+    entry = lock.get("migratedPackages", {}).get(package, {})
+    return str(entry.get("sourceKind", "")).startswith("faceted-import")
+
+
 def compile_into(package: str, destination: Path, freecad: Path, extra_path: str) -> None:
     """Run one board's build into a scratch directory, in a fresh process.
 
@@ -59,6 +75,8 @@ def compile_into(package: str, destination: Path, freecad: Path, extra_path: str
         "--source", str(REPOSITORY / "Hangboards" / package / f"{package}.FCStd"),
         "--assets", str(destination),
     ]
+    if faceted_import_acknowledged(package):
+        expected.append("--allow-faceted-import")
     wrapper.write_text(
         "import sys, traceback\n"
         f"path = {str(TOOLS / 'compile_board.py')!r}\n"

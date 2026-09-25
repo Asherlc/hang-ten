@@ -1397,7 +1397,7 @@ def test_deluxe_model_package_freezes_the_independent_official_inventory() -> No
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.usdz", 2.8347345959048824, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.8240740604423875, True, None, False)
     ]
     assert {
         (

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from conftest import load_board_catalog_module
+from conftest import load_board_catalog_module, package_board_text
 from test_model_first_packages import _write_reusable_model_package, write_model_package
 
 
@@ -367,7 +367,7 @@ def test_discovered_model_inventory_matches_current_packages() -> None:
 def test_fixed_front_model_presentation_ratios_match_descriptor_bounds() -> None:
     for slug in FIXED_FRONT_MODEL_PACKAGE_SLUGS:
         package_path = HANGBOARDS_ROOT / slug
-        board = json.loads((package_path / "board.json").read_text())
+        board = json.loads(package_board_text(package_path))
         presentations = [item for item in board["presentations"] if item["media"]["type"] == "model"]
         assert len(presentations) == 1, slug
         presentation = presentations[0]

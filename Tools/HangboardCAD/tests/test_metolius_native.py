@@ -102,8 +102,9 @@ def test_compiler_check_mode_reports_a_v2_package(tmp_path):
 
 
 # NOTE: there is deliberately no committed compare_exports guard for this board.
-# Its approved reference is a closed shell of sculpted surfaces (a rounded jug
-# lip over an open back, scooped pockets), so the native measured approximation
-# cannot match it within the 0.5 mm comparison limit. The comparison is run
-# manually and reported rather than committed as a knowingly-failing test; see
-# docs/freecad-authoring-migration.md, "Measuring a sculpted board".
+# The vector source fits the reference's measured stations to 0.012 mm, but it
+# deliberately differs elsewhere. The pockets are lofted smoothly between
+# stations (up to 0.9 mm from the reference's facets), and the jug is the
+# photographed crown hump rather than the reference's scoop (up to 21 mm). The
+# comparison is run manually and reported; see
+# docs/source-audits/2026-09-25-metolius-rock-rings-3d-vector-provenance.md.

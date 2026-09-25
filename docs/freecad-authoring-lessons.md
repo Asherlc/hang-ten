@@ -1,7 +1,7 @@
 # Lessons from the FreeCAD hold-authoring migration
 
 Hard-won, board-agnostic lessons from migrating hangboards to native FreeCAD
-sources (pilot: `lattice-triple-rung`; then `metolius-rock-rings-3d`; then
+sources (pilot: `lattice-triple-rung`; then `metolius-rock-rings-3d`, later re-authored as vectors (§17); then
 sculpted `lattice-mxedge-lift-small`; then the vector-profile
 `metolius-prime-rib`). Read with
 `docs/freecad-authoring-migration.md`. The point of writing these down is to
@@ -289,8 +289,10 @@ triangle count.
 
 - Contacts must be **faces of the boolean-cut body**, not separate shells
   `Common`'d onto the body (degenerate coincident boolean → fragments / holes).
-- **Never export a true `Cylinder` as a contact.** Curved tessellation fails the
-  compiler's `distToShape < 1e-4` check; use an n-gon prism / loft instead.
+- Curved contact faces (cylinders, cones, B-splines) need
+  `HangTenCurvedRegionPartition` on the source (lessons §15 and §16). Without
+  it, a true `Cylinder` contact fails the centroid `distToShape < 1e-4` check,
+  and the body keeps a duplicate of the hold.
 - **No non-planar quads** for crowned floors. A lofted/ruled quad between
   stations along a parabola is non-planar and breaks `compile_board`'s
   surface-area partition check; author a **triangle soup** (planar by
@@ -520,3 +522,114 @@ exactly. On OCCT 7.9.3 it also costs ~54k body triangles (2,048 per toroidal
 fillet face) against the reference's 8.8k. The asset grows to ~1.1 MB.
 `compare_exports` takes tens of minutes on it and needs a small `--chunk`. If that trade is wrong for a
 board, a square end changes the ends by at most 0.5 mm (1.2·(√2−1)).
+
+## 16. What Deluxe II added: holds as vectors, not triangles
+(`metolius-wood-grips-deluxe-ii`)
+
+- **Author with native features, not faceted polyhedra.** The body is a
+  `PartDesign::Body`: five pads of one lines-only profile sketch, one
+  through-all pocket of the outline sketch, and 21 capsule sketches (two lines,
+  two arcs, tangent and radius constraints) pocketed from their tier front
+  planes. Each pocket's `Length` *is* the published depth. The document has 373
+  B-rep faces and is 1.1 MB; the faceted draft of the same geometry had 11,893
+  faces and was 12.7 MB.
+- **Opt in to the curved partition.** The source sets
+  `HangTenCurvedRegionPartition` (README "Surface partition"). Without it, every
+  cylindrical pocket wall and conical chamfer stays duplicated in the body.
+- **Small toroidal fillets explode the mesh.** A 1.2 or 2 mm fillet around a
+  12.5 mm capsule arc tessellates to about 3,700 triangles per toroidal face
+  with the pinned OCCT, whatever the deflection: about 300k triangles for the
+  board. A chamfer of the same size gives exact conical faces and 23k triangles
+  in total. Measure triangle counts per surface type before you pick fillets.
+- **PartDesign features refine by default.** Set `Refine = False` on every pad
+  and pocket, or coplanar faces merge and a top region straddles its x boundary.
+  The same applies to `Part::Cut`.
+- **Split region boundaries with the feature tree.** Pad the profile once per
+  top-region span (x = ±305, ±238, ±81). With refine off, the chamfer faces
+  stay split at those x stations, so each top hold owns whole faces.
+- **Do not fillet an edge that lies on the board end face.** Each side-open
+  floor meets the end face in a straight edge. Adding those six edges to one
+  combined fillet made it fail (`BRep_API: command not done`), although every
+  pocket filleted on its own. Exclude them; the end stays sharp.
+- **Check the reference texture before embedding it.** The Deluxe reference
+  carried `dummy_texture.png`, a 1 × 1 black pixel. Embedded as `TextureFile`,
+  it rendered the whole board black in the app. Use `BaseColor` alone when the
+  texture is a placeholder.
+
+## 17. Vector primitives on a "sculpted" board
+(`metolius-rock-rings-3d`, re-authored 2026-09-25)
+
+### Look for the generator's sampling before you call a mesh sculpted
+
+The first Rock Rings source treated the reference as a sculpted shell and
+accepted a 17.67 mm deviation. In fact nearly every feature was sampled from
+primitives:
+
+- Outline: each span has exactly 12 uniform parameter samples between
+  round-number knots, and cubic Beziers with integer poles fit them to 5e-6 mm.
+  The perimeter round's stations are 22.5 + 6·sin θ.
+- Pockets: six depth stations. Each station is an exact stadium, and each is the
+  opening inset by the same amounts at the same depth fractions in all three
+  pockets.
+- Cord tunnels: exact ellipses (fixed 1.4 aspect) and circles at a few
+  stations.
+
+Group the vertices by coordinate (`Counter` of rounded y, z, …). Station planes
+show up as large counts, and the sample spacing within a span shows the
+parameterisation.
+
+### The reference can be wrong about the product
+
+The reference's jug was a stepped scoop cut down from behind. The photographs
+and the product owner show a convex hump. An exact fit to the reference is not
+evidence about the product, so check each feature against the photographs
+before authoring it.
+
+### OCCT traps met here
+
+- **One fillet across both perimeters of a Bezier outline with small kinks
+  fails** (`BRep_API: command not done`), at any radius. Two sequential
+  `Part::Fillet`s, front then back, succeed.
+- **`Part::Mirroring` of a B-spline shell flips it to face inward.** Mirrored
+  cylinders and cones kept their orientation; mirrored B-spline loft walls did
+  not. Author the other side's sections and bind them with expressions instead.
+- **`Part::Common` drops a `Reversed` B-spline face's orientation.** A
+  `Part::Reverse` placed *before* the clip had no effect on the walls, but it
+  did reverse the planar end cap. Reverse *after* the clip. A loft's intrinsic
+  normal is set by its station order, so try reversing the section list first.
+- **Every `Part::Cut` in a chain stores a full copy of the body.** With B-spline
+  fillets this made the FCStd 15 MB. One `MultiFuse` of all tools and one
+  `Cut` brought it to about 5 MB (7.4 MB once the jug region also stores the
+  rounded crown).
+- Assert region orientation in the authoring script: step 0.3 mm along each
+  region face's normal and require the point to be outside the body. Flipped
+  regions render dark. The CPU `preview.py` side view shows the flip as the lit
+  arc of a tunnel appearing on the wrong side.
+
+### Do not bind fillet faces by name; split the solid instead
+
+The jug had to include the crown's round-overs to be visible from the front. A
+`SubShapeBinder` on those fillet faces (on `Part::Fillet`, and again on
+`PartDesign::Fillet`) lost its element-map names after a crown edit, even
+though the solid's topology and face indices were unchanged. It then fell back
+to binding the **whole solid**, which is silently wrong, because the compiler
+would have exported the entire body as the hold. Edge bindings to sketch
+geometry (prime-rib) survive. Face bindings to fillets do not.
+
+A geometric split has no names to lose. `Part::Common(rounded solid, box)` is
+the region, and the same box joins the body's recess `MultiFuse`, so the body
+and the region meet on the box planes. The region's seam faces are internal:
+they are coincident with the body's seam faces, which the partition hands to the
+region, and they are hidden inside the board. Exempt them from orientation
+checks. Two cautions:
+
+- Keep the box planes off tangencies. A plane at exactly the height where the
+  round meets the crease gave an invalid solid; 1 mm lower was clean.
+- Test the region with an edit that moves it (here `CrownP3Z`), not only with
+  an edit elsewhere. An unrelated edit passed with the broken binder.
+
+### Cost
+
+B-spline fillet faces tessellate densely at 0.08 mm. The board went from 15.8k
+to 87.8k triangles, the asset from 314 KB to 1.95 MB, and the FCStd from
+1.3 MB to 7.4 MB.

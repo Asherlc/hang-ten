@@ -43,6 +43,28 @@ def check(label: str, condition: bool, detail: str = "") -> None:
         FAILURES.append(label)
 
 
+def surface_distance(document, point) -> float:
+    """Distance from a point to the board surface.
+
+    The board surface is the body node plus the jug, which is split off the
+    rounded solid (``Solid``). The seam between them is on both.
+    """
+    vertex = Part.Vertex(point)
+    return min(
+        document.getObject("Body").Shape.distToShape(vertex)[0],
+        document.getObject("Solid").Shape.Shells[0].distToShape(vertex)[0],
+    )
+
+
+def is_jug_seam(face) -> bool:
+    """A jug face on the split planes, internal to the board by design."""
+    if face.Surface.__class__.__name__ != "Plane":
+        return False
+    point = face.CenterOfMass
+    normal = face.normalAt(*face.Surface.parameter(point))
+    return abs(abs(normal.x) - 1.0) < 1e-9 or abs(normal.z + 1.0) < 1e-9
+
+
 def bound_objects(document):
     return [
         obj
@@ -94,6 +116,47 @@ def main() -> int:
     outline = document.getObject("Outline")
     check("outline sketch is fully constrained", bool(outline.FullyConstrained))
 
+    # The source is vector primitives: Bezier spans, stadiums, ellipses and
+    # circles, with no measured polyline anywhere.
+    sketches = [obj for obj in document.Objects if obj.TypeId == "Sketcher::SketchObject"]
+    loose = [s.Name for s in sketches if not s.FullyConstrained]
+    check("every sketch is fully constrained", not loose, ", ".join(loose))
+    outline_kinds = sorted(
+        {type(g).__name__ for i, g in enumerate(outline.Geometry) if not outline.getConstruction(i)}
+    )
+    spans = [g for i, g in enumerate(outline.Geometry) if not outline.getConstruction(i)]
+    check(
+        "outline is 14 cubic Bezier spans",
+        outline_kinds == ["BSplineCurve"] and len(spans) == 14
+        and all(g.Degree == 3 and g.NbPoles == 4 for g in spans),
+        f"{outline_kinds} x{len(spans)}",
+    )
+    polylines = [
+        s.Name for s in sketches
+        if sum(1 for i, g in enumerate(s.Geometry)
+               if not s.getConstruction(i) and type(g).__name__ == "LineSegment") > 4
+    ]
+    check("no sketch is a polyline", not polylines, ", ".join(polylines))
+
+    # Every exported region faces out of the body, into its cavity.
+    inward = []
+    for obj in bound_objects(document):
+        if obj.NodeRole == "body":
+            continue
+        for face in obj.Shape.Faces:
+            if obj.NodeID == "unit_jug_001" and is_jug_seam(face):
+                continue
+            u0, u1, v0, v1 = face.ParameterRange
+            u, v = (u0 + u1) / 2.0, (v0 + v1) / 2.0
+            probe = face.valueAt(u, v) + face.normalAt(u, v) * 0.3
+            # Outside the finished board: neither in the body nor in the jug.
+            if any(
+                document.getObject(name).Shape.isInside(probe, 1e-6, True)
+                for name in ("Body", "Region_jug")
+            ):
+                inward.append(obj.NodeID)
+    check("every region face points out of the body", not inward, ", ".join(sorted(set(inward))))
+
     nodes = bound_objects(document)
     inventory = sorted((obj.NodeID, obj.NodeRole) for obj in nodes)
     check("bound node inventory", len(nodes) == 7, f"{inventory}")
@@ -103,6 +166,16 @@ def main() -> int:
     check("one body node", body is not None)
     check("four contact slots", sorted(contacts) == ["jug", "pocket-25", "pocket-32", "pocket-40"])
     check("two attachment nodes", len(attachments) == 2)
+
+    # The jug is the crown hump: its top and both round-overs, split off the
+    # rounded solid geometrically, so the hold is visible from the front.
+    jug = contacts["jug"].Shape
+    jug_faces = len(jug.Faces)
+    check(
+        "jug covers the crown's front round-over",
+        jug.BoundBox.YMin < -28.4 and jug.BoundBox.YMax > 28.4 and jug.BoundBox.ZMax > 86.9,
+        f"y {jug.BoundBox.YMin:.2f}..{jug.BoundBox.YMax:.2f}, z max {jug.BoundBox.ZMax:.2f}",
+    )
     check("body occupies the native frame", abs(body.Shape.BoundBox.XLength - 146.0) < 1.0
           and abs(body.Shape.BoundBox.YLength - 57.0) < 0.1
           and abs(body.Shape.BoundBox.ZLength - 184.0) < 1.0,
@@ -122,7 +195,7 @@ def main() -> int:
     for slot, obj in sorted(contacts.items()):
         worst = 0.0
         for vertex in obj.Shape.Vertexes:
-            worst = max(worst, body.Shape.distToShape(Part.Vertex(vertex.Point))[0])
+            worst = max(worst, surface_distance(document, vertex.Point))
         check(
             f"{slot} region lies on the body surface",
             worst < 0.01,
@@ -145,7 +218,57 @@ def main() -> int:
         all(abs(after[slot] - before[slot]) < 0.05 for slot in ("pocket-25", "pocket-32")),
         f"pocket-25={after['pocket-25']} pocket-32={after['pocket-32']}",
     )
+    # Station 3 sits at 0.74 of the opening-to-floor depth: 34 mm now, not 40.
+    station = document.getObject("Station3_pocket_40").Placement.Base.y
+    check(
+        "the inner pocket stations follow the floor",
+        abs(station - (-28.5 + 0.74 * 34.0)) < 1e-6,
+        f"Station3 y = {station:.3f} mm",
+    )
     floor.Placement.Base.y = floor.Placement.Base.y + 6.0
+    document.recompute()
+
+    print("edit: right lower-flank pole x 55 -> 53 mm", flush=True)
+    outline.setDatum("LowerFlankP1X", App.Units.Quantity("53 mm"))
+    document.recompute()
+    box = document.getObject("Body").Shape.BoundBox
+    poles = [
+        (round(p.x, 6), round(p.y, 6))
+        for i, g in enumerate(outline.Geometry)
+        if not outline.getConstruction(i)
+        for p in g.getPoles()
+    ]
+    mirrored = {(-x, y) for x, y in poles}
+    check(
+        "a right-hand outline edit is mirrored on the left",
+        (-53.0, -17.0 + 92.0) in {(x, y) for x, y in poles} and mirrored == set(poles),
+        f"outline x span {box.XMin:.3f}..{box.XMax:.3f}",
+    )
+    worst = max(surface_distance(document, v.Point) for v in contacts["jug"].Shape.Vertexes)
+    check(
+        "the jug survives an outline edit",
+        len(contacts["jug"].Shape.Faces) == jug_faces and worst < 0.01,
+        f"{len(contacts['jug'].Shape.Faces)} faces, max distance to body {worst:.5f} mm",
+    )
+    outline.setDatum("LowerFlankP1X", App.Units.Quantity("55 mm"))
+    document.recompute()
+
+    print("edit: crown centre height 87 -> 86 mm", flush=True)
+    outline.setDatum("CrownP3Z", App.Units.Quantity(f"{86 + 92} mm"))
+    document.recompute()
+    jug = contacts["jug"].Shape
+    worst = max(surface_distance(document, v.Point) for v in jug.Vertexes)
+    crown = outline.Geometry[6]  # RightCrown: its interior poles still reach z 87
+    crown_top = max(
+        outline.Placement.multVec(crown.value(crown.FirstParameter + (crown.LastParameter - crown.FirstParameter) * k / 200)).z
+        for k in range(201)
+    )
+    check(
+        "the jug follows a crown edit",
+        len(jug.Faces) == jug_faces and abs(jug.optimalBoundingBox().ZMax - crown_top) < 0.01 and crown_top < 86.5 and worst < 0.01,
+        f"{len(jug.Faces)} faces, z max {jug.optimalBoundingBox().ZMax:.3f} (crown {crown_top:.3f}), max distance to body {worst:.5f} mm",
+    )
+    outline.setDatum("CrownP3Z", App.Units.Quantity(f"{87 + 92} mm"))
     document.recompute()
 
     # The same node must still serve both physical contacts of a slot: the
