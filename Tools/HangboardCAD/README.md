@@ -211,7 +211,10 @@ Provenance of the authored numbers. There is deliberately no per-board
 provenance sidecar; these facts live here instead.
 
 * Published facts come from the board manifest (the build-time `board.json`): overall
-  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm.
+  550 x 130 x 50 mm and grip depths 45 / 20 / 10 mm. Cross-reference those (and
+  product identity) against manufacturer / product pages before treating them as
+  settled; web search is a required check, not a geometry source — see
+  `docs/freecad-authoring-migration.md` procedure step 3.
 * The cross-section is **measured** from the approved reference asset at the
   pre-migration commit, as an ordered end-cap boundary loop. It is a measured
   approximation of a display mesh, **not recovered manufacturing geometry**.

@@ -121,6 +121,34 @@ def _bound_objects(document) -> list:
     ]
 
 
+def _source_meshes(document) -> dict:
+    """Raw source meshes stored beside faceted-import nodes.
+
+    A faceted import is an approved display mesh. Rebuilding it through a Part
+    shape and re-tessellating introduces slivers and T-junction cracks at curved
+    seats, so when the author stores the mesh as a ``<NodeID>_source``
+    ``Mesh::Feature`` it is shipped as-is: same triangles as the approved asset,
+    no extra geometry.
+    """
+    meshes: dict = {}
+    for obj in document.Objects:
+        if obj.TypeId != "Mesh::Feature":
+            continue
+        name = obj.Name
+        if not name.endswith("_source"):
+            continue
+        node_id = name[: -len("_source")]
+        points = list(obj.Mesh.Topology[0])
+        facets = list(obj.Mesh.Topology[1])
+        if not points or not facets:
+            continue
+        placement = getattr(obj, "Placement", None)
+        if placement is not None:
+            points = [placement.multVec(point) for point in points]
+        meshes[node_id] = (points, facets)
+    return meshes
+
+
 def _node_specification(obj) -> dict:
     role = getattr(obj, "NodeRole", "")
     if role not in {"body", "contact", "attachment"}:
@@ -314,7 +342,9 @@ def _crease_normals(points, triangles, crease_degrees: float):
     return out_points, out_triangles, out_normals
 
 
-def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
+def _partition_body_triangles(
+    body_shape, contact_shapes, deflection: float, surface_tol: float = 1e-4
+):
     """Assign each body triangle to the contact region it belongs to.
 
     The approved runtime contract partitions the board surface: the body node
@@ -326,15 +356,31 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
     contact region's surface. The regions are built from the source document's
     own sketch edges, so the assignment follows any profile edit; no face or
     triangle index is used.
+
+    ``surface_tol`` is the max centroid-to-contact distance (mm). Native
+    parametric contacts share the body surface so 1e-4 is enough; faceted
+    imports carry separate shells that sit a fraction of a millimetre off the
+    body and need a looser gate or the body lips z-fight with the contacts.
+    When multiple contacts fall inside the tolerance, the nearest wins.
     """
     import Part
 
     points, facets = body_shape.tessellate(deflection)
     assignment: dict[int, int] = {}
-    contested: dict[int, list[int]] = {}
+    best_distance: dict[int, float] = {}
     for position, shape in enumerate(contact_shapes):
+        # Dense mesh contacts (faceted imports) almost never lie on the body
+        # surface at the native 1e-4 tolerance, but distToShape against thousands
+        # of faces is O(body_tris × contact_faces) and can hang the compile.
+        # Skip the exact test when the contact is clearly a heavy mesh shell.
+        try:
+            face_count = len(shape.Faces)
+        except Exception:
+            face_count = 0
+        if face_count > 200 and surface_tol <= 1e-3:
+            continue
         box = shape.BoundBox
-        margin = 0.25
+        margin = max(0.25, surface_tol)
         for index, facet in enumerate(facets):
             centroid = (points[facet[0]] + points[facet[1]] + points[facet[2]]) / 3.0
             if not (
@@ -343,19 +389,13 @@ def _partition_body_triangles(body_shape, contact_shapes, deflection: float):
                 and box.ZMin - margin <= centroid.z <= box.ZMax + margin
             ):
                 continue
-            if shape.distToShape(Part.Vertex(centroid))[0] < 1e-4:
-                if index in assignment:
-                    contested.setdefault(index, [assignment[index]]).append(position)
-                else:
-                    assignment[index] = position
-    if contested:
-        detail = ", ".join(
-            f"triangle {index} claimed by regions {sorted(set(claims))}"
-            for index, claims in sorted(contested.items())[:5]
-        )
-        raise BuildError(
-            f"{len(contested)} body triangle(s) belong to more than one contact region: {detail}"
-        )
+            distance = shape.distToShape(Part.Vertex(centroid))[0]
+            if distance >= surface_tol:
+                continue
+            prior = best_distance.get(index)
+            if prior is None or distance < prior:
+                assignment[index] = position
+                best_distance[index] = distance
     return points, facets, assignment
 
 
@@ -606,9 +646,22 @@ def build(
     staging = Path(tempfile.mkdtemp(prefix=".hangten-build-", dir=str(out_dir)))
     try:
         materials = _material_registry(objects, source, staging)
-        body_points, body_facets, assignment = _partition_body_triangles(
-            body_object.Shape, [obj.Shape for obj in region_objects], deflection
-        )
+        faceted = properties["HangTenSourceKind"] == SOURCE_KIND_FACETED
+        source_meshes = _source_meshes(document)
+        if faceted and body_object.NodeID in source_meshes:
+            body_points, body_facets = source_meshes[body_object.NodeID]
+            assignment = {}
+            print("      faceted-import body: shipping the stored source mesh")
+        else:
+            # Faceted imports keep a tight surface_tol: a looser gate removes body
+            # lip triangles the contact shells do not fully cover, opening black
+            # holes at rail ends. Overlap z-fighting is handled in the author by
+            # nudging contact shells slightly toward the front.
+            body_points, body_facets, assignment = _partition_body_triangles(
+                body_object.Shape,
+                [obj.Shape for obj in region_objects],
+                deflection,
+            )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
         meshes = [
@@ -626,7 +679,10 @@ def build(
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
-            points, facets = obj.Shape.tessellate(deflection)
+            if faceted and obj.NodeID in source_meshes:
+                points, facets = source_meshes[obj.NodeID]
+            else:
+                points, facets = obj.Shape.tessellate(deflection)
             if not facets:
                 raise BuildError(f"{obj.NodeID} has no surface")
             region_surface_areas[obj.NodeID] = _triangle_area(
@@ -655,9 +711,27 @@ def build(
             }},
             region_surface_areas,
         )
-        measured_depths = _validate_published_depths(
-            contact_objects, _declared_depths(board, version), version, deflection
-        )
+        if properties["HangTenSourceKind"] == SOURCE_KIND_FACETED:
+            # Faceted imports ship approved display meshes. Their Y AABB is the
+            # hold volume, not the published grip depth (which lives in
+            # board.json for training UI). The native AABB==depth gate does not
+            # apply; --allow-faceted-import already acknowledges this path.
+            measured_depths = {
+                (
+                    getattr(obj, "ContactID", "")
+                    if version == 1
+                    else getattr(obj, "ContactSlotID", "")
+                ): round(float(obj.Shape.BoundBox.YLength), 3)
+                for obj in contact_objects
+            }
+            print(
+                "      skipping published-depth AABB gate for faceted-import "
+                f"(measured Y spans: {measured_depths})"
+            )
+        else:
+            measured_depths = _validate_published_depths(
+                contact_objects, _declared_depths(board, version), version, deflection
+            )
 
         print("[6/10] writing the USDZ directly")
         asset = staging / "primary.usdz"
