@@ -253,15 +253,16 @@ def _assert_model_descriptor(
     assert media["assetPath"] == "assets/primary.usdz"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
-    # A CAD-backed package carries its FCStd instead of board.json, which is
-    # generated from the source at build time.
-    source = root / f"{root.name}.FCStd"
-    document = source.name if source.is_file() else "board.json"
+    # A CAD-backed package carries its own authoring source, named after its
+    # directory, instead of board.json: board.json is generated from the FCStd
+    # at build time. The source is not a runtime resource.
+    source = f"{root.name}.FCStd"
+    metadata = source if (root / source).is_file() else "board.json"
     assert {
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
         if path.is_file()
-    } == {document, "assets/primary.usdz", "assets/primary.model.json"}
+    } == {metadata, "assets/primary.usdz", "assets/primary.model.json"}
     descriptor = json.loads(
         (root / media["descriptorPath"]).read_text(encoding="utf-8")
     )

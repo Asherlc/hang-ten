@@ -2,7 +2,8 @@
 
 Hard-won, board-agnostic lessons from migrating hangboards to native FreeCAD
 sources (pilot: `lattice-triple-rung`; then `metolius-rock-rings-3d`; then
-sculpted `lattice-mxedge-lift-small`). Read with
+sculpted `lattice-mxedge-lift-small`; then the vector-profile
+`metolius-prime-rib`). Read with
 `docs/freecad-authoring-migration.md`. The point of writing these down is to
 avoid repeating the same detours.
 
@@ -288,10 +289,10 @@ triangle count.
 
 - Contacts must be **faces of the boolean-cut body**, not separate shells
   `Common`'d onto the body (degenerate coincident boolean → fragments / holes).
-- Curved contact faces (cylinders, cones) are supported since Deluxe II: the
-  compiler assigns curved body faces to regions per face (lesson §15). Before
-  that, a true `Cylinder` contact failed the centroid `distToShape < 1e-4` check
-  and needed an n-gon prism.
+- Curved contact faces (cylinders, cones, B-splines) need
+  `HangTenCurvedRegionPartition` on the source (lessons §15 and §16). Without
+  it, a true `Cylinder` contact fails the centroid `distToShape < 1e-4` check,
+  and the body keeps a duplicate of the hold.
 - **No non-planar quads** for crowned floors. A lofted/ruled quad between
   stations along a parabola is non-planar and breaks `compile_board`'s
   surface-area partition check; author a **triangle soup** (planar by
@@ -427,7 +428,8 @@ The partition claims a body triangle only when its centroid is within 1e-4 mm
 of a contact face. On a curved face, a chord triangle's centroid sits up to
 the tessellation deflection away from the surface, so the claim fails
 silently. The triangle then stays in the body and z-fights the region mesh.
-Compact II avoids this with planar faces only:
+(`HangTenCurvedRegionPartition`, §15, now opts a source into claiming such
+triangles.) Compact II avoids this with planar faces only:
 
 - The body is a stack of depth stations. Each station is the silhouette offset
   along its inward normal by the roll inset, with the top lowered by the
@@ -471,7 +473,57 @@ bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
 the script's provenance into a dated `docs/source-audits/` record, and delete
 the script.
 
-## 15. What Deluxe II added: holds as vectors, not triangles
+## 15. Vector-primitive profiles
+(`metolius-prime-rib`; applies to any constant-section board)
+
+### Fit primitives before you reduce vertices
+
+Order the reference's end-cap loop (every vertex at the prismatic end, here
+x = 252.8 mm) and fit its runs before reaching for a polyline. On prime-rib,
+straight runs and circles fit exactly: 11 lines and 12 tangent arcs with radii
+2 / 2.2 / 2.6 / 3.4 / 3.5 / 4 / 6 / 7.5 mm. No circle fits the top surface
+(0.3–1.1 mm residual). A cubic Bezier with its end points fixed, solved by least
+squares on the mesh's uniform parameter samples, fits both top spans to 6e-5 mm
+with poles on a 0.1 mm grid. That points to parametric design data behind the
+mesh. The whole profile became vector geometry with named dimensions. Have the
+throwaway authoring script refuse to save if the sketch drifts more than
+0.01 mm from any reference vertex (prime-rib's did; see its provenance record).
+
+### Sketcher B-splines as Beziers
+
+- Build a cubic Bezier as `BSplineCurve.buildFromPolesMultsKnots(poles, [4, 4],
+  [0, 1], False, 3)` and call `exposeInternalGeometry`. That call already adds
+  the pole circles, one `Weight` and three `Equal` constraints. An extra
+  `Weight` is redundant.
+- On 1.1.3, an endpoint `Tangent` between a circular arc and a B-spline end
+  leaves the end handle free to rotate: one DoF per joint, reported through
+  `getGeometryWithDependentParameters()`. A B-spline–B-spline `Tangent` does
+  bind. Level the handle explicitly (point-to-point `Horizontal` between pole
+  centres). Then check G1 numerically, because `FullyConstrained` alone does not
+  prove tangency.
+- Find each pole circle by its centre coordinates, not by creation order.
+
+### Regions, orientation, partition
+
+- Sketch `Edge<n>` names follow `Shape.Edges`, not the geometry index. See
+  migration trap 12.
+- An extruded region face's normal follows the stored edge direction. See
+  migration trap 13. A flipped hold renders dark in the front view before any
+  test notices it.
+- Curved hold surfaces need `HangTenCurvedRegionPartition`. Without it, the body
+  keeps a duplicate of every curved hold. Check the compiled asset with a
+  duplicate-coverage count (body triangles inside a region's profile span in
+  the prismatic middle). It should be zero.
+
+### Cost of fidelity
+
+A 1.2 mm end round-over reproduces the reference ends and contact extents
+exactly. On OCCT 7.9.3 it also costs ~54k body triangles (2,048 per toroidal
+fillet face) against the reference's 8.8k. The asset grows to ~1.1 MB.
+`compare_exports` takes tens of minutes on it and needs a small `--chunk`. If that trade is wrong for a
+board, a square end changes the ends by at most 0.5 mm (1.2·(√2−1)).
+
+## 16. What Deluxe II added: holds as vectors, not triangles
 (`metolius-wood-grips-deluxe-ii`)
 
 - **Author with native features, not faceted polyhedra.** The body is a
@@ -481,9 +533,9 @@ the script.
   planes. Each pocket's `Length` *is* the published depth. The document has 373
   B-rep faces and is 1.1 MB; the faceted draft of the same geometry had 11,893
   faces and was 12.7 MB.
-- **The compiler now partitions curved faces per face** (README "Surface
-  partition"), so cylinder and cone hold faces are exact. The region ships the
-  claimed body triangles, so its boundary with the body is shared.
+- **Opt in to the curved partition.** The source sets
+  `HangTenCurvedRegionPartition` (README "Surface partition"). Without it, every
+  cylindrical pocket wall and conical chamfer stays duplicated in the body.
 - **Small toroidal fillets explode the mesh.** A 1.2 or 2 mm fillet around a
   12.5 mm capsule arc tessellates to about 3,700 triangles per toroidal face
   with the pinned OCCT, whatever the deflection: about 300k triangles for the
@@ -503,4 +555,3 @@ the script.
   carried `dummy_texture.png`, a 1 × 1 black pixel. Embedded as `TextureFile`,
   it rendered the whole board black in the app. Use `BaseColor` alone when the
   texture is a placeholder.
-

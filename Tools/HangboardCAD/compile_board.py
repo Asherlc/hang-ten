@@ -81,6 +81,10 @@ DOCUMENT_PROPERTIES = (
     "HangTenTessellationDeflection",
 )
 CREASE_DEGREES = 35.0
+# Optional document property (App::PropertyBool). When true, the partition also
+# claims chord triangles of curved region faces; see _partition_body_triangles.
+# Opt-in so boards compiled before it existed keep byte-identical output.
+CURVED_REGION_PARTITION = "HangTenCurvedRegionPartition"
 
 
 class BuildError(RuntimeError):
@@ -342,8 +346,34 @@ def _crease_normals(points, triangles, crease_degrees: float):
     return out_points, out_triangles, out_normals
 
 
+def _curved_facet_on_region(shape, corners, centroid, deflection: float, on_surface: float) -> bool:
+    """True when a chord triangle of a curved face belongs to ``shape``'s surface."""
+    import Part
+
+    normal = (corners[1] - corners[0]).cross(corners[2] - corners[0])
+    if normal.Length < 1e-12:
+        return False
+    normal.normalize()
+    for corner in corners:
+        if shape.distToShape(Part.Vertex(corner))[0] >= on_surface:
+            return False
+    distance, _pairs, supports = shape.distToShape(Part.Vertex(centroid))
+    if distance > deflection:
+        return False
+    kind, index, parameters = supports[0][0], supports[0][1], supports[0][2]
+    if kind != "Face":
+        return False
+    surface_normal = shape.Faces[index].normalAt(*parameters)
+    # Region shells carry no reliable orientation, so compare lines, not senses.
+    return abs(surface_normal.dot(normal)) >= math.cos(math.radians(CREASE_DEGREES))
+
+
 def _partition_body_triangles(
-    body_shape, contact_shapes, deflection: float, surface_tol: float = 1e-4
+    body_shape,
+    contact_shapes,
+    deflection: float,
+    surface_tol: float = 1e-4,
+    curved_regions: bool = False,
 ):
     """Assign each body triangle to the contact region it belongs to.
 
@@ -362,6 +392,16 @@ def _partition_body_triangles(
     imports carry separate shells that sit a fraction of a millimetre off the
     body and need a looser gate or the body lips z-fight with the contacts.
     When multiple contacts fall inside the tolerance, the nearest wins.
+
+    A triangle tessellated from a *curved* face (an arc or a B-spline run of the
+    profile) has its vertices on the surface but its centroid inside the chord,
+    up to the tessellation deflection away, so the centroid rule leaves it in the
+    body and the region's own surface then duplicates it. With
+    ``curved_regions`` (the source's ``HangTenCurvedRegionPartition``), such a
+    triangle is also assigned when all three vertices lie on the region surface,
+    the centroid is within the deflection, and the triangle lies along the
+    surface there, so a triangle of an adjacent face (an end cap whose vertices
+    happen to lie on the region's boundary edge) is never claimed.
     """
     import Part
 
@@ -390,82 +430,18 @@ def _partition_body_triangles(
             ):
                 continue
             distance = shape.distToShape(Part.Vertex(centroid))[0]
-            if distance >= surface_tol:
+            claimed = distance < surface_tol
+            if not claimed and curved_regions:
+                claimed = _curved_facet_on_region(
+                    shape, [points[corner] for corner in facet], centroid, deflection, surface_tol
+                )
+            if not claimed:
                 continue
             prior = best_distance.get(index)
             if prior is None or distance < prior:
                 assignment[index] = position
                 best_distance[index] = distance
-    curved_regions = _assign_curved_faces(
-        body_shape, contact_shapes, deflection, surface_tol, facets, assignment
-    )
-    return points, facets, assignment, curved_regions
-
-
-def _face_sample_point(face, deflection: float):
-    """A point exactly on ``face``: its largest triangle's centroid, projected."""
-    points, triangles = face.tessellate(deflection)
-    if not triangles:
-        return None
-    best = max(
-        triangles,
-        key=lambda t: (points[t[1]] - points[t[0]]).cross(points[t[2]] - points[t[0]]).Length,
-    )
-    centroid = (points[best[0]] + points[best[1]] + points[best[2]]) / 3.0
-    u, v = face.Surface.parameter(centroid)
-    return face.Surface.value(u, v)
-
-
-def _assign_curved_faces(body_shape, contact_shapes, deflection, surface_tol, facets, assignment):
-    """Assign the triangles of curved body faces that lie on a region.
-
-    A chord triangle's centroid sits off a curved surface by the chordal sag,
-    so the centroid test above cannot claim a native cylinder, cone, or fillet
-    face. Ownership is decided per body face instead, from a point exactly on
-    that face. Planar faces are left to the centroid test, which is already
-    exact for them, so boards authored entirely from planar faces partition as
-    before. Returns the positions of regions that received curved faces; those
-    regions ship the claimed body triangles, so their boundary with the body
-    is shared vertex for vertex.
-    """
-    import Part
-
-    ranges = []
-    start = 0
-    for face in body_shape.Faces:
-        count = len(face.tessellate(deflection)[1])
-        ranges.append((face, start, start + count))
-        start += count
-    if start != len(facets):
-        raise BuildError("body tessellation is not face-ordered; cannot partition curved faces")
-    curved_regions: set[int] = set()
-    for face, first, last in ranges:
-        if first == last or isinstance(face.Surface, Part.Plane):
-            continue
-        if all(index in assignment for index in range(first, last)):
-            continue
-        sample = _face_sample_point(face, deflection)
-        if sample is None:
-            continue
-        owner, nearest = None, None
-        for position, shape in enumerate(contact_shapes):
-            box = shape.BoundBox
-            margin = max(0.25, surface_tol)
-            if not (
-                box.XMin - margin <= sample.x <= box.XMax + margin
-                and box.YMin - margin <= sample.y <= box.YMax + margin
-                and box.ZMin - margin <= sample.z <= box.ZMax + margin
-            ):
-                continue
-            distance = shape.distToShape(Part.Vertex(sample))[0]
-            if distance < surface_tol and (nearest is None or distance < nearest):
-                owner, nearest = position, distance
-        if owner is None:
-            continue
-        for index in range(first, last):
-            assignment[index] = owner
-        curved_regions.add(owner)
-    return curved_regions
+    return points, facets, assignment
 
 
 def _subset_mesh(points, facets, indices):
@@ -720,17 +696,20 @@ def build(
         if faceted and body_object.NodeID in source_meshes:
             body_points, body_facets = source_meshes[body_object.NodeID]
             assignment = {}
-            curved_regions = set()
             print("      faceted-import body: shipping the stored source mesh")
         else:
             # Faceted imports keep a tight surface_tol: a looser gate removes body
             # lip triangles the contact shells do not fully cover, opening black
             # holes at rail ends. Overlap z-fighting is handled in the author by
             # nudging contact shells slightly toward the front.
-            body_points, body_facets, assignment, curved_regions = _partition_body_triangles(
+            body_points, body_facets, assignment = _partition_body_triangles(
                 body_object.Shape,
                 [obj.Shape for obj in region_objects],
                 deflection,
+                curved_regions=bool(
+                    CURVED_REGION_PARTITION in document.PropertiesList
+                    and document.getPropertyByName(CURVED_REGION_PARTITION)
+                ),
             )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
 
@@ -745,7 +724,7 @@ def build(
         print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
 
         region_surface_areas = {}
-        for position, obj in enumerate(region_objects):
+        for obj in region_objects:
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
@@ -755,22 +734,9 @@ def build(
                 points, facets = obj.Shape.tessellate(deflection)
             if not facets:
                 raise BuildError(f"{obj.NodeID} has no surface")
-            own_area = _triangle_area(points, facets, range(len(facets)))
-            if position in curved_regions:
-                # A region with curved faces ships the body triangles it claimed:
-                # the same CAD faces tessellated once, so the region and the body
-                # share every boundary vertex. Its own tessellation must still
-                # agree on area, or the region is not the surface it claimed.
-                claimed = [i for i, owner in assignment.items() if owner == position]
-                points, facets = _subset_mesh(body_points, body_facets, claimed)
-                exported_area = _triangle_area(points, facets, range(len(facets)))
-                if abs(exported_area - own_area) > 1e-3 * max(own_area, 1e-9):
-                    raise BuildError(
-                        f"{obj.NodeID} claims {exported_area:.4f} mm^2 of curved body surface "
-                        f"but its own surface is {own_area:.4f} mm^2"
-                    )
-                own_area = exported_area
-            region_surface_areas[obj.NodeID] = own_area
+            region_surface_areas[obj.NodeID] = _triangle_area(
+                points, facets, range(len(facets))
+            )
             meshes.append(
                 _build_mesh(
                     obj.NodeID,

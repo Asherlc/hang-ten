@@ -14,6 +14,11 @@ Run with the host interpreter; FreeCAD is invoked as a subprocess.
 
     python3 Tools/HangboardCAD/verify_reproducible.py            # all source-backed boards
     python3 Tools/HangboardCAD/verify_reproducible.py --package lattice-triple-rung
+    python3 Tools/HangboardCAD/verify_reproducible.py --keep-rebuild <dir>
+
+`--keep-rebuild` copies every rebuilt pair to `<dir>/<package>/assets/`
+(`primary.usdz`, `primary.model.json`), mirroring `Hangboards/`, whether or not it
+matched. It never changes the verdict or the exit status.
 """
 
 from __future__ import annotations
@@ -22,6 +27,7 @@ import argparse
 import hashlib
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -87,7 +93,32 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def verify(package: str, freecad: Path, extra_path: str) -> dict:
+ASSET_NAMES = ("primary.usdz", "primary.model.json")
+
+
+def keep_conflicts(keep: Path, package: str) -> list[str]:
+    """Committed asset paths that a `--keep-rebuild` copy for `package` would hit.
+
+    Paths are resolved (following symlinks), so `--keep-rebuild Hangboards` from
+    the repository root, or any alias of it, is caught before anything is copied.
+    """
+    committed_dir = (REPOSITORY / "Hangboards" / package / "assets").resolve()
+    kept_dir = (keep / package / "assets").resolve()
+    conflicts = []
+    for name in ASSET_NAMES:
+        committed = committed_dir / name
+        kept = kept_dir / name
+        same = kept.resolve() == committed.resolve()
+        if not same and kept.exists() and committed.exists():
+            same = os.path.samefile(kept, committed)
+        if same:
+            conflicts.append(str(committed))
+    return conflicts
+
+
+def verify(
+    package: str, freecad: Path, extra_path: str, keep: Path | None = None
+) -> dict:
     committed_dir = REPOSITORY / "Hangboards" / package / "assets"
     committed_asset = committed_dir / "primary.usdz"
     committed_descriptor = committed_dir / "primary.model.json"
@@ -113,6 +144,19 @@ def verify(package: str, freecad: Path, extra_path: str) -> dict:
         recorded = committed_json.get("modelSHA256")
         binds_to_committed = recorded == committed_sha
 
+        # Copy only after the committed bytes have been read, and only to a
+        # destination main() has already checked cannot be a committed asset.
+        if keep is not None:
+            conflicts = keep_conflicts(keep, package)
+            if conflicts:
+                raise RuntimeError(
+                    f"--keep-rebuild would overwrite committed asset(s): {', '.join(conflicts)}"
+                )
+            kept = keep / package / "assets"
+            kept.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(rebuilt_asset, kept / "primary.usdz")
+            shutil.copyfile(rebuilt_descriptor, kept / "primary.model.json")
+
         # The app trusts the descriptor's modelSHA256, so the descriptor must
         # bind to the bytes that actually ship, independently of the rebuild.
         return {
@@ -135,12 +179,29 @@ def main(argv: list[str] | None = None) -> int:
         default=os.environ.get("HANGTEN_CAD_PYTHONPATH", ""),
         help="site directory containing pxr, supplied to FreeCAD's interpreter",
     )
+    parser.add_argument(
+        "--keep-rebuild",
+        type=Path,
+        default=None,
+        help="copy each rebuilt asset/descriptor pair to <dir>/<package>/assets/",
+    )
     arguments = parser.parse_args(argv)
 
     packages = arguments.package or source_backed_packages()
     if not packages:
         print("no source-backed boards found; nothing to verify")
         return 0
+    if arguments.keep_rebuild is not None:
+        conflicts = [
+            path
+            for package in packages
+            for path in keep_conflicts(arguments.keep_rebuild, package)
+        ]
+        if conflicts:
+            parser.error(
+                "--keep-rebuild must not resolve onto committed assets; it would "
+                "overwrite them before comparison: " + ", ".join(conflicts)
+            )
     if not arguments.freecad.is_file():
         print(f"pinned FreeCAD is not installed at {arguments.freecad}", file=sys.stderr)
         return 2
@@ -149,7 +210,12 @@ def main(argv: list[str] | None = None) -> int:
     failures = []
     for package in packages:
         try:
-            report = verify(package, arguments.freecad, arguments.extra_python_path)
+            report = verify(
+                package,
+                arguments.freecad,
+                arguments.extra_python_path,
+                arguments.keep_rebuild,
+            )
         except RuntimeError as error:
             failures.append(f"{package}: {error}")
             continue

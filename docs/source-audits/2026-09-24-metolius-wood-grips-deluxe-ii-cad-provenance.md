@@ -59,7 +59,10 @@ omission policy.
 
 Document properties: `HangTenSchemaVersion` 1, `HangTenSourceKind`
 `native-parametric-measured-profile`, `HangTenCoordinateFrame`
-`freecad-mm-z-up-front-negative-y`, and `HangTenTessellationDeflection` 0.05.
+`freecad-mm-z-up-front-negative-y`, `HangTenTessellationDeflection` 0.05, and
+`HangTenCurvedRegionPartition` true. The last opts into the curved-region
+partition, which is needed because the hold walls are cylinders and the
+chamfers are cones.
 
 - `Body` (`PartDesign::Body`, node `body_001`):
   - `ProfileSketch0`–`4` (lines only) and `ProfilePad0`–`4`: the side profile
@@ -87,7 +90,8 @@ Document properties: `HangTenSchemaVersion` 1, `HangTenSourceKind`
 
 ## Evidence
 
-- Compile: 23,260 triangles (body 2,572). Every published-depth gate is exact
+- Compile: 23,260 triangles (body 2,572). The compiled asset has no unpaired
+  open edges. Every published-depth gate is exact
   (31/32/38, 25/25/28, and 19 mm). `modelBounds` is 610 × 216 × 70 mm, and the
   build is byte-reproducible (`verify_reproducible.py`).
 - `compare_exports`: worst two-way sampled deviation 1.94 mm (limit 0.5 mm;
