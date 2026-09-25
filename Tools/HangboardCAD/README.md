@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 6 of the 46 model-media boards are migrated** (those with a committed
+**Status: 8 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -200,6 +200,20 @@ result has no duplicated coplanar geometry and no z-fighting. Verified on the
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
 
+A body triangle is claimed when its centroid lies within 1e-4 mm of a region.
+That test is exact only on planar faces: on a curved face (a cylinder, cone, or
+fillet) a chord triangle's centroid sits off the surface by the chordal sag. So
+the compiler also decides ownership per *curved* body face, from a point exactly
+on that face, and a region that receives curved faces ships the body triangles
+it claimed rather than its own separate tessellation. The region and the body
+then share every boundary vertex, and the build still checks that the region's
+own tessellation agrees on area to 0.1%. Boards built only from planar faces
+partition exactly as before. This is what lets a hold be true vector geometry
+(sketched arcs, pockets, chamfers) instead of a faceted approximation; see
+`metolius-wood-grips-deluxe-ii`. It also moved about 2,600 curved pocket-wall
+triangles of `metolius-rock-rings-3d` out of its body node, where the old
+centroid-only test had left them duplicating the hold surfaces.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -253,7 +267,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **6 of 46 model-media boards are migrated.** The other 40 still ship their
+* **8 of 46 model-media boards are migrated.** The other 38 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

@@ -396,7 +396,76 @@ def _partition_body_triangles(
             if prior is None or distance < prior:
                 assignment[index] = position
                 best_distance[index] = distance
-    return points, facets, assignment
+    curved_regions = _assign_curved_faces(
+        body_shape, contact_shapes, deflection, surface_tol, facets, assignment
+    )
+    return points, facets, assignment, curved_regions
+
+
+def _face_sample_point(face, deflection: float):
+    """A point exactly on ``face``: its largest triangle's centroid, projected."""
+    points, triangles = face.tessellate(deflection)
+    if not triangles:
+        return None
+    best = max(
+        triangles,
+        key=lambda t: (points[t[1]] - points[t[0]]).cross(points[t[2]] - points[t[0]]).Length,
+    )
+    centroid = (points[best[0]] + points[best[1]] + points[best[2]]) / 3.0
+    u, v = face.Surface.parameter(centroid)
+    return face.Surface.value(u, v)
+
+
+def _assign_curved_faces(body_shape, contact_shapes, deflection, surface_tol, facets, assignment):
+    """Assign the triangles of curved body faces that lie on a region.
+
+    A chord triangle's centroid sits off a curved surface by the chordal sag,
+    so the centroid test above cannot claim a native cylinder, cone, or fillet
+    face. Ownership is decided per body face instead, from a point exactly on
+    that face. Planar faces are left to the centroid test, which is already
+    exact for them, so boards authored entirely from planar faces partition as
+    before. Returns the positions of regions that received curved faces; those
+    regions ship the claimed body triangles, so their boundary with the body
+    is shared vertex for vertex.
+    """
+    import Part
+
+    ranges = []
+    start = 0
+    for face in body_shape.Faces:
+        count = len(face.tessellate(deflection)[1])
+        ranges.append((face, start, start + count))
+        start += count
+    if start != len(facets):
+        raise BuildError("body tessellation is not face-ordered; cannot partition curved faces")
+    curved_regions: set[int] = set()
+    for face, first, last in ranges:
+        if first == last or isinstance(face.Surface, Part.Plane):
+            continue
+        if all(index in assignment for index in range(first, last)):
+            continue
+        sample = _face_sample_point(face, deflection)
+        if sample is None:
+            continue
+        owner, nearest = None, None
+        for position, shape in enumerate(contact_shapes):
+            box = shape.BoundBox
+            margin = max(0.25, surface_tol)
+            if not (
+                box.XMin - margin <= sample.x <= box.XMax + margin
+                and box.YMin - margin <= sample.y <= box.YMax + margin
+                and box.ZMin - margin <= sample.z <= box.ZMax + margin
+            ):
+                continue
+            distance = shape.distToShape(Part.Vertex(sample))[0]
+            if distance < surface_tol and (nearest is None or distance < nearest):
+                owner, nearest = position, distance
+        if owner is None:
+            continue
+        for index in range(first, last):
+            assignment[index] = owner
+        curved_regions.add(owner)
+    return curved_regions
 
 
 def _subset_mesh(points, facets, indices):
@@ -651,13 +720,14 @@ def build(
         if faceted and body_object.NodeID in source_meshes:
             body_points, body_facets = source_meshes[body_object.NodeID]
             assignment = {}
+            curved_regions = set()
             print("      faceted-import body: shipping the stored source mesh")
         else:
             # Faceted imports keep a tight surface_tol: a looser gate removes body
             # lip triangles the contact shells do not fully cover, opening black
             # holes at rail ends. Overlap z-fighting is handled in the author by
             # nudging contact shells slightly toward the front.
-            body_points, body_facets, assignment = _partition_body_triangles(
+            body_points, body_facets, assignment, curved_regions = _partition_body_triangles(
                 body_object.Shape,
                 [obj.Shape for obj in region_objects],
                 deflection,
@@ -675,7 +745,7 @@ def build(
         print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
 
         region_surface_areas = {}
-        for obj in region_objects:
+        for position, obj in enumerate(region_objects):
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
@@ -685,9 +755,22 @@ def build(
                 points, facets = obj.Shape.tessellate(deflection)
             if not facets:
                 raise BuildError(f"{obj.NodeID} has no surface")
-            region_surface_areas[obj.NodeID] = _triangle_area(
-                points, facets, range(len(facets))
-            )
+            own_area = _triangle_area(points, facets, range(len(facets)))
+            if position in curved_regions:
+                # A region with curved faces ships the body triangles it claimed:
+                # the same CAD faces tessellated once, so the region and the body
+                # share every boundary vertex. Its own tessellation must still
+                # agree on area, or the region is not the surface it claimed.
+                claimed = [i for i, owner in assignment.items() if owner == position]
+                points, facets = _subset_mesh(body_points, body_facets, claimed)
+                exported_area = _triangle_area(points, facets, range(len(facets)))
+                if abs(exported_area - own_area) > 1e-3 * max(own_area, 1e-9):
+                    raise BuildError(
+                        f"{obj.NodeID} claims {exported_area:.4f} mm^2 of curved body surface "
+                        f"but its own surface is {own_area:.4f} mm^2"
+                    )
+                own_area = exported_area
+            region_surface_areas[obj.NodeID] = own_area
             meshes.append(
                 _build_mesh(
                     obj.NodeID,

@@ -253,11 +253,15 @@ def _assert_model_descriptor(
     assert media["assetPath"] == "assets/primary.usdz"
     assert media["descriptorPath"] == "assets/primary.model.json"
     assert "contactGeometry" not in media
+    # A CAD-backed package carries its FCStd instead of board.json, which is
+    # generated from the source at build time.
+    source = root / f"{root.name}.FCStd"
+    document = source.name if source.is_file() else "board.json"
     assert {
         path.relative_to(root).as_posix()
         for path in root.rglob("*")
         if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {document, "assets/primary.usdz", "assets/primary.model.json"}
     descriptor = json.loads(
         (root / media["descriptorPath"]).read_text(encoding="utf-8")
     )
@@ -1392,7 +1396,7 @@ def test_deluxe_model_package_freezes_the_independent_official_inventory() -> No
     assert board["id"] == "metolius.wood-grips-deluxe-ii"
     assert board["dimensions"] == "24 × 8.5 in"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.usdz", 2.8347345959048824, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.8240740604423875, True, None, False)
     ]
     assert {
         (

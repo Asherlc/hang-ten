@@ -541,7 +541,12 @@ write-up. The durable points:
 - **Compact II** reused the deleted Blender authoring script from Git as its
   dimension source. It also showed that a sculpted body gets exact contact
   partitions only when every face is planar: station-stacked quads and
-  triangles, not curved lofts. See lessons §14.
+  triangles, not curved lofts. See lessons §14. (Superseded by Deluxe II.)
+- **Deluxe II** is authored as vectors: a `PartDesign::Body` of sketched lines
+  and arcs, pads, pockets whose `Length` is the published depth, and chamfers.
+  The compiler partitions curved faces per face, so cylinder and cone holds are
+  exact. Toroidal fillets on small arcs over-tessellate; prefer chamfers there.
+  See lessons §15.
 
 ## Fast loop and definition of done
 
