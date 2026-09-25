@@ -18,6 +18,7 @@ from conftest import (
     PRIMARY_PNG_BYTES,
     PRIMARY_PNG_WIDTH,
     SECONDARY_PNG_BYTES,
+    package_board_text,
     write_board_package,
     write_multi_presentation_board_package,
     write_cad_source,
@@ -36,6 +37,7 @@ LIVE_MODEL_PACKAGE_SLUGS = (
 
 
 def load_staging_module():
+    """Import the stage-board-packages.py script as a module."""
     module_path = REPO_ROOT / "scripts" / "stage-board-packages.py"
     spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
@@ -47,6 +49,7 @@ def load_staging_module():
 
 
 def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
+    """Create a temporary repo with two board packages and one draft."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     package_source = REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
@@ -73,12 +76,14 @@ def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
 
 
 def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
+    """Set Xcode environment variables to simulate a build destination."""
     monkeypatch.setenv("TARGET_BUILD_DIR", str(destination.parent.parent))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
     monkeypatch.setenv("DERIVED_FILE_DIR", str(destination.parents[2] / "DerivedFiles"))
 
 
 def odr_staging_root(destination: Path) -> Path:
+    """Return the ODR staging root derived from a TARGET_BUILD_DIR destination."""
     return destination.parents[2] / "DerivedFiles" / "HangTenModelODR"
 
 
@@ -510,11 +515,19 @@ def test_staging_splits_every_live_model_package_without_duplication(
             for path in odr_package_root.rglob("*")
             if path.is_file() and not path.is_symlink()
         }
-        assert staged_base_files == {
+        # A CAD-backed package's own authoring source (<slug>.FCStd) is never
+        # staged; staging writes the board.json generated from it instead.
+        expected_base_files = {
             relative: contents
             for relative, contents in source_files.items()
-            if relative != "assets/primary.usdz"
+            if relative != "assets/primary.usdz" and relative != f"{slug}.FCStd"
         }
+        if f"{slug}.FCStd" in source_files:
+            assert "board.json" not in source_files
+            expected_base_files["board.json"] = package_board_text(
+                source_package
+            ).encode("utf-8")
+        assert staged_base_files == expected_base_files
         assert staged_odr_files == {
             "assets/primary.usdz": source_files["assets/primary.usdz"]
         }

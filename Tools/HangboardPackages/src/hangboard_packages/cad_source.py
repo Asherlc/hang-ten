@@ -56,6 +56,7 @@ BUILTIN_TYPES = frozenset({
     "PartDesign::Mirrored", "PartDesign::LinearPattern", "PartDesign::PolarPattern",
     "PartDesign::MultiTransform", "PartDesign::SubShapeBinder", "PartDesign::ShapeBinder",
     "Sketcher::SketchObject",
+    "Mesh::Feature",
 })
 # Cross-document reference properties. FreeCAD stores the referencing document's
 # path in a ``file`` attribute; an empty value means the reference stays inside
