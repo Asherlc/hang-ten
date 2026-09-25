@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 8 of the 46 model-media boards are migrated** (those with a committed
+**Status: 9 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -230,6 +230,10 @@ board's committed bytes must keep reproducing until it is deliberately rebuilt. 
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
 
+`metolius-wood-grips-deluxe-ii` also sets `HangTenCurvedRegionPartition`: its
+holds are sketched capsules pocketed into the body, so their walls are true
+cylinders and their mouth and floor chamfers are cones.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -275,7 +279,7 @@ dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
   any of its 291 profile vertices was more than 0.01 mm from the sketch
   (achieved 0.00006 mm). No polyline is used.
 * The source sets `HangTenCurvedRegionPartition` (see the partition section
-  above); it is the only committed source that does.
+  above), as does `metolius-wood-grips-deluxe-ii`.
 * Contacts are sketch-edge runs extruded over the prismatic span
   (`Pad.Length - 2 * EndRoundover.Radius`); a concave slot fillet in a run is
   reversed with `Part::Reverse` and combined with `Part::Compound`, so every
@@ -311,7 +315,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **8 of 46 model-media boards are migrated.** The other 38 still ship their
+* **9 of 46 model-media boards are migrated.** The other 37 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

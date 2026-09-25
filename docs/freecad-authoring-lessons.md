@@ -289,8 +289,10 @@ triangle count.
 
 - Contacts must be **faces of the boolean-cut body**, not separate shells
   `Common`'d onto the body (degenerate coincident boolean → fragments / holes).
-- **Never export a true `Cylinder` as a contact.** Curved tessellation fails the
-  compiler's `distToShape < 1e-4` check; use an n-gon prism / loft instead.
+- Curved contact faces (cylinders, cones, B-splines) need
+  `HangTenCurvedRegionPartition` on the source (lessons §15 and §16). Without
+  it, a true `Cylinder` contact fails the centroid `distToShape < 1e-4` check,
+  and the body keeps a duplicate of the hold.
 - **No non-planar quads** for crowned floors. A lofted/ruled quad between
   stations along a parabola is non-planar and breaks `compile_board`'s
   surface-area partition check; author a **triangle soup** (planar by
@@ -520,3 +522,36 @@ exactly. On OCCT 7.9.3 it also costs ~54k body triangles (2,048 per toroidal
 fillet face) against the reference's 8.8k. The asset grows to ~1.1 MB.
 `compare_exports` takes tens of minutes on it and needs a small `--chunk`. If that trade is wrong for a
 board, a square end changes the ends by at most 0.5 mm (1.2·(√2−1)).
+
+## 16. What Deluxe II added: holds as vectors, not triangles
+(`metolius-wood-grips-deluxe-ii`)
+
+- **Author with native features, not faceted polyhedra.** The body is a
+  `PartDesign::Body`: five pads of one lines-only profile sketch, one
+  through-all pocket of the outline sketch, and 21 capsule sketches (two lines,
+  two arcs, tangent and radius constraints) pocketed from their tier front
+  planes. Each pocket's `Length` *is* the published depth. The document has 373
+  B-rep faces and is 1.1 MB; the faceted draft of the same geometry had 11,893
+  faces and was 12.7 MB.
+- **Opt in to the curved partition.** The source sets
+  `HangTenCurvedRegionPartition` (README "Surface partition"). Without it, every
+  cylindrical pocket wall and conical chamfer stays duplicated in the body.
+- **Small toroidal fillets explode the mesh.** A 1.2 or 2 mm fillet around a
+  12.5 mm capsule arc tessellates to about 3,700 triangles per toroidal face
+  with the pinned OCCT, whatever the deflection: about 300k triangles for the
+  board. A chamfer of the same size gives exact conical faces and 23k triangles
+  in total. Measure triangle counts per surface type before you pick fillets.
+- **PartDesign features refine by default.** Set `Refine = False` on every pad
+  and pocket, or coplanar faces merge and a top region straddles its x boundary.
+  The same applies to `Part::Cut`.
+- **Split region boundaries with the feature tree.** Pad the profile once per
+  top-region span (x = ±305, ±238, ±81). With refine off, the chamfer faces
+  stay split at those x stations, so each top hold owns whole faces.
+- **Do not fillet an edge that lies on the board end face.** Each side-open
+  floor meets the end face in a straight edge. Adding those six edges to one
+  combined fillet made it fail (`BRep_API: command not done`), although every
+  pocket filleted on its own. Exclude them; the end stays sharp.
+- **Check the reference texture before embedding it.** The Deluxe reference
+  carried `dummy_texture.png`, a 1 × 1 black pixel. Embedded as `TextureFile`,
+  it rendered the whole board black in the app. Use `BaseColor` alone when the
+  texture is a placeholder.
