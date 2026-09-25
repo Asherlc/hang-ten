@@ -519,8 +519,8 @@ def _export_temporary_copies(
         result = bpy.ops.wm.usd_export(
             filepath=str(model_path),
             selected_objects_only=True,
-            export_materials=True,
-            generate_preview_surface=True,
+            # Committed models ship unbound (AGENTS.md model material policy).
+            export_materials=False,
             export_custom_properties=True,
             convert_orientation=True,
             export_global_forward_selection="NEGATIVE_Z",
