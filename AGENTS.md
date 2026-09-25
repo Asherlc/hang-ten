@@ -60,6 +60,17 @@ workflows. Do not reintroduce tooling or guidance for those approaches. The
 accepted process is direct path authoring, package validation, and human visual
 review in the app.
 
+That prohibition governs the flat 2D `board.json` hold paths. For a native 3D
+CAD source it does not forbid measuring the approved display mesh's cross-section
+into a vector sketch profile: that is the accepted 3D migration step ("extract the
+profile as an ordered boundary loop of the reference's cross-section"), authored
+deliberately as a Sketcher profile. Never infer a 3D profile from pixels.
+
+Every geometry change must be shown, not just described: render front/side/top
+previews of the changed board next to the prior committed asset and present them
+before reporting the change complete. A geometry change without screenshots is
+not reported as done.
+
 ## 3D suspension and On-Demand Resources
 
 For missing or changed cords on model-media boards, use the repository-local
