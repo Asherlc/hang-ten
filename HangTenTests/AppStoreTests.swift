@@ -1935,18 +1935,46 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             )
 
             let resolvesAPair = compatibleBoards.contains { board in
-                plan.steps.contains { step in
-                    guard !step.isRestStep else { return false }
-                    let contacts = (try? ContactResolver.resolve(
+                plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
+                    ((try? ContactResolver.resolve(
                         step.workRequirements,
                         step: step,
                         board: board
-                    )) ?? []
-                    return contacts.count == 2
+                    )) ?? []).count == 2
                 }
             }
             XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")
         }
+    }
+
+    func testTwoHandedLatticePlanIsIncompatibleWithoutAPair() throws {
+        let store = AppStore(defaults: makeDefaults())
+        let plan = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
+        let board = BoardRevision(
+            id: "fixture.center-edge-only",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Center edge only",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [
+                PhysicalContact(
+                    id: "center-20",
+                    name: "Center 20 mm edge",
+                    kind: .edge,
+                    depth: .range(.init(minimum: 20, maximum: 20))
+                )
+            ],
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil
+        )
+
+        XCTAssertTrue(
+            store.isIncompatible(plan, on: board),
+            "A two-handed plan must be hidden on a capacity-2 board that cannot form a pair"
+        )
     }
 
     private func makeDefaults() -> UserDefaults {
