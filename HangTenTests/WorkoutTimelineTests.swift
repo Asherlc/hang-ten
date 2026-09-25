@@ -1605,6 +1605,24 @@ final class WorkoutTimelineTests: XCTestCase {
             "An exact contact cannot form a pair and must stay single"
         )
     }
+
+    func testDefaultHandPreferenceFollowsBoardCapacity() {
+        XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 2), .both)
+        XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 1), .alternate)
+    }
+
+    func testHandChoiceCopyOnlySaysTwoBoardsForOneHandedBoards() {
+        XCTAssertEqual(HandChoiceCopy.bothHandsTitle(boardIsOneHanded: false), "Both hands")
+        XCTAssertEqual(HandChoiceCopy.bothHandsTitle(boardIsOneHanded: true), "Both hands (two boards)")
+        XCTAssertEqual(
+            HandChoiceCopy.bothHandsHint(boardIsOneHanded: false),
+            "Both hands simultaneously on this board."
+        )
+        XCTAssertEqual(
+            HandChoiceCopy.bothHandsHint(boardIsOneHanded: true),
+            "Both hands simultaneously on two boards."
+        )
+    }
 }
 
 final class WorkoutClockTests: XCTestCase {

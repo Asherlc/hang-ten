@@ -1565,6 +1565,29 @@ enum WorkoutSessionHandPreference: Equatable {
     }
 }
 
+extension WorkoutSessionHandPreference {
+    /// Start-of-session default derived from the selected board's hand capacity.
+    /// A board that fits one hand at a time defaults to alternating sides; a
+    /// board that fits both hands defaults to a simultaneous both-hands set.
+    static func defaultPreference(boardHandCapacity: Int) -> WorkoutSessionHandPreference {
+        boardHandCapacity <= 1 ? .alternate : .both
+    }
+}
+
+/// User-facing wording for the start-of-session hand choice. Only a one-handed
+/// board ever asks the athlete to set up two boards.
+enum HandChoiceCopy {
+    static func bothHandsTitle(boardIsOneHanded: Bool) -> String {
+        boardIsOneHanded ? "Both hands (two boards)" : "Both hands"
+    }
+
+    static func bothHandsHint(boardIsOneHanded: Bool) -> String {
+        boardIsOneHanded
+            ? "Both hands simultaneously on two boards."
+            : "Both hands simultaneously on this board."
+    }
+}
+
 enum WorkoutAction: String, Codable, CaseIterable, Hashable {
     case hang
     case isometricPull
