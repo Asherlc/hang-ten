@@ -279,7 +279,7 @@ dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
   any of its 291 profile vertices was more than 0.01 mm from the sketch
   (achieved 0.00006 mm). No polyline is used.
 * The source sets `HangTenCurvedRegionPartition` (see the partition section
-  above); it is the only committed source that does.
+  above), as does `metolius-wood-grips-deluxe-ii`.
 * Contacts are sketch-edge runs extruded over the prismatic span
   (`Pad.Length - 2 * EndRoundover.Radius`); a concave slot fillet in a run is
   reversed with `Part::Reverse` and combined with `Part::Compound`, so every
