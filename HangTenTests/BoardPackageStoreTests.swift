@@ -962,7 +962,7 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(media.orientation)
         XCTAssertEqual(
             media.descriptor.modelSHA256,
-            "4098ba4f8d8211683e6ec5c4466cd2725c0a040caae4a75e561d705315757524"
+            "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac"
         )
         XCTAssertEqual(suspension.branches.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))
