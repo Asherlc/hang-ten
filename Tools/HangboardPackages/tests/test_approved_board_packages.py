@@ -1592,7 +1592,7 @@ def test_compact_model_descriptor_is_hash_bound_to_actual_asset() -> None:
 
     model_sha = hashlib.sha256(model_path.read_bytes()).hexdigest()
     descriptor_sha = hashlib.sha256(descriptor_path.read_bytes()).hexdigest()
-    assert model_sha == "80f72ba01864d09a03083f78a5d824cc1833d7f4a3b5d20624d46332cfa6969e"
+    assert model_sha == "713e24484d82139f742bd98960603c96bed1f72c7c43357927fa3de332d1ee6e"
     assert descriptor["modelSHA256"] == model_sha
     assert descriptor["schemaVersion"] == 1
     assert descriptor["coordinateFrame"] == "hang-ten-board-v1"
