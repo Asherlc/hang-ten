@@ -201,74 +201,14 @@ def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
     return outlines
 
 
-def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Path]:
-    """Extract an FCStd-included file and stage it under ``textures/``."""
-    import zipfile
-
-    basename = os.path.basename(member)
-    if not basename or cad_source.safe_member(basename) != basename:
-        raise BuildError(f"unsafe embedded texture member: {member!r}")
-    with zipfile.ZipFile(source) as archive:
-        if basename not in archive.namelist():
-            raise BuildError(f"source declares texture {basename} but does not contain it")
-        data = archive.read(basename)
-    destination = staging / "textures" / basename
-    destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.write_bytes(data)
-    return f"textures/{basename}", destination
-
 
 def _material_registry(objects, source: Path, staging: Path) -> dict:
-    """Collect one material definition per MaterialName across all bound nodes.
+    """No-op: committed USDZ models ship without materials.
 
-    Returns a dict mapping material names to ``usdz_writer.Material`` objects.
-    Objects without ``MaterialName`` are skipped (they produce unbound meshes).
+    MaterialName and other material properties on FreeCAD objects are ignored.
+    All meshes are exported unbound so the renderer uses its default appearance.
     """
-    declared: dict[str, dict] = {}
-    for obj in objects:
-        name = str(getattr(obj, "MaterialName", ""))
-        if not name:
-            continue
-        base_color = (0.8, 0.8, 0.8)
-        raw = str(getattr(obj, "BaseColor", ""))
-        if raw:
-            parts = [float(part) for part in raw.split(",")]
-            if len(parts) != 3:
-                raise BuildError(f"{obj.Name} BaseColor must be three comma-separated floats")
-            base_color = (parts[0], parts[1], parts[2])
-        entry = {
-            "base_color": base_color,
-            "roughness": float(getattr(obj, "Roughness", 0.5)),
-            "metallic": float(getattr(obj, "Metallic", 0.0)),
-            "texture": None,
-        }
-        member = str(getattr(obj, "TextureFile", "")) if "TextureFile" in obj.PropertiesList else ""
-        if member:
-            entry["texture"] = _embedded_texture(source, staging, member)
-        existing = declared.get(name)
-        if existing is None:
-            declared[name] = entry
-            continue
-        for key in ("base_color", "roughness", "metallic"):
-            if existing[key] != entry[key]:
-                raise BuildError(f"material {name} declares conflicting {key} across nodes")
-        if entry["texture"] is not None:
-            if existing["texture"] is not None and existing["texture"] != entry["texture"]:
-                raise BuildError(f"material {name} declares conflicting textures across nodes")
-            existing["texture"] = entry["texture"]
-
-    registry = {}
-    for name, entry in declared.items():
-        archive_path, texture_path = entry["texture"] or (None, None)
-        registry[name] = usdz_writer.Material(
-            name=name,
-            base_color=entry["base_color"],
-            roughness=entry["roughness"],
-            metallic=entry["metallic"],
-            texture_archive_path=archive_path,
-            texture_source=texture_path,
-        )
-    return registry
+    return {}
 
 
 def _crease_normals(points, triangles, crease_degrees: float):
