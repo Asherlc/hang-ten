@@ -47,11 +47,9 @@ def test_keep_rebuild_elsewhere_is_allowed(tmp_path):
     assert verify_reproducible.keep_conflicts(tmp_path / "out", "lattice-triple-rung") == []
 
 
-compare_exports = pytest.importorskip("compare_exports")
-
-
 @pytest.mark.parametrize("value", ["0", "-1", "abc"])
 def test_chunk_must_be_a_positive_integer(value, capsys):
+    compare_exports = pytest.importorskip("compare_exports")
     with pytest.raises(SystemExit) as raised:
         compare_exports.main(["a.usdz", "b.usdz", "--chunk", value])
     assert raised.value.code == 2
@@ -59,5 +57,6 @@ def test_chunk_must_be_a_positive_integer(value, capsys):
 
 
 def test_chunk_accepts_positive_values():
+    compare_exports = pytest.importorskip("compare_exports")
     assert compare_exports.positive_int("1") == 1
     assert compare_exports.positive_int("2048") == 2048
