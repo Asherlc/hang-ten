@@ -522,7 +522,8 @@ which is the part a CPU render cannot check.
 15. **OCCT 7.9.3 meshes a small toroidal face into 2,048 triangles at any
     deflection.** That is every arc edge under a round-over fillet. Prime-rib's
     1.2 mm end round-over puts ~54k triangles in the body, against 8.8k in the
-    reference. `compare_exports` is O(samples x triangles). At the default
+    reference (the pinned OCCT 7.8.1 macOS build is similar: 54,222 against
+    54,622 on 7.9.3). `compare_exports` is O(samples x triangles). At the default
     `--chunk 2048` its reverse pass needs several 2.7 GB blocks and was
     OOM-killed (exit 137) on a 15 GB host. Pass a smaller `--chunk` (it changes
     memory, not results) and expect it to take tens of minutes.

@@ -45,6 +45,23 @@ through `Tools/HangboardCAD/run_freecad.py`), reading extra site directories suc
 as the one providing `pxr` from `HANGTEN_CAD_PYTHONPATH`. It was run on
 conda-forge FreeCAD 1.1.3 (OCCT 7.9.3) on Linux, not the pinned macOS build.
 
+## Committed asset
+
+The committed `assets/primary.usdz` (SHA-256 `b1b849ff…f683`) and its descriptor
+(`1b2b8f46…c16f`) are the pinned macOS CI rebuild of the committed FCStd: FreeCAD
+1.1.3 macOS arm64 (OCCT 7.8.1), taken unmodified from the `cad-rebuilt-assets`
+artifact of GitHub Actions run 36074854274 (`cad-reproducibility`, head
+`24209c9`) per "Without the pinned toolchain" in `Tools/HangboardCAD/README.md`.
+It replaced the Linux-compiled asset (`45c37c3f…9d5d`, descriptor
+`53c90e3d…c74f`), which the macOS job could not reproduce. The descriptor
+differs from the Linux one only in `modelSHA256`: `modelBounds`, contact
+`facePlaneAABB`, outlines, centers and the published depths 15 / 23 / 38.1 mm
+are unchanged. The rebuild has 55,752 triangles (body 54,222; edge-15 132,
+edge-23 132, edge-38 1,266) against the Linux build's 56,152 (body 54,622,
+same contact counts). The compile and `compare_exports` figures under
+"Verification evidence" were measured on the Linux-built asset and were not
+re-run on the macOS rebuild.
+
 ## Module docstring (verbatim)
 
 ```text
@@ -281,6 +298,9 @@ native `(0, −u, v)`.
   carries their flat cap patches, and the native surface is continuous there.
 
 ## Verification evidence
+
+Linux-built evidence (conda-forge FreeCAD 1.1.3, OCCT 7.9.3; superseded asset
+`45c37c3f…9d5d`, see "Committed asset" above):
 
 - Reference fit: all 291 reference end-cap profile vertices lie within
   0.00006 mm of the authored sketch (the script's limit is 0.01 mm).

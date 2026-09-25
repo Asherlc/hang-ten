@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d07a406beb317efa4b2e2967bd120454fe0ada41e7e7c666567b83537c6a13ff",
+  "sha256Manifest": "bfb6f1e15a0c5d2e21c8f6052f2e35da5336e4cbe05c0a22ff6d5f83c227f4ae",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "685f63d9953dd6d8266bc8e7e6b57598e1605903b7f38e26c3c568efd801356d",
+  "supersededSha256Manifest": "d07a406beb317efa4b2e2967bd120454fe0ada41e7e7c666567b83537c6a13ff",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -116,13 +116,15 @@
       "supersededSourceSHA256": "b4255cdee0345f868af18850a636743d067d76c923d8cabfabaac04c2e40416c",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "ddfb6f8fde38026e2e77e0b6b66e0682b9a788c6eff9c86b26646438808f8026",
-      "assetSHA256": "45c37c3f16c6b9b93505cd45927bc6eb3caab0876ac7873d23751c8e1ca49d5d",
-      "descriptorSHA256": "53c90e3df85ff72e2d36502ba6cfa62430df8cc71831b7ecd4511ee2a1b0c74f",
+      "assetSHA256": "b1b849ffa5c5bb7e90bc1c139ad524b35837be88c73eade01149bc38ae08f683",
+      "supersededAssetSHA256": "45c37c3f16c6b9b93505cd45927bc6eb3caab0876ac7873d23751c8e1ca49d5d",
+      "descriptorSHA256": "1b2b8f464bf8605f93a2e5e7a18c2b4c2b5011cff2db59adf049f345f082c16f",
+      "supersededDescriptorSHA256": "53c90e3df85ff72e2d36502ba6cfa62430df8cc71831b7ecd4511ee2a1b0c74f",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (prime_rib_native_source_checks.py: reopen, recompute, fully constrained vector profile, published envelope and depths, regions on surface, pad-length and Edge23Depth edit propagation)",
       "nativeAppValidation": "not run",
-      "compileToolchain": "FreeCAD 1.1.3 conda-forge linux-64 (OCCT 7.9.3, Python 3.11.16), usd-core 26.8; not the pinned macOS build, so the macOS verify_reproducible job must recompile this asset",
-      "comparison": "compare_exports two-way sampled worst 0.0782 mm (candidate->reference 0.0782 over 336912 samples, reference->candidate 0.0671 over 55020; p99 0.014 mm) vs 0.5 mm limit, run with its own functions at a smaller chunk after the default chunk was OOM-killed; per-contact regions agree to 0.0026 / 0.0046 / 0.078 mm (edge-15 / edge-23 / edge-38); facePlaneAABB agrees within 4e-8 normalized; mounting-bore cap patches of the reference are not authored",
+      "compileToolchain": "pinned macOS CI rebuild: FreeCAD 1.1.3 macOS arm64 (OCCT 7.8.1), cad-rebuilt-assets artifact from GitHub Actions run 36074854274 (cad-reproducibility job at 24209c9), copied unmodified; supersedes the conda-forge linux-64 build (OCCT 7.9.3) whose asset is recorded in supersededAssetSHA256. Descriptor differs from the Linux one only in modelSHA256; body 54,222 triangles (Linux 54,622), contact meshes identical in count",
+      "comparison": "Linux-built evidence (asset supersededAssetSHA256, not re-run on the macOS rebuild): compare_exports two-way sampled worst 0.0782 mm (candidate->reference 0.0782 over 336912 samples, reference->candidate 0.0671 over 55020; p99 0.014 mm) vs 0.5 mm limit, run with its own functions at a smaller chunk after the default chunk was OOM-killed; per-contact regions agree to 0.0026 / 0.0046 / 0.078 mm (edge-15 / edge-23 / edge-38); facePlaneAABB agrees within 4e-8 normalized; mounting-bore cap patches of the reference are not authored",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md (retired script recoverable from 3498f979355d60553e09fd557b85c87e745c0ba3)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -145,5 +147,5 @@
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
   "buildTimeBoardJSONNote": "2026-09-24: CAD-backed board.json is no longer committed; it is generated from the locked FCStd at build time (package validation, iOS and Android staging). sha256Manifest now covers descriptor + FCStd for the five source-backed packages instead of descriptor + board.json + FCStd; the previous manifest 4af6ea74... moved to supersededSha256Manifest (which previously held abfe9228...). The generated board.json bytes are identical to the last committed ones.",
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages.",
-  "primeRibNote": "2026-09-24: metolius-prime-rib's native source (authored on this branch before main's build-time board.json landed) now embeds its board.json (minus id) as HangTenBoardManifest via Tools/HangboardCAD/set_board_manifest.py; only Document.xml changed, and the generated board.json is byte-identical to the previously committed file, which was deleted. sha256Manifest covers descriptor + FCStd for all six source-backed packages; main's 685f63d9... moved to supersededSha256Manifest (which previously held 4af6ea74...)."
+  "primeRibNote": "2026-09-24: metolius-prime-rib's native source (authored on this branch before main's build-time board.json landed) now embeds its board.json (minus id) as HangTenBoardManifest via Tools/HangboardCAD/set_board_manifest.py; only Document.xml changed, and the generated board.json is byte-identical to the previously committed file, which was deleted. sha256Manifest covers descriptor + FCStd for all six source-backed packages; main's 685f63d9... moved to supersededSha256Manifest (which previously held 4af6ea74...). 2026-09-25: the Linux-compiled asset was replaced by the pinned macOS CI rebuild (run 36074854274, FreeCAD 1.1.3 macOS arm64, OCCT 7.8.1); only the USDZ and the descriptor modelSHA256 changed, so sha256Manifest d07a406b... moved to supersededSha256Manifest (which previously held 685f63d9...)."
 }
