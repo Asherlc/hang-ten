@@ -263,7 +263,8 @@ struct ContactRequirement: Codable, Hashable {
     /// the step resolves to the board's paired left/right holds. An exact
     /// contact pin cannot form a pair, so it keeps its single selection.
     var bilateralSelection: ContactRequirement {
-        guard selection != .bilateralPair, contactID == nil else { return self }
+        guard contactID == nil else { return singleHandSelection }
+        guard selection != .bilateralPair else { return self }
         return ContactRequirement(
             kind: kind,
             shape: shape,

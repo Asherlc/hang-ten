@@ -100,7 +100,7 @@ enum WorkoutSessionHandResolver {
         let transform: (ContactRequirement) -> ContactRequirement = boardIsOneHanded
             ? { $0.singleHandSelection }
             : { $0.bilateralSelection }
-        let bothHandedSegments = step.segments.map { segment in
+        let resolvedSegments = step.segments.map { segment in
             segment.mappingRequirements(transform)
         }
         return WorkoutStep(
@@ -111,7 +111,7 @@ enum WorkoutSessionHandResolver {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            segments: bothHandedSegments,
+            segments: resolvedSegments,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
             handUse: .double,

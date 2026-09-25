@@ -452,6 +452,10 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(oneHanded.handUse, .double)
         XCTAssertEqual(oneHanded.side, .both)
         XCTAssertEqual(oneHanded.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(
+            oneHanded.segments.first?.contactRequirements.map(\.selection),
+            [.single]
+        )
     }
 
     func testSessionStepsAlternateExpandsLeftThenRightWithoutDuplicatingRest() {
@@ -1615,6 +1619,9 @@ final class WorkoutTimelineTests: XCTestCase {
             pinned,
             "An exact contact cannot form a pair and must stay single"
         )
+
+        let pinnedPair = ContactRequirement(contactID: "left-edge", kind: .edge, selection: .bilateralPair)
+        XCTAssertEqual(pinnedPair.bilateralSelection.selection, .single)
     }
 
     func testDefaultHandPreferenceFollowsBoardCapacity() {
