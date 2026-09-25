@@ -25,10 +25,13 @@ published for the jug.
 - **Source-bound:** product identity, overall dimensions, hold inventory, and the
   three grip depths (20 / 15 / 10 mm).
 - **Authored (display simplification):** the board's cross-section. It is
-  **measured from the approved committed display mesh** — an ordered boundary
-  loop of the projected body + contact triangles, simplified to 0.05 mm and
-  authored as a fully constrained Sketcher profile — not recovered manufacturing
-  geometry. The sculpted reference surface is simplified to a prismatic comb.
+  **measured from the approved committed display mesh** at revision
+  `91ab368f9` (`Hangboards/evolv-kilter-basic-long/assets/primary.usdz`, sha256
+  `82a20c9772978184369799408c716232a96cbaa3e05781c5cb54f40de8430b41`) — an
+  ordered boundary loop of the projected body + contact triangles, simplified to
+  0.05 mm and authored as a fully constrained Sketcher profile — not recovered
+  manufacturing geometry. The sculpted reference surface is simplified to a
+  prismatic comb.
 
 ## Method
 
@@ -45,8 +48,15 @@ to pad faces.
   (`edge-20` 20.000, `edge-15` 14.999, `edge-10` 9.985 mm); descriptor
   `modelBounds` 0.790 × 0.15994 × 0.06 m matches the published envelope.
 - `verify_reproducible`: the committed asset rebuilds byte-identically
-  (`4812009ba567fbc1…`).
+  (`5727cb40d8f4f19f…`).
 - Package validation passes (`scripts/hangboard-packages.sh validate`).
+
+## Preview evidence
+
+`docs/source-audits/2026-09-25-evolv-kilter-basic-long-cad-preview.png` renders
+the migrated board (left) beside the superseded reference at revision `91ab368f9`
+(right) for front, side, and top (`Tools/HangboardCAD/preview.py`; CPU geometry
+renders, not native SceneKit).
 
 ## Caveats
 

@@ -54,7 +54,7 @@
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "9ab92a6c6914ccdf98cba078e1f73b2307af95fc6b02c8e1898955f51528c1ae",
+  "supersededSha256Manifest": "473ebca2d94c417ebac31d4b3529f6431b755962cb18f64ccff7c2d2793a5428",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -209,8 +209,11 @@
       "sourceSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
       "sourceKind": "native-parametric-measured-profile",
-      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 4812009ba567fbc1)",
-      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified"
+      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
+      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-evolv-kilter-basic-long-cad-provenance.md",
+      "assetSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
+      "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
