@@ -63,7 +63,7 @@ generator. No other number was taken from the page.
 | Pocket centres, throat widths, and 22 mm height | Retained estimate | generator `pocket_specs` |
 | 2.8 mm mouth and floor blend up to 4 mm (`min(4, depth/3)`) | Retained size, **represented as 45° chamfers** | the generator's rounds are authored as chamfer lofts of the same size, following the Deluxe II precedent (lessons §15, §16). This is a stated display choice |
 | Step end taper (30 mm) and 6 mm front-to-back end roll (`step_sy`, `sz`) | **Omitted** | the step runs straight to the elliptical end, and the end cap is a sharp-edged elliptical wall. This is the main visible difference from the reference (side view) |
-| Material `canonical_neutral_wood`, base colour 0.69, 0.49, 0.28, roughness 0.62, metallic 0, texture `canonical-neutral-wood.png` | Carried | same texture bytes (`fdab3b78…`) as the reference USDZ and Compact II |
+| Material `canonical_neutral_wood`, base colour 0.69, 0.49, 0.28, roughness 0.62, metallic 0, texture `canonical-neutral-wood.png` | Carried as compile-time source metadata only | same texture bytes (`fdab3b78…`) as the reference USDZ and Compact II. Under the model material policy (`AGENTS.md`), the committed USDZ is stripped with `Tools/set_clay_materials.py` after compiling, so it ships with no material or texture |
 | Node IDs `BeastmakerBody_023_001_001` (body) and `BeastmakerBody_024..045_001_002` (contacts) | Carried | reference descriptor; every contact keeps its node ID |
 
 ## Document structure
@@ -110,8 +110,11 @@ and the pocket chamfers are cones.
 
 - Compile: 48,810 triangles, `modelBounds` 580 × 150 × 58 mm, and every
   published-depth gate exact (10 / 30 / 45 / 50 / 20 / 25 mm).
-  `verify_reproducible.py` rebuilds it byte-identically on the pinned toolchain
-  (FreeCAD 1.1.3, macOS).
+  Before the material strip, `verify_reproducible.py` rebuilt it
+  byte-identically on the pinned toolchain (FreeCAD 1.1.3, macOS). The
+  committed USDZ is the compiled output with its materials stripped, so, like
+  the other CAD boards since the clay-model change, it no longer matches a
+  fresh compile until `compile_board.py` itself emits unbound meshes.
 - Descriptor `facePlaneAABB` against the reference: every cavity is within
   0.16 mm, the jugs within 0.58 mm, and the slopers within 0.68 mm. All 22
   node IDs are unchanged.
@@ -129,7 +132,7 @@ and the pocket chamfers are cones.
   `pocket-bottom-mid-right` (`_029`) have reversed triangle winding (0–1% of
   triangles face the front), so they render black in `preview.py`. Every node
   of the new asset faces outward.
-- In app: iPhone 17 Pro simulator (iOS 26.5), Debug board-detail review route, in a
+- In app (checked before the material strip, with the wood texture): iPhone 17 Pro simulator (iOS 26.5), Debug board-detail review route, in a
   workspace-owned simulator that was deleted afterwards. The wood texture
   renders. Three holds were each selected and confirmed via
   `boardDetail.selectedHold.<id>`:
