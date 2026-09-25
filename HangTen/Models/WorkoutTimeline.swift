@@ -176,6 +176,42 @@ enum WorkoutSessionHandResolver {
     }
 }
 
+extension WorkoutSessionHandResolver {
+    /// True when a both-hands materialization resolves every work requirement
+    /// on this board. A capacity-2 board with no paired target for a step
+    /// cannot satisfy a both-hands choice and must fall back to alternate.
+    static func bothHandsResolve(plan: TrainingPlan, board: BoardRevision) -> Bool {
+        let steps = sessionSteps(
+            from: plan.steps,
+            preference: .both,
+            boardIsOneHanded: board.isOneHanded
+        )
+        return steps.allSatisfy { step in
+            guard !step.isRestStep else { return true }
+            let requirements = step.workRequirements
+            guard !requirements.isEmpty else { return true }
+            return (try? ContactResolver.resolve(
+                requirements,
+                step: step,
+                board: board
+            ))?.isEmpty == false
+        }
+    }
+
+    /// The capacity default, downgraded to `.alternate` when a both-hands
+    /// materialization cannot resolve every work requirement on this board.
+    static func defaultPreference(
+        plan: TrainingPlan,
+        board: BoardRevision
+    ) -> WorkoutSessionHandPreference {
+        let capacityDefault = WorkoutSessionHandPreference.defaultPreference(
+            boardHandCapacity: board.handCapacity
+        )
+        guard capacityDefault == .both else { return capacityDefault }
+        return bothHandsResolve(plan: plan, board: board) ? .both : .alternate
+    }
+}
+
 struct WorkoutClock {
     static var monotonicTime: TimeInterval {
         ProcessInfo.processInfo.systemUptime

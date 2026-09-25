@@ -1641,6 +1641,74 @@ final class WorkoutTimelineTests: XCTestCase {
             "Both hands simultaneously on two boards."
         )
     }
+
+    func testResolutionAwareDefaultFallsBackToAlternateWhenBothCannotResolve() {
+        let board = BoardRevision(
+            id: "fixture.single-contact",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Single contact",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [
+                PhysicalContact(id: "only-edge", name: "Only edge", kind: .edge, handCapacity: 1)
+            ],
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil
+        )
+        let plan = TrainingPlan(
+            id: "fixture.either",
+            title: "Either",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/plan")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [
+                WorkoutStep(
+                    id: "either", number: 1, title: "Either", instruction: "",
+                    accessory: "", duration: 7, phase: .hang,
+                    segments: [WorkoutSegment(
+                        kind: .work,
+                        target: .fromLegacyTargets([ContactRequirement(kind: .edge, selection: .single)]),
+                        timing: .fixed,
+                        duration: 7
+                    )],
+                    handUse: .either, side: .both
+                )
+            ]
+        )
+
+        XCTAssertFalse(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+        XCTAssertEqual(
+            WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+            .alternate
+        )
+    }
+
+    func testResolutionAwareDefaultKeepsBothWhenAPairResolves() throws {
+        let plan = try XCTUnwrap(PlanCatalog.all.first { $0.id == "research.max-hangs" })
+        let board = try XCTUnwrap(
+            BoardCatalog.all.first { board in
+                plan.steps.allSatisfy { step in
+                    guard !step.isRestStep else { return true }
+                    let requirements = step.workRequirements
+                    guard !requirements.isEmpty else { return true }
+                    return (try? ContactResolver.resolve(requirements, step: step, board: board))?.isEmpty == false
+                }
+            },
+            "Expected at least one registered board where Max Hangs resolves its pair"
+        )
+
+        XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+        XCTAssertEqual(
+            WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+            .both
+        )
+    }
 }
 
 final class WorkoutClockTests: XCTestCase {

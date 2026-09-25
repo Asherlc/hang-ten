@@ -1895,7 +1895,6 @@ struct WorkoutView: View {
 	    @State private var handPreference: WorkoutSessionHandPreference?
 	    /// Preference-expanded steps; source of truth for timeline once set.
 	    @State private var sessionSteps: [WorkoutStep]?
-	    @State private var showsHandSidePicker = false
 
     private var board: BoardRevision {
         store.board(for: plan)
@@ -2135,55 +2134,14 @@ struct WorkoutView: View {
 				}
 			)
 		}
-		.sheet(isPresented: $showsHandSidePicker) {
-			NavigationStack {
-				VStack(alignment: .leading, spacing: 20) {
-					SectionLabel(title: "Hand choice")
-					Text("Which hand will you use for this routine?")
-						.font(.system(size: 16, weight: .medium, design: .rounded))
-						.foregroundStyle(Color.hangMuted)
-					Text("Alternate does each work step left then right. Both hands means simultaneous on two boards.")
-						.font(.system(size: 14, weight: .medium, design: .rounded))
-						.foregroundStyle(Color.hangMuted)
-
-					VStack(spacing: 12) {
-						handPreferenceButton(
-							title: "Left hand",
-							systemImage: "hand.left",
-							preference: .left,
-							accessibilityID: "handSide.left"
-						)
-						handPreferenceButton(
-							title: "Right hand",
-							systemImage: "hand.right",
-							preference: .right,
-							accessibilityID: "handSide.right"
-						)
-						handPreferenceButton(
-							title: "Alternate hands",
-							systemImage: "arrow.left.arrow.right",
-							preference: .alternate,
-							accessibilityID: "handSide.alternate"
-						)
-						handPreferenceButton(
-							title: "Both hands (two boards)",
-							systemImage: "square.split.2x1",
-							preference: .both,
-							accessibilityID: "handSide.both"
-						)
-					}
-				}
-				.padding(24)
-				.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-				.background(Color.hangBackground)
-				.navigationTitle("Choose hand")
-				.navigationBarTitleDisplayMode(.inline)
-			}
-			.interactiveDismissDisabled()
-		}
 		.onAppear {
 			UIApplication.shared.isIdleTimerDisabled = true
 			configureRecorder()
+			if planNeedsHandChoice, handPreference == nil {
+				applyHandPreference(
+					WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+				)
+			}
 			#if DEBUG
 			if !didApplyReviewStep {
 				didApplyReviewStep = true
@@ -2649,6 +2607,10 @@ struct WorkoutView: View {
             .accessibilityLabel("Routine, current step \(step.number): \(step.title)")
             .accessibilityIdentifier("workout.routinePicker")
 
+            if planNeedsHandChoice {
+                handPreferenceMenu()
+            }
+
 			Text(WorkoutPresentationContent.title(step: step, isComplete: isComplete))
 				.font(.system(size: 30, weight: .bold, design: .rounded))
 				.foregroundStyle(Color.hangInk)
@@ -2949,31 +2911,60 @@ struct WorkoutView: View {
 		.accessibilityIdentifier("workout.stopwatch")
 	}
 
-	private func handPreferenceButton(
+	private func handPreferenceMenu() -> some View {
+		Menu {
+			handPreferenceMenuButton(.left, title: "Left hand", accessibilityID: "handSide.left")
+			handPreferenceMenuButton(.right, title: "Right hand", accessibilityID: "handSide.right")
+			handPreferenceMenuButton(.alternate, title: "Alternate hands", accessibilityID: "handSide.alternate")
+			handPreferenceMenuButton(
+				.both,
+				title: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded),
+				accessibilityID: "handSide.both",
+				disabled: !WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board)
+			)
+		} label: {
+			HStack(spacing: 6) {
+				Image(systemName: "hand.raised")
+				Text(handChoiceLabel)
+			}
+			.font(.system(size: 13, weight: .bold, design: .rounded))
+			.foregroundStyle(Color.hangGreenDark)
+		}
+		.disabled(!WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt))
+		.accessibilityLabel("Hand choice, \(handChoiceLabel)")
+		.accessibilityHint(HandChoiceCopy.bothHandsHint(boardIsOneHanded: boardIsOneHanded))
+		.accessibilityIdentifier("workout.handPicker")
+	}
+
+	private func handPreferenceMenuButton(
+		_ preference: WorkoutSessionHandPreference,
 		title: String,
-		systemImage: String,
-		preference: WorkoutSessionHandPreference,
-		accessibilityID: String
+		accessibilityID: String,
+		disabled: Bool = false
 	) -> some View {
 		Button {
-			chooseHandPreference(preference)
+			applyHandPreference(preference)
 		} label: {
-			HStack {
-				Image(systemName: systemImage)
+			if handPreference == preference {
+				Label(title, systemImage: "checkmark")
+			} else {
 				Text(title)
-				Spacer()
 			}
-			.font(.system(size: 16, weight: .bold, design: .rounded))
-			.foregroundStyle(Color.hangInk)
-			.padding(.horizontal, 17)
-			.padding(.vertical, 15)
-			.background(Color.hangGreen, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
 		}
-		.buttonStyle(.plain)
+		.disabled(disabled)
 		.accessibilityIdentifier(accessibilityID)
 	}
 
-	private func chooseHandPreference(_ preference: WorkoutSessionHandPreference) {
+	private var handChoiceLabel: String {
+		switch handPreference {
+		case .left: "Left hand"
+		case .right: "Right hand"
+		case .alternate: "Alternate hands"
+		case .both, .none: HandChoiceCopy.bothHandsTitle(boardIsOneHanded: boardIsOneHanded)
+		}
+	}
+
+	private func applyHandPreference(_ preference: WorkoutSessionHandPreference) {
 		handPreference = preference
 		sessionSteps = WorkoutSessionHandResolver.sessionSteps(
 			from: plan.steps,
@@ -2981,8 +2972,6 @@ struct WorkoutView: View {
 			boardIsOneHanded: boardIsOneHanded
 		)
 		initializeStopwatches()
-		showsHandSidePicker = false
-		toggleRunning()
 	}
 
 	private func resolvedHandSide(for step: WorkoutStep) -> WorkoutSide? {
@@ -2997,8 +2986,9 @@ struct WorkoutView: View {
 		   WorkoutSessionPolicy.isFirstStart(routineStartedAt: sessionState.routineStartedAt),
 		   planNeedsHandChoice,
 		   handPreference == nil {
-			showsHandSidePicker = true
-			return
+			applyHandPreference(
+				WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board)
+			)
 		}
 		let monotonicTime = WorkoutClock.monotonicTime
 		if pendingCountdownStart != nil || countdownArmTask != nil {
