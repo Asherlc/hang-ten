@@ -1588,6 +1588,23 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertLessThan(strokeGreen, fillGreen)
         XCTAssertLessThan(strokeBlue, fillBlue)
     }
+
+    func testBilateralSelectionWidensSingleRequirementToPair() {
+        let single = ContactRequirement(kind: .edge, fingerCapacity: 4, selection: .single)
+        XCTAssertEqual(single.bilateralSelection.selection, .bilateralPair)
+        XCTAssertEqual(single.bilateralSelection.kind, .edge)
+        XCTAssertEqual(single.bilateralSelection.fingerCapacity, 4)
+
+        let alreadyPaired = ContactRequirement(kind: .edge, selection: .bilateralPair)
+        XCTAssertEqual(alreadyPaired.bilateralSelection, alreadyPaired)
+
+        let pinned = ContactRequirement(contactID: "left-edge", kind: .edge, selection: .single)
+        XCTAssertEqual(
+            pinned.bilateralSelection,
+            pinned,
+            "An exact contact cannot form a pair and must stay single"
+        )
+    }
 }
 
 final class WorkoutClockTests: XCTestCase {
