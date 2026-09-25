@@ -2,6 +2,11 @@
 
 Date: 2026-09-24
 
+> **Superseded geometry.** On 2026-09-25 the FCStd was re-authored as vector
+> primitives; see
+> [`2026-09-25-metolius-rock-rings-3d-vector-provenance.md`](2026-09-25-metolius-rock-rings-3d-vector-provenance.md).
+> This record still documents the first polyline source and its measurements.
+
 This record preserves the provenance carried by the retired one-off migration
 script `Tools/HangboardCAD/migration/author_metolius_rock_rings_3d.py`, which authored
 `Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd`. The script was never a build input: the

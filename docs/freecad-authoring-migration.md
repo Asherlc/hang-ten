@@ -154,7 +154,14 @@ an **open surface** (a shell), not a solid:
   authoring script in
   `docs/source-audits/2026-09-24-metolius-rock-rings-3d-cad-provenance.md`); a
   `Part::Common` of the body and a bounding solid is superseded — it leaves a
-  ragged hole.
+  ragged hole;
+- a hold that is a run of the profile (a rail) is an extrusion of those sketch
+  edges through a `SubShapeBinder`, as on `metolius-prime-rib`;
+- a hold that must include fillet faces (the `metolius-rock-rings-3d` crown jug
+  and its round-overs) is split off the solid with a box: `Part::Common(solid,
+  box)` is the region, and the box joins the body's recess cut. Do not bind
+  fillet faces by name, because the binding is lost on a sketch edit (lessons
+  §17).
 
 A solid region is wrong: its tessellation carries the opening cap (the body has
 a hole there, so the hold would render flush and hide the cavity) and, for a
@@ -208,10 +215,13 @@ model against it, or pivot to a faceted import unless exact surface fidelity is
 actually required for that board. Visually confirmed hold placement, the
 published grip depths, the node/role inventory, and the descriptor's
 `facePlaneAABB` agreement are the acceptance signals that matter. This was
-decided explicitly on `metolius-rock-rings-3d` (worst deviation 17.67 mm,
-concentrated at the sculpted top lip; pocket regions agree to under 0.25 mm):
-chasing the 0.5 mm limit cost about a third of the migration's time and changed
-no delivered behaviour. Record the accepted deviation in the delivery lock's
+decided explicitly on the first `metolius-rock-rings-3d` source (worst deviation
+17.67 mm, concentrated at the sculpted top lip; pocket regions agree to under
+0.25 mm): chasing the 0.5 mm limit cost about a third of the migration's time
+and changed no delivered behaviour. (That board was later re-authored as vector
+primitives, which fit the reference to 0.012 mm everywhere except the jug. There
+the reference's scoop is deliberately replaced by the photographed hump; see
+`docs/source-audits/2026-09-25-metolius-rock-rings-3d-vector-provenance.md`.) Record the accepted deviation in the delivery lock's
 `migratedPackages` entry so a future agent does not re-litigate it.
 
 ## Procedure
@@ -595,7 +605,10 @@ write-up. The durable points:
 - **Fit primitives before you reduce vertices.** Prime-rib's reference end
   cap was exactly lines, tangent arcs and two cubic Beziers with round-number
   values (fit residual 6e-5 mm). A vector sketch with named dimensions beats a
-  measured polyline wherever that holds. See lessons §15.
+  measured polyline wherever that holds. See lessons §15. Rock Rings showed
+  the same holds for a sculpted-looking board: outline, pockets and cord
+  tunnels were all integer-pole Beziers, stadiums, ellipses and circles
+  (lessons §17).
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
   mono circle fit, cord mouths, source-backed lock). See lessons §12.

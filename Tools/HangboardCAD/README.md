@@ -224,9 +224,9 @@ curved hold. With `HangTenCurvedRegionPartition` set, such a triangle is also
 assigned when all three vertices lie on the region, the centroid is within the
 deflection, and its normal agrees with the surface normal (so an end-cap
 triangle touching the region's boundary edge is never claimed). It is opt-in
-because it changes existing output: on `metolius-rock-rings-3d` it would move
-~3,400 body triangles that currently duplicate curved pocket surfaces, and that
-board's committed bytes must keep reproducing until it is deliberately rebuilt. Verified on the
+because it changes existing output, and older sources must keep reproducing
+their committed bytes until they are deliberately rebuilt. `metolius-prime-rib`
+and the vector `metolius-rock-rings-3d` source opt in. Verified on the
 pilot: 390 body triangles plus 122 / 82 / 82 contact triangles, with each contact
 region matching the approved reference to 0.0000 mm in both directions.
 
