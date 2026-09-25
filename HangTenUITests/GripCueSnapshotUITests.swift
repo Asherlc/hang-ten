@@ -294,3 +294,85 @@ final class IronPalmBoardMapInteractionUITests: XCTestCase {
         )
     }
 }
+
+final class OneHandedHandChoiceUITests: XCTestCase {
+    private let app = XCUIApplication()
+
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+        app.launchEnvironment = [
+            "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
+            "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            "HANGTEN_REVIEW_PLAN": "1",
+            "HANGTEN_REVIEW_PORTRAIT": "1",
+            "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
+        ]
+        app.launch()
+    }
+
+    func testInlineHandChoiceOnOneHandedBoard() throws {
+        XCTAssertTrue(
+            app.navigationBars["Plan"].waitForExistence(timeout: 20),
+            "DEBUG plan-detail review route should open Max Hangs on the one-handed Dual board."
+        )
+
+        selectManualWeightSourceIfNeeded()
+        tapStartRoutine()
+
+        let handPicker = app.buttons["workout.handPicker"]
+        XCTAssertTrue(
+            handPicker.waitForExistence(timeout: 20),
+            "The pre-start workout page must expose the inline hand picker when a choice is needed."
+        )
+        XCTAssertTrue(
+            handPicker.label.contains("Alternate hands"),
+            "A capacity-1 board must default to Alternate hands, got: \(handPicker.label)"
+        )
+
+        handPicker.tap()
+
+        let both = app.buttons["handSide.both"]
+        XCTAssertTrue(both.waitForExistence(timeout: 10), "The Both menu item must be present.")
+        XCTAssertEqual(both.label, "Both hands (two boards)")
+        XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
+
+        app.buttons["handSide.left"].tap()
+
+        let updated = app.buttons["workout.handPicker"]
+        let labelUpdated = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
+            object: updated
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [labelUpdated], timeout: 10),
+            .completed,
+            "Choosing a hand must update the picker label, got: \(updated.label)"
+        )
+
+        let start = app.buttons["Start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
+
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        XCTAssertFalse(
+            app.buttons["workout.handPicker"].isEnabled,
+            "The hand picker must be disabled once the routine is running."
+        )
+    }
+
+    private func selectManualWeightSourceIfNeeded() {
+        let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
+        let manual = source.buttons["Manual"]
+        guard manual.exists, !manual.isSelected else { return }
+        manual.tap()
+    }
+
+    private func tapStartRoutine() {
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        if !start.isHittable {
+            app.swipeUp()
+        }
+        start.tap()
+    }
+}
