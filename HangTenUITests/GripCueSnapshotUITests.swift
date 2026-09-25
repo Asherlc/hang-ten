@@ -51,8 +51,6 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
 
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
         tapStartRoutine()
-        XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
-        app.buttons["handSide.left"].tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertFalse(app.otherElements["motherboard.forceRocker"].exists)
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
@@ -67,12 +65,11 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         let handChoice = app.buttons["handSide.left"]
         let pause = app.buttons["Pause"]
         app.open(workoutDeepLink)
-        if !handChoice.waitForExistence(timeout: perAttemptTimeout),
-           !pause.exists {
+        if !pause.waitForExistence(timeout: perAttemptTimeout), !handChoice.exists {
             waitForTrainShellReady(timeout: 10)
             app.open(workoutDeepLink)
         }
-        if handChoice.waitForExistence(timeout: perAttemptTimeout) {
+        if handChoice.exists {
             handChoice.tap()
         }
         XCTAssertTrue(pause.waitForExistence(timeout: perAttemptTimeout))
@@ -204,8 +201,6 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(connect.label, "Disconnect scale")
         XCTAssertTrue(app.buttons["plan.startRoutine"].exists)
         tapStartRoutine()
-        XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
-        app.buttons["handSide.left"].tap()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
         XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
@@ -220,8 +215,6 @@ final class InitialWeightSetupUITests: XCTestCase {
     func testScaleSelectionDoesNotBlockStartWhenDisconnected() {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Scale"].tap()
         tapStartRoutine()
-        XCTAssertTrue(app.buttons["handSide.left"].waitForExistence(timeout: 10))
-        app.buttons["handSide.left"].tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
         XCTAssertFalse(app.navigationBars["Sensor pairing"].exists)
