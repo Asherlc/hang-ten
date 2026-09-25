@@ -161,7 +161,7 @@ an **open surface** (a shell), not a solid:
   and its round-overs) is split off the solid with a box: `Part::Common(solid,
   box)` is the region, and the box joins the body's recess cut. Do not bind
   fillet faces by name, because the binding is lost on a sketch edit (lessons
-  §16).
+  §17).
 
 A solid region is wrong: its tessellation carries the opening cap (the body has
 a hole there, so the hold would render flush and hide the cavity) and, for a
@@ -608,14 +608,19 @@ write-up. The durable points:
   measured polyline wherever that holds. See lessons §15. Rock Rings showed
   the same holds for a sculpted-looking board: outline, pockets and cord
   tunnels were all integer-pole Beziers, stadiums, ellipses and circles
-  (lessons §16).
+  (lessons §17).
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
   mono circle fit, cord mouths, source-backed lock). See lessons §12.
 - **Compact II** reused the deleted Blender authoring script from Git as its
   dimension source. It also showed that a sculpted body gets exact contact
   partitions only when every face is planar: station-stacked quads and
-  triangles, not curved lofts. See lessons §14.
+  triangles, not curved lofts. See lessons §14. (Superseded: see Prime Rib and Deluxe II.)
+- **Deluxe II** is authored as vectors: a `PartDesign::Body` of sketched lines
+  and arcs, pads, pockets whose `Length` is the published depth, and chamfers.
+  The source sets `HangTenCurvedRegionPartition`, so its cylinder and cone hold
+  faces partition out of the body. Toroidal fillets on small arcs
+  over-tessellate; prefer chamfers there. See lessons §16.
 
 ## Fast loop and definition of done
 

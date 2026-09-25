@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, and metolius-wood-grips-compact-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, and metolius-wood-grips-deluxe-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "ecf2e96f153291949530e39e8e3656fe87d66bb6dda169a6fa1aacf035bd47fd",
+  "sha256Manifest": "3575d045437474511787bae54f634dd8cba2e9a75f72e9c3f59cbc64d7895521",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "c7ce4d239c1283945187b63ef4af1971ede87f3cf8d69c6dc9e4cd2b3bf68499",
+  "supersededSha256Manifest": "864203cf6883cf4a3c9b99fc54ed47fdf5324c90a97228f22b46ae93609f7c21",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -160,6 +160,21 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules; bounding rectangles for edges, jugs and slopers"
     },
+    "metolius-wood-grips-deluxe-ii": {
+      "source": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
+      "sourceSHA256": "eb3f85c72faa4619bf97bcb755945a7d3baf6821efde5703b6f4742f2ecb2707",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); token-identical to the deleted hand-authored file except the front presentation aspectRatio, now the descriptor modelBounds ratio 2.8240740604423875",
+      "referenceSHA256": "cfdf112a2f4ebecb69ebeca2a2102af3e64bcb72a08ba90cb555e60fa50e16e6",
+      "assetSHA256": "f716ba95d00faefb1a87e83f94ead35f8893ad9b639062ecfa26d31fee7f9d7e",
+      "descriptorSHA256": "a35725d4b23be50cb5373d6bb795b1ef226822e89d96365b90d2842b671d04f7",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set)",
+      "nativeValidation": "compile reopen and published-depth gate passed (31/32/38, 25/25/28, 19 mm, exact); verify_reproducible byte-identical; compiled asset has no unpaired open edges; PartDesign body of sketched lines and arcs, pads, pockets (Length = published depth) and chamfers; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-1-left, pocket-5-38-two-left, edge-3-31-left, sloper-12-round-center and pocket-15-19-four-center selected and confirmed via boardDetail.selectedHold.<contactID>; captured before HangTenCurvedRegionPartition replaced this branch's per-face partition, with the same body triangle count)",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 1.94 mm (limit 0.5 mm; 18,082 reference vs 23,260 candidate triangles); the reference is a voxelised, decimated rendering of the same pre-migration config, and the deviation comes from the omitted 3 / 2.5 mm body edge rounds and from mouth chamfers standing in for rounds; pocket and edge facePlaneAABB within 2.0 mm except where the reference is asymmetric against its own config",
+      "provenanceSidecar": "docs/source-audits/2026-09-24-metolius-wood-grips-deluxe-ii-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules (clipped at the board ends for side-open edges); bounding rectangles for jugs and slopers"
+    },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
       "sourceSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
@@ -179,5 +194,6 @@
   "inventoryNote": "main's lock listed 40 model-media packages while the merged tree contains 46, because PR #452 migrated six further boards without refreshing it. The lock now covers all 46. Tools/HangboardModels/tests/test_model_delivery_alignment.py is not executed by CI: the pytest job's working-directory is Tools/HangboardPackages.",
   "primeRibNote": "2026-09-24: metolius-prime-rib's native source (authored on this branch before main's build-time board.json landed) now embeds its board.json (minus id) as HangTenBoardManifest via Tools/HangboardCAD/set_board_manifest.py; only Document.xml changed, and the generated board.json is byte-identical to the previously committed file, which was deleted. sha256Manifest covers descriptor + FCStd for all six source-backed packages; main's 685f63d9... moved to supersededSha256Manifest (which previously held 4af6ea74...). 2026-09-25: the Linux-compiled asset was replaced by the pinned macOS CI rebuild (run 36074854274, FreeCAD 1.1.3 macOS arm64, OCCT 7.8.1); only the USDZ and the descriptor modelSHA256 changed, so sha256Manifest d07a406b... moved to supersededSha256Manifest (which previously held 685f63d9...).",
   "mainMergeNote": "2026-09-25: merged main 88c6f04 (metolius-wood-grips-compact-ii and soill-iron-palm-2 FreeCAD sources) into the metolius-prime-rib branch. is_source_backed detects every package with an FCStd, so sha256Manifest c7ce4d23... covers descriptor + FCStd for all eight source-backed packages (prime-rib with its pinned macOS CI rebuild descriptor); main's ff7f8f00... moved to supersededSha256Manifest (which on this branch previously held d07a406b...), and this branch's pre-merge bfb6f1e1... is superseded by it as well. soill-iron-palm-2 (faceted-import source) was given a migratedPackages entry, which PR #478 had omitted. No USDZ was rebuilt.",
-  "rockRingsVectorNote": "2026-09-25: metolius-rock-rings-3d re-authored as vector primitives (Bezier outline, stadium pockets, ellipse/circle cord tunnels, crown-hump jug) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. Its FCStd, USDZ and descriptor changed, so sha256Manifest c7ce4d23... moved to supersededSha256Manifest (which previously held ff7f8f00...)."
+  "deluxeIIMigrationNote": "2026-09-24: metolius-wood-grips-deluxe-ii became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 864203cf... supersedes c7ce4d23..., which moved to supersededSha256Manifest (which previously held ff7f8f00...).",
+  "rockRingsVectorNote": "2026-09-25: metolius-rock-rings-3d re-authored as vector primitives (Bezier outline, stadium pockets, ellipse/circle cord tunnels, crown-hump jug) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. Its FCStd, USDZ and descriptor changed; after merging main (Deluxe II), main's sha256Manifest 864203cf... moved to supersededSha256Manifest (which previously held c7ce4d23...)."
 }
