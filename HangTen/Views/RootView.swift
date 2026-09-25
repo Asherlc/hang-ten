@@ -2494,6 +2494,10 @@ struct WorkoutView: View {
 			.disabled(!canNavigate)
 			.accessibilityLabel("Routine, current step \(step.number): \(step.title)")
 			.accessibilityIdentifier("workout.routinePicker")
+
+			if planNeedsHandChoice {
+				handPreferenceMenu()
+			}
 		}
 	}
 
