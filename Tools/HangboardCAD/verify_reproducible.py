@@ -93,6 +93,29 @@ def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+ASSET_NAMES = ("primary.usdz", "primary.model.json")
+
+
+def keep_conflicts(keep: Path, package: str) -> list[str]:
+    """Committed asset paths that a `--keep-rebuild` copy for `package` would hit.
+
+    Paths are resolved (following symlinks), so `--keep-rebuild Hangboards` from
+    the repository root, or any alias of it, is caught before anything is copied.
+    """
+    committed_dir = (REPOSITORY / "Hangboards" / package / "assets").resolve()
+    kept_dir = (keep / package / "assets").resolve()
+    conflicts = []
+    for name in ASSET_NAMES:
+        committed = committed_dir / name
+        kept = kept_dir / name
+        same = kept.resolve() == committed.resolve()
+        if not same and kept.exists() and committed.exists():
+            same = os.path.samefile(kept, committed)
+        if same:
+            conflicts.append(str(committed))
+    return conflicts
+
+
 def verify(
     package: str, freecad: Path, extra_path: str, keep: Path | None = None
 ) -> dict:
@@ -110,12 +133,6 @@ def verify(
         if not rebuilt_asset.is_file() or not rebuilt_descriptor.is_file():
             raise RuntimeError(f"{package}: the rebuild produced no asset/descriptor pair")
 
-        if keep is not None:
-            kept = keep / package / "assets"
-            kept.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(rebuilt_asset, kept / "primary.usdz")
-            shutil.copyfile(rebuilt_descriptor, kept / "primary.model.json")
-
         committed_sha = sha256(committed_asset)
         rebuilt_sha = sha256(rebuilt_asset)
         asset_matches = committed_sha == rebuilt_sha
@@ -126,6 +143,19 @@ def verify(
 
         recorded = committed_json.get("modelSHA256")
         binds_to_committed = recorded == committed_sha
+
+        # Copy only after the committed bytes have been read, and only to a
+        # destination main() has already checked cannot be a committed asset.
+        if keep is not None:
+            conflicts = keep_conflicts(keep, package)
+            if conflicts:
+                raise RuntimeError(
+                    f"--keep-rebuild would overwrite committed asset(s): {', '.join(conflicts)}"
+                )
+            kept = keep / package / "assets"
+            kept.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(rebuilt_asset, kept / "primary.usdz")
+            shutil.copyfile(rebuilt_descriptor, kept / "primary.model.json")
 
         # The app trusts the descriptor's modelSHA256, so the descriptor must
         # bind to the bytes that actually ship, independently of the rebuild.
@@ -161,6 +191,17 @@ def main(argv: list[str] | None = None) -> int:
     if not packages:
         print("no source-backed boards found; nothing to verify")
         return 0
+    if arguments.keep_rebuild is not None:
+        conflicts = [
+            path
+            for package in packages
+            for path in keep_conflicts(arguments.keep_rebuild, package)
+        ]
+        if conflicts:
+            parser.error(
+                "--keep-rebuild must not resolve onto committed assets; it would "
+                "overwrite them before comparison: " + ", ".join(conflicts)
+            )
     if not arguments.freecad.is_file():
         print(f"pinned FreeCAD is not installed at {arguments.freecad}", file=sys.stderr)
         return 2

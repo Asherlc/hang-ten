@@ -99,18 +99,28 @@ def point_to_triangle_distance(points: np.ndarray, tris: np.ndarray, chunk: int 
     return out
 
 
-def main() -> int:
+def positive_int(text: str) -> int:
+    try:
+        value = int(text)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"invalid int value: {text!r}") from None
+    if value <= 0:
+        raise argparse.ArgumentTypeError(f"must be a positive integer, got {value}")
+    return value
+
+
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("reference")
     parser.add_argument("candidate")
     parser.add_argument("--limit-mm", type=float, default=0.5)
     parser.add_argument(
         "--chunk",
-        type=int,
+        type=positive_int,
         default=2048,
         help="query points per block; lower it for dense meshes (memory is chunk x triangles)",
     )
-    arguments = parser.parse_args()
+    arguments = parser.parse_args(argv)
 
     reference = read_usdz(Path(arguments.reference))
     candidate = read_usdz(Path(arguments.candidate))
