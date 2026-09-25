@@ -108,7 +108,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "test-without-building" in xctest_attempt_body
 
     expected_suite_jobs = (
-        ("test-unit", "HangTenTests", "2", None),
+        ("test-unit", "HangTenTests", "1", None),
         ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "2"),
         (
             "test-ui-map",
