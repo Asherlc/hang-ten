@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c7ce4d239c1283945187b63ef4af1971ede87f3cf8d69c6dc9e4cd2b3bf68499",
+  "sha256Manifest": "30009d0b59276c9db4fd4cba6b4928957319d53718c4bab751f552b5a83b392c",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -62,7 +62,7 @@
       "supersededSourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
-      "assetSHA256": "bd00147c6bf074271d4eb6542ca803ef8badcf37ca8d4978f0685f1c760bb399",
+      "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "0be3ea489e27b91b786de8fa1481b62ac5903fd7f4e7004eb4f0d657db09d264",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
@@ -93,7 +93,8 @@
       "nativeValidation": "compile reopen and published-depth gate passed on the Small authoring branch carried into this PR",
       "nativeAppValidation": "not re-run on this merge",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
-      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "assetSHA256": "cf6f14541846577d9010b9020db20ff7dabc5fc4870b751ace029712b7565029"
     },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
@@ -149,7 +150,7 @@
       "supersededSourceSHA256": "8599506fd6f2762ac519770f4defb5c785002179d7f31036683338a376308498",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
-      "assetSHA256": "fd4a02477c0ea81f4d863ae839f2e144a0a2ff7b3f8993a7238ef562b9e8b181",
+      "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "d21c03846539f080e7b8b3000e4cd37f0fb0cdad81e51f88c6f6caed6921e4b6",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
