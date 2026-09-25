@@ -41,15 +41,15 @@ def _normalise_package_timestamps(path: Path) -> None:
         local = int.from_bytes(data[offset + 42 : offset + 46], "little")
         if data[local : local + 4] != b"PK\x03\x04":
             raise ValueError("malformed local header")
-        for base, time_field, date_field, name_field in (
-            (local, 10, 12, 26),
-            (offset, 12, 14, 28),
+        for base, time_field, date_field, name_field, header_len in (
+            (local, 10, 12, 26, 30),
+            (offset, 12, 14, 28, 46),
         ):
             data[base + time_field : base + time_field + 2] = _DOS_TIME.to_bytes(2, "little")
             data[base + date_field : base + date_field + 2] = _DOS_DATE.to_bytes(2, "little")
             name_length = int.from_bytes(data[base + name_field : base + name_field + 2], "little")
             extra_length = int.from_bytes(data[base + name_field + 2 : base + name_field + 4], "little")
-            cursor = base + 30 + name_length
+            cursor = base + header_len + name_length
             limit = cursor + extra_length
             while cursor + 4 <= limit:
                 field_id = int.from_bytes(data[cursor : cursor + 2], "little")
@@ -68,12 +68,16 @@ def _normalise_package_timestamps(path: Path) -> None:
 
 def strip_materials_from_usdz(usdz_path: Path) -> bool:
     """Strip all materials and textures from a USDZ. Returns True if modified."""
-    staging = Path(tempfile.mkdtemp(prefix=".strip-", dir=usdz_path.parent))
+    staging = Path(tempfile.mkdtemp(prefix=".strip-usdz-"))
     try:
         with zipfile.ZipFile(usdz_path) as archive:
             members = archive.namelist()
             for name in members:
                 dest = staging / name
+                resolved = dest.resolve()
+                if not resolved.is_relative_to(staging.resolve()):
+                    print(f"  SKIP: unsafe archive member path: {name}")
+                    return False
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 dest.write_bytes(archive.read(name))
 
@@ -90,12 +94,12 @@ def strip_materials_from_usdz(usdz_path: Path) -> bool:
             print(f"  SKIP: cannot open stage")
             return False
 
-        # Unbind materials from all meshes
+        # Unbind materials from all prims (meshes, xforms, ancestors)
         mesh_count = 0
         for prim in stage.Traverse():
+            if prim.HasAPI(UsdShade.MaterialBindingAPI):
+                UsdShade.MaterialBindingAPI(prim).UnbindAllBindings()
             if prim.IsA(UsdGeom.Mesh):
-                binding = UsdShade.MaterialBindingAPI(prim)
-                binding.UnbindAllBindings()
                 mesh_count += 1
 
         if mesh_count == 0:
@@ -103,7 +107,9 @@ def strip_materials_from_usdz(usdz_path: Path) -> bool:
             return False
 
         # Remove the entire _materials subtree
-        stage.RemovePrim("/root/_materials")
+        materials_prim = stage.GetPrim("/root/_materials")
+        if materials_prim:
+            stage.RemovePrim("/root/_materials")
 
         stage.GetRootLayer().Save()
         stage = None
@@ -134,7 +140,7 @@ def update_descriptor_hash(usdz_path: Path) -> None:
     if not descriptor_path.is_file():
         return
 
-    descriptor = json.loads(descriptor_path.read_text())
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
     new_hash = hashlib.sha256(usdz_path.read_bytes()).hexdigest()
     old_hash = descriptor.get("modelSHA256")
 
@@ -142,7 +148,10 @@ def update_descriptor_hash(usdz_path: Path) -> None:
         return
 
     descriptor["modelSHA256"] = new_hash
-    descriptor_path.write_text(json.dumps(descriptor, indent=2, sort_keys=False) + "\n")
+    descriptor_path.write_text(
+        json.dumps(descriptor, indent=2, sort_keys=False) + "\n",
+        encoding="utf-8",
+    )
     print(f"  descriptor hash: {old_hash[:12]}... -> {new_hash[:12]}...")
 
 
@@ -169,6 +178,8 @@ def main() -> None:
             print(f"  ERROR: {e}")
 
     print(f"\nDone: {modified} modified, {skipped} skipped, {errors} errors")
+    if errors:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
