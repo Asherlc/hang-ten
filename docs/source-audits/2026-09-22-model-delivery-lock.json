@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d587906202cf51cc776147046bcd73a2db158bf9b49c10fbdc6033f74326b31e",
+  "sha256Manifest": "acfb277324c694cdca9aaedb0f7a0cd944f60d35992511bde81ef9817c322564",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
