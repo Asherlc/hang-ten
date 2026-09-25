@@ -60,6 +60,15 @@ workflows. Do not reintroduce tooling or guidance for those approaches. The
 accepted process is direct path authoring, package validation, and human visual
 review in the app.
 
+## Model material policy
+
+All USDZ models must ship without materials or textures. Meshes are unbound so
+the renderer uses its default appearance. Do not add PBR materials, image
+textures, or color adornments to committed USDZ files. Both compilers
+(`compile_board.py` and `contact_model_package.py`) produce unbound meshes by
+default — objects without `MaterialName` in FreeCAD or without materials in
+Blender are exported as-is.
+
 ## 3D suspension and On-Demand Resources
 
 For missing or changed cords on model-media boards, use the repository-local

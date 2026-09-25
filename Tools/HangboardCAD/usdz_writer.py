@@ -57,7 +57,7 @@ class Mesh:
     node_id: str
     points_mm: Sequence[tuple[float, float, float]]
     triangles: Sequence[tuple[int, int, int]]
-    material: Material
+    material: Material | None = None
     uvs: Sequence[tuple[float, float]] | None = None
     normals_mm: Sequence[tuple[float, float, float]] | None = None
 
@@ -91,8 +91,8 @@ def _validate(meshes: Sequence[Mesh]) -> None:
         if mesh.node_id in seen:
             raise ValueError(f"duplicate node id: {mesh.node_id}")
         seen.add(mesh.node_id)
-        if not isinstance(mesh.material, Material) or not mesh.material.name:
-            raise ValueError(f"node {mesh.node_id} requires a named material")
+        if mesh.material is not None and (not isinstance(mesh.material, Material) or not mesh.material.name):
+            raise ValueError(f"node {mesh.node_id} has an invalid material")
         if not mesh.points_mm:
             raise ValueError(f"node {mesh.node_id} has no points")
         for point in mesh.points_mm:
@@ -173,8 +173,9 @@ def _mesh(stage: Usd.Stage, mesh: Mesh) -> None:
         )
         primvar.Set(Vt.Vec2fArray([Gf.Vec2f(float(u), float(v)) for u, v in mesh.uvs]))
 
-    binding = UsdShade.MaterialBindingAPI.Apply(prim.GetPrim())
-    binding.Bind(_material(stage, mesh.material))
+    if mesh.material is not None:
+        binding = UsdShade.MaterialBindingAPI.Apply(prim.GetPrim())
+        binding.Bind(_material(stage, mesh.material))
 
 
 _DOS_TIME = 0
@@ -249,7 +250,7 @@ def write_usdz(path: Path, meshes: Sequence[Mesh]) -> None:
         root.AddRotateXYZOp().Set(Gf.Vec3f(-90.0, 0.0, 0.0))
         stage.SetDefaultPrim(root.GetPrim())
         for mesh in meshes:
-            if mesh.material.texture_source is not None:
+            if mesh.material is not None and mesh.material.texture_source is not None:
                 if not mesh.material.texture_archive_path:
                     raise ValueError("texture_source requires texture_archive_path")
                 destination = staging / mesh.material.texture_archive_path
@@ -326,7 +327,8 @@ def read_usdz(path: Path) -> dict:
         ]
         if any(count != 3 for count in counts):
             raise ValueError(f"{prim.GetName()} contains a non-triangular face")
-        bound = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()[0]
+        bound_result = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()
+        bound = bound_result[0] if bound_result else None
         local_to_world = cache.GetLocalToWorldTransform(prim)
         nodes[prim.GetName()] = {
             "path": str(prim.GetPath()),

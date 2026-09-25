@@ -22,10 +22,9 @@ conditionals. The known regression is Baguette, not a special runtime case.
 ## Scope and inventory
 
 The shared Swift package loader and `BoardModelScene` are authoritative for iOS.
-The Android decoder is a live schema consumer even though it currently marks
-model media unavailable; its schema handling must be updated in the same change
-or explicitly retain a strict, documented unsupported-model result. It must not
-silently interpret orientation fields as raster data.
+Its schema handling must be updated in the same change or explicitly retain a strict,
+documented unsupported-model result. It must not silently interpret orientation
+fields as raster data.
 
 The migration audit covers every model package currently in `Hangboards`:
 
@@ -241,14 +240,14 @@ smallest change:
    omissions when a new model package is added. The inventory test also asserts
    union coverage (every descriptor hold appears in at least one position) and
    validates the selection disambiguation rule for overlapping holds.
-4. Android repository tests cover the shared JSON contract and assert that model
-   packages either decode the same orientation fields or produce the explicit
-   existing unavailable-model result without accepting malformed metadata. No
-   Android board-ID exception is permitted.
-5. Run the package compiler/validator and the focused Swift and Android tests,
-   then the full relevant test suites. The RED run must demonstrate each new
-   assertion fails against the pre-change behavior; the GREEN run must show all
-   pass.
+4. Swift repository tests cover the shared JSON contract and assert that model
+    packages either decode the same orientation fields or produce the explicit
+    existing unavailable-model result without accepting malformed metadata. No
+    board-ID exception is permitted.
+5. Run the package compiler/validator and the focused Swift test,
+    then the full relevant test suites. The RED run must demonstrate each new
+    assertion fails against the pre-change behavior; the GREEN run must show all
+    pass.
 
 ## Provenance, audit, and visual acceptance
 

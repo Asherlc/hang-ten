@@ -1,12 +1,12 @@
 # Rotatable 3D Board Orientations Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking. All tasks below are completed and verified.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking. Implementation is complete, but visual validation remains open.
 
 **Goal:** Add auditable, metadata-driven canonical orientations to the shared 3D board model while preserving exact hold identity, fixed-model behavior, suspension behavior, strict cross-language decoding, and interactive orbit.
 
-**Architecture:** Extend the schema-v2 model media with a mutually exclusive `orientation` value and extend `BoardPosition` with an optional-on-wire, materialized-in-memory `holdIDs` array. Python package validation is the authoring/inventory gate; Swift is the iOS authoritative loader/renderer; Android either decodes the same contract or fails with its existing explicit unavailable-model result. SceneKit rotates one shared board container around the descriptor model-bounds center and recalculates orthographic framing.
+**Architecture:** Extend the schema-v2 model media with a mutually exclusive `orientation` value and extend `BoardPosition` with an optional-on-wire, materialized-in-memory `holdIDs` array. Python package validation is the authoring/inventory gate; SceneKit rotates one shared board container around the descriptor model-bounds center and recalculates orthographic framing.
 
-**Tech Stack:** Swift 5/Xcode 26, SceneKit/simd, XCTest, Kotlin/JUnit/Gradle, Python 3/pytest, canonical JSON package files, isolated iOS Simulator validation.
+**Tech Stack:** Swift 5/Xcode 26, SceneKit/simd, XCTest, Python 3/pytest, canonical JSON package files, isolated iOS Simulator validation.
 
 **Spec:** `docs/superpowers/specs/2026-09-11-rotatable-3d-board-orientations-design.md`
 
@@ -29,8 +29,7 @@
 - Modify `Tools/HangboardPackages/src/hangboard_packages/board_catalog.py` and `Tools/HangboardPackages/tests/test_model_first_packages.py` for Python schema/domain parsing, union-cover validation, canonical quaternion checks, and model inventory.
 - Modify `HangTen/Models/TrainingModels.swift`, `HangTen/Models/BoardPackageStore.swift`, and `HangTenTests/BoardPackageStoreTests.swift` for the Swift domain contract and strict loader. `BoardPackageWriter.swift` is the legacy editable raster/v1 document and is not a v2 model serializer.
 - Modify `HangTen/Views/BoardModelView.swift` and `HangTenTests/BoardModelTests.swift` for canonical rotation, center pivot, transformed framing, reset/orbit behavior, and no-cord orientation state.
-- Modify `Android/app/src/main/java/com/hangten/android/content/BoardModels.kt`, `Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt`, and `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt` for the strict decoder boundary.
-- Modify all 14 migrated packages—`Hangboards/beastmaker-1000/board.json`, `Hangboards/beastmaker-2000/board.json`, `Hangboards/captain-fingerfood-dual/board.json`, `Hangboards/captain-fingerfood-pocket/board.json`, `Hangboards/captain-fingerfood-unlevel/board.json`, `Hangboards/lattice-triple-rung/board.json`, `Hangboards/lattice-mxedge-lift-large/board.json`, `Hangboards/lattice-mxedge-lift-small/board.json`, `Hangboards/metolius-prime-rib/board.json`, `Hangboards/metolius-project/board.json`, `Hangboards/metolius-wood-grips-compact-ii/board.json`, `Hangboards/nature-stone-hanger/board.json`, `Hangboards/tension-flash-board/board.json`, and `Hangboards/yy-baguette-evo/board.json`—and add `docs/source-audits/2026-09-11-3d-board-orientation-audit.md` for reviewed metadata and provenance.
+- Modify `HangTen/Models/TrainingModels.swift`, `HangTen/Models/BoardPackageStore.swift`, and `HangTenTests/BoardPackageStoreTests.swift` for the Swift domain contract and strict loader. `BoardPackageWriter.swift` is the legacy editable raster/v1 document and is not a v2 model serializer.
 - Modify/add `Tools/HangboardPackages/tests/test_model_orientation_inventory.py` for synthetic/discovered-package coverage; add simulator artifacts only under `.context/$workspace_owner/`.
 
 ## Native XCTest Lifecycle (Tasks 2–4)
@@ -130,23 +129,6 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 - [x] **Step 5: Run GREEN using the Native XCTest Lifecycle.** Re-run focused XCTest and then `rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id='$simulator_uuid -derivedDataPath .context/$workspace_name/task-4-DerivedData -resultBundlePath .context/$workspace_name/task-4.xcresult -only-testing:HangTenTests/BoardModelTests -only-testing:HangTenTests/SuspendedBoardPresentationTests`; expected all pass and suspension snapshots remain unchanged, then verify cleanup.
 - [x] **Step 6: Commit.** `git add HangTen/Views/BoardModelView.swift HangTenTests/BoardModelTests.swift && git commit -m "feat: render canonical model orientations"`
 
-### Task 5: Enforce the Android decoder boundary
-
-**Files:**
-- Modify: `Android/app/src/main/java/com/hangten/android/content/BoardModels.kt`
-- Modify: `Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt`
-- Modify: `Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt`
-
-**Interfaces:**
-- Kotlin `BoardPosition.holdIds: List<String>` and model `BoardOrientation(pivot: String, rotations: Map<String, List<Float>>)` use the same JSON names and `[x,y,z,w]` order.
-- `decodeSchemaV2Board` either validates/decodes orientation fields through the shared strict path or marks model media unavailable with the existing explicit `unavailableBoardIds` result; malformed orientation must never become raster geometry.
-
-- [x] **Step 1: Write RED JUnit tests** for valid orientation, legacy positions, unknown orientation keys, bad pivot/quaternion/rotation IDs, orientation+suspension, and a model package returning the explicit unavailable-model result. Assert no model orientation field is read as `holdGeometry`.
-- [x] **Step 2: Run RED.** `rtk ./Android/gradlew -p Android testDebugUnitTest --tests com.hangten.android.content.BoardRepositoryTest`; expected failure is missing fields or acceptance of the model as an undifferentiated unsupported payload.
-- [x] **Step 3: Implement the strict boundary.** Add closed-key parsing and exact validation; keep board-ID-agnostic behavior and preserve the explicit unavailable-model path if Android does not render models.
-- [x] **Step 4: Run GREEN Android tests.** Re-run the command above and `rtk ./Android/gradlew -p Android test`; expected all unit tests pass.
-- [x] **Step 5: Commit.** `git add Android/app/src/main/java/com/hangten/android/content/BoardModels.kt Android/app/src/main/java/com/hangten/android/content/BoardRepository.kt Android/app/src/test/java/com/hangten/android/content/BoardRepositoryTest.kt && git commit -m "feat: enforce Android model orientation decoding"`
-
 ### Task 6: Deliberately audit and backfill every current 3D package
 
 **Files:**
@@ -192,13 +174,13 @@ def test_model_orientation_is_normalized_and_membership_is_exact(tmp_path):
 
 - [x] **Step 1: Prepare owned resources.** Derive `workspace_path="${PASEO_WORKTREE_PATH:-$PWD}"` and `workspace_owner="${workspace_path:t}"` in zsh, create `.context/$workspace_owner/orientation-validation`, allocate the exact device name `Hang Ten Paseo royal-anaconda Review`, record pending/owned UUID manifests, and install the documented EXIT/INT/TERM cleanup trap.
 - [x] **Step 2: Build and install.** Boot and readiness-poll only `$simulator_uuid`, then run `rtk xcodebuild -project HangTen.xcodeproj -scheme HangTen -sdk iphonesimulator -configuration Debug -destination 'platform=iOS Simulator,id='$simulator_uuid -derivedDataPath .context/$workspace_owner/orientation-validation/DerivedData build`; install and launch by UUID, and record logs under the owned directory.
-- [ ] **Step 3: Capture GREEN evidence after Tasks 1–6.** In landscape, capture front and every canonical position for Baguette, Nature, Beastmaker 1000, and Compact II; verify expected holds are visible/selectable, manually orbit then reset, switch positions, and verify framing stays in viewport on detail and workout. Confirm display-only preview remains intentionally non-interactive and malformed packages show unavailable state. Automated RED tests in Tasks 1–5 provide the pre-change baseline. Baguette, Beastmaker 1000, and Compact II have landscape evidence, and Nature's front/reverse positions are verified in portrait; Nature landscape validation remains open because its 3D card is blank under the synthetic-landscape flag and has not yet been verified on a physical device genuinely rotated to landscape.
+- [ ] **Step 3: Capture GREEN evidence after Tasks 1–4 and 6.** In landscape, capture front and every canonical position for Baguette, Nature, Beastmaker 1000, and Compact II; verify expected holds are visible/selectable, manually orbit then reset, switch positions, and verify framing stays in viewport on detail and workout. Confirm display-only preview remains intentionally non-interactive and malformed packages show unavailable state. Automated RED tests in Tasks 1–4 provide the pre-change baseline. Baguette, Beastmaker 1000, and Compact II have landscape evidence, and Nature's front/reverse positions are verified in portrait; Nature landscape validation remains open because its 3D card is blank under the synthetic-landscape flag and has not yet been verified on a physical device genuinely rotated to landscape.
 - [x] **Step 4: Verify cleanup.** Stop the app, shut down/delete the exact simulator UUID, remove only `.context/$workspace_owner/orientation-validation` and its owned DerivedData/results, assert the UUID and paths no longer exist, and leave shared/unknown resources untouched.
 - [x] **Step 5: Commit review evidence only if repository policy accepts it.** Keep screenshots/logs under ignored `.context`; otherwise commit the concise audit checklist at `docs/source-audits/2026-09-11-3d-board-orientation-audit.md` only with `git add` and `git commit -m "test: validate model orientation surfaces"`.
 
 ## Final Review Gate
 
-- [x] Run the full relevant suites: `rtk python3 -m pytest -q Tools/HangboardPackages/tests`, the Native XCTest Lifecycle with a fresh `Hang Ten Paseo royal-anaconda Review` UUID and `-destination 'platform=iOS Simulator,id='$simulator_uuid` using `.context/$workspace_name/final-DerivedData` and `.context/$workspace_name/final.xcresult`, and `rtk ./Android/gradlew -p Android test`.
-- [x] Re-read the spec section-by-section and map each acceptance criterion to Tasks 1–7; verify no board-ID conditional, USDZ/descriptor edit, invented provenance, orientation+suspension combination, arbitrary pivot, or incomplete hold coverage exists.
+- [x] Run the full relevant suites: `rtk python3 -m pytest -q Tools/HangboardPackages/tests` and the Native XCTest Lifecycle with a fresh `Hang Ten Paseo royal-anaconda Review` UUID and `-destination 'platform=iOS Simulator,id='$simulator_uuid` using `.context/$workspace_name/final-DerivedData` and `.context/$workspace_name/final.xcresult`.
+- [ ] Re-read the spec section-by-section and map each acceptance criterion to Tasks 1–4, 6, and 7, including Task 7's iOS simulator visual validation; verify no board-ID conditional, USDZ/descriptor edit, invented provenance, orientation+suspension combination, arbitrary pivot, or incomplete hold coverage exists. Keep this gate incomplete until Task 7 visual validation passes or an explicit blocker is recorded.
 - [x] Search this plan for forbidden planning markers and vague instructions; none may remain. Check that all later interfaces use the exact names/types defined above.
 - [x] A fresh reviewer must inspect each task’s diff and test output before the implementation branch is integrated. Push every resulting commit automatically: `git push -u origin HEAD`. (Auto-push is the established workflow policy; maintainer review happens on the PR, not per-commit.)

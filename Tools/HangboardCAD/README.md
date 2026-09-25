@@ -32,7 +32,7 @@ whenever something needs the board document:
   hand-authored `board.json`;
 * `scripts/stage-board-packages.py` writes it into each staged package, for the
   iOS bundle (the Xcode "Stage Board Packages" phase) and for the Android assets
-  (the Gradle `stageCanonicalAssets` task, `--target android`); the FCStd itself
+  (the `scripts/stage-board-packages.py --target android` entrypoint); the FCStd itself
   is never staged into either app.
 
 Generation is pure host Python (`hangboard_packages.cad_source`, stdlib only; no
@@ -209,6 +209,12 @@ against.
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
+
+**Material policy.** Committed USDZ models ship without materials or textures.
+The compiler produces unbound meshes — objects without `MaterialName` are
+exported without material bindings. The FreeCAD source may still carry
+`MaterialName`, `BaseColor`, etc. as compile-time metadata, but those
+properties are not required and do not affect the shipped appearance.
 
 ## Surface partition
 

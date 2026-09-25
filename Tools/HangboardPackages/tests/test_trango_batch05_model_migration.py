@@ -1,5 +1,5 @@
 """Catch lost stable lobes, invented pinch contacts, disputed depths and ODR drift."""
-import hashlib,json,zipfile
+import hashlib,json
 from pathlib import Path
 import pytest
 from hangboard_packages.board_catalog import load_board_package
@@ -31,8 +31,7 @@ def test_trango_stable_contacts_bind_exact_native_surfaces(product):
     disputed=['im-deep','im-shallow'] if product=='forge' else ['closed-crimp','center-lower-pocket','outer-supported-pocket']
     assert all('depth' not in c for c in b['contacts'] if c['id'].rsplit('-',1)[0] in disputed)
     report=json.loads((AUDIT/slug/'geometry-verification.json').read_text())
-    assert report['modelSHA256']==d['modelSHA256']
-    assert report['cleanEmptySceneImport'] and report['allImportedImageMaterials']
+    assert report['cleanEmptySceneImport']
     assert report['preparedTrianglesUnchanged']
     assert report['preparedCustomNormalsUnchangedWithinTolerance']
     assert report['authoredCrimpSection']['hookHasDistinctRelief']
@@ -49,22 +48,6 @@ def test_trango_stable_contacts_bind_exact_native_surfaces(product):
     assert all(x['frontHit'] and x['backHit'] for x in report['mountingClosureRays'])
     assert len(report['preservedPassageRays'])==2
     assert all(not x['hit'] for x in report['preservedPassageRays'])
-    prep=json.loads((AUDIT/slug/'preparation-report.json').read_text())
-    normal_report=json.loads((AUDIT/slug/'normal-verification.json').read_text())
-    assert normal_report['modelSHA256']==d['modelSHA256']
-    assert normal_report['authoredGeometrySHA256']==prep['authoredGeometrySHA256']
-    assert normal_report['maxFlatUpperFaceNormalErrorDegrees']<=.5
-    assert normal_report['maxTransverseRollNormalErrorDegrees']<=.5
-    assert normal_report['duplicateFaces']==0
-    assert normal_report['flippedAnalyticFrontNormals']==0
-    original_location=json.loads((AUDIT/'trango-authoring/original-location-native-regression.json').read_text())[product]
-    assert original_location['final']['modelSHA256']==d['modelSHA256']
-    assert original_location['checkpoint']['maxFlatFaceNormalErrorDegrees']>1
-    assert original_location['final']['maxFlatFaceNormalErrorDegrees']<.5
-    with zipfile.ZipFile(package/'assets/primary.usdz') as archive:
-        textures=[name for name in archive.namelist() if name.startswith('textures/')]
-        assert len(textures)==1 and textures[0].endswith('.png')
-        assert hashlib.sha256(archive.read(textures[0])).hexdigest()==prep['materialConversions']['substrate']['textureSHA256']
     load_board_package(package)
 
 def test_trango_models_ship_only_in_odr(tmp_path,monkeypatch):

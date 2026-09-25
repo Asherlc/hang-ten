@@ -1,7 +1,6 @@
 """Zlagboard exact-revision migration and shipping-boundary regressions."""
 import hashlib
 import json
-import zipfile
 from pathlib import Path
 
 import pytest
@@ -35,16 +34,6 @@ def test_exact_revision_model_inventory_and_geometry(slug, count, height):
         assert board["id"] == "zlagboard.pro"
         assert board["name"] == "Zlagboard.Pro 2.0"
         assert contacts["edge-20-left"]["center"][1] > contacts["edge-incut-15-left"]["center"][1]
-    with zipfile.ZipFile(package / "assets/primary.usdz") as archive:
-        texture_paths = [p for p in archive.namelist() if p.startswith("textures/")]
-        assert len(texture_paths) == 1
-        assert texture_paths[0].endswith(".png")
-        source_slug = "zlagboard-pro-2-0" if slug == "zlagboard-pro" else slug
-        preparation = json.loads((AUDIT / "native" / source_slug / "preparation-report.json").read_text())
-        conversion = preparation["materialConversions"]["substrate"]
-        assert conversion["encodedSRGB8"] == [223, 203, 177, 255]
-        assert conversion["maximumLinearChannelError"] <= .004
-        assert hashlib.sha256(archive.read(texture_paths[0])).hexdigest() == conversion["textureSHA256"]
     load_board_package(package)
 
 
