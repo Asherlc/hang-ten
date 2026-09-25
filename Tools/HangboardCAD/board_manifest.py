@@ -64,10 +64,12 @@ REPOSITORY = Path(__file__).resolve().parents[2]
 
 
 def package_source(root: Path, package: str) -> Path:
+    """Return the path to the FCStd authoring source for ``package``."""
     return root / "Hangboards" / package / f"{package}.FCStd"
 
 
 def source_backed_packages(root: Path) -> list[str]:
+    """Return the sorted slugs of packages that carry an FCStd authoring source."""
     return sorted(
         path.parent.name
         for path in (root / "Hangboards").glob("*/*.FCStd")
@@ -176,6 +178,7 @@ def describe_source(path: Path) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
+    """CLI entry point: generate board.json from FCStd sources or render textconv."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

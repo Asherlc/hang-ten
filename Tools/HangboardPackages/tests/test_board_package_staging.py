@@ -37,6 +37,7 @@ LIVE_MODEL_PACKAGE_SLUGS = (
 
 
 def load_staging_module():
+    """Import the stage-board-packages.py script as a module."""
     module_path = REPO_ROOT / "scripts" / "stage-board-packages.py"
     spec = importlib.util.spec_from_file_location("board_package_staging", module_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
@@ -48,6 +49,7 @@ def load_staging_module():
 
 
 def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
+    """Create a temporary repo with two board packages and one draft."""
     repository_root = tmp_path / "repository"
     hangboards = repository_root / "Hangboards"
     package_source = REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages"
@@ -74,12 +76,14 @@ def build_repository(tmp_path: Path) -> tuple[Path, list[Path], Path]:
 
 
 def configure_xcode_destination(monkeypatch: pytest.MonkeyPatch, destination: Path) -> None:
+    """Set Xcode environment variables to simulate a build destination."""
     monkeypatch.setenv("TARGET_BUILD_DIR", str(destination.parent.parent))
     monkeypatch.setenv("UNLOCALIZED_RESOURCES_FOLDER_PATH", destination.parent.name)
     monkeypatch.setenv("DERIVED_FILE_DIR", str(destination.parents[2] / "DerivedFiles"))
 
 
 def odr_staging_root(destination: Path) -> Path:
+    """Return the ODR staging root derived from a TARGET_BUILD_DIR destination."""
     return destination.parents[2] / "DerivedFiles" / "HangTenModelODR"
 
 
