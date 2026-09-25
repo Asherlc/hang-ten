@@ -467,6 +467,8 @@ git commit -m "feat: encode Lattice max-hang routines as two-handed pairs"
 - Modify: `HangTen/Views/RootView.swift:2976-2986` (`chooseHandPreference` → `applyHandPreference`)
 - Modify: `HangTen/Views/RootView.swift:2995-3036` (`toggleRunning` gate)
 - Modify: `HangTen/Views/RootView.swift:2184-2210` (`onAppear` default)
+- Modify: `HangTen/Models/WorkoutTimeline.swift` (add resolution-aware default)
+- Test: `HangTenTests/WorkoutTimelineTests.swift`
 
 - [ ] **Step 1: Remove the sheet state and sheet**
 
@@ -550,6 +552,115 @@ Replace the existing `handPreferenceButton` and `chooseHandPreference` (lines 29
 	}
 ```
 
+- [ ] **Step 3b: Add a resolution-aware default and its tests**
+
+A capacity-2 default of `.both` must not break custom either-hand routines on a board where a both-hands target cannot pair: recording fails closed for custom provenance, so the default must downgrade to `.alternate` when the both materialization does not resolve. Add to `HangTen/Models/WorkoutTimeline.swift`, in an `extension WorkoutSessionHandResolver` after the enum:
+
+```swift
+extension WorkoutSessionHandResolver {
+    /// The capacity default, downgraded to `.alternate` when a both-hands
+    /// materialization cannot resolve every work requirement on this board.
+    static func defaultPreference(
+        plan: TrainingPlan,
+        board: BoardRevision
+    ) -> WorkoutSessionHandPreference {
+        let capacityDefault = WorkoutSessionHandPreference.defaultPreference(
+            boardHandCapacity: board.handCapacity
+        )
+        guard capacityDefault == .both else { return capacityDefault }
+        let steps = sessionSteps(
+            from: plan.steps,
+            preference: .both,
+            boardIsOneHanded: board.isOneHanded
+        )
+        let resolvesEveryStep = steps.allSatisfy { step in
+            guard !step.isRestStep else { return true }
+            let requirements = step.workRequirements
+            guard !requirements.isEmpty else { return true }
+            return (try? ContactResolver.resolve(
+                requirements,
+                step: step,
+                board: board
+            ))?.isEmpty == false
+        }
+        return resolvesEveryStep ? .both : .alternate
+    }
+}
+```
+
+Add these tests to the `WorkoutTimelineTests` class:
+
+```swift
+func testResolutionAwareDefaultFallsBackToAlternateWhenBothCannotResolve() {
+    let board = BoardRevision(
+        id: "fixture.single-contact",
+        revisionID: "test",
+        manufacturer: "Fixture",
+        name: "Single contact",
+        subtitle: "",
+        dimensions: nil,
+        aspectRatio: 1,
+        handCapacity: 2,
+        contacts: [
+            PhysicalContact(id: "only-edge", name: "Only edge", kind: .edge, handCapacity: 1)
+        ],
+        productURL: URL(string: "https://example.com/board")!,
+        photoAssetName: nil
+    )
+    let plan = TrainingPlan(
+        id: "fixture.either",
+        title: "Either",
+        subtitle: "",
+        level: "",
+        sourceLabel: "",
+        sourceURL: URL(string: "https://example.com/plan")!,
+        provenance: .adapted,
+        boardID: board.id,
+        steps: [
+            WorkoutStep(
+                id: "either", number: 1, title: "Either", instruction: "",
+                accessory: "", duration: 7, phase: .hang,
+                segments: [WorkoutSegment(
+                    kind: .work,
+                    target: .fromLegacyTargets([ContactRequirement(kind: .edge, selection: .single)]),
+                    timing: .fixed,
+                    duration: 7
+                )],
+                handUse: .either, side: .both
+            )
+        ]
+    )
+
+    XCTAssertEqual(
+        WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+        .alternate
+    )
+}
+
+func testResolutionAwareDefaultKeepsBothWhenAPairResolves() throws {
+    let plan = try XCTUnwrap(PlanCatalog.all.first { $0.id == "research.max-hangs" })
+    let board = try XCTUnwrap(
+        BoardCatalog.all.first { board in
+            plan.steps.allSatisfy { step in
+                guard !step.isRestStep else { return true }
+                let requirements = step.workRequirements
+                guard !requirements.isEmpty else { return true }
+                return (try? ContactResolver.resolve(requirements, step: step, board: board))?.isEmpty == false
+            }
+        },
+        "Expected at least one registered board where Max Hangs resolves its pair"
+    )
+
+    XCTAssertEqual(
+        WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+        .both
+    )
+}
+```
+
+Run: `ht_test -only-testing:HangTenTests/WorkoutTimelineTests/testResolutionAwareDefaultFallsBackToAlternateWhenBothCannotResolve -only-testing:HangTenTests/WorkoutTimelineTests/testResolutionAwareDefaultKeepsBothWhenAPairResolves`
+Expected: 2 tests, 0 failures. If the real-board test cannot find a paired contact, report it rather than guessing a different board.
+
 - [ ] **Step 4: Apply the default on appear**
 
 In `onAppear` (line 2184), immediately after `configureRecorder()`, add:
@@ -557,7 +668,7 @@ In `onAppear` (line 2184), immediately after `configureRecorder()`, add:
 ```swift
 			if planNeedsHandChoice, handPreference == nil {
 				applyHandPreference(
-					.defaultPreference(boardHandCapacity: board.handCapacity)
+					.defaultPreference(plan: plan, board: board)
 				)
 			}
 ```
@@ -584,7 +695,7 @@ with:
 		   planNeedsHandChoice,
 		   handPreference == nil {
 			applyHandPreference(
-				.defaultPreference(boardHandCapacity: board.handCapacity)
+				.defaultPreference(plan: plan, board: board)
 			)
 		}
 ```
