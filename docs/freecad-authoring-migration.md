@@ -311,7 +311,7 @@ byte-identical. Re-running an authoring script that creates the document from
 scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
-commit it. The five boards migrated so far were authored by committed
+commit it. The six boards migrated so far were authored by committed
 `Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
 (published versus measured values, tolerances, reference SHAs, stated
 deviations) is preserved in
@@ -538,6 +538,10 @@ write-up. The durable points:
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
   mono circle fit, cord mouths, source-backed lock). See lessons §12.
+- **Compact II** reused the deleted Blender authoring script from Git as its
+  dimension source. It also showed that a sculpted body gets exact contact
+  partitions only when every face is planar: station-stacked quads and
+  triangles, not curved lofts. See lessons §14.
 
 ## Fast loop and definition of done
 
