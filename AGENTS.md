@@ -71,6 +71,14 @@ previews of the changed board next to the prior committed asset and present them
 before reporting the change complete. A geometry change without screenshots is
 not reported as done.
 
+## Model material policy
+
+All USDZ models must ship without materials or textures. Meshes are unbound so
+the renderer uses its default appearance. Do not add PBR materials, image
+textures, or color adornments to committed USDZ files. The script
+`Tools/set_clay_materials.py` enforces this by stripping materials from existing
+models; use it after any pipeline that produces textured output.
+
 ## 3D suspension and On-Demand Resources
 
 For missing or changed cords on model-media boards, use the repository-local

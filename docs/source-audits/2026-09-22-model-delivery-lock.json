@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, and metolius-wood-grips-deluxe-ii native FreeCAD migrations, and evolv-kilter-basic-long; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, and metolius-wood-grips-deluxe-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c45397f9dd660af636074bdd296dd6f49b8721e49f12be3a6226792a1a3e6694",
+  "sha256Manifest": "206fc7e6d0b79ca392bdcd2e05819b7afa0f2a8e9d49f21482066d1689f6648d",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "c66f5f7fd7d83a2bc2cbc4c032bba90258d6df0979aca31b6f9a330ca79a157c",
+  "supersededSha256Manifest": "fb3515c1a3f1a8ba1be772fa36d9160aba8b14f0598cfa442555737603197ddf",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -62,8 +62,8 @@
       "supersededSourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
-      "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
-      "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
+      "assetSHA256": "86c8de2836f73c207a28f5a7e124686296a19d1c01f48e6d5864e5caa926210a",
+      "descriptorSHA256": "6a5c7fdfca2c0788f4e11ac6a6e79cba1190df14d3818a81d536b174250f5746",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
@@ -94,8 +94,8 @@
       "nativeAppValidation": "not re-run on this merge",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
-      "assetSHA256": "cf6f14541846577d9010b9020db20ff7dabc5fc4870b751ace029712b7565029",
-      "descriptorSHA256": "b0cf9e32911d723a6742f4abe4cd7b22c2c2658aa008319479a0dddf4e57d387"
+      "assetSHA256": "af72564e24bd8b69c707405ae49dcbcabed9aa210bc7e7c677abe4b6f36b89d8",
+      "descriptorSHA256": "0b74899328b6ca8b110f8ac19fee65e875249cd8a23953542e43c6d95b6c76d3"
     },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
@@ -152,8 +152,8 @@
       "supersededSourceSHA256": "8599506fd6f2762ac519770f4defb5c785002179d7f31036683338a376308498",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
-      "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
-      "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
+      "assetSHA256": "25d0e5e4705a819c71bf621e617c5f12e08962b87f3ce47756321103ccddbdbe",
+      "descriptorSHA256": "0aefe99cb498caac54f8b6dbf68594eb40eb44388febefec874ae3832ed35086",
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",

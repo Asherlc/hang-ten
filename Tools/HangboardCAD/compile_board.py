@@ -70,6 +70,11 @@ from contact_model_descriptor import (  # noqa: E402
     compile_reusable_descriptor,
 )
 
+# Tools/ holds the host-only material stripper the shipped pair must pass through
+# (AGENTS.md model material policy).
+sys.path.insert(0, str(REPOSITORY / "Tools"))
+import set_clay_materials  # noqa: E402
+
 SOURCE_KIND_NATIVE = "native-parametric-measured-profile"
 SOURCE_KIND_FACETED = "faceted-import"
 DOCUMENT_PROPERTIES = (
@@ -844,6 +849,17 @@ def build(
         descriptor_path.write_text(json.dumps(descriptor_json, indent=2, sort_keys=False) + "\n")
         json.loads(descriptor_path.read_text())
         usdz_writer.read_usdz(asset)
+
+        # AGENTS.md model material policy: shipped USDZ carry no materials or
+        # textures. Strip the staged asset and rebind the descriptor hash, so any
+        # published pair is material-free and a rebuild reproduces the committed
+        # bytes (which are already stripped).
+        if set_clay_materials.strip_materials_from_usdz(asset):
+            set_clay_materials.update_descriptor_hash(asset)
+            descriptor_json = json.loads(descriptor_path.read_text())
+        model_bytes = asset.read_bytes()
+        if descriptor_json["modelSHA256"] != hashlib.sha256(model_bytes).hexdigest():
+            raise BuildError("descriptor hash does not match the stripped bytes")
 
         result = {
             "package": package,
