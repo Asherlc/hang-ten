@@ -50,19 +50,19 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "a45ad1d46c7de9c0a042e312548c759b113150bc6d5cca610cba34f30f40e54f",
+  "sha256Manifest": "e9b03cffc6757503c9cc6c8d136f487ce68874543b092528ebcaf3716013134d",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "77eb9b0c025496efa5ce456d148d2f347cc8312054e2984e5a421a3f7f64a750",
+  "supersededSha256Manifest": "473ebca2d94c417ebac31d4b3529f6431b755962cb18f64ccff7c2d2793a5428",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
       "sourceSHA256": "7cf2fbc8c8710109e5841f0d86aac9f85f243d9124df3786b4df03b738e39c17",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the deleted hand-authored file",
       "referenceSHA256": "4f9690d8969dddf8178ef4f7961c05115ab00266821e11982284ff8437b2ac6e",
-      "assetSHA256": "67780905b46597c78c696be449c2e2ab6836ed98f7feb037803ec8e04ce033c7",
-      "descriptorSHA256": "9154697f07e1d38366a860bf917add63d86fb3b98b83aab7639bae4ab26ccd6a",
+      "assetSHA256": "7b820fc44a6d696ddd5eecf6e4c85392301c7ac1d2f52fdf6b23284e8c4fb645",
+      "descriptorSHA256": "35f984398c95a4296dfea31d09ee6671ad3838a357cb77b081a232abd4ff4aab",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (10/30/45/50/20/25 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs, ellipses and cubic Beziers, extrusions and ruled lofts for the body, ruled capsule lofts cut for the 17 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-center (deep link) and pocket-bottom-mid-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
@@ -84,6 +84,17 @@
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
+    },
+    "evolv-kilter-basic-long": {
+      "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sourceSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
+      "sourceKind": "native-parametric-measured-profile",
+      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
+      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-evolv-kilter-basic-long-cad-provenance.md",
+      "assetSHA256": "ac2399e6477942eed730d4e16c78f3021f26228cc52b168c03884b120f165700",
+      "descriptorSHA256": "d218e19200d50e63b18b92de027445454fa6c6f28fd60947535411de2d270d46"
     },
     "j-bryant-ftg-32": {
       "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
