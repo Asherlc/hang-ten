@@ -1,121 +1,193 @@
 {
-  "contacts": {
-    "edge-10": {
-      "center": [
-        0.500002924,
-        0.480837719
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.999800589,
-          0.515820985
-        ],
-        "min": [
-          0.000205259,
-          0.445854454
-        ]
-      },
-      "nodeIDs": [
-        "hold_edge_upper_001"
-      ]
-    },
-    "edge-15": {
-      "center": [
-        0.499979157,
-        0.295051684
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.999803456,
-          0.332938986
-        ],
-        "min": [
-          0.000154859,
-          0.257164383
-        ]
-      },
-      "nodeIDs": [
-        "hold_edge_middle_001"
-      ]
-    },
-    "edge-20": {
-      "center": [
-        0.499992569,
-        0.070540195
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.999844387,
-          0.140678451
-        ],
-        "min": [
-          0.00014075,
-          0.000401939
-        ]
-      },
-      "nodeIDs": [
-        "hold_edge_lower_001"
-      ]
-    },
-    "jug-rounded": {
-      "center": [
-        0.499994078,
-        0.813610052
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.999877773,
-          1.0
-        ],
-        "min": [
-          0.000110382,
-          0.627220104
-        ]
-      },
-      "nodeIDs": [
-        "hold_jug_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
   "modelBounds": {
-    "max": [
-      0.395000011,
-      0.159939215,
-      0.059999999
-    ],
     "min": [
       -0.395000011,
-      0.0,
-      0.0
+      -0.0,
+      -0.0
+    ],
+    "max": [
+      0.395000011,
+      0.1599392,
+      0.059999999
     ]
   },
-  "modelSHA256": "3b9aff75e9228f507b5ad0b5e8404f883b8a59b438a145c7756ba98233fe7479",
   "nodes": [
     {
       "nodeID": "body_001",
       "role": "body"
     },
     {
-      "contactID": "edge-20",
       "nodeID": "hold_edge_lower_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-20"
     },
     {
-      "contactID": "edge-15",
       "nodeID": "hold_edge_middle_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-15"
     },
     {
-      "contactID": "edge-10",
       "nodeID": "hold_edge_upper_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-10"
     },
     {
-      "contactID": "jug-rounded",
       "nodeID": "hold_jug_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "jug-rounded"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "edge-10": {
+      "nodeIDs": [
+        "hold_edge_upper_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          1.4e-08,
+          0.44391869
+        ],
+        "max": [
+          0.999999986,
+          0.558819227
+        ]
+      },
+      "center": [
+        0.5,
+        0.501368958
+      ],
+      "outline": [
+        [
+          1.4e-08,
+          0.44391869
+        ],
+        [
+          0.999999986,
+          0.44391869
+        ],
+        [
+          0.999999986,
+          0.558819227
+        ],
+        [
+          1.4e-08,
+          0.558819227
+        ]
+      ]
+    },
+    "edge-15": {
+      "nodeIDs": [
+        "hold_edge_middle_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          1.4e-08,
+          0.256347413
+        ],
+        "max": [
+          0.999999986,
+          0.428043908
+        ]
+      },
+      "center": [
+        0.5,
+        0.34219566
+      ],
+      "outline": [
+        [
+          1.4e-08,
+          0.256347413
+        ],
+        [
+          0.999999986,
+          0.256347413
+        ],
+        [
+          0.999999986,
+          0.428043908
+        ],
+        [
+          1.4e-08,
+          0.428043908
+        ]
+      ]
+    },
+    "edge-20": {
+      "nodeIDs": [
+        "hold_edge_lower_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          1.4e-08,
+          0.0
+        ],
+        "max": [
+          0.999999986,
+          0.234010174
+        ]
+      },
+      "center": [
+        0.5,
+        0.117005087
+      ],
+      "outline": [
+        [
+          1.4e-08,
+          0.0
+        ],
+        [
+          0.999999986,
+          0.0
+        ],
+        [
+          0.999999986,
+          0.234010174
+        ],
+        [
+          1.4e-08,
+          0.234010174
+        ]
+      ]
+    },
+    "jug-rounded": {
+      "nodeIDs": [
+        "hold_jug_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          1.4e-08,
+          0.621513676
+        ],
+        "max": [
+          0.999999986,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.810756838
+      ],
+      "outline": [
+        [
+          1.4e-08,
+          0.621513676
+        ],
+        [
+          0.999999986,
+          0.621513676
+        ],
+        [
+          0.999999986,
+          1.0
+        ],
+        [
+          1.4e-08,
+          1.0
+        ]
+      ]
+    }
+  }
 }
