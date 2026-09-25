@@ -32,7 +32,7 @@ whenever something needs the board document:
   hand-authored `board.json`;
 * `scripts/stage-board-packages.py` writes it into each staged package, for the
   iOS bundle (the Xcode "Stage Board Packages" phase) and for the Android assets
-  (the Gradle `stageCanonicalAssets` task, `--target android`); the FCStd itself
+  (the `scripts/stage-board-packages.py --target android` entrypoint); the FCStd itself
   is never staged into either app.
 
 Generation is pure host Python (`hangboard_packages.cad_source`, stdlib only; no

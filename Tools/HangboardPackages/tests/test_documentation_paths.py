@@ -13,7 +13,6 @@ CI_PATH_FILTERS = REPO_ROOT / ".github/ci-paths.yml"
 README = REPO_ROOT / "README.md"
 ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
-ANDROID_APP_BUILD = REPO_ROOT / "Android/app/build.gradle.kts"
 CAD_README = REPO_ROOT / "Tools/HangboardCAD/README.md"
 DELIVERY_LOCK = REPO_ROOT / "docs/source-audits/2026-09-22-model-delivery-lock.json"
 
@@ -109,7 +108,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "test-without-building" in xctest_attempt_body
 
     expected_suite_jobs = (
-        ("test-unit", "HangTenTests", "2", None),
+        ("test-unit", "HangTenTests", "1", None),
         ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "2"),
         (
             "test-ui-map",

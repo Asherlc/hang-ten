@@ -243,14 +243,6 @@ Resolution failures distinguish between an unresolvable target, no common
 position within a step, and no valid transition path. User-facing copy remains
 brief, while diagnostics retain the failing target or position IDs.
 
-## Cross-platform behavior
-
-iOS and Android must decode the same position and transition schema, derive
-hold availability through canonical presentations identically, and produce the
-same deterministic position sequence. Android must gain parity for
-`sourcePresentationID` and inversion before multi-position workout resolution
-is considered complete.
-
 ## Testing
 
 Model and package tests cover decoding, implicit single-position migration,
@@ -260,7 +252,7 @@ defaults, invalid references, duplicate edges, and self-edge rejection.
 Resolver tests cover deterministic ties, multiple valid placements, preference
 for unchanged and seamless positions, rejection of unsupported paths, semantic
 position constraints, and steps whose targets have no common position. Shared
-fixtures assert identical expected sequences on iOS and Android.
+fixtures assert identical expected sequences across platforms.
 
 Playback tests cover initial readiness, seamless cues, setup confirmation before
 rest expires, pausing when rest expires, no-rest transitions, pause/resume,
