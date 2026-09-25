@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "3575d045437474511787bae54f634dd8cba2e9a75f72e9c3f59cbc64d7895521",
+  "sha256Manifest": "2c5788e7ec2609cbbef67db52437eef1dff18dc8747ed28991a06eabf53814c5",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -65,7 +65,7 @@
       "assetSHA256": "bd00147c6bf074271d4eb6542ca803ef8badcf37ca8d4978f0685f1c760bb399",
       "descriptorSHA256": "0be3ea489e27b91b786de8fa1481b62ac5903fd7f4e7004eb4f0d657db09d264",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -153,7 +153,7 @@
       "assetSHA256": "fd4a02477c0ea81f4d863ae839f2e144a0a2ff7b3f8993a7238ef562b9e8b181",
       "descriptorSHA256": "d21c03846539f080e7b8b3000e4cd37f0fb0cdad81e51f88c6f6caed6921e4b6",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",

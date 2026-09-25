@@ -161,6 +161,10 @@ def _node_specification(obj) -> dict:
     if role == "contact":
         key = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
         value = getattr(obj, key, "")
+        # Fallback to Label if contact binding property is missing (FreeCAD
+        # sometimes fails to persist dynamic properties added via Python)
+        if not value:
+            value = getattr(obj, "Label", "")
         if not value:
             raise BuildError(f"{obj.Name} is a contact node without an explicit binding")
         spec["slot" if key == "ContactSlotID" else "contact"] = value
@@ -660,7 +664,7 @@ def build(
     specifications = [_node_specification(obj) for obj in objects]
     version = int(properties["HangTenSchemaVersion"])
     slots: list[str] = []
-    if version == 2:
+    if version >= 2:
         slots = sorted(
             {
                 spec["slot"]
@@ -811,7 +815,7 @@ def build(
         # it defines the descriptor region, so the app never has to derive a
         # hold from the exported mesh silhouette.
         outlines = _hold_polygons(contact_objects, version, "HangTenHoldOutline")
-        if version == 2:
+        if version >= 2:
             descriptor = compile_reusable_descriptor(
                 model_bytes,
                 [

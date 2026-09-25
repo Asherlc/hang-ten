@@ -1,73 +1,73 @@
 {
-  "contacts": {
-    "edge-16": {
-      "center": [
-        0.5,
-        0.791558444
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.83809526,
-          0.791558444
-        ],
-        "min": [
-          0.16190474,
-          0.791558444
-        ]
-      },
-      "nodeIDs": [
-        "edge_16_mesh_001"
-      ]
-    },
-    "edge-25": {
-      "center": [
-        0.5,
-        0.208441556
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.83809526,
-          0.208441556
-        ],
-        "min": [
-          0.16190474,
-          0.208441556
-        ]
-      },
-      "nodeIDs": [
-        "edge_25_mesh_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "9d2b92359e981afe15dfad90ec8d93081779def62691615f7d0c20c6d97caa8a",
   "modelBounds": {
-    "max": [
-      0.052499998,
-      0.0385,
-      0.0185
-    ],
     "min": [
       -0.052499998,
       -0.0385,
       -0.0185
+    ],
+    "max": [
+      0.052499998,
+      0.0385,
+      0.0185
     ]
   },
-  "modelSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
   "nodes": [
     {
       "nodeID": "Cube_001",
       "role": "body"
     },
     {
-      "contactID": "edge-16",
       "nodeID": "edge_16_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-16"
     },
     {
-      "contactID": "edge-25",
       "nodeID": "edge_25_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-25"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "edge-16": {
+      "nodeIDs": [
+        "edge_16_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.16190474,
+          0.791558444
+        ],
+        "max": [
+          0.83809526,
+          0.791558444
+        ]
+      },
+      "center": [
+        0.5,
+        0.791558444
+      ]
+    },
+    "edge-25": {
+      "nodeIDs": [
+        "edge_25_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.16190474,
+          0.208441556
+        ],
+        "max": [
+          0.83809526,
+          0.208441556
+        ]
+      },
+      "center": [
+        0.5,
+        0.208441556
+      ]
+    }
+  }
 }
