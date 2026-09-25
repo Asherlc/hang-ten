@@ -414,33 +414,44 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(rightSteps.first?.handUse, .single)
     }
 
-    func testSessionStepsBothKeepsDoubleBothWithSingleHandSelection() throws {
-        let bilateral = WorkoutStep(
-            id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
+    func testSessionStepsBothPairsHoldsOnTwoHandedBoardsAndUsesSingleHoldOnOneHandedBoards() throws {
+        let either = WorkoutStep(
+            id: "either", number: 1, title: "Both", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
             segments: [WorkoutSegment(
                 kind: .work,
-                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
                 timing: .fixed,
                 duration: 7
             )],
             handUse: .either, side: .both
         )
 
-        let both = WorkoutSessionHandResolver.sessionSteps(
-            from: [bilateral],
-            preference: .both,
-            boardIsOneHanded: false
+        let twoHanded = try XCTUnwrap(
+            WorkoutSessionHandResolver.sessionSteps(
+                from: [either],
+                preference: .both,
+                boardIsOneHanded: false
+            ).first
         )
-        let resolved = try XCTUnwrap(both.first)
-        XCTAssertEqual(resolved.handUse, .double)
-        XCTAssertEqual(resolved.side, .both)
-        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(twoHanded.handUse, .double)
+        XCTAssertEqual(twoHanded.side, .both)
+        XCTAssertEqual(twoHanded.workRequirements.map(\.selection), [.bilateralPair])
         XCTAssertEqual(
-            resolved.segments.first?.contactRequirements.map(\.selection),
-            [.single]
+            twoHanded.segments.first?.contactRequirements.map(\.selection),
+            [.bilateralPair]
         )
-        XCTAssertNotEqual(resolved.workRequirements.map(\.selection), [.bilateralPair])
+
+        let oneHanded = try XCTUnwrap(
+            WorkoutSessionHandResolver.sessionSteps(
+                from: [either],
+                preference: .both,
+                boardIsOneHanded: true
+            ).first
+        )
+        XCTAssertEqual(oneHanded.handUse, .double)
+        XCTAssertEqual(oneHanded.side, .both)
+        XCTAssertEqual(oneHanded.workRequirements.map(\.selection), [.single])
     }
 
     func testSessionStepsAlternateExpandsLeftThenRightWithoutDuplicatingRest() {
