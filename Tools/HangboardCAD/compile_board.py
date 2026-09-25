@@ -221,15 +221,14 @@ def _embedded_texture(source: Path, staging: Path, member: str) -> tuple[str, Pa
 def _material_registry(objects, source: Path, staging: Path) -> dict:
     """Collect one material definition per MaterialName across all bound nodes.
 
-    A node without ``TextureFile`` inherits the texture declared by another node
-    using the same material name, so a shared material is declared once. Any
-    genuine disagreement between nodes is an error rather than a silent pick.
+    Returns a dict mapping material names to ``usdz_writer.Material`` objects.
+    Objects without ``MaterialName`` are skipped (they produce unbound meshes).
     """
     declared: dict[str, dict] = {}
     for obj in objects:
         name = str(getattr(obj, "MaterialName", ""))
         if not name:
-            raise BuildError(f"{obj.Name} is missing MaterialName")
+            continue
         base_color = (0.8, 0.8, 0.8)
         raw = str(getattr(obj, "BaseColor", ""))
         if raw:
@@ -727,7 +726,7 @@ def build(
             _build_mesh(
                 body_object.NodeID,
                 *_subset_mesh(body_points, body_facets, body_indices),
-                material=materials[body_object.MaterialName],
+                material=materials.get(body_object.MaterialName),
                 model_box=model_box,
             )
         ]
@@ -752,7 +751,7 @@ def build(
                     obj.NodeID,
                     points,
                     facets,
-                    material=materials[obj.MaterialName],
+                    material=materials.get(obj.MaterialName),
                     model_box=model_box,
                 )
             )
@@ -800,9 +799,6 @@ def build(
         reopened = usdz_writer.read_usdz(asset)
         if set(reopened["nodes"]) != {mesh.node_id for mesh in meshes}:
             raise BuildError("reopened asset node inventory does not match the source")
-        for node_id, node in reopened["nodes"].items():
-            if not node["material"]:
-                raise BuildError(f"{node_id} lost its material binding in the export")
 
         print("[8/10] deriving the descriptor from the exported bytes")
         model_bytes = asset.read_bytes()

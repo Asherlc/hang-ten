@@ -64,9 +64,10 @@ review in the app.
 
 All USDZ models must ship without materials or textures. Meshes are unbound so
 the renderer uses its default appearance. Do not add PBR materials, image
-textures, or color adornments to committed USDZ files. The script
-`Tools/set_clay_materials.py` enforces this by stripping materials from existing
-models; use it after any pipeline that produces textured output.
+textures, or color adornments to committed USDZ files. Both compilers
+(`compile_board.py` and `contact_model_package.py`) produce unbound meshes by
+default — objects without `MaterialName` in FreeCAD or without materials in
+Blender are exported as-is.
 
 ## 3D suspension and On-Demand Resources
 
