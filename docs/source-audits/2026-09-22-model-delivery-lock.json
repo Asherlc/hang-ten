@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, and metolius-wood-grips-compact-ii native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, lattice-triple-rung, metolius-rock-rings-3d, metolius-wood-grips-compact-ii, soill-iron-palm-2 native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,7 +50,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "ff7f8f00d6e01d4ffce6106f4543d8c697fb9e3fb225841adcac8511636b2b9b",
+  "sha256Manifest": "2869861a1f158a689079923484de415a5413f776deb1995c78d856da9e5d9bb8",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -137,6 +137,21 @@
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules; bounding rectangles for edges, jugs and slopers"
+    },
+    "soill-iron-palm-2": {
+      "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
+      "sourceSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
+      "supersededSourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
+      "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
+      "assetSHA256": "87380f8cdccff35bffab093d8b9808abe7cc0f9cad95e3c5c1530ef3c79d3db1",
+      "descriptorSHA256": "1aa6d386fbbec5a1cc8459a33fadec772000de0c29d31155f33d1e312b61a694",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
+      "nativeAppValidation": "not run",
+      "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-soill-iron-palm-2-cad-provenance.md (if available)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules; bounding rectangles for edges, jugs and slopers"
     }
