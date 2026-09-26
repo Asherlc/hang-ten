@@ -3710,6 +3710,34 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testPrepareModelPreservesGeometrySourceChannelsForMultiChannelMeshes() throws {
+        let vertices = [SCNVector3(0, 0, 0), SCNVector3(1, 0, 0), SCNVector3(0, 1, 0)]
+        let normals = [SCNVector3(0, 0, 1), SCNVector3(0, 0, 1), SCNVector3(0, 0, 1)]
+        let vertexSource = SCNGeometrySource(vertices: vertices)
+        let normalSource = SCNGeometrySource(normals: normals)
+        // Interleaved [positionIndex, normalIndex] per vertex => 6 scalars.
+        var scalars: [UInt32] = [0, 0, 1, 1, 2, 2]
+        let data = scalars.withUnsafeBufferPointer { Data(buffer: $0) }
+        let element = SCNGeometryElement(data: data, primitiveType: .triangles, primitiveCount: 1, indicesChannelCount: 2, interleavedIndicesChannels: true, bytesPerIndex: 4)
+        let source = SCNScene()
+        for name in ["Body", "Hold"] {
+            let node = SCNNode(geometry: SCNGeometry(sources: [vertexSource, normalSource], elements: [element], sourceChannels: [0, 1]))
+            node.geometry?.firstMaterial = SCNMaterial()
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
+            node.name = name
+            source.rootNode.addChildNode(node)
+        }
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Body", role: .body, contactID: nil),
+            .init(nodeID: "Hold", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor, display: display(), allowedPositionIDs: ["front"]))
+        XCTAssertEqual(model.geometryNodes.count, 2)
+        for node in model.geometryNodes {
+            XCTAssertEqual(node.geometry?.geometrySourceChannels?.map(\.intValue), [0, 1])
+        }
+    }
+
     private func modelDescriptor(
         nodes: [BoardModelNodeDescriptor],
         minimum: [Double] = [0, 0, 0],

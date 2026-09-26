@@ -677,7 +677,11 @@ final class BoardModelScene {
             // for every mesh, including unreflected clones and crease topology.
             let elements = snapshot.elements.map(Self.copyElement)
             let copiedGeometry: SCNGeometry
-            if let channels = snapshot.geometrySourceChannels {
+            // SCNGeometry.copy() drops geometrySourceChannels, which
+            // multi-channel USDZ imports rely on (vertex->0, normal->1).
+            // Read the mapping from the pre-copy geometry first so the
+            // rebuild keeps interpreting the interleaved index stream.
+            if let channels = geometry.geometrySourceChannels ?? snapshot.geometrySourceChannels {
                 copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements, sourceChannels: channels)
             } else {
                 // Preserve the implicit single-channel representation.
