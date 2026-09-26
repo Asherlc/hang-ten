@@ -153,17 +153,32 @@ def _source_meshes(document) -> dict:
     return meshes
 
 
-def _node_specification(obj) -> dict:
+def _contact_binding(obj) -> str:
+    """Resolve a contact object's binding string the one way.
+
+    Prefers the persisted ``ContactSlotID``/``ContactID`` property, then falls
+    back to the object Label (FreeCAD sometimes fails to persist dynamic
+    properties added via Python). Returns an empty string when nothing is set;
+    callers decide whether that is an error.
+    """
+    property_name = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
+    return getattr(obj, property_name, "") or getattr(obj, "Label", "")
+
+
+def _node_specification(obj, version: int) -> dict:
     role = getattr(obj, "NodeRole", "")
     if role not in {"body", "contact", "attachment"}:
         raise BuildError(f"{obj.Name} has an invalid NodeRole {role!r}")
     spec = {"id": obj.NodeID, "role": role}
     if role == "contact":
-        key = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
-        value = getattr(obj, key, "")
+        # The binding key is fixed by the schema: v2-or-later sources use
+        # "slot", v1 sources use "contact". Resolve it once here so the slot
+        # inventory, outline reader, and depth validator all read the same key.
+        binding_key = "slot" if version >= 2 else "contact"
+        value = _contact_binding(obj)
         if not value:
             raise BuildError(f"{obj.Name} is a contact node without an explicit binding")
-        spec["slot" if key == "ContactSlotID" else "contact"] = value
+        spec[binding_key] = value
     return spec
 
 
@@ -183,7 +198,7 @@ def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
         raw = str(getattr(obj, property_name, "")).strip()
         if not raw:
             continue
-        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        key = _contact_binding(obj)
         if not key:
             raise BuildError(f"{obj.Name} declares {property_name} without a contact binding")
         try:
@@ -493,7 +508,7 @@ def _validate_published_depths(contact_objects, declared, version: int, deflecti
     """
     measured = {}
     for obj in contact_objects:
-        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        key = _contact_binding(obj)
         measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
         if key not in declared:
             continue
@@ -596,10 +611,10 @@ def build(
     objects = _bound_objects(document)
     if not objects:
         raise BuildError("source declares no bound nodes")
-    specifications = [_node_specification(obj) for obj in objects]
     version = int(properties["HangTenSchemaVersion"])
+    specifications = [_node_specification(obj, version) for obj in objects]
     slots: list[str] = []
-    if version == 2:
+    if version >= 2:
         slots = sorted(
             {
                 spec["slot"]
@@ -666,7 +681,7 @@ def build(
             _build_mesh(
                 body_object.NodeID,
                 *_subset_mesh(body_points, body_facets, body_indices),
-                material=materials.get(body_object.MaterialName),
+                material=materials.get(getattr(body_object, "MaterialName", "")),
                 model_box=model_box,
             )
         ]
@@ -691,7 +706,7 @@ def build(
                     obj.NodeID,
                     points,
                     facets,
-                    material=materials.get(obj.MaterialName),
+                    material=materials.get(getattr(obj, "MaterialName", "")),
                     model_box=model_box,
                 )
             )
@@ -747,7 +762,7 @@ def build(
         # it defines the descriptor region, so the app never has to derive a
         # hold from the exported mesh silhouette.
         outlines = _hold_polygons(contact_objects, version, "HangTenHoldOutline")
-        if version == 2:
+        if version >= 2:
             descriptor = compile_reusable_descriptor(
                 model_bytes,
                 [
