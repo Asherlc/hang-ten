@@ -183,8 +183,10 @@
 		D1000000000000000000002C /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002C /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
 		D1000000000000000000002D /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
 		E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
+		5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */; };
 		E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
 		E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
+		EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */; };
 		E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */; };
 		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
 		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
@@ -234,6 +236,7 @@
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
+		7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Models/BoardModelRealityTypes.swift; sourceTree = "<group>"; };
 		BB0000000000000000000004 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		BB0000000000000000000005 /* BoardMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardMapView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000006 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -388,6 +391,7 @@
 		E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
 		E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
 		E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
+		64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelRealityTests.swift; sourceTree = "<group>"; };
 		E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentationTests.swift; sourceTree = "<group>"; };
 		E32000000000000000000005 /* SuspensionProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionProfiles.swift; sourceTree = "<group>"; };
 		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
@@ -514,6 +518,7 @@
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
+				7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000093 /* CountdownAudioScheduler.swift */,
@@ -645,6 +650,7 @@
 				E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				E32000000000000000000003 /* BoardModelTests.swift */,
+				64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -905,6 +911,7 @@
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
 				E31000000000000000000001 /* BoardModelView.swift in Sources */,
+				5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */,
 				E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
 				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
@@ -1015,6 +1022,7 @@
 				E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
+				EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
