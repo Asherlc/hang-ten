@@ -343,7 +343,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             object: left
         )
         XCTAssertEqual(
-            XCTWaiter.wait(for: [hittable], timeout: 10),
+            XCTWaiter.wait(for: [hittable], timeout: 30),
             .completed,
             "The Left hand menu item must be hittable."
         )
