@@ -153,21 +153,24 @@ def _source_meshes(document) -> dict:
     return meshes
 
 
-def _node_specification(obj) -> dict:
+def _node_specification(obj, version: int) -> dict:
     role = getattr(obj, "NodeRole", "")
     if role not in {"body", "contact", "attachment"}:
         raise BuildError(f"{obj.Name} has an invalid NodeRole {role!r}")
     spec = {"id": obj.NodeID, "role": role}
     if role == "contact":
-        key = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
-        value = getattr(obj, key, "")
-        # Fallback to Label if contact binding property is missing (FreeCAD
-        # sometimes fails to persist dynamic properties added via Python)
-        if not value:
-            value = getattr(obj, "Label", "")
+        # The binding key is fixed by the schema: v2-or-later sources use
+        # "slot", v1 sources use "contact". Resolve it once here so the slot
+        # inventory, outline reader, and depth validator all read the same key.
+        binding_key = "slot" if version >= 2 else "contact"
+        property_name = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
+        # Fallback to the Label if the binding property is missing or empty
+        # (FreeCAD sometimes fails to persist dynamic properties added via
+        # Python).
+        value = getattr(obj, property_name, "") or getattr(obj, "Label", "")
         if not value:
             raise BuildError(f"{obj.Name} is a contact node without an explicit binding")
-        spec["slot" if key == "ContactSlotID" else "contact"] = value
+        spec[binding_key] = value
     return spec
 
 
@@ -600,8 +603,8 @@ def build(
     objects = _bound_objects(document)
     if not objects:
         raise BuildError("source declares no bound nodes")
-    specifications = [_node_specification(obj) for obj in objects]
     version = int(properties["HangTenSchemaVersion"])
+    specifications = [_node_specification(obj, version) for obj in objects]
     slots: list[str] = []
     if version >= 2:
         slots = sorted(
