@@ -6,6 +6,7 @@ HangTen/HangTenApp.swift
 HangTen/Info.plist
 HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
+HangTen/Models/BoardModelRealityTypes.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift

@@ -641,8 +641,8 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.camera.position.z, 16.28, accuracy: 0.000_01)
 
         let quarterTurn = simd_quatf(angle: .pi / 2, axis: SIMD3<Float>(0, 1, 0))
-        let rotated = BoardModelScene.rotatedBounds(descriptor.modelBounds, by: quarterTurn, pivot: pivot)
-        let framing = try XCTUnwrap(BoardModelScene.framing(bounds: rotated, display: display()))
+        let rotated = BoardModelRealityScene.rotatedBounds(descriptor.modelBounds, by: quarterTurn, pivot: pivot)
+        let framing = try XCTUnwrap(BoardModelRealityScene.framing(bounds: rotated, display: display()))
         XCTAssertEqual(rotated.minimum[0], -1, accuracy: 0.000_01)
         XCTAssertEqual(rotated.minimum[1], 2, accuracy: 0.000_01)
         XCTAssertEqual(rotated.minimum[2], 5, accuracy: 0.000_01)
@@ -721,14 +721,14 @@ final class BoardModelTests: XCTestCase {
         let quaternion = simd_quatf(angle: .pi / 4, axis: SIMD3<Float>(0, 1, 0))
         let display = display(viewDirection: [1, 0, -1], up: [0, 1, 0])
 
-        let transformedCorners = BoardModelScene.rotatedCorners(
+        let transformedCorners = BoardModelRealityScene.rotatedCorners(
             bounds,
             by: quaternion,
             pivot: pivot
         )
-        let exact = try XCTUnwrap(BoardModelScene.framing(points: transformedCorners, display: display))
-        let aabb = BoardModelScene.rotatedBounds(bounds, by: quaternion, pivot: pivot)
-        let aabbFraming = try XCTUnwrap(BoardModelScene.framing(bounds: aabb, display: display))
+        let exact = try XCTUnwrap(BoardModelRealityScene.framing(points: transformedCorners, display: display))
+        let aabb = BoardModelRealityScene.rotatedBounds(bounds, by: quaternion, pivot: pivot)
+        let aabbFraming = try XCTUnwrap(BoardModelRealityScene.framing(bounds: aabb, display: display))
 
         XCTAssertEqual(exact.width, 8, accuracy: 0.000_01)
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
@@ -823,7 +823,7 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
                 let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
-                let solved = try BoardModelScene.solveSuspension(
+                let solved = try BoardModelRealityScene.solveSuspension(
                     pose: pose,
                     suspension: .pairedLeadCord(suspension),
                     bounds: media.descriptor.modelBounds
@@ -1000,7 +1000,7 @@ final class BoardModelTests: XCTestCase {
             // view space to remain visibly distinct from the board in detail.
             for position in board.positions {
                 let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
-                let solved = try BoardModelScene.solveSuspension(
+                let solved = try BoardModelRealityScene.solveSuspension(
                     pose: pose,
                     suspension: .pairedLeadCord(suspension),
                     bounds: media.descriptor.modelBounds
@@ -1217,7 +1217,7 @@ final class BoardModelTests: XCTestCase {
         }
 
         for (positionID, pose) in suspension.canonicalPoses.sorted(by: { $0.key < $1.key }) {
-            let solved = try BoardModelScene.solveSuspension(
+            let solved = try BoardModelRealityScene.solveSuspension(
                 pose: pose,
                 suspension: .twoBranchCord(suspension),
                 bounds: media.descriptor.modelBounds
@@ -1419,7 +1419,7 @@ final class BoardModelTests: XCTestCase {
         }
         XCTAssertEqual(suspension.canonicalPoses.count, 4)
         for (positionID, pose) in suspension.canonicalPoses {
-            let solved = try BoardModelScene.solveSuspension(
+            let solved = try BoardModelRealityScene.solveSuspension(
                 pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
             )
             // The solved direction is the viewDirection rotated by the pose.
@@ -1450,7 +1450,7 @@ final class BoardModelTests: XCTestCase {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
         }
         let pose = try XCTUnwrap(suspension.canonicalPoses["two-edge-upright"])
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose,
             suspension: .twoBranchCord(suspension),
             bounds: media.descriptor.modelBounds
@@ -1748,7 +1748,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertFalse(model.isUnavailable)
         XCTAssertFalse(model.isTransientCordAccessible)
         let pose = try XCTUnwrap(suspension.canonicalPoses["front"])
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose,
             suspension: .pairedLeadCord(suspension),
             bounds: media.descriptor.modelBounds
@@ -3283,7 +3283,9 @@ final class BoardModelTests: XCTestCase {
             type: "orthographic",
             viewDirection: viewDirection,
             up: up,
-            fitPadding: padding
+            fitPadding: padding,
+            distanceMultiplier: nil,
+            boundsExpansionFactor: nil
         ))
     }
 

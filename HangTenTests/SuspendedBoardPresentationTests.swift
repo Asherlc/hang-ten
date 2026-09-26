@@ -900,7 +900,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
     @MainActor
     func testSceneRuntimeDispatchesTwoBranchSuspensionToTwoBranchSolver() throws {
         let suspension = twoBranchSuspension(restLength: 4.2)
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose(),
             suspension: .twoBranchCord(suspension),
             bounds: bounds
@@ -1396,7 +1396,9 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             type: "orthographic",
             viewDirection: [0, 0, -1],
             up: [0, 1, 0],
-            fitPadding: 0.08
+            fitPadding: 0.08,
+            distanceMultiplier: nil,
+            boundsExpansionFactor: nil
         ))
     }
 

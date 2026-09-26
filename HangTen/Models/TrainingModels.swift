@@ -83,8 +83,8 @@ struct BoardModelFacePlaneAABB: Hashable {
     }
 }
 
-struct BoardModelNodeDescriptor: Hashable {
-    enum Role: String, Hashable {
+struct BoardModelNodeDescriptor: Hashable, Codable {
+    enum Role: String, Hashable, Codable {
         case body
         case contact
         case attachment
@@ -93,6 +93,12 @@ struct BoardModelNodeDescriptor: Hashable {
     let nodeID: String
     let role: Role
     let contactID: String?
+
+    enum CodingKeys: String, CodingKey {
+        case nodeID
+        case role
+        case contactID = "contactSlotID"
+    }
 }
 
 struct BoardModelAttachment: Hashable {
@@ -346,6 +352,8 @@ struct BoardModelCamera: Hashable {
     let viewDirection: [Double]
     let up: [Double]
     let fitPadding: Double
+    let distanceMultiplier: Double?
+    let boundsExpansionFactor: Double?
 }
 
 struct BoardModelDisplay: Hashable {

@@ -117,7 +117,7 @@ extension BoardPresentation {
         guard case .model(let media) = media,
               let orientation = media.orientation,
               let positionID,
-              let framing = BoardModelScene.framing(
+              let framing = BoardModelRealityScene.framing(
                   bounds: media.descriptor.modelBounds,
                   display: media.display,
                   orientation: orientation,

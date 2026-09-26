@@ -3,6 +3,14 @@ import RealityKit
 import SceneKit
 import SwiftUI
 
+/// Errors specific to board model SceneKit asset loading.
+enum BoardModelAssetError: Error, Equatable {
+    case fileReadError(underlying: String)
+    case sha256Mismatch(expected: String, actual: String)
+    case invalidFile
+    case sceneLoadFailed(underlying: String)
+}
+
 /// Identity for a decoded package model. The hash makes replacement assets a
 /// distinct cached source even when a board keeps the same presentation ID.
 struct BoardModelKey: Hashable {
@@ -21,7 +29,7 @@ extension NSBundleResourceRequest: BoardModelResourceRequesting {}
 
 final class BoardModelResourceLease {
     let url: URL
-    private var request: BoardModelResourceRequesting?
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
 
     init(url: URL, request: BoardModelResourceRequesting? = nil) {
         self.url = url
@@ -29,14 +37,17 @@ final class BoardModelResourceLease {
     }
 
     deinit {
+        // Note: deinit runs on arbitrary thread; endAccessingResources() may not be thread-safe.
+        // The BoardModelResourceRequestAccess.lease() method transfers ownership to the lease
+        // and clears the request under a lock, so this deinit is a fallback for cancelled paths.
         request?.endAccessingResources()
     }
 }
 
 private final class BoardModelResourceRequestAccess: @unchecked Sendable {
     private let lock = NSLock()
-    private var request: BoardModelResourceRequesting?
-    private var isCancelled = false
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
+    nonisolated(unsafe) private var isCancelled = false
 
     init(request: BoardModelResourceRequesting) {
         self.request = request
@@ -153,23 +164,33 @@ enum BoardModelAsset {
     @TaskLocal static var sceneLoaderForTesting: (@Sendable (URL) -> SCNScene?)?
     #endif
 
-    static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
+    static func load(media: BoardModelMedia, packageURL: URL) throws -> SCNScene {
         guard packageURL.isFileURL,
               let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
-              values.isRegularFile == true,
-              sha256(of: packageURL) == media.descriptor.modelSHA256 else {
-            return nil
+              values.isRegularFile == true else {
+            throw BoardModelAssetError.invalidFile
+        }
+        let computedSHA256 = try sha256(of: packageURL)
+        guard computedSHA256 == media.descriptor.modelSHA256 else {
+            throw BoardModelAssetError.sha256Mismatch(expected: media.descriptor.modelSHA256, actual: computedSHA256)
         }
         // SceneKit can otherwise return an empty scene for a missing asset.
         #if DEBUG
         if let sceneLoaderForTesting {
-            return sceneLoaderForTesting(packageURL)
+            guard let scene = sceneLoaderForTesting(packageURL) else {
+                throw BoardModelAssetError.sceneLoadFailed(underlying: "Test scene loader returned nil")
+            }
+            return scene
         }
         #endif
-        return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
+        do {
+            return try SCNScene(url: packageURL, options: [.convertToYUp: true])
+        } catch {
+            throw BoardModelAssetError.sceneLoadFailed(underlying: error.localizedDescription)
+        }
     }
 
-    private static func sha256(of url: URL) -> String? {
+    private static func sha256(of url: URL) throws -> String {
         do {
             let handle = try FileHandle(forReadingFrom: url)
             defer { try? handle.close() }
@@ -178,8 +199,10 @@ enum BoardModelAsset {
                 hash.update(data: data)
             }
             return hash.finalize().map { String(format: "%02x", $0) }.joined()
+        } catch let error as BoardModelAssetError {
+            throw error
         } catch {
-            return nil
+            throw BoardModelAssetError.fileReadError(underlying: error.localizedDescription)
         }
     }
 
@@ -298,18 +321,27 @@ private enum BoardModelCache {
         let willDecodeForTesting = BoardModelAsset.willDecodeForTesting
         let sceneLoaderForTesting = BoardModelAsset.sceneLoaderForTesting
         #endif
-        let scene = await Task.detached(priority: .userInitiated) {
-            withExtendedLifetime(resourceLease) {
-                #if DEBUG
-                willDecodeForTesting?(resourceLease.url)
-                return BoardModelAsset.$sceneLoaderForTesting.withValue(sceneLoaderForTesting) {
-                    BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+        let scene: SCNScene?
+        do {
+            scene = try await Task.detached(priority: .userInitiated) {
+                try withExtendedLifetime(resourceLease) {
+                    #if DEBUG
+                    willDecodeForTesting?(resourceLease.url)
+                    return try BoardModelAsset.$sceneLoaderForTesting.withValue(sceneLoaderForTesting) {
+                        try BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                    }
+                    #else
+                    return try BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                    #endif
                 }
-                #else
-                return BoardModelAsset.load(media: media, packageURL: resourceLease.url)
-                #endif
-            }
-        }.value
+            }.value
+        } catch {
+            // Log error for diagnostics; return nil to match existing failure handling
+            #if DEBUG
+            print("[BoardModelCache] Failed to load scene: \(error)")
+            #endif
+            return nil
+        }
         guard let scene, !Task.isCancelled else { return nil }
         return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
     }
@@ -359,6 +391,7 @@ private enum BoardModelLoadGate {
             active -= 1
         } else {
             // Hand the slot to the earliest waiter; active stays at limit.
+            // Do NOT decrement active here - the waiter now holds the slot.
             waiters.removeFirst().continuation.resume(returning: true)
         }
     }
@@ -427,7 +460,7 @@ enum BoardModelLoader {
 struct BoardModelSurface: View {
     enum ResultState {
         case loading
-        case ready(BoardModelScene)
+        case ready(BoardModelRealityScene)
         case unavailable
 
         var loadingMessage: String? {
@@ -480,7 +513,7 @@ struct BoardModelSurface: View {
                 .accessibilityIdentifier("boardModel.3d")
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
-                // when the hosted SCNView has user interaction disabled.
+                // when the hosted RealityView has user interaction disabled.
                 .allowsHitTesting(!isDisplayOnly)
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
@@ -508,15 +541,21 @@ struct BoardModelSurface: View {
                 return
             }
             result = .loading
-            guard let model = await BoardModelLoader.load(
-                board: board,
-                presentation: presentation,
-                store: BoardCatalog.packageStore
-            ), !Task.isCancelled else {
-                if !Task.isCancelled { result = .unavailable }
-                return
+            do {
+                let model = try await BoardModelRealityLoader.load(
+                    board: board,
+                    presentation: presentation,
+                    store: BoardCatalog.packageStore
+                )
+                guard !Task.isCancelled else { return }
+                result = .ready(model)
+            } catch {
+                guard !Task.isCancelled else { return }
+                #if DEBUG
+                print("[BoardModelSurface] RealityKit model load failed: \(error)")
+                #endif
+                result = .unavailable
             }
-            result = .ready(model)
         }
         .onDisappear {
             result = .loading
@@ -2600,13 +2639,8 @@ final class BoardModelScene {
     }
 }
 
-/// Deterministic procedural studio environment for board rendering.
-///
-/// Produces a cached 1024x512 equirectangular image drawn with CoreGraphics:
-/// a bright-ceiling to dark-floor vertical gradient, a warm key softbox in
-/// the upper third, and a faint cool fill blob. No randomness, no bundled
-/// asset, no network. Returns nil only if gradient construction fails; the
-/// caller then renders with the existing lights and PBR materials.
+/// Deterministic procedural studio environment retained by the SceneKit model
+/// test helpers while the legacy model layer is being removed.
 struct StudioLightingEnvironment {
     static let width: CGFloat = 1024
     static let height: CGFloat = 512
@@ -2623,33 +2657,25 @@ struct StudioLightingEnvironment {
         var gradientFailed = false
         let rendered = renderer.image { context in
             let cg = context.cgContext
-            let top = UIColor(white: 1.0, alpha: 1.0).cgColor
-            let mid = UIColor(white: 0.45, alpha: 1.0).cgColor
-            let bottom = UIColor(white: 0.08, alpha: 1.0).cgColor
+            let top = UIColor(white: 1, alpha: 1).cgColor
+            let mid = UIColor(white: 0.45, alpha: 1).cgColor
+            let bottom = UIColor(white: 0.08, alpha: 1).cgColor
             guard let gradient = CGGradient(
                 colorsSpace: CGColorSpaceCreateDeviceRGB(),
                 colors: [top, mid, bottom] as CFArray,
-                locations: [0.0, 0.55, 1.0]
+                locations: [0, 0.55, 1]
             ) else {
                 gradientFailed = true
                 return
             }
-            cg.drawLinearGradient(
-                gradient,
-                start: CGPoint(x: 0, y: 0),
-                end: CGPoint(x: 0, y: size.height),
-                options: []
-            )
-            cg.setFillColor(UIColor(red: 1.0, green: 0.95, blue: 0.85, alpha: 0.9).cgColor)
-            cg.fillEllipse(in: CGRect(
-                x: size.width * 0.28, y: size.height * 0.08,
-                width: size.width * 0.44, height: size.height * 0.30
-            ))
+            cg.drawLinearGradient(gradient, start: .zero,
+                                  end: CGPoint(x: 0, y: size.height), options: [])
+            cg.setFillColor(UIColor(red: 1, green: 0.95, blue: 0.85, alpha: 0.9).cgColor)
+            cg.fillEllipse(in: CGRect(x: size.width * 0.28, y: size.height * 0.08,
+                                      width: size.width * 0.44, height: size.height * 0.30))
             cg.setFillColor(UIColor(red: 0.6, green: 0.7, blue: 0.9, alpha: 0.35).cgColor)
-            cg.fillEllipse(in: CGRect(
-                x: size.width * 0.05, y: size.height * 0.45,
-                width: size.width * 0.30, height: size.height * 0.30
-            ))
+            cg.fillEllipse(in: CGRect(x: size.width * 0.05, y: size.height * 0.45,
+                                      width: size.width * 0.30, height: size.height * 0.30))
         }
         guard !gradientFailed else { return nil }
         cached = rendered
@@ -2701,297 +2727,8 @@ private extension SCNVector3 {
     }
 }
 
-// MARK: - RealityKit presentation
-
-/// Bridges the decoded `BoardModelScene` into a RealityKit render tree. The
-/// SceneKit model layer stays the source of truth for decode, instance
-/// transforms, mirrored geometry, positions, and contact binding; only the
-/// drawing moves to RealityKit, whose default physically based appearance
-/// lights the unbound meshes with believable form.
-@MainActor
-final class BoardRealityRenderer {
-    let root = Entity()
-    let camera = PerspectiveCamera()
-
-    private var renderables: [(node: SCNNode, entity: ModelEntity)] = []
-    private var contactEntities: [String: [ModelEntity]] = [:]
-    private var contactIDByEntity: [ObjectIdentifier: String] = [:]
-    private var isInstalled = false
-    private var lastHighlights: Set<String> = []
-    private var lastHighlightMode: BoardHighlightMode?
-
-    func install(model: BoardModelScene, content: inout RealityViewCameraContent) {
-        guard !isInstalled else { return }
-        isInstalled = true
-        content.add(root)
-        content.add(camera)
-        for node in model.geometryNodes {
-            guard let geometry = node.geometry,
-                  let mesh = Self.meshResource(from: geometry) else { continue }
-            let entity = ModelEntity(mesh: mesh, materials: [Self.neutralMaterial()])
-            entity.name = node.name ?? ""
-            root.addChild(entity)
-            renderables.append((node, entity))
-            if let contactID = model.contactID(for: node) {
-                contactEntities[contactID, default: []].append(entity)
-                contactIDByEntity[ObjectIdentifier(entity)] = contactID
-                entity.generateCollisionShapes(recursive: false)
-            }
-        }
-    }
-
-    @discardableResult
-    func sync(model: BoardModelScene, positionID: String?, highlights: Set<String>,
-              mode: BoardHighlightMode, viewport: CGSize, fieldOfViewDegrees: Double) -> Bool {
-        guard isInstalled else { return true }
-        let didSelect = model.select(positionID: positionID)
-        for (node, entity) in renderables {
-            entity.transform = Transform(matrix: node.simdWorldTransform)
-        }
-        if highlights != lastHighlights || mode != lastHighlightMode {
-            applyHighlights(highlights, mode: mode)
-            lastHighlights = highlights
-            lastHighlightMode = mode
-        }
-        camera.transform = Transform(matrix: Self.cameraTransform(
-            model: model, viewport: viewport, fieldOfViewDegrees: fieldOfViewDegrees))
-        applyCameraComponent(fieldOfViewDegrees: fieldOfViewDegrees)
-        return didSelect
-    }
-
-    func contactID(for entity: Entity) -> String? {
-        var current: Entity? = entity
-        while let candidate = current {
-            if let id = contactIDByEntity[ObjectIdentifier(candidate)] { return id }
-            current = candidate.parent
-        }
-        return nil
-    }
-
-    private func applyCameraComponent(fieldOfViewDegrees: Double) {
-        var component = camera.camera
-        component.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
-        component.fieldOfViewOrientation = .vertical
-        component.near = 0.001
-        component.far = 1000
-        camera.camera = component
-    }
-
-    private func applyHighlights(_ highlights: Set<String>, mode: BoardHighlightMode) {
-        let neutral = Self.neutralMaterial()
-        var tinted = Self.neutralMaterial()
-        tinted.baseColor = .init(tint: UIColor(mode == .active ? Color.holdActive : Color.restBlue))
-        tinted.roughness = .init(floatLiteral: 0.8)
-        for (contactID, entities) in contactEntities {
-            let material = highlights.contains(contactID) ? tinted : neutral
-            for entity in entities { entity.model?.materials = [material] }
-        }
-    }
-
-    // MARK: Geometry bridge
-
-    /// Converts a prepared (already posed and, where required, mirrored)
-    /// `SCNGeometry` into a RealityKit `MeshResource`.
-    ///
-    /// USDZ packages index positions and normals with independent interleaved
-    /// index channels (`SCNGeometryElement.indicesChannelCount > 1`), which
-    /// `MeshDescriptor` cannot express. The bridge therefore expands each
-    /// triangle into three unshared vertices, preserving the authored per-vertex
-    /// normals, and emits an implicit identity index list. Committed packages
-    /// ship no materials or texture coordinates, so nothing else is read.
-    static func meshResource(from geometry: SCNGeometry) -> MeshResource? {
-        guard let descriptor = meshDescriptor(from: geometry) else { return nil }
-        return try? MeshResource.generate(from: [descriptor])
-    }
-
-    static func meshDescriptor(from geometry: SCNGeometry) -> MeshDescriptor? {
-        let sources = geometry.sources
-        guard let vertexIndex = sources.firstIndex(where: { $0.semantic == .vertex }) else { return nil }
-        let vertexSource = sources[vertexIndex]
-        let normalIndex = sources.firstIndex(where: { $0.semantic == .normal })
-        let channels: [Int]
-        if let declared = geometry.geometrySourceChannels {
-            guard declared.count == sources.count else { return nil }
-            channels = declared.map(\.intValue)
-        } else {
-            channels = [Int](repeating: 0, count: sources.count)
-        }
-        let vertexChannel = channels[vertexIndex]
-        let normalChannel = normalIndex.map { channels[$0] }
-
-        var positions: [SIMD3<Float>] = []
-        var normals: [SIMD3<Float>] = []
-        var normalsAreValid = normalIndex != nil
-
-        for element in geometry.elements {
-            guard element.primitiveType == .triangles else { return nil }
-            let channelCount = max(element.indicesChannelCount, 1)
-            guard element.indicesChannelCount <= 1 || element.hasInterleavedIndicesChannels else { return nil }
-            let vertexCount = element.primitiveCount * 3
-            guard let vertexIndices = indices(element, channel: vertexChannel,
-                                              channelCount: channelCount, vertexCount: vertexCount) else { return nil }
-            let normalIndices = normalChannel.flatMap {
-                indices(element, channel: $0, channelCount: channelCount, vertexCount: vertexCount)
-            }
-            let normalSource = normalIndex.map { sources[$0] }
-            for vertex in 0..<vertexCount {
-                guard let position = vector3(vertexSource, at: vertexIndices[vertex]) else { return nil }
-                positions.append(position)
-                if let normalSource, let normalIndices,
-                   let normal = vector3(normalSource, at: normalIndices[vertex]) {
-                    normals.append(normal)
-                } else {
-                    normalsAreValid = false
-                    normals.append(.zero)
-                }
-            }
-        }
-        guard !positions.isEmpty else { return nil }
-        if !normalsAreValid {
-            normals = faceNormals(for: positions)
-        }
-
-        var descriptor = MeshDescriptor(name: geometry.name ?? "board")
-        descriptor[MeshBuffers.positions] = MeshBuffers.Positions(positions)
-        descriptor[MeshBuffers.normals] = MeshBuffers.Normals(normals)
-        descriptor.primitives = .triangles(Array(0..<UInt32(positions.count)))
-        return descriptor
-    }
-
-    private static func indices(_ element: SCNGeometryElement, channel: Int,
-                                channelCount: Int, vertexCount: Int) -> [Int]? {
-        guard [1, 2, 4].contains(element.bytesPerIndex) else { return nil }
-        if element.data.isEmpty {
-            return Array(0..<vertexCount)
-        }
-        guard vertexCount * channelCount <= element.data.count / element.bytesPerIndex else { return nil }
-        var result = [Int](repeating: 0, count: vertexCount)
-        element.data.withUnsafeBytes { raw in
-            for vertex in 0..<vertexCount {
-                let scalar = vertex * channelCount + channel
-                let offset = scalar * element.bytesPerIndex
-                switch element.bytesPerIndex {
-                case 1: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
-                case 2: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
-                default: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt32.self))
-                }
-            }
-        }
-        return result
-    }
-
-    private static func vector3(_ source: SCNGeometrySource, at index: Int) -> SIMD3<Float>? {
-        guard index >= 0, index < source.vectorCount,
-              source.usesFloatComponents, [4, 8].contains(source.bytesPerComponent),
-              source.componentsPerVector >= 3 else { return nil }
-        let offset = source.dataOffset + index * source.dataStride
-        guard offset >= 0, offset + 3 * source.bytesPerComponent <= source.data.count else { return nil }
-        return source.data.withUnsafeBytes { raw in
-            let values = (0..<3).map { axis -> Float in
-                let address = offset + axis * source.bytesPerComponent
-                return source.bytesPerComponent == 4
-                    ? raw.loadUnaligned(fromByteOffset: address, as: Float.self)
-                    : Float(raw.loadUnaligned(fromByteOffset: address, as: Double.self))
-            }
-            return SIMD3<Float>(values[0], values[1], values[2])
-        }
-    }
-
-    private static func faceNormals(for positions: [SIMD3<Float>]) -> [SIMD3<Float>] {
-        var normals = [SIMD3<Float>](repeating: .zero, count: positions.count)
-        var index = 0
-        while index + 2 < positions.count {
-            let edge1 = positions[index + 1] - positions[index]
-            let edge2 = positions[index + 2] - positions[index]
-            let cross = simd_cross(edge1, edge2)
-            let length = simd_length(cross)
-            let normal = length > 0 ? cross / length : SIMD3<Float>(0, 1, 0)
-            normals[index] = normal
-            normals[index + 1] = normal
-            normals[index + 2] = normal
-            index += 3
-        }
-        return normals
-    }
-
-    static func neutralMaterial() -> PhysicallyBasedMaterial {
-        var material = PhysicallyBasedMaterial()
-        material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
-        material.roughness = .init(floatLiteral: 0.5)
-        material.metallic = .init(floatLiteral: 0)
-        return material
-    }
-
-    // MARK: Camera fit
-
-    static func cameraTransform(model: BoardModelScene, viewport: CGSize,
-                                fieldOfViewDegrees: Double) -> simd_float4x4 {
-        var transform = model.camera.simdWorldTransform
-        guard viewport.width > 0, viewport.height > 0,
-              let halfHeight = model.fittedOrthographicScale(in: viewport),
-              fieldOfViewDegrees > 0 else { return transform }
-        let fovRadians = Float(fieldOfViewDegrees * .pi / 180)
-        let distance = Float(halfHeight) / Float(tan(Double(fovRadians) / 2))
-        let columns = transform.columns
-        let forward = -simd_normalize(SIMD3<Float>(columns.2.x, columns.2.y, columns.2.z))
-        let center = contentCenter(model)
-        transform.columns.3 = SIMD4<Float>(center - forward * distance, 1)
-        return transform
-    }
-
-    static func contentCenter(_ model: BoardModelScene) -> SIMD3<Float> {
-        var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
-        var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
-        var found = false
-        for node in model.geometryNodes {
-            let box = node.boundingBox
-            guard box.min.x.isFinite, box.max.x.isFinite,
-                  box.min.y.isFinite, box.max.y.isFinite,
-                  box.min.z.isFinite, box.max.z.isFinite else { continue }
-            found = true
-            for x in [box.min.x, box.max.x] {
-                for y in [box.min.y, box.max.y] {
-                    for z in [box.min.z, box.max.z] {
-                        let world = node.simdWorldTransform * SIMD4<Float>(Float(x), Float(y), Float(z), 1)
-                        let point = SIMD3<Float>(world.x, world.y, world.z)
-                        minimum = simd_min(minimum, point)
-                        maximum = simd_max(maximum, point)
-                    }
-                }
-            }
-        }
-        guard found else { return .zero }
-        return (minimum + maximum) / 2
-    }
-
-    static func worldCenter(of node: SCNNode) -> SIMD3<Float> {
-        let box = node.boundingBox
-        let local = SIMD4<Float>(
-            Float((box.min.x + box.max.x) / 2),
-            Float((box.min.y + box.max.y) / 2),
-            Float((box.min.z + box.max.z) / 2), 1)
-        let world = node.simdWorldTransform * local
-        return SIMD3<Float>(world.x, world.y, world.z)
-    }
-
-    static func project(_ world: SIMD3<Float>, cameraMatrix: simd_float4x4,
-                        fieldOfViewDegrees: Double, viewport: CGSize) -> CGPoint? {
-        guard viewport.width > 0, viewport.height > 0 else { return nil }
-        let view = simd_inverse(cameraMatrix) * SIMD4<Float>(world, 1)
-        let depth = -view.z
-        guard depth > 0.0001 else { return nil }
-        let focal = Float(1 / tan(fieldOfViewDegrees * .pi / 180 / 2))
-        let aspect = Float(viewport.width / viewport.height)
-        guard aspect > 0 else { return nil }
-        let ndcX = (focal / aspect) * view.x / depth
-        let ndcY = focal * view.y / depth
-        return CGPoint(x: CGFloat(ndcX * 0.5 + 0.5) * viewport.width,
-                       y: CGFloat(0.5 - ndcY * 0.5) * viewport.height)
-    }
-}
-
 struct BoardModelRealityView: View {
-    let model: BoardModelScene
+    let model: BoardModelRealityScene
     let boardName: String
     let contacts: [PhysicalContact]
     let positionID: String?
@@ -3001,7 +2738,6 @@ struct BoardModelRealityView: View {
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
 
-    @State private var renderer = BoardRealityRenderer()
     @State private var cameraRevision = 0
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
@@ -3020,10 +2756,11 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
-                renderer.install(model: model, content: &content)
-                applySync(content: &content, size: size)
+                content.add(model.root)
+                content.add(model.camera)
+                applySync(size: size)
             } update: { content in
-                applySync(content: &content, size: size)
+                applySync(size: size)
             }
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
@@ -3038,10 +2775,16 @@ struct BoardModelRealityView: View {
             label: onContactTap == nil ? "\(boardName) hangboard" : nil))
     }
 
-    private func applySync(content: inout RealityViewCameraContent, size: CGSize) {
-        let didSelect = renderer.sync(model: model, positionID: positionID,
-                                      highlights: highlightedContactIDs, mode: highlightMode,
-                                      viewport: size, fieldOfViewDegrees: fieldOfViewDegrees)
+    private func applySync(size: CGSize) {
+        model.frame(in: size)
+        let didSelect = model.select(positionID: positionID)
+        model.highlight(highlightedContactIDs, mode: highlightMode)
+        var camera = model.camera.camera
+        camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+        camera.fieldOfViewOrientation = .vertical
+        camera.near = 0.001
+        camera.far = 1000
+        model.camera.camera = camera
         if !didSelect { onUnavailable?() }
     }
 
@@ -3049,7 +2792,7 @@ struct BoardModelRealityView: View {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                guard let id = renderer.contactID(for: value.entity),
+                guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
                 onContactTap?(contact)
             }
@@ -3061,8 +2804,8 @@ struct BoardModelRealityView: View {
                 let deltaX = value.translation.width - lastDragTranslation.width
                 let deltaY = value.translation.height - lastDragTranslation.height
                 lastDragTranslation = value.translation
-                model.orbit(azimuth: Float(-deltaX / max(size.width, 1)) * 0.9,
-                            elevation: Float(-deltaY / max(size.height, 1)) * 0.65)
+                model.orbit(azimuth: model.orbitAzimuth - Float(deltaX / max(size.width, 1)) * 0.9,
+                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65)
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastDragTranslation = .zero }
@@ -3073,7 +2816,8 @@ struct BoardModelRealityView: View {
             .onChanged { value in
                 let ratio = value / max(lastMagnification, 0.001)
                 lastMagnification = value
-                model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(ratio))
+                model.orbit(azimuth: model.orbitAzimuth, elevation: model.orbitElevation,
+                            zoomScale: model.orbitZoom / Float(ratio))
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastMagnification = 1 }
@@ -3082,16 +2826,10 @@ struct BoardModelRealityView: View {
     @ViewBuilder
     private func accessibilityOverlay(size: CGSize) -> some View {
         if let onContactTap {
-            let cameraMatrix = BoardRealityRenderer.cameraTransform(
-                model: model, viewport: size, fieldOfViewDegrees: fieldOfViewDegrees)
             ZStack {
                 ForEach(contacts) { contact in
-                    if let node = model.contactNodes[contact.id]?.first,
-                       let point = BoardRealityRenderer.project(
-                           BoardRealityRenderer.worldCenter(of: node),
-                           cameraMatrix: cameraMatrix,
-                           fieldOfViewDegrees: fieldOfViewDegrees,
-                           viewport: size) {
+                    if let point = model.projectedContactCenter(contact.id, viewport: size,
+                                                               fieldOfViewDegrees: fieldOfViewDegrees) {
                         Color.clear
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
@@ -3126,4 +2864,3 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
-
