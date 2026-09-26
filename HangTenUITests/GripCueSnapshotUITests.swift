@@ -299,6 +299,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
     private let app = XCUIApplication()
 
     override func setUpWithError() throws {
+        /// Sets up the test environment for one-handed board hand choice tests.
         continueAfterFailure = false
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
@@ -310,6 +311,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         app.launch()
     }
 
+    /// Tests that a user can select a hand for a one-handed board.
     func testInlineHandChoiceOnOneHandedBoard() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
