@@ -3327,7 +3327,7 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             var steps: [WorkoutStep] = []
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [lattice20mmEdgePairTarget], .halfCrimp, nil),
+                ("Half 4 Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])),
                 ("F3 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
                 ("M2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
                 ("F2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),

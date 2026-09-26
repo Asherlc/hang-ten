@@ -13192,6 +13192,14 @@
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
           "handUse" : "double",
           "id" : "abrahangs-grip-1",
