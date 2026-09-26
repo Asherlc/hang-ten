@@ -1,7 +1,7 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 15 of the 46 model-media boards are migrated** (those with a committed
-`Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
+**Status: 16 of the 47 model-media boards are migrated** (those with a committed
+`Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
 
@@ -264,6 +264,11 @@ pre-migration mesh: the front view comes from Trango's top-down photograph
 contrast-stretched photo crops and the model-over-photo overlay. It is a
 diagnostic, never a build input (lessons §18).
 
+`tension-grindstone` sets it too: its top slots have stadium ends. It is the
+first CAD board with no prior 3D asset (it was raster-only), so there is no
+reference mesh. See
+`docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -345,7 +350,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **15 of 46 model-media boards are migrated.** The other 31 still ship their
+* **16 of 47 model-media boards are migrated.** The other 31 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

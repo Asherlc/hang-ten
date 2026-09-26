@@ -989,6 +989,29 @@
       }
     },
     {
+      "packageID": "tension.grindstone",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The current Tension Grindstone (Mk2) product evidence describes a wall-mounted board with no supplied or integral cord system.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://tensionclimbing.com/products/grindstone",
+          "exactRevisionID": "tension-grindstone-mk2-2026-09-26",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "d9b832981efd33ddb7cd97c8732a7567b9747eeac3b478c17bfbc0cea2ddfb6b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/tension-grindstone.html"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "hang-ten-cord-audit",
+        "reviewedAt": "2026-09-26",
+        "notes": "Reviewed the retained exact-revision source artifacts when the board gained its 3D model (CAD migration)."
+      }
+    },
+    {
       "packageID": "the-hangboard.the-hangboard",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
