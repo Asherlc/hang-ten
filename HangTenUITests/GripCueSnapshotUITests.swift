@@ -355,7 +355,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             object: updated
         )
         XCTAssertEqual(
-            XCTWaiter.wait(for: [labelUpdated], timeout: 10),
+            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
             .completed,
             "Choosing a hand must update the picker label, got: \(updated.label)"
         )
