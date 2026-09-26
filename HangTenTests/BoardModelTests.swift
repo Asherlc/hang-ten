@@ -3606,9 +3606,9 @@ final class BoardModelTests: XCTestCase {
             allowedPositionIDs: ["front"]
         ))
         model.applyStudioAppearance()
-        let first = model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        let first = try model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
         model.applyStudioAppearance()
-        let second = model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        let second = try model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
         XCTAssertEqual(first, second)
         XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
     }
@@ -3644,7 +3644,7 @@ final class BoardModelTests: XCTestCase {
         func brightness(at point: CGPoint) throws -> CGFloat {
             let provider = try XCTUnwrap(cg.dataProvider)
             let data = try XCTUnwrap(provider.data)
-            let ptr = CFDataGetBytePtr(data)
+            let ptr = try XCTUnwrap(CFDataGetBytePtr(data))
             let bytesPerPixel = cg.bitsPerPixel / 8
             let x = min(max(Int(point.x * CGFloat(cg.width) / image.size.width), 0), cg.width - 1)
             let y = min(max(Int(point.y * CGFloat(cg.height) / image.size.height), 0), cg.height - 1)
