@@ -12,7 +12,7 @@ final class CustomRoutineDraftTests: XCTestCase {
 
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left"])
+            Set(["left", "right"])
         )
 
         CustomRoutineBoardPreview.toggle(
@@ -57,7 +57,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertNil(step.targets.first?.contactID)
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left"])
+            Set(["left", "right"])
         )
         var draft = CustomRoutineDraft(createWith: .boardSpecific(boardID: board.id))
         draft.steps = [step]
@@ -108,7 +108,7 @@ final class CustomRoutineDraftTests: XCTestCase {
         XCTAssertEqual(step.targets, [factualRequirement(contactID: nil, selection: .single)])
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left"])
+            Set(["left", "right"])
         )
     }
 
