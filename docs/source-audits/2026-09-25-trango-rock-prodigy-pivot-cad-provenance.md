@@ -99,9 +99,10 @@ through end window. The depth guide was followed in both cases.
 - **Wing** (`outer-wedge-pinch`): a smooth loft through 12 sections at
   X = −124 … −18. The crest (crease) and base lines are authored from G:
   crest (−115, −19.5) … (−18, 22.5), base (−100, −36.2) … (−18, −12.0). The
-  front face is a gentle concave Bézier from the crease down to the rim face;
-  its control-point fractions (0.28/0.36, 0.12/0.22) are a display estimate
-  chosen against D's photo. The loft is trimmed to the silhouette and ends on
+  front face is nearly planar (G, P and Q p. 3 all show a flat slope), with a
+  mild concavity toward the base: a Bézier with control points at 35 % along
+  the crease-to-base chord and at (0.20 h, 0.25) from the base, a display
+  estimate. The loft is trimmed to the silhouette and ends on
   the field's left wall at X = −20.
 - **Field**: the left wall is X = −20. The bottom edge (the medium-crimp rim
   edge) is Z = −17.6, with a 64.5–71.5 mm end-stop tab up to Z = −9.6. The
@@ -122,9 +123,11 @@ through end window. The depth guide was followed in both cases.
 - **Lower-right bevel**: from Z = −55.5 on the rim face back to the bottom
   silhouette at 45°, X 21–96. The bevel is visible in G, D and Q p. 3; its 45°
   angle is a display estimate.
-- **Round-overs**: 1.5 mm on the 19 rim-face edges that OCCT fillets together.
-  Crimp-band and wing edges stay sharp, so the gated depths are unaffected.
-  Display choice.
+- **Round-overs**: 1.5 mm on every convex edge OCCT can round together (50 of
+  88), matching the moulded edges in Trango's CAD render (Q p. 3) and product
+  photos. The two gated sloped-crimp bands and the back plane stay sharp, so
+  the gated depths are unaffected. The 38 edges OCCT would not round stay
+  sharp. Display choice.
 
 Omitted under the hardware/branding policy: the bolt countersink and bore, the
 two set-screw holes, the TRANGO plate, and all Quad Cleat and rail hardware.
@@ -165,21 +168,23 @@ all other fields are byte-identical.
 
 ## Evidence
 
-- Compile (FreeCAD 1.1.3, OCCT 7.8.1, macOS): 35,938 triangles;
+- Compile (FreeCAD 1.1.3, OCCT 7.8.1, macOS): 94,210 triangles (the
+  round-overs; the USDZ is 2.1 MB);
   `modelBounds` 234.3 × 136.1 × 63.5 mm. Published-depth gates: upper sloped
   crimp 12.500, outer sloped crimp 11.500. Measured region depths for the
-  ungated range holds: rail 29.5 (31 − 1.5 round-over), 3F 26.5, 2F 32.0,
-  medium crimp 10.04, large crimp 13.07.
+  ungated range holds: rail 30.87 (31 minus the round-over at the rim), 3F 26.5, 2F 32.0,
+  medium crimp 10.04, large crimp 13.03.
 - `verify_reproducible.py --package trango-rock-prodigy-pivot` rebuilds the
   asset byte-identically (`553c9ced…`).
 - The compiled mesh is watertight, with consistent winding and positive
   volume, so every node faces outward.
-- `compare_exports` against the pre-migration mesh reports a two-way sampled
+- `compare_exports` (first revision) against the pre-migration mesh reports a two-way sampled
   worst deviation of 36.58 mm (reverse 21.35 mm; limit 0.5 mm; 215,628 /
   84,324 samples). This is **accepted and expected**: the reference was about
   20 % undersized and topologically different (see above). It is evidence, not
   a gate.
-- In app: iPhone 17 Pro simulator (iOS 26.5), Debug board-detail route, in a
+- In app (first revision, before the round-over and wing-face pass; node IDs
+  and slots are unchanged since): iPhone 17 Pro simulator (iOS 26.5), Debug board-detail route, in a
   workspace-owned simulator that was deleted afterwards. The pair renders
   mirrored with the 30 mm gap. The following selections were confirmed via
   `boardDetail.selectedHold.<id>` and screenshots:
