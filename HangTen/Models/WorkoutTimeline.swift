@@ -177,24 +177,38 @@ enum WorkoutSessionHandResolver {
 }
 
 extension WorkoutSessionHandResolver {
-    /// True when a both-hands materialization resolves every work requirement
-    /// on this board. A capacity-2 board with no paired target for a step
-    /// cannot satisfy a both-hands choice and must fall back to alternate.
+    /// True when a both-hands choice is viable on this board. Only the steps
+    /// that need a start-of-session hand choice are evaluated, so an unrelated
+    /// `.double` step cannot disable the option.
+    ///
+    /// A two-hand board needs the choice to resolve to a pair, or to a single
+    /// hold the package documents as `handCapacity == 2`. A one-hand board
+    /// resolves one hold per board (the athlete uses two boards).
     static func bothHandsResolve(plan: TrainingPlan, board: BoardRevision) -> Bool {
-        let steps = sessionSteps(
-            from: plan.steps,
-            preference: .both,
-            boardIsOneHanded: board.isOneHanded
-        )
-        return steps.allSatisfy { step in
-            guard !step.isRestStep else { return true }
-            let requirements = step.workRequirements
+        let boardIsOneHanded = board.isOneHanded
+        let resolutionSteps = plan.steps.filter {
+            stepNeedsHandResolution($0, boardIsOneHanded: boardIsOneHanded)
+        }
+        return resolutionSteps.allSatisfy { step in
+            let resolved = materialized(
+                step,
+                preference: .both,
+                boardIsOneHanded: boardIsOneHanded
+            )
+            let requirements = resolved.workRequirements
             guard !requirements.isEmpty else { return true }
-            return (try? ContactResolver.resolve(
+            guard let contacts = try? ContactResolver.resolve(
                 requirements,
-                step: step,
+                step: resolved,
                 board: board
-            ))?.isEmpty == false
+            ) else {
+                return false
+            }
+            if boardIsOneHanded {
+                return !contacts.isEmpty
+            }
+            return contacts.count >= 2
+                || (contacts.count == 1 && contacts[0].handCapacity == 2)
         }
     }
 
