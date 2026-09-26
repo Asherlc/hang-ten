@@ -640,6 +640,19 @@ write-up. The durable points:
   floor) passes the gate only if its region reaches the face. Give it the
   parent pocket's end-cap faces on the hole side. See
   `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+- **Rock Prodigy Pivot**: the approved display mesh was wrong. It was about
+  20 % undersized, had the wrong topology, and reversed two published depth
+  gradients. Before measuring it, check the reference against the
+  manufacturer's own images and depth guide. When they disagree, author the
+  front view from a manufacturer top-down photo instead. Type the points in by
+  eye from 1 mm-gridded crops (no detection), and take the scale from a known
+  part in the photo's plane, such as a bolt seat. OCCT will not chamfer an
+  outline chain ending at a near-tangent or concave kink, so build asymmetric
+  bands as ruled lofts from the photographed front edge to the silhouette at
+  the published depth. The reading and review aids (1 mm-gridded crops and
+  the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
+  full method are in `freecad-authoring-lessons.md` §18. See
+  `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
 
 ## Fast loop and definition of done
 

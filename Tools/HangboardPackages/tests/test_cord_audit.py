@@ -8,6 +8,7 @@ from types import SimpleNamespace
 import pytest
 
 import hangboard_packages.cli as cli
+from conftest import package_board_text
 from hangboard_packages.board_catalog import (
     BoardInventory,
     BoardModelSingleCordSuspension,
@@ -61,7 +62,7 @@ def test_pivot_exclusion_keeps_pulley_ropes_out_of_board_suspension() -> None:
         assert snapshot.is_file() and not snapshot.is_symlink()
         assert snapshot.parent == PRODUCTION_MANIFEST.parent / "2026-09-13-model-cord-snapshots"
         assert hashlib.sha256(snapshot.read_bytes()).hexdigest() == evidence["snapshotSHA256"]
-    board = json.loads((REPO_ROOT / "Hangboards/trango-rock-prodigy-pivot/board.json").read_text())
+    board = json.loads(package_board_text(REPO_ROOT / "Hangboards/trango-rock-prodigy-pivot"))
     media = board["presentations"][0]["media"]
     assert "suspension" not in media
     assert all("suspension" not in instance for instance in media["instances"])
