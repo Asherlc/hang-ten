@@ -33,15 +33,23 @@ perspective camera and a narrow-FOV telephoto variant.
 - **Deployment:** raise `IPHONEOS_DEPLOYMENT_TARGET` to 18.0. The RealityKit
   camera components (`PerspectiveCamera`, `RealityViewCameraControls`) require
   iOS 18, and the iOS 17 fallback is removed rather than maintained.
+- **Model layer:** the SceneKit model layer (`BoardModelScene`: package decode,
+  descriptor binding, instance transforms, mirrored geometry, positions,
+  suspension, hit-test bindings) stays the source of truth. Only drawing moves
+  to RealityKit. Reusing it avoids re-implementing the audited geometry,
+  reflection, and picking contract, and keeps the existing `BoardModelScene`
+  tests valid.
 - **Camera:** RealityKit has no orthographic projection. Board packages declare
   `display.camera.type = "orthographic"` and `BoardModelScene.framing` hard-guards
   on it. The orthographic look is treated as negotiable. Phase 1 renders a
   native perspective camera; screenshots compare it against a narrow-FOV
   telephoto approximation so the perceptual change is visible.
-- **Phase boundary:** this phase adds the RealityKit path and switches the app to
-  it. Existing SceneKit sources remain in-tree but unreferenced; they and their
-  tests are removed in a follow-up once the look is approved. This keeps the
-  phase-1 diff from deleting 3,690 lines of SCN-typed tests before validation.
+- **Phase boundary:** this phase adds the RealityKit renderer and switches
+  `BoardModelSurface` to it. The SceneKit renderer (`BoardModelView` /
+  `BoardModelSCNView`) remains in-tree but is no longer referenced by the app;
+  it and its tests are removed in a follow-up once the look is approved. This
+  keeps the phase-1 diff from deleting 3,690 lines of SCN-typed tests before
+  validation.
 
 ## Non-goals
 
@@ -62,99 +70,94 @@ perspective camera and a narrow-FOV telephoto variant.
 `BoardModelSurface` (`HangTen/Views/BoardModelView.swift:426`) is the only
 consumer-facing seam; `BoardMapView` renders it at the board detail map
 (`BoardMapView.swift:383`) and the picker card (`:624`). Its `ResultState.ready`
-holds a `BoardModelScene` today. Phase 1 introduces a RealityKit scene type and
-routes the seam through it. `BoardPresentation.aspectRatio(for:)`
+still holds a `BoardModelScene`; the surface now renders it through
+`BoardModelRealityView` instead of `BoardModelView`. The loader, cache, resource
+lease, and SHA-256 verification are unchanged. `BoardPresentation.aspectRatio(for:)`
 (`BoardMapView.swift:120`) keeps using the pure static `BoardModelScene.framing`
 math, which is unchanged.
 
 ### Components
 
-**`BoardModelRealityScene`** (new, `HangTen/Views/`)
+**`BoardRealityRenderer`** (new, `HangTen/Views/BoardModelView.swift`)
 
-- Owns an `Entity` root built from the verified package URL.
-- Decodes by loading the USDZ into an entity and binding descriptor `nodeID`s to
-  entities by name (schema-v2 descriptors use bare importer IDs; path
-  descriptors walk the hierarchy). Node role (`body`/`contact`/`attachment`) and
-  contact-slot IDs come from the descriptor exactly as they do today.
-- Builds one entity per `BoardModelInstance`, applies `baseTransform`, and
-  applies per-position transforms for the selected `positionID` using the
-  existing `reusableMatrix` math.
-- Mirrors an instance whose `baseTransform.reflection == .x`. The implementation
-  is chosen by a spike: either a negative-scale container, or a ModelIO-based
-  re-decode (`MDLAsset` -> `MeshResource.generate(from:)`) with negated x
-  positions/normals and reversed winding. Because packages are guaranteed
-  unbound, ModelIO re-decode does not need to import materials.
+- `@MainActor` class that owns a RealityKit `Entity` root and a
+  `PerspectiveCamera`, and mirrors `BoardModelScene.geometryNodes` into
+  `ModelEntity`s.
+- Bridges each prepared `SCNGeometry` into a `MeshResource`. USDZ geometry
+  indexes positions and normals with independent interleaved index channels
+  (`indicesChannelCount` 1–4), which `MeshDescriptor` cannot express, so the
+  bridge expands every triangle into three unshared vertices with the authored
+  per-vertex normals and an identity index list. Missing normals are synthesized
+  per face.
 - Assigns one neutral `PhysicallyBasedMaterial` (warm off-white diffuse,
-  roughness ~0.5, metalness 0) to board geometry; RealityKit supplies default
-  image-based lighting.
-- Exposes contact lookup (entity -> contactID) and the per-position transforms
-  needed by the view.
-- Idempotent: appearances are assigned once per decode, not per SwiftUI update.
-
-**`BoardModelRealityLoader`** (new)
-
-- Mirrors `BoardModelLoader` (`BoardModelView.swift:371`): same resource lease,
-  load gate, cache key, and SHA-256 verification, but returns a
-  `BoardModelRealityScene`. Reuses `BoardModelAsset` verification and
-  `BoardModelCache`.
-
-**`BoardModelRealityView`** (new, SwiftUI)
-
-- A `RealityView` that adds the scene root and hosts a `PerspectiveCamera`
-  entity.
-- Framing computes a fit distance from the existing `BoardModelScene.framing`
-  projected width/height and `fitPadding`, solving for the camera distance that
-  fits the board in the viewport at the chosen field of view.
-- Picking uses `SpatialTapGesture().targetedToAnyEntity()`; contact entities get
-  `CollisionComponent` shapes, body/attachment entities do not, preserving
-  today's "only contacts are pickable" behavior. The hit entity maps back to a
-  contact ID and fires `onContactTap`.
+  roughness 0.5, metalness 0) to board geometry; RealityKit supplies default
+  image-based lighting, so no lighting rig or environment image is bundled.
+- Copies `node.simdWorldTransform` onto each entity, so instance placement,
+  mirroring (already baked into the cloned geometry by `BoardModelScene`), and
+  position changes flow through without re-implementing them.
+- Binds contact entities to contact IDs and gives only those entities collision
+  shapes, preserving "only contacts are pickable".
+- Maps a hit entity back to its contact ID for tap handling.
 - Highlights reassign the contact entity's `PhysicallyBasedMaterial` (value
   type) to the highlight tint and restore the neutral base material on clear.
-- Closed state (no tap handler) renders without picking, matching the current
+
+**`BoardModelRealityView`** (new, SwiftUI, `HangTen/Views/BoardModelView.swift`)
+
+- A `RealityView` that installs the renderer's root and camera and hosts a
+  `PerspectiveCamera` entity.
+- Framing derives a perspective fit distance from the existing
+  `BoardModelScene.fittedOrthographicScale(in:)` half-height and `fitPadding`
+  (orthographic half-height / tan(fov/2)), so the board fills the viewport at
+  the chosen field of view.
+- Reuses `BoardModelScene.orbit` / `select` for orbit, pinch zoom, and position
+  changes by driving the SceneKit camera and re-reading its transform.
+- Picking uses `SpatialTapGesture().targetedToAnyEntity()`.
+- Projects contact centers with the same camera math to expose
+  `boardModel.contact.<id>` accessibility elements, matching the prior contract.
+- Closed state (no tap handler) renders without picking, matching the existing
   display-only card behavior.
 
 **Camera variants**
 
-- Native perspective: `PerspectiveCamera` with a normal field of view.
-- Telephoto: a narrow field of view (single-digit degrees) with a proportionally
-  larger fit distance, approximating the prior orthographic presentation.
-- A DEBUG-only switch selects the variant so both can be screenshotted without a
-  rebuild. The switch does not exist in release.
+- Native perspective: `PerspectiveCamera` with a 30° vertical field of view.
+- Telephoto: a 6° vertical field of view with a proportionally larger fit
+  distance, approximating the prior orthographic presentation.
+- A DEBUG-only environment switch (`HANGTEN_REVIEW_BOARD_TELEPHOTO=1`) selects
+  the variant so both can be screenshotted without a rebuild. The switch does
+  not exist in release.
 
 ### Data flow
 
-`BoardModelSurface.task` -> `BoardModelRealityLoader.load` -> SHA-256 verify +
-resource lease -> RealityKit decode -> `BoardModelRealityScene` -> `RealityView`
-renders, `select` applies the position transform, `highlight` tints contacts,
-`SpatialTapGesture` reports a tapped contact.
+`BoardModelSurface.task` -> `BoardModelLoader.load` (unchanged) -> SHA-256 verify
++ resource lease + SceneKit decode -> `BoardModelScene` -> `BoardModelRealityView`
+mirrors it into RealityKit entities -> `RealityView` renders, `select` applies
+the position transform, `highlight` tints contacts, `SpatialTapGesture`
+reports a tapped contact.
 
 ### Error handling
 
 - Verification, lease, gate, or decode failure -> existing `.unavailable` state.
-- A node in the descriptor that cannot be bound -> the scene fails to construct,
-  matching the current `prepareModel` all-or-nothing contract.
-- Mirroring or model-buffer failures during the spike fall back to the other
-  mirroring implementation; a board that cannot be mirrored fails to construct
-  rather than rendering a wrong half.
+- A geometry that cannot be bridged (unsupported primitive type or channel
+  layout) is skipped rather than crashing; the rest of the board still renders.
+- A position the scene cannot select -> `onUnavailable` fires, matching the
+  SceneKit view's behavior.
 
 ## Testing and verification
 
-- Unit tests on `BoardModelRealityScene` (device/simulator required):
-  descriptor node binding, instance construction, reflection presence, position
-  transform application, contact ID lookup, and highlight material swap/restore.
-- The existing SceneKit `BoardModelScene` tests continue to pass unchanged,
-  because the SceneKit sources are left in place this phase.
+- The existing `BoardModelScene` tests continue to pass unchanged, because the
+  SceneKit model layer is left in place this phase (70 `BoardModelTests` pass on
+  an iOS 26.5 simulator).
 - Build the app for an isolated iOS Simulator and screenshot the board detail
-  screen for at least `trango-rock-prodigy-pivot` in both camera variants, using
-  the `validate-hang-ten-ios` skill.
-- Report the screenshots against the current SceneKit render so the perceptual
-  change (perspective and telephoto) is visible.
+  screen for `trango-rock-prodigy-pivot` in both camera variants, using the
+  `validate-hang-ten-ios` skill.
+- Report the screenshots against the pre-migration SceneKit render so the
+  perceptual change is visible.
 
 ## Deferrals
 
 - Deletion of the SceneKit renderer and rewrite/removal of its SCN-typed tests.
-- Suspension-cord rendering and mesh-triangle clearance parity.
-- Accessibility-projection parity for contacts (`presentation`-tree stall
-  handling does not exist in RealityKit); if needed, contacts can be exposed via
-  the descriptor `center`/`facePlaneAABB` rather than mesh projection.
+- Replacing the SceneKit model/decode layer with a RealityKit-native scene.
+- Suspension-cord rendering and mesh-triangle clearance parity (the bridge has
+  no cord entities; `BoardModelScene` still computes the solver).
+- Full accessibility parity for the `presentation`-tree stall handling; the
+  RealityKit view projects contact centers directly instead.

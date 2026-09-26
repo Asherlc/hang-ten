@@ -1,4 +1,5 @@
 import CryptoKit
+import RealityKit
 import SceneKit
 import SwiftUI
 
@@ -465,7 +466,7 @@ struct BoardModelSurface: View {
     var body: some View {
         Group {
             if case .ready(let model) = result {
-                BoardModelView(
+                BoardModelRealityView(
                     model: model,
                     boardName: board.name,
                     contacts: board.contacts(in: presentation),
@@ -2237,6 +2238,25 @@ final class BoardModelScene {
         return nil
     }
 
+    /// The orthographic half-height that `frame(in:)` would apply, without
+    /// mutating the camera. Used by the RealityKit presentation to derive an
+    /// equivalent perspective fit distance.
+    func fittedOrthographicScale(in size: CGSize) -> Double? {
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else { return nil }
+        let aspectFloat = Float(size.width / size.height)
+        guard aspectFloat.isFinite, aspectFloat > 0 else { return nil }
+        let candidate: Double
+        if let framing = currentFraming {
+            candidate = Double(max(framing.height, framing.width / aspectFloat)
+                * framing.fitPadding / orbitZoom / 2)
+        } else {
+            candidate = Double(max(projectedHeight, projectedWidth / aspectFloat) / 2)
+        }
+        guard candidate.isFinite, candidate > 0 else { return nil }
+        return candidate
+    }
+
     func frame(in size: CGSize) {
         guard size.width.isFinite, size.height.isFinite,
               size.width > 0, size.height > 0 else { return }
@@ -3026,3 +3046,430 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
         }
     }
 }
+
+// MARK: - RealityKit presentation
+
+/// Bridges the decoded `BoardModelScene` into a RealityKit render tree. The
+/// SceneKit model layer stays the source of truth for decode, instance
+/// transforms, mirrored geometry, positions, and contact binding; only the
+/// drawing moves to RealityKit, whose default physically based appearance
+/// lights the unbound meshes with believable form.
+@MainActor
+final class BoardRealityRenderer {
+    let root = Entity()
+    let camera = PerspectiveCamera()
+
+    private var renderables: [(node: SCNNode, entity: ModelEntity)] = []
+    private var contactEntities: [String: [ModelEntity]] = [:]
+    private var contactIDByEntity: [ObjectIdentifier: String] = [:]
+    private var isInstalled = false
+    private var lastHighlights: Set<String> = []
+    private var lastHighlightMode: BoardHighlightMode?
+
+    func install(model: BoardModelScene, content: inout RealityViewCameraContent) {
+        guard !isInstalled else { return }
+        isInstalled = true
+        content.add(root)
+        content.add(camera)
+        for node in model.geometryNodes {
+            guard let geometry = node.geometry,
+                  let mesh = Self.meshResource(from: geometry) else { continue }
+            let entity = ModelEntity(mesh: mesh, materials: [Self.neutralMaterial()])
+            entity.name = node.name ?? ""
+            root.addChild(entity)
+            renderables.append((node, entity))
+            if let contactID = model.contactID(for: node) {
+                contactEntities[contactID, default: []].append(entity)
+                contactIDByEntity[ObjectIdentifier(entity)] = contactID
+                entity.generateCollisionShapes(recursive: false)
+            }
+        }
+    }
+
+    @discardableResult
+    func sync(model: BoardModelScene, positionID: String?, highlights: Set<String>,
+              mode: BoardHighlightMode, viewport: CGSize, fieldOfViewDegrees: Double) -> Bool {
+        guard isInstalled else { return true }
+        let didSelect = model.select(positionID: positionID)
+        for (node, entity) in renderables {
+            entity.transform = Transform(matrix: node.simdWorldTransform)
+        }
+        if highlights != lastHighlights || mode != lastHighlightMode {
+            applyHighlights(highlights, mode: mode)
+            lastHighlights = highlights
+            lastHighlightMode = mode
+        }
+        camera.transform = Transform(matrix: Self.cameraTransform(
+            model: model, viewport: viewport, fieldOfViewDegrees: fieldOfViewDegrees))
+        applyCameraComponent(fieldOfViewDegrees: fieldOfViewDegrees)
+        return didSelect
+    }
+
+    func contactID(for entity: Entity) -> String? {
+        var current: Entity? = entity
+        while let candidate = current {
+            if let id = contactIDByEntity[ObjectIdentifier(candidate)] { return id }
+            current = candidate.parent
+        }
+        return nil
+    }
+
+    private func applyCameraComponent(fieldOfViewDegrees: Double) {
+        var component = camera.camera
+        component.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+        component.fieldOfViewOrientation = .vertical
+        component.near = 0.001
+        component.far = 1000
+        camera.camera = component
+    }
+
+    private func applyHighlights(_ highlights: Set<String>, mode: BoardHighlightMode) {
+        let neutral = Self.neutralMaterial()
+        var tinted = Self.neutralMaterial()
+        tinted.baseColor = .init(tint: UIColor(mode == .active ? Color.holdActive : Color.restBlue))
+        tinted.roughness = .init(floatLiteral: 0.8)
+        for (contactID, entities) in contactEntities {
+            let material = highlights.contains(contactID) ? tinted : neutral
+            for entity in entities { entity.model?.materials = [material] }
+        }
+    }
+
+    // MARK: Geometry bridge
+
+    /// Converts a prepared (already posed and, where required, mirrored)
+    /// `SCNGeometry` into a RealityKit `MeshResource`.
+    ///
+    /// USDZ packages index positions and normals with independent interleaved
+    /// index channels (`SCNGeometryElement.indicesChannelCount > 1`), which
+    /// `MeshDescriptor` cannot express. The bridge therefore expands each
+    /// triangle into three unshared vertices, preserving the authored per-vertex
+    /// normals, and emits an implicit identity index list. Committed packages
+    /// ship no materials or texture coordinates, so nothing else is read.
+    static func meshResource(from geometry: SCNGeometry) -> MeshResource? {
+        guard let descriptor = meshDescriptor(from: geometry) else { return nil }
+        return try? MeshResource.generate(from: [descriptor])
+    }
+
+    static func meshDescriptor(from geometry: SCNGeometry) -> MeshDescriptor? {
+        let sources = geometry.sources
+        guard let vertexIndex = sources.firstIndex(where: { $0.semantic == .vertex }) else { return nil }
+        let vertexSource = sources[vertexIndex]
+        let normalIndex = sources.firstIndex(where: { $0.semantic == .normal })
+        let channels: [Int]
+        if let declared = geometry.geometrySourceChannels {
+            guard declared.count == sources.count else { return nil }
+            channels = declared.map(\.intValue)
+        } else {
+            channels = [Int](repeating: 0, count: sources.count)
+        }
+        let vertexChannel = channels[vertexIndex]
+        let normalChannel = normalIndex.map { channels[$0] }
+
+        var positions: [SIMD3<Float>] = []
+        var normals: [SIMD3<Float>] = []
+        var normalsAreValid = normalIndex != nil
+
+        for element in geometry.elements {
+            guard element.primitiveType == .triangles else { return nil }
+            let channelCount = max(element.indicesChannelCount, 1)
+            guard element.indicesChannelCount <= 1 || element.hasInterleavedIndicesChannels else { return nil }
+            let vertexCount = element.primitiveCount * 3
+            guard let vertexIndices = indices(element, channel: vertexChannel,
+                                              channelCount: channelCount, vertexCount: vertexCount) else { return nil }
+            let normalIndices = normalChannel.flatMap {
+                indices(element, channel: $0, channelCount: channelCount, vertexCount: vertexCount)
+            }
+            let normalSource = normalIndex.map { sources[$0] }
+            for vertex in 0..<vertexCount {
+                guard let position = vector3(vertexSource, at: vertexIndices[vertex]) else { return nil }
+                positions.append(position)
+                if let normalSource, let normalIndices,
+                   let normal = vector3(normalSource, at: normalIndices[vertex]) {
+                    normals.append(normal)
+                } else {
+                    normalsAreValid = false
+                    normals.append(.zero)
+                }
+            }
+        }
+        guard !positions.isEmpty else { return nil }
+        if !normalsAreValid {
+            normals = faceNormals(for: positions)
+        }
+
+        var descriptor = MeshDescriptor(name: geometry.name ?? "board")
+        descriptor[MeshBuffers.positions] = MeshBuffers.Positions(positions)
+        descriptor[MeshBuffers.normals] = MeshBuffers.Normals(normals)
+        descriptor.primitives = .triangles(Array(0..<UInt32(positions.count)))
+        return descriptor
+    }
+
+    private static func indices(_ element: SCNGeometryElement, channel: Int,
+                                channelCount: Int, vertexCount: Int) -> [Int]? {
+        guard [1, 2, 4].contains(element.bytesPerIndex) else { return nil }
+        if element.data.isEmpty {
+            return Array(0..<vertexCount)
+        }
+        guard vertexCount * channelCount <= element.data.count / element.bytesPerIndex else { return nil }
+        var result = [Int](repeating: 0, count: vertexCount)
+        element.data.withUnsafeBytes { raw in
+            for vertex in 0..<vertexCount {
+                let scalar = vertex * channelCount + channel
+                let offset = scalar * element.bytesPerIndex
+                switch element.bytesPerIndex {
+                case 1: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt8.self))
+                case 2: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt16.self))
+                default: result[vertex] = Int(raw.loadUnaligned(fromByteOffset: offset, as: UInt32.self))
+                }
+            }
+        }
+        return result
+    }
+
+    private static func vector3(_ source: SCNGeometrySource, at index: Int) -> SIMD3<Float>? {
+        guard index >= 0, index < source.vectorCount,
+              source.usesFloatComponents, [4, 8].contains(source.bytesPerComponent),
+              source.componentsPerVector >= 3 else { return nil }
+        let offset = source.dataOffset + index * source.dataStride
+        guard offset >= 0, offset + 3 * source.bytesPerComponent <= source.data.count else { return nil }
+        return source.data.withUnsafeBytes { raw in
+            let values = (0..<3).map { axis -> Float in
+                let address = offset + axis * source.bytesPerComponent
+                return source.bytesPerComponent == 4
+                    ? raw.loadUnaligned(fromByteOffset: address, as: Float.self)
+                    : Float(raw.loadUnaligned(fromByteOffset: address, as: Double.self))
+            }
+            return SIMD3<Float>(values[0], values[1], values[2])
+        }
+    }
+
+    private static func faceNormals(for positions: [SIMD3<Float>]) -> [SIMD3<Float>] {
+        var normals = [SIMD3<Float>](repeating: .zero, count: positions.count)
+        var index = 0
+        while index + 2 < positions.count {
+            let edge1 = positions[index + 1] - positions[index]
+            let edge2 = positions[index + 2] - positions[index]
+            let cross = simd_cross(edge1, edge2)
+            let length = simd_length(cross)
+            let normal = length > 0 ? cross / length : SIMD3<Float>(0, 1, 0)
+            normals[index] = normal
+            normals[index + 1] = normal
+            normals[index + 2] = normal
+            index += 3
+        }
+        return normals
+    }
+
+    static func neutralMaterial() -> PhysicallyBasedMaterial {
+        var material = PhysicallyBasedMaterial()
+        material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
+        material.roughness = .init(floatLiteral: 0.5)
+        material.metallic = .init(floatLiteral: 0)
+        return material
+    }
+
+    // MARK: Camera fit
+
+    static func cameraTransform(model: BoardModelScene, viewport: CGSize,
+                                fieldOfViewDegrees: Double) -> simd_float4x4 {
+        var transform = model.camera.simdWorldTransform
+        guard viewport.width > 0, viewport.height > 0,
+              let halfHeight = model.fittedOrthographicScale(in: viewport),
+              fieldOfViewDegrees > 0 else { return transform }
+        let fovRadians = Float(fieldOfViewDegrees * .pi / 180)
+        let distance = Float(halfHeight) / Float(tan(Double(fovRadians) / 2))
+        let columns = transform.columns
+        let forward = -simd_normalize(SIMD3<Float>(columns.2.x, columns.2.y, columns.2.z))
+        let center = contentCenter(model)
+        transform.columns.3 = SIMD4<Float>(center - forward * distance, 1)
+        return transform
+    }
+
+    static func contentCenter(_ model: BoardModelScene) -> SIMD3<Float> {
+        var minimum = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+        var maximum = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+        var found = false
+        for node in model.geometryNodes {
+            let box = node.boundingBox
+            guard box.min.x.isFinite, box.max.x.isFinite,
+                  box.min.y.isFinite, box.max.y.isFinite,
+                  box.min.z.isFinite, box.max.z.isFinite else { continue }
+            found = true
+            for x in [box.min.x, box.max.x] {
+                for y in [box.min.y, box.max.y] {
+                    for z in [box.min.z, box.max.z] {
+                        let world = node.simdWorldTransform * SIMD4<Float>(Float(x), Float(y), Float(z), 1)
+                        let point = SIMD3<Float>(world.x, world.y, world.z)
+                        minimum = simd_min(minimum, point)
+                        maximum = simd_max(maximum, point)
+                    }
+                }
+            }
+        }
+        guard found else { return .zero }
+        return (minimum + maximum) / 2
+    }
+
+    static func worldCenter(of node: SCNNode) -> SIMD3<Float> {
+        let box = node.boundingBox
+        let local = SIMD4<Float>(
+            Float((box.min.x + box.max.x) / 2),
+            Float((box.min.y + box.max.y) / 2),
+            Float((box.min.z + box.max.z) / 2), 1)
+        let world = node.simdWorldTransform * local
+        return SIMD3<Float>(world.x, world.y, world.z)
+    }
+
+    static func project(_ world: SIMD3<Float>, cameraMatrix: simd_float4x4,
+                        fieldOfViewDegrees: Double, viewport: CGSize) -> CGPoint? {
+        guard viewport.width > 0, viewport.height > 0 else { return nil }
+        let view = simd_inverse(cameraMatrix) * SIMD4<Float>(world, 1)
+        let depth = -view.z
+        guard depth > 0.0001 else { return nil }
+        let focal = Float(1 / tan(fieldOfViewDegrees * .pi / 180 / 2))
+        let aspect = Float(viewport.width / viewport.height)
+        guard aspect > 0 else { return nil }
+        let ndcX = (focal / aspect) * view.x / depth
+        let ndcY = focal * view.y / depth
+        return CGPoint(x: CGFloat(ndcX * 0.5 + 0.5) * viewport.width,
+                       y: CGFloat(0.5 - ndcY * 0.5) * viewport.height)
+    }
+}
+
+struct BoardModelRealityView: View {
+    let model: BoardModelScene
+    let boardName: String
+    let contacts: [PhysicalContact]
+    let positionID: String?
+    let highlightedContactIDs: Set<String>
+    let highlightMode: BoardHighlightMode
+    let onContactTap: ((PhysicalContact) -> Void)?
+    let onUnavailable: (() -> Void)?
+    var isDisplayOnly = false
+
+    @State private var renderer = BoardRealityRenderer()
+    @State private var cameraRevision = 0
+    @State private var lastDragTranslation: CGSize = .zero
+    @State private var lastMagnification: CGFloat = 1
+
+    private var fieldOfViewDegrees: Double {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_TELEPHOTO"] == "1" {
+            return 6
+        }
+        #endif
+        return 30
+    }
+
+    var body: some View {
+        let _ = cameraRevision
+        GeometryReader { proxy in
+            let size = proxy.size
+            RealityView { content in
+                renderer.install(model: model, content: &content)
+                applySync(content: &content, size: size)
+            } update: { content in
+                applySync(content: &content, size: size)
+            }
+            .gesture(orbitGesture(size: size))
+            .simultaneousGesture(magnifyGesture)
+            .gesture(tapGesture)
+            .overlay { accessibilityOverlay(size: size) }
+            .allowsHitTesting(!isDisplayOnly)
+        }
+        // A display-only card is one element (its host Button owns the tap). An
+        // interactive board exposes its contact elements instead, so the
+        // container must not collapse them into a single element.
+        .modifier(BoardModelAccessibilityContainer(
+            label: onContactTap == nil ? "\(boardName) hangboard" : nil))
+    }
+
+    private func applySync(content: inout RealityViewCameraContent, size: CGSize) {
+        let didSelect = renderer.sync(model: model, positionID: positionID,
+                                      highlights: highlightedContactIDs, mode: highlightMode,
+                                      viewport: size, fieldOfViewDegrees: fieldOfViewDegrees)
+        if !didSelect { onUnavailable?() }
+    }
+
+    private var tapGesture: some Gesture {
+        SpatialTapGesture()
+            .targetedToAnyEntity()
+            .onEnded { value in
+                guard let id = renderer.contactID(for: value.entity),
+                      let contact = contacts.first(where: { $0.id == id }) else { return }
+                onContactTap?(contact)
+            }
+    }
+
+    private func orbitGesture(size: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: 4)
+            .onChanged { value in
+                let deltaX = value.translation.width - lastDragTranslation.width
+                let deltaY = value.translation.height - lastDragTranslation.height
+                lastDragTranslation = value.translation
+                model.orbit(azimuth: Float(-deltaX / max(size.width, 1)) * 0.9,
+                            elevation: Float(-deltaY / max(size.height, 1)) * 0.65)
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastDragTranslation = .zero }
+    }
+
+    private var magnifyGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                let ratio = value / max(lastMagnification, 0.001)
+                lastMagnification = value
+                model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(ratio))
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastMagnification = 1 }
+    }
+
+    @ViewBuilder
+    private func accessibilityOverlay(size: CGSize) -> some View {
+        if let onContactTap {
+            let cameraMatrix = BoardRealityRenderer.cameraTransform(
+                model: model, viewport: size, fieldOfViewDegrees: fieldOfViewDegrees)
+            ZStack {
+                ForEach(contacts) { contact in
+                    if let node = model.contactNodes[contact.id]?.first,
+                       let point = BoardRealityRenderer.project(
+                           BoardRealityRenderer.worldCenter(of: node),
+                           cameraMatrix: cameraMatrix,
+                           fieldOfViewDegrees: fieldOfViewDegrees,
+                           viewport: size) {
+                        Color.clear
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                            .position(point)
+                            .accessibilityElement()
+                            .accessibilityIdentifier("boardModel.contact.\(contact.id)")
+                            .accessibilityLabel(contact.name)
+                            .accessibilityAddTraits(
+                                highlightedContactIDs.contains(contact.id)
+                                    ? [.isButton, .isSelected] : [.isButton])
+                            .accessibilityAction { onContactTap(contact) }
+                    }
+                }
+            }
+            // Accessibility only: real taps must reach the RealityKit picking
+            // gesture so the nearest visible contact wins, not the overlay.
+            .allowsHitTesting(false)
+        }
+    }
+}
+
+private struct BoardModelAccessibilityContainer: ViewModifier {
+    let label: String?
+
+    func body(content: Content) -> some View {
+        if let label {
+            content
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(label)
+        } else {
+            content
+        }
+    }
+}
+
