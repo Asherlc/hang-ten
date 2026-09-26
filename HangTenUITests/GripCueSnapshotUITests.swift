@@ -351,6 +351,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         )
         left.tap()
 
+        // Wait a moment for the UI to update after the tap
+        Thread.sleep(forTimeInterval: 0.5)
+
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
