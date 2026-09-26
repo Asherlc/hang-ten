@@ -355,6 +355,39 @@ struct GripHandAsset: Decodable {
     }
 }
 
+struct GripHandRealityMeshBuilder {
+    private static let baseColor = SIMD4<Float>(0.687, 0.392, 0.242, 1)
+    private static let highlightColor = SIMD4<Float>(0.966, 0.0615, 0.0108, 1)
+
+    static func vertexColors(
+        asset: GripHandAsset,
+        action: GripHandPose,
+        selectedFingers: Set<FingerSlot>
+    ) throws -> [SIMD4<Float>] {
+        guard asset.poses[action.action()] != nil else {
+            throw GripHandAsset.AssetError.invalidMesh
+        }
+
+        return asset.digitIndices.indices.map { vertex in
+            let finger: FingerSlot?
+            switch asset.digitIndices[vertex] {
+            case 2: finger = .index
+            case 3: finger = .middle
+            case 4: finger = .ring
+            case 5: finger = .pinky
+            default: finger = nil
+            }
+
+            let authoredWeight = asset.highlightWeights[vertex]
+            let strength = finger.map { selectedFingers.contains($0) ? authoredWeight : 0 } ?? 0
+            let clampedStrength = min(max(strength, 0), 1)
+            if clampedStrength == 0 { return baseColor }
+            if clampedStrength == 1 { return highlightColor }
+            return baseColor + (highlightColor - baseColor) * clampedStrength
+        }
+    }
+}
+
 private final class GripHandSurface {
     let root = SCNNode()
     private let mesh = SCNNode()
