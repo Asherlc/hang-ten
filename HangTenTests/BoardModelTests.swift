@@ -3566,6 +3566,53 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
+    func testStudioAppearanceSetsEnvironmentAndNeutralMaterials() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        XCTAssertNotNil(model.scene.lightingEnvironment.contents)
+        XCTAssertGreaterThan(model.scene.lightingEnvironment.intensity, 0)
+        XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
+        let expectedDiffuse = UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1.0)
+        for node in model.geometryNodes {
+            let material = try XCTUnwrap(node.geometry?.firstMaterial)
+            XCTAssertEqual(material.lightingModel, .physicallyBased)
+            XCTAssertEqual(material.diffuse.contents as? UIColor, expectedDiffuse)
+            XCTAssertEqual((material.roughness.contents as? NSNumber)?.doubleValue ?? -1, 0.5, accuracy: 0.001)
+            XCTAssertEqual((material.metalness.contents as? NSNumber)?.doubleValue ?? -1, 0.0, accuracy: 0.001)
+            XCTAssertNil(material.emission.contents)
+            XCTAssertNil(material.normal.contents)
+            XCTAssertNil(material.specular.contents)
+        }
+    }
+
+    func testStudioAppearanceIsIdempotent() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        let first = model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        model.applyStudioAppearance()
+        let second = model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        XCTAssertEqual(first, second)
+        XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
+    }
+
     private func modelDescriptor(
         nodes: [BoardModelNodeDescriptor],
         minimum: [Double] = [0, 0, 0],
