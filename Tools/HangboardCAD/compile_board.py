@@ -666,7 +666,7 @@ def build(
             _build_mesh(
                 body_object.NodeID,
                 *_subset_mesh(body_points, body_facets, body_indices),
-                material=materials.get(body_object.MaterialName),
+                material=materials.get(getattr(body_object, "MaterialName", "")),
                 model_box=model_box,
             )
         ]
@@ -691,7 +691,7 @@ def build(
                     obj.NodeID,
                     points,
                     facets,
-                    material=materials.get(obj.MaterialName),
+                    material=materials.get(getattr(obj, "MaterialName", "")),
                     model_box=model_box,
                 )
             )

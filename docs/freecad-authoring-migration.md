@@ -630,6 +630,17 @@ write-up. The durable points:
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
   `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+- **Rock Prodigy Pivot**: the approved display mesh was wrong. It was about
+  20 % undersized, had the wrong topology, and reversed two published depth
+  gradients. Before measuring it, check the reference against the
+  manufacturer's own images and depth guide. When they disagree, author the
+  front view from a manufacturer top-down photo instead. Type the points in by
+  eye from 1 mm-gridded crops (no detection), and take the scale from a known
+  part in the photo's plane, such as a bolt seat. OCCT will not chamfer an
+  outline chain ending at a near-tangent or concave kink, so build asymmetric
+  bands as ruled lofts from the photographed front edge to the silhouette at
+  the published depth. See
+  `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
 
 ## Fast loop and definition of done
 

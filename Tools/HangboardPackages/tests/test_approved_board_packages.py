@@ -480,7 +480,11 @@ def test_pivot_renders_one_reflected_half_with_eighteen_physical_contacts() -> N
         path.relative_to(PIVOT_ROOT).as_posix()
         for path in PIVOT_ROOT.rglob("*")
         if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {
+        "trango-rock-prodigy-pivot.FCStd",
+        "assets/primary.usdz",
+        "assets/primary.model.json",
+    }
 
     assert len(board["contacts"]) == 18
     expected_contacts = {f"{slot}-{side}" for slot in PIVOT_SLOTS for side in ("left", "right")}

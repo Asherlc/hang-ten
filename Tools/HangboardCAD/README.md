@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 11 of the 46 model-media boards are migrated** (those with a committed
+**Status: 12 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -197,8 +197,9 @@ Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
 `HangTenTessellationDeflection`.
 
 Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
-`attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`.
+`attachment`), and `ContactID` (or `ContactSlotID`). `MaterialName`,
+`BaseColor`, `Roughness`, `Metallic`, and `TextureFile` are optional
+compile-time metadata (see **Material policy** below).
 Optionally, `HangTenCurvedRegionPartition` (`App::PropertyBool`) opts a
 document into the curved-region partition described below; documents without it
 compile exactly as before. Objects
@@ -244,6 +245,13 @@ cylinders and their mouth and floor chamfers are cones.
 sections, and its cavities are ruled capsule lofts (planes, cylinders, and
 cones) cut from the body. See
 `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+
+`trango-rock-prodigy-pivot` sets it too. Its wing is a smooth loft, and its
+sloped crimps and two-finger pocket are ruled lofts. It is also the first
+source re-authored from manufacturer evidence rather than from the
+pre-migration mesh: the front view comes from Trango's top-down photograph
+(bolt-seat scale) and every depth from Trango's depth guide. See
+`docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
 
 ## Pilot: lattice-triple-rung
 
@@ -326,7 +334,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **11 of 46 model-media boards are migrated.** The other 35 still ship their
+* **12 of 46 model-media boards are migrated.** The other 34 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
