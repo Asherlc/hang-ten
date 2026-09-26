@@ -2508,7 +2508,7 @@ final class BoardModelScene {
         camera.camera?.zFar = 10
         camera.camera?.wantsHDR = false
         camera.camera?.screenSpaceAmbientOcclusionIntensity = 0.7
-        camera.camera?.screenSpaceAmbientOcclusionRadius = 0.018
+        camera.camera?.screenSpaceAmbientOcclusionRadius = 0.008
         camera.camera?.screenSpaceAmbientOcclusionBias = 0.001
         camera.camera?.screenSpaceAmbientOcclusionDepthThreshold = 0.03
         camera.position = SCNVector3(framing.target - framing.direction * framing.distance)
