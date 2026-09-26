@@ -521,13 +521,20 @@ final class PlanStorageTests: XCTestCase {
             .flatMap(\.steps)
             .filter { !$0.isRestStep && $0.handUse == .either }
             .map(\.id)
-        XCTAssertEqual(eitherStepIDs, [
-            "max-hangs-1.segment-1", "max-hangs-2.segment-1", "max-hangs-3.segment-1",
-            "max-hangs-4.segment-1", "max-hangs-5",
-            "abrahangs-grip-1.segment-1", "abrahangs-grip-2.segment-1",
-            "abrahangs-grip-3.segment-1", "abrahangs-grip-4.segment-1",
-            "abrahangs-grip-5.segment-1", "abrahangs-grip-6"
-        ])
+        XCTAssertEqual(
+            eitherStepIDs,
+            [],
+            "No built-in plan opts into either-hand materialization after the Lattice two-handed recode."
+        )
+
+        XCTAssertTrue(
+            try ["research.max-hangs", "research.abrahangs"].allSatisfy { planID in
+                let plan = try XCTUnwrap(store.plan(id: planID))
+                return plan.steps.filter { !$0.isRestStep }.allSatisfy {
+                    $0.handUse == .double && $0.side == .both
+                }
+            }
+        )
 
         XCTAssertTrue(
             (try XCTUnwrap(store.plan(id: "research.force-feedback-f80"))).steps
@@ -2104,7 +2111,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(megoTerminalStep.duration, 3)
     }
 
-    func testAbrahangsSecondGripKeepsSourceBackedCueWithEdgeFingerCapacity() throws {
+    func testAbrahangsSecondGripKeepsSourceBackedCueWithPairedEdge() throws {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.abrahangs.steps.first { $0.id == "abrahangs-grip-2" }
         )
@@ -2112,7 +2119,10 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(
             step.workRequirements,
-            [ContactRequirement(kind: .edge, fingerCapacity: 3)]
+            [ContactRequirement.edge(
+                depth: .range(.init(minimum: 20, maximum: 20)),
+                selection: .bilateralPair
+            )]
         )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(
@@ -2384,7 +2394,7 @@ final class PlanStorageTests: XCTestCase {
                     target: .fromLegacyTargets([
                         ContactRequirement.edge(
                             depth: .range(.init(minimum: 20, maximum: 20)),
-                            selection: .single
+                            selection: .bilateralPair
                         )
                     ]),
                     timing: .fixed,

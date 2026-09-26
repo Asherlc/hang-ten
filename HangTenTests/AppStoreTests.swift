@@ -1922,6 +1922,61 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(sessionStore.asynchronousFlushCount, 0)
     }
 
+    func testTwoHandedLatticePlansResolvePairedHoldsOnAtLeastOneBoard() throws {
+        let store = AppStore(defaults: makeDefaults())
+
+        for planID in ["research.max-hangs", "research.abrahangs"] {
+            let plan = try XCTUnwrap(store.plans.first { $0.id == planID })
+
+            let compatibleBoards = BoardCatalog.all.filter { !store.isIncompatible(plan, on: $0) }
+            XCTAssertFalse(
+                compatibleBoards.isEmpty,
+                "\(planID) must resolve on at least one registered board"
+            )
+
+            let resolvesAPair = compatibleBoards.contains { board in
+                plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
+                    ((try? ContactResolver.resolve(
+                        step.workRequirements,
+                        step: step,
+                        board: board
+                    )) ?? []).count == 2
+                }
+            }
+            XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")
+        }
+    }
+
+    func testTwoHandedLatticePlanIsIncompatibleWithoutAPair() throws {
+        let store = AppStore(defaults: makeDefaults())
+        let plan = try XCTUnwrap(store.plans.first { $0.id == "research.max-hangs" })
+        let board = BoardRevision(
+            id: "fixture.center-edge-only",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Center edge only",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [
+                PhysicalContact(
+                    id: "center-20",
+                    name: "Center 20 mm edge",
+                    kind: .edge,
+                    depth: .range(.init(minimum: 20, maximum: 20))
+                )
+            ],
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil
+        )
+
+        XCTAssertTrue(
+            store.isIncompatible(plan, on: board),
+            "A two-handed plan must be hidden on a capacity-2 board that cannot form a pair"
+        )
+    }
+
     private func makeDefaults() -> UserDefaults {
         let suite = "AppStoreTests-\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suite)!

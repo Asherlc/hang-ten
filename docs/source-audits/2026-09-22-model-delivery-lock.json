@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, and target10a-linebreaker-base native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, and target10a-linebreaker-base native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,12 +50,42 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "101453082503381064fff6dc7796adf32342725b1cdbd97a1b2eca7d9777192e",
+  "sha256Manifest": "ae5b34ebc5b8064a1e9096fe6e1c6459c0ce76bde1447645b2ce595eea26394f",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
   "supersededSha256Manifest": "473ebca2d94c417ebac31d4b3529f6431b755962cb18f64ccff7c2d2793a5428",
   "migratedPackages": {
+    "beastmaker-1000": {
+      "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
+      "sourceSHA256": "7cf2fbc8c8710109e5841f0d86aac9f85f243d9124df3786b4df03b738e39c17",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the deleted hand-authored file",
+      "referenceSHA256": "4f9690d8969dddf8178ef4f7961c05115ab00266821e11982284ff8437b2ac6e",
+      "assetSHA256": "7b820fc44a6d696ddd5eecf6e4c85392301c7ac1d2f52fdf6b23284e8c4fb645",
+      "descriptorSHA256": "35f984398c95a4296dfea31d09ee6671ad3838a357cb77b081a232abd4ff4aab",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
+      "nativeValidation": "compile reopen and published-depth gate passed (10/30/45/50/20/25 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs, ellipses and cubic Beziers, extrusions and ruled lofts for the body, ruled capsule lofts cut for the 17 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-center (deep link) and pocket-bottom-mid-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 8.65 mm (reverse 7.07 mm; limit 0.5 mm; 17,284 reference vs 48,810 candidate triangles) after shifting the left-origin reference by -290 mm in x to the centred CAD frame; the reference is a subdivided display mesh of the same generator, and the deviation comes from the omitted 6 mm end roll and 30 mm step taper, chamfers standing in for rounds, and ruled rather than smoothstep top transitions; cavity facePlaneAABB within 0.16 mm, jugs 0.58 mm, slopers 0.68 mm; all 22 node IDs unchanged",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules; front-view bands (front top edge to crest) for jugs and slopers"
+    },
+    "beastmaker-2000": {
+      "source": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
+      "sourceSHA256": "2dd92a230a956a19d6d9f41babf75c3c67a3c64c982ca2553055e422c215d58c",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the deleted hand-authored file",
+      "referenceSHA256": "f234f39e672c776fb98b0df7c835642e54f9b2e43c3ffad05ec68fae3cee159f",
+      "assetSHA256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
+      "descriptorSHA256": "02b7f12b9c675025fc4c91e8175f53aaf8a648d6530e3de132b9691f7704ef1d",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
+      "nativeValidation": "compile reopen and published-depth gate passed (15/25/20/22/33/55/35/30/50/40/20 mm and the nested 50 mm holes, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines and arcs extruded as five top segments, three-prism rounded end trim, and 22 ruled capsule/circle lofts cut for the cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; top-sloper-1 (default), top-sloper-2, front-middle-5 and hold-26 (deep links) selected and confirmed via boardDetail.selectedHold.<contactID>; A/B against the prior committed asset on the same route)",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 4.05 mm (candidate->reference 3.53 mm; limit 0.5 mm; 22,941 reference vs 36,890 candidate triangles); comes from front-middle-2/8 deepened 51 -> 55 mm and front-middle-5 48.9 -> 50 mm to the published depths, 45-degree chamfers standing in for the mouth and floor rounds, sharp top-segment steps, and a three-prism end trim instead of spherical corners; cavity facePlaneAABB within 0.82 mm, slopers within 2.94 mm (outline starts at the front-top round tangent); all 28 node IDs unchanged",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules/circles (nested holes: the parent end-cap circle); front-view bands (front-top round tangent to crest) for the five top slopers"
+    },
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
       "sourceSHA256": "dc967c62fb7d1ea5ee7ff808a53994ddefff6b635bd0865794d7f8e30f708ac7",
@@ -65,10 +95,35 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
+    },
+    "evolv-kilter-basic-long": {
+      "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
+      "sourceSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
+      "sourceKind": "native-parametric-measured-profile",
+      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
+      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-evolv-kilter-basic-long-cad-provenance.md",
+      "assetSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
+      "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641"
+    },
+    "j-bryant-ftg-32": {
+      "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
+      "sourceSHA256": "bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523",
+      "supersededSourceSHA256": "b2443ff4b48776b6be30a5b83437746ad52d6e6b4919eeb6ddda6e442af6c073",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
+      "referenceSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
+      "assetSHA256": "dbc50905cb93ee432da5a6ba39fb9c558d7bdf5d40c09cf26ecb4ab6db434d9a",
+      "descriptorSHA256": "7a9160b0061ce21448f81afd387f7c4191ce07fccfd702d90f953b99e665dac8",
+      "compiler": "Tools/HangboardCAD/compile_board.py",
+      "nativeValidation": "passed (compile published depths 16/25; author cut-body source)",
+      "nativeAppValidation": "passed (isolated iPhone 16 Pro / iOS 26.5 Simulator; 7 focused FTG-32 tests and the four affected classes: 152 passed)",
+      "comparison": "compare_exports.py vs the retired Blender reference: 0.0377 mm worst sampled deviation, both directions (limit 0.5 mm)",
+      "holdOutline": "not authored; descriptor region derived from the CAD contact surfaces"
     },
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
@@ -155,7 +210,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -189,32 +244,6 @@
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     },
-    "beastmaker-1000": {
-      "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
-      "sourceSHA256": "7cf2fbc8c8710109e5841f0d86aac9f85f243d9124df3786b4df03b738e39c17",
-      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the deleted hand-authored file",
-      "referenceSHA256": "4f9690d8969dddf8178ef4f7961c05115ab00266821e11982284ff8437b2ac6e",
-      "assetSHA256": "7b820fc44a6d696ddd5eecf6e4c85392301c7ac1d2f52fdf6b23284e8c4fb645",
-      "descriptorSHA256": "35f984398c95a4296dfea31d09ee6671ad3838a357cb77b081a232abd4ff4aab",
-      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (10/30/45/50/20/25 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs, ellipses and cubic Beziers, extrusions and ruled lofts for the body, ruled capsule lofts cut for the 17 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
-      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-center (deep link) and pocket-bottom-mid-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 8.65 mm (reverse 7.07 mm; limit 0.5 mm; 17,284 reference vs 48,810 candidate triangles) after shifting the left-origin reference by -290 mm in x to the centred CAD frame; the reference is a subdivided display mesh of the same generator, and the deviation comes from the omitted 6 mm end roll and 30 mm step taper, chamfers standing in for rounds, and ruled rather than smoothstep top transitions; cavity facePlaneAABB within 0.16 mm, jugs 0.58 mm, slopers 0.68 mm; all 22 node IDs unchanged",
-      "provenanceSidecar": "docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
-      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
-      "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules; front-view bands (front top edge to crest) for jugs and slopers"
-    },
-    "evolv-kilter-basic-long": {
-      "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
-      "sourceSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
-      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
-      "sourceKind": "native-parametric-measured-profile",
-      "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
-      "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified",
-      "provenanceSidecar": "docs/source-audits/2026-09-25-evolv-kilter-basic-long-cad-provenance.md",
-      "assetSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
-      "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641"
-    },
     "target10a-linebreaker-base": {
       "source": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
       "sourceSHA256": "69c3646329715e0d244a02f0b4fc5b02d6e636982b4431cc86430e1905a5caa0",
@@ -225,7 +254,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -240,5 +269,6 @@
   "deluxeIIMigrationNote": "2026-09-24: metolius-wood-grips-deluxe-ii became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 864203cf... supersedes c7ce4d23..., which moved to supersededSha256Manifest (which previously held ff7f8f00...).",
   "rockRingsVectorNote": "2026-09-25: metolius-rock-rings-3d re-authored as vector primitives (Bezier outline, stadium pockets, ellipse/circle cord tunnels, crown-hump jug) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. Its FCStd, USDZ and descriptor changed; after merging main (Deluxe II), main's sha256Manifest 864203cf... moved to supersededSha256Manifest (which previously held c7ce4d23...).",
   "beastmaker1000MigrationNote": "2026-09-25: beastmaker-1000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set), compiled as unbound meshes by the clay-emitting compiler from main. sha256Manifest 9ab92a6c... supersedes main's 77eb9b0c..., which moved to supersededSha256Manifest (which previously held 30009d0b...).",
+  "beastmaker2000MigrationNote": "2026-09-25: beastmaker-2000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest aa58e9f8... supersedes 473ebca2..., which moved to supersededSha256Manifest.",
   "target10aLinebreakerBaseMigrationNote": "2026-09-25: target10a-linebreaker-base became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. sha256Manifest 10145308... supersedes 473ebca2..., which moved to supersededSha256Manifest. Accepted deviation: see docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md."
 }

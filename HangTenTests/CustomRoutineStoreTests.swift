@@ -719,7 +719,7 @@ final class CustomRoutineStoreTests: XCTestCase {
         XCTAssertEqual(step.targets, [expectedTarget])
         XCTAssertEqual(
             CustomRoutineBoardPreview.contactIDs(for: step, on: board),
-            Set(["left"])
+            Set(["left", "right"])
         )
         let definition = CustomRoutineDefinition(
             id: "custom.board-specific-either-after-tap",
