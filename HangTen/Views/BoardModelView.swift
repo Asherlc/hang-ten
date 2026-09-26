@@ -1,6 +1,15 @@
 import CryptoKit
+import RealityKit
 import SceneKit
 import SwiftUI
+
+/// Errors specific to board model SceneKit asset loading.
+enum BoardModelAssetError: Error, Equatable {
+    case fileReadError(underlying: String)
+    case sha256Mismatch(expected: String, actual: String)
+    case invalidFile
+    case sceneLoadFailed(underlying: String)
+}
 
 /// Identity for a decoded package model. The hash makes replacement assets a
 /// distinct cached source even when a board keeps the same presentation ID.
@@ -20,7 +29,7 @@ extension NSBundleResourceRequest: BoardModelResourceRequesting {}
 
 final class BoardModelResourceLease {
     let url: URL
-    private var request: BoardModelResourceRequesting?
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
 
     init(url: URL, request: BoardModelResourceRequesting? = nil) {
         self.url = url
@@ -28,14 +37,17 @@ final class BoardModelResourceLease {
     }
 
     deinit {
+        // Note: deinit runs on arbitrary thread; endAccessingResources() may not be thread-safe.
+        // The BoardModelResourceRequestAccess.lease() method transfers ownership to the lease
+        // and clears the request under a lock, so this deinit is a fallback for cancelled paths.
         request?.endAccessingResources()
     }
 }
 
 private final class BoardModelResourceRequestAccess: @unchecked Sendable {
     private let lock = NSLock()
-    private var request: BoardModelResourceRequesting?
-    private var isCancelled = false
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
+    nonisolated(unsafe) private var isCancelled = false
 
     init(request: BoardModelResourceRequesting) {
         self.request = request
@@ -152,23 +164,33 @@ enum BoardModelAsset {
     @TaskLocal static var sceneLoaderForTesting: (@Sendable (URL) -> SCNScene?)?
     #endif
 
-    static func load(media: BoardModelMedia, packageURL: URL) -> SCNScene? {
+    static func load(media: BoardModelMedia, packageURL: URL) throws -> SCNScene {
         guard packageURL.isFileURL,
               let values = try? packageURL.resourceValues(forKeys: [.isRegularFileKey]),
-              values.isRegularFile == true,
-              sha256(of: packageURL) == media.descriptor.modelSHA256 else {
-            return nil
+              values.isRegularFile == true else {
+            throw BoardModelAssetError.invalidFile
+        }
+        let computedSHA256 = try sha256(of: packageURL)
+        guard computedSHA256 == media.descriptor.modelSHA256 else {
+            throw BoardModelAssetError.sha256Mismatch(expected: media.descriptor.modelSHA256, actual: computedSHA256)
         }
         // SceneKit can otherwise return an empty scene for a missing asset.
         #if DEBUG
         if let sceneLoaderForTesting {
-            return sceneLoaderForTesting(packageURL)
+            guard let scene = sceneLoaderForTesting(packageURL) else {
+                throw BoardModelAssetError.sceneLoadFailed(underlying: "Test scene loader returned nil")
+            }
+            return scene
         }
         #endif
-        return try? SCNScene(url: packageURL, options: [.convertToYUp: true])
+        do {
+            return try SCNScene(url: packageURL, options: [.convertToYUp: true])
+        } catch {
+            throw BoardModelAssetError.sceneLoadFailed(underlying: error.localizedDescription)
+        }
     }
 
-    private static func sha256(of url: URL) -> String? {
+    private static func sha256(of url: URL) throws -> String {
         do {
             let handle = try FileHandle(forReadingFrom: url)
             defer { try? handle.close() }
@@ -177,8 +199,10 @@ enum BoardModelAsset {
                 hash.update(data: data)
             }
             return hash.finalize().map { String(format: "%02x", $0) }.joined()
+        } catch let error as BoardModelAssetError {
+            throw error
         } catch {
-            return nil
+            throw BoardModelAssetError.fileReadError(underlying: error.localizedDescription)
         }
     }
 
@@ -297,18 +321,27 @@ private enum BoardModelCache {
         let willDecodeForTesting = BoardModelAsset.willDecodeForTesting
         let sceneLoaderForTesting = BoardModelAsset.sceneLoaderForTesting
         #endif
-        let scene = await Task.detached(priority: .userInitiated) {
-            withExtendedLifetime(resourceLease) {
-                #if DEBUG
-                willDecodeForTesting?(resourceLease.url)
-                return BoardModelAsset.$sceneLoaderForTesting.withValue(sceneLoaderForTesting) {
-                    BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+        let scene: SCNScene?
+        do {
+            scene = try await Task.detached(priority: .userInitiated) {
+                try withExtendedLifetime(resourceLease) {
+                    #if DEBUG
+                    willDecodeForTesting?(resourceLease.url)
+                    return try BoardModelAsset.$sceneLoaderForTesting.withValue(sceneLoaderForTesting) {
+                        try BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                    }
+                    #else
+                    return try BoardModelAsset.load(media: media, packageURL: resourceLease.url)
+                    #endif
                 }
-                #else
-                return BoardModelAsset.load(media: media, packageURL: resourceLease.url)
-                #endif
-            }
-        }.value
+            }.value
+        } catch {
+            // Log error for diagnostics; return nil to match existing failure handling
+            #if DEBUG
+            print("[BoardModelCache] Failed to load scene: \(error)")
+            #endif
+            return nil
+        }
         guard let scene, !Task.isCancelled else { return nil }
         return BoardModelLoadedAsset(scene: scene, resourceLease: resourceLease)
     }
@@ -358,6 +391,7 @@ private enum BoardModelLoadGate {
             active -= 1
         } else {
             // Hand the slot to the earliest waiter; active stays at limit.
+            // Do NOT decrement active here - the waiter now holds the slot.
             waiters.removeFirst().continuation.resume(returning: true)
         }
     }
@@ -426,7 +460,7 @@ enum BoardModelLoader {
 struct BoardModelSurface: View {
     enum ResultState {
         case loading
-        case ready(BoardModelScene)
+        case ready(BoardModelRealityScene)
         case unavailable
 
         var loadingMessage: String? {
@@ -465,7 +499,7 @@ struct BoardModelSurface: View {
     var body: some View {
         Group {
             if case .ready(let model) = result {
-                BoardModelView(
+                BoardModelRealityView(
                     model: model,
                     boardName: board.name,
                     contacts: board.contacts(in: presentation),
@@ -479,7 +513,7 @@ struct BoardModelSurface: View {
                 .accessibilityIdentifier("boardModel.3d")
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
-                // when the hosted SCNView has user interaction disabled.
+                // when the hosted RealityView has user interaction disabled.
                 .allowsHitTesting(!isDisplayOnly)
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
@@ -507,15 +541,21 @@ struct BoardModelSurface: View {
                 return
             }
             result = .loading
-            guard let model = await BoardModelLoader.load(
-                board: board,
-                presentation: presentation,
-                store: BoardCatalog.packageStore
-            ), !Task.isCancelled else {
-                if !Task.isCancelled { result = .unavailable }
-                return
+            do {
+                let model = try await BoardModelRealityLoader.load(
+                    board: board,
+                    presentation: presentation,
+                    store: BoardCatalog.packageStore
+                )
+                guard !Task.isCancelled else { return }
+                result = .ready(model)
+            } catch {
+                guard !Task.isCancelled else { return }
+                #if DEBUG
+                print("[BoardModelSurface] RealityKit model load failed: \(error)")
+                #endif
+                result = .unavailable
             }
-            result = .ready(model)
         }
         .onDisappear {
             result = .loading
@@ -597,6 +637,7 @@ final class BoardModelScene {
     private(set) var instanceScenes: [BoardModelInstanceScene] = []
     private var contactIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
+    private var didApplyStudioAppearance = false
     private var lastHighlights: Set<String> = []
     private var lastMode: BoardHighlightMode?
     private var canonicalFraming: SuspendedCameraFraming?
@@ -676,7 +717,11 @@ final class BoardModelScene {
             // for every mesh, including unreflected clones and crease topology.
             let elements = snapshot.elements.map(Self.copyElement)
             let copiedGeometry: SCNGeometry
-            if let channels = snapshot.geometrySourceChannels {
+            // SCNGeometry.copy() drops geometrySourceChannels, which
+            // multi-channel USDZ imports rely on (vertex->0, normal->1).
+            // Read the mapping from the pre-copy geometry first so the
+            // rebuild keeps interpreting the interleaved index stream.
+            if let channels = geometry.geometrySourceChannels ?? snapshot.geometrySourceChannels {
                 copiedGeometry = SCNGeometry(sources: snapshot.sources, elements: elements, sourceChannels: channels)
             } else {
                 // Preserve the implicit single-channel representation.
@@ -1764,6 +1809,7 @@ final class BoardModelScene {
                 guard length.isFinite, length > 1e-7 else { continue }
                 let geometry = SCNCylinder(radius: CGFloat(path.1), height: CGFloat(length))
                 let material = SCNMaterial()
+                material.lightingModel = .physicallyBased
                 material.diffuse.contents = UIColor(white: 0.08, alpha: 1)
                 material.roughness.contents = 0.8
                 geometry.firstMaterial = material
@@ -2231,6 +2277,25 @@ final class BoardModelScene {
         return nil
     }
 
+    /// The orthographic half-height that `frame(in:)` would apply, without
+    /// mutating the camera. Used by the RealityKit presentation to derive an
+    /// equivalent perspective fit distance.
+    func fittedOrthographicScale(in size: CGSize) -> Double? {
+        guard size.width.isFinite, size.height.isFinite,
+              size.width > 0, size.height > 0 else { return nil }
+        let aspectFloat = Float(size.width / size.height)
+        guard aspectFloat.isFinite, aspectFloat > 0 else { return nil }
+        let candidate: Double
+        if let framing = currentFraming {
+            candidate = Double(max(framing.height, framing.width / aspectFloat)
+                * framing.fitPadding / orbitZoom / 2)
+        } else {
+            candidate = Double(max(projectedHeight, projectedWidth / aspectFloat) / 2)
+        }
+        guard candidate.isFinite, candidate > 0 else { return nil }
+        return candidate
+    }
+
     func frame(in size: CGSize) {
         guard size.width.isFinite, size.height.isFinite,
               size.width > 0, size.height > 0 else { return }
@@ -2270,6 +2335,40 @@ final class BoardModelScene {
         Self.applyHighlights(validIDs, mode: mode, contactNodes: contactNodes, originalMaterials: originalMaterials)
         lastHighlights = validIDs
         lastMode = mode
+    }
+
+    /// Applies the studio look: procedural IBL environment plus one neutral
+    /// physically based material. Mutates the existing materials in place so
+    /// the highlight system (which captured these same objects in
+    /// `originalMaterials`) keeps working with no rebinding. Idempotent.
+    func applyStudioAppearance() {
+        if didApplyStudioAppearance { return }
+        didApplyStudioAppearance = true
+        if let environment = StudioLightingEnvironment.image() {
+            scene.lightingEnvironment.contents = environment
+            scene.lightingEnvironment.intensity = StudioLightingEnvironment.intensity
+        }
+        let neutral = UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1.0)
+        for node in geometryNodes {
+            guard let geometry = node.geometry else { continue }
+            for material in geometry.materials {
+                material.lightingModel = .physicallyBased
+                material.diffuse.contents = neutral
+                material.roughness.contents = 0.5
+                material.metalness.contents = 0.0
+                material.emission.contents = nil
+                material.emission.intensity = 0
+                material.normal.contents = nil
+                material.specular.contents = nil
+            }
+        }
+        scene.rootNode.enumerateChildNodes { node, _ in
+            guard node.categoryBitMask == Self.cordCategory,
+                  let geometry = node.geometry else { return }
+            for material in geometry.materials {
+                material.lightingModel = .physicallyBased
+            }
+        }
     }
 
     private static func applyHighlights(_ validIDs: Set<String>, mode: BoardHighlightMode,
@@ -2518,7 +2617,7 @@ final class BoardModelScene {
         let ambient = SCNNode()
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
-        ambient.light?.intensity = 250
+        ambient.light?.intensity = 150
         ambient.light?.categoryBitMask = Self.renderedCategory
         scene.rootNode.addChildNode(ambient)
         let key = SCNNode()
@@ -2537,6 +2636,50 @@ final class BoardModelScene {
         key.position = camera.position + SCNVector3(framing.up) * framing.height
         key.look(at: SCNVector3(framing.target), up: SCNVector3(framing.up), localFront: SCNVector3(0, 0, -1))
         scene.rootNode.addChildNode(key)
+    }
+}
+
+/// Deterministic procedural studio environment retained by the SceneKit model
+/// test helpers while the legacy model layer is being removed.
+struct StudioLightingEnvironment {
+    static let width: CGFloat = 1024
+    static let height: CGFloat = 512
+    static let intensity: CGFloat = 1.5
+    private static var cached: UIImage?
+
+    static func image() -> UIImage? {
+        if let cached { return cached }
+        let size = CGSize(width: width, height: height)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        var gradientFailed = false
+        let rendered = renderer.image { context in
+            let cg = context.cgContext
+            let top = UIColor(white: 1, alpha: 1).cgColor
+            let mid = UIColor(white: 0.45, alpha: 1).cgColor
+            let bottom = UIColor(white: 0.08, alpha: 1).cgColor
+            guard let gradient = CGGradient(
+                colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                colors: [top, mid, bottom] as CFArray,
+                locations: [0, 0.55, 1]
+            ) else {
+                gradientFailed = true
+                return
+            }
+            cg.drawLinearGradient(gradient, start: .zero,
+                                  end: CGPoint(x: 0, y: size.height), options: [])
+            cg.setFillColor(UIColor(red: 1, green: 0.95, blue: 0.85, alpha: 0.9).cgColor)
+            cg.fillEllipse(in: CGRect(x: size.width * 0.28, y: size.height * 0.08,
+                                      width: size.width * 0.44, height: size.height * 0.30))
+            cg.setFillColor(UIColor(red: 0.6, green: 0.7, blue: 0.9, alpha: 0.35).cgColor)
+            cg.fillEllipse(in: CGRect(x: size.width * 0.05, y: size.height * 0.45,
+                                      width: size.width * 0.30, height: size.height * 0.30))
+        }
+        guard !gradientFailed else { return nil }
+        cached = rendered
+        return rendered
     }
 }
 
@@ -2584,8 +2727,8 @@ private extension SCNVector3 {
     }
 }
 
-private struct BoardModelView: UIViewRepresentable {
-    let model: BoardModelScene
+struct BoardModelRealityView: View {
+    let model: BoardModelRealityScene
     let boardName: String
     let contacts: [PhysicalContact]
     let positionID: String?
@@ -2595,336 +2738,129 @@ private struct BoardModelView: UIViewRepresentable {
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
 
-    func makeUIView(context: Context) -> BoardModelSCNView {
-        let view = BoardModelSCNView()
-        view.backgroundColor = .clear
-        view.isOpaque = false
-        view.antialiasingMode = .multisampling4X
-        view.rendersContinuously = false
-        view.isPlaying = false
-        view.allowsCameraControl = false
-        view.boardName = boardName
-        view.contacts = contacts
-        view.positionID = positionID
-        view.highlightedContactIDs = highlightedContactIDs
-        view.onContactTap = onContactTap
-        view.onUnavailable = onUnavailable
-        view.display(model)
-        view.delegate = view
-        let orbitPan = OrbitPanGestureRecognizer(target: view, action: #selector(view.orbitPan(_:)))
-        orbitPan.delegate = view.orbitGestureDelegate
-        view.addGestureRecognizer(orbitPan)
-        view.orbitPanGesture = orbitPan
-        let tapGesture = UITapGestureRecognizer(target: view, action: #selector(view.selectContact(_:)))
-        tapGesture.delegate = view
-        // Short taps never clear orbit activation distance, so the pan fails
-        // and the contact tap can recognize without being stolen by micro-drags.
-        tapGesture.require(toFail: orbitPan)
-        view.addGestureRecognizer(tapGesture)
-        view.contactTapGesture = tapGesture
-        view.addGestureRecognizer(UIPinchGestureRecognizer(target: view, action: #selector(view.orbitPinch(_:))))
-        // Pose first, then paint. Dual and other multi-pose boards rebuild the
-        // visible transform in select(); highlighting beforehand can leave
-        // lastHighlights stuck while the posed materials never receive color.
-        view.selectPositionIfNeeded()
-        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
-        view.updateAccessibility()
-        view.updateTapGesturePresence()
-        return view
-    }
+    @State private var cameraRevision = 0
+    @State private var lastDragTranslation: CGSize = .zero
+    @State private var lastMagnification: CGFloat = 1
 
-    func updateUIView(_ view: BoardModelSCNView, context: Context) {
-        view.display(model)
-        view.boardName = boardName
-        view.contacts = contacts
-        view.positionID = positionID
-        view.onContactTap = onContactTap
-        view.onUnavailable = onUnavailable
-        view.highlightedContactIDs = highlightedContactIDs
-        view.isUserInteractionEnabled = !isDisplayOnly
-        view.needsAccessibilityProjection = true
-        view.selectPositionIfNeeded()
-        view.applyHighlights(highlightedContactIDs, mode: highlightMode)
-        view.updateAccessibility()
-        view.updateTapGesturePresence()
-    }
-
-    static func dismantleUIView(_ view: BoardModelSCNView, coordinator: ()) {
-        view.onContactTap = nil
-        view.onUnavailable = nil
-        view.accessibilityElements = nil
-        view.delegate = nil
-        view.scene = nil
-        view.model = nil
-        view.contactTapGesture = nil
-        view.orbitPanGesture = nil
-    }
-}
-
-private final class BoardModelAccessibilityElement: UIAccessibilityElement {
-    var action: (() -> Void)?
-    override func accessibilityActivate() -> Bool {
-        guard let action else { return false }
-        action()
-        return true
-    }
-}
-
-class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerDelegate {
-    var model: BoardModelScene?
-    var boardName = "hangboard"
-    var contacts: [PhysicalContact] = []
-    var highlightedContactIDs: Set<String> = []
-    var onContactTap: ((PhysicalContact) -> Void)?
-    var onUnavailable: (() -> Void)?
-    var positionID: String?
-    var needsAccessibilityProjection = true
-    let orbitGestureDelegate = OrbitPanGestureDelegate()
-    var orbitPanGesture: OrbitPanGestureRecognizer?
-    var contactTapGesture: UITapGestureRecognizer?
-    private var contactAccessibilityElements: [String: BoardModelAccessibilityElement] = [:]
-    private var accessibilityContactIDs: [String] = []
-    private var accessibilityProjection: AccessibilityProjection?
-    /// After a canonical commit, ignore renderer-driven accessibility refreshes
-    /// that would rewrite frames from a stalled orbit presentation tree.
-    private var freezeAccessibilityProjectionToCanonical = false
-
-    private struct AccessibilityProjection: Equatable {
-        let cameraTransform: SCNMatrix4
-        let presentationTransform: SCNMatrix4
-        let projectionTransform: SCNMatrix4
-        let orthographicScale: Double
-        let presentationProjection: SCNMatrix4
-        let presentationScale: Double
-        let viewport: CGRect
-
-        static func == (lhs: Self, rhs: Self) -> Bool {
-            SCNMatrix4EqualToMatrix4(lhs.cameraTransform, rhs.cameraTransform)
-                && SCNMatrix4EqualToMatrix4(lhs.presentationTransform, rhs.presentationTransform)
-                && SCNMatrix4EqualToMatrix4(lhs.projectionTransform, rhs.projectionTransform)
-                && lhs.orthographicScale == rhs.orthographicScale
-                && SCNMatrix4EqualToMatrix4(lhs.presentationProjection, rhs.presentationProjection)
-                && lhs.presentationScale == rhs.presentationScale
-                && lhs.viewport == rhs.viewport
+    private var fieldOfViewDegrees: Double {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_TELEPHOTO"] == "1" {
+            return 6
         }
+        #endif
+        return 30
     }
 
-    private var currentAccessibilityProjection: AccessibilityProjection? {
-        guard let pointOfView, let camera = pointOfView.camera else { return nil }
-        return AccessibilityProjection(
-            cameraTransform: pointOfView.worldTransform,
-            presentationTransform: pointOfView.presentation.worldTransform,
-            projectionTransform: camera.projectionTransform,
-            orthographicScale: camera.orthographicScale,
-            presentationProjection: pointOfView.presentation.camera?.projectionTransform ?? camera.projectionTransform,
-            presentationScale: pointOfView.presentation.camera?.orthographicScale ?? camera.orthographicScale,
-            viewport: bounds
-        )
-    }
-
-    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        guard gestureRecognizer is UITapGestureRecognizer else { return true }
-        return onContactTap != nil
-    }
-
-    func updateTapGesturePresence() {
-        let shouldHaveTap = onContactTap != nil
-        if let contactTapGesture, !shouldHaveTap {
-            removeGestureRecognizer(contactTapGesture)
-            self.contactTapGesture = nil
-        } else if contactTapGesture == nil, shouldHaveTap {
-            let tap = UITapGestureRecognizer(target: self, action: #selector(selectContact(_:)))
-            tap.delegate = self
-            if let orbitPanGesture {
-                tap.require(toFail: orbitPanGesture)
+    var body: some View {
+        let _ = cameraRevision
+        GeometryReader { proxy in
+            let size = proxy.size
+            RealityView { content in
+                content.add(model.root)
+                content.add(model.camera)
+                applySync(size: size)
+            } update: { content in
+                applySync(size: size)
             }
-            addGestureRecognizer(tap)
-            self.contactTapGesture = tap
+            .gesture(orbitGesture(size: size))
+            .simultaneousGesture(magnifyGesture)
+            .gesture(tapGesture)
+            .overlay { accessibilityOverlay(size: size) }
+            .allowsHitTesting(!isDisplayOnly)
         }
+        // A display-only card is one element (its host Button owns the tap). An
+        // interactive board exposes its contact elements instead, so the
+        // container must not collapse them into a single element.
+        .modifier(BoardModelAccessibilityContainer(
+            label: onContactTap == nil ? "\(boardName) hangboard" : nil))
     }
 
-    private func requestPausedRedraw() {
-        guard !rendersContinuously, !isPlaying else { return }
-        setNeedsDisplay()
-    }
-
-    /// Project using the model-layer camera when accessibility is frozen to
-    /// canonical after reset. SceneKit's projectPoint follows the presentation
-    /// tree, which CI simulators can leave stuck on the last orbit frame.
-    func projectContactPoint(_ worldPosition: SCNVector3) -> SCNVector3 {
-        guard freezeAccessibilityProjectionToCanonical,
-              let pov = pointOfView,
-              let camera = pov.camera,
-              camera.usesOrthographicProjection,
-              bounds.width > 0, bounds.height > 0 else {
-            return projectPoint(worldPosition)
-        }
-        let scale = camera.orthographicScale
-        guard scale.isFinite, scale > 0 else { return projectPoint(worldPosition) }
-
-        let world = SIMD4<Float>(worldPosition.x, worldPosition.y, worldPosition.z, 1)
-        let view = simd_inverse(pov.simdWorldTransform) * world
-        let aspect = Float(bounds.width / bounds.height)
-        guard aspect.isFinite, aspect > 0 else { return projectPoint(worldPosition) }
-        let halfHeight = Float(scale)
-        let halfWidth = halfHeight * aspect
-        let ndcX = view.x / halfWidth
-        let ndcY = view.y / halfHeight
-        let x = CGFloat(ndcX * 0.5 + 0.5) * bounds.width
-        // Match SceneKit/UIKit: Y increases downward in view space.
-        let y = CGFloat(0.5 - ndcY * 0.5) * bounds.height
-        return SCNVector3(x, y, CGFloat(view.z))
-    }
-
-    func display(_ model: BoardModelScene) {
-        guard self.model !== model else { return }
-        self.model = model
-        scene = model.scene
-        pointOfView = model.camera
-        model.frame(in: bounds.size)
-        needsAccessibilityProjection = true
-        requestPausedRedraw()
-    }
-
-    func selectPositionIfNeeded() {
-        guard let model else { return }
+    private func applySync(size: CGSize) {
+        model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
-        scene = model.scene
-        pointOfView = model.camera
-        needsAccessibilityProjection = true
-        requestPausedRedraw()
-        guard didSelect else {
-            onUnavailable?()
-            return
-        }
+        model.highlight(highlightedContactIDs, mode: highlightMode)
+        var camera = model.camera.camera
+        camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
+        camera.fieldOfViewOrientation = .vertical
+        camera.near = 0.001
+        camera.far = 1000
+        model.camera.camera = camera
+        if !didSelect { onUnavailable?() }
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        model?.frame(in: bounds.size)
-        needsAccessibilityProjection = true
-        requestPausedRedraw()
-        updateAccessibility()
-    }
-
-    nonisolated func renderer(_ renderer: any SCNSceneRenderer, didRenderScene scene: SCNScene, atTime time: TimeInterval) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            // After a canonical commit, in-flight renderer callbacks can still
-            // observe a stalled orbit presentation and would otherwise rewrite
-            // accessibility back off-canonical. Clear the freeze when a new
-            // position or board explicitly requests a projection refresh.
-            if self.needsAccessibilityProjection {
-                self.freezeAccessibilityProjectionToCanonical = false
-            } else if self.freezeAccessibilityProjectionToCanonical {
-                return
+    private var tapGesture: some Gesture {
+        SpatialTapGesture()
+            .targetedToAnyEntity()
+            .onEnded { value in
+                guard let id = model.contactID(for: value.entity),
+                      let contact = contacts.first(where: { $0.id == id }) else { return }
+                onContactTap?(contact)
             }
-            guard self.needsAccessibilityProjection
-                    || self.accessibilityProjection != self.currentAccessibilityProjection else { return }
-            self.updateAccessibility()
+    }
+
+    private func orbitGesture(size: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: 4)
+            .onChanged { value in
+                let deltaX = value.translation.width - lastDragTranslation.width
+                let deltaY = value.translation.height - lastDragTranslation.height
+                lastDragTranslation = value.translation
+                model.orbit(azimuth: model.orbitAzimuth - Float(deltaX / max(size.width, 1)) * 0.9,
+                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65)
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastDragTranslation = .zero }
+    }
+
+    private var magnifyGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                let ratio = value / max(lastMagnification, 0.001)
+                lastMagnification = value
+                model.orbit(azimuth: model.orbitAzimuth, elevation: model.orbitElevation,
+                            zoomScale: model.orbitZoom / Float(ratio))
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastMagnification = 1 }
+    }
+
+    @ViewBuilder
+    private func accessibilityOverlay(size: CGSize) -> some View {
+        if let onContactTap {
+            ZStack {
+                ForEach(contacts) { contact in
+                    if let point = model.projectedContactCenter(contact.id, viewport: size,
+                                                               fieldOfViewDegrees: fieldOfViewDegrees) {
+                        Color.clear
+                            .frame(width: 44, height: 44)
+                            .contentShape(Rectangle())
+                            .position(point)
+                            .accessibilityElement()
+                            .accessibilityIdentifier("boardModel.contact.\(contact.id)")
+                            .accessibilityLabel(contact.name)
+                            .accessibilityAddTraits(
+                                highlightedContactIDs.contains(contact.id)
+                                    ? [.isButton, .isSelected] : [.isButton])
+                            .accessibilityAction { onContactTap(contact) }
+                    }
+                }
+            }
+            // Accessibility only: real taps must reach the RealityKit picking
+            // gesture so the nearest visible contact wins, not the overlay.
+            .allowsHitTesting(false)
         }
     }
+}
 
-    @objc func selectContact(_ recognizer: UITapGestureRecognizer) {
-        guard let model, onContactTap != nil else { return }
-        // CPU-only nearest-hit regressions require this commit before SceneKit
-        // traverses newly cloned geometry.
-        SCNTransaction.flush()
-        guard let hit = hitTest(recognizer.location(in: self), options: [
-            SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
-            SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue
-        ]).first,
-              let id = model.contactID(for: hit.node),
-              let contact = contacts.first(where: { $0.id == id }) else { return }
-        onContactTap?(contact)
-        freezeAccessibilityProjectionToCanonical = false
-        // Always snap synchronously. Paused XCTest hosts do not advance
-        // SCNTransaction actions or main-queue timers during Task.sleep, so an
-        // animated reset leaves projectPoint and accessibility on the orbit
-        // frame for the full convergence wait.
-        commitCanonicalAccessibilitySynchronously()
-    }
+private struct BoardModelAccessibilityContainer: ViewModifier {
+    let label: String?
 
-    /// Immediate canonical camera + accessibility refresh.
-    private func commitCanonicalAccessibilitySynchronously() {
-        guard let model else { return }
-        model.resetCamera(animated: false)
-        if let camera = model.camera as SCNNode? {
-            camera.removeAllAnimations()
-            pointOfView = camera
-        }
-        // Re-apply framing scale for the current bounds after orbit zoom.
-        model.frame(in: bounds.size)
-        model.resetCamera(animated: false)
-        freezeAccessibilityProjectionToCanonical = true
-        updateAccessibility()
-        requestPausedRedraw()
-    }
-
-    @objc func orbitPan(_ recognizer: UIPanGestureRecognizer) {
-        guard let model, recognizer.state == .changed else { return }
-        freezeAccessibilityProjectionToCanonical = false
-        let translation = recognizer.translation(in: self)
-        let width = max(bounds.width, 1)
-        let height = max(bounds.height, 1)
-        model.orbit(
-            azimuth: Float(-translation.x / width) * 0.9,
-            elevation: Float(-translation.y / height) * 0.65
-        )
-        recognizer.setTranslation(.zero, in: self)
-        requestPausedRedraw()
-    }
-
-    @objc func orbitPinch(_ recognizer: UIPinchGestureRecognizer) {
-        guard let model, recognizer.state == .changed else { return }
-        freezeAccessibilityProjectionToCanonical = false
-        model.orbit(azimuth: 0, elevation: 0, zoomScale: Float(recognizer.scale))
-        recognizer.scale = 1
-        requestPausedRedraw()
-    }
-
-    func applyHighlights(_ ids: Set<String>, mode: BoardHighlightMode) {
-        highlightedContactIDs = ids
-        model?.highlight(ids, mode: mode)
-        requestPausedRedraw()
-    }
-
-    func updateAccessibility() {
-        needsAccessibilityProjection = false
-        if !freezeAccessibilityProjectionToCanonical {
-            accessibilityProjection = currentAccessibilityProjection
-        }
-        guard let onContactTap, let model else {
-            isAccessibilityElement = true
-            accessibilityLabel = "\(boardName) hangboard"
-            accessibilityValue = contacts.filter { highlightedContactIDs.contains($0.id) }.map(\.name).joined(separator: ", ")
-            accessibilityElements = nil
-            contactAccessibilityElements.removeAll()
-            accessibilityContactIDs = []
-            return
-        }
-        isAccessibilityElement = false
-        let elements = contacts.compactMap { contact -> UIAccessibilityElement? in
-            guard let node = model.contactNodes[contact.id]?.first else { return nil }
-            let box = node.boundingBox
-            let center = SCNVector3((box.min.x + box.max.x) / 2, (box.min.y + box.max.y) / 2, (box.min.z + box.max.z) / 2)
-            let world = node.convertPosition(center, to: nil)
-            let projected = projectContactPoint(world)
-            guard projected.x.isFinite, projected.y.isFinite else { return nil }
-            let element = contactAccessibilityElements[contact.id]
-                ?? BoardModelAccessibilityElement(accessibilityContainer: self)
-            contactAccessibilityElements[contact.id] = element
-            element.accessibilityLabel = contact.name
-            element.accessibilityIdentifier = "boardModel.contact.\(contact.id)"
-            element.accessibilityTraits = highlightedContactIDs.contains(contact.id) ? [.button, .selected] : .button
-            element.accessibilityFrameInContainerSpace = CGRect(x: CGFloat(projected.x) - 18, y: CGFloat(projected.y) - 18, width: 36, height: 36)
-            element.action = { onContactTap(contact) }
-            return element
-        }
-        let ids = elements.compactMap(\.accessibilityIdentifier)
-        if accessibilityContactIDs != ids {
-            accessibilityElements = elements
-            accessibilityContactIDs = ids
+    func body(content: Content) -> some View {
+        if let label {
+            content
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(label)
+        } else {
+            content
         }
     }
 }

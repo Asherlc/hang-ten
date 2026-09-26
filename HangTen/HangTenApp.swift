@@ -16,6 +16,9 @@ struct HangTenApp: App {
 			}
 		}
 
+		// Configure memory pressure handling for 3D model cache
+		BoardModelRealityCache.configureMemoryPressureHandling()
+
 		#if DEBUG
 		let useMotherboardReviewFixture = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MOTHERBOARD"] == "1"
 		let transport: MotherboardTransport = useMotherboardReviewFixture

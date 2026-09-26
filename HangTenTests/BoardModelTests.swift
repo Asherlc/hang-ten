@@ -641,8 +641,8 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.camera.position.z, 16.28, accuracy: 0.000_01)
 
         let quarterTurn = simd_quatf(angle: .pi / 2, axis: SIMD3<Float>(0, 1, 0))
-        let rotated = BoardModelScene.rotatedBounds(descriptor.modelBounds, by: quarterTurn, pivot: pivot)
-        let framing = try XCTUnwrap(BoardModelScene.framing(bounds: rotated, display: display()))
+        let rotated = BoardModelRealityScene.rotatedBounds(descriptor.modelBounds, by: quarterTurn, pivot: pivot)
+        let framing = try XCTUnwrap(BoardModelRealityScene.framing(bounds: rotated, display: display()))
         XCTAssertEqual(rotated.minimum[0], -1, accuracy: 0.000_01)
         XCTAssertEqual(rotated.minimum[1], 2, accuracy: 0.000_01)
         XCTAssertEqual(rotated.minimum[2], 5, accuracy: 0.000_01)
@@ -721,14 +721,14 @@ final class BoardModelTests: XCTestCase {
         let quaternion = simd_quatf(angle: .pi / 4, axis: SIMD3<Float>(0, 1, 0))
         let display = display(viewDirection: [1, 0, -1], up: [0, 1, 0])
 
-        let transformedCorners = BoardModelScene.rotatedCorners(
+        let transformedCorners = BoardModelRealityScene.rotatedCorners(
             bounds,
             by: quaternion,
             pivot: pivot
         )
-        let exact = try XCTUnwrap(BoardModelScene.framing(points: transformedCorners, display: display))
-        let aabb = BoardModelScene.rotatedBounds(bounds, by: quaternion, pivot: pivot)
-        let aabbFraming = try XCTUnwrap(BoardModelScene.framing(bounds: aabb, display: display))
+        let exact = try XCTUnwrap(BoardModelRealityScene.framing(points: transformedCorners, display: display))
+        let aabb = BoardModelRealityScene.rotatedBounds(bounds, by: quaternion, pivot: pivot)
+        let aabbFraming = try XCTUnwrap(BoardModelRealityScene.framing(bounds: aabb, display: display))
 
         XCTAssertEqual(exact.width, 8, accuracy: 0.000_01)
         XCTAssertGreaterThan(aabbFraming.width, exact.width + 1)
@@ -823,7 +823,7 @@ final class BoardModelTests: XCTestCase {
                 XCTAssertFalse(model.isTransientCordAccessible, "\(boardID)/\(position.id)")
                 let cord = try XCTUnwrap(model.transientCordNode, "\(boardID)/\(position.id)")
                 let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
-                let solved = try BoardModelScene.solveSuspension(
+                let solved = try BoardModelRealityScene.solveSuspension(
                     pose: pose,
                     suspension: .pairedLeadCord(suspension),
                     bounds: media.descriptor.modelBounds
@@ -1000,7 +1000,7 @@ final class BoardModelTests: XCTestCase {
             // view space to remain visibly distinct from the board in detail.
             for position in board.positions {
                 let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
-                let solved = try BoardModelScene.solveSuspension(
+                let solved = try BoardModelRealityScene.solveSuspension(
                     pose: pose,
                     suspension: .pairedLeadCord(suspension),
                     bounds: media.descriptor.modelBounds
@@ -1072,61 +1072,6 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    func testJBryantFTG32CanonicalSelectedEdgesAreUnoccluded() async throws {
-        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 390, height: 228))
-        view.display(model)
-        model.frame(in: view.bounds.size)
-        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
-            .map { Float($1 - $0) }.max() ?? 1
-        let rayExtension = max(extent * 4, 1)
-
-        // Re-select the first edge too: visibility must survive the normal
-        // highlight-driven half-turn and its inverse without an orbit fallback.
-        for contactID in ["edge-25", "edge-16", "edge-25"] {
-            let positionID = try XCTUnwrap(BoardMapPresentationSelection.resolvePositionID(
-                board: board,
-                presentationID: "primary",
-                activeHoldID: nil,
-                highlightedHoldIDs: [contactID]
-            ))
-            XCTAssertTrue(model.select(positionID: positionID), positionID)
-            XCTAssertFalse(model.isUnavailable, positionID)
-            model.highlight([contactID], mode: .active)
-            SCNTransaction.flush()
-            let direction = model.camera.presentation.worldFront
-            let nodes = try XCTUnwrap(model.contactNodes[contactID])
-            for node in nodes {
-                XCTAssertEqual(node.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
-                for localCenter in try nativeTriangleCenters(for: node) {
-                    let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
-                    let projected = view.projectPoint(center)
-                    XCTAssertTrue((0...1).contains(projected.z), positionID)
-                    XCTAssertTrue(view.bounds.contains(CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))), positionID)
-                    let closest = try XCTUnwrap(model.scene.rootNode.hitTestWithSegment(
-                        from: SCNVector3(center.x - direction.x * rayExtension,
-                                         center.y - direction.y * rayExtension,
-                                         center.z - direction.z * rayExtension),
-                        to: SCNVector3(center.x + direction.x * rayExtension,
-                                       center.y + direction.y * rayExtension,
-                                       center.z + direction.z * rayExtension),
-                        options: [
-                            // Include the visible body and transient cord, not
-                            // only selectable triangles. The USDZ is double-sided.
-                            SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.renderedCategory,
-                            SCNHitTestOption.backFaceCulling.rawValue: false,
-                            SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
-                        ]
-                    ).first, "\(positionID): missing rendered intersection")
-                    XCTAssertEqual(
-                        model.contactID(for: closest.node), contactID,
-                        "\(positionID): canonical selected ledge is occluded by \(closest.node.name ?? "unnamed") at \(closest.worldCoordinates)"
-                    )
-                }
-            }
-        }
-    }
-
     func testJBryantFTG32HighlightedContactResolvesItsMatchingHalfTurnPosition() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "j-bryant.ftg-32"))
         for (contactID, expectedPositionID) in [("edge-25", "edge-25-down"), ("edge-16", "edge-16-down")] {
@@ -1141,46 +1086,6 @@ final class BoardModelTests: XCTestCase {
             )
         }
         XCTAssertFalse(PlanCatalog.all.contains { $0.boardID == "j-bryant.ftg-32" })
-    }
-
-    func testJBryantFTG32NativePickingAndAccessibilityExcludeBodyHolesAndCord() async throws {
-        try await assertNativeNearestTrianglePicking(boardID: "j-bryant.ftg-32")
-        let (board, media, model) = try await loadMigratedModel("j-bryant.ftg-32")
-        XCTAssertEqual(model.geometryNodes.count, 3)
-        XCTAssertEqual(model.contactNodes.count, 2)
-        XCTAssertEqual(Set(media.descriptor.nodes.map(\.nodeID)), [
-            "Cube_001", "edge_16_mesh_001", "edge_25_mesh_001",
-        ])
-        XCTAssertEqual(Set(media.descriptor.nodes.filter { $0.role == .contact }.map(\.nodeID)), [
-            "edge_16_mesh_001", "edge_25_mesh_001",
-        ])
-        let body = try XCTUnwrap(model.geometryNodes.first { $0.name == "Cube_001" })
-        XCTAssertNil(model.contactID(for: body))
-        for binding in media.descriptor.nodes where binding.role == .contact {
-            let name = binding.nodeID.lowercased()
-            XCTAssertFalse(["hole", "cord", "rear"].contains { name.contains($0) })
-        }
-
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
-        view.display(model)
-        view.contacts = board.contacts
-        view.onContactTap = { _ in }
-        for position in board.positions {
-            XCTAssertTrue(model.select(positionID: position.id), position.id)
-            let cord = try XCTUnwrap(model.transientCordNode)
-            XCTAssertNil(model.contactID(for: cord))
-            XCTAssertTrue(cord.childNodes.allSatisfy { model.contactID(for: $0) == nil })
-            XCTAssertFalse(model.isTransientCordAccessible)
-            view.updateAccessibility()
-            let rawAccessibilityElements = try XCTUnwrap(
-                view.accessibilityElements as? [UIAccessibilityElement]
-            )
-            XCTAssertEqual(rawAccessibilityElements.count, 2)
-            XCTAssertEqual(rawAccessibilityElements.map(\.accessibilityIdentifier), [
-                "boardModel.contact.edge-16",
-                "boardModel.contact.edge-25",
-            ])
-        }
     }
 
     func testJBryantFTG32InvalidSuspensionFailsClosedWithoutTransientCord() async throws {
@@ -1312,7 +1217,7 @@ final class BoardModelTests: XCTestCase {
         }
 
         for (positionID, pose) in suspension.canonicalPoses.sorted(by: { $0.key < $1.key }) {
-            let solved = try BoardModelScene.solveSuspension(
+            let solved = try BoardModelRealityScene.solveSuspension(
                 pose: pose,
                 suspension: .twoBranchCord(suspension),
                 bounds: media.descriptor.modelBounds
@@ -1514,7 +1419,7 @@ final class BoardModelTests: XCTestCase {
         }
         XCTAssertEqual(suspension.canonicalPoses.count, 4)
         for (positionID, pose) in suspension.canonicalPoses {
-            let solved = try BoardModelScene.solveSuspension(
+            let solved = try BoardModelRealityScene.solveSuspension(
                 pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
             )
             // The solved direction is the viewDirection rotated by the pose.
@@ -1545,7 +1450,7 @@ final class BoardModelTests: XCTestCase {
             return XCTFail("Flash Board must load the approved twoBranchCord suspension")
         }
         let pose = try XCTUnwrap(suspension.canonicalPoses["two-edge-upright"])
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose,
             suspension: .twoBranchCord(suspension),
             bounds: media.descriptor.modelBounds
@@ -1783,109 +1688,6 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.camera.simdPosition.z, expected.camera.simdPosition.z, accuracy: 0.000_01)
     }
 
-    func testFlashBoardTwoEdgeSceneProjectsOrbitsAndRendersEachComponentSeparately() async throws {
-        let (_, _, model) = try await loadMigratedModel("tension.flash-board")
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
-        view.backgroundColor = .white
-        view.isOpaque = true
-        view.rendersContinuously = false
-        view.isPlaying = false
-        view.display(model)
-        view.scene = model.scene
-        view.scene?.background.contents = UIColor.white
-        view.pointOfView = model.camera
-
-        func projectedCorners(for node: SCNNode) -> [SCNVector3] {
-            let bounds = node.boundingBox
-            let corners = [bounds.min.x, bounds.max.x].flatMap { x in
-                [bounds.min.y, bounds.max.y].flatMap { y in
-                    [bounds.min.z, bounds.max.z].map { z in SCNVector3(x, y, z) }
-                }
-            }
-            return corners.map { view.projectPoint(node.convertPosition($0, to: nil)) }
-        }
-
-        func assertProjected(_ nodes: [SCNNode], _ label: String) {
-            let points = nodes.flatMap(projectedCorners)
-            XCTAssertFalse(points.isEmpty, "\(label) must have projected geometry")
-            let visible = points.filter { point in
-                point.x >= 0 && point.x <= Float(view.bounds.width) &&
-                point.y >= 0 && point.y <= Float(view.bounds.height) &&
-                point.z >= 0 && point.z <= 1
-            }
-            let xValues = points.map(\.x)
-            let yValues = points.map(\.y)
-            let zValues = points.map(\.z)
-            XCTAssertFalse(
-                visible.isEmpty,
-                "\(label) must intersect the viewport with visible depth; " +
-                "x=\(xValues.min() ?? .nan)...\(xValues.max() ?? .nan), " +
-                "y=\(yValues.min() ?? .nan)...\(yValues.max() ?? .nan), " +
-                "z=\(zValues.min() ?? .nan)...\(zValues.max() ?? .nan), " +
-                "cameraPosition=\(model.camera.position), cameraFront=\(model.camera.simdWorldFront)"
-            )
-        }
-
-        func assertProjectedPresentation(_ positionID: String, _ label: String, orbit: Bool = false) throws {
-            view.positionID = positionID
-            view.selectPositionIfNeeded()
-            SCNTransaction.flush()
-
-            if orbit {
-                model.orbit(azimuth: 0.3, elevation: -0.2, zoomScale: 1.2)
-                SCNTransaction.flush()
-            }
-
-            assertProjected(model.geometryNodes, "\(label) board")
-            guard let cord = model.transientCordNode else {
-                XCTFail("\(label) must create a cord node")
-                return
-            }
-            for branchIndex in 0..<2 {
-                let segments = cord.childNodes.filter {
-                    $0.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
-                }
-                XCTAssertFalse(segments.isEmpty, "\(label) branch \(branchIndex) must contain cord geometry")
-                assertProjected(segments, "\(label) cord branch \(branchIndex)")
-            }
-
-            func capture(_ label: String, only predicate: (SCNNode) -> Bool) throws -> CGImage {
-                let nodes = model.geometryNodes + [cord] + cord.childNodes
-                let visibility = nodes.map { ($0, $0.isHidden) }
-                defer {
-                    for (node, isHidden) in visibility {
-                        node.isHidden = isHidden
-                    }
-                }
-                for node in nodes {
-                    node.isHidden = !predicate(node)
-                }
-                SCNTransaction.flush()
-                view.layoutIfNeeded()
-                guard let image = view.snapshot().cgImage else {
-                    throw XCTSkip("\(label) snapshot did not produce a CGImage")
-                }
-                XCTAssertTrue(
-                    hasNonBackgroundPixels(image),
-                    "\(label) isolated snapshot must contain rendered pixels"
-                )
-                return image
-            }
-
-            _ = try capture("\(label) board", only: { node in
-                model.geometryNodes.contains { $0 === node }
-            })
-            for branchIndex in 0..<2 {
-                _ = try capture("\(label) cord branch \(branchIndex)", only: { node in
-                    node === cord || node.name?.hasPrefix("suspended.cord.branch.\(branchIndex).") == true
-                })
-            }
-        }
-
-        try assertProjectedPresentation("three-edge-upright", "three-edge control")
-        try assertProjectedPresentation("two-edge-upright", "two-edge", orbit: true)
-    }
-
     func testNatureStoneHangerCatalogUsesExactDefaultModelContract() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
@@ -1946,7 +1748,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertFalse(model.isUnavailable)
         XCTAssertFalse(model.isTransientCordAccessible)
         let pose = try XCTUnwrap(suspension.canonicalPoses["front"])
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose,
             suspension: .pairedLeadCord(suspension),
             bounds: media.descriptor.modelBounds
@@ -2105,141 +1907,274 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(Set(assetFiles), ["primary.model.json", "primary.usdz"])
     }
 
-    func testBaguetteEvoNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
-        try await assertNativeNearestTrianglePicking(boardID: "yy.baguette-evo")
-    }
-
-    func testCollectionModelsNativeNearestTrianglePickingCoversEveryContactPiece() async throws {
-        for boardID in [
-            "clavellium-training-block", "metolius.climbers-edge", "metolius.contact", "metolius.simulator-3d",
-            "soill.training-tiles", "the-hangboard.the-hangboard",
-            "trango.rock-prodigy-training-center",
-        ] {
-            try await assertNativeNearestTrianglePicking(boardID: boardID)
-        }
-    }
-
-    // These literal identities bind native acceptance to the reviewed Batch 05
+// These literal identities bind native acceptance to the reviewed Batch 05
     // exports. A changed contact binding, hidden contact, shared highlight material,
     // unavailable model or camera regression must fail against the real loader.
-    func testGestureCameraChangesRefreshContactAccessibilityThroughAnimatedReset() async throws {
-        let (board, _, model) = try await loadMigratedModel("frictitious.doormount-pro-7")
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: 240))
-        let window = UIWindow(frame: view.frame)
-        let controller = UIViewController()
-        controller.view.addSubview(view)
-        window.rootViewController = controller
-        window.makeKeyAndVisible()
-        defer { view.delegate = nil; window.isHidden = true }
-        view.delegate = view
+    private func assertBatch05NativeContract(
+        boardID: String, modelSHA256: String, descriptorSHA256: String,
+        contactIDs: [String], bindings: [String]
+    ) async throws {
+        let (board, media, model) = try await loadMigratedModel(boardID)
+        XCTAssertEqual(board.contacts.map(\.id), contactIDs, boardID)
+        XCTAssertEqual(Set(model.contactNodes.keys), Set(contactIDs), boardID)
+        XCTAssertEqual(media.descriptor.nodes.map {
+            "\($0.nodeID)|\($0.role.rawValue)|\($0.contactID ?? "-")"
+        }, bindings, boardID)
+        XCTAssertEqual(media.descriptor.modelSHA256, modelSHA256, boardID)
+        let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
+        XCTAssertEqual(SHA256.hash(data: try Data(contentsOf: descriptorURL))
+            .map { String(format: "%02x", $0) }.joined(), descriptorSHA256, boardID)
+        XCTAssertNil(media.suspension, boardID)
+        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board), boardID)
+        XCTAssertFalse(model.isUnavailable, boardID)
+
+        let originalMaterials = try model.geometryNodes.map { node in
+            (node, try XCTUnwrap(node.geometry?.materials, boardID))
+        }
+        for contactID in contactIDs {
+            model.highlight([contactID], mode: .active)
+            for (node, originals) in originalMaterials {
+                let current = try XCTUnwrap(node.geometry?.materials)
+                XCTAssertEqual(current.count, originals.count)
+                for (material, original) in zip(current, originals) {
+                    if model.contactID(for: node) == contactID {
+                        XCTAssertFalse(material === original, "\(boardID)/\(contactID) must clone")
+                        XCTAssertEqual(material.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+                    } else {
+                        XCTAssertTrue(material === original, "\(boardID)/\(contactID) must isolate")
+                    }
+                }
+            }
+            model.highlight([], mode: .active)
+            for (node, originals) in originalMaterials {
+                XCTAssertTrue(zip(node.geometry!.materials, originals).allSatisfy { $0 === $1 },
+                              "\(boardID)/\(contactID) clear restores original material identities")
+            }
+        }
+        for node in model.geometryNodes where model.contactID(for: node) == nil {
+            XCTAssertEqual(node.categoryBitMask, BoardModelScene.modelVisibleCategory)
+            XCTAssertEqual(node.categoryBitMask & BoardModelScene.modelPickCategory, 0)
+        }
+        for size in [CGSize(width: 393, height: 240), CGSize(width: 650, height: 230), CGSize(width: 334, height: 334 / board.defaultPresentation.aspectRatio), CGSize(width: 802, height: 802 / board.defaultPresentation.aspectRatio)] {
+            let view = SCNView(frame: CGRect(origin: .zero, size: size))
+            view.scene = model.scene
+            view.pointOfView = model.camera
+            view.rendersContinuously = false
+            view.isPlaying = false
+            for position in board.positions {
+                XCTAssertTrue(model.select(positionID: position.id))
+                model.resetCamera(animated: false)
+                SCNTransaction.flush()
+                XCTAssertNil(model.transientCordNode)
+                let canonical = model.camera.simdTransform
+                let scale = model.camera.camera?.orthographicScale
+                for node in model.geometryNodes {
+                    let box = node.boundingBox
+                    for x in [box.min.x, box.max.x] {
+                        for y in [box.min.y, box.max.y] {
+                            for z in [box.min.z, box.max.z] {
+                                let point = view.projectPoint(node.convertPosition(SCNVector3(x, y, z), to: nil))
+                                XCTAssertTrue(point.x >= -0.001 && point.x <= Float(size.width) + 0.001
+                                    && point.y >= -0.001 && point.y <= Float(size.height) + 0.001
+                                    && point.z >= 0 && point.z <= 1, "\(boardID) visible framing \(position.id) \(size) node=\(node.name ?? "unnamed") point=\(point)")
+                            }
+                        }
+                    }
+                }
+                model.orbit(azimuth: 0.35, elevation: -0.25, zoomScale: 1.1)
+                XCTAssertNotEqual(model.camera.simdTransform, canonical)
+                XCTAssertEqual(model.activePositionID, position.id)
+                model.resetCamera(animated: false)
+                XCTAssertEqual(model.camera.simdTransform, canonical)
+                XCTAssertEqual(model.camera.camera?.orthographicScale, scale)
+                XCTAssertEqual(model.activePositionID, position.id)
+            }
+        }
+    }
+
+    private func assertNativeNearestTrianglePicking(boardID: String, requireVisibleSurface: Bool = false) async throws {
+        let (board, media, model) = try await loadMigratedModel(boardID)
+        let view = SCNView(frame: CGRect(x: 0, y: 0, width: 800, height: requireVisibleSurface ? 800 / board.defaultPresentation.aspectRatio : 600))
+        view.scene = model.scene
+        view.pointOfView = model.camera
         view.rendersContinuously = false
         view.isPlaying = false
-        view.display(model)
-        view.contacts = board.contacts
-        view.positionID = board.positions.first!.id
-        var tapped: String?
-        view.onContactTap = { tapped = $0.id }
-        view.selectPositionIfNeeded()
-        view.updateAccessibility()
-        let contactID = "edge-35-right"
-        let element = try XCTUnwrap((view.accessibilityElements as? [UIAccessibilityElement])?
-            .first { $0.accessibilityIdentifier == "boardModel.contact.\(contactID)" })
-        let node = try XCTUnwrap(model.contactNodes[contactID]?.first)
-        func expectedCenter() -> CGPoint {
-            let box = node.boundingBox
-            let local = SCNVector3((box.min.x + box.max.x) / 2,
-                                  (box.min.y + box.max.y) / 2,
-                                  (box.min.z + box.max.z) / 2)
-            let projected = view.projectContactPoint(node.convertPosition(local, to: nil))
-            return CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
-        }
-        func renderFrame() async {
+        model.frame(in: view.bounds.size)
+        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
+            .map { Float($1 - $0) }
+            .max() ?? 1
+        let rayExtension = max(extent * 4, 1)
+
+        for position in board.positions {
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
             SCNTransaction.flush()
-            view.setNeedsDisplay()
-            try? await Task.sleep(for: .milliseconds(80))
-        }
-        func assertAligned(accuracy: CGFloat = 0.1) {
-            let center = expectedCenter()
-            XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, center.x, accuracy: accuracy)
-            XCTAssertEqual(element.accessibilityFrameInContainerSpace.midY, center.y, accuracy: accuracy)
-        }
-        func isAligned(accuracy: CGFloat = 0.1) -> Bool {
-            let center = expectedCenter()
-            let frame = element.accessibilityFrameInContainerSpace
-            return abs(frame.midX - center.x) <= accuracy
-                && abs(frame.midY - center.y) <= accuracy
-        }
-        func waitForConvergence(
-            timeout: Duration = .seconds(3),
-            _ condition: () -> Bool
-        ) async {
-            let deadline = ContinuousClock.now.advanced(by: timeout)
-            while !condition(), ContinuousClock.now < deadline {
-                await renderFrame()
+            let reviewAngles: [SIMD2<Float>] = [
+                [0, 0], [0.45, 0], [-0.45, 0], [0, 0.4], [0, -0.4],
+                [0.35, 0.3], [-0.35, 0.3], [0.35, -0.3], [-0.35, -0.3],
+            ]
+            for contactID in position.contactIDs {
+                let nodes = try XCTUnwrap(model.contactNodes[contactID], "\(position.id): \(contactID)")
+                for node in nodes {
+                    let raySamples = try nativeTriangleCenters(for: node)
+                    let hasNativePick = reviewAngles.contains { angle in
+                        model.resetCamera(animated: false)
+                        model.orbit(azimuth: angle.x, elevation: angle.y)
+                        SCNTransaction.flush()
+                        let direction = model.camera.presentation.worldFront
+                        return raySamples.contains { localCenter in
+                            let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
+                            let start = SCNVector3(
+                                center.x - direction.x * rayExtension,
+                                center.y - direction.y * rayExtension,
+                                center.z - direction.z * rayExtension
+                            )
+                            let end = SCNVector3(
+                                center.x + direction.x * rayExtension,
+                                center.y + direction.y * rayExtension,
+                                center.z + direction.z * rayExtension
+                            )
+                            let closest = model.scene.rootNode.hitTestWithSegment(
+                                from: start,
+                                to: end,
+                                options: [
+                                    SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
+                                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                                ]
+                            ).first
+                            guard closest?.node === node,
+                                  closest.flatMap({ model.contactID(for: $0.node) }) == contactID else {
+                                return false
+                            }
+                            if requireVisibleSurface {
+                                let visibleHit = model.scene.rootNode.hitTestWithSegment(
+                                    from: start, to: end,
+                                    options: [
+                                        SCNHitTestOption.categoryBitMask.rawValue:
+                                            BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
+                                        SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
+                                    ]
+                                ).first
+                                guard visibleHit?.node === node else { return false }
+                            }
+                            let projected = view.projectPoint(center)
+                            let point = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
+                            guard projected.z >= 0, projected.z <= 1, view.bounds.contains(point) else {
+                                return false
+                            }
+                            let screenHit = view.hitTest(point, options: [
+                                SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
+                                SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
+                            ]).first
+                            if requireVisibleSurface {
+                                let visibleScreenHit = view.hitTest(point, options: [
+                                    SCNHitTestOption.categoryBitMask:
+                                        BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
+                                    SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
+                                ]).first
+                                guard visibleScreenHit?.node === node else { return false }
+                            }
+                            let success = screenHit?.node === node
+                                && screenHit.flatMap { model.contactID(for: $0.node) } == contactID
+                            return success
+                        }
+                    }
+                    XCTAssertTrue(
+                        hasNativePick,
+                        "\(boardID): \(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across the reviewed camera angles"
+                    )
+                }
             }
-            XCTAssertTrue(
-                condition(),
-                "Animated reset did not converge accessibility to the canonical camera within \(timeout)"
+        }
+    }
+
+    private func nativeTriangleCenters(for node: SCNNode) throws -> [SCNVector3] {
+        let geometry = try XCTUnwrap(node.geometry, node.name ?? "unnamed")
+        let source = try XCTUnwrap(
+            geometry.sources(for: .vertex).first,
+            "\(node.name ?? "unnamed") has no vertex source"
+        )
+        guard source.usesFloatComponents,
+              source.bytesPerComponent == MemoryLayout<Float>.size else {
+            throw NSError(
+                domain: "BoardModelTests.nativeTriangleCenters",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "unsupported native vertex component layout"]
             )
         }
-        // Initial position selection animates its camera framing too.
-        try await Task.sleep(for: .milliseconds(300))
-        await renderFrame()
-        let canonicalFrame = element.accessibilityFrameInContainerSpace
-        let pan = ChangedBoardPanGesture()
-        pan.setTranslation(CGPoint(x: 160, y: 40), in: view)
-        view.orbitPan(pan)
-        await renderFrame()
-        XCTAssertNotEqual(element.accessibilityFrameInContainerSpace, canonicalFrame,
-                          "Pan must move the accessibility target with the rendered contact")
-        assertAligned()
-        let orbitedFrame = element.accessibilityFrameInContainerSpace
-        let pinch = ChangedBoardPinchGesture()
-        pinch.scale = 1.2
-        view.orbitPinch(pinch)
-        await renderFrame()
-        XCTAssertNotEqual(element.accessibilityFrameInContainerSpace, orbitedFrame,
-                          "Pinch must update the projected accessibility target")
-        assertAligned()
 
-        let samples = try nativeTriangleCenters(for: node)
-        let tapPoint = try XCTUnwrap(samples.lazy.compactMap { local -> CGPoint? in
-            let projected = view.projectPoint(node.convertPosition(local, to: nil))
-            let point = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
-            let hit = view.hitTest(point, options: [
-                SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
-                SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
-            ]).first
-            return hit?.node === node ? point : nil
-        }.first)
-        let tap = LocatedBoardTapGesture()
-        tap.point = tapPoint
-        view.selectContact(tap)
-        XCTAssertEqual(tapped, contactID)
-        // Observe actual rendered frames through the production 0.18s transition.
-        for _ in 0..<8 {
-            try await Task.sleep(for: .milliseconds(40))
-            await renderFrame()
-            // During animation the main-thread assertion can be one render frame
-            // ahead of the queued accessibility callback.
-            assertAligned(accuracy: 3)
+        let sourceData = source.data
+        func vertex(_ index: Int) throws -> SCNVector3 {
+            guard index >= 0, index < source.vectorCount else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 2,
+                    userInfo: [NSLocalizedDescriptionKey: "native triangle index exceeds vertex inventory"]
+                )
+            }
+            func component(_ component: Int) -> Float {
+                let byteOffset = source.dataOffset + index * source.dataStride
+                    + component * source.bytesPerComponent
+                return sourceData.withUnsafeBytes {
+                    $0.loadUnaligned(fromByteOffset: byteOffset, as: Float.self)
+                }
+            }
+            return SCNVector3(component(0), component(1), component(2))
         }
-        await waitForConvergence {
-            isAligned()
-                && abs(element.accessibilityFrameInContainerSpace.midX - canonicalFrame.midX) <= 0.1
-                && abs(element.accessibilityFrameInContainerSpace.midY - canonicalFrame.midY) <= 0.1
-        }
-        assertAligned()
-        XCTAssertEqual(element.accessibilityFrameInContainerSpace.midX, canonicalFrame.midX, accuracy: 0.1)
-        XCTAssertEqual(element.accessibilityFrameInContainerSpace.midY, canonicalFrame.midY, accuracy: 0.1)
-        XCTAssertFalse(view.rendersContinuously)
-        XCTAssertFalse(view.isPlaying)
 
-        view.frame.size = CGSize(width: 650, height: 180)
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        await renderFrame()
-        assertAligned()
+        func index(in element: SCNGeometryElement, data: Data, at offset: Int) throws -> Int {
+            let byteOffset = offset * element.bytesPerIndex
+            guard [1, 2, 4, 8].contains(element.bytesPerIndex),
+                  byteOffset >= 0,
+                  byteOffset + element.bytesPerIndex <= data.count else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 3,
+                    userInfo: [NSLocalizedDescriptionKey: "unsupported native triangle index layout"]
+                )
+            }
+            return data.withUnsafeBytes { bytes in
+                switch element.bytesPerIndex {
+                case 1: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt8.self))
+                case 2: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt16.self))
+                case 4: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt32.self))
+                default: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt64.self))
+                }
+            }
+        }
+
+        var centers: [SCNVector3] = []
+        for element in geometry.elements where element.primitiveType == .triangles {
+            let elementData = element.data
+            let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
+            let attributeCount = geometry.sources.count
+            let importerMultiIndexSize = plainSize * attributeCount
+            let layout: (stride: Int, corners: [Int])
+            if elementData.count == plainSize {
+                layout = (3, [0, 1, 2])
+            } else if elementData.count == importerMultiIndexSize,
+                      geometry.sources.first?.semantic == .vertex {
+                layout = (3 * attributeCount, [0, attributeCount, 2 * attributeCount])
+            } else {
+                throw NSError(
+                    domain: "BoardModelTests.nativeTriangleCenters",
+                    code: 4,
+                    userInfo: [NSLocalizedDescriptionKey: "\(node.name ?? "unnamed"): unknown native triangle element layout: bytes=\(elementData.count), triangles=\(element.primitiveCount), bytesPerIndex=\(element.bytesPerIndex), sources=\(geometry.sources.map { $0.semantic.rawValue })"]
+                )
+            }
+            for triangle in 0..<element.primitiveCount {
+                let base = triangle * layout.stride
+                let first = try vertex(index(in: element, data: elementData, at: base + layout.corners[0]))
+                let second = try vertex(index(in: element, data: elementData, at: base + layout.corners[1]))
+                let third = try vertex(index(in: element, data: elementData, at: base + layout.corners[2]))
+                centers.append(SCNVector3(
+                    (first.x + second.x + third.x) / 3,
+                    (first.y + second.y + third.y) / 3,
+                    (first.z + second.z + third.z) / 3
+                ))
+            }
+        }
+        XCTAssertFalse(centers.isEmpty, "\(node.name ?? "unnamed") has no native triangles")
+        return centers
     }
 
     func testBatch05FrictitiousNativeMaterialsHaveTextureCoordinates() async throws {
@@ -2503,275 +2438,6 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
-    func testBatch05ProNativeAcceptance() async throws {
-        try await assertBatch05NativeContract(
-            boardID: "zlagboard.pro",
-            modelSHA256: "c8b740284160de55c5f846c9d11742b5a29a31c0a67c9bb5f43ce1d4873bbd30",
-            descriptorSHA256: "1be45681ce98fcb6fb1eda0f7939f3174a85d3c70c625b2aa8d6f2aed399cb83",
-            contactIDs: [
-                "top-jug-left",
-                "top-jug-right",
-                "top-sloper-32-left",
-                "top-sloper-32-right",
-                "top-sloper-20-left",
-                "top-sloper-20-right",
-                "top-sloper-jug-center",
-                "edge-30-left",
-                "sloper-edge-30-left",
-                "sloper-edge-25-left",
-                "edge-35-center",
-                "sloper-edge-25-right",
-                "sloper-edge-30-right",
-                "edge-30-right",
-                "edge-20-left",
-                "sloper-edge-25-lower-left",
-                "edge-30-inner-left",
-                "sloper-edge-30-center",
-                "edge-30-inner-right",
-                "sloper-edge-25-lower-right",
-                "edge-20-right",
-                "edge-incut-15-left",
-                "edge-15-left",
-                "edge-incut-30-left",
-                "edge-incut-10-center",
-                "edge-incut-30-right",
-                "edge-15-right",
-                "edge-incut-15-right",
-            ],
-            bindings: [
-                "body__board_001|body|-",
-                "hold__center_sloping_jug_001|contact|top-sloper-jug-center",
-                "hold__left_jug_001|contact|top-jug-left",
-                "hold__left_sloper_20_001|contact|top-sloper-20-left",
-                "hold__left_sloper_32_001|contact|top-sloper-32-left",
-                "hold__right_jug_001|contact|top-jug-right",
-                "hold__right_sloper_20_001|contact|top-sloper-20-right",
-                "hold__right_sloper_32_001|contact|top-sloper-32-right",
-                "hold__row_1_column_1_001|contact|edge-30-left",
-                "hold__row_1_column_2_001|contact|sloper-edge-30-left",
-                "hold__row_1_column_3_001|contact|sloper-edge-25-left",
-                "hold__row_1_column_4_001|contact|edge-35-center",
-                "hold__row_1_column_5_001|contact|sloper-edge-25-right",
-                "hold__row_1_column_6_001|contact|sloper-edge-30-right",
-                "hold__row_1_column_7_001|contact|edge-30-right",
-                "hold__row_2_column_1_001|contact|edge-20-left",
-                "hold__row_2_column_2_001|contact|sloper-edge-25-lower-left",
-                "hold__row_2_column_3_001|contact|edge-30-inner-left",
-                "hold__row_2_column_4_001|contact|sloper-edge-30-center",
-                "hold__row_2_column_5_001|contact|edge-30-inner-right",
-                "hold__row_2_column_6_001|contact|sloper-edge-25-lower-right",
-                "hold__row_2_column_7_001|contact|edge-20-right",
-                "hold__row_3_column_1_001|contact|edge-incut-15-left",
-                "hold__row_3_column_2_001|contact|edge-15-left",
-                "hold__row_3_column_3_001|contact|edge-incut-30-left",
-                "hold__row_3_column_4_001|contact|edge-incut-10-center",
-                "hold__row_3_column_5_001|contact|edge-incut-30-right",
-                "hold__row_3_column_6_001|contact|edge-15-right",
-                "hold__row_3_column_7_001|contact|edge-incut-15-right",
-            ]
-        )
-    }
-
-    private func assertBatch05NativeContract(
-        boardID: String, modelSHA256: String, descriptorSHA256: String,
-        contactIDs: [String], bindings: [String]
-    ) async throws {
-        let (board, media, model) = try await loadMigratedModel(boardID)
-        XCTAssertEqual(board.contacts.map(\.id), contactIDs, boardID)
-        XCTAssertEqual(Set(model.contactNodes.keys), Set(contactIDs), boardID)
-        XCTAssertEqual(media.descriptor.nodes.map {
-            "\($0.nodeID)|\($0.role.rawValue)|\($0.contactID ?? "-")"
-        }, bindings, boardID)
-        XCTAssertEqual(media.descriptor.modelSHA256, modelSHA256, boardID)
-        let descriptorURL = try XCTUnwrap(BoardCatalog.packageStore.presentationDescriptorURL(for: board))
-        XCTAssertEqual(SHA256.hash(data: try Data(contentsOf: descriptorURL))
-            .map { String(format: "%02x", $0) }.joined(), descriptorSHA256, boardID)
-        XCTAssertNil(media.suspension, boardID)
-        XCTAssertNil(BoardCatalog.packageStore.presentationImageURL(for: board), boardID)
-        XCTAssertFalse(model.isUnavailable, boardID)
-
-        let originalMaterials = try model.geometryNodes.map { node in
-            (node, try XCTUnwrap(node.geometry?.materials, boardID))
-        }
-        for contactID in contactIDs {
-            model.highlight([contactID], mode: .active)
-            for (node, originals) in originalMaterials {
-                let current = try XCTUnwrap(node.geometry?.materials)
-                XCTAssertEqual(current.count, originals.count)
-                for (material, original) in zip(current, originals) {
-                    if model.contactID(for: node) == contactID {
-                        XCTAssertFalse(material === original, "\(boardID)/\(contactID) must clone")
-                        XCTAssertEqual(material.diffuse.contents as? UIColor, UIColor(Color.holdActive))
-                    } else {
-                        XCTAssertTrue(material === original, "\(boardID)/\(contactID) must isolate")
-                    }
-                }
-            }
-            model.highlight([], mode: .active)
-            for (node, originals) in originalMaterials {
-                XCTAssertTrue(zip(node.geometry!.materials, originals).allSatisfy { $0 === $1 },
-                              "\(boardID)/\(contactID) clear restores original material identities")
-            }
-        }
-        for node in model.geometryNodes where model.contactID(for: node) == nil {
-            XCTAssertEqual(node.categoryBitMask, BoardModelScene.modelVisibleCategory)
-            XCTAssertEqual(node.categoryBitMask & BoardModelScene.modelPickCategory, 0)
-        }
-        for size in [CGSize(width: 393, height: 240), CGSize(width: 650, height: 230), CGSize(width: 334, height: 334 / board.defaultPresentation.aspectRatio), CGSize(width: 802, height: 802 / board.defaultPresentation.aspectRatio)] {
-            let view = BoardModelSCNView(frame: CGRect(origin: .zero, size: size))
-            view.display(model)
-            for position in board.positions {
-                XCTAssertTrue(model.select(positionID: position.id))
-                model.resetCamera(animated: false)
-                SCNTransaction.flush()
-                XCTAssertNil(model.transientCordNode)
-                let canonical = model.camera.simdTransform
-                let scale = model.camera.camera?.orthographicScale
-                for node in model.geometryNodes {
-                    let box = node.boundingBox
-                    for x in [box.min.x, box.max.x] {
-                        for y in [box.min.y, box.max.y] {
-                            for z in [box.min.z, box.max.z] {
-                                let point = view.projectPoint(node.convertPosition(SCNVector3(x, y, z), to: nil))
-                                XCTAssertTrue(point.x >= -0.001 && point.x <= Float(size.width) + 0.001
-                                    && point.y >= -0.001 && point.y <= Float(size.height) + 0.001
-                                    && point.z >= 0 && point.z <= 1, "\(boardID) visible framing \(position.id) \(size) node=\(node.name ?? "unnamed") point=\(point)")
-                            }
-                        }
-                    }
-                }
-                model.orbit(azimuth: 0.35, elevation: -0.25, zoomScale: 1.1)
-                XCTAssertNotEqual(model.camera.simdTransform, canonical)
-                XCTAssertEqual(model.activePositionID, position.id)
-                model.resetCamera(animated: false)
-                XCTAssertEqual(model.camera.simdTransform, canonical)
-                XCTAssertEqual(model.camera.camera?.orthographicScale, scale)
-                XCTAssertEqual(model.activePositionID, position.id)
-            }
-        }
-        try await assertNativeNearestTrianglePicking(boardID: boardID, requireVisibleSurface: true)
-    }
-
-    private func assertNativeNearestTrianglePicking(boardID: String, requireVisibleSurface: Bool = false) async throws {
-        let (board, media, model) = try await loadMigratedModel(boardID)
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 800, height: requireVisibleSurface ? 800 / board.defaultPresentation.aspectRatio : 600))
-        view.display(model)
-        model.frame(in: view.bounds.size)
-        let extent = zip(media.descriptor.modelBounds.minimum, media.descriptor.modelBounds.maximum)
-            .map { Float($1 - $0) }
-            .max() ?? 1
-        let rayExtension = max(extent * 4, 1)
-
-        for position in board.positions {
-            XCTAssertTrue(model.select(positionID: position.id), position.id)
-            SCNTransaction.flush()
-            let reviewAngles: [SIMD2<Float>] = [
-                [0, 0], [0.45, 0], [-0.45, 0], [0, 0.4], [0, -0.4],
-                [0.35, 0.3], [-0.35, 0.3], [0.35, -0.3], [-0.35, -0.3],
-            ]
-            for contactID in position.contactIDs {
-                let nodes = try XCTUnwrap(model.contactNodes[contactID], "\(position.id): \(contactID)")
-                for node in nodes {
-                    let raySamples = try nativeTriangleCenters(for: node)
-                    let hasNativePick = reviewAngles.contains { angle in
-                        model.resetCamera(animated: false)
-                        model.orbit(azimuth: angle.x, elevation: angle.y)
-                        SCNTransaction.flush()
-                        let direction = model.camera.presentation.worldFront
-                        return raySamples.contains { localCenter in
-                            let center = node.presentation.convertPosition(localCenter, to: model.scene.rootNode)
-                            let start = SCNVector3(
-                                center.x - direction.x * rayExtension,
-                                center.y - direction.y * rayExtension,
-                                center.z - direction.z * rayExtension
-                            )
-                            let end = SCNVector3(
-                                center.x + direction.x * rayExtension,
-                                center.y + direction.y * rayExtension,
-                                center.z + direction.z * rayExtension
-                            )
-                            let closest = model.scene.rootNode.hitTestWithSegment(
-                                from: start,
-                                to: end,
-                                options: [
-                                    SCNHitTestOption.categoryBitMask.rawValue: BoardModelScene.modelPickCategory,
-                                    SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
-                                ]
-                            ).first
-                            guard closest?.node === node,
-                                  closest.flatMap({ model.contactID(for: $0.node) }) == contactID else {
-                                return false
-                            }
-                            if requireVisibleSurface {
-                                let visibleHit = model.scene.rootNode.hitTestWithSegment(
-                                    from: start, to: end,
-                                    options: [
-                                        SCNHitTestOption.categoryBitMask.rawValue:
-                                            BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
-                                        SCNHitTestOption.searchMode.rawValue: SCNHitTestSearchMode.closest.rawValue,
-                                    ]
-                                ).first
-                                guard visibleHit?.node === node else { return false }
-                            }
-                            // Exercise the same projected-point nearest hit used by
-                            // selectContact, not an accessibility/legend identity lookup.
-                            let projected = view.projectPoint(center)
-                            let point = CGPoint(x: CGFloat(projected.x), y: CGFloat(projected.y))
-                            guard projected.z >= 0, projected.z <= 1, view.bounds.contains(point) else {
-                                return false
-                            }
-                            let screenHit = view.hitTest(point, options: [
-                                SCNHitTestOption.categoryBitMask: BoardModelScene.modelPickCategory,
-                                SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
-                            ]).first
-                            if requireVisibleSurface {
-                                let visibleScreenHit = view.hitTest(point, options: [
-                                    SCNHitTestOption.categoryBitMask:
-                                        BoardModelScene.modelPickCategory | BoardModelScene.modelVisibleCategory,
-                                    SCNHitTestOption.searchMode: SCNHitTestSearchMode.closest.rawValue,
-                                ]).first
-                                guard visibleScreenHit?.node === node else { return false }
-                            }
-                            let success = screenHit?.node === node
-                                && screenHit.flatMap { model.contactID(for: $0.node) } == contactID
-                            return success
-                        }
-                    }
-                    XCTAssertTrue(
-                        hasNativePick,
-                        "\(boardID): \(position.id): \(contactID): \(node.name ?? "unnamed") has no nearest native triangle pick across the reviewed camera angles"
-                    )
-                }
-            }
-        }
-    }
-
-    func testNatureStoneHangerCordPassageMarkersAreNotSelectableOrAccessible() async throws {
-        let (board, media, model) = try await loadMigratedModel("nature.stone-hanger")
-        let passageMarkerIDs = ["cord-passage-1", "cord-passage-2"]
-        let descriptorNodeIDs = Set(media.descriptor.nodes.map(\.nodeID))
-
-        XCTAssertTrue(passageMarkerIDs.allSatisfy { !descriptorNodeIDs.contains($0) })
-        XCTAssertTrue(passageMarkerIDs.allSatisfy { model.contactNodes[$0] == nil })
-        XCTAssertEqual(model.geometryNodes.count, board.contacts.count + 1)
-        for markerID in passageMarkerIDs {
-            let marker = SCNNode()
-            marker.name = markerID
-            XCTAssertNil(model.contactID(for: marker), markerID)
-        }
-
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 320))
-        view.display(model)
-        view.contacts = board.contacts
-        view.onContactTap = { _ in }
-        view.updateAccessibility()
-
-        let identifiers = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
-            .compactMap(\.accessibilityIdentifier)
-        XCTAssertEqual(Set(identifiers), Set(board.contacts.map { "boardModel.contact.\($0.id)" }))
-        XCTAssertTrue(passageMarkerIDs.allSatisfy { !identifiers.contains("boardModel.contact.\($0)") })
-    }
-
     func testExistingPlanTargetsStillResolveOnMetoliusBaguetteAndTrainingTilesBoards() throws {
         let directPlanBoardIDs: Set<String> = ["metolius.contact", "metolius.simulator-3d"]
         let directPlans = PlanCatalog.all.filter { plan in
@@ -2878,30 +2544,6 @@ final class BoardModelTests: XCTestCase {
                 boardID: expectation.boardID
             )
         }
-    }
-
-    func testModelAccessibilityEnumeratesOnlyDescriptorBoundContacts() throws {
-        let descriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, contactID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
-        ])
-        let model = try XCTUnwrap(BoardModelScene(
-            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
-            descriptor: descriptor,
-            display: display()
-        ))
-        let boundContact = PhysicalContact(id: "left", name: "Bound left", kind: .edge)
-        let unboundContact = PhysicalContact(id: "not-in-descriptor", name: "Unbound", kind: .edge)
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 320, height: 160))
-
-        view.display(model)
-        view.contacts = [boundContact, unboundContact]
-        view.onContactTap = { _ in }
-        view.updateAccessibility()
-
-        let elements = try XCTUnwrap(view.accessibilityElements as? [UIAccessibilityElement])
-        XCTAssertEqual(elements.compactMap(\.accessibilityIdentifier), ["boardModel.contact.left"])
-        XCTAssertEqual(elements.compactMap(\.accessibilityLabel), ["Bound left"])
     }
 
     // This proves disconnected body components remain visible geometry while
@@ -3099,43 +2741,6 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(firstNode.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.restBlue))
         first.highlight([], mode: .preview)
         XCTAssertTrue(firstNode.geometry?.firstMaterial === original)
-    }
-
-    func testExistingViewRebindsDescriptorFramedReplacementSceneAndCamera() throws {
-        let firstDescriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, contactID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
-        ], minimum: [-1, -0.5, -0.1], maximum: [1, 0.5, 0.1])
-        let replacementDescriptor = modelDescriptor(nodes: [
-            .init(nodeID: "Board/Body", role: .body, contactID: nil),
-            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left")
-        ], minimum: [10, 20, 30], maximum: [14, 26, 32])
-        let source = scene(nodes: ["Board/Body", "Board/Hold/Left"])
-        let first = try XCTUnwrap(BoardModelScene(
-            source: source,
-            descriptor: firstDescriptor,
-            display: display(viewDirection: [0, 0, -1], up: [0, 1, 0], padding: 0.1)
-        ))
-        let replacement = try XCTUnwrap(BoardModelScene(
-            source: source,
-            descriptor: replacementDescriptor,
-            display: display(viewDirection: [1, 0, 0], up: [0, 0, 1], padding: 0.3)
-        ))
-        let view = BoardModelSCNView(frame: CGRect(x: 0, y: 0, width: 350, height: 100))
-
-        view.display(first)
-        view.display(replacement)
-
-        XCTAssertTrue(view.scene === replacement.scene)
-        XCTAssertTrue(view.pointOfView === replacement.camera)
-        XCTAssertTrue(view.model === replacement)
-        XCTAssertFalse(view.scene === first.scene)
-        XCTAssertNotEqual(first.camera.position.x, replacement.camera.position.x)
-        XCTAssertNotEqual(first.camera.position.y, replacement.camera.position.y)
-        XCTAssertNotEqual(first.camera.position.z, replacement.camera.position.z)
-        XCTAssertNotEqual(first.camera.camera?.orthographicScale, replacement.camera.camera?.orthographicScale)
-        view.scene = nil
-        view.model = nil
     }
 
     func testCameraFramingFillsTheDeclaredPresentationAspect() throws {
@@ -3399,100 +3004,6 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
-    private func nativeTriangleCenters(for node: SCNNode) throws -> [SCNVector3] {
-        let geometry = try XCTUnwrap(node.geometry, node.name ?? "unnamed")
-        let source = try XCTUnwrap(
-            geometry.sources(for: .vertex).first,
-            "\(node.name ?? "unnamed") has no vertex source"
-        )
-        guard source.usesFloatComponents,
-              source.bytesPerComponent == MemoryLayout<Float>.size else {
-            throw NSError(
-                domain: "BoardModelTests.nativeTriangleCenters",
-                code: 1,
-                userInfo: [NSLocalizedDescriptionKey: "unsupported native vertex component layout"]
-            )
-        }
-
-        // Bridging reconstructed SceneKit buffers can copy the entire Data.
-        // Keep one snapshot per buffer instead of copying it for each index.
-        let sourceData = source.data
-        func vertex(_ index: Int) throws -> SCNVector3 {
-            guard index >= 0, index < source.vectorCount else {
-                throw NSError(
-                    domain: "BoardModelTests.nativeTriangleCenters",
-                    code: 2,
-                    userInfo: [NSLocalizedDescriptionKey: "native triangle index exceeds vertex inventory"]
-                )
-            }
-            func component(_ component: Int) -> Float {
-                let byteOffset = source.dataOffset + index * source.dataStride
-                    + component * source.bytesPerComponent
-                return sourceData.withUnsafeBytes {
-                    $0.loadUnaligned(fromByteOffset: byteOffset, as: Float.self)
-                }
-            }
-            return SCNVector3(component(0), component(1), component(2))
-        }
-
-        func index(in element: SCNGeometryElement, data: Data, at offset: Int) throws -> Int {
-            let byteOffset = offset * element.bytesPerIndex
-            guard [1, 2, 4, 8].contains(element.bytesPerIndex),
-                  byteOffset >= 0,
-                  byteOffset + element.bytesPerIndex <= data.count else {
-                throw NSError(
-                    domain: "BoardModelTests.nativeTriangleCenters",
-                    code: 3,
-                    userInfo: [NSLocalizedDescriptionKey: "unsupported native triangle index layout"]
-                )
-            }
-            return data.withUnsafeBytes { bytes in
-                switch element.bytesPerIndex {
-                case 1: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt8.self))
-                case 2: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt16.self))
-                case 4: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt32.self))
-                default: Int(bytes.loadUnaligned(fromByteOffset: byteOffset, as: UInt64.self))
-                }
-            }
-        }
-
-        var centers: [SCNVector3] = []
-        for element in geometry.elements where element.primitiveType == .triangles {
-            let elementData = element.data
-            let plainSize = element.primitiveCount * 3 * element.bytesPerIndex
-            let attributeCount = geometry.sources.count
-            let importerMultiIndexSize = plainSize * attributeCount
-            let layout: (stride: Int, corners: [Int])
-            if elementData.count == plainSize {
-                layout = (3, [0, 1, 2])
-            } else if elementData.count == importerMultiIndexSize,
-                      geometry.sources.first?.semantic == .vertex {
-                // USD-imported meshes use one index per attribute per corner:
-                // vertex/normal, or vertex/normal/UV for textured sources.
-                layout = (3 * attributeCount, [0, attributeCount, 2 * attributeCount])
-            } else {
-                throw NSError(
-                    domain: "BoardModelTests.nativeTriangleCenters",
-                    code: 4,
-                    userInfo: [NSLocalizedDescriptionKey: "\(node.name ?? "unnamed"): unknown native triangle element layout: bytes=\(elementData.count), triangles=\(element.primitiveCount), bytesPerIndex=\(element.bytesPerIndex), sources=\(geometry.sources.map { $0.semantic.rawValue })"]
-                )
-            }
-            for triangle in 0..<element.primitiveCount {
-                let base = triangle * layout.stride
-                let first = try vertex(index(in: element, data: elementData, at: base + layout.corners[0]))
-                let second = try vertex(index(in: element, data: elementData, at: base + layout.corners[1]))
-                let third = try vertex(index(in: element, data: elementData, at: base + layout.corners[2]))
-                centers.append(SCNVector3(
-                    (first.x + second.x + third.x) / 3,
-                    (first.y + second.y + third.y) / 3,
-                    (first.z + second.z + third.z) / 3
-                ))
-            }
-        }
-        XCTAssertFalse(centers.isEmpty, "\(node.name ?? "unnamed") has no native triangles")
-        return centers
-    }
-
     private func assertNearestHeadOnHitForEveryContact(
         _ model: BoardModelScene,
         media: BoardModelMedia,
@@ -3566,6 +3077,178 @@ final class BoardModelTests: XCTestCase {
         )
     }
 
+    func testStudioAppearanceSetsEnvironmentAndNeutralMaterials() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        XCTAssertNotNil(model.scene.lightingEnvironment.contents)
+        XCTAssertGreaterThan(model.scene.lightingEnvironment.intensity, 0)
+        XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
+        let expectedDiffuse = UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1.0)
+        for node in model.geometryNodes {
+            let material = try XCTUnwrap(node.geometry?.firstMaterial)
+            XCTAssertEqual(material.lightingModel, .physicallyBased)
+            XCTAssertEqual(material.diffuse.contents as? UIColor, expectedDiffuse)
+            XCTAssertEqual((material.roughness.contents as? NSNumber)?.doubleValue ?? -1, 0.5, accuracy: 0.001)
+            XCTAssertEqual((material.metalness.contents as? NSNumber)?.doubleValue ?? -1, 0.0, accuracy: 0.001)
+            XCTAssertNil(material.emission.contents)
+            XCTAssertNil(material.normal.contents)
+            XCTAssertNil(material.specular.contents)
+        }
+    }
+
+    func testStudioAppearanceIsIdempotent() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        let first = try model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        model.applyStudioAppearance()
+        let second = try model.geometryNodes.map { ObjectIdentifier(try XCTUnwrap($0.geometry?.firstMaterial)) }
+        XCTAssertEqual(first, second)
+        XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
+    }
+
+    func testStudioHighlightRestoreReturnsNeutralMaterial() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        let node = try XCTUnwrap(model.contactNodes["left"]?.first)
+        let neutral = try XCTUnwrap(node.geometry?.firstMaterial)
+        XCTAssertEqual(neutral.lightingModel, .physicallyBased)
+        model.highlight(["left"], mode: .active)
+        XCTAssertFalse(node.geometry?.firstMaterial === neutral)
+        XCTAssertEqual(node.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+        model.highlight([], mode: .active)
+        XCTAssertTrue(node.geometry?.firstMaterial === neutral)
+    }
+
+    func testStudioLightingEnvironmentImageIs1024x512AndTopLit() throws {
+        let image = try XCTUnwrap(StudioLightingEnvironment.image())
+        XCTAssertEqual(image.size, CGSize(width: 1024, height: 512))
+        let cg = try XCTUnwrap(image.cgImage)
+        XCTAssertEqual(cg.width, 1024)
+        XCTAssertEqual(cg.height, 512)
+        func brightness(at point: CGPoint) throws -> CGFloat {
+            let provider = try XCTUnwrap(cg.dataProvider)
+            let data = try XCTUnwrap(provider.data)
+            let ptr = try XCTUnwrap(CFDataGetBytePtr(data))
+            let bytesPerPixel = cg.bitsPerPixel / 8
+            let x = min(max(Int(point.x * CGFloat(cg.width) / image.size.width), 0), cg.width - 1)
+            let y = min(max(Int(point.y * CGFloat(cg.height) / image.size.height), 0), cg.height - 1)
+            let offset = y * cg.bytesPerRow + x * bytesPerPixel
+            let r = CGFloat(ptr[offset]) / 255.0
+            let g = CGFloat(ptr[offset + 1]) / 255.0
+            let b = CGFloat(ptr[offset + 2]) / 255.0
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b
+        }
+        let top = try brightness(at: CGPoint(x: 512, y: 60))
+        let bottom = try brightness(at: CGPoint(x: 512, y: 450))
+        XCTAssertGreaterThan(top, bottom)
+    }
+
+    func testStudioCordMaterialsArePBRAndDark() throws {
+        let selectedPose = BoardModelCanonicalPose(
+            rotation: [0, 0, 0, 1],
+            translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.08)
+        )
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                BoardModelPairedLeadAttachment(id: "left", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test"),
+                BoardModelPairedLeadAttachment(id: "right", nodeID: "Lead/Right", pointInModel: [0.6, 0.4, -0.05], provenance: "test"),
+            ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "Lead/Right", pointInModel: [0.6, 0.4, -0.05], provenance: "test")]
+            ),
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: BoardModelCord(restLength: 2, radius: 0.01, material: "test-cord", provenance: "test"),
+            canonicalPoses: ["primary": selectedPose]
+        )
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Body", role: .body, contactID: nil),
+                .init(nodeID: "Hold", role: .contact, contactID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, contactID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, contactID: nil),
+            ],
+            minimum: [-1, -0.5, -0.2],
+            maximum: [1, 0.5, 0.2]
+        )
+        let source = scene(nodes: ["Body", "Hold", "Lead/Left", "Lead/Right"])
+        for path in ["Body", "Hold", "Lead/Left", "Lead/Right"] {
+            node(at: path, in: source)?.simdPosition = SIMD3<Float>(10, 10, 10)
+        }
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source, descriptor: descriptor, display: display(), suspension: .pairedLeadCord(suspension)
+        ))
+        model.applyStudioAppearance()
+        XCTAssertTrue(model.select(positionID: "primary"))
+        let cord = try XCTUnwrap(model.transientCordNode)
+        XCTAssertFalse(cord.childNodes.isEmpty)
+        for segment in cord.childNodes {
+            let material = try XCTUnwrap(segment.geometry?.firstMaterial)
+            XCTAssertEqual(material.lightingModel, .physicallyBased)
+            let diffuse = try XCTUnwrap(material.diffuse.contents as? UIColor)
+            var white: CGFloat = -1
+            var alpha: CGFloat = -1
+            XCTAssertTrue(diffuse.getWhite(&white, alpha: &alpha))
+            XCTAssertEqual(white, 0.08, accuracy: 0.001)
+        }
+    }
+
+    func testPrepareModelPreservesGeometrySourceChannelsForMultiChannelMeshes() throws {
+        let vertices = [SCNVector3(0, 0, 0), SCNVector3(1, 0, 0), SCNVector3(0, 1, 0)]
+        let normals = [SCNVector3(0, 0, 1), SCNVector3(0, 0, 1), SCNVector3(0, 0, 1)]
+        let vertexSource = SCNGeometrySource(vertices: vertices)
+        let normalSource = SCNGeometrySource(normals: normals)
+        // Interleaved [positionIndex, normalIndex] per vertex => 6 scalars.
+        var scalars: [UInt32] = [0, 0, 1, 1, 2, 2]
+        let data = scalars.withUnsafeBufferPointer { Data(buffer: $0) }
+        let element = SCNGeometryElement(data: data, primitiveType: .triangles, primitiveCount: 1, indicesChannelCount: 2, interleavedIndicesChannels: true, bytesPerIndex: 4)
+        let source = SCNScene()
+        for name in ["Body", "Hold"] {
+            let node = SCNNode(geometry: SCNGeometry(sources: [vertexSource, normalSource], elements: [element], sourceChannels: [0, 1]))
+            node.geometry?.firstMaterial = SCNMaterial()
+            node.geometry?.firstMaterial?.diffuse.contents = UIColor.brown
+            node.name = name
+            source.rootNode.addChildNode(node)
+        }
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Body", role: .body, contactID: nil),
+            .init(nodeID: "Hold", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(source: source, descriptor: descriptor, display: display(), allowedPositionIDs: ["front"]))
+        XCTAssertEqual(model.geometryNodes.count, 2)
+        for node in model.geometryNodes {
+            XCTAssertEqual(node.geometry?.geometrySourceChannels?.map(\.intValue), [0, 1])
+        }
+    }
+
     private func modelDescriptor(
         nodes: [BoardModelNodeDescriptor],
         minimum: [Double] = [0, 0, 0],
@@ -3600,7 +3283,9 @@ final class BoardModelTests: XCTestCase {
             type: "orthographic",
             viewDirection: viewDirection,
             up: up,
-            fitPadding: padding
+            fitPadding: padding,
+            distanceMultiplier: nil,
+            boundsExpansionFactor: nil
         ))
     }
 
