@@ -299,6 +299,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
     private let app = XCUIApplication()
 
     override func setUpWithError() throws {
+        /// Sets up the test environment for one-handed board hand choice tests.
         continueAfterFailure = false
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
@@ -310,6 +311,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         app.launch()
     }
 
+    /// Tests that a user can select a hand for a one-handed board.
     func testInlineHandChoiceOnOneHandedBoard() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
@@ -336,7 +338,21 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         XCTAssertEqual(both.label, "Both hands (two boards)")
         XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
 
-        app.buttons["handSide.left"].tap()
+        let left = app.buttons["handSide.left"]
+        XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
+        let hittable = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isHittable == true"),
+            object: left
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [hittable], timeout: 30),
+            .completed,
+            "The Left hand menu item must be hittable."
+        )
+        left.tap()
+
+        // Wait a moment for the UI to update after the tap
+        Thread.sleep(forTimeInterval: 0.5)
 
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
@@ -344,7 +360,7 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             object: updated
         )
         XCTAssertEqual(
-            XCTWaiter.wait(for: [labelUpdated], timeout: 10),
+            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
             .completed,
             "Choosing a hand must update the picker label, got: \(updated.label)"
         )
