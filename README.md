@@ -261,3 +261,4 @@ manufacturer guidance before training.
 - [Metolius training-board manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826)
 - [Phosphor Icons](https://github.com/phosphor-icons/core), used under the MIT
   license; see `THIRD_PARTY_NOTICES.md`.
+# CI trigger
