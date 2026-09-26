@@ -3613,6 +3613,103 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(model.scene.lightingEnvironment.intensity, 1.5, accuracy: 0.001)
     }
 
+    func testStudioHighlightRestoreReturnsNeutralMaterial() throws {
+        let descriptor = modelDescriptor(nodes: [
+            .init(nodeID: "Board/Body", role: .body, contactID: nil),
+            .init(nodeID: "Board/Hold/Left", role: .contact, contactID: "left"),
+        ])
+        let model = try XCTUnwrap(BoardModelScene(
+            source: scene(nodes: ["Board/Body", "Board/Hold/Left"]),
+            descriptor: descriptor,
+            display: display(),
+            allowedPositionIDs: ["front"]
+        ))
+        model.applyStudioAppearance()
+        let node = try XCTUnwrap(model.contactNodes["left"]?.first)
+        let neutral = try XCTUnwrap(node.geometry?.firstMaterial)
+        XCTAssertEqual(neutral.lightingModel, .physicallyBased)
+        model.highlight(["left"], mode: .active)
+        XCTAssertFalse(node.geometry?.firstMaterial === neutral)
+        XCTAssertEqual(node.geometry?.firstMaterial?.diffuse.contents as? UIColor, UIColor(Color.holdActive))
+        model.highlight([], mode: .active)
+        XCTAssertTrue(node.geometry?.firstMaterial === neutral)
+    }
+
+    func testStudioLightingEnvironmentImageIs1024x512AndTopLit() throws {
+        let image = try XCTUnwrap(StudioLightingEnvironment.image())
+        XCTAssertEqual(image.size, CGSize(width: 1024, height: 512))
+        let cg = try XCTUnwrap(image.cgImage)
+        XCTAssertEqual(cg.width, 1024)
+        XCTAssertEqual(cg.height, 512)
+        func brightness(at point: CGPoint) throws -> CGFloat {
+            let provider = try XCTUnwrap(cg.dataProvider)
+            let data = try XCTUnwrap(provider.data)
+            let ptr = CFDataGetBytePtr(data)
+            let bytesPerPixel = cg.bitsPerPixel / 8
+            let x = min(max(Int(point.x * CGFloat(cg.width) / image.size.width), 0), cg.width - 1)
+            let y = min(max(Int(point.y * CGFloat(cg.height) / image.size.height), 0), cg.height - 1)
+            let offset = y * cg.bytesPerRow + x * bytesPerPixel
+            let r = CGFloat(ptr[offset]) / 255.0
+            let g = CGFloat(ptr[offset + 1]) / 255.0
+            let b = CGFloat(ptr[offset + 2]) / 255.0
+            return 0.2126 * r + 0.7152 * g + 0.0722 * b
+        }
+        let top = try brightness(at: CGPoint(x: 512, y: 60))
+        let bottom = try brightness(at: CGPoint(x: 512, y: 450))
+        XCTAssertGreaterThan(top, bottom)
+    }
+
+    func testStudioCordMaterialsArePBRAndDark() throws {
+        let selectedPose = BoardModelCanonicalPose(
+            rotation: [0, 0, 0, 1],
+            translation: [0, 0, 0],
+            camera: BoardModelCanonicalCamera(viewDirection: [0, 0, -1], fitPadding: 0.08)
+        )
+        let suspension = BoardModelPairedLeadCord(
+            attachments: [
+                BoardModelPairedLeadAttachment(id: "left", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test"),
+                BoardModelPairedLeadAttachment(id: "right", nodeID: "Lead/Right", pointInModel: [0.6, 0.4, -0.05], provenance: "test"),
+            ],
+            passages: BoardModelPassagePairs(
+                left: [BoardModelPassage(id: "left-lip", nodeID: "Lead/Left", pointInModel: [-0.6, 0.4, 0.05], provenance: "test")],
+                right: [BoardModelPassage(id: "right-lip", nodeID: "Lead/Right", pointInModel: [0.6, 0.4, -0.05], provenance: "test")]
+            ),
+            anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: [0, 0, 0], visibility: "invisible", provenance: "test", position: [0, 2, 0]),
+            cord: BoardModelCord(restLength: 2, radius: 0.01, material: "test-cord", provenance: "test"),
+            canonicalPoses: ["primary": selectedPose]
+        )
+        let descriptor = modelDescriptor(
+            nodes: [
+                .init(nodeID: "Body", role: .body, contactID: nil),
+                .init(nodeID: "Hold", role: .contact, contactID: "hold"),
+                .init(nodeID: "Lead/Left", role: .attachment, contactID: nil),
+                .init(nodeID: "Lead/Right", role: .attachment, contactID: nil),
+            ],
+            minimum: [-1, -0.5, -0.2],
+            maximum: [1, 0.5, 0.2]
+        )
+        let source = scene(nodes: ["Body", "Hold", "Lead/Left", "Lead/Right"])
+        for path in ["Body", "Hold", "Lead/Left", "Lead/Right"] {
+            node(at: path, in: source)?.simdPosition = SIMD3<Float>(10, 10, 10)
+        }
+        let model = try XCTUnwrap(BoardModelScene(
+            source: source, descriptor: descriptor, display: display(), suspension: .pairedLeadCord(suspension)
+        ))
+        model.applyStudioAppearance()
+        XCTAssertTrue(model.select(positionID: "primary"))
+        let cord = try XCTUnwrap(model.transientCordNode)
+        XCTAssertFalse(cord.childNodes.isEmpty)
+        for segment in cord.childNodes {
+            let material = try XCTUnwrap(segment.geometry?.firstMaterial)
+            XCTAssertEqual(material.lightingModel, .physicallyBased)
+            let diffuse = try XCTUnwrap(material.diffuse.contents as? UIColor)
+            var white: CGFloat = -1
+            var alpha: CGFloat = -1
+            XCTAssertTrue(diffuse.getWhite(&white, alpha: &alpha))
+            XCTAssertEqual(white, 0.08, accuracy: 0.001)
+        }
+    }
+
     private func modelDescriptor(
         nodes: [BoardModelNodeDescriptor],
         minimum: [Double] = [0, 0, 0],
