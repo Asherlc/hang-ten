@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, and target10a-linebreaker-base native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, target10a-linebreaker-base, and trango-rock-prodigy-pivot native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "71e62086615b97c6c7ca78025c409766dbb2c2aba5588f114318edebb4c4fd5a",
+  "sha256Manifest": "e8854f58a101fc27ff3f54b238b913562376ead04c9955be92518c73ebe36fa2",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "473ebca2d94c417ebac31d4b3529f6431b755962cb18f64ccff7c2d2793a5428",
+  "supersededSha256Manifest": "ae5b34ebc5b8064a1e9096fe6e1c6459c0ce76bde1447645b2ce595eea26394f",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -244,6 +244,21 @@
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     },
+    "trango-rock-prodigy-pivot": {
+      "source": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
+      "sourceSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
+      "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest; identical to the deleted hand-authored file except the eight instance translations 0.102000000 -> 0.132500000 (the re-authored half is 234 mm wide)",
+      "referenceSHA256": "1549ef478ec19152b8d5340187aee0f0fb8581b1c3312575d62cc1395577832a",
+      "assetSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
+      "descriptorSHA256": "b7c97e44c37c0d521a5ac991bb9ccd54fca2301d6b3ea8446cc48ce86eac3005",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; schema-v2 slots; unbound meshes per the model material policy)",
+      "nativeValidation": "compile reopen and published-depth gate passed (upper-sloped-crimp 12.5, outer-sloped-crimp 11.5, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs and cubic Beziers, extrusions, ruled lofts (crimp bands, two-finger pocket) and a smooth loft (wing); 1.5 mm round-overs on 58 of 102 convex edges (gated crimp bands and back plane excluded); contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
+      "comparison": "front view re-authored from Trango's top-down main image (bolt-seat scale 3.82 px/mm) and depths from the Trango depth guide, replacing a pre-migration display mesh that was ~20% undersized (188 x 96 mm vs 234 x 136 mm) and topologically different (five scallops vs two sawtooth teeth, ridge vs slab wing, 13 mm vs 22 mm rail, reversed rail and three-finger depth gradients); accepted deviation: compare_exports two-way sampled worst 36.58 mm (reverse 21.35 mm; limit 0.5 mm) against it on the first revision, evidence only; not rerun after the round-over pass",
+      "provenanceSidecar": "docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: authored outlines for rail, pockets, ledge, medium-crimp strip and wing; front-view hulls for the crimp bands and teeth",
+      "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised"
+    },
     "target10a-linebreaker-base": {
       "source": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
       "sourceSHA256": "69c3646329715e0d244a02f0b4fc5b02d6e636982b4431cc86430e1905a5caa0",
@@ -270,5 +285,6 @@
   "rockRingsVectorNote": "2026-09-25: metolius-rock-rings-3d re-authored as vector primitives (Bezier outline, stadium pockets, ellipse/circle cord tunnels, crown-hump jug) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. Its FCStd, USDZ and descriptor changed; after merging main (Deluxe II), main's sha256Manifest 864203cf... moved to supersededSha256Manifest (which previously held c7ce4d23...).",
   "beastmaker1000MigrationNote": "2026-09-25: beastmaker-1000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set), compiled as unbound meshes by the clay-emitting compiler from main. sha256Manifest 9ab92a6c... supersedes main's 77eb9b0c..., which moved to supersededSha256Manifest (which previously held 30009d0b...).",
   "beastmaker2000MigrationNote": "2026-09-25: beastmaker-2000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest aa58e9f8... supersedes 473ebca2..., which moved to supersededSha256Manifest.",
+  "pivotMigrationNote": "2026-09-25: trango-rock-prodigy-pivot became a source-backed package re-authored from manufacturer evidence as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 88e5882b... supersedes 473ebca2..., which moved to supersededSha256Manifest (which previously held the same 473ebca2...). Revised the same day (round-overs, flatter wing face): sha256Manifest 0020ebf9... supersedes 88e5882b..., which moved to supersededSha256Manifest (which previously held 473ebca2...). 2026-09-26: lower-right corner corrected (band end-stop caret, field running down to the rail, J lip over the rail end) and the large-crimp bar now ends free; sha256Manifest 8cce8ca2... supersedes 0020ebf9..., which moved to supersededSha256Manifest (which previously held 88e5882b...). 2026-09-26: merged main 34ca3c3 (usdz_writer normal inverse-transform, beastmaker-2000 and j-bryant-ftg-32 sources) and recompiled the pivot asset with the merged compiler; sha256Manifest e8854f58... supersedes main's ae5b34eb..., which moved to supersededSha256Manifest (which previously held 473ebca2...).",
   "target10aLinebreakerBaseMigrationNote": "2026-09-25: target10a-linebreaker-base became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. sha256Manifest 10145308... supersedes 473ebca2..., which moved to supersededSha256Manifest. Accepted deviation: see docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md."
 }

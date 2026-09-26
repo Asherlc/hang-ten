@@ -663,3 +663,102 @@ to 87.8k triangles, the asset from 314 KB to 1.95 MB, and the FCStd from
   17 Pro, or tap a hold-map row by its accessibility frame. A second
   `hangten://…/hold/…` deep link to the board that is already open did not
   change the selection.
+
+## 19. Re-authoring from manufacturer photos
+(`trango-rock-prodigy-pivot`, 2026-09-25/26)
+
+The Pivot's approved display mesh was wrong about the product. It was about
+20 % undersized, had the wrong topology, and reversed two published depth
+gradients. Tracing it faithfully would only have reproduced those errors. The
+board was re-authored from first-party evidence instead. The techniques below
+got it from "resembles the product" to "matches it feature by feature", and
+they carry over to any board that has a straight-on manufacturer photo. They
+are reading and review aids only. Every point is still typed in by an
+operator, and nothing detects, traces, fits or registers pixels (see
+`AGENTS.md`).
+
+### Check the reference against the manufacturer before measuring it
+
+Before extracting anything, put the reference's front render next to the
+manufacturer's photos and depth guide. Compare:
+
+- feature count and shape (teeth vs scallops, slab vs ridge);
+- relative sizes of features;
+- the direction of every published depth gradient ("16mm - 31mm (L - R)").
+
+If they disagree, stop measuring the mesh and author from the manufacturer.
+Depth-guide pictures can show a half rotated 180°; reverse the L→R order for
+those, and say so in the provenance.
+
+### Take the scale from a known part in the photo's plane
+
+Manufacturers often publish no dimensions, and retail listings contradict each
+other. Pick a feature of known size that lies in the part's front plane: a
+bolt seat, a counterbore, a hardware hole whose fastener the manual names.
+Measure it in pixels and record the inference chain. For the Pivot, the quick
+start's 7/32 in hex key points to a 3/8 in flat-head bolt, which gives a 20.6 mm
+countersink, which at 78.8 px gives 3.82 px/mm. Check that circles image as
+circles (the photo is near-orthographic) and cross-check against every other
+anchor you can find. Record the conflicts; don't average them away.
+
+### Read coordinates off 1 mm-gridded, contrast-stretched crops
+
+`Tools/HangboardCAD/photo_grid.py crop` cuts a region of the photo in the
+authoring frame (mm), stretches its contrast, upsamples it to about 20 px/mm,
+and draws a 1 mm grid with labelled 5 mm lines. At full-photo zoom, low-contrast
+edges such as grey resin-on-resin ledges are invisible. In a 40–60 mm tile with
+the contrast stretched they read to about 0.5 mm.
+
+- Tile the whole part at 40–60 mm per tile. Read the silhouette first, then
+  each feature, then write the points into a table in the authoring script.
+- Pass `--mark x,z ...` to circle authored joints on the crop and confirm they
+  sit on the edge.
+- Where two crops of the same edge disagree by more than about 1 mm, re-crop
+  tighter. Eyeball readings across different zooms drift by 2–3 mm.
+- Shading in a product photo is ambiguous about which side of an edge is high.
+  Decide from an oblique photo, the manufacturer's CAD render, or the product
+  owner, not from the straight-on shot alone (see "Ask about the region" below).
+
+### Fit vector primitives to the typed points
+
+Fit lines and cubic Béziers (G1 at smooth joints, one-sided tangents at kinks)
+to the hand-typed points, and report the worst deviation (Pivot: 0.80 mm).
+Unconstrained Bézier handles at a kink fold back on themselves. Take each
+kink's tangent from the local one-sided direction, and keep handle lengths
+positive.
+
+### Review with an overlay, not just side-by-side renders
+
+`Tools/HangboardCAD/photo_grid.py overlay` blends the compiled model's front
+view over the photo at the same scale and origin. Misplaced features show up
+immediately. Side-by-side renders from a hand-matched oblique camera hide
+errors, because the camera never quite matches. Use the overlay for X/Z. Use
+oblique photos and the manufacturer's CAD render (quick-start page 3 for the
+Pivot) for depth-direction questions.
+
+### Ask about the region, and use the owner's photos
+
+The Pivot's lower-right corner was wrong through two passes until the product
+owner circled it on a photo. The band there ends in a pointed caret, the field
+runs down to the rail, the rim wraps the rail's end as a J lip, and the upper
+bar ends free. When feedback is vague, ask which region looks off, and ask for
+a photo of the owner's board. Zoom into their photo at the circled region
+before re-reading the gridded crop.
+
+### Moulded parts need round-overs
+
+A resin board with sharp CAD edges reads as wrong even when every dimension is
+right. Round every convex edge (a dihedral test: n₂·t₁ < 0) at about 1.5 mm.
+Test candidates one at a time, then add them in chunks of about 12, keeping
+the ones OCCT accepts together (Pivot: 58 of 102). Keep gated bands sharp so
+the published-depth check stays exact. The round-overs roughly double the
+triangle count.
+
+### OCCT traps met here
+
+- `makeChamfer` (symmetric or asymmetric) fails on an outline chain that ends
+  at a near-tangent or concave kink. Build an asymmetric crimp band as a ruled
+  loft from its photographed front edge on the rim face to the silhouette at
+  the published depth, and cut it.
+- A cutting tool whose edge coincides with another cutter's edge (the field
+  floor meeting the rail slot) should overlap by about 0.5 mm instead.

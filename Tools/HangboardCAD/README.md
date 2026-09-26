@@ -197,8 +197,9 @@ Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
 `HangTenTessellationDeflection`.
 
 Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
-`attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`.
+`attachment`), and `ContactID` (or `ContactSlotID`). `MaterialName`,
+`BaseColor`, `Roughness`, `Metallic`, and `TextureFile` are optional
+compile-time metadata (see **Material policy** below).
 Optionally, `HangTenCurvedRegionPartition` (`App::PropertyBool`) opts a
 document into the curved-region partition described below; documents without it
 compile exactly as before. Objects
@@ -252,6 +253,16 @@ its chamfers are cones, and its rim rounds are cylinders. See
 `beastmaker-2000` sets it as well: its front-top rounds are cylinders and its
 cavity chamfers are cones. See
 `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+
+`trango-rock-prodigy-pivot` sets it too. Its wing is a smooth loft, and its
+sloped crimps and two-finger pocket are ruled lofts. It is also the first
+source re-authored from manufacturer evidence rather than from the
+pre-migration mesh: the front view comes from Trango's top-down photograph
+(bolt-seat scale) and every depth from Trango's depth guide. See
+`docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+`photo_grid.py` provides the reading and review aids used there: gridded,
+contrast-stretched photo crops and the model-over-photo overlay. It is a
+diagnostic, never a build input (lessons §18).
 
 ## Pilot: lattice-triple-rung
 
