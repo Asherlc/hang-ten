@@ -2501,6 +2501,8 @@ final class BoardModelScene {
         return translateToPivot * simd_float4x4(quaternion) * translateFromPivot
     }
 
+    /// Configures the SceneKit camera and lighting for a suspended board view.
+    /// - Parameter framing: Precomputed camera position, target, direction, distance, and up-vector for the board.
     private func configureCameraAndLighting(framing: SuspendedCameraFraming) {
         camera.camera = SCNCamera()
         camera.camera?.usesOrthographicProjection = true

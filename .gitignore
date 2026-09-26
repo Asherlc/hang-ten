@@ -34,6 +34,7 @@ __pycache__/
 # (a pattern could hide a hand-authored package's board.json).
 /Hangboards/soill-iron-palm-2/board.json
 /Hangboards/beastmaker-1000/board.json
+/Hangboards/beastmaker-2000/board.json
 /Hangboards/captain-fingerfood-pocket/board.json
 /Hangboards/evolv-kilter-basic-long/board.json
 /Hangboards/lattice-mxedge-lift-large/board.json
@@ -43,4 +44,5 @@ __pycache__/
 /Hangboards/metolius-rock-rings-3d/board.json
 /Hangboards/metolius-wood-grips-compact-ii/board.json
 /Hangboards/metolius-wood-grips-deluxe-ii/board.json
+/Hangboards/j-bryant-ftg-32/board.json
 /Hangboards/target10a-linebreaker-base/board.json

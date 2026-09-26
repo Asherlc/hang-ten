@@ -119,8 +119,9 @@ cylinders).
     those faces' front projection.
 
   These are static copies. Editing a cutter moves the body but not its contact
-  object, and the published-depth gate catches that mismatch. The
-  sketch-edit-propagation suite is not claimed.
+  object. The published-depth gate checks only `Shape.BoundBox.YLength` against
+  the declared depth; it does not detect stale `Contact_*` geometry from X/Z-only
+  cutter edits. The sketch-edit-propagation suite is not claimed.
 
 ## Evidence
 
