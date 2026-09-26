@@ -338,7 +338,15 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        XCTAssertTrue(left.waitForHittable(timeout: 10), "The Left hand menu item must be hittable.")
+        let hittable = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "isHittable == true"),
+            object: left
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [hittable], timeout: 10),
+            .completed,
+            "The Left hand menu item must be hittable."
+        )
         left.tap()
 
         let updated = app.buttons["workout.handPicker"]
