@@ -2540,6 +2540,63 @@ final class BoardModelScene {
     }
 }
 
+/// Deterministic procedural studio environment for board rendering.
+///
+/// Produces a cached 1024x512 equirectangular image drawn with CoreGraphics:
+/// a bright-ceiling to dark-floor vertical gradient, a warm key softbox in
+/// the upper third, and a faint cool fill blob. No randomness, no bundled
+/// asset, no network. Returns nil only if gradient construction fails; the
+/// caller then renders with the existing lights and PBR materials.
+struct StudioLightingEnvironment {
+    static let width: CGFloat = 1024
+    static let height: CGFloat = 512
+    static let intensity: CGFloat = 1.5
+    private static var cached: UIImage?
+
+    static func image() -> UIImage? {
+        if let cached { return cached }
+        let size = CGSize(width: width, height: height)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let renderer = UIGraphicsImageRenderer(size: size, format: format)
+        var gradientFailed = false
+        let rendered = renderer.image { context in
+            let cg = context.cgContext
+            let top = UIColor(white: 1.0, alpha: 1.0).cgColor
+            let mid = UIColor(white: 0.45, alpha: 1.0).cgColor
+            let bottom = UIColor(white: 0.08, alpha: 1.0).cgColor
+            guard let gradient = CGGradient(
+                colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                colors: [top, mid, bottom] as CFArray,
+                locations: [0.0, 0.55, 1.0]
+            ) else {
+                gradientFailed = true
+                return
+            }
+            cg.drawLinearGradient(
+                gradient,
+                start: CGPoint(x: 0, y: 0),
+                end: CGPoint(x: 0, y: size.height),
+                options: []
+            )
+            cg.setFillColor(UIColor(red: 1.0, green: 0.95, blue: 0.85, alpha: 0.9).cgColor)
+            cg.fillEllipse(in: CGRect(
+                x: size.width * 0.28, y: size.height * 0.08,
+                width: size.width * 0.44, height: size.height * 0.30
+            ))
+            cg.setFillColor(UIColor(red: 0.6, green: 0.7, blue: 0.9, alpha: 0.35).cgColor)
+            cg.fillEllipse(in: CGRect(
+                x: size.width * 0.05, y: size.height * 0.45,
+                width: size.width * 0.30, height: size.height * 0.30
+            ))
+        }
+        guard !gradientFailed else { return nil }
+        cached = rendered
+        return rendered
+    }
+}
+
 private extension SCNVector3 {
     init(_ value: SIMD3<Float>) {
         self.init(value.x, value.y, value.z)
