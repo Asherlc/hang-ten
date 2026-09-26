@@ -630,6 +630,16 @@ write-up. The durable points:
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
   `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+- **Beastmaker 2000** has no generator in Git, so every number was measured from
+  the display mesh with slices and circle/line fits. It is five extruded section
+  sketches (one per top-slope segment) fused, then trimmed by the intersection
+  of a plan-view and a front-view rounded rectangle. That trim stands in for the
+  r 12 end rounds, whose spherical corners it misses by about 0.7 mm. The
+  published-depth gate overrides the mesh where they disagree: two pockets were
+  about 4 mm shallower than published. A nested hold (a deep hole in a pocket
+  floor) passes the gate only if its region reaches the face. Give it the
+  parent pocket's end-cap faces on the hole side. See
+  `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
