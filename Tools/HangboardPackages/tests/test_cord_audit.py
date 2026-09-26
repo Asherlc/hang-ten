@@ -219,7 +219,7 @@ def test_documented_suspension_packages_use_reviewed_visual_cords() -> None:
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 33, "represented": 13}
+    assert report.decisions == {"excluded": 34, "represented": 13}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

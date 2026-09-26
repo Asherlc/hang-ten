@@ -55,6 +55,7 @@ MODEL_PACKAGE_IDS = {
     "nature.stone-hanger",
     "target10a.linebreaker-base",
     "tension.flash-board",
+    "tension.grindstone",
     "soill.iron-palm-2",
     "soill.split-palm",
     "soill.training-tiles",
@@ -732,6 +733,7 @@ def test_poker_is_one_model_with_four_source_face_orientations() -> None:
         ("metolius.wood-grips-deluxe-ii", "front"),
         ("moon.armstrong", "primary"),
         ("target10a.linebreaker-base", "primary"),
+        ("tension.grindstone", "primary"),
     ],
 )
 def test_fixed_model_packages_keep_one_canonical_position_without_orientation(
