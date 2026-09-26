@@ -153,6 +153,18 @@ def _source_meshes(document) -> dict:
     return meshes
 
 
+def _contact_binding(obj) -> str:
+    """Resolve a contact object's binding string the one way.
+
+    Prefers the persisted ``ContactSlotID``/``ContactID`` property, then falls
+    back to the object Label (FreeCAD sometimes fails to persist dynamic
+    properties added via Python). Returns an empty string when nothing is set;
+    callers decide whether that is an error.
+    """
+    property_name = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
+    return getattr(obj, property_name, "") or getattr(obj, "Label", "")
+
+
 def _node_specification(obj, version: int) -> dict:
     role = getattr(obj, "NodeRole", "")
     if role not in {"body", "contact", "attachment"}:
@@ -163,11 +175,7 @@ def _node_specification(obj, version: int) -> dict:
         # "slot", v1 sources use "contact". Resolve it once here so the slot
         # inventory, outline reader, and depth validator all read the same key.
         binding_key = "slot" if version >= 2 else "contact"
-        property_name = "ContactSlotID" if "ContactSlotID" in obj.PropertiesList else "ContactID"
-        # Fallback to the Label if the binding property is missing or empty
-        # (FreeCAD sometimes fails to persist dynamic properties added via
-        # Python).
-        value = getattr(obj, property_name, "") or getattr(obj, "Label", "")
+        value = _contact_binding(obj)
         if not value:
             raise BuildError(f"{obj.Name} is a contact node without an explicit binding")
         spec[binding_key] = value
@@ -190,7 +198,7 @@ def _hold_polygons(contact_objects, version: int, property_name: str) -> dict:
         raw = str(getattr(obj, property_name, "")).strip()
         if not raw:
             continue
-        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        key = _contact_binding(obj)
         if not key:
             raise BuildError(f"{obj.Name} declares {property_name} without a contact binding")
         try:
@@ -500,7 +508,7 @@ def _validate_published_depths(contact_objects, declared, version: int, deflecti
     """
     measured = {}
     for obj in contact_objects:
-        key = getattr(obj, "ContactID", "") if version == 1 else getattr(obj, "ContactSlotID", "")
+        key = _contact_binding(obj)
         measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
         if key not in declared:
             continue
