@@ -2119,7 +2119,10 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertEqual(step.title, "Abrahang · F3 Open Hang")
         XCTAssertEqual(
             step.workRequirements,
-            [ContactRequirement(kind: .edge, selection: .bilateralPair)]
+            [ContactRequirement.edge(
+                depth: .range(.init(minimum: 20, maximum: 20)),
+                selection: .bilateralPair
+            )]
         )
         XCTAssertEqual(step.gripType, .openHand)
         XCTAssertEqual(

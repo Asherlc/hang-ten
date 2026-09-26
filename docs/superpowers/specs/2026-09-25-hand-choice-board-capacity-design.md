@@ -96,9 +96,9 @@ In `LegacyPlanSeedCatalog` (`TrainingModels.swift`):
 
 - `research.max-hangs`: five steps change `handUse: .either` → `.double`.
 - `research.abrahangs`: six steps change `handUse: .either` → `.double`.
-- Their targets change to `.bilateralPair` (the 20 mm edge for max-hangs, and a
-  generic `edge` for abrahangs: the source names executed finger positions,
-  carried by `fingerConfiguration`, not a hold finger capacity).
+- Their targets change to `.bilateralPair` on the 20 mm edge (the source
+  specifies a 20 mm edge for all six abrahangs exercises; the executed finger
+  position is carried by `fingerConfiguration`).
 - Regenerate `HangTen/Resources/PlanLibrary.json` and pass
   `scripts/export-plan-library.sh --check`.
 

@@ -13205,6 +13205,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }
@@ -13252,6 +13258,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }
@@ -13292,6 +13304,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }
@@ -13332,6 +13350,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }
@@ -13373,6 +13397,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }
@@ -13414,6 +13444,12 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
                     "selection" : "bilateralPair"
                   }

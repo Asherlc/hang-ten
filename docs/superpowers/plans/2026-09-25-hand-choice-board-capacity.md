@@ -359,9 +359,10 @@ Expected: FAIL — the steps are still `.either` with `.single` targets, so no s
 In `TrainingModels.swift`, replace `maxHangs20mmEdgeTarget` (lines 2830-2835) with:
 
 ```swift
-    /// Lattice Half 4 Max Hang names a 20 mm edge and is a two-handed hang.
-    /// `.bilateralPair` resolves the board's paired left/right 20 mm holds.
-    private static let maxHangs20mmEdgeTarget = ContactRequirement.edge(
+    /// Lattice max-hang and Abrahangs protocols both name a 20 mm edge and are
+    /// two-handed hangs. `.bilateralPair` resolves the board's paired left/right
+    /// 20 mm holds.
+    private static let lattice20mmEdgePairTarget = ContactRequirement.edge(
         depth: .range(.init(minimum: 20, maximum: 20)),
         selection: .bilateralPair
     )
@@ -382,12 +383,12 @@ In `TrainingModels.swift`, replace the `grips` array (lines 3305-3312) with:
 
 ```swift
             let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, nil),
-                ("F3 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [ContactRequirement(kind: .edge, selection: .bilateralPair)], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+                ("Half 4 Hang", [lattice20mmEdgePairTarget], .halfCrimp, nil),
+                ("F3 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
+                ("M2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
+                ("F2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
+                ("B3 Half Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
+                ("F3 Half Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
             ]
 ```
 
@@ -439,7 +440,7 @@ board's paired holds. No one-hand selection remains for these plans.
 | Plan ID | Source URL | Two-handed encoding | Rationale |
 | --- | --- | --- | --- |
 | `research.max-hangs` | [Lattice Half 4 — Hang — Max](https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/) | All five work steps are `double` / `both`; recovery remains `double` / `both`; target is `.bilateralPair` on the 20 mm edge. | The source prescribes a two-handed near-maximal 20 mm four-finger half-crimp hang; the five 7-second tasks and their recoveries are unchanged. |
-| `research.abrahangs` | [Lattice Abrahangs Protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | All six work steps are `double` / `both`; targets are `.bilateralPair` on a generic `edge`, since the source names executed finger positions (carried by `fingerConfiguration`, and by the title for the Half 4 hang) rather than a hold finger capacity. | The source's six two-handed finger-position hangs, low-intensity feet-supported prescription, and the 10/50 app timing adaptation are retained. |
+| `research.abrahangs` | [Lattice Abrahangs Protocol](https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol) | All six work steps are `double` / `both`; targets are `.bilateralPair` on the source's 20 mm edge (the executed finger position is carried by `fingerConfiguration` and the title). | The source's six two-handed finger-position hangs, low-intensity feet-supported prescription, and the 10/50 app timing adaptation are retained. |
 ```
 
 - [ ] **Step 11: Run the full model suites**
