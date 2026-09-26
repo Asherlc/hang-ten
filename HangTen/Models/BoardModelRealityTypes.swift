@@ -6,6 +6,144 @@ import UIKit
 import simd
 import CryptoKit
 
+protocol BoardModelResourceRequesting: AnyObject {
+    var progress: Progress { get }
+    func beginAccessingResources() async throws
+    func endAccessingResources()
+}
+
+extension NSBundleResourceRequest: BoardModelResourceRequesting {}
+
+final class BoardModelResourceLease {
+    let url: URL
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
+
+    init(url: URL, request: BoardModelResourceRequesting? = nil) {
+        self.url = url
+        self.request = request
+    }
+
+    deinit {
+        // Note: deinit runs on arbitrary thread; endAccessingResources() may not be thread-safe.
+        // The BoardModelResourceRequestAccess.lease() method transfers ownership to the lease
+        // and clears the request under a lock, so this deinit is a fallback for cancelled paths.
+        request?.endAccessingResources()
+    }
+}
+
+private final class BoardModelResourceRequestAccess: @unchecked Sendable {
+    private let lock = NSLock()
+    nonisolated(unsafe) private var request: BoardModelResourceRequesting?
+    nonisolated(unsafe) private var isCancelled = false
+
+    init(request: BoardModelResourceRequesting) {
+        self.request = request
+    }
+
+    func cancel() {
+        lock.lock()
+        isCancelled = true
+        let request = request
+        lock.unlock()
+        // Cancellation signals the pending request; only a completed successful
+        // begin (or its transferred lease) may balance resource access.
+        request?.progress.cancel()
+    }
+
+    func endAccessingResources() {
+        lock.lock()
+        let request = request
+        self.request = nil
+        lock.unlock()
+        request?.endAccessingResources()
+    }
+
+    func lease(for url: URL) -> BoardModelResourceLease? {
+        lock.lock()
+        guard !isCancelled else {
+            lock.unlock()
+            return nil
+        }
+        let request = request
+        self.request = nil
+        lock.unlock()
+        return request.map { BoardModelResourceLease(url: url, request: $0) }
+    }
+}
+
+struct BoardModelResourceAccess {
+    typealias RequestFactory = (Set<String>, Bundle) -> BoardModelResourceRequesting
+    typealias URLResolver = (Bundle, BoardModelResource) -> URL?
+
+    static let live = BoardModelResourceAccess(
+        requestFactory: { tags, bundle in
+            NSBundleResourceRequest(tags: tags, bundle: bundle)
+        },
+        urlResolver: { bundle, resource in
+            bundle.url(
+                forResource: resource.resourceName,
+                withExtension: resource.resourceExtension,
+                subdirectory: resource.bundleSubdirectory
+            )
+        }
+    )
+
+    let requestFactory: RequestFactory
+    let urlResolver: URLResolver
+
+    func acquire(
+        _ resource: BoardModelResource,
+        bundle: Bundle
+    ) async -> BoardModelResourceLease? {
+        guard !Task.isCancelled else { return nil }
+        let request = requestFactory([resource.tag], bundle)
+        let access = BoardModelResourceRequestAccess(request: request)
+        return await withTaskCancellationHandler {
+            guard !Task.isCancelled else { return nil }
+            do {
+                try await request.beginAccessingResources()
+            } catch {
+                return nil
+            }
+            // Begin has succeeded. Keep ownership through URL resolution;
+            // lease transfer and cancellation choose an owner under one lock.
+            defer { access.endAccessingResources() }
+            guard !Task.isCancelled,
+                  let url = urlResolver(bundle, resource),
+                  let lease = access.lease(for: url),
+                  !Task.isCancelled else {
+                return nil
+            }
+            return lease
+        } onCancel: {
+            access.cancel()
+        }
+    }
+}
+
+enum BoardModelSolvedSuspension {
+    case single(SuspendedSolvedPresentation)
+    case pairedLead(SuspendedPairedLeadSolvedPresentation)
+    case twoBranch(SuspendedTwoBranchSolvedPresentation)
+
+    var boardTransform: simd_float4x4 {
+        switch self {
+        case .single(let solved): solved.boardTransform
+        case .pairedLead(let solved): solved.boardTransform
+        case .twoBranch(let solved): solved.boardTransform
+        }
+    }
+
+    var cameraFraming: SuspendedCameraFraming {
+        switch self {
+        case .single(let solved): solved.cameraFraming
+        case .pairedLead(let solved): solved.cameraFraming
+        case .twoBranch(let solved): solved.cameraFraming
+        }
+    }
+}
+
+
 /// Errors specific to board model RealityKit loading and caching.
 enum BoardModelRealityError: Error, Equatable {
     case resourceUnavailable
@@ -313,7 +451,11 @@ final class BoardModelRealityScene {
     }
 
     func select(positionID: String?) -> Bool {
-        guard let positionID, allowedPositionIDs.contains(positionID) else {
+        guard let positionID else {
+            clearSelection()
+            return false
+        }
+        guard allowedPositionIDs.contains(positionID) else {
             activePositionID = nil
             return false
         }
@@ -381,6 +523,23 @@ final class BoardModelRealityScene {
         activePositionID = positionID
         updateCameraTransform()
         return true
+    }
+
+    private func clearSelection() {
+        activePositionID = nil
+        transientCordEntity?.removeFromParent()
+        transientCordEntity = nil
+        if let instances, !instances.isEmpty, instances.count == instanceEntities.count {
+            let center = Self.boundsCenter(descriptor.modelBounds)
+            for (entity, instance) in zip(instanceEntities, instances) {
+                entity.transform = Transform(matrix: Self.instanceMatrix(
+                    instance: instance, positionID: nil, center: center))
+            }
+        } else {
+            for entity in instanceEntities { entity.transform = .identity }
+        }
+        currentFraming = canonicalFraming
+        updateCameraTransform()
     }
 
     func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1) {
@@ -971,10 +1130,12 @@ final class BoardModelRealityLoadedSource: @unchecked Sendable {
 /// Limit is 1 because RealityKit model loading is memory-intensive and concurrent
 /// loads can cause OOM or GPU resource contention on iOS devices.
 @MainActor
-private enum BoardModelRealityLoadGate {
+enum BoardModelRealityLoadGate {
     private static let limit = 1
     private static var active = 0
     private static var waiters: [(id: UUID, continuation: CheckedContinuation<Bool, Never>)] = []
+
+    static var queuedWaiterCount: Int { waiters.count }
 
     static func acquire() async -> Bool {
         guard !Task.isCancelled else { return false }

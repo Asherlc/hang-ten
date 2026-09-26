@@ -192,6 +192,81 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testNativePairedLeadAndTwoBranchModelsCreateNonPickableCordSegments() async throws {
+        let store = BoardCatalog.packageStore
+        let cases = [try XCTUnwrap(store.board(id: "nature.stone-hanger")),
+                     try XCTUnwrap(store.board(id: "tension.flash-board"))]
+
+        for board in cases {
+            let presentation = board.defaultPresentation
+            guard case .model(let media) = presentation.media,
+                  let suspension = media.suspension else {
+                return XCTFail("\(board.id) must have a model suspension")
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation,
+                                                               store: store)
+            let positionID = try XCTUnwrap(board.positions.first {
+                $0.presentationID == presentation.id
+            }?.id, board.id)
+            XCTAssertTrue(scene.select(positionID: positionID), board.id)
+            let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
+            XCTAssertFalse(cord.children.isEmpty, board.id)
+            XCTAssertTrue(cord.children.allSatisfy { scene.contactID(for: $0) == nil }, board.id)
+            XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil }, board.id)
+
+            switch (board.id, suspension) {
+            case ("nature.stone-hanger", .pairedLeadCord): break
+            case ("tension.flash-board", .twoBranchCord): break
+            default: XCTFail("Unexpected suspension family for \(board.id)")
+            }
+        }
+    }
+
+    @MainActor
+    func testClearingSelectionRemovesTransientCordEntity() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
+        let presentation = board.defaultPresentation
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let positionID = try XCTUnwrap(board.positions.first(where: { $0.presentationID == presentation.id })?.id)
+        XCTAssertTrue(scene.select(positionID: positionID))
+        let cordEntity = try XCTUnwrap(scene.transientCordEntity)
+        XCTAssertNotNil(cordEntity.parent)
+
+        XCTAssertFalse(scene.select(positionID: nil))
+
+        XCTAssertNil(scene.transientCordEntity)
+        XCTAssertNil(cordEntity.parent)
+    }
+
+    @MainActor
+    func testNativeLoadGateSerializesWaitersAndRecoversAfterCancellation() async throws {
+        let firstResult = await BoardModelRealityLoadGate.acquire()
+        XCTAssertTrue(firstResult)
+        let cancelled = Task { @MainActor in await BoardModelRealityLoadGate.acquire() }
+        for _ in 0..<100 where BoardModelRealityLoadGate.queuedWaiterCount == 0 {
+            await Task.yield()
+        }
+        XCTAssertEqual(BoardModelRealityLoadGate.queuedWaiterCount, 1)
+        cancelled.cancel()
+        let cancelledResult = await cancelled.value
+        XCTAssertFalse(cancelledResult)
+
+        let next = Task { @MainActor in await BoardModelRealityLoadGate.acquire() }
+        for _ in 0..<100 where BoardModelRealityLoadGate.queuedWaiterCount == 0 {
+            await Task.yield()
+        }
+        XCTAssertEqual(BoardModelRealityLoadGate.queuedWaiterCount, 1)
+        BoardModelRealityLoadGate.release()
+        let nextResult = await next.value
+        XCTAssertTrue(nextResult)
+        BoardModelRealityLoadGate.release()
+
+        let finalResult = await BoardModelRealityLoadGate.acquire()
+        XCTAssertTrue(finalResult)
+        BoardModelRealityLoadGate.release()
+    }
+
+    @MainActor
     func testSuspensionOrientationDisplayPassedToScene() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation

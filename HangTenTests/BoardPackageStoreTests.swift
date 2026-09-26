@@ -1,4 +1,3 @@
-import SceneKit
 import XCTest
 @testable import HangTen
 
@@ -274,259 +273,6 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(resource.debugSimulatorPackagedURL(in: fixture.bundle))
         #endif
     }
-
-    @MainActor
-    func testOnDemandModelLoaderRetainsAccessForSceneLifetimeAndSupportsRepeatedLoads() async throws {
-        let fixture = try makeModelFixtureBundle(
-            modelSHA256Matches: true,
-            boardID: "fixture.scene-lifetime-\(UUID().uuidString.lowercased())"
-        )
-        defer { fixture.remove() }
-        let bundledModelURL = fixture.rootURL.appendingPathComponent(
-            "Hangboards/fixture-model/assets/primary.usdz"
-        )
-        let modelBytes = try Data(contentsOf: bundledModelURL)
-        try FileManager.default.removeItem(at: bundledModelURL)
-        let store = try BoardPackageStore(
-            bundle: fixture.bundle,
-            modelAssetMode: .onDemand
-        )
-        let board = try XCTUnwrap(store.boards.first)
-        let presentation = board.defaultPresentation
-        let requestedModelURL = fixture.rootURL.appendingPathComponent(
-            "OnDemand/Hangboards/fixture-model/assets/primary.usdz"
-        )
-        var requestedTags: [Set<String>] = []
-        var endCount = 0
-        let access = BoardModelResourceAccess(
-            requestFactory: { tags, _ in
-                requestedTags.append(tags)
-                return TestBoardModelResourceRequest(
-                    begin: {
-                        try FileManager.default.createDirectory(
-                            at: requestedModelURL.deletingLastPathComponent(),
-                            withIntermediateDirectories: true
-                        )
-                        try modelBytes.write(to: requestedModelURL)
-                    },
-                    end: {
-                        endCount += 1
-                        try? FileManager.default.removeItem(at: requestedModelURL)
-                    }
-                )
-            },
-            urlResolver: { _, _ in
-                FileManager.default.fileExists(atPath: requestedModelURL.path)
-                    ? requestedModelURL
-                    : nil
-            }
-        )
-
-        for attempt in 1...2 {
-            var scene = await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
-                makeBoardModelFixtureScene()
-            }) {
-                await BoardModelLoader.load(
-                    board: board,
-                    presentation: presentation,
-                    store: store,
-                    resourceAccess: access
-                )
-            }
-
-            XCTAssertNotNil(scene, "load \(attempt)")
-            XCTAssertEqual(
-                try Data(contentsOf: requestedModelURL),
-                modelBytes,
-                "load \(attempt)"
-            )
-            scene = nil
-            XCTAssertFalse(
-                FileManager.default.fileExists(atPath: requestedModelURL.path),
-                "load \(attempt) must end access when its scene is released"
-            )
-        }
-
-        XCTAssertEqual(
-            requestedTags,
-            [
-                ["hang-ten-model-fixture-model"],
-                ["hang-ten-model-fixture-model"]
-            ]
-        )
-        XCTAssertEqual(endCount, 2)
-    }
-
-    @MainActor
-    func testModelLoadsAreSerializedAcrossDistinctBoards() async throws {
-        let loadCount = 4
-        var fixtures: [FixtureBundle] = []
-        defer { fixtures.forEach { $0.remove() } }
-        var stores: [BoardPackageStore] = []
-        for index in 0..<loadCount {
-            let fixture = try makeModelFixtureBundle(
-                modelSHA256Matches: true,
-                boardID: "fixture.concurrent-\(index)-\(UUID().uuidString.lowercased())"
-            )
-            fixtures.append(fixture)
-            stores.append(try BoardPackageStore(bundle: fixture.bundle))
-        }
-
-        let tracker = ModelLoadConcurrencyTracker()
-        let results = await withTaskGroup(of: Bool.self, returning: [Bool].self) { group in
-            for store in stores {
-                group.addTask {
-                    guard let board = store.boards.first else { return false }
-                    let presentation = board.defaultPresentation
-                    return await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
-                        tracker.enter()
-                        Thread.sleep(forTimeInterval: 0.1)
-                        tracker.exit()
-                        return makeBoardModelFixtureScene()
-                    }) {
-                        await BoardModelLoader.load(
-                            board: board,
-                            presentation: presentation,
-                            store: store
-                        ) != nil
-                    }
-                }
-            }
-            var results: [Bool] = []
-            for await result in group {
-                results.append(result)
-            }
-            return results
-        }
-
-        XCTAssertEqual(results.filter { $0 }.count, loadCount, "every distinct board must load")
-        XCTAssertEqual(tracker.peak, 1, "model decodes must never overlap across boards")
-    }
-
-    @MainActor
-    func testCancelledQueuedModelLoadDoesNotJamOrLeakGate() async throws {
-        let heldFixture = try makeModelFixtureBundle(
-            modelSHA256Matches: true,
-            boardID: "fixture.held-\(UUID().uuidString.lowercased())"
-        )
-        defer { heldFixture.remove() }
-        let queuedFixture = try makeModelFixtureBundle(
-            modelSHA256Matches: true,
-            boardID: "fixture.queued-\(UUID().uuidString.lowercased())"
-        )
-        defer { queuedFixture.remove() }
-        let afterFixture = try makeModelFixtureBundle(
-            modelSHA256Matches: true,
-            boardID: "fixture.after-\(UUID().uuidString.lowercased())"
-        )
-        defer { afterFixture.remove() }
-
-        let heldStore = try BoardPackageStore(bundle: heldFixture.bundle)
-        let queuedStore = try BoardPackageStore(bundle: queuedFixture.bundle)
-        let afterStore = try BoardPackageStore(bundle: afterFixture.bundle)
-
-        let heldBoard = try XCTUnwrap(heldStore.boards.first)
-        let queuedBoard = try XCTUnwrap(queuedStore.boards.first)
-        let afterBoard = try XCTUnwrap(afterStore.boards.first)
-
-        let tracker = ModelLoadConcurrencyTracker()
-
-        // Held load owns the gate while its decode sleeps for half a second.
-        let held = Task { @MainActor in
-            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
-                tracker.enter()
-                Thread.sleep(forTimeInterval: 0.5)
-                tracker.exit()
-                return makeBoardModelFixtureScene()
-            }) {
-                await BoardModelLoader.load(
-                    board: heldBoard,
-                    presentation: heldBoard.defaultPresentation,
-                    store: heldStore
-                )
-            }
-        }
-        var waitIndex = 0
-        while tracker.current == 0, waitIndex < 100 {
-            waitIndex += 1
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        XCTAssertGreaterThanOrEqual(
-            tracker.current,
-            1,
-            "held load must occupy the decode hook before the queued load is created"
-        )
-
-        // Queued behind held; cancelled before it is granted a slot. The hook is
-        // set so a buggy (non-serializing) gate would let it succeed -- making the
-        // nil assertion discriminate the gate rather than a junk-byte decode.
-        let queued = Task { @MainActor in
-            await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
-                makeBoardModelFixtureScene()
-            }) {
-                await BoardModelLoader.load(
-                    board: queuedBoard,
-                    presentation: queuedBoard.defaultPresentation,
-                    store: queuedStore
-                )
-            }
-        }
-        var admissionIndex = 0
-        while BoardModelAsset.queuedLoadWaiterCount == 0, admissionIndex < 100 {
-            admissionIndex += 1
-            try await Task.sleep(for: .milliseconds(10))
-        }
-        XCTAssertGreaterThanOrEqual(
-            BoardModelAsset.queuedLoadWaiterCount,
-            1,
-            "queued load must register as a gate waiter before it is cancelled"
-        )
-        queued.cancel()
-
-        let queuedResult = await queued.value
-        let heldResult = await held.value
-
-        XCTAssertNotNil(heldResult, "held load must still complete")
-        XCTAssertNil(queuedResult, "cancelled queued load must return nil")
-
-        // The fixture logs are junk bytes, so the hook is required for a
-        // successful decode; it also keeps `after` independent of the gate timing.
-        let after = await BoardModelAsset.$sceneLoaderForTesting.withValue({ _ in
-            makeBoardModelFixtureScene()
-        }) {
-            await BoardModelLoader.load(
-                board: afterBoard,
-                presentation: afterBoard.defaultPresentation,
-                store: afterStore
-            )
-        }
-        XCTAssertNotNil(after, "gate must remain usable after a queued load is cancelled")
-    }
-
-    @MainActor
-    func testCancelledOnDemandAccessCancelsProgressAndEndsOnlyAfterLateSuccess() async throws {
-        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
-        defer { fixture.remove() }
-
-        let store = try BoardPackageStore(bundle: fixture.bundle)
-        let board = try XCTUnwrap(store.boards.first)
-        let presentation = try XCTUnwrap(board.presentations.first)
-
-        XCTAssertEqual(presentation.media.kind, .model)
-        XCTAssertEqual(
-            board.contacts[0].resolvedFrame(in: presentation),
-            HoldFrame(x: 0.1, y: 0.2, width: 0.3, height: 0.4)
-        )
-        XCTAssertEqual(
-            store.presentationAssetURL(for: board),
-            fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.usdz")
-        )
-        XCTAssertEqual(
-            store.presentationDescriptorURL(for: board),
-            fixture.rootURL.appendingPathComponent("Hangboards/fixture-model/assets/primary.model.json")
-        )
-    }
-
     @MainActor
     func testModelLoaderFailsClosedWhenValidatedPackageModelIsMissingOrCorrupt() async throws {
         let mutations: [(name: String, mutate: (URL) throws -> Void)] = [
@@ -551,23 +297,30 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertNil(store.presentationImageURL(for: board, presentationID: presentation.id))
             try mutation.mutate(assetURL)
 
-            let loaded = await BoardModelLoader.load(
-                board: board,
-                presentation: presentation,
-                store: store
-            )
-
-            XCTAssertNil(loaded, mutation.name)
+            do {
+                _ = try await BoardModelRealityLoader.load(
+                    board: board,
+                    presentation: presentation,
+                    store: store
+                )
+                XCTFail("\(mutation.name) model should fail closed")
+            } catch let error as BoardModelRealityError {
+                switch mutation.name {
+                case "missing": XCTAssertTrue({ if case .fileReadError = error { true } else { false } }())
+                case "corrupt": XCTAssertTrue({ if case .sha256Mismatch = error { true } else { false } }())
+                default: XCTFail("Unexpected fixture: \(mutation.name)")
+                }
+            }
         }
     }
 
     func testModelCacheKeySeparatesDistinctDescriptorHashes() {
-        let first = BoardModelKey(
+        let first = BoardModelRealityKey(
             boardID: "fixture.board",
             presentationID: "primary",
             modelSHA256: String(repeating: "a", count: 64)
         )
-        let replacement = BoardModelKey(
+        let replacement = BoardModelRealityKey(
             boardID: "fixture.board",
             presentationID: "primary",
             modelSHA256: String(repeating: "b", count: 64)
@@ -5093,22 +4846,6 @@ private struct FixtureBundle {
     }
 }
 
-private func makeBoardModelFixtureScene() -> SCNScene {
-    let scene = SCNScene()
-    for (nodeID, size, position) in [
-        ("Body", SIMD3<Float>(1, 1, 0.1), SIMD3<Float>(0.5, 0.5, 0.05)),
-        ("Left", SIMD3<Float>(0.3, 0.4, 0.1), SIMD3<Float>(0.25, 0.4, 0.05))
-    ] {
-        let geometry = SCNBox(width: CGFloat(size.x), height: CGFloat(size.y), length: CGFloat(size.z), chamferRadius: 0)
-        geometry.firstMaterial = SCNMaterial()
-        let node = SCNNode(geometry: geometry)
-        node.name = nodeID
-        node.simdPosition = position
-        scene.rootNode.addChildNode(node)
-    }
-    return scene
-}
-
 private final class TestBoardModelResourceRequest: BoardModelResourceRequesting {
     let progress = Progress(totalUnitCount: 1)
     private let beginAction: () throws -> Void
@@ -5128,33 +4865,3 @@ private final class TestBoardModelResourceRequest: BoardModelResourceRequesting 
     }
 }
 
-private final class ModelLoadConcurrencyTracker: @unchecked Sendable {
-    private let lock = NSLock()
-    private var active = 0
-    private var peakActive = 0
-
-    func enter() {
-        lock.lock()
-        active += 1
-        peakActive = max(peakActive, active)
-        lock.unlock()
-    }
-
-    func exit() {
-        lock.lock()
-        active -= 1
-        lock.unlock()
-    }
-
-    var current: Int {
-        lock.lock()
-        defer { lock.unlock() }
-        return active
-    }
-
-    var peak: Int {
-        lock.lock()
-        defer { lock.unlock() }
-        return peakActive
-    }
-}

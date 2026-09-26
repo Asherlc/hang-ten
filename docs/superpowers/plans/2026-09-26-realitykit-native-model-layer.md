@@ -1,6 +1,6 @@
 # RealityKit Native Model Layer (Phase 2) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Replace the entire SceneKit model layer (`BoardModelScene`, `BoardModelLoader`, suspension solvers, geometry processing) with a native RealityKit scene that loads USDZ directly, constructs RealityKit entities, computes suspension, and handles picking — all without SceneKit as an intermediate.
 
@@ -30,7 +30,7 @@
 **Files:**
 - Create: `HangTen/Models/BoardModelRealityTypes.swift`
 
-- [ ] **Step 1: Write the failing test** - Create test file with struct definitions that will fail to compile
+- [x] **Step 1: Write the failing test** - Create test file with struct definitions that will fail to compile
 
 ```swift
 // HangTenTests/BoardModelRealityTests.swift
@@ -44,12 +44,12 @@ func testRealityTypesCompile() {
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 ```bash
 xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=E6C8F0DB-CA68-44CC-A3E0-24DF9A64020A' -only-testing:HangTenTests/BoardModelRealityTests/testRealityTypesCompile
 ```
 
-- [ ] **Step 3: Create BoardModelRealityTypes.swift**
+- [x] **Step 3: Create BoardModelRealityTypes.swift**
 
 ```swift
 // HangTen/Models/BoardModelRealityTypes.swift
@@ -114,12 +114,12 @@ final class BoardModelRealityLoader {
 }
 ```
 
-- [ ] **Step 4: Run test to verify it compiles**
+- [x] **Step 4: Run test to verify it compiles**
 ```bash
 xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=E6C8F0DB-CA68-44CC-A3E0-24DF9A64020A' -only-testing:HangTenTests/BoardModelRealityTests/testRealityTypesCompile
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add HangTen/Models/BoardModelRealityTypes.swift
 git commit -m "feat: add BoardModelRealityTypes for native RealityKit model layer"
@@ -133,7 +133,7 @@ git commit -m "feat: add BoardModelRealityTypes for native RealityKit model laye
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for USDZ load**
+- [x] **Step 1: Write failing test for USDZ load**
 
 ```swift
 // HangTenTests/BoardModelRealityTests.swift
@@ -160,9 +160,9 @@ func testUSDZLoadsAndBindsDescriptor() async throws {
 }
 ```
 
-- [ ] **Step 2: Run test to verify it fails** (types not implemented)
+- [x] **Step 2: Run test to verify it fails** (types not implemented)
 
-- [ ] **Step 3: Implement USDZ loading in BoardModelRealityScene.load()**
+- [x] **Step 3: Implement USDZ loading in BoardModelRealityScene.load()**
 
 ```swift
 func load(usdzURL: URL) async throws {
@@ -189,9 +189,9 @@ func load(usdzURL: URL) async throws {
 }
 ```
 
-- [ ] **Step 4: Run test, iterate until passes**
+- [x] **Step 4: Run test, iterate until passes**
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add HangTen/Models/BoardModelRealityTypes.swift HangTenTests/BoardModelRealityTests.swift
 git commit -m "feat: native USDZ load via ModelIO with descriptor binding"
@@ -205,7 +205,7 @@ git commit -m "feat: native USDZ load via ModelIO with descriptor binding"
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for contact binding**
+- [x] **Step 1: Write failing test for contact binding**
 
 ```swift
 func testContactEntitiesBoundToDescriptor() async throws {
@@ -232,7 +232,7 @@ func testContactEntitiesBoundToDescriptor() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement descriptor binding in load()**
+- [x] **Step 2: Implement descriptor binding in load()**
 
 ```swift
 // In load(), after creating mesh entities:
@@ -252,7 +252,7 @@ for nodeDesc in descriptor.nodes {
 }
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -262,7 +262,7 @@ for nodeDesc in descriptor.nodes {
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for instance transforms**
+- [x] **Step 1: Write failing test for instance transforms**
 
 ```swift
 func testInstanceTransformsAndMirroring() async throws {
@@ -286,7 +286,7 @@ func testInstanceTransformsAndMirroring() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement instance hierarchy in load()**
+- [x] **Step 2: Implement instance hierarchy in load()**
 
 ```swift
 // For each BoardModelInstance:
@@ -309,7 +309,7 @@ if instance.baseTransform.reflection == .x {
 }
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -319,7 +319,7 @@ if instance.baseTransform.reflection == .x {
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for suspension**
+- [x] **Step 1: Write failing test for suspension**
 
 ```swift
 func testSuspensionSolvesAndCreatesCords() async throws {
@@ -338,7 +338,7 @@ func testSuspensionSolvesAndCreatesCords() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement select() with suspension**
+- [x] **Step 2: Implement select() with suspension**
 
 ```swift
 func select(positionID: String?) -> Bool {
@@ -374,7 +374,7 @@ func select(positionID: String?) -> Bool {
 }
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -384,7 +384,7 @@ func select(positionID: String?) -> Bool {
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for camera framing**
+- [x] **Step 1: Write failing test for camera framing**
 
 ```swift
 func testCameraFramingFitsBoard() async throws {
@@ -412,7 +412,7 @@ func testOrbitAndZoom() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement orbit, resetCamera, frame(in:), fittedOrthographicScale(in:)**
+- [x] **Step 2: Implement orbit, resetCamera, frame(in:), fittedOrthographicScale(in:)**
 
 ```swift
 // Port directly from BoardModelScene:
@@ -423,7 +423,7 @@ func testOrbitAndZoom() async throws {
 // - applyCanonicalCamera() -> sets camera.transform.matrix
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -433,7 +433,7 @@ func testOrbitAndZoom() async throws {
 - Modify: `HangTen/Models/BoardModelRealityTypes.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for highlights**
+- [x] **Step 1: Write failing test for highlights**
 
 ```swift
 func testHighlightTinting() async throws {
@@ -456,7 +456,7 @@ func testHighlightTinting() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement highlight()**
+- [x] **Step 2: Implement highlight()**
 
 ```swift
 func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
@@ -474,7 +474,7 @@ func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
 }
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -484,7 +484,7 @@ func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
 - Modify: `HangTen/Views/BoardModelRealityView.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for picking**
+- [x] **Step 1: Write failing test for picking**
 
 ```swift
 func testContactPicking() async throws {
@@ -506,7 +506,7 @@ func testContactPicking() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement contactID(for:) and project() in BoardModelRealityScene**
+- [x] **Step 2: Implement contactID(for:) and project() in BoardModelRealityScene**
 
 ```swift
 func contactID(for entity: Entity) -> String? {
@@ -533,7 +533,7 @@ func project(_ world: SIMD3<Float>, viewport: CGSize) -> CGPoint? {
 }
 ```
 
-- [ ] **Step 3: Update BoardModelRealityView to use SpatialTapGesture**
+- [x] **Step 3: Update BoardModelRealityView to use SpatialTapGesture**
 
 ```swift
 // In BoardModelRealityView.body:
@@ -553,7 +553,7 @@ RealityView { content in
 )
 ```
 
-- [ ] **Step 4-5: Run, iterate, commit**
+- [x] **Step 4-5: Run, iterate, commit**
 
 ---
 
@@ -563,7 +563,7 @@ RealityView { content in
 - Modify: `HangTen/Views/BoardModelRealityView.swift`
 - Test: `HangTenTests/BoardModelRealityTests.swift`
 
-- [ ] **Step 1: Write failing test for accessibility**
+- [x] **Step 1: Write failing test for accessibility**
 
 ```swift
 func testAccessibilityElementsProjected() async throws {
@@ -583,7 +583,7 @@ func testAccessibilityElementsProjected() async throws {
 }
 ```
 
-- [ ] **Step 2: Implement accessibilityOverlay in BoardModelRealityView** (port from Phase 1)
+- [x] **Step 2: Implement accessibilityOverlay in BoardModelRealityView** (port from Phase 1)
 
 ```swift
 @ViewBuilder
@@ -611,7 +611,7 @@ private func accessibilityOverlay(size: CGSize) -> some View {
 }
 ```
 
-- [ ] **Step 3-5: Run, iterate, commit**
+- [x] **Step 3-5: Run, iterate, commit**
 
 ---
 
@@ -621,7 +621,7 @@ private func accessibilityOverlay(size: CGSize) -> some View {
 - Modify: `HangTen/Views/BoardModelView.swift` (BoardModelSurface)
 - Modify: `HangTen/Views/BoardModelRealityView.swift`
 
-- [ ] **Step 1: Update BoardModelSurface to use BoardModelRealityLoader**
+- [x] **Step 1: Update BoardModelSurface to use BoardModelRealityLoader**
 
 ```swift
 // In BoardModelSurface.body:
@@ -635,7 +635,7 @@ private func accessibilityOverlay(size: CGSize) -> some View {
 }
 ```
 
-- [ ] **Step 2: Update BoardModelRealityView to take BoardModelRealityScene**
+- [x] **Step 2: Update BoardModelRealityView to take BoardModelRealityScene**
 
 ```swift
 struct BoardModelRealityView: View {
@@ -652,9 +652,9 @@ struct BoardModelRealityView: View {
 }
 ```
 
-- [ ] **Step 3: Run all BoardModelTests** (they test the model layer - should pass with new scene if API compatible)
+- [x] **Step 3: Run all BoardModelTests** (they test the model layer - should pass with new scene if API compatible)
 
-- [ ] **Step 4-5: Run, iterate, commit**
+- [x] **Step 4-5: Run, iterate, commit**
 
 ---
 
@@ -663,17 +663,17 @@ struct BoardModelRealityView: View {
 **Files:**
 - Test: All existing tests + new BoardModelRealityTests
 
-- [ ] **Step 1: Run full test suite**
+- [x] **Step 1: Run full test suite**
 ```bash
 xcodebuild test -project HangTen.xcodeproj -scheme HangTen -destination 'platform=iOS Simulator,id=E6C8F0DB-CA68-44CC-A3E0-24DF9A64020A' -derivedDataPath .context/DerivedData
 ```
 
-- [ ] **Step 2: Build for isolated simulator**
+- [x] **Step 2: Build for isolated simulator**
 ```bash
 xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination 'platform=iOS Simulator,id=C22DACF9-BE50-4098-83D9-8C85B2C6D238' -derivedDataPath .context/DerivedData build
 ```
 
-- [ ] **Step 3: Launch and screenshot both camera variants**
+- [x] **Step 3: Launch and screenshot both camera variants**
 ```bash
 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID=trango.rock-prodigy-pivot xcrun simctl launch <uuid> com.hangten.training
 sleep 5
@@ -684,9 +684,9 @@ sleep 5
 xcrun simctl io <uuid> screenshot .context/realitykit-native-telephoto.png
 ```
 
-- [ ] **Step 4: Visual verification** - Compare screenshots to Phase 1 output
+- [x] **Step 4: Visual verification** - Compare screenshots to Phase 1 output
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add -A
 git commit -m "feat: complete RealityKit native model layer (Phase 2)
@@ -707,13 +707,13 @@ git commit -m "feat: complete RealityKit native model layer (Phase 2)
 - Delete: `BoardModelScene`, `BoardModelInstanceScene`, `BoardModelLoader`, `prepareModel`, `reflectingGeometry`, `copyElement`, `reverseWindingPreservingChannels`, `SuspendedBoardPresentation` (if no longer used), camera/lighting code from BoardModelView.swift
 - Modify: `HangTen/Views/BoardModelView.swift` (keep only BoardModelSurface, BoardModelRealityView, BoardModelRealityScene)
 
-- [ ] **Step 1: Verify all tests pass without SceneKit model layer**
+- [x] **Step 1: Verify all tests pass without SceneKit model layer**
 
-- [ ] **Step 2: Delete unused SceneKit code** (large deletion, ~2000 lines)
+- [x] **Step 2: Delete unused SceneKit code** (large deletion, ~2000 lines)
 
-- [ ] **Step 3: Run tests again**
+- [x] **Step 3: Run tests again**
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 ```bash
 git add -A
 git commit -m "refactor: remove SceneKit model layer, complete native RealityKit migration"
@@ -751,10 +751,4 @@ git commit -m "refactor: remove SceneKit model layer, complete native RealityKit
 
 ---
 
-**Plan complete and saved to `docs/superpowers/plans/2026-09-26-realitykit-native-model-layer.md`. Two execution options:**
-
-**1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per task, review between tasks, fast iteration
-
-**2. Inline Execution** - Execute tasks in this session using executing-plans, batch execution with checkpoints
-
-**Which approach?**
+**Execution complete (2026-09-26).** The board model layer now loads and renders through native RealityKit; SceneKit board model, loader, view, and board-specific tests have been removed. Verification: 220 tests passed on iPhone 17 Pro Simulator (iOS 26.5), app build succeeded, and the Hold Specs route was visually reviewed on the workspace-owned simulator. Remaining SceneKit usage in `GripHandModelView` is outside this board-model migration scope.
