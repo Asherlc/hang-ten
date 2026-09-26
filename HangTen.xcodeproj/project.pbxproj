@@ -150,6 +150,7 @@
 		D1000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-wood-grips-compact-ii", ); }; };
 		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
+		D1000000000000000000002E /* tension-grindstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002E /* tension-grindstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
 		D10000000000000000000010 /* metolius-contact Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000010 /* metolius-contact Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-contact", ); }; };
@@ -353,6 +354,7 @@
 		D2000000000000000000000B /* metolius-wood-grips-compact-ii Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-wood-grips-compact-ii Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-wood-grips-compact-ii/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
+		D2000000000000000000002E /* tension-grindstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000010 /* metolius-contact Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-contact Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-contact/Hangboards"; sourceTree = "<absolute>"; };
@@ -458,6 +460,7 @@
 				D2000000000000000000000C /* nature-stone-hanger Hangboards */,
 				D20000000000000000000012 /* soill-training-tiles Hangboards */,
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
+				D2000000000000000000002E /* tension-grindstone Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
 				D20000000000000000000015 /* clavellium-training-block Hangboards */,
@@ -797,6 +800,7 @@
 				D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */,
 				D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */,
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
+				D1000000000000000000002E /* tension-grindstone Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
 				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,

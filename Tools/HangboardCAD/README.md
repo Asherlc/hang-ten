@@ -1,7 +1,7 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 13 of the 46 model-media boards are migrated** (those with a committed
-`Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
+**Status: 14 of the 47 model-media boards are migrated** (those with a committed
+`Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
 
@@ -249,6 +249,11 @@ cones) cut from the body. See
 cavity chamfers are cones. See
 `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
 
+`tension-grindstone` sets it too: its top slots have stadium ends. It is the
+first CAD board with no prior 3D asset (it was raster-only), so there is no
+reference mesh. See
+`docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -330,7 +335,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **13 of 46 model-media boards are migrated.** The other 33 still ship their
+* **14 of 47 model-media boards are migrated.** The other 33 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

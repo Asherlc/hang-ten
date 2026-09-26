@@ -23,7 +23,6 @@ _MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
 _ENCLOSED_BACKGROUND_SEEDS = {
     "beastmaker-1000": ((215, 10), (785, 10)),
     "soill-training-tiles": ((500, 450),),
-    "tension-grindstone": ((887, 443),),
     "yy-travelboard": ((190, 625), (1348, 625)),
     "yy-verticalboard-evo": ((887, 500),),
     "yy-verticalboard-one": ((887, 500),),

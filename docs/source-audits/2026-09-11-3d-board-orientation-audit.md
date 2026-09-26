@@ -970,3 +970,16 @@ Author: Astra. Approved evidence D1/D2/D3/D4 (lower Pro 7 only), M1/M2/M3 (side 
 
 | `trango.rock-prodigy-forge` | Fixed front, split adjustable spacing | F1/F2/F4/F5/F6/F7 approved 2026-09-20; no canonical alternate pose established. |
 | `trango.rock-prodigy-natural` | Fixed front, removable cleat mount | N1/N2/N3/N4/N5 approved 2026-09-20; removal/sliding is not a training rotation. |
+
+## Tension Grindstone Mk2 CAD migration (2026-09-26)
+
+`tension.grindstone` became a model package when it gained a native FreeCAD
+source (see
+`docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`). It is a
+wall-mounted board with a single fixed front face, so it keeps one
+loader-materialized `primary` position with no orientation block and no
+suspension.
+
+| package ID | holds | descriptor model bounds (`min` → `max`) | pivot | evidence basis |
+| --- | ---: | --- | --- | --- |
+| `tension.grindstone` | 14: `top-jug`, `edge-50-center`, `edge-10-left/right`, `edge-8-left/right`, `edge-30-left/right`, `edge-25-left/right`, `edge-20-left/right`, `edge-15-left/right` | `[-0.279399991, 0.0, -0.0]` → `[0.279399991, 0.152400002, 0.069849998]` | none (no orientation block) | Tension Grindstone product page (`https://tensionclimbing.com/products/grindstone`) and its front product image `Grindstone1.png`; the in-use photos show a wall-mounted board with no selectable second face |
