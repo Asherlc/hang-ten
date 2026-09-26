@@ -597,6 +597,7 @@ final class BoardModelScene {
     private(set) var instanceScenes: [BoardModelInstanceScene] = []
     private var contactIDsByNode: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: [SCNMaterial]] = [:]
+    private var didApplyStudioAppearance = false
     private var lastHighlights: Set<String> = []
     private var lastMode: BoardHighlightMode?
     private var canonicalFraming: SuspendedCameraFraming?
@@ -1764,6 +1765,7 @@ final class BoardModelScene {
                 guard length.isFinite, length > 1e-7 else { continue }
                 let geometry = SCNCylinder(radius: CGFloat(path.1), height: CGFloat(length))
                 let material = SCNMaterial()
+                material.lightingModel = .physicallyBased
                 material.diffuse.contents = UIColor(white: 0.08, alpha: 1)
                 material.roughness.contents = 0.8
                 geometry.firstMaterial = material
@@ -2272,6 +2274,40 @@ final class BoardModelScene {
         lastMode = mode
     }
 
+    /// Applies the studio look: procedural IBL environment plus one neutral
+    /// physically based material. Mutates the existing materials in place so
+    /// the highlight system (which captured these same objects in
+    /// `originalMaterials`) keeps working with no rebinding. Idempotent.
+    func applyStudioAppearance() {
+        if didApplyStudioAppearance { return }
+        didApplyStudioAppearance = true
+        if let environment = StudioLightingEnvironment.image() {
+            scene.lightingEnvironment.contents = environment
+            scene.lightingEnvironment.intensity = StudioLightingEnvironment.intensity
+        }
+        let neutral = UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1.0)
+        for node in geometryNodes {
+            guard let geometry = node.geometry else { continue }
+            for material in geometry.materials {
+                material.lightingModel = .physicallyBased
+                material.diffuse.contents = neutral
+                material.roughness.contents = 0.5
+                material.metalness.contents = 0.0
+                material.emission.contents = nil
+                material.emission.intensity = 0
+                material.normal.contents = nil
+                material.specular.contents = nil
+            }
+        }
+        scene.rootNode.enumerateChildNodes { node, _ in
+            guard node.categoryBitMask == Self.cordCategory,
+                  let geometry = node.geometry else { return }
+            for material in geometry.materials {
+                material.lightingModel = .physicallyBased
+            }
+        }
+    }
+
     private static func applyHighlights(_ validIDs: Set<String>, mode: BoardHighlightMode,
         contactNodes: [String: [SCNNode]], originalMaterials: [ObjectIdentifier: [SCNMaterial]]) {
         let color = UIColor(mode == .active ? Color.holdActive : Color.restBlue)
@@ -2518,7 +2554,7 @@ final class BoardModelScene {
         let ambient = SCNNode()
         ambient.light = SCNLight()
         ambient.light?.type = .ambient
-        ambient.light?.intensity = 250
+        ambient.light?.intensity = 150
         ambient.light?.categoryBitMask = Self.renderedCategory
         scene.rootNode.addChildNode(ambient)
         let key = SCNNode()
@@ -2836,6 +2872,7 @@ class BoardModelSCNView: SCNView, SCNSceneRendererDelegate, UIGestureRecognizerD
     func display(_ model: BoardModelScene) {
         guard self.model !== model else { return }
         self.model = model
+        model.applyStudioAppearance()
         scene = model.scene
         pointOfView = model.camera
         model.frame(in: bounds.size)
