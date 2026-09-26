@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 11 of the 46 model-media boards are migrated** (those with a committed
+**Status: 12 of the 46 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -245,6 +245,10 @@ sections, and its cavities are ruled capsule lofts (planes, cylinders, and
 cones) cut from the body. See
 `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
 
+`target10a-linebreaker-base` sets it as well: its cavity walls are cylinders,
+its chamfers are cones, and its rim rounds are cylinders. See
+`docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -326,7 +330,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **11 of 46 model-media boards are migrated.** The other 35 still ship their
+* **12 of 46 model-media boards are migrated.** The other 34 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

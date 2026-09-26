@@ -630,6 +630,14 @@ write-up. The durable points:
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
   `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+- **target10a Linebreaker BASE** (23 contacts) came from a retained
+  signed-distance generator, not a Blender script. Search `.context/migration*`
+  history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
+  An SDF's smooth blends (`smax`) have no exact B-rep, so author the primitives
+  and state which blends are omitted. Check each cavity's mouth against every
+  crease *before* authoring. A mouth that crosses a tier crease makes the
+  region's depth extent miss the published depth. See lessons §18 and
+  `docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
