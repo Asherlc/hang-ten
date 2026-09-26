@@ -104,9 +104,15 @@ through end window. The depth guide was followed in both cases.
   the crease-to-base chord and at (0.20 h, 0.25) from the base, a display
   estimate. The loft is trimmed to the silhouette and ends on
   the field's left wall at X = −20.
-- **Field**: the left wall is X = −20. The bottom edge (the medium-crimp rim
-  edge) is Z = −17.6, with a 64.5–71.5 mm end-stop tab up to Z = −9.6. The
-  right wall is X = 100. The top follows the two-finger opening, up to Z = 37.6.
+- **Field**: the left wall is X = −20. The bottom edge (the medium-crimp band
+  edge) is Z = −17.6 from X −20 to 64.8. There the band ends in a pointed
+  end-stop caret: it rises vertically to Z = −9 at X 64.8–65.8, slopes down to
+  (75, −18.2), and drops vertically into the rail. Right of X 75 the field runs
+  down to the rail (to Z = −31, just into the slot). A J lip of the rim wraps
+  the rail's right end: X 92.5–100, top Z = −24.5, with a rounded free end
+  (R 2.9). The right wall is X = 100. The top follows the two-finger opening,
+  up to Z = 37.6. The caret, field-to-rail run and J lip were corrected on
+  2026-09-26 from an operator photo of the same corner, then re-read on G.
 - **Three-finger pocket**: X −20 … 41, bottom Z = 16.5. Its top lip is
   scalloped, with highs at X −6/11/28 (Z 37.0) and dividers at X −14.5/2.5/19.5
   (Z 34.5–35.0).
@@ -117,16 +123,18 @@ through end window. The depth guide was followed in both cases.
   32.4 and 29.3; the dark top wall in G is inclined. Corner radius 4. The
   ruled loft F2 → B2 is the pocket; the B2 through prism behind it is the
   `two-finger-opening` attachment.
-- **Γ ledge**: top Z 15.2 → 14.0, bottom 6.5 → 5.8, X 9.8 → 100 (joins the
-  right rim), with a hook to a tip at (19.2, −0.8).
+- **Γ ledge**: top Z 15.2 → 14.05, bottom 6.5 → 5.85, X 9.8 → 95.0 (top) /
+  97.8 (bottom), with a hook to a tip at (19.2, −0.8). It ends free with a
+  slanted end short of the right wall (G; confirmed by the product owner,
+  2026-09-26).
 - **Rail**: a stadium, X −82 … 99.5, Z −52.0 … −30.3.
 - **Lower-right bevel**: from Z = −55.5 on the rim face back to the bottom
   silhouette at 45°, X 21–96. The bevel is visible in G, D and Q p. 3; its 45°
   angle is a display estimate.
-- **Round-overs**: 1.5 mm on every convex edge OCCT can round together (50 of
-  88), matching the moulded edges in Trango's CAD render (Q p. 3) and product
+- **Round-overs**: 1.5 mm on every convex edge OCCT can round together (58 of
+  102), matching the moulded edges in Trango's CAD render (Q p. 3) and product
   photos. The two gated sloped-crimp bands and the back plane stay sharp, so
-  the gated depths are unaffected. The 38 edges OCCT would not round stay
+  the gated depths are unaffected. The 44 edges OCCT would not round stay
   sharp. Display choice.
 
 Omitted under the hardware/branding policy: the bolt countersink and bore, the
@@ -168,14 +176,14 @@ all other fields are byte-identical.
 
 ## Evidence
 
-- Compile (FreeCAD 1.1.3, OCCT 7.8.1, macOS): 94,210 triangles (the
+- Compile (FreeCAD 1.1.3, OCCT 7.8.1, macOS): 92,547 triangles (the
   round-overs; the USDZ is 2.1 MB);
   `modelBounds` 234.3 × 136.1 × 63.5 mm. Published-depth gates: upper sloped
   crimp 12.500, outer sloped crimp 11.500. Measured region depths for the
-  ungated range holds: rail 30.87 (31 minus the round-over at the rim), 3F 26.5, 2F 32.0,
-  medium crimp 10.04, large crimp 13.03.
+  ungated range holds: rail 31.0 (31), 3F 26.5, 2F 32.0,
+  medium crimp 8.619 (the round-over on the band edge), large crimp 12.998.
 - `verify_reproducible.py --package trango-rock-prodigy-pivot` rebuilds the
-  asset byte-identically (`553c9ced…`).
+  asset byte-identically.
 - The compiled mesh is watertight, with consistent winding and positive
   volume, so every node faces outward.
 - `compare_exports` (first revision) against the pre-migration mesh reports a two-way sampled
@@ -194,7 +202,8 @@ all other fields are byte-identical.
     the rail.
 
   Not verified: positions `p2`/`p3`/`p5`, accessibility, and performance.
-- Visual review: side-by-side renders of the compiled asset against G at equal
+- Visual review: `Tools/HangboardCAD/photo_grid.py overlay` of the compiled
+  front view over G at the bolt-seat scale; side-by-side renders of the compiled asset against G at equal
   mm scale, and against D's photo at a matching viewpoint. `preview.py`
   front/side/top renders of the new asset next to the prior committed asset.
   All images live in workspace scratch, not in the repository.

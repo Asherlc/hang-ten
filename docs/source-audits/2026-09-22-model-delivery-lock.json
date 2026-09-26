@@ -50,11 +50,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0020ebf9a3f6d1be0110faf1ce5536b46989e4c4a93ff545d7f215e4850d26ba",
+  "sha256Manifest": "8cce8ca22673a987a37e1860cc62f0b72d5b78b81ca1396f906dd89ea11cbac4",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "88e5882b966bb39849523aea167429b45bd5d5fadd0e9c9edcad0eb3cb76adaf",
+  "supersededSha256Manifest": "0020ebf9a3f6d1be0110faf1ce5536b46989e4c4a93ff545d7f215e4850d26ba",
   "migratedPackages": {
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
@@ -217,13 +217,13 @@
     },
     "trango-rock-prodigy-pivot": {
       "source": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
-      "sourceSHA256": "bca5621dbc582c6ee880097b44fc2f50f57fa04caa0e1719e32ded9a55011adc",
+      "sourceSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest; identical to the deleted hand-authored file except the eight instance translations 0.102000000 -> 0.132500000 (the re-authored half is 234 mm wide)",
       "referenceSHA256": "1549ef478ec19152b8d5340187aee0f0fb8581b1c3312575d62cc1395577832a",
-      "assetSHA256": "7a77d8edeaea90baa42091227476abc101b88eb718001c5ec70558865d05e8e9",
-      "descriptorSHA256": "6a377a2be7b5de2733c44b9da060366846543280fed480279e66905e632d2c5f",
+      "assetSHA256": "f3c3ad2983fbc2bea592cb5e530b49d598c8ae55e9946d121e67fde9a89293d7",
+      "descriptorSHA256": "7faca0ca929591ca56765401ba53fd5328e5723e9a63b59b1dce79fa6dff74de",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; schema-v2 slots)",
-      "nativeValidation": "compile reopen and published-depth gate passed (upper-sloped-crimp 12.5, outer-sloped-crimp 11.5, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs and cubic Beziers, extrusions, ruled lofts (crimp bands, two-finger pocket) and a smooth loft (wing); 1.5 mm round-overs on 50 of 88 convex edges (gated crimp bands and back plane excluded); contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (upper-sloped-crimp 12.5, outer-sloped-crimp 11.5, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher lines, arcs and cubic Beziers, extrusions, ruled lofts (crimp bands, two-finger pocket) and a smooth loft (wing); 1.5 mm round-overs on 58 of 102 convex edges (gated crimp bands and back plane excluded); contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "comparison": "front view re-authored from Trango's top-down main image (bolt-seat scale 3.82 px/mm) and depths from the Trango depth guide, replacing a pre-migration display mesh that was ~20% undersized (188 x 96 mm vs 234 x 136 mm) and topologically different (five scallops vs two sawtooth teeth, ridge vs slab wing, 13 mm vs 22 mm rail, reversed rail and three-finger depth gradients); accepted deviation: compare_exports two-way sampled worst 36.58 mm (reverse 21.35 mm; limit 0.5 mm) against it on the first revision, evidence only; not rerun after the round-over pass",
       "provenanceSidecar": "docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -240,5 +240,5 @@
   "deluxeIIMigrationNote": "2026-09-24: metolius-wood-grips-deluxe-ii became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 864203cf... supersedes c7ce4d23..., which moved to supersededSha256Manifest (which previously held ff7f8f00...).",
   "rockRingsVectorNote": "2026-09-25: metolius-rock-rings-3d re-authored as vector primitives (Bezier outline, stadium pockets, ellipse/circle cord tunnels, crown-hump jug) on the pinned macOS toolchain (FreeCAD 1.1.3, OCCT 7.8.1); verify_reproducible rebuilds it byte-identically. Its FCStd, USDZ and descriptor changed; after merging main (Deluxe II), main's sha256Manifest 864203cf... moved to supersededSha256Manifest (which previously held c7ce4d23...).",
   "beastmaker1000MigrationNote": "2026-09-25: beastmaker-1000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set), compiled as unbound meshes by the clay-emitting compiler from main. sha256Manifest 9ab92a6c... supersedes main's 77eb9b0c..., which moved to supersededSha256Manifest (which previously held 30009d0b...).",
-  "pivotMigrationNote": "2026-09-25: trango-rock-prodigy-pivot became a source-backed package re-authored from manufacturer evidence as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 88e5882b... supersedes 473ebca2..., which moved to supersededSha256Manifest (which previously held the same 473ebca2...). Revised the same day (round-overs, flatter wing face): sha256Manifest 0020ebf9... supersedes 88e5882b..., which moved to supersededSha256Manifest (which previously held 473ebca2...)."
+  "pivotMigrationNote": "2026-09-25: trango-rock-prodigy-pivot became a source-backed package re-authored from manufacturer evidence as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 88e5882b... supersedes 473ebca2..., which moved to supersededSha256Manifest (which previously held the same 473ebca2...). Revised the same day (round-overs, flatter wing face): sha256Manifest 0020ebf9... supersedes 88e5882b..., which moved to supersededSha256Manifest (which previously held 473ebca2...). 2026-09-26: lower-right corner corrected (band end-stop caret, field running down to the rail, J lip over the rail end) and the large-crimp bar now ends free; sha256Manifest 8cce8ca2... supersedes 0020ebf9..., which moved to supersededSha256Manifest (which previously held 88e5882b...)."
 }

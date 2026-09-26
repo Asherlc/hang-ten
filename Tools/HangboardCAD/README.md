@@ -252,6 +252,9 @@ source re-authored from manufacturer evidence rather than from the
 pre-migration mesh: the front view comes from Trango's top-down photograph
 (bolt-seat scale) and every depth from Trango's depth guide. See
 `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+`photo_grid.py` provides the reading and review aids used there: gridded,
+contrast-stretched photo crops and the model-over-photo overlay. It is a
+diagnostic, never a build input (lessons §18).
 
 ## Pilot: lattice-triple-rung
 

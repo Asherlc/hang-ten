@@ -639,7 +639,9 @@ write-up. The durable points:
   part in the photo's plane, such as a bolt seat. OCCT will not chamfer an
   outline chain ending at a near-tangent or concave kink, so build asymmetric
   bands as ruled lofts from the photographed front edge to the silhouette at
-  the published depth. See
+  the published depth. The reading and review aids (1 mm-gridded crops and
+  the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
+  full method are in `freecad-authoring-lessons.md` §18. See
   `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
 
 ## Fast loop and definition of done
