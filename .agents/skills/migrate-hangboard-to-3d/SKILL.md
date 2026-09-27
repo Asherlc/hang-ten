@@ -16,7 +16,10 @@ model has, needs, or is suspected to be missing a cord. Read
 [`3D suspension and ODR`](../../../docs/3D_SUSPENSION_AND_ODR.md) before
 changing suspension metadata or diagnosing Apple offline/On-Demand Resource
 caching. The USDZ is the only ODR asset; cords are metadata-driven transient
-geometry.
+geometry. For connected passages or a mesh-derived bearing route, read
+[`CAD cord authoring`](../../../docs/HANGBOARD_CORD_AUTHORING.md) before
+authoring topology or selecting a solver. The cord route is not live physics;
+document its mesh and topology assumptions.
 
 ## Evidence and scope
 

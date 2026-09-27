@@ -1,11 +1,13 @@
 # Mini Bar Bullet rope contact experiment
 
-**Physical-fidelity correction (2026-09-27):** Lattice's photos, product-page
-review, and how-to video show cord openings near the ends. The current CAD
-body has no local holes, and this solver pins inferred exterior guide points.
-The eight runs below describe a **solid-bar surrogate**, not the physical Mini
-Bar. Their zero-of-eight outcome does not establish that Bullet would fail on
-the actual board. See the [cord passage audit](../../docs/source-audits/2026-09-27-lattice-mini-bar-cord-passages-correction.md).
+**Historical experiment (2026-09-27):** These runs used the earlier USDZ
+whose body had no local holes; the prototype pinned inferred exterior guide
+points. The current CAD body has two connected channels, one per end, and
+uses a different model SHA-256. The eight runs below describe a
+**solid-bar surrogate**, not the corrected Mini Bar. Their zero-of-eight
+outcome does not establish that Bullet would fail on the actual board. See
+the [cord passage audit](../../docs/source-audits/2026-09-27-lattice-mini-bar-cord-passages-correction.md)
+and [reusable CAD cord authoring guide](../../docs/HANGBOARD_CORD_AUTHORING.md).
 
 This is an offline experiment for the Lattice Mini Bar. It does not change the
 app, FreeCAD source, USDZ, descriptor, or suspension sidecar. The cord remains

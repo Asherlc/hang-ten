@@ -5,13 +5,16 @@ description: Use when a Hang Ten 3D board is missing an expected cord, Apple On-
 
 # Audit 3D hangboard suspension
 
-Treat suspension as bundled package metadata rendered as transient SceneKit
+Treat suspension as bundled package metadata rendered as transient RealityKit
 geometry. The USDZ is the only On-Demand Resource (ODR); clearing Apple's ODR
 cache cannot make a metadata-driven cord appear.
 
 Read [3D suspension and ODR](../../../docs/3D_SUSPENSION_AND_ODR.md) before
 diagnosis or edits. Also read the current cord audit manifest and its retained
 evidence rather than relying on an older design note.
+For a cord entering two connected mouths, read
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md) before choosing
+`internalLoop` or changing a winding direction.
 
 ## Work from the failing boundary
 
@@ -42,8 +45,11 @@ assumptions; in particular, `yy.baguette-evo` intentionally retains its
 source-backed `twoBranchCord` alongside orientation metadata.
 
 Choose the narrowest supported topology: `singleCord` for one attachment,
-`pairedLeadCord` for two independent exterior leads, or `twoBranchCord` only
-for two evidenced ordered passage routes. Keep sourced facts distinct from
+`pairedLeadCord` for two independent exterior leads, or `twoBranchCord` for
+two evidenced ordered passage routes or connected internal mouth pairs.
+`internalLoop` additionally requires each branch's two mouths to connect in
+the CAD solid and an evidence-backed winding choice at every mouth. Keep
+sourced facts distinct from
 `displayEstimate` values. A published total rope length is not a per-lead
 `restLength`; record any derivation explicitly. A user-approved shorter visual
 cord remains a display estimate: adjust its anchor geometry and rest length
