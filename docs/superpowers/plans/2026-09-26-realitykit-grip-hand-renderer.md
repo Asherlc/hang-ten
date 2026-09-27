@@ -174,24 +174,60 @@ rtk git add HangTen/Views/GripHandModelView.swift HangTenTests/GripHandOrbitTest
 rtk git commit -m "refactor: host grip hand in RealityView"
 ```
 
-### Task 5: Remove SceneKit and verify app flows
+### Task 5: Use one RealityView for paired-hand layouts
+
+**Files:**
+- Modify: `HangTen/Views/GripHandModelView.swift`
+- Modify: `HangTen/Views/GripDiagramView.swift`
+- Modify: `HangTen/Views/RootView.swift`
+- Test: `HangTenTests/GripHandOrbitTests.swift`, `HangTenTests/GripHandCueCardTests.swift`
+
+**Interfaces:**
+- Add `GripHandRealityPairScene` that owns one root entity, one RealityKit camera, and left/right `GripHandRealitySurface` instances.
+- Add `GripHandPairModelView(posture:fingerConfiguration:resetToken:)` as one `RealityView` host for the two surfaces. It updates both meshes and fits both authored posed bounds when posture or explicit fingers change.
+- Add a paired cue-card composition that places the single pair preview in the two card hand slots and keeps each card's existing button, label, accessibility identifier, and inspector sheet as separate SwiftUI elements.
+
+- [ ] **Step 1: Add failing tests for shared scene ownership and repeated updates**
+
+Test that the pair scene owns two distinct surfaces under one root and uses one camera; update HalfCrimp → OpenHand → HalfCrimp and verify both surfaces' mesh data and pose keys follow every transition. Assert left/right framing remains finite and both hands remain inside the shared bounds. Add a UI/source-level assertion for the paired card host while retaining existing cue-card accessibility tests.
+
+- [ ] **Step 2: Run focused tests and capture the RED result**
+
+Run `GripHandOrbitTests` and `GripHandCueCardTests` with the new pair assertions. Expected: pair scene/host API is absent or paired call sites still create sibling RealityViews.
+
+- [ ] **Step 3: Implement the shared pair scene and host**
+
+Build both hand surfaces from the same validated asset and requested `GripHandPose`, parent them under the pair root, apply opposite side transforms, and place the existing orthographic camera to frame the union of both posed bounds. Keep transforms stable across pose updates; reapply the requested mesh to both entities during each update. The RealityView update closure must synchronize the single scene object, not create or replace separate renderer roots. Use the existing drag arbitration and pinch behavior for the shared camera. Keep `GripHandModelView` unchanged for single-hand inspectors and diagrams.
+
+- [ ] **Step 4: Migrate paired cue-card, portrait, and landscape call sites**
+
+In workout cue cards, retain two independent card control/accessibility layers and inspector sheets while rendering a single pair preview behind/in the two model slots. In portrait fallback and landscape session layouts, mount exactly one pair host for the visible left/right hands. If only one side is visible, continue using the single-hand view. Preserve view sizing and card text/layout.
+
+- [ ] **Step 5: Verify repeated live pose updates and paired layouts**
+
+Run focused tests. On an isolated simulator, exercise both posture directions repeatedly in portrait cue cards and landscape slots, then orbit/pinch/reset. Confirm both silhouettes update on every transition without camera input; confirm single-hand inspector behavior and accessibility identifiers remain intact. Save screenshots under `.context`.
+
+- [ ] **Step 6: Commit the paired renderer architecture**
+
+```bash
+rtk git add HangTen/Views/GripHandModelView.swift HangTen/Views/GripDiagramView.swift HangTen/Views/RootView.swift HangTenTests/GripHandOrbitTests.swift HangTenTests/GripHandCueCardTests.swift
+rtk git commit -m "fix: render paired grip hands in one RealityView"
+```
+
+### Task 6: Remove SceneKit and verify app flows
 
 **Files:**
 - Modify: `HangTen/Views/GripHandModelView.swift`, `HangTenTests/GripHandOrbitTests.swift`
 - Verify: `HangTenTests/GripHandCueCardTests.swift`, app and test targets
 
-**Interfaces:**
-- Consumes: completed RealityKit view/scene/mesh from Tasks 1–4.
-- Produces: grip-hand implementation and tests with no SceneKit references.
-
 - [ ] **Step 1: Delete SceneKit renderer code and test imports**
 
-Remove `UIViewRepresentable`, `SCNView`, `SCNScene`, `SCNNode`, `SCNGeometry`, `SCNMaterial`, `SCNTransaction`, `SCNVector*`, the custom `GripHandSceneView`, and SceneKit-only helpers. Keep `GripHandAsset`, `GripHandPose`, `GripHandRealityMeshBuilder`, `GripHandRealitySurface`, and `GripHandRealityScene`. Keep the `.metal` file and its Xcode target registration. Remove `import SceneKit` from `GripHandOrbitTests` and assert renderer state through RealityKit entities.
+Remove `UIViewRepresentable`, `SCNView`, `SCNScene`, `SCNNode`, `SCNGeometry`, `SCNMaterial`, `SCNTransaction`, `SCNVector*`, the custom `GripHandSceneView`, and SceneKit-only helpers. Keep `GripHandAsset`, `GripHandPose`, `GripHandRealityMeshBuilder`, `GripHandRealitySurface`, `GripHandRealityScene`, and `GripHandRealityPairScene`. Keep the `.metal` file and its Xcode target registration. Remove `import SceneKit` from `GripHandOrbitTests` and assert renderer state through RealityKit entities.
 
-- [ ] **Step 2: Search for all SceneKit dependencies**
+- [ ] **Step 2: Search application and test sources for SceneKit**
 
-Run: `rtk rg -n 'import SceneKit|SCN(View|Scene|Node|Geometry|Material|Transaction|Vector|Matrix|Camera|Light)' HangTen HangTenTests --glob '*.swift'`
-Expected: no matches. Existing unrelated historical design documents are not code dependencies and remain unchanged.
+Run `rtk rg -n 'import SceneKit|SCN(View|Scene|Node|Geometry|Material|Transaction|Vector|Matrix|Camera|Light)' HangTen HangTenTests --glob '*.swift'`.
+Expected: no matches.
 
 - [ ] **Step 3: Build and run all tests**
 
@@ -204,15 +240,16 @@ rtk xcodebuild test -project HangTen.xcodeproj -scheme HangTen -sdk iphonesimula
 
 Expected: build succeeds and the full test target passes.
 
-- [ ] **Step 4: Visually verify hand variants in the isolated iOS Simulator**
+- [ ] **Step 4: Visually verify single and paired hand variants in an isolated iOS Simulator**
 
-Launch `HANGTEN_REVIEW_GRIP_MODEL=1` on the workspace-owned simulator. Capture `.context` screenshots for neutral, single finger, and multi-finger variants, left and right sides; inspect posture changes, drag, pinch, viewport resize, and reset. Expected: authored silhouettes and smooth color selection match the pre-migration renderer; controls, card layout, fallback copy, and accessibility labels remain intact. Leave workspace-owned simulator state for the archive hook; do not delete shared simulators.
+Launch `HANGTEN_REVIEW_GRIP_MODEL=1` on a workspace-owned simulator. Capture `.context` screenshots for neutral, single-finger, and multi-finger variants on both sides; inspect portrait paired cue cards, landscape paired slots, single-hand inspector, posture changes, drag, pinch, viewport resize, and reset. Expected: authored silhouettes and smooth color selection match the pre-migration renderer; both paired silhouettes update on every repeated transition without camera movement; controls, fallback copy, and accessibility labels remain intact. Clean up the exact workspace-owned simulator and verify deletion.
 
-- [ ] **Step 5: Commit the SceneKit removal and verification-ready code**
+- [ ] **Step 5: Commit and push SceneKit removal**
 
 ```bash
 rtk git add HangTen/Views/GripHandModelView.swift HangTenTests/GripHandOrbitTests.swift
 rtk git commit -m "refactor: remove final SceneKit renderer"
+rtk git push origin ios-model-rendering-options
 ```
 
 ---
