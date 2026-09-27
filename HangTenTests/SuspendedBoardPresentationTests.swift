@@ -53,6 +53,50 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testMiniBarSettledLoopKeepsItsLengthAndLowersBoard() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .twoBranchCord(let profile) = media.suspension else {
+            return XCTFail("expected Mini Bar suspension")
+        }
+        let channelLengths = try XCTUnwrap(profile.internalLoopChannelLengthByBranchID)
+        let section = (0..<96).map { index -> SIMD2<Float> in
+            let angle = Float(index) * 2 * .pi / 96
+            return SIMD2<Float>(0.031 + 0.032 * sin(angle), 0.036 + 0.032 * cos(angle))
+        }
+        let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
+        for (positionID, pose) in profile.canonicalPoses {
+            let settled = try MeshInternalLoopSolver.settledPose(
+                section: section, anchor: anchor, pose: pose, profile: profile)
+            XCTAssertLessThan(settled.pose.translation[1], pose.translation[1], positionID)
+            let q = simd_quatf(ix: Float(settled.pose.rotation[0]),
+                               iy: Float(settled.pose.rotation[1]),
+                               iz: Float(settled.pose.rotation[2]),
+                               r: Float(settled.pose.rotation[3]))
+            let localAnchor = q.inverse.act(anchor - SIMD3<Float>(settled.pose.translation.map(Float.init)))
+            for branch in profile.branches {
+                let first = try XCTUnwrap(settled.routes[branch.passageIDs[0]])
+                let second = try XCTUnwrap(settled.routes[branch.passageIDs[1]])
+                let firstStart = SIMD3<Float>(first[0].map(Float.init))
+                let secondStart = SIMD3<Float>(second[0].map(Float.init))
+                var visible = simd_length(localAnchor - firstStart) + simd_length(localAnchor - secondStart)
+                for route in [first, second] {
+                    for index in 1..<route.count {
+                        let previous = SIMD3<Float>(route[index - 1].map(Float.init))
+                        let current = SIMD3<Float>(route[index].map(Float.init))
+                        visible += simd_length(current - previous)
+                    }
+                }
+                XCTAssertEqual(visible + Float(try XCTUnwrap(channelLengths[branch.id])),
+                               Float(branch.restLength), accuracy: 0.001, positionID)
+                XCTAssertLessThanOrEqual(
+                    visible + Float(try XCTUnwrap(channelLengths[branch.id])),
+                    Float(branch.restLength) + SuspendedCordSolver.tautTolerance,
+                    positionID)
+            }
+        }
+    }
+
     func testInstanceRoutedPairedLeadsPreserveAuthoredWorldAnchor() throws {
         var transform = matrix_identity_float4x4
         transform.columns.0.x = -1

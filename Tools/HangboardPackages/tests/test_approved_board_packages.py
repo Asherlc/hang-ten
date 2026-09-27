@@ -67,6 +67,9 @@ def test_mini_bar_cad_keeps_four_contacts_and_connected_internal_loops() -> None
             "left-in": "clockwise", "left-out": "counterclockwise",
             "right-in": "clockwise", "right-out": "counterclockwise",
         },
+        "channelLengthByBranchID": {
+            "left-loop": 0.087214214, "right-loop": 0.087214214,
+        },
     }
     assert {passage["nodeID"] for side in suspension["passages"].values() for passage in side} == {"mini_bar_body"}
     assert set(suspension["canonicalPoses"]) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}

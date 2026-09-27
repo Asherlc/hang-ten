@@ -113,22 +113,8 @@ enum MeshInternalLoopSolver {
         a.x * b.y - a.y * b.x
     }
 
-    static func routes(
-        section: [SIMD2<Float>],
-        anchor: SIMD3<Float>,
-        pose: BoardModelCanonicalPose,
-        radius: Float,
-        clearance: Float,
-        mouths: [(id: String, point: SIMD3<Float>)],
-        windingByPassageID: [String: BoardModelLoopWinding]
-    ) throws -> [String: [[Double]]] {
-        guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
-              anchor.allFinite, radius.isFinite, radius > 0,
-              clearance.isFinite, clearance > 0,
-              mouths.count == 4, Set(mouths.map(\.id)).count == 4,
-              Set(windingByPassageID.keys) == Set(mouths.map(\.id)),
-              mouths.allSatisfy({ $0.point.allFinite }),
-              pose.rotation.count == 4, pose.translation.count == 3 else {
+    private static func convexHull(_ section: [SIMD2<Float>]) throws -> [SIMD2<Float>] {
+        guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
         let sorted = Array(Set(section)).sorted { $0.x == $1.x ? $0.y < $1.y : $0.x < $1.x }
@@ -148,6 +134,109 @@ enum MeshInternalLoopSolver {
         }
         let hull = Array(lower.dropLast()) + Array(upper.dropLast())
         guard hull.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
+        return hull
+    }
+
+    /// Heavy-board, negligible-rope-mass static equilibrium. The loaded board
+    /// descends until each inextensible loop is taut against its CAD bearing
+    /// route; the support stays fixed in world space. The channel length is
+    /// measured once from the native CAD spine, never from pose artwork.
+    static func settledPose(
+        section: [SIMD2<Float>], anchor: SIMD3<Float>,
+        pose: BoardModelCanonicalPose, profile: BoardModelTwoBranchSuspension
+    ) throws -> (pose: BoardModelCanonicalPose, routes: [String: [[Double]]]) {
+        guard let clearance = profile.internalLoopClearance,
+              let winding = profile.internalLoopWindingByPassageID,
+              let channelLengths = profile.internalLoopChannelLengthByBranchID,
+              profile.branches.count == 2, pose.translation.count == 3,
+              Set(channelLengths.keys) == Set(profile.branches.map(\.id)) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let mouths = profile.passages.left + profile.passages.right
+        let bearingSection = try convexHull(section)
+        let radius = Float(profile.branches.map(\.radius).max()!)
+        func evaluate(_ height: Double) throws -> (BoardModelCanonicalPose, [String: [[Double]]], [Float]) {
+            var candidate = pose
+            candidate.translation[1] = height
+            let routes = try Self.routes(
+                section: bearingSection, anchor: anchor, pose: candidate,
+                radius: radius, clearance: Float(clearance),
+                mouths: mouths.map { ($0.id, SIMD3<Float>($0.pointInModel.map(Float.init))) },
+                windingByPassageID: winding)
+            let q = simd_quatf(ix: Float(candidate.rotation[0]), iy: Float(candidate.rotation[1]),
+                               iz: Float(candidate.rotation[2]), r: Float(candidate.rotation[3]))
+            let localAnchor = q.inverse.act(anchor - SIMD3<Float>(candidate.translation.map(Float.init)))
+            let lengths = try profile.branches.map { branch -> Float in
+                guard let first = routes[branch.passageIDs[0]],
+                      let second = routes[branch.passageIDs[1]],
+                      let hidden = channelLengths[branch.id] else {
+                    throw SuspendedPresentationError.invalidSuspension
+                }
+                func points(_ route: [[Double]]) -> [SIMD3<Float>] {
+                    route.map { SIMD3<Float>($0.map(Float.init)) }
+                }
+                let a = points(first), b = points(second)
+                return simd_length(localAnchor - a[0])
+                    + simd_length(localAnchor - b[0])
+                    + [a, b].reduce(Float(hidden)) { total, route in
+                        total + zip(route, route.dropFirst()).reduce(Float.zero) {
+                            $0 + simd_length($1.1 - $1.0)
+                        }
+                    }
+            }
+            return (candidate, routes, lengths)
+        }
+        let target = Float(profile.branches[0].restLength)
+        guard target.isFinite, target > 0,
+              profile.branches.allSatisfy({ abs(Float($0.restLength) - target) < 0.0005 }) else {
+            throw SuspendedPresentationError.invalidCord
+        }
+        var upper = pose.translation[1]
+        var lower = upper - Double(target) * 2
+        let atUpper = try evaluate(upper)
+        guard atUpper.2.allSatisfy({ $0 < target + 0.0005 }) else {
+            throw SuspendedPresentationError.cordTooShort
+        }
+        let atLower = try evaluate(lower)
+        guard atLower.2.allSatisfy({ $0 > target }) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        var result = atUpper
+        for _ in 0..<24 {
+            let midpoint = (lower + upper) / 2
+            let candidate = try evaluate(midpoint)
+            if candidate.2.allSatisfy({ $0 <= target - 1e-6 }) {
+                upper = midpoint
+                result = candidate
+            } else {
+                lower = midpoint
+            }
+        }
+        guard result.2.allSatisfy({ abs($0 - target) < 0.001 }) else {
+            throw SuspendedPresentationError.invalidCord
+        }
+        return (result.0, result.1)
+    }
+
+    static func routes(
+        section: [SIMD2<Float>],
+        anchor: SIMD3<Float>,
+        pose: BoardModelCanonicalPose,
+        radius: Float,
+        clearance: Float,
+        mouths: [(id: String, point: SIMD3<Float>)],
+        windingByPassageID: [String: BoardModelLoopWinding]
+    ) throws -> [String: [[Double]]] {
+        guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+              anchor.allFinite, radius.isFinite, radius > 0,
+              clearance.isFinite, clearance > 0,
+              mouths.count == 4, Set(mouths.map(\.id)).count == 4,
+              Set(windingByPassageID.keys) == Set(mouths.map(\.id)),
+              mouths.allSatisfy({ $0.point.allFinite }),
+              pose.rotation.count == 4, pose.translation.count == 3 else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let hull = try convexHull(section)
         let offset = radius + clearance
         var perimeter: [SIMD2<Float>] = []
         for index in hull.indices {
@@ -726,9 +815,22 @@ enum SuspendedBoardPresentation {
             guard zip(rigidRoute, rigidRoute.dropFirst()).allSatisfy({
                 simd_length($0.1 - $0.0) > 1e-7
             }) else { throw SuspendedPresentationError.invalidPose }
-            let rigidLength = zip(rigidRoute, rigidRoute.dropFirst()).reduce(Float.zero) {
+            let visibleRigidLength = zip(rigidRoute, rigidRoute.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
             }
+            let mouthChord = simd_length(entryContacts.last! - exitContacts.first!)
+            let hiddenLength: Float
+            if usesInternalLoop {
+                guard let declared = suspension.internalLoopChannelLengthByBranchID?[branch.id],
+                      declared.isFinite, declared >= Double(mouthChord) else {
+                    throw SuspendedPresentationError.invalidCord
+                }
+                hiddenLength = Float(declared)
+            } else {
+                hiddenLength = mouthChord
+            }
+            let hiddenLengthCorrection = usesInternalLoop ? hiddenLength - mouthChord : 0
+            let rigidLength = visibleRigidLength + hiddenLengthCorrection
             guard rigidLength.isFinite, rigidLength > 1e-7 else {
                 throw SuspendedPresentationError.invalidSuspension
             }
@@ -795,7 +897,7 @@ enum SuspendedBoardPresentation {
             try SuspendedCordSolver.validateNoSelfIntersectionAllowingClosedEndpoint(centerline)
             let measuredLength = zip(centerline, centerline.dropFirst()).reduce(Float.zero) {
                 $0 + simd_length($1.1 - $1.0)
-            }
+            } + hiddenLengthCorrection
             let arcLength = firstSpan.arcLength + rigidLength + secondSpan.arcLength
             guard measuredLength.isFinite, arcLength.isFinite,
                   arcLength <= declaredLength + SuspendedCordSolver.tautTolerance,

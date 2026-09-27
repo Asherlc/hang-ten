@@ -161,6 +161,23 @@ the commit from which the script can still be read with `git show`.
 
 From then on every build and validation generates `board.json` from the FCStd.
 
+For a cord routed through connected `PartDesign::SubtractivePipe` channels,
+measure the hidden length from each pipe's Sketcher spine between the two
+declared mouth points. The result is channel geometry, not a cord mesh. For
+the Mini Bar, run:
+
+```sh
+HANGTEN_CHANNEL_PACKAGE=lattice-mini-bar \
+HANGTEN_CHANNEL_FEATURES_JSON='{"left-loop":"LeftCordChannel","right-loop":"RightCordChannel"}' \
+  /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+  Tools/HangboardCAD/measure_channel_spines.py
+```
+
+Record the output in `suspension.json` under
+`internalLoop.channelLengthByBranchID`. Run the same command with
+`HANGTEN_CHANNEL_VERIFY=1` after editing the sidecar to check that the
+declared lengths still match the CAD spines.
+
 ## Running it
 
 The pinned toolchain is FreeCAD 1.1.3 (OCCT 7.8.1, Python 3.11.14) with OpenUSD

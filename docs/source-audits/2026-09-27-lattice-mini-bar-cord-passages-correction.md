@@ -60,10 +60,24 @@ the exterior route, giving about 0.09 mm surface clearance for the estimated
 without crossing wooden solid. The invisible channel segment is represented
 by the CAD void; its centerline is not rendered.
 
+In a subsequent settled-pose pass, the two channel spine lengths between the
+declared mouths measured 87.214 mm each with
+`Tools/HangboardCAD/measure_channel_spines.py`. The sidecar now records that
+length so the bar can descend beneath the fixed support until each estimated
+0.82 m loop is taut. The app derives the vertical offset from the selected
+pose rather than storing one per grip. The exterior route remains a convex
+section approximation. Its centerline can be as far as 3.41 mm from the CAD
+solid near a mouth, leaving up to 1.41 mm between the estimated 2 mm rope
+surface and wood; exact bore-rim contact needs further work.
+
 ## Visual and package review
 
 The front, side, and top before/after CAD preview is
 `.context/frantic-kiwi/internal-cad-preview/front-side-top-before-after.png`.
+The later settled-length front/side/top comparison is
+`.context/frantic-kiwi/mini-bar-settled-before-after-front-side-top.png`;
+simulator screenshots for all four grips are
+`.context/frantic-kiwi/mini-bar-physics-app-<grip>.png`.
 The approved-photo comparisons are
 `.context/frantic-kiwi/mini-bar-Web-{1,2,7,8,9,10,11}-vs-CAD.png`, and the
 four-pose end and side matrices are `mini-bar-end-pose-matrix.png` and

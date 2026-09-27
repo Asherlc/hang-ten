@@ -2049,6 +2049,8 @@ struct BoardPackageStore {
         if let loop = document.internalLoop {
             guard !throughBore, document.meshWrap == nil,
                   loop.clearance.isFinite, loop.clearance > 0,
+                  Set(loop.channelLengthByBranchID.keys) == Set(document.branches.map(\.id)),
+                  loop.channelLengthByBranchID.values.allSatisfy({ $0.isFinite && $0 > 0 }),
                   Set(loop.windingByPassageID.keys) == Set(passages.map(\.id)),
                   loop.windingByPassageID.values.allSatisfy({
                       BoardModelLoopWinding(rawValue: $0) != nil
@@ -2222,7 +2224,8 @@ struct BoardPackageStore {
             internalLoopClearance: document.internalLoop?.clearance,
             internalLoopWindingByPassageID: document.internalLoop.map {
                 $0.windingByPassageID.mapValues { BoardModelLoopWinding(rawValue: $0)! }
-            }
+            },
+            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID
         ))
 
 }
@@ -3173,13 +3176,15 @@ struct BoardPackageMeshWrapDocument: Decodable, Equatable {
 struct BoardPackageInternalLoopDocument: Decodable, Equatable {
     let clearance: Double
     let windingByPassageID: [String: String]
+    let channelLengthByBranchID: [String: Double]
 
-    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID }
+    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID"])
+        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         clearance = try container.decode(Double.self, forKey: .clearance)
         windingByPassageID = try container.decode([String: String].self, forKey: .windingByPassageID)
+        channelLengthByBranchID = try container.decode([String: Double].self, forKey: .channelLengthByBranchID)
     }
 }
 

@@ -128,7 +128,7 @@ struct BoardModelCanonicalCamera: Hashable {
 
 struct BoardModelCanonicalPose: Hashable {
     let rotation: [Double]
-    let translation: [Double]
+    var translation: [Double]
     let camera: BoardModelCanonicalCamera
     // Visible exterior endpoints in this pose; clipped display endpoints do
     // not establish additional physical mouths or an inferred interior route.
@@ -252,6 +252,8 @@ struct BoardModelTwoBranchSuspension: Hashable {
     /// Threading topology is fixed when the cord is installed; contact points
     /// along that route are recomputed from the mesh for every board pose.
     var internalLoopWindingByPassageID: [String: BoardModelLoopWinding]? = nil
+    /// Length of the connected CAD channel centerline between each mouth pair.
+    var internalLoopChannelLengthByBranchID: [String: Double]? = nil
 }
 
 enum BoardModelSuspension: Hashable {
