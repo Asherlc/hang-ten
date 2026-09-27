@@ -307,8 +307,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 }
             }
         }
-        let contactOffset = CGVector(dx: initialPoint.screenPoint.x - contact.frame.midX,
-                                     dy: initialPoint.screenPoint.y - contact.frame.midY)
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
         capture("\(boardID)-portrait-active")
 
@@ -321,8 +319,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
         // A real contact tap runs the production selectContact canonical reset.
-        contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            .withOffset(contactOffset).tap()
+        // Orbiting moves the projected contact frame. Tap its current screen
+        // position so the physical reset gesture still lands on the hold.
+        surfaceCoordinate(for: contact, in: map).tap()
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let currentFrames = self.contactFrames(allContacts)
