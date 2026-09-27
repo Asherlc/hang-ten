@@ -502,14 +502,17 @@ def _declared_depths(board, version: int) -> dict:
 def _validate_published_depths(contact_objects, declared, version: int, deflection) -> dict:
     """Check each authored region against the grip depth the board declares.
 
-    The authored region's extent along the native depth axis must agree with the
-    published depth; this is what catches a region that silently re-bound to
-    another surface. Attachments have no published grip depth and are skipped.
+    The authored region's extent along its native depth axis must agree with the
+    published depth. Y remains the default for front-facing pockets; a side
+    pocket may declare HangTenDepthAxis = "x" on its contact object.
     """
     measured = {}
     for obj in contact_objects:
         key = _contact_binding(obj)
-        measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
+        axis = str(getattr(obj, "HangTenDepthAxis", "y") or "y").lower()
+        if axis not in {"x", "y", "z"}:
+            raise BuildError(f"{key} has invalid HangTenDepthAxis {axis!r}")
+        measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)

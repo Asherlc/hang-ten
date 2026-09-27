@@ -207,6 +207,11 @@ without `NodeID` — sketches, datums, construction features — are never expor
 The `NodeID` becomes the USD mesh prim name, which is what the application binds
 against.
 
+For a contact that declares `HangTenGripDepthMm`, optional string property
+`HangTenDepthAxis` selects the native measurement axis (`x`, `y`, or `z`).
+Omitting it retains the original Y-axis behavior. The compiler validates the
+declared depth against that axis's exported contact bounds.
+
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
