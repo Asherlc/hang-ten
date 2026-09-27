@@ -29,6 +29,7 @@ def test_real_case_uses_hash_bound_body_and_all_poses(tmp_path):
     assert set(case.poses) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}
     assert case.anchor == pytest.approx((0.0, 0.243020565, 0.036151047), abs=1e-8)
     assert {loop.id for loop in case.loops} == {"left-loop", "right-loop"}
+    assert all(loop.wrap_side == "opposite-anchor" for loop in case.loops)
     assert all(loop.radius == pytest.approx(0.002) for loop in case.loops)
     assert all(loop.rest_length == pytest.approx(0.75) for loop in case.loops)
     minimum = tuple(min(v[i] for v in case.vertices) for i in range(3))

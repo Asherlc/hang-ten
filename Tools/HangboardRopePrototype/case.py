@@ -17,6 +17,7 @@ class Loop:
     id: str
     outer_x: float
     inner_x: float
+    wrap_side: str
     radius: float
     rest_length: float
 
@@ -108,6 +109,7 @@ def load_case(package: Path) -> RopeCase:
             id=branch["id"],
             outer_x=float(first["pointInModel"][0]),
             inner_x=float(second["pointInModel"][0]),
+            wrap_side="opposite-anchor",  # Approved exterior Mini Bar topology for this pilot.
             radius=float(branch["radius"]),
             rest_length=float(branch["restLength"]),
         ))
