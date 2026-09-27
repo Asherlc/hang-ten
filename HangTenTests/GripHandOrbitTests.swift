@@ -8,6 +8,34 @@ import XCTest
 /// the same bounded-turntable guarantees: a full spin returns to the start,
 /// zoom stays clamped, and a reset restores the canonical framing.
 final class GripHandOrbitTests: XCTestCase {
+    func testVerticalFirstDragKeepsScrollingAfterTurningHorizontal() {
+        var drag = GripHandDragState()
+
+        XCTAssertNil(drag.advance(translation: CGSize(width: 2, height: 12),
+                                  velocity: CGSize(width: 1, height: 15)))
+        XCTAssertEqual(drag.disposition, .scroll)
+        XCTAssertNil(drag.advance(translation: CGSize(width: 35, height: 14),
+                                  velocity: CGSize(width: 30, height: 1)))
+        XCTAssertEqual(drag.disposition, .scroll)
+    }
+
+    func testHorizontalDragSeedsOrbitDeltaAtClaimAndResetsForNextGesture() {
+        var drag = GripHandDragState()
+
+        XCTAssertNil(drag.advance(translation: CGSize(width: 12, height: 2),
+                                  velocity: CGSize(width: 15, height: 1)))
+        XCTAssertEqual(drag.disposition, .orbit)
+        XCTAssertEqual(drag.advance(translation: CGSize(width: 16, height: 5),
+                                    velocity: CGSize(width: 5, height: 3)),
+                       CGSize(width: 4, height: 3))
+
+        drag.reset()
+        XCTAssertEqual(drag.disposition, .undecided)
+        XCTAssertNil(drag.advance(translation: CGSize(width: 1, height: 11),
+                                  velocity: CGSize(width: 1, height: 12)))
+        XCTAssertEqual(drag.disposition, .scroll)
+    }
+
     @MainActor
     func testRealitySceneShowsUnavailableStateForAssetFailure() {
         let scene = GripHandRealityScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))

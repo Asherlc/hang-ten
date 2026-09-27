@@ -45,6 +45,37 @@ private final class GripHandSceneStorage {
     }
 }
 
+/// Makes the scroll-or-orbit choice once, at the first active drag update.
+/// The claiming event seeds the origin so earlier travel cannot jump the camera.
+struct GripHandDragState {
+    enum Disposition: Equatable { case undecided, orbit, scroll }
+
+    private(set) var disposition: Disposition = .undecided
+    private var lastTranslation: CGSize = .zero
+
+    mutating func advance(translation: CGSize, velocity: CGSize) -> CGSize? {
+        switch disposition {
+        case .undecided:
+            let shouldOrbit = OrbitPanArbitration.shouldBegin(
+                translation: CGPoint(x: translation.width, y: translation.height),
+                velocity: CGPoint(x: velocity.width, y: velocity.height)
+            )
+            disposition = shouldOrbit ? .orbit : .scroll
+            lastTranslation = translation
+            return nil
+        case .scroll:
+            return nil
+        case .orbit:
+            let delta = CGSize(width: translation.width - lastTranslation.width,
+                               height: translation.height - lastTranslation.height)
+            lastTranslation = translation
+            return delta
+        }
+    }
+
+    mutating func reset() { self = Self() }
+}
+
 @MainActor
 struct GripHandModelView: View {
     let posture: GripType?
@@ -53,9 +84,8 @@ struct GripHandModelView: View {
     let resetToken: Int
     @State private var sceneStorage: GripHandSceneStorage
     @State private var isUnavailable: Bool
-    @State private var lastDragTranslation: CGSize = .zero
+    @State private var dragState = GripHandDragState()
     @State private var lastMagnification: CGFloat = 1
-    @State private var isOrbiting = false
     @State private var cameraRevision = 0
 
     private var scene: GripHandRealityScene { sceneStorage.scene }
@@ -123,21 +153,13 @@ struct GripHandModelView: View {
     private func orbitGesture(size: CGSize) -> some Gesture {
         DragGesture(minimumDistance: OrbitPanArbitration.activationDistance)
             .onChanged { value in
-                if !isOrbiting {
-                    guard abs(value.translation.width) >= abs(value.translation.height) else { return }
-                    isOrbiting = true
-                }
-                let deltaX = value.translation.width - lastDragTranslation.width
-                let deltaY = value.translation.height - lastDragTranslation.height
-                lastDragTranslation = value.translation
-                scene.orbit(azimuthDelta: Float(-deltaX / max(size.width, 1)) * 0.9,
-                            elevationDelta: Float(-deltaY / max(size.height, 1)) * 0.65)
+                guard let delta = dragState.advance(translation: value.translation,
+                                                    velocity: value.velocity) else { return }
+                scene.orbit(azimuthDelta: Float(-delta.width / max(size.width, 1)) * 0.9,
+                            elevationDelta: Float(-delta.height / max(size.height, 1)) * 0.65)
                 cameraRevision &+= 1
             }
-            .onEnded { _ in
-                lastDragTranslation = .zero
-                isOrbiting = false
-            }
+            .onEnded { _ in dragState.reset() }
     }
 
     private var magnifyGesture: some Gesture {
