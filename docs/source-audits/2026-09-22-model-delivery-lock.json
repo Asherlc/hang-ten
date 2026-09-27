@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0c0d9051f125c80702f9dbda83e4795dbfffbae8ff44fbddf20a403a9fd828b8",
+  "sha256Manifest": "a018236889c0b3090c85b079aad1c8164a7d21555025fa4a70ef1c16e3a221b7",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "e8854f58a101fc27ff3f54b238b913562376ead04c9955be92518c73ebe36fa2",
+  "supersededSha256Manifest": "0c0d9051f125c80702f9dbda83e4795dbfffbae8ff44fbddf20a403a9fd828b8",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -274,6 +274,21 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: authored outlines for rail, pockets, ledge, medium-crimp strip and wing; front-view hulls for the crimp bands and teeth",
       "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised"
+    },
+    "trango-rock-prodigy-training-center": {
+      "source": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
+      "sourceSHA256": "de2ce4db5f7d84dfdf92c0b4024ce787c34bfbb918202cb81f12a776222e1872",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the removed hand-authored board.json",
+      "referenceSHA256": "9b9fbeda3846f72bd671fdb0733f2ce39c69342c033933ce75653a67a060f105",
+      "assetSHA256": "f55ee5cc3c390a1b4268c41bf14ed0d92a991eb28acc9d3519595a059295dc64",
+      "descriptorSHA256": "150e1d6b911a447581600d35085075d16e7b83b262edc2dfe6ddb648cb5919ba",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes)",
+      "nativeValidation": "FreeCAD source reopened/recomputed during compile with sourceUnchanged true; 31 fully constrained sketches, one body and 24 contact nodes; package validator and byte-identical reproducibility passed. No manufacturer grip-depth gate exists.",
+      "comparison": "Front, side, top, and oblique renderings reviewed against the prior committed display mesh; per-half overall envelope aligns with published 12.1 x 9.1 in. Depths and sculpted sections are measured display approximations from the prior mesh. Final revision omits two mounting bores previously retained inside outer pockets.",
+      "provenanceSidecar": "docs/source-audits/2026-09-26-trango-rock-prodigy-training-center-cad-provenance.md",
+      "assetCoverage": "Locked as descriptor + FCStd; board.json is generated at build time and the USDZ is hash-bound by the descriptor.",
+      "holdOutline": "CAD-authored HangTenHoldOutline from each explicitly classified contact shell front-view hull.",
+      "nativeAppValidation": "Prior export: iPhone 17 Pro isolated simulator (iOS 26.5), signed Debug build, board-detail route rendered the model and highlighted the left deep middle-ring pocket. Final bore-removal export: signed Debug build succeeded but simctl launch stalled before the app process started, so no final-revision screenshot was obtained. Each owned simulator was deleted."
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -287,5 +302,6 @@
   "beastmaker1000MigrationNote": "2026-09-25: beastmaker-1000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set), compiled as unbound meshes by the clay-emitting compiler from main. sha256Manifest 9ab92a6c... supersedes main's 77eb9b0c..., which moved to supersededSha256Manifest (which previously held 30009d0b...).",
   "beastmaker2000MigrationNote": "2026-09-25: beastmaker-2000 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest aa58e9f8... supersedes 473ebca2..., which moved to supersededSha256Manifest.",
   "pivotMigrationNote": "2026-09-25: trango-rock-prodigy-pivot became a source-backed package re-authored from manufacturer evidence as native vector geometry (HangTenCurvedRegionPartition set). sha256Manifest 88e5882b... supersedes 473ebca2..., which moved to supersededSha256Manifest (which previously held the same 473ebca2...). Revised the same day (round-overs, flatter wing face): sha256Manifest 0020ebf9... supersedes 88e5882b..., which moved to supersededSha256Manifest (which previously held 473ebca2...). 2026-09-26: lower-right corner corrected (band end-stop caret, field running down to the rail, J lip over the rail end) and the large-crimp bar now ends free; sha256Manifest 8cce8ca2... supersedes 0020ebf9..., which moved to supersededSha256Manifest (which previously held 88e5882b...). 2026-09-26: merged main 34ca3c3 (usdz_writer normal inverse-transform, beastmaker-2000 and j-bryant-ftg-32 sources) and recompiled the pivot asset with the merged compiler; sha256Manifest e8854f58... supersedes main's ae5b34eb..., which moved to supersededSha256Manifest (which previously held 473ebca2...).",
-  "tensionGrindstoneMigrationNote": "2026-09-26: tension-grindstone moved from a raster presentation to a source-backed model package (47 model packages). After merging main (trango-rock-prodigy-pivot), sha256Manifest 0c0d9051... supersedes main's e8854f58..., which moved to supersededSha256Manifest."
+  "tensionGrindstoneMigrationNote": "2026-09-26: tension-grindstone moved from a raster presentation to a source-backed model package (47 model packages). After merging main (trango-rock-prodigy-pivot), sha256Manifest 0c0d9051... supersedes main's e8854f58..., which moved to supersededSha256Manifest.",
+  "trainingCenterMigrationNote": "2026-09-26: trango-rock-prodigy-training-center moved to native FreeCAD source with its unchanged embedded board manifest. Final display geometry omits mounting bores. sha256Manifest a0182368 supersedes 0c0d9051."
 }
