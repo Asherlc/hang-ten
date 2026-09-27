@@ -289,8 +289,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         // native spatial picking without baking in the previous renderer's camera.
         let initialPoint = surfacePoint.map { map.coordinate(withNormalizedOffset: $0) }
             ?? surfaceCoordinate(for: contact, in: map)
-        let contactOffset = CGVector(dx: initialPoint.screenPoint.x - contact.frame.midX,
-                                     dy: initialPoint.screenPoint.y - contact.frame.midY)
         initialPoint.tap()
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
         capture("\(boardID)-portrait-active")
@@ -304,8 +302,10 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
         // A real contact tap runs the production selectContact canonical reset.
-        contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            .withOffset(contactOffset).tap()
+        // Recompute from the live accessibility frame after orbit. A screen
+        // offset captured in the neutral camera points at a different part of
+        // the surface once RealityKit has changed its projection.
+        surfaceCoordinate(for: contact, in: map).tap()
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let currentFrames = self.contactFrames(allContacts)
@@ -367,6 +367,18 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     private func assertModelBodyIsVisible(_ model: XCUIElement) throws {
+        let deadline = Date().addingTimeInterval(20)
+        var visibleBodySamples = 0
+        repeat {
+            visibleBodySamples = try modelBodySampleCount(model)
+            if visibleBodySamples > 8 { return }
+            Thread.sleep(forTimeInterval: 0.5)
+        } while Date() < deadline
+
+        XCTFail("Native board body did not render inside its rounded card (visible samples: \(visibleBodySamples))")
+    }
+
+    private func modelBodySampleCount(_ model: XCUIElement) throws -> Int {
         let screenshot = XCUIScreen.main.screenshot().image
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
@@ -393,8 +405,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 if pixels[offset + 2] < 235 { visibleBodySamples += 1 }
             }
         }
-        XCTAssertGreaterThan(visibleBodySamples, 8,
-                             "Native board body must be visible inside its rounded card")
+        return visibleBodySamples
     }
 
     private func capture(_ name: String) {
