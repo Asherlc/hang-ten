@@ -51,16 +51,7 @@ struct GripDiagramView: View {
                         side: singleSide
                     )
                 } else {
-                    GripHandCueCard(
-                        posture: gripType,
-                        fingerConfiguration: fingerConfiguration,
-                        side: .left
-                    )
-                    GripHandCueCard(
-                        posture: gripType,
-                        fingerConfiguration: fingerConfiguration,
-                        side: .right
-                    )
+                    GripHandPairCueCards(posture: gripType, fingerConfiguration: fingerConfiguration)
                 }
             }
         }
@@ -140,6 +131,7 @@ struct GripHandCueCard: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
+    var usesSharedPairPreview = false
     @State private var showsModel = false
 
     var body: some View {
@@ -147,14 +139,23 @@ struct GripHandCueCard: View {
             Button {
                 showsModel = true
             } label: {
-                GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
-                    .frame(height: 88)
-                    .overlay(alignment: .topTrailing) {
+                Group {
+                    if usesSharedPairPreview {
                         Image(systemName: "arrow.up.left.and.arrow.down.right")
                             .font(.system(size: 9, weight: .semibold))
                             .foregroundStyle(Color.hangMuted)
+                            .frame(maxWidth: .infinity, minHeight: 28)
+                    } else {
+                        GripHandModelView(posture: posture, fingerConfiguration: fingerConfiguration, side: side)
+                            .frame(height: 88)
+                            .overlay(alignment: .topTrailing) {
+                                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                                    .font(.system(size: 9, weight: .semibold))
+                                    .foregroundStyle(Color.hangMuted)
+                            }
                     }
-                    .contentShape(Rectangle())
+                }
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel("Explore \(side.accessibilityIdentifier) hand in 3D")
@@ -177,7 +178,7 @@ struct GripHandCueCard: View {
         .frame(maxWidth: .infinity)
         .padding(.horizontal, 8)
         .padding(.vertical, 7)
-        .background(Color.hangBackground.opacity(0.88), in: RoundedRectangle(cornerRadius: 15))
+        .background(Color.hangBackground.opacity(usesSharedPairPreview ? 0.48 : 0.88), in: RoundedRectangle(cornerRadius: 15))
         .overlay {
             RoundedRectangle(cornerRadius: 15)
                 .stroke(Color.hangLine.opacity(0.85), lineWidth: 1)
@@ -195,6 +196,27 @@ struct GripHandCueCard: View {
             posture?.label ?? "Grip not specified",
             fingerConfiguration.map { "Exact fingers: \($0.orderedFingers.namedList)" } ?? "Fingers not specified"
         ].joined(separator: ", ")
+    }
+}
+
+struct GripHandPairCueCards: View {
+    let posture: GripType?
+    let fingerConfiguration: FingerConfiguration?
+
+    var body: some View {
+        VStack(spacing: 2) {
+            GripHandPairModelView(posture: posture, fingerConfiguration: fingerConfiguration)
+                .frame(height: 88)
+                .padding(.horizontal, 8)
+                .accessibilityHidden(true)
+
+            HStack(spacing: 10) {
+                GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
+                                side: .left, usesSharedPairPreview: true)
+                GripHandCueCard(posture: posture, fingerConfiguration: fingerConfiguration,
+                                side: .right, usesSharedPairPreview: true)
+            }
+        }
     }
 }
 

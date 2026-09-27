@@ -2305,22 +2305,7 @@ struct WorkoutView: View {
 							resolvedHandSide: resolvedHandSide(for: step)
 						)
 					} else {
-						HStack(spacing: 12) {
-							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep) {
-								GripHandCueCard(
-									posture: holdCue.gripType,
-									fingerConfiguration: holdCue.fingerConfiguration,
-									side: .left
-								)
-							}
-							if WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep) {
-								GripHandCueCard(
-									posture: holdCue.gripType,
-									fingerConfiguration: holdCue.fingerConfiguration,
-									side: .right
-								)
-							}
-						}
+						portraitHandCueCards(holdCue: holdCue, cueStep: cueStep)
 					}
 				}
 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
@@ -2345,6 +2330,27 @@ struct WorkoutView: View {
 		}
 	}
 
+	@ViewBuilder
+	private func portraitHandCueCards(holdCue: WorkoutHoldCue, cueStep: WorkoutStep?) -> some View {
+		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep)
+		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep)
+		if showsLeft && showsRight {
+			GripHandPairCueCards(posture: holdCue.gripType,
+								fingerConfiguration: holdCue.fingerConfiguration)
+		} else {
+			HStack(spacing: 12) {
+				if showsLeft {
+					GripHandCueCard(posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration, side: .left)
+				}
+				if showsRight {
+					GripHandCueCard(posture: holdCue.gripType,
+									fingerConfiguration: holdCue.fingerConfiguration, side: .right)
+				}
+			}
+		}
+	}
+
 	private func landscapeSession(
 		step: WorkoutStep,
 		stepElapsed: TimeInterval,
@@ -2361,7 +2367,17 @@ struct WorkoutView: View {
 		cueStep: WorkoutStep?,
 		isSkipCountdown: Bool
 	) -> some View {
-		VStack(spacing: 9) {
+		let showsPairedHandCue: Bool = {
+			guard let holdCue else { return false }
+			return WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
+				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+			)
+		}()
+		return VStack(spacing: 9) {
 			landscapeHeader(
 				step: step,
 				stepElapsed: stepElapsed,
@@ -2374,14 +2390,21 @@ struct WorkoutView: View {
 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
 				.tint(Color.hangGreenDark)
 
-			HStack(spacing: 12) {
+			ZStack {
+				if showsPairedHandCue, let holdCue {
+					GripHandPairModelView(posture: holdCue.gripType,
+										 fingerConfiguration: holdCue.fingerConfiguration)
+						.accessibilityHidden(true)
+				}
+				HStack(spacing: 12) {
 				landscapeHandCueSlot(
 					holdCue: holdCue,
 					cueStep: cueStep,
 					countdown: countdown,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
-					side: .left
+					side: .left,
+					usesSharedPairPreview: showsPairedHandCue
 				)
 
 				VStack(alignment: .leading, spacing: 4) {
@@ -2406,8 +2429,10 @@ struct WorkoutView: View {
 					countdown: countdown,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
-					side: .right
+					side: .right,
+					usesSharedPairPreview: showsPairedHandCue
 				)
+				}
 			}
 			.frame(maxHeight: LandscapeLayout.normalCueRowHeight)
 
@@ -2457,7 +2482,8 @@ struct WorkoutView: View {
 		countdown: Int,
 		isComplete: Bool,
 		isSkipCountdown: Bool,
-		side: GripCueSide
+		side: GripCueSide,
+		usesSharedPairPreview: Bool = false
 	) -> some View {
 		ZStack {
 			Color.clear
@@ -2473,7 +2499,8 @@ struct WorkoutView: View {
 				GripHandCueCard(
 					posture: holdCue.gripType,
 					fingerConfiguration: holdCue.fingerConfiguration,
-					side: side
+					side: side,
+					usesSharedPairPreview: usesSharedPairPreview
 				)
 			}
 		}

@@ -1,4 +1,3 @@
-import SceneKit
 import RealityKit
 import SwiftUI
 import XCTest
@@ -307,6 +306,91 @@ final class GripHandOrbitTests: XCTestCase {
                      viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
         scene.orbit(azimuthDelta: 0.2, elevationDelta: 0.1)
         XCTAssertTrue([scene.camera.position.x, scene.camera.position.y, scene.camera.position.z].allSatisfy(\.isFinite))
+    }
+
+    @MainActor
+    func testPairSceneOwnsBothSurfacesAndAppliesRepeatedPoseUpdatesTogether() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let scene = GripHandRealityPairScene(assetResult: .success(asset))
+        let hands = try XCTUnwrap(FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]))
+        let leftSurface = try XCTUnwrap(scene.leftSurface)
+        let rightSurface = try XCTUnwrap(scene.rightSurface)
+
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: hands),
+                     viewportSize: CGSize(width: 360, height: 260), resetToken: 0)
+        XCTAssertTrue(scene.isAvailable)
+        XCTAssertFalse(scene.root.children.isEmpty)
+        XCTAssertTrue(scene.root.children.contains { $0 === scene.leftHand })
+        XCTAssertTrue(scene.root.children.contains { $0 === scene.rightHand })
+        XCTAssertFalse(leftSurface.modelEntity === rightSurface.modelEntity)
+        XCTAssertEqual(leftSurface.appliedPose?.action(), "HalfCrimp")
+        XCTAssertEqual(rightSurface.appliedPose?.action(), "HalfCrimp")
+        let halfCrimpColors = try GripHandRealityMeshBuilder.vertexColors(
+            asset: asset, action: GripHandPose(posture: .halfCrimp, fingerConfiguration: hands),
+            selectedFingers: hands.engagedFingers
+        )
+        XCTAssertEqual(leftSurface.appliedVertexColors, halfCrimpColors)
+        XCTAssertEqual(rightSurface.appliedVertexColors, halfCrimpColors)
+
+        let openHand = GripHandPose(posture: .openHand,
+                                    fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .ring]))
+        scene.update(pose: openHand,
+                     viewportSize: CGSize(width: 360, height: 260), resetToken: 0)
+
+        let openHandColors = try GripHandRealityMeshBuilder.vertexColors(
+            asset: asset, action: openHand, selectedFingers: openHand.highlightedFingers
+        )
+        XCTAssertEqual(leftSurface.appliedPose, openHand)
+        XCTAssertEqual(rightSurface.appliedPose, openHand)
+        XCTAssertEqual(leftSurface.appliedVertexColors, openHandColors)
+        XCTAssertEqual(rightSurface.appliedVertexColors, openHandColors)
+
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: hands),
+                     viewportSize: CGSize(width: 360, height: 260), resetToken: 0)
+        XCTAssertEqual(leftSurface.appliedPose?.action(), "HalfCrimp")
+        XCTAssertEqual(rightSurface.appliedPose?.action(), "HalfCrimp")
+        XCTAssertEqual(leftSurface.appliedVertexColors, halfCrimpColors)
+        XCTAssertEqual(rightSurface.appliedVertexColors, halfCrimpColors)
+
+        scene.update(pose: openHand, viewportSize: CGSize(width: 360, height: 260), resetToken: 0)
+        XCTAssertEqual(leftSurface.appliedPose, openHand)
+        XCTAssertEqual(rightSurface.appliedPose, openHand)
+        XCTAssertEqual(leftSurface.appliedVertexColors, openHandColors)
+        XCTAssertEqual(rightSurface.appliedVertexColors, openHandColors)
+    }
+
+    @MainActor
+    func testPairSceneFramesUnionAndOrbitsOneCamera() throws {
+        let scene = GripHandRealityPairScene()
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     viewportSize: CGSize(width: 420, height: 260), resetToken: 0)
+        let startingCamera = scene.camera.position
+        let startingScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
+
+        scene.orbit(azimuthDelta: 0.35, elevationDelta: 0.1, zoomScale: 1.1)
+
+        XCTAssertNotEqual(scene.camera.position, startingCamera)
+        XCTAssertLessThan(scene.camera.components[OrthographicCameraComponent.self]!.scale, startingScale)
+        XCTAssertTrue(scene.root.children.contains { $0 === scene.camera })
+    }
+
+    @MainActor
+    func testPairModelViewForwardsSharedPoseAndViewport() {
+        let scene = GripHandRealityPairScene()
+        let view = GripHandPairModelView(
+            posture: .halfCrimp,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.middle, .ring]),
+            resetToken: 3,
+            scene: scene
+        )
+        let _: any View = view
+
+        view.syncScene(in: CGSize(width: 380, height: 240))
+
+        XCTAssertEqual(scene.currentPose?.action(), "HalfCrimp")
+        XCTAssertEqual(scene.currentPose?.highlightedFingers, [.middle, .ring])
+        XCTAssertEqual(scene.currentResetToken, 3)
+        XCTAssertEqual(scene.currentViewportSize, CGSize(width: 380, height: 240))
     }
 
 }
