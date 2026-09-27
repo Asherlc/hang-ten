@@ -660,17 +660,17 @@ final class GripHandRealityScene {
     }
 
     private func orientLights(for side: GripCueSide) {
-        // Aim the key from the lit side of each mirrored rendering. The left
-        // rendering needs more light to match the right's visible brightness.
-        let facing: Float = side == .left ? -1 : 1
+        // Both cameras look from positive Z. Mirror the lights on X with the
+        // hand so each key stays beside its camera and in front of the palm.
+        let lateral: Float = side == .left ? 1 : -1
         keyLight.components.set(DirectionalLightComponent(
             color: .white, intensity: side == .left ? 4_500 : 2_800
         ))
         fillLight.components.set(DirectionalLightComponent(
-            color: .white, intensity: side == .left ? 400 : 250
+            color: .white, intensity: side == .left ? 4_000 : 250
         ))
-        keyLight.look(at: .zero, from: SIMD3(0, 8, facing * 7), relativeTo: root)
-        fillLight.look(at: .zero, from: SIMD3(0, 2, -facing * 5), relativeTo: root)
+        keyLight.look(at: .zero, from: SIMD3(lateral * 5.8, 8, 7), relativeTo: root)
+        fillLight.look(at: .zero, from: SIMD3(-lateral * 2, 2, -5), relativeTo: root)
     }
 }
 
