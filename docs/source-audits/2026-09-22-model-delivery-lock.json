@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0226500f0aa7a8f188adf1fc871727bbc832333991f50ee02a88508dd9b5ac97",
+  "sha256Manifest": "69a392832a07b35cecd2af03eb8dad325f50e9a3f3b46029a992ff1935eeb706",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "e61267b46f7c275bcb4fef37f013aa0045978bedc8c29b3d37fe41dcb8d7d476",
+  "supersededSha256Manifest": "0226500f0aa7a8f188adf1fc871727bbc832333991f50ee02a88508dd9b5ac97",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -158,14 +158,14 @@
     },
     "lattice-mini-bar": {
       "source": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
-      "sourceSHA256": "51ac5ebb43cdc8a0ba1426fda985b9c78ccdcc7c98341dfa2df017bb7d3fb0d2",
+      "sourceSHA256": "fe442221345f5a69d0a5fb058efde7faa0eda07640e8c7b0a6994eb97c0dcc0a",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; four original raster presentations become one model presentation with four grip positions",
-      "assetSHA256": "1addf5642497fbdd39f1a2763e5360ed5f6b7b46ecc4e2b8c8eef280ecdd8e47",
-      "descriptorSHA256": "02960f12c3ebfbe3527e5bd7d10ef496ec2ed17d383770cefcc0fca6305563da",
+      "assetSHA256": "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46",
+      "descriptorSHA256": "7f24709d1448b26c245d40718048a257af6aba6b876075a36c63bd3e3f9f9d7e",
       "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes)",
       "nativeValidation": "FreeCAD sketch and pad reopened and compiled; 10/20 mm shoulder depths measured exact; package and cord audit passed",
-      "nativeAppValidation": "isolated iPhone 17 Pro simulator: model loaded and all four grip poses selected; focused suspension test passed",
-      "comparison": "manufacturer-photo-derived display approximation; prior raster contact presentation compared in three views at .context/frantic-kiwi/mini-bar-preview/cad-vs-prior.png; 155 mm published length and 10/20 mm published edge depths retained",
+      "nativeAppValidation": "isolated iPhone 17 Pro simulator: mesh-derived exterior loops selected and cleared in all four grip poses; focused native test passed",
+      "comparison": "2026-09-26 ovoid correction: one continuous convex exterior arc replaces the prior double-bulge side profile; front/side/top comparison at .context/frantic-kiwi/mini-bar-preview/ovoid-vs-prior-cad.png; cord contact routes calculated at runtime from the loaded mesh and anchor, with no per-pose route coordinates in FCStd or cord mesh in USDZ",
       "provenanceSidecar": "docs/source-audits/2026-09-26-lattice-mini-bar-cad-provenance.md",
       "assetCoverage": "descriptor + source; board.json generated from FCStd, USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored contact surfaces define picking and highlights; no 2D path inference"
@@ -397,5 +397,6 @@
   "escapeBeta22MigrationNote": "2026-09-26: escape-beta-22 became a source-backed native FreeCAD package with 22 contact IDs and generated board.json. Combined sha256Manifest 8c203507... supersedes main's a00fbcef..., recorded in supersededSha256Manifest. See provenance sidecar for approved source set and display deviations.",
   "trainingCenterMigrationNote": "2026-09-26: trango-rock-prodigy-training-center moved to native FreeCAD source with its unchanged embedded board manifest. Final display geometry omits mounting bores. Its shallow middle-ring contact partition was corrected during PR review. The combined manifest includes escape-beta-22 and supersedes main's 8c203507... manifest.",
   "clavelliumMigrationNote": "2026-09-26: clavellium-training-block migrated to a native FreeCAD source; four side cavity depths validated on explicit X axes, metadata embedded unchanged, and the prior model replaced by an unbound CAD export.",
-  "miniBarMigrationNote": "2026-09-26: lattice-mini-bar became a source-backed FreeCAD package with four canonical grip poses and two approved exterior wrapped cord routes. The previous sha256Manifest moved to supersededSha256Manifest. See the provenance sidecar for sourced dimensions and labeled display estimates."
+  "miniBarMigrationNote": "2026-09-26: lattice-mini-bar became a source-backed FreeCAD package with four canonical grip poses and two approved exterior wrapped cord routes. The previous sha256Manifest moved to supersededSha256Manifest. See the provenance sidecar for sourced dimensions and labeled display estimates.",
+  "miniBarOvoidCorrectionNote": "2026-09-26: approved Lattice end view and user correction led to a continuous ovoid CAD section. Mini Bar cord loops are solved at runtime from the validated loaded mesh and the overhead anchor for each grip angle; the FCStd manifest has loop topology and display parameters but no route coordinates, and the USDZ has no cord geometry. Native four-pose clearance test passes. FCStd, USDZ, and descriptor hashes changed; previous manifest remains in supersededSha256Manifest."
 }

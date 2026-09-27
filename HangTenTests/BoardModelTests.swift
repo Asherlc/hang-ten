@@ -811,10 +811,7 @@ final class BoardModelTests: XCTestCase {
         XCTAssertEqual(suspension.branches.count, 2)
         for position in board.positions {
             let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
-            XCTAssertEqual(Set(try XCTUnwrap(pose.wrappedRoutes).keys), ["left-loop", "right-loop"])
-            _ = try BoardModelScene.solveSuspension(
-                pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
-            )
+            XCTAssertNil(pose.wrappedRoutes, "cord path must be solved from the loaded mesh at runtime")
             XCTAssertTrue(model.select(positionID: position.id), position.id)
             XCTAssertFalse(model.isUnavailable, position.id)
             XCTAssertFalse(model.isTransientCordAccessible, position.id)

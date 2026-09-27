@@ -1,6 +1,108 @@
 import Foundation
 import simd
 
+/// A taut exterior loop is solved from the loaded board section and the fixed
+/// anchor each time a pose is selected. No cord centerline is stored in CAD or
+/// in the USDZ. The hull is a conservative support surface for the cord.
+enum MeshSectionWrapSolver {
+    private static func cross(_ a: SIMD2<Float>, _ b: SIMD2<Float>) -> Float {
+        a.x * b.y - a.y * b.x
+    }
+
+    static func routes(
+        section: [SIMD2<Float>],
+        anchor: SIMD3<Float>,
+        pose: BoardModelCanonicalPose,
+        radius: Float,
+        outerX: Float,
+        innerX: Float
+    ) throws -> [String: [[Double]]] {
+        guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+              radius.isFinite, radius > 0, outerX > innerX, innerX > 0,
+              pose.rotation.count == 4, pose.translation.count == 3 else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let sorted = Array(Set(section)).sorted { $0.x == $1.x ? $0.y < $1.y : $0.x < $1.x }
+        var lower: [SIMD2<Float>] = []
+        for point in sorted {
+            while lower.count > 1 && cross(lower.last! - lower[lower.count - 2], point - lower.last!) <= 1e-10 {
+                lower.removeLast()
+            }
+            lower.append(point)
+        }
+        var upper: [SIMD2<Float>] = []
+        for point in sorted.reversed() {
+            while upper.count > 1 && cross(upper.last! - upper[upper.count - 2], point - upper.last!) <= 1e-10 {
+                upper.removeLast()
+            }
+            upper.append(point)
+        }
+        let hull = Array(lower.dropLast()) + Array(upper.dropLast())
+        guard hull.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
+        let clearance = radius + 0.005
+        var perimeter: [SIMD2<Float>] = []
+        for index in hull.indices {
+            let previous = hull[(index + hull.count - 1) % hull.count]
+            let point = hull[index]
+            let following = hull[(index + 1) % hull.count]
+            let first = point - previous
+            let second = following - point
+            let firstNormal = SIMD2<Float>(first.y, -first.x) / simd_length(first)
+            let secondNormal = SIMD2<Float>(second.y, -second.x) / simd_length(second)
+            let firstOffset = point + clearance * firstNormal
+            let secondOffset = point + clearance * secondNormal
+            let divisor = cross(first, second)
+            let offset = abs(divisor) < 1e-10 ? firstOffset
+                : firstOffset + (cross(secondOffset - firstOffset, second) / divisor) * first
+            guard offset.x.isFinite && offset.y.isFinite else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            perimeter.append(offset)
+        }
+
+        let q = simd_quatf(ix: Float(pose.rotation[0]), iy: Float(pose.rotation[1]),
+            iz: Float(pose.rotation[2]), r: Float(pose.rotation[3]))
+        let localAnchor = q.inverse.act(anchor - SIMD3<Float>(pose.translation.map(Float.init)))
+        let projectedAnchor = SIMD2<Float>(localAnchor.y, localAnchor.z)
+        let visible = perimeter.indices.map { index in
+            cross(perimeter[(index + 1) % perimeter.count] - perimeter[index],
+                  projectedAnchor - perimeter[index]) < -1e-10
+        }
+        let starts = perimeter.indices.filter { visible[$0] && !visible[($0 + perimeter.count - 1) % perimeter.count] }
+        let ends = perimeter.indices.filter { visible[$0] && !visible[($0 + 1) % perimeter.count] }
+        guard starts.count == 1, ends.count == 1 else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        var index = starts[0]
+        let finish = (ends[0] + 1) % perimeter.count
+        var chain = [perimeter[index]]
+        while index != finish {
+            index = (index + perimeter.count - 1) % perimeter.count
+            chain.append(perimeter[index])
+            guard chain.count <= perimeter.count + 1 else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+        }
+        var samples = [chain[0]]
+        for (start, end) in zip(chain, chain.dropFirst()) {
+            let distance = simd_length(end - start)
+            let segments = max(1, Int(ceil(distance / 0.0035)))
+            for step in 1...segments {
+                samples.append(start + (end - start) * (Float(step) / Float(segments)))
+            }
+        }
+        guard samples.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
+        return Dictionary(uniqueKeysWithValues: [(-1.0 as Float, "left-loop"), (1.0 as Float, "right-loop")].map { sign, id in
+            (id, samples.enumerated().map { item in
+                let fraction = Float(item.offset) / Float(samples.count - 1)
+                let point = item.element
+                return [Double(sign * (outerX + (innerX - outerX) * fraction)),
+                        Double(point.x), Double(point.y)]
+            })
+        })
+    }
+}
+
 
 // Compatibility names retained for presentation and test callers while the
 // model-layer solver owns the single-cord result data.

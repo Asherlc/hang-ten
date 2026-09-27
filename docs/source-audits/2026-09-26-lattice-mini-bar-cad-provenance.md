@@ -5,7 +5,7 @@ Reviewed 2026-09-26. The canonical source is
 `HangTenBoardManifest` generates `board.json`; the package has one unbound USDZ
 and descriptor. The temporary authoring script is
 `.context/frantic-kiwi/author_mini_bar.py` (SHA-256
-`714eb6f61ec247c2f0acc18e212b3b4529a114fded42bf861d4f9d8a8ec6f5ad`)
+`cacaff17a0f6c32b23eaf304323a5a86ab2b898d849aeffb127ef7731fc5052d`)
 and is not a build input. The saved FreeCAD sketch, pad, and surface regions
 stand alone.
 
@@ -39,10 +39,12 @@ edge use; Web-11 shows jug use. These are distinct visual views of this revision
 ## Authored geometry and metadata mapping
 
 The 155 mm length is the published product fact. The end profile is a directly
-authored, fully constrained FreeCAD sketch of three circular exterior arcs,
-one arc at the open concavity, and straight shoulder runs. It is a display
+authored, fully constrained FreeCAD sketch of one continuous convex exterior
+arc, one arc at the open concavity, and straight shoulder runs. The continuous
+ovoid perimeter replaces an earlier double-bulge approximation after visual
+review against the approved end-on Lattice photo. It is a display
 approximation drawn from the approved photos, not traced from pixels or claimed
-as manufacturing geometry. Its exported bounds are about 155 × 60 × 63 mm
+as manufacturing geometry. Its exported bounds are about 155 × 64 × 55 mm
 after coordinate conversion; the approximately 6 cm section agrees only with
 the rounded technical-table size. The pad and contact surface extrusions remain
 editable FreeCAD features. The flat 10 and 20 mm shoulder runs measure exactly
@@ -57,10 +59,19 @@ positions. The edge and jug pose angles and pinch camera direction are
 additional grip, training cue, or performance claim was inferred.
 
 The gallery shows four hanging strands and an exterior bight around each end.
-The representation therefore has two ordered exterior branch routes on the
-same body node. Each canonical pose supplies its own `wrappedRoutes` in
-unposed importer coordinates. These route points, 2 mm tube radius, 180 mm
-anchor offset, and 0.75 m per-branch rendering capacity are display estimates.
+The representation therefore has two exterior loops on the body. The FCStd
+manifest records the loop topology, nominal passage points, 2 mm tube radius,
+180 mm anchor offset, and 0.75 m per-branch rendering capacity as display
+estimates. It contains no per-pose `wrappedRoutes`. The USDZ contains only the
+bar meshes. At runtime, the iOS renderer reads the loaded mesh vertices,
+projects their convex cross-section, and offsets it by the cord radius plus
+5 mm of display clearance. For each selected grip rotation, the fixed overhead
+anchor is transformed into the bar's frame; its two tangencies delimit the
+contact side of the offset perimeter. The sampled contact run spans an outer
+strand 4.5 mm from each end to an inner strand 12 mm farther in, making the
+bight visible. This is a deterministic taut-rope contact calculation at pose
+selection, not a measured construction detail. The calculated route passes
+native board, selectable-surface, and tube clearance checks in all four grips.
 Retailers [Needle Sports](https://www.needlesports.com/Catalogue/Climbing/Bouldering-Training-Sport/Training-Equipment/Lattice-Mini-Bar-LAT-MINIBAR)
 and [Bananafingers](https://bananafingers.co.uk/lattice-mini-bar-portable-fingerboard)
 report 1.5 m of included rope; that is a total product length, not a measured
@@ -69,8 +80,10 @@ and exceeds the resolved path in all four poses. The route does not assert
 independent physical cords, a bore, an unseen knot path, or a safety property.
 The cord stays transient, unbound to picking, and outside the USDZ.
 
-The prior committed raster views are used only for the three-view visual
-comparison at `.context/frantic-kiwi/mini-bar-preview/cad-vs-prior.png`; they
-were not geometry inputs. Mounting hardware and a rendered knot are omitted
+The prior committed CAD asset is shown beside the revised front, side, and top
+previews at `.context/frantic-kiwi/mini-bar-preview/ovoid-vs-prior-cad.png`.
+The earlier raster views remain in the initial migration comparison; neither
+they nor the prior CAD asset were used as geometry inputs. Mounting hardware
+and a rendered knot are omitted
 from the display model. The product photographs show cord hardware but do not
 give a reliable construction path for the knot.

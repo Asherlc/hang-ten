@@ -159,6 +159,14 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
+The Lattice Mini Bar's exterior loops are a mesh-driven exception to authored
+`wrappedRoutes`. Its CAD manifest records loop topology and display parameters,
+but no route coordinates. When a grip is selected, `BoardModelView` computes
+the convex section of the validated loaded mesh, finds the two tangencies from
+the fixed overhead anchor in that pose, and routes a taut cord around the
+opposite side. The result still passes the same mesh-clearance gate and remains
+transient and non-pickable. Its exact model hash gates this calculation.
+
 ## Make an evidence-backed correction
 
 1. Reproduce the failure with the exact board, presentation, and position.
