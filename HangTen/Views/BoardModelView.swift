@@ -43,7 +43,7 @@ struct BoardModelSurface: View {
     var body: some View {
         Group {
             if case .ready(let model) = result {
-                BoardModelRealityView(
+                let realityView = BoardModelRealityView(
                     model: model,
                     boardName: board.name,
                     accessibilityValue: highlightedContactCue,
@@ -55,11 +55,19 @@ struct BoardModelSurface: View {
                     onUnavailable: { result = .unavailable },
                     isDisplayOnly: isDisplayOnly
                 )
-                .accessibilityIdentifier("boardModel.3d")
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
                 // when the hosted RealityView has user interaction disabled.
                 .allowsHitTesting(!isDisplayOnly)
+                if onContactTap == nil {
+                    realityView.accessibilityIdentifier("boardModel.3d")
+                } else {
+                    // A parent accessibility identifier propagates to the
+                    // RealityView's projected contact buttons. Keep their
+                    // per-contact identifiers available to UI automation and
+                    // assistive technology on interactive board maps.
+                    realityView
+                }
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
                     ProgressView()

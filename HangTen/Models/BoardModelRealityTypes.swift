@@ -323,7 +323,10 @@ final class BoardModelRealityScene {
             + direction * ((minD + maxD) / 2)
         // `fitPadding` retains the board package's existing orthographic fit
         // margin. Convert that fitted span into a perspective camera distance.
-        let defaultDistanceMultiplier = 1 + display.camera.fitPadding * 2
+        // `perspectiveFitDistance` applies fitPadding after considering the
+        // viewport FOV. Keep the fallback distance unpadded to avoid applying
+        // the package margin twice when the viewport is already available.
+        let defaultDistanceMultiplier = 1.0
         let distance = max(width, max(height, depthSpan))
             * Float(display.camera.distanceMultiplier ?? defaultDistanceMultiplier)
         currentFraming = SuspendedCameraFraming(
