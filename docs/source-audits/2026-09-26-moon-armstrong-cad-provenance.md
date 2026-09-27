@@ -116,11 +116,15 @@ Estimates (no dimensioned source; labelled):
   6 mm tile corners. These are approximated by four ruled stations of a
   quarter circle.
 
-Adaptation — mono depth: the monos are through bores, but the manifest gives
-them a 22 mm depth. Each mono contact is the front 22 mm of its bore (the bore
-loft has a station there, so the body face is split exactly), and the rest of
-the bore stays body. Moon's "22mm one-fingered pocket" may describe the
-opening size rather than the depth. The manifest is left unchanged.
+Mono depth: Moon publishes the one-fingered pockets as 22 mm. The product
+owner confirmed on 2026-09-26 that this is the depth. The photographs show a
+through bore of nearly the full mouth diameter: about 18 mm of wall is visible
+through a Ø21 mouth in the blog photo, and Beech photo 04 shows the pulley cord
+threaded through it. Each mono contact is therefore the front 22 mm of its bore.
+The bore loft has a station at 22 mm, so the body face is split exactly there.
+The rest of the bore stays body (adaptation). How the bore continues behind the
+22 mm hold is not shown by any source. It is authored as a straight bore of the
+same diameter to the back plane.
 
 Omitted: the logo engraving, "train hard / climb harder" text, screws, and
 the pulley cord holes (hardware omission policy). Suspension metadata is
