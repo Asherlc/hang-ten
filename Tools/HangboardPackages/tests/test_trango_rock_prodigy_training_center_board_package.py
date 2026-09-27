@@ -4,13 +4,16 @@ import hashlib
 import json
 from pathlib import Path
 
+from hangboard_packages.cad_source import load_board
+
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PACKAGE_ROOT = REPO_ROOT / "Hangboards" / "trango-rock-prodigy-training-center"
 
 
 def test_training_center_is_a_hash_bound_model_only_package() -> None:
-    board = json.loads((PACKAGE_ROOT / "board.json").read_text(encoding="utf-8"))
+    source = PACKAGE_ROOT / "trango-rock-prodigy-training-center.FCStd"
+    board = load_board(source)
     presentations = board["presentations"]
     assert isinstance(presentations, list) and len(presentations) == 1
     media = presentations[0]["media"]
@@ -22,7 +25,7 @@ def test_training_center_is_a_hash_bound_model_only_package() -> None:
         path.relative_to(PACKAGE_ROOT).as_posix()
         for path in PACKAGE_ROOT.rglob("*")
         if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {source.name, "assets/primary.usdz", "assets/primary.model.json"}
 
     descriptor = json.loads(
         (PACKAGE_ROOT / media["descriptorPath"]).read_text(encoding="utf-8")
@@ -36,7 +39,7 @@ def test_training_center_is_a_hash_bound_model_only_package() -> None:
     assert len(contact_ids) == 24
     assert set(descriptor["contacts"]) == contact_ids
     assert [node["nodeID"] for node in descriptor["nodes"] if node["role"] == "body"] == [
-        "body_left_001", "body_right_001",
+        "body_001",
     ]
     for contact_id, contact in descriptor["contacts"].items():
         assert contact["nodeIDs"] == [
