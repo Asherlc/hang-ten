@@ -324,6 +324,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "owl-climb.poker",
             "tension.flash-board",
             "tension.grindstone",
+            "tension.grindstone-pro",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
             "metolius.contact",
