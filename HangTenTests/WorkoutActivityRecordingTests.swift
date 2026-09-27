@@ -152,7 +152,9 @@ final class WorkoutActivityRecordingTests: XCTestCase {
                             type: "orthographic",
                             viewDirection: [0, 0, -1],
                             up: [0, 1, 0],
-                            fitPadding: 0
+                            fitPadding: 0,
+                            distanceMultiplier: nil,
+                            boundsExpansionFactor: nil
                         )
                     )
                 )
