@@ -226,6 +226,8 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
+                model.resetCamera(animated: true)
+                cameraRevision &+= 1
                 onContactTap?(contact)
             }
     }
