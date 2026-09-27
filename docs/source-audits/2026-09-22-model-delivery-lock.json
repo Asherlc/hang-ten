@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, and metolius-light-rail-2 native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone,, metolius-light-rail-2, and escape-beta-22 native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "ffd1dfda347e1a696f9b59bd0922458c9e88185e79d710d463c6cd62d1123b89",
+  "sha256Manifest": "a28566ba60dcd6d9a68c6306829de58110fa51c15702804dcb62f3b0aa6e93a0",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "a00fbcef0287d21ae6d20591c0cdb0fedf6938059ff845591f0a208bf8255576",
+  "supersededSha256Manifest": "8c203507dd01762a4958f7755235b17e92d4404e9122241a0ed39f1236cbc537",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -114,6 +114,21 @@
       "comparison": "native measured approximation; see provenance for two-way mesh comparison and front/side/top previews",
       "provenanceSidecar": "docs/source-audits/2026-09-26-clavellium-training-block-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256"
+    },
+    "escape-beta-22": {
+      "source": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "sourceSHA256": "2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c",
+      "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 22 stable contact IDs preserved; camera view direction adjusted 20 degrees downward",
+      "referenceSHA256": "95c41baa291c134358fa47eb8a9981acabd35bfb2231e14fd7951a9d9a0b0be4",
+      "assetSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+      "descriptorSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
+      "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes, no materials or textures)",
+      "nativeValidation": "passed: compile reopen, 22 IDs, manufacturer depth gate, analytic contact partition, USDZ reimport and descriptor hash; verify_reproducible byte-identical on pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; left thin pinch selected by default and left 38mm mini-jug selected by hold-map tap, confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
+      "comparison": "reviewed against superseded asset in front, side and top views; deliberate native display approximation retains 22 contacts, open slots and end-wing taper but simplifies molded blends and front bands",
+      "provenanceSidecar": "docs/source-audits/2026-09-26-escape-beta-22-cad-provenance.md",
+      "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored mouth rectangles and upper/lower end-wing bands; left/right central crown and upper sloper partitioned at x=0"
     },
     "evolv-kilter-basic-long": {
       "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
@@ -349,5 +364,6 @@
   "tensionGrindstoneMigrationNote": "2026-09-26: tension-grindstone moved from a raster presentation to a source-backed model package. The merged manifest includes both this migration and target10a-linebreaker-base.",
   "metoliusLightRail2MigrationNote": "2026-09-26: metolius-light-rail-2 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition and HangTenSurfaceNormals set). sha256Manifest 1abe8932... supersedes 9ad65de5..., which moved to supersededSha256Manifest.",
   "trainingTilesMigrationNote": "2026-09-26: So iLL Training Tiles became the eighteenth source-backed model package after target10a-linebreaker-base and metolius-light-rail-2 merged. Its approved sculpted model was retained as an explicitly faceted FreeCAD source with exact contact meshes and a full-resolution stored body mesh. The merged manifest supersedes main's prior manifest; the Training Tiles branch previously used 071a5279... and e3087ab2... before those migrations merged.",
+  "escapeBeta22MigrationNote": "2026-09-26: escape-beta-22 became a source-backed native FreeCAD package with 22 contact IDs and generated board.json. Combined sha256Manifest 8c203507... supersedes main's a00fbcef..., recorded in supersededSha256Manifest. See provenance sidecar for approved source set and display deviations.",
   "clavelliumMigrationNote": "2026-09-26: clavellium-training-block migrated to a native FreeCAD source; four side cavity depths validated on explicit X axes, metadata embedded unchanged, and the prior model replaced by an unbound CAD export."
 }
