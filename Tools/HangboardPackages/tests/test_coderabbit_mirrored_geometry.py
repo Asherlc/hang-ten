@@ -178,15 +178,15 @@ def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> N
                 continue
             left_bounds = left["facePlaneAABB"]
             right_bounds = right["facePlaneAABB"]
-            # The supplied Simulator and batch-02 Stoak meshes have submillimeter
-            # bilateral tessellation differences; model AABBs are not authored
-            # raster paths. Other boards keep the exact 1e-6 bound.
+            # The supplied Simulator mesh has submillimeter bilateral
+            # tessellation differences; model AABBs are not authored raster
+            # paths. Other boards keep the exact 1e-6 bound.
             bounds = descriptor["modelBounds"]
             for axis in (0, 1):
                 span = bounds["max"][axis] - bounds["min"][axis]
                 tolerance = (
                     0.0005 / span
-                    if board_id in {"metolius-simulator-3d", "nature-stoak-board-iii"}
+                    if board_id == "metolius-simulator-3d"
                     else 1e-6
                 )
                 for bound, opposite in (("min", "max"), ("max", "min")):
