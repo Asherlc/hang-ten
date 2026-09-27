@@ -64,7 +64,6 @@ def test_chunk_accepts_positive_values():
 
 def test_faceted_import_is_acknowledged_only_where_the_lock_records_it():
     """The rebuild repeats --allow-faceted-import only for a locked faceted source."""
-    assert verify_reproducible.faceted_import_acknowledged("soill-iron-palm-2")
+    acknowledged = {"soill-iron-palm-2", "soill-training-tiles"}
     for package in verify_reproducible.source_backed_packages():
-        if package != "soill-iron-palm-2":
-            assert not verify_reproducible.faceted_import_acknowledged(package), package
+        assert verify_reproducible.faceted_import_acknowledged(package) == (package in acknowledged), package

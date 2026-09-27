@@ -787,4 +787,3 @@ triangle count.
 - **`doc.saveAs` over an existing FCStd leaves a `.FCBak` beside it**, and the
   package validator rejects the unknown entry. Delete it (or save elsewhere and
   copy).
-
