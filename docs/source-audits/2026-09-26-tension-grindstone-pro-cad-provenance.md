@@ -6,7 +6,7 @@ This record covers the discontinued 2017 Tension Grindstone Pro (`tension.grinds
 
 ## Evidence retained and reviewed
 
-Both approved images are archival Climbing magazine CDN photos, not manufacturer assets. They are retained only in the workspace review scratch directory and are not redistributed in this package.
+Both approved images are archival Climbing magazine CDN photos, not manufacturer assets. They are retained in the repository at `docs/source-audits/2026-09-13-model-cord-snapshots/` for evidence review; they are not redistributed as package assets.
 
 | Evidence | URL | SHA-256 | Supports |
 | --- | --- | --- | --- |
