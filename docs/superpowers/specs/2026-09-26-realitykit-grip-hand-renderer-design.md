@@ -33,6 +33,17 @@ pose surface's positions, normals, and shared triangle indices; do not regenerat
 or deform the Blender mesh. Apply side mirroring as an entity transform and
 retain the existing world-space bounds framing and bounded turntable orbit.
 
+When both mirrored hands are visible in one layout, render both surfaces inside
+one shared `RealityView` and one RealityKit scene graph. A device review found
+that two sibling `RealityView`s can receive identical pose updates and install
+distinct correct meshes while one renderer intermittently keeps showing its
+previous frame until a camera gesture. Repeated bounded experiments with entity
+replacement, stable view identity, delayed mesh reapply, and camera/state
+invalidation did not reliably refresh both sibling renderers. The paired host
+owns both hand entities and updates them together; single-hand inspector and
+diagram contexts continue to use `GripHandModelView`. Keep separate SwiftUI
+controls/accessibility elements layered over their corresponding hand slots.
+
 Preserve the shader's highlight equation and exact finger semantics. For each
 vertex, select its authored highlight weight only when its `digitIndices` entry
 matches one of the explicitly selected fingers, clamp the result to 0...1, and
@@ -56,7 +67,8 @@ out of the accessibility element tree, as the current UIKit view does.
 
 ## Scope and constraints
 
-- Modify `HangTen/Views/GripHandModelView.swift`,
+- Modify `HangTen/Views/GripHandModelView.swift`, paired cue-card and diagram
+  hosts in `HangTen/Views/GripDiagramView.swift` and `HangTen/Views/RootView.swift`,
   `HangTenTests/GripHandOrbitTests.swift`, and `HangTen.xcodeproj/project.pbxproj`.
 - Add `HangTen/Rendering/GripHandSurfaceShader.metal` to the HangTen target for
   the RealityKit `CustomMaterial` surface shader; no package dependency or
