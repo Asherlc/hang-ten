@@ -1139,7 +1139,10 @@ def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
 
     assert "suspension" not in cad_board["presentations"][0]["media"]
     assert (root / "suspension.json").is_file()
-    assert generated.board.presentations[0].media.suspension.mesh_wrap_clearance == 0.005
+    suspension = generated.board.presentations[0].media.suspension
+    assert suspension.mesh_wrap_clearance is None
+    assert all(passage.is_through_bore
+               for passage in suspension.passages.left + suspension.passages.right)
     assert "suspension" in json.loads(generated.generated_board_json)["presentations"][0]["media"]
 
 

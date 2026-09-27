@@ -160,13 +160,15 @@ cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
 For exterior point-passage branches, `meshWrap.clearance` selects the shared
-mesh-driven route solver. The Mini Bar's `suspension.json` supplies that choice,
-its two loop positions, and display parameters; its FCStd has no cord data.
-When a grip is selected, `BoardModelView` computes the convex section of the
-validated loaded mesh, finds two tangencies from the fixed overhead anchor,
-and routes each taut loop around the opposite side. The result passes the same
-mesh-clearance gate and remains transient and non-pickable. A sidecar's
-`modelSHA256` must match its descriptor, and the delivery lock pins its bytes.
+mesh-driven route solver. The Mini Bar previously used this path, but the user
+identified two through-bores per end in the manufacturer gallery. Its current
+`suspension.json` therefore declares four directed bores and transient exterior
+bights, while its FCStd contains the matching four pocket cuts and no cord.
+The current through-bore renderer still needs authored exterior contact points;
+the Mini Bar's present points are labeled display estimates pending a generic
+holes-plus-anchor solver and current-source visual clearance review. A
+sidecar's `modelSHA256` must match its descriptor, and the delivery lock pins
+its bytes.
 
 ## Make an evidence-backed correction
 

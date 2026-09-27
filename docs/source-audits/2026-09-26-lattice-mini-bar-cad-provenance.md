@@ -1,5 +1,11 @@
 # Lattice Mini Bar CAD migration provenance
 
+**Correction (2026-09-27):** [The cord passage audit](2026-09-27-lattice-mini-bar-cord-passages-correction.md)
+records the user's confirmation of two bores per end, the revised four-bore
+FreeCAD pocket, and the new hash-bound suspension sidecar. The exterior-only
+interpretation and solid-bar Bullet prototype below are historical. The new
+topology is published; current-source iOS rope-contact review is pending.
+
 Reviewed 2026-09-26. The bar geometry and contact metadata are sourced from
 `Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd`. The separate
 `Hangboards/lattice-mini-bar/suspension.json` owns the cord setup. Both

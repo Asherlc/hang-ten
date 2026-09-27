@@ -1,5 +1,11 @@
 # Lattice Mini Bar presentation assets — source audit
 
+**Correction (2026-09-27):** The original no-hole interpretation in the
+historical image prompts below was wrong. See the
+[cord passage correction](2026-09-27-lattice-mini-bar-cord-passages-correction.md).
+The physical Mini Bar shows cord openings near both ends in Lattice's gallery
+and video. Do not use the old “no drilled holes” prompt as a CAD constraint.
+
 Reviewed 2026-08-31. This audit covers the four physical/selectable
 presentations and manually authored canonical geometry in
 `Hangboards/lattice-mini-bar`.

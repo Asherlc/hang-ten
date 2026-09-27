@@ -407,7 +407,7 @@
       "decision": "represented",
       "sourceFact": "documentedSuspension",
       "topology": "twoBranchCord",
-      "ruling": "Two visible exterior wrapped loops, one near each bar end, are represented as pose-specific ordered surface routes. No through-bore, hidden internal route, or baked cord is inferred.",
+      "ruling": "Two separate through-bores near each bar end, four total, with an exterior bight joining each pair. User confirmed bore count after reinspection of the approved Lattice gallery and video. CAD dimensions and transient cord contact coordinates are display estimates; no cord is baked into USDZ.",
       "evidence": [
         {
           "view": "manufacturer product",
@@ -477,8 +477,8 @@
       "humanApproval": {
         "approved": true,
         "reviewer": "user",
-        "reviewedAt": "2026-09-26",
-        "notes": "User approved the exact seven Lattice gallery URLs and the two exterior wrapped loop representation in this session. Numeric route, radius, per-loop capacity and anchor are display estimates."
+        "reviewedAt": "2026-09-27",
+        "notes": "User approved the exact seven Lattice gallery URLs, corrected the exterior-only reading, and explicitly confirmed two bores per end. Numeric bore dimensions, route, radius, per-loop capacity and anchor are display estimates."
       }
     },
     {

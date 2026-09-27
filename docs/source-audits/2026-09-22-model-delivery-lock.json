@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "5e5bda1bbfaf035c6dafa0fa0228bf45604689f090de5b52ecac5242b8a4d4ab",
+  "sha256Manifest": "79f8d19d288b113d77f0f429600218c8b38ac23bbb71cfa9a2dca8f614f38ac1",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "2129c9573bf175f7ce83785752b9cd52faa232037150f1618713c64132c5547b",
+  "supersededSha256Manifest": "5e5bda1bbfaf035c6dafa0fa0228bf45604689f090de5b52ecac5242b8a4d4ab",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -97,7 +97,7 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -158,19 +158,20 @@
     },
     "lattice-mini-bar": {
       "source": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
-      "sourceSHA256": "3896411d0f15fff3e6cb4159e76650d6c15171fc7763a74308201a9698ca7be3",
+      "sourceSHA256": "c4478cb21a2a70d2bb0719096061ab5bf2a5d6869082b87dff0fdb7e17ce655f",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; four original raster presentations become one model presentation with four grip positions",
-      "assetSHA256": "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46",
-      "descriptorSHA256": "7f24709d1448b26c245d40718048a257af6aba6b876075a36c63bd3e3f9f9d7e",
+      "assetSHA256": "3c49d6ffe2a5860ac67a24333251207ef806a9300cf8bb5b7292b73b9c521f95",
+      "descriptorSHA256": "2d640a1fc0292348f4d57f61b895200c430e79b785b26d9b822a62c245683a04",
       "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes)",
-      "nativeValidation": "FreeCAD sketch and pad reopened and compiled; 10/20 mm shoulder depths measured exact; package and cord audit passed",
-      "nativeAppValidation": "isolated iPhone 17 Pro simulator: mesh-derived exterior loops selected and cleared in all four grip poses; focused native test passed",
-      "comparison": "2026-09-26 ovoid CAD profile retained; front/side/top comparison at .context/frantic-kiwi/mini-bar-preview/ovoid-vs-prior-cad.png. Suspension setup moved from FCStd to a locked, descriptor-bound suspension.json. The shared meshWrap solver derives a route from the loaded model for each grip pose.",
-      "provenanceSidecar": "docs/source-audits/2026-09-26-lattice-mini-bar-cad-provenance.md",
+      "nativeValidation": "Four through bores from a blocked Sketcher circle profile and PartDesign pocket; FreeCAD recompute and CAD compiler passed; hole centers and 5.4 mm diameter are display estimates.",
+      "nativeAppValidation": "All 57 focused SuspendedBoardPresentationTests passed on an isolated iPhone 17 Pro / iOS 26.5 Simulator; default jug pose captured in the current-source app. Eight pose/branch centerlines had no wood penetration under a native FreeCAD solid-intersection check. Full tube-clearance and all-angle visual review remain pending.",
+      "comparison": "2026-09-27 front/side/top before-after preview at .context/frantic-kiwi/mini-bar-bore-comparison.png; four-pose side cord review at .context/frantic-kiwi/mini-bar-cord-side-poses.png; current-source default jug screenshot at .context/frantic-kiwi/mini-bar-app-front.png.",
+      "provenanceSidecar": "docs/source-audits/2026-09-27-lattice-mini-bar-cord-passages-correction.md",
       "assetCoverage": "descriptor + FCStd + suspension sidecar; board.json generated from both authoring sources, USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored contact surfaces define picking and highlights; no 2D path inference",
       "suspensionSource": "Hangboards/lattice-mini-bar/suspension.json",
-      "suspensionSourceSHA256": "ea1e652ae611f6b638c432a5ee6fabcdf6223018567a6337bb307c6aac549220"
+      "suspensionSourceSHA256": "3b9540bd7db4bcb02e23361738362a6ea3f65110790a3edddb0327bd2583bca3",
+      "supersededSourceSHA256": "3896411d0f15fff3e6cb4159e76650d6c15171fc7763a74308201a9698ca7be3"
     },
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
@@ -222,7 +223,7 @@
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
       "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -271,7 +272,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -345,7 +346,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -417,5 +418,6 @@
   "miniBarMigrationNote": "2026-09-26: lattice-mini-bar became a source-backed FreeCAD package with four canonical grip poses and two approved exterior wrapped cord routes. The previous sha256Manifest moved to supersededSha256Manifest. See the provenance sidecar for sourced dimensions and labeled display estimates.",
   "miniBarOvoidCorrectionNote": "2026-09-26: approved Lattice end view and user correction led to a continuous ovoid CAD section; prior front/side/top comparison is retained. The USDZ has no cord geometry.",
   "miniBarSuspensionSeparationNote": "2026-09-26: user-approved separation puts the two exterior loops, meshWrap choice, and display parameters in suspension.json, matched to the descriptor modelSHA256 and locked by checksum. FCStd carries no suspension. Shared runtime solver uses the loaded mesh and the overhead anchor for each grip pose. CAD geometry, USDZ, and descriptor bytes are unchanged from the ovoid correction commit; native four-pose test passes.",
-  "moonArmstrongMigrationNote": "2026-09-26: moon-armstrong migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). The RealityKit branch carried manifest b1036dea...; the combined manifest also includes the Mini Bar native source and sidecar, and supersedes the Mini Bar branch manifest 2129c957...."
+  "moonArmstrongMigrationNote": "2026-09-26: moon-armstrong migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). The RealityKit branch carried manifest b1036dea...; the combined manifest also includes the Mini Bar native source and sidecar, and supersedes the Mini Bar branch manifest 2129c957....",
+  "miniBarBoreCorrectionNote": "2026-09-27: user confirmed two cord bores per end. CAD now has four transverse through cuts; sidecar records their estimated endpoints and CAD-derived per-pose exterior bights. Prior exterior-only meshWrap interpretation is superseded. Focused simulator and centerline checks pass; generic holes-plus-anchor runtime route generation and full tube-clearance review remain pending."
 }

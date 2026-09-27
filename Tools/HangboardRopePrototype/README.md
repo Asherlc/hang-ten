@@ -1,5 +1,12 @@
 # Mini Bar Bullet rope contact experiment
 
+**Physical-fidelity correction (2026-09-27):** Lattice's photos, product-page
+review, and how-to video show cord openings near the ends. The current CAD
+body has no local holes, and this solver pins inferred exterior guide points.
+The eight runs below describe a **solid-bar surrogate**, not the physical Mini
+Bar. Their zero-of-eight outcome does not establish that Bullet would fail on
+the actual board. See the [cord passage audit](../../docs/source-audits/2026-09-27-lattice-mini-bar-cord-passages-correction.md).
+
 This is an offline experiment for the Lattice Mini Bar. It does not change the
 app, FreeCAD source, USDZ, descriptor, or suspension sidecar. The cord remains
 transient and unselectable in the product. The experiment asks whether a rope
@@ -72,7 +79,7 @@ closed solid mesh.
 
 ## Findings (2026-09-27)
 
-The synthetic round-bar test passed outside winding, tube contact, separate
+For the provisional solid-bar surrogate, the synthetic round-bar test passed outside winding, tube contact, separate
 loops, fixed guides, and repeatability. On the real Mini Bar, all eight fresh
 conditions reproduced in an independent second run, but **zero of eight met
 the exact mesh acceptance criteria**. Six did not converge within 3000 steps.
@@ -82,9 +89,6 @@ not converge. The original 0.75 m estimate was slack relative to the taut
 estimate and gave visibly hanging spans. See the generated side PNGs and
 `report.json` for each pose and loop.
 
-This prototype does not support replacing the product cord renderer with a
-simple Bullet soft-body chain. The gap is caused at least in part by the
-convex approximation of the recessed body and by guide points that are display
-estimates. A later approach would need a contact solver that handles the
-actual concave surface and measured physical cord passages; simply increasing
-iterations or hiding the gap in rendering would not validate contact.
+These runs cannot support a decision to replace the product cord renderer.
+The CAD first needs the actual passage topology represented. The simulator
+then needs passage constraints and a collider that handles that geometry.

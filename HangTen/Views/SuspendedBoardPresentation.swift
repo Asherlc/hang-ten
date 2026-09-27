@@ -616,11 +616,13 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.cordTooShort
             }
 
-            // Reserve the exact authored route and allocate the remaining
-            // declared capacity between free spans. Each span renders taut;
-            // unused capacity never introduces sag or changes the bore route.
-            let freeLength = declaredLength - rigidLength
+            // A loaded cord through fixed bores is tensioned between its
+            // exterior contact route and the overhead anchor. Rest length is
+            // a capacity bound; excess does not create visible sag in the
+            // free spans or move the bore route. Point-passage loops keep
+            // their previous allocated-length behavior.
             let endpointDistanceSum = firstDistance + secondDistance
+            let freeLength = usesAuthoredRoute ? endpointDistanceSum : declaredLength - rigidLength
             guard freeLength.isFinite, endpointDistanceSum.isFinite,
                   freeLength >= endpointDistanceSum - SuspendedCordSolver.tautTolerance else {
                 throw SuspendedPresentationError.cordTooShort

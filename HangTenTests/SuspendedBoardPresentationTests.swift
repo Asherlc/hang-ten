@@ -973,6 +973,23 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testThroughBoreFreeSpansStayTautWhenCapacityExceedsRoute() throws {
+        let authored = authoredTwoBranchSuspension().suspension
+        let result = try SuspendedBoardPresentation.solve(
+            pose: pose(), suspension: authored, bounds: bounds
+        )
+        for branch in result.branches {
+            XCTAssertEqual(branch.spans.count, 3)
+            for span in [branch.spans.first!, branch.spans.last!] {
+                let straight = simd_length(span.last! - span.first!)
+                let sampled = zip(span, span.dropFirst()).reduce(Float.zero) {
+                    $0 + simd_length($1.1 - $1.0)
+                }
+                XCTAssertEqual(sampled, straight, accuracy: 1e-5)
+            }
+        }
+    }
+
     func testTwoBranchRejectsShortRestLength() {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
             pose: pose(),

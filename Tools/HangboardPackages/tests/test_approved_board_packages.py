@@ -45,7 +45,7 @@ J_BRYANT_FTG32_ROOT = HANGBOARDS_ROOT / "j-bryant-ftg-32"
 MINI_BAR_ROOT = HANGBOARDS_ROOT / "lattice-mini-bar"
 
 
-def test_mini_bar_cad_keeps_four_contacts_and_separate_mesh_wrapped_loops() -> None:
+def test_mini_bar_cad_keeps_four_contacts_and_two_bores_per_end() -> None:
     board = json.loads(package_board_text(MINI_BAR_ROOT))
     assert not (MINI_BAR_ROOT / "board.json").exists()
     assert (MINI_BAR_ROOT / "lattice-mini-bar.FCStd").exists()
@@ -60,11 +60,17 @@ def test_mini_bar_cad_keeps_four_contacts_and_separate_mesh_wrapped_loops() -> N
     assert media["type"] == "model"
     suspension = media["suspension"]
     assert suspension["type"] == "twoBranchCord"
-    assert suspension["meshWrap"] == {"clearance": 0.005}
+    assert "meshWrap" not in suspension
     assert {passage["nodeID"] for side in suspension["passages"].values() for passage in side} == {"mini_bar_body"}
     assert set(suspension["canonicalPoses"]) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}
     assert all("wrappedRoutes" not in pose for pose in suspension["canonicalPoses"].values())
-    assert all(side[0]["pointInModel"][0] != side[1]["pointInModel"][0]
+    assert all(len(side) == 2 for side in suspension["passages"].values())
+    assert all(set(passage) == {"id", "nodeID", "entryPointInModel", "exitPointInModel", "provenance"}
+               for side in suspension["passages"].values() for passage in side)
+    assert all(side[0]["entryPointInModel"][0] != side[1]["entryPointInModel"][0]
+               for side in suspension["passages"].values())
+    assert all(side[0]["entryPointInModel"][2] < side[0]["exitPointInModel"][2]
+               and side[1]["entryPointInModel"][2] > side[1]["exitPointInModel"][2]
                for side in suspension["passages"].values())
     descriptor = json.loads((MINI_BAR_ROOT / media["descriptorPath"]).read_text())
     assert descriptor["modelSHA256"] == hashlib.sha256((MINI_BAR_ROOT / media["assetPath"]).read_bytes()).hexdigest()
