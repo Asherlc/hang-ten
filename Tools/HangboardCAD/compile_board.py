@@ -85,6 +85,11 @@ CREASE_DEGREES = 35.0
 # claims chord triangles of curved region faces; see _partition_body_triangles.
 # Opt-in so boards compiled before it existed keep byte-identical output.
 CURVED_REGION_PARTITION = "HangTenCurvedRegionPartition"
+# Opt-in: take each vertex normal from the B-rep surface it lies on instead of
+# averaging incident triangles. Averaging tilts the normal where a large planar
+# triangle meets a tangent fillet's many small ones, which shades a band across
+# the flat face. Opt-in so existing sources keep reproducing their bytes.
+SURFACE_NORMALS = "HangTenSurfaceNormals"
 
 
 class BuildError(RuntimeError):
@@ -431,8 +436,77 @@ def _triangle_area(points, facets, indices) -> float:
     return total
 
 
-def _build_mesh(node_id, points, triangles, material, model_box):
-    points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
+def _surface_normals(shape, points, triangles, deflection: float):
+    """Shade each triangle with the analytic normal of the B-rep face it tessellates.
+
+    Each triangle is assigned to the face whose surface its centroid lies on
+    (within the deflection, inside the face domain, best aligned with the
+    triangle). Vertices are split per face, and each carries that face's
+    surface normal at its position, so a face shades smoothly, a tangent seam
+    is continuous, and every edge between faces that is not tangent stays
+    crisp. The sign follows the triangle winding, because region shells carry
+    no reliable face orientation. A triangle no face claims keeps its flat
+    normal.
+    """
+    import FreeCAD as App
+
+    faces = []
+    for face in shape.Faces:
+        box = face.BoundBox
+        box.enlarge(2.0 * deflection)
+        faces.append((face, box))
+    out_points: list = []
+    out_normals: list = []
+    out_triangles: list = []
+    remap: dict[tuple[int, int], int] = {}
+    for triangle_index, triangle in enumerate(triangles):
+        a, b, c = (points[index] for index in triangle)
+        flat = (b - a).cross(c - a)
+        if flat.Length > 1e-12:
+            flat.normalize()
+        centroid = (a + b + c) * (1.0 / 3.0)
+        owner, best = None, None
+        for face_index, (face, box) in enumerate(faces):
+            if not box.isInside(centroid):
+                continue
+            u, v = face.Surface.parameter(centroid)
+            distance = (face.Surface.value(u, v) - centroid).Length
+            if distance > 1.5 * deflection + 1e-6 or not face.isPartOfDomain(u, v):
+                continue
+            normal = face.normalAt(u, v)
+            alignment = abs(normal.dot(flat)) if normal.Length > 1e-12 else 0.0
+            key = (distance, -alignment)
+            if best is None or key < best:
+                owner, best = face_index, key
+        corners = []
+        for index in triangle:
+            if owner is None:
+                key = (index, -1 - triangle_index)
+                normal = flat
+            else:
+                key = (index, owner)
+                normal = None
+            if key not in remap:
+                if normal is None:
+                    face = faces[owner][0]
+                    normal = face.normalAt(*face.Surface.parameter(points[index]))
+                    if normal.Length > 1e-12:
+                        normal.normalize()
+                    if normal.dot(flat) < 0:
+                        normal = App.Vector(-normal.x, -normal.y, -normal.z)
+                remap[key] = len(out_points)
+                out_points.append(points[index])
+                out_normals.append(normal)
+            corners.append(remap[key])
+        out_triangles.append(tuple(corners))
+    return out_points, out_triangles, out_normals
+
+
+def _build_mesh(node_id, points, triangles, material, model_box, surface=None, deflection=None):
+    if surface is not None:
+        points, triangles, normals = _surface_normals(surface, points, triangles, deflection)
+    else:
+        points, triangles, normals = _crease_normals(points, triangles, CREASE_DEGREES)
     return usdz_writer.Mesh(
         node_id=node_id,
         points_mm=[(p.x, p.y, p.z) for p in points],
@@ -499,12 +573,18 @@ def _declared_depths(board, version: int) -> dict:
     return declared
 
 
-def _validate_published_depths(contact_objects, declared, version: int, deflection) -> dict:
+def _validate_published_depths(
+    contact_objects, declared, version: int, deflection, board_depth: float | None = None
+) -> dict:
     """Check each authored region against the grip depth the board declares.
 
     The authored region's extent along the native depth axis must agree with the
     published depth; this is what catches a region that silently re-bound to
     another surface. Attachments have no published grip depth and are skipped.
+
+    A region cannot be deeper than the board. When a published depth exceeds the
+    body's own depth extent ``board_depth`` (a nominal label, such as a 40 mm jug
+    across a 38 mm rail), the region must instead span the body's full depth.
     """
     measured = {}
     for obj in contact_objects:
@@ -513,10 +593,14 @@ def _validate_published_depths(contact_objects, declared, version: int, deflecti
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
-        if abs(measured[key] - declared[key]) > tolerance:
+        expected = declared[key]
+        if board_depth is not None and expected > board_depth + tolerance:
+            expected = board_depth
+        if abs(measured[key] - expected) > tolerance:
             raise BuildError(
                 f"{key} region depth {measured[key]:.3f} mm disagrees with the "
-                f"published depth {declared[key]:.3f} mm (tolerance {tolerance:.3f} mm); "
+                f"published depth {declared[key]:.3f} mm (expected {expected:.3f} mm, "
+                f"tolerance {tolerance:.3f} mm); "
                 "the region has probably bound to the wrong surface"
             )
     return measured
@@ -676,6 +760,10 @@ def build(
                 skip_mesh_shells=faceted,
             )
         body_indices = [index for index in range(len(body_facets)) if index not in assignment]
+        surface_normals = bool(
+            SURFACE_NORMALS in document.PropertiesList
+            and document.getPropertyByName(SURFACE_NORMALS)
+        )
 
         meshes = [
             _build_mesh(
@@ -683,6 +771,8 @@ def build(
                 *_subset_mesh(body_points, body_facets, body_indices),
                 material=materials.get(getattr(body_object, "MaterialName", "")),
                 model_box=model_box,
+                surface=body_object.Shape if surface_normals and not faceted else None,
+                deflection=deflection,
             )
         ]
         print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
@@ -708,6 +798,8 @@ def build(
                     facets,
                     material=materials.get(getattr(obj, "MaterialName", "")),
                     model_box=model_box,
+                    surface=obj.Shape if surface_normals and not faceted else None,
+                    deflection=deflection,
                 )
             )
             print(f"      {obj.NodeID}: {len(facets)} triangles, role={obj.NodeRole}")
@@ -743,7 +835,11 @@ def build(
             )
         else:
             measured_depths = _validate_published_depths(
-                contact_objects, _declared_depths(board, version), version, deflection
+                contact_objects,
+                _declared_depths(board, version),
+                version,
+                deflection,
+                board_depth=float(body_object.Shape.BoundBox.YLength),
             )
 
         print("[6/10] writing the USDZ directly")

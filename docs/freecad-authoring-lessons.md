@@ -762,3 +762,28 @@ triangle count.
   the published depth, and cut it.
 - A cutting tool whose edge coincides with another cutter's edge (the field
   floor meeting the rail slot) should overlap by about 0.5 mm instead.
+
+## 20. Analytic references, fillet shading, and nominal depths
+(`metolius-light-rail-2`, 2026-09-26)
+
+- **Slice before you trace.** Slicing the reference at a few x stations and
+  listing its mouth ring showed round-number stations: a rounded-rectangle mouth
+  (r 9) inset 0 / 1.5 / 2.4 / 2.7 / 3.6 / 4.6 mm at fixed fractions of a depth
+  that runs 20 mm on one lip and 15 mm on the other. Each station is then a
+  planar sketch on a plane tilted about X, and the pocket is one ruled loft.
+- **Check the reference against what the product's process can make.** The
+  reference kept an r 6 corner radius through a 5 mm round-over, which no router
+  cuts. A true fillet of the outline, with its radius read off the manufacturer
+  photo, is both physical and closer to the photo.
+- **Crease-averaged normals band flat faces next to tangent fillets.** At the
+  seam, a vertex averages one long planar triangle with many small fillet
+  triangles, and the tilt spreads across the flat face. Set
+  `HangTenSurfaceNormals` to shade each triangle with its B-rep face's analytic
+  normal. Taking one face normal per crease cluster instead is wrong: it
+  streaks the small creases between pocket station bands.
+- **A nominal depth can exceed the board.** "40 mm" jugs across a 38 mm rail
+  cannot meet the published-depth gate. The gate now requires such a region to
+  span the full body depth; do not enlarge the board or change the label.
+- **`doc.saveAs` over an existing FCStd leaves a `.FCBak` beside it**, and the
+  package validator rejects the unknown entry. Delete it (or save elsewhere and
+  copy).

@@ -662,6 +662,14 @@ write-up. The durable points:
   the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
   full method are in `freecad-authoring-lessons.md` §18. See
   `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+- **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
+  Grouping its vertices by coordinate recovered every station exactly (lessons
+  §20). Check a reference's round-over against what a router can cut: a true
+  fillet of an r 6 outline, not the reference's constant-r 6 sweep, which the
+  manufacturer photo supports. Two compiler additions came out of it: a region
+  whose published depth exceeds the board's thickness must span the full depth,
+  and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
+  `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
