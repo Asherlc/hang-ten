@@ -99,7 +99,7 @@ rtk git add HangTen/Views/GripHandModelView.swift HangTen/Rendering/GripHandSurf
 rtk git commit -m "feat: render grip hand mesh with RealityKit"
 ```
 
-### Task 3: Port camera, bounds framing, and orbit controls
+### Task 3: Port camera, bounds framing, lighting, and orbit controls
 
 **Files:**
 - Modify: `HangTen/Views/GripHandModelView.swift`
@@ -120,12 +120,12 @@ Expected: compile failures for the new `GripHandRealityScene` camera API.
 
 - [ ] **Step 3: Implement `GripHandRealityScene`**
 
-Own the root, hand entity, and entity with `OrthographicCameraComponent`. Port the current explicit camera basis calculation, palm-oblique offsets `(±5.8, 2.75, 9.4)`, fit padding `1.08`, fallback aspect `0.85`, bounded azimuth/elevation/zoom, and reset-token behavior. Recompute canonical framing on viewport, pose, or side change. Set the RealityView camera to the entity camera.
+Own the root, hand entity, and entity with `OrthographicCameraComponent`. Port the current explicit camera basis calculation, palm-oblique offsets `(±5.8, 2.75, 9.4)`, fit padding `1.08`, fallback aspect `0.85`, bounded azimuth/elevation/zoom, and reset-token behavior. Recompute canonical framing on viewport, pose, or side change. Add RealityKit lighting/environment components that bring neutral and highlighted hand appearance close to the existing SceneKit reference; tune against Task 2's neutral, index, and index+ring reference screenshots, preserving the exact vertex-color interpolation. Set the RealityView camera to the entity camera.
 
-- [ ] **Step 4: Run camera and transform tests**
+- [ ] **Step 4: Run camera, transform, and lighting visual checks**
 
-Run focused `GripHandOrbitTests`.
-Expected: full azimuth returns to canonical camera transform; scale clamps to canonical `/1.35` and `/0.75`; reset restores camera framing; bad inputs leave transforms finite and unchanged.
+Run focused `GripHandOrbitTests` and capture the three Task 2 color states for both sides on the isolated simulator.
+Expected: full azimuth returns to canonical camera transform; scale clamps to canonical `/1.35` and `/0.75`; reset restores camera framing; bad inputs leave transforms finite and unchanged; the neutral material remains warm matte and selected-finger brightness/contrast is close to the SceneKit reference without changing which vertices are highlighted.
 
 - [ ] **Step 5: Commit camera/orbit support**
 
