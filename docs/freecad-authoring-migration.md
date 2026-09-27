@@ -630,6 +630,15 @@ write-up. The durable points:
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
   `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+- **target10a Linebreaker BASE** (23 contacts) came from a retained
+  signed-distance generator, not a Blender script. Search `.context/migration*`
+  history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
+  An SDF's smooth blends (`smax`) have no exact B-rep, so author the primitives
+  and state which blends are omitted. Check each cavity's mouth against every
+  crease *before* authoring. A mouth that crosses a tier crease makes the
+  region's depth extent miss the published depth. See lessons §18 and
+  `docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+
 - **Beastmaker 2000** has no generator in Git, so every number was measured from
   the display mesh with slices and circle/line fits. It is five extruded section
   sketches (one per top-slope segment) fused, then trimmed by the intersection
@@ -653,6 +662,14 @@ write-up. The durable points:
   the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
   full method are in `freecad-authoring-lessons.md` §18. See
   `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+- **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
+  Grouping its vertices by coordinate recovered every station exactly (lessons
+  §20). Check a reference's round-over against what a router can cut: a true
+  fillet of an r 6 outline, not the reference's constant-r 6 sweep, which the
+  manufacturer photo supports. Two compiler additions came out of it: a region
+  whose published depth exceeds the board's thickness must span the full depth,
+  and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
+  `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
 
 ## Fast loop and definition of done
 

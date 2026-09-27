@@ -50,9 +50,9 @@ The migrated front, side, and top renderings were compared with the prior
 committed USDZ in workspace-owned side-by-side images under
 `.context/quiet-bedbug/prev1/`. The oblique comparison is at
 `.context/quiet-bedbug/{new3q,ref3q}.png`. The migrated source SHA-256 is
-`de2ce4db5f7d84dfdf92c0b4024ce787c34bfbb918202cb81f12a776222e1872`;
+`10b634a6f3ac880bfb1414605c36eec3a696e55ea339bd626a796ffa6fbf24d5`;
 the compiled USDZ SHA-256 is
-`f55ee5cc3c390a1b4268c41bf14ed0d92a991eb28acc9d3519595a059295dc64`.
+`112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b`.
 The compiler reports 162,804 triangles and 24 contact IDs. It reopened the
 source without modifying it. An additional FreeCAD reopen found 31 fully
 constrained sketches, one body node, 24 contact nodes, and no imported mesh
@@ -69,3 +69,11 @@ dedicated simulator was deleted after review. The final bore-removal revision
 also built successfully, but `simctl launch` stalled before the app process
 started; the owned simulator and DerivedData were removed by the cleanup trap.
 There is no final-revision app screenshot.
+
+PR review found that a large planar back face had been assigned to the
+shallow middle-ring contact by the temporary author's area-weighted face
+classifier. The native source now leaves every y = 0 back face in the body
+region. The rebuilt shallow middle-ring contact has nine pocket faces per
+side and no back face; its left normalized frame is x = 0.291–0.342,
+y = 0.070–0.145, close to the prior asset's x = 0.290–0.343,
+y = 0.067–0.147. The mirrored right frame was corrected as well.
