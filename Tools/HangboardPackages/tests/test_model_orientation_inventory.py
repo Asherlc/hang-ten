@@ -57,6 +57,7 @@ MODEL_PACKAGE_IDS = {
     "target10a.linebreaker-base",
     "tension.flash-board",
     "tension.grindstone",
+    "tension.grindstone-pro",
     "soill.iron-palm-2",
     "soill.split-palm",
     "soill.training-tiles",

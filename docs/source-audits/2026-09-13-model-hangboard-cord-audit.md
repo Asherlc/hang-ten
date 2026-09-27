@@ -633,3 +633,7 @@ Historical inventory validation after all six packages became model-backed:
 ```json
 {"decisions":{"excluded":18,"represented":8}}
 ```
+
+### 2026-09-27 — Grindstone Pro model migration
+
+The 2017 Tension Grindstone Pro now has an explicit `noDocumentedSuspension` exclusion. The user-approved exact-revision archival front and alternate-angle photos are retained as `tension-grindstone-pro-climbing-front.jpg` and `tension-grindstone-pro-climbing-angle.jpg` beneath `2026-09-13-model-cord-snapshots/`; their source URLs and SHA-256 digests are recorded in the closed JSON manifest. The photos and 2017 product interview establish the board and contact layout but do not establish a cord accessory or route. This excludes a rendered cord on the evidence available; it does not claim no mounting accessory exists.

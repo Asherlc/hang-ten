@@ -1091,6 +1091,37 @@
       }
     },
     {
+      "packageID": "tension.grindstone-pro",
+      "decision": "excluded",
+      "sourceFact": "noDocumentedSuspension",
+      "topology": null,
+      "ruling": "The approved archival front and alternate-angle photos and 2017 product interview document the Grindstone Pro and its hold layout but do not establish a supplied or integral cord system or any cord route. No cord is rendered; this evidence-limited exclusion does not assert that no mounting accessory exists.",
+      "evidence": [
+        {
+          "view": "exact-revision archival front photo",
+          "url": "https://cdn.climbing.com/wp-content/uploads/2017/11/dsc09271.jpg",
+          "exactRevisionID": "tension-grindstone-pro-2017",
+          "sourceTier": "independent",
+          "snapshotSHA256": "929108c3f712a7186711543f705c4855eb95a0cc3dcf11be5c6d545e568c5407",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/tension-grindstone-pro-climbing-front.jpg"
+        },
+        {
+          "view": "exact-revision archival alternate-angle photo",
+          "url": "https://cdn.climbing.com/wp-content/uploads/2017/12/hptensionboard.jpg",
+          "exactRevisionID": "tension-grindstone-pro-2017",
+          "sourceTier": "independent",
+          "snapshotSHA256": "39a55492120d84fd6a35780116c6b1a21853e2440d9ace6796b559293f22bea9",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/tension-grindstone-pro-climbing-angle.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user",
+        "reviewedAt": "2026-09-26",
+        "notes": "The user approved these exact photos as the Grindstone Pro visual evidence set and approved the CAD design to omit unsupported details; no suspension route is represented."
+      }
+    },
+    {
       "packageID": "the-hangboard.the-hangboard",
       "decision": "excluded",
       "sourceFact": "noDocumentedSuspension",
