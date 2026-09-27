@@ -574,28 +574,34 @@ def _declared_depths(board, version: int) -> dict:
 
 
 def _validate_published_depths(
-    contact_objects, declared, version: int, deflection, board_depth: float | None = None
+    contact_objects, declared, version: int, deflection,
+    board_depth: float | dict[str, float] | None = None,
 ) -> dict:
     """Check each authored region against the grip depth the board declares.
 
-    The authored region's extent along the native depth axis must agree with the
-    published depth; this is what catches a region that silently re-bound to
-    another surface. Attachments have no published grip depth and are skipped.
+    The authored region's extent along its native depth axis must agree with the
+    published depth. Y remains the default; a side pocket may declare
+    HangTenDepthAxis = "x" on its contact object. Attachments have no published
+    grip depth and are skipped.
 
     A region cannot be deeper than the board. When a published depth exceeds the
-    body's own depth extent ``board_depth`` (a nominal label, such as a 40 mm jug
-    across a 38 mm rail), the region must instead span the body's full depth.
+    body's own extent on that axis (a nominal label, such as a 40 mm jug across
+    a 38 mm rail), the region must instead span the body's full extent.
     """
     measured = {}
     for obj in contact_objects:
         key = _contact_binding(obj)
-        measured[key] = round(float(obj.Shape.BoundBox.YLength), 3)
+        axis = str(getattr(obj, "HangTenDepthAxis", "y")).lower()
+        if axis not in {"x", "y", "z"}:
+            raise BuildError(f"{key} has invalid HangTenDepthAxis {axis!r}")
+        measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
         expected = declared[key]
-        if board_depth is not None and expected > board_depth + tolerance:
-            expected = board_depth
+        full_depth = board_depth.get(axis) if isinstance(board_depth, dict) else board_depth
+        if full_depth is not None and expected > full_depth + tolerance:
+            expected = full_depth
         if abs(measured[key] - expected) > tolerance:
             raise BuildError(
                 f"{key} region depth {measured[key]:.3f} mm disagrees with the "
@@ -839,7 +845,8 @@ def build(
                 _declared_depths(board, version),
                 version,
                 deflection,
-                board_depth=float(body_object.Shape.BoundBox.YLength),
+                board_depth={axis: float(getattr(body_object.Shape.BoundBox, axis.upper() + "Length"))
+                             for axis in ("x", "y", "z")},
             )
 
         print("[6/10] writing the USDZ directly")

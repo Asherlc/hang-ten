@@ -1,265 +1,337 @@
 {
-  "contacts": {
-    "cd-crimp-10mm": {
-      "center": [
-        0.0625,
-        0.777
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.125,
-          0.799
-        ],
-        "min": [
-          0.0,
-          0.755
-        ]
-      },
-      "nodeIDs": [
-        "hold_crimp_10mm_001"
-      ]
-    },
-    "cd-crimp-15mm": {
-      "center": [
-        0.90625,
-        0.537
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          0.559
-        ],
-        "min": [
-          0.8125,
-          0.515
-        ]
-      },
-      "nodeIDs": [
-        "hold_crimp_15mm_001"
-      ]
-    },
-    "cd-crimp-20mm": {
-      "center": [
-        0.125,
-        0.534483
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.25,
-          0.559
-        ],
-        "min": [
-          0.0,
-          0.509966
-        ]
-      },
-      "nodeIDs": [
-        "hold_crimp_20mm_001"
-      ]
-    },
-    "cd-crimp-8mm": {
-      "center": [
-        0.95,
-        0.777
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          0.799
-        ],
-        "min": [
-          0.9,
-          0.755
-        ]
-      },
-      "nodeIDs": [
-        "hold_crimp_8mm_001"
-      ]
-    },
-    "cd-pinch-100mm-bottom": {
-      "center": [
-        0.5,
-        0.0
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.825,
-          0.0
-        ],
-        "min": [
-          0.175,
-          0.0
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_100mm_bottom_001"
-      ]
-    },
-    "cd-pinch-100mm-top": {
-      "center": [
-        0.5,
-        1.0
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.825,
-          1.0
-        ],
-        "min": [
-          0.175,
-          1.0
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_100mm_top_001"
-      ]
-    },
-    "cd-pinch-80mm-negative-x": {
-      "center": [
-        0.0,
-        0.25
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.0,
-          0.41
-        ],
-        "min": [
-          0.0,
-          0.09
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_80mm_negative_x_001"
-      ]
-    },
-    "cd-pinch-80mm-positive-x": {
-      "center": [
-        1.0,
-        0.25
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          0.41
-        ],
-        "min": [
-          1.0,
-          0.09
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_80mm_positive_x_001"
-      ]
-    },
-    "cd-pinch-90mm-back": {
-      "center": [
-        0.5,
-        0.82
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.8375,
-          0.92
-        ],
-        "min": [
-          0.1625,
-          0.72
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_90mm_back_001"
-      ]
-    },
-    "cd-pinch-90mm-front": {
-      "center": [
-        0.5,
-        0.82
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.8375,
-          0.92
-        ],
-        "min": [
-          0.1625,
-          0.72
-        ]
-      },
-      "nodeIDs": [
-        "hold_pinch_90mm_front_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
   "modelBounds": {
-    "max": [
-      0.04,
-      0.05,
-      0.045
-    ],
     "min": [
-      -0.04,
-      -0.05,
-      -0.045
+      -0.039999999,
+      -0.050000001,
+      -0.045000002
+    ],
+    "max": [
+      0.039999999,
+      0.050000001,
+      0.045000002
     ]
   },
-  "modelSHA256": "3516382e00321d5c831695e454e78b3185092f147ec46b1dbd2ac57b61413f5c",
   "nodes": [
     {
       "nodeID": "body_training_block_001",
       "role": "body"
     },
     {
-      "contactID": "cd-crimp-10mm",
       "nodeID": "hold_crimp_10mm_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-crimp-10mm"
     },
     {
-      "contactID": "cd-crimp-15mm",
       "nodeID": "hold_crimp_15mm_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-crimp-15mm"
     },
     {
-      "contactID": "cd-crimp-20mm",
       "nodeID": "hold_crimp_20mm_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-crimp-20mm"
     },
     {
-      "contactID": "cd-crimp-8mm",
       "nodeID": "hold_crimp_8mm_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-crimp-8mm"
     },
     {
-      "contactID": "cd-pinch-100mm-bottom",
       "nodeID": "hold_pinch_100mm_bottom_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-100mm-bottom"
     },
     {
-      "contactID": "cd-pinch-100mm-top",
       "nodeID": "hold_pinch_100mm_top_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-100mm-top"
     },
     {
-      "contactID": "cd-pinch-80mm-negative-x",
       "nodeID": "hold_pinch_80mm_negative_x_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-80mm-negative-x"
     },
     {
-      "contactID": "cd-pinch-80mm-positive-x",
       "nodeID": "hold_pinch_80mm_positive_x_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-80mm-positive-x"
     },
     {
-      "contactID": "cd-pinch-90mm-back",
       "nodeID": "hold_pinch_90mm_back_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-90mm-back"
     },
     {
-      "contactID": "cd-pinch-90mm-front",
       "nodeID": "hold_pinch_90mm_front_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "cd-pinch-90mm-front"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "cd-crimp-10mm": {
+      "nodeIDs": [
+        "hold_crimp_10mm_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.754999996
+        ],
+        "max": [
+          0.124999992,
+          0.798999996
+        ]
+      },
+      "center": [
+        0.062499996,
+        0.776999996
+      ],
+      "outline": [
+        [
+          0.0,
+          0.754999996
+        ],
+        [
+          0.124999992,
+          0.754999996
+        ],
+        [
+          0.124999992,
+          0.798999996
+        ],
+        [
+          0.0,
+          0.798999996
+        ]
+      ]
+    },
+    "cd-crimp-15mm": {
+      "nodeIDs": [
+        "hold_crimp_15mm_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.812500007,
+          0.515
+        ],
+        "max": [
+          1.0,
+          0.558999999
+        ]
+      },
+      "center": [
+        0.906250004,
+        0.536999999
+      ],
+      "outline": [
+        [
+          0.812500007,
+          0.515
+        ],
+        [
+          1.0,
+          0.515
+        ],
+        [
+          1.0,
+          0.558999999
+        ],
+        [
+          0.812500007,
+          0.558999999
+        ]
+      ]
+    },
+    "cd-crimp-20mm": {
+      "nodeIDs": [
+        "hold_crimp_20mm_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.509965954
+        ],
+        "max": [
+          0.249999994,
+          0.558999999
+        ]
+      },
+      "center": [
+        0.124999997,
+        0.534482976
+      ],
+      "outline": [
+        [
+          0.0,
+          0.509965954
+        ],
+        [
+          0.249999994,
+          0.509965954
+        ],
+        [
+          0.249999994,
+          0.558999999
+        ],
+        [
+          0.0,
+          0.558999999
+        ]
+      ]
+    },
+    "cd-crimp-8mm": {
+      "nodeIDs": [
+        "hold_crimp_8mm_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.900000009,
+          0.754999996
+        ],
+        "max": [
+          1.0,
+          0.798999996
+        ]
+      },
+      "center": [
+        0.950000004,
+        0.776999996
+      ],
+      "outline": [
+        [
+          0.900000009,
+          0.754999996
+        ],
+        [
+          1.0,
+          0.754999996
+        ],
+        [
+          1.0,
+          0.798999996
+        ],
+        [
+          0.900000009,
+          0.798999996
+        ]
+      ]
+    },
+    "cd-pinch-100mm-bottom": {
+      "nodeIDs": [
+        "hold_pinch_100mm_bottom_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.174999986,
+          0.000500008
+        ],
+        "max": [
+          0.825000014,
+          0.000500008
+        ]
+      },
+      "center": [
+        0.5,
+        0.000500008
+      ]
+    },
+    "cd-pinch-100mm-top": {
+      "nodeIDs": [
+        "hold_pinch_100mm_top_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.174999986,
+          0.999499992
+        ],
+        "max": [
+          0.825000014,
+          0.999499992
+        ]
+      },
+      "center": [
+        0.5,
+        0.999499992
+      ]
+    },
+    "cd-pinch-80mm-negative-x": {
+      "nodeIDs": [
+        "hold_pinch_80mm_negative_x_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.000625011,
+          0.089999995
+        ],
+        "max": [
+          0.000625011,
+          0.410000005
+        ]
+      },
+      "center": [
+        0.000625011,
+        0.25
+      ]
+    },
+    "cd-pinch-80mm-positive-x": {
+      "nodeIDs": [
+        "hold_pinch_80mm_positive_x_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.999374989,
+          0.089999995
+        ],
+        "max": [
+          0.999374989,
+          0.410000005
+        ]
+      },
+      "center": [
+        0.999374989,
+        0.25
+      ]
+    },
+    "cd-pinch-90mm-back": {
+      "nodeIDs": [
+        "hold_pinch_90mm_back_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.162499984,
+          0.719999996
+        ],
+        "max": [
+          0.837500016,
+          0.919999988
+        ]
+      },
+      "center": [
+        0.5,
+        0.819999992
+      ]
+    },
+    "cd-pinch-90mm-front": {
+      "nodeIDs": [
+        "hold_pinch_90mm_front_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.162499984,
+          0.719999996
+        ],
+        "max": [
+          0.837500016,
+          0.919999988
+        ]
+      },
+      "center": [
+        0.5,
+        0.819999992
+      ]
+    }
+  }
 }

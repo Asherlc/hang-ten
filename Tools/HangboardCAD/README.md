@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 20 of the 47 model-media boards are migrated** (those with a committed
+**Status: 21 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -207,6 +207,11 @@ without `NodeID` — sketches, datums, construction features — are never expor
 The `NodeID` becomes the USD mesh prim name, which is what the application binds
 against.
 
+For a contact that declares `HangTenGripDepthMm`, optional string property
+`HangTenDepthAxis` selects the native measurement axis (`x`, `y`, or `z`).
+Omitting it retains the original Y-axis behavior. The compiler validates the
+declared depth against that axis's exported contact bounds.
+
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.
@@ -291,11 +296,13 @@ sets it.
 
 ## Published depth deeper than the board
 
-The published-depth gate compares a region's native Y extent with its
-published grip depth. A region cannot be deeper than the body, so when a
-published depth exceeds the body's own Y extent (a nominal label, such as the
-Light Rail's "40 mm" jugs across a 38 mm rail), the region must instead span the
-body's full depth. Every other region still has to match its published depth.
+The published-depth gate compares a region's extent on its selected native
+axis with its published grip depth. `HangTenDepthAxis` selects X, Y, or Z;
+omitting it retains the original Y-axis behavior. A region cannot be deeper
+than the body on that axis, so when a published depth exceeds the body's
+extent there (a nominal label, such as the Light Rail's "40 mm" jugs across a
+38 mm rail), the region must instead span the body's full extent on that axis.
+Every other region still has to match its published depth.
 
 ## Pilot: lattice-triple-rung
 
@@ -378,7 +385,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **20 of 47 model-media boards are migrated.** The other 27 still ship their
+* **21 of 47 model-media boards are migrated.** The other 26 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

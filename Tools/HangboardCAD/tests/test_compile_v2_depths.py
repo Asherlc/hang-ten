@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import sys
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -83,6 +84,28 @@ def test_shipped_metolius_board_declares_its_slot_depths() -> None:
         "pocket-32": 32.0,
         "pocket-40": 40.0,
     }
+
+
+def test_side_pocket_uses_explicit_x_depth_axis() -> None:
+    region = SimpleNamespace(
+        PropertiesList=["ContactID", "HangTenDepthAxis"], ContactID="side-20",
+        HangTenDepthAxis="x",
+        Shape=SimpleNamespace(BoundBox=SimpleNamespace(XLength=20, YLength=80, ZLength=4.4)),
+    )
+    assert compile_board._validate_published_depths(
+        [region], {"side-20": 20}, 1, .12, {"x": 80, "y": 10, "z": 90}
+    ) == {"side-20": 20}
+
+
+@pytest.mark.parametrize("axis", ["", "diagonal"])
+def test_invalid_depth_axis_fails_closed(axis: str) -> None:
+    region = SimpleNamespace(
+        PropertiesList=["ContactID", "HangTenDepthAxis"], ContactID="side-20",
+        HangTenDepthAxis=axis,
+        Shape=SimpleNamespace(BoundBox=SimpleNamespace(XLength=20, YLength=80, ZLength=4.4)),
+    )
+    with pytest.raises(compile_board.BuildError, match="invalid HangTenDepthAxis"):
+        compile_board._validate_published_depths([region], {"side-20": 20}, 1, .12)
 
 
 class _Box:
