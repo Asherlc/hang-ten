@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 21 of the 47 model-media boards are migrated** (those with a committed
+**Status: 22 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -279,6 +279,13 @@ its cord wells are cones and cylinders, and its pocket corners are ruled
 B-spline walls. See
 `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
 
+`moon-armstrong` sets it too: every hold mouth, tile, rail and bar edge is a
+ruled loft of rounded-rectangle sections (cones and planes). Its contact
+regions are copies of the compiled body's own faces, selected by lying on each
+cutter or rail surface, so the partition is exact. Like the Pivot, it was
+re-authored from manufacturer photos rather than traced from its reference. See
+`docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -292,7 +299,7 @@ are split per face, and each carries that face's normal at its position. A face
 then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`
-sets it.
+and `moon-armstrong` set it.
 
 ## Published depth deeper than the board
 
@@ -385,7 +392,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **21 of 47 model-media boards are migrated.** The other 26 still ship their
+* **22 of 47 model-media boards are migrated.** The other 25 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
