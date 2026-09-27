@@ -1,4 +1,5 @@
 import SceneKit
+import RealityKit
 import XCTest
 @testable import HangTen
 
@@ -28,16 +29,16 @@ final class GripHandOrbitTests: XCTestCase {
         XCTAssertTrue((bounds.1 - bounds.0).z > 0)
     }
 
-    private func makeInstalledCoordinator() -> (GripHandModelView.Coordinator, SCNView) {
-        let coordinator = GripHandModelView.Coordinator()
-        let view = SCNView(frame: CGRect(x: 0, y: 0, width: 200, height: 260))
-        coordinator.install(in: view)
-        coordinator.update(
+    @MainActor
+    private func makeScene() -> GripHandRealityScene {
+        let scene = GripHandRealityScene()
+        scene.update(
             pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
             side: .right,
+            viewportSize: CGSize(width: 200, height: 260),
             resetToken: 0
         )
-        return (coordinator, view)
+        return scene
     }
 
     func testVertexColorsUseBaseColorForEmptySelection() throws {
@@ -137,45 +138,109 @@ final class GripHandOrbitTests: XCTestCase {
         return try GripHandAsset.decode(JSONSerialization.data(withJSONObject: fixture))
     }
 
+    @MainActor
     func testFullAzimuthOrbitReturnsCameraToItsStartingPosition() throws {
-        let (coordinator, view) = makeInstalledCoordinator()
-        let camera = try XCTUnwrap(view.pointOfView)
-        let startPosition = camera.simdPosition
-        let startScale = try XCTUnwrap(camera.camera?.orthographicScale)
+        let scene = makeScene()
+        let startPosition = scene.camera.position
+        let startScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
 
         let steps = 12
         for _ in 0..<steps {
-            coordinator.orbit(azimuthDelta: .pi * 2 / Float(steps), elevationDelta: 0)
+            scene.orbit(azimuthDelta: .pi * 2 / Float(steps), elevationDelta: 0)
         }
 
-        XCTAssertEqual(camera.simdPosition.x, startPosition.x, accuracy: 1e-3)
-        XCTAssertEqual(camera.simdPosition.y, startPosition.y, accuracy: 1e-3)
-        XCTAssertEqual(camera.simdPosition.z, startPosition.z, accuracy: 1e-3)
-        XCTAssertEqual(camera.camera?.orthographicScale ?? -1, startScale, accuracy: 1e-6)
+        XCTAssertEqual(scene.camera.position.x, startPosition.x, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.position.y, startPosition.y, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.position.z, startPosition.z, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]?.scale ?? -1, startScale, accuracy: 1e-6)
     }
 
+    @MainActor
     func testOrbitZoomIsBoundedAndResetRestoresCanonicalFraming() throws {
-        let (coordinator, view) = makeInstalledCoordinator()
-        let camera = try XCTUnwrap(view.pointOfView)
-        let canonicalPosition = camera.simdPosition
-        let canonicalScale = try XCTUnwrap(camera.camera?.orthographicScale)
+        let scene = makeScene()
+        let canonicalPosition = scene.camera.position
+        let canonicalScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
 
-        coordinator.orbit(azimuthDelta: 0.4, elevationDelta: 0.2, zoomScale: 100)
-        XCTAssertEqual(camera.camera?.orthographicScale ?? -1, canonicalScale / 1.35, accuracy: 1e-6)
-        XCTAssertNotEqual(camera.simdPosition.x, canonicalPosition.x)
+        scene.orbit(azimuthDelta: 0.4, elevationDelta: 0.2, zoomScale: 100)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]?.scale ?? -1, canonicalScale / 1.35, accuracy: 1e-6)
+        XCTAssertNotEqual(scene.camera.position.x, canonicalPosition.x)
 
-        coordinator.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: 0.0001)
-        XCTAssertEqual(camera.camera?.orthographicScale ?? -1, canonicalScale / 0.75, accuracy: 1e-6)
+        scene.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: 0.0001)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]?.scale ?? -1, canonicalScale / 0.75, accuracy: 1e-6)
 
-        coordinator.update(
+        scene.orbit(azimuthDelta: 0, elevationDelta: 100)
+        let upperPosition = scene.camera.position
+        scene.orbit(azimuthDelta: 0, elevationDelta: 100)
+        XCTAssertEqual(scene.camera.position, upperPosition)
+        scene.orbit(azimuthDelta: 0, elevationDelta: -100)
+        let lowerPosition = scene.camera.position
+        scene.orbit(azimuthDelta: 0, elevationDelta: -100)
+        XCTAssertEqual(scene.camera.position, lowerPosition)
+
+        scene.update(
             pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
             side: .right,
+            viewportSize: CGSize(width: 200, height: 260),
             resetToken: 1
         )
-        XCTAssertEqual(camera.simdPosition.x, canonicalPosition.x, accuracy: 1e-3)
-        XCTAssertEqual(camera.simdPosition.y, canonicalPosition.y, accuracy: 1e-3)
-        XCTAssertEqual(camera.simdPosition.z, canonicalPosition.z, accuracy: 1e-3)
-        XCTAssertEqual(camera.camera?.orthographicScale ?? -1, canonicalScale, accuracy: 1e-6)
+        XCTAssertEqual(scene.camera.position.x, canonicalPosition.x, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.position.y, canonicalPosition.y, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.position.z, canonicalPosition.z, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]?.scale ?? -1, canonicalScale, accuracy: 1e-6)
+    }
+
+    @MainActor
+    func testSideChangeMirrorsHandAndRefitsCamera() {
+        let scene = makeScene()
+        let rightPosition = scene.camera.position
+        let rightScale = scene.camera.components[OrthographicCameraComponent.self]!.scale
+
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     side: .left, viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
+
+        XCTAssertEqual(scene.hand.scale.x, -1)
+        XCTAssertEqual(scene.camera.position.x, -rightPosition.x, accuracy: 1e-3)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]!.scale,
+                       rightScale, accuracy: 1e-3)
+    }
+
+    @MainActor
+    func testPoseAndViewportChangesRefitAuthoredBounds() {
+        let scene = makeScene()
+        let initialScale = scene.camera.components[OrthographicCameraComponent.self]!.scale
+
+        scene.update(pose: GripHandPose(posture: .openHand, fingerConfiguration: nil),
+                     side: .right, viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
+        let poseScale = scene.camera.components[OrthographicCameraComponent.self]!.scale
+        XCTAssertNotEqual(poseScale, initialScale)
+
+        scene.update(pose: GripHandPose(posture: .openHand, fingerConfiguration: nil),
+                     side: .right, viewportSize: CGSize(width: 100, height: 260), resetToken: 0)
+        let narrowScale = scene.camera.components[OrthographicCameraComponent.self]!.scale
+        XCTAssertGreaterThan(narrowScale, poseScale)
+    }
+
+    @MainActor
+    func testZeroViewportAndInvalidDeltasKeepCameraFiniteAndStable() {
+        let scene = makeScene()
+        let pose = GripHandPose(posture: .halfCrimp, fingerConfiguration: nil)
+        scene.update(pose: pose, side: .right, viewportSize: .zero, resetToken: 0)
+        XCTAssertTrue([scene.camera.position.x, scene.camera.position.y, scene.camera.position.z,
+                       scene.camera.components[OrthographicCameraComponent.self]!.scale].allSatisfy(\.isFinite))
+
+        let position = scene.camera.position
+        let scale = scene.camera.components[OrthographicCameraComponent.self]!.scale
+        scene.orbit(azimuthDelta: .nan, elevationDelta: 0)
+        scene.orbit(azimuthDelta: 0, elevationDelta: .infinity)
+        scene.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: 0)
+        scene.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: .nan)
+        XCTAssertEqual(scene.camera.position, position)
+        XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]!.scale, scale)
+
+        scene.update(pose: pose, side: .right,
+                     viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
+        scene.orbit(azimuthDelta: 0.2, elevationDelta: 0.1)
+        XCTAssertTrue([scene.camera.position.x, scene.camera.position.y, scene.camera.position.z].allSatisfy(\.isFinite))
     }
 
 }

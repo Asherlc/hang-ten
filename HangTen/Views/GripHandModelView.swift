@@ -496,6 +496,191 @@ final class GripHandRealitySurface {
     }
 }
 
+@MainActor
+final class GripHandRealityScene {
+    let root = Entity()
+    let hand = Entity()
+    let camera = Entity()
+    private(set) var isUnavailable = false
+
+    private var surface: GripHandRealitySurface?
+    private var currentPose: GripHandPose?
+    private var currentSide: GripCueSide?
+    private var currentViewportSize: CGSize = .zero
+    private var currentResetToken: Int?
+    private var canonicalCenter = SIMD3<Float>.zero
+    private var canonicalOffset = SIMD3<Float>(0, 0, 1)
+    private var canonicalOrthographicScale: Float = 1
+    private var orbitAzimuth: Float = 0
+    private var orbitElevation: Float = 0
+    private var orbitZoom: Float = 1
+    private static let studioEnvironment: EnvironmentResource? = {
+        guard let context = CGContext(data: nil, width: 32, height: 16,
+                                      bitsPerComponent: 8, bytesPerRow: 0,
+                                      space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
+        context.setFillColor(UIColor(white: 0.7, alpha: 1).cgColor)
+        context.fill(CGRect(x: 0, y: 0, width: 32, height: 16))
+        guard let image = context.makeImage() else { return nil }
+        return try? EnvironmentResource(equirectangular: image, withName: "GripHandStudio")
+    }()
+
+    init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
+        root.addChild(hand)
+        var orthographicCamera = OrthographicCameraComponent()
+        orthographicCamera.near = 0.1
+        orthographicCamera.far = 100
+        orthographicCamera.scale = 3.2
+        orthographicCamera.scaleDirection = .vertical
+        camera.components.set(orthographicCamera)
+        root.addChild(camera)
+
+        // Broad front and fill lights keep the matte hand legible from either
+        // mirrored palm-oblique view without modifying authored vertex colors.
+        addDirectionalLight(intensity: 2_400, position: SIMD3(0, 8, 7))
+        addDirectionalLight(intensity: 2_400, position: SIMD3(0, 2, -5))
+        if let environment = Self.studioEnvironment {
+            let light = Entity()
+            light.components.set(ImageBasedLightComponent(source: .single(environment), intensityExponent: 2))
+            root.addChild(light)
+            hand.components.set(ImageBasedLightReceiverComponent(imageBasedLight: light))
+        }
+
+        do {
+            let asset = try assetResult.get()
+            let surface = try GripHandRealitySurface(asset: asset)
+            hand.addChild(surface.root)
+            self.surface = surface
+        } catch {
+            isUnavailable = true
+        }
+    }
+
+    func update(pose: GripHandPose, side: GripCueSide, viewportSize: CGSize, resetToken: Int) {
+        let poseChanged = currentPose != pose
+        let sideChanged = currentSide != side
+        let viewportChanged = currentViewportSize != viewportSize
+        if poseChanged {
+            do {
+                try surface?.apply(pose)
+            } catch {
+                surface?.root.removeFromParent()
+                surface = nil
+                isUnavailable = true
+            }
+        }
+        if sideChanged { hand.scale.x = side == .left ? -1 : 1 }
+        let needsReset = poseChanged || sideChanged || viewportChanged || currentResetToken != resetToken
+        currentPose = pose
+        currentSide = side
+        currentViewportSize = viewportSize
+        currentResetToken = resetToken
+        if needsReset { resetCamera() }
+    }
+
+    func resetCamera() {
+        guard let surface else { return }
+        let points = surface.posedVerticesForFraming().map { point in
+            SIMD4<Float>(point.x * hand.scale.x, point.y, point.z, 1)
+        }
+        guard !points.isEmpty else { return }
+        var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
+        var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
+        for point in points {
+            let xyz = SIMD3<Float>(point.x, point.y, point.z)
+            low = simd_min(low, xyz)
+            high = simd_max(high, xyz)
+        }
+        let center = (low + high) / 2
+        let offset = SIMD3<Float>(currentSide == .left ? 5.8 : -5.8, 2.75, 9.4)
+        guard let transform = Self.cameraTransform(position: center + offset, target: center) else { return }
+        let inverseCamera = simd_inverse(transform)
+        var halfWidth: Float = 0
+        var halfHeight: Float = 0
+        for point in points {
+            let projected = inverseCamera * point
+            halfWidth = max(halfWidth, abs(projected.x))
+            halfHeight = max(halfHeight, abs(projected.y))
+        }
+        let size = currentViewportSize
+        let aspect = size.width.isFinite && size.height.isFinite && size.width > 0 && size.height > 0
+            ? Float(size.width / size.height) : 0.85
+        guard aspect.isFinite, aspect > 0 else { return }
+        let orthographicScale = max(halfHeight, halfWidth / aspect) * 1.08
+        guard orthographicScale.isFinite, orthographicScale > 0 else { return }
+        camera.transform = Transform(matrix: transform)
+        var component = camera.components[OrthographicCameraComponent.self]!
+        component.scale = orthographicScale
+        camera.components.set(component)
+
+        canonicalCenter = center
+        canonicalOffset = offset
+        canonicalOrthographicScale = orthographicScale
+        orbitAzimuth = 0
+        orbitElevation = 0
+        orbitZoom = 1
+    }
+
+    func orbit(azimuthDelta: Float, elevationDelta: Float, zoomScale: Float = 1) {
+        guard azimuthDelta.isFinite, elevationDelta.isFinite,
+              zoomScale.isFinite, zoomScale > 0 else { return }
+        let fullRotation: Float = .pi * 2
+        let nextAzimuth = (orbitAzimuth + azimuthDelta).truncatingRemainder(dividingBy: fullRotation)
+        let nextElevation = min(max(orbitElevation + elevationDelta, -0.55), 0.55)
+        let nextZoom = min(max(orbitZoom * zoomScale, 0.75), 1.35)
+        let baseDistance = simd_length(canonicalOffset)
+        guard baseDistance > 1e-6 else { return }
+        let baseDirection = canonicalOffset / baseDistance
+        let worldUp = SIMD3<Float>(0, 1, 0)
+        let rightVector = simd_cross(worldUp, baseDirection)
+        guard simd_length(rightVector) > 1e-6 else { return }
+        let right = simd_normalize(rightVector)
+
+        let yaw = simd_quatf(angle: nextAzimuth, axis: worldUp)
+        let pitch = simd_quatf(angle: nextElevation, axis: right)
+        let distance = baseDistance / nextZoom
+        guard distance.isFinite, distance > 0 else { return }
+        let rotatedOffset = (pitch * yaw).act(baseDirection) * distance
+        guard rotatedOffset.x.isFinite, rotatedOffset.y.isFinite, rotatedOffset.z.isFinite,
+              let transform = Self.cameraTransform(position: canonicalCenter + rotatedOffset,
+                                                   target: canonicalCenter) else { return }
+        camera.transform = Transform(matrix: transform)
+        var component = camera.components[OrthographicCameraComponent.self]!
+        component.scale = canonicalOrthographicScale / nextZoom
+        camera.components.set(component)
+        orbitAzimuth = nextAzimuth
+        orbitElevation = nextElevation
+        orbitZoom = nextZoom
+    }
+
+    private static func cameraTransform(position: SIMD3<Float>, target: SIMD3<Float>) -> simd_float4x4? {
+        let direction = target - position
+        let length = simd_length(direction)
+        guard length.isFinite, length > 1e-6 else { return nil }
+        let forward = direction / length
+        let worldUp = SIMD3<Float>(0, 1, 0)
+        let rightVector = simd_cross(forward, worldUp)
+        let rightLength = simd_length(rightVector)
+        guard rightLength.isFinite, rightLength > 1e-6 else { return nil }
+        let right = rightVector / rightLength
+        let up = simd_cross(right, forward)
+        var transform = matrix_identity_float4x4
+        transform.columns.0 = SIMD4<Float>(right.x, right.y, right.z, 0)
+        transform.columns.1 = SIMD4<Float>(up.x, up.y, up.z, 0)
+        transform.columns.2 = SIMD4<Float>(-forward.x, -forward.y, -forward.z, 0)
+        transform.columns.3 = SIMD4<Float>(position.x, position.y, position.z, 1)
+        return transform
+    }
+
+    private func addDirectionalLight(intensity: Float, position: SIMD3<Float>) {
+        let light = Entity()
+        light.components.set(DirectionalLightComponent(color: .white, intensity: intensity))
+        light.position = position
+        light.look(at: .zero, from: position, relativeTo: root)
+        root.addChild(light)
+    }
+}
+
 private final class GripHandSurface {
     let root = SCNNode()
     private let mesh = SCNNode()
