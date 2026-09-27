@@ -36,13 +36,15 @@ retain the existing world-space bounds framing and bounded turntable orbit.
 Preserve the shader's highlight equation and exact finger semantics. For each
 vertex, select its authored highlight weight only when its `digitIndices` entry
 matches one of the explicitly selected fingers, clamp the result to 0...1, and
-mix the existing linear-RGB base and highlight colors. Use RealityKit-supported
-mesh/material data for the computed per-vertex color; implementation planning
-must include an early rendering probe to confirm the chosen API preserves smooth
-interpolation and the colors on the bundled mesh. The pose geometry cache stays
-bounded, and its key must include both the pose and selected-finger set if the
-colored output is cached. Do not infer finger membership from grip type or
-finger count.
+mix the existing linear-RGB base and highlight colors. Store the computed RGBA
+values in the RealityKit mesh's per-vertex color attribute. A device probe found
+that `LowLevelMesh.VertexSemantic.color` alone is ignored by the standard PBR
+material used in the initial experiment, so the view must use a RealityKit
+`CustomMaterial` surface shader to read the interpolated geometry color and set
+that pixel's base color. Preserve the PBR lighting/roughness behavior of the
+hand material. The pose geometry cache stays bounded, and its key must include
+both the pose and selected-finger set if the colored output is cached. Do not
+infer finger membership from grip type or finger count.
 
 Move pan and pinch handling to SwiftUI gestures attached to the RealityView.
 Translate drag deltas and magnification changes through the same orbit limits,
@@ -54,9 +56,11 @@ out of the accessibility element tree, as the current UIKit view does.
 
 ## Scope and constraints
 
-- Modify `HangTen/Views/GripHandModelView.swift` and
-  `HangTenTests/GripHandOrbitTests.swift`; update project references only if
-  RealityKit requires a new compiled resource.
+- Modify `HangTen/Views/GripHandModelView.swift`,
+  `HangTenTests/GripHandOrbitTests.swift`, and `HangTen.xcodeproj/project.pbxproj`.
+- Add `HangTen/Rendering/GripHandSurfaceShader.metal` to the HangTen target for
+  the RealityKit `CustomMaterial` surface shader; no package dependency or
+  other compiled resources are added.
 - Keep the `hand-mesh.json` schema and Blender authoring/export pipeline
   unchanged.
 - Preserve all existing `GripHandCueCardTests` and their source-fidelity
@@ -83,4 +87,6 @@ both left and right hands, and exercise drag, pinch, resize, and reset.
 - [RealityView](https://developer.apple.com/documentation/realitykit/realityview)
 - [MeshDescriptor](https://developer.apple.com/documentation/realitykit/meshdescriptor)
 - [OrthographicCameraComponent](https://developer.apple.com/documentation/realitykit/orthographiccameracomponent)
+- [LowLevelMesh vertex color](https://developer.apple.com/documentation/realitykit/lowlevelmesh/vertexsemantic/color)
+- [CustomMaterial and interpolated geometry colors](https://developer.apple.com/documentation/realitykit/modifying-realitykit-rendering-using-custom-materials)
 - [Transforming RealityKit entities using gestures](https://developer.apple.com/documentation/realitykit/transforming-realitykit-entities-using-gestures)
