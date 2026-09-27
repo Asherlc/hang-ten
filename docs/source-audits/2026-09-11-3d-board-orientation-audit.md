@@ -11,6 +11,16 @@ four authored orientation positions, and no suspension block. The Nature and
 YY Vertical Baguette Evo groupings and quaternions are recorded in the
 Promotion record. This document does not itself change package or model bytes.
 
+## September 26 Mini Bar extension
+
+`lattice.mini-bar` adds four authored positions for the ergonomic jug, 10 mm
+edge, 20 mm edge, and mini pinch hold IDs. Its model bounds come from the native
+FreeCAD source; a common central pivot and pose quaternions rotate the bar to
+expose each grip. The author selected those display angles from the approved
+Lattice product gallery evidence, and recorded the exact source set, dimensions,
+cord route estimates, and visual comparison in the
+[Mini Bar CAD provenance](2026-09-26-lattice-mini-bar-cad-provenance.md).
+
 ## September 15 collection extension
 
 The model inventory now contains twenty-seven packages. The seven added fixed boards

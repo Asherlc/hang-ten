@@ -802,6 +802,28 @@ final class BoardModelTests: XCTestCase {
         }
     }
 
+    func testMiniBarExteriorLoopsFollowEachCanonicalGripPose() async throws {
+        let (board, media, model) = try await loadMigratedModel("lattice.mini-bar")
+        guard case .twoBranchCord(let suspension) = media.suspension else {
+            return XCTFail("Mini Bar must load its two exterior loops")
+        }
+        XCTAssertEqual(Set(board.contacts.map(\.id)), ["edge-10", "edge-20", "ergonomic-jug", "mini-pinch"])
+        XCTAssertEqual(suspension.branches.count, 2)
+        for position in board.positions {
+            let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
+            XCTAssertEqual(Set(try XCTUnwrap(pose.wrappedRoutes).keys), ["left-loop", "right-loop"])
+            _ = try BoardModelScene.solveSuspension(
+                pose: pose, suspension: .twoBranchCord(suspension), bounds: media.descriptor.modelBounds
+            )
+            XCTAssertTrue(model.select(positionID: position.id), position.id)
+            XCTAssertFalse(model.isUnavailable, position.id)
+            XCTAssertFalse(model.isTransientCordAccessible, position.id)
+            let cord = try XCTUnwrap(model.transientCordNode, position.id)
+            XCTAssertFalse(cord.childNodes.isEmpty, position.id)
+            XCTAssertTrue(cord.childNodes.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
+        }
+    }
+
     func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {
         for boardID in ["captain-fingerfood.dual", "captain-fingerfood.pocket", "captain-fingerfood.unlevel", "j-bryant.ftg-32", "lattice.mxedge-lift-large", "lattice.mxedge-lift-small", "nature.stone-hanger"] {
             let (board, media, model) = try await loadMigratedModel(boardID)

@@ -1,0 +1,193 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "1addf5642497fbdd39f1a2763e5360ed5f6b7b46ecc4e2b8c8eef280ecdd8e47",
+  "modelBounds": {
+    "min": [
+      -0.077500001,
+      0.008,
+      -0.001192116
+    ],
+    "max": [
+      0.077500001,
+      0.067997158,
+      0.061676782
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "edge_10_surface",
+      "role": "contact",
+      "contactID": "edge-10"
+    },
+    {
+      "nodeID": "edge_20_surface",
+      "role": "contact",
+      "contactID": "edge-20"
+    },
+    {
+      "nodeID": "ergonomic_jug_surface",
+      "role": "contact",
+      "contactID": "ergonomic-jug"
+    },
+    {
+      "nodeID": "mini_bar_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "mini_pinch_surface",
+      "role": "contact",
+      "contactID": "mini-pinch"
+    }
+  ],
+  "contacts": {
+    "edge-10": {
+      "nodeIDs": [
+        "edge_10_surface"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          4e-09,
+          0.0
+        ],
+        "max": [
+          0.999999996,
+          0.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.0
+      ],
+      "outline": [
+        [
+          4e-09,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          4e-09,
+          0.0
+        ]
+      ]
+    },
+    "edge-20": {
+      "nodeIDs": [
+        "edge_20_surface"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          4e-09,
+          0.0
+        ],
+        "max": [
+          0.999999996,
+          0.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.0
+      ],
+      "outline": [
+        [
+          4e-09,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          4e-09,
+          0.0
+        ]
+      ]
+    },
+    "ergonomic-jug": {
+      "nodeIDs": [
+        "ergonomic_jug_surface"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          4e-09,
+          0.0
+        ],
+        "max": [
+          0.999999996,
+          0.999219003
+        ]
+      },
+      "center": [
+        0.5,
+        0.499609501
+      ],
+      "outline": [
+        [
+          4e-09,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.999219003
+        ],
+        [
+          4e-09,
+          0.999219003
+        ]
+      ]
+    },
+    "mini-pinch": {
+      "nodeIDs": [
+        "mini_pinch_surface"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          4e-09,
+          0.0
+        ],
+        "max": [
+          0.999999996,
+          0.216676927
+        ]
+      },
+      "center": [
+        0.5,
+        0.108338463
+      ],
+      "outline": [
+        [
+          4e-09,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.0
+        ],
+        [
+          0.999999996,
+          0.216676927
+        ],
+        [
+          4e-09,
+          0.216676927
+        ]
+      ]
+    }
+  }
+}

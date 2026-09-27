@@ -1428,9 +1428,11 @@ def test_initial_phase2_manifest_has_exact_pending_catalog_preflight(
         ).packages
         if package.board.id == "lattice.mini-bar"
     )
+    # The historical preflight remains frozen; the live board now uses one
+    # CAD presentation with four named grip positions.
     assert tuple(
         presentation.id for presentation in live_mini_bar.board.presentations
-    ) == ("edge-10", "edge-20", "ergonomic-jug", "mini-pinch")
+    ) == ("primary",)
 
 
 def test_historical_phase2_replay_rejects_manifest_asset_path_drift(

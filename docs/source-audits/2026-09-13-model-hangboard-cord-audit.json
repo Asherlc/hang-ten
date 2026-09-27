@@ -403,6 +403,85 @@
       }
     },
     {
+      "packageID": "lattice.mini-bar",
+      "decision": "represented",
+      "sourceFact": "documentedSuspension",
+      "topology": "twoBranchCord",
+      "ruling": "Two visible exterior wrapped loops, one near each bar end, are represented as pose-specific ordered surface routes. No through-bore, hidden internal route, or baked cord is inferred.",
+      "evidence": [
+        {
+          "view": "manufacturer product",
+          "url": "https://latticetraining.com/product/mini-bar-portable-hangboard/",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "f2294055f6a19e506aeb6a7d0ea600be5d8ff472ee8167639b12d0ffcbc8b1ff",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-product.html"
+        },
+        {
+          "view": "manufacturer gallery Web-1",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "610cfaa96a95d80ae0d37ef4bbf2b1d881b47d0813d7d0eb4f9db9b5c30270de",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-1.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-2",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "3b4c28e84d46972cd6f2d3be241d148c8fe1eac9aefce54bb0d223470165f037",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-2.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-7",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-7.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "6b598a018ae1b016861c21892d93153652253167a2b50448646f5b2432a3c601",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-7.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-8",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-8.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "e1aadca2bb1c035facd8f18ab8c55ec283376c00b0a349700d5f2b6b2c966243",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-8.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-9",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-9.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "a325b8e5a2611159bad8290cccff074016be372a71d7444d4cc5b4b5ce4be3bf",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-9.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-10",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-10.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "fd9c49b6102902fb07984eedb48e3724b6cc77f23e7ce4f0e18e276b792234db",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-10.jpg"
+        },
+        {
+          "view": "manufacturer gallery Web-11",
+          "url": "https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-11.jpg",
+          "exactRevisionID": "lattice-mini-bar-current",
+          "sourceTier": "manufacturer",
+          "snapshotSHA256": "df87e1c699fad4261e5e18cfe45c525e60df71d44731c21508fcf795b65c0b2b",
+          "snapshotPath": "docs/source-audits/2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-11.jpg"
+        }
+      ],
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "user",
+        "reviewedAt": "2026-09-26",
+        "notes": "User approved the exact seven Lattice gallery URLs and the two exterior wrapped loop representation in this session. Numeric route, radius, per-loop capacity and anchor are display estimates."
+      }
+    },
+    {
       "packageID": "lattice.mxedge-lift-large",
       "decision": "represented",
       "sourceFact": "documentedSuspension",

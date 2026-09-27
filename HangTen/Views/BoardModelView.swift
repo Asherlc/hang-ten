@@ -1851,6 +1851,16 @@ final class BoardModelScene {
             guard case .some(.twoBranchCord(let twoBranchSuspension)) = suspension else { return false }
             let transform = twoBranch.boardTransform
             let passagePairs = [twoBranchSuspension.passages.left, twoBranchSuspension.passages.right]
+            for (index, branch) in twoBranch.branches.enumerated() {
+                if passagePairs[index].allSatisfy({ !$0.isThroughBore }) && branch.spans.count == 3 {
+                    guard branch.spans[1].count >= 3 else { return false }
+                    let start = branch.spans[0].count - 1
+                    // The Mini Bar's exterior loop bears on the same physical
+                    // perimeter as its grip surfaces, close to each end.
+                    let boundNodes = Set(geometryByNodeID.keys)
+                    bearingIntervals.append((index, start..<(start + branch.spans[1].count - 1), boundNodes, twoBranch.tubeRadius))
+                }
+            }
             for (index, passages) in passagePairs.enumerated() where passages.allSatisfy(\.isThroughBore) {
                 let branch = twoBranch.branches[index]
                 guard branch.spans.count == 3 else { return false }
@@ -1858,7 +1868,20 @@ final class BoardModelScene {
                 bearingIntervals.append((index, start..<(start + branch.spans[1].count - 1), Set(passages.map(\.nodeID)), Float(twoBranchSuspension.branches[index].radius)))
             }
             intentionalContacts = passagePairs.enumerated().flatMap { pathIndex, passages in
-                passages.enumerated().flatMap { passageIndex, passage -> [IntentionalContact] in
+                if twoBranch.branches[pathIndex].spans.count == 3 && passages.allSatisfy({ !$0.isThroughBore }) {
+                    let samples = twoBranch.branches[pathIndex].centerlineSamples
+                    let first = twoBranch.branches[pathIndex].spans[0].count - 1
+                    let last = first + twoBranch.branches[pathIndex].spans[1].count - 1
+                    return geometryByNodeID.keys.flatMap { nodeID in [
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: first - 1, segmentParameter: 1,
+                                           nodeID: nodeID, point: samples[first],
+                                           mouthRadius: twoBranch.tubeRadius + twoBranch.requiredClearance),
+                        IntentionalContact(pathIndex: pathIndex, segmentIndex: last, segmentParameter: 0,
+                                           nodeID: nodeID, point: samples[last],
+                                           mouthRadius: twoBranch.tubeRadius + twoBranch.requiredClearance),
+                    ] }
+                }
+                return passages.enumerated().flatMap { passageIndex, passage -> [IntentionalContact] in
                     guard !passage.isThroughBore else { return [] }
                     let point = SIMD3<Float>(Float(passage.pointInModel[0]), Float(passage.pointInModel[1]), Float(passage.pointInModel[2]))
                     let transformed = transform * SIMD4<Float>(point.x, point.y, point.z, 1)

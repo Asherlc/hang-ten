@@ -130,6 +130,9 @@ struct BoardModelCanonicalPose: Hashable {
     // Ordered exterior contact points keyed by paired-lead attachment ID or
     // two-branch passage ID. Passage overrides never change the actual bore.
     var cordContactPoints: [String: [[Double]]]? = nil
+    /// Complete exterior route for each loop in a point-passage two-branch
+    /// suspension. These are display estimates in unposed model coordinates.
+    var wrappedRoutes: [String: [[Double]]]? = nil
 }
 
 struct BoardModelSingleCordSuspension: Hashable {

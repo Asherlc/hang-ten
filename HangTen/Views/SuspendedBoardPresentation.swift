@@ -372,6 +372,9 @@ enum SuspendedBoardPresentation {
         guard pose.cordContactPoints == nil || allPassages.allSatisfy(\.isThroughBore) else {
             throw SuspendedPresentationError.invalidSuspension
         }
+        guard pose.wrappedRoutes == nil || allPassages.allSatisfy({ !$0.isThroughBore }) else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
         guard allPassages.count == 4,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
@@ -413,6 +416,12 @@ enum SuspendedBoardPresentation {
               Set(suspension.branches.map(\.id)).count == suspension.branches.count else {
             throw SuspendedPresentationError.invalidSuspension
         }
+        if let routes = pose.wrappedRoutes {
+            guard Set(routes.keys) == Set(suspension.branches.map(\.id)),
+                  routes.values.allSatisfy({ $0.count >= 3 && $0.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) }) else {
+                throw SuspendedPresentationError.invalidPose
+            }
+        }
         var framingPoints = transformedBoundsCorners(
             minimum: minimum,
             maximum: maximum,
@@ -433,6 +442,9 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.invalidSuspension
             }
             let usesAuthoredRoute = firstModelPassage.2 && secondModelPassage.2
+            let wrappedRoute = pose.wrappedRoutes?[branch.id]?.map {
+                transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+            }
             guard !usesAuthoredRoute || (
                 branch.entryContactPoints.count >= 1 &&
                 branch.exteriorContactPoints.count >= 2 &&
@@ -450,7 +462,11 @@ enum SuspendedBoardPresentation {
             let entryContacts: [SIMD3<Float>]
             let contactPoints: [SIMD3<Float>]
             let exitContacts: [SIMD3<Float>]
-            if usesAuthoredRoute {
+            if let wrappedRoute {
+                entryContacts = [wrappedRoute[0]]
+                contactPoints = Array(wrappedRoute.dropFirst().dropLast())
+                exitContacts = [wrappedRoute[wrappedRoute.count - 1]]
+            } else if usesAuthoredRoute {
                 entryContacts = (pose.cordContactPoints?[branch.passageIDs[0]] ?? branch.entryContactPoints).map {
                     transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
                 }
@@ -470,9 +486,9 @@ enum SuspendedBoardPresentation {
                   exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
-            let rigidRoute = usesAuthoredRoute
+            let rigidRoute = wrappedRoute ?? (usesAuthoredRoute
                 ? entryContacts + [firstEntry, firstExit] + contactPoints + [secondExit, secondEntry] + exitContacts
-                : [firstEntry, secondEntry]
+                : [firstEntry, secondEntry])
             guard zip(rigidRoute, rigidRoute.dropFirst()).allSatisfy({
                 simd_length($0.1 - $0.0) > 1e-7
             }) else { throw SuspendedPresentationError.invalidPose }
@@ -553,7 +569,7 @@ enum SuspendedBoardPresentation {
             branches.append(SuspendedBranchSolution(
                 id: branch.id,
                 passageIDs: branch.passageIDs,
-                spans: usesAuthoredRoute
+                spans: (usesAuthoredRoute || wrappedRoute != nil)
                     ? [firstSpan.samples, rigidRoute, secondSpan.samples]
                     : [firstSpan.samples, secondSpan.samples],
                 centerlineSamples: centerline,

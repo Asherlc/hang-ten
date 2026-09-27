@@ -207,8 +207,9 @@ def test_documented_suspension_packages_use_reviewed_visual_cords() -> None:
         "captain-fingerfood.dual": "pairedLeadCord",
         "captain-fingerfood.pocket": "pairedLeadCord",
         "captain-fingerfood.unlevel": "pairedLeadCord",
-        "j-bryant.ftg-32": "pairedLeadCord",
-        "yy.baguette-evo": "twoBranchCord",
+            "j-bryant.ftg-32": "pairedLeadCord",
+            "lattice.mini-bar": "twoBranchCord",
+            "yy.baguette-evo": "twoBranchCord",
     }
     assert {
         package_id: records[package_id].topology
@@ -219,7 +220,7 @@ def test_documented_suspension_packages_use_reviewed_visual_cords() -> None:
         records[package_id].source_fact == "documentedSuspension"
         for package_id in expected_topologies
     )
-    assert report.decisions == {"excluded": 34, "represented": 13}
+    assert report.decisions == {"excluded": 34, "represented": 14}
 
     captain_rest_lengths = {
         "captain-fingerfood.dual": 0.4,

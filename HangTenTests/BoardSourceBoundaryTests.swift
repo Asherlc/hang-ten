@@ -307,6 +307,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "evolv-kilter-basic-long",
             "j-bryant.ftg-32",
             "lattice-triple-rung",
+            "lattice.mini-bar",
             "lattice.mxedge-lift-large",
             "lattice.mxedge-lift-small",
             "mammut.diamond-finger",
