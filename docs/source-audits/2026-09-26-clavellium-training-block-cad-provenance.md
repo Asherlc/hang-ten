@@ -82,7 +82,11 @@ comparison, not a whole-surface Hausdorff guarantee.
 `compile_board.py --check` and publish both validate all ten bindings, the
 source reopen, and exact X-axis grip depths. Reproducible compilation produced
 byte-identical assets. Package validation and the model-delivery lock passed.
-The new model and descriptor hashes are recorded in the delivery lock. An iOS
-Simulator app build passed, but a system deep-link confirmation obscured the
-captured live-model screens, so those captures do not establish a visual app
-review.
+The new model and descriptor hashes are recorded in the delivery lock. The CAD
+test suite excluding the native lattice pilot test file passed (66 tests);
+the Clavellium package was separately rebuilt byte-identically. An iOS
+Simulator app build passed twice, but the first capture was obscured by a
+system deep-link confirmation and subsequent Simulator launches or screenshots
+stalled. Those captures do not establish a visual app review. Both isolated
+Simulator devices and their workspace build directories were removed by their
+exit traps.
