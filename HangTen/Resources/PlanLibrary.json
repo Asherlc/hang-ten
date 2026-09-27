@@ -4584,7 +4584,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "max-hangs-1",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4603,7 +4603,7 @@
                       }
                     },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -4638,7 +4638,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "max-hangs-2",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4657,7 +4657,7 @@
                       }
                     },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -4686,7 +4686,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "max-hangs-3",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4705,7 +4705,7 @@
                       }
                     },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -4734,7 +4734,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "max-hangs-4",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4753,7 +4753,7 @@
                       }
                     },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -4782,7 +4782,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "max-hangs-5",
           "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
           "phase" : "hang",
@@ -4801,7 +4801,7 @@
                       }
                     },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13192,8 +13192,16 @@
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-1",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13205,9 +13213,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 4,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13241,7 +13254,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-2",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13253,9 +13266,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 3,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13282,7 +13300,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-3",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13294,9 +13312,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 2,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13323,7 +13346,7 @@
             ]
           },
           "gripType" : "openHand",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-4",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13335,9 +13358,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 2,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13365,7 +13393,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-5",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13377,9 +13405,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 3,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },
@@ -13407,7 +13440,7 @@
             ]
           },
           "gripType" : "halfCrimp",
-          "handUse" : "either",
+          "handUse" : "double",
           "id" : "abrahangs-grip-6",
           "instruction" : "Keep both feet supported and the intensity low throughout.",
           "phase" : "hang",
@@ -13419,9 +13452,14 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "fingerCapacity" : 3,
+                    "depth" : {
+                      "range" : {
+                        "maximum" : 20,
+                        "minimum" : 20
+                      }
+                    },
                     "kind" : "edge",
-                    "selection" : "single"
+                    "selection" : "bilateralPair"
                   }
                 ]
               },

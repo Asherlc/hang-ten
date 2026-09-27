@@ -203,9 +203,12 @@ final class ContactResolverTests: XCTestCase {
         let step = try XCTUnwrap(
             LegacyPlanSeedCatalog.maxHangs.steps.first { $0.id == "max-hangs-1" }
         )
+        let sessionStep = try XCTUnwrap(
+            step.resolvingEitherHand(selectedHandSide: .left, boardIsOneHanded: board.isOneHanded)
+        )
         let resolved = try ContactResolver.resolve(
-            step.workRequirements,
-            step: step,
+            sessionStep.workRequirements,
+            step: sessionStep,
             board: board
         )
         XCTAssertEqual(Set(resolved.map(\.kind)), [.edge])
@@ -213,7 +216,7 @@ final class ContactResolverTests: XCTestCase {
             $0.depth == .range(.init(minimum: 20, maximum: 20))
         })
         XCTAssertEqual(
-            WorkoutHighlightResolver.contactIDs(for: step, on: board),
+            WorkoutHighlightResolver.contactIDs(for: sessionStep, on: board),
             resolved.map(\.id)
         )
     }

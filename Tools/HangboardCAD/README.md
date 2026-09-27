@@ -1,7 +1,7 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 12 of the 46 model-media boards are migrated** (those with a committed
-`Hangboards/*/*.FCStd` source; the delivery lock lists 46 model packages). The
+**Status: 22 of the 47 model-media boards are migrated** (those with a committed
+`Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
 
@@ -197,14 +197,20 @@ Document properties: `HangTenBoardID`, `HangTenBoardManifest` (see above),
 `HangTenTessellationDeflection`.
 
 Every exported object carries `NodeID`, `NodeRole` (`body`, `contact`,
-`attachment`), `ContactID` (or `ContactSlotID`), `MaterialName`, `BaseColor`,
-`Roughness`, `Metallic`, and optionally an embedded `TextureFile`.
+`attachment`), and `ContactID` (or `ContactSlotID`). `MaterialName`,
+`BaseColor`, `Roughness`, `Metallic`, and `TextureFile` are optional
+compile-time metadata (see **Material policy** below).
 Optionally, `HangTenCurvedRegionPartition` (`App::PropertyBool`) opts a
 document into the curved-region partition described below; documents without it
 compile exactly as before. Objects
 without `NodeID` — sketches, datums, construction features — are never exported.
 The `NodeID` becomes the USD mesh prim name, which is what the application binds
 against.
+
+For a contact that declares `HangTenGripDepthMm`, optional string property
+`HangTenDepthAxis` selects the native measurement axis (`x`, `y`, or `z`).
+Omitting it retains the original Y-axis behavior. The compiler validates the
+declared depth against that axis's exported contact bounds.
 
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
@@ -245,9 +251,65 @@ sections, and its cavities are ruled capsule lofts (planes, cylinders, and
 cones) cut from the body. See
 `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
 
+`target10a-linebreaker-base` sets it as well: its cavity walls are cylinders,
+its chamfers are cones, and its rim rounds are cylinders. See
+`docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+
 `beastmaker-2000` sets it as well: its front-top rounds are cylinders and its
 cavity chamfers are cones. See
 `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+
+`trango-rock-prodigy-pivot` sets it too. Its wing is a smooth loft, and its
+sloped crimps and two-finger pocket are ruled lofts. It is also the first
+source re-authored from manufacturer evidence rather than from the
+pre-migration mesh: the front view comes from Trango's top-down photograph
+(bolt-seat scale) and every depth from Trango's depth guide. See
+`docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+`photo_grid.py` provides the reading and review aids used there: gridded,
+contrast-stretched photo crops and the model-over-photo overlay. It is a
+diagnostic, never a build input (lessons §18).
+
+`tension-grindstone` sets it too: its top slots have stadium ends. It is the
+first CAD board with no prior 3D asset (it was raster-only), so there is no
+reference mesh. See
+`docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`.
+
+`metolius-light-rail-2` sets it too: its jugs include cylindrical round-overs,
+its cord wells are cones and cylinders, and its pocket corners are ruled
+B-spline walls. See
+`docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+
+`moon-armstrong` sets it too: every hold mouth, tile, rail and bar edge is a
+ruled loft of rounded-rectangle sections (cones and planes). Its contact
+regions are copies of the compiled body's own faces, selected by lying on each
+cutter or rail surface, so the partition is exact. Like the Pivot, it was
+re-authored from manufacturer photos rather than traced from its reference. See
+`docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
+
+## Surface normals
+
+By default the compiler clusters each vertex's incident triangles by crease
+angle and averages their normals. Where a large planar triangle meets the many
+small triangles of a tangent fillet, that average tilts, and the flat face
+shades a visible band. A document that sets `HangTenSurfaceNormals`
+(`App::PropertyBool`) instead shades each triangle with the analytic normal of
+the B-rep face it tessellates: the triangle's face is the one whose surface
+holds its centroid (within the deflection, inside the face domain), vertices
+are split per face, and each carries that face's normal at its position. A face
+then shades smoothly, a tangent seam is continuous, and every edge that is not
+tangent stays crisp. The sign follows the triangle winding. It is opt-in so
+existing sources keep reproducing their committed bytes. `metolius-light-rail-2`
+and `moon-armstrong` set it.
+
+## Published depth deeper than the board
+
+The published-depth gate compares a region's extent on its selected native
+axis with its published grip depth. `HangTenDepthAxis` selects X, Y, or Z;
+omitting it retains the original Y-axis behavior. A region cannot be deeper
+than the body on that axis, so when a published depth exceeds the body's
+extent there (a nominal label, such as the Light Rail's "40 mm" jugs across a
+38 mm rail), the region must instead span the body's full extent on that axis.
+Every other region still has to match its published depth.
 
 ## Pilot: lattice-triple-rung
 
@@ -330,7 +392,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **12 of 46 model-media boards are migrated.** The other 34 still ship their
+* **22 of 47 model-media boards are migrated.** The other 25 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

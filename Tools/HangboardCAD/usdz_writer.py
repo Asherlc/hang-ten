@@ -63,20 +63,22 @@ class Mesh:
 
 
 def runtime_point(point_mm: Sequence[float]) -> tuple[float, float, float]:
-    """Convert one native millimetre point to the runtime metre frame."""
+    """Convert one native millimetre point to the runtime metre frame.
+
+    Native FreeCAD points are written unchanged (``+X`` right, ``+Z`` up, front
+    ``-Y``), and the Z-up to Y-up basis change is carried by the ``/root``
+    rotation, exactly as the approved Blender-sourced references do. Writing the
+    rotated board frame here instead would leave the app's model-local camera
+    directions interpreted in a different frame than every shipped board.
+    """
     x, y, z = point_mm
-    return (x * _METERS_PER_MILLIMETRE, z * _METERS_PER_MILLIMETRE, -y * _METERS_PER_MILLIMETRE)
+    return (x * _METERS_PER_MILLIMETRE, y * _METERS_PER_MILLIMETRE, z * _METERS_PER_MILLIMETRE)
 
 
 def runtime_direction(direction: Sequence[float]) -> tuple[float, float, float]:
-    """Rotate a direction into the runtime frame.
-
-    The basis change is ``(x, y, z) -> (x, z, -y)``; the millimetre-to-metre
-    factor belongs to positions only. Applying ``runtime_point`` to a normal
-    would emit unit-less vectors of magnitude 1e-3.
-    """
+    """Write a normal in the native frame (the ``/root`` rotation applies it)."""
     x, y, z = direction
-    return (x, z, -y)
+    return (x, y, z)
 
 
 def _validate(meshes: Sequence[Mesh]) -> None:
@@ -243,6 +245,9 @@ def write_usdz(path: Path, meshes: Sequence[Mesh]) -> None:
         UsdGeom.SetStageUpAxis(stage, UsdGeom.Tokens.y)
         UsdGeom.SetStageMetersPerUnit(stage, 1.0)
         root = UsdGeom.Xform.Define(stage, "/root")
+        # Z-up (FreeCAD/Blender native) -> Y-up runtime basis change, matching
+        # the approved reference structure: (x, y, z) -> (x, z, -y).
+        root.AddRotateXYZOp().Set(Gf.Vec3f(-90.0, 0.0, 0.0))
         stage.SetDefaultPrim(root.GetPrim())
         for mesh in meshes:
             if mesh.material is not None and mesh.material.texture_source is not None:
@@ -276,6 +281,27 @@ def _texture_asset(shader: UsdShade.Shader) -> str | None:
     if marker in resolved:
         return resolved.split(marker, 1)[1].rstrip("]")
     return str(value)
+
+
+def _normal_to_world(matrix: Gf.Matrix4d, normal: Sequence[float]) -> tuple[float, float, float]:
+    """Transform a normal by the inverse-transpose of the linear part, normalized.
+
+    Points use the row-vector ``Transform``, so the matching normal operator is
+    the inverse of the linear part (the row-vector form of the inverse-transpose);
+    ``TransformDir`` would instead apply any non-uniform scale directly, giving
+    the wrong normal length and direction. The result is renormalized.
+    """
+    linear = Gf.Matrix3d(
+        matrix[0][0], matrix[0][1], matrix[0][2],
+        matrix[1][0], matrix[1][1], matrix[1][2],
+        matrix[2][0], matrix[2][1], matrix[2][2],
+    )
+    transformed = linear.GetInverse() * Gf.Vec3d(*normal)
+    length = transformed.GetLength()
+    if length == 0.0:
+        return (0.0, 0.0, 0.0)
+    transformed /= length
+    return (transformed[0], transformed[1], transformed[2])
 
 
 def read_usdz(path: Path) -> dict:
@@ -333,7 +359,8 @@ def read_usdz(path: Path) -> dict:
             "triangles": triangles,
             "material": bound.GetPrim().GetName() if bound else None,
             "normals": [
-                tuple(vector) for vector in (mesh.GetNormalsAttr().Get() or [])
+                tuple(_normal_to_world(local_to_world, vector))
+                for vector in (mesh.GetNormalsAttr().Get() or [])
             ],
             "uvs": (
                 len(UsdGeom.PrimvarsAPI(prim).GetPrimvar("st").Get() or [])

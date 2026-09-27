@@ -813,6 +813,7 @@ jobs:
             HangTenUITests/GripCueDiagnosticScreenshotUITests
             HangTenUITests/InitialWeightSetupUITests
             HangTenUITests/DualMaxHangsHighlightUITests
+            HangTenUITests/OneHandedHandChoiceUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import sys
+from types import SimpleNamespace
 from pathlib import Path
 
 import pytest
@@ -83,3 +84,61 @@ def test_shipped_metolius_board_declares_its_slot_depths() -> None:
         "pocket-32": 32.0,
         "pocket-40": 40.0,
     }
+
+
+def test_side_pocket_uses_explicit_x_depth_axis() -> None:
+    region = SimpleNamespace(
+        PropertiesList=["ContactID", "HangTenDepthAxis"], ContactID="side-20",
+        HangTenDepthAxis="x",
+        Shape=SimpleNamespace(BoundBox=SimpleNamespace(XLength=20, YLength=80, ZLength=4.4)),
+    )
+    assert compile_board._validate_published_depths(
+        [region], {"side-20": 20}, 1, .12, {"x": 80, "y": 10, "z": 90}
+    ) == {"side-20": 20}
+
+
+@pytest.mark.parametrize("axis", ["", "diagonal"])
+def test_invalid_depth_axis_fails_closed(axis: str) -> None:
+    region = SimpleNamespace(
+        PropertiesList=["ContactID", "HangTenDepthAxis"], ContactID="side-20",
+        HangTenDepthAxis=axis,
+        Shape=SimpleNamespace(BoundBox=SimpleNamespace(XLength=20, YLength=80, ZLength=4.4)),
+    )
+    with pytest.raises(compile_board.BuildError, match="invalid HangTenDepthAxis"):
+        compile_board._validate_published_depths([region], {"side-20": 20}, 1, .12)
+
+
+class _Box:
+    def __init__(self, depth: float) -> None:
+        self.YLength = depth
+
+
+class _Shape:
+    def __init__(self, depth: float) -> None:
+        self.BoundBox = _Box(depth)
+
+
+class _Region:
+    def __init__(self, contact_id: str, depth: float) -> None:
+        self.PropertiesList = ["ContactID"]
+        self.ContactID = contact_id
+        self.Shape = _Shape(depth)
+
+
+def test_region_depth_must_match_the_published_depth() -> None:
+    declared = {"edge-20": 20.0}
+    compile_board._validate_published_depths([_Region("edge-20", 20.1)], declared, 1, 0.05, 38.0)
+    with pytest.raises(compile_board.BuildError, match="disagrees with the published depth"):
+        compile_board._validate_published_depths([_Region("edge-20", 15.0)], declared, 1, 0.05, 38.0)
+
+
+def test_a_published_depth_deeper_than_the_board_needs_the_full_board_depth() -> None:
+    # A nominal 40 mm jug across a 38 mm rail: the region cannot be 40 mm deep,
+    # so it must span the whole board instead.
+    declared = {"jug-40": 40.0}
+    compile_board._validate_published_depths([_Region("jug-40", 38.0)], declared, 1, 0.05, 38.0)
+    with pytest.raises(compile_board.BuildError, match="expected 38.000 mm"):
+        compile_board._validate_published_depths([_Region("jug-40", 30.0)], declared, 1, 0.05, 38.0)
+    # Without a board depth the published value is still the only target.
+    with pytest.raises(compile_board.BuildError, match="disagrees with the published depth"):
+        compile_board._validate_published_depths([_Region("jug-40", 38.0)], declared, 1, 0.05)

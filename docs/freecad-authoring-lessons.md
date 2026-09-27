@@ -633,3 +633,157 @@ checks. Two cautions:
 B-spline fillet faces tessellate densely at 0.08 mm. The board went from 15.8k
 to 87.8k triangles, the asset from 314 KB to 1.95 MB, and the FCStd from
 1.3 MB to 7.4 MB.
+
+## 18. What Linebreaker BASE added
+(`target10a-linebreaker-base`, from a retained signed-distance generator)
+
+- **Look for generator configs under `.context/` history.** The batch-01
+  imports kept `source/geometry-config.json` (outline polygon, relief cuts,
+  cavity table) at `2dd5182b4`. The Dewoodstok, Escape Unlimited, and Moon
+  Armstrong generators are there too. Their frame was already native (front
+  −Y, mm), so no transform was needed.
+- **The published-depth gate measures the region's whole Y extent.** Tilted
+  floors and mouths that cross a crease both inflate it. A 35° floor pivoted on
+  the centre line measured 43 mm against a published 35 mm. Pivot it so the
+  deepest point equals the published depth, as for every other cavity. The
+  lower-row mouths crossed the tier crease by 1–3 mm, so the crease was raised
+  4 mm. Label both as adaptations.
+- **Sequential rim fillets, again.** Front then back `Part::Fillet` worked. The
+  back failed only where a cut plane met the back face exactly on an outline
+  edge (sloper planes through z = 132 at y = 0). Test each edge with
+  `makeFillet` to find the offenders, and leave them square.
+- **The reference's region selectors may be sloppy.** Its box-selected nodes
+  spilled onto neighbouring holds by up to 19 mm, so large `facePlaneAABB`
+  deltas were reference defects, not CAD errors. Check them in a highlighted
+  render before chasing them.
+- **Diagnostic renders need a z-buffer.** A painter's-algorithm render of a
+  CAD asset, whose big planar faces are a few long triangles, draws them in the
+  wrong order and looks broken.
+- **Taps in `axe` are in points.** Divide screenshot pixels by 3 on the iPhone
+  17 Pro, or tap a hold-map row by its accessibility frame. A second
+  `hangten://…/hold/…` deep link to the board that is already open did not
+  change the selection.
+
+## 19. Re-authoring from manufacturer photos
+(`trango-rock-prodigy-pivot`, 2026-09-25/26)
+
+The Pivot's approved display mesh was wrong about the product. It was about
+20 % undersized, had the wrong topology, and reversed two published depth
+gradients. Tracing it faithfully would only have reproduced those errors. The
+board was re-authored from first-party evidence instead. The techniques below
+got it from "resembles the product" to "matches it feature by feature", and
+they carry over to any board that has a straight-on manufacturer photo. They
+are reading and review aids only. Every point is still typed in by an
+operator, and nothing detects, traces, fits or registers pixels (see
+`AGENTS.md`).
+
+### Check the reference against the manufacturer before measuring it
+
+Before extracting anything, put the reference's front render next to the
+manufacturer's photos and depth guide. Compare:
+
+- feature count and shape (teeth vs scallops, slab vs ridge);
+- relative sizes of features;
+- the direction of every published depth gradient ("16mm - 31mm (L - R)").
+
+If they disagree, stop measuring the mesh and author from the manufacturer.
+Depth-guide pictures can show a half rotated 180°; reverse the L→R order for
+those, and say so in the provenance.
+
+### Take the scale from a known part in the photo's plane
+
+Manufacturers often publish no dimensions, and retail listings contradict each
+other. Pick a feature of known size that lies in the part's front plane: a
+bolt seat, a counterbore, a hardware hole whose fastener the manual names.
+Measure it in pixels and record the inference chain. For the Pivot, the quick
+start's 7/32 in hex key points to a 3/8 in flat-head bolt, which gives a 20.6 mm
+countersink, which at 78.8 px gives 3.82 px/mm. Check that circles image as
+circles (the photo is near-orthographic) and cross-check against every other
+anchor you can find. Record the conflicts; don't average them away.
+
+### Read coordinates off 1 mm-gridded, contrast-stretched crops
+
+`Tools/HangboardCAD/photo_grid.py crop` cuts a region of the photo in the
+authoring frame (mm), stretches its contrast, upsamples it to about 20 px/mm,
+and draws a 1 mm grid with labelled 5 mm lines. At full-photo zoom, low-contrast
+edges such as grey resin-on-resin ledges are invisible. In a 40–60 mm tile with
+the contrast stretched they read to about 0.5 mm.
+
+- Tile the whole part at 40–60 mm per tile. Read the silhouette first, then
+  each feature, then write the points into a table in the authoring script.
+- Pass `--mark x,z ...` to circle authored joints on the crop and confirm they
+  sit on the edge.
+- Where two crops of the same edge disagree by more than about 1 mm, re-crop
+  tighter. Eyeball readings across different zooms drift by 2–3 mm.
+- Shading in a product photo is ambiguous about which side of an edge is high.
+  Decide from an oblique photo, the manufacturer's CAD render, or the product
+  owner, not from the straight-on shot alone (see "Ask about the region" below).
+
+### Fit vector primitives to the typed points
+
+Fit lines and cubic Béziers (G1 at smooth joints, one-sided tangents at kinks)
+to the hand-typed points, and report the worst deviation (Pivot: 0.80 mm).
+Unconstrained Bézier handles at a kink fold back on themselves. Take each
+kink's tangent from the local one-sided direction, and keep handle lengths
+positive.
+
+### Review with an overlay, not just side-by-side renders
+
+`Tools/HangboardCAD/photo_grid.py overlay` blends the compiled model's front
+view over the photo at the same scale and origin. Misplaced features show up
+immediately. Side-by-side renders from a hand-matched oblique camera hide
+errors, because the camera never quite matches. Use the overlay for X/Z. Use
+oblique photos and the manufacturer's CAD render (quick-start page 3 for the
+Pivot) for depth-direction questions.
+
+### Ask about the region, and use the owner's photos
+
+The Pivot's lower-right corner was wrong through two passes until the product
+owner circled it on a photo. The band there ends in a pointed caret, the field
+runs down to the rail, the rim wraps the rail's end as a J lip, and the upper
+bar ends free. When feedback is vague, ask which region looks off, and ask for
+a photo of the owner's board. Zoom into their photo at the circled region
+before re-reading the gridded crop.
+
+### Moulded parts need round-overs
+
+A resin board with sharp CAD edges reads as wrong even when every dimension is
+right. Round every convex edge (a dihedral test: n₂·t₁ < 0) at about 1.5 mm.
+Test candidates one at a time, then add them in chunks of about 12, keeping
+the ones OCCT accepts together (Pivot: 58 of 102). Keep gated bands sharp so
+the published-depth check stays exact. The round-overs roughly double the
+triangle count.
+
+### OCCT traps met here
+
+- `makeChamfer` (symmetric or asymmetric) fails on an outline chain that ends
+  at a near-tangent or concave kink. Build an asymmetric crimp band as a ruled
+  loft from its photographed front edge on the rim face to the silhouette at
+  the published depth, and cut it.
+- A cutting tool whose edge coincides with another cutter's edge (the field
+  floor meeting the rail slot) should overlap by about 0.5 mm instead.
+
+## 20. Analytic references, fillet shading, and nominal depths
+(`metolius-light-rail-2`, 2026-09-26)
+
+- **Slice before you trace.** Slicing the reference at a few x stations and
+  listing its mouth ring showed round-number stations: a rounded-rectangle mouth
+  (r 9) inset 0 / 1.5 / 2.4 / 2.7 / 3.6 / 4.6 mm at fixed fractions of a depth
+  that runs 20 mm on one lip and 15 mm on the other. Each station is then a
+  planar sketch on a plane tilted about X, and the pocket is one ruled loft.
+- **Check the reference against what the product's process can make.** The
+  reference kept an r 6 corner radius through a 5 mm round-over, which no router
+  cuts. A true fillet of the outline, with its radius read off the manufacturer
+  photo, is both physical and closer to the photo.
+- **Crease-averaged normals band flat faces next to tangent fillets.** At the
+  seam, a vertex averages one long planar triangle with many small fillet
+  triangles, and the tilt spreads across the flat face. Set
+  `HangTenSurfaceNormals` to shade each triangle with its B-rep face's analytic
+  normal. Taking one face normal per crease cluster instead is wrong: it
+  streaks the small creases between pocket station bands.
+- **A nominal depth can exceed the board.** "40 mm" jugs across a 38 mm rail
+  cannot meet the published-depth gate. The gate now requires such a region to
+  span the full body depth; do not enlarge the board or change the label.
+- **`doc.saveAs` over an existing FCStd leaves a `.FCBak` beside it**, and the
+  package validator rejects the unknown entry. Delete it (or save elsewhere and
+  copy).

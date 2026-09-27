@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from _board_package_helpers import document_contact_geometry
+from hangboard_packages.cad_source import load_board as load_cad_board
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 MIRRORED_PAIRS = {
@@ -119,8 +120,12 @@ def _assert_mirrored_piece(left: dict[str, object], right: dict[str, object]) ->
 
 @pytest.mark.parametrize("board_id", MIRRORED_PAIRS)
 def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> None:
-    board = json.loads(
-        (REPO_ROOT / "Hangboards" / board_id / "board.json").read_text(encoding="utf-8")
+    package = REPO_ROOT / "Hangboards" / board_id
+    cad_source = package / f"{board_id}.FCStd"
+    board = (
+        load_cad_board(cad_source)
+        if cad_source.is_file()
+        else json.loads((package / "board.json").read_text(encoding="utf-8"))
     )
     media = board["presentations"][0]["media"]
     if media["type"] == "model":

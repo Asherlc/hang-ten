@@ -1084,7 +1084,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
     }
 
     func testActivityRecordingRejectsDoubleHandPairOnOneSideOfBoard() {
-        let board = portableBoard(handCapacity: 1)
+        let board = portableBoard(handCapacity: 2)
         let workout = portablePlan(handUse: .double, side: .both)
 
         XCTAssertThrowsError(try WorkoutActivityRecorder().segments(for: workout, on: board))
@@ -1924,6 +1924,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
             subtitle: "",
             dimensions: "",
             aspectRatio: 1,
+            handCapacity: handCapacity ?? 2,
             equipmentObjects: [.init(id: "left")],
             contacts: [
                 PhysicalContact(

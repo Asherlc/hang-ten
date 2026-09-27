@@ -4,6 +4,8 @@ import hashlib
 import json
 from pathlib import Path
 
+from hangboard_packages.board_catalog import load_board_json
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -20,7 +22,8 @@ def _aabbs_overlap(
 
 def test_moon_armstrong_model_descriptor_is_complete_with_reviewed_right_side_separations() -> None:
     root = REPO_ROOT / "Hangboards" / "moon-armstrong"
-    board = json.loads((root / "board.json").read_text(encoding="utf-8"))
+    # CAD-backed: board.json is generated from the FCStd manifest at build time.
+    board = load_board_json(root)
     media = board["presentations"][0]["media"]
 
     assert len(board["presentations"]) == 1
@@ -30,7 +33,7 @@ def test_moon_armstrong_model_descriptor_is_complete_with_reviewed_right_side_se
     assert "contactGeometry" not in media
     assert {
         path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()
-    } == {"board.json", "assets/primary.usdz", "assets/primary.model.json"}
+    } == {"moon-armstrong.FCStd", "assets/primary.usdz", "assets/primary.model.json"}
 
     descriptor = json.loads(
         (root / media["descriptorPath"]).read_text(encoding="utf-8")

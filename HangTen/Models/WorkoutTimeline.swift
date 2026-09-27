@@ -95,8 +95,13 @@ enum WorkoutSessionHandResolver {
         guard stepNeedsHandResolution(step, boardIsOneHanded: boardIsOneHanded) else {
             return step
         }
-        let singleHandedSegments = step.segments.map { segment in
-            segment.mappingRequirements(\.singleHandSelection)
+        // A two-hand-capable board holds both hands on its paired left/right
+        // holds; a one-hand board resolves one hold, performed on two boards.
+        let transform: (ContactRequirement) -> ContactRequirement = boardIsOneHanded
+            ? { $0.singleHandSelection }
+            : { $0.bilateralSelection }
+        let resolvedSegments = step.segments.map { segment in
+            segment.mappingRequirements(transform)
         }
         return WorkoutStep(
             id: step.id,
@@ -106,7 +111,7 @@ enum WorkoutSessionHandResolver {
             accessory: step.accessory,
             duration: step.duration,
             phase: step.phase,
-            segments: singleHandedSegments,
+            segments: resolvedSegments,
             gripType: step.gripType,
             fingerConfiguration: step.fingerConfiguration,
             handUse: .double,
@@ -168,6 +173,56 @@ enum WorkoutSessionHandResolver {
         steps.enumerated().map { index, step in
             step.withNumber(index + 1)
         }
+    }
+}
+
+extension WorkoutSessionHandResolver {
+    /// True when a both-hands choice is viable on this board. Only the steps
+    /// that need a start-of-session hand choice are evaluated, so an unrelated
+    /// `.double` step cannot disable the option.
+    ///
+    /// A two-hand board needs the choice to resolve to a pair, or to a single
+    /// hold the package documents as `handCapacity == 2`. A one-hand board
+    /// resolves one hold per board (the athlete uses two boards).
+    static func bothHandsResolve(plan: TrainingPlan, board: BoardRevision) -> Bool {
+        let boardIsOneHanded = board.isOneHanded
+        let resolutionSteps = plan.steps.filter {
+            stepNeedsHandResolution($0, boardIsOneHanded: boardIsOneHanded)
+        }
+        return resolutionSteps.allSatisfy { step in
+            let resolved = materialized(
+                step,
+                preference: .both,
+                boardIsOneHanded: boardIsOneHanded
+            )
+            let requirements = resolved.workRequirements
+            guard !requirements.isEmpty else { return true }
+            guard let contacts = try? ContactResolver.resolve(
+                requirements,
+                step: resolved,
+                board: board
+            ) else {
+                return false
+            }
+            if boardIsOneHanded {
+                return !contacts.isEmpty
+            }
+            return contacts.count >= 2
+                || (contacts.count == 1 && contacts[0].handCapacity == 2)
+        }
+    }
+
+    /// The capacity default, downgraded to `.alternate` when a both-hands
+    /// materialization cannot resolve every work requirement on this board.
+    static func defaultPreference(
+        plan: TrainingPlan,
+        board: BoardRevision
+    ) -> WorkoutSessionHandPreference {
+        let capacityDefault = WorkoutSessionHandPreference.defaultPreference(
+            boardHandCapacity: board.handCapacity
+        )
+        guard capacityDefault == .both else { return capacityDefault }
+        return bothHandsResolve(plan: plan, board: board) ? .both : .alternate
     }
 }
 

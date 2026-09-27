@@ -414,33 +414,48 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(rightSteps.first?.handUse, .single)
     }
 
-    func testSessionStepsBothKeepsDoubleBothWithSingleHandSelection() throws {
-        let bilateral = WorkoutStep(
-            id: "bilateral", number: 1, title: "Both", instruction: "Hang.",
+    func testSessionStepsBothPairsHoldsOnTwoHandedBoardsAndUsesSingleHoldOnOneHandedBoards() throws {
+        let either = WorkoutStep(
+            id: "either", number: 1, title: "Both", instruction: "Hang.",
             accessory: "", duration: 7, phase: .hang,
             segments: [WorkoutSegment(
                 kind: .work,
-                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .bilateralPair)]),
+                target: .fromLegacyTargets([ContactRequirement(kind: .jug, selection: .single)]),
                 timing: .fixed,
                 duration: 7
             )],
             handUse: .either, side: .both
         )
 
-        let both = WorkoutSessionHandResolver.sessionSteps(
-            from: [bilateral],
-            preference: .both,
-            boardIsOneHanded: false
+        let twoHanded = try XCTUnwrap(
+            WorkoutSessionHandResolver.sessionSteps(
+                from: [either],
+                preference: .both,
+                boardIsOneHanded: false
+            ).first
         )
-        let resolved = try XCTUnwrap(both.first)
-        XCTAssertEqual(resolved.handUse, .double)
-        XCTAssertEqual(resolved.side, .both)
-        XCTAssertEqual(resolved.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(twoHanded.handUse, .double)
+        XCTAssertEqual(twoHanded.side, .both)
+        XCTAssertEqual(twoHanded.workRequirements.map(\.selection), [.bilateralPair])
         XCTAssertEqual(
-            resolved.segments.first?.contactRequirements.map(\.selection),
+            twoHanded.segments.first?.contactRequirements.map(\.selection),
+            [.bilateralPair]
+        )
+
+        let oneHanded = try XCTUnwrap(
+            WorkoutSessionHandResolver.sessionSteps(
+                from: [either],
+                preference: .both,
+                boardIsOneHanded: true
+            ).first
+        )
+        XCTAssertEqual(oneHanded.handUse, .double)
+        XCTAssertEqual(oneHanded.side, .both)
+        XCTAssertEqual(oneHanded.workRequirements.map(\.selection), [.single])
+        XCTAssertEqual(
+            oneHanded.segments.first?.contactRequirements.map(\.selection),
             [.single]
         )
-        XCTAssertNotEqual(resolved.workRequirements.map(\.selection), [.bilateralPair])
     }
 
     func testSessionStepsAlternateExpandsLeftThenRightWithoutDuplicatingRest() {
@@ -1587,6 +1602,196 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertLessThan(strokeRed, fillRed)
         XCTAssertLessThan(strokeGreen, fillGreen)
         XCTAssertLessThan(strokeBlue, fillBlue)
+    }
+
+    func testBilateralSelectionWidensSingleRequirementToPair() {
+        let single = ContactRequirement(kind: .edge, fingerCapacity: 4, selection: .single)
+        XCTAssertEqual(single.bilateralSelection.selection, .bilateralPair)
+        XCTAssertEqual(single.bilateralSelection.kind, .edge)
+        XCTAssertEqual(single.bilateralSelection.fingerCapacity, 4)
+
+        let alreadyPaired = ContactRequirement(kind: .edge, selection: .bilateralPair)
+        XCTAssertEqual(alreadyPaired.bilateralSelection, alreadyPaired)
+
+        let pinned = ContactRequirement(contactID: "left-edge", kind: .edge, selection: .single)
+        XCTAssertEqual(
+            pinned.bilateralSelection,
+            pinned,
+            "An exact contact cannot form a pair and must stay single"
+        )
+
+        let pinnedPair = ContactRequirement(contactID: "left-edge", kind: .edge, selection: .bilateralPair)
+        XCTAssertEqual(pinnedPair.bilateralSelection.selection, .single)
+    }
+
+    func testDefaultHandPreferenceFollowsBoardCapacity() {
+        XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 2), .both)
+        XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 1), .alternate)
+    }
+
+    func testHandChoiceCopyOnlySaysTwoBoardsForOneHandedBoards() {
+        XCTAssertEqual(HandChoiceCopy.bothHandsTitle(boardIsOneHanded: false), "Both hands")
+        XCTAssertEqual(HandChoiceCopy.bothHandsTitle(boardIsOneHanded: true), "Both hands (two boards)")
+        XCTAssertEqual(
+            HandChoiceCopy.bothHandsHint(boardIsOneHanded: false),
+            "Both hands simultaneously on this board."
+        )
+        XCTAssertEqual(
+            HandChoiceCopy.bothHandsHint(boardIsOneHanded: true),
+            "Both hands simultaneously on two boards."
+        )
+    }
+
+    func testResolutionAwareDefaultFallsBackToAlternateWhenBothCannotResolve() {
+        let board = BoardRevision(
+            id: "fixture.single-contact",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Single contact",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            handCapacity: 2,
+            contacts: [
+                PhysicalContact(id: "only-edge", name: "Only edge", kind: .edge, handCapacity: 1)
+            ],
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil
+        )
+        let plan = TrainingPlan(
+            id: "fixture.either",
+            title: "Either",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/plan")!,
+            provenance: .adapted,
+            boardID: board.id,
+            steps: [
+                WorkoutStep(
+                    id: "either", number: 1, title: "Either", instruction: "",
+                    accessory: "", duration: 7, phase: .hang,
+                    segments: [WorkoutSegment(
+                        kind: .work,
+                        target: .fromLegacyTargets([ContactRequirement(kind: .edge, selection: .single)]),
+                        timing: .fixed,
+                        duration: 7
+                    )],
+                    handUse: .either, side: .both
+                )
+            ]
+        )
+
+        XCTAssertFalse(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+        XCTAssertEqual(
+            WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+            .alternate
+        )
+    }
+
+    func testResolutionAwareDefaultKeepsBothWhenAPairResolves() {
+        let board = mirroredPairBoard()
+        let plan = eitherEdgePlan(boardID: board.id)
+
+        XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+        XCTAssertEqual(
+            WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+            .both
+        )
+    }
+
+    func testBothHandsResolveRejectsPinnedSingleHandContactOnTwoHandBoard() {
+        let board = mirroredPairBoard()
+        let plan = eitherEdgePlan(boardID: board.id, pinnedContactID: "left")
+
+        XCTAssertFalse(
+            WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board),
+            "A both-hands choice must not be offered for a single one-hand contact"
+        )
+        XCTAssertEqual(
+            WorkoutSessionHandResolver.defaultPreference(plan: plan, board: board),
+            .alternate
+        )
+    }
+
+    func testBothHandsResolveAllowsPinnedTwoHandContactOnTwoHandBoard() {
+        let board = mirroredPairBoard(contactHandCapacity: 2)
+        let plan = eitherEdgePlan(boardID: board.id, pinnedContactID: "left")
+
+        XCTAssertTrue(WorkoutSessionHandResolver.bothHandsResolve(plan: plan, board: board))
+    }
+
+    private func mirroredPairBoard(contactHandCapacity: Int = 1) -> BoardRevision {
+        let contacts = [
+            PhysicalContact(
+                id: "left", name: "Left", kind: .edge,
+                handCapacity: contactHandCapacity, side: .left, pairedContactID: "right"
+            ),
+            PhysicalContact(
+                id: "right", name: "Right", kind: .edge,
+                handCapacity: contactHandCapacity, side: .right, pairedContactID: "left"
+            )
+        ]
+        let geometry = [
+            "left": [BoardContactPiece(
+                id: "left-piece", contactID: "left",
+                frame: CGRect(x: 0.1, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface
+            )],
+            "right": [BoardContactPiece(
+                id: "right-piece", contactID: "right",
+                frame: CGRect(x: 0.8, y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface
+            )]
+        ]
+        return BoardRevision(
+            id: "fixture.mirrored-pair",
+            revisionID: "test",
+            manufacturer: "Fixture",
+            name: "Mirrored pair",
+            subtitle: "",
+            dimensions: nil,
+            aspectRatio: 1,
+            contacts: contacts,
+            productURL: URL(string: "https://example.com/board")!,
+            photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
+        )
+    }
+
+    private func eitherEdgePlan(boardID: String, pinnedContactID: String? = nil) -> TrainingPlan {
+        TrainingPlan(
+            id: "fixture.either",
+            title: "Either",
+            subtitle: "",
+            level: "",
+            sourceLabel: "",
+            sourceURL: URL(string: "https://example.com/plan")!,
+            provenance: .adapted,
+            boardID: boardID,
+            steps: [
+                WorkoutStep(
+                    id: "either", number: 1, title: "Either", instruction: "",
+                    accessory: "", duration: 7, phase: .hang,
+                    segments: [WorkoutSegment(
+                        kind: .work,
+                        target: .fromLegacyTargets([
+                            ContactRequirement(
+                                contactID: pinnedContactID,
+                                kind: .edge,
+                                selection: .single
+                            )
+                        ]),
+                        timing: .fixed,
+                        duration: 7
+                    )],
+                    handUse: .either, side: .both
+                )
+            ]
+        )
     }
 }
 

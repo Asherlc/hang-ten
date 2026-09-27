@@ -78,7 +78,8 @@ struct CustomRoutineStepDraft: Equatable, Identifiable {
 /// Resolves the editor preview through a valid athlete-hand alternative. An
 /// either-hand definition deliberately retains `.both` until a session starts,
 /// which is not a contact-resolver input for a single-contact requirement.
-/// Both-hands (two boards) preview also includes the single-hold materialization.
+/// Both-hands preview also includes the capacity-aware materialization (paired
+/// holds on two-hand boards, one hold on one-hand boards).
 enum CustomRoutineBoardPreview {
     static func contactIDs(
         for step: CustomRoutineStepDraft,

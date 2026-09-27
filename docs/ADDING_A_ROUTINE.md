@@ -117,8 +117,8 @@ contain board contact IDs or visual-frame references:
   when the source gives no measurement, or `depth: .range(...)` for a stated
   measurement;
 - `fingerCapacity` or `handCapacity` only when the source specifies it;
-- `.bilateralPair` only when the source prescribes the pair; otherwise
-  `.single` resolves one stable geometry-selected contact.
+- `.bilateralPair` when the source prescribes both hands together or names a
+  pair; otherwise `.single` resolves one stable geometry-selected contact.
 
 The resolver matches those predicates against factual board metadata. Do not
 hard-code a contact ID or visual frame into a routine. If the source names a

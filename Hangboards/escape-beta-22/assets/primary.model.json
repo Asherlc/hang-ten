@@ -1,553 +1,949 @@
 {
-  "contacts": {
-    "hold-01-left": {
-      "center": [
-        0.042944348,
-        0.594394876
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.073062918,
-          0.792526509
-        ],
-        "min": [
-          0.012825777,
-          0.396263242
-        ]
-      },
-      "nodeIDs": [
-        "left_pinch_005"
-      ]
-    },
-    "hold-01-right": {
-      "center": [
-        0.957055653,
-        0.594394876
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.987174223,
-          0.792526509
-        ],
-        "min": [
-          0.926937082,
-          0.396263242
-        ]
-      },
-      "nodeIDs": [
-        "left_pinch_007"
-      ]
-    },
-    "hold-02-left": {
-      "center": [
-        0.036531459,
-        0.198197731
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.073062918,
-          0.396395461
-        ],
-        "min": [
-          0.0,
-          0.0
-        ]
-      },
-      "nodeIDs": [
-        "left_pinch_006"
-      ]
-    },
-    "hold-02-right": {
-      "center": [
-        0.963468541,
-        0.198197731
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          0.396395461
-        ],
-        "min": [
-          0.926937082,
-          0.0
-        ]
-      },
-      "nodeIDs": [
-        "left_pinch_008"
-      ]
-    },
-    "hold-03-left": {
-      "center": [
-        0.148760987,
-        0.849552721
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.224459057,
-          0.944518457
-        ],
-        "min": [
-          0.073062918,
-          0.754586985
-        ]
-      },
-      "nodeIDs": [
-        "left_jug_38_002"
-      ]
-    },
-    "hold-03-right": {
-      "center": [
-        0.851239013,
-        0.849552721
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.926937082,
-          0.944518457
-        ],
-        "min": [
-          0.775540943,
-          0.754586985
-        ]
-      },
-      "nodeIDs": [
-        "left_jug_38_003"
-      ]
-    },
-    "hold-04-left": {
-      "center": [
-        0.148760999,
-        0.474758205
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.222945093,
-          0.570229238
-        ],
-        "min": [
-          0.074576905,
-          0.379287172
-        ]
-      },
-      "nodeIDs": [
-        "left_incut_29_002"
-      ]
-    },
-    "hold-04-right": {
-      "center": [
-        0.851239001,
-        0.474758205
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.925423095,
-          0.570229238
-        ],
-        "min": [
-          0.777054907,
-          0.379287172
-        ]
-      },
-      "nodeIDs": [
-        "left_incut_29_003"
-      ]
-    },
-    "hold-05-left": {
-      "center": [
-        0.148004006,
-        0.119182902
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.222945093,
-          0.227850466
-        ],
-        "min": [
-          0.073062918,
-          0.010515337
-        ]
-      },
-      "nodeIDs": [
-        "left_incut_12_002"
-      ]
-    },
-    "hold-05-right": {
-      "center": [
-        0.851995994,
-        0.119182902
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.926937082,
-          0.227850466
-        ],
-        "min": [
-          0.777054907,
-          0.010515337
-        ]
-      },
-      "nodeIDs": [
-        "left_incut_12_003"
-      ]
-    },
-    "hold-06-left": {
-      "center": [
-        0.294858252,
-        0.942370483
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.36677141,
-          0.99846984
-        ],
-        "min": [
-          0.222945093,
-          0.886271126
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_38_002"
-      ]
-    },
-    "hold-06-right": {
-      "center": [
-        0.705141748,
-        0.942370483
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.777054907,
-          0.99846984
-        ],
-        "min": [
-          0.63322859,
-          0.886271126
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_38_003"
-      ]
-    },
-    "hold-07-left": {
-      "center": [
-        0.295615234,
-        0.632779182
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.36677141,
-          0.715081808
-        ],
-        "min": [
-          0.224459057,
-          0.550476557
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_29_002"
-      ]
-    },
-    "hold-07-right": {
-      "center": [
-        0.704384767,
-        0.632779182
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.775540943,
-          0.715081808
-        ],
-        "min": [
-          0.63322859,
-          0.550476557
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_29_003"
-      ]
-    },
-    "hold-08-left": {
-      "center": [
-        0.294101275,
-        0.25981384
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.362229529,
-          0.379287209
-        ],
-        "min": [
-          0.225973021,
-          0.14034047
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_12_002"
-      ]
-    },
-    "hold-08-right": {
-      "center": [
-        0.705898725,
-        0.25981384
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.774026979,
-          0.379287209
-        ],
-        "min": [
-          0.637770471,
-          0.14034047
-        ]
-      },
-      "nodeIDs": [
-        "left_flat_12_003"
-      ]
-    },
-    "hold-09-left": {
-      "center": [
-        0.434142688,
-        0.923382975
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.5,
-          1.0
-        ],
-        "min": [
-          0.368285375,
-          0.84676595
-        ]
-      },
-      "nodeIDs": [
-        "centre_sloper_50_001"
-      ]
-    },
-    "hold-09-right": {
-      "center": [
-        0.565857312,
-        0.923382975
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.631714625,
-          1.0
-        ],
-        "min": [
-          0.5,
-          0.84676595
-        ]
-      },
-      "nodeIDs": [
-        "centre_sloper_50_004"
-      ]
-    },
-    "hold-10-left": {
-      "center": [
-        0.43193385,
-        0.478050321
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.500124219,
-          0.603150279
-        ],
-        "min": [
-          0.363743482,
-          0.352950363
-        ]
-      },
-      "nodeIDs": [
-        "centre_sloper_31_001"
-      ]
-    },
-    "hold-10-right": {
-      "center": [
-        0.56806615,
-        0.478050321
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.636256518,
-          0.603150279
-        ],
-        "min": [
-          0.499875781,
-          0.352950363
-        ]
-      },
-      "nodeIDs": [
-        "centre_sloper_31_004"
-      ]
-    },
-    "hold-11-left": {
-      "center": [
-        0.426572878,
-        0.171386353
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.493944155,
-          0.214682001
-        ],
-        "min": [
-          0.3592016,
-          0.128090704
-        ]
-      },
-      "nodeIDs": [
-        "left_sloper_12_002"
-      ]
-    },
-    "hold-11-right": {
-      "center": [
-        0.573427123,
-        0.171386353
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.6407984,
-          0.214682001
-        ],
-        "min": [
-          0.506055845,
-          0.128090704
-        ]
-      },
-      "nodeIDs": [
-        "left_sloper_12_003"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
   "modelBounds": {
-    "max": [
-      0.330259442,
-      0.076272979,
-      0.050613005
-    ],
     "min": [
-      -0.330259442,
-      -0.075605594,
-      0.000149759
+      -0.330199987,
+      -0.076200001,
+      -0.0
+    ],
+    "max": [
+      0.330199987,
+      0.076200001,
+      0.050799999
     ]
   },
-  "modelSHA256": "95c41baa291c134358fa47eb8a9981acabd35bfb2231e14fd7951a9d9a0b0be4",
   "nodes": [
     {
       "nodeID": "body_board_001",
       "role": "body"
     },
     {
-      "contactID": "hold-10-left",
-      "nodeID": "centre_sloper_31_001",
-      "role": "contact"
+      "nodeID": "hold_01_left",
+      "role": "contact",
+      "contactID": "hold-01-left"
     },
     {
-      "contactID": "hold-10-right",
-      "nodeID": "centre_sloper_31_004",
-      "role": "contact"
+      "nodeID": "hold_01_right",
+      "role": "contact",
+      "contactID": "hold-01-right"
     },
     {
-      "contactID": "hold-09-left",
-      "nodeID": "centre_sloper_50_001",
-      "role": "contact"
+      "nodeID": "hold_02_left",
+      "role": "contact",
+      "contactID": "hold-02-left"
     },
     {
-      "contactID": "hold-09-right",
-      "nodeID": "centre_sloper_50_004",
-      "role": "contact"
+      "nodeID": "hold_02_right",
+      "role": "contact",
+      "contactID": "hold-02-right"
     },
     {
-      "contactID": "hold-08-left",
-      "nodeID": "left_flat_12_002",
-      "role": "contact"
+      "nodeID": "hold_03_left",
+      "role": "contact",
+      "contactID": "hold-03-left"
     },
     {
-      "contactID": "hold-08-right",
-      "nodeID": "left_flat_12_003",
-      "role": "contact"
+      "nodeID": "hold_03_right",
+      "role": "contact",
+      "contactID": "hold-03-right"
     },
     {
-      "contactID": "hold-07-left",
-      "nodeID": "left_flat_29_002",
-      "role": "contact"
+      "nodeID": "hold_04_left",
+      "role": "contact",
+      "contactID": "hold-04-left"
     },
     {
-      "contactID": "hold-07-right",
-      "nodeID": "left_flat_29_003",
-      "role": "contact"
+      "nodeID": "hold_04_right",
+      "role": "contact",
+      "contactID": "hold-04-right"
     },
     {
-      "contactID": "hold-06-left",
-      "nodeID": "left_flat_38_002",
-      "role": "contact"
+      "nodeID": "hold_05_left",
+      "role": "contact",
+      "contactID": "hold-05-left"
     },
     {
-      "contactID": "hold-06-right",
-      "nodeID": "left_flat_38_003",
-      "role": "contact"
+      "nodeID": "hold_05_right",
+      "role": "contact",
+      "contactID": "hold-05-right"
     },
     {
-      "contactID": "hold-05-left",
-      "nodeID": "left_incut_12_002",
-      "role": "contact"
+      "nodeID": "hold_06_left",
+      "role": "contact",
+      "contactID": "hold-06-left"
     },
     {
-      "contactID": "hold-05-right",
-      "nodeID": "left_incut_12_003",
-      "role": "contact"
+      "nodeID": "hold_06_right",
+      "role": "contact",
+      "contactID": "hold-06-right"
     },
     {
-      "contactID": "hold-04-left",
-      "nodeID": "left_incut_29_002",
-      "role": "contact"
+      "nodeID": "hold_07_left",
+      "role": "contact",
+      "contactID": "hold-07-left"
     },
     {
-      "contactID": "hold-04-right",
-      "nodeID": "left_incut_29_003",
-      "role": "contact"
+      "nodeID": "hold_07_right",
+      "role": "contact",
+      "contactID": "hold-07-right"
     },
     {
-      "contactID": "hold-03-left",
-      "nodeID": "left_jug_38_002",
-      "role": "contact"
+      "nodeID": "hold_08_left",
+      "role": "contact",
+      "contactID": "hold-08-left"
     },
     {
-      "contactID": "hold-03-right",
-      "nodeID": "left_jug_38_003",
-      "role": "contact"
+      "nodeID": "hold_08_right",
+      "role": "contact",
+      "contactID": "hold-08-right"
     },
     {
-      "contactID": "hold-01-left",
-      "nodeID": "left_pinch_005",
-      "role": "contact"
+      "nodeID": "hold_09_left",
+      "role": "contact",
+      "contactID": "hold-09-left"
     },
     {
-      "contactID": "hold-02-left",
-      "nodeID": "left_pinch_006",
-      "role": "contact"
+      "nodeID": "hold_09_right",
+      "role": "contact",
+      "contactID": "hold-09-right"
     },
     {
-      "contactID": "hold-01-right",
-      "nodeID": "left_pinch_007",
-      "role": "contact"
+      "nodeID": "hold_10_left",
+      "role": "contact",
+      "contactID": "hold-10-left"
     },
     {
-      "contactID": "hold-02-right",
-      "nodeID": "left_pinch_008",
-      "role": "contact"
+      "nodeID": "hold_10_right",
+      "role": "contact",
+      "contactID": "hold-10-right"
     },
     {
-      "contactID": "hold-11-left",
-      "nodeID": "left_sloper_12_002",
-      "role": "contact"
+      "nodeID": "hold_11_left",
+      "role": "contact",
+      "contactID": "hold-11-left"
     },
     {
-      "contactID": "hold-11-right",
-      "nodeID": "left_sloper_12_003",
-      "role": "contact"
+      "nodeID": "hold_11_right",
+      "role": "contact",
+      "contactID": "hold-11-right"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "hold-01-left": {
+      "nodeIDs": [
+        "hold_01_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.5
+        ],
+        "max": [
+          0.072986052,
+          0.72965879
+        ]
+      },
+      "center": [
+        0.036493026,
+        0.614829395
+      ],
+      "outline": [
+        [
+          0.0,
+          0.5
+        ],
+        [
+          0.072986052,
+          0.5
+        ],
+        [
+          0.072986052,
+          0.72965879
+        ],
+        [
+          0.0,
+          0.72965879
+        ]
+      ]
+    },
+    "hold-01-right": {
+      "nodeIDs": [
+        "hold_01_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.927013948,
+          0.5
+        ],
+        "max": [
+          1.0,
+          0.72965879
+        ]
+      },
+      "center": [
+        0.963506974,
+        0.614829395
+      ],
+      "outline": [
+        [
+          0.927013948,
+          0.5
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          1.0,
+          0.72965879
+        ],
+        [
+          0.927013948,
+          0.72965879
+        ]
+      ]
+    },
+    "hold-02-left": {
+      "nodeIDs": [
+        "hold_02_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.106299217
+        ],
+        "max": [
+          0.072986052,
+          0.303149609
+        ]
+      },
+      "center": [
+        0.036493026,
+        0.204724413
+      ],
+      "outline": [
+        [
+          0.0,
+          0.106299217
+        ],
+        [
+          0.072986052,
+          0.106299217
+        ],
+        [
+          0.072986052,
+          0.303149609
+        ],
+        [
+          0.0,
+          0.303149609
+        ]
+      ]
+    },
+    "hold-02-right": {
+      "nodeIDs": [
+        "hold_02_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.927013948,
+          0.106299217
+        ],
+        "max": [
+          1.0,
+          0.303149609
+        ]
+      },
+      "center": [
+        0.963506974,
+        0.204724413
+      ],
+      "outline": [
+        [
+          0.927013948,
+          0.106299217
+        ],
+        [
+          1.0,
+          0.106299217
+        ],
+        [
+          1.0,
+          0.303149609
+        ],
+        [
+          0.927013948,
+          0.303149609
+        ]
+      ]
+    },
+    "hold-03-left": {
+      "nodeIDs": [
+        "hold_03_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.079042987,
+          0.624671914
+        ],
+        "max": [
+          0.212295567,
+          0.782152227
+        ]
+      },
+      "center": [
+        0.145669277,
+        0.70341207
+      ],
+      "outline": [
+        [
+          0.079042987,
+          0.624671914
+        ],
+        [
+          0.212295567,
+          0.624671914
+        ],
+        [
+          0.212295567,
+          0.782152227
+        ],
+        [
+          0.079042987,
+          0.782152227
+        ]
+      ]
+    },
+    "hold-03-right": {
+      "nodeIDs": [
+        "hold_03_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.787704433,
+          0.624671914
+        ],
+        "max": [
+          0.920957013,
+          0.782152227
+        ]
+      },
+      "center": [
+        0.854330723,
+        0.70341207
+      ],
+      "outline": [
+        [
+          0.787704433,
+          0.624671914
+        ],
+        [
+          0.920957013,
+          0.624671914
+        ],
+        [
+          0.920957013,
+          0.782152227
+        ],
+        [
+          0.787704433,
+          0.782152227
+        ]
+      ]
+    },
+    "hold-04-left": {
+      "nodeIDs": [
+        "hold_04_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.082071455,
+          0.395013125
+        ],
+        "max": [
+          0.212295567,
+          0.539370078
+        ]
+      },
+      "center": [
+        0.147183511,
+        0.467191602
+      ],
+      "outline": [
+        [
+          0.082071455,
+          0.395013125
+        ],
+        [
+          0.212295567,
+          0.395013125
+        ],
+        [
+          0.212295567,
+          0.539370078
+        ],
+        [
+          0.082071455,
+          0.539370078
+        ]
+      ]
+    },
+    "hold-04-right": {
+      "nodeIDs": [
+        "hold_04_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.787704433,
+          0.395013125
+        ],
+        "max": [
+          0.917928545,
+          0.539370078
+        ]
+      },
+      "center": [
+        0.852816489,
+        0.467191602
+      ],
+      "outline": [
+        [
+          0.787704433,
+          0.395013125
+        ],
+        [
+          0.917928545,
+          0.395013125
+        ],
+        [
+          0.917928545,
+          0.539370078
+        ],
+        [
+          0.787704433,
+          0.539370078
+        ]
+      ]
+    },
+    "hold-05-left": {
+      "nodeIDs": [
+        "hold_05_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.086614157,
+          0.145669296
+        ],
+        "max": [
+          0.210781333,
+          0.27690289
+        ]
+      },
+      "center": [
+        0.148697745,
+        0.211286093
+      ],
+      "outline": [
+        [
+          0.086614157,
+          0.145669296
+        ],
+        [
+          0.210781333,
+          0.145669296
+        ],
+        [
+          0.210781333,
+          0.27690289
+        ],
+        [
+          0.086614157,
+          0.27690289
+        ]
+      ]
+    },
+    "hold-05-right": {
+      "nodeIDs": [
+        "hold_05_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.789218667,
+          0.145669296
+        ],
+        "max": [
+          0.913385843,
+          0.27690289
+        ]
+      },
+      "center": [
+        0.851302255,
+        0.211286093
+      ],
+      "outline": [
+        [
+          0.789218667,
+          0.145669296
+        ],
+        [
+          0.913385843,
+          0.145669296
+        ],
+        [
+          0.913385843,
+          0.27690289
+        ],
+        [
+          0.789218667,
+          0.27690289
+        ]
+      ]
+    },
+    "hold-06-left": {
+      "nodeIDs": [
+        "hold_06_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.231980607,
+          0.677165352
+        ],
+        "max": [
+          0.351605082,
+          0.860892384
+        ]
+      },
+      "center": [
+        0.291792844,
+        0.769028868
+      ],
+      "outline": [
+        [
+          0.231980607,
+          0.677165352
+        ],
+        [
+          0.351605082,
+          0.677165352
+        ],
+        [
+          0.351605082,
+          0.860892384
+        ],
+        [
+          0.231980607,
+          0.860892384
+        ]
+      ]
+    },
+    "hold-06-right": {
+      "nodeIDs": [
+        "hold_06_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.648394918,
+          0.677165352
+        ],
+        "max": [
+          0.768019393,
+          0.860892384
+        ]
+      },
+      "center": [
+        0.708207156,
+        0.769028868
+      ],
+      "outline": [
+        [
+          0.648394918,
+          0.677165352
+        ],
+        [
+          0.768019393,
+          0.677165352
+        ],
+        [
+          0.768019393,
+          0.860892384
+        ],
+        [
+          0.648394918,
+          0.860892384
+        ]
+      ]
+    },
+    "hold-07-left": {
+      "nodeIDs": [
+        "hold_07_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.231980607,
+          0.408136484
+        ],
+        "max": [
+          0.351605082,
+          0.565616797
+        ]
+      },
+      "center": [
+        0.291792844,
+        0.486876641
+      ],
+      "outline": [
+        [
+          0.231980607,
+          0.408136484
+        ],
+        [
+          0.351605082,
+          0.408136484
+        ],
+        [
+          0.351605082,
+          0.565616797
+        ],
+        [
+          0.231980607,
+          0.565616797
+        ]
+      ]
+    },
+    "hold-07-right": {
+      "nodeIDs": [
+        "hold_07_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.648394918,
+          0.408136484
+        ],
+        "max": [
+          0.768019393,
+          0.565616797
+        ]
+      },
+      "center": [
+        0.708207156,
+        0.486876641
+      ],
+      "outline": [
+        [
+          0.648394918,
+          0.408136484
+        ],
+        [
+          0.768019393,
+          0.408136484
+        ],
+        [
+          0.768019393,
+          0.565616797
+        ],
+        [
+          0.648394918,
+          0.565616797
+        ]
+      ]
+    },
+    "hold-08-left": {
+      "nodeIDs": [
+        "hold_08_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.233494841,
+          0.139107616
+        ],
+        "max": [
+          0.351605082,
+          0.27690289
+        ]
+      },
+      "center": [
+        0.292549962,
+        0.208005253
+      ],
+      "outline": [
+        [
+          0.233494841,
+          0.139107616
+        ],
+        [
+          0.351605082,
+          0.139107616
+        ],
+        [
+          0.351605082,
+          0.27690289
+        ],
+        [
+          0.233494841,
+          0.27690289
+        ]
+      ]
+    },
+    "hold-08-right": {
+      "nodeIDs": [
+        "hold_08_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.648394918,
+          0.139107616
+        ],
+        "max": [
+          0.766505159,
+          0.27690289
+        ]
+      },
+      "center": [
+        0.707450038,
+        0.208005253
+      ],
+      "outline": [
+        [
+          0.648394918,
+          0.139107616
+        ],
+        [
+          0.766505159,
+          0.139107616
+        ],
+        [
+          0.766505159,
+          0.27690289
+        ],
+        [
+          0.648394918,
+          0.27690289
+        ]
+      ]
+    },
+    "hold-09-left": {
+      "nodeIDs": [
+        "hold_09_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.363718953,
+          0.94619422
+        ],
+        "max": [
+          0.5,
+          0.999999994
+        ]
+      },
+      "center": [
+        0.431859477,
+        0.973097107
+      ],
+      "outline": [
+        [
+          0.363718953,
+          0.94619422
+        ],
+        [
+          0.5,
+          0.94619422
+        ],
+        [
+          0.5,
+          0.999999994
+        ],
+        [
+          0.363718953,
+          0.999999994
+        ]
+      ]
+    },
+    "hold-09-right": {
+      "nodeIDs": [
+        "hold_09_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.5,
+          0.94619422
+        ],
+        "max": [
+          0.636281047,
+          0.999999994
+        ]
+      },
+      "center": [
+        0.568140523,
+        0.973097107
+      ],
+      "outline": [
+        [
+          0.5,
+          0.94619422
+        ],
+        [
+          0.636281047,
+          0.94619422
+        ],
+        [
+          0.636281047,
+          0.999999994
+        ],
+        [
+          0.5,
+          0.999999994
+        ]
+      ]
+    },
+    "hold-10-left": {
+      "nodeIDs": [
+        "hold_10_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.37431859,
+          0.565616797
+        ],
+        "max": [
+          0.5,
+          0.782152227
+        ]
+      },
+      "center": [
+        0.437159295,
+        0.673884512
+      ],
+      "outline": [
+        [
+          0.37431859,
+          0.565616797
+        ],
+        [
+          0.5,
+          0.565616797
+        ],
+        [
+          0.5,
+          0.782152227
+        ],
+        [
+          0.37431859,
+          0.782152227
+        ]
+      ]
+    },
+    "hold-10-right": {
+      "nodeIDs": [
+        "hold_10_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.5,
+          0.565616797
+        ],
+        "max": [
+          0.62568141,
+          0.782152227
+        ]
+      },
+      "center": [
+        0.562840705,
+        0.673884512
+      ],
+      "outline": [
+        [
+          0.5,
+          0.565616797
+        ],
+        [
+          0.62568141,
+          0.565616797
+        ],
+        [
+          0.62568141,
+          0.782152227
+        ],
+        [
+          0.5,
+          0.782152227
+        ]
+      ]
+    },
+    "hold-11-left": {
+      "nodeIDs": [
+        "hold_11_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.37431859,
+          0.165354335
+        ],
+        "max": [
+          0.486371895,
+          0.316272968
+        ]
+      },
+      "center": [
+        0.430345243,
+        0.240813652
+      ],
+      "outline": [
+        [
+          0.37431859,
+          0.165354335
+        ],
+        [
+          0.486371895,
+          0.165354335
+        ],
+        [
+          0.486371895,
+          0.316272968
+        ],
+        [
+          0.37431859,
+          0.316272968
+        ]
+      ]
+    },
+    "hold-11-right": {
+      "nodeIDs": [
+        "hold_11_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.513628105,
+          0.165354335
+        ],
+        "max": [
+          0.62568141,
+          0.316272968
+        ]
+      },
+      "center": [
+        0.569654757,
+        0.240813652
+      ],
+      "outline": [
+        [
+          0.513628105,
+          0.165354335
+        ],
+        [
+          0.62568141,
+          0.165354335
+        ],
+        [
+          0.62568141,
+          0.316272968
+        ],
+        [
+          0.513628105,
+          0.316272968
+        ]
+      ]
+    }
+  }
 }

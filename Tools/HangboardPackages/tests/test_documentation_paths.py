@@ -129,6 +129,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
                     "HangTenUITests/GripCueDiagnosticScreenshotUITests",
                     "HangTenUITests/InitialWeightSetupUITests",
                     "HangTenUITests/DualMaxHangsHighlightUITests",
+                    "HangTenUITests/OneHandedHandChoiceUITests",
                 )
             ),
             "1",

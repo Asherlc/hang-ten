@@ -630,6 +630,15 @@ write-up. The durable points:
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
   `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+- **target10a Linebreaker BASE** (23 contacts) came from a retained
+  signed-distance generator, not a Blender script. Search `.context/migration*`
+  history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
+  An SDF's smooth blends (`smax`) have no exact B-rep, so author the primitives
+  and state which blends are omitted. Check each cavity's mouth against every
+  crease *before* authoring. A mouth that crosses a tier crease makes the
+  region's depth extent miss the published depth. See lessons §18 and
+  `docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+
 - **Beastmaker 2000** has no generator in Git, so every number was measured from
   the display mesh with slices and circle/line fits. It is five extruded section
   sketches (one per top-slope segment) fused, then trimmed by the intersection
@@ -640,6 +649,41 @@ write-up. The durable points:
   floor) passes the gate only if its region reaches the face. Give it the
   parent pocket's end-cap faces on the hole side. See
   `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+- **Rock Prodigy Pivot**: the approved display mesh was wrong. It was about
+  20 % undersized, had the wrong topology, and reversed two published depth
+  gradients. Before measuring it, check the reference against the
+  manufacturer's own images and depth guide. When they disagree, author the
+  front view from a manufacturer top-down photo instead. Type the points in by
+  eye from 1 mm-gridded crops (no detection), and take the scale from a known
+  part in the photo's plane, such as a bolt seat. OCCT will not chamfer an
+  outline chain ending at a near-tangent or concave kink, so build asymmetric
+  bands as ruled lofts from the photographed front edge to the silhouette at
+  the published depth. The reading and review aids (1 mm-gridded crops and
+  the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
+  full method are in `freecad-authoring-lessons.md` §18. See
+  `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+- **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
+  Grouping its vertices by coordinate recovered every station exactly (lessons
+  §20). Check a reference's round-over against what a router can cut: a true
+  fillet of an r 6 outline, not the reference's constant-r 6 sweep, which the
+  manufacturer photo supports. Two compiler additions came out of it: a region
+  whose published depth exceeds the board's thickness must span the full depth,
+  and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
+  `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+- **Moon Armstrong**: re-authored from Moon's photos, like the Pivot. Two
+  techniques carried it:
+  - *Perspective check from repeated blocks.* Left-side blocks read ~9 mm
+    narrower than their identical right-side twins. Averaging the twins
+    predicted the directly read centre width to 0.2 mm.
+  - *Regions as copies of body faces.* Each contact is a compound of copies of
+    the compiled body's own faces, selected by lying on the hold's cutter or
+    rail surface. The partition and the published-depth gate are then exact by
+    construction, and no `Part::Reverse` is needed.
+
+  Rounded mouths and edges are ruled lofts through four quarter-round stations.
+  A station at a depth splits a through bore there, so a mono's contact can be
+  its front 22 mm. See
+  `docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
