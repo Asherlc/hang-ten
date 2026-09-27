@@ -340,16 +340,11 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        let hittable = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "isHittable == true"),
-            object: left
-        )
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [hittable], timeout: 30),
-            .completed,
-            "The Left hand menu item must be hittable."
-        )
-        left.tap()
+        // On iOS 26 the native SwiftUI Menu exposes its visible row with a
+        // valid button frame, but its zero-sized UICollectionView container
+        // makes XCTest report isHittable=false. Tap the visible row's center
+        // and verify the selected hand below.
+        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
 
         // Wait a moment for the UI to update after the tap
         Thread.sleep(forTimeInterval: 1.0)
