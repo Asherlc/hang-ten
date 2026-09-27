@@ -328,7 +328,7 @@
       "descriptorSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
       "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes, no materials or textures)",
       "nativeValidation": "passed: compile reopen, 22 IDs, manufacturer depth gate, analytic contact partition, USDZ reimport and descriptor hash; verify_reproducible byte-identical on pinned macOS toolchain",
-      "nativeAppValidation": "iPhone 17 Pro simulator iOS 26.5 DEBUG board-detail route: CAD model loaded and default left thin pinch selected; non-default hold-map selection unverified because the second simulator launch stalled before app startup",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; left thin pinch selected by default and left 38mm mini-jug selected by hold-map tap, confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
       "comparison": "reviewed against superseded asset in front, side and top views; deliberate native display approximation retains 22 contacts, open slots and end-wing taper but simplifies molded blends and front bands",
       "provenanceSidecar": "docs/source-audits/2026-09-26-escape-beta-22-cad-provenance.md",
       "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",

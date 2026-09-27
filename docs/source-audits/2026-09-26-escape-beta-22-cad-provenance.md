@@ -87,10 +87,19 @@ check accepts the 50.8 mm overall dimension within the source's 1.8 mm
 tessellation tolerance. The FreeCAD features are native and editable, while the
 contact face copies require manual rebind after a geometry edit.
 
-The preview must be compared with the superseded asset from front, side, and
+The previews were compared with the superseded asset from front, side, and
 top. The model intentionally has simpler planar bands and end-wing facets than
 the manufacturer's molded, rounded surface. The individual slot shapes and
 wing transitions are display estimates; no manufacturing tolerances are known.
+
+| Review view | Previous asset | Native CAD |
+| --- | --- | --- |
+| Front | [previous](../pr-screenshots/escape-beta-22/previous-front.png) | [CAD](../pr-screenshots/escape-beta-22/cad-front.png) |
+| Side | [previous](../pr-screenshots/escape-beta-22/previous-side.png) | [CAD](../pr-screenshots/escape-beta-22/cad-side.png) |
+| Top | [previous](../pr-screenshots/escape-beta-22/previous-top.png) | [CAD](../pr-screenshots/escape-beta-22/cad-top.png) |
+
+The [iOS hold-map screenshot](../pr-screenshots/escape-beta-22/app-hold-03-left.png)
+records the non-default contact selection and highlight.
 
 Final source SHA-256:
 `2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c`.
@@ -104,7 +113,9 @@ descriptor byte-identically on the pinned macOS toolchain. The package
 validator accepted all 64 discovered boards, and the 47-package model-delivery
 lock verified with this FCStd as the Beta Board authority. An iPhone 17 Pro
 simulator running iOS 26.5 loaded the model on the DEBUG board-detail route and
-selected the default left thin pinch. The temporary simulator was deleted
-afterward. A second run intended to exercise a non-default hold-map selection
-stalled in `simctl launch` before the app process started. Its owned simulator
-was also deleted; that interaction remains unverified in-app.
+selected the default left thin pinch. After a full first-boot migration, a
+fresh iPhone 17 Pro simulator loaded the same route; tapping the hold-map row
+`boardDetail.holdLegend.hold-03-left` selected
+`boardDetail.selectedHold.hold-03-left`. Its screenshot shows the upper-left
+pocket highlighted and the Left 38mm Mini-Jug card with 38 mm depth. Both owned
+simulators were deleted after their runs.
