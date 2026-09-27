@@ -146,7 +146,7 @@ rtk git commit -m "feat: add RealityKit grip hand camera controls"
 
 - [ ] **Step 1: Add a failing host/update test**
 
-Add `testRealitySceneShowsUnavailableStateForAssetFailure` using `.failure(GripHandAsset.AssetError.missingResource)`; assert `isUnavailable == true` and no hand mesh is installed. Add scene-update assertions that posture, explicit fingers, side, viewport size, and `resetToken` reach the RealityKit scene. Keep existing accessibility labels unchanged.
+Add `testRealitySceneShowsUnavailableStateForAssetFailure` using `.failure(GripHandAsset.AssetError.missingResource)`; assert `isUnavailable == true` and no hand mesh is installed. Add scene-update assertions that posture, explicit fingers, side, viewport size, and `resetToken` reach the RealityKit scene. Add a focused drag-intent test proving a vertical-first drag stays a scroll and an orbit starts from its claimed translation without applying earlier motion. Keep existing accessibility labels unchanged.
 
 - [ ] **Step 2: Run the new host test to verify it fails**
 
