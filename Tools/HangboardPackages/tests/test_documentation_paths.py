@@ -38,6 +38,26 @@ def _ci_workflow() -> dict[str, object]:
     return document
 
 
+def _xctest_only_testing_selectors(job: dict[str, object]) -> list[str]:
+    step = next(
+        step for step in job["steps"] if step.get("name") == "Run XCTest suite"
+    )
+    value = str(step["env"]["XCTEST_ONLY_TESTING"])
+    if value == "${{ matrix.only_testing }}":
+        matrix = job["strategy"]["matrix"]
+        return [
+            selector
+            for shard in matrix["include"]
+            for selector in str(shard["only_testing"]).split()
+        ]
+    return value.split()
+
+
+def _xctest_selector_target(selector: str) -> str:
+    """Return the target/class coverage represented by a test selector."""
+    return "/".join(selector.split("/")[:2])
+
+
 def test_ui_test_changes_run_ios_and_python_contract_suites() -> None:
     """UI-test edits must exercise their XCTest shard and shard-assignment contract."""
     filters = yaml.safe_load(CI_PATH_FILTERS.read_text(encoding="utf-8"))
@@ -167,9 +187,13 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
             assert "XCTEST_MAX_ATTEMPTS" not in xctest_step["env"]
         else:
             assert xctest_step["env"]["XCTEST_MAX_ATTEMPTS"] == max_attempts
-        assert " ".join(str(xctest_step["env"]["XCTEST_ONLY_TESTING"]).split()) == " ".join(
-            only_testing.split()
-        )
+        expected_targets = {
+            _xctest_selector_target(selector) for selector in only_testing.split()
+        }
+        actual_selectors = _xctest_only_testing_selectors(test_job)
+        assert {
+            _xctest_selector_target(selector) for selector in actual_selectors
+        } == expected_targets
         assert "scripts/ci-run-xctest.sh" in xctest_command
         assert "xcodebuild" not in xctest_command
 
@@ -187,7 +211,7 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
             for step in jobs[job_name]["steps"]
             if step.get("name") == "Run XCTest suite"
         )
-        ui_shard_targets.extend(str(xctest_step["env"]["XCTEST_ONLY_TESTING"]).split())
+        ui_shard_targets.extend(_xctest_only_testing_selectors(jobs[job_name]))
     assert len(ui_shard_targets) == len(set(ui_shard_targets))
     discovered_ui_classes = {
         f"HangTenUITests/{match.group(1)}"
@@ -198,7 +222,9 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
             flags=re.MULTILINE,
         )
     }
-    assert set(ui_shard_targets) == discovered_ui_classes
+    assert {
+        _xctest_selector_target(selector) for selector in ui_shard_targets
+    } == discovered_ui_classes
 
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
