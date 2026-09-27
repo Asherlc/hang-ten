@@ -43,9 +43,10 @@ struct BoardModelSurface: View {
     var body: some View {
         Group {
             if case .ready(let model) = result {
-                BoardModelRealityView(
+                let realityView = BoardModelRealityView(
                     model: model,
                     boardName: board.name,
+                    accessibilityValue: highlightedContactCue,
                     contacts: board.contacts(in: presentation),
                     positionID: positionID,
                     highlightedContactIDs: highlightedContactIDs,
@@ -54,11 +55,19 @@ struct BoardModelSurface: View {
                     onUnavailable: { result = .unavailable },
                     isDisplayOnly: isDisplayOnly
                 )
-                .accessibilityIdentifier("boardModel.3d")
                 // Display-only picker cards wrap this in a Button; claiming
                 // SwiftUI hits here would intercept the card select tap even
                 // when the hosted RealityView has user interaction disabled.
                 .allowsHitTesting(!isDisplayOnly)
+                if onContactTap == nil {
+                    realityView.accessibilityIdentifier("boardModel.3d")
+                } else {
+                    // A parent accessibility identifier propagates to the
+                    // RealityView's projected contact buttons. Keep their
+                    // per-contact identifiers available to UI automation and
+                    // assistive technology on interactive board maps.
+                    realityView
+                }
             } else if let loadingMessage = result.loadingMessage {
                 HStack(spacing: 12) {
                     ProgressView()
@@ -114,6 +123,13 @@ struct BoardModelSurface: View {
             modelSHA256: media.descriptor.modelSHA256
         )
     }
+
+    private var highlightedContactCue: String? {
+        let boardContacts = board.contacts(in: presentation)
+        let highlighted = boardContacts.filter { highlightedContactIDs.contains($0.id) }
+        guard highlighted.count == 1, let contact = highlighted.first else { return nil }
+        return GripDiagramView.cueLabel(for: contact)
+    }
 }
 
 struct BoardModelUnavailableView: View {
@@ -132,6 +148,7 @@ struct BoardModelUnavailableView: View {
 struct BoardModelRealityView: View {
     let model: BoardModelRealityScene
     let boardName: String
+    let accessibilityValue: String?
     let contacts: [PhysicalContact]
     let positionID: String?
     let highlightedContactIDs: Set<String>
@@ -178,7 +195,8 @@ struct BoardModelRealityView: View {
         // interactive board exposes its contact elements instead, so the
         // container must not collapse them into a single element.
         .modifier(BoardModelAccessibilityContainer(
-            label: onContactTap == nil ? "\(boardName) hangboard" : nil))
+            label: onContactTap == nil ? "\(boardName) hangboard" : nil,
+            value: onContactTap == nil ? accessibilityValue : nil))
     }
 
     private func applySync(size: CGSize) {
@@ -208,6 +226,8 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
+                model.resetCamera(animated: true)
+                cameraRevision &+= 1
                 onContactTap?(contact)
             }
     }
@@ -267,12 +287,14 @@ struct BoardModelRealityView: View {
 
 private struct BoardModelAccessibilityContainer: ViewModifier {
     let label: String?
+    let value: String?
 
     func body(content: Content) -> some View {
         if let label {
             content
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(label)
+                .accessibilityValue(value ?? "")
         } else {
             content
         }
