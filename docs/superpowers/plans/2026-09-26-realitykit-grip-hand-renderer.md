@@ -120,7 +120,7 @@ Expected: compile failures for the new `GripHandRealityScene` camera API.
 
 - [ ] **Step 3: Implement `GripHandRealityScene`**
 
-Own the root, hand entity, and entity with `OrthographicCameraComponent`. Port the current explicit camera basis calculation, palm-oblique offsets `(±5.8, 2.75, 9.4)`, fit padding `1.08`, fallback aspect `0.85`, bounded azimuth/elevation/zoom, and reset-token behavior. Recompute canonical framing on viewport, pose, or side change. Add RealityKit lighting/environment components that bring neutral and highlighted hand appearance close to the existing SceneKit reference; tune against Task 2's neutral, index, and index+ring reference screenshots, preserving the exact vertex-color interpolation. Set the RealityView camera to the entity camera.
+Own the root, hand entity, and entity with `OrthographicCameraComponent`. Port the current explicit camera basis calculation, palm-oblique offsets `(±5.8, 2.75, 9.4)`, fit padding `1.08`, fallback aspect `0.85`, bounded azimuth/elevation/zoom, and reset-token behavior. Recompute canonical framing on viewport, pose, or side change. Add RealityKit lighting/environment components that bring neutral and highlighted hand appearance close to the existing SceneKit reference; tune against Task 2's neutral, index, and index+ring reference screenshots, preserving the exact vertex-color interpolation. Expose the entity camera for the RealityView host; Task 4 installs it as the active RealityView camera.
 
 - [ ] **Step 4: Run camera, transform, and lighting visual checks**
 
@@ -155,7 +155,7 @@ Expected: failure until the view uses the RealityKit scene and sync path.
 
 - [ ] **Step 3: Replace `UIViewRepresentable` with `RealityView`**
 
-Keep `GripHandModelView(posture:fingerConfiguration:side:resetToken:)` at the call sites. Create/add the RealityKit root and orthographic camera in `RealityView`; route drag and magnification deltas through the scene orbit API; reset gesture state when a gesture ends; update for pose/side/size/reset-token changes. Retain the non-accessible decorative model and accessible label, and overlay the existing unavailable text when asset loading fails.
+Keep `GripHandModelView(posture:fingerConfiguration:side:resetToken:)` at the call sites. Create/add the RealityKit root in `RealityView` and set its active camera to `GripHandRealityScene.camera`; route drag and magnification deltas through the scene orbit API; reset gesture state when a gesture ends; update for pose/side/size/reset-token changes. Retain the non-accessible decorative model and accessible label, and overlay the existing unavailable text when asset loading fails.
 
 - [ ] **Step 4: Run host and cue-card tests**
 
