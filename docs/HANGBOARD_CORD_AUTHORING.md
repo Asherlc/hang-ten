@@ -61,6 +61,18 @@ all eight cases. That experiment did not contain the now-confirmed channel,
 so it cannot establish whether a correctly constrained physical simulation
 would work. See [the experiment and its measured limits](../Tools/HangboardRopePrototype/README.md).
 
+Live simulation remains possible engineering work. RealityKit provides
+[rigid-body physics](https://developer.apple.com/documentation/realitykit/physics-simulations-and-motion),
+[joints](https://developer.apple.com/documentation/realitykit/physics-joints-and-pins),
+and [cloth simulation](https://developer.apple.com/documentation/realitykit/physics-cloth-simulation),
+but these APIs do not infer a threaded, continuous rope through hidden
+channels from mouth and anchor positions. A rope implementation would still
+need the route graph, attachment and bore constraints, a collision shape
+faithful at the mouths and grip recesses, a stable tension/length model, and
+repeatable settling across all poses. Test exact CAD-solid clearance and
+motion before replacing the deterministic renderer; the old surrogate's
+failure is evidence about that experiment, not a proof against simulation.
+
 Mouth and anchor coordinates **do not uniquely determine a route**. Between
 one mouth and an external support, cord can travel around either side of the
 section. The winding choice records how the physical cord was threaded. It
