@@ -18,6 +18,7 @@
 		F1A2B3C4D5E6F708192A3B58 /* FreeWorkoutFinish.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */; };
 		1615E79EA23842FDAD1EBFEA /* FreeWorkoutLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F112E2145AE4C0AA500D26A /* FreeWorkoutLogTests.swift */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
+		A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000006 /* GripHandSurfaceShader.metal */; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
@@ -220,6 +221,7 @@
 		F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDecimalText.swift; path = FreeWorkoutDecimalText.swift; sourceTree = "<group>"; };
 		6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutUITests.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
+		A3D000000000000000000006 /* GripHandSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GripHandSurfaceShader.metal; sourceTree = "<group>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HangTen/Resources/GripHand/hand-mesh.json"; sourceTree = SOURCE_ROOT; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 				BB0000000000000000000011 /* HangTen.entitlements */,
 				DD0000000000000000000008 /* Config */,
 				DD0000000000000000000004 /* Models */,
+				A3D000000000000000000007 /* Rendering */,
 				DD0000000000000000000005 /* Views */,
 				DD0000000000000000000006 /* Resources */,
 			);
@@ -510,6 +513,14 @@
 				AE0000000000000000000004 /* HangTenUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		A3D000000000000000000007 /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				A3D000000000000000000006 /* GripHandSurfaceShader.metal */,
+			);
+			path = Rendering;
 			sourceTree = "<group>";
 		};
 		DD0000000000000000000004 /* Models */ = {
@@ -920,6 +931,7 @@
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				A3D000000000000000000001 /* GripHandModelView.swift in Sources */,
+				A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,

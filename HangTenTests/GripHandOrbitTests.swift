@@ -6,6 +6,28 @@ import XCTest
 /// the same bounded-turntable guarantees: a full spin returns to the start,
 /// zoom stays clamped, and a reset restores the canonical framing.
 final class GripHandOrbitTests: XCTestCase {
+    @MainActor
+    func testRealityMeshUsesBundledPosePositionsNormalsAndIndices() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let surface = try GripHandRealitySurface(asset: asset)
+
+        try surface.apply(GripHandPose(posture: .halfCrimp, fingerConfiguration: nil))
+
+        XCTAssertNotNil(surface.modelEntity.model)
+        XCTAssertEqual(surface.vertexCount, asset.vertexCount)
+        XCTAssertEqual(surface.triangleCount, asset.indices.count / 3)
+        let vertices = surface.posedVerticesForFraming()
+        XCTAssertEqual(vertices.count, asset.vertexCount)
+        XCTAssertTrue(vertices.allSatisfy { $0.x.isFinite && $0.y.isFinite && $0.z.isFinite })
+        let bounds = vertices.reduce((SIMD3<Float>(repeating: .greatestFiniteMagnitude),
+                                      SIMD3<Float>(repeating: -.greatestFiniteMagnitude))) { result, point in
+            (simd_min(result.0, point), simd_max(result.1, point))
+        }
+        XCTAssertTrue((bounds.1 - bounds.0).x > 0)
+        XCTAssertTrue((bounds.1 - bounds.0).y > 0)
+        XCTAssertTrue((bounds.1 - bounds.0).z > 0)
+    }
+
     private func makeInstalledCoordinator() -> (GripHandModelView.Coordinator, SCNView) {
         let coordinator = GripHandModelView.Coordinator()
         let view = SCNView(frame: CGRect(x: 0, y: 0, width: 200, height: 260))

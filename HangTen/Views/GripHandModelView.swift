@@ -1,4 +1,6 @@
 import SceneKit
+import RealityKit
+import Metal
 import SwiftUI
 
 /// Rendering parameters, not anatomical measurements or training prescriptions.
@@ -385,6 +387,112 @@ struct GripHandRealityMeshBuilder {
             if clampedStrength == 1 { return highlightColor }
             return baseColor + (highlightColor - baseColor) * clampedStrength
         }
+    }
+}
+
+@MainActor
+final class GripHandRealitySurface {
+    private struct Vertex {
+        var position: SIMD3<Float>
+        var normal: SIMD3<Float>
+        var color: SIMD4<Float>
+    }
+
+    private struct MeshKey: Hashable {
+        let action: String
+        let fingers: Set<FingerSlot>
+    }
+
+    let root = Entity()
+    let modelEntity = ModelEntity()
+    private(set) var vertexCount = 0
+    private(set) var triangleCount = 0
+
+    private let asset: GripHandAsset
+    private let material: CustomMaterial
+    private var meshes: [MeshKey: MeshResource] = [:]
+    private var recentKeys: [MeshKey] = []
+    private var currentAction = "Neutral"
+
+    init(asset: GripHandAsset) throws {
+        self.asset = asset
+        var base = PhysicallyBasedMaterial()
+        base.baseColor = .init(tint: .white)
+        base.roughness = .init(floatLiteral: 0.9)
+        base.metallic = .init(floatLiteral: 0)
+        base.faceCulling = .none
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else {
+            throw GripHandAsset.AssetError.invalidMesh
+        }
+        let shader = CustomMaterial.SurfaceShader(named: "gripHandSurfaceShader", in: library)
+        var material = try CustomMaterial(from: base, surfaceShader: shader)
+        material.faceCulling = .none
+        self.material = material
+        root.addChild(modelEntity)
+    }
+
+    func apply(_ pose: GripHandPose) throws {
+        let key = MeshKey(action: pose.action(), fingers: pose.highlightedFingers)
+        guard asset.poses[key.action] != nil else { throw GripHandAsset.AssetError.invalidMesh }
+        let mesh: MeshResource
+        if let cached = meshes[key] {
+            mesh = cached
+        } else {
+            mesh = try makeMesh(for: key, pose: pose)
+            meshes[key] = mesh
+        }
+        recentKeys.removeAll { $0 == key }
+        recentKeys.append(key)
+        while recentKeys.count > 3 {
+            meshes.removeValue(forKey: recentKeys.removeFirst())
+        }
+        modelEntity.model = ModelComponent(mesh: mesh, materials: [material])
+        currentAction = key.action
+        vertexCount = asset.vertexCount
+        triangleCount = asset.indices.count / 3
+    }
+
+    /// Frame the exact displayed surface, including the source's short wrist.
+    func posedVerticesForFraming() -> [SIMD3<Float>] {
+        guard let positions = asset.poses[currentAction]?.positions else { return [] }
+        return stride(from: 0, to: positions.count, by: 3).map {
+            SIMD3(positions[$0], positions[$0 + 1], positions[$0 + 2])
+        }
+    }
+
+    private func makeMesh(for key: MeshKey, pose: GripHandPose) throws -> MeshResource {
+        let source = asset.poses[key.action]!
+        let colors = try GripHandRealityMeshBuilder.vertexColors(
+            asset: asset, action: pose, selectedFingers: key.fingers
+        )
+        let vertices = (0..<asset.vertexCount).map { i in
+            Vertex(position: SIMD3(source.positions[i * 3], source.positions[i * 3 + 1], source.positions[i * 3 + 2]),
+                   normal: SIMD3(source.normals[i * 3], source.normals[i * 3 + 1], source.normals[i * 3 + 2]),
+                   color: colors[i])
+        }
+        let bounds = vertices.reduce(BoundingBox.empty) { box, vertex in
+            BoundingBox(min: simd_min(box.min, vertex.position), max: simd_max(box.max, vertex.position))
+        }
+        let descriptor = LowLevelMesh.Descriptor(
+            vertexCapacity: vertices.count,
+            vertexAttributes: [
+                .init(semantic: .position, format: .float3, offset: MemoryLayout<Vertex>.offset(of: \.position)!),
+                .init(semantic: .normal, format: .float3, offset: MemoryLayout<Vertex>.offset(of: \.normal)!),
+                .init(semantic: .color, format: .float4, offset: MemoryLayout<Vertex>.offset(of: \.color)!)
+            ],
+            vertexLayouts: [.init(bufferIndex: 0, bufferStride: MemoryLayout<Vertex>.stride)],
+            indexCapacity: asset.indices.count
+        )
+        let lowLevelMesh = try LowLevelMesh(descriptor: descriptor)
+        lowLevelMesh.withUnsafeMutableBytes(bufferIndex: 0) { destination in
+            vertices.withUnsafeBytes { source in destination.copyBytes(from: source) }
+        }
+        lowLevelMesh.withUnsafeMutableIndices { destination in
+            asset.indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
+        }
+        lowLevelMesh.parts.append(.init(indexCount: asset.indices.count, bounds: bounds))
+        return try MeshResource(from: lowLevelMesh)
     }
 }
 
