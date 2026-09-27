@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "e61267b46f7c275bcb4fef37f013aa0045978bedc8c29b3d37fe41dcb8d7d476",
+  "sha256Manifest": "b1036deadedcefac99aa6efb829e485315874524cfc7aaa80abbe1a1ad386ed2",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "1c0d7bd0910103bfa37e05e6ad3f666da56956176472f1d2b0dc737679652a39",
+  "supersededSha256Manifest": "e61267b46f7c275bcb4fef37f013aa0045978bedc8c29b3d37fe41dcb8d7d476",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -276,6 +276,21 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules (clipped at the board ends for side-open edges); bounding rectangles for jugs and slopers"
     },
+    "moon-armstrong": {
+      "source": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "sourceSHA256": "b31c71fbb2236f93f78ff15215c63cafe360b93f6873477d1c936ca9c7b5dda8",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.9393936268136036, was 3.9573770458016795 from the superseded mesh bounds)",
+      "referenceSHA256": "26e916d54b39f1f6afcf78b53bdc883a584dae0ff6e78d67fb8823ee1daf8e6a",
+      "assetSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+      "descriptorSHA256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 21 stable contact IDs and node IDs, published-depth gate exact (25/20/15/10/8/22/18 mm and 22 mm pockets; mono contacts are the front 22 mm of a through bore), verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; sloper-left (default), jug-left, sloper-right, center-jug, mono-right, edge-8-left and center-edge-18 selected by deep link and confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
+      "comparison": "re-authored from Moon Climbing's own photographs (front view) and owner-supplied plywood side views (tier depths), not traced from the superseded SDF display mesh, which contradicted the manufacturer photos (open centre shelves instead of proud rails, edge floors not at published depths); compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: mouth outlines (slot/pocket + round-over), rail and bar outlines, sloper front band"
+    },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
       "sourceSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
@@ -381,5 +396,6 @@
   "trainingTilesMigrationNote": "2026-09-26: So iLL Training Tiles became the eighteenth source-backed model package after target10a-linebreaker-base and metolius-light-rail-2 merged. Its approved sculpted model was retained as an explicitly faceted FreeCAD source with exact contact meshes and a full-resolution stored body mesh. The merged manifest supersedes main's prior manifest; the Training Tiles branch previously used 071a5279... and e3087ab2... before those migrations merged.",
   "escapeBeta22MigrationNote": "2026-09-26: escape-beta-22 became a source-backed native FreeCAD package with 22 contact IDs and generated board.json. Combined sha256Manifest 8c203507... supersedes main's a00fbcef..., recorded in supersededSha256Manifest. See provenance sidecar for approved source set and display deviations.",
   "trainingCenterMigrationNote": "2026-09-26: trango-rock-prodigy-training-center moved to native FreeCAD source with its unchanged embedded board manifest. Final display geometry omits mounting bores. Its shallow middle-ring contact partition was corrected during PR review. The combined manifest includes escape-beta-22 and supersedes main's 8c203507... manifest.",
-  "clavelliumMigrationNote": "2026-09-26: clavellium-training-block migrated to a native FreeCAD source; four side cavity depths validated on explicit X axes, metadata embedded unchanged, and the prior model replaced by an unbound CAD export."
+  "clavelliumMigrationNote": "2026-09-26: clavellium-training-block migrated to a native FreeCAD source; four side cavity depths validated on explicit X axes, metadata embedded unchanged, and the prior model replaced by an unbound CAD export.",
+  "moonArmstrongMigrationNote": "2026-09-26: moon-armstrong migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest b1036dea... supersedes e61267b4..., which moved to supersededSha256Manifest (which previously held 1c0d7bd0...)."
 }

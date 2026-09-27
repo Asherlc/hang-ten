@@ -670,6 +670,20 @@ write-up. The durable points:
   whose published depth exceeds the board's thickness must span the full depth,
   and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
   `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+- **Moon Armstrong**: re-authored from Moon's photos, like the Pivot. Two
+  techniques carried it:
+  - *Perspective check from repeated blocks.* Left-side blocks read ~9 mm
+    narrower than their identical right-side twins. Averaging the twins
+    predicted the directly read centre width to 0.2 mm.
+  - *Regions as copies of body faces.* Each contact is a compound of copies of
+    the compiled body's own faces, selected by lying on the hold's cutter or
+    rail surface. The partition and the published-depth gate are then exact by
+    construction, and no `Part::Reverse` is needed.
+
+  Rounded mouths and edges are ruled lofts through four quarter-round stations.
+  A station at a depth splits a through bore there, so a mono's contact can be
+  its front 22 mm. See
+  `docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
 
 ## Fast loop and definition of done
 
