@@ -29,6 +29,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from verify_reproducible import faceted_import_acknowledged
+
 REPOSITORY = Path(__file__).resolve().parents[2]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
 DEFAULT_FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd")
@@ -56,6 +58,8 @@ def _run_build(package: str, destination: Path, freecad: Path, extra_path: str) 
         "--source", str(REPOSITORY / "Hangboards" / package / f"{package}{SOURCE_SUFFIX}"),
         "--assets", str(destination),
     ]
+    if faceted_import_acknowledged(package):
+        arguments.append("--allow-faceted-import")
     wrapper.write_text(
         "import sys, traceback\n"
         f"path = {str(TOOLS / 'compile_board.py')!r}\n"
