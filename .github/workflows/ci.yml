@@ -672,6 +672,7 @@ jobs:
             only_testing: "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests"
           - shard: iron-palm
             only_testing: "HangTenUITests/IronPalmBoardMapInteractionUITests"
+          # Keep these method selectors updated when adding Batch05 tests.
           - shard: batch05-a
             only_testing: "HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMount HangTenUITests/Batch05BoardModelInteractionUITests/testEvo HangTenUITests/Batch05BoardModelInteractionUITests/testMegalith"
           - shard: batch05-b
@@ -962,6 +963,7 @@ jobs:
         include:
           - shard: settings
             only_testing: "HangTenUITests/SettingsUITests"
+          # Keep these method selectors updated when adding FreeWorkout tests.
           - shard: free-workout-basic
             only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain"
           - shard: free-workout-finish
