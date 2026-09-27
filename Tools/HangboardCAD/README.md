@@ -177,6 +177,11 @@ Record the output in `suspension.json` under
 `internalLoop.channelLengthByBranchID`. Run the same command with
 `HANGTEN_CHANNEL_VERIFY=1` after editing the sidecar to check that the
 declared lengths still match the CAD spines.
+For a physics probe, add
+`HANGTEN_CHANNEL_SAMPLES_OUTPUT=.context/<workspace-owner>/channel-paths.json`
+to export both spine centerlines in model coordinates. The output paths run
+from the first to second declared mouth, including both endpoints; they are
+derived from CAD and must not be copied into the USDZ.
 
 ## Running it
 

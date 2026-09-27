@@ -106,6 +106,18 @@ therefore rejected for app integration. Point clearance alone is insufficient:
 acceptance also needs segment clearance, length and local strain, topology,
 convergence, and all eight pose/loop combinations against the exact CAD solid.
 
+A later Bullet soft-body chain trial used the same watertight CAD collider and
+the **measured** FreeCAD channel spine as its hidden seed. The spine exporter
+reproduced both mouth centers and the 87.214214 mm channel length. At 1 mm
+chain spacing, 1,000 position iterations, and an experimental 0.84 m loop,
+the edge-20 left loop still settled at 0.84166 m; the most stretched link was
+about 10% longer than rest. Sampled nodes stayed outside the wood, but
+segment midpoints came within 1.974 mm of it for a 2 mm rope. This is also a
+rejected probe: increasing iteration count and using the real hidden spine
+did not establish inextensible, nonpenetrating contact. The nominal 0.82 m
+length is a display estimate, not a manufacturer measurement. A solver cannot
+use that estimate as proof of a physically feasible rope configuration.
+
 The settled-pose approximation passes a fixed-length test for all four Mini
 Bar grips. A separate native-solid inspection found 2.09 mm minimum rope
 centerline clearance for the 2 mm rope, but up to 3.41 mm centerline distance

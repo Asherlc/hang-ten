@@ -65,6 +65,33 @@ def station_on_spine(point, samples):
     return best[1]
 
 
+def point_at_station(samples, station):
+    traversed = 0.0
+    for start, end in zip(samples, samples[1:]):
+        length = start.distanceToPoint(end)
+        if station <= traversed + length:
+            fraction = (station - traversed) / length if length else 0.0
+            return start.add(end.sub(start).multiply(fraction))
+        traversed += length
+    return samples[-1]
+
+
+def path_between_stations(samples, first, second):
+    low, high = sorted((first, second))
+    station = 0.0
+    result = [point_at_station(samples, low)]
+    for start, end in zip(samples, samples[1:]):
+        station += start.distanceToPoint(end)
+        if low < station < high:
+            result.append(end)
+    result.append(point_at_station(samples, high))
+    return result if first <= second else list(reversed(result))
+
+
+def native_to_model(point):
+    return [point.x / 1000, point.z / 1000, -point.y / 1000]
+
+
 def main():
     document = App.openDocument(str(SOURCE))
     suspension = json.loads(SIDECAR.read_text())["suspension"]
@@ -73,6 +100,7 @@ def main():
         for passage in side
     }
     output = {}
+    paths = {}
     for branch in suspension["branches"]:
         feature_name = FEATURES[branch["id"]]
         feature = document.getObject(feature_name)
@@ -84,8 +112,12 @@ def main():
             model_to_native(passages_by_id[passage_id]["pointInModel"])
             for passage_id in branch["passageIDs"]
         )
-        length = abs(station_on_spine(second, samples) - station_on_spine(first, samples)) / 1000
+        first_station = station_on_spine(first, samples)
+        second_station = station_on_spine(second, samples)
+        length = abs(second_station - first_station) / 1000
         output[branch["id"]] = round(length, 9)
+        paths[branch["id"]] = [native_to_model(point) for point in
+                               path_between_stations(samples, first_station, second_station)]
     if os.environ.get("HANGTEN_CHANNEL_VERIFY") == "1":
         declared = suspension["internalLoop"]["channelLengthByBranchID"]
         if set(declared) != set(output) or any(
@@ -93,6 +125,8 @@ def main():
         ):
             raise ValueError(f"channel lengths differ from CAD spine: {output}")
     print(json.dumps(output, sort_keys=True))
+    if destination := os.environ.get("HANGTEN_CHANNEL_SAMPLES_OUTPUT"):
+        Path(destination).write_text(json.dumps(paths, sort_keys=True) + "\n")
 
 
 main()
