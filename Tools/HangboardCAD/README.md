@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 19 of the 47 model-media boards are migrated** (those with a committed
+**Status: 20 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -378,7 +378,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **19 of 47 model-media boards are migrated.** The other 28 still ship their
+* **20 of 47 model-media boards are migrated.** The other 27 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, trango-rock-prodigy-training-center, tension-grindstone, and metolius-light-rail-2 native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, and trango-rock-prodigy-training-center native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d7d534aeca27d0c5be92d45e774625e1fe296b38d403dbc1e3b20ba38300333d",
+  "sha256Manifest": "1c0d7bd0910103bfa37e05e6ad3f666da56956176472f1d2b0dc737679652a39",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "a00fbcef0287d21ae6d20591c0cdb0fedf6938059ff845591f0a208bf8255576",
+  "supersededSha256Manifest": "8c203507dd01762a4958f7755235b17e92d4404e9122241a0ed39f1236cbc537",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -319,15 +319,30 @@
       "holdOutline": "CAD-authored HangTenHoldOutline: authored outlines for rail, pockets, ledge, medium-crimp strip and wing; front-view hulls for the crimp bands and teeth",
       "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised"
     },
+    "escape-beta-22": {
+      "source": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
+      "sourceSHA256": "2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c",
+      "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 22 stable contact IDs preserved; camera view direction adjusted 20 degrees downward",
+      "referenceSHA256": "95c41baa291c134358fa47eb8a9981acabd35bfb2231e14fd7951a9d9a0b0be4",
+      "assetSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
+      "descriptorSHA256": "2797e436006385608aa7fb11bc8ec2a3786ecf8d29e00182b5e64f4e66658d2e",
+      "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes, no materials or textures)",
+      "nativeValidation": "passed: compile reopen, 22 IDs, manufacturer depth gate, analytic contact partition, USDZ reimport and descriptor hash; verify_reproducible byte-identical on pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; left thin pinch selected by default and left 38mm mini-jug selected by hold-map tap, confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
+      "comparison": "reviewed against superseded asset in front, side and top views; deliberate native display approximation retains 22 contacts, open slots and end-wing taper but simplifies molded blends and front bands",
+      "provenanceSidecar": "docs/source-audits/2026-09-26-escape-beta-22-cad-provenance.md",
+      "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored mouth rectangles and upper/lower end-wing bands; left/right central crown and upper sloper partitioned at x=0"
+    },
     "trango-rock-prodigy-training-center": {
       "source": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
-      "sourceSHA256": "de2ce4db5f7d84dfdf92c0b4024ce787c34bfbb918202cb81f12a776222e1872",
+      "sourceSHA256": "10b634a6f3ac880bfb1414605c36eec3a696e55ea339bd626a796ffa6fbf24d5",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the removed hand-authored board.json",
       "referenceSHA256": "9b9fbeda3846f72bd671fdb0733f2ce39c69342c033933ce75653a67a060f105",
-      "assetSHA256": "f55ee5cc3c390a1b4268c41bf14ed0d92a991eb28acc9d3519595a059295dc64",
-      "descriptorSHA256": "150e1d6b911a447581600d35085075d16e7b83b262edc2dfe6ddb648cb5919ba",
+      "assetSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
+      "descriptorSHA256": "3fba542de1faff90f9f3699fcdedad0a68ac847250ad1baf7c1dbd5929d2534a",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes)",
-      "nativeValidation": "FreeCAD source reopened/recomputed during compile with sourceUnchanged true; 31 fully constrained sketches, one body and 24 contact nodes; package validator and byte-identical reproducibility passed. No manufacturer grip-depth gate exists.",
+      "nativeValidation": "FreeCAD source reopened/recomputed during compile with sourceUnchanged true; 31 fully constrained sketches, one body and 24 contact nodes; package validator and byte-identical reproducibility passed. Shallow middle-ring contact partition corrected during PR review. No manufacturer grip-depth gate exists.",
       "comparison": "Front, side, top, and oblique renderings reviewed against the prior committed display mesh; per-half overall envelope aligns with published 12.1 x 9.1 in. Depths and sculpted sections are measured display approximations from the prior mesh. Final revision omits two mounting bores previously retained inside outer pockets.",
       "provenanceSidecar": "docs/source-audits/2026-09-26-trango-rock-prodigy-training-center-cad-provenance.md",
       "assetCoverage": "Locked as descriptor + FCStd; board.json is generated at build time and the USDZ is hash-bound by the descriptor.",
@@ -350,5 +365,6 @@
   "tensionGrindstoneMigrationNote": "2026-09-26: tension-grindstone moved from a raster presentation to a source-backed model package. The merged manifest includes both this migration and target10a-linebreaker-base.",
   "metoliusLightRail2MigrationNote": "2026-09-26: metolius-light-rail-2 became a source-backed package authored as native vector geometry (HangTenCurvedRegionPartition and HangTenSurfaceNormals set). sha256Manifest 1abe8932... supersedes 9ad65de5..., which moved to supersededSha256Manifest.",
   "trainingTilesMigrationNote": "2026-09-26: So iLL Training Tiles became the eighteenth source-backed model package after target10a-linebreaker-base and metolius-light-rail-2 merged. Its approved sculpted model was retained as an explicitly faceted FreeCAD source with exact contact meshes and a full-resolution stored body mesh. The merged manifest supersedes main's prior manifest; the Training Tiles branch previously used 071a5279... and e3087ab2... before those migrations merged.",
-  "trainingCenterMigrationNote": "2026-09-26: trango-rock-prodigy-training-center moved to native FreeCAD source with its unchanged embedded board manifest. Final display geometry omits mounting bores. This manifest includes the three concurrently merged source-backed boards from main. The contact partition was corrected during PR review; sha256Manifest d7d534ae supersedes main's a00fbcef."
+  "escapeBeta22MigrationNote": "2026-09-26: escape-beta-22 became a source-backed native FreeCAD package with 22 contact IDs and generated board.json. Combined sha256Manifest 8c203507... supersedes main's a00fbcef..., recorded in supersededSha256Manifest. See provenance sidecar for approved source set and display deviations.",
+  "trainingCenterMigrationNote": "2026-09-26: trango-rock-prodigy-training-center moved to native FreeCAD source with its unchanged embedded board manifest. Final display geometry omits mounting bores. Its shallow middle-ring contact partition was corrected during PR review. The combined manifest includes escape-beta-22 and supersedes main's 8c203507... manifest."
 }
