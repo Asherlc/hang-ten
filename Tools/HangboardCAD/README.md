@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 16 of the 47 model-media boards are migrated** (those with a committed
+**Status: 17 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -274,6 +274,34 @@ first CAD board with no prior 3D asset (it was raster-only), so there is no
 reference mesh. See
 `docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`.
 
+`metolius-light-rail-2` sets it too: its jugs include cylindrical round-overs,
+its cord wells are cones and cylinders, and its pocket corners are ruled
+B-spline walls. See
+`docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+
+## Surface normals
+
+By default the compiler clusters each vertex's incident triangles by crease
+angle and averages their normals. Where a large planar triangle meets the many
+small triangles of a tangent fillet, that average tilts, and the flat face
+shades a visible band. A document that sets `HangTenSurfaceNormals`
+(`App::PropertyBool`) instead shades each triangle with the analytic normal of
+the B-rep face it tessellates: the triangle's face is the one whose surface
+holds its centroid (within the deflection, inside the face domain), vertices
+are split per face, and each carries that face's normal at its position. A face
+then shades smoothly, a tangent seam is continuous, and every edge that is not
+tangent stays crisp. The sign follows the triangle winding. It is opt-in so
+existing sources keep reproducing their committed bytes. `metolius-light-rail-2`
+sets it.
+
+## Published depth deeper than the board
+
+The published-depth gate compares a region's native Y extent with its
+published grip depth. A region cannot be deeper than the body, so when a
+published depth exceeds the body's own Y extent (a nominal label, such as the
+Light Rail's "40 mm" jugs across a 38 mm rail), the region must instead span the
+body's full depth. Every other region still has to match its published depth.
+
 ## Pilot: lattice-triple-rung
 
 `Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd` is a native PartDesign body: one fully
@@ -355,7 +383,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **16 of 47 model-media boards are migrated.** The other 31 still ship their
+* **17 of 47 model-media boards are migrated.** The other 30 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
