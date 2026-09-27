@@ -146,6 +146,16 @@ def test_coderabbit_flagged_pairs_preserve_mirrored_geometry(board_id: str) -> N
                 for bound, opposite in (("min", "max"), ("max", "min")):
                     expected = 1 - left_bounds[opposite][axis] if axis == 0 else left_bounds[bound][axis]
                     assert right_bounds[bound][axis] == pytest.approx(expected, abs=tolerance)
+                left_center = left["center"][axis]
+                expected_center = 1 - left_center if axis == 0 else left_center
+                assert right["center"][axis] == pytest.approx(expected_center, abs=tolerance)
+                for contact in (left, right):
+                    contact_bounds = contact["facePlaneAABB"]
+                    assert (
+                        contact_bounds["min"][axis] - 1e-6
+                        <= contact["center"][axis]
+                        <= contact_bounds["max"][axis] + 1e-6
+                    )
         return
     geometry = document_contact_geometry(board)
     for left_id, right_id in MIRRORED_PAIRS[board_id]:
