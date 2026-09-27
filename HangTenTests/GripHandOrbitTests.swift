@@ -362,6 +362,11 @@ final class GripHandOrbitTests: XCTestCase {
     @MainActor
     func testPairSceneFramesUnionAndOrbitsOneCamera() throws {
         let scene = GripHandRealityPairScene()
+        let directionalLights = scene.root.children.filter {
+            $0.components[DirectionalLightComponent.self] != nil
+        }
+        XCTAssertEqual(directionalLights.count, 2,
+                       "Both hands share one key light and one fill light")
         scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
                      viewportSize: CGSize(width: 420, height: 260), resetToken: 0)
         let startingCamera = scene.camera.position

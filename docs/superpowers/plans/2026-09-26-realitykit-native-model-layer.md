@@ -679,7 +679,7 @@ SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID=
 sleep 5
 xcrun simctl io <uuid> screenshot .context/realitykit-native-perspective.png
 
-HANGTEN_REVIEW_BOARD_TELEPHOTO=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID=trango.rock-prodigy-pivot xcrun simctl launch <uuid> com.hangten.training
+SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_TELEPHOTO=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_DETAIL=1 SIMCTL_CHILD_HANGTEN_REVIEW_BOARD_ID=trango.rock-prodigy-pivot xcrun simctl launch <uuid> com.hangten.training
 sleep 5
 xcrun simctl io <uuid> screenshot .context/realitykit-native-telephoto.png
 ```

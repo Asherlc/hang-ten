@@ -1,6 +1,5 @@
 import Foundation
 import RealityKit
-import ModelIO
 import SwiftUI
 import UIKit
 import simd
@@ -219,18 +218,9 @@ final class BoardModelRealityScene {
         self.resourceLease = resourceLease
     }
 
-    /// Loads the USDZ model from the given URL using ModelIO and binds descriptor nodes.
+/// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
     func load(usdzURL: URL) async throws {
-        // Load via ModelIO (MDLAsset) for validation, then load via RealityKit
-        let asset = MDLAsset(url: usdzURL)
-        asset.loadTextures()
-        
-        // Verify asset has meshes
-        guard asset.count > 0 else {
-            throw BoardModelRealityError.invalidUSDZ(reason: "No meshes found in USDZ")
-        }
-        
-        // Load the USDZ as RealityKit entity hierarchy (preserves node structure)
+        // RealityKit imports the USDZ asynchronously and reports malformed assets.
         let modelEntity = try await Entity(contentsOf: usdzURL)
         
         self.modelEntity = modelEntity
@@ -250,7 +240,7 @@ final class BoardModelRealityScene {
         
         // Build contact entity mapping from descriptor
         // Neutral highlight baselines were captured by applyNeutralMaterials().
-        buildContactEntities()
+        try buildContactEntities()
         
         // Set up camera framing based on model bounds
         setupCameraFraming()
@@ -349,7 +339,9 @@ final class BoardModelRealityScene {
             fitPadding: fitPadding,
             includedPoints: allPoints
         )
-        canonicalFraming = currentFraming
+        if canonicalFraming == nil {
+            canonicalFraming = currentFraming
+        }
         
         // Position camera
         updateCameraTransform()
@@ -456,7 +448,6 @@ final class BoardModelRealityScene {
             return false
         }
         guard allowedPositionIDs.contains(positionID) else {
-            activePositionID = nil
             return false
         }
         if activePositionID == positionID { return true }
@@ -464,8 +455,9 @@ final class BoardModelRealityScene {
         if let instances, !instances.isEmpty {
             guard instances.count == instanceEntities.count else { return false }
             var selectedFraming: SuspendedCameraFraming?
+            var selectedTransforms: [simd_float4x4] = []
             let cordGroup = Entity()
-            for (index, instance) in instances.enumerated() {
+            for instance in instances {
                 let transform: simd_float4x4
                 if let suspension = instance.suspension {
                     guard let pose = suspension.canonicalPoses[positionID] else { return false }
@@ -486,7 +478,10 @@ final class BoardModelRealityScene {
                     transform = Self.instanceMatrix(instance: instance, positionID: positionID,
                                                     center: Self.boundsCenter(descriptor.modelBounds))
                 }
-                instanceEntities[index].transform = Transform(matrix: transform)
+                selectedTransforms.append(transform)
+            }
+            for (entity, transform) in zip(instanceEntities, selectedTransforms) {
+                entity.transform = Transform(matrix: transform)
             }
             if let selectedFraming {
                 currentFraming = selectedFraming
@@ -610,6 +605,27 @@ final class BoardModelRealityScene {
         updateCameraTransform()
     }
 
+    nonisolated static func perspectiveFitDistance(framing: SuspendedCameraFraming,
+                                       viewportSize: CGSize,
+                                       fieldOfViewDegrees: Float,
+                                       distanceMultiplier: Float = 1) -> Float? {
+        guard fieldOfViewDegrees.isFinite, fieldOfViewDegrees > 0, fieldOfViewDegrees < 179,
+              distanceMultiplier.isFinite, distanceMultiplier > 0,
+              framing.width.isFinite, framing.width > 0,
+              framing.height.isFinite, framing.height > 0,
+              framing.depth.isFinite, framing.depth >= 0,
+              framing.fitPadding.isFinite, framing.fitPadding > 0 else { return nil }
+        let aspect = viewportSize.width > 0 && viewportSize.height > 0
+            ? Float(viewportSize.width / viewportSize.height) : 1
+        let tangent = tan(fieldOfViewDegrees * .pi / 360)
+        guard aspect.isFinite, aspect > 0, tangent.isFinite, tangent > 0 else { return nil }
+        let verticalDistance = framing.height * 0.5 / tangent
+        let horizontalDistance = framing.width * 0.5 / (tangent * aspect)
+        let distance = (max(verticalDistance, horizontalDistance) + framing.depth * 0.5)
+            * framing.fitPadding * distanceMultiplier
+        return distance.isFinite && distance > 0 ? distance : nil
+    }
+
     func fittedOrthographicScale(in size: CGSize) -> Double? {
         guard let framing = currentFraming else { return nil }
         guard size.width > 0, size.height > 0 else { return nil }
@@ -617,7 +633,7 @@ final class BoardModelRealityScene {
         return Double(max(framing.height, framing.width / aspect) * framing.fitPadding / orbitZoom / 2)
     }
 
-    private func buildContactEntities() {
+    private func buildContactEntities() throws {
         // For schema v2 (reusable model), descriptor.contacts is keyed by physical contact ID.
         // Each instance has contactIDsBySlotID mapping slotID -> physicalContactID.
         // We need to build nodeID -> slotID mapping per instance.
@@ -650,16 +666,22 @@ final class BoardModelRealityScene {
                 // Now traverse and map using slotID -> physicalContactID
                 let slotIDToContactID = instance.contactIDsBySlotID
                 
+                var matchedNodeIDs: Set<String> = []
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
-                       let slotID = findSlotID(for: entity, nodeIDToSlotID: nodeIDToSlotID),
+                       let nodeID = findNodeID(for: entity, relativeTo: instanceEntity,
+                                               nodeIDToSlotID: nodeIDToSlotID),
+                       let slotID = nodeIDToSlotID[nodeID],
                        let contactID = slotIDToContactID[slotID] {
+                        matchedNodeIDs.insert(nodeID)
                         contactEntities[contactID, default: []].append(modelEntity)
                         contactIDByEntity[modelEntity] = contactID
                         modelEntity.generateCollisionShapes(recursive: false)
-                        // Neutral highlight baseline captured before this method runs.
+                        modelEntity.components.set(InputTargetComponent())
                     }
                 }
+                try requireDescriptorNodes(nodeIDToSlotID, matched: matchedNodeIDs,
+                                           slotIDToContactID: slotIDToContactID)
             } else {
                 // Single instance (schema v1): descriptor.contacts is keyed by physical contact ID == slotID
                 for (physicalContactID, contactDescriptor) in contactDescriptorByPhysicalID {
@@ -668,48 +690,54 @@ final class BoardModelRealityScene {
                     }
                 }
                 
-                let slotIDToContactID = Dictionary(uniqueKeysWithValues: nodeIDToSlotID.map { ($0.value, $0.value) })
+                let slotIDToContactID = Dictionary(
+                    nodeIDToSlotID.values.map { ($0, $0) },
+                    uniquingKeysWith: { first, _ in first }
+                )
                 
+                var matchedNodeIDs: Set<String> = []
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
-                       let slotID = findSlotID(for: entity, nodeIDToSlotID: nodeIDToSlotID),
+                       let nodeID = findNodeID(for: entity, relativeTo: instanceEntity,
+                                               nodeIDToSlotID: nodeIDToSlotID),
+                       let slotID = nodeIDToSlotID[nodeID],
                        let contactID = slotIDToContactID[slotID] {
+                        matchedNodeIDs.insert(nodeID)
                         contactEntities[contactID, default: []].append(modelEntity)
                         contactIDByEntity[modelEntity] = contactID
                         modelEntity.generateCollisionShapes(recursive: false)
-                        // Neutral highlight baseline captured before this method runs.
+                        modelEntity.components.set(InputTargetComponent())
                     }
                 }
+                try requireDescriptorNodes(nodeIDToSlotID, matched: matchedNodeIDs,
+                                           slotIDToContactID: slotIDToContactID)
             }
         }
     }
-    
-    private func findSlotID(for entity: Entity, nodeIDToSlotID: [String: String]) -> String? {
-        // Primary: direct entity name match (USDZ import uses node names)
-        if let slotID = nodeIDToSlotID[entity.name] {
-            return slotID
-        }
-        // Fallback: check parent hierarchy for matching names
+
+    private func findNodeID(for entity: Entity, relativeTo instanceRoot: Entity,
+                            nodeIDToSlotID: [String: String]) -> String? {
+        if nodeIDToSlotID[entity.name] != nil { return entity.name }
+        var components: [String] = []
         var current: Entity? = entity
-        while let parent = current?.parent {
-            if let slotID = nodeIDToSlotID[parent.name] {
-                return slotID
-            }
-            current = parent
+        while let value = current, value !== instanceRoot {
+            components.append(value.name)
+            current = value.parent
         }
-        // Fallback: try matching by sanitized name (USDZ import may add prefixes/suffixes)
-        let sanitizedName = entity.name
-            .replacingOccurrences(of: "^[^_]+_", with: "", options: .regularExpression) // Remove prefix before first underscore
-            .replacingOccurrences(of: "_[^_]+$", with: "", options: .regularExpression) // Remove suffix after last underscore
-        if sanitizedName != entity.name,
-           let slotID = nodeIDToSlotID[sanitizedName] {
-            return slotID
-        }
-        // Log unmatched entity for debugging
-        if !nodeIDToSlotID.isEmpty {
-            print("[BoardModelRealityScene] Warning: No slotID match for entity '\(entity.name)' (sanitized: '\(sanitizedName)'). Available nodeIDs: \(Array(nodeIDToSlotID.keys).prefix(10))")
-        }
-        return nil
+        let path = components.reversed().joined(separator: "/")
+        return nodeIDToSlotID[path] == nil ? nil : path
+    }
+
+    private func requireDescriptorNodes(_ nodeIDToSlotID: [String: String],
+                                        matched: Set<String>,
+                                        slotIDToContactID: [String: String]) throws {
+        guard let missingNodeID = nodeIDToSlotID.keys.sorted().first(where: { !matched.contains($0) }),
+              let slotID = nodeIDToSlotID[missingNodeID],
+              let contactID = slotIDToContactID[slotID] else { return }
+        #if DEBUG
+        print("[BoardModelRealityScene] Descriptor node \(missingNodeID) did not match an imported RealityKit entity")
+        #endif
+        throw BoardModelRealityError.missingContactDescriptor(contactID: contactID)
     }
     
     private func traverseEntities(_ entity: Entity, _ visit: (Entity) -> Void) {
@@ -741,7 +769,14 @@ final class BoardModelRealityScene {
     private func updateCameraTransform(animated: Bool = false, completion: (() -> Void)? = nil) {
         // Update camera position based on orbit state and framing
         let framing = currentFraming
-        let distance = (framing?.distance ?? 1) * orbitZoom
+        let fov = camera.camera.fieldOfViewInDegrees
+        let distanceMultiplier = Float(display.camera.distanceMultiplier ?? 1)
+        let distance = framing.flatMap {
+            Self.perspectiveFitDistance(framing: $0, viewportSize: viewportSize,
+                                       fieldOfViewDegrees: fov,
+                                       distanceMultiplier: distanceMultiplier)
+        } ?? (framing?.distance ?? 1)
+        let zoomedDistance = distance * orbitZoom
         let target = framing?.target ?? SIMD3<Float>(0, 0, 0)
         let up = framing?.up ?? SIMD3<Float>(0, 1, 0)
         let direction = simd_normalize(-(framing?.direction ?? SIMD3<Float>(0, 0, -1)))
@@ -750,7 +785,7 @@ final class BoardModelRealityScene {
         let yawedDirection = yaw.act(direction)
         let yawedRight = simd_normalize(yaw.act(right))
         let pitch = simd_quatf(angle: -orbitElevation, axis: yawedRight)
-        camera.position = target + pitch.act(yawedDirection) * distance
+        camera.position = target + pitch.act(yawedDirection) * zoomedDistance
         camera.look(at: target, from: camera.position, relativeTo: nil)
 
         if animated {
@@ -908,18 +943,6 @@ enum BoardModelRealityCache {
 
     private static var loading: [BoardModelRealityKey: InFlight] = [:]
 
-    // Long-term cache for loaded sources with memory pressure eviction.
-    // Cost is based on file size to prioritize keeping smaller models.
-    private static let sourceCache: NSCache<NSString, BoardModelRealityLoadedSource> = {
-        let cache = NSCache<NSString, BoardModelRealityLoadedSource>()
-        cache.countLimit = 10 // Maximum number of cached models
-        cache.totalCostLimit = 100 * 1024 * 1024 // 100 MB total cost limit
-        return cache
-    }()
-
-    // Observer token for memory pressure notifications
-    private static var memoryPressureObserver: NSObjectProtocol?
-
     static func source(
         for key: BoardModelRealityKey,
         media: BoardModelMedia,
@@ -928,13 +951,6 @@ enum BoardModelRealityCache {
         store: BoardPackageStore,
         resourceAccess: BoardModelResourceAccess
     ) async throws -> BoardModelRealityLoadedSource? {
-        let cacheKey = cacheKeyString(for: key)
-
-        // Check long-term cache first
-        if let cachedSource = sourceCache.object(forKey: cacheKey as NSString) {
-            return cachedSource
-        }
-
         let waiterID = UUID()
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<BoardModelRealityLoadedSource?, Error>) in
@@ -978,11 +994,6 @@ enum BoardModelRealityCache {
                             waiter.resume(throwing: error)
                         }
                     }
-                    // Cache the result for future loads (if successful)
-                    if let result = result {
-                        let cost = fileSizeCost(for: result.resourceLease.url)
-                        sourceCache.setObject(result, forKey: cacheKey as NSString, cost: cost)
-                    }
                     return result
                 }
             }
@@ -999,58 +1010,6 @@ enum BoardModelRealityCache {
                 waiter.resume(throwing: CancellationError())
             }
         }
-    }
-
-    private static func cacheKeyString(for key: BoardModelRealityKey) -> String {
-        "\(key.boardID)/\(key.presentationID)/\(key.modelSHA256)"
-    }
-
-    private static func fileSizeCost(for url: URL) -> Int {
-        do {
-            let attrs = try FileManager.default.attributesOfItem(atPath: url.path)
-            if let fileSize = attrs[.size] as? NSNumber {
-                return fileSize.intValue
-            }
-        } catch {
-            // Ignore errors, return default cost
-        }
-        return 10 * 1024 * 1024 // Default 10 MB cost
-    }
-
-    /// Clear the cache in response to memory pressure.
-    static func clearCache() {
-        sourceCache.removeAllObjects()
-    }
-
-    /// Configure automatic memory pressure handling.
-    /// Call once at app launch (e.g., from AppDelegate or SceneDelegate).
-    static func configureMemoryPressureHandling() {
-        #if os(iOS) || os(tvOS)
-        guard memoryPressureObserver == nil else { return }
-        memoryPressureObserver = NotificationCenter.default.addObserver(
-            forName: UIApplication.didReceiveMemoryWarningNotification,
-            object: nil,
-            queue: .main
-        ) { _ in
-            Task { @MainActor in
-                clearCache()
-            }
-        }
-        #elseif os(macOS)
-        // macOS doesn't have a direct equivalent, but we can observe
-        // NSWorkspace memory pressure notifications if needed
-        #endif
-    }
-
-    /// Remove the memory pressure observer.
-    /// Call when the app is terminating or when memory pressure handling is no longer needed.
-    static func deconfigureMemoryPressureHandling() {
-        #if os(iOS) || os(tvOS)
-        if let observer = memoryPressureObserver {
-            NotificationCenter.default.removeObserver(observer)
-            memoryPressureObserver = nil
-        }
-        #endif
     }
 
     private static func loadSource(
@@ -1088,7 +1047,10 @@ enum BoardModelRealityCache {
         guard let resourceLease, !Task.isCancelled else { return nil }
 
         // Verify SHA-256
-        let computedSHA256 = try sha256(of: resourceLease.url)
+        let url = resourceLease.url
+        let computedSHA256 = try await Task.detached(priority: .utility) {
+            try Self.sha256(of: url)
+        }.value
         guard computedSHA256 == media.descriptor.modelSHA256 else {
             throw BoardModelRealityError.sha256Mismatch(expected: media.descriptor.modelSHA256, actual: computedSHA256)
         }
@@ -1096,7 +1058,7 @@ enum BoardModelRealityCache {
         return BoardModelRealityLoadedSource(resourceLease: resourceLease)
     }
 
-    private static func sha256(of url: URL) throws -> String {
+    nonisolated private static func sha256(of url: URL) throws -> String {
         // 1 MB read buffer for streaming hash computation
         let readBufferSize = 1_048_576
         do {
@@ -1115,10 +1077,8 @@ enum BoardModelRealityCache {
     }
 }
 
-/// Loaded model source with resource lease.
-/// This class is @unchecked Sendable because it's only accessed on the MainActor
-/// through the BoardModelRealityCache which is @MainActor-isolated.
-final class BoardModelRealityLoadedSource: @unchecked Sendable {
+/// Loaded source shared only by waiters while the same key is in flight.
+final class BoardModelRealityLoadedSource {
     let resourceLease: BoardModelRealityResourceLease
     
     init(resourceLease: BoardModelRealityResourceLease) {

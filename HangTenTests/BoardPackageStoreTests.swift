@@ -1284,6 +1284,34 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
     }
 
+    func testStoreRejectsInvalidCameraOverrides() throws {
+        let invalidOverrides: [(String, Double)] = [
+            ("distanceMultiplier", 0),
+            ("distanceMultiplier", 1e100),
+            ("boundsExpansionFactor", -1),
+            ("boundsExpansionFactor", 1e100)
+        ]
+        for (key, value) in invalidOverrides {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                    var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                    var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                    media["display"] = ["camera": [
+                        "type": "orthographic",
+                        "viewDirection": [0, 0, -1],
+                        "up": [0, 1, 0],
+                        "fitPadding": 0.08,
+                        key: value
+                    ]]
+                    presentations[0]["media"] = media
+                    board["presentations"] = presentations
+                }
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), "\(key)=\(value)")
+        }
+    }
+
     func testStoreRejectsIncompleteV3RasterContactOwnership() throws {
         let fixture = try makeRasterV3FixtureBundle { board in
             var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
@@ -4864,4 +4892,3 @@ private final class TestBoardModelResourceRequest: BoardModelResourceRequesting 
         endAction()
     }
 }
-

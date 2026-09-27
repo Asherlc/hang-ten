@@ -2390,10 +2390,11 @@ struct WorkoutView: View {
 			ProgressView(value: min(elapsed, sessionDuration), total: sessionDuration)
 				.tint(Color.hangGreenDark)
 
-			ZStack {
+			VStack(spacing: 2) {
 				if showsPairedHandCue, let holdCue {
 					GripHandPairModelView(posture: holdCue.gripType,
 										 fingerConfiguration: holdCue.fingerConfiguration)
+						.frame(height: 68)
 						.accessibilityHidden(true)
 				}
 				HStack(spacing: 12) {

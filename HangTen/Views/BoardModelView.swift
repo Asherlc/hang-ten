@@ -143,6 +143,7 @@ struct BoardModelRealityView: View {
     @State private var cameraRevision = 0
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
+    @State private var didReportUnavailable = false
 
     private var fieldOfViewDegrees: Double {
         #if DEBUG
@@ -169,6 +170,9 @@ struct BoardModelRealityView: View {
             .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
             .allowsHitTesting(!isDisplayOnly)
+            // A different scene needs a fresh RealityView make closure so its
+            // root and camera replace the prior scene's entities.
+            .id(ObjectIdentifier(model))
         }
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
@@ -178,16 +182,24 @@ struct BoardModelRealityView: View {
     }
 
     private func applySync(size: CGSize) {
-        model.frame(in: size)
-        let didSelect = model.select(positionID: positionID)
-        model.highlight(highlightedContactIDs, mode: highlightMode)
         var camera = model.camera.camera
         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
         camera.fieldOfViewOrientation = .vertical
         camera.near = 0.001
         camera.far = 1000
         model.camera.camera = camera
-        if !didSelect { onUnavailable?() }
+        model.frame(in: size)
+        let didSelect = model.select(positionID: positionID)
+        model.highlight(highlightedContactIDs, mode: highlightMode)
+        if let positionID, !didSelect {
+            Task { @MainActor in
+                guard !didReportUnavailable else { return }
+                didReportUnavailable = true
+                onUnavailable?()
+            }
+        } else if didSelect {
+            Task { @MainActor in didReportUnavailable = false }
+        }
     }
 
     private var tapGesture: some Gesture {

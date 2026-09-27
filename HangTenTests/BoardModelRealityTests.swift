@@ -1,5 +1,6 @@
 import XCTest
 import RealityKit
+import simd
 @testable import HangTen
 
 final class BoardModelRealityTests: XCTestCase {
@@ -50,8 +51,26 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertFalse(entities.isEmpty, "Contact \(contactID) should have at least one entity")
             for entity in entities {
                 XCTAssertNotNil(entity.collision, "Contact \(contactID) should be pickable")
+                XCTAssertNotNil(entity.components[InputTargetComponent.self],
+                                "Spatial taps require an input target on each contact entity")
             }
         }
+    }
+
+    func testPerspectiveFitUsesFieldOfViewAndViewportAspect() throws {
+        let framing = SuspendedCameraFraming(
+            target: .zero, direction: SIMD3(0, 0, -1), viewDirection: SIMD3(0, 0, -1),
+            right: SIMD3(1, 0, 0), up: SIMD3(0, 1, 0), distance: 1,
+            width: 4, height: 2, depth: 0.5, fitPadding: 1.2, includedPoints: []
+        )
+        let wide = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 400, height: 200), fieldOfViewDegrees: 30))
+        let narrow = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 200, height: 400), fieldOfViewDegrees: 30))
+        let telephoto = try XCTUnwrap(BoardModelRealityScene.perspectiveFitDistance(
+            framing: framing, viewportSize: CGSize(width: 400, height: 200), fieldOfViewDegrees: 6))
+        XCTAssertGreaterThan(narrow, wide)
+        XCTAssertGreaterThan(telephoto, wide)
     }
 
     @MainActor
@@ -98,9 +117,8 @@ final class BoardModelRealityTests: XCTestCase {
 
                 // If reflection == .x, verify mirroring was applied
                 if instance.baseTransform.reflection == .x {
-                    // The entity should have negative X scale (mirroring applied to root)
-                    XCTAssertEqual(entity.scale.x, -1.0, accuracy: 0.001,
-                                   "Mirrored instance should have negative X scale")
+                    XCTAssertLessThan(simd_determinant(entity.transform.matrix), 0,
+                                      "Mirrored instance should preserve a negative transform determinant")
                     // And should have ModelEntity children with model components
                     var hasModelEntities = false
                     func checkForModelEntity(_ e: Entity) {

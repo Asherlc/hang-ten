@@ -561,10 +561,8 @@ final class GripHandRealityPairScene {
     let camera = Entity()
     let leftHand = Entity()
     let rightHand = Entity()
-    private let leftKeyLight = Entity()
-    private let rightKeyLight = Entity()
-    private let leftFillLight = Entity()
-    private let rightFillLight = Entity()
+    private let keyLight = Entity()
+    private let fillLight = Entity()
     private(set) var leftSurface: GripHandRealitySurface?
     private(set) var rightSurface: GripHandRealitySurface?
     private(set) var isAvailable = false
@@ -593,20 +591,13 @@ final class GripHandRealityPairScene {
         orthographicCamera.scaleDirection = .vertical
         camera.components.set(orthographicCamera)
         root.addChild(camera)
-        root.addChild(leftKeyLight)
-        root.addChild(rightKeyLight)
-        root.addChild(leftFillLight)
-        root.addChild(rightFillLight)
-        leftKeyLight.components.set(DirectionalLightComponent(color: .white, intensity: 4_500))
-        rightKeyLight.components.set(DirectionalLightComponent(color: .white, intensity: 2_800))
-        leftFillLight.components.set(DirectionalLightComponent(color: .white, intensity: 4_000))
-        rightFillLight.components.set(DirectionalLightComponent(color: .white, intensity: 250))
-        // Mirror the existing single-hand light rigs so a reflected mesh receives
-        // the same light from the same local direction as its unreflected twin.
-        leftKeyLight.look(at: .zero, from: SIMD3(5.8, 8, 7), relativeTo: root)
-        rightKeyLight.look(at: .zero, from: SIMD3(-5.8, 8, 7), relativeTo: root)
-        leftFillLight.look(at: .zero, from: SIMD3(-2, 2, -5), relativeTo: root)
-        rightFillLight.look(at: .zero, from: SIMD3(2, 2, -5), relativeTo: root)
+        root.addChild(keyLight)
+        root.addChild(fillLight)
+        keyLight.components.set(DirectionalLightComponent(color: .white, intensity: 3_200))
+        fillLight.components.set(DirectionalLightComponent(color: .white, intensity: 600))
+        // Directional lights affect every entity, so the pair shares one centered rig.
+        keyLight.look(at: .zero, from: SIMD3(0, 8, 7), relativeTo: root)
+        fillLight.look(at: .zero, from: SIMD3(0, 2, -5), relativeTo: root)
 
         do {
             let asset = try assetResult.get()
