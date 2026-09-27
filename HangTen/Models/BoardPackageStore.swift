@@ -925,7 +925,9 @@ struct BoardPackageStore {
                                 type: camera.type,
                                 viewDirection: camera.viewDirection,
                                 up: camera.up,
-                                fitPadding: camera.fitPadding
+                                fitPadding: camera.fitPadding,
+                                distanceMultiplier: camera.distanceMultiplier,
+                                boundsExpansionFactor: camera.boundsExpansionFactor
                             )
                         ),
                         suspension: suspension,
@@ -1093,15 +1095,23 @@ struct BoardPackageStore {
         boardID: String
     ) throws {
         let camera = display.camera
+        let isPositiveFloatRepresentable: (Double) -> Bool = { value in
+            let converted = Float(value)
+            return value.isFinite && value > 0 && converted.isFinite && converted > 0
+        }
         guard camera.type == "orthographic",
               camera.viewDirection.count == 3,
               camera.up.count == 3,
               camera.viewDirection.allSatisfy(\.isFinite),
               camera.up.allSatisfy(\.isFinite),
+              camera.viewDirection.allSatisfy({ Float($0).isFinite }),
+              camera.up.allSatisfy({ Float($0).isFinite }),
               camera.viewDirection.contains(where: { $0 != 0 }),
               camera.up.contains(where: { $0 != 0 }),
               camera.fitPadding.isFinite,
-              camera.fitPadding > 0 else {
+              isPositiveFloatRepresentable(camera.fitPadding),
+              camera.distanceMultiplier.map(isPositiveFloatRepresentable) ?? true,
+              camera.boundsExpansionFactor.map(isPositiveFloatRepresentable) ?? true else {
             throw BoardPackageStoreError.invalidPackage(
                 boardID: boardID,
                 reason: "model camera must be finite, orthographic, non-zero, and positively padded"
@@ -3240,16 +3250,20 @@ struct BoardPackageModelCameraDocument: Decodable, Equatable {
     let viewDirection: [Double]
     let up: [Double]
     let fitPadding: Double
+    let distanceMultiplier: Double?
+    let boundsExpansionFactor: Double?
 
-    private enum CodingKeys: String, CodingKey { case type, viewDirection, up, fitPadding }
+    private enum CodingKeys: String, CodingKey { case type, viewDirection, up, fitPadding, distanceMultiplier, boundsExpansionFactor }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["type", "viewDirection", "up", "fitPadding"])
+        try decoder.rejectUnknownKeys(["type", "viewDirection", "up", "fitPadding", "distanceMultiplier", "boundsExpansionFactor"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         type = try container.decode(String.self, forKey: .type)
         viewDirection = try container.decode([Double].self, forKey: .viewDirection)
         up = try container.decode([Double].self, forKey: .up)
         fitPadding = try container.decode(Double.self, forKey: .fitPadding)
+        distanceMultiplier = try container.decodeIfPresent(Double.self, forKey: .distanceMultiplier)
+        boundsExpansionFactor = try container.decodeIfPresent(Double.self, forKey: .boundsExpansionFactor)
     }
 }
 

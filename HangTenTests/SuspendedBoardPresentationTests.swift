@@ -1,5 +1,4 @@
 import XCTest
-import SceneKit
 import simd
 @testable import HangTen
 
@@ -900,7 +899,7 @@ final class SuspendedBoardPresentationTests: XCTestCase {
     @MainActor
     func testSceneRuntimeDispatchesTwoBranchSuspensionToTwoBranchSolver() throws {
         let suspension = twoBranchSuspension(restLength: 4.2)
-        let solved = try BoardModelScene.solveSuspension(
+        let solved = try BoardModelRealityScene.solveSuspension(
             pose: pose(),
             suspension: .twoBranchCord(suspension),
             bounds: bounds
@@ -912,44 +911,6 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertEqual(result.branches.map(\.id), ["left", "right"])
         XCTAssertEqual(result.cameraFraming.includedPoints.count, 8 + 1 + 4 + 128)
     }
-
-    @MainActor
-    func testSceneSelectionRendersBothBranchesAndRejectsUnrelatedInteriorContact() throws {
-        let selectedPose = pose()
-        let suspension = twoBranchSuspension(
-            restLength: 4.2,
-            canonicalPoses: ["primary": selectedPose]
-        )
-        let solved = try SuspendedBoardPresentation.solve(
-            pose: selectedPose,
-            suspension: suspension,
-            bounds: bounds
-        )
-        let descriptor = sceneDescriptor(for: suspension)
-
-        let clearScene = try XCTUnwrap(BoardModelScene(
-            source: modelScene(descriptor: descriptor),
-            descriptor: descriptor,
-            display: sceneDisplay(),
-            suspension: .twoBranchCord(suspension)
-        ))
-        XCTAssertTrue(clearScene.select(positionID: "primary"))
-        let renderedSegments = try XCTUnwrap(clearScene.transientCordNode?.childNodes)
-        XCTAssertTrue(renderedSegments.contains { $0.name?.contains("branch.0.segment") == true })
-        XCTAssertTrue(renderedSegments.contains { $0.name?.contains("branch.1.segment") == true })
-
-        let interiorPoint = solved.branches[0].centerlineSamples[10]
-        let blockedScene = try XCTUnwrap(BoardModelScene(
-            source: modelScene(descriptor: descriptor, bodyPosition: interiorPoint),
-            descriptor: descriptor,
-            display: sceneDisplay(),
-            suspension: .twoBranchCord(suspension)
-        ))
-        XCTAssertFalse(blockedScene.select(positionID: "primary"))
-        XCTAssertTrue(blockedScene.isUnavailable)
-        XCTAssertNil(blockedScene.transientCordNode)
-    }
-
     func testTwoBranchQuarterTurnTransformsAllFourPassagesButNotAnchor() throws {
         let result = try SuspendedBoardPresentation.solve(
             pose: pose(rotation: [0, sin(Double.pi / 4), 0, cos(Double.pi / 4)]),
@@ -1193,59 +1154,6 @@ final class SuspendedBoardPresentationTests: XCTestCase {
             XCTAssertEqual(error as? SuspendedPresentationError, .selfIntersection)
         }
     }
-
-    @MainActor
-    func testSceneSelectionAcceptsEachBodyOrAttachmentPassageBinding() throws {
-        let suspension = twoBranchSuspension(
-            restLength: 4.2,
-            canonicalPoses: ["primary": pose()]
-        )
-        for passage in suspension.passages.left + suspension.passages.right {
-            for role in [BoardModelNodeDescriptor.Role.body, .attachment] {
-                let descriptor = sceneDescriptor(
-                    for: suspension,
-                    bodyNodeID: role == .body ? passage.nodeID : nil
-                )
-                let model = try XCTUnwrap(BoardModelScene(
-                    source: modelScene(descriptor: descriptor),
-                    descriptor: descriptor,
-                    display: sceneDisplay(),
-                    suspension: .twoBranchCord(suspension)
-                ))
-                XCTAssertTrue(model.select(positionID: "primary"), "\(passage.nodeID), role: \(role)")
-                XCTAssertFalse(model.isUnavailable)
-                XCTAssertNotNil(model.transientCordNode)
-            }
-        }
-    }
-
-    @MainActor
-    func testSceneSelectionRejectsEachMissingOrHoldPassageBinding() throws {
-        let suspension = twoBranchSuspension(
-            restLength: 4.2,
-            canonicalPoses: ["primary": pose()]
-        )
-        for passage in suspension.passages.left + suspension.passages.right {
-            for omit in [true, false] {
-                let descriptor = sceneDescriptor(
-                    for: suspension,
-                    omittedNodeID: omit ? passage.nodeID : nil,
-                    holdNodeID: omit ? nil : passage.nodeID
-                )
-                let model = try XCTUnwrap(BoardModelScene(
-                    source: modelScene(descriptor: descriptor),
-                    descriptor: descriptor,
-                    display: sceneDisplay(),
-                    suspension: .twoBranchCord(suspension)
-                ))
-                XCTAssertFalse(model.select(positionID: "primary"), "\(passage.nodeID), omitted: \(omit)")
-                XCTAssertTrue(model.isUnavailable)
-                XCTAssertNil(model.activePositionID)
-                XCTAssertNil(model.transientCordNode)
-            }
-        }
-    }
-
     private func assertStraight(_ samples: [SIMD3<Float>], label: String) {
         guard let start = samples.first, let end = samples.last else {
             return XCTFail("\(label) must have endpoints")
@@ -1357,64 +1265,4 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         )
     }
 
-    private func sceneDescriptor(
-        for suspension: BoardModelTwoBranchSuspension,
-        omittedNodeID: String? = nil,
-        bodyNodeID: String? = nil,
-        holdNodeID: String? = nil
-    ) -> BoardModelDescriptor {
-        let passageNodes = (suspension.passages.left + suspension.passages.right)
-            .filter { $0.nodeID != omittedNodeID }
-            .map {
-            BoardModelNodeDescriptor(
-                nodeID: $0.nodeID,
-                role: $0.nodeID == holdNodeID ? .contact : ($0.nodeID == bodyNodeID ? .body : .attachment),
-                contactID: $0.nodeID == holdNodeID ? "hold" : nil
-            )
-        }
-        return BoardModelDescriptor(
-            schemaVersion: 1,
-            coordinateFrame: "hang-ten-board-v1",
-            modelSHA256: String(repeating: "0", count: 64),
-            modelBounds: bounds,
-            nodes: [
-                BoardModelNodeDescriptor(nodeID: "Body", role: .body, contactID: nil),
-                BoardModelNodeDescriptor(nodeID: "Hold", role: .contact, contactID: "hold"),
-            ] + passageNodes,
-            contacts: [
-                "hold": BoardModelContactDescriptor(
-                    nodeIDs: ["Hold"] + (holdNodeID.map { [$0] } ?? []),
-                    facePlaneAABB: BoardModelFacePlaneAABB(minimum: [0, 0], maximum: [1, 1]),
-                    center: [0.5, 0.5]
-                )
-            ]
-        )
-    }
-
-    private func sceneDisplay() -> BoardModelDisplay {
-        BoardModelDisplay(camera: BoardModelCamera(
-            type: "orthographic",
-            viewDirection: [0, 0, -1],
-            up: [0, 1, 0],
-            fitPadding: 0.08
-        ))
-    }
-
-    private func modelScene(
-        descriptor: BoardModelDescriptor,
-        bodyPosition: SIMD3<Float>? = nil
-    ) -> SCNScene {
-        let scene = SCNScene()
-        for (index, binding) in descriptor.nodes.enumerated() {
-            let geometry = SCNBox(width: 0.02, height: 0.02, length: 0.02, chamferRadius: 0)
-            geometry.firstMaterial = SCNMaterial()
-            let node = SCNNode(geometry: geometry)
-            node.name = binding.nodeID
-            node.simdPosition = binding.role == .body && bodyPosition != nil
-                ? bodyPosition!
-                : SIMD3<Float>(10 + Float(index), 10, 10)
-            scene.rootNode.addChildNode(node)
-        }
-        return scene
-    }
 }

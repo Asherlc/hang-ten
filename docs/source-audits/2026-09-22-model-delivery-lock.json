@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, and trango-rock-prodigy-training-center native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, and moon-armstrong native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "2129c9573bf175f7ce83785752b9cd52faa232037150f1618713c64132c5547b",
-  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
+  "sha256Manifest": "5e5bda1bbfaf035c6dafa0fa0228bf45604689f090de5b52ecac5242b8a4d4ab",
+  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "0226500f0aa7a8f188adf1fc871727bbc832333991f50ee02a88508dd9b5ac97",
+  "supersededSha256Manifest": "2129c9573bf175f7ce83785752b9cd52faa232037150f1618713c64132c5547b",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -293,6 +293,21 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules (clipped at the board ends for side-open edges); bounding rectangles for jugs and slopers"
     },
+    "moon-armstrong": {
+      "source": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
+      "sourceSHA256": "b31c71fbb2236f93f78ff15215c63cafe360b93f6873477d1c936ca9c7b5dda8",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.9393936268136036, was 3.9573770458016795 from the superseded mesh bounds)",
+      "referenceSHA256": "26e916d54b39f1f6afcf78b53bdc883a584dae0ff6e78d67fb8823ee1daf8e6a",
+      "assetSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
+      "descriptorSHA256": "c4791fcc5908aa76745b0a3022e3e1fa9de040d5f3a48ea64740e57911c17c11",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 21 stable contact IDs and node IDs, published-depth gate exact (25/20/15/10/8/22/18 mm and 22 mm pockets; mono contacts are the front 22 mm of a through bore), verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; sloper-left (default), jug-left, sloper-right, center-jug, mono-right, edge-8-left and center-edge-18 selected by deep link and confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
+      "comparison": "re-authored from Moon Climbing's own photographs (front view) and owner-supplied plywood side views (tier depths), not traced from the superseded SDF display mesh, which contradicted the manufacturer photos (open centre shelves instead of proud rails, edge floors not at published depths); compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: mouth outlines (slot/pocket + round-over), rail and bar outlines, sloper front band"
+    },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
       "sourceSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
@@ -401,5 +416,6 @@
   "clavelliumMigrationNote": "2026-09-26: clavellium-training-block migrated to a native FreeCAD source; four side cavity depths validated on explicit X axes, metadata embedded unchanged, and the prior model replaced by an unbound CAD export.",
   "miniBarMigrationNote": "2026-09-26: lattice-mini-bar became a source-backed FreeCAD package with four canonical grip poses and two approved exterior wrapped cord routes. The previous sha256Manifest moved to supersededSha256Manifest. See the provenance sidecar for sourced dimensions and labeled display estimates.",
   "miniBarOvoidCorrectionNote": "2026-09-26: approved Lattice end view and user correction led to a continuous ovoid CAD section; prior front/side/top comparison is retained. The USDZ has no cord geometry.",
-  "miniBarSuspensionSeparationNote": "2026-09-26: user-approved separation puts the two exterior loops, meshWrap choice, and display parameters in suspension.json, matched to the descriptor modelSHA256 and locked by checksum. FCStd carries no suspension. Shared runtime solver uses the loaded mesh and the overhead anchor for each grip pose. CAD geometry, USDZ, and descriptor bytes are unchanged from the ovoid correction commit; native four-pose test passes."
+  "miniBarSuspensionSeparationNote": "2026-09-26: user-approved separation puts the two exterior loops, meshWrap choice, and display parameters in suspension.json, matched to the descriptor modelSHA256 and locked by checksum. FCStd carries no suspension. Shared runtime solver uses the loaded mesh and the overhead anchor for each grip pose. CAD geometry, USDZ, and descriptor bytes are unchanged from the ovoid correction commit; native four-pose test passes.",
+  "moonArmstrongMigrationNote": "2026-09-26: moon-armstrong migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). The RealityKit branch carried manifest b1036dea...; the combined manifest also includes the Mini Bar native source and sidecar, and supersedes the Mini Bar branch manifest 2129c957...."
 }

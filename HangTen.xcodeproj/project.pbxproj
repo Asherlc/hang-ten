@@ -18,6 +18,7 @@
 		F1A2B3C4D5E6F708192A3B58 /* FreeWorkoutFinish.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1A2B3C4D5E6F708192A3B59 /* FreeWorkoutFinish.swift */; };
 		1615E79EA23842FDAD1EBFEA /* FreeWorkoutLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F112E2145AE4C0AA500D26A /* FreeWorkoutLogTests.swift */; };
 		A3D000000000000000000001 /* GripHandModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000002 /* GripHandModelView.swift */; };
+		A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000006 /* GripHandSurfaceShader.metal */; };
 		A3D000000000000000000003 /* hand-mesh.json in Resources */ = {isa = PBXBuildFile; fileRef = A3D000000000000000000004 /* hand-mesh.json */; };
 		AA0000000000000000000001 /* HangTenApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000001 /* HangTenApp.swift */; };
 		AA0000000000000000000002 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB0000000000000000000002 /* AppStore.swift */; };
@@ -185,8 +186,10 @@
 		D1000000000000000000002C /* owl-climb-poker Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002C /* owl-climb-poker Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-owl-climb-poker", ); }; };
 		D1000000000000000000002D /* trango-rock-prodigy-pivot Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002D /* trango-rock-prodigy-pivot Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-trango-rock-prodigy-pivot", ); }; };
 		E31000000000000000000001 /* BoardModelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000001 /* BoardModelView.swift */; };
+		5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */; };
 		E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000002 /* SuspendedBoardPresentation.swift */; };
 		E31000000000000000000003 /* BoardModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000003 /* BoardModelTests.swift */; };
+		EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */; };
 		E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */; };
 		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
 		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
@@ -220,6 +223,7 @@
 		F1A2B3C4D5E6F708192A3B5B /* FreeWorkoutDecimalText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutDecimalText.swift; path = FreeWorkoutDecimalText.swift; sourceTree = "<group>"; };
 		6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutUITests.swift; path = FreeWorkoutUITests.swift; sourceTree = "<group>"; };
 		A3D000000000000000000002 /* GripHandModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GripHandModelView.swift; sourceTree = "<group>"; };
+		A3D000000000000000000006 /* GripHandSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = GripHandSurfaceShader.metal; sourceTree = "<group>"; };
 		A3D000000000000000000004 /* hand-mesh.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "HangTen/Resources/GripHand/hand-mesh.json"; sourceTree = SOURCE_ROOT; };
 		AC0000000000000000000001 /* Telemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Telemetry.swift; sourceTree = "<group>"; };
 		AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeAnalyticsTelemetry.swift; sourceTree = "<group>"; };
@@ -236,6 +240,7 @@
 		BB0000000000000000000001 /* HangTenApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTenApp.swift; sourceTree = "<group>"; };
 		BB0000000000000000000002 /* AppStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStore.swift; sourceTree = "<group>"; };
 		BB0000000000000000000003 /* TrainingModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainingModels.swift; sourceTree = "<group>"; };
+		7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ../Models/BoardModelRealityTypes.swift; sourceTree = "<group>"; };
 		BB0000000000000000000004 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		BB0000000000000000000005 /* BoardMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardMapView.swift; sourceTree = "<group>"; };
 		BB0000000000000000000006 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -392,6 +397,7 @@
 		E32000000000000000000001 /* BoardModelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelView.swift; sourceTree = "<group>"; };
 		E32000000000000000000002 /* SuspendedBoardPresentation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentation.swift; sourceTree = "<group>"; };
 		E32000000000000000000003 /* BoardModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelTests.swift; sourceTree = "<group>"; };
+		64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardModelRealityTests.swift; sourceTree = "<group>"; };
 		E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendedBoardPresentationTests.swift; sourceTree = "<group>"; };
 		E32000000000000000000005 /* SuspensionProfiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspensionProfiles.swift; sourceTree = "<group>"; };
 		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
@@ -498,6 +504,7 @@
 				BB0000000000000000000011 /* HangTen.entitlements */,
 				DD0000000000000000000008 /* Config */,
 				DD0000000000000000000004 /* Models */,
+				A3D000000000000000000007 /* Rendering */,
 				DD0000000000000000000005 /* Views */,
 				DD0000000000000000000006 /* Resources */,
 			);
@@ -514,12 +521,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		A3D000000000000000000007 /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				A3D000000000000000000006 /* GripHandSurfaceShader.metal */,
+			);
+			path = Rendering;
+			sourceTree = "<group>";
+		};
 		DD0000000000000000000004 /* Models */ = {
 			isa = PBXGroup;
 			children = (
 				BB0000000000000000000002 /* AppStore.swift */,
 				BB0000000000000000000009 /* HealthKitService.swift */,
 				BB0000000000000000000003 /* TrainingModels.swift */,
+				7387E97C7CC64DED8C447142 /* BoardModelRealityTypes.swift */,
 				BB0000000000000000000016 /* PlanStorage.swift */,
 				BB0000000000000000000015 /* WorkoutAudioCoach.swift */,
 				BB0000000000000000000093 /* CountdownAudioScheduler.swift */,
@@ -651,6 +667,7 @@
 				E32000000000000000000004 /* SuspendedBoardPresentationTests.swift */,
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				E32000000000000000000003 /* BoardModelTests.swift */,
+				64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -913,6 +930,7 @@
 				AA0000000000000000000004 /* DesignSystem.swift in Sources */,
 				AA0000000000000000000005 /* BoardMapView.swift in Sources */,
 				E31000000000000000000001 /* BoardModelView.swift in Sources */,
+				5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */,
 				E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
 				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
@@ -921,6 +939,7 @@
 				AA0000000000000000000092 /* AppSettingsView.swift in Sources */,
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				A3D000000000000000000001 /* GripHandModelView.swift in Sources */,
+				A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
@@ -1023,6 +1042,7 @@
 				E31000000000000000000004 /* SuspendedBoardPresentationTests.swift in Sources */,
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
+				EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
@@ -1058,7 +1078,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1079,7 +1099,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1125,7 +1145,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1164,7 +1184,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1200,7 +1220,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1243,7 +1263,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1267,7 +1287,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1291,7 +1311,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

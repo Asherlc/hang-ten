@@ -6,6 +6,7 @@ HangTen/HangTenApp.swift
 HangTen/Info.plist
 HangTen/Models/AmplitudeAnalyticsTelemetry.swift
 HangTen/Models/AppStore.swift
+HangTen/Models/BoardModelRealityTypes.swift
 HangTen/Models/BoardPackageStore.swift
 HangTen/Models/BoardStorage.swift
 HangTen/Models/ClimbroProtocol.swift
@@ -51,6 +52,7 @@ HangTen/Models/WorkoutSessionStore.swift
 HangTen/Models/WorkoutStepNormalization.swift
 HangTen/Models/WorkoutStopwatch.swift
 HangTen/Models/WorkoutTimeline.swift
+HangTen/Rendering/GripHandSurfaceShader.metal
 HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png
 HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-60@2x.png
 HangTen/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon-76@2x.png
