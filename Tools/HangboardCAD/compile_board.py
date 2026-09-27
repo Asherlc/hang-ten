@@ -591,7 +591,7 @@ def _validate_published_depths(
     measured = {}
     for obj in contact_objects:
         key = _contact_binding(obj)
-        axis = str(getattr(obj, "HangTenDepthAxis", "y") or "y").lower()
+        axis = str(getattr(obj, "HangTenDepthAxis", "y")).lower()
         if axis not in {"x", "y", "z"}:
             raise BuildError(f"{key} has invalid HangTenDepthAxis {axis!r}")
         measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)

@@ -296,11 +296,13 @@ sets it.
 
 ## Published depth deeper than the board
 
-The published-depth gate compares a region's native Y extent with its
-published grip depth. A region cannot be deeper than the body, so when a
-published depth exceeds the body's own Y extent (a nominal label, such as the
-Light Rail's "40 mm" jugs across a 38 mm rail), the region must instead span the
-body's full depth. Every other region still has to match its published depth.
+The published-depth gate compares a region's extent on its selected native
+axis with its published grip depth. `HangTenDepthAxis` selects X, Y, or Z;
+omitting it retains the original Y-axis behavior. A region cannot be deeper
+than the body on that axis, so when a published depth exceeds the body's
+extent there (a nominal label, such as the Light Rail's "40 mm" jugs across a
+38 mm rail), the region must instead span the body's full extent on that axis.
+Every other region still has to match its published depth.
 
 ## Pilot: lattice-triple-rung
 
