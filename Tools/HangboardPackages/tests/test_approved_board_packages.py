@@ -45,10 +45,11 @@ J_BRYANT_FTG32_ROOT = HANGBOARDS_ROOT / "j-bryant-ftg-32"
 MINI_BAR_ROOT = HANGBOARDS_ROOT / "lattice-mini-bar"
 
 
-def test_mini_bar_cad_keeps_four_contacts_and_pose_specific_exterior_loops() -> None:
+def test_mini_bar_cad_keeps_four_contacts_and_separate_mesh_wrapped_loops() -> None:
     board = json.loads(package_board_text(MINI_BAR_ROOT))
     assert not (MINI_BAR_ROOT / "board.json").exists()
     assert (MINI_BAR_ROOT / "lattice-mini-bar.FCStd").exists()
+    assert (MINI_BAR_ROOT / "suspension.json").exists()
     assert {contact["id"] for contact in board["contacts"]} == {
         "edge-10", "edge-20", "ergonomic-jug", "mini-pinch"
     }
@@ -59,11 +60,12 @@ def test_mini_bar_cad_keeps_four_contacts_and_pose_specific_exterior_loops() -> 
     assert media["type"] == "model"
     suspension = media["suspension"]
     assert suspension["type"] == "twoBranchCord"
+    assert suspension["meshWrap"] == {"clearance": 0.005}
     assert {passage["nodeID"] for side in suspension["passages"].values() for passage in side} == {"mini_bar_body"}
-    assert {pose_id: set(pose["wrappedRoutes"]) for pose_id, pose in suspension["canonicalPoses"].items()} == {
-        pose_id: {"left-loop", "right-loop"} for pose_id in ("edge-10", "edge-20", "ergonomic-jug", "mini-pinch")
-    }
-    assert suspension["canonicalPoses"]["edge-20"]["wrappedRoutes"]["left-loop"] != suspension["canonicalPoses"]["ergonomic-jug"]["wrappedRoutes"]["left-loop"]
+    assert set(suspension["canonicalPoses"]) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}
+    assert all("wrappedRoutes" not in pose for pose in suspension["canonicalPoses"].values())
+    assert all(side[0]["pointInModel"][0] != side[1]["pointInModel"][0]
+               for side in suspension["passages"].values())
     descriptor = json.loads((MINI_BAR_ROOT / media["descriptorPath"]).read_text())
     assert descriptor["modelSHA256"] == hashlib.sha256((MINI_BAR_ROOT / media["assetPath"]).read_bytes()).hexdigest()
     assert set(descriptor["contacts"]) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}

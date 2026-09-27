@@ -1,14 +1,16 @@
 """Generate a CAD-backed board's ``board.json`` from its FreeCAD source.
 
 For a package with a native source (``Hangboards/<slug>/<slug>.FCStd``) the
-FCStd is the single source of truth for the board's logical metadata as well as
-its geometry. The metadata lives in two document-level string properties:
+FCStd owns geometry and most logical metadata. An optional adjacent
+``suspension.json`` owns cord setup for a model presentation. The CAD metadata
+lives in two document-level string properties:
 
 * ``HangTenBoardID`` -- the board ``id`` (also bound by the compiler);
 * ``HangTenBoardManifest`` -- compact JSON of ``board.json`` *minus* ``id``, in
   the key order ``board.json`` is emitted in.
 
-``board.json`` is generated at build time and is **not committed**: the package
+``board.json`` is generated at build time from these authoring sources and is
+**not committed**: the package
 validator, ``scripts/stage-board-packages.py`` (iOS and Android), and the
 verifiers generate it in memory from the FCStd, and an on-disk ``board.json``
 inside a CAD-backed package is rejected as a stale hand edit (``.gitignore``

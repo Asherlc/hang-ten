@@ -23,11 +23,12 @@ evidence rather than relying on an older design note.
   includes the suspension renderer and current bundled metadata.
 
 For a package with a native `<slug>.FCStd`, there is no committed `board.json`:
-it is generated from the FCStd's `HangTenBoardManifest` at build time (read it
-with `python3 Tools/HangboardCAD/board_manifest.py --package <slug>`, or the
-staged app bundle). Make suspension metadata edits in the manifest with
-`Tools/HangboardCAD/set_board_manifest.py`; never create a `board.json` in the
-package (the validator rejects it).
+it is generated from the FCStd's `HangTenBoardManifest` and any adjacent
+`suspension.json` at build time (read it with
+`python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
+sidecar when present; otherwise edit suspension in the manifest with
+`Tools/HangboardCAD/set_board_manifest.py`. The sidecar must match the model
+descriptor's SHA-256. Never create a `board.json` in the package.
 
 Do not bake a cord, anchor, or fallback into the USDZ. Do not infer a hidden
 route, through-bore, knot, supplied accessory, or safety property.

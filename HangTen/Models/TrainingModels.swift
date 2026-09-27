@@ -230,6 +230,9 @@ struct BoardModelTwoBranchSuspension: Hashable {
     let branches: [BoardModelCordBranch]
     let anchor: BoardModelInvisibleAnchor
     let canonicalPoses: [String: BoardModelCanonicalPose]
+    /// Runtime convex-section wrap clearance for exterior point passages.
+    /// Nil retains explicitly authored routes or direct point-passage spans.
+    var meshWrapClearance: Double? = nil
 }
 
 enum BoardModelSuspension: Hashable {

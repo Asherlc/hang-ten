@@ -14,11 +14,13 @@ enum MeshSectionWrapSolver {
         anchor: SIMD3<Float>,
         pose: BoardModelCanonicalPose,
         radius: Float,
-        outerX: Float,
-        innerX: Float
+        clearance: Float,
+        loops: [(id: String, outerX: Float, innerX: Float)]
     ) throws -> [String: [[Double]]] {
         guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
-              radius.isFinite, radius > 0, outerX > innerX, innerX > 0,
+              radius.isFinite, radius > 0, clearance.isFinite, clearance > 0,
+              loops.count == 2, Set(loops.map { $0.id }).count == 2,
+              loops.allSatisfy({ $0.outerX.isFinite && $0.innerX.isFinite && $0.outerX != $0.innerX }),
               pose.rotation.count == 4, pose.translation.count == 3 else {
             throw SuspendedPresentationError.invalidSuspension
         }
@@ -39,7 +41,7 @@ enum MeshSectionWrapSolver {
         }
         let hull = Array(lower.dropLast()) + Array(upper.dropLast())
         guard hull.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
-        let clearance = radius + 0.005
+        let envelope = radius + clearance
         var perimeter: [SIMD2<Float>] = []
         for index in hull.indices {
             let previous = hull[(index + hull.count - 1) % hull.count]
@@ -49,8 +51,8 @@ enum MeshSectionWrapSolver {
             let second = following - point
             let firstNormal = SIMD2<Float>(first.y, -first.x) / simd_length(first)
             let secondNormal = SIMD2<Float>(second.y, -second.x) / simd_length(second)
-            let firstOffset = point + clearance * firstNormal
-            let secondOffset = point + clearance * secondNormal
+            let firstOffset = point + envelope * firstNormal
+            let secondOffset = point + envelope * secondNormal
             let divisor = cross(first, second)
             let offset = abs(divisor) < 1e-10 ? firstOffset
                 : firstOffset + (cross(secondOffset - firstOffset, second) / divisor) * first
@@ -92,11 +94,11 @@ enum MeshSectionWrapSolver {
             }
         }
         guard samples.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
-        return Dictionary(uniqueKeysWithValues: [(-1.0 as Float, "left-loop"), (1.0 as Float, "right-loop")].map { sign, id in
-            (id, samples.enumerated().map { item in
+        return Dictionary(uniqueKeysWithValues: loops.map { loop in
+            (loop.id, samples.enumerated().map { item in
                 let fraction = Float(item.offset) / Float(samples.count - 1)
                 let point = item.element
-                return [Double(sign * (outerX + (innerX - outerX) * fraction)),
+                return [Double(loop.outerX + (loop.innerX - loop.outerX) * fraction),
                         Double(point.x), Double(point.y)]
             })
         })

@@ -1,9 +1,10 @@
 # Lattice Mini Bar CAD migration provenance
 
-Reviewed 2026-09-26. The canonical source is
-`Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd`. Its document-level
-`HangTenBoardManifest` generates `board.json`; the package has one unbound USDZ
-and descriptor. The temporary authoring script is
+Reviewed 2026-09-26. The bar geometry and contact metadata are sourced from
+`Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd`. The separate
+`Hangboards/lattice-mini-bar/suspension.json` owns the cord setup. Both
+authoring sources generate `board.json`; the package has one unbound USDZ and
+descriptor. The temporary authoring script is
 `.context/frantic-kiwi/author_mini_bar.py` (SHA-256
 `cacaff17a0f6c32b23eaf304323a5a86ab2b898d849aeffb127ef7731fc5052d`)
 and is not a build input. The saved FreeCAD sketch, pad, and surface regions
@@ -59,11 +60,13 @@ positions. The edge and jug pose angles and pinch camera direction are
 additional grip, training cue, or performance claim was inferred.
 
 The gallery shows four hanging strands and an exterior bight around each end.
-The representation therefore has two exterior loops on the body. The FCStd
-manifest records the loop topology, nominal passage points, 2 mm tube radius,
-180 mm anchor offset, and 0.75 m per-branch rendering capacity as display
-estimates. It contains no per-pose `wrappedRoutes`. The USDZ contains only the
-bar meshes. At runtime, the iOS renderer reads the loaded mesh vertices,
+The representation therefore has two exterior loops on the body. The separate
+`suspension.json` records loop topology, two distinct strand positions near
+each end, 2 mm tube radius, 180 mm anchor offset, and 0.75 m per-branch
+rendering capacity as display estimates. Its `meshWrap.clearance` is 5 mm and
+it contains no per-pose `wrappedRoutes`. The sidecar names the descriptor's
+`modelSHA256`; generation rejects a mismatch. The FCStd and USDZ contain no
+cord geometry or cord setup. At runtime, the shared solver reads mesh vertices,
 projects their convex cross-section, and offsets it by the cord radius plus
 5 mm of display clearance. For each selected grip rotation, the fixed overhead
 anchor is transformed into the bar's frame; its two tangencies delimit the

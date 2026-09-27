@@ -1090,6 +1090,59 @@ def test_a_cad_backed_package_validates_its_generated_board_json(tmp_path: Path)
     assert not (package_root / "board.json").exists()
 
 
+def test_cad_suspension_sidecar_merges_without_entering_the_source(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = tmp_path / "cad-model"
+    (package_root / "assets").mkdir(parents=True)
+    (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
+    board = {"presentations": [{"id": "primary", "media": {
+        "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
+    suspension = {"type": "twoBranchCord"}
+    (package_root / "suspension.json").write_text(json.dumps({
+        "schemaVersion": 1,
+        "presentationID": "primary",
+        "modelSHA256": "a" * 64,
+        "suspension": suspension,
+    }))
+
+    generated = module.cad_source.merge_suspension_sidecar(board, package_root)
+    assert "suspension" not in board["presentations"][0]["media"]
+    assert generated["presentations"][0]["media"]["suspension"] == suspension
+
+
+def test_cad_suspension_sidecar_rejects_mismatched_asset(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = tmp_path / "cad-model"
+    (package_root / "assets").mkdir(parents=True)
+    (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
+    board = {"presentations": [{"id": "primary", "media": {
+        "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
+    (package_root / "suspension.json").write_text(json.dumps({
+        "schemaVersion": 1,
+        "presentationID": "primary",
+        "modelSHA256": "0" * 64,
+        "suspension": {"type": "twoBranchCord"},
+    }))
+
+    with pytest.raises(module.cad_source.ManifestError, match="modelSHA256"):
+        module.cad_source.merge_suspension_sidecar(board, package_root)
+
+
+def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
+    module = load_board_catalog_module()
+    root = Path(__file__).resolve().parents[3] / "Hangboards/lattice-mini-bar"
+    source = module.cad_source.package_source_path(root)
+    if module.cad_source._is_lfs_pointer(source):
+        pytest.skip("Mini Bar FCStd is a Git LFS pointer")
+    cad_board = module.cad_source.load_board(source)
+    generated = module.load_board_package(root)
+
+    assert "suspension" not in cad_board["presentations"][0]["media"]
+    assert (root / "suspension.json").is_file()
+    assert generated.board.presentations[0].media.suspension.mesh_wrap_clearance == 0.005
+    assert "suspension" in json.loads(generated.generated_board_json)["presentations"][0]["media"]
+
+
 def test_a_hand_authored_package_has_no_generated_board_json(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = write_board_package(tmp_path / "plain-model")

@@ -9,9 +9,8 @@ import re
 
 LOCK_PATH = "docs/source-audits/2026-09-22-model-delivery-lock.json"
 SUFFIXES = ("assets/primary.model.json", "assets/primary.usdz", "board.json")
-# A source-backed (CAD) package locks its FCStd instead of board.json: board.json
-# is generated from the FCStd's HangTenBoardManifest at build time and is never
-# committed, so the source pins the metadata as well as the geometry.
+# A source-backed (CAD) package locks its FCStd and any suspension authoring
+# sidecar instead of board.json, which is generated from those sources.
 COMPILED_SUFFIXES = ("assets/primary.model.json",)
 
 
@@ -29,7 +28,9 @@ def is_source_backed(root: Path, package: str) -> bool:
 
 def package_suffixes(root: Path, package: str) -> tuple[str, ...]:
     if is_source_backed(root, package):
-        return COMPILED_SUFFIXES + (f"{package}.FCStd",)
+        sidecar = root / "Hangboards" / package / "suspension.json"
+        authored_suspension = ("suspension.json",) if sidecar.exists() or sidecar.is_symlink() else ()
+        return COMPILED_SUFFIXES + (f"{package}.FCStd",) + authored_suspension
     return SUFFIXES
 
 
@@ -90,8 +91,8 @@ def verify(root: Path, lock: dict) -> dict:
             "sourceBacked": sourced,
             "sha256Manifest": digest, "assetCommit": lock.get("assetCommit"),
             "scope": "exact-file identity for committed files; a source-backed board pins "
-                     "its compiled asset through the descriptor modelSHA256 and its "
-                     "build-time board.json through the locked FCStd instead"}
+                     "its compiled asset through descriptor modelSHA256 and its build-time "
+                     "board.json through the locked FCStd and optional suspension sidecar"}
 
 
 def main() -> None:

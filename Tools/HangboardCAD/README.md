@@ -12,8 +12,9 @@ package:
 
     Hangboards/<package-directory>/<package-directory>.FCStd
 
-The FCStd is the single source of truth for the board: its geometry *and* its
-logical metadata. One shared command turns it into the runtime pair
+The FCStd is the source of truth for the board geometry and board metadata.
+An optional adjacent `suspension.json` owns cord setup. One shared command turns
+the FCStd into the runtime pair
 (`assets/primary.usdz` and `assets/primary.model.json`), and the package's
 `board.json` is generated from it at build time and never committed (see
 [Board metadata](#board-metadata-boardjson-is-generated-at-build-time)).
@@ -23,8 +24,13 @@ Python program in the build path.
 ## Board metadata: board.json is generated at build time
 
 For a CAD-backed package, `Hangboards/<package>/board.json` is **not in the
-repository**. The FCStd is the only source; `board.json` is generated from it
-whenever something needs the board document:
+repository**. It is generated from the FCStd whenever something needs the board
+document. A package may also carry an authoring-only `suspension.json` beside
+the FCStd; generation merges its suspension into the named model presentation.
+The sidecar declares `schemaVersion`, `presentationID`, the descriptor's
+`modelSHA256`, and `suspension`. It is rejected if the FCStd already contains
+that presentation's suspension, if the descriptor hash differs, or if the
+package is not CAD-backed. Neither source file is staged into the app:
 
 * the package validator (`hangboard_packages.board_catalog`, used by
   `scripts/hangboard-packages.sh validate` and every package test) validates the

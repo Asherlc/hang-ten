@@ -575,8 +575,6 @@ final class BoardModelScene {
     static let modelVisibleCategory = 4
     static let renderedCategory = modelPickCategory | cordCategory | modelVisibleCategory
     static let canonicalTransitionDuration: CFTimeInterval = 0.18
-    // The mesh-driven wrap is audited for this exact Mini Bar CAD revision.
-    private static let miniBarMeshWrapSHA256 = "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46"
 
     private struct PreparedCameraState {
         let transform: simd_float4x4
@@ -606,7 +604,7 @@ final class BoardModelScene {
     // Descriptor, geometry and suspension are immutable for this scene instance.
     // Keep successful pose/clearance results and cord nodes across highlight updates.
     private var verifiedPresentations: [String: (BoardModelSolvedSuspension, SCNNode)] = [:]
-    private var miniBarWrapSection: [SIMD2<Float>]?
+    private var meshWrapSection: [SIMD2<Float>]?
     private var orbitAzimuth: Float = 0
     private var orbitElevation: Float = 0
     private var orbitZoom: Float = 1
@@ -1378,20 +1376,25 @@ final class BoardModelScene {
                 (solved, cord) = cached
             } else {
                 var resolvedPose = pose
-                if descriptor.modelSHA256 == Self.miniBarMeshWrapSHA256,
-                   case .twoBranchCord(let twoBranch) = suspension,
-                   pose.wrappedRoutes == nil {
-                    let section = try miniBarSection()
+                if case .twoBranchCord(let twoBranch) = suspension,
+                   let clearance = twoBranch.meshWrapClearance {
+                    let section = try wrapSection()
                     guard twoBranch.branches.count == 2,
-                          twoBranch.branches.map(\.id) == ["left-loop", "right-loop"],
-                          let radius = twoBranch.branches.map({ Float($0.radius) }).max(),
-                          let outerX = descriptor.modelBounds.maximum.first.map({ Float($0) - 0.0045 }) else {
+                          twoBranch.passages.left.count == 2,
+                          twoBranch.passages.right.count == 2,
+                          let radius = twoBranch.branches.map({ Float($0.radius) }).max() else {
                         throw SuspendedPresentationError.invalidSuspension
+                    }
+                    let loopPassages = [twoBranch.passages.left, twoBranch.passages.right]
+                    let loops = zip(twoBranch.branches, loopPassages).map { branch, side in
+                        (id: branch.id,
+                         outerX: Float(side[0].pointInModel[0]),
+                         innerX: Float(side[1].pointInModel[0]))
                     }
                     let anchor = SIMD3<Float>(twoBranch.anchor.position.map(Float.init))
                     resolvedPose.wrappedRoutes = try MeshSectionWrapSolver.routes(
                         section: section, anchor: anchor, pose: pose, radius: radius,
-                        outerX: outerX, innerX: outerX - 0.012)
+                        clearance: Float(clearance), loops: loops)
                 }
                 solved = try Self.solveSuspension(
                     pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds
@@ -1414,11 +1417,8 @@ final class BoardModelScene {
         }
     }
 
-    private func miniBarSection() throws -> [SIMD2<Float>] {
-        if let miniBarWrapSection { return miniBarWrapSection }
-        guard geometryByNodeID["mini_bar_body"] != nil else {
-            throw SuspendedPresentationError.invalidSuspension
-        }
+    private func wrapSection() throws -> [SIMD2<Float>] {
+        if let meshWrapSection { return meshWrapSection }
         let inverse = boardContainer.simdWorldTransform.inverse
         let triangles = try geometryByNodeID.values.flatMap { node -> [Triangle] in
             guard let geometry = node.geometry,
@@ -1436,7 +1436,7 @@ final class BoardModelScene {
         guard section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        miniBarWrapSection = section
+        meshWrapSection = section
         return section
     }
 

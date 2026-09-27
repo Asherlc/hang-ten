@@ -652,6 +652,7 @@ class BoardModelTwoBranchSuspension:
     branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
+    mesh_wrap_clearance: float | None = None
 
 
 BoardModelSuspension = (
@@ -797,9 +798,11 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     payload = _mapping(value, source)
     suspension_type = _string(payload.get("type"), f"{source}.type")
     if suspension_type == "twoBranchCord":
-        _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source)
+        _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
+                optional={"meshWrap"})
         _canonical_member_order(
-            payload, ("type", "passages", "branches", "anchor", "canonicalPoses"), source
+            payload, tuple(key for key in ("type", "passages", "branches", "meshWrap", "anchor", "canonicalPoses")
+                           if key in payload), source
         )
         passages_source = f"{source}.passages"
         passages_payload = _mapping(payload["passages"], passages_source)
@@ -853,6 +856,14 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         if len({passage.is_through_bore for passage in all_passages}) != 1:
             raise ValueError("twoBranchCord cannot mix point passages and through-bores")
         through_bore = all_passages[0].is_through_bore
+        mesh_wrap_clearance = None
+        if "meshWrap" in payload:
+            if through_bore:
+                raise ValueError("meshWrap requires exterior point passages")
+            wrap_source = f"{source}.meshWrap"
+            wrap = _mapping(payload["meshWrap"], wrap_source)
+            _closed(wrap, {"clearance"}, wrap_source)
+            mesh_wrap_clearance = _positive_number(wrap["clearance"], f"{wrap_source}.clearance")
         # Exterior contacts may share one continuous body node. Their passage
         # IDs and coordinates, rather than node IDs, distinguish the routes.
 
@@ -930,6 +941,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             _load_model_poses(
                 payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
             ),
+            mesh_wrap_clearance,
         )
 
     if suspension_type == "pairedLeadCord":
@@ -2053,6 +2065,11 @@ def _validate_model_suspension(
         )
         if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
             raise ValueError("twoBranchCord suspension requires four distinct passages")
+        if suspension.mesh_wrap_clearance is not None and any(
+            side[0].point_in_model[0] == side[1].point_in_model[0]
+            for side in (suspension.passages.left, suspension.passages.right)
+        ):
+            raise ValueError("meshWrap requires distinct outer and inner strand positions")
         for passage in passages:
             role = nodes.get(passage.node_id)
             if role not in {"body", "attachment"}:
@@ -2093,6 +2110,9 @@ def _validate_model_suspension(
             if any(math.dist(start, end) <= 1e-7 for start, end in zip(route, route[1:])):
                 raise ValueError("paired lead route points must be distinct")
     for position_id, pose in suspension.canonical_poses.items():
+        if isinstance(suspension, BoardModelTwoBranchSuspension) and suspension.mesh_wrap_clearance is not None \
+                and pose.wrapped_routes is not None:
+            raise ValueError("meshWrap cannot also declare wrappedRoutes")
         if pose.wrapped_routes is not None:
             if not isinstance(suspension, BoardModelTwoBranchSuspension) or any(p.is_through_bore for p in passages):
                 raise ValueError("wrappedRoutes requires two exterior point-passage branches")
@@ -2572,7 +2592,10 @@ def _validate_finished_shape(
         if cad_source.is_cad_package(root)
         else _PACKAGE_ENTRIES
     )
-    unknown = entries - (required | {cad_source_name})
+    allowed = set(required | {cad_source_name})
+    if cad_source.is_cad_package(root) and "suspension.json" in entries:
+        allowed.add("suspension.json")
+    unknown = entries - allowed
     missing = required - entries
     if unknown:
         raise ValueError(f"unknown package entry: {sorted(unknown)[0]}")

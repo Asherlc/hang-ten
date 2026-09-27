@@ -35,11 +35,13 @@ def test_committed_models_match_delivery_lock():
     # when PR #452 added six model-media boards, because this module is not
     # executed by CI (the pytest job's working-directory is Tools/HangboardPackages).
     assert result["models"] == len(lock["modelPackages"])
-    # Three locked files per committed-asset package; two (descriptor + FCStd)
-    # per source-backed package, whose board.json is generated at build time.
+    # Source-backed packages lock their descriptor and FCStd, plus an optional
+    # suspension authoring sidecar merged into board.json at build time.
     sourced = len(result["sourceBacked"])
     assert sourced == len(lock["migratedPackages"])
-    assert result["files"] == (len(lock["modelPackages"]) - sourced) * 3 + sourced * 2
+    sidecars = sum((ROOT / "Hangboards" / package / "suspension.json").is_file()
+                   for package in result["sourceBacked"])
+    assert result["files"] == (len(lock["modelPackages"]) - sourced) * 3 + sourced * 2 + sidecars
 
 
 def test_source_backed_package_locks_its_source_and_no_board_json(tmp_path):
@@ -63,6 +65,23 @@ def test_source_backed_package_locks_its_source_and_no_board_json(tmp_path):
     (p.parent / "board.json").write_text("{}\n")
     with pytest.raises(ValueError, match="on-disk board.json"):
         module().verify(tmp_path, lock)
+
+
+def test_source_backed_suspension_sidecar_is_locked(tmp_path):
+    p = tmp_path / "Hangboards/example/assets"
+    p.mkdir(parents=True)
+    (p / "primary.model.json").write_text("{}\n")
+    (p.parent / "example.FCStd").write_bytes(b"cad source")
+    sidecar = p.parent / "suspension.json"
+    sidecar.write_text("original suspension\n")
+    verifier = module()
+    text = verifier.checksum_manifest(tmp_path, ["example"])
+    assert "Hangboards/example/suspension.json" in text
+    lock = {"schemaVersion": 1, "modelPackages": ["example"],
+            "sha256Manifest": hashlib.sha256(text.encode()).hexdigest()}
+    sidecar.write_text("changed suspension\n")
+    with pytest.raises(ValueError, match="checksum"):
+        verifier.verify(tmp_path, lock)
 
 
 def test_changed_bytes_are_rejected(tmp_path):

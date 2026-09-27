@@ -809,6 +809,9 @@ final class BoardModelTests: XCTestCase {
         }
         XCTAssertEqual(Set(board.contacts.map(\.id)), ["edge-10", "edge-20", "ergonomic-jug", "mini-pinch"])
         XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(suspension.meshWrapClearance, 0.005)
+        XCTAssertNotEqual(suspension.passages.left[0].pointInModel[0], suspension.passages.left[1].pointInModel[0])
+        XCTAssertNotEqual(suspension.passages.right[0].pointInModel[0], suspension.passages.right[1].pointInModel[0])
         for position in board.positions {
             let pose = try XCTUnwrap(suspension.canonicalPoses[position.id])
             XCTAssertNil(pose.wrappedRoutes, "cord path must be solved from the loaded mesh at runtime")
@@ -819,6 +822,29 @@ final class BoardModelTests: XCTestCase {
             XCTAssertFalse(cord.childNodes.isEmpty, position.id)
             XCTAssertTrue(cord.childNodes.allSatisfy { $0.categoryBitMask == BoardModelScene.cordCategory })
         }
+    }
+
+    func testMeshSectionWrapUsesDeclaredLoopIDsAndStrandPositions() throws {
+        let section: [SIMD2<Float>] = [
+            SIMD2(0, 0), SIMD2(0, 0.06), SIMD2(0.06, 0.06), SIMD2(0.06, 0)
+        ]
+        let camera = BoardModelCanonicalCamera(viewDirection: [0, 0, 1], fitPadding: 1)
+        let first = BoardModelCanonicalPose(rotation: [0, 0, 0, 1], translation: [0, 0, 0], camera: camera)
+        let rotated = BoardModelCanonicalPose(rotation: [sqrt(0.5), 0, 0, sqrt(0.5)],
+            translation: [0, 0, 0], camera: camera)
+        let loops: [(id: String, outerX: Float, innerX: Float)] = [
+            ("near-end", -0.073, -0.061), ("far-end", 0.073, 0.061)
+        ]
+        let anchor = SIMD3<Float>(0, 0.2, 0.03)
+        let firstRoutes = try MeshSectionWrapSolver.routes(section: section, anchor: anchor,
+            pose: first, radius: 0.002, clearance: 0.005, loops: loops)
+        let rotatedRoutes = try MeshSectionWrapSolver.routes(section: section, anchor: anchor,
+            pose: rotated, radius: 0.002, clearance: 0.005, loops: loops)
+
+        XCTAssertEqual(Set(firstRoutes.keys), ["near-end", "far-end"])
+        XCTAssertEqual(firstRoutes["near-end"]?.first?.first ?? 0, -0.073, accuracy: 1e-6)
+        XCTAssertEqual(firstRoutes["near-end"]?.last?.first ?? 0, -0.061, accuracy: 1e-6)
+        XCTAssertNotEqual(firstRoutes["near-end"], rotatedRoutes["near-end"])
     }
 
     func testPairedLeadModelHangboardsBindTwoDistinctPointsAndRenderNonPickableLeads() async throws {

@@ -281,8 +281,8 @@ def stage_board_packages(
         _validate_regular_tree(package_source)
 
     model_asset_paths_by_slug: dict[str, frozenset[Path]] = {}
-    # The CAD authoring source is neither a runtime resource nor an ODR asset: it
-    # must be excluded from the bundle and must NOT be routed to ODR.
+    # CAD and suspension authoring sources are merged into generated board.json;
+    # neither belongs in the runtime bundle or ODR.
     authoring_source_paths_by_slug: dict[str, frozenset[Path]] = {}
     for package in inventory.packages:
         package_root = package.root
@@ -291,10 +291,12 @@ def stage_board_packages(
             for presentation in package.board.presentations
             if isinstance(presentation.media, package_module.PresentationMediaModel)
         )
-        authoring_source_paths_by_slug[package.root.name] = frozenset(
+        cad_sources = frozenset(
             path.relative_to(package_root)
             for path in package_root.rglob("*.FCStd")
         )
+        sidecar = frozenset({Path("suspension.json")}) if (package_root / "suspension.json").is_file() else frozenset()
+        authoring_source_paths_by_slug[package.root.name] = cad_sources | sidecar
 
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")

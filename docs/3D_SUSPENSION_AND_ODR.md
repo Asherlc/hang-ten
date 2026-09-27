@@ -16,11 +16,11 @@ A model presentation crosses two different delivery paths:
 | Board mesh and embedded materials | `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by SceneKit after access and SHA-256 validation |
 
 `scripts/stage-board-packages.py` copies each validated regular-file package
-tree into the app resources while excluding only each model presentation's
-`assetPath` (and a CAD package's `<slug>.FCStd` authoring source, which is never
-bundled). It stages those excluded USDZ files for ODR separately. For a CAD
+tree into the app resources while excluding each model presentation's
+`assetPath` and CAD authoring sources (`<slug>.FCStd` and optional
+`suspension.json`). It stages excluded USDZ files for ODR separately. For a CAD
 package it writes the `board.json` generated from the FCStd's
-`HangTenBoardManifest` into the staged package, since none is committed.
+`HangTenBoardManifest` and any suspension sidecar into the staged package.
 Therefore `board.json` and the descriptor remain ordinary bundled metadata; the
 cord is not part of the downloaded model asset. Android stages with the same
 script (`--target android`), which keeps the USDZ inline instead of splitting it
@@ -159,13 +159,14 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
-The Lattice Mini Bar's exterior loops are a mesh-driven exception to authored
-`wrappedRoutes`. Its CAD manifest records loop topology and display parameters,
-but no route coordinates. When a grip is selected, `BoardModelView` computes
-the convex section of the validated loaded mesh, finds the two tangencies from
-the fixed overhead anchor in that pose, and routes a taut cord around the
-opposite side. The result still passes the same mesh-clearance gate and remains
-transient and non-pickable. Its exact model hash gates this calculation.
+For exterior point-passage branches, `meshWrap.clearance` selects the shared
+mesh-driven route solver. The Mini Bar's `suspension.json` supplies that choice,
+its two loop positions, and display parameters; its FCStd has no cord data.
+When a grip is selected, `BoardModelView` computes the convex section of the
+validated loaded mesh, finds two tangencies from the fixed overhead anchor,
+and routes each taut loop around the opposite side. The result passes the same
+mesh-clearance gate and remains transient and non-pickable. A sidecar's
+`modelSHA256` must match its descriptor, and the delivery lock pins its bytes.
 
 ## Make an evidence-backed correction
 
@@ -182,10 +183,11 @@ transient and non-pickable. Its exact model hash gates this calculation.
    bindings are unchanged, edit `board.json` suspension metadata only and
    preserve the USDZ and descriptor bytes. For a package with a native
    `<slug>.FCStd` source, there is no committed `board.json`; it is generated
-   from the FCStd at build time. Change the suspension in the FCStd's
+   from the FCStd and optional adjacent `suspension.json` at build time. Edit
+   the sidecar when present; otherwise change suspension in the FCStd's
    `HangTenBoardManifest` with `Tools/HangboardCAD/set_board_manifest.py`
-   (which leaves every geometry member byte-identical); inspect the result
-   with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
+   (which leaves every geometry member byte-identical). Inspect the generated
+   result with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
 5. Re-run the focused test, package/audit validation, relevant native tests,
