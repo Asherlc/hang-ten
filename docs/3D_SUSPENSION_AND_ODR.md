@@ -160,15 +160,17 @@ cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
 For exterior point-passage branches, `meshWrap.clearance` selects the shared
-mesh-driven route solver. The Mini Bar previously used this path, but the user
-identified two through-bores per end in the manufacturer gallery. Its current
-`suspension.json` therefore declares four directed bores and transient exterior
-bights, while its FCStd contains the matching four pocket cuts and no cord.
-The current through-bore renderer still needs authored exterior contact points;
-the Mini Bar's present points are labeled display estimates pending a generic
-holes-plus-anchor solver and current-source visual clearance review. A
-sidecar's `modelSHA256` must match its descriptor, and the delivery lock pins
-its bytes.
+mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
+connected U-shaped channels in its FCStd, each with two mouth points in
+`suspension.json`. The user confirmed one continuous loop per end, including
+the visible lower curve in Lattice's end photo. `windingByPassageID` records
+which side of the ovoid each lead follows. This one-time threading choice is
+necessary because mouth and anchor coordinates alone admit two exterior
+paths. The renderer recomputes bearing points from the loaded body mesh for
+every grip pose; no pose-specific route coordinates or cord geometry are baked
+into the USDZ. Mouth positions, channel and cord diameters, anchor offset,
+and clearance are labeled display estimates. A sidecar's `modelSHA256` must
+match its descriptor, and the delivery lock pins its bytes.
 
 ## Make an evidence-backed correction
 

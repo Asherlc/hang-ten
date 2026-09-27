@@ -231,6 +231,13 @@ struct BoardModelCordBranch: Hashable {
     }
 }
 
+enum BoardModelLoopWinding: String, Hashable {
+    /// Hull traversal from the anchor tangent to the channel mouth, viewed
+    /// in the model's (y, z) cross-section.
+    case clockwise
+    case counterclockwise
+}
+
 struct BoardModelTwoBranchSuspension: Hashable {
     let passages: BoardModelPassagePairs
     let branches: [BoardModelCordBranch]
@@ -239,6 +246,12 @@ struct BoardModelTwoBranchSuspension: Hashable {
     /// Runtime convex-section wrap clearance for exterior point passages.
     /// Nil retains explicitly authored routes or direct point-passage spans.
     var meshWrapClearance: Double? = nil
+    /// Two mouths per end connected by a hidden channel in the CAD body.
+    /// The loaded mesh and hanging point determine each exterior lead at runtime.
+    var internalLoopClearance: Double? = nil
+    /// Threading topology is fixed when the cord is installed; contact points
+    /// along that route are recomputed from the mesh for every board pose.
+    var internalLoopWindingByPassageID: [String: BoardModelLoopWinding]? = nil
 }
 
 enum BoardModelSuspension: Hashable {

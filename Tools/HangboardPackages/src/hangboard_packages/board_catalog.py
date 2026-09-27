@@ -653,6 +653,8 @@ class BoardModelTwoBranchSuspension:
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
     mesh_wrap_clearance: float | None = None
+    internal_loop_clearance: float | None = None
+    internal_loop_winding_by_passage_id: Mapping[str, str] | None = None
 
 
 BoardModelSuspension = (
@@ -799,9 +801,9 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     suspension_type = _string(payload.get("type"), f"{source}.type")
     if suspension_type == "twoBranchCord":
         _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
-                optional={"meshWrap"})
+                optional={"meshWrap", "internalLoop"})
         _canonical_member_order(
-            payload, tuple(key for key in ("type", "passages", "branches", "meshWrap", "anchor", "canonicalPoses")
+            payload, tuple(key for key in ("type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses")
                            if key in payload), source
         )
         passages_source = f"{source}.passages"
@@ -864,6 +866,22 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
             wrap = _mapping(payload["meshWrap"], wrap_source)
             _closed(wrap, {"clearance"}, wrap_source)
             mesh_wrap_clearance = _positive_number(wrap["clearance"], f"{wrap_source}.clearance")
+        internal_loop_clearance = None
+        internal_loop_winding_by_passage_id = None
+        if "internalLoop" in payload:
+            if through_bore or mesh_wrap_clearance is not None:
+                raise ValueError("internalLoop requires paired point mouths and no exterior meshWrap")
+            loop_source = f"{source}.internalLoop"
+            loop = _mapping(payload["internalLoop"], loop_source)
+            _closed(loop, {"clearance", "windingByPassageID"}, loop_source)
+            _canonical_member_order(loop, ("clearance", "windingByPassageID"), loop_source)
+            internal_loop_clearance = _positive_number(loop["clearance"], f"{loop_source}.clearance")
+            winding = _mapping(loop["windingByPassageID"], f"{loop_source}.windingByPassageID")
+            if set(winding) != all_passage_ids:
+                raise ValueError("internalLoop winding must name every passage exactly once")
+            if any(value not in ("clockwise", "counterclockwise") for value in winding.values()):
+                raise ValueError("internalLoop winding must be clockwise or counterclockwise")
+            internal_loop_winding_by_passage_id = dict(winding)
         # Exterior contacts may share one continuous body node. Their passage
         # IDs and coordinates, rather than node IDs, distinguish the routes.
 
@@ -942,6 +960,8 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
                 payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
             ),
             mesh_wrap_clearance,
+            internal_loop_clearance,
+            internal_loop_winding_by_passage_id,
         )
 
     if suspension_type == "pairedLeadCord":

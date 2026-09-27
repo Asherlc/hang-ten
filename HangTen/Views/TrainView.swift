@@ -77,7 +77,10 @@ struct TrainView: View {
                 case .settings:
                     AppSettingsView()
                 case .boardDetail:
-                    BoardDetailView(board: store.selectedBoard)
+                    BoardDetailView(
+                        board: store.selectedBoard,
+                        initialHoldID: ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_HOLD_ID"]
+                    )
                 case .boardPicker:
                     BoardPickerView()
                 }

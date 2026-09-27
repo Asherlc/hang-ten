@@ -2046,6 +2046,21 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "meshWrap requires distinct exterior strands and no authored routes")
             }
         }
+        if let loop = document.internalLoop {
+            guard !throughBore, document.meshWrap == nil,
+                  loop.clearance.isFinite, loop.clearance > 0,
+                  Set(loop.windingByPassageID.keys) == Set(passages.map(\.id)),
+                  loop.windingByPassageID.values.allSatisfy({
+                      BoardModelLoopWinding(rawValue: $0) != nil
+                  }),
+                  document.canonicalPoses.values.allSatisfy({
+                      $0.cordContactPoints == nil && $0.wrappedRoutes == nil
+                  }),
+                  document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
+                  document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and no authored cord routes")
+            }
+        }
         guard passages.allSatisfy({ $0.id.isBoardPackageIdentifier }),
               Set(passages.map(\.id)).count == passages.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage IDs must be distinct and identifier-shaped")
@@ -2203,7 +2218,11 @@ struct BoardPackageStore {
             branches: document.branches.map { BoardModelCordBranch(id: $0.id, passageIDs: $0.passageIDs, entryContactPoints: $0.entryContactPoints, exteriorContactPoints: $0.exteriorContactPoints, exitContactPoints: $0.exitContactPoints, restLength: $0.restLength, radius: $0.radius, material: $0.material, provenance: $0.provenance) },
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: document.anchor.offsetFromBoardBounds, visibility: document.anchor.visibility, provenance: document.anchor.provenance, position: anchorPosition),
             canonicalPoses: poseValues,
-            meshWrapClearance: document.meshWrap?.clearance
+            meshWrapClearance: document.meshWrap?.clearance,
+            internalLoopClearance: document.internalLoop?.clearance,
+            internalLoopWindingByPassageID: document.internalLoop.map {
+                $0.windingByPassageID.mapValues { BoardModelLoopWinding(rawValue: $0)! }
+            }
         ))
 
 }
@@ -2376,7 +2395,7 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
             }
             guard suspensionType == "twoBranchCord" else { continue }
             try suspensionMembers.requireCanonicalOrder(
-                ["type", "passages", "branches", "meshWrap", "anchor", "canonicalPoses"]
+                ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
                     .filter { suspensionMembers.value(named: $0) != nil })
             guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
                   case .array(let leftPassages)? = passagesMembers.value(named: "left"),
@@ -3122,17 +3141,19 @@ struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
     let meshWrap: BoardPackageMeshWrapDocument?
+    let internalLoop: BoardPackageInternalLoopDocument?
     let anchor: BoardPackageAnchorDocument
     let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
 
-    private enum CodingKeys: String, CodingKey { case type, passages, branches, meshWrap, anchor, canonicalPoses }
+    private enum CodingKeys: String, CodingKey { case type, passages, branches, meshWrap, internalLoop, anchor, canonicalPoses }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["type", "passages", "branches", "meshWrap", "anchor", "canonicalPoses"])
+        try decoder.rejectUnknownKeys(["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         _ = try container.decode(String.self, forKey: .type)
         passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
         branches = try container.decode([BoardPackageCordBranchDocument].self, forKey: .branches)
         meshWrap = try container.decodeIfPresent(BoardPackageMeshWrapDocument.self, forKey: .meshWrap)
+        internalLoop = try container.decodeIfPresent(BoardPackageInternalLoopDocument.self, forKey: .internalLoop)
         anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
         canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
     }
@@ -3146,6 +3167,19 @@ struct BoardPackageMeshWrapDocument: Decodable, Equatable {
         try decoder.rejectUnknownKeys(["clearance"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         clearance = try container.decode(Double.self, forKey: .clearance)
+    }
+}
+
+struct BoardPackageInternalLoopDocument: Decodable, Equatable {
+    let clearance: Double
+    let windingByPassageID: [String: String]
+
+    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        clearance = try container.decode(Double.self, forKey: .clearance)
+        windingByPassageID = try container.decode([String: String].self, forKey: .windingByPassageID)
     }
 }
 

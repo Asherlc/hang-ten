@@ -1,98 +1,81 @@
 # Lattice Mini Bar cord passage correction
 
-Reviewed 2026-09-27 after the user identified through-holes in the Mini Bar.
-This corrects the cord interpretation in the August presentation audit, the
-September CAD provenance, and the offline Bullet prototype. The approved
-gallery is still the same physical revision.
+Reviewed 2026-09-27 against the user-approved Lattice Mini Bar gallery: Web-1,
+Web-2, Web-7, Web-8, Web-9, Web-10, and Web-11. Their exact URLs, retained
+snapshots, and SHA-256 values are in
+`2026-09-13-model-hangboard-cord-audit.json`. The user also supplied a loaded
+photo and clarified the threading: there are two openings near each end,
+connected by a passage **inside** the wood; the rope emerging from those
+openings rises as **one continuous loop** per end. The blue curve beneath the
+wood in Web-2 belongs to that same loop.
 
-The user then confirmed **two separate bores per end** and supplied an
-additional photo of the bar in use. This is the topology for the CAD revision:
-four transverse bores total, two at each end, with an exterior bight between
-the two visible mouths at each end.
+## What the photos establish
 
-## Evidence
+- [Web-1](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg)
+  shows both end loops tensioned and bearing near the underside of the bar.
+- [Web-2](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
+  shows an ovoid end, two rising strands, and the continuous lower curve.
+- [Web-7](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-7.jpg),
+  [Web-8](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-8.jpg),
+  [Web-10](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-10.jpg),
+  and [Web-11](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-11.jpg)
+  show loaded oblique views across different grips.
+- [Web-9](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-9.jpg)
+  adds a loaded end view. The hands obscure the exact opening edges.
 
-- [Lattice Web-1](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg)
-  shows cord entering small openings in the wooden side near both ends, with
-  exterior bights visible below. The retained snapshot is
-  `2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-1.jpg` (SHA-256
-  `610cfaa96a95d80ae0d37ef4bbf2b1d881b47d0813d7d0eb4f9db9b5c30270de`).
-- [Lattice Web-2](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
-  shows the cord curving around the end section. The end photo alone does not
-  reveal the passage axis inside the wood. Its retained September snapshot
-  has SHA-256 `3b4c28e84d46972cd6f2d3be241d148c8fe1eac9aefce54bb0d223470165f037`.
-- Lattice's [Mini Bar product page](https://latticetraining.com/product/mini-bar-portable-hangboard/)
-  contains a review describing wear near the “rope holes.” Lattice's reply
-  confirms that cord position can slip under initial load and be readjusted.
-- Lattice's [How to Use the Mini Bar video](https://www.youtube.com/watch?v=hHt20hop3UU),
-  especially 00:28–00:32 and 01:40–02:00, shows strands emerging from
-  openings near the ends while exterior bights remain visible. The 00:30
-  frame is retained for inspection at
-  `.context/frantic-kiwi/video-frames/frame-030.jpg`.
+The photos do not expose the channel inside the wood or provide a measured
+channel diameter, mouth spacing, rope diameter, or exact camera/board pose.
+Those dimensions remain **display estimates**. Lattice's how-to video was
+consulted as supplemental research, but the approved seven gallery views and
+the user's topology corrections govern this CAD authoring.
 
-## CAD and simulation discrepancy
+## Native geometry and transient cord
 
-The current `lattice-mini-bar.FCStd` body is a single `EndProfile` pad
-(`LengthPad`) over 155 mm with no local bore or pocket feature. The exported
-body has only the two end X coordinates; it cannot contain passages at the
-cord positions near each end. `suspension.json` stores two representative
-points per end but labels their Y/Z coordinates as display estimates. They
-are not verified bore endpoints: one of the points at each end is about
-10.9 mm inside the current exported surface.
+The native FreeCAD source retains one ovoid `EndProfile` and a 155 mm
+`LengthPad`. Two `PartDesign::SubtractivePipe` features cut one smooth,
+connected U channel near each end. The four mouth centers are at native
+X = -69, -57, +57, +69 mm, Z = 24 mm on the estimated front surface;
+the estimated channel diameter is 5.4 mm. The resulting solid recomputes
+validly, and the materialless USDZ contains the wood and its contact surfaces
+only. There is no rope mesh in the CAD source or USDZ.
 
-The Bullet prototype pins an inferred point on a bounding circle at each
-strand X coordinate. Those pins are not the product's hole boundaries. Its
-zero-of-eight contact finding applies only to that **solid-bar surrogate**;
-it does not test whether a cord threaded through the actual Mini Bar can
-contact its surface. The prototype must not be promoted into the app or used
-as a physical fidelity verdict.
+`suspension.json` binds the four mouth points to the exported body and declares
+two loops, one per end. Each loop follows one free leg from the common overhead
+point to a mouth, passes through the hidden connected channel, then follows the
+second free leg back to the same overhead point. `internalLoop.clearance` is
+0.1 mm and the estimated cord radius is 2 mm. A single
+`windingByPassageID` choice records which side of the ovoid each leg leaves its
+mouth on. It is threading topology, authored once per passage, **not** a list
+of pose-specific coordinates. For every selected grip, the app derives the
+visible bearing path from the loaded body mesh, the four mouth positions, and
+the fixed overhead point. The direction choices let one leg per loop bear
+under the wood as the approved photos show. The rope is transient,
+non-pickable, and absent from the USDZ.
 
-The gallery and video prove openings and exterior bights. They do not supply
-an unambiguous interior bore path or measured diameter. A CAD revision must
-model deliberately chosen passage geometry and label its dimensions as
-estimates, then recompile the USDZ and update the hash-bound sidecar. The cord
-remains outside the USDZ as transient geometry; the CAD only contains wood.
+The route solver offsets the ovoid section by the rope radius plus clearance.
+A native FreeCAD solid-intersection check across all four poses and all four
+visible leads measured a minimum **2.09 mm centerline-to-wood distance** on
+the exterior route, giving about 0.09 mm surface clearance for the estimated
+2 mm rope radius. The final lead segment enters its actual channel mouth
+without crossing wooden solid. The invisible channel segment is represented
+by the CAD void; its centerline is not rendered.
 
-## Authored correction
+## Visual and package review
 
-The revised native FreeCAD source retains the ovoid `EndProfile` and 155 mm
-`LengthPad`. `CordBoreCenters` is a fully constrained four-circle Sketcher
-profile; `CordBores` is a 90 mm PartDesign pocket through the full section.
-The deliberately estimated bore centers are X = -69, -57, +57, +69 mm and
-native Z = 24 mm, with 5.4 mm diameter. The pocket cuts through both long
-faces. Native section inspection at Z = 24 mm found the two face intersections
-at Y = -67.183 and -5.124 mm; the suspension sidecar converts these to model
-Z = +0.067183 and +0.005124 m. At Z = 17 mm, the existing open pinch relief
-would split each nominal bore into separate wood segments, so that position
-was rejected during authoring.
+The front, side, and top before/after CAD preview is
+`.context/frantic-kiwi/internal-cad-preview/front-side-top-before-after.png`.
+The approved-photo comparisons are
+`.context/frantic-kiwi/mini-bar-Web-{1,2,7,8,9,10,11}-vs-CAD.png`, and the
+four-pose end and side matrices are `mini-bar-end-pose-matrix.png` and
+`mini-bar-Web-1-all-pose-matrix.png` in the same workspace directory. The
+review renderer depth-sorts rope and wood; it uses hand-chosen approximate
+camera directions and canonical poses. It is a topology and contact review,
+not a photogrammetric match. Knots and hands are absent from the display.
 
-The revised USDZ contains only the wooden body and contact surfaces. The
-sidecar binds four directed through-bores to `mini_bar_body`, with a transient
-exterior bight at each end. Each pose's exterior contact points were calculated
-from the CAD's circular outer section, the bore mouths, and the overhead
-anchor, then retained in the sidecar because the current through-bore runtime
-contract requires explicit routes. The cord centerline lies 2.1 mm outside
-the arc for an estimated 2 mm radius. The native FreeCAD solid intersection
-check found no centerline penetration in any of the eight pose/branch routes
-away from the intended internal bore spans. Bore centers, diameter, cord
-radius, mouth coordinates, exterior contact points, 120 mm anchor offset, and
-0.82 m per-branch rendering capacity are **display estimates**, not
-manufacturing measurements or a claim about supplied rope length. The
-through-bore topology comes from the user's explicit correction and Lattice's
-approved gallery. The native profile, bore positions, and route should be
-revisited if measured bare-board evidence becomes available.
-
-The front, side, and top comparison against the prior committed asset is
-`.context/frantic-kiwi/mini-bar-bore-comparison.png`. It shows four openings
-on the long face while the end section remains ovoid. A four-pose side review
-of the CAD section and transient centerline is
-`.context/frantic-kiwi/mini-bar-cord-side-poses.png`; a current-source iPhone
-Simulator screenshot of the default jug pose is
-`.context/frantic-kiwi/mini-bar-app-front.png`. The CAD compiler, package
-validator, cord audit, and all 57 focused iOS suspension tests pass on the
-isolated iPhone 17 Pro simulator. These checks
-do not yet prove full tube clearance or visual quality from every in-app orbit
-angle. The current RealityKit renderer uses the retained per-pose routes for
-through-bores, so this correction establishes physical topology and a
-no-penetration centerline but does not yet provide the user's requested generic
-holes-plus-anchor runtime solver.
+The compiled USDZ and descriptor hashes match, and the sidecar is bound to
+the descriptor's `modelSHA256`. Package validation and all 722 package tests
+passed. The focused and full iOS test targets passed in isolated iPhone 17 Pro
+simulators. The launched app was captured for all four selected grips at
+`.context/frantic-kiwi/mini-bar-app-{ergonomic-jug,edge-10,edge-20,mini-pinch}.png`.
+The simulators were deleted and deletion verified. The exact native
+validation commands and final hashes are recorded by the delivery lock.

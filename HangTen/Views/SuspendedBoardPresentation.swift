@@ -105,6 +105,122 @@ enum MeshSectionWrapSolver {
     }
 }
 
+/// Exterior portions of cords threaded through hidden U-shaped channels.
+/// The channel itself is CAD geometry. Mouth points, the overhead anchor,
+/// and the fixed threading direction determine visible leads for each pose.
+enum MeshInternalLoopSolver {
+    private static func cross(_ a: SIMD2<Float>, _ b: SIMD2<Float>) -> Float {
+        a.x * b.y - a.y * b.x
+    }
+
+    static func routes(
+        section: [SIMD2<Float>],
+        anchor: SIMD3<Float>,
+        pose: BoardModelCanonicalPose,
+        radius: Float,
+        clearance: Float,
+        mouths: [(id: String, point: SIMD3<Float>)],
+        windingByPassageID: [String: BoardModelLoopWinding]
+    ) throws -> [String: [[Double]]] {
+        guard section.count >= 3, section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }),
+              anchor.allFinite, radius.isFinite, radius > 0,
+              clearance.isFinite, clearance > 0,
+              mouths.count == 4, Set(mouths.map(\.id)).count == 4,
+              Set(windingByPassageID.keys) == Set(mouths.map(\.id)),
+              mouths.allSatisfy({ $0.point.allFinite }),
+              pose.rotation.count == 4, pose.translation.count == 3 else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        let sorted = Array(Set(section)).sorted { $0.x == $1.x ? $0.y < $1.y : $0.x < $1.x }
+        var lower: [SIMD2<Float>] = []
+        for point in sorted {
+            while lower.count > 1 && cross(lower.last! - lower[lower.count - 2], point - lower.last!) <= 1e-10 {
+                lower.removeLast()
+            }
+            lower.append(point)
+        }
+        var upper: [SIMD2<Float>] = []
+        for point in sorted.reversed() {
+            while upper.count > 1 && cross(upper.last! - upper[upper.count - 2], point - upper.last!) <= 1e-10 {
+                upper.removeLast()
+            }
+            upper.append(point)
+        }
+        let hull = Array(lower.dropLast()) + Array(upper.dropLast())
+        guard hull.count >= 3 else { throw SuspendedPresentationError.invalidSuspension }
+        let offset = radius + clearance
+        var perimeter: [SIMD2<Float>] = []
+        for index in hull.indices {
+            let previous = hull[(index + hull.count - 1) % hull.count]
+            let point = hull[index]
+            let following = hull[(index + 1) % hull.count]
+            let first = point - previous
+            let second = following - point
+            let firstNormal = SIMD2<Float>(first.y, -first.x) / simd_length(first)
+            let secondNormal = SIMD2<Float>(second.y, -second.x) / simd_length(second)
+            let firstOffset = point + offset * firstNormal
+            let secondOffset = point + offset * secondNormal
+            let divisor = cross(first, second)
+            let projected = abs(divisor) < 1e-10 ? firstOffset
+                : firstOffset + (cross(secondOffset - firstOffset, second) / divisor) * first
+            guard projected.x.isFinite && projected.y.isFinite else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            perimeter.append(projected)
+        }
+        let q = simd_quatf(ix: Float(pose.rotation[0]), iy: Float(pose.rotation[1]),
+            iz: Float(pose.rotation[2]), r: Float(pose.rotation[3]))
+        let localAnchor = q.inverse.act(anchor - SIMD3<Float>(pose.translation.map(Float.init)))
+        let projectedAnchor = SIMD2<Float>(localAnchor.y, localAnchor.z)
+        let visible = perimeter.indices.map { index in
+            cross(perimeter[(index + 1) % perimeter.count] - perimeter[index],
+                  projectedAnchor - perimeter[index]) < -1e-10
+        }
+        let starts = perimeter.indices.filter { visible[$0] && !visible[($0 + perimeter.count - 1) % perimeter.count] }
+        let ends = perimeter.indices.filter { visible[$0] && !visible[($0 + 1) % perimeter.count] }
+        guard starts.count == 1, ends.count == 1 else {
+            throw SuspendedPresentationError.invalidSuspension
+        }
+        // Each mouth has two possible exterior paths to an outside anchor.
+        // Threading fixes which side the cord leaves the mouth on; the exact
+        // bearing points then come from the current CAD section and pose.
+        let tangentByStep = [-1: starts[0], 1: (ends[0] + 1) % perimeter.count]
+        let count = perimeter.count
+        func route(from start: Int, to finish: Int, step: Int) -> [Int] {
+            var result = [start]
+            while result.last != finish {
+                result.append((result.last! + step + count) % count)
+                if result.count > count { return [] }
+            }
+            return result
+        }
+        var result: [String: [[Double]]] = [:]
+        for mouth in mouths {
+            let projected = SIMD2<Float>(mouth.point.y, mouth.point.z)
+            guard let foot = perimeter.indices.min(by: {
+                simd_length_squared(perimeter[$0] - projected) < simd_length_squared(perimeter[$1] - projected)
+            }), let winding = windingByPassageID[mouth.id] else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            let step = winding == .clockwise ? -1 : 1
+            guard let tangent = tangentByStep[step] else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            let best = route(from: tangent, to: foot, step: step)
+            guard !best.isEmpty else { throw SuspendedPresentationError.invalidSuspension }
+            var points = best.map { index -> SIMD3<Float> in
+                SIMD3<Float>(mouth.point.x, perimeter[index].x, perimeter[index].y)
+            }
+            points.append(mouth.point)
+            guard zip(points, points.dropFirst()).allSatisfy({ simd_length($0.1 - $0.0) > 1e-7 }) else {
+                throw SuspendedPresentationError.invalidSuspension
+            }
+            result[mouth.id] = points.map { [Double($0.x), Double($0.y), Double($0.z)] }
+        }
+        return result
+    }
+}
+
 
 // Compatibility names retained for presentation and test callers while the
 // model-layer solver owns the single-cord result data.
@@ -473,7 +589,7 @@ enum SuspendedBoardPresentation {
 
         let allPassages = suspension.passages.left + suspension.passages.right
         try validateContactOverrides(pose.cordContactPoints, ids: Set(allPassages.map(\.id)))
-        guard pose.cordContactPoints == nil || allPassages.allSatisfy(\.isThroughBore) else {
+        guard pose.cordContactPoints == nil || allPassages.allSatisfy(\.isThroughBore) || suspension.internalLoopClearance != nil else {
             throw SuspendedPresentationError.invalidSuspension
         }
         guard pose.wrappedRoutes == nil || allPassages.allSatisfy({ !$0.isThroughBore }) else {
@@ -546,17 +662,21 @@ enum SuspendedBoardPresentation {
                 throw SuspendedPresentationError.invalidSuspension
             }
             let usesAuthoredRoute = firstModelPassage.2 && secondModelPassage.2
+            let usesInternalLoop = suspension.internalLoopClearance != nil
             let wrappedRoute = pose.wrappedRoutes?[branch.id]?.map {
                 transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
             }
-            guard !usesAuthoredRoute || (
+            guard (!usesInternalLoop || (!usesAuthoredRoute &&
+                pose.cordContactPoints?[branch.passageIDs[0]] != nil &&
+                pose.cordContactPoints?[branch.passageIDs[1]] != nil)) &&
+                (!usesAuthoredRoute || (
                 branch.entryContactPoints.count >= 1 &&
                 branch.exteriorContactPoints.count >= 2 &&
                 branch.exitContactPoints.count >= 1 &&
                 branch.entryContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) &&
                 branch.exteriorContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) &&
                 branch.exitContactPoints.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) })
-            ) else {
+            )) else {
                 throw SuspendedPresentationError.invalidCord
             }
             let firstEntry = transformPoint(transform, firstModelPassage.0)
@@ -570,6 +690,14 @@ enum SuspendedBoardPresentation {
                 entryContacts = [wrappedRoute[0]]
                 contactPoints = Array(wrappedRoute.dropFirst().dropLast())
                 exitContacts = [wrappedRoute[wrappedRoute.count - 1]]
+            } else if usesInternalLoop {
+                entryContacts = pose.cordContactPoints![branch.passageIDs[0]]!.map {
+                    transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+                }
+                contactPoints = []
+                exitContacts = pose.cordContactPoints![branch.passageIDs[1]]!.map {
+                    transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
+                }
             } else if usesAuthoredRoute {
                 entryContacts = (pose.cordContactPoints?[branch.passageIDs[0]] ?? branch.entryContactPoints).map {
                     transformPoint(transform, SIMD3<Float>(Float($0[0]), Float($0[1]), Float($0[2])))
@@ -590,7 +718,9 @@ enum SuspendedBoardPresentation {
                   exitContacts.allSatisfy(\.allFinite) else {
                 throw SuspendedPresentationError.invalidPose
             }
-            let rigidRoute = wrappedRoute ?? (usesAuthoredRoute
+            let rigidRoute = wrappedRoute ?? (usesInternalLoop
+                ? entryContacts + exitContacts
+                : usesAuthoredRoute
                 ? entryContacts + [firstEntry, firstExit] + contactPoints + [secondExit, secondEntry] + exitContacts
                 : [firstEntry, secondEntry])
             guard zip(rigidRoute, rigidRoute.dropFirst()).allSatisfy({
@@ -622,7 +752,7 @@ enum SuspendedBoardPresentation {
             // free spans or move the bore route. Point-passage loops keep
             // their previous allocated-length behavior.
             let endpointDistanceSum = firstDistance + secondDistance
-            let freeLength = usesAuthoredRoute ? endpointDistanceSum : declaredLength - rigidLength
+            let freeLength = (usesAuthoredRoute || usesInternalLoop) ? endpointDistanceSum : declaredLength - rigidLength
             guard freeLength.isFinite, endpointDistanceSum.isFinite,
                   freeLength >= endpointDistanceSum - SuspendedCordSolver.tautTolerance else {
                 throw SuspendedPresentationError.cordTooShort
@@ -675,9 +805,12 @@ enum SuspendedBoardPresentation {
             branches.append(SuspendedBranchSolution(
                 id: branch.id,
                 passageIDs: branch.passageIDs,
-                spans: (usesAuthoredRoute || wrappedRoute != nil)
-                    ? [firstSpan.samples, rigidRoute, secondSpan.samples]
-                    : [firstSpan.samples, secondSpan.samples],
+                spans: usesInternalLoop
+                    ? [firstSpan.samples + Array(entryContacts.dropFirst()),
+                       exitContacts + Array(secondSpan.samples.dropFirst())]
+                    : (usesAuthoredRoute || wrappedRoute != nil)
+                        ? [firstSpan.samples, rigidRoute, secondSpan.samples]
+                        : [firstSpan.samples, secondSpan.samples],
                 centerlineSamples: centerline,
                 tangentSamples: tangents,
                 arcLength: arcLength

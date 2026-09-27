@@ -1141,7 +1141,12 @@ def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
     assert (root / "suspension.json").is_file()
     suspension = generated.board.presentations[0].media.suspension
     assert suspension.mesh_wrap_clearance is None
-    assert all(passage.is_through_bore
+    assert suspension.internal_loop_clearance == 0.0001
+    assert suspension.internal_loop_winding_by_passage_id == {
+        "left-in": "clockwise", "left-out": "counterclockwise",
+        "right-in": "clockwise", "right-out": "counterclockwise",
+    }
+    assert all(not passage.is_through_bore
                for passage in suspension.passages.left + suspension.passages.right)
     assert "suspension" in json.loads(generated.generated_board_json)["presentations"][0]["media"]
 

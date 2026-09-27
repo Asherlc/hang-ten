@@ -522,6 +522,33 @@ final class BoardModelRealityScene {
                         clearance: Float(clearance),
                         loops: loops)
                 }
+                if case .twoBranchCord(let profile) = suspension,
+                   let clearance = profile.internalLoopClearance {
+                    guard profile.branches.count == 2,
+                          profile.passages.left.count == 2,
+                          profile.passages.right.count == 2,
+                          let winding = profile.internalLoopWindingByPassageID,
+                          let radius = profile.branches.map({ Float($0.radius) }).max() else {
+                        return false
+                    }
+                    let passages = profile.passages.left + profile.passages.right
+                    var routes = try MeshInternalLoopSolver.routes(
+                        section: try wrapSection(),
+                        anchor: SIMD3<Float>(profile.anchor.position.map(Float.init)),
+                        pose: pose,
+                        radius: radius,
+                        clearance: Float(clearance),
+                        mouths: passages.map { passage in
+                            (id: passage.id,
+                             point: SIMD3<Float>(passage.pointInModel.map(Float.init)))
+                        },
+                        windingByPassageID: winding)
+                    // The second mouth of each hidden U is traversed outward.
+                    for passage in [profile.passages.left[1], profile.passages.right[1]] {
+                        routes[passage.id]?.reverse()
+                    }
+                    resolvedPose.cordContactPoints = routes
+                }
                 let solved = try Self.solveSuspension(
                     pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds)
                 instanceEntities.first?.transform = Transform(matrix: solved.boardTransform)
