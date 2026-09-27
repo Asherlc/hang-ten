@@ -73,6 +73,42 @@ repeatable settling across all poses. Test exact CAD-solid clearance and
 motion before replacing the deterministic renderer; the old surrogate's
 failure is evidence about that experiment, not a proof against simulation.
 
+### Follow-up whole-loop physics probe (2026-09-27)
+
+The corrected Mini Bar CAD solid was tessellated directly from the final
+FreeCAD `RightCordChannel` feature: 17,022 vertices and 34,048 triangles. The
+result is watertight, unlike the importer-visible USDZ surface, and can supply
+an inside/outside collision test. A temporary position-based chain prototype
+seeded one continuous loop through each CAD channel, with both ends at the
+fixed overhead point and 2 mm cord radius. It remains under the workspace's
+ignored `.context/frantic-kiwi/` directory; it is **not** product code.
+
+Two failures were reproducible. First, holding the board center at one height
+for every grip while declaring a fixed 0.82 m loop leaves roughly 0.29 m of
+unaccounted length in three of the four poses. A hanging board must be allowed
+to move vertically beneath the fixed support as its grip pose changes. The
+estimated downward displacement for a taut seed is about 154 mm for either
+edge, 48 mm for the jug, and 156 mm for the pinch. These values depend on the
+estimated loop length and are only initial conditions, not authored poses.
+Second, unsigned closest-face distance missed particles already inside the
+wood. Signed distance from the closed FreeCAD solid detected those crossings.
+After adding signed collision and constraining the hidden particles to the
+channel, an edge-20 trial had zero sampled points inside the wood but still
+measured 0.829 m of chain for a declared 0.820 m loop, with a link stretched
+28% at the bore rim. Finer 2 mm spacing did not resolve the constraint conflict;
+the trial measured 0.856 m and a 72% maximum local stretch. The prototype is
+therefore rejected for app integration. Point clearance alone is insufficient:
+acceptance also needs segment clearance, length and local strain, topology,
+convergence, and all eight pose/loop combinations against the exact CAD solid.
+
+For a settled-per-pose implementation, solve the board's vertical degree of
+freedom together with a continuous, inextensible loop and its actual channel
+constraint. A static equilibrium solver is appropriate; visible swing is not
+required. The board's [manufacturer-published 150 g mass](https://latticetraining.com/product/mini-bar-portable-hangboard/)
+can set the gravitational load. Do not convert the current convex-section
+route or this failed particle probe into a claimed physics result by merely
+renaming it.
+
 Mouth and anchor coordinates **do not uniquely determine a route**. Between
 one mouth and an external support, cord can travel around either side of the
 section. The winding choice records how the physical cord was threaded. It
