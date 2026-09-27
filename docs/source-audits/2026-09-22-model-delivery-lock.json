@@ -489,18 +489,18 @@
     },
     "tension-grindstone-pro": {
       "source": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
-      "sourceSHA256": "24e376d62e434eaa8bbdc905ab5b1ab22f1c9e043a7027e8e8cc79ae063c669b",
+      "sourceSHA256": "85c15658f0dc3c46c38b8e576e681f6983500271df9e58d43e99cd5c2973f028",
       "boardMetadata": "board.json generated at build time from the embedded HangTenBoardManifest; phone-slot has no depth metadata and retains user-approved utility-contact identity",
       "referenceSHA256": "929108c3f712a7186711543f705c4855eb95a0cc3dcf11be5c6d545e568c5407; 39a55492120d84fd6a35780116c6b1a21853e2440d9ace6796b559293f22bea9",
-      "assetSHA256": "a14558e6534430096edc39a5fd124ef529ad9d6093e6664b6eb8a6b59ccfaa24",
-      "descriptorSHA256": "1d3f773a8e73a2d763ae57bf57576380377a790fe8318603ee395c7227b72a35",
+      "assetSHA256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
+      "descriptorSHA256": "d926095165b5c401a84a7cffddf5fda5219efeed42a02acddc2bcce26e1f8a98",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition; material-free USDZ)",
-      "nativeValidation": "pinned FreeCAD compile/reopen passed; 16 IDs and published contact depths 7/10/15/20/22/25/30/35/45 mm validated; native BREP pocket cuts valid; package validator passed",
+      "nativeValidation": "pinned FreeCAD compile/reopen passed; 16 IDs and published contact depths 7/10/15/20/22/25/30/35/45 mm validated after lofted cavity and envelope refinement; native body valid; package validator passed",
       "nativeAppValidation": "not run",
-      "comparison": "front, side and top review renders compared beside previous committed image; all envelope and cavity placement dimensions are display estimates; see provenance for visual contrast limitation and evidence mapping",
+      "comparison": "front, side and top post-refinement renders reviewed beside the prior asset; lofted rounded cavity transitions and a 3.5 mm estimated envelope fillet improve the display approximation; temporary contact contrast used for review only; no physical-dimension claim",
       "provenanceSidecar": "docs/source-audits/2026-09-26-tension-grindstone-pro-cad-provenance.md",
       "assetCoverage": "locked as descriptor + FCStd source; the USDZ hash is bound by the descriptor and board.json is generated at build time",
-      "holdOutline": "CAD-authored rounded opening outlines; 7 mm incut authored as a ruled tilted profile"
+      "holdOutline": "CAD-authored rounded mouth outlines; lofted bowl sections preserve the exact published depth extents and the 7 mm incut retains its 15-degree profile"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -539,5 +539,5 @@
   "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s Escape Unlimited migration. The digest covers both packages and supersedes main’s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest.",
   "metoliusClimbersEdgeMigrationNote": "2026-09-27: metolius-climbers-edge became a source-backed native FreeCAD package re-authored from Metolius's spec drawing and end-grain photograph (stepped-scoop edges at the published 20/15/10 and 17.5/12.5/7.5 mm depths, 20-degree flat slopers, 40 mm-radius round sloper) with generated board.json. sha256Manifest dfd32f63... supersedes 52ec1c9f..., recorded in supersededSha256Manifest.",
   "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main’s Metolius Climber’s Edge migration. The digest covers both and supersedes main’s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
-  "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source; all proportions are display estimates, source-backed depths and contact IDs are retained, and phone-slot remains a no-depth utility contact."
+  "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source and refined after visual review with estimated lofted cavity lips, bowl profiles and rounded tier edges; source-backed depths and contact IDs remain exact, and phone-slot remains a no-depth utility contact."
 }
