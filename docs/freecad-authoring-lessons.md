@@ -634,7 +634,37 @@ B-spline fillet faces tessellate densely at 0.08 mm. The board went from 15.8k
 to 87.8k triangles, the asset from 314 KB to 1.95 MB, and the FCStd from
 1.3 MB to 7.4 MB.
 
-## 18. Re-authoring from manufacturer photos
+## 18. What Linebreaker BASE added
+(`target10a-linebreaker-base`, from a retained signed-distance generator)
+
+- **Look for generator configs under `.context/` history.** The batch-01
+  imports kept `source/geometry-config.json` (outline polygon, relief cuts,
+  cavity table) at `2dd5182b4`. The Dewoodstok, Escape Unlimited, and Moon
+  Armstrong generators are there too. Their frame was already native (front
+  −Y, mm), so no transform was needed.
+- **The published-depth gate measures the region's whole Y extent.** Tilted
+  floors and mouths that cross a crease both inflate it. A 35° floor pivoted on
+  the centre line measured 43 mm against a published 35 mm. Pivot it so the
+  deepest point equals the published depth, as for every other cavity. The
+  lower-row mouths crossed the tier crease by 1–3 mm, so the crease was raised
+  4 mm. Label both as adaptations.
+- **Sequential rim fillets, again.** Front then back `Part::Fillet` worked. The
+  back failed only where a cut plane met the back face exactly on an outline
+  edge (sloper planes through z = 132 at y = 0). Test each edge with
+  `makeFillet` to find the offenders, and leave them square.
+- **The reference's region selectors may be sloppy.** Its box-selected nodes
+  spilled onto neighbouring holds by up to 19 mm, so large `facePlaneAABB`
+  deltas were reference defects, not CAD errors. Check them in a highlighted
+  render before chasing them.
+- **Diagnostic renders need a z-buffer.** A painter's-algorithm render of a
+  CAD asset, whose big planar faces are a few long triangles, draws them in the
+  wrong order and looks broken.
+- **Taps in `axe` are in points.** Divide screenshot pixels by 3 on the iPhone
+  17 Pro, or tap a hold-map row by its accessibility frame. A second
+  `hangten://…/hold/…` deep link to the board that is already open did not
+  change the selection.
+
+## 19. Re-authoring from manufacturer photos
 (`trango-rock-prodigy-pivot`, 2026-09-25/26)
 
 The Pivot's approved display mesh was wrong about the product. It was about
