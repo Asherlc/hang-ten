@@ -501,6 +501,8 @@ final class GripHandRealityScene {
     let root = Entity()
     let hand = Entity()
     let camera = Entity()
+    private let keyLight = Entity()
+    private let fillLight = Entity()
     private(set) var isUnavailable = false
 
     private var surface: GripHandRealitySurface?
@@ -514,17 +516,6 @@ final class GripHandRealityScene {
     private var orbitAzimuth: Float = 0
     private var orbitElevation: Float = 0
     private var orbitZoom: Float = 1
-    private static let studioEnvironment: EnvironmentResource? = {
-        guard let context = CGContext(data: nil, width: 32, height: 16,
-                                      bitsPerComponent: 8, bytesPerRow: 0,
-                                      space: CGColorSpaceCreateDeviceRGB(),
-                                      bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) else { return nil }
-        context.setFillColor(UIColor(white: 0.7, alpha: 1).cgColor)
-        context.fill(CGRect(x: 0, y: 0, width: 32, height: 16))
-        guard let image = context.makeImage() else { return nil }
-        return try? EnvironmentResource(equirectangular: image, withName: "GripHandStudio")
-    }()
-
     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
         root.addChild(hand)
         var orthographicCamera = OrthographicCameraComponent()
@@ -535,16 +526,9 @@ final class GripHandRealityScene {
         camera.components.set(orthographicCamera)
         root.addChild(camera)
 
-        // Broad front and fill lights keep the matte hand legible from either
-        // mirrored palm-oblique view without modifying authored vertex colors.
-        addDirectionalLight(intensity: 2_400, position: SIMD3(0, 8, 7))
-        addDirectionalLight(intensity: 2_400, position: SIMD3(0, 2, -5))
-        if let environment = Self.studioEnvironment {
-            let light = Entity()
-            light.components.set(ImageBasedLightComponent(source: .single(environment), intensityExponent: 2))
-            root.addChild(light)
-            hand.components.set(ImageBasedLightReceiverComponent(imageBasedLight: light))
-        }
+        root.addChild(keyLight)
+        root.addChild(fillLight)
+        orientLights(for: .right)
 
         do {
             let asset = try assetResult.get()
@@ -569,7 +553,10 @@ final class GripHandRealityScene {
                 isUnavailable = true
             }
         }
-        if sideChanged { hand.scale.x = side == .left ? -1 : 1 }
+        if sideChanged {
+            hand.scale.x = side == .left ? -1 : 1
+            orientLights(for: side)
+        }
         let needsReset = poseChanged || sideChanged || viewportChanged || currentResetToken != resetToken
         currentPose = pose
         currentSide = side
@@ -672,12 +659,18 @@ final class GripHandRealityScene {
         return transform
     }
 
-    private func addDirectionalLight(intensity: Float, position: SIMD3<Float>) {
-        let light = Entity()
-        light.components.set(DirectionalLightComponent(color: .white, intensity: intensity))
-        light.position = position
-        light.look(at: .zero, from: position, relativeTo: root)
-        root.addChild(light)
+    private func orientLights(for side: GripCueSide) {
+        // Aim the key from the lit side of each mirrored rendering. The left
+        // rendering needs more light to match the right's visible brightness.
+        let facing: Float = side == .left ? -1 : 1
+        keyLight.components.set(DirectionalLightComponent(
+            color: .white, intensity: side == .left ? 4_500 : 2_800
+        ))
+        fillLight.components.set(DirectionalLightComponent(
+            color: .white, intensity: side == .left ? 400 : 250
+        ))
+        keyLight.look(at: .zero, from: SIMD3(0, 8, facing * 7), relativeTo: root)
+        fillLight.look(at: .zero, from: SIMD3(0, 2, -facing * 5), relativeTo: root)
     }
 }
 
