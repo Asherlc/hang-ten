@@ -35,48 +35,120 @@ struct GripHandPose: Equatable {
 
 /// Displays the evaluated surfaces authored in Art/GripHand/GripHand.blend.
 /// Pose changes preserve Blender deformation and smoothing exactly.
-struct GripHandModelView: UIViewRepresentable {
+@MainActor
+private final class GripHandSceneStorage {
+    private let makeScene: @MainActor () -> GripHandRealityScene
+    lazy var scene = makeScene()
+
+    init(makeScene: @escaping @MainActor () -> GripHandRealityScene = { GripHandRealityScene() }) {
+        self.makeScene = makeScene
+    }
+}
+
+@MainActor
+struct GripHandModelView: View {
     let posture: GripType?
     let fingerConfiguration: FingerConfiguration?
     let side: GripCueSide
-    var resetToken = 0
+    let resetToken: Int
+    @State private var sceneStorage: GripHandSceneStorage
+    @State private var isUnavailable: Bool
+    @State private var lastDragTranslation: CGSize = .zero
+    @State private var lastMagnification: CGFloat = 1
+    @State private var isOrbiting = false
+    @State private var cameraRevision = 0
 
-    func makeCoordinator() -> Coordinator { Coordinator() }
+    private var scene: GripHandRealityScene { sceneStorage.scene }
 
-    func makeUIView(context: Context) -> SCNView {
-        let view = GripHandSceneView()
-        view.backgroundColor = .clear
-        view.isOpaque = false
-        view.antialiasingMode = .multisampling4X
-        view.preferredFramesPerSecond = 30
-        view.rendersContinuously = false
-        view.isPlaying = false
-        view.isUserInteractionEnabled = true
-        view.isAccessibilityElement = false
-        view.accessibilityElementsHidden = true
-        context.coordinator.install(in: view)
-        view.didResize = { [weak coordinator = context.coordinator] in coordinator?.resetCamera() }
-        view.onPan = { [weak coordinator = context.coordinator, weak view] recognizer in
-            guard let view else { return }
-            coordinator?.orbitPan(recognizer, in: view)
-        }
-        view.onPinch = { [weak coordinator = context.coordinator] recognizer in
-            coordinator?.orbitPinch(recognizer)
-        }
-        view.installOrbitGestures()
-        return view
+    init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+         resetToken: Int = 0) {
+        self.posture = posture
+        self.fingerConfiguration = fingerConfiguration
+        self.side = side
+        self.resetToken = resetToken
+        _sceneStorage = State(initialValue: GripHandSceneStorage())
+        _isUnavailable = State(initialValue: false)
     }
 
-    func updateUIView(_ view: SCNView, context: Context) {
-        let pose = GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration)
-        context.coordinator.update(pose: pose, side: side, resetToken: resetToken)
-        view.setNeedsDisplay()
+    init(posture: GripType?, fingerConfiguration: FingerConfiguration?, side: GripCueSide,
+         resetToken: Int, scene: GripHandRealityScene) {
+        self.posture = posture
+        self.fingerConfiguration = fingerConfiguration
+        self.side = side
+        self.resetToken = resetToken
+        _sceneStorage = State(initialValue: GripHandSceneStorage(makeScene: { scene }))
+        _isUnavailable = State(initialValue: scene.isUnavailable)
     }
 
-    static func dismantleUIView(_ view: SCNView, coordinator: Coordinator) {
-        (view as? GripHandSceneView)?.didResize = nil
-        view.scene = nil
-        view.delegate = nil
+    var body: some View {
+        let _ = cameraRevision
+        GeometryReader { proxy in
+            let size = proxy.size
+            RealityView { content in
+                content.camera = .virtual
+                content.add(scene.root)
+                syncScene(in: size)
+                updateUnavailableState()
+            } update: { _ in
+                syncScene(in: size)
+                updateUnavailableState()
+            }
+            .simultaneousGesture(orbitGesture(size: size))
+            .simultaneousGesture(magnifyGesture)
+            .overlay {
+                if isUnavailable {
+                    Text("3D hand unavailable")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .accessibilityHidden(true)
+                }
+            }
+            .accessibilityHidden(true)
+        }
+    }
+
+    func syncScene(in size: CGSize) {
+        scene.update(pose: GripHandPose(posture: posture, fingerConfiguration: fingerConfiguration),
+                     side: side, viewportSize: size, resetToken: resetToken)
+    }
+
+    private func updateUnavailableState() {
+        let unavailable = scene.isUnavailable
+        guard unavailable != isUnavailable else { return }
+        Task { @MainActor in isUnavailable = unavailable }
+    }
+
+    private func orbitGesture(size: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: OrbitPanArbitration.activationDistance)
+            .onChanged { value in
+                if !isOrbiting {
+                    guard abs(value.translation.width) >= abs(value.translation.height) else { return }
+                    isOrbiting = true
+                }
+                let deltaX = value.translation.width - lastDragTranslation.width
+                let deltaY = value.translation.height - lastDragTranslation.height
+                lastDragTranslation = value.translation
+                scene.orbit(azimuthDelta: Float(-deltaX / max(size.width, 1)) * 0.9,
+                            elevationDelta: Float(-deltaY / max(size.height, 1)) * 0.65)
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in
+                lastDragTranslation = .zero
+                isOrbiting = false
+            }
+    }
+
+    private var magnifyGesture: some Gesture {
+        MagnificationGesture()
+            .onChanged { value in
+                let ratio = value / max(lastMagnification, 0.001)
+                lastMagnification = value
+                scene.orbit(azimuthDelta: 0, elevationDelta: 0, zoomScale: Float(ratio))
+                cameraRevision &+= 1
+            }
+            .onEnded { _ in lastMagnification = 1 }
     }
 
     final class Coordinator {
@@ -506,7 +578,7 @@ final class GripHandRealityScene {
     private(set) var isUnavailable = false
 
     private var surface: GripHandRealitySurface?
-    private var currentPose: GripHandPose?
+    private(set) var currentPose: GripHandPose?
     private var currentSide: GripCueSide?
     private var currentViewportSize: CGSize = .zero
     private var currentResetToken: Int?

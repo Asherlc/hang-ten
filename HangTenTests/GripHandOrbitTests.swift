@@ -1,5 +1,6 @@
 import SceneKit
 import RealityKit
+import SwiftUI
 import XCTest
 @testable import HangTen
 
@@ -7,6 +8,43 @@ import XCTest
 /// the same bounded-turntable guarantees: a full spin returns to the start,
 /// zoom stays clamped, and a reset restores the canonical framing.
 final class GripHandOrbitTests: XCTestCase {
+    @MainActor
+    func testRealitySceneShowsUnavailableStateForAssetFailure() {
+        let scene = GripHandRealityScene(assetResult: .failure(GripHandAsset.AssetError.missingResource))
+
+        XCTAssertTrue(scene.isUnavailable)
+        XCTAssertTrue(scene.hand.children.isEmpty)
+    }
+
+    @MainActor
+    func testHostSyncForwardsPoseFingersSideViewportAndReset() throws {
+        let scene = GripHandRealityScene()
+        let fingers = FingerConfiguration(engagedFingers: [.index, .ring])
+        let view = GripHandModelView(posture: .halfCrimp, fingerConfiguration: fingers,
+                                     side: .left, resetToken: 4, scene: scene)
+        let _: any View = view
+
+        view.syncScene(in: CGSize(width: 180, height: 260))
+
+        XCTAssertEqual(scene.currentPose?.action(), "HalfCrimp")
+        XCTAssertEqual(scene.currentPose?.highlightedFingers, [.index, .ring])
+        XCTAssertEqual(scene.hand.scale.x, -1)
+        let narrowScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
+
+        scene.orbit(azimuthDelta: 0.3, elevationDelta: 0)
+        let orbitPosition = scene.camera.position
+        view.syncScene(in: CGSize(width: 300, height: 260))
+        XCTAssertNotEqual(scene.camera.position, orbitPosition)
+        let wideScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
+        XCTAssertLessThan(wideScale, narrowScale)
+
+        scene.orbit(azimuthDelta: 0.3, elevationDelta: 0)
+        let secondOrbitPosition = scene.camera.position
+        let resetView = GripHandModelView(posture: .halfCrimp, fingerConfiguration: fingers,
+                                          side: .left, resetToken: 5, scene: scene)
+        resetView.syncScene(in: CGSize(width: 300, height: 260))
+        XCTAssertNotEqual(scene.camera.position, secondOrbitPosition)
+    }
     @MainActor
     func testRealityMeshUsesBundledPosePositionsNormalsAndIndices() throws {
         let asset = try GripHandAsset.bundled.get()
