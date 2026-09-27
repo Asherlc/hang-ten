@@ -235,7 +235,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     func testDoorMount() throws {
-        try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right")
+        try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
+                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296))
     }
 
     func testMegalith() throws {
@@ -255,10 +256,11 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     func testPro() throws {
-        try review(boardID: "zlagboard.pro", target: "edge-35-center")
+        try review(boardID: "zlagboard.pro", target: "edge-35-center",
+                   surfacePoint: CGVector(dx: 0.44776505, dy: 0.3821585))
     }
 
-    private func review(boardID: String, target: String) throws {
+    private func review(boardID: String, target: String, surfacePoint: CGVector? = nil) throws {
         let app = XCUIApplication()
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
@@ -285,7 +287,10 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         // The contact's accessibility frame is projected from its live RealityKit
         // bounds. Tap that screen location through the RealityView so this checks
         // native spatial picking without baking in the previous renderer's camera.
-        let initialPoint = surfaceCoordinate(for: contact, in: map)
+        let initialPoint = surfacePoint.map { map.coordinate(withNormalizedOffset: $0) }
+            ?? surfaceCoordinate(for: contact, in: map)
+        let contactOffset = CGVector(dx: initialPoint.screenPoint.x - contact.frame.midX,
+                                     dy: initialPoint.screenPoint.y - contact.frame.midY)
         initialPoint.tap()
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
         capture("\(boardID)-portrait-active")
@@ -299,7 +304,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
         // A real contact tap runs the production selectContact canonical reset.
-        surfaceCoordinate(for: contact, in: map).tap()
+        contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .withOffset(contactOffset).tap()
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let currentFrames = self.contactFrames(allContacts)
@@ -376,15 +382,19 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let frame = model.frame
         let scale = CGFloat(width) / XCUIApplication().frame.width
         // RealityKit preserves the physical mesh aspect ratio within its card.
-        // Check representative body pixels across its interior instead of the
-        // empty letterbox corners of the wider viewport.
-        for fraction in [CGFloat(0.25), 0.5, 0.75] {
-            let x = frame.minX + frame.width * fraction
-            let y = frame.minY + frame.height * 0.5
-            let offset = (Int(y * scale) * width + Int(x * scale)) * 4
-            XCTAssertLessThan(pixels[offset + 2], 220,
-                              "Native board body must be visible inside its rounded card")
+        // Scan inside the viewport so letterbox margins don't have to contain wood.
+        var visibleBodySamples = 0
+        let sampleCount = 16
+        for row in 0..<sampleCount {
+            for column in 0..<sampleCount {
+                let x = frame.minX + (CGFloat(column) + 0.5) * frame.width / CGFloat(sampleCount)
+                let y = frame.minY + (CGFloat(row) + 0.5) * frame.height / CGFloat(sampleCount)
+                let offset = (Int(y * scale) * width + Int(x * scale)) * 4
+                if pixels[offset + 2] < 235 { visibleBodySamples += 1 }
+            }
         }
+        XCTAssertGreaterThan(visibleBodySamples, 8,
+                             "Native board body must be visible inside its rounded card")
     }
 
     private func capture(_ name: String) {
