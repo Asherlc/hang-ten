@@ -1,16 +1,15 @@
 # 3D model hangboard cord audit
 
-Initial audit: 2026-09-13; latest coverage addendum: 2026-09-20
+Initial audit: 2026-09-13; latest coverage addendum: 2026-09-27
 Scope: every model-media package discovered under `Hangboards/`  
 Decision: approved for package promotion after human review of the retained
 exact-revision views and attachment views
 
 ## Result
 
-The audit covers all 40 discovered model packages after the 2026-09-21 Rock
-Prodigy Pivot promotion and the 2026-09-20 J Bryant FTG-32 addition. Thirteen
-have documented suspended presentation evidence and render transient cord
-geometry; twenty-seven remain
+The audit covers all 49 discovered model packages after the Grindstone Pro
+migration was stacked on the Mini Bar connected-loop migration. Fourteen have
+documented suspended presentation evidence and render transient cord geometry; thirty-five remain
 excluded because their reviewed product evidence does not establish a
 suspended presentation. Optional user-provided rope or bungee is sufficient
 for documented suspended presentation, but it is never described as supplied
@@ -18,8 +17,8 @@ or integral.
 
 | Decision | Count | Packages |
 |---|---:|---|
-| `represented` | 13 | `yy.penta-evo`, `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `j-bryant.ftg-32`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
-| `excluded` | 27 | Trango Rock Prodigy Pivot; Owl Climb Poker; Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; The Hangboard; Trango Rock Prodigy Training Center |
+| `represented` | 14 | `yy.penta-evo`, `metolius.rock-rings-3d`, `metolius.light-rail-2`, `crimptonite.helium-mobile`, `j-bryant.ftg-32`, `tension.flash-board`, `captain-fingerfood.dual`, `captain-fingerfood.pocket`, `captain-fingerfood.unlevel`, `lattice.mini-bar`, `lattice.mxedge-lift-large`, `lattice.mxedge-lift-small`, `nature.stone-hanger`, `yy.baguette-evo` |
+| `excluded` | 35 | Trango Rock Prodigy Forge/Natural/Pivot/Training Center; Owl Climb Poker; Beastmaker 1000/2000; Clavellium Training Block; DeWoodstok Woodbord; Escape Unlimited/Beta 22; Evolv Kilter Basic Long; Frictitious DoorMount Pro 7/Megalith; Lattice Triple Rung; Mammut Diamond Finger; Metolius Climber's Edge/Contact/Foundry/Prime Rib/Project/Simulator 3-D/Wood Grips Compact II/Wood Grips Deluxe II; Moon Armstrong; Nature Stoak Board III; So iLL Iron Palm II/Split Palm/Training Tiles; Target10a Linebreaker Base; Tension Grindstone/Grindstone Pro; The Hangboard; Zlagboard Evo/Pro |
 
 The machine-readable record is [`2026-09-13-model-hangboard-cord-audit.json`](2026-09-13-model-hangboard-cord-audit.json). Its record set is deliberately closed: the cord-audit command discovers model media directly and requires exact equality with the manifest package IDs.
 
@@ -633,3 +632,7 @@ Historical inventory validation after all six packages became model-backed:
 ```json
 {"decisions":{"excluded":18,"represented":8}}
 ```
+
+### 2026-09-27 — Grindstone Pro model migration
+
+The 2017 Tension Grindstone Pro now has an explicit `noDocumentedSuspension` exclusion. The user-approved exact-revision archival front and alternate-angle photos are retained as `tension-grindstone-pro-climbing-front.jpg` and `tension-grindstone-pro-climbing-angle.jpg` beneath `2026-09-13-model-cord-snapshots/`; their source URLs and SHA-256 digests are recorded in the closed JSON manifest. The photos and 2017 product interview establish the board and contact layout but do not establish a cord accessory or route. This excludes a rendered cord on the evidence available; it does not claim no mounting accessory exists.

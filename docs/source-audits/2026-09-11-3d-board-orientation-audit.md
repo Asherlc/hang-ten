@@ -993,3 +993,16 @@ suspension.
 | package ID | holds | descriptor model bounds (`min` → `max`) | pivot | evidence basis |
 | --- | ---: | --- | --- | --- |
 | `tension.grindstone` | 14: `top-jug`, `edge-50-center`, `edge-10-left/right`, `edge-8-left/right`, `edge-30-left/right`, `edge-25-left/right`, `edge-20-left/right`, `edge-15-left/right` | `[-0.279399991, 0.0, -0.0]` → `[0.279399991, 0.152400002, 0.069849998]` | none (no orientation block) | Tension Grindstone product page (`https://tensionclimbing.com/products/grindstone`) and its front product image `Grindstone1.png`; the in-use photos show a wall-mounted board with no selectable second face |
+
+## Tension Grindstone Pro CAD migration (2026-09-26)
+
+`tension.grindstone-pro` is a fixed-front model package with one loader-materialized
+`primary` position, no orientation block, and no suspension metadata. The reviewed
+Climbing product and in-use photos establish a single wall-mounted front view;
+they do not establish alternate selectable faces or suspension. The package's
+display geometry remains an estimate where the approved evidence does not publish
+dimensions.
+
+| package ID | holds | descriptor model bounds (`min` → `max`) | pivot | evidence basis |
+| --- | ---: | --- | --- | --- |
+| `tension.grindstone-pro` | 16: `edge-10-left/right`, `edge-15-left/right`, `edge-20-left/right`, `edge-22-center`, `edge-30-center`, `edge-35-left/right`, `edge-7-incut`, `mono-45-left/right`, `phone-slot`, `pocket-25-left/right` | `[-0.280000001, -0.0, 0.0]` → `[0.280000001, 0.204999998, 0.092]` | none (no orientation block) | User-approved Climbing front and in-use photos, retained with hashes in `docs/source-audits/2026-09-13-model-cord-snapshots/`; fixed wall-mounted face and lack of documented suspension are bounded to those sources. |
