@@ -213,7 +213,7 @@ unchanged.
   passed. `scripts/verify-model-delivery.py` verified the refreshed lock.
 - `Tools/HangboardPackages` pytest: 718 passed.
   `Tools/HangboardModels/tests/test_model_delivery_alignment.py`: 8 passed.
-  `Tools/HangboardCAD/tests`: see the PR description.
+  `Tools/HangboardCAD/tests`: 74 passed.
 - iOS: a workspace-owned iPhone 17 Pro simulator (iOS 26.5) ran the DEBUG
   board-detail route. It loaded the model with `jug-left` selected by default
   (the left ear's round top highlighted). Hold-map taps selected, each
