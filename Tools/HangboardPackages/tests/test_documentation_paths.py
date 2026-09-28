@@ -73,6 +73,92 @@ def test_ui_test_changes_run_ios_and_python_contract_suites() -> None:
     )
 
 
+def test_paywall_methods_are_distributed_once_across_ci_shards() -> None:
+    """Paywall sharding must keep every UI test method required exactly once."""
+    workflow = _ci_workflow()
+    paywall_job = workflow["jobs"]["test-ui-paywall"]
+    shards = paywall_job["strategy"]["matrix"]["include"]
+    selectors = [
+        selector
+        for shard in shards
+        for selector in str(shard["only_testing"]).split()
+    ]
+    test_file = REPO_ROOT / "HangTenUITests/WorkoutPaywallUITests.swift"
+    discovered_methods = {
+        f"HangTenUITests/WorkoutPaywallUITests/{method}"
+        for method in re.findall(
+            r"^\s*func\s+(test\w+)\s*\(",
+            test_file.read_text(encoding="utf-8"),
+            flags=re.MULTILINE,
+        )
+    }
+
+    assert len(shards) >= 2
+    assert len(selectors) == len(set(selectors))
+    assert set(selectors) == discovered_methods
+
+
+def test_grip_ui_classes_are_balanced_across_two_ci_shards() -> None:
+    """The slow grip suite must use two class-balanced simulator jobs."""
+    workflow = _ci_workflow()
+    grip_job = workflow["jobs"]["test-ui-grip"]
+    shards = grip_job["strategy"]["matrix"]["include"]
+    shard_classes = [
+        {
+            _xctest_selector_target(selector)
+            for selector in str(shard["only_testing"]).split()
+        }
+        for shard in shards
+    ]
+
+    assert len(shards) == 2
+    assert all(len(classes) == 2 for classes in shard_classes)
+    assert set.union(*shard_classes) == {
+        "HangTenUITests/GripCueDiagnosticScreenshotUITests",
+        "HangTenUITests/InitialWeightSetupUITests",
+        "HangTenUITests/DualMaxHangsHighlightUITests",
+        "HangTenUITests/OneHandedHandChoiceUITests",
+    }
+    assert shard_classes[0].isdisjoint(shard_classes[1])
+
+
+def test_free_workout_finish_cases_are_separated_across_ci_shards() -> None:
+    """Long finish flows must not both sit in one simulator shard."""
+    workflow = _ci_workflow()
+    shards = workflow["jobs"]["test-ui-misc"]["strategy"]["matrix"]["include"]
+    selectors = [
+        selector
+        for shard in shards
+        for selector in str(shard["only_testing"]).split()
+        if selector.startswith("HangTenUITests/FreeWorkoutUITests/")
+    ]
+    discovered_methods = {
+        f"HangTenUITests/FreeWorkoutUITests/{method}"
+        for method in re.findall(
+            r"^\s*func\s+(test\w+)\s*\(",
+            (REPO_ROOT / "HangTenUITests/FreeWorkoutUITests.swift").read_text(
+                encoding="utf-8"
+            ),
+            flags=re.MULTILINE,
+        )
+    }
+    finish_methods = {
+        "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish",
+        "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout",
+    }
+    locations = {
+        selector: str(shard["shard"])
+        for shard in shards
+        for selector in str(shard["only_testing"]).split()
+        if selector in finish_methods
+    }
+
+    assert len(selectors) == len(set(selectors))
+    assert set(selectors) == discovered_methods
+    assert set(locations) == finish_methods
+    assert len(set(locations.values())) == len(finish_methods)
+
+
 def test_shell_function_body_ends_at_an_unindented_closing_brace() -> None:
     """Nested shell blocks must not require YAML source indentation to parse."""
     script = """\

@@ -498,7 +498,7 @@ jobs:
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenTests-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-paywall:
-    name: "Test (iOS Simulator: HangTenUITests / paywall)"
+    name: "Test (iOS Simulator: HangTenUITests / paywall: ${{ matrix.shard }})"
     needs:
       - changes
     if: >-
@@ -506,6 +506,29 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: entry
+            only_testing: >-
+              HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
+              HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
+              HangTenUITests/WorkoutPaywallUITests/testVerifiedFakePurchaseContinuesIntoSession
+              HangTenUITests/WorkoutPaywallUITests/testLandscapePaywallKeepsRestorePurchasesInsideViewport
+              HangTenUITests/WorkoutPaywallUITests/testPendingPurchaseShowsApprovedStatusCopy
+              HangTenUITests/WorkoutPaywallUITests/testFailedPurchaseShowsApprovedStatusCopy
+              HangTenUITests/WorkoutPaywallUITests/testRetryAfterTransientProductLoadFailureMakesBuyAvailable
+              HangTenUITests/WorkoutPaywallUITests/testRestoreWithoutEntitlementShowsNothingToRestoreFeedback
+          - shard: recovery
+            only_testing: >-
+              HangTenUITests/WorkoutPaywallUITests/testVerifiedFakeRestoreContinuesIntoSession
+              HangTenUITests/WorkoutPaywallUITests/testVerifiedPurchaseCarriesScaleSnapshotIntoSensorPreparation
+              HangTenUITests/WorkoutPaywallUITests/testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary
+              HangTenUITests/WorkoutPaywallUITests/testCancelledPurchaseShowsApprovedStatusCopy
+              HangTenUITests/WorkoutPaywallUITests/testRetryRemainsAvailableAfterProductLoadFailureAndEmptyRestore
+              HangTenUITests/WorkoutPaywallUITests/testRetryRemainsHittableAfterProductLoadFailureAndRestoreFailure
+              HangTenUITests/WorkoutPaywallUITests/testRestoreFailureUsesRestoreSpecificFeedback
     timeout-minutes: 70
 
     steps:
@@ -534,10 +557,10 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-
 
       - name: Show Apple toolchain
         run: |
@@ -552,11 +575,11 @@ jobs:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
           XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
           XCTEST_MAX_ATTEMPTS: "2"
-          XCTEST_LABEL: HangTenUITests-paywall
+          XCTEST_LABEL: HangTenUITests-paywall-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
-          XCTEST_ONLY_TESTING: HangTenUITests/WorkoutPaywallUITests
+          XCTEST_ONLY_TESTING: ${{ matrix.only_testing }}
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
@@ -575,9 +598,9 @@ jobs:
         if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ci-test-results-HangTenUITests-paywall-${{ github.run_id }}
+          name: ci-test-results-HangTenUITests-paywall-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-paywall-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-paywall-${{ matrix.shard }}-attempt-*.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -587,7 +610,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-map:
     name: "Test (iOS Simulator: HangTenUITests / map: ${{ matrix.shard }})"
@@ -695,7 +718,7 @@ jobs:
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-grip:
-    name: "Test (iOS Simulator: HangTenUITests / grip)"
+    name: "Test (iOS Simulator: HangTenUITests / grip: ${{ matrix.shard }})"
     needs:
       - changes
     if: >-
@@ -703,6 +726,18 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: cues-and-highlights
+            only_testing: >-
+              HangTenUITests/GripCueDiagnosticScreenshotUITests
+              HangTenUITests/DualMaxHangsHighlightUITests
+          - shard: setup-and-hand-choice
+            only_testing: >-
+              HangTenUITests/InitialWeightSetupUITests
+              HangTenUITests/OneHandedHandChoiceUITests
     timeout-minutes: 70
 
     steps:
@@ -731,10 +766,10 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-
 
       - name: Show Apple toolchain
         run: |
@@ -749,15 +784,11 @@ jobs:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
           XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
           XCTEST_MAX_ATTEMPTS: "2"
-          XCTEST_LABEL: HangTenUITests-grip
+          XCTEST_LABEL: HangTenUITests-grip-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
-          XCTEST_ONLY_TESTING: >-
-            HangTenUITests/GripCueDiagnosticScreenshotUITests
-            HangTenUITests/InitialWeightSetupUITests
-            HangTenUITests/DualMaxHangsHighlightUITests
-            HangTenUITests/OneHandedHandChoiceUITests
+          XCTEST_ONLY_TESTING: ${{ matrix.only_testing }}
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
@@ -776,9 +807,9 @@ jobs:
         if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ci-test-results-HangTenUITests-grip-${{ github.run_id }}
+          name: ci-test-results-HangTenUITests-grip-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-grip-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-grip-${{ matrix.shard }}-attempt-*.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -788,7 +819,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-picker:
     name: "Test (iOS Simulator: HangTenUITests / picker)"
@@ -898,10 +929,11 @@ jobs:
           - shard: settings
             only_testing: "HangTenUITests/SettingsUITests"
           # Keep these method selectors updated when adding FreeWorkout tests.
-          - shard: free-workout-basic
-            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain"
+          # Split the two long finish flows so neither shard owns both.
+          - shard: free-workout-resume
+            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish"
           - shard: free-workout-finish
-            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout"
+            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout"
     timeout-minutes: 70
 
     steps:
