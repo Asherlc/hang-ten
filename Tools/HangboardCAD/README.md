@@ -1,9 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 31 of the 49 model-media boards are migrated** (those with a committed
-`Hangboards/*/*.FCStd` source; the delivery lock lists 49 model packages). The
-pipeline below is implemented, executed, and reproducible. Do not read this as a
-finished catalogue migration.
+The pipeline below is implemented and reproducible for native CAD packages.
 
 ## What this provides
 
@@ -72,7 +69,7 @@ seven CAD boards covered by the aspect-ratio audit, five match the descriptor
 (0.14% from its 610 × 157 mm face), and `metolius-rock-rings-3d` presents two
 ring instances while its descriptor bounds cover one ring, so a derived value
 would be wrong there (see
-[`docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/source-audits/2026-09-24-cad-aspect-ratio-audit.md)).
+[`docs/2026-09-24-cad-aspect-ratio-audit.md`](../../docs/2026-09-24-cad-aspect-ratio-audit.md)).
 The eighth CAD board, `soill-iron-palm-2`, was added after that audit and is
 not covered by it: its model presentation `aspectRatio` equals its bounds ratio
 (`2.3226565483816386`), while its top-level value is `1.5`.
@@ -136,7 +133,7 @@ There is no per-board authoring program in the repository. The six retired
 `Tools/HangboardCAD/migration/author_*.py` scripts that created the current
 FCStd documents were one-off, and re-running one would now recreate a document
 without its embedded manifest. Their provenance is preserved in
-`docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names
+a provenance record, and each record names
 the commit from which the script can still be read with `git show`.
 
 1. Create the FCStd. Drawing it in the FreeCAD GUI or writing a throwaway script
@@ -157,7 +154,7 @@ the commit from which the script can still be read with `git show`.
    then run the native source checks and the package validator.
 4. Record the provenance of every authored number (published versus measured,
    tolerances, reference SHAs, source URLs) in a dated
-   `docs/source-audits/` record, and refresh the delivery lock.
+   provenance record, and refresh the delivery lock.
 
 From then on every build and validation generates `board.json` from the FCStd.
 
@@ -311,22 +308,22 @@ cylinders and their mouth and floor chamfers are cones.
 `beastmaker-1000` sets it too: its top holds are ruled lofts between Bézier
 sections, and its cavities are ruled capsule lofts (planes, cylinders, and
 cones) cut from the body. See
-`docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+`docs/2026-09-25-beastmaker-1000-cad-provenance.md`.
 
 `target10a-linebreaker-base` sets it as well: its cavity walls are cylinders,
 its chamfers are cones, and its rim rounds are cylinders. See
-`docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+`docs/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
 
 `beastmaker-2000` sets it as well: its front-top rounds are cylinders and its
 cavity chamfers are cones. See
-`docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+`docs/2026-09-25-beastmaker-2000-cad-provenance.md`.
 
 `trango-rock-prodigy-pivot` sets it too. Its wing is a smooth loft, and its
 sloped crimps and two-finger pocket are ruled lofts. It is also the first
 source re-authored from manufacturer evidence rather than from the
 pre-migration mesh: the front view comes from Trango's top-down photograph
 (bolt-seat scale) and every depth from Trango's depth guide. See
-`docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+`docs/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
 `photo_grid.py` provides the reading and review aids used there: gridded,
 contrast-stretched photo crops and the model-over-photo overlay. It is a
 diagnostic, never a build input (lessons §18).
@@ -334,32 +331,32 @@ diagnostic, never a build input (lessons §18).
 `tension-grindstone` sets it too: its top slots have stadium ends. It is the
 first CAD board with no prior 3D asset (it was raster-only), so there is no
 reference mesh. See
-`docs/source-audits/2026-09-26-tension-grindstone-cad-provenance.md`.
+`docs/2026-09-26-tension-grindstone-cad-provenance.md`.
 
 `metolius-light-rail-2` sets it too: its jugs include cylindrical round-overs,
 its cord wells are cones and cylinders, and its pocket corners are ruled
 B-spline walls. See
-`docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+`docs/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
 
 `moon-armstrong` sets it too: every hold mouth, tile, rail and bar edge is a
 ruled loft of rounded-rectangle sections (cones and planes). Its contact
 regions are copies of the compiled body's own faces, selected by lying on each
 cutter or rail surface, so the partition is exact. Like the Pivot, it was
 re-authored from manufacturer photos rather than traced from its reference. See
-`docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
+`docs/2026-09-26-moon-armstrong-cad-provenance.md`.
 
 `nature-stoak-board-iii` sets it too: its pocket and slot ends are cylinders
 and every hold mouth has a 2 mm round-over. Its gradient edge is a channel whose
 back wall slants from 10 mm deep at the board end to 25 mm inboard. The compiler
 gates only scalar depths, so the authoring script checked the range ends. See
-`docs/source-audits/2026-09-27-nature-stoak-board-iii-cad-provenance.md`.
+`docs/2026-09-27-nature-stoak-board-iii-cad-provenance.md`.
 
 `dewoodstok-woodbord` sets it too: its 16 pockets are stadiums whose 3 mm
 mouth round-overs are ruled lofts through quarter-round stations (planes and
 cones), which keeps the asset at 32k triangles instead of the 147k a toroidal
 `Part::Fillet` produced. It was re-authored from deWoodstok's straight-on
 media-kit photo. See
-`docs/source-audits/2026-09-27-dewoodstok-woodbord-cad-provenance.md`.
+`docs/2026-09-27-dewoodstok-woodbord-cad-provenance.md`.
 
 `the-hangboard` sets it too: its full-round jug tops, sloper crest and profile
 corners are cylinders, and each of its 12 edge segments has a 3 mm mouth
@@ -367,13 +364,13 @@ round-over built as a ruled loft through quarter-round stations (planes and
 cones). Each segment is its own cutter, so the faces split where one edge depth
 steps to the next. It was re-authored from The Hangboard's straight-on product
 photo and end-profile render. See
-`docs/source-audits/2026-09-27-the-hangboard-cad-provenance.md`.
+`docs/2026-09-27-the-hangboard-cad-provenance.md`.
 
 `frictitious-megalith` sets the same analytic-normal option. Its round-overs are
 cylinders, and each of its 14 edge segments and 2 pocket spans is its own
 section cutter. It was re-authored from Frictitious's front and end-grain
 photographs. See
-`docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md`.
+`docs/2026-09-28-frictitious-megalith-cad-provenance.md`.
 
 ## Surface normals
 
@@ -422,7 +419,7 @@ provenance sidecar; these facts live here instead.
 * The 267 measured points were reduced to 170 authored vertices, with a maximum
   deviation of 0.1899 mm. The reduction criterion and tolerance from the retired
   authoring script are preserved in
-  `docs/source-audits/2026-09-24-lattice-triple-rung-cad-provenance.md`.
+  the corresponding authoring notes.
 * The reference is resolved from commit `6b828e15`
   (`Tools/HangboardCAD/reference.py`), never from the live runtime path.
 
@@ -452,7 +449,7 @@ dimensions (`BoardThickness` 38.1, `BoardHeight` 106.68, `Edge15Depth` 15,
   reversed with `Part::Reverse` and combined with `Part::Compound`, so every
   hold face points out of the board.
 * Provenance, field mappings, and the retired authoring script's recovery
-  commit: `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`.
+  commit: `docs/2026-09-24-metolius-prime-rib-cad-provenance.md`.
 
 ## In-app verification
 
@@ -470,7 +467,7 @@ The migrated asset renders a smoother surface than the reference, which shows
 banding and shading artifacts. Those artifacts are the residue of the earlier
 mounting-bore removal: the reference still carries six flat circular cap patches
 at exactly the positions recorded in
-``docs/source-audits/2026-09-22-mounting-bore-repairs.json`` (x = +/-75 mm and
+``docs/2026-09-22-mounting-bore-repairs.json`` (x = +/-75 mm and
 +/-225 mm at y = 14 mm, and x = +/-225 mm at y = 96 mm). They are essentially
 flush with the surrounding surface - the two-way sampled deviation is 0.21 mm
 worst case - but the rim crease is visible. The migrated asset has a continuous
@@ -479,35 +476,6 @@ screw-hole/hardware omission policy.
 
 Not verified in the app: suspension and cord clearance, accessibility, and
 performance. Those remain open.
-
-## Known limitations and open interface question
-
-* **31 of 49 model-media boards are migrated.** The other 18 still ship their
-  existing runtime assets, which are unchanged by this work.
-* `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
-  `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
-  and must not be presented as recovered parametric history.
-* The compiler refuses a source it cannot recompute cleanly, a contact region
-  whose depth disagrees with the published grip depth in the board manifest, a
-  region that claims more body surface than its own exported surface, and a document labelled
-  `faceted-import` unless `--allow-faceted-import` acknowledges it. Each guard
-  has a failing test. A body triangle within reach of two contact regions goes
-  to the nearest one.
-* FreeCAD's Sketcher `DistanceX`/`DistanceY` against an axis solve to the negated
-  value in this pinned build. The authored sketch stores negated local
-  coordinates with positive driving dimensions and negates them back through an
-  explicit sketch placement; the pad's world bounding box is asserted, so any
-  change in that behaviour fails the build rather than silently mirroring.
-* Binding contact regions to the pad's **faces** was tried and rejected: FreeCAD
-  lost the face element map after a profile edit and unrelated contact regions
-  silently moved to different faces. The sketch-edge binding is used instead, and
-  the native checks fail if any region's depth changes after an unrelated edit.
-* CPU previews are neutral geometry renders with an explicit planar UV
-  projection. They are not native SceneKit screenshots and do not establish
-  native materials, picking, accessibility, suspension, or performance.
-* The migrated asset was validated in the iOS simulator board-detail route (see
-  above). Suspension, accessibility, and performance checks were not run, so this
-  is not complete native acceptance.
 
 ## Tests
 

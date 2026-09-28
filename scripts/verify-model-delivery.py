@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 import re
 
-LOCK_PATH = "docs/source-audits/2026-09-22-model-delivery-lock.json"
+LOCK_PATH = "docs/model-delivery-lock.json"
 SUFFIXES = ("assets/primary.model.json", "assets/primary.usdz", "board.json")
 # A source-backed (CAD) package locks its FCStd and any suspension authoring
 # sidecar instead of board.json, which is generated from those sources.

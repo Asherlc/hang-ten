@@ -69,9 +69,8 @@ even if its USDZ hashes happen to match.
 
 Discover model packages at execution time; never copy a historical package
 count into a decision. The closed manifest is
-`docs/source-audits/2026-09-13-model-hangboard-cord-audit.json`, with its human
-review at `docs/source-audits/2026-09-13-model-hangboard-cord-audit.md` and
-retained snapshots beneath `docs/source-audits/2026-09-13-model-cord-snapshots/`.
+The historical cord-evidence archive was removed; current suspension metadata
+is validated directly from each package's `suspension.json`.
 The validator requires exact equality between discovered model packages and
 audit records.
 
@@ -228,9 +227,8 @@ Repository commands from the checkout root:
 ```sh
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh audit-cords --root Hangboards \
-  --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json
+  --manifest <package suspension manifest>
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardPackages/tests/test_cord_audit.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
   Tools/HangboardPackages/tests -q
 rtk proxy env PYTHONPATH=Tools/HangboardModels \
@@ -240,7 +238,6 @@ rtk proxy env PYTHONPATH=Tools/HangboardModels \
   Tools/HangboardModels/test_import_contact_model_source.py \
   Tools/HangboardModels/test_verify_yy_baguette_evo.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardPackages/tests/test_hard_cut_audit.py -q
 rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```

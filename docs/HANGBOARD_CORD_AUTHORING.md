@@ -2,7 +2,7 @@
 
 This is the reusable authoring contract learned from the Lattice Mini Bar
 migration. Read the [suspension and ODR guide](3D_SUSPENSION_AND_ODR.md) for
-package delivery and the [Mini Bar source audit](source-audits/2026-09-27-lattice-mini-bar-cord-passages-correction.md)
+package delivery and the approved Mini Bar cord passage metadata
 for the product-specific evidence. The approved [Lattice end view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
 and [loaded view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg)
 were decisive: the lower curve belongs to the same loop as the two rising

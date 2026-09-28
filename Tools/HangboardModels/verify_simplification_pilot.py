@@ -63,7 +63,7 @@ def verify(baseline,out,slug):
         report['meshResults'].append(r)
     # Read from the pinned baseline checkout (simplification_pilot.json
     # sourceCommit), where the bore record still lived at this path; at later
-    # commits it is docs/source-audits/2026-09-22-mounting-bore-repairs.json.
+    # commits it is removed audit record
     boremanifest=json.loads((baseline/'Tools/HangboardModels/mounting_bore_repairs.json').read_text())
     if slug in boremanifest['models']:
         checks=[]

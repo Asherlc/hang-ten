@@ -237,7 +237,7 @@ coincident-surface trap in lesson 6:
   `Tools/HangboardCAD/migration/author_*.py` scripts were retired for that reason (and because
   re-running one would now recreate a document without its embedded board
   manifest); their provenance lives in
-  `docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, each naming the
+  `the delivery lock`, each naming the
   commit the script can be recovered from. A new board's authoring script is a
   throwaway under `.context/`; the committed FCStd, its embedded manifest, and
   a dated provenance record are what survive.
@@ -329,7 +329,7 @@ triangle count.
 - Prefer the retired sibling author scripts for Small and Large, and their
   authoring notes, as the structural precedent for partitioned troughs — not
   the constant-section `lattice-triple-rung` pad clone. The notes are preserved
-  in `docs/source-audits/2026-09-24-lattice-mxedge-lift-small-cad-provenance.md`
+  in `the delivery lock`
   and `…-lattice-mxedge-lift-large-cad-provenance.md`, which also give the
   commit to `git show` the code from. Large-specific measurement traps are in
   §11.
@@ -471,7 +471,7 @@ needed no FreeCAD run: `set_board_manifest.py` embedded the existing
 `board.json`, `board_manifest.py` regenerated it byte-identically on the first
 try, and only `Document.xml` changed in the FCStd, so the USDZ and descriptor
 bytes stayed the same. Then delete `board.json`, add it to `.gitignore`, move
-the script's provenance into a dated `docs/source-audits/` record, and delete
+the script's provenance into a dated `the delivery locks/` record, and delete
 the script.
 
 ## 15. Vector-primitive profiles

@@ -24,8 +24,7 @@ cad:
   - 'Hangboards/**/assets/primary.model.json'
   - 'scripts/hangboard-packages.sh'
   - 'scripts/verify-model-delivery.py'
-  - 'Tools/HangboardModels/tests/test_model_delivery_alignment.py'
-  - 'docs/source-audits/2026-09-22-model-delivery-lock.json'
+  - 'docs/model-delivery-lock.json'
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'

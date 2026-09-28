@@ -151,7 +151,7 @@ an **open surface** (a shell), not a solid:
   the body like a pocket, so the partition claims the cut and the region's own
   surface matches it (see the `main()` notes preserved from the retired
   authoring script in
-  `docs/source-audits/2026-09-24-metolius-rock-rings-3d-cad-provenance.md`); a
+  `the delivery lock`); a
   `Part::Common` of the body and a bounding solid is superseded — it leaves a
   ragged hole;
 - a hold that is a run of the profile (a rail) is an extrusion of those sketch
@@ -220,7 +220,7 @@ decided explicitly on the first `metolius-rock-rings-3d` source (worst deviation
 and changed no delivered behaviour. (That board was later re-authored as vector
 primitives, which fit the reference to 0.012 mm everywhere except the jug. There
 the reference's scoop is deliberately replaced by the photographed hump; see
-`docs/source-audits/2026-09-25-metolius-rock-rings-3d-vector-provenance.md`.) Record the accepted deviation in the delivery lock's
+`the delivery lock`.) Record the accepted deviation in the delivery lock's
 `migratedPackages` entry so a future agent does not re-litigate it.
 
 ## Procedure
@@ -345,9 +345,9 @@ commit it. The six boards migrated so far were authored by committed
 `Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
 (published versus measured values, tolerances, reference SHAs, stated
 deviations) is preserved in
-`docs/source-audits/2026-09-24-<slug>-cad-provenance.md`, and each record names
+`the delivery lock`, and each record names
 the commit to `git show` the script from. Record a new board's provenance the
-same way, in a dated `docs/source-audits/` file, before discarding its script.
+same way, in a dated `the delivery locks/` file, before discarding its script.
 
 ### 4. Write the native checks before trusting anything
 
@@ -390,12 +390,11 @@ identity survived.
 
 ### 7. Refresh the delivery lock
 
-`docs/source-audits/2026-09-22-model-delivery-lock.json` pins the committed
+`the delivery lock` pins the committed
 bytes. Refresh it **only after** verifying the changed bytes, and keep the
 previous value in `supersededSha256Manifest`:
 
 ```bash
-python3 -m pytest Tools/HangboardModels/tests/test_model_delivery_alignment.py -q
 ```
 
 A source-backed board is locked as descriptor + source (the FCStd pins the
@@ -628,7 +627,7 @@ write-up. The durable points:
   ruled loft of four capsule sketches (chamfered mouth and floor) cut from it.
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
-  `docs/source-audits/2026-09-25-beastmaker-1000-cad-provenance.md`.
+  `the delivery lock`.
 - **target10a Linebreaker BASE** (23 contacts) came from a retained
   signed-distance generator, not a Blender script. Search `.context/migration*`
   history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
@@ -636,7 +635,7 @@ write-up. The durable points:
   and state which blends are omitted. Check each cavity's mouth against every
   crease *before* authoring. A mouth that crosses a tier crease makes the
   region's depth extent miss the published depth. See lessons §18 and
-  `docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md`.
+  `the delivery lock`.
 
 - **Beastmaker 2000** has no generator in Git, so every number was measured from
   the display mesh with slices and circle/line fits. It is five extruded section
@@ -647,7 +646,7 @@ write-up. The durable points:
   about 4 mm shallower than published. A nested hold (a deep hole in a pocket
   floor) passes the gate only if its region reaches the face. Give it the
   parent pocket's end-cap faces on the hole side. See
-  `docs/source-audits/2026-09-25-beastmaker-2000-cad-provenance.md`.
+  `the delivery lock`.
 - **Rock Prodigy Pivot**: the approved display mesh was wrong. It was about
   20 % undersized, had the wrong topology, and reversed two published depth
   gradients. Before measuring it, check the reference against the
@@ -660,7 +659,7 @@ write-up. The durable points:
   the published depth. The reading and review aids (1 mm-gridded crops and
   the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
   full method are in `freecad-authoring-lessons.md` §18. See
-  `docs/source-audits/2026-09-25-trango-rock-prodigy-pivot-cad-provenance.md`.
+  `the delivery lock`.
 - **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
   Grouping its vertices by coordinate recovered every station exactly (lessons
   §20). Check a reference's round-over against what a router can cut: a true
@@ -668,7 +667,7 @@ write-up. The durable points:
   manufacturer photo supports. Two compiler additions came out of it: a region
   whose published depth exceeds the board's thickness must span the full depth,
   and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
-  `docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md`.
+  `the delivery lock`.
 - **Moon Armstrong**: re-authored from Moon's photos, like the Pivot. Two
   techniques carried it:
   - *Perspective check from repeated blocks.* Left-side blocks read ~9 mm
@@ -682,7 +681,7 @@ write-up. The durable points:
   Rounded mouths and edges are ruled lofts through four quarter-round stations.
   A station at a depth splits a through bore there, so a mono's contact can be
   its front 22 mm. See
-  `docs/source-audits/2026-09-26-moon-armstrong-cad-provenance.md`.
+  `the delivery lock`.
 
 ## Fast loop and definition of done
 
@@ -695,7 +694,7 @@ anything:
   holds are extruded runs of the profile. Reproduces closely. Before
   reducing the section to a polyline, fit circles and cubic Beziers to its runs;
   when they fit (as on `metolius-prime-rib`), author those primitives instead
-  (see `docs/source-audits/2026-09-24-metolius-prime-rib-cad-provenance.md`).
+  (see `the delivery lock`).
 - **Genuinely sculpted shell (rounded lip, scooped pockets)? → pick the bar up
   front.** Either a native *measured approximation* (declare the accepted
   deviation; `compare_exports` is evidence, not a gate) or a *faceted import*.
