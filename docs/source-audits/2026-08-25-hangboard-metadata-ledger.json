@@ -3508,14 +3508,19 @@
     {
       "boardID": "metolius.foundry",
       "field": "depth",
-      "outcome": "unavailable",
-      "reviewedAt": "2026-08-25",
+      "outcome": "verified",
+      "reviewedAt": "2026-09-28",
       "source": {
         "kind": "manufacturer",
         "url": "https://www.metoliusclimbing.com/cdn/shop/files/Foundry-depth.jpg?v=1762201186",
         "label": "8 \u2014 53 mm flat sloper"
       },
-      "reason": "The sloper measurement is not established as a scalar contact depth.",
+      "value": {
+        "range": {
+          "minimum": 53,
+          "maximum": 53
+        }
+      },
       "contactIDs": [
         "sloper-8-center"
       ]

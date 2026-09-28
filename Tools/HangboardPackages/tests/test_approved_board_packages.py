@@ -680,7 +680,7 @@ FOUNDRY_HOLDS = (
     ("pocket-5-left", "Left #5 30 mm 2-finger pocket", "pocket", 30, 2),
     ("pocket-6-left", "Left #6 15 mm 3-finger pocket", "pocket", 15, 3),
     ("pocket-7-left", "Left #7 21 mm 2-finger pocket", "pocket", 21, 2),
-    ("sloper-8-center", "Center #8 53 mm flat sloper", "sloper", None, None),
+    ("sloper-8-center", "Center #8 53 mm flat sloper", "sloper", 53, None),
     ("edge-9-center", "Center #9 16 mm edge", "edge", 16, None),
     ("edge-10-center", "Center #10 30 mm edge", "edge", 30, None),
     ("edge-11-center", "Center #11 23 mm edge", "edge", 23, None),
@@ -969,11 +969,14 @@ def test_mammut_diamond_freezes_the_documented_16_contact_inventory() -> None:
 
 
 def test_foundry_package_freezes_the_official_numbered_inventory() -> None:
+    assert (FOUNDRY_ROOT / "metolius-foundry.FCStd").is_file()
+    assert not (FOUNDRY_ROOT / "board.json").exists()
+
     board = json.loads(package_board_text(FOUNDRY_ROOT))
 
     assert board["id"] == "metolius.foundry"
     assert _presentation_summary(board) == [
-        ("front", "Front", "assets/primary.usdz", 2.6588197894316767, True, None, False)
+        ("front", "Front", "assets/primary.usdz", 2.675925925925926, True, None, False)
     ]
     assert tuple(
         (
