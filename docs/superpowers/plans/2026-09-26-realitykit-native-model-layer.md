@@ -63,32 +63,32 @@ final class BoardModelRealityScene {
     // Core state
     let root = Entity()
     let camera = PerspectiveCamera()
-    
+
     private var modelEntity: ModelEntity?
     private var instanceEntities: [Entity] = []
     private var contactEntities: [String: [ModelEntity]] = [:]
     private var contactIDByEntity: [ObjectIdentifier: String] = [:]
     private var originalMaterials: [ObjectIdentifier: PhysicallyBasedMaterial] = [:]
-    
+
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
     private var verifiedPresentations: [String: (BoardModelSolvedSuspension, ModelEntity)] = [:]
     private var canonicalFraming: SuspendedCameraFraming?
     private var currentFraming: SuspendedCameraFraming?
     private var activePositionID: String?
-    
+
     // Orbit state
     private var orbitAzimuth: Float = 0
     private var orbitElevation: Float = 0
     private var orbitZoom: Float = 1
     private var viewportSize: CGSize = .zero
-    
+
     // Config
     private let descriptor: BoardModelDescriptor
     private let display: BoardModelDisplay
     private let orientation: BoardModelOrientation?
     private let allowedPositionIDs: Set<String>
-    
+
     init(descriptor: BoardModelDescriptor, display: BoardModelDisplay, suspension: BoardModelSuspension?, orientation: BoardModelOrientation?, allowedPositionIDs: Set<String>) {
         self.descriptor = descriptor
         self.display = display
@@ -96,7 +96,7 @@ final class BoardModelRealityScene {
         self.orientation = orientation
         self.allowedPositionIDs = allowedPositionIDs
     }
-    
+
     func load(usdzURL: URL) async throws { /* ... */ }
     func select(positionID: String?) -> Bool { /* ... */ }
     func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1) { /* ... */ }
@@ -143,14 +143,14 @@ func testUSDZLoadsAndBindsDescriptor() async throws {
     guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
     let loader = BoardModelRealityLoader()
     let scene = try await loader.load(board: board, presentation: presentation)
-    
+
     // Verify geometry loaded
     XCTAssertNotNil(scene.modelEntity)
     XCTAssertGreaterThan(scene.instanceEntities.count, 0)
-    
+
     // Verify contact binding
     XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
-    
+
     // Verify materials are PBR neutral
     for entity in scene.contactEntities.values.flatMap({ $0 }) {
         let material = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
@@ -169,7 +169,7 @@ func load(usdzURL: URL) async throws {
     // Load via ModelIO
     let asset = MDLAsset(url: usdzURL)
     asset.loadTextures()
-    
+
     // Convert to RealityKit entities
     var entities: [Entity] = []
     let meshEntities = try await withCheckedThrowingContinuation { continuation in
@@ -177,12 +177,12 @@ func load(usdzURL: URL) async throws {
             continuation.resume(with: result)
         }
     }
-    
+
     // For each mesh in asset, create ModelEntity
     for meshEntity in meshEntities {
         // Apply descriptor binding here...
     }
-    
+
     // Build instance hierarchy
     // Apply suspension if present
     // Set up camera framing
@@ -210,18 +210,18 @@ git commit -m "feat: native USDZ load via ModelIO with descriptor binding"
 ```swift
 func testContactEntitiesBoundToDescriptor() async throws {
     let scene = try await loadTrangoScene()
-    
+
     // Each contact ID maps to exactly the descriptor-declared nodes
     for contact in board.contacts {
         let entities = try XCTUnwrap(scene.contactEntities[contact.id])
         XCTAssertFalse(entities.isEmpty)
-        
+
         // Verify only contact entities are pickable (have collision)
         for entity in entities {
             XCTAssertNotNil(entity.collision)
         }
     }
-    
+
     // Body/attachment entities have NO collision
     let allEntities = scene.instanceEntities.flatMap { $0.children.compactMap { $0 as? ModelEntity } }
     let contactEntities = scene.contactEntities.values.flatMap { $0 }
@@ -267,10 +267,10 @@ for nodeDesc in descriptor.nodes {
 ```swift
 func testInstanceTransformsAndMirroring() async throws {
     let scene = try await loadDualInstanceBoard() // e.g., trango.rock-prodigy-forge
-    
+
     // Two instances exist
     XCTAssertEqual(scene.instanceEntities.count, 2)
-    
+
     // Each instance has correct baseTransform applied
     for (index, instance) in scene.instanceEntities.enumerated() {
         let expected = try XCTUnwrap(board.instances?[index])
@@ -278,7 +278,7 @@ func testInstanceTransformsAndMirroring() async throws {
         let expectedTransform = try BoardModelRealityScene.computeInstanceMatrix(instance: expected, ...)
         XCTAssertEqual(actualTransform, expectedTransform, accuracy: 0.0001)
     }
-    
+
     // Reflected instance has mirrored geometry (X-flipped)
     if board.instances?.first?.baseTransform.reflection == .x {
         // Verify geometry is mirrored
@@ -324,14 +324,14 @@ if instance.baseTransform.reflection == .x {
 ```swift
 func testSuspensionSolvesAndCreatesCords() async throws {
     let scene = try await loadSuspendedBoard() // e.g., nature.stone-hanger
-    
+
     for position in board.positions {
         XCTAssertTrue(scene.select(positionID: position.id))
-        
+
         // Cord entity created
         XCTAssertNotNil(scene.transientCordEntity)
         XCTAssertTrue(scene.transientCordEntity!.parent === scene.root)
-        
+
         // Cord geometry matches solved presentation
         // (visual verification via screenshots)
     }
@@ -345,7 +345,7 @@ func select(positionID: String?) -> Bool {
     guard let positionID, allowedPositionIDs.contains(positionID) else {
         isUnavailable = true; return false
     }
-    
+
     if let suspension {
         // Solve suspension (reuse SuspendedBoardPresentation)
         let solved = try SuspendedBoardPresentation.solveInstance(...)
@@ -356,18 +356,18 @@ func select(positionID: String?) -> Bool {
         root.addChild(cordEntity)
         verifiedPresentations[positionID] = (solved, cordEntity)
     }
-    
+
     // Apply instance transforms for position
     for (index, instanceEntity) in instanceEntities.enumerated() {
         let transform = computePositionMatrix(instance: instances[index], positionID: positionID)
         instanceEntity.transform.matrix = transform * baseTransforms[index]
     }
-    
+
     // Update camera framing
     let framing = computeFraming(...)
     canonicalFraming = framing
     applyCanonicalCamera(framing)
-    
+
     activePositionID = positionID
     isUnavailable = false
     return true
@@ -390,7 +390,7 @@ func select(positionID: String?) -> Bool {
 func testCameraFramingFitsBoard() async throws {
     let scene = try await loadTrangoScene()
     scene.frame(in: CGSize(width: 390, height: 228))
-    
+
     // Camera positioned to fit board
     let cameraTransform = scene.camera.transform.matrix
     // Verify framing math matches SuspendedCameraFraming
@@ -400,13 +400,13 @@ func testCameraFramingFitsBoard() async throws {
 func testOrbitAndZoom() async throws {
     let scene = try await loadTrangoScene()
     scene.select(positionID: "primary")
-    
+
     let initialTransform = scene.camera.transform.matrix
     scene.orbit(azimuth: 0.5, elevation: -0.2, zoomScale: 1.2)
-    
+
     let newTransform = scene.camera.transform.matrix
     XCTAssertNotEqual(initialTransform, newTransform)
-    
+
     scene.resetCamera(animated: false)
     XCTAssertTrue(scene.isCanonicalCameraApplied())
 }
@@ -439,17 +439,17 @@ func testOrbitAndZoom() async throws {
 func testHighlightTinting() async throws {
     let scene = try await loadTrangoScene()
     scene.select(positionID: "primary")
-    
+
     let contactID = "upper-sloped-crimp-left"
     let entities = try XCTUnwrap(scene.contactEntities[contactID])
     let originalMaterial = entities.first!.model!.materials.first as! PhysicallyBasedMaterial
-    
+
     scene.highlight([contactID], mode: .active)
-    
+
     let highlightedMaterial = entities.first!.model!.materials.first as! PhysicallyBasedMaterial
     XCTAssertNotEqual(highlightedMaterial.baseColor, originalMaterial.baseColor)
     XCTAssertEqual(highlightedMaterial.roughness, .init(floatLiteral: 0.8))
-    
+
     scene.highlight([], mode: .active)
     let restoredMaterial = entities.first!.model!.materials.first as! PhysicallyBasedMaterial
     XCTAssertEqual(restoredMaterial.baseColor, originalMaterial.baseColor)
@@ -464,7 +464,7 @@ func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
     let tinted = neutralMaterial()
     tinted.baseColor = .init(tint: UIColor(mode == .active ? Color.holdActive : Color.restBlue))
     tinted.roughness = .init(floatLiteral: 0.8)
-    
+
     for (contactID, entities) in contactEntities {
         let material = contactIDs.contains(contactID) ? tinted : neutral
         for entity in entities {
@@ -490,16 +490,16 @@ func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {
 func testContactPicking() async throws {
     let scene = try await loadTrangoScene()
     scene.select(positionID: "primary")
-    
+
     // Simulate tap on contact center
     let contactID = "upper-sloped-crimp-left"
     let entity = try XCTUnwrap(scene.contactEntities[contactID]?.first)
     let worldCenter = entity.position(relativeTo: nil)
-    
+
     // Project to screen and verify contactID mapping
     let projected = scene.project(worldCenter, viewport: CGSize(width: 390, height: 228))
     XCTAssertNotNil(projected)
-    
+
     // Verify contactID lookup
     let foundID = scene.contactID(for: entity)
     XCTAssertEqual(foundID, contactID)
@@ -569,11 +569,11 @@ RealityView { content in
 func testAccessibilityElementsProjected() async throws {
     let scene = try await loadTrangoScene()
     scene.select(positionID: "primary")
-    
+
     // Verify accessibility overlay creates elements
     let size = CGSize(width: 390, height: 228)
     let cameraMatrix = BoardModelRealityScene.cameraTransform(...)
-    
+
     for contact in board.contacts {
         let entity = try XCTUnwrap(scene.contactEntities[contact.id]?.first)
         let worldCenter = entity.position(relativeTo: nil)

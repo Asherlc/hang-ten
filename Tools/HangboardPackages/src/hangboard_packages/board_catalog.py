@@ -584,6 +584,7 @@ class BoardModelCanonicalPose:
     camera: Mapping[str, Any]
     attachment_points: Mapping[str, tuple[float, float, float]] | None = None
     cord_contact_points: Mapping[str, tuple[tuple[float, float, float], ...]] | None = None
+    wrapped_routes: Mapping[str, tuple[tuple[float, float, float], ...]] | None = None
 
 
 @dataclass(frozen=True)
@@ -651,6 +652,10 @@ class BoardModelTwoBranchSuspension:
     branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
+    mesh_wrap_clearance: float | None = None
+    internal_loop_clearance: float | None = None
+    internal_loop_winding_by_passage_id: Mapping[str, str] | None = None
+    internal_loop_channel_length_by_branch_id: Mapping[str, float] | None = None
 
 
 BoardModelSuspension = (
@@ -735,10 +740,10 @@ def _load_model_poses(
         position_id = _identifier(position_id, f"{position_source} positionID")
         pose_payload = _mapping(raw_pose, position_source)
         _closed(pose_payload, {"rotation", "translation", "camera"}, position_source,
-                optional={"cordContactPoints"} | ({"attachmentPoints"} if paired_leads else set()))
+                optional={"cordContactPoints", "wrappedRoutes"} | ({"attachmentPoints"} if paired_leads else set()))
         if canonical_order:
             _canonical_member_order(
-                pose_payload, tuple(key for key in ("rotation", "translation", "camera", "attachmentPoints", "cordContactPoints") if key in pose_payload), position_source
+                pose_payload, tuple(key for key in ("rotation", "translation", "camera", "attachmentPoints", "cordContactPoints", "wrappedRoutes") if key in pose_payload), position_source
             )
         rotation = _unit_vector(pose_payload["rotation"], f"{position_source}.rotation")
         if len(rotation) != 4:
@@ -767,6 +772,17 @@ def _load_model_poses(
                 if any(math.dist(a, b) <= 1e-7 for a, b in zip(points, points[1:])):
                     raise ValueError(f"{position_source}.cordContactPoints must be distinct")
                 contact_routes[key] = points
+        wrapped_routes = None
+        if "wrappedRoutes" in pose_payload:
+            wrapped_routes = {}
+            for key, route in _mapping(pose_payload["wrappedRoutes"], f"{position_source}.wrappedRoutes").items():
+                _identifier(key, f"{position_source}.wrappedRoutes")
+                if not isinstance(route, list) or len(route) < 3:
+                    raise ValueError(f"{position_source}.wrappedRoutes routes need at least three points")
+                points = tuple(_finite_vector3(point, f"{position_source}.wrappedRoutes.{key}") for point in route)
+                if any(math.dist(a, b) <= 1e-7 for a, b in zip(points, points[1:])):
+                    raise ValueError(f"{position_source}.wrappedRoutes points must be distinct")
+                wrapped_routes[key] = points
         poses[position_id] = BoardModelCanonicalPose(
             tuple(rotation),
             translation,
@@ -776,6 +792,7 @@ def _load_model_poses(
                 for key, point in _mapping(pose_payload["attachmentPoints"], f"{position_source}.attachmentPoints").items()
             }) if "attachmentPoints" in pose_payload else None,
             MappingProxyType(contact_routes) if contact_routes is not None else None,
+            MappingProxyType(wrapped_routes) if wrapped_routes is not None else None,
         )
     return MappingProxyType(poses)
 
@@ -784,9 +801,11 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
     payload = _mapping(value, source)
     suspension_type = _string(payload.get("type"), f"{source}.type")
     if suspension_type == "twoBranchCord":
-        _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source)
+        _closed(payload, {"type", "passages", "branches", "anchor", "canonicalPoses"}, source,
+                optional={"meshWrap", "internalLoop"})
         _canonical_member_order(
-            payload, ("type", "passages", "branches", "anchor", "canonicalPoses"), source
+            payload, tuple(key for key in ("type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses")
+                           if key in payload), source
         )
         passages_source = f"{source}.passages"
         passages_payload = _mapping(payload["passages"], passages_source)
@@ -840,8 +859,40 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         if len({passage.is_through_bore for passage in all_passages}) != 1:
             raise ValueError("twoBranchCord cannot mix point passages and through-bores")
         through_bore = all_passages[0].is_through_bore
-        if not through_bore and len({passage.node_id for passage in all_passages}) != 4:
-            raise ValueError("duplicate suspension passage node ID")
+        mesh_wrap_clearance = None
+        if "meshWrap" in payload:
+            if through_bore:
+                raise ValueError("meshWrap requires exterior point passages")
+            wrap_source = f"{source}.meshWrap"
+            wrap = _mapping(payload["meshWrap"], wrap_source)
+            _closed(wrap, {"clearance"}, wrap_source)
+            mesh_wrap_clearance = _positive_number(wrap["clearance"], f"{wrap_source}.clearance")
+        internal_loop_clearance = None
+        internal_loop_winding_by_passage_id = None
+        internal_loop_channel_length_by_branch_id = None
+        if "internalLoop" in payload:
+            if through_bore or mesh_wrap_clearance is not None:
+                raise ValueError("internalLoop requires paired point mouths and no exterior meshWrap")
+            loop_source = f"{source}.internalLoop"
+            loop = _mapping(payload["internalLoop"], loop_source)
+            _closed(loop, {"clearance", "windingByPassageID", "channelLengthByBranchID"}, loop_source)
+            _canonical_member_order(loop, ("clearance", "windingByPassageID", "channelLengthByBranchID"), loop_source)
+            internal_loop_clearance = _positive_number(loop["clearance"], f"{loop_source}.clearance")
+            winding = _mapping(loop["windingByPassageID"], f"{loop_source}.windingByPassageID")
+            if set(winding) != all_passage_ids:
+                raise ValueError("internalLoop winding must name every passage exactly once")
+            if any(value not in ("clockwise", "counterclockwise") for value in winding.values()):
+                raise ValueError("internalLoop winding must be clockwise or counterclockwise")
+            internal_loop_winding_by_passage_id = dict(winding)
+            lengths = _mapping(loop["channelLengthByBranchID"], f"{loop_source}.channelLengthByBranchID")
+            if set(lengths) != {branch["id"] for branch in payload["branches"]}:
+                raise ValueError("internalLoop channel lengths must name every branch exactly once")
+            internal_loop_channel_length_by_branch_id = {
+                key: _positive_number(value, f"{loop_source}.channelLengthByBranchID.{key}")
+                for key, value in lengths.items()
+            }
+        # Exterior contacts may share one continuous body node. Their passage
+        # IDs and coordinates, rather than node IDs, distinguish the routes.
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
@@ -910,13 +961,25 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         _canonical_member_order(
             anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
         )
+        poses = _load_model_poses(
+            payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+        )
+        if internal_loop_clearance is not None:
+            cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
+            if cached_count not in (0, len(poses)) or any(
+                pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
+                for pose in poses.values()
+            ):
+                raise ValueError("internalLoop derived routes must cover every passage and pose")
         return BoardModelTwoBranchSuspension(
             passage_pairs,
             (branches[0], branches[1]),
             _load_model_anchor(anchor_payload, anchor_source),
-            _load_model_poses(
-                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
-            ),
+            poses,
+            mesh_wrap_clearance,
+            internal_loop_clearance,
+            internal_loop_winding_by_passage_id,
+            internal_loop_channel_length_by_branch_id,
         )
 
     if suspension_type == "pairedLeadCord":
@@ -2040,6 +2103,11 @@ def _validate_model_suspension(
         )
         if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
             raise ValueError("twoBranchCord suspension requires four distinct passages")
+        if suspension.mesh_wrap_clearance is not None and any(
+            side[0].point_in_model[0] == side[1].point_in_model[0]
+            for side in (suspension.passages.left, suspension.passages.right)
+        ):
+            raise ValueError("meshWrap requires distinct outer and inner strand positions")
         for passage in passages:
             role = nodes.get(passage.node_id)
             if role not in {"body", "attachment"}:
@@ -2080,10 +2148,20 @@ def _validate_model_suspension(
             if any(math.dist(start, end) <= 1e-7 for start, end in zip(route, route[1:])):
                 raise ValueError("paired lead route points must be distinct")
     for position_id, pose in suspension.canonical_poses.items():
+        if isinstance(suspension, BoardModelTwoBranchSuspension) and suspension.mesh_wrap_clearance is not None \
+                and pose.wrapped_routes is not None:
+            raise ValueError("meshWrap cannot also declare wrappedRoutes")
+        if pose.wrapped_routes is not None:
+            if not isinstance(suspension, BoardModelTwoBranchSuspension) or any(p.is_through_bore for p in passages):
+                raise ValueError("wrappedRoutes requires two exterior point-passage branches")
+            if set(pose.wrapped_routes) != {branch.id for branch in suspension.branches}:
+                raise ValueError("wrappedRoutes must name both branches exactly")
         if pose.cord_contact_points is not None:
             if isinstance(suspension, BoardModelPairedLeadCord):
                 route_ids = {a.id for a in suspension.attachments}
-            elif isinstance(suspension, BoardModelTwoBranchSuspension) and all(p.is_through_bore for p in passages):
+            elif isinstance(suspension, BoardModelTwoBranchSuspension) and (
+                all(p.is_through_bore for p in passages) or suspension.internal_loop_clearance is not None
+            ):
                 route_ids = {p.id for p in passages}
             else:
                 raise ValueError("cordContactPoints requires paired leads or directed passages")
@@ -2136,11 +2214,28 @@ def _validate_model_suspension(
                     *(pose.cord_contact_points[branch_endpoints[1].id] if pose.cord_contact_points is not None else branch_data.exit_contact_points),
                 )
                 rest_length = branch_data.rest_length
-                if not branch_endpoints[0].is_through_bore:
-                    endpoints = tuple(passage.point_in_model for passage in branch_endpoints)
-                rigid_route_length = sum(
-                    math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
-                ) + math.dist(endpoints[0], endpoints[1])
+                if suspension.internal_loop_clearance is not None and pose.cord_contact_points is not None:
+                    first_contacts = pose.cord_contact_points[branch_endpoints[0].id]
+                    second_contacts = pose.cord_contact_points[branch_endpoints[1].id]
+                    endpoints = (*first_contacts, *second_contacts)
+                    mouth_chord = math.dist(first_contacts[-1], second_contacts[0])
+                    hidden_length = suspension.internal_loop_channel_length_by_branch_id[branch_data.id]
+                    if hidden_length < mouth_chord:
+                        raise ValueError("internalLoop channel is shorter than its mouth chord")
+                    rigid_route_length = sum(
+                        math.dist(start, end) for start, end in zip(endpoints, endpoints[1:])
+                    ) + hidden_length - mouth_chord
+                elif not branch_endpoints[0].is_through_bore:
+                    endpoints = (pose.wrapped_routes[branch_data.id] if pose.wrapped_routes is not None
+                                 else tuple(passage.point_in_model for passage in branch_endpoints))
+                if suspension.internal_loop_clearance is None or pose.cord_contact_points is None:
+                    rigid_route_length = sum(
+                        math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
+                    ) + math.dist(endpoints[0], endpoints[1])
+                    if pose.wrapped_routes is not None:
+                        rigid_route_length = sum(
+                            math.dist(start, end) for start, end in zip(endpoints, endpoints[1:])
+                        )
             if any(
                 math.dist(start, end) <= 1e-7 for start, end in zip(endpoints, endpoints[1:])
             ):
@@ -2185,7 +2280,7 @@ def _validate_model_suspension(
                     raise ValueError(f"suspension pose {position_id} passage endpoints must not coincide with the anchor")
                 if rest_length < first_distance + rigid_route_length + second_distance - 1e-5:
                     route = "directed route" if branch_endpoints[0].is_through_bore else "the closed route"
-                    raise ValueError(f"suspension pose {position_id} restLength is shorter than {route}")
+                    raise ValueError(f"suspension pose {position_id} restLength is shorter than {route}: {rest_length:.6f} < {first_distance:.6f} + {rigid_route_length:.6f} + {second_distance:.6f}")
 
 
 def _validate_reusable_instances(
@@ -2549,7 +2644,10 @@ def _validate_finished_shape(
         if cad_source.is_cad_package(root)
         else _PACKAGE_ENTRIES
     )
-    unknown = entries - (required | {cad_source_name})
+    allowed = set(required | {cad_source_name})
+    if cad_source.is_cad_package(root) and "suspension.json" in entries:
+        allowed.add("suspension.json")
+    unknown = entries - allowed
     missing = required - entries
     if unknown:
         raise ValueError(f"unknown package entry: {sorted(unknown)[0]}")

@@ -241,6 +241,26 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testMiniBarRealityKitCordWrapsUnderTheBodyInEveryGripPose() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        let scene = try await BoardModelRealityLoader.load(
+            board: board, presentation: board.defaultPresentation)
+        for position in board.positions {
+            XCTAssertTrue(scene.select(positionID: position.id), position.id)
+            let cord = try XCTUnwrap(scene.transientCordEntity, position.id)
+            let body = try XCTUnwrap(scene.instanceEntities.first, position.id)
+            let inverse = body.transformMatrix(relativeTo: scene.root).inverse
+            let localCenters = cord.children.map { child -> SIMD3<Float> in
+                let center = inverse * SIMD4<Float>(child.position(relativeTo: scene.root), 1)
+                return SIMD3<Float>(center.x, center.y, center.z)
+            }
+            XCTAssertLessThan(try XCTUnwrap(localCenters.map(\.y).min()), 0.008,
+                              "The \(position.id) loop must pass around the lower surface")
+            XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil })
+        }
+    }
+
+    @MainActor
     func testClearingSelectionRemovesTransientCordEntity() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation

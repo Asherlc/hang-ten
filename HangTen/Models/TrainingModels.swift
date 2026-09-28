@@ -128,7 +128,7 @@ struct BoardModelCanonicalCamera: Hashable {
 
 struct BoardModelCanonicalPose: Hashable {
     let rotation: [Double]
-    let translation: [Double]
+    var translation: [Double]
     let camera: BoardModelCanonicalCamera
     // Visible exterior endpoints in this pose; clipped display endpoints do
     // not establish additional physical mouths or an inferred interior route.
@@ -136,6 +136,9 @@ struct BoardModelCanonicalPose: Hashable {
     // Ordered exterior contact points keyed by paired-lead attachment ID or
     // two-branch passage ID. Passage overrides never change the actual bore.
     var cordContactPoints: [String: [[Double]]]? = nil
+    /// Complete exterior route for each loop in a point-passage two-branch
+    /// suspension. These are display estimates in unposed model coordinates.
+    var wrappedRoutes: [String: [[Double]]]? = nil
 }
 
 struct BoardModelSingleCordSuspension: Hashable {
@@ -228,11 +231,29 @@ struct BoardModelCordBranch: Hashable {
     }
 }
 
+enum BoardModelLoopWinding: String, Hashable {
+    /// Hull traversal from the anchor tangent to the channel mouth, viewed
+    /// in the model's (y, z) cross-section.
+    case clockwise
+    case counterclockwise
+}
+
 struct BoardModelTwoBranchSuspension: Hashable {
     let passages: BoardModelPassagePairs
     let branches: [BoardModelCordBranch]
     let anchor: BoardModelInvisibleAnchor
     let canonicalPoses: [String: BoardModelCanonicalPose]
+    /// Runtime convex-section wrap clearance for exterior point passages.
+    /// Nil retains explicitly authored routes or direct point-passage spans.
+    var meshWrapClearance: Double? = nil
+    /// Two mouths per end connected by a hidden channel in the CAD body.
+    /// The loaded mesh and hanging point determine each exterior lead at runtime.
+    var internalLoopClearance: Double? = nil
+    /// Threading topology is fixed when the cord is installed; contact points
+    /// along that route are recomputed from the mesh for every board pose.
+    var internalLoopWindingByPassageID: [String: BoardModelLoopWinding]? = nil
+    /// Length of the connected CAD channel centerline between each mouth pair.
+    var internalLoopChannelLengthByBranchID: [String: Double]? = nil
 }
 
 enum BoardModelSuspension: Hashable {
