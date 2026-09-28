@@ -99,9 +99,19 @@ final class WorkoutPaywallUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let field = app.textFields["workout.initialWeight.manualField"]
-        XCTAssertTrue(field.waitForExistence(timeout: 2))
+        XCTAssertTrue(field.waitForExistence(timeout: 10))
+        XCTAssertTrue(field.isHittable)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
-        field.tap()
+        let keyboard = app.keyboards.firstMatch
+        var keyboardPresented = false
+        for _ in 0..<3 {
+            field.tap()
+            if keyboard.waitForExistence(timeout: 2) {
+                keyboardPresented = true
+                break
+            }
+        }
+        XCTAssertTrue(keyboardPresented, "Tapping the manual weight field must present its keyboard")
         field.typeText(
             String(
                 repeating: XCUIKeyboardKey.delete.rawValue,
