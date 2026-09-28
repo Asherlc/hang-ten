@@ -663,6 +663,8 @@ struct MillimeterRange: Codable, Hashable {
 }
 
 enum HoldDepth: Codable, Hashable {
+    private static let numericMatchToleranceMillimeters = 1.0
+
     case category(HoldSize)
     case range(MillimeterRange)
 
@@ -720,7 +722,8 @@ enum HoldDepth: Codable, Hashable {
         case let (.category(required), .range(actual)):
             required.depthRange.overlaps(actual.minimum...actual.maximum)
         case let (.range(required), .range(actual)):
-            required.minimum <= actual.maximum && required.maximum >= actual.minimum
+            required.minimum <= actual.maximum + Self.numericMatchToleranceMillimeters
+                && required.maximum + Self.numericMatchToleranceMillimeters >= actual.minimum
         case (.range, .category):
             false
         }
