@@ -108,6 +108,9 @@ run_xcodebuild_with_watchdog() {
   python3 -c 'import os, sys; os.setsid(); os.execvp(sys.argv[1], sys.argv[1:])' \
     "${cmd[@]}" > "$phase_log" 2>&1 &
   xcodebuild_pid=$!
+  # xcodebuild runs in a detached process group. Forward Actions cancellation
+  # before the shell exits so it cannot keep writing to a result bundle.
+  trap 'trap - INT TERM; kill -TERM -- "-$xcodebuild_pid" 2>/dev/null || true; wait "$xcodebuild_pid" 2>/dev/null || true; exit 143' INT TERM
 
   while kill -0 "$xcodebuild_pid" 2>/dev/null; do
     if (( SECONDS - phase_started >= timeout_seconds )); then
@@ -124,6 +127,7 @@ run_xcodebuild_with_watchdog() {
         kill -KILL -- "-$xcodebuild_pid" 2>/dev/null || true
       fi
       wait "$xcodebuild_pid" || true
+      trap - INT TERM
       cat "$phase_log"
       return 124
     fi
@@ -131,6 +135,7 @@ run_xcodebuild_with_watchdog() {
   done
 
   wait "$xcodebuild_pid" || xcodebuild_status=$?
+  trap - INT TERM
   cat "$phase_log"
   return "$xcodebuild_status"
 }
