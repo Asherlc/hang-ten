@@ -372,6 +372,15 @@ section cutter. It was re-authored from Frictitious's front and end-grain
 photographs. See
 `docs/2026-09-28-frictitious-megalith-cad-provenance.md`.
 
+`crimptonite-helium-mobile` sets both options too: its ends and round-overs
+are cylinders and tori, and its cavity mouths are ruled stadium chamfers
+(planes and cones). Each cavity is a shallow mouth at the lower-lip depth with
+a deeper slot sharing its top wall at the upper-lip depth, so both published
+lips of a cavity are exact. The cord holes pass through the board and are
+split at mid-thickness into the front and reverse attachment nodes. It was
+re-authored from Crimptonite's product photographs; its provenance is in the
+delivery lock's `migratedPackages` entry.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
