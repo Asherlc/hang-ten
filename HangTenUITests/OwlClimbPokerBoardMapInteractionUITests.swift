@@ -286,6 +286,11 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-initial")
         let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
         XCTAssertTrue(map.exists)
+        let nearbyPhysicalPointOffsets = [
+            CGVector(dx: 8, dy: 0), CGVector(dx: -8, dy: 0),
+            CGVector(dx: 0, dy: 8), CGVector(dx: 0, dy: -8),
+            CGVector(dx: 8, dy: 8), CGVector(dx: -8, dy: -8),
+        ]
         // The contact's accessibility frame is projected from its live RealityKit
         // bounds. Tap that screen location through the RealityView so this checks
         // native spatial picking without baking in the previous renderer's camera.
@@ -296,9 +301,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             // Projected contact centers can overlap in this two-piece board.
             // Probe nearby screen points through RealityView; no
             // accessibility action is used to select the contact.
-            for offset in [CGVector(dx: 8, dy: 0), CGVector(dx: -8, dy: 0),
-                           CGVector(dx: 0, dy: 8), CGVector(dx: 0, dy: -8),
-                           CGVector(dx: 8, dy: 8), CGVector(dx: -8, dy: -8)] {
+            for offset in nearbyPhysicalPointOffsets {
                 let point = surfaceCoordinate(for: contact, in: map, offset: offset)
                 point.tap()
                 if selected.waitForExistence(timeout: 2) {
@@ -320,22 +323,30 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-orbit")
         // A real contact tap runs the production selectContact canonical reset.
         // Orbiting moves the projected contact frame. Tap its current screen
-        // position so the physical reset gesture still lands on the hold.
-        surfaceCoordinate(for: contact, in: map).tap()
-        XCTAssertTrue(selected.exists)
-        let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            let currentFrames = self.contactFrames(allContacts)
-            guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
-            return currentFrames.allSatisfy { identifier, frame in
-                guard let canonical = canonicalFrames[identifier] else { return false }
-                return abs(frame.midX - canonical.midX) <= 0.5
-                    && abs(frame.midY - canonical.midY) <= 0.5
+        // position. Probe nearby physical points and treat frame convergence,
+        // not the already-selected accessibility element, as reset completion.
+        let resetOffsets = [CGVector.zero] + nearbyPhysicalPointOffsets
+        var resetCompleted = false
+        for offset in resetOffsets {
+            let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                let currentFrames = self.contactFrames(allContacts)
+                guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
+                return currentFrames.allSatisfy { identifier, frame in
+                    guard let canonical = canonicalFrames[identifier] else { return false }
+                    return abs(frame.midX - canonical.midX) <= 0.5
+                        && abs(frame.midY - canonical.midY) <= 0.5
+                }
+            }, object: nil)
+            surfaceCoordinate(for: contact, in: map, offset: offset).tap()
+            if XCTWaiter.wait(for: [resetFinished], timeout: 4) == .completed {
+                resetCompleted = true
+                break
             }
-        }, object: nil)
-        // Reading all 28 Pro frames crosses the UI-test process boundary;
-        // allow traversal time without relaxing the canonical-frame tolerance.
-        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 30), .completed,
-                       "A physical surface tap must finish the canonical camera reset")
+        }
+        // Reading all 28 Pro frames crosses the UI-test process boundary; retry
+        // nearby points without relaxing the canonical-frame tolerance.
+        XCTAssertTrue(resetCompleted,
+                      "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.
         // Require every projected contact to return to its canonical frame.
         let resetFrames = contactFrames(allContacts)

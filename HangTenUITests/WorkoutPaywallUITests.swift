@@ -100,7 +100,11 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         let field = app.textFields["workout.initialWeight.manualField"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
-        XCTAssertTrue(field.isHittable)
+        let fieldHittable = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND isHittable == true"),
+            object: field
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [fieldHittable], timeout: 10), .completed)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
         let keyboard = app.keyboards.firstMatch
         var keyboardPresented = false
