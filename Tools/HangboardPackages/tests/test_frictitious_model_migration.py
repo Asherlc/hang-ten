@@ -5,6 +5,7 @@ import zipfile
 from pathlib import Path
 import pytest
 from hangboard_packages.board_catalog import load_board_package
+from hangboard_packages import cad_source
 from test_board_package_staging import load_staging_module, configure_xcode_destination, odr_staging_root
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -26,7 +27,9 @@ MEGA = {'jug':'top-jug','center-edge-25':'center-edge-25',
     ('frictitious-megalith', MEGA,.67945,.1651,6)])
 def test_physical_identities_survive_native_export(slug,mapping,width,height,holes):
     package=ROOT/'Hangboards'/slug
-    board=json.loads((package/'board.json').read_text())
+    cad_path=package/f'{slug}.FCStd'
+    board=(cad_source.load_board(cad_path) if cad_path.exists()
+           else json.loads((package/'board.json').read_text()))
     assert board['presentations'][0]['media']['type']=='model'
     assert not list(package.rglob('*.png'))
     assert 'contactGeometry' not in json.dumps(board)
@@ -47,15 +50,17 @@ def test_physical_identities_survive_native_export(slug,mapping,width,height,hol
             for side,other in [('min','max'),('max','min')]:
                 assert right['facePlaneAABB'][side][0]==pytest.approx(1-left['facePlaneAABB'][other][0],abs=1e-6)
                 assert right['facePlaneAABB'][side][1]==pytest.approx(left['facePlaneAABB'][side][1],abs=1e-6)
-    prep=json.loads((AUDIT/'native'/slug/'preparation-report.json').read_text())
-    assert prep['mountingOpeningsRemoved']==holes
-    assert prep['maximumContactVertexDeltaMetres']<1e-7
-    verify=json.loads((AUDIT/'native'/slug/'geometry-verification.json').read_text())
-    assert len(verify['mountingClosureRays'])==holes
-    assert all(v['frontHit'] and v['backHit'] for v in verify['mountingClosureRays'])
-    assert verify['contactCount']==len(mapping)
-    assert verify['unionOfAllContactTrianglesUnchanged']
-    assert verify['ownershipTransferTriangles']==(18 if slug.endswith('megalith') else 0)
+    if not cad_path.exists():
+        # These reports describe the earlier USDZ repair, not a later CAD rebuild.
+        prep=json.loads((AUDIT/'native'/slug/'preparation-report.json').read_text())
+        assert prep['mountingOpeningsRemoved']==holes
+        assert prep['maximumContactVertexDeltaMetres']<1e-7
+        verify=json.loads((AUDIT/'native'/slug/'geometry-verification.json').read_text())
+        assert len(verify['mountingClosureRays'])==holes
+        assert all(v['frontHit'] and v['backHit'] for v in verify['mountingClosureRays'])
+        assert verify['contactCount']==len(mapping)
+        assert verify['unionOfAllContactTrianglesUnchanged']
+        assert verify['ownershipTransferTriangles']==(18 if slug.endswith('megalith') else 0)
     load_board_package(package)
 
 
@@ -80,4 +85,7 @@ def test_frictitious_stages_exact_models_only_in_odr(tmp_path,monkeypatch):
         assert (destination/slug/'assets/primary.model.json').exists()
         assert not (destination/slug/'assets/primary.usdz').exists()
         assert (odr_staging_root(destination)/slug/'Hangboards'/slug/'assets/primary.usdz').read_bytes()==(source/'assets/primary.usdz').read_bytes()
-        assert (destination/slug/'board.json').read_bytes()==(source/'board.json').read_bytes()
+        cad=source/f'{slug}.FCStd'
+        board_bytes=(cad_source.generate_board_json(cad) if cad.exists()
+                     else (source/'board.json').read_bytes())
+        assert (destination/slug/'board.json').read_bytes()==board_bytes
