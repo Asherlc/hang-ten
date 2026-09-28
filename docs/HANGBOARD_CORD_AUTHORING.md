@@ -188,7 +188,15 @@ the mesh alone.
    from each `SubtractivePipe` spine with
    `Tools/HangboardCAD/measure_channel_spines.py`; record it in
    `internalLoop.channelLengthByBranchID` and rerun the tool with
-   `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. Export the final native
+   `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. For every canonical grip,
+   compare the CAD contact-region normal with the
+   intended loaded face. A selected edge must not point down while the hand
+   is meant to hang from its upper rail. The pose camera's stored
+   `viewDirection` points from camera to board, so it must oppose the
+   outward contact normal to show that region. A nearly end-on camera can hide the rail
+   and make a cord opening look like the selected hold. A bar that flips
+   between grips needs its pose rotation changed before the cord is solved.
+   Then export the final native
    solid, run `solve_threaded_rope.py --apply`, then rerun with `--check`.
    Generated pose routes are a cache in the sidecar, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;

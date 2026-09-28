@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 import re
 import shutil
 import zipfile
@@ -9,6 +10,8 @@ from pathlib import Path
 
 import pytest
 from PIL import Image
+
+from Tools.HangboardCAD.usdz_writer import read_usdz
 
 from _board_package_helpers import document_contact_geometry
 from conftest import (
@@ -100,6 +103,49 @@ def test_mini_bar_cad_keeps_four_contacts_and_connected_internal_loops() -> None
     with zipfile.ZipFile(MINI_BAR_ROOT / media["assetPath"]) as archive:
         assert len(archive.namelist()) == 1
     assert load_board_catalog_module().load_board_package(MINI_BAR_ROOT).board.id == "lattice.mini-bar"
+
+
+def test_mini_bar_selected_grips_face_up_and_camera_shows_the_active_rail() -> None:
+    """A hanging edge must face the hand, and the pinch needs a long-face view."""
+    suspension = json.loads((MINI_BAR_ROOT / "suspension.json").read_text())["suspension"]
+    nodes = read_usdz(MINI_BAR_ROOT / "assets/primary.usdz")["nodes"]
+    names = {
+        "edge-10": "edge_10_surface", "edge-20": "edge_20_surface",
+        "ergonomic-jug": "ergonomic_jug_surface", "mini-pinch": "mini_pinch_surface",
+    }
+
+    def cross(a, b):
+        return (a[1] * b[2] - a[2] * b[1],
+                a[2] * b[0] - a[0] * b[2],
+                a[0] * b[1] - a[1] * b[0])
+
+    def rotate(q, v):
+        qv = q[:3]
+        t = cross(qv, v)
+        t = tuple(2 * x for x in t)
+        turn = cross(qv, t)
+        return tuple(v[i] + q[3] * t[i] + turn[i] for i in range(3))
+
+    for grip, node_id in names.items():
+        pose = suspension["canonicalPoses"][grip]
+        node = nodes[node_id]
+        points = node["points_m"]
+        normal = [0.0, 0.0, 0.0]
+        for i, j, k in node["triangles"]:
+            a, b, c = points[i], points[j], points[k]
+            triangle_normal = cross(tuple(b[n] - a[n] for n in range(3)),
+                                    tuple(c[n] - a[n] for n in range(3)))
+            normal = [normal[n] + triangle_normal[n] for n in range(3)]
+        magnitude = math.sqrt(sum(component * component for component in normal))
+        local_normal = tuple(component / magnitude for component in normal)
+        world_normal = rotate(pose["rotation"], local_normal)
+        assert world_normal[1] > 0.75, f"{grip} contact faces down in its hanging pose"
+        direction = pose["camera"]["viewDirection"]
+        # Runtime camera position is opposite the declared camera-to-board direction.
+        assert sum(a * b for a, b in zip(local_normal, direction)) < -0.35, (
+            f"{grip} camera shows the back of the selected contact"
+        )
+    assert abs(suspension["canonicalPoses"]["mini-pinch"]["camera"]["viewDirection"][0]) < 0.2
 
 
 def test_poker_four_faces_keep_all_34_contacts_on_one_hash_bound_model() -> None:

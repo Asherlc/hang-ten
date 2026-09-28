@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "3c5522d943e925dc2782a4ffcf983d4388b7dac156e347ed4c59b25fd19186ad",
+  "sha256Manifest": "88073991d93a3276c9eb8edd3ea307ce94d4b8059c6646a9a861d8ecf75e2fb3",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "5ce7c637f0af8a9c6157309a7a089cf6fc3641708df9fc20015ea7480f217f86",
+  "supersededSha256Manifest": "3c5522d943e925dc2782a4ffcf983d4388b7dac156e347ed4c59b25fd19186ad",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -470,5 +470,6 @@
   "natureStoakBoardIIIMigrationNote": "2026-09-27: nature-stoak-board-iii migrated to a native FreeCAD source re-authored from manufacturer photographs and the manufacturer's annotated contact map; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). Contact-to-node pairing kept, so three legacy node names no longer describe their region (see provenance). The merged manifest includes both Nature Stoak Board III and Mini Bar.",
   "miniBarExactSectionRopeNote": "Mini Bar derived pose routes are reproducibly solved from the native CAD solid, four mouths, channel lengths, winding and overhead anchor, then cached in suspension.json; no cord is stored in USDZ.",
   "dewoodstokWoodbordMigrationNote": "2026-09-27: dewoodstok-woodbord migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest 0208a876... supersedes a1609fef..., which moved to supersededSha256Manifest.",
-  "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest."
+  "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
+  "miniBarGripFlipCorrectionNote": "2026-09-27: Lattice grip photos and CAD contact normals showed the two edge rails and pinch facing down in their canonical poses; corrected pose half-turns place the selected grip upward, the pinch camera now faces its highlighted long rail, and all cord routes were re-solved against the unchanged CAD solid."
 }

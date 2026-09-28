@@ -103,3 +103,36 @@ simulators. The launched app was captured for all four selected grips at
 `.context/frantic-kiwi/mini-bar-app-{ergonomic-jug,edge-10,edge-20,mini-pinch}.png`.
 The simulators were deleted and deletion verified. The exact native
 validation commands and final hashes are recorded by the delivery lock.
+
+## Grip-facing correction after simulator review
+
+The first four-pose app captures revealed a functional orientation error.
+The native contact meshes for the 10 mm edge, 20 mm edge, and mini pinch
+face local `-Y`; the old edge poses left both rails facing downward in world
+space, and the old pinch camera looked nearly along the bar axis at a cord
+opening. Those renders did not show usable hanging grips. The retained
+manufacturer views [Web-7](2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-7.jpg),
+[Web-10](2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-10.jpg), and
+[Web-11](2026-09-13-model-cord-snapshots/lattice-mini-bar-Web-11.jpg) show
+the hand on the upper working surface with the cord shifting its bearing
+side when the bar flips. Lattice also describes flipping between edges on
+the [Mini Bar product page](https://latticetraining.com/product/mini-bar-portable-hangboard/).
+
+The corrected edge-10, edge-20, and pinch poses are 180-degree turns about
+the bar's long axis; the jug uses the unturned orientation. Cameras for the three inward
+contacts now look toward the active rail from the long face, with no
+end-on pinch view. The CAD body and its four contact regions are unchanged.
+The stored camera direction runs from camera to board; its sign was checked
+against each outward CAD contact normal and confirmed in RealityKit.
+The rope solver regenerated every pose's vertical translation and contact
+cache from the same watertight CAD solid and fixed overhead support.
+
+The front/side/top prior-versus-corrected review is
+`docs/pr-screenshots/lattice-mini-bar/grip-flip-front-side-top.png`.
+The updated four-pose RealityKit capture is
+`docs/pr-screenshots/lattice-mini-bar/app-four-poses.png`, with larger
+selected-grip views at
+`docs/pr-screenshots/lattice-mini-bar/app-grip-closeups.png`.
+The jug highlight remains visually indistinct because its contact overlay
+coincides with the wood surface in this model; this was also present in the
+prior app capture and is separate from the grip rotation and cord correction.
