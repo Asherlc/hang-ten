@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 24 of the 48 model-media boards are migrated** (those with a committed
+**Status: 25 of the 48 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 48 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -354,6 +354,13 @@ back wall slants from 10 mm deep at the board end to 25 mm inboard. The compiler
 gates only scalar depths, so the authoring script checked the range ends. See
 `docs/source-audits/2026-09-27-nature-stoak-board-iii-cad-provenance.md`.
 
+`dewoodstok-woodbord` sets it too: its 16 pockets are stadiums whose 3 mm
+mouth round-overs are ruled lofts through quarter-round stations (planes and
+cones), which keeps the asset at 32k triangles instead of the 147k a toroidal
+`Part::Fillet` produced. It was re-authored from deWoodstok's straight-on
+media-kit photo. See
+`docs/source-audits/2026-09-27-dewoodstok-woodbord-cad-provenance.md`.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -367,7 +374,7 @@ are split per face, and each carries that face's normal at its position. A face
 then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
-`moon-armstrong` and `nature-stoak-board-iii` set it.
+`moon-armstrong`, `nature-stoak-board-iii` and `dewoodstok-woodbord` set it.
 
 ## Published depth deeper than the board
 
@@ -460,7 +467,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **24 of 48 model-media boards are migrated.** The other 24 still ship their
+* **25 of 48 model-media boards are migrated.** The other 23 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

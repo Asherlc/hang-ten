@@ -78,14 +78,18 @@ The front, side, and top before/after CAD preview is
 The later settled-length front/side/top comparison is
 `.context/frantic-kiwi/mini-bar-settled-before-after-front-side-top.png`;
 the CAD-section route comparison against that prior wrap is
-`.context/frantic-kiwi/mini-bar-exact-before-after-front-side-top.png`.
+`docs/pr-screenshots/lattice-mini-bar/rope-before-after-front-side-top.png`.
 Simulator screenshots for the final CAD-section routes in all four grips are
 `.context/frantic-kiwi/mini-bar-exact-app-<grip>.png`; the prior settled-length
 screenshots are `.context/frantic-kiwi/mini-bar-physics-app-<grip>.png`.
+The four final app captures are committed together at
+`docs/pr-screenshots/lattice-mini-bar/app-four-poses.png`.
 The approved-photo comparisons are
 `.context/frantic-kiwi/mini-bar-Web-{1,2,7,8,9,10,11}-vs-CAD.png`, and the
 updated CAD-section comparisons are
 `.context/frantic-kiwi/mini-bar-exact-Web-{1,2,7,8,9,10,11}-vs-CAD.png`.
+Their combined review sheet is committed at
+`docs/pr-screenshots/lattice-mini-bar/rope-photo-comparison.png`.
 The four-pose end and side matrices are `mini-bar-end-pose-matrix.png` and
 `mini-bar-Web-1-all-pose-matrix.png` in the same workspace directory. The
 review renderer depth-sorts rope and wood; it uses hand-chosen approximate
