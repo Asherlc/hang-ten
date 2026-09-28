@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 30 of the 49 model-media boards are migrated** (those with a committed
+**Status: 31 of the 49 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 49 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -369,6 +369,12 @@ steps to the next. It was re-authored from The Hangboard's straight-on product
 photo and end-profile render. See
 `docs/source-audits/2026-09-27-the-hangboard-cad-provenance.md`.
 
+`frictitious-megalith` sets the same analytic-normal option. Its round-overs are
+cylinders, and each of its 14 edge segments and 2 pocket spans is its own
+section cutter. It was re-authored from Frictitious's front and end-grain
+photographs. See
+`docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md`.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -382,8 +388,8 @@ are split per face, and each carries that face's normal at its position. A face
 then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
-`moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord` and
-`the-hangboard` set it.
+`moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
+`the-hangboard` and `frictitious-megalith` set it.
 
 ## Published depth deeper than the board
 
@@ -476,7 +482,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **30 of 49 model-media boards are migrated.** The other 19 still ship their
+* **31 of 49 model-media boards are migrated.** The other 18 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

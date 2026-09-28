@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, and metolius-climbers-edge native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, and frictitious-megalith native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "9a883647c049b5be2a2d4197a6d3aad6ad7351993f53ecf8d40554367499a6ee",
+  "sha256Manifest": "9b2308c4fb4f5a66513c57635584d8fe63cfabcb92ce9e929574d9cf2f282ebc",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "55f398f6f72f82b2e377c0806444e22c1c9882cd4cbd9686eae27c8c7b2c1aff",
+  "supersededSha256Manifest": "8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -501,6 +501,21 @@
       "provenanceSidecar": "docs/source-audits/2026-09-26-tension-grindstone-pro-cad-provenance.md",
       "assetCoverage": "locked as descriptor + FCStd source; the USDZ hash is bound by the descriptor and board.json is generated at build time",
       "holdOutline": "CAD-authored rounded mouth outlines; lofted bowl sections preserve the exact published depth extents and the 7 mm incut retains its 15-degree profile"
+    },
+    "frictitious-megalith": {
+      "source": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "sourceSHA256": "f2c8ed561824139ec2c6aef8fc05eda9a89737e4839897ae2d47ea9f99c76fb8",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; every parsed field, key order and number spelling equals the deleted hand-authored file (only the escaping of the multiplication sign in dimensions differs); all 20 contact IDs and 21 node IDs and their contact-to-node pairing unchanged",
+      "referenceSHA256": "f88f4c9cf989af88230b8c0937bfb37ef656e0d3df142b7377e11638363d904f",
+      "assetSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+      "descriptorSHA256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 20 stable contact IDs and 21 node IDs, published-depth gate exact for all 14 edges (8 / 10 / 12, 30 / 40 and 15 / 20 mm per half) and the 25 mm center hold; verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; edge-8-left, edge-12-right, edge-40-pocket-left, pocket-2finger-right, edge-15-right, mono-right, center-edge-25 and top-jug by deep link, each confirmed via boardDetail.selectedHold.<contactID> and a screenshot highlighting only that region, with the published depth for the edges)",
+      "comparison": "re-authored from Frictitious's straight-on front photograph (Megalith-Front.jpg) and end-grain photograph (Megalith-Front-1.jpg), not traced from the superseded generator mesh, which mirrored the right half (the photo shows the right half repeating the left half's left-to-right order) and used 37 / 52 / 57 mm tier fronts where the end profile reads about 26.6 / 51 / 57.15 mm; compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: 14 edge-segment windows (ledge round-over up to the groove roof), the 40 mm windows notched around the two-finger pocket windows, mono chamfer ellipses, center hold front face, jug top band"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -540,5 +555,6 @@
   "metoliusClimbersEdgeMigrationNote": "2026-09-27: metolius-climbers-edge became a source-backed native FreeCAD package re-authored from Metolius's spec drawing and end-grain photograph (stepped-scoop edges at the published 20/15/10 and 17.5/12.5/7.5 mm depths, 20-degree flat slopers, 40 mm-radius round sloper) with generated board.json. sha256Manifest dfd32f63... supersedes 52ec1c9f..., recorded in supersededSha256Manifest.",
   "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main’s Metolius Climber’s Edge migration. The digest covers both and supersedes main’s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
   "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source and refined after visual review with estimated lofted cavity lips, bowl profiles and rounded tier edges; source-backed depths and contact IDs remain exact, and phone-slot remains a no-depth utility contact.",
-  "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology."
+  "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
+  "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest."
 }
