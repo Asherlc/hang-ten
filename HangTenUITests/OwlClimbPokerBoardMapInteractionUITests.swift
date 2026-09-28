@@ -319,7 +319,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         // Reading all 28 Pro frames crosses the UI-test process boundary;
         // allow traversal time without relaxing the canonical-frame tolerance.
-        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 15), .completed,
+        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 30), .completed,
                        "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.
         // Require every projected contact to return to its canonical frame.
@@ -368,6 +368,16 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     private func assertModelBodyIsVisible(_ model: XCUIElement) throws {
+        let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            ((try? self.modelBodySampleCount(model)) ?? 0) > 8
+        }, object: nil)
+        // On-Demand Resources can still be downloading when the card's accessibility
+        // element appears. Wait for the rendered body itself before checking it.
+        XCTAssertEqual(XCTWaiter.wait(for: [rendered], timeout: 90), .completed,
+                       "Native board body must finish loading inside its rounded card")
+    }
+
+    private func modelBodySampleCount(_ model: XCUIElement) throws -> Int {
         let screenshot = XCUIScreen.main.screenshot().image
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
@@ -394,8 +404,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 if pixels[offset + 2] < 235 { visibleBodySamples += 1 }
             }
         }
-        XCTAssertGreaterThan(visibleBodySamples, 8,
-                             "Native board body must be visible inside its rounded card")
+        return visibleBodySamples
     }
 
     private func capture(_ name: String) {
