@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
-  "modelSHA256": "2c098d167743dfd54ad71a47225e9dd2d7cc2159c80f88ddf4c3ba2cb106c48a",
+  "modelSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
   "modelBounds": {
     "min": [
       -0.199990988,
@@ -15,10 +15,6 @@
     ]
   },
   "nodes": [
-    {
-      "nodeID": "front_lead_mouth_001",
-      "role": "attachment"
-    },
     {
       "nodeID": "he_C_lower_10_001",
       "role": "contact",
@@ -62,10 +58,6 @@
     {
       "nodeID": "helium_body_001",
       "role": "body"
-    },
-    {
-      "nodeID": "reverse_lead_mouth_001",
-      "role": "attachment"
     }
   ],
   "contacts": {

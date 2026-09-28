@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c",
+  "sha256Manifest": "60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491",
+  "supersededSha256Manifest": "99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -534,17 +534,19 @@
     },
     "crimptonite-helium-mobile": {
       "source": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
-      "sourceSHA256": "cc413fa97eab6713b8ed20ae90589d8aa8ad7949bc7b725acb57131968fa3f6a",
-      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the deleted hand-authored file; all 6 contact IDs, 11 node IDs (8 contact, 2 attachment, 1 body), their contact-to-node pairing and the pairedLeadCord suspension unchanged",
+      "sourceSHA256": "3c00cd605c6681b65324aec37ec1c21e0af2422522a6f5d2b4db4832b19c3ad0",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest plus suspension.json; all 6 contact IDs and their 7 contact nodes unchanged; the two former cord-mouth attachment nodes are gone because the cord now binds to the body's through-bores (9 nodes)",
       "referenceSHA256": "745f92fdafcfa26f3ff5fe77f1f993d5de68bf0a199173b6f7a43167eb56ba94",
-      "assetSHA256": "2c098d167743dfd54ad71a47225e9dd2d7cc2159c80f88ddf4c3ba2cb106c48a",
-      "descriptorSHA256": "7216b28b01536c3ad8f16a3641353d888af8f294f779266ca380321de6243a26",
+      "assetSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+      "descriptorSHA256": "8527910cc401c516a5585c0bdeb9907a0654405e323c43d12b835fc8731b0911",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
-      "nativeValidation": "passed: compile reopen, 6 stable contact IDs and 11 nodes, published-depth gate exact for edge-22 / edge-14 / center-edge-18 / center-edge-10 (22 / 14 / 18 / 10 mm); verify_reproducible byte-identical on the pinned macOS toolchain; package validator passed",
-      "comparison": "re-authored from Crimptonite's first-party photographs DSCF6543-6546 (https://crimptonite.com/wp-content/uploads/2026/01/DSCF654{3,4,5,6}-1.jpg; SHA-256 86fc6636..., ed289d26..., 7621b042..., 33de984a...) and the product page (400 x 58 x 24 mm; 14 / 22 mm edges and 10 / 18 mm centre hold; top jug; back jug / sloper; Beal 4 mm cord). Published: envelope and the four depths. Display estimates read by eye from 1 mm-gridded photo crops: stadium outline with fully round ends, 6 mm perimeter round-over, cavity mouths (outer x 62-172, z -13..20; centre x +/-55, z -13..17) with 1.5 mm chamfer, deeper upper slots (outer x 76-160, z -5..20; centre x +/-45, z -3..17), 7 mm through cord holes at the manifest's x = +/-186 mm. The engraved labels put the deeper lip at the top (used when the board is flipped); the slot therefore shares the mouth's top wall so that lip reaches the published 22 / 18 mm, while the photo's inner outline reads about 5 mm below the lip, taken as occlusion under the lip. The prior mesh sloped the floor between lips, so its lower-lip regions reached 18 / 14 mm rather than 14 / 10; it was used only for side-by-side review. Mounting hardware, logo and depth engraving omitted",
+      "nativeValidation": "passed: compile reopen, 6 stable contact IDs and 9 nodes, published-depth gate exact for edge-22 / edge-14 / center-edge-18 / center-edge-10 (22 / 14 / 18 / 10 mm); verify_reproducible byte-identical on the pinned macOS toolchain; package validator passed; solve_threaded_rope --check passed; measure_channel_spines HANGTEN_CHANNEL_VERIFY passed",
+      "comparison": "re-authored from Crimptonite's first-party photographs DSCF6543-6546 (https://crimptonite.com/wp-content/uploads/2026/01/DSCF654{3,4,5,6}-1.jpg; SHA-256 86fc6636..., ed289d26..., 7621b042..., 33de984a...) and the product page (400 x 58 x 24 mm; 14 / 22 mm edges and 10 / 18 mm centre hold; top jug; back jug / sloper; Beal 4 mm cord). Published: envelope and the four depths. Display estimates read by eye from 1 mm-gridded photo crops: stadium outline with fully round ends, 6 mm perimeter round-over, cavity mouths (outer x 62-172, z -13..20; centre x +/-55, z -13..17) with 1.5 mm chamfer, deeper upper slots (outer x 76-160, z -5..20; centre x +/-45, z -3..17), 7 mm through cord holes at the prior manifest's x = +/-186 mm. The engraved labels put the deeper lip at the top (used when the board is flipped); the slot therefore shares the mouth's top wall so that lip reaches the published 22 / 18 mm, while the photo's inner outline reads about 5 mm below the lip, taken as occlusion under the lip. The prior mesh sloped the floor between lips, so its lower-lip regions reached 18 / 14 mm rather than 14 / 10; it was used only for side-by-side review. Mounting hardware, logo and depth engraving omitted",
       "provenanceSidecar": "none (audit archive removed); provenance recorded here and in the PR",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
-      "holdOutline": "CAD-authored HangTenHoldOutline: upper-slot stadiums for edge-22 and center-edge-18, mouth-minus-slot outlines for edge-14 and center-edge-10"
+      "holdOutline": "CAD-authored HangTenHoldOutline: upper-slot stadiums for edge-22 and center-edge-18, mouth-minus-slot outlines for edge-14 and center-edge-10",
+      "suspensionSHA256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
+      "suspension": "twoBranchCord with internalLoop in suspension.json (the standard CAD cord method): owner-confirmed single cord loop through both end holes; LeftCordChannel / RightCordChannel Part::Cylinder through-bores measured at 24 mm by measure_channel_spines.py; routes and hanging height solved by solve_threaded_rope.py with ropeSolver.sectionPlane anchor; >= 2.074 mm centerline clearance to the CAD solid for a 2 mm cord; 0.45 m per end (~0.9 m loop) is a display estimate from the resting loop in DSCF6544/6545; replaces the hand-authored pairedLeadCord"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -587,5 +589,5 @@
   "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
   "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
-  "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest."
+  "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c."
 }
