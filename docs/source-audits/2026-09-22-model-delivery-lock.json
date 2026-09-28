@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, and metolius-climbers-edge native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, and frictitious-megalith native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0",
+  "sha256Manifest": "8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8",
+  "supersededSha256Manifest": "dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -96,7 +96,7 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -235,7 +235,7 @@
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
       "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -284,7 +284,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -373,7 +373,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -467,6 +467,21 @@
       "provenanceSidecar": "docs/source-audits/2026-09-27-metolius-climbers-edge-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 10 edge-segment windows (ledge round-over up to the scoop's front edge), jug top bands, flat-sloper front bands, round-sloper front band with shoulders"
+    },
+    "frictitious-megalith": {
+      "source": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
+      "sourceSHA256": "f2c8ed561824139ec2c6aef8fc05eda9a89737e4839897ae2d47ea9f99c76fb8",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; every parsed field, key order and number spelling equals the deleted hand-authored file (only the escaping of the multiplication sign in dimensions differs); all 20 contact IDs and 21 node IDs and their contact-to-node pairing unchanged",
+      "referenceSHA256": "f88f4c9cf989af88230b8c0937bfb37ef656e0d3df142b7377e11638363d904f",
+      "assetSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
+      "descriptorSHA256": "cfe53835cc918b3250e98630d5e03aff9297049188ce08a4bf24b08913678b27",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 20 stable contact IDs and 21 node IDs, published-depth gate exact for all 14 edges (8 / 10 / 12, 30 / 40 and 15 / 20 mm per half) and the 25 mm center hold; verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; edge-8-left, edge-12-right, edge-40-pocket-left, pocket-2finger-right, edge-15-right, mono-right, center-edge-25 and top-jug by deep link, each confirmed via boardDetail.selectedHold.<contactID> and a screenshot highlighting only that region, with the published depth for the edges)",
+      "comparison": "re-authored from Frictitious's straight-on front photograph (Megalith-Front.jpg) and end-grain photograph (Megalith-Front-1.jpg), not traced from the superseded generator mesh, which mirrored the right half (the photo shows the right half repeating the left half's left-to-right order) and used 37 / 52 / 57 mm tier fronts where the end profile reads about 26.6 / 51 / 57.15 mm; compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: 14 edge-segment windows (ledge round-over up to the groove roof), the 40 mm windows notched around the two-finger pocket windows, mono chamfer ellipses, center hold front face, jug top band"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
