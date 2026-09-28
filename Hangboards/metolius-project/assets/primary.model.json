@@ -1,433 +1,841 @@
 {
-  "contacts": {
-    "edge-10-center": {
-      "center": [
-        0.499999659,
-        0.268981582
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.666120211,
-          0.382889659
-        ],
-        "min": [
-          0.333879107,
-          0.155073506
-        ]
-      },
-      "nodeIDs": [
-        "edge_10_center_partition_mesh_001"
-      ]
-    },
-    "edge-4-left": {
-      "center": [
-        0.120750859,
-        0.505244825
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.201918651,
-          0.636808107
-        ],
-        "min": [
-          0.039583066,
-          0.373681543
-        ]
-      },
-      "nodeIDs": [
-        "edge_4_left_partition_mesh_001"
-      ]
-    },
-    "edge-4-right": {
-      "center": [
-        0.879249142,
-        0.505256974
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.960416934,
-          0.636808107
-        ],
-        "min": [
-          0.798081349,
-          0.373705841
-        ]
-      },
-      "nodeIDs": [
-        "edge_4_right_partition_mesh_001"
-      ]
-    },
-    "edge-9-center": {
-      "center": [
-        0.500001203,
-        0.584081757
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.666898254,
-          0.707876916
-        ],
-        "min": [
-          0.333104153,
-          0.460286597
-        ]
-      },
-      "nodeIDs": [
-        "edge_9_center_partition_mesh_001"
-      ]
-    },
-    "flat-sloper-2-left": {
-      "center": [
-        0.238068463,
-        0.833288764
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.332878037,
-          0.882921167
-        ],
-        "min": [
-          0.14325889,
-          0.78365636
-        ]
-      },
-      "nodeIDs": [
-        "flat_sloper_2_left_partition_mesh_001"
-      ]
-    },
-    "flat-sloper-2-right": {
-      "center": [
-        0.761931537,
-        0.833288764
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.85674111,
-          0.882921167
-        ],
-        "min": [
-          0.667121963,
-          0.78365636
-        ]
-      },
-      "nodeIDs": [
-        "flat_sloper_2_right_partition_mesh_001"
-      ]
-    },
-    "jug-1-left": {
-      "center": [
-        0.071629445,
-        0.879957019
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.14325889,
-          1.0
-        ],
-        "min": [
-          0.0,
-          0.759914039
-        ]
-      },
-      "nodeIDs": [
-        "jug_1_left_partition_mesh_001"
-      ]
-    },
-    "jug-1-right": {
-      "center": [
-        0.928370555,
-        0.879957019
-      ],
-      "facePlaneAABB": {
-        "max": [
-          1.0,
-          1.0
-        ],
-        "min": [
-          0.85674111,
-          0.759914039
-        ]
-      },
-      "nodeIDs": [
-        "jug_1_right_partition_mesh_001"
-      ]
-    },
-    "pocket-3-left": {
-      "center": [
-        0.079654952,
-        0.767699236
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.135769614,
-          0.87195053
-        ],
-        "min": [
-          0.02354029,
-          0.663447941
-        ]
-      },
-      "nodeIDs": [
-        "pocket_3_left_partition_mesh_001"
-      ]
-    },
-    "pocket-3-right": {
-      "center": [
-        0.920345048,
-        0.767699236
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.97645971,
-          0.87195053
-        ],
-        "min": [
-          0.864230386,
-          0.663447941
-        ]
-      },
-      "nodeIDs": [
-        "pocket_3_right_partition_mesh_001"
-      ]
-    },
-    "pocket-5-left": {
-      "center": [
-        0.273419941,
-        0.531505665
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.312575057,
-          0.642096895
-        ],
-        "min": [
-          0.234264825,
-          0.420914435
-        ]
-      },
-      "nodeIDs": [
-        "pocket_5_left_partition_mesh_001"
-      ]
-    },
-    "pocket-5-right": {
-      "center": [
-        0.726580059,
-        0.531505665
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.765735175,
-          0.642096895
-        ],
-        "min": [
-          0.687424943,
-          0.420914435
-        ]
-      },
-      "nodeIDs": [
-        "pocket_5_right_partition_mesh_001"
-      ]
-    },
-    "pocket-6-left": {
-      "center": [
-        0.146475199,
-        0.196831378
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.203477633,
-          0.307277731
-        ],
-        "min": [
-          0.089472765,
-          0.086385026
-        ]
-      },
-      "nodeIDs": [
-        "pocket_6_left_partition_mesh_001"
-      ]
-    },
-    "pocket-6-right": {
-      "center": [
-        0.853524801,
-        0.196831378
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.910527235,
-          0.307277731
-        ],
-        "min": [
-          0.796522367,
-          0.086385026
-        ]
-      },
-      "nodeIDs": [
-        "pocket_6_right_partition_mesh_001"
-      ]
-    },
-    "pocket-7-left": {
-      "center": [
-        0.275014272,
-        0.209907169
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.312569824,
-          0.307430091
-        ],
-        "min": [
-          0.237458721,
-          0.112384246
-        ]
-      },
-      "nodeIDs": [
-        "pocket_7_left_partition_mesh_001"
-      ]
-    },
-    "pocket-7-right": {
-      "center": [
-        0.724985728,
-        0.209907169
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.762541279,
-          0.307430091
-        ],
-        "min": [
-          0.687430176,
-          0.112384246
-        ]
-      },
-      "nodeIDs": [
-        "pocket_7_right_partition_mesh_001"
-      ]
-    },
-    "round-sloper-8-center": {
-      "center": [
-        0.5,
-        0.856782268
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.667121963,
-          0.89363035
-        ],
-        "min": [
-          0.332878037,
-          0.819934185
-        ]
-      },
-      "nodeIDs": [
-        "round_sloper_8_center_partition_mesh_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
   "modelBounds": {
-    "max": [
-      0.311150014,
-      0.152400002,
-      0.075999998
-    ],
     "min": [
-      -0.311150014,
+      -0.31099999,
       -0.0,
       0.0
+    ],
+    "max": [
+      0.31099999,
+      0.151999995,
+      0.072098516
     ]
   },
-  "modelSHA256": "ce5cdbaaf6fa6cea29d9a5634b7c8a579ca99d3b3c1189dbd4e19148aa1108bb",
   "nodes": [
     {
-      "contactID": "edge-10-center",
       "nodeID": "edge_10_center_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-10-center"
     },
     {
-      "contactID": "edge-4-left",
       "nodeID": "edge_4_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-4-left"
     },
     {
-      "contactID": "edge-4-right",
       "nodeID": "edge_4_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-4-right"
     },
     {
-      "contactID": "edge-9-center",
       "nodeID": "edge_9_center_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "edge-9-center"
     },
     {
-      "contactID": "flat-sloper-2-left",
       "nodeID": "flat_sloper_2_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "flat-sloper-2-left"
     },
     {
-      "contactID": "flat-sloper-2-right",
       "nodeID": "flat_sloper_2_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "flat-sloper-2-right"
     },
     {
-      "contactID": "jug-1-left",
       "nodeID": "jug_1_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "jug-1-left"
     },
     {
-      "contactID": "jug-1-right",
       "nodeID": "jug_1_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "jug-1-right"
     },
     {
-      "contactID": "pocket-3-left",
       "nodeID": "pocket_3_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-3-left"
     },
     {
-      "contactID": "pocket-3-right",
       "nodeID": "pocket_3_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-3-right"
     },
     {
-      "contactID": "pocket-5-left",
       "nodeID": "pocket_5_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-5-left"
     },
     {
-      "contactID": "pocket-5-right",
       "nodeID": "pocket_5_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-5-right"
     },
     {
-      "contactID": "pocket-6-left",
       "nodeID": "pocket_6_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-6-left"
     },
     {
-      "contactID": "pocket-6-right",
       "nodeID": "pocket_6_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-6-right"
     },
     {
-      "contactID": "pocket-7-left",
       "nodeID": "pocket_7_left_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-7-left"
     },
     {
-      "contactID": "pocket-7-right",
       "nodeID": "pocket_7_right_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "pocket-7-right"
     },
     {
       "nodeID": "project_body_partition_mesh_001",
       "role": "body"
     },
     {
-      "contactID": "round-sloper-8-center",
       "nodeID": "round_sloper_8_center_partition_mesh_001",
-      "role": "contact"
+      "role": "contact",
+      "contactID": "round-sloper-8-center"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "edge-10-center": {
+      "nodeIDs": [
+        "edge_10_center_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.340836007,
+          0.118421056
+        ],
+        "max": [
+          0.659163993,
+          0.309210536
+        ]
+      },
+      "center": [
+        0.5,
+        0.213815796
+      ],
+      "outline": [
+        [
+          0.340836007,
+          0.177631585
+        ],
+        [
+          0.355305461,
+          0.118421056
+        ],
+        [
+          0.644694539,
+          0.118421056
+        ],
+        [
+          0.659163993,
+          0.177631585
+        ],
+        [
+          0.659163993,
+          0.250000008
+        ],
+        [
+          0.644694539,
+          0.309210536
+        ],
+        [
+          0.355305461,
+          0.309210536
+        ],
+        [
+          0.340836007,
+          0.250000008
+        ]
+      ]
+    },
+    "edge-4-left": {
+      "nodeIDs": [
+        "edge_4_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.081993555,
+          0.368421064
+        ],
+        "max": [
+          0.245980699,
+          0.546052649
+        ]
+      },
+      "center": [
+        0.163987127,
+        0.457236857
+      ],
+      "outline": [
+        [
+          0.081993555,
+          0.43421054
+        ],
+        [
+          0.098070726,
+          0.368421064
+        ],
+        [
+          0.229903528,
+          0.368421064
+        ],
+        [
+          0.245980699,
+          0.43421054
+        ],
+        [
+          0.245980699,
+          0.480263173
+        ],
+        [
+          0.229903528,
+          0.546052649
+        ],
+        [
+          0.098070726,
+          0.546052649
+        ],
+        [
+          0.081993555,
+          0.480263173
+        ]
+      ]
+    },
+    "edge-4-right": {
+      "nodeIDs": [
+        "edge_4_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.754019301,
+          0.368421064
+        ],
+        "max": [
+          0.918006445,
+          0.546052649
+        ]
+      },
+      "center": [
+        0.836012873,
+        0.457236857
+      ],
+      "outline": [
+        [
+          0.754019301,
+          0.43421054
+        ],
+        [
+          0.770096472,
+          0.368421064
+        ],
+        [
+          0.901929274,
+          0.368421064
+        ],
+        [
+          0.918006445,
+          0.43421054
+        ],
+        [
+          0.918006445,
+          0.480263173
+        ],
+        [
+          0.901929274,
+          0.546052649
+        ],
+        [
+          0.770096472,
+          0.546052649
+        ],
+        [
+          0.754019301,
+          0.480263173
+        ]
+      ]
+    },
+    "edge-9-center": {
+      "nodeIDs": [
+        "edge_9_center_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.340836007,
+          0.355263169
+        ],
+        "max": [
+          0.659163993,
+          0.572368439
+        ]
+      },
+      "center": [
+        0.5,
+        0.463815804
+      ],
+      "outline": [
+        [
+          0.340836007,
+          0.414473698
+        ],
+        [
+          0.355305461,
+          0.355263169
+        ],
+        [
+          0.644694539,
+          0.355263169
+        ],
+        [
+          0.659163993,
+          0.414473698
+        ],
+        [
+          0.659163993,
+          0.513157911
+        ],
+        [
+          0.644694539,
+          0.572368439
+        ],
+        [
+          0.355305461,
+          0.572368439
+        ],
+        [
+          0.340836007,
+          0.513157911
+        ]
+      ]
+    },
+    "flat-sloper-2-left": {
+      "nodeIDs": [
+        "flat_sloper_2_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.117363322,
+          0.828947408
+        ],
+        "max": [
+          0.339228288,
+          0.855263154
+        ]
+      },
+      "center": [
+        0.228295805,
+        0.842105281
+      ]
+    },
+    "flat-sloper-2-right": {
+      "nodeIDs": [
+        "flat_sloper_2_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.660771712,
+          0.828947408
+        ],
+        "max": [
+          0.882636678,
+          0.855263154
+        ]
+      },
+      "center": [
+        0.771704195,
+        0.842105281
+      ]
+    },
+    "jug-1-left": {
+      "nodeIDs": [
+        "jug_1_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.835526369
+        ],
+        "max": [
+          0.115755626,
+          1.0
+        ]
+      },
+      "center": [
+        0.057877813,
+        0.917763185
+      ]
+    },
+    "jug-1-right": {
+      "nodeIDs": [
+        "jug_1_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.884244374,
+          0.835526369
+        ],
+        "max": [
+          1.0,
+          1.0
+        ]
+      },
+      "center": [
+        0.942122187,
+        0.917763185
+      ]
+    },
+    "pocket-3-left": {
+      "nodeIDs": [
+        "pocket_3_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.053054647,
+          0.578947387
+        ],
+        "max": [
+          0.168810278,
+          0.743421077
+        ]
+      },
+      "center": [
+        0.110932462,
+        0.661184232
+      ],
+      "outline": [
+        [
+          0.053054647,
+          0.65131581
+        ],
+        [
+          0.070739535,
+          0.578947387
+        ],
+        [
+          0.15112539,
+          0.578947387
+        ],
+        [
+          0.168810278,
+          0.65131581
+        ],
+        [
+          0.168810278,
+          0.671052653
+        ],
+        [
+          0.15112539,
+          0.743421077
+        ],
+        [
+          0.070739535,
+          0.743421077
+        ],
+        [
+          0.053054647,
+          0.671052653
+        ]
+      ]
+    },
+    "pocket-3-right": {
+      "nodeIDs": [
+        "pocket_3_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.831189722,
+          0.578947387
+        ],
+        "max": [
+          0.946945353,
+          0.743421077
+        ]
+      },
+      "center": [
+        0.889067538,
+        0.661184232
+      ],
+      "outline": [
+        [
+          0.831189722,
+          0.65131581
+        ],
+        [
+          0.84887461,
+          0.578947387
+        ],
+        [
+          0.929260465,
+          0.578947387
+        ],
+        [
+          0.946945353,
+          0.65131581
+        ],
+        [
+          0.946945353,
+          0.671052653
+        ],
+        [
+          0.929260465,
+          0.743421077
+        ],
+        [
+          0.84887461,
+          0.743421077
+        ],
+        [
+          0.831189722,
+          0.671052653
+        ]
+      ]
+    },
+    "pocket-5-left": {
+      "nodeIDs": [
+        "pocket_5_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.255627001,
+          0.375000012
+        ],
+        "max": [
+          0.326366554,
+          0.539473702
+        ]
+      },
+      "center": [
+        0.290996777,
+        0.457236857
+      ],
+      "outline": [
+        [
+          0.255627001,
+          0.440789488
+        ],
+        [
+          0.271704172,
+          0.375000012
+        ],
+        [
+          0.310289383,
+          0.375000012
+        ],
+        [
+          0.326366554,
+          0.440789488
+        ],
+        [
+          0.326366554,
+          0.473684226
+        ],
+        [
+          0.310289383,
+          0.539473702
+        ],
+        [
+          0.271704172,
+          0.539473702
+        ],
+        [
+          0.255627001,
+          0.473684226
+        ]
+      ]
+    },
+    "pocket-5-right": {
+      "nodeIDs": [
+        "pocket_5_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.673633446,
+          0.375000012
+        ],
+        "max": [
+          0.744372999,
+          0.539473702
+        ]
+      },
+      "center": [
+        0.709003223,
+        0.457236857
+      ],
+      "outline": [
+        [
+          0.673633446,
+          0.440789488
+        ],
+        [
+          0.689710617,
+          0.375000012
+        ],
+        [
+          0.728295828,
+          0.375000012
+        ],
+        [
+          0.744372999,
+          0.440789488
+        ],
+        [
+          0.744372999,
+          0.473684226
+        ],
+        [
+          0.728295828,
+          0.539473702
+        ],
+        [
+          0.689710617,
+          0.539473702
+        ],
+        [
+          0.673633446,
+          0.473684226
+        ]
+      ]
+    },
+    "pocket-6-left": {
+      "nodeIDs": [
+        "pocket_6_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.085208989,
+          0.105263161
+        ],
+        "max": [
+          0.217041791,
+          0.289473694
+        ]
+      },
+      "center": [
+        0.15112539,
+        0.197368427
+      ],
+      "outline": [
+        [
+          0.085208989,
+          0.171052637
+        ],
+        [
+          0.10128616,
+          0.105263161
+        ],
+        [
+          0.20096462,
+          0.105263161
+        ],
+        [
+          0.217041791,
+          0.171052637
+        ],
+        [
+          0.217041791,
+          0.223684218
+        ],
+        [
+          0.20096462,
+          0.289473694
+        ],
+        [
+          0.10128616,
+          0.289473694
+        ],
+        [
+          0.085208989,
+          0.223684218
+        ]
+      ]
+    },
+    "pocket-6-right": {
+      "nodeIDs": [
+        "pocket_6_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.782958209,
+          0.105263161
+        ],
+        "max": [
+          0.914791011,
+          0.289473694
+        ]
+      },
+      "center": [
+        0.84887461,
+        0.197368427
+      ],
+      "outline": [
+        [
+          0.782958209,
+          0.171052637
+        ],
+        [
+          0.79903538,
+          0.105263161
+        ],
+        [
+          0.89871384,
+          0.105263161
+        ],
+        [
+          0.914791011,
+          0.171052637
+        ],
+        [
+          0.914791011,
+          0.223684218
+        ],
+        [
+          0.89871384,
+          0.289473694
+        ],
+        [
+          0.79903538,
+          0.289473694
+        ],
+        [
+          0.782958209,
+          0.223684218
+        ]
+      ]
+    },
+    "pocket-7-left": {
+      "nodeIDs": [
+        "pocket_7_left_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.257234718,
+          0.118421056
+        ],
+        "max": [
+          0.324758837,
+          0.289473694
+        ]
+      },
+      "center": [
+        0.290996777,
+        0.203947375
+      ],
+      "outline": [
+        [
+          0.257234718,
+          0.184210532
+        ],
+        [
+          0.273311889,
+          0.118421056
+        ],
+        [
+          0.308681666,
+          0.118421056
+        ],
+        [
+          0.324758837,
+          0.184210532
+        ],
+        [
+          0.324758837,
+          0.223684218
+        ],
+        [
+          0.308681666,
+          0.289473694
+        ],
+        [
+          0.273311889,
+          0.289473694
+        ],
+        [
+          0.257234718,
+          0.223684218
+        ]
+      ]
+    },
+    "pocket-7-right": {
+      "nodeIDs": [
+        "pocket_7_right_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.675241163,
+          0.118421056
+        ],
+        "max": [
+          0.742765282,
+          0.289473694
+        ]
+      },
+      "center": [
+        0.709003223,
+        0.203947375
+      ],
+      "outline": [
+        [
+          0.675241163,
+          0.184210532
+        ],
+        [
+          0.691318334,
+          0.118421056
+        ],
+        [
+          0.726688111,
+          0.118421056
+        ],
+        [
+          0.742765282,
+          0.184210532
+        ],
+        [
+          0.742765282,
+          0.223684218
+        ],
+        [
+          0.726688111,
+          0.289473694
+        ],
+        [
+          0.691318334,
+          0.289473694
+        ],
+        [
+          0.675241163,
+          0.223684218
+        ]
+      ]
+    },
+    "round-sloper-8-center": {
+      "nodeIDs": [
+        "round_sloper_8_center_partition_mesh_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.339228288,
+          0.62098709
+        ],
+        "max": [
+          0.660771712,
+          0.855263154
+        ]
+      },
+      "center": [
+        0.5,
+        0.738125122
+      ]
+    }
+  }
 }
