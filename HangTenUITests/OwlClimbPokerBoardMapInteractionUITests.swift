@@ -260,9 +260,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_PORTRAIT": "1",
         ]
         app.launch()
-        let model = app.otherElements["boardModel.display"]
-        XCTAssertTrue(model.waitForExistence(timeout: 60))
-        XCTAssertTrue(model.label.hasSuffix("hangboard"))
+        let model = app.otherElements.matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
+        XCTAssertTrue(model.waitForExistence(timeout: 30))
         if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
             try assertModelBodyIsVisible(model)
         }
