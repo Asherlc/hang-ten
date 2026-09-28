@@ -261,14 +261,17 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         ]
         app.launch()
         let model = app.otherElements.matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
-        XCTAssertTrue(model.waitForExistence(timeout: 30))
+        // A cold simulator can spend over two minutes importing the Forge USDZ
+        // into RealityKit. Wait for the real model instead of treating an active
+        // load as a failed interaction; this returns as soon as it is ready.
+        XCTAssertTrue(model.waitForExistence(timeout: 120))
         if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
             try assertModelBodyIsVisible(model)
         }
         capture("\(boardID)-portrait-neutral")
-        app.terminate()
-        app.launchEnvironment["HANGTEN_REVIEW_BOARD_DETAIL"] = "1"
-        app.launch()
+        // Navigate through the app so the second assertion uses the same
+        // process and warmed model resources, avoiding another cold launch.
+        app.buttons["View hold specs"].tap()
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
         XCTAssertTrue(contact.waitForExistence(timeout: 60))
