@@ -269,7 +269,7 @@ jobs:
           else
             # HangTenTests is path-gated and skipped when iOS is not required.
             # The HangTenUITests aggregator always runs (like this job) and
-            # reports success only after confirming all five shards were skipped.
+            # reports success only after confirming every UI group was skipped.
             if [[ "$UNIT_TEST_RESULT" != "skipped" ]]; then
               echo "Non-required HangTenTests had unexpected result: $UNIT_TEST_RESULT" >&2
               exit 1
@@ -622,15 +622,21 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - shard: owl
-            only_testing: "HangTenUITests/OwlClimbPokerBoardMapInteractionUITests"
-          - shard: iron-palm
-            only_testing: "HangTenUITests/IronPalmBoardMapInteractionUITests"
           # Keep these method selectors updated when adding Batch05 tests.
+          # Pair a smaller board suite with each Batch05 half to reuse the
+          # simulator without making one map group disproportionately long.
           - shard: batch05-a
-            only_testing: "HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMount HangTenUITests/Batch05BoardModelInteractionUITests/testEvo HangTenUITests/Batch05BoardModelInteractionUITests/testMegalith"
+            only_testing: >-
+              HangTenUITests/Batch05BoardModelInteractionUITests/testDoorMount
+              HangTenUITests/Batch05BoardModelInteractionUITests/testEvo
+              HangTenUITests/Batch05BoardModelInteractionUITests/testMegalith
+              HangTenUITests/IronPalmBoardMapInteractionUITests
           - shard: batch05-b
-            only_testing: "HangTenUITests/Batch05BoardModelInteractionUITests/testNatural HangTenUITests/Batch05BoardModelInteractionUITests/testPro HangTenUITests/Batch05BoardModelInteractionUITests/testForge"
+            only_testing: >-
+              HangTenUITests/Batch05BoardModelInteractionUITests/testNatural
+              HangTenUITests/Batch05BoardModelInteractionUITests/testPro
+              HangTenUITests/Batch05BoardModelInteractionUITests/testForge
+              HangTenUITests/OwlClimbPokerBoardMapInteractionUITests
     timeout-minutes: 70
 
     steps:
@@ -675,7 +681,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
+          XCTEST_RUN_TIMEOUT_SECONDS: "2400"
           XCTEST_LABEL: HangTenUITests-map-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -714,110 +720,7 @@ jobs:
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-grip:
-    name: "Test (iOS Simulator: HangTenUITests / grip: ${{ matrix.shard }})"
-    needs:
-      - changes
-    if: >-
-      github.event_name != 'pull_request' ||
-      needs.changes.outputs.ios == 'true' ||
-      needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - shard: cues-and-highlights
-            only_testing: >-
-              HangTenUITests/GripCueDiagnosticScreenshotUITests
-              HangTenUITests/DualMaxHangsHighlightUITests
-          - shard: setup-and-hand-choice
-            only_testing: >-
-              HangTenUITests/InitialWeightSetupUITests
-              HangTenUITests/OneHandedHandChoiceUITests
-    timeout-minutes: 70
-
-    steps:
-      # actions/checkout v4.2.2
-      - name: Check out source
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          persist-credentials: false
-          lfs: true
-
-      # actions/cache v4.2.3
-      - name: Restore Swift package sources
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          path: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
-          key: swiftpm-source-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-
-      - name: Capture Xcode version for DerivedData cache key
-        run: |
-          set -euo pipefail
-          mkdir -p .context
-          xcodebuild -version | tee .context/ci-xcode-version.txt
-
-      # actions/cache/restore v4.2.3
-      - name: Restore Xcode DerivedData
-        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
-          restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-
-
-      - name: Show Apple toolchain
-        run: |
-          set -euo pipefail
-          sw_vers
-          xcodebuild -version
-          xcodebuild -showsdks
-
-      - name: Run XCTest suite
-        id: xctest
-        env:
-          ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
-          XCTEST_LABEL: HangTenUITests-grip-${{ matrix.shard }}
-          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
-          XCTEST_RESULT_ROOT: ${{ runner.temp }}
-          XCTEST_ONLY_TESTING: ${{ matrix.only_testing }}
-          XCTEST_PARALLEL_WORKERS: "1"
-          SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
-        run: |
-          set -euo pipefail
-          mkdir -p "$XCTEST_DERIVED_DATA" "$XCTEST_LOG_ROOT"
-          telemetry_xcconfig="$(mktemp "$RUNNER_TEMP/hang-ten-analytics.XXXXXX")"
-          trap 'rm -f "$telemetry_xcconfig"' EXIT
-          umask 077
-          printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
-          chmod 600 "$telemetry_xcconfig"
-          unset ANALYTICS_API_KEY
-          XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh
-
-      # actions/upload-artifact v4.6.2
-      - name: Upload test diagnostics on failure
-        if: failure() || cancelled()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: ci-test-results-HangTenUITests-grip-${{ matrix.shard }}-${{ github.run_id }}
-          path: |
-            ${{ runner.temp }}/HangTenUITests-grip-${{ matrix.shard }}-run.xcresult
-            ${{ runner.temp }}/hang-ten-ui-test-logs/
-          if-no-files-found: ignore
-
-      # actions/cache/save v4.2.3
-      - name: Save Xcode DerivedData
-        if: success()
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
-        with:
-          path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
-
-  test-ui-picker:
-    name: "Test (iOS Simulator: HangTenUITests / picker)"
+    name: "Test (iOS Simulator: HangTenUITests / grip and picker)"
     needs:
       - changes
     if: >-
@@ -853,10 +756,10 @@ jobs:
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-cues-and-highlights-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-cues-and-highlights-
 
       - name: Show Apple toolchain
         run: |
@@ -869,12 +772,17 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
-          XCTEST_LABEL: HangTenUITests-picker
+          XCTEST_RUN_TIMEOUT_SECONDS: "2400"
+          XCTEST_LABEL: HangTenUITests-grip-picker
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}
-          XCTEST_ONLY_TESTING: HangTenUITests/BeastmakerBoardPickerInteractionUITests
+          XCTEST_ONLY_TESTING: >-
+            HangTenUITests/GripCueDiagnosticScreenshotUITests
+            HangTenUITests/DualMaxHangsHighlightUITests
+            HangTenUITests/InitialWeightSetupUITests
+            HangTenUITests/OneHandedHandChoiceUITests
+            HangTenUITests/BeastmakerBoardPickerInteractionUITests
           XCTEST_PARALLEL_WORKERS: "1"
           SWIFT_PACKAGE_CACHE_PATH: ${{ runner.temp }}/hang-ten-swiftpm-source-packages
         run: |
@@ -893,9 +801,9 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ci-test-results-HangTenUITests-picker-${{ github.run_id }}
+          name: ci-test-results-HangTenUITests-grip-picker-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-picker-run.xcresult
+            ${{ runner.temp }}/HangTenUITests-grip-picker-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -905,7 +813,7 @@ jobs:
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
-          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
+          key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}-${{ github.run_id }}-${{ github.run_attempt }}
 
   test-ui-misc:
     name: "Test (iOS Simulator: HangTenUITests / misc: ${{ matrix.shard }})"
@@ -920,12 +828,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - shard: settings
-            only_testing: "HangTenUITests/SettingsUITests"
           # Keep these method selectors updated when adding FreeWorkout tests.
-          # Split the two long finish flows so neither shard owns both.
-          - shard: free-workout-resume
-            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish"
+          # The long finish flow remains separate from the resume flow.
+          - shard: settings-and-resume
+            only_testing: >-
+              HangTenUITests/SettingsUITests
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
           - shard: free-workout-finish
             only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout"
     timeout-minutes: 70
@@ -960,6 +870,8 @@ jobs:
           restore-keys: |
             deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
             deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ matrix.shard }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-free-workout-resume-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-free-workout-resume-
 
       - name: Show Apple toolchain
         run: |
@@ -972,7 +884,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
+          XCTEST_RUN_TIMEOUT_SECONDS: "2400"
           XCTEST_LABEL: HangTenUITests-misc-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -1019,7 +931,6 @@ jobs:
       - test-ui-paywall
       - test-ui-map
       - test-ui-grip
-      - test-ui-picker
       - test-ui-misc
     if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
@@ -1030,7 +941,6 @@ jobs:
           PAYWALL_RESULT: ${{ needs.test-ui-paywall.result }}
           MAP_RESULT: ${{ needs.test-ui-map.result }}
           GRIP_RESULT: ${{ needs.test-ui-grip.result }}
-          PICKER_RESULT: ${{ needs.test-ui-picker.result }}
           MISC_RESULT: ${{ needs.test-ui-misc.result }}
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
@@ -1046,22 +956,22 @@ jobs:
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
             # Prefer failure over cancelled so a failed shard is not masked when
             # a sibling is cancelled mid-run.
-            if [[ "$PAYWALL_RESULT" == "failure" || "$MAP_RESULT" == "failure" || "$GRIP_RESULT" == "failure" || "$PICKER_RESULT" == "failure" || "$MISC_RESULT" == "failure" ]]; then
-              echo "Required UI test shard failed: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+            if [[ "$PAYWALL_RESULT" == "failure" || "$MAP_RESULT" == "failure" || "$GRIP_RESULT" == "failure" || "$MISC_RESULT" == "failure" ]]; then
+              echo "Required UI test shard failed: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT misc=$MISC_RESULT" >&2
               exit 1
             fi
-            if [[ "$PAYWALL_RESULT" == "cancelled" || "$MAP_RESULT" == "cancelled" || "$GRIP_RESULT" == "cancelled" || "$PICKER_RESULT" == "cancelled" || "$MISC_RESULT" == "cancelled" ]]; then
+            if [[ "$PAYWALL_RESULT" == "cancelled" || "$MAP_RESULT" == "cancelled" || "$GRIP_RESULT" == "cancelled" || "$MISC_RESULT" == "cancelled" ]]; then
               echo "Required UI test shard was cancelled for this attempt; evaluating only non-cancelled runs."
               exit 0
             fi
-            if [[ "$PAYWALL_RESULT" != "success" ]] || [[ "$MAP_RESULT" != "success" ]] || [[ "$GRIP_RESULT" != "success" ]] || [[ "$PICKER_RESULT" != "success" ]] || [[ "$MISC_RESULT" != "success" ]]; then
-              echo "Required UI test shards did not succeed: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+            if [[ "$PAYWALL_RESULT" != "success" ]] || [[ "$MAP_RESULT" != "success" ]] || [[ "$GRIP_RESULT" != "success" ]] || [[ "$MISC_RESULT" != "success" ]]; then
+              echo "Required UI test shards did not succeed: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT misc=$MISC_RESULT" >&2
               exit 1
             fi
             echo "Required UI test shards succeeded."
           else
-            if [[ "$PAYWALL_RESULT" != "skipped" ]] || [[ "$MAP_RESULT" != "skipped" ]] || [[ "$GRIP_RESULT" != "skipped" ]] || [[ "$PICKER_RESULT" != "skipped" ]] || [[ "$MISC_RESULT" != "skipped" ]]; then
-              echo "Non-required UI test shards had unexpected results: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT picker=$PICKER_RESULT misc=$MISC_RESULT" >&2
+            if [[ "$PAYWALL_RESULT" != "skipped" ]] || [[ "$MAP_RESULT" != "skipped" ]] || [[ "$GRIP_RESULT" != "skipped" ]] || [[ "$MISC_RESULT" != "skipped" ]]; then
+              echo "Non-required UI test shards had unexpected results: paywall=$PAYWALL_RESULT map=$MAP_RESULT grip=$GRIP_RESULT misc=$MISC_RESULT" >&2
               exit 1
             fi
             echo "UI tests are not required for the changed components."

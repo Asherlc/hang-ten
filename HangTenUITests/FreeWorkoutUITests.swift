@@ -161,7 +161,9 @@ final class FreeWorkoutUITests: XCTestCase {
         // Real finish path unlocks Last.
         openEmptyLog(in: app, alreadyOnStartSheet: true)
         addHangExercise(in: app)
-        completeFocusedSetPreferringGuidedHang(in: app)
+        // This test verifies discard and Last history. Complete the set through
+        // its checkbox; the guided Start Set path has a dedicated UI test.
+        completeFocusedHangViaMarkDone(in: app)
         XCTAssertTrue(anyElement(app, "freeWorkout.restBar").waitForExistence(timeout: 10))
         finishWorkoutSkippingTemplate(in: app)
 
@@ -238,32 +240,6 @@ final class FreeWorkoutUITests: XCTestCase {
             "Hang set needs Mark set complete (or Mark done) to finish without guided hang"
         )
         tapHittable(checkbox, timeout: 15)
-    }
-
-    /// Prefer guided Start Set → Complete early; fall back to checkbox / Mark done.
-    private func completeFocusedSetPreferringGuidedHang(in app: XCUIApplication) {
-        let startSet = firstMatching(
-            in: app,
-            identifiers: ["freeWorkout.startSet"],
-            labels: ["Start Set"]
-        )
-        if startSet.waitForExistence(timeout: 5), startSet.isHittable {
-            startSet.tap()
-            XCTAssertTrue(
-                anyElement(app, "freeWorkout.guidedHang").waitForExistence(timeout: 10),
-                "Start Set should present guided hang"
-            )
-            let completeEarly = firstMatching(
-                in: app,
-                identifiers: ["freeWorkout.guidedHang.completeEarly"],
-                labels: ["Complete early"]
-            )
-            XCTAssertTrue(completeEarly.waitForExistence(timeout: 10))
-            completeEarly.tap()
-            return
-        }
-
-        completeFocusedHangViaMarkDone(in: app)
     }
 
     private func focusedSetActionAvailable(in app: XCUIApplication, timeout: TimeInterval) -> Bool {

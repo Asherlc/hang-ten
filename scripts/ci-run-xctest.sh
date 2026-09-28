@@ -129,6 +129,7 @@ run_xcodebuild_with_watchdog() {
       wait "$xcodebuild_pid" || true
       trap - INT TERM
       cat "$phase_log"
+      echo "XCTest phase=${phase} duration=$((SECONDS - phase_started))s status=124"
       return 124
     fi
     sleep 5
@@ -137,6 +138,7 @@ run_xcodebuild_with_watchdog() {
   wait "$xcodebuild_pid" || xcodebuild_status=$?
   trap - INT TERM
   cat "$phase_log"
+  echo "XCTest phase=${phase} duration=$((SECONDS - phase_started))s status=${xcodebuild_status}"
   return "$xcodebuild_status"
 }
 
