@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7 native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, and escape-unlimited native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "939b516e9d41c9ab9d681431a795709a2e8247181088a68e42ec8b6716436447",
+  "sha256Manifest": "61f9769ae2830a0f885ed109725798615ebfbac0f35c6056a39684b81ceab49d",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "d72bc116d00bc99fb17f7dbf9d032f1e1d9b8045311aaabeefc3cb63d864f4e3",
+  "supersededSha256Manifest": "52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -455,6 +455,21 @@
       "provenanceSidecar": "docs/source-audits/2026-09-27-frictitious-doormount-pro-7-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline for each analytic cavity mouth and the full-width top jug front band"
+    },
+    "escape-unlimited": {
+      "source": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
+      "sourceSHA256": "7d58c7afa47497300c20c3be3516a69cc584ef77898047e0f7602b8e93976592",
+      "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 7 stable contact IDs and node IDs preserved; only the model presentation aspectRatio changed (3.2884058722385614 -> 3.275862299100252, the new modelBounds x/y ratio)",
+      "referenceSHA256": "4d0fde630f301c41d8b3ef8e209a5c3b520df70edc0543afc90d960a44f28d7f",
+      "assetSHA256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
+      "descriptorSHA256": "905db88c97f4ed2ae64cfe853c351d284f1c0417768a4e0f4b119e1cf7ff45f3",
+      "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes, no materials or textures)",
+      "nativeValidation": "passed: compile reopen, 7 IDs, published-depth gate exact (45/20/15 mm; 60 mm sloper spans the full 47.625 mm body), analytic contact partition, USDZ reimport and descriptor hash; verify_reproducible byte-identical on pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; all 7 boardModel.contact.* elements present; top-sloper-60 selected by default and edge-20-right selected by deep link, confirmed via boardDetail.selectedHold.<contactID> and screenshot highlight)",
+      "comparison": "reviewed against superseded asset in front, side and top views; native display model follows the manufacturer side profile (sharp tier steps) instead of the superseded mesh's sloped tier transitions",
+      "provenanceSidecar": "docs/source-audits/2026-09-27-escape-unlimited-cad-provenance.md",
+      "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored slot lip pills for the six edges; front-plane band of the quarter-round for the top sloper"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -488,5 +503,7 @@
   "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
   "miniBarGripFlipCorrectionNote": "2026-09-27: Lattice grip photos and CAD contact normals showed the two edge rails and pinch facing down in their canonical poses; corrected pose half-turns place the selected grip upward, the pinch camera now faces its highlighted long rail, and all cord routes were re-solved against the unchanged CAD solid.",
   "frictitiousDoorMountPro7MigrationNote": "2026-09-27: source-backed native FreeCAD DoorMount Pro 7 with generated board.json and 13 preserved contact/14 node IDs. sha256Manifest supersedes the main delivery manifest recorded in supersededSha256Manifest. See dated provenance for sources and review renders.",
-  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main’s d72bc116... manifest and also incorporates the Mini Bar branch’s 88073991... manifest."
+  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main’s d72bc116... manifest and also incorporates the Mini Bar branch’s 88073991... manifest.",
+  "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest.",
+  "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s Escape Unlimited migration. The digest covers both packages and supersedes main’s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest."
 }

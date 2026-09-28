@@ -208,7 +208,9 @@ jobs:
       needs.changes.outputs.cad == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
-    timeout-minutes: 30
+    # Rebuilds every source-backed board; the time grows with each migration
+    # (22 boards already took 29m47s on main).
+    timeout-minutes: 60
 
     steps:
       # actions/checkout v4.2.2
