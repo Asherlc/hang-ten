@@ -338,13 +338,14 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 }
             }, object: nil)
             surfaceCoordinate(for: contact, in: map, offset: offset).tap()
-            if XCTWaiter.wait(for: [resetFinished], timeout: 4) == .completed {
+            // Reading all 28 Pro frames crosses the UI-test process boundary;
+            // give each physical probe enough time to observe the full reset.
+            if XCTWaiter.wait(for: [resetFinished], timeout: 30) == .completed {
                 resetCompleted = true
                 break
             }
         }
-        // Reading all 28 Pro frames crosses the UI-test process boundary; retry
-        // nearby points without relaxing the canonical-frame tolerance.
+        // Retry nearby points without relaxing the canonical-frame tolerance.
         XCTAssertTrue(resetCompleted,
                       "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.
