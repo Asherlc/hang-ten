@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, moon-armstrong, and nature-stoak-board-iii, and dewoodstok-woodbord native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, and the-hangboard native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "595a6074cccdf1ff9c82a73e4ef8386d6927b38f3c6db28f0ae1ed8e26fb23bd",
+  "sha256Manifest": "3c5522d943e925dc2782a4ffcf983d4388b7dac156e347ed4c59b25fd19186ad",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "0208a876a2c391bbbbe669e4c5e26657268a08834ba67d83bc0790fa188455b1",
+  "supersededSha256Manifest": "5ce7c637f0af8a9c6157309a7a089cf6fc3641708df9fc20015ea7480f217f86",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -396,6 +396,21 @@
       "holdOutline": "CAD-authored HangTenHoldOutline: slot-segment openings (rounded outer ends, straight at the depth step), the window opening, and a 9.5 mm top band for the jug (region: the round-over plus the planar top face)",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; top-jug (default), edge-50-center, edge-10-right and edge-20-left (deep links) selected and confirmed via boardDetail.selectedHold.<contactID>; presentation camera tilted 20 degrees down so the through-window floor is visible)"
     },
+    "the-hangboard": {
+      "source": "Hangboards/the-hangboard/the-hangboard.FCStd",
+      "sourceSHA256": "1ff13aaf7b4442b682333c8cb845c2550ebe7170c75bf1936042d70e3aee3f0d",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.759999959181102, was 2.0); all 15 contact IDs and 16 node IDs and their contact-to-node pairing unchanged",
+      "referenceSHA256": "7666ef014e2fd5be4af874d56caced26ba1202c8c18978f9fd8ff737ae23ff42",
+      "assetSHA256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
+      "descriptorSHA256": "6d0d41548748408a8a4b0d5c0037a498f17589aafddb1817cab83a221f75444b",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 15 stable contact IDs and 16 node IDs, published-depth gate exact for all 12 edges (40 / 30 / 25 mm upper, 20 / 15 / 10 mm lower); verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), edge-30-left, edge-30-right, edge-10-left and sloper-40-center by hold-map tap, each confirmed via boardDetail.selectedHold.<contactID> and a screenshot highlighting only that region, with the published depth for the edges)",
+      "comparison": "re-authored from The Hangboard's own straight-on product photograph (hangboard-straight-2.png, about 3.1 px/mm per side), end-profile render, back, top and oblique photographs, not traced from the superseded display mesh, whose jugs were solid domes with no space behind them, whose ears sat on a narrower back block below a separate proud upper band, and whose sloper had a flat top 8 mm below the jugs; compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-27-the-hangboard-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: 12 edge-segment mouths (window segment grown by the 3 mm mouth round-over), jug front bands (full-round tops), sloper front band"
+    },
     "trango-rock-prodigy-pivot": {
       "source": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
       "sourceSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
@@ -454,5 +469,6 @@
   "miniBarSettledLengthNote": "2026-09-27: a follow-up static taut-loop approximation measures each hidden channel length from its FreeCAD pipe spine and lowers the board beneath the fixed support until both estimated 0.82 m loops fit. The old manifest moved to supersededSha256Manifest. A later CAD-section contact solve resolves the visible gap; see docs/HANGBOARD_CORD_AUTHORING.md.",
   "natureStoakBoardIIIMigrationNote": "2026-09-27: nature-stoak-board-iii migrated to a native FreeCAD source re-authored from manufacturer photographs and the manufacturer's annotated contact map; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). Contact-to-node pairing kept, so three legacy node names no longer describe their region (see provenance). The merged manifest includes both Nature Stoak Board III and Mini Bar.",
   "miniBarExactSectionRopeNote": "Mini Bar derived pose routes are reproducibly solved from the native CAD solid, four mouths, channel lengths, winding and overhead anchor, then cached in suspension.json; no cord is stored in USDZ.",
-  "dewoodstokWoodbordMigrationNote": "2026-09-27: dewoodstok-woodbord migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest 0208a876... supersedes a1609fef..., which moved to supersededSha256Manifest."
+  "dewoodstokWoodbordMigrationNote": "2026-09-27: dewoodstok-woodbord migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest 0208a876... supersedes a1609fef..., which moved to supersededSha256Manifest.",
+  "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest."
 }
