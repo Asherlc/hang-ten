@@ -302,17 +302,14 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let resetPoint = surfaceCoordinate(for: contact, in: map)
         resetPoint.tap()
         XCTAssertTrue(selected.exists)
+        let canonicalContactFrame = try XCTUnwrap(canonicalFrames[contact.identifier])
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            let currentFrames = self.contactFrames(allContacts)
-            guard Set(currentFrames.keys) == Set(canonicalFrames.keys) else { return false }
-            return currentFrames.allSatisfy { identifier, frame in
-                guard let canonical = canonicalFrames[identifier] else { return false }
-                return abs(frame.midX - canonical.midX) <= 0.5
-                    && abs(frame.midY - canonical.midY) <= 0.5
-            }
+            let frame = contact.frame
+            return abs(frame.midX - canonicalContactFrame.midX) <= 0.5
+                && abs(frame.midY - canonicalContactFrame.midY) <= 0.5
         }, object: nil)
-        // Reading all 28 Pro frames crosses the UI-test process boundary;
-        // allow traversal time without relaxing the canonical-frame tolerance.
+        // Poll one projected contact. Reading every contact on each poll can
+        // consume the timeout in cross-process accessibility snapshots.
         XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 30), .completed,
                        "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.

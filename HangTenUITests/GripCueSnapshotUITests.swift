@@ -159,8 +159,9 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        // Tap the switch itself, rather than the center of its full-width Form row.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        // The accessibility frame spans the row. Tap the off thumb's center;
+        // the far-right track edge can miss the native switch on iPhone 17 Pro.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.86, dy: 0.5)).tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
