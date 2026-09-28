@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, and escape-unlimited native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, and metolius-climbers-edge native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8",
+  "sha256Manifest": "dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "d72bc116d00bc99fb17f7dbf9d032f1e1d9b8045311aaabeefc3cb63d864f4e3",
+  "supersededSha256Manifest": "52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -452,6 +452,21 @@
       "provenanceSidecar": "docs/source-audits/2026-09-27-escape-unlimited-cad-provenance.md",
       "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored slot lip pills for the six edges; front-plane band of the quarter-round for the top sloper"
+    },
+    "metolius-climbers-edge": {
+      "source": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
+      "sourceSHA256": "02943657a02d83c59daf75ed473e2f841cd7a07003e907cb04a5eecf8dcb9239",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the deleted hand-authored file (the model presentation aspectRatio stays 3.75, which equals the new 600 x 160 mm modelBounds ratio); all 15 contact IDs and 16 node IDs and their contact-to-node pairing unchanged",
+      "referenceSHA256": "19c0d57881561f8c5a8a28af79148253137bc9135828f9e8ac1308a6c3ea4b32",
+      "assetSHA256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
+      "descriptorSHA256": "3cd49d64e8c8dc5bbd8d5f3fefdf784f24ea1e444de2c4276fa0f1af5fb0efce",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 15 stable contact IDs and 16 node IDs, published-depth gate exact for all 10 edges (20 / 15 / 10 mm upper row, 17.5 / 12.5 / 7.5 mm lower row); verify_reproducible byte-identical on the pinned macOS toolchain",
+      "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), then edge-20-left, edge-15-left, edge-7-5-center, edge-12-5-right, flat-sloper-right, round-sloper-center and jug-right by deep link, each confirmed via boardDetail.selectedHold.<contactID> and a screenshot highlighting only that region, with the published depth for the edges)",
+      "comparison": "re-authored from Metolius's own spec drawing (Climber_s-Edge-Spec.jpg, 3.0 px/mm, 600 x 160 mm published) and end-grain product photograph, not traced from the superseded display mesh, whose rail fronts (55 / 47 / 41 mm) and groove floors (27 mm off the back for the 20 mm edge) disagree with the photographed end profile, and whose outline was a rectangle rather than the drawn taper; compare_exports not used as evidence",
+      "provenanceSidecar": "docs/source-audits/2026-09-27-metolius-climbers-edge-cad-provenance.md",
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline: 10 edge-segment windows (ledge round-over up to the scoop's front edge), jug top bands, flat-sloper front bands, round-sloper front band with shoulders"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -477,5 +492,6 @@
   "dewoodstokWoodbordMigrationNote": "2026-09-27: dewoodstok-woodbord migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... is the merged manifest after The Hangboard migration; main's PENDING_... manifest moved to supersededSha256Manifest. The combined manifest after The Hangboard migration is 5ce7c637...; main's 0208a876... manifest is recorded in supersededSha256Manifest.",
   "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
   "frictitiousDoorMountPro7MigrationNote": "2026-09-27: source-backed native FreeCAD DoorMount Pro 7 with generated board.json and 13 preserved contact/14 node IDs. sha256Manifest supersedes the main delivery manifest recorded in supersededSha256Manifest. See dated provenance for sources and review renders.",
-  "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest."
+  "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest.",
+  "metoliusClimbersEdgeMigrationNote": "2026-09-27: metolius-climbers-edge became a source-backed native FreeCAD package re-authored from Metolius's spec drawing and end-grain photograph (stepped-scoop edges at the published 20/15/10 and 17.5/12.5/7.5 mm depths, 20-degree flat slopers, 40 mm-radius round sloper) with generated board.json. sha256Manifest dfd32f63... supersedes 52ec1c9f..., recorded in supersededSha256Manifest."
 }
