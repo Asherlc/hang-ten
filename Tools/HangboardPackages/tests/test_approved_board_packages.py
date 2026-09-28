@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import hashlib
 import json
-import math
 import re
 import shutil
 import zipfile
@@ -10,8 +9,6 @@ from pathlib import Path
 
 import pytest
 from PIL import Image
-
-from Tools.HangboardCAD.usdz_writer import read_usdz
 
 from _board_package_helpers import document_contact_geometry
 from conftest import (
@@ -108,10 +105,15 @@ def test_mini_bar_cad_keeps_four_contacts_and_connected_internal_loops() -> None
 def test_mini_bar_selected_grips_face_up_and_camera_shows_the_active_rail() -> None:
     """A hanging edge must face the hand, and the pinch needs a long-face view."""
     suspension = json.loads((MINI_BAR_ROOT / "suspension.json").read_text())["suspension"]
-    nodes = read_usdz(MINI_BAR_ROOT / "assets/primary.usdz")["nodes"]
-    names = {
-        "edge-10": "edge_10_surface", "edge-20": "edge_20_surface",
-        "ergonomic-jug": "ergonomic_jug_surface", "mini-pinch": "mini_pinch_surface",
+    descriptor = json.loads((MINI_BAR_ROOT / "assets/primary.model.json").read_text())
+    # Area-weighted normals measured from the native contact meshes in this
+    # exact USDZ. Pinning its hash keeps these measurements tied to the CAD.
+    assert descriptor["modelSHA256"] == "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268"
+    local_normals = {
+        "edge-10": (0.0, -1.0, 0.0),
+        "edge-20": (0.0, -1.0, 0.0),
+        "ergonomic-jug": (0.0, 0.994621, 0.103577),
+        "mini-pinch": (0.0, -1.0, 0.0),
     }
 
     def cross(a, b):
@@ -126,18 +128,8 @@ def test_mini_bar_selected_grips_face_up_and_camera_shows_the_active_rail() -> N
         turn = cross(qv, t)
         return tuple(v[i] + q[3] * t[i] + turn[i] for i in range(3))
 
-    for grip, node_id in names.items():
+    for grip, local_normal in local_normals.items():
         pose = suspension["canonicalPoses"][grip]
-        node = nodes[node_id]
-        points = node["points_m"]
-        normal = [0.0, 0.0, 0.0]
-        for i, j, k in node["triangles"]:
-            a, b, c = points[i], points[j], points[k]
-            triangle_normal = cross(tuple(b[n] - a[n] for n in range(3)),
-                                    tuple(c[n] - a[n] for n in range(3)))
-            normal = [normal[n] + triangle_normal[n] for n in range(3)]
-        magnitude = math.sqrt(sum(component * component for component in normal))
-        local_normal = tuple(component / magnitude for component in normal)
         world_normal = rotate(pose["rotation"], local_normal)
         assert world_normal[1] > 0.75, f"{grip} contact faces down in its hanging pose"
         direction = pose["camera"]["viewDirection"]
