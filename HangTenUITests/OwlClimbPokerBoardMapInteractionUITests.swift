@@ -244,7 +244,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     func testForge() throws {
-        try review(boardID: "trango.rock-prodigy-forge", target: "variable-edge-rail-right")
+        // The projected bounds center falls in the gap between the two units.
+        try review(boardID: "trango.rock-prodigy-forge", target: "variable-edge-rail-right",
+                   surfacePoint: CGVector(dx: 0.70, dy: 0.43))
     }
 
     func testNatural() throws {
@@ -289,8 +291,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         // native spatial picking without baking in the previous renderer's camera.
         let initialPoint = surfacePoint.map { map.coordinate(withNormalizedOffset: $0) }
             ?? surfaceCoordinate(for: contact, in: map)
-        let contactOffset = CGVector(dx: initialPoint.screenPoint.x - contact.frame.midX,
-                                     dy: initialPoint.screenPoint.y - contact.frame.midY)
         initialPoint.tap()
         XCTAssertTrue(selected.waitForExistence(timeout: 10), "Real coordinate tap must select \(target)")
         capture("\(boardID)-portrait-active")
@@ -303,9 +303,10 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
         XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
-        // A real contact tap runs the production selectContact canonical reset.
-        contact.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            .withOffset(contactOffset).tap()
+        // Reproject after orbit; the initial contact offset no longer tracks
+        // the visible surface once the camera has moved.
+        let resetPoint = surfaceCoordinate(for: contact, in: map)
+        resetPoint.tap()
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let currentFrames = self.contactFrames(allContacts)
