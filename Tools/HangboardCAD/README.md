@@ -183,6 +183,40 @@ to export both spine centerlines in model coordinates. The output paths run
 from the first to second declared mouth, including both endpoints; they are
 derived from CAD and must not be copied into the USDZ.
 
+For a bar-shaped board with two connected cord channels, solve the visible
+settled routes from the native wood solid. This authoring step writes derived
+pose translations and contact routes into `suspension.json`; the authored
+inputs remain the mouths, connected channel lengths, winding, overhead anchor,
+and loop length. Install `rope_solver_requirements.txt` in a workspace-local
+virtual environment, then run:
+
+```sh
+HANGTEN_ROPE_PACKAGE=lattice-mini-bar \
+HANGTEN_ROPE_SOLID_FEATURE=RightCordChannel \
+HANGTEN_ROPE_SOLID_OUTPUT=.context/<workspace-owner>/mini-bar-solid.json \
+  /Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd \
+  Tools/HangboardCAD/export_rope_collision_solid.py
+
+.context/<workspace-owner>/rope-venv/bin/python \
+  Tools/HangboardCAD/solve_threaded_rope.py \
+  --package lattice-mini-bar \
+  --solid .context/<workspace-owner>/mini-bar-solid.json --apply
+
+.context/<workspace-owner>/rope-venv/bin/python \
+  Tools/HangboardCAD/solve_threaded_rope.py \
+  --package lattice-mini-bar \
+  --solid .context/<workspace-owner>/mini-bar-solid.json --check
+```
+
+The solver finds a shortest route in each declared winding direction on a
+CAD section offset by the rope radius, moves the board under the fixed anchor
+until the longest loop reaches its declared length, and checks the full visible
+centerline against the watertight CAD solid every 0.5 mm. It fails on a
+missing route, wood penetration, or more than 0.5 mm slack in either loop.
+This is a static taut-rope model for approximately extruded bars; it does not
+simulate swing, friction, elasticity, or arbitrary travel along the bar.
+Review the generated poses next to manufacturer photos before delivery.
+
 ## Running it
 
 The pinned toolchain is FreeCAD 1.1.3 (OCCT 7.8.1, Python 3.11.14) with OpenUSD

@@ -92,6 +92,8 @@ def load_case(package: Path) -> RopeCase:
     suspension = sidecar["suspension"]
     if suspension.get("type") != "twoBranchCord":
         raise ValueError("expected exterior two-branch cord")
+    if "internalLoop" in suspension:
+        raise ValueError("internal-loop suspension is not supported by the exterior-wrap prototype")
     offset = suspension["anchor"]["offsetFromBoardBounds"]
     anchor = (
         (minimum[0] + maximum[0]) / 2 + offset[0],

@@ -119,8 +119,9 @@ exterior routes keyed by both paired-lead IDs or all four directed-passage IDs.
 For a branch, the first passage's override runs from the anchor toward the
 entry mouth, and the second runs from its entry mouth back toward the anchor.
 These override the branch's entry/exit contacts only; the bore and the fixed
-route between bore exits remain unchanged. Single cords and point-only
-passages cannot use these overrides. Parsers validate the resolved route,
+route between bore exits remain unchanged. Connected `internalLoop` point
+mouths may hold generated settled-route caches; other point-only passages
+and single cords cannot use these overrides. Parsers validate the resolved route,
 including full length and distinct adjacent points.
 
 Captain pose-specific `attachmentPoints` delimit the visible cord at the
@@ -169,9 +170,10 @@ connected U-shaped channels in its FCStd, each with two mouth points in
 the visible lower curve in Lattice's end photo. `windingByPassageID` records
 which side of the ovoid each lead follows. This one-time threading choice is
 necessary because mouth and anchor coordinates alone admit two exterior
-paths. The renderer recomputes bearing points from the loaded body mesh for
-every grip pose; no pose-specific route coordinates or cord geometry are baked
-into the USDZ. Mouth positions, channel and cord diameters, anchor offset,
+paths. The CAD-section solver computes settled bearing points for every grip
+pose from the native solid and caches them in `suspension.json`; the renderer
+uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
+positions, channel and cord diameters, anchor offset,
 and clearance are labeled display estimates. A sidecar's `modelSHA256` must
 match its descriptor, and the delivery lock pins its bytes.
 

@@ -52,11 +52,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d1157eb0c0bad7945312d1789afcb7b1b1b535ad9237d5cde84b86c595b6ad82",
+  "sha256Manifest": "8b9b3f07c8016abc74e3f4e90c0af8c3662a53ac4870fe0b306aaa43b3b673de",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "a14948190354f70d64c13b5d3d8792795903d1787caebaca6de7ea15f3335073",
+  "supersededSha256Manifest": "d1157eb0c0bad7945312d1789afcb7b1b1b535ad9237d5cde84b86c595b6ad82",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -97,7 +97,7 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -223,7 +223,7 @@
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
       "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "docs/source-audits/2026-09-26-metolius-light-rail-2-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -272,7 +272,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in docs/source-audits/2026-09-24-metolius-wood-grips-compact-ii-cad-provenance.md (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -361,7 +361,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "docs/source-audits/2026-09-25-target10a-linebreaker-base-cad-provenance.md (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -437,5 +437,6 @@
   "miniBarBoreCorrectionNote": "Superseded 2026-09-27: the intermediate four-through-bore interpretation was replaced after the user confirmed a connected internal passage and one continuous exterior-bearing loop per end.",
   "miniBarInternalLoopCorrectionNote": "2026-09-27: two native U channels connect paired mouths in the ovoid wood. A topology direction per mouth fixes which side each leg uses; the transient iOS renderer computes contact from the loaded mesh, mouths, and overhead anchor at every pose. The cord is absent from the USDZ. Approved Lattice photo comparisons, native solid clearance, package tests, and isolated simulator review are recorded in the provenance sidecar.",
   "miniBarSettledLengthNote": "2026-09-27: a follow-up static taut-loop approximation measures each hidden channel length from its FreeCAD pipe spine and lowers the board beneath the fixed support until both estimated 0.82 m loops fit. The old manifest moved to supersededSha256Manifest. Exact channel-rim contact remains unresolved; see docs/HANGBOARD_CORD_AUTHORING.md.",
-  "natureStoakBoardIIIMigrationNote": "2026-09-27: nature-stoak-board-iii migrated to a native FreeCAD source re-authored from manufacturer photographs and the manufacturer's annotated contact map; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). Contact-to-node pairing kept, so three legacy node names no longer describe their region (see provenance). The merged manifest includes both Nature Stoak Board III and Mini Bar."
+  "natureStoakBoardIIIMigrationNote": "2026-09-27: nature-stoak-board-iii migrated to a native FreeCAD source re-authored from manufacturer photographs and the manufacturer's annotated contact map; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). Contact-to-node pairing kept, so three legacy node names no longer describe their region (see provenance). The merged manifest includes both Nature Stoak Board III and Mini Bar.",
+  "miniBarExactSectionRopeNote": "Mini Bar derived pose routes are reproducibly solved from the native CAD solid, four mouths, channel lengths, winding and overhead anchor, then cached in suspension.json; no cord is stored in USDZ."
 }

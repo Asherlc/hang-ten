@@ -74,7 +74,17 @@ def test_mini_bar_cad_keeps_four_contacts_and_connected_internal_loops() -> None
     assert {passage["nodeID"] for side in suspension["passages"].values() for passage in side} == {"mini_bar_body"}
     assert set(suspension["canonicalPoses"]) == {"edge-10", "edge-20", "ergonomic-jug", "mini-pinch"}
     assert all("wrappedRoutes" not in pose for pose in suspension["canonicalPoses"].values())
-    assert all("cordContactPoints" not in pose for pose in suspension["canonicalPoses"].values())
+    for pose in suspension["canonicalPoses"].values():
+        assert pose["translation"][1] < 0
+        routes = pose["cordContactPoints"]
+        assert set(routes) == {"left-in", "left-out", "right-in", "right-out"}
+        assert all(len(route) >= 1 for route in routes.values())
+        assert all(route[-1] == next(p["pointInModel"] for side in suspension["passages"].values()
+                                     for p in side if p["id"] == passage_id)
+                   for passage_id, route in routes.items() if passage_id.endswith("-in"))
+        assert all(route[0] == next(p["pointInModel"] for side in suspension["passages"].values()
+                                    for p in side if p["id"] == passage_id)
+                   for passage_id, route in routes.items() if passage_id.endswith("-out"))
     assert all(len(side) == 2 for side in suspension["passages"].values())
     assert all(set(passage) == {"id", "nodeID", "pointInModel", "provenance"}
                for side in suspension["passages"].values() for passage in side)

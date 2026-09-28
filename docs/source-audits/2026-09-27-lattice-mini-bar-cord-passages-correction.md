@@ -46,29 +46,30 @@ second free leg back to the same overhead point. `internalLoop.clearance` is
 0.1 mm and the estimated cord radius is 2 mm. A single
 `windingByPassageID` choice records which side of the ovoid each leg leaves its
 mouth on. It is threading topology, authored once per passage, **not** a list
-of pose-specific coordinates. For every selected grip, the app derives the
-visible bearing path from the loaded body mesh, the four mouth positions, and
-the fixed overhead point. The direction choices let one leg per loop bear
+of pose-specific coordinates. The authoring solver derives pose routes from
+the native CAD solid, four mouth positions, fixed overhead point, and loop
+length, then caches them in `suspension.json`. The direction choices let one leg per loop bear
 under the wood as the approved photos show. The rope is transient,
 non-pickable, and absent from the USDZ.
 
-The route solver offsets the ovoid section by the rope radius plus clearance.
+The settled solver offsets each mouth's native ovoid section by the rope radius
+plus clearance and minimizes visible length in the selected winding class.
 A native FreeCAD solid-intersection check across all four poses and all four
-visible leads measured a minimum **2.09 mm centerline-to-wood distance** on
+visible leads measured a minimum **2.097 mm centerline-to-wood distance** on
 the exterior route, giving about 0.09 mm surface clearance for the estimated
 2 mm rope radius. The final lead segment enters its actual channel mouth
 without crossing wooden solid. The invisible channel segment is represented
 by the CAD void; its centerline is not rendered.
 
-In a subsequent settled-pose pass, the two channel spine lengths between the
+The two channel spine lengths between the
 declared mouths measured 87.214 mm each with
 `Tools/HangboardCAD/measure_channel_spines.py`. The sidecar now records that
-length so the bar can descend beneath the fixed support until each estimated
-0.82 m loop is taut. The app derives the vertical offset from the selected
-pose rather than storing one per grip. The exterior route remains a convex
-section approximation. Its centerline can be as far as 3.41 mm from the CAD
-solid near a mouth, leaving up to 1.41 mm between the estimated 2 mm rope
-surface and wood; exact bore-rim contact needs further work.
+length so the bar can descend beneath the fixed support until the longer
+estimated 0.82 m loop is taut in each grip. The shorter loop has at most
+0.378 mm slack. A prior runtime convex-section approximation left up to
+1.41 mm of visible gap between rope and wood near a mouth; the CAD-section
+routes replace it. Their pose translations and contacts are generated data,
+not hand-authored rope geometry. The 0.82 m loop remains a display estimate.
 
 ## Visual and package review
 
@@ -76,11 +77,16 @@ The front, side, and top before/after CAD preview is
 `.context/frantic-kiwi/internal-cad-preview/front-side-top-before-after.png`.
 The later settled-length front/side/top comparison is
 `.context/frantic-kiwi/mini-bar-settled-before-after-front-side-top.png`;
-simulator screenshots for all four grips are
-`.context/frantic-kiwi/mini-bar-physics-app-<grip>.png`.
+the CAD-section route comparison against that prior wrap is
+`.context/frantic-kiwi/mini-bar-exact-before-after-front-side-top.png`.
+Simulator screenshots for the final CAD-section routes in all four grips are
+`.context/frantic-kiwi/mini-bar-exact-app-<grip>.png`; the prior settled-length
+screenshots are `.context/frantic-kiwi/mini-bar-physics-app-<grip>.png`.
 The approved-photo comparisons are
 `.context/frantic-kiwi/mini-bar-Web-{1,2,7,8,9,10,11}-vs-CAD.png`, and the
-four-pose end and side matrices are `mini-bar-end-pose-matrix.png` and
+updated CAD-section comparisons are
+`.context/frantic-kiwi/mini-bar-exact-Web-{1,2,7,8,9,10,11}-vs-CAD.png`.
+The four-pose end and side matrices are `mini-bar-end-pose-matrix.png` and
 `mini-bar-Web-1-all-pose-matrix.png` in the same workspace directory. The
 review renderer depth-sorts rope and wood; it uses hand-chosen approximate
 camera directions and canonical poses. It is a topology and contact review,

@@ -10,7 +10,9 @@ from pxr import Gf, Usd, UsdGeom
 from Tools.HangboardRopePrototype.case import load_case, read_body_mesh, write_case
 
 
-PACKAGE = Path(__file__).resolve().parents[3] / "Hangboards/lattice-mini-bar"
+ROOT = Path(__file__).resolve().parents[3]
+PACKAGE = ROOT / "Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26"
+CURRENT_PACKAGE = ROOT / "Hangboards/lattice-mini-bar"
 EXPECTED_SHA = "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46"
 
 
@@ -44,6 +46,11 @@ def test_real_case_uses_hash_bound_body_and_all_poses(tmp_path):
     assert payload["modelSHA256"] == EXPECTED_SHA
     assert len(payload["faces"]) == len(case.faces)
     assert list(payload["poses"]) == sorted(case.poses)
+
+
+def test_current_internal_loop_package_is_rejected_by_exterior_prototype():
+    with pytest.raises(ValueError, match="internal-loop suspension is not supported"):
+        load_case(CURRENT_PACKAGE)
 
 
 @pytest.mark.parametrize("file_name", ["assets/primary.model.json", "suspension.json"])

@@ -2038,6 +2038,7 @@ struct BoardPackageStore {
         }
         if let wrap = document.meshWrap {
             guard !throughBore, wrap.clearance.isFinite, wrap.clearance > 0,
+                  Float(wrap.clearance).isFinite, Float(wrap.clearance) > 0,
                   document.canonicalPoses.values.allSatisfy({ $0.wrappedRoutes == nil }),
                   document.passages.left.allSatisfy({ $0.entryPointInModel.count == 3 }),
                   document.passages.right.allSatisfy({ $0.entryPointInModel.count == 3 }),
@@ -2049,18 +2050,22 @@ struct BoardPackageStore {
         if let loop = document.internalLoop {
             guard !throughBore, document.meshWrap == nil,
                   loop.clearance.isFinite, loop.clearance > 0,
+                  Float(loop.clearance).isFinite, Float(loop.clearance) > 0,
                   Set(loop.channelLengthByBranchID.keys) == Set(document.branches.map(\.id)),
                   loop.channelLengthByBranchID.values.allSatisfy({ $0.isFinite && $0 > 0 }),
                   Set(loop.windingByPassageID.keys) == Set(passages.map(\.id)),
                   loop.windingByPassageID.values.allSatisfy({
                       BoardModelLoopWinding(rawValue: $0) != nil
                   }),
-                  document.canonicalPoses.values.allSatisfy({
-                      $0.cordContactPoints == nil && $0.wrappedRoutes == nil
+                  [0, document.canonicalPoses.count].contains(
+                      document.canonicalPoses.values.filter { $0.cordContactPoints != nil }.count),
+                  document.canonicalPoses.values.allSatisfy({ pose in
+                      pose.wrappedRoutes == nil && (pose.cordContactPoints == nil ||
+                          Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
                   }),
                   document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
                   document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
-                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and no authored cord routes")
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
             }
         }
         guard passages.allSatisfy({ $0.id.isBoardPackageIdentifier }),
@@ -2125,7 +2130,7 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord anchor must be finite")
         }
         for (positionID, pose) in document.canonicalPoses {
-            if pose.cordContactPoints != nil && !throughBore {
+            if pose.cordContactPoints != nil && !throughBore && document.internalLoop == nil {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints requires directed passages")
             }
             if pose.wrappedRoutes != nil && throughBore {
@@ -2165,7 +2170,9 @@ struct BoardPackageStore {
                 let side = branchIndex == 0 ? document.passages.left : document.passages.right
                 let entryContacts = pose.cordContactPoints?[side[0].id] ?? branch.entryContactPoints
                 let exitContacts = pose.cordContactPoints?[side[1].id] ?? branch.exitContactPoints
-                let modelRoute = !throughBore ? (pose.wrappedRoutes?[branch.id] ?? side.map(\.entryPointInModel)) : entryContacts + [
+                let modelRoute = document.internalLoop != nil && pose.cordContactPoints != nil
+                    ? entryContacts + exitContacts
+                    : !throughBore ? (pose.wrappedRoutes?[branch.id] ?? side.map(\.entryPointInModel)) : entryContacts + [
                     side[0].entryPointInModel,
                     side[0].exitPointInModel,
                 ] + branch.exteriorContactPoints + [
@@ -2194,10 +2201,23 @@ struct BoardPackageStore {
                         throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) endpoint distance must be finite")
                     }
                 }
-                let rigidLength = zip(transformedEndpoints, transformedEndpoints.dropFirst())
+                let visibleRigidLength = zip(transformedEndpoints, transformedEndpoints.dropFirst())
                     .reduce(0) { partial, pair in
                         partial + zip(pair.0, pair.1).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                     }
+                let rigidLength: Double
+                if let hiddenLength = document.internalLoop?.channelLengthByBranchID[branch.id] {
+                    let firstMouth = entryContacts.last ?? side[0].entryPointInModel
+                    let secondMouth = exitContacts.first ?? side[1].entryPointInModel
+                    let mouthChord = zip(firstMouth, secondMouth)
+                        .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                    guard hiddenLength >= mouthChord else {
+                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop channel is shorter than its mouth chord")
+                    }
+                    rigidLength = visibleRigidLength + hiddenLength - mouthChord
+                } else {
+                    rigidLength = visibleRigidLength
+                }
                 let firstDistance = zip(transformedEndpoints[0], anchorPosition)
                     .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                 let lastDistance = zip(transformedEndpoints.last!, anchorPosition)

@@ -66,9 +66,12 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
         let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
         for (positionID, pose) in profile.canonicalPoses {
+            var fallbackPose = pose
+            fallbackPose.translation[1] = 0
+            fallbackPose.cordContactPoints = nil
             let settled = try MeshInternalLoopSolver.settledPose(
-                section: section, anchor: anchor, pose: pose, profile: profile)
-            XCTAssertLessThan(settled.pose.translation[1], pose.translation[1], positionID)
+                section: section, anchor: anchor, pose: fallbackPose, profile: profile)
+            XCTAssertLessThan(settled.pose.translation[1], fallbackPose.translation[1], positionID)
             let q = simd_quatf(ix: Float(settled.pose.rotation[0]),
                                iy: Float(settled.pose.rotation[1]),
                                iz: Float(settled.pose.rotation[2]),

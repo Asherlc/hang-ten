@@ -961,13 +961,21 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         _canonical_member_order(
             anchor_payload, ("offsetFromBoardBounds", "visibility", "provenance"), anchor_source
         )
+        poses = _load_model_poses(
+            payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
+        )
+        if internal_loop_clearance is not None:
+            cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
+            if cached_count not in (0, len(poses)) or any(
+                pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
+                for pose in poses.values()
+            ):
+                raise ValueError("internalLoop derived routes must cover every passage and pose")
         return BoardModelTwoBranchSuspension(
             passage_pairs,
             (branches[0], branches[1]),
             _load_model_anchor(anchor_payload, anchor_source),
-            _load_model_poses(
-                payload["canonicalPoses"], f"{source}.canonicalPoses", canonical_order=True
-            ),
+            poses,
             mesh_wrap_clearance,
             internal_loop_clearance,
             internal_loop_winding_by_passage_id,
@@ -2151,7 +2159,9 @@ def _validate_model_suspension(
         if pose.cord_contact_points is not None:
             if isinstance(suspension, BoardModelPairedLeadCord):
                 route_ids = {a.id for a in suspension.attachments}
-            elif isinstance(suspension, BoardModelTwoBranchSuspension) and all(p.is_through_bore for p in passages):
+            elif isinstance(suspension, BoardModelTwoBranchSuspension) and (
+                all(p.is_through_bore for p in passages) or suspension.internal_loop_clearance is not None
+            ):
                 route_ids = {p.id for p in passages}
             else:
                 raise ValueError("cordContactPoints requires paired leads or directed passages")
@@ -2204,16 +2214,28 @@ def _validate_model_suspension(
                     *(pose.cord_contact_points[branch_endpoints[1].id] if pose.cord_contact_points is not None else branch_data.exit_contact_points),
                 )
                 rest_length = branch_data.rest_length
-                if not branch_endpoints[0].is_through_bore:
-                    endpoints = (pose.wrapped_routes[branch_data.id] if pose.wrapped_routes is not None
-                                 else tuple(passage.point_in_model for passage in branch_endpoints))
-                rigid_route_length = sum(
-                    math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
-                ) + math.dist(endpoints[0], endpoints[1])
-                if pose.wrapped_routes is not None:
+                if suspension.internal_loop_clearance is not None and pose.cord_contact_points is not None:
+                    first_contacts = pose.cord_contact_points[branch_endpoints[0].id]
+                    second_contacts = pose.cord_contact_points[branch_endpoints[1].id]
+                    endpoints = (*first_contacts, *second_contacts)
+                    mouth_chord = math.dist(first_contacts[-1], second_contacts[0])
+                    hidden_length = suspension.internal_loop_channel_length_by_branch_id[branch_data.id]
+                    if hidden_length < mouth_chord:
+                        raise ValueError("internalLoop channel is shorter than its mouth chord")
                     rigid_route_length = sum(
                         math.dist(start, end) for start, end in zip(endpoints, endpoints[1:])
-                    )
+                    ) + hidden_length - mouth_chord
+                elif not branch_endpoints[0].is_through_bore:
+                    endpoints = (pose.wrapped_routes[branch_data.id] if pose.wrapped_routes is not None
+                                 else tuple(passage.point_in_model for passage in branch_endpoints))
+                if suspension.internal_loop_clearance is None or pose.cord_contact_points is None:
+                    rigid_route_length = sum(
+                        math.dist(start, end) for start, end in zip(endpoints[1:], endpoints[2:])
+                    ) + math.dist(endpoints[0], endpoints[1])
+                    if pose.wrapped_routes is not None:
+                        rigid_route_length = sum(
+                            math.dist(start, end) for start, end in zip(endpoints, endpoints[1:])
+                        )
             if any(
                 math.dist(start, end) <= 1e-7 for start, end in zip(endpoints, endpoints[1:])
             ):

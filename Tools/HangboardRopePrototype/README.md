@@ -17,7 +17,10 @@ settle against the board without authored contact coordinates.
 
 ## Inputs and provenance
 
-- Product package: `Hangboards/lattice-mini-bar/`.
+- Historical exterior-loop fixture: `Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26/`.
+  Its descriptor and suspension sidecar are preserved from commit `f559563f7`;
+  the USDZ is the matching 32,354-byte staged asset with the hash below. This
+  fixture is only for reproducing the rejected historical experiment.
 - USDZ SHA-256: `5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46`.
   `case.py` refuses a mismatch with either the descriptor or suspension sidecar.
 - Body collider source: the `mini_bar_body` triangles from the USDZ, with the
@@ -45,7 +48,7 @@ cmake -S .context/frantic-kiwi/bullet3-3.25 -B .context/frantic-kiwi/bullet-buil
 cmake --build .context/frantic-kiwi/bullet-build --target BulletSoftBody BulletDynamics BulletCollision LinearMath -j 8
 cmake -S Tools/HangboardRopePrototype -B .context/frantic-kiwi/rope-build -DBULLET_SOURCE="$PWD/.context/frantic-kiwi/bullet3-3.25" -DBULLET_BUILD="$PWD/.context/frantic-kiwi/bullet-build" -DJSON_HEADER_DIR="$PWD/.context/frantic-kiwi"
 cmake --build .context/frantic-kiwi/rope-build -j 8
-.context/frantic-kiwi/rope-venv/bin/python Tools/HangboardRopePrototype/case.py Hangboards/lattice-mini-bar .context/frantic-kiwi/rope-case.json
+.context/frantic-kiwi/rope-venv/bin/python Tools/HangboardRopePrototype/case.py Tools/HangboardRopePrototype/fixtures/exterior-mini-bar-2026-09-26 .context/frantic-kiwi/rope-case.json
 .context/frantic-kiwi/rope-venv/bin/python Tools/HangboardRopePrototype/run_case.py .context/frantic-kiwi/rope-case.json .context/frantic-kiwi/rope-build/rope_solver .context/frantic-kiwi/rope-results --bullet-revision 2c204c49e56ed15ec5fcfa71d199ab6d6570b3f5
 .context/frantic-kiwi/rope-venv/bin/python Tools/HangboardRopePrototype/run_case.py .context/frantic-kiwi/rope-case.json .context/frantic-kiwi/rope-build/rope_solver .context/frantic-kiwi/rope-repeat --bullet-revision 2c204c49e56ed15ec5fcfa71d199ab6d6570b3f5
 .context/frantic-kiwi/rope-venv/bin/python Tools/HangboardRopePrototype/evaluate.py .context/frantic-kiwi/rope-case.json .context/frantic-kiwi/rope-results --repeat-results .context/frantic-kiwi/rope-repeat

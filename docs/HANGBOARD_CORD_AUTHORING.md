@@ -31,7 +31,7 @@ inspect the mouths, both legs, lower bearing, and occlusion, then rotate the
 model through every supported grip. The Mini Bar matched-photo review is
 described in its source audit.
 
-## What the current branch solver does
+## Settled physics for a bar-shaped board
 
 `suspension.json` stores two point mouths per loop, their body node, branch
 pairing, one overhead anchor, estimated radius and rest length, canonical
@@ -41,26 +41,35 @@ The passage IDs and pair order are part of the topology. The sidecar is bound
 to the model descriptor's `modelSHA256` and covered by the delivery lock;
 `board.json` is generated from the FCStd manifest plus this sidecar.
 
-At runtime, `BoardModelRealityScene.wrapSection()` reads vertices from the
-imported USDZ body node and projects them into the board's Y/Z section. The
-`MeshInternalLoopSolver` takes that section's convex hull and offsets it by
-cord radius plus clearance. For the selected board rotation, it transforms
-the fixed world anchor into board space, finds the two exterior tangent
-sides, then follows the **authored winding direction** from each tangent to
-its mouth. The second route is reversed so the branch runs from the support
-through the first mouth and back from the second mouth to the support. The
-settled-pose calculation lowers the board beneath the fixed support until
-each visible route plus its hidden channel uses the declared loop length. The
-existing suspension solver then samples the visible spans and creates
-transient, non-pickable RealityKit geometry. Each pose is solved from the
-loaded mesh; there is no list of per-pose contact coordinates in the package.
+`Tools/HangboardCAD/export_rope_collision_solid.py` tessellates the final,
+watertight FreeCAD wood solid as an authoring intermediate. The reusable
+`solve_threaded_rope.py` intersects that solid at each mouth, offsets the
+section by the cord radius plus declared clearance, and finds the shortest
+collision-free exterior path in the passage's winding direction. It includes
+the CAD-measured hidden channel length, then lowers the board beneath the
+fixed support until the longer of its two loops uses the declared length.
+The other loop may have at most 0.5 mm slack. Every visible segment is sampled
+at 0.5 mm against the native 3D solid before the solver updates the sidecar.
 
-This is a **static equilibrium approximation** for a taut, inextensible,
-negligible-mass cord carrying a heavier board in a prescribed grip pose.
-RealityKit renders the result; it does not simulate particle or joint motion.
-The current runtime still derives exterior bearing from a convex projected
-section, not exact triangle contact, and does not solve friction or channel
-wall pressure. An offline Bullet experiment tried
+The resulting translations and centerline contacts are a **generated cache**
+under each `canonicalPoses` entry in `suspension.json`. Authors specify mouths,
+threading, channel length, loop length, and overhead support, then rerun the
+tool; they do not draw pose contacts. `--check` regenerates the cache and
+rejects stale values. The app renders this cache as transient, unpickable
+RealityKit geometry. Cord remains absent from the CAD body and material-free
+USDZ. The prior convex-section runtime solver remains a fallback for older
+packages without a generated cache.
+
+This solves the **settled, taut, negligible-mass rope** shape in the plane of
+each mouth for a bar-shaped board with a representative end section. It models
+contact and fixed length without animated swing. It does not model friction,
+elastic stretch, or unrestricted 3D sliding along a nonuniform board. For a
+board that violates the section assumption, use a full 3D constrained solver
+and retain the same native-solid clearance and loop-length acceptance gates.
+The estimated 0.82 m Mini Bar loop is not a manufacturer measurement, so the
+predicted board height is a display estimate to compare with loaded photos.
+
+An earlier offline Bullet experiment tried
 to settle an earlier solid-bar surrogate and failed exact-mesh acceptance in
 all eight cases. That experiment did not contain the now-confirmed channel,
 so it cannot establish whether a correctly constrained physical simulation
@@ -118,19 +127,22 @@ did not establish inextensible, nonpenetrating contact. The nominal 0.82 m
 length is a display estimate, not a manufacturer measurement. A solver cannot
 use that estimate as proof of a physically feasible rope configuration.
 
-The settled-pose approximation passes a fixed-length test for all four Mini
-Bar grips. A separate native-solid inspection found 2.09 mm minimum rope
-centerline clearance for the 2 mm rope, but up to 3.41 mm centerline distance
-near a mouth. That represents up to 1.41 mm of visible space between the rope
-surface and wood there. Exact channel-rim contact remains unresolved; do not
-present the approximation as a fully solved rope/wood collision model.
+The prior convex-section approximation passed a fixed-length test for all
+four grips, but native-solid inspection found up to 3.41 mm centerline
+distance near a mouth: 1.41 mm of visible space beyond the 2 mm rope radius.
+The new CAD-section solve removes that hull buffer where the rope bears on
+wood. Across four grips and four visible leads it measured at least 2.097 mm
+centerline distance from the solid, with 2 mm estimated rope radius and
+0.1 mm authored clearance. Direct legs may have more clearance because they
+do not bear on the wood. The four pose solutions use no more than 0.378 mm
+slack in either loop; their 0.82 m rest length remains an estimate.
 
-For exact contact, solve the board's vertical degree of freedom together with
-a continuous, inextensible loop and its actual channel-wall constraint. The
-board's [manufacturer-published 150 g mass](https://latticetraining.com/product/mini-bar-portable-hangboard/)
-can set the gravitational load. Do not convert the current convex-section
-route or this failed particle probe into a claimed full collision result by
-merely renaming it.
+For a future unrestricted 3D simulator, include both the board's free vertical
+degree of freedom and a continuous, inextensible loop constrained inside the
+real channel. The board's [manufacturer-published 150 g mass](https://latticetraining.com/product/mini-bar-portable-hangboard/)
+can set the gravitational load. The current section solver meets the settled
+shape requirement for this approximately extruded bar; it is not a dynamic
+soft-body simulation.
 
 Mouth and anchor coordinates **do not uniquely determine a route**. Between
 one mouth and an external support, cord can travel around either side of the
@@ -146,16 +158,15 @@ Use the current method only when all of these hold:
    cord returning to the same support.
 2. The CAD source contains the connected void, and mouth coordinates refer
    to that void in the descriptor/importer coordinate basis.
-3. The relevant body has a nearly constant, convex Y/Z section along X, so
-   projecting all body vertices to one section and using its convex hull is
-   a faithful exterior envelope near every mouth.
+3. Each mouth's actual CAD Y/Z section is representative of the bearing
+   surface along that leg. The native solid is watertight for collision checks.
 4. The model has two branches, four distinct point mouths, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
 
-For a tapered, twisted, strongly concave, or locally different section,
-the current whole-body projected hull may float above a recess or mask a
-collision. For an external wrap without connected internal mouths, use the
+For a tapered, twisted, or locally different section, one planar path may
+miss a shorter 3D route even when its sampled points clear the solid. For an
+external wrap without connected internal mouths, use the
 appropriate exterior topology; do not label it `internalLoop`. For a
 different connection graph or moving anchor, extend the schema and solver
 with evidence and tests. No solver choice can recover hidden threading from
@@ -177,9 +188,11 @@ the mesh alone.
    from each `SubtractivePipe` spine with
    `Tools/HangboardCAD/measure_channel_spines.py`; record it in
    `internalLoop.channelLengthByBranchID` and rerun the tool with
-   `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. Keep the route free of
-   pose-specific control points. Generate `board.json` through the normal
-   CAD package process; never commit that generated file.
+   `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. Export the final native
+   solid, run `solve_threaded_rope.py --apply`, then rerun with `--check`.
+   Generated pose routes are a cache in the sidecar, not operator-drawn
+   contacts. Generate `board.json` through the normal CAD package process;
+   never commit that generated file.
 4. Validate the schema, model SHA, delivery lock, package inventory, and
    byte-for-byte CAD rebuild. Add a focused parser and native solver test for
    every pose and a negative test for malformed topology.
@@ -190,7 +203,7 @@ the mesh alone.
    picking and accessibility, that selection and orbit still work, and that
    clearing/reselecting a pose removes/recreates the transient cord.
 
-The Mini Bar's final native check found at least 2.09 mm exterior
+The Mini Bar's generated routes found at least 2.097 mm exterior
 centerline-to-wood clearance with a 2 mm estimated rope radius. Those numbers
 are specific to its display model; they are not a general rope or safety
 specification.

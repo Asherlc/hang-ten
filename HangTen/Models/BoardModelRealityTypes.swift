@@ -526,7 +526,8 @@ final class BoardModelRealityScene {
                         loops: loops)
                 }
                 if case .twoBranchCord(let profile) = suspension,
-                   profile.internalLoopClearance != nil {
+                   profile.internalLoopClearance != nil,
+                   pose.cordContactPoints == nil {
                     guard profile.branches.count == 2,
                           profile.passages.left.count == 2,
                           profile.passages.right.count == 2 else {

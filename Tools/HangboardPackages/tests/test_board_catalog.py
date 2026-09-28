@@ -1148,6 +1148,9 @@ def test_mini_bar_keeps_cord_metadata_out_of_its_cad_source() -> None:
     }
     assert all(not passage.is_through_bore
                for passage in suspension.passages.left + suspension.passages.right)
+    assert all(set(pose.cord_contact_points) == {
+        "left-in", "left-out", "right-in", "right-out"
+    } for pose in suspension.canonical_poses.values())
     assert "suspension" in json.loads(generated.generated_board_json)["presentations"][0]["media"]
 
 
