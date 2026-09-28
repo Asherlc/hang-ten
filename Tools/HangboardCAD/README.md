@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 29 of the 47 model-media boards are migrated** (those with a committed
+**Status: 30 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -176,18 +176,14 @@ partitions the board surface, writes the USDZ directly, reopens the exported
 bytes, derives the descriptor from those bytes, and publishes the pair. It never
 writes `board.json`.
 
-**Without the pinned toolchain.** A USDZ compiled anywhere else (for example
-Linux conda-forge FreeCAD, which links OCCT 7.9.3) fails the macOS
-`cad-reproducibility` CI job. When that job fails, it uploads the pinned-toolchain
-rebuild as the `cad-rebuilt-assets` artifact (kept 7 days), laid out like
-`Hangboards/`: `<slug>/assets/primary.usdz` and `primary.model.json` for every
-source-backed board (`verify_reproducible.py --keep-rebuild <dir>`). Download it
-from the failing run, copy the mismatched boards' pairs over
-`Hangboards/<slug>/assets/`, review the `git diff` (only the reported boards should
-change, and the descriptor's `modelSHA256` must hash the new USDZ), refresh the
-delivery lock for the changed descriptors (see "Refresh the delivery lock" in
-`docs/freecad-authoring-migration.md`), then commit and push; the job must then
-pass on the new bytes.
+**Reproducibility check.** A USDZ compiled on another platform (for example
+Linux conda-forge FreeCAD, which links OCCT 7.9.3) may differ byte-for-byte from
+the pinned macOS build. To compare committed assets, run
+`verify_reproducible.py --keep-rebuild <dir>` with the pinned FreeCAD 1.1.3 macOS
+arm64 toolchain. Review the report and rebuilt pairs before copying any changed
+assets into `Hangboards/<slug>/assets/`; refresh the delivery lock for changed
+descriptors (see "Refresh the delivery lock" in
+`docs/freecad-authoring-migration.md`).
 
 ## Source document contract
 
@@ -315,6 +311,15 @@ steps to the next. It was re-authored from Metolius's spec drawing and
 end-grain product photo. See
 `docs/source-audits/2026-09-27-metolius-climbers-edge-cad-provenance.md`.
 
+`frictitious-megalith` sets it too: its groove ends and depth steps are
+cylinders in the front view, and its lip round-overs, floor fillets and tier
+rounds are cylinders. Each of its 14 edge segments and 2 pocket spans is its
+own section cutter clipped by a front-view region, so the faces split where one
+depth steps to the next. It was re-authored from Frictitious's straight-on
+front photo and end-grain photo. The photo shows the right half repeating the
+left half's order rather than mirroring it. See
+`docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md`.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -329,7 +334,7 @@ then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
 `moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
-`the-hangboard` and `metolius-climbers-edge` set it.
+`the-hangboard`, `metolius-climbers-edge` and `frictitious-megalith` set it.
 
 ## Published depth deeper than the board
 
@@ -422,7 +427,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **29 of 47 model-media boards are migrated.** The other 18 still ship their
+* **30 of 47 model-media boards are migrated.** The other 17 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`

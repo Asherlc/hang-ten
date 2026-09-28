@@ -399,8 +399,9 @@ a second screenshot pass is a full rebuild.
   bytes.** The same unchanged sources compiled on Linux differ from the
   committed assets for all five boards. Linux is fine for before/after
   comparisons on one platform (the manifest migration compiled byte-identically
-  before and after), but committed assets must be compiled on the pinned macOS
-  toolchain, which CI's `cad-reproducibility` job enforces.
+  before and after), but rebuild comparisons against committed assets require
+  the pinned macOS toolchain. Use `verify_reproducible.py` locally for that
+  comparison.
 - FCStd sources are Git LFS objects. Without `git-lfs` they are 130-byte
   pointers and every CAD tool (and the freshness check) refuses them.
 

@@ -47,9 +47,15 @@ def test_physical_identities_survive_native_export(slug,mapping,width,height,hol
             left=contacts[identity];right=contacts[mapping[source.replace('left-','right-',1)]]
             assert left['center'][0]<.5<right['center'][0]
             assert not set(left['nodeIDs'])&set(right['nodeIDs'])
+            for side in ('min','max'):
+                assert right['facePlaneAABB'][side][1]==pytest.approx(left['facePlaneAABB'][side][1],abs=1e-6)
+            if slug.endswith('megalith'):
+                # Frictitious's front photo shows the right half repeating the
+                # left half's left-to-right order (not a mirror image): each
+                # right hold sits right of centre by its own photographed offset.
+                continue
             for side,other in [('min','max'),('max','min')]:
                 assert right['facePlaneAABB'][side][0]==pytest.approx(1-left['facePlaneAABB'][other][0],abs=1e-6)
-                assert right['facePlaneAABB'][side][1]==pytest.approx(left['facePlaneAABB'][side][1],abs=1e-6)
     if not cad_path.exists():
         # These reports describe the earlier USDZ repair, not a later CAD rebuild.
         prep=json.loads((AUDIT/'native'/slug/'preparation-report.json').read_text())
@@ -65,7 +71,7 @@ def test_physical_identities_survive_native_export(slug,mapping,width,height,hol
 
 
 def test_nested_megalith_pockets_have_independent_unspecified_depth():
-    board=json.loads((ROOT/'Hangboards/frictitious-megalith/board.json').read_text())
+    board=cad_source.load_board(ROOT/'Hangboards/frictitious-megalith/frictitious-megalith.FCStd')
     contacts={c['id']:c for c in board['contacts']}
     assert {'pocket-2finger-left','pocket-2finger-right'}<=contacts.keys()
     for side in ('left','right'):
@@ -89,3 +95,15 @@ def test_frictitious_stages_exact_models_only_in_odr(tmp_path,monkeypatch):
         board_bytes=(cad_source.generate_board_json(cad) if cad.exists()
                      else (source/'board.json').read_bytes())
         assert (destination/slug/'board.json').read_bytes()==board_bytes
+
+
+def test_megalith_right_half_repeats_left_half_order():
+    # The CAD source follows the manufacturer front photo: on both halves the
+    # stepped edges deepen left to right (8/10/12, 30/40, 15/20) and the mono
+    # sits right of the 15/20 edge pair, so the right mono is at the outer end.
+    contacts=json.loads((ROOT/'Hangboards/frictitious-megalith/assets/primary.model.json').read_text())['contacts']
+    x=lambda cid:contacts[cid]['center'][0]
+    for side in ('left','right'):
+        assert x(f'edge-8-{side}')<x(f'edge-10-{side}')<x(f'edge-12-{side}')
+        assert x(f'edge-30-{side}')<x(f'edge-40-pocket-{side}')
+        assert x(f'edge-15-{side}')<x(f'edge-20-{side}')<x(f'mono-{side}')
