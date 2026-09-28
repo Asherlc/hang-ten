@@ -339,6 +339,7 @@ final class FreeWorkoutUITests: XCTestCase {
     private func skipTemplatePrompt(in app: XCUIApplication) {
         let alert = app.alerts["Save as Template?"]
         if alert.waitForExistence(timeout: 10) {
+            XCTAssertFalse(alert.textFields.firstMatch.exists, "Skipping a template must not open the keyboard")
             let skipInAlert = alert.buttons.matching(NSPredicate(format: "label == %@", "Skip"))
             XCTAssertTrue(skipInAlert.element(boundBy: 0).waitForExistence(timeout: 5))
             skipInAlert.element(boundBy: 0).tap()

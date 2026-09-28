@@ -120,15 +120,8 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [fieldHittable], timeout: 10), .completed)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
         let keyboard = app.keyboards.firstMatch
-        var keyboardPresented = false
-        for _ in 0..<3 {
-            field.tap()
-            if keyboard.waitForExistence(timeout: 2) {
-                keyboardPresented = true
-                break
-            }
-        }
-        XCTAssertTrue(keyboardPresented, "Tapping the manual weight field must present its keyboard")
+        field.tap()
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "Tapping the manual weight field must present its keyboard")
         field.typeText(
             String(
                 repeating: XCUIKeyboardKey.delete.rawValue,
@@ -138,8 +131,11 @@ final class WorkoutPaywallUITests: XCTestCase {
         field.typeText("12.5")
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.86, dy: 0.5)).tap()
+        guard bodyweight.value as? String == "1" else {
+            XCTFail("Add bodyweight must be on before purchasing")
+            return
+        }
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))

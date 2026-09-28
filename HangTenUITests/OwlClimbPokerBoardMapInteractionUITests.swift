@@ -241,7 +241,10 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     func testNatural() throws {
-        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right")
+        // The projected center of this recessed pocket can fall in empty space
+        // after orbiting; aim at its visible right wall for the reset tap.
+        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right",
+                   resetContactOffset: CGVector(dx: 0.82, dy: 0.55))
     }
 
     func testEvo() throws {
@@ -253,7 +256,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                    surfacePoint: CGVector(dx: 0.44776505, dy: 0.3821585))
     }
 
-    private func review(boardID: String, target: String, surfacePoint: CGVector? = nil) throws {
+    private func review(boardID: String, target: String, surfacePoint: CGVector? = nil,
+                        resetContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5)) throws {
         let app = XCUIApplication()
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
@@ -299,7 +303,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-orbit")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
-        let resetPoint = surfaceCoordinate(for: contact, in: map)
+        let resetPoint = surfaceCoordinate(for: contact, in: map, offset: resetContactOffset)
         resetPoint.tap()
         XCTAssertTrue(selected.exists)
         let canonicalContactFrame = try XCTUnwrap(canonicalFrames[contact.identifier])
@@ -310,7 +314,11 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         // Poll one projected contact. Reading every contact on each poll can
         // consume the timeout in cross-process accessibility snapshots.
-        XCTAssertEqual(XCTWaiter.wait(for: [resetFinished], timeout: 30), .completed,
+        let resetResult = XCTWaiter.wait(for: [resetFinished], timeout: 30)
+        if resetResult != .completed {
+            print("Camera reset diagnostic: board=\(boardID) contact=\(target) canonical=\(canonicalContactFrame) actual=\(contact.frame)")
+        }
+        XCTAssertEqual(resetResult, .completed,
                        "A physical surface tap must finish the canonical camera reset")
         // A top-edge center may move less than two points despite a visible orbit.
         // Require every projected contact to return to its canonical frame.
@@ -341,12 +349,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-landscape-neutral")
     }
 
-    private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement) -> XCUICoordinate {
+    private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement,
+                                   offset: CGVector = CGVector(dx: 0.5, dy: 0.5)) -> XCUICoordinate {
         let frame = contact.frame
         let viewport = map.frame
         return map.coordinate(withNormalizedOffset: CGVector(
-            dx: (frame.midX - viewport.minX) / viewport.width,
-            dy: (frame.midY - viewport.minY) / viewport.height
+            dx: (frame.minX + frame.width * offset.dx - viewport.minX) / viewport.width,
+            dy: (frame.minY + frame.height * offset.dy - viewport.minY) / viewport.height
         ))
     }
 
