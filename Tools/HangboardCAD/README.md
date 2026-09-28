@@ -1,6 +1,6 @@
 # FreeCAD authoring — native source and direct USDZ compiler
 
-**Status: 28 of the 47 model-media boards are migrated** (those with a committed
+**Status: 29 of the 47 model-media boards are migrated** (those with a committed
 `Hangboards/*/*.FCStd` source; the delivery lock lists 47 model packages). The
 pipeline below is implemented, executed, and reproducible. Do not read this as a
 finished catalogue migration.
@@ -315,6 +315,15 @@ steps to the next. It was re-authored from Metolius's spec drawing and
 end-grain product photo. See
 `docs/source-audits/2026-09-27-metolius-climbers-edge-cad-provenance.md`.
 
+`frictitious-megalith` sets it too: its groove ends and depth steps are
+cylinders in the front view, and its lip round-overs, floor fillets and tier
+rounds are cylinders. Each of its 14 edge segments and 2 pocket spans is its
+own section cutter clipped by a front-view region, so the faces split where one
+depth steps to the next. It was re-authored from Frictitious's straight-on
+front photo and end-grain photo. The photo shows the right half repeating the
+left half's order rather than mirroring it. See
+`docs/source-audits/2026-09-28-frictitious-megalith-cad-provenance.md`.
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -329,7 +338,7 @@ then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
 `moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
-`the-hangboard` and `metolius-climbers-edge` set it.
+`the-hangboard`, `metolius-climbers-edge` and `frictitious-megalith` set it.
 
 ## Published depth deeper than the board
 
@@ -422,7 +431,7 @@ performance. Those remain open.
 
 ## Known limitations and open interface question
 
-* **28 of 47 model-media boards are migrated.** The other 19 still ship their
+* **29 of 47 model-media boards are migrated.** The other 18 still ship their
   existing runtime assets, which are unchanged by this work.
 * `HangTenSourceKind` distinguishes `native-parametric-measured-profile` from
   `faceted-import`. A mesh imported as B-rep must be labelled `faceted-import`
