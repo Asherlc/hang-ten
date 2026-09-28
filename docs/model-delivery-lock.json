@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, and frictitious-megalith native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, and frictitious-megalith, and metolius-project native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "9b2308c4fb4f5a66513c57635584d8fe63cfabcb92ce9e929574d9cf2f282ebc",
+  "sha256Manifest": "786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2",
+  "supersededSha256Manifest": "4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -516,6 +516,21 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 14 edge-segment windows (ledge round-over up to the groove roof), the 40 mm windows notched around the two-finger pocket windows, mono chamfer ellipses, center hold front face, jug top band"
+    },
+    "metolius-project": {
+      "source": "Hangboards/metolius-project/metolius-project.FCStd",
+      "sourceSHA256": "1d09434aebccc9e2facad80824fa8632fbfe14b92c0dce938a1812e263c6d72f",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed fields, key order and numeric values match the deleted file; all 17 contact IDs, 18 node IDs and their pairing unchanged",
+      "referenceSHA256": "ce5cdbaaf6fa6cea29d9a5634b7c8a579ca99d3b3c1189dbd4e19148aa1108bb",
+      "assetSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
+      "descriptorSHA256": "4f3a52b8cd9e556323d96632c5bd9c612a25ad16b3958c2d35fa5d188f628e78",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
+      "nativeValidation": "passed: compile reopen, 17 stable contacts and 18 nodes, exact published-depth gate for 12 recessed holds and 2 flat slopers; verify_reproducible byte-identical on the pinned macOS toolchain; package validator passed; retained CAD/model/package Python suites 805 passed, 10 skipped",
+      "nativeAppValidation": "passed: isolated iPhone 17 Pro simulator (iOS 26.5), Debug board-detail route; six named contact highlights verified from deep links with screenshots and left #3 pocket selected by direct model tap via AXe; exact owned simulator deleted after review",
+      "comparison": "re-authored from the operator-approved Metolius product photo and numbered depth diagram; simplified analytic display geometry with unpublished section, thickness, radii and mouth chamfers labeled as display estimates; previous mesh used only for side-by-side visual review",
+      "provenanceSidecar": "removed audit record",
+      "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
+      "holdOutline": "CAD-authored HangTenHoldOutline for the 12 recessed pockets and edges"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -556,5 +571,6 @@
   "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main’s Metolius Climber’s Edge migration. The digest covers both and supersedes main’s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
   "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source and refined after visual review with estimated lofted cavity lips, bowl profiles and rounded tier edges; source-backed depths and contact IDs remain exact, and phone-slot remains a no-depth utility contact.",
   "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
-  "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest."
+  "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
+  "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest."
 }
