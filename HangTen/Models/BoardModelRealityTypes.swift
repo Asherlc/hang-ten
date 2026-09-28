@@ -177,6 +177,7 @@ final class BoardModelRealityScene {
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
     private var verifiedPresentations: [String: (BoardModelSolvedSuspension, ModelEntity)] = [:]
+    private var meshWrapSection: [SIMD2<Float>]?
     private var canonicalFraming: SuspendedCameraFraming?
     private var currentFraming: SuspendedCameraFraming?
     private var activePositionID: String?
@@ -222,9 +223,9 @@ final class BoardModelRealityScene {
     func load(usdzURL: URL) async throws {
         // RealityKit imports the USDZ asynchronously and reports malformed assets.
         let modelEntity = try await Entity(contentsOf: usdzURL)
-        
+
         self.modelEntity = modelEntity
-        
+
         // Build instance entities from media instances
         if let instances = instances, !instances.isEmpty {
             buildInstanceEntities(from: modelEntity, instances: instances)
@@ -233,35 +234,35 @@ final class BoardModelRealityScene {
             root.addChild(modelEntity)
             instanceEntities = [modelEntity]
         }
-        
+
         // Apply neutral PBR materials to all model entities FIRST
         // This captures original USDZ materials before they're replaced
         applyNeutralMaterials(to: root)
-        
+
         // Build contact entity mapping from descriptor
         // Neutral highlight baselines were captured by applyNeutralMaterials().
         try buildContactEntities()
-        
+
         // Set up camera framing based on model bounds
         setupCameraFraming()
     }
-    
+
     private func buildInstanceEntities(from sourceEntity: Entity, instances: [BoardModelInstance]) {
         instanceEntities = []
         let center = Self.boundsCenter(descriptor.modelBounds)
-        
+
         for instance in instances {
             // Clone the source entity hierarchy for this instance
             let instanceEntity = sourceEntity.clone(recursive: true)
-            
+
             instanceEntity.transform = Transform(matrix: Self.instanceMatrix(
                 instance: instance, positionID: nil, center: center))
-            
+
             root.addChild(instanceEntity)
             instanceEntities.append(instanceEntity)
         }
     }
-    
+
     private func applyNeutralMaterials(to entity: Entity) {
         if let modelEntity = entity as? ModelEntity,
            let model = modelEntity.model {
@@ -273,7 +274,7 @@ final class BoardModelRealityScene {
             applyNeutralMaterials(to: child)
         }
     }
-    
+
     private func setupCameraFraming() {
         var allPoints: [SIMD3<Float>] = []
         for entity in instanceEntities {
@@ -345,11 +346,11 @@ final class BoardModelRealityScene {
         if canonicalFraming == nil {
             canonicalFraming = currentFraming
         }
-        
+
         // Position camera
         updateCameraTransform()
     }
-    
+
     static func neutralMaterial() -> PhysicallyBasedMaterial {
         var material = PhysicallyBasedMaterial()
         material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
@@ -501,8 +502,51 @@ final class BoardModelRealityScene {
         } else if let suspension {
             guard let pose = suspension.canonicalPoses[positionID] else { return false }
             do {
+                var resolvedPose = pose
+                if case .twoBranchCord(let profile) = suspension,
+                   let clearance = profile.meshWrapClearance {
+                    guard profile.branches.count == 2,
+                          profile.passages.left.count == 2,
+                          profile.passages.right.count == 2,
+                          let radius = profile.branches.map({ Float($0.radius) }).max() else {
+                        return false
+                    }
+                    let passages = [profile.passages.left, profile.passages.right]
+                    let loops = zip(profile.branches, passages).map { branch, side in
+                        (id: branch.id,
+                         outerX: Float(side[0].pointInModel[0]),
+                         innerX: Float(side[1].pointInModel[0]))
+                    }
+                    resolvedPose.wrappedRoutes = try MeshSectionWrapSolver.routes(
+                        section: try wrapSection(),
+                        anchor: SIMD3<Float>(profile.anchor.position.map(Float.init)),
+                        pose: pose,
+                        radius: radius,
+                        clearance: Float(clearance),
+                        loops: loops)
+                }
+                if case .twoBranchCord(let profile) = suspension,
+                   profile.internalLoopClearance != nil,
+                   pose.cordContactPoints == nil {
+                    guard profile.branches.count == 2,
+                          profile.passages.left.count == 2,
+                          profile.passages.right.count == 2 else {
+                        return false
+                    }
+                    let settled = try MeshInternalLoopSolver.settledPose(
+                        section: try wrapSection(),
+                        anchor: SIMD3<Float>(profile.anchor.position.map(Float.init)),
+                        pose: pose, profile: profile)
+                    resolvedPose = settled.pose
+                    var routes = settled.routes
+                    // The second mouth of each hidden U is traversed outward.
+                    for passage in [profile.passages.left[1], profile.passages.right[1]] {
+                        routes[passage.id]?.reverse()
+                    }
+                    resolvedPose.cordContactPoints = routes
+                }
                 let solved = try Self.solveSuspension(
-                    pose: pose, suspension: suspension, bounds: descriptor.modelBounds)
+                    pose: resolvedPose, suspension: suspension, bounds: descriptor.modelBounds)
                 instanceEntities.first?.transform = Transform(matrix: solved.boardTransform)
                 currentFraming = solved.cameraFraming
                 transientCordEntity?.removeFromParent()
@@ -521,6 +565,37 @@ final class BoardModelRealityScene {
         activePositionID = positionID
         updateCameraTransform()
         return true
+    }
+
+    /// Read the rigid body surface from the same imported USDZ that RealityKit
+    /// renders. The section is cached before the first canonical pose rotates
+    /// the board; only transient cord entities depend on it.
+    private func wrapSection() throws -> [SIMD2<Float>] {
+        if let meshWrapSection { return meshWrapSection }
+        guard let instance = instanceEntities.first else {
+            throw BoardModelRealityError.invalidSuspension
+        }
+        let bodyIDs = Set(descriptor.nodes.filter { $0.role == .body }.map(\.nodeID))
+        var section: [SIMD2<Float>] = []
+        traverseEntities(instance) { entity in
+            guard bodyIDs.contains(entity.name),
+                  let model = (entity as? ModelEntity)?.model else { return }
+            let transform = entity.transformMatrix(relativeTo: root)
+            for meshModel in model.mesh.contents.models {
+                for part in meshModel.parts {
+                    for vertex in part.positions {
+                        let point = transform * SIMD4<Float>(vertex, 1)
+                        section.append(SIMD2<Float>(point.y, point.z))
+                    }
+                }
+            }
+        }
+        guard section.count >= 3,
+              section.allSatisfy({ $0.x.isFinite && $0.y.isFinite }) else {
+            throw BoardModelRealityError.geometryProcessingFailed(reason: "missing wrap body section")
+        }
+        meshWrapSection = section
+        return section
     }
 
     private func clearSelection() {
@@ -640,7 +715,7 @@ final class BoardModelRealityScene {
         // For schema v2 (reusable model), descriptor.contacts is keyed by physical contact ID.
         // Each instance has contactIDsBySlotID mapping slotID -> physicalContactID.
         // We need to build nodeID -> slotID mapping per instance.
-        
+
         // Build a mapping from physicalContactID -> contactDescriptor for quick lookup
         let contactDescriptorByPhysicalID = descriptor.contacts
 
@@ -648,7 +723,7 @@ final class BoardModelRealityScene {
         for (instanceIndex, instanceEntity) in instanceEntities.enumerated() {
             // Build nodeID -> slotID mapping for this instance
             var nodeIDToSlotID: [String: String] = [:]
-            
+
             if let instances = instances, instanceIndex < instances.count {
                 let instance = instances[instanceIndex]
                 // Invert contactIDsBySlotID to get physicalContactID -> slotID
@@ -656,7 +731,7 @@ final class BoardModelRealityScene {
                 for (slotID, physicalContactID) in instance.contactIDsBySlotID {
                     physicalIDToSlotID[physicalContactID] = slotID
                 }
-                
+
                 // For each physicalContactID in this instance, get the contact descriptor and its nodeIDs
                 for (physicalContactID, slotID) in physicalIDToSlotID {
                     if let contactDescriptor = contactDescriptorByPhysicalID[physicalContactID] {
@@ -665,10 +740,10 @@ final class BoardModelRealityScene {
                         }
                     }
                 }
-                
+
                 // Now traverse and map using slotID -> physicalContactID
                 let slotIDToContactID = instance.contactIDsBySlotID
-                
+
                 var matchedNodeIDs: Set<String> = []
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
@@ -692,12 +767,12 @@ final class BoardModelRealityScene {
                         nodeIDToSlotID[nodeID] = physicalContactID
                     }
                 }
-                
+
                 let slotIDToContactID = Dictionary(
                     nodeIDToSlotID.values.map { ($0, $0) },
                     uniquingKeysWith: { first, _ in first }
                 )
-                
+
                 var matchedNodeIDs: Set<String> = []
                 traverseEntities(instanceEntity) { entity in
                     if let modelEntity = entity as? ModelEntity,
@@ -742,7 +817,7 @@ final class BoardModelRealityScene {
         #endif
         throw BoardModelRealityError.missingContactDescriptor(contactID: contactID)
     }
-    
+
     private func traverseEntities(_ entity: Entity, _ visit: (Entity) -> Void) {
         visit(entity)
         for child in entity.children {
@@ -1083,7 +1158,7 @@ enum BoardModelRealityCache {
 /// Loaded source shared only by waiters while the same key is in flight.
 final class BoardModelRealityLoadedSource {
     let resourceLease: BoardModelRealityResourceLease
-    
+
     init(resourceLease: BoardModelRealityResourceLease) {
         self.resourceLease = resourceLease
     }

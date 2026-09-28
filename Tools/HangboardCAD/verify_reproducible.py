@@ -46,7 +46,7 @@ def source_backed_packages() -> list[str]:
     )
 
 
-DELIVERY_LOCK = REPOSITORY / "docs" / "source-audits" / "2026-09-22-model-delivery-lock.json"
+DELIVERY_LOCK = REPOSITORY / "docs" / "model-delivery-lock.json"
 
 
 def faceted_import_acknowledged(package: str) -> bool:

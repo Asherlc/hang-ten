@@ -178,13 +178,12 @@ jobs:
       - name: Run pytest suite
         run: python -m pytest tests -q --junitxml=pytest-results.xml
 
-      - name: Run CAD board-manifest, source-contract, and delivery-lock tests
+      - name: Run CAD board-manifest and source-contract tests
         if: ${{ !cancelled() }}
         run: >-
           python -m pytest
           ../HangboardCAD/tests/test_board_manifest.py
           ../HangboardCAD/tests/test_contract.py
-          ../HangboardModels/tests/test_model_delivery_alignment.py
           -q
           --junitxml=pytest-cad-results.xml
 

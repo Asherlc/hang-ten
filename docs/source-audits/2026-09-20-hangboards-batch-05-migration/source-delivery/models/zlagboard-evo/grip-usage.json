@@ -1,5 +1,0 @@
-{
-  "schemaVersion": 1,
-  "note": "Interaction combinations reuse physical surfaces; they are not additional hold meshes.",
-  "combinations": []
-}

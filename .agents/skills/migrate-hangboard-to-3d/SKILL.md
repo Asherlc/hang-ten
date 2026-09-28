@@ -16,7 +16,10 @@ model has, needs, or is suspected to be missing a cord. Read
 [`3D suspension and ODR`](../../../docs/3D_SUSPENSION_AND_ODR.md) before
 changing suspension metadata or diagnosing Apple offline/On-Demand Resource
 caching. The USDZ is the only ODR asset; cords are metadata-driven transient
-geometry.
+geometry. For connected passages or a mesh-derived bearing route, read
+[`CAD cord authoring`](../../../docs/HANGBOARD_CORD_AUTHORING.md) before
+authoring topology or selecting a solver. The cord route is not live physics;
+document its mesh and topology assumptions.
 
 ## Evidence and scope
 
@@ -56,9 +59,10 @@ Use only the retained native tools:
 - `Tools/HangboardCAD/compile_board.py` compiles a native FreeCAD source
   (`Hangboards/<slug>/<slug>.FCStd`) directly into the USDZ and descriptor. For
   such a package, `board.json` is generated from the FCStd's embedded
-  `HangTenBoardManifest` at build time and is not committed: embed the reviewed
-  `board.json` with `set_board_manifest.py`, then `git rm` it and add its path
-  to `.gitignore`. Follow
+  `HangTenBoardManifest` and any adjacent `suspension.json` at build time and
+  is not committed: embed reviewed CAD metadata with `set_board_manifest.py`,
+  keep optional cord setup in the descriptor-bound sidecar, then `git rm` the
+  old `board.json` and add its path to `.gitignore`. Follow
   `docs/freecad-authoring-migration.md` and "Authoring a new CAD board" in
   `Tools/HangboardCAD/README.md`; any authoring script is a throwaway under
   `.context/`, and its provenance goes in a dated `docs/source-audits/` record.

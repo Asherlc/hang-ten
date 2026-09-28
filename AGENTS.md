@@ -46,12 +46,14 @@ remains the sole rendering, highlighting, and hit-testing source of truth.
 Never infer a constraint from pixels.
 
 A model package with a native FreeCAD source (`Hangboards/<slug>/<slug>.FCStd`)
-is different: the FCStd is its only source. Its `board.json` is generated from
-the FCStd's `HangTenBoardManifest` property at build time (package validation,
-iOS and Android staging) and is never committed; the validator rejects an
-on-disk copy. Change the metadata with `Tools/HangboardCAD/set_board_manifest.py`;
-see `Tools/HangboardCAD/README.md`. Building or validating packages needs the
-FCStd Git LFS objects, not pointers.
+generates `board.json` from its `HangTenBoardManifest` at build time; the file
+is never committed and an on-disk copy is rejected. Change the CAD metadata
+with `Tools/HangboardCAD/set_board_manifest.py`. A CAD package may keep its
+cord setup in a separate `suspension.json`; generation merges that authoring
+file into `board.json`, and both app platforms stage only the generated file.
+The sidecar must match the descriptor's model SHA-256 and is covered by the
+delivery lock. See `Tools/HangboardCAD/README.md`. Building or validating
+packages needs the FCStd Git LFS objects, not pointers.
 
 Do not use image-driven hold detection, segmentation, generated masks or
 contours, source registration/alignment, vectorization, automatic path
