@@ -178,6 +178,9 @@ final class FreeWorkoutUITests: XCTestCase {
     private func launchResetFreeWorkout() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
+        // Free Workout does not depend on a 3D board; avoid model loading while
+        // locating the Train entry point on a fresh simulator.
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.honestone"
         app.launch()
         return app
     }

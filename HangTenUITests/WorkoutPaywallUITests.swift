@@ -67,6 +67,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_SENSOR_DISCONNECTED"] = "1"
         app.launch()
 
         if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
@@ -75,6 +76,18 @@ final class WorkoutPaywallUITests: XCTestCase {
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Scale"].tap()
+        let connect = app.buttons["plan.initialWeight.connect"]
+        XCTAssertTrue(connect.waitForExistence(timeout: 10))
+        connect.tap()
+        let scaleStatus = app.staticTexts["plan.initialWeight.scaleStatus"]
+        let connected = XCTNSPredicateExpectation(
+            predicate: NSPredicate(
+                format: "label == %@",
+                "Your supported scale is connected and ready."
+            ),
+            object: scaleStatus
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [connected], timeout: 10), .completed)
         app.buttons["plan.startRoutine"].tap()
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
 
