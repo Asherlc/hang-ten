@@ -56,11 +56,10 @@ python=3.11`) runs every tool here via `--freecad <prefix>/bin/freecadcmd`, but
 it links OCCT 7.9.3, not 7.8.1: rebuilding the five sources migrated before
 `metolius-prime-rib` on it gave five `verify_reproducible` MISMATCHes (same
 node and triangle counts, different vertex bytes). A USDZ compiled there is
-valid and hash-bound, but the macOS `cad` CI job will not reproduce it; recompile
-it on the pinned toolchain before merging. Without a Mac, commit the
-`cad-rebuilt-assets` artifact that the failing `cad-reproducibility` job uploads
-after reviewing it (see "Without the pinned toolchain" in
-`Tools/HangboardCAD/README.md`).
+valid and hash-bound, but it may not reproduce byte-for-byte on the pinned
+macOS toolchain. Rebuild and compare assets with
+`Tools/HangboardCAD/verify_reproducible.py --keep-rebuild <dir>` using pinned
+FreeCAD 1.1.3 on macOS before committing generated assets.
 
 Two launcher quirks cost real time. Both are worked around in the existing
 scripts, so reuse them rather than re-deriving:
@@ -841,4 +840,3 @@ python3 Tools/HangboardCAD/verify_reproducible.py --extra-python-path "$PXRPATH"
 
 # compile into a directory instead of the packages
 python3 Tools/HangboardCAD/prepare_assets.py --out <dir> --extra-python-path "$PXRPATH"
-
