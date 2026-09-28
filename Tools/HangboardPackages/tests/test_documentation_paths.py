@@ -15,6 +15,10 @@ ADDING_A_BOARD = REPO_ROOT / "docs/ADDING_A_BOARD.md"
 TESTING = REPO_ROOT / "Tools/HangboardPackages/TESTING.md"
 CAD_README = REPO_ROOT / "Tools/HangboardCAD/README.md"
 DELIVERY_LOCK = REPO_ROOT / "docs/source-audits/2026-09-22-model-delivery-lock.json"
+XCTEST_METHOD_PATTERN = re.compile(
+    r"^\s*(?:@\w+(?:\s*\([^)]*\))?\s+)*func\s+(test\w+)\s*\(",
+    flags=re.MULTILINE,
+)
 
 
 def _shell_function_body(script: str, function_name: str) -> str:
@@ -69,7 +73,6 @@ def _discovered_ui_test_methods() -> dict[str, set[str]]:
         r"^\s*(?:open\s+|final\s+)?class\s+(\w+UITests)\b",
         flags=re.MULTILINE,
     )
-    method_pattern = re.compile(r"^\s*func\s+(test\w+)\s*\(", re.MULTILINE)
     for path in (REPO_ROOT / "HangTenUITests").glob("*.swift"):
         source = path.read_text(encoding="utf-8")
         classes = list(class_pattern.finditer(source))
@@ -78,9 +81,25 @@ def _discovered_ui_test_methods() -> dict[str, set[str]]:
             class_selector = f"HangTenUITests/{match.group(1)}"
             methods_by_class[class_selector] = {
                 f"{class_selector}/{method}"
-                for method in method_pattern.findall(source, match.end(), end)
+                for method in XCTEST_METHOD_PATTERN.findall(source[match.end() : end])
             }
     return methods_by_class
+
+
+def test_attributed_xctest_methods_are_discovered() -> None:
+    """Attributes on the same or preceding line must not hide test methods."""
+    source = """\
+    @MainActor func testSameLineAttribute() {}
+    @MainActor
+    func testPrecedingLineAttribute() {}
+    func testUnattributed() {}
+    """
+
+    assert set(XCTEST_METHOD_PATTERN.findall(source)) == {
+        "testSameLineAttribute",
+        "testPrecedingLineAttribute",
+        "testUnattributed",
+    }
 
 
 def test_ui_test_changes_run_ios_and_python_contract_suites() -> None:
@@ -111,10 +130,8 @@ def test_paywall_methods_are_distributed_once_across_ci_shards() -> None:
     test_file = REPO_ROOT / "HangTenUITests/WorkoutPaywallUITests.swift"
     discovered_methods = {
         f"HangTenUITests/WorkoutPaywallUITests/{method}"
-        for method in re.findall(
-            r"^\s*func\s+(test\w+)\s*\(",
-            test_file.read_text(encoding="utf-8"),
-            flags=re.MULTILINE,
+        for method in XCTEST_METHOD_PATTERN.findall(
+            test_file.read_text(encoding="utf-8")
         )
     }
 
@@ -160,12 +177,10 @@ def test_free_workout_finish_cases_are_separated_across_ci_shards() -> None:
     ]
     discovered_methods = {
         f"HangTenUITests/FreeWorkoutUITests/{method}"
-        for method in re.findall(
-            r"^\s*func\s+(test\w+)\s*\(",
+        for method in XCTEST_METHOD_PATTERN.findall(
             (REPO_ROOT / "HangTenUITests/FreeWorkoutUITests.swift").read_text(
                 encoding="utf-8"
-            ),
-            flags=re.MULTILINE,
+            )
         )
     }
     finish_methods = {
