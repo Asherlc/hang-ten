@@ -53,9 +53,34 @@ def _xctest_only_testing_selectors(job: dict[str, object]) -> list[str]:
     return value.split()
 
 
-def _xctest_selector_target(selector: str) -> str:
-    """Return the target/class coverage represented by a test selector."""
-    return "/".join(selector.split("/")[:2])
+def _xctest_selector_target(selector: str) -> tuple[str, str | None]:
+    """Return the class selector and optional method selector separately."""
+    parts = selector.split("/")
+    assert len(parts) in (1, 2, 3), f"invalid XCTest selector: {selector}"
+    if len(parts) == 1:
+        return selector, None
+    return "/".join(parts[:2]), parts[2] if len(parts) == 3 else None
+
+
+def _discovered_ui_test_methods() -> dict[str, set[str]]:
+    """Map every UI-test class selector to its discovered test methods."""
+    methods_by_class: dict[str, set[str]] = {}
+    class_pattern = re.compile(
+        r"^\s*(?:open\s+|final\s+)?class\s+(\w+UITests)\b",
+        flags=re.MULTILINE,
+    )
+    method_pattern = re.compile(r"^\s*func\s+(test\w+)\s*\(", re.MULTILINE)
+    for path in (REPO_ROOT / "HangTenUITests").glob("*.swift"):
+        source = path.read_text(encoding="utf-8")
+        classes = list(class_pattern.finditer(source))
+        for index, match in enumerate(classes):
+            end = classes[index + 1].start() if index + 1 < len(classes) else len(source)
+            class_selector = f"HangTenUITests/{match.group(1)}"
+            methods_by_class[class_selector] = {
+                f"{class_selector}/{method}"
+                for method in method_pattern.findall(source, match.end(), end)
+            }
+    return methods_by_class
 
 
 def test_ui_test_changes_run_ios_and_python_contract_suites() -> None:
@@ -94,6 +119,7 @@ def test_paywall_methods_are_distributed_once_across_ci_shards() -> None:
     }
 
     assert len(shards) >= 2
+    assert all(str(shard["only_testing"]).split() for shard in shards)
     assert len(selectors) == len(set(selectors))
     assert set(selectors) == discovered_methods
 
@@ -105,7 +131,7 @@ def test_grip_ui_classes_are_balanced_across_two_ci_shards() -> None:
     shards = grip_job["strategy"]["matrix"]["include"]
     shard_classes = [
         {
-            _xctest_selector_target(selector)
+            _xctest_selector_target(selector)[0]
             for selector in str(shard["only_testing"]).split()
         }
         for shard in shards
@@ -274,11 +300,11 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
         else:
             assert xctest_step["env"]["XCTEST_MAX_ATTEMPTS"] == max_attempts
         expected_targets = {
-            _xctest_selector_target(selector) for selector in only_testing.split()
+            _xctest_selector_target(selector)[0] for selector in only_testing.split()
         }
         actual_selectors = _xctest_only_testing_selectors(test_job)
         assert {
-            _xctest_selector_target(selector) for selector in actual_selectors
+            _xctest_selector_target(selector)[0] for selector in actual_selectors
         } == expected_targets
         assert "scripts/ci-run-xctest.sh" in xctest_command
         assert "xcodebuild" not in xctest_command
@@ -299,18 +325,28 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
         )
         ui_shard_targets.extend(_xctest_only_testing_selectors(jobs[job_name]))
     assert len(ui_shard_targets) == len(set(ui_shard_targets))
-    discovered_ui_classes = {
-        f"HangTenUITests/{match.group(1)}"
-        for path in (REPO_ROOT / "HangTenUITests").glob("*.swift")
-        for match in re.finditer(
-            r"^\s*(?:open\s+|final\s+)?class\s+(\w+UITests)\b",
-            path.read_text(encoding="utf-8"),
-            flags=re.MULTILINE,
+    discovered_ui_methods = _discovered_ui_test_methods()
+    selected_ui_methods: list[str] = []
+    for selector in ui_shard_targets:
+        class_selector, method = _xctest_selector_target(selector)
+        assert class_selector in discovered_ui_methods, (
+            f"unknown UI-test class selector: {class_selector}"
         )
+        if method is None:
+            selected_ui_methods.extend(sorted(discovered_ui_methods[class_selector]))
+        else:
+            method_selector = f"{class_selector}/{method}"
+            assert method_selector in discovered_ui_methods[class_selector], (
+                f"unknown UI-test method selector: {method_selector}"
+            )
+            selected_ui_methods.append(method_selector)
+    discovered_methods = {
+        method
+        for methods in discovered_ui_methods.values()
+        for method in methods
     }
-    assert {
-        _xctest_selector_target(selector) for selector in ui_shard_targets
-    } == discovered_ui_classes
+    assert len(selected_ui_methods) == len(set(selected_ui_methods))
+    assert set(selected_ui_methods) == discovered_methods
 
     assert "status: draft" not in active_docs
     assert "status: approved" not in active_docs
