@@ -4,33 +4,23 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
-    func testMiniBarInternalLoopRecomputesFourLeadsForEveryGripPose() throws {
+    func testMiniBarInternalLoopSolvesFourLeadsForEveryGripPose() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
         guard case .model(let media) = board.defaultPresentation.media,
               case .twoBranchCord(let profile) = media.suspension else {
             return XCTFail("expected Mini Bar internal loop suspension")
         }
-        let clearance = try XCTUnwrap(profile.internalLoopClearance)
-        let winding = try XCTUnwrap(profile.internalLoopWindingByPassageID)
+        XCTAssertNotNil(profile.internalLoopClearance)
+        XCTAssertNotNil(profile.internalLoopWindingByPassageID)
         XCTAssertNil(profile.meshWrapClearance)
         let passages = profile.passages.left + profile.passages.right
         XCTAssertTrue(passages.allSatisfy { !$0.isThroughBore })
-        XCTAssertTrue(profile.canonicalPoses.values.allSatisfy { $0.cordContactPoints == nil })
-
-        // The authored section is ovoid. This dense circular support tests the
-        // route algorithm independently of tessellation and pose-specific data.
-        let section = (0..<96).map { index -> SIMD2<Float> in
-            let angle = Float(index) * 2 * .pi / 96
-            return SIMD2<Float>(0.031 + 0.032 * sin(angle), 0.036 + 0.032 * cos(angle))
-        }
         let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
-        for (positionID, sourcePose) in profile.canonicalPoses {
-            var pose = sourcePose
-            var routes = try MeshInternalLoopSolver.routes(
-                section: section, anchor: anchor, pose: pose,
-                radius: 0.002, clearance: Float(clearance),
-                mouths: passages.map { (id: $0.id, point: SIMD3<Float>($0.pointInModel.map(Float.init))) },
-                windingByPassageID: winding)
+        for (positionID, pose) in profile.canonicalPoses {
+            // The package caches each settled CAD route; selection uses these
+            // routes directly instead of solving against a test section.
+            let routes = try XCTUnwrap(pose.cordContactPoints, positionID)
+            XCTAssertEqual(Set(routes.keys), Set(passages.map(\.id)), positionID)
             if positionID == "edge-20" {
                 // One continuous loop at each end has a leg bearing below
                 // the ovoid section before it rises to the anchor.
@@ -38,10 +28,6 @@ final class SuspendedBoardPresentationTests: XCTestCase {
                     XCTAssertTrue(try XCTUnwrap(routes[id]).contains { $0[1] < 0.031 }, id)
                 }
             }
-            for passage in [profile.passages.left[1], profile.passages.right[1]] {
-                routes[passage.id]?.reverse()
-            }
-            pose.cordContactPoints = routes
             let solved = try SuspendedBoardPresentation.solve(
                 pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
             XCTAssertEqual(solved.branches.count, 2, positionID)
