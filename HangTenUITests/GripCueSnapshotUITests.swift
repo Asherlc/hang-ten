@@ -56,23 +56,22 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
     }
 
-    /// Opens the workout deep link only after Train is the top of the stack, then
-    /// retries once if the URL was dropped during a nav/orientation settle.
+    /// Opens the workout deep link only after Train is the top of the stack.
     private func openWorkoutDeepLinkAndChooseLeftHandIfNeeded(
-        perAttemptTimeout: TimeInterval = 20
+        timeout: TimeInterval = 20
     ) {
         waitForTrainShellReady(timeout: 20)
         let handChoice = app.buttons["handSide.left"]
         let pause = app.buttons["Pause"]
         app.open(workoutDeepLink)
-        if !pause.waitForExistence(timeout: perAttemptTimeout), !handChoice.exists {
-            waitForTrainShellReady(timeout: 10)
-            app.open(workoutDeepLink)
-        }
+        let destination = app.buttons.matching(
+            NSPredicate(format: "identifier == %@ OR label == %@", "handSide.left", "Pause")
+        ).firstMatch
+        XCTAssertTrue(destination.waitForExistence(timeout: timeout))
         if handChoice.exists {
             handChoice.tap()
         }
-        XCTAssertTrue(pause.waitForExistence(timeout: perAttemptTimeout))
+        XCTAssertTrue(pause.waitForExistence(timeout: timeout))
     }
 
     private func openPlanDetail(withMotherboardFixture: Bool = false) {

@@ -189,16 +189,7 @@ final class BeastmakerBoardPickerInteractionUITests: XCTestCase {
         app.launch()
 
         let search = app.searchFields["Search boards"]
-        if !search.waitForExistence(timeout: 45) {
-            // Picker review route can white-screen under CI load after landscape
-            // board-detail cases; one terminate+relaunch recovers reliably.
-            app.terminate()
-            app.launch()
-            XCTAssertTrue(
-                search.waitForExistence(timeout: 60),
-                "Board picker Search boards must appear after relaunch."
-            )
-        }
+        XCTAssertTrue(search.waitForExistence(timeout: 45), "Board picker Search boards must appear.")
         search.tap()
         search.typeText("Beastmaker 1000")
 
@@ -269,8 +260,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_PORTRAIT": "1",
         ]
         app.launch()
-        let model = app.descendants(matching: .any).matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
+        let model = app.otherElements["boardModel.display"]
         XCTAssertTrue(model.waitForExistence(timeout: 60))
+        XCTAssertTrue(model.label.hasSuffix("hangboard"))
         if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
             try assertModelBodyIsVisible(model)
         }

@@ -9,10 +9,9 @@ final class FreeWorkoutUITests: XCTestCase {
     func testFreeWorkoutStartSheetOpensFromTrain() {
         let app = launchResetFreeWorkout()
         let entry = app.buttons["train.freeWorkout"]
-        XCTAssertTrue(entry.waitForExistence(timeout: 10))
-        entry.tap()
-        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
+        tapHittable(entry, timeout: 15)
         XCTAssertTrue(anyElement(app, "freeWorkout.start").waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.empty"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.last"].exists)
         // Timeline builder is gone; start sheet is the only entry.
@@ -131,28 +130,10 @@ final class FreeWorkoutUITests: XCTestCase {
         close.tap()
 
         let resume = app.buttons["freeWorkout.resume"]
-        if resume.waitForExistence(timeout: 8) {
-            resume.tap()
-            XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
-            XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
-        } else {
-            // Fallback: terminate/relaunch without reset — active log must still Resume.
-            app.terminate()
-            let relaunched = XCUIApplication()
-            relaunched.launch()
-            let entry = relaunched.buttons["train.freeWorkout"]
-            tapHittable(entry, timeout: 15)
-            let resumeAfterRelaunch = relaunched.buttons["freeWorkout.resume"]
-            XCTAssertTrue(
-                resumeAfterRelaunch.waitForExistence(timeout: 10),
-                "Active log should surface Resume after Close or relaunch"
-            )
-            resumeAfterRelaunch.tap()
-            XCTAssertTrue(anyElement(relaunched, "freeWorkout.log").waitForExistence(timeout: 10))
-
-            finishDiscardThenRealFinishUnlocksLast(in: relaunched)
-            return
-        }
+        XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
+        resume.tap()
+        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
+        XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
         finishDiscardThenRealFinishUnlocksLast(in: app)
     }
@@ -202,8 +183,7 @@ final class FreeWorkoutUITests: XCTestCase {
     private func openEmptyLog(in app: XCUIApplication, alreadyOnStartSheet: Bool = false) {
         if !alreadyOnStartSheet {
             let entry = app.buttons["train.freeWorkout"]
-            XCTAssertTrue(entry.waitForExistence(timeout: 10))
-            entry.tap()
+            tapHittable(entry, timeout: 15)
         }
         let empty = app.buttons["freeWorkout.empty"]
         XCTAssertTrue(empty.waitForExistence(timeout: 10))

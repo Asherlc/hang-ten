@@ -241,22 +241,20 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
     assert "xcodebuild" in xctest_script
     assert "build-for-testing" in xctest_script
     assert "test-without-building" in xctest_script
-    assert 'XCTEST_MAX_ATTEMPTS="${XCTEST_MAX_ATTEMPTS:-2}"' in xctest_script
-    assert "while (( attempt <= XCTEST_MAX_ATTEMPTS )); do" in xctest_script
-    assert "run_xctest_attempt \"$attempt\"" in xctest_script
-    assert "mark_attempt_failed \"$attempt\"" in xctest_script
+    assert "XCTEST_MAX_ATTEMPTS" not in xctest_script
+    assert "run_xctest_attempt" not in xctest_script
+    assert "retry" not in xctest_script.lower()
     assert "os.setsid()" in xctest_script
     assert "os.execvp(sys.argv[1], sys.argv[1:])" in xctest_script
     assert 'kill -TERM -- "-$xcodebuild_pid"' in xctest_script
     assert 'kill -KILL -- "-$xcodebuild_pid"' in xctest_script
     assert xctest_script.count('kill -0 -- "-$xcodebuild_pid"') == 2
-    xctest_attempt_body = _shell_function_body(xctest_script, "run_xctest_attempt")
-    assert "build-for-testing" in xctest_attempt_body
-    assert "test-without-building" in xctest_attempt_body
+    assert xctest_script.count('run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"') == 1
+    assert xctest_script.count('run_xcodebuild_with_watchdog "test-without-building" "test-without-building"') == 1
 
     expected_suite_jobs = (
-        ("test-unit", "HangTenTests", "1", None),
-        ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1", "2"),
+        ("test-unit", "HangTenTests", "1"),
+        ("test-ui-paywall", "HangTenUITests/WorkoutPaywallUITests", "1"),
         (
             "test-ui-map",
             "\n".join(
@@ -267,7 +265,6 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
                 )
             ),
             "1",
-            "2",
         ),
         (
             "test-ui-grip",
@@ -280,13 +277,11 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
                 )
             ),
             "1",
-            "2",
         ),
         (
             "test-ui-picker",
             "HangTenUITests/BeastmakerBoardPickerInteractionUITests",
             "1",
-            "2",
         ),
         (
             "test-ui-misc",
@@ -297,10 +292,9 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
                 )
             ),
             "1",
-            "2",
         ),
     )
-    for job_name, only_testing, workers, max_attempts in expected_suite_jobs:
+    for job_name, only_testing, workers in expected_suite_jobs:
         test_job = jobs[job_name]
         xctest_step = next(
             step for step in test_job["steps"] if step.get("name") == "Run XCTest suite"
@@ -308,12 +302,13 @@ def test_active_delivery_guidance_uses_the_state_free_direct_package_contract() 
         xctest_command = xctest_step["run"]
 
         assert test_job["timeout-minutes"] == 70
-        assert xctest_step["env"]["XCTEST_ATTEMPT_TIMEOUT_SECONDS"] == "1800"
+        assert xctest_step["env"]["XCTEST_RUN_TIMEOUT_SECONDS"] == "1800"
         assert xctest_step["env"]["XCTEST_PARALLEL_WORKERS"] == workers
-        if max_attempts is None:
-            assert "XCTEST_MAX_ATTEMPTS" not in xctest_step["env"]
-        else:
-            assert xctest_step["env"]["XCTEST_MAX_ATTEMPTS"] == max_attempts
+        assert "XCTEST_MAX_ATTEMPTS" not in xctest_step["env"]
+        upload_step = next(
+            step for step in test_job["steps"] if step.get("name") == "Upload test diagnostics on failure"
+        )
+        assert upload_step["if"] == "failure() || cancelled()"
         expected_targets = {
             _xctest_selector_target(selector)[0] for selector in only_testing.split()
         }

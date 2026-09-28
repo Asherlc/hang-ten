@@ -365,8 +365,7 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
-    # One soft retry plus result-bundle upload need a little headroom,
-    # while each attempt has its own watchdog below.
+    # Allow headroom for result-bundle upload; XCTest runs once per shard.
     timeout-minutes: 70
 
     steps:
@@ -429,7 +428,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenTests
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-test-logs
@@ -450,12 +449,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenTests-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenTests-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenTests-run.xcresult
             ${{ runner.temp }}/hang-ten-test-logs/
           if-no-files-found: ignore
 
@@ -573,8 +572,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
-          XCTEST_MAX_ATTEMPTS: "2"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenUITests-paywall-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -595,12 +593,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-paywall-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-paywall-${{ matrix.shard }}-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-paywall-${{ matrix.shard }}-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -678,8 +676,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
-          XCTEST_MAX_ATTEMPTS: "2"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenUITests-map-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -700,12 +697,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-map-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-map-${{ matrix.shard }}-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-map-${{ matrix.shard }}-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -782,8 +779,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
-          XCTEST_MAX_ATTEMPTS: "2"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenUITests-grip-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -804,12 +800,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-grip-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-grip-${{ matrix.shard }}-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-grip-${{ matrix.shard }}-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -874,8 +870,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
-          XCTEST_MAX_ATTEMPTS: "2"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenUITests-picker
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -896,12 +891,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-picker-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-picker-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-picker-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
@@ -978,8 +973,7 @@ jobs:
         id: xctest
         env:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
-          XCTEST_ATTEMPT_TIMEOUT_SECONDS: "1800"
-          XCTEST_MAX_ATTEMPTS: "2"
+          XCTEST_RUN_TIMEOUT_SECONDS: "1800"
           XCTEST_LABEL: HangTenUITests-misc-${{ matrix.shard }}
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
@@ -1000,12 +994,12 @@ jobs:
 
       # actions/upload-artifact v4.6.2
       - name: Upload test diagnostics on failure
-        if: failure() || cancelled() || steps.xctest.outputs.attempt_1_failed == 'true' || steps.xctest.outputs.attempt_2_failed == 'true'
+        if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-test-results-HangTenUITests-misc-${{ matrix.shard }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/HangTenUITests-misc-${{ matrix.shard }}-attempt-*.xcresult
+            ${{ runner.temp }}/HangTenUITests-misc-${{ matrix.shard }}-run.xcresult
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 

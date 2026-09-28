@@ -293,6 +293,7 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         if let label {
             content
                 .accessibilityElement(children: .ignore)
+                .accessibilityIdentifier("boardModel.display")
                 .accessibilityLabel(label)
                 .accessibilityValue(value ?? "")
         } else {
