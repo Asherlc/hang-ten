@@ -51,11 +51,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d72bc116d00bc99fb17f7dbf9d032f1e1d9b8045311aaabeefc3cb63d864f4e3",
+  "sha256Manifest": "52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; three files (descriptor, USDZ, board.json) per committed-asset package and two (descriptor, FCStd source) per source-backed package, whose board.json is generated from the source at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "5ce7c637f0af8a9c6157309a7a089cf6fc3641708df9fc20015ea7480f217f86",
+  "supersededSha256Manifest": "d72bc116d00bc99fb17f7dbf9d032f1e1d9b8045311aaabeefc3cb63d864f4e3",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -477,5 +477,5 @@
   "dewoodstokWoodbordMigrationNote": "2026-09-27: dewoodstok-woodbord migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... is the merged manifest after The Hangboard migration; main's PENDING_... manifest moved to supersededSha256Manifest. The combined manifest after The Hangboard migration is 5ce7c637...; main's 0208a876... manifest is recorded in supersededSha256Manifest.",
   "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
   "frictitiousDoorMountPro7MigrationNote": "2026-09-27: source-backed native FreeCAD DoorMount Pro 7 with generated board.json and 13 preserved contact/14 node IDs. sha256Manifest supersedes the main delivery manifest recorded in supersededSha256Manifest. See dated provenance for sources and review renders.",
-  "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest also includes nature-stoak-board-iii and dewoodstok-woodbord; the prior 0208a876... manifest moved to supersededSha256Manifest."
+  "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest."
 }
