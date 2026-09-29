@@ -213,11 +213,22 @@ def crown_metrics(polyline: list[tuple[float, float]]) -> dict:
         turn = after - before
         turn = (turn + 180.0) % 360.0 - 180.0
         turns.append(turn)
+    absolute_turns = [abs(turn) for turn in turns]
+    # A smooth crown shares its turning across adjacent 1 mm samples. A
+    # polygon concentrates nearly all local turning at one sampled vertex.
+    turn_concentrations = [
+        value / max(
+            1e-9,
+            sum(absolute_turns[max(0, index - 5) : min(len(turns), index + 6)]),
+        )
+        for index, value in enumerate(absolute_turns)
+    ]
     nose_depth = min(point[1] for point in polyline)
     return {
         "max_turn": max((abs(turn) for turn in turns), default=float("nan")),
         "concave_turns": sum(turn < -0.05 for turn in turns),
         "max_concave_turn": max((-turn for turn in turns if turn < 0), default=0.0),
+        "max_turn_concentration": max(turn_concentrations, default=float("nan")),
         "total_turn": sum(turns),
         "nose_depth": nose_depth,
     }
@@ -234,6 +245,7 @@ def rail_crown_sections(rail_shape) -> list[dict]:
         metrics = crown_metrics(polyline)
         passed = (
             metrics["max_turn"] < 20.0
+            and metrics["max_turn_concentration"] < 0.65
             and metrics["max_concave_turn"] < 3.0
             and metrics["total_turn"] > 90.0
             and metrics["nose_depth"] < -20.0
@@ -296,6 +308,17 @@ def faceted_rail_control():
         App.Vector(62, -34, 0),
         App.Vector(92, -25, 0),
         App.Vector(100, 0, 0),
+    ]
+    wire = Part.makePolygon(points + [points[0]])
+    return Part.Face(wire).extrude(App.Vector(0, 0, 220))
+
+
+def shallow_faceted_rail_control():
+    """A many-sided shallow crown: 15 degree creases evade a 20 degree cap."""
+    points = [
+        App.Vector(50 + 50 * math.cos(math.pi + index * math.pi / 12),
+                   50 * math.sin(math.pi + index * math.pi / 12), 0)
+        for index in range(13)
     ]
     wire = Part.makePolygon(points + [points[0]])
     return Part.Face(wire).extrude(App.Vector(0, 0, 220))
@@ -453,6 +476,20 @@ def main() -> int:
         "; ".join(
             f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f}"
             for section in faceted_sections
+        ),
+    )
+
+    shallow_faceted_control = shallow_faceted_rail_control()
+    shallow_faceted_sections = rail_crown_sections(shallow_faceted_control)
+    check(
+        "crown gate rejects shallow creases distributed across many facets",
+        shallow_faceted_control.isValid()
+        and len(shallow_faceted_sections) == 4
+        and not any(section["passed"] for section in shallow_faceted_sections),
+        "; ".join(
+            f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
+            f"concentration={section.get('max_turn_concentration', float('nan')):.2f}"
+            for section in shallow_faceted_sections
         ),
     )
 
