@@ -246,11 +246,12 @@ struct GripHandRealityMeshBuilder {
             SIMD3(mirrored ? -source.normals[offset] : source.normals[offset],
                   source.normals[offset + 1], source.normals[offset + 2])
         }
-        let indices = mirrored
-            ? stride(from: 0, to: asset.indices.count, by: 3).flatMap { offset in
-                [asset.indices[offset], asset.indices[offset + 2], asset.indices[offset + 1]]
+        var indices: [UInt32] = asset.indices
+        if mirrored {
+            for offset in stride(from: 0, to: indices.count, by: 3) {
+                indices.swapAt(offset + 1, offset + 2)
             }
-            : asset.indices
+        }
         return Geometry(positions: positions, normals: normals, indices: indices)
     }
 

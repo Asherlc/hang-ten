@@ -413,8 +413,12 @@ final class GripHandOrbitTests: XCTestCase {
         let expectedNormals = stride(from: 0, to: source.normals.count, by: 3).map { i in
             SIMD3(-source.normals[i], source.normals[i + 1], source.normals[i + 2])
         }
-        let expectedIndices = stride(from: 0, to: asset.indices.count, by: 3).flatMap { i in
-            [asset.indices[i], asset.indices[i + 2], asset.indices[i + 1]]
+        var expectedIndices: [UInt32] = []
+        expectedIndices.reserveCapacity(asset.indices.count)
+        for triangle in stride(from: 0, to: asset.indices.count, by: 3) {
+            expectedIndices.append(asset.indices[triangle])
+            expectedIndices.append(asset.indices[triangle + 2])
+            expectedIndices.append(asset.indices[triangle + 1])
         }
         XCTAssertEqual(mirrored.positions, expectedPositions)
         XCTAssertEqual(mirrored.normals, expectedNormals)
