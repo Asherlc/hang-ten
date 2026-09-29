@@ -171,6 +171,16 @@ def test_v2_reusable_slot_board_round_trips():
     )
     instances = board["presentations"][0]["media"]["instances"]
     assert all("contactIDsBySlotID" in instance for instance in instances)
+    model_bounds = json.loads(
+        (committed_source("metolius-rock-rings-3d").parent / "assets" / "primary.model.json").read_text()
+    )["modelBounds"]
+    for instance in instances:
+        offset = instance["suspension"]["anchor"]["offsetFromBoardBounds"]
+        resolved_y = model_bounds["max"][1] + offset[1]
+        assert resolved_y == pytest.approx(0.19), (
+            f"{instance['equipmentObjectID']} anchor resolves too high for its 202 mm leads: "
+            f"{resolved_y:.3f} m"
+        )
 
     manifest = cad_source.board_to_manifest(board)
     assert "id" not in manifest
