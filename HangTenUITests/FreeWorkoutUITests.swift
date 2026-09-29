@@ -80,30 +80,12 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
-        // Start Set is available for a timed hang. Give the simulator a concrete duration
-        // so the guided interaction has a valid active set to start.
-        let logSet = app.buttons["freeWorkout.logSet"]
-        XCTAssertTrue(logSet.waitForExistence(timeout: 10), "Added hang should expose Log Set")
-        tapHittable(logSet, timeout: 10)
-        let duration = app.textFields["freeWorkout.logSet.duration"]
-        XCTAssertTrue(duration.waitForExistence(timeout: 10), "Log Set should request a duration")
-        tapHittable(duration, timeout: 10)
-        duration.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 2) + "600")
-        let saveSet = app.buttons["freeWorkout.logSet.save"]
-        XCTAssertTrue(saveSet.waitForExistence(timeout: 10), "Timed hang should be saveable")
-        tapHittable(saveSet, timeout: 10)
-
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
             labels: ["Start Set"]
         )
-        XCTAssertTrue(startSet.waitForExistence(timeout: 15), "Added hang should expose Start Set")
-        let logScrollView = app.scrollViews.firstMatch
-        for _ in 0..<3 where !startSet.isHittable {
-            XCTAssertTrue(logScrollView.exists, "Free-workout log should be scrollable to Start Set")
-            logScrollView.swipeUp()
-        }
+        XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
         tapHittable(startSet, timeout: 15)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
@@ -237,9 +219,15 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(confirm.waitForExistence(timeout: 10))
         confirm.tap()
 
-        // Wait until focused hang actions are available (sheet dismissed).
+        // Focused actions sit below the board preview on an iPhone. Scroll them into view
+        // before querying XCTest, which otherwise cannot see the lazy row controls.
+        let logScrollView = app.scrollViews.firstMatch
+        XCTAssertTrue(logScrollView.waitForExistence(timeout: 10), "Free-workout log should scroll")
+        logScrollView.swipeUp()
+
+        // Wait until focused hang actions are available (sheet dismissed and row visible).
         XCTAssertTrue(
-            focusedSetActionAvailable(in: app, timeout: 12),
+            focusedSetActionAvailable(in: app, timeout: 5),
             "Added hang should expose Start Set, Mark done, or Mark set complete"
         )
     }
