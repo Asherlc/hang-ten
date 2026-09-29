@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, and crimptonite-helium-mobile native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-split-palm, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, and crimptonite-helium-mobile native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -53,7 +53,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d2a0e85862156a32c78b6ea84cb9216666ed584fc4d0e9f29a76eb48c6d8fc2b",
+  "sha256Manifest": "487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -352,6 +352,22 @@
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
     },
+    "soill-split-palm": {
+      "source": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
+      "sourceSHA256": "6c9e3e425186bd139dc9efcd04a79239cc29ed53e0c5750d1c24b358215bdf3c",
+      "sourceKind": "faceted-import (authored parametric/faceted hybrid; compiled with --allow-faceted-import)",
+      "boardMetadata": "schema-v3 board.json generated at build time from HangTenBoardManifest; its model presentation uses the schema-v2 descriptor to instantiate one canonical right-half source twice, reflecting the left instance at runtime; all 14 contact IDs, names, kinds, factual depths, and product metadata are preserved, while left/right equipment ownership is made explicit for runtime instancing; instance translations use exact nine-decimal lexemes",
+      "referenceSHA256": "36a8877dddbaeebf86f99c96592184075bd314d85f23b65417dc19c092c57bed (prior committed USDZ used only for before/after display and never as geometry input)",
+      "assetSHA256": "6efb970ca86f280db52e174dcd862e15a33bf28fb8ffd938140f224838eba32f",
+      "descriptorSHA256": "dd97b633165e1add83cff26c422f816c94a357c2e681400eae944f6aa990eb85",
+      "compiler": "Tools/HangboardCAD/compile_board.py --allow-faceted-import; unbound meshes",
+      "nativeValidation": "FreeCAD reopen and recompute, explicit seven-slot bindings on one canonical half, compile check, package validation, Android staging parity, and authored-geometry tests passed; verify_reproducible rebuilt the 1,635,072-byte USDZ and descriptor byte-identically with the pinned macOS FreeCAD toolchain",
+      "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro simulator, iOS 26.5, signed Debug board-detail route; right-small-sloper-pinch selected at launch and left-small-sloper-pinch selected through the production board deep link, each confirmed via boardDetail.selectedHold.<contactID> and screenshot; the same canonical mesh appears reflected and each pinch highlights as one continuous contact)",
+      "comparison": "Re-authored directly from So iLL manufacturer evidence: product page https://soill.ca/products/split-palm; straight-on image https://cdn.shopify.com/s/files/1/0424/1145/products/split-palm-so-ill-white-12-01-so-ill-385627.jpg?v=1677258498 (SHA-256 377cf3307178b492aac924b7780d83fa884112165a4342549ab6b1b1254bb0bb); installed oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460618-1800x1200.jpg?v=1658522760 (SHA-256 4a88c665d4b8417ff6a899169b5bd21ab42a4ed60d6bc860faa4e166d7e78b5d); in-use oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460686-1800x1200.jpg?v=1658522760 (SHA-256 fb6f1a7288fea85803447f7917081ee47c5d18f48e72f8e857aeda8f18b07360). Published facts are the 419 x 279.4 x 98.4 mm per-piece envelope and 38.1/25.4/12.7/12.7 mm rail depths. Operator-selected display estimates are every Bezier control point, globe radius and exponent, the 12 mm pinch blend, 50-65.5 mm side fairing, 44 mm jug depth, and local relief/rounding. Three operator-supplied orthographic views (SHA-256 586534473004bf632098bcce5275ad5e32b792a57542539d17ec4bad6b68198f, 42f72675c7d38e1c12a8e44a72b39a84ddb5464fef0a6b874e459faaf59a5499, aa18ba39895ab7475f343329763304e1277000648e6961b7d926c383fe8485ab) were qualitative exact-revision checks. The silhouette was manually reviewed on a 2.3103 px/mm head-on grid at a 1-2 native-pixel control-line target; no registration, detection, fitting, tracing, segmentation, vectorization, or prior-mesh sampling was used. Geometry uses deliberate cubic Bezier/straight planforms and parametric superellipse globes; the small pinch is one continuous smooth procedural block. Fastener holes, screws, wordmark, materials, and textures are intentionally omitted from the display model.",
+      "provenanceSidecar": "none (audit archive removed); provenance recorded here and in the PR",
+      "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
+      "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes"
+    },
     "soill-training-tiles": {
       "source": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
       "sourceSHA256": "87296ca455240e185fc4486eef6fe2d6e126f55acded1431e354872946981cd7",
@@ -605,5 +621,6 @@
   "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
   "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
-  "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c."
+  "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
+  "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest."
 }

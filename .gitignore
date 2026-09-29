@@ -33,6 +33,7 @@ __pycache__/
 # package validator rejects an on-disk copy. List each CAD package explicitly
 # (a pattern could hide a hand-authored package's board.json).
 /Hangboards/soill-iron-palm-2/board.json
+/Hangboards/soill-split-palm/board.json
 /Hangboards/soill-training-tiles/board.json
 /Hangboards/beastmaker-1000/board.json
 /Hangboards/beastmaker-2000/board.json
