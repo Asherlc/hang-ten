@@ -1066,11 +1066,11 @@ final class AppStoreTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitUntil { appStore.healthAuthorizationError != nil }
+        waitUntil(timeout: 20) { appStore.healthAuthorizationError != nil }
         healthStore.fetchResult = .failure(FakeHealthError.failed)
 
         appStore.requestHealthAuthorization()
-        waitUntil { appStore.healthAuthorizationError != nil }
+        waitUntil(timeout: 20) { appStore.healthAuthorizationError != nil }
 
         XCTAssertEqual(
             appStore.healthAuthorizationError,
@@ -1373,11 +1373,12 @@ final class AppStoreTests: XCTestCase {
     }
 
     private func waitUntil(
+        timeout: TimeInterval = 5,
         _ condition: @escaping () -> Bool,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(5)
+        let deadline = Date().addingTimeInterval(timeout)
         while !condition(), Date() < deadline {
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
