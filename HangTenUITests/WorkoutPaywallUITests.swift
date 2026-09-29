@@ -253,8 +253,17 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
         app.launch()
 
-        app.buttons["plan.startRoutine"].tap()
-        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 2))
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        let startReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: start
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [startReady], timeout: 10), .completed)
+        start.tap()
+
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.restore"].tap()
 

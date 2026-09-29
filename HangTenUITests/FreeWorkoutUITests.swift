@@ -53,6 +53,14 @@ final class FreeWorkoutUITests: XCTestCase {
 
         finishWorkoutSkippingTemplate(in: app)
 
+        let startSheet = anyElement(app, "freeWorkout.start")
+        let startSheetGone = expectation(for: NSPredicate(format: "exists == false"), evaluatedWith: startSheet)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [startSheetGone], timeout: 10),
+            .completed,
+            "Finishing a workout should dismiss its parent start sheet"
+        )
+
         // Start sheet dismissed after finish; reopen without reset so history remains.
         let entry = app.buttons["train.freeWorkout"]
         tapHittable(entry, timeout: 15)

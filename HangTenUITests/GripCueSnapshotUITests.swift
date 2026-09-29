@@ -162,7 +162,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight

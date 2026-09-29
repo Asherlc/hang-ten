@@ -227,7 +227,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
 
     func testDoorMount() throws {
         try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
-                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296))
+                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296),
+                   resetContactOffset: CGVector(dx: 0.82, dy: 0.55))
     }
 
     func testMegalith() throws {
