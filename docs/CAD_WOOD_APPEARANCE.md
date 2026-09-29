@@ -56,21 +56,33 @@ product pages retain FSC certification and wooden product imagery.
 | `tension.grindstone` | [Product source](https://tensionclimbing.com/products/grindstone) | Body and contact nodes; attachments excluded |
 | `tension.grindstone-pro` | [Product source](https://www.tensionclimbing.com/hangboards/grindstone-pro) | Body and contact nodes; attachments excluded |
 | `the-hangboard.the-hangboard` | [Product source](https://thehangboard.com/products/hangboard) | Body and contact nodes; attachments excluded |
-| `nature.stoak-board-iii` | [Product source](https://natureclimbing.com/products/stoak-board-iii) | Uniform wood display finish (see below) |
+| `nature.stoak-board-iii` | [Product source](https://natureclimbing.com/products/stoak-board-iii) | Wood with three source-backed granite inserts (see below) |
 
 ## Board-wide coverage and Stoak correction
 
-`surfaceFinish` is `wood`, `plastic`, or `neutral`. Omission preserves the legacy
+`surfaceFinish` is `wood`, `plastic`, `granite`, or `neutral`. Omission preserves the legacy
 neutral default. The native CAD catalog explicitly chooses one finish for every
 board. Existing optional `woodNodeIDs` / `plasticNodeIDs` are supported for
 whole-node overrides in legacy packages; native packages no longer rely on
 exhaustive node lists. Attachment nodes always stay neutral. Both validators
 reject invalid finish values and unknown display fields.
 
-Stoak now uses the wood display finish throughout its body and all hold meshes,
-including pocket floors. Its physical wood/granite contact metadata remains
-unchanged: a uniform app finish is a visual adaptation, not a claim that every
-physical surface is wood. Legacy mesh names do not determine material identity.
+Stoak keeps wood as its board-wide default. Three separately authored CAD surface
+nodes receive granite via `graniteNodeIDs`: the larger lower-center pocket insert
+and the outer ends of the two lower side pockets. Their pocket floors, rounded
+front lips and front faces share a subtle charcoal mineral shader. The wooden
+rear walls, roofs, inner side edges and small upper-center pocket retain wood.
+Both validators require override selectors to be unique, disjoint, and bound to
+body/contact nodes; attachments cannot receive an override. Granite material
+selection is independent of contact identity, so a mixed contact highlights and
+restores both finishes together. See
+[the approved evidence and CAD partition audit](source-audits/2026-09-29-stoak-granite-surfaces.md).
+
+The granite appearance is supplied at runtime. USDZ meshes stay unbound and
+texture-free; no per-pixel height cutoff paints wood gray. The CAD splits actual
+surfaces at explicitly authored material boundaries. The retained parametric
+solid and physical contact metadata are unchanged. Legacy node names remain
+identity strings, not material evidence.
 
 The previous correction introduced `woodNeutralBands` and hand-selected height
 cutoffs to paint pocket bottoms gray. That answered a different appearance
@@ -85,7 +97,7 @@ inspect the complete walls, rear faces, floors, lips and transitions of every
 pocket. Then exercise selection and clearing to ensure the same finish returns.
 A passing material-type test alone does not establish visual correctness.
 
-The catalog audit covers 35 native CAD boards: 24 wood, 11 plastic and 477
+The catalog audit covers 35 native CAD boards: 24 wood, 11 plastic and 480
 body/contact descriptor meshes. A catalog test requires a board-level finish
 for every native source. An iOS catalog test loads every opted-in model and
 checks all imported body/hold meshes for its finish. A regression also verifies

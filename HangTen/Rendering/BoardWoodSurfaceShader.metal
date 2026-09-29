@@ -4,6 +4,22 @@
 using namespace metal;
 
 [[visible]]
+void boardGraniteSurfaceShader(realitykit::surface_parameters params) {
+    // Three-dimensional mineral cells remain aligned on the insert's floor,
+    // rounded edge and front face. Fade subpixel crystals in picker thumbnails.
+    float3 p = params.geometry().model_position() * 1700.0f;
+    float filter = 1.0f - smoothstep(0.5f, 2.0f, length(fwidth(p)));
+    float3 cell = floor(p);
+    float crystal = fract(sin(dot(cell, float3(12.9898f, 78.233f, 37.719f))) * 43758.5453f);
+    float grain = sin(p.x * 2.3f + sin(p.y)) * sin(p.y * 2.7f + p.z);
+    float variation = ((crystal - 0.5f) * 0.25f + grain * 0.035f) * filter;
+    half3 tint = half3(params.material_constants().base_color_tint());
+    params.surface().set_base_color(tint * half(1.0f + variation));
+    params.surface().set_roughness(half(0.92f + 0.025f * grain * filter));
+    params.surface().set_metallic(0.0h);
+}
+
+[[visible]]
 void boardWoodSurfaceShader(realitykit::surface_parameters params) {
     // CAD meshes share board-space coordinates in metres. A volume pattern
     // stays aligned across body/contact boundaries, inside recesses, and while

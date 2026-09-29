@@ -201,21 +201,38 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testStoakWholeBoardWoodFinishRestoresEveryContact() async throws {
+    func testStoakMixedFinishesRestoreEveryContact() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stoak-board-iii"))
         let scene = try await BoardModelRealityLoader.load(board: board,
                                                           presentation: board.defaultPresentation)
         XCTAssertEqual(scene.displayForTesting.surfaceFinish, .wood)
         XCTAssertTrue(scene.displayForTesting.woodNodeIDs.isEmpty,
                       "Wood coverage must not depend on enumerating each mesh")
+        XCTAssertEqual(Set(scene.displayForTesting.graniteNodeIDs),
+                       ["granite_insert_left", "granite_insert_right", "granite_insert_center"])
         for id in ["edge-22-center", "gradient-edge-left", "gradient-edge-right", "top-jug",
                    "lower-composite-left", "lower-composite-right", "lower-composite-center"] {
             let entities = try XCTUnwrap(scene.contactEntities[id])
             XCTAssertFalse(entities.isEmpty)
+            if id.hasPrefix("lower-composite-") {
+                XCTAssertGreaterThanOrEqual(entities.count, 2, "Mixed contacts must include wood and stone")
+            }
+            var baselineTints: [Entity: UIColor] = [:]
+            let graniteNodes = Set(scene.displayForTesting.graniteNodeIDs)
             for entity in entities {
                 let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
-                                             "Wood interiors must not remain gray: \(id)")
-                XCTAssertEqual(material.custom.value, .zero)
+                                             "Every wood/stone contact must receive its finish: \(id)")
+                let tint = UIColor(cgColor: material.baseColor.__tint)
+                var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+                XCTAssertTrue(tint.getRed(&r, green: &g, blue: &b, alpha: &a))
+                if graniteNodes.contains(entity.name) {
+                    XCTAssertLessThan(r, 0.4, "Granite must be dark: \(entity.name)")
+                    XCTAssertLessThan(abs(r - b), 0.05)
+                } else {
+                    XCTAssertGreaterThan(r, g, "Wood walls must retain warm grain")
+                    XCTAssertGreaterThan(g, b)
+                }
+                baselineTints[entity] = tint
             }
             for mode: BoardHighlightMode in [.active, .preview] {
                 scene.highlight([id], mode: mode)
@@ -225,7 +242,7 @@ final class BoardModelRealityTests: XCTestCase {
                 scene.highlight([], mode: mode)
                 for entity in entities {
                     let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
-                    XCTAssertEqual(restored.custom.value, .zero)
+                    XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
                 }
             }
         }
@@ -316,9 +333,11 @@ final class BoardModelRealityTests: XCTestCase {
                 let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
                 let attachmentIDs = Set(media.descriptor.nodes.filter { $0.role == .attachment }.map(\.nodeID))
                 let surfaceIDs = Set(media.descriptor.nodes.filter { $0.role != .attachment }.map(\.nodeID))
-                func check(_ entity: Entity, attachment: Bool = false) throws {
+                let graniteIDs = Set(media.display.graniteNodeIDs)
+                func check(_ entity: Entity, attachment: Bool = false, granite: Bool = false) throws {
                     let isAttachment = attachmentIDs.contains(entity.name) ? true
                         : surfaceIDs.contains(entity.name) ? false : attachment
+                    let isGranite = surfaceIDs.contains(entity.name) ? graniteIDs.contains(entity.name) : granite
                     if let model = (entity as? ModelEntity)?.model {
                         if isAttachment {
                             XCTAssertTrue(model.materials.first is PhysicallyBasedMaterial, board.id)
@@ -328,7 +347,10 @@ final class BoardModelRealityTests: XCTestCase {
                             let tint = UIColor(cgColor: material.baseColor.__tint)
                             var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
                             XCTAssertTrue(tint.getRed(&r, green: &g, blue: &b, alpha: &a))
-                            if media.display.surfaceFinish == .wood {
+                            if isGranite || media.display.surfaceFinish == .granite {
+                                XCTAssertLessThan(r, 0.4, board.id)
+                                XCTAssertLessThan(abs(r - b), 0.05, board.id)
+                            } else if media.display.surfaceFinish == .wood {
                                 XCTAssertGreaterThan(r, g, board.id)
                                 XCTAssertGreaterThan(g, b, board.id)
                             } else {
@@ -338,7 +360,7 @@ final class BoardModelRealityTests: XCTestCase {
                             meshesChecked += 1
                         }
                     }
-                    for child in entity.children { try check(child, attachment: isAttachment) }
+                    for child in entity.children { try check(child, attachment: isAttachment, granite: isGranite) }
                 }
                 try check(scene.root)
                 boardsChecked += 1

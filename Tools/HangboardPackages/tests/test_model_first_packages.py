@@ -1395,6 +1395,39 @@ def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> N
         load_board_package(package)
 
 
+def test_model_display_granite_overrides_keep_board_wood_default(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    display = document["presentations"][0]["media"]["display"]
+    display.update(surfaceFinish="wood", graniteNodeIDs=["edge-node"])
+    (package / "board.json").write_text(json.dumps(document))
+    board = load_board_package(package).board
+    assert board.presentations[0].media.display["surfaceFinish"] == "wood"
+    assert board.presentations[0].media.display["graniteNodeIDs"] == ("edge-node",)
+
+
+@pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
+def test_model_display_rejects_invalid_granite_nodes(tmp_path: Path, nodes) -> None:
+    package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["graniteNodeIDs"] = nodes
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="graniteNodeIDs"):
+        load_board_package(package)
+
+
+@pytest.mark.parametrize("other", ["woodNodeIDs", "plasticNodeIDs"])
+def test_model_display_rejects_conflicting_granite_override(tmp_path: Path, other: str) -> None:
+    package = write_v3_model_package(tmp_path / "stone-insert", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    display = document["presentations"][0]["media"]["display"]
+    display["graniteNodeIDs"] = ["edge-node"]
+    display[other] = ["edge-node"]
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="disjoint"):
+        load_board_package(package)
+
+
 def test_model_display_surface_finish_applies_without_node_inventory(tmp_path: Path) -> None:
     package = write_v3_model_package(tmp_path / "board-finish", contacts=("edge",), body_nodes=("body", "new-body"))
     document = json.loads((package / "board.json").read_text())

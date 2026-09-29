@@ -1133,7 +1133,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source, optional={"surfaceFinish", "woodNodeIDs", "plasticNodeIDs"})
+    _closed(payload, {"camera"}, source, optional={"surfaceFinish", "woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1152,10 +1152,10 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     }
     if "surfaceFinish" in payload:
         finish = payload["surfaceFinish"]
-        if not isinstance(finish, str) or finish not in {"neutral", "wood", "plastic"}:
-            raise ValueError(f"{source}.surfaceFinish must be neutral, wood, or plastic")
+        if not isinstance(finish, str) or finish not in {"neutral", "wood", "plastic", "granite"}:
+            raise ValueError(f"{source}.surfaceFinish must be neutral, wood, plastic, or granite")
         result["surfaceFinish"] = finish
-    for field in ("woodNodeIDs", "plasticNodeIDs"):
+    for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
         if field in payload:
             raw_nodes = payload[field]
             if not isinstance(raw_nodes, list):
@@ -1164,8 +1164,11 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
             if len(set(nodes)) != len(nodes):
                 raise ValueError(f"{source}.{field} must contain unique node IDs")
             result[field] = nodes
-    if set(result.get("woodNodeIDs", ())) & set(result.get("plasticNodeIDs", ())):
-        raise ValueError(f"{source} woodNodeIDs and plasticNodeIDs must be disjoint")
+    fields = ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs")
+    for index, field in enumerate(fields):
+        for other in fields[index + 1:]:
+            if set(result.get(field, ())) & set(result.get(other, ())):
+                raise ValueError(f"{source} {field} and {other} must be disjoint")
     return MappingProxyType(result)
 
 
@@ -2738,7 +2741,7 @@ def _validate_finished_shape(
             contacts=board.contacts,
             equipment_objects=frozenset(board.equipment_objects),
         )
-        for field in ("woodNodeIDs", "plasticNodeIDs"):
+        for field in ("woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"):
             surface_nodes = presentation.media.display.get(field, ())
             if surface_nodes:
                 descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")

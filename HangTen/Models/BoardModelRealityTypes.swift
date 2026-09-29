@@ -221,10 +221,12 @@ final class BoardModelRealityScene {
         self.resourceLease = resourceLease
         let woodNodes = Set(display.woodNodeIDs)
         let plasticNodes = Set(display.plasticNodeIDs)
+        let graniteNodes = Set(display.graniteNodeIDs)
         self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
             ($0.nodeID, $0.role == .attachment ? .neutral
                 : woodNodes.contains($0.nodeID) ? .wood
-                : plasticNodes.contains($0.nodeID) ? .plastic : display.surfaceFinish)
+                : plasticNodes.contains($0.nodeID) ? .plastic
+                : graniteNodes.contains($0.nodeID) ? .granite : display.surfaceFinish)
         })
     }
 
@@ -281,6 +283,7 @@ final class BoardModelRealityScene {
             switch finish {
             case .wood: material = Self.woodMaterial
             case .plastic: material = Self.plasticMaterial
+            case .granite: material = Self.graniteMaterial
             case .neutral: material = Self.neutralMaterial()
             }
             modelEntity.model?.materials = [material]
@@ -306,6 +309,24 @@ final class BoardModelRealityScene {
             print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
             #endif
             // A warm matte fallback still identifies wood on unsupported devices.
+            return base
+        }
+    }()
+
+    private static let graniteMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        base.baseColor = .init(tint: UIColor(red: 0.25, green: 0.26, blue: 0.27, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.92)
+        base.metallic = .init(floatLiteral: 0)
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardGraniteSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Granite shader unavailable: \(error)")
+            #endif
             return base
         }
     }()
