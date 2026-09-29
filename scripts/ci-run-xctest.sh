@@ -40,6 +40,85 @@ if [[ "${#only_testing_targets[@]}" -eq 0 ]]; then
   exit 1
 fi
 
+prepare_simulator_destination() {
+  local simulator_record simulator_id simulator_state simulator_name
+  local simulator_sdk_version simulator_ready=0
+
+  simulator_sdk_version="$(xcrun --sdk iphonesimulator --show-sdk-version)"
+  simulator_record="$(xcrun simctl list devices available --json | python3 -c '
+import json
+import re
+import sys
+
+destination, sdk_version = sys.argv[1:3]
+devices = json.load(sys.stdin).get("devices", {})
+id_match = re.search(r"(?:^|,)id=([^,]+)", destination)
+name_match = re.search(r"(?:^|,)name=([^,]+)", destination)
+if id_match:
+    requested_id = id_match.group(1)
+    candidates = [
+        device
+        for runtime_devices in devices.values()
+        for device in runtime_devices
+        if device.get("udid", "").casefold() == requested_id.casefold()
+        and device.get("isAvailable", False)
+    ]
+else:
+    if not name_match:
+        raise SystemExit(f"Cannot resolve an iOS Simulator name or id from destination: {destination}")
+    runtime_id = "com.apple.CoreSimulator.SimRuntime.iOS-" + sdk_version.replace(".", "-")
+    candidates = [
+        device
+        for device in devices.get(runtime_id, [])
+        if device.get("name") == name_match.group(1)
+        and device.get("isAvailable", False)
+    ]
+if len(candidates) != 1:
+    rendered = ", ".join(
+        "{} ({})".format(device["name"], device["udid"])
+        for device in candidates
+    ) or "none"
+    raise SystemExit(
+        f"Expected one available simulator for {destination} on iOS {sdk_version}; found {len(candidates)}: {rendered}"
+    )
+device = candidates[0]
+print("\t".join((device["udid"], device["state"], device["name"])))
+' "$destination" "$simulator_sdk_version")"
+  IFS=$'\t' read -r simulator_id simulator_state simulator_name <<< "$simulator_record"
+
+  case "$simulator_state" in
+    Shutdown)
+      echo "Booting simulator before XCTest: ${simulator_name} (${simulator_id}), iOS ${simulator_sdk_version}"
+      xcrun simctl boot "$simulator_id"
+      ;;
+    Booted)
+      echo "Simulator already booted before XCTest: ${simulator_name} (${simulator_id}), iOS ${simulator_sdk_version}"
+      ;;
+    *)
+      echo "Simulator is not ready for XCTest: ${simulator_name} (${simulator_id}) state=${simulator_state}" >&2
+      return 1
+      ;;
+  esac
+
+  xcrun simctl bootstatus "$simulator_id" -b
+  for _ in {1..40}; do
+    if perl -e 'alarm 4; exec @ARGV' \
+      xcrun simctl spawn "$simulator_id" launchctl print system >/dev/null 2>&1; then
+      simulator_ready=1
+      break
+    fi
+    sleep 3
+  done
+  if [[ "$simulator_ready" -ne 1 ]]; then
+    echo "Simulator launch services did not become ready: ${simulator_name} (${simulator_id})" >&2
+    xcrun simctl list devices available >&2 || true
+    return 1
+  fi
+
+  destination="platform=iOS Simulator,id=${simulator_id}"
+  echo "Using ready simulator destination: ${simulator_name} (${simulator_id}), iOS ${simulator_sdk_version}"
+}
+
 run_xcodebuild_with_watchdog() {
   local phase="$1"
   local action="$2"
@@ -145,6 +224,7 @@ run_xcodebuild_with_watchdog() {
 deadline=$((SECONDS + XCTEST_RUN_TIMEOUT_SECONDS))
 result_bundle="$XCTEST_RESULT_ROOT/${XCTEST_LABEL}-run.xcresult"
 
+prepare_simulator_destination
 run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"
 
 if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
