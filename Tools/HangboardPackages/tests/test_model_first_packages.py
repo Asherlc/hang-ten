@@ -1344,3 +1344,22 @@ def test_v3_descriptor_rejects_finite_bounds_whose_span_overflows(
 
     with pytest.raises(ValueError, match="finite"):
         module.load_board_package(package_root)
+
+
+def test_model_display_wood_nodes_preserves_explicit_surface_selection(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "wood-display", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["woodNodeIDs"] = ["body", "edge-node"]
+    (package / "board.json").write_text(json.dumps(document))
+    board = load_board_package(package).board
+    assert board.presentations[0].media.display["woodNodeIDs"] == ("body", "edge-node")
+
+
+@pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
+def test_model_display_rejects_invalid_wood_surface_selection(tmp_path: Path, nodes) -> None:
+    package = write_v3_model_package(tmp_path / "wood-display", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["woodNodeIDs"] = nodes
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="woodNodeIDs"):
+        load_board_package(package)

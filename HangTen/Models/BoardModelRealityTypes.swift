@@ -1,5 +1,6 @@
 import Foundation
 import RealityKit
+import Metal
 import SwiftUI
 import UIKit
 import simd
@@ -172,7 +173,8 @@ final class BoardModelRealityScene {
     var contactEntities: [String: [ModelEntity]] = [:]
     private(set) var transientCordEntity: Entity?
     private var contactIDByEntity: [Entity: String] = [:]
-    private var baselineMaterials: [Entity: PhysicallyBasedMaterial] = [:]
+    private var baselineMaterials: [Entity: any RealityKit.Material] = [:]
+    private let woodByNodeID: [String: Bool]
 
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
@@ -217,6 +219,10 @@ final class BoardModelRealityScene {
         self.allowedPositionIDs = allowedPositionIDs
         self.instances = instances
         self.resourceLease = resourceLease
+        let woodNodes = Set(display.woodNodeIDs)
+        self.woodByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
+            ($0.nodeID, woodNodes.contains($0.nodeID))
+        })
     }
 
 /// Loads the USDZ model directly into RealityKit and binds descriptor nodes.
@@ -235,12 +241,12 @@ final class BoardModelRealityScene {
             instanceEntities = [modelEntity]
         }
 
-        // Apply neutral PBR materials to all model entities FIRST
-        // This captures original USDZ materials before they're replaced
-        applyNeutralMaterials(to: root)
+        // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
+        // each finish before highlighting so deselection restores wood grain.
+        applyBoardMaterials(to: root)
 
         // Build contact entity mapping from descriptor
-        // Neutral highlight baselines were captured by applyNeutralMaterials().
+        // Highlight baselines were captured by applyBoardMaterials().
         try buildContactEntities()
 
         // Set up camera framing based on model bounds
@@ -263,17 +269,38 @@ final class BoardModelRealityScene {
         }
     }
 
-    private func applyNeutralMaterials(to entity: Entity) {
-        if let modelEntity = entity as? ModelEntity,
-           let model = modelEntity.model {
-            let material = Self.neutralMaterial()
+    private func applyBoardMaterials(to entity: Entity, inheritedWood: Bool = false) {
+        // CAD descriptor names identify the authored surfaces. Carry the finish
+        // through any unnamed mesh children inserted by the USDZ importer.
+        let isWood = woodByNodeID[entity.name] ?? inheritedWood
+        if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
+            let material: any RealityKit.Material = isWood ? Self.woodMaterial : Self.neutralMaterial()
             modelEntity.model?.materials = [material]
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyNeutralMaterials(to: child)
+            applyBoardMaterials(to: child, inheritedWood: isWood)
         }
     }
+
+    private static let woodMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        base.baseColor = .init(tint: UIColor(red: 0.78, green: 0.66, blue: 0.49, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.82)
+        base.metallic = .init(floatLiteral: 0)
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardWoodSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
+            #endif
+            // A warm matte fallback still identifies wood on unsupported devices.
+            return base
+        }
+    }()
 
     private func setupCameraFraming() {
         var allPoints: [SIMD3<Float>] = []
@@ -826,17 +853,16 @@ final class BoardModelRealityScene {
     }
 
     private func applyHighlight(to entity: ModelEntity, color: Color, mode: BoardHighlightMode) {
-        guard var material = entity.model?.materials.first as? PhysicallyBasedMaterial else { return }
+        guard let baseline = baselineMaterials[entity] else { return }
 
         if color == .clear {
-            // Restore the neutral PBR baseline.
-            if let baselineMaterial = baselineMaterials[entity] {
-                entity.model?.materials = [baselineMaterial]
-            }
+            // Restore the complete runtime finish, including a wood shader.
+            entity.model?.materials = [baseline]
             return
         }
 
-        // Apply highlight by setting a tint color
+        // Use a solid selection color for legibility over either finish.
+        var material = (baseline as? PhysicallyBasedMaterial) ?? Self.neutralMaterial()
         let uiColor = UIColor(color)
         material.baseColor = .init(tint: uiColor.withAlphaComponent(0.6))
         material.roughness = .init(floatLiteral: 0.8)

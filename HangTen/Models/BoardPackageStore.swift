@@ -911,6 +911,15 @@ struct BoardPackageStore {
                     instanceDocuments: instanceDocuments
                 )
                 let descriptor = loadedDescriptor.descriptor
+                let woodNodes = Set(displayDocument.woodNodeIDs)
+                let eligibleNodes = Set(descriptor.nodes.filter { $0.role != .attachment }.map(\.nodeID))
+                guard woodNodes.count == displayDocument.woodNodeIDs.count,
+                      woodNodes.isSubset(of: eligibleNodes) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "display.woodNodeIDs must name unique body or contact descriptor nodes"
+                    )
+                }
                 let suspension = try suspensionDocument.map {
                     try makeModelSuspension(
                         $0,
@@ -940,7 +949,8 @@ struct BoardPackageStore {
                                 fitPadding: camera.fitPadding,
                                 distanceMultiplier: camera.distanceMultiplier,
                                 boundsExpansionFactor: camera.boundsExpansionFactor
-                            )
+                            ),
+                            woodNodeIDs: displayDocument.woodNodeIDs
                         ),
                         suspension: suspension,
                         orientation: orientation,
@@ -3306,13 +3316,16 @@ struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
 
 struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
+    let woodNodeIDs: [String]
 
-    private enum CodingKeys: String, CodingKey { case camera }
+    private enum CodingKeys: String, CodingKey { case camera, woodNodeIDs }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["camera"])
-        camera = try decoder.container(keyedBy: CodingKeys.self)
-            .decode(BoardPackageModelCameraDocument.self, forKey: .camera)
+        try decoder.rejectUnknownKeys(["camera", "woodNodeIDs"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        camera = try container.decode(BoardPackageModelCameraDocument.self, forKey: .camera)
+        woodNodeIDs = container.contains(.woodNodeIDs)
+            ? try container.decode([String].self, forKey: .woodNodeIDs) : []
     }
 }
 

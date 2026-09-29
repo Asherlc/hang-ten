@@ -1285,6 +1285,45 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
+    func testModelWoodAppearanceUsesPackageAuthoredNodes() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                var display = try XCTUnwrap(media["display"] as? [String: Any])
+                display["woodNodeIDs"] = ["Body", "Left"]
+                media["display"] = display
+                presentations[0]["media"] = media
+                board["presentations"] = presentations
+            }
+        }
+        defer { fixture.remove() }
+        let store = try BoardPackageStore(bundle: fixture.bundle)
+        let board = try XCTUnwrap(store.board(id: "fixture.board"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("model fixture required")
+        }
+        XCTAssertEqual(media.display.woodNodeIDs, ["Body", "Left"])
+    }
+
+    func testModelWoodAppearanceRejectsUnknownAndDuplicateNodes() throws {
+        for nodes in [["Missing"], ["Body", "Body"], [""]] {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+                    var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
+                    var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
+                    var display = try XCTUnwrap(media["display"] as? [String: Any])
+                    display["woodNodeIDs"] = nodes
+                    media["display"] = display
+                    presentations[0]["media"] = media
+                    board["presentations"] = presentations
+                }
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle), "\(nodes)")
+        }
+    }
+
     func testStoreRejectsInvalidModelCamera() throws {
         let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
             try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in

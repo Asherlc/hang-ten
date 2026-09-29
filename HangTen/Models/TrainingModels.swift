@@ -379,6 +379,13 @@ struct BoardModelCamera: Hashable {
 
 struct BoardModelDisplay: Hashable {
     let camera: BoardModelCamera
+    /// Package-authored surface selection; USDZ meshes remain material-free.
+    let woodNodeIDs: [String]
+
+    init(camera: BoardModelCamera, woodNodeIDs: [String] = []) {
+        self.camera = camera
+        self.woodNodeIDs = woodNodeIDs
+    }
 }
 
 struct BoardModelOrientation: Hashable {

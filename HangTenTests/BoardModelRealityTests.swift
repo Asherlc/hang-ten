@@ -200,6 +200,57 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testMixedOakBoardKeepsGraniteContactsNeutral() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stoak-board-iii"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        for id in ["edge-22-center", "lower-composite-left", "lower-composite-right"] {
+            let entities = try XCTUnwrap(scene.contactEntities[id])
+            XCTAssertFalse(entities.isEmpty)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial,
+                              "Granite must not receive a wood shader")
+            }
+        }
+        for id in ["gradient-edge-left", "gradient-edge-right", "top-jug", "lower-composite-center"] {
+            let entities = try XCTUnwrap(scene.contactEntities[id])
+            XCTAssertFalse(entities.isEmpty)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Wood contacts on the mixed board must receive grain")
+            }
+        }
+    }
+
+    @MainActor
+    func testWoodContactsHighlightAndRestoreGrainMaterial() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        let contactID = try XCTUnwrap(scene.contactEntities.keys.sorted().first)
+        let entities = try XCTUnwrap(scene.contactEntities[contactID])
+        XCTAssertFalse(entities.isEmpty)
+        for entity in entities {
+            XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                          "Wood contacts must receive the grain shader, including recesses")
+        }
+
+        for mode: BoardHighlightMode in [.active, .preview] {
+            scene.highlight([contactID], mode: mode)
+            for entity in entities {
+                let highlighted = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial,
+                                               "Wood grips must still show the selection color")
+                XCTAssertEqual(highlighted.roughness.scale, 0.8, accuracy: 0.0001)
+            }
+            scene.highlight([], mode: mode)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Clearing selection must restore wood grain")
+            }
+        }
+    }
+
+    @MainActor
     func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let scene = try await BoardModelRealityLoader.load(board: board,

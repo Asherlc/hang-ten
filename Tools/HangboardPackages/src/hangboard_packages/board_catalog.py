@@ -1133,7 +1133,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source)
+    _closed(payload, {"camera"}, source, optional={"woodNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1142,18 +1142,23 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     view_direction = _vector3(camera["viewDirection"], f"{camera_source}.viewDirection")
     up = _vector3(camera["up"], f"{camera_source}.up")
     fit_padding = _positive_number(camera["fitPadding"], f"{camera_source}.fitPadding")
-    return MappingProxyType(
-        {
-            "camera": MappingProxyType(
-                {
-                    "type": "orthographic",
-                    "viewDirection": view_direction,
-                    "up": up,
-                    "fitPadding": fit_padding,
-                }
-            )
-        }
-    )
+    result: dict[str, Any] = {
+        "camera": MappingProxyType({
+            "type": "orthographic",
+            "viewDirection": view_direction,
+            "up": up,
+            "fitPadding": fit_padding,
+        })
+    }
+    if "woodNodeIDs" in payload:
+        raw_nodes = payload["woodNodeIDs"]
+        if not isinstance(raw_nodes, list):
+            raise ValueError(f"{source}.woodNodeIDs must be an array")
+        nodes = tuple(_string(node, f"{source}.woodNodeIDs") for node in raw_nodes)
+        if len(set(nodes)) != len(nodes):
+            raise ValueError(f"{source}.woodNodeIDs must contain unique node IDs")
+        result["woodNodeIDs"] = nodes
+    return MappingProxyType(result)
 
 
 def _load_model_orientation(value: Any, source: str) -> BoardModelOrientation:
@@ -2725,6 +2730,13 @@ def _validate_finished_shape(
             contacts=board.contacts,
             equipment_objects=frozenset(board.equipment_objects),
         )
+        wood_nodes = presentation.media.display.get("woodNodeIDs", ())
+        if wood_nodes:
+            descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+            eligible_nodes = {node["nodeID"] for node in descriptor["nodes"]
+                              if node["role"] in {"body", "contact"}}
+            if not set(wood_nodes) <= eligible_nodes:
+                raise ValueError("display.woodNodeIDs must name body or contact descriptor nodes")
         _validate_model_orientation(
             presentation.media.orientation,
             board.positions,
