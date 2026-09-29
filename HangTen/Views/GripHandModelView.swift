@@ -270,6 +270,7 @@ final class GripHandRealitySurface {
     private struct MeshKey: Hashable {
         let action: String
         let fingers: Set<FingerSlot>
+        let mirrored: Bool
     }
 
     let root = Entity()
@@ -278,6 +279,7 @@ final class GripHandRealitySurface {
     private(set) var triangleCount = 0
     private(set) var appliedPose: GripHandPose?
     private(set) var appliedVertexColors: [SIMD4<Float>] = []
+    private(set) var appliedMirrored = false
 
     private let asset: GripHandAsset
     private let material: CustomMaterial
@@ -308,8 +310,8 @@ final class GripHandRealitySurface {
         root.addChild(modelEntity)
     }
 
-    func apply(_ pose: GripHandPose) throws {
-        let key = MeshKey(action: pose.action(), fingers: pose.highlightedFingers)
+    func apply(_ pose: GripHandPose, mirrored: Bool = false) throws {
+        let key = MeshKey(action: pose.action(), fingers: pose.highlightedFingers, mirrored: mirrored)
         guard asset.poses[key.action] != nil else { throw GripHandAsset.AssetError.invalidMesh }
         let builtMesh: BuiltMesh
         if let cached = meshes[key] {
@@ -327,6 +329,7 @@ final class GripHandRealitySurface {
         currentAction = key.action
         appliedPose = pose
         appliedVertexColors = builtMesh.vertexColors
+        appliedMirrored = mirrored
         vertexCount = asset.vertexCount
         triangleCount = asset.indices.count / 3
     }
@@ -335,7 +338,8 @@ final class GripHandRealitySurface {
     func posedVerticesForFraming() -> [SIMD3<Float>] {
         guard let positions = asset.poses[currentAction]?.positions else { return [] }
         return stride(from: 0, to: positions.count, by: 3).map {
-            SIMD3(positions[$0], positions[$0 + 1], positions[$0 + 2])
+            SIMD3(appliedMirrored ? -positions[$0] : positions[$0],
+                  positions[$0 + 1], positions[$0 + 2])
         }
     }
 
@@ -345,8 +349,10 @@ final class GripHandRealitySurface {
             asset: asset, action: pose, selectedFingers: key.fingers
         )
         let vertices = (0..<asset.vertexCount).map { i in
-            Vertex(position: SIMD3(source.positions[i * 3], source.positions[i * 3 + 1], source.positions[i * 3 + 2]),
-                   normal: SIMD3(source.normals[i * 3], source.normals[i * 3 + 1], source.normals[i * 3 + 2]),
+            Vertex(position: SIMD3(key.mirrored ? -source.positions[i * 3] : source.positions[i * 3],
+                                   source.positions[i * 3 + 1], source.positions[i * 3 + 2]),
+                   normal: SIMD3(key.mirrored ? -source.normals[i * 3] : source.normals[i * 3],
+                                 source.normals[i * 3 + 1], source.normals[i * 3 + 2]),
                    color: colors[i])
         }
         let bounds = vertices.reduce(BoundingBox.empty) { box, vertex in
@@ -366,8 +372,13 @@ final class GripHandRealitySurface {
         lowLevelMesh.withUnsafeMutableBytes(bufferIndex: 0) { destination in
             vertices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
+        let indices = key.mirrored
+            ? stride(from: 0, to: asset.indices.count, by: 3).flatMap {
+                [asset.indices[$0], asset.indices[$0 + 2], asset.indices[$0 + 1]]
+            }
+            : asset.indices
         lowLevelMesh.withUnsafeMutableIndices { destination in
-            asset.indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
+            indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
         lowLevelMesh.parts.append(.init(indexCount: asset.indices.count, bounds: bounds))
         return BuiltMesh(resource: try MeshResource(from: lowLevelMesh), vertexColors: colors)
@@ -384,6 +395,7 @@ final class GripHandRealityScene {
     private(set) var isUnavailable = false
 
     private var surface: GripHandRealitySurface?
+    var isMirrored: Bool { surface?.appliedMirrored ?? false }
     private(set) var currentPose: GripHandPose?
     private var currentSide: GripCueSide?
     private var currentViewportSize: CGSize = .zero
@@ -422,9 +434,9 @@ final class GripHandRealityScene {
         let poseChanged = currentPose != pose
         let sideChanged = currentSide != side
         let viewportChanged = currentViewportSize != viewportSize
-        if poseChanged {
+        if poseChanged || sideChanged {
             do {
-                try surface?.apply(pose)
+                try surface?.apply(pose, mirrored: side == .left)
             } catch {
                 surface?.root.removeFromParent()
                 surface = nil
@@ -432,7 +444,6 @@ final class GripHandRealityScene {
             }
         }
         if sideChanged {
-            hand.scale.x = side == .left ? -1 : 1
             orientLights(for: side)
         }
         let needsReset = poseChanged || sideChanged || viewportChanged || currentResetToken != resetToken
@@ -445,9 +456,7 @@ final class GripHandRealityScene {
 
     func resetCamera() {
         guard let surface else { return }
-        let points = surface.posedVerticesForFraming().map { point in
-            SIMD4<Float>(point.x * hand.scale.x, point.y, point.z, 1)
-        }
+        let points = surface.posedVerticesForFraming().map { SIMD4<Float>($0, 1) }
         guard !points.isEmpty else { return }
         var low = SIMD3<Float>(repeating: .greatestFiniteMagnitude)
         var high = SIMD3<Float>(repeating: -.greatestFiniteMagnitude)
@@ -542,10 +551,10 @@ final class GripHandRealityScene {
         // hand so each key stays beside its camera and in front of the palm.
         let lateral: Float = side == .left ? 1 : -1
         keyLight.components.set(DirectionalLightComponent(
-            color: .white, intensity: side == .left ? 4_500 : 2_800
+            color: .white, intensity: 2_800
         ))
         fillLight.components.set(DirectionalLightComponent(
-            color: .white, intensity: side == .left ? 4_000 : 250
+            color: .white, intensity: 250
         ))
         keyLight.look(at: .zero, from: SIMD3(lateral * 5.8, 8, 7), relativeTo: root)
         fillLight.look(at: .zero, from: SIMD3(-lateral * 2, 2, -5), relativeTo: root)
@@ -570,7 +579,7 @@ final class GripHandRealityPairScene {
     private(set) var currentViewportSize: CGSize = .zero
     private(set) var currentResetToken: Int?
 
-    private let slotOffset: Float = 0.82
+    private let handGap: Float = 0.55
     private var canonicalCenter = SIMD3<Float>.zero
     private var canonicalOffset = SIMD3<Float>(0, 0, 1)
     private var canonicalOrthographicScale: Float = 1
@@ -581,9 +590,9 @@ final class GripHandRealityPairScene {
     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
         root.addChild(leftHand)
         root.addChild(rightHand)
-        leftHand.position.x = -slotOffset
-        rightHand.position.x = slotOffset
-        leftHand.scale.x = -1
+        // Turn each palm toward the viewer while revealing the finger curl.
+        leftHand.orientation = simd_quatf(angle: -0.85, axis: SIMD3(0, 1, 0))
+        rightHand.orientation = simd_quatf(angle: 0.85, axis: SIMD3(0, 1, 0))
         var orthographicCamera = OrthographicCameraComponent()
         orthographicCamera.near = 0.1
         orthographicCamera.far = 100
@@ -618,7 +627,7 @@ final class GripHandRealityPairScene {
         let viewportChanged = currentViewportSize != viewportSize
         if poseChanged {
             do {
-                try leftSurface?.apply(pose)
+                try leftSurface?.apply(pose, mirrored: true)
                 try rightSurface?.apply(pose)
             } catch {
                 if let leftSurface { leftHand.removeChild(leftSurface.root) }
@@ -637,6 +646,13 @@ final class GripHandRealityPairScene {
 
     func resetCamera() {
         guard let leftSurface, let rightSurface else { return }
+        let leftLocal = leftSurface.posedVerticesForFraming()
+        let rightLocal = rightSurface.posedVerticesForFraming()
+        guard let leftInnerEdge = leftLocal.map({ leftHand.orientation.act($0).x }).max(),
+              let rightInnerEdge = rightLocal.map({ rightHand.orientation.act($0).x }).min() else { return }
+        let slotOffset = max(0, (leftInnerEdge - rightInnerEdge + handGap) / 2)
+        leftHand.position.x = -slotOffset
+        rightHand.position.x = slotOffset
         let points = framedPoints(for: leftSurface, under: leftHand)
             + framedPoints(for: rightSurface, under: rightHand)
         guard !points.isEmpty else { return }

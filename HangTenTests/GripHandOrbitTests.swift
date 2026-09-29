@@ -55,7 +55,8 @@ final class GripHandOrbitTests: XCTestCase {
 
         XCTAssertEqual(scene.currentPose?.action(), "HalfCrimp")
         XCTAssertEqual(scene.currentPose?.highlightedFingers, [.index, .ring])
-        XCTAssertEqual(scene.hand.scale.x, -1)
+        XCTAssertEqual(scene.hand.scale.x, 1)
+        XCTAssertTrue(scene.isMirrored)
         let narrowScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
 
         scene.orbit(azimuthDelta: 0.3, elevationDelta: 0)
@@ -263,7 +264,8 @@ final class GripHandOrbitTests: XCTestCase {
         scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
                      side: .left, viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
 
-        XCTAssertEqual(scene.hand.scale.x, -1)
+        XCTAssertEqual(scene.hand.scale.x, 1)
+        XCTAssertTrue(scene.isMirrored)
         XCTAssertEqual(scene.camera.position.x, -rightPosition.x, accuracy: 1e-3)
         XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]!.scale,
                        rightScale, accuracy: 1e-3)
@@ -377,6 +379,26 @@ final class GripHandOrbitTests: XCTestCase {
         XCTAssertNotEqual(scene.camera.position, startingCamera)
         XCTAssertLessThan(scene.camera.components[OrthographicCameraComponent.self]!.scale, startingScale)
         XCTAssertTrue(scene.root.children.contains { $0 === scene.camera })
+    }
+
+    @MainActor
+    func testPairUsesMirroredGeometryWithSeparatedObliqueHands() throws {
+        let scene = GripHandRealityPairScene()
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+        let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+        let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+        XCTAssertEqual(left.count, right.count)
+        XCTAssertEqual(left[0].x, -right[0].x, accuracy: 1e-5)
+        XCTAssertGreaterThan(scene.leftHand.scale.x, 0)
+        XCTAssertGreaterThan(scene.rightHand.scale.x, 0)
+        XCTAssertGreaterThan(abs(scene.leftHand.orientation.vector.y), 0.2)
+        XCTAssertGreaterThan(abs(scene.rightHand.orientation.vector.y), 0.2)
+
+        let leftX = left.map { (scene.leftHand.transform.matrix * SIMD4<Float>($0, 1)).x }
+        let rightX = right.map { (scene.rightHand.transform.matrix * SIMD4<Float>($0, 1)).x }
+        XCTAssertLessThan(try XCTUnwrap(leftX.max()) + 0.15,
+                          try XCTUnwrap(rightX.min()))
     }
 
     @MainActor
