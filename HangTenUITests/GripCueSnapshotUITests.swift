@@ -167,7 +167,9 @@ final class InitialWeightSetupUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        bodyweight.tap()
+        // Switch.tap() targets the center of the whole track. On iOS 26 that point is
+        // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
