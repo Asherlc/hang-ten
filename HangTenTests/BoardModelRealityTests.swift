@@ -20,7 +20,8 @@ final class BoardModelRealityTests: XCTestCase {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
             let presentation = board.defaultPresentation
             guard case .model = presentation.media else {
-                return XCTFail("\(boardID) must use its CAD model")
+                XCTFail("\(boardID) must use its CAD model")
+                continue
             }
             let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
             XCTAssertNotNil(scene.modelEntity, boardID)
