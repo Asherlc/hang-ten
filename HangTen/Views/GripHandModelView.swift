@@ -590,9 +590,9 @@ final class GripHandRealityPairScene {
     init(assetResult: Result<GripHandAsset, Error> = GripHandAsset.bundled) {
         root.addChild(leftHand)
         root.addChild(rightHand)
-        // Turn each palm toward the viewer while revealing the finger curl.
-        leftHand.orientation = simd_quatf(angle: -0.85, axis: SIMD3(0, 1, 0))
-        rightHand.orientation = simd_quatf(angle: 0.85, axis: SIMD3(0, 1, 0))
+        // Show the palm and the inward curl of each half-crimp finger.
+        leftHand.orientation = simd_quatf(angle: 0.85, axis: SIMD3(0, 1, 0))
+        rightHand.orientation = simd_quatf(angle: -0.85, axis: SIMD3(0, 1, 0))
         var orthographicCamera = OrthographicCameraComponent()
         orthographicCamera.near = 0.1
         orthographicCamera.far = 100

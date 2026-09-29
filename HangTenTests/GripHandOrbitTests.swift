@@ -402,6 +402,33 @@ final class GripHandOrbitTests: XCTestCase {
     }
 
     @MainActor
+    func testPairHalfCrimpFingertipsCurlTowardCenter() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let scene = GripHandRealityPairScene(assetResult: .success(asset))
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+
+        func tipShift(for hand: Entity, vertices: [SIMD3<Float>]) -> Float {
+            let middleFinger = vertices.indices.filter { asset.digitIndices[$0] == 3 }
+            let bottom = middleFinger.map { vertices[$0].y }.min()!
+            let top = middleFinger.map { vertices[$0].y }.max()!
+            let base = middleFinger.filter { vertices[$0].y < bottom + 0.15 }
+            let tip = middleFinger.filter { vertices[$0].y > top - 0.15 }
+            func averageX(_ indices: [Int]) -> Float {
+                indices.reduce(0) {
+                    $0 + (hand.transform.matrix * SIMD4<Float>(vertices[$1], 1)).x
+                } / Float(indices.count)
+            }
+            return averageX(tip) - averageX(base)
+        }
+
+        let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+        let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+        XCTAssertGreaterThan(tipShift(for: scene.leftHand, vertices: left), 0.2)
+        XCTAssertLessThan(tipShift(for: scene.rightHand, vertices: right), -0.2)
+    }
+
+    @MainActor
     func testPairModelViewForwardsSharedPoseAndViewport() {
         let scene = GripHandRealityPairScene()
         let view = GripHandPairModelView(
