@@ -7,8 +7,10 @@ Run with FreeCAD's Python interpreter, for example:
     freecadcmd Tools/HangboardCAD/measure_channel_spines.py
 
 The adjacent suspension.json supplies each branch's two mouth coordinates.
-This command reports the measured length between their projections on the
-SubtractivePipe spine. It never edits the CAD source or sidecar.
+This command reports the measured length between their projections on each
+channel's spine. A channel is either a `PartDesign::SubtractivePipe` (its
+Sketcher spine, as on the Mini Bar) or a straight `Part::Cylinder` through-bore
+(its axis, as on the Helium Mobile). It never edits the CAD source or sidecar.
 """
 from __future__ import annotations
 
@@ -44,6 +46,25 @@ def spine_samples(sketch):
     if len(samples) < 2:
         raise ValueError(f"{sketch.Name} has no usable spine")
     return samples
+
+
+def cylinder_axis_samples(feature):
+    """A straight bore's spine: the Part::Cylinder axis, base to top cap."""
+    placement = feature.Placement
+    start = placement.multVec(App.Vector(0, 0, 0))
+    end = placement.multVec(App.Vector(0, 0, float(feature.Height)))
+    count = max(2, math.ceil(start.distanceToPoint(end) / 0.25) + 1)
+    return [start.add(end.sub(start).multiply(i / (count - 1))) for i in range(count)]
+
+
+def channel_samples(feature, name):
+    if feature is None:
+        raise ValueError(f"{name} is missing")
+    if feature.TypeId == "PartDesign::SubtractivePipe":
+        return spine_samples(feature.Spine[0])
+    if feature.TypeId == "Part::Cylinder":
+        return cylinder_axis_samples(feature)
+    raise ValueError(f"{name} is neither a SubtractivePipe nor a Part::Cylinder channel")
 
 
 def station_on_spine(point, samples):
@@ -103,11 +124,7 @@ def main():
     paths = {}
     for branch in suspension["branches"]:
         feature_name = FEATURES[branch["id"]]
-        feature = document.getObject(feature_name)
-        if feature is None or feature.TypeId != "PartDesign::SubtractivePipe":
-            raise ValueError(f"{feature_name} is not a SubtractivePipe")
-        spine = feature.Spine[0]
-        samples = spine_samples(spine)
+        samples = channel_samples(document.getObject(feature_name), feature_name)
         first, second = (
             model_to_native(passages_by_id[passage_id]["pointInModel"])
             for passage_id in branch["passageIDs"]

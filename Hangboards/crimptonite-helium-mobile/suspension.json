@@ -1,0 +1,220 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
+  "ropeSolver": {
+    "sectionPlane": "anchor"
+  },
+  "suspension": {
+    "type": "twoBranchCord",
+    "passages": {
+      "left": [
+        {
+          "id": "left-front",
+          "nodeID": "helium_body_001",
+          "pointInModel": [-0.186, 0, 0.012],
+          "provenance": "Owner-confirmed single cord loop through each end's straight through-bore (Crimptonite DSCF6543-6546 show one knotted loop threaded through both end holes and lying along both faces). Mouth at the bore axis on the front face; x = 186 mm and the 7 mm bore are display estimates."
+        },
+        {
+          "id": "left-back",
+          "nodeID": "helium_body_001",
+          "pointInModel": [-0.186, 0, -0.012],
+          "provenance": "Owner-confirmed single cord loop through each end's straight through-bore (Crimptonite DSCF6543-6546 show one knotted loop threaded through both end holes and lying along both faces). Mouth at the bore axis on the back face; x = 186 mm and the 7 mm bore are display estimates."
+        }
+      ],
+      "right": [
+        {
+          "id": "right-front",
+          "nodeID": "helium_body_001",
+          "pointInModel": [0.186, 0, 0.012],
+          "provenance": "Owner-confirmed single cord loop through each end's straight through-bore (Crimptonite DSCF6543-6546 show one knotted loop threaded through both end holes and lying along both faces). Mouth at the bore axis on the front face; x = 186 mm and the 7 mm bore are display estimates."
+        },
+        {
+          "id": "right-back",
+          "nodeID": "helium_body_001",
+          "pointInModel": [0.186, 0, -0.012],
+          "provenance": "Owner-confirmed single cord loop through each end's straight through-bore (Crimptonite DSCF6543-6546 show one knotted loop threaded through both end holes and lying along both faces). Mouth at the bore axis on the back face; x = 186 mm and the 7 mm bore are display estimates."
+        }
+      ]
+    },
+    "branches": [
+      {
+        "id": "left-loop",
+        "passageIDs": [
+          "left-front",
+          "left-back"
+        ],
+        "restLength": 0.45,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Half of one closed cord loop: hung from one hook, the loop's front and back spans form a left and a right loop that pass through the end bores and equalize over the hook. Supplied cord is Beal 4 mm (published); the ~0.9 m total loop length is a display estimate read by eye from the resting loop in DSCF6544/6545. Visible contact is solved from the CAD solid for each pose."
+      },
+      {
+        "id": "right-loop",
+        "passageIDs": [
+          "right-front",
+          "right-back"
+        ],
+        "restLength": 0.45,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Half of one closed cord loop: hung from one hook, the loop's front and back spans form a left and a right loop that pass through the end bores and equalize over the hook. Supplied cord is Beal 4 mm (published); the ~0.9 m total loop length is a display estimate read by eye from the resting loop in DSCF6544/6545. Visible contact is solved from the CAD solid for each pose."
+      }
+    ],
+    "internalLoop": {
+      "clearance": 0.0001,
+      "windingByPassageID": {
+        "left-front": "counterclockwise",
+        "left-back": "clockwise",
+        "right-front": "counterclockwise",
+        "right-back": "clockwise"
+      },
+      "channelLengthByBranchID": {
+        "left-loop": 0.024,
+        "right-loop": 0.024
+      }
+    },
+    "anchor": {
+      "offsetFromBoardBounds": [0, 0.02, 0],
+      "visibility": "invisible",
+      "provenance": "Display estimate of the single overhead hook; the board height and cord routes are solved from this point, the CAD mouths and the loop length."
+    },
+    "canonicalPoses": {
+      "primary": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [0, -0.052193705, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "cordContactPoints": {
+          "left-front": [
+            [-0.141439243, 0.024243377, 0.013979281],
+            [-0.141466492, 0.024228552, 0.013981854],
+            [-0.141935675, 0.023973292, 0.014026146],
+            [-0.141957617, 0.023961354, 0.014028067],
+            [-0.141994303, 0.023941395, 0.014031029],
+            [-0.142016263, 0.023929448, 0.014032652],
+            [-0.14204322, 0.023914782, 0.014034461],
+            [-0.142516943, 0.023657052, 0.014066249],
+            [-0.142538715, 0.023645207, 0.014067563],
+            [-0.142575112, 0.023625405, 0.014069515],
+            [-0.142596896, 0.023613553, 0.014070535],
+            [-0.143074542, 0.023353689, 0.014089704],
+            [-0.143100411, 0.023339615, 0.014090742],
+            [-0.143122082, 0.023327824, 0.014091467],
+            [-0.143158308, 0.023308116, 0.014092436],
+            [-0.143179985, 0.023296322, 0.01409287],
+            [-0.143693961, 0.023016692, 0.014099735],
+            [-0.143704781, 0.023010806, 0.014099843],
+            [-0.143722865, 0.023000967, 0.014099964],
+            [-0.143733685, 0.02299508, 0.0141],
+            [-0.182824652, 0.001727555, 0.0141],
+            [-0.182945299, 0.001661917, 0.014095504],
+            [-0.183040024, 0.001610382, 0.014088436],
+            [-0.183279253, 0.001480228, 0.014052581],
+            [-0.183512325, 0.001353425, 0.013981485],
+            [-0.183735252, 0.001232141, 0.013876365],
+            [-0.183944219, 0.001118452, 0.013739018],
+            [-0.186, 0.0, 0.012]
+          ],
+          "left-back": [
+            [-0.186, 0.0, -0.012],
+            [-0.183944219, 0.001118452, -0.013739018],
+            [-0.183735252, 0.001232141, -0.013876365],
+            [-0.183512325, 0.001353425, -0.013981485],
+            [-0.183279253, 0.001480228, -0.014052581],
+            [-0.183040024, 0.001610382, -0.014088436],
+            [-0.182945299, 0.001661917, -0.014095504],
+            [-0.182824652, 0.001727555, -0.0141],
+            [-0.143733685, 0.02299508, -0.0141],
+            [-0.143722865, 0.023000967, -0.014099964],
+            [-0.143704781, 0.023010806, -0.014099843],
+            [-0.143693961, 0.023016692, -0.014099735],
+            [-0.143659778, 0.02303529, -0.014099278],
+            [-0.143179985, 0.023296322, -0.01409287],
+            [-0.143158308, 0.023308116, -0.014092436],
+            [-0.143122082, 0.023327824, -0.014091467],
+            [-0.143100411, 0.023339615, -0.014090742],
+            [-0.143074542, 0.023353689, -0.014089704],
+            [-0.142596896, 0.023613553, -0.014070535],
+            [-0.142575112, 0.023625405, -0.014069515],
+            [-0.142538715, 0.023645207, -0.014067563],
+            [-0.142516943, 0.023657052, -0.014066249],
+            [-0.142016263, 0.023929448, -0.014032652],
+            [-0.141994303, 0.023941395, -0.014031029],
+            [-0.141957617, 0.023961354, -0.014028067],
+            [-0.141935675, 0.023973292, -0.014026146],
+            [-0.141466492, 0.024228552, -0.013981854],
+            [-0.141439243, 0.024243377, -0.013979281]
+          ],
+          "right-front": [
+            [0.141439243, 0.024243377, 0.013979281],
+            [0.141908875, 0.023987872, 0.014023616],
+            [0.141935675, 0.023973292, 0.014026146],
+            [0.141957617, 0.023961354, 0.014028067],
+            [0.141994303, 0.023941395, 0.014031029],
+            [0.142016263, 0.023929448, 0.014032652],
+            [0.142490519, 0.023671428, 0.014064476],
+            [0.142516943, 0.023657051, 0.014066249],
+            [0.142538715, 0.023645207, 0.014067563],
+            [0.142575112, 0.023625405, 0.014069515],
+            [0.142596896, 0.023613553, 0.014070535],
+            [0.142623376, 0.023599147, 0.014071598],
+            [0.143100411, 0.023339615, 0.014090742],
+            [0.143122082, 0.023327824, 0.014091467],
+            [0.143158308, 0.023308116, 0.014092436],
+            [0.143179985, 0.023296322, 0.01409287],
+            [0.143693961, 0.023016692, 0.014099735],
+            [0.143704781, 0.023010806, 0.014099843],
+            [0.143722865, 0.023000967, 0.014099964],
+            [0.143733685, 0.02299508, 0.0141],
+            [0.182824652, 0.001727555, 0.0141],
+            [0.182945299, 0.001661917, 0.014095504],
+            [0.183040024, 0.001610382, 0.014088436],
+            [0.183279253, 0.001480228, 0.014052581],
+            [0.183512325, 0.001353425, 0.013981485],
+            [0.183735252, 0.001232141, 0.013876365],
+            [0.183944219, 0.001118452, 0.013739018],
+            [0.186, 0.0, 0.012]
+          ],
+          "right-back": [
+            [0.186, 0.0, -0.012],
+            [0.183944219, 0.001118452, -0.013739018],
+            [0.183735252, 0.001232141, -0.013876365],
+            [0.183512325, 0.001353425, -0.013981485],
+            [0.183279253, 0.001480228, -0.014052581],
+            [0.183040024, 0.001610382, -0.014088436],
+            [0.182945299, 0.001661917, -0.014095504],
+            [0.182824652, 0.001727555, -0.0141],
+            [0.143733685, 0.02299508, -0.0141],
+            [0.143722865, 0.023000967, -0.014099964],
+            [0.143704781, 0.023010806, -0.014099843],
+            [0.143693961, 0.023016692, -0.014099735],
+            [0.143179985, 0.023296322, -0.01409287],
+            [0.143158308, 0.023308116, -0.014092436],
+            [0.143122082, 0.023327824, -0.014091467],
+            [0.143100411, 0.023339615, -0.014090742],
+            [0.142623376, 0.023599147, -0.014071598],
+            [0.142596896, 0.023613553, -0.014070535],
+            [0.142575112, 0.023625405, -0.014069515],
+            [0.142538715, 0.023645207, -0.014067563],
+            [0.142516943, 0.023657051, -0.014066249],
+            [0.142490519, 0.023671428, -0.014064476],
+            [0.142016263, 0.023929448, -0.014032652],
+            [0.141994303, 0.023941395, -0.014031029],
+            [0.141957617, 0.023961354, -0.014028067],
+            [0.141935675, 0.023973292, -0.014026146],
+            [0.141908875, 0.023987872, -0.014023616],
+            [0.141439243, 0.024243377, -0.013979281]
+          ]
+        }
+      }
+    }
+  }
+}

@@ -18,7 +18,9 @@ changing suspension metadata or diagnosing Apple offline/On-Demand Resource
 caching. The USDZ is the only ODR asset; cords are metadata-driven transient
 geometry. For connected passages or a mesh-derived bearing route, read
 [`CAD cord authoring`](../../../docs/HANGBOARD_CORD_AUTHORING.md) before
-authoring topology or selecting a solver. The cord route is not live physics;
+authoring topology or selecting a solver. A board migrated to CAD moves its
+cord to that doc's standard method (CAD channel, `internalLoop` sidecar,
+`solve_threaded_rope.py`), replacing any hand-authored leads. The cord route is not live physics;
 document its mesh and topology assumptions.
 
 ## Evidence and scope

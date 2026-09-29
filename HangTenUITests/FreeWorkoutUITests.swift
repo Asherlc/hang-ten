@@ -73,6 +73,19 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
+        // CI simulator UI automation can take longer than the 10 second default hang.
+        // Give the cancellation path enough time to interact with the overlay.
+        let logSet = app.buttons["freeWorkout.logSet"]
+        XCTAssertTrue(logSet.waitForExistence(timeout: 10))
+        logSet.tap()
+        let duration = app.textFields["freeWorkout.logSet.duration"]
+        XCTAssertTrue(duration.waitForExistence(timeout: 10))
+        duration.tap()
+        duration.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 2) + "600")
+        let saveSet = app.buttons["freeWorkout.logSet.save"]
+        XCTAssertTrue(saveSet.waitForExistence(timeout: 10))
+        saveSet.tap()
+
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
