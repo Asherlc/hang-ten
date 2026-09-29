@@ -336,7 +336,10 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
             "yy.baguette-evo",
-            "yy.penta-evo"
+            "yy.penta-evo",
+            "yy.verticalboard-first",
+            "yy.verticalboard-light",
+            "yy.verticalboard-one"
         ]
 
         XCTAssertFalse(

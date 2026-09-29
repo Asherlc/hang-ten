@@ -10,6 +10,34 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testVerticalBoardCADModelsLoadEveryPhysicalContactForPicking() async throws {
+        let expectedCounts = [
+            ("yy.verticalboard-first", 17),
+            ("yy.verticalboard-light", 12),
+            ("yy.verticalboard-one", 20),
+        ]
+        for (boardID, contactCount) in expectedCounts {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let presentation = board.defaultPresentation
+            guard case .model = presentation.media else {
+                return XCTFail("\(boardID) must use its CAD model")
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+            XCTAssertNotNil(scene.modelEntity, boardID)
+            XCTAssertEqual(scene.contactEntities.count, contactCount, boardID)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts(in: presentation).map(\.id)), boardID)
+            for (contactID, entities) in scene.contactEntities {
+                XCTAssertFalse(entities.isEmpty, "\(boardID): \(contactID)")
+                for entity in entities {
+                    XCTAssertNotNil(entity.model, "\(boardID): \(contactID) must render")
+                    XCTAssertNotNil(entity.collision, "\(boardID): \(contactID) must be pickable")
+                    XCTAssertNotNil(entity.components[InputTargetComponent.self], "\(boardID): \(contactID)")
+                }
+            }
+        }
+    }
+
+    @MainActor
     func testUSDZLoadsAndBindsDescriptor() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation
