@@ -168,12 +168,35 @@ final class BoardModelRealityTests: XCTestCase {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let scene = try await BoardModelRealityLoader.load(board: board,
                                                           presentation: board.defaultPresentation)
-        scene.frame(in: CGSize(width: 390, height: 240))
+        let viewport = CGSize(width: 390, height: 240)
+        scene.frame(in: viewport)
         let initial = scene.camera.transform.matrix
+        let contactIDs = scene.contactEntities.keys.sorted()
+        let canonicalCenters = Dictionary(uniqueKeysWithValues: contactIDs.compactMap { id in
+            scene.projectedContactCenter(id, viewport: viewport, fieldOfViewDegrees: 40)
+                .map { (id, $0) }
+        })
+        XCTAssertEqual(canonicalCenters.count, contactIDs.count,
+                       "Every contact must have a projected center before orbit")
+
         scene.orbit(azimuth: 0.35, elevation: 0.2, zoomScale: 0.9)
         XCTAssertNotEqual(scene.camera.transform.matrix, initial)
+        let orbitedCenters = Dictionary(uniqueKeysWithValues: contactIDs.compactMap { id in
+            scene.projectedContactCenter(id, viewport: viewport, fieldOfViewDegrees: 40)
+                .map { (id, $0) }
+        })
+        XCTAssertTrue(contactIDs.contains { canonicalCenters[$0] != orbitedCenters[$0] },
+                      "Orbit must change projected contact centers")
+
         scene.resetCamera(animated: false)
         XCTAssertEqual(scene.camera.transform.matrix, initial)
+        for id in contactIDs {
+            let canonical = try XCTUnwrap(canonicalCenters[id])
+            let reset = try XCTUnwrap(scene.projectedContactCenter(
+                id, viewport: viewport, fieldOfViewDegrees: 40))
+            XCTAssertEqual(reset.x, canonical.x, accuracy: 0.001, id)
+            XCTAssertEqual(reset.y, canonical.y, accuracy: 0.001, id)
+        }
     }
 
     @MainActor

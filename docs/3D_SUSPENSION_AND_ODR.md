@@ -101,6 +101,12 @@ otherwise.
 
 ## Select the narrowest truthful topology
 
+For a CAD board this choice is already made: its cord follows the standard
+method in [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), a
+`twoBranchCord` with `internalLoop` whose routes are solved against the CAD
+solid. The table below governs older non-CAD packages; when one of them moves
+to CAD, migrate its cord to the standard method with it.
+
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
 | `singleCord` | One attachment and one branch to a shared invisible display anchor | Use only when one physical attachment is established. The attachment binds to an importer-visible body/attachment node, never a selectable contact node. |

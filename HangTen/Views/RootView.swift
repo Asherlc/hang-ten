@@ -953,9 +953,10 @@ struct PlanDetailView: View {
                         manualWeightIncludesBodyweight.toggle()
                     }
                     .accessibilityHidden(true)
-                Spacer()
+                Spacer(minLength: 12)
                 Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
                     .labelsHidden()
+                    .fixedSize()
                     .accessibilityIdentifier("workout.initialWeight.addBodyweight")
                     .accessibilityLabel("Add bodyweight")
             }

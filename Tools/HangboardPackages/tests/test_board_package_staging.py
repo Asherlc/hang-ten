@@ -315,6 +315,57 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     assert odr_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
 
 
+@pytest.mark.parametrize(
+    "slug",
+    (
+        "frictitious-doormount-pro-7",
+        "frictitious-megalith",
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-natural",
+        "zlagboard-evo",
+        "zlagboard-pro",
+    ),
+)
+def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
+) -> None:
+    repository_root = tmp_path / "repository"
+    for model_slug in (
+        "frictitious-doormount-pro-7",
+        "frictitious-megalith",
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-natural",
+        "zlagboard-evo",
+        "zlagboard-pro",
+    ):
+        package = make_v3_model_package(repository_root / "Hangboards" / model_slug)
+        board_path = package / "board.json"
+        board = json.loads(board_path.read_text())
+        board["id"] = f"fixture.{model_slug}"
+        board_path.write_text(json.dumps(board, indent=2) + "\n")
+    source = repository_root / "Hangboards" / slug
+    shutil.copytree(
+        REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+    )
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    monkeypatch.setenv("CONFIGURATION", "Debug")
+    monkeypatch.setenv("PLATFORM_NAME", "iphonesimulator")
+    monkeypatch.setenv("CI", "true")
+
+    load_staging_module().stage_board_packages(repository_root, destination)
+
+    bundled_model = (
+        destination.parent
+        / "HangTenDebugSimulatorModels"
+        / slug
+        / "assets"
+        / "primary.usdz"
+    )
+    assert bundled_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
+
+
 def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

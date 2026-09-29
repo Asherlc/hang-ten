@@ -10,6 +10,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
+            // Keep this integration test independent from the board persisted
+            // by earlier cases; this raster fixture needs no ODR download.
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
         app.launch()
     }
@@ -56,23 +59,22 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         XCTAssertFalse(app.buttons["Skip preparation"].exists)
     }
 
-    /// Opens the workout deep link only after Train is the top of the stack, then
-    /// retries once if the URL was dropped during a nav/orientation settle.
+    /// Opens the workout deep link only after Train is the top of the stack.
     private func openWorkoutDeepLinkAndChooseLeftHandIfNeeded(
-        perAttemptTimeout: TimeInterval = 20
+        timeout: TimeInterval = 20
     ) {
         waitForTrainShellReady(timeout: 20)
         let handChoice = app.buttons["handSide.left"]
         let pause = app.buttons["Pause"]
         app.open(workoutDeepLink)
-        if !pause.waitForExistence(timeout: perAttemptTimeout), !handChoice.exists {
-            waitForTrainShellReady(timeout: 10)
-            app.open(workoutDeepLink)
-        }
+        let destination = app.buttons.matching(
+            NSPredicate(format: "identifier == %@ OR label == %@", "handSide.left", "Pause")
+        ).firstMatch
+        XCTAssertTrue(destination.waitForExistence(timeout: timeout))
         if handChoice.exists {
             handChoice.tap()
         }
-        XCTAssertTrue(pause.waitForExistence(timeout: perAttemptTimeout))
+        XCTAssertTrue(pause.waitForExistence(timeout: timeout))
     }
 
     private func openPlanDetail(withMotherboardFixture: Bool = false) {
@@ -160,14 +162,26 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
         XCTAssertLessThan(
             bodyweight.frame.width,
             app.frame.width / 3,
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        // Switch.tap() targets the center of the whole track. On iOS 26 that point is
+        // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Manual tracking must add bodyweight when its switch is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
@@ -194,6 +208,11 @@ final class InitialWeightSetupUITests: XCTestCase {
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         let setup = app.otherElements["plan.initialWeight.setup"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
@@ -210,7 +229,11 @@ final class InitialWeightSetupUITests: XCTestCase {
                 dy: labelPoint.y - setup.frame.minY
             ))
         label.tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {

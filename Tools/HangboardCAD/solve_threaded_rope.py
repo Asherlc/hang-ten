@@ -6,6 +6,20 @@ the shortest nonpenetrating route in each winding class on a rope-radius
 offset CAD section, then lowers the board until the longest loop is taut.
 Its generated route cache stays in suspension.json, outside the USDZ.
 
+A connected channel may be a curved pipe whose mouths lie in different
+sections (Lattice Mini Bar) or a straight through-bore whose mouths share one
+section (Crimptonite Helium Mobile). A through-bore splits its own section in
+two; the solver bridges that gap to recover the exterior bearing outline and
+reopens only the notch at the mouth being solved.
+
+The sidecar's optional authoring-only `ropeSolver.sectionPlane` selects each
+mouth's section plane. `mouth-x` (the default) cuts at the mouth's x, which
+suits mouths on a constant-section bar (Mini Bar). `anchor` cuts the plane
+through the mouth that contains the model depth axis and the overhead anchor,
+which is the plane a taut leg actually hangs in; use it when the mouth sits
+where the section varies along x, such as a rounded end (Helium Mobile). The
+anchor plane follows the solved board height until it converges.
+
 This is a static massless-rope equilibrium for bar-shaped boards whose end
 sections are representative of the exterior bearing surface. It does not
 model friction, rope elasticity, swing, or arbitrary 3D sliding along the bar.
@@ -22,6 +36,7 @@ import numpy as np
 import trimesh
 from shapely.geometry import LineString, Point, Polygon
 from shapely.geometry.polygon import orient
+from shapely.ops import unary_union
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -32,20 +47,66 @@ def rotate_inverse(quaternion, vector):
     return vector + quaternion[3] * turn + np.cross(xyz, turn)
 
 
+def bearing_section(pieces, mouth, offset):
+    """Rope-centerline-free region of one section, open only at this mouth.
+
+    One piece is the ordinary case. Several pieces mean a straight channel in
+    this plane cut the section apart; close that gap so the exterior outline
+    is intact, then subtract the channel's own clearance strip near the mouth
+    so the rope can reach it. Other mouths in the plane stay closed.
+    """
+    wood = unary_union(pieces)
+    grown = wood.buffer(offset, quad_segs=12)
+    if len(pieces) == 1:
+        return grown
+    gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
+    bridge = gap / 2 + 1e-5
+    closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+    if closed.geom_type != "Polygon" or closed.interiors:
+        raise ValueError("section channel could not be bridged into one outline")
+    channel = closed.buffer(offset, quad_segs=12).difference(grown)
+    notch = channel.intersection(Point(mouth).buffer(offset * 1.25, quad_segs=12))
+    if notch.is_empty:
+        raise ValueError("mouth does not open into its through-bore channel")
+    return closed.buffer(offset, quad_segs=12).difference(notch)
+
+
 class Section:
-    def __init__(self, mouth, mesh, radius, clearance):
+    DEPTH = np.array([0.0, 0.0, 1.0])
+
+    def __init__(self, mouth, mesh, radius, clearance, anchor=None):
+        """Section through `mouth`: the x-plane, or the plane holding `anchor`.
+
+        Plane coordinates are (distance along `up`, model z). For the x-plane
+        `up` is model +Y, so they are exactly the model (y, z).
+        """
         self.mouth = mouth
-        self.x = mouth["pointInModel"][0]
-        cross = mesh.section(plane_origin=[self.x, 0, 0], plane_normal=[1, 0, 0])
-        assert cross is not None and len(cross.discrete) == 1
+        origin = np.asarray(mouth["pointInModel"], dtype=float)
+        if anchor is None:
+            self.up = np.array([0.0, 1.0, 0.0])
+            self.normal = np.array([1.0, 0.0, 0.0])
+            plane_origin = [origin[0], 0, 0]
+        else:
+            toward = np.asarray(anchor, dtype=float) - origin
+            up = toward - toward.dot(self.DEPTH) * self.DEPTH
+            self.up = up / np.linalg.norm(up)
+            self.normal = np.cross(self.up, self.DEPTH)
+            plane_origin = origin
+        self.offset = float(origin @ self.normal)
+        cross = mesh.section(plane_origin=plane_origin, plane_normal=self.normal)
+        assert cross is not None and cross.discrete
         self.polygon = orient(
-            Polygon(cross.discrete[0][:, 1:3]).buffer(radius + clearance, quad_segs=12),
+            bearing_section(
+                [Polygon(self.to_plane(loop)) for loop in cross.discrete],
+                self.to_plane(origin),
+                radius + clearance,
+            ),
             1,
         )
         assert self.polygon.is_valid and not self.polygon.interiors
         self.points = np.vstack(
             [
-                np.array(mouth["pointInModel"][1:3]),
+                self.to_plane(origin),
                 np.array(self.polygon.exterior.coords)[:-1],
             ]
         )
@@ -65,6 +126,18 @@ class Section:
                 cross = self.crossing(a, b)
                 self.adj[i].append((j, distance, cross))
                 self.adj[j].append((i, distance, -cross))
+
+    def to_plane(self, points):
+        points = np.asarray(points, dtype=float)
+        return np.stack([points @ self.up, points[..., 2]], axis=-1)
+
+    def to_world(self, points):
+        points = np.asarray(points, dtype=float)
+        return (
+            points[..., :1] * self.up
+            + points[..., 1:2] * self.DEPTH
+            + self.offset * self.normal
+        )
 
     def crossing(self, a, b):
         if (a[0] < self.ray_y) == (b[0] < self.ray_y):
@@ -96,13 +169,13 @@ class Section:
         return min(matching, key=lambda item: item[1])[0]
 
     def solve(self, anchor, winding):
-        start = np.array(anchor[1:3])
+        start = self.to_plane(anchor)
         assert not self.polygon.contains(Point(start))
         links = []
         for j, point in enumerate(self.points):
             if LineString([start, point]).relate(self.polygon)[0] != "F":
                 continue
-            three_d_length = float(np.linalg.norm(anchor - np.array([self.x, *point])))
+            three_d_length = float(np.linalg.norm(anchor - self.to_world(point)))
             links.append((j, three_d_length, self.crossing(start, point)))
         distances = {(-1, 0): 0.0}
         previous = {}
@@ -155,14 +228,23 @@ def solve_package(package, mesh, suspension, descriptor):
     radius = radii.pop()
     rest = rest_lengths.pop()
     clearance = setup["internalLoop"]["clearance"]
-    sections = {
-        key: Section(mouth, mesh, radius, clearance) for key, mouth in mouths.items()
-    }
-    print(
-        "sections",
-        [(key, len(value.points)) for key, value in sections.items()],
-        flush=True,
-    )
+    plane = suspension.get("ropeSolver", {}).get("sectionPlane", "mouth-x")
+    if plane not in ("mouth-x", "anchor"):
+        raise ValueError(f"unknown ropeSolver.sectionPlane {plane!r}")
+
+    def build_sections(local=None):
+        built = {
+            key: Section(mouth, mesh, radius, clearance, local)
+            for key, mouth in mouths.items()
+        }
+        print(
+            "sections",
+            [(key, len(value.points)) for key, value in built.items()],
+            flush=True,
+        )
+        return built
+
+    sections = build_sections() if plane == "mouth-x" else {}
 
     def local_anchor(pose, height):
         translation = np.asarray(pose["translation"], dtype=float).copy()
@@ -188,8 +270,7 @@ def solve_package(package, mesh, suspension, descriptor):
             )
         return branches, routes
 
-    output = {}
-    for pose_id, pose in setup["canonicalPoses"].items():
+    def settle(pose_id, pose):
         initial = local_anchor(pose, 0)
         winding = {
             key: section.winding_from_direction(
@@ -208,7 +289,24 @@ def solve_package(package, mesh, suspension, descriptor):
                 low = midpoint
             else:
                 high = midpoint
-        height = (low + high) / 2
+        return (low + high) / 2, winding
+
+    output = {}
+    for pose_id, pose in setup["canonicalPoses"].items():
+        if plane == "mouth-x":
+            height, winding = settle(pose_id, pose)
+        else:
+            height = 0.0
+            for _ in range(20):
+                sections = build_sections(local_anchor(pose, height))
+                settled, winding = settle(pose_id, pose)
+                converged = abs(settled - height) < 1e-8
+                height = settled
+                if converged:
+                    break
+            else:
+                raise ValueError(f"{pose_id}: anchor-plane sections did not converge")
+            sections = build_sections(local_anchor(pose, height))
         branches, routes = evaluate(pose, height, winding, True)
         if any(
             rest - length > 0.0005 or length - rest > 0.00001
@@ -220,8 +318,7 @@ def solve_package(package, mesh, suspension, descriptor):
         contacts = {}
         second_mouths = {branch["passageIDs"][1] for branch in setup["branches"]}
         for key, path in routes.items():
-            x = mouths[key]["pointInModel"][0]
-            world = np.column_stack([np.full(len(path), x), np.asarray(path)])
+            world = sections[key].to_world(path)
             world[0] = local_anchor(pose, height)
             samples = []
             for start, end in zip(world, world[1:]):

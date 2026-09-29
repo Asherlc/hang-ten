@@ -158,9 +158,12 @@ the commit from which the script can still be read with `git show`.
 
 From then on every build and validation generates `board.json` from the FCStd.
 
+Every corded CAD board uses this channel-and-solver method (see
+[`docs/HANGBOARD_CORD_AUTHORING.md`](../../docs/HANGBOARD_CORD_AUTHORING.md)).
 For a cord routed through connected `PartDesign::SubtractivePipe` channels,
 measure the hidden length from each pipe's Sketcher spine between the two
-declared mouth points. The result is channel geometry, not a cord mesh. For
+declared mouth points; a straight `Part::Cylinder` through-bore is measured
+along its axis. The result is channel geometry, not a cord mesh. For
 the Mini Bar, run:
 
 ```sh
@@ -372,6 +375,31 @@ section cutter. It was re-authored from Frictitious's front and end-grain
 photographs. See
 `docs/2026-09-28-frictitious-megalith-cad-provenance.md`.
 
+`crimptonite-helium-mobile` sets both options too: its ends and round-overs
+are cylinders and tori, and its cavity mouths are ruled stadium chamfers
+(planes and cones). Each cavity is a shallow mouth at the lower-lip depth with
+a deeper slot sharing its top wall at the upper-lip depth, so both published
+lips of a cavity are exact. Each cord hole is a `Part::Cylinder` through-bore
+(`LeftCordChannel`, `RightCordChannel`) whose axis is the measured channel
+spine; one loop of cord runs through both, and its routes are solved with
+`ropeSolver.sectionPlane: "anchor"` (see
+[`docs/HANGBOARD_CORD_AUTHORING.md`](../../docs/HANGBOARD_CORD_AUTHORING.md)).
+It was re-authored from Crimptonite's product photographs; its provenance is
+in the delivery lock's `migratedPackages` entry.
+
+The Metolius Foundry is a native measured-profile source with a deliberately
+drawn, exactly symmetric front boundary and continuous side/top depth profiles.
+Ordered sections from the superseded display asset were only a qualitative
+station guide for the operator-authored macro profile; Metolius's front and
+depth images govern the topology and correct the reference's center-crown
+conflict. Its fully constrained Sketcher profiles feed native lofts, booleans
+and live semantic binders. The 578 x 216 mm published envelope, numbered hold
+inventory, and published 15 / 16 / 21 / 22 / 23 / 30 / 32 / 53 mm grip
+dimensions are frozen in the source manifest and semantic regions. Unpublished
+shell relief, aperture sizes, and jug/pinch display depths remain documented
+estimates. See
+[`docs/2026-09-28-metolius-foundry-cad-provenance.md`](../../docs/2026-09-28-metolius-foundry-cad-provenance.md).
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -386,7 +414,8 @@ then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
 `moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
-`the-hangboard` and `frictitious-megalith` set it.
+`the-hangboard`, `metolius-climbers-edge`, `frictitious-megalith` and
+`metolius-foundry` set it.
 
 ## Published depth deeper than the board
 

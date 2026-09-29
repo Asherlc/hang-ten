@@ -4,8 +4,15 @@ from __future__ import annotations
 
 import importlib
 import json
+import sys
 import unittest
 from pathlib import Path
+
+
+PACKAGE_SOURCE = Path(__file__).resolve().parents[1] / "HangboardPackages" / "src"
+if str(PACKAGE_SOURCE) not in sys.path:
+    sys.path.insert(0, str(PACKAGE_SOURCE))
+board_catalog = importlib.import_module("hangboard_packages.board_catalog")
 
 
 class VerifyTrangoRockProdigyTrainingCenterTests(unittest.TestCase):
@@ -28,8 +35,8 @@ class VerifyTrangoRockProdigyTrainingCenterTests(unittest.TestCase):
         verifier = importlib.import_module("verify_trango_rock_prodigy_training_center")
         root = Path(__file__).resolve().parents[2]
         board = json.loads(
-            (root / "Hangboards/trango-rock-prodigy-training-center/board.json").read_text(
-                encoding="utf-8"
+            board_catalog.read_board_json(
+                root / "Hangboards/trango-rock-prodigy-training-center"
             )
         )
         self.assertEqual(
