@@ -328,7 +328,17 @@ final class AppStore: ObservableObject {
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let candidates = handResolutionCandidates(for: step, on: board)
-        return Set(candidates.flatMap { WorkoutHighlightResolver.contactIDs(for: $0, on: board) })
+        return Set(candidates.flatMap { candidate in
+            // Plan previews have no athlete-selected side yet. Show the hold
+            // that either hand could use for an unsided one-arm task.
+            [WorkoutSide.left, .right].flatMap {
+                WorkoutHighlightResolver.contactIDs(
+                    for: candidate,
+                    on: board,
+                    selectedHandSide: $0
+                )
+            }
+        })
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {

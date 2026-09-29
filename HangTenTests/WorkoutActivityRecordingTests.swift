@@ -780,6 +780,24 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records[0].target, .selfSelected)
     }
 
+    func testBoardAgnosticSourceLinkedUnmatchedTasksRecordSelfSelected() throws {
+        let workout = plan(boardID: nil, [
+            WorkoutSegment(
+                kind: .work,
+                target: .tasks([[
+                    .init(target: .init(kind: .pinch)),
+                    .init(target: .init(kind: .pinch))
+                ]]),
+                timing: .fixed,
+                duration: 7
+            )
+        ])
+
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: board)
+        XCTAssertEqual(records.count, 1)
+        XCTAssertEqual(records[0].target, .selfSelected)
+    }
+
     func testBoardBoundUnmatchedRequirementsStillFailClosed() {
         let workout = plan(boardID: board.id, [
             WorkoutSegment(

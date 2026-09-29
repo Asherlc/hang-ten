@@ -49,6 +49,27 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
     }
 
+    func testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { board in
+            board.contacts.contains { $0.handCapacity == 1 }
+        })
+        let hold = try XCTUnwrap(board.contacts.first { $0.handCapacity == 1 })
+        let step = WorkoutStep(
+            id: "preview-one-arm", number: 1, title: "One arm", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([[
+                    PlanHandTarget(target: PlanContactPredicate(kind: hold.kind))
+                ]]),
+                timing: .fixed, duration: 10
+            )]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertFalse(store.contactIDs(for: step, on: board).isEmpty)
+    }
+
     func testMostRecentSavedLoadAdjustmentUsesLatestLocalSessionRegardlessOfPlan() {
         let olderSession = workoutSessionRecord(
             id: UUID(uuidString: "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE")!,

@@ -795,9 +795,33 @@ struct WorkoutActivityRecorder {
                             if task.count == 1, task[0].side == nil {
                                 contacts = []
                             } else {
-                                contacts = try ContactResolver.resolve(
-                                    task, step: recordedStep, board: board
-                                )
+                                do {
+                                    contacts = try ContactResolver.resolve(
+                                        task, step: recordedStep, board: board
+                                    )
+                                } catch {
+                                    guard allowsSourceLinkedRequirementFallback(
+                                        segment,
+                                        in: recordedStep,
+                                        plan: plan
+                                    ) else {
+                                        throw WorkoutActivityRecordingError.unresolvedTarget(
+                                            stepID: recordedStep.id,
+                                            segmentIndex: index
+                                        )
+                                    }
+                                    recordedTarget = .selfSelected
+                                    result.append(RecordedActivitySegment(
+                                        stepID: recordedStep.id,
+                                        stepNumber: recordedStep.number,
+                                        kind: .work,
+                                        target: recordedTarget,
+                                        durationSeconds: tasks.count == 1 ? duration : nil,
+                                        handUse: task.count == 2 ? .double : task[0].side == nil ? .either : .single,
+                                        side: task.count == 1 ? task[0].side ?? .both : .both
+                                    ))
+                                    continue
+                                }
                             }
                             recordedTarget = .resolvedContacts(ResolvedContactSnapshot(
                                 boardID: board.id,
