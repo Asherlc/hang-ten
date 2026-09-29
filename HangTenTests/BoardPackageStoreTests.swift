@@ -1285,40 +1285,33 @@ final class BoardPackageStoreTests: XCTestCase {
         }
     }
 
-    func testModelMixedWoodBandsDecodeAndRejectInvalidBounds() throws {
-        let valid: [[String: Any]] = [["nodeID": "Left", "xRange": [-0.3, -0.18], "maxZ": 0.029]]
-        let cases: [(Any, Bool)] = [
-            (valid, true),
-            (NSNull(), false),
-            ([["nodeID": "Right", "xRange": [0, 1], "maxZ": 0.02]], false),
-            ([["nodeID": "Left", "xRange": [1, 0], "maxZ": 0.02]], false),
-            ([["nodeID": "Left", "xRange": [0], "maxZ": 0.02]], false),
-            (valid + valid, false),
-            ([["nodeID": "Left", "xRange": [0, 1], "maxZ": 0.02, "extra": true]], false)
+    func testModelBoardFinishDecodesWithoutPerMeshSelections() throws {
+        let values: [(Any, BoardSurfaceFinish?)] = [
+            ("wood", .wood), ("plastic", .plastic), ("neutral", .neutral),
+            ("unknown", nil), (NSNull(), nil), (1, nil)
         ]
-        for (bands, shouldLoad) in cases {
+        for (value, expected) in values {
             let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
                 try self.mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
                     var presentations = try XCTUnwrap(board["presentations"] as? [[String: Any]])
                     var media = try XCTUnwrap(presentations[0]["media"] as? [String: Any])
                     var display = try XCTUnwrap(media["display"] as? [String: Any])
-                    display["woodNodeIDs"] = ["Body", "Left"]
-                    display["woodNeutralBands"] = bands
+                    display["surfaceFinish"] = value
                     media["display"] = display
                     presentations[0]["media"] = media
                     board["presentations"] = presentations
                 }
             }
             defer { fixture.remove() }
-            if shouldLoad {
+            if let expected {
                 let store = try BoardPackageStore(bundle: fixture.bundle)
                 let board = try XCTUnwrap(store.board(id: "fixture.board"))
                 guard case .model(let media) = board.defaultPresentation.media else {
                     return XCTFail("model fixture required")
                 }
-                XCTAssertEqual(media.display.woodNeutralBands.first?.nodeID, "Left")
-                XCTAssertEqual(media.display.woodNeutralBands.first?.xRange, [-0.3, -0.18])
-                XCTAssertEqual(media.display.woodNeutralBands.first?.maxZ, 0.029)
+                XCTAssertEqual(media.display.surfaceFinish, expected)
+                XCTAssertTrue(media.display.woodNodeIDs.isEmpty)
+                XCTAssertTrue(media.display.plasticNodeIDs.isEmpty)
             } else {
                 XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle))
             }

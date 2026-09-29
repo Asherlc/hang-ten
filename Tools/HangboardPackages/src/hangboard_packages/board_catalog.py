@@ -1133,7 +1133,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source, optional={"woodNodeIDs", "plasticNodeIDs", "woodNeutralBands"})
+    _closed(payload, {"camera"}, source, optional={"surfaceFinish", "woodNodeIDs", "plasticNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1150,6 +1150,11 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
             "fitPadding": fit_padding,
         })
     }
+    if "surfaceFinish" in payload:
+        finish = payload["surfaceFinish"]
+        if not isinstance(finish, str) or finish not in {"neutral", "wood", "plastic"}:
+            raise ValueError(f"{source}.surfaceFinish must be neutral, wood, or plastic")
+        result["surfaceFinish"] = finish
     for field in ("woodNodeIDs", "plasticNodeIDs"):
         if field in payload:
             raw_nodes = payload[field]
@@ -1161,30 +1166,6 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
             result[field] = nodes
     if set(result.get("woodNodeIDs", ())) & set(result.get("plasticNodeIDs", ())):
         raise ValueError(f"{source} woodNodeIDs and plasticNodeIDs must be disjoint")
-    if "woodNeutralBands" in payload:
-        band_source = f"{source}.woodNeutralBands"
-        raw_bands = payload["woodNeutralBands"]
-        if not isinstance(raw_bands, list):
-            raise ValueError(f"{band_source} must be an array")
-        bands = []
-        seen = set()
-        for raw_band in raw_bands:
-            band = _mapping(raw_band, band_source)
-            _closed(band, {"nodeID", "xRange", "maxZ"}, band_source)
-            node = _string(band["nodeID"], band_source)
-            if node not in result.get("woodNodeIDs", ()) or node in seen:
-                raise ValueError(f"{band_source} must name unique wood nodes")
-            if not isinstance(band["xRange"], list) or len(band["xRange"]) != 2:
-                raise ValueError(f"{band_source} xRange must contain two finite numbers")
-            x_range = tuple(_number(value, band_source) for value in band["xRange"])
-            if x_range[0] >= x_range[1]:
-                raise ValueError(f"{band_source} xRange must be increasing")
-            max_z = _number(band["maxZ"], band_source)
-            if any(abs(value) > 3.402823466e38 for value in (*x_range, max_z)):
-                raise ValueError(f"{band_source} bounds must fit finite shader floats")
-            seen.add(node)
-            bands.append(MappingProxyType({"nodeID": node, "xRange": x_range, "maxZ": max_z}))
-        result["woodNeutralBands"] = tuple(bands)
     return MappingProxyType(result)
 
 

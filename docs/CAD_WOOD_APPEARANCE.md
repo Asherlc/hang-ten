@@ -1,12 +1,16 @@
 # Runtime wood appearance for CAD boards
 
-Each wooden CAD package explicitly authors `media.display.woodNodeIDs` in its
-native `HangTenBoardManifest`. The iOS RealityKit renderer reads those surface
-selections and applies a warm matte procedural grain finish. The USDZ packages
-remain unchanged, unbound, and texture-free. No geometry, UVs, descriptor paths,
-suspension, or contact facts are changed. Only the native manifest display metadata is
-updated with `set_board_manifest.py`; every other FCStd archive member is
-verified byte-identical. The delivery lock records the new metadata hashes.
+Each wooden CAD package chooses `media.display.surfaceFinish: "wood"` once in
+its native `HangTenBoardManifest`. The iOS renderer applies the same warm matte
+procedural grain to every body and hold mesh, including complete recesses and
+new importer children. Attachment-role nodes remain neutral; cords retain their
+independent material. This removes the need to enumerate every mesh to get
+complete coverage.
+
+USDZ packages remain unbound and texture-free. Only the native display metadata
+changes through `set_board_manifest.py`; every other FCStd archive member and
+all USDZ/descriptor bytes are verified unchanged. The delivery lock records the
+new source hashes. Geometry and physical contact facts are unchanged.
 
 The color and grain are a deliberately subtle visual adaptation, not a
 manufacturer-exact reproduction of a wood species, stain, veneer, or plywood
@@ -18,7 +22,7 @@ once and reused; failure to load Metal falls back to warm matte PBR.
 
 ## Product material mapping
 
-These are explicit package-owned surface selections, not keyword detection. IDs and source
+These are package-owned board finish choices, not keyword detection. IDs and source
 URLs below come from each native FCStd's retained board manifest. The retained
 wood product metadata, manufacturer product descriptions/specifications, and
 source evidence determine eligibility. The Lattice catalogue identifies the
@@ -52,47 +56,46 @@ product pages retain FSC certification and wooden product imagery.
 | `tension.grindstone` | [Product source](https://tensionclimbing.com/products/grindstone) | Body and contact nodes; attachments excluded |
 | `tension.grindstone-pro` | [Product source](https://www.tensionclimbing.com/hangboards/grindstone-pro) | Body and contact nodes; attachments excluded |
 | `the-hangboard.the-hangboard` | [Product source](https://thehangboard.com/products/hangboard) | Body and contact nodes; attachments excluded |
-| `nature.stoak-board-iii` | [Product source](https://natureclimbing.com/products/stoak-board-iii) | Explicit oak nodes only (see below) |
+| `nature.stoak-board-iii` | [Product source](https://natureclimbing.com/products/stoak-board-iii) | Uniform wood display finish (see below) |
 
-The optional `woodNodeIDs` array contains exact body/contact descriptor node
-IDs. It is display metadata only: the USDZ remains the geometry source of truth.
-An empty array has the same neutral behavior as omission.
+## Board-wide coverage and Stoak correction
 
-## Mixed oak/granite mapping
+`surfaceFinish` is `wood`, `plastic`, or `neutral`. Omission preserves the legacy
+neutral default. The native CAD catalog explicitly chooses one finish for every
+board. Existing optional `woodNodeIDs` / `plasticNodeIDs` are supported for
+whole-node overrides in legacy packages; native packages no longer rely on
+exhaustive node lists. Attachment nodes always stay neutral. Both validators
+reject invalid finish values and unknown display fields.
 
-For `nature.stoak-board-iii`, all eight descriptor meshes include wood. The
-legacy names `centre_granite_edge_001` and `upper_centre_wood_edge_001` no longer
-describe their physical regions after the CAD migration: the former is the upper
-wood pocket and the latter is the lower mixed centre slot. Selecting finishes by
-those names alone incorrectly left wood interiors gray.
+Stoak now uses the wood display finish throughout its body and all hold meshes,
+including pocket floors. Its physical wood/granite contact metadata remains
+unchanged: a uniform app finish is a visual adaptation, not a claim that every
+physical surface is wood. Legacy mesh names do not determine material identity.
 
-All eight nodes now explicitly receive the wood finish. Optional
-`display.woodNeutralBands` retains a neutral strip within the three mixed lower
-contacts. Each entry contains a unique wood `nodeID`, an increasing two-number
-`xRange`, and `maxZ`; pixels inside that x interval and at or below that z station
-receive the existing neutral PBR color/roughness. Coordinates are local USD mesh
-metres before its root transform, not app coordinates. Both validators reject
-unknown fields, non-wood nodes, duplicate nodes, invalid intervals, and nonfinite
-or nonrepresentable shader bounds. Missing bands preserve full wood behavior.
-Highlighting covers the entire contact and clearing it restores the banded finish.
+The previous correction introduced `woodNeutralBands` and hand-selected height
+cutoffs to paint pocket bottoms gray. That answered a different appearance
+question and preserved the reported symptom. Those estimates, their schema,
+and their shader branch have been removed. They must not be used as material
+or geometry authoring precedent.
 
-Material evidence was reviewed on 2026-09-29 against Nature Climbing’s
-[product page](https://natureclimbing.com/products/stoak-board-iii) and its
-[official close-up](https://natureclimbing.com/cdn/shop/files/FullSizeRender_222c441c-2a78-4132-81e1-79cc4c9033ce_1600x.jpg?v=1764017405).
-The photo shows wooden recess walls and granite ledges in the three lower slots.
-The retained CAD already distinguishes the side slots’ outer 20 mm and inner
-30 mm sections; its `LowerWoodL/R` sketches terminate at x = ±180 mm. The
-neutral side intervals end at those exact CAD stations. Strip heights (29 mm on
-the sides, 42 mm in the centre, each 8 mm above the CAD slot minimum) are
-operator-selected display estimates, not manufacturer dimensions. The existing
-geometry, seven contact IDs, physical facts, and unbound USDZ remain unchanged.
+The earlier process checked that chosen material parameters survived selection,
+but did not establish that the resulting appearance met the user’s request.
+The acceptance check now starts with an unhighlighted whole-board render:
+inspect the complete walls, rear faces, floors, lips and transitions of every
+pocket. Then exercise selection and clearing to ensure the same finish returns.
+A passing material-type test alone does not establish visual correctness.
 
-Packages may also declare `display.plasticNodeIDs` for the runtime mint plastic
-finish; see [CAD plastic appearance](CAD_PLASTIC_APPEARANCE.md). Nodes without
-either selector retain neutral PBR. The two lists must be disjoint. New or revised
-products need explicit evidence-backed node selections in their package metadata.
-The renderer contains no board IDs or product-specific node mappings. Both package
-validators reject duplicate, unknown, or attachment node IDs.
+The catalog audit covers 35 native CAD boards: 24 wood, 11 plastic and 477
+body/contact descriptor meshes. A catalog test requires a board-level finish
+for every native source. An iOS catalog test loads every opted-in model and
+checks all imported body/hold meshes for its finish. A regression also verifies
+that an unlisted imported mesh inherits the board finish while an attachment
+stays neutral. These are coverage checks; actual app screenshots remain the
+appearance acceptance evidence.
+
+Plastic boards choose `surfaceFinish: "plastic"`; see
+[CAD plastic appearance](CAD_PLASTIC_APPEARANCE.md). The renderer contains no
+product IDs, product-name heuristics, or per-pocket coordinate cutoffs.
 
 ## Highlighting
 
@@ -103,7 +106,8 @@ The suspension cord continues to use its existing independent dark material.
 
 ## Validation
 
-Use `validate-hang-ten-ios` on a workspace-owned simulator. Check the original
-neutral board against the new wood finish, highlighted recesses, and the mixed
-Stoak board. `BoardModelRealityTests` covers wood highlight/restore and mixed
-wood/stone selection alongside existing neutral-material and picking checks.
+Use `validate-hang-ten-ios` on a workspace-owned simulator. Review normal wood
+and mint boards at detail and thumbnail size before checking highlights. Inspect
+all of Stoak’s pocket floors while no hold is selected. Keep the before/after
+screenshots with the audit. `BoardModelRealityTests` covers catalog mesh coverage,
+new-mesh inheritance, attachment isolation and full highlight restoration.

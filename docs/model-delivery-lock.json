@@ -53,15 +53,15 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "bd5d4054e8f6091a7a3de30ad5f51896c048d391e0ecf8931f2c5578d75eb10f",
+  "sha256Manifest": "598cac49d5abb3283c747d59c00695464fb66e89cc9880d0a6923ca5a82495a7",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "f222f9cd90203206149503fd1f61f6f471422f3decd64d35a7c1c2bce3574677",
+  "supersededSha256Manifest": "bd5d4054e8f6091a7a3de30ad5f51896c048d391e0ecf8931f2c5578d75eb10f",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
-      "sourceSHA256": "29cb0f71cd72a680264413488dafdde23cd04ebb4ec2a9629af98b3c47256915",
+      "sourceSHA256": "fe5830c2557995b62da1f48664d0e84ad7c34642acdddf1afa0af4f177bbd097",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source)",
       "referenceSHA256": "4f9690d8969dddf8178ef4f7961c05115ab00266821e11982284ff8437b2ac6e",
       "assetSHA256": "7b820fc44a6d696ddd5eecf6e4c85392301c7ac1d2f52fdf6b23284e8c4fb645",
@@ -73,11 +73,11 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules; front-view bands (front top edge to crest) for jugs and slopers",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "beastmaker-2000": {
       "source": "Hangboards/beastmaker-2000/beastmaker-2000.FCStd",
-      "sourceSHA256": "e7e9274f94746e978bbcd6b3ab3a9c73dfb04e88ee4208546d5de7c6aaa4a68d",
+      "sourceSHA256": "153fab7ad77c49f8fc0a05fec4ff397f522dcd8877c531fab3c3f41c6f8e1b04",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source)",
       "referenceSHA256": "f234f39e672c776fb98b0df7c835642e54f9b2e43c3ffad05ec68fae3cee159f",
       "assetSHA256": "ebf9267920d7d6103030efd78a0aedd7ce052c6ad26bf0fbb1f96faf4911b9cc",
@@ -89,11 +89,11 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules/circles (nested holes: the parent end-cap circle); front-view bands (front-top round tangent to crest) for the five top slopers",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "captain-fingerfood-pocket": {
       "source": "Hangboards/captain-fingerfood-pocket/captain-fingerfood-pocket.FCStd",
-      "sourceSHA256": "dc5a5b06151892f13e9024520772b4b9373c6cade82b94c07fff042718081a67",
+      "sourceSHA256": "3165dc49577a93e82cd2b1ec3f8ea4a24965b89ac0b2d4c00ccfb7a36c8c7ff6",
       "supersededSourceSHA256": "4b40b9426601833c2f2c3ea980f2489f072f367e11310d4ad9f0a79fe28178f5",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "3c6194af77718c6a05b56a6f0968c14274ae3811b248c982e3ed9696cf8e848f",
@@ -104,11 +104,11 @@
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "clavellium-training-block": {
       "source": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
-      "sourceSHA256": "c9cbd968d8d833071d0ea32b14bab15b89c96ca0f4dbde2a838c49e3d413e24a",
+      "sourceSHA256": "9393bae2832666bc895abf7101cbef4ae0ed6b3f3eb7baf5ee0aa3489c7d96d8",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file",
       "referenceSHA256": "3516382e00321d5c831695e454e78b3185092f147ec46b1dbd2ac57b61413f5c",
       "assetSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
@@ -119,11 +119,11 @@
       "comparison": "native measured approximation; see provenance for two-way mesh comparison and front/side/top previews",
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "dewoodstok-woodbord": {
       "source": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
-      "sourceSHA256": "bf8419bd1a8130c11c5e8a674b42bf1d4abe3c9517ae2dcd98202c6be2519669",
+      "sourceSHA256": "02c55948ebbec3e32f3fe9c206ac21d9917f749da33117ff35c8503eb638ee01",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.9864862569393753, was 4.011387803216873 from the superseded mesh bounds); all 17 contact IDs and 18 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "b8ffc338baa9c5bc4d961ad727d1c87dde5d0539c13fc78a848c579b3cda3186",
       "assetSHA256": "62a43523b873e2c4fc87d9a0c41bf4be862720eed499d5635236822bbb709a52",
@@ -135,11 +135,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 16 pocket stadiums (cutter wall, inside the 3 mm mouth round-over), top-rim front band (front-top round-over)",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "escape-beta-22": {
       "source": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
-      "sourceSHA256": "d22d9f18f3d82625fe1cd7396b9044f18ac4adebace52f5409751508a4b57123",
+      "sourceSHA256": "4bd4b717970805ebfe58005f9d2659dc94927f39cac31ae736a1f5338067a528",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 22 stable contact IDs preserved; camera view direction adjusted 20 degrees downward",
       "referenceSHA256": "95c41baa291c134358fa47eb8a9981acabd35bfb2231e14fd7951a9d9a0b0be4",
       "assetSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
@@ -151,11 +151,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored mouth rectangles and upper/lower end-wing bands; left/right central crown and upper sloper partitioned at x=0",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "evolv-kilter-basic-long": {
       "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
-      "sourceSHA256": "d0af66c18528220c2efc3facf796ea7a91cbe2f53ac11d6721abb89f41fe0723",
+      "sourceSHA256": "b18d962a2366682d558666169be2363efa53a9e914df7baa922799ccc6536a2e",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
       "sourceKind": "native-parametric-measured-profile",
       "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
@@ -163,11 +163,11 @@
       "provenanceSidecar": "removed audit record",
       "assetSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
       "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "j-bryant-ftg-32": {
       "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
-      "sourceSHA256": "35153068971048736a781afde03e6ee1773277189b9810aaf3752d173844c897",
+      "sourceSHA256": "1a55445202855cba44d05cc5e26e2ef1d420f207110035959d916bb43a278c83",
       "supersededSourceSHA256": "b2443ff4b48776b6be30a5b83437746ad52d6e6b4919eeb6ddda6e442af6c073",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
@@ -178,11 +178,11 @@
       "nativeAppValidation": "passed (isolated iPhone 16 Pro / iOS 26.5 Simulator; 7 focused FTG-32 tests and the four affected classes: 152 passed)",
       "comparison": "compare_exports.py vs the retired Blender reference: 0.0377 mm worst sampled deviation, both directions (limit 0.5 mm)",
       "holdOutline": "not authored; descriptor region derived from the CAD contact surfaces",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "lattice-mini-bar": {
       "source": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
-      "sourceSHA256": "538f1cb7fb7d4a2ffa9ac8717893ca165dbc31f7709f8125209f307b97455fc8",
+      "sourceSHA256": "130d0d308a87d4d6c8bc12e2958f3bf89381300968c80de465391ca1f1b87643",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; four original raster presentations become one model presentation with four grip positions",
       "assetSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
       "descriptorSHA256": "aa7353ce7ae0e72c2b1cd8b31fedde0bd4e16f05ec24de23eca3f9d5b4533f8e",
@@ -196,11 +196,11 @@
       "suspensionSource": "Hangboards/lattice-mini-bar/suspension.json",
       "suspensionSourceSHA256": "85c764db5244beb17816f76db032ab8e2b5f60dbd5514f29b8a4078536807348",
       "supersededSourceSHA256": "3896411d0f15fff3e6cb4159e76650d6c15171fc7763a74308201a9698ca7be3",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",
-      "sourceSHA256": "21f1fa1ea088e4404a5b05a8257281e39bca367364e3528cf3d71deed03196e4",
+      "sourceSHA256": "a44dc7de549c3a9c1f9dddafcba983bd1ea095443f63cad58b147e0d86960720",
       "supersededSourceSHA256": "bfd4cf9c1e85f7096d8f0373ca6aecd14ba34060e4f31187c23c97fb6e619af1",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "b8f9b7f75002f91b4ec45cf9b5212c7ae8a1ea6dffe9af9d5421a7566b9b2f25",
@@ -211,11 +211,11 @@
       "nativeAppValidation": "iPhone 17 Pro sim, iOS 26.5: board detail shows MX22 at 22 mm on the lower lip; 28 mm mono highlights the lower-right pocket at 28 mm; landscape board detail renders",
       "provenanceSidecar": "author notes preserved in removed audit record (retired script recoverable from 060eba8ebd6d5ba44ae8becd3a538232d483eaa9)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "lattice-mxedge-lift-small": {
       "source": "Hangboards/lattice-mxedge-lift-small/lattice-mxedge-lift-small.FCStd",
-      "sourceSHA256": "5eb498a4e85bae44c826bcbc4e6ffd267f0884fae2830595d49510cfcadddf61",
+      "sourceSHA256": "6724c8548eaa71235f75e924e4306448c02cf47e6d822e22967abb61e50d009e",
       "supersededSourceSHA256": "98460711b54b10b82db418ceedbc8f28c02c5e2800c61fc1abf1d065111359fc",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "compiler": "Tools/HangboardCAD/compile_board.py",
@@ -225,11 +225,11 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "assetSHA256": "cf6f14541846577d9010b9020db20ff7dabc5fc4870b751ace029712b7565029",
       "descriptorSHA256": "b0cf9e32911d723a6742f4abe4cd7b22c2c2658aa008319479a0dddf4e57d387",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "lattice-triple-rung": {
       "source": "Hangboards/lattice-triple-rung/lattice-triple-rung.FCStd",
-      "sourceSHA256": "5a53af2a0f8c026876ee03b3a4956cdee20bd422ce698100aced72168316cfba",
+      "sourceSHA256": "821beadb22810a96da35b2952e9932f60796202a8782ca5275eaa37498d96786",
       "supersededSourceSHA256": "ea5664b6a09b150d5175a3b6f7849ee4697a95aaa373c974f4b3647cabad1f1c",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "d1234103be9c59242431b00dd42344d7f2482ebd20e86df6776d1ea2251bfd23",
@@ -241,11 +241,11 @@
       "provenanceSidecar": "removed; provenance facts documented in Tools/HangboardCAD/README.md",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256 and verified by prepare_assets.py",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center; asset bytes unchanged",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-light-rail-2": {
       "source": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
-      "sourceSHA256": "42412ef8c1b308c9f82190e34a94e944c3e13e3b94b7f826f45c5cd45044ba9c",
+      "sourceSHA256": "0a08628ba8bf6c9087219703fe5fea852ab6b8d3cde88177a960f0d18d83c165",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the previous hand-authored board.json",
       "referenceSHA256": "6fc0c73bfcd0a22d94a733fa7f8b482730a2423d4eec139539d92229ec64a598 (assets/primary.usdz at 94d48974e)",
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
@@ -256,11 +256,11 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-40-20mm-side (default), edge-20, jug-40-15mm-side and edge-15 selected from the hold map and confirmed via boardDetail.selectedHold.<contactID>; highlights land on the top jug and lower lip upright, and on the flipped jug and lip in the inverted pose)",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-prime-rib": {
       "source": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
-      "sourceSHA256": "4fe173d7775123a0ddf26806006db2e959ab1b81af9b954ba1f30e9a8005cb78",
+      "sourceSHA256": "481381c0bbc020d6a48c6c0d76b796b306d7faab64e362335697d2f688377117",
       "supersededSourceSHA256": "b4255cdee0345f868af18850a636743d067d76c923d8cabfabaac04c2e40416c",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "ddfb6f8fde38026e2e77e0b6b66e0682b9a788c6eff9c86b26646438808f8026",
@@ -276,11 +276,11 @@
       "provenanceSidecar": "author notes preserved in removed audit record (retired script recoverable from 3498f979355d60553e09fd557b85c87e745c0ba3)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "9f9a44cfa4f1eb00c06e6d9a28ef43e2355bc3b4f7b8446912d82883f620f7c3",
+      "sourceSHA256": "fda6bf867898e483888a9f16f4bf26bb6f7ce9f0c9d9b79fd3cf87f452c1d058",
       "supersededSourceSHA256": "4603f9f27c5bc46a4ee8d1fc3204475d4c785a1943efe97c9c49bc386ab3ada6",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); manifest re-embedded unchanged after the 2026-09-25 vector re-authoring (generated board.json byte-identical)",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
@@ -292,11 +292,11 @@
       "comparison": "accepted deviation (2026-09-25 vector source): compare_exports two-way worst 20.999 mm (candidate->reference) / 10.000 mm (reference->candidate) vs 0.5 mm limit, from the deliberate jug change (photographed crown hump instead of the reference scoop). Tunnels <= 0.15 mm, pockets <= 0.91 mm (smooth loft between exact stations); every measured station fits the reference to 0.012 mm. See removed audit record",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center",
       "provenance": "removed audit record",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-wood-grips-compact-ii": {
       "source": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
-      "sourceSHA256": "7183057cebdc7b9b1542953bcb777484ead7b17301b18dba7d9933c6cd348aa4",
+      "sourceSHA256": "52e315a954a34c2d73017593d7f54850c05532e646f2f9dae965d6229008b02d",
       "supersededSourceSHA256": "8599506fd6f2762ac519770f4defb5c785002179d7f31036683338a376308498",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "addf2cd2ddd34f18f311ccc1413ca94644df0d2f3d56020b68edf25625bc664a",
@@ -309,11 +309,11 @@
       "provenanceSidecar": "author notes preserved in removed audit record (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules; bounding rectangles for edges, jugs and slopers",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-wood-grips-deluxe-ii": {
       "source": "Hangboards/metolius-wood-grips-deluxe-ii/metolius-wood-grips-deluxe-ii.FCStd",
-      "sourceSHA256": "578ed7b080334d701b128b33841788ad7b884d21de9933784c0cf8c2042f394e",
+      "sourceSHA256": "0e13ed6ecd996c735ead7344fb2d7f5a6fef4d247c7c4deb8aea8b57d5c64cfe",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); token-identical to the deleted hand-authored file except the front presentation aspectRatio, now the descriptor modelBounds ratio 2.8240740604423875",
       "referenceSHA256": "cfdf112a2f4ebecb69ebeca2a2102af3e64bcb72a08ba90cb555e60fa50e16e6",
       "assetSHA256": "f716ba95d00faefb1a87e83f94ead35f8893ad9b639062ecfa26d31fee7f9d7e",
@@ -325,11 +325,11 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: pocket mouth capsules (clipped at the board ends for side-open edges); bounding rectangles for jugs and slopers",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "moon-armstrong": {
       "source": "Hangboards/moon-armstrong/moon-armstrong.FCStd",
-      "sourceSHA256": "df2a77dae6569cbb1a5abc19bcf654316f29085104f72a124ec04c8e354eb674",
+      "sourceSHA256": "cdb73bb79c0d971b179e246dce75c8f7332f1e0353f2f53a44f0ce249efbede7",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.9393936268136036, was 3.9573770458016795 from the superseded mesh bounds)",
       "referenceSHA256": "26e916d54b39f1f6afcf78b53bdc883a584dae0ff6e78d67fb8823ee1daf8e6a",
       "assetSHA256": "0a2fdcfd4178b98ca1170a807f33c92dc30ac60dd5795ab315d2fec6b3153f9c",
@@ -341,11 +341,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: mouth outlines (slot/pocket + round-over), rail and bar outlines, sloper front band",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "nature-stoak-board-iii": {
       "source": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
-      "sourceSHA256": "e6e18265377678b191ee4c8bdf5038d23ef50dd671ddcd4a313ad7bf394988a8",
+      "sourceSHA256": "2742a0885ed285b7a166d8f04b10607c86b4f927d263d3cec75eca44e623f835",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (4.750000052083334, was 4.718998795731431 from the superseded mesh bounds); all 7 contact IDs and 8 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "fc48bd058d8404047ffedb5f6ca1f00ed733caf61cd879ba3e7374651dadffe0",
       "assetSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
@@ -357,11 +357,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: top-rail band, gradient channel bands to the board ends, 22 mm stadium, lower slot and centre slot mouths",
-      "runtimeAppearance": "Corrected wood interiors by physical region, including the legacy-named upper wood pocket; three operator-authored woodNeutralBands retain granite strips in lower mixed contacts. Only the manifest property changed; all shape, USDZ and descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
-      "sourceSHA256": "2cf155e6d02bc5c413bb98222b99f00611e6fd8aba61459d4c0e84f1b5eae106",
+      "sourceSHA256": "ba86f4813c7d42f846608a0b89c2610db3a3f83753d04e63f4b0bbb5f0139a4d",
       "sourceKind": "faceted-import (HangTenSourceKind; compiled with --allow-faceted-import)",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source)",
       "assetSHA256": "87380f8cdccff35bffab093d8b9808abe7cc0f9cad95e3c5c1530ef3c79d3db1",
@@ -370,11 +370,11 @@
       "provenanceSidecar": "authoring script committed at Tools/HangboardCAD/migration/author_soill_iron_palm_2.py (PR #478, last source change 54b4621)",
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "soill-split-palm": {
       "source": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
-      "sourceSHA256": "a065dc8629dd8c7f25979c809772ce042c270f114bf393b7dbd460ae9800ad52",
+      "sourceSHA256": "fbb507deba4071b09bfc06ddd5f2a5512409227c9aa63f0b5b600b821d744187",
       "sourceKind": "faceted-import (authored parametric/faceted hybrid; compiled with --allow-faceted-import)",
       "boardMetadata": "schema-v3 board.json generated at build time from HangTenBoardManifest; its model presentation uses the schema-v2 descriptor to instantiate one canonical right-half source twice, reflecting the left instance at runtime; all 14 contact IDs, names, kinds, factual depths, and product metadata are preserved, while left/right equipment ownership is made explicit for runtime instancing; instance translations use exact nine-decimal lexemes",
       "referenceSHA256": "36a8877dddbaeebf86f99c96592184075bd314d85f23b65417dc19c092c57bed (prior committed USDZ used only for before/after display and never as geometry input)",
@@ -387,11 +387,11 @@
       "provenanceSidecar": "none (audit archive removed); provenance recorded here and in the PR",
       "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
       "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "soill-training-tiles": {
       "source": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
-      "sourceSHA256": "2495c02471398ee5c9062c80926d4d63fb401e5732c9fb2295eeac4b67f88236",
+      "sourceSHA256": "3b47e3f69514c8a3ebb12dce2659b40e809798630fc6e2ff3ed2c262048390ac",
       "sourceKind": "faceted-import",
       "boardMetadata": "board.json generated at build time from HangTenBoardManifest; byte-identical to the former committed board.json; all 20 adapted contacts and factual fields unchanged",
       "referenceSHA256": "ba2f62a8c72d2a24f99465e855a21e2b38945969db6d6d2e33c0366608ac53cb",
@@ -403,11 +403,11 @@
       "comparison": "Complete triangle-coordinate multiset comparison against the prior committed USDZ and front/side/top previews; see the dated provenance sidecar",
       "provenanceSidecar": "removed audit record (one-off authoring script under .context/)",
       "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "target10a-linebreaker-base": {
       "source": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
-      "sourceSHA256": "60755b53562a26d1bdaa58ce0fd0521e589d819941efa6cdfc41791eae3e91b8",
+      "sourceSHA256": "393be4f238e6cfa3584c642d6373f575fa5f11823502fe04d8a6a9e6a780d6ac",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source) except one deliberate presentation aspectRatio change to the CAD modelBounds ratio (3.8666664053333437 vs the reference's 3.885558901066122)",
       "referenceSHA256": "da9dd116d43575d1c021f0cfe106a9cec89bb74bba7e3caab8829b196ed29374",
       "assetSHA256": "b1c08983d2b353442a9cd0131ad5a1e4255a2e6c3222bc26ea5b0fd44ef3e8df",
@@ -419,11 +419,11 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "tension-grindstone": {
       "source": "Hangboards/tension-grindstone/tension-grindstone.FCStd",
-      "sourceSHA256": "90d3a4dac321f7c2013d204b851a00bdf22647b9b28032856240fbf8f7e2ce7f",
+      "sourceSHA256": "3ef21f4328ea2b0f2f6d6f7714c9ceb72d4725f563fae664f22b5d3783cedabd",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the previous hand-authored raster board.json was replaced by a model presentation with the same identity, metadata, and 14 contacts",
       "referenceSHA256": "none: the board had no prior 3D asset; its previous presentation was the raster assets/primary.png",
       "assetSHA256": "d69795c0f0c65e0c2070e3dc0c84fcfa7480a03c627157be4b8ed65cffcf5495",
@@ -435,11 +435,11 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: slot-segment openings (rounded outer ends, straight at the depth step), the window opening, and a 9.5 mm top band for the jug (region: the round-over plus the planar top face)",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; top-jug (default), edge-50-center, edge-10-right and edge-20-left (deep links) selected and confirmed via boardDetail.selectedHold.<contactID>; presentation camera tilted 20 degrees down so the through-window floor is visible)",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "the-hangboard": {
       "source": "Hangboards/the-hangboard/the-hangboard.FCStd",
-      "sourceSHA256": "dacd3d6cfb3be56597224a5998070b8ccbcf595feff62f5ed969f3cd56e6432e",
+      "sourceSHA256": "a57761033e8706e3ec759bc006a2c48860141673a90e308e0e1c49e41f0945e5",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (3.759999959181102, was 2.0); all 15 contact IDs and 16 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "7666ef014e2fd5be4af874d56caced26ba1202c8c18978f9fd8ff737ae23ff42",
       "assetSHA256": "baa39c97ac15c6ad5775af55801eb6a0419df6e251aca81c2624046cba49c2e9",
@@ -451,11 +451,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 12 edge-segment mouths (window segment grown by the 3 mm mouth round-over), jug front bands (full-round tops), sloper front band",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "trango-rock-prodigy-pivot": {
       "source": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
-      "sourceSHA256": "600a7b1661c2db5d24bd603ff2059914008d4012ddf194a1b5ad8bed61174c6f",
+      "sourceSHA256": "6ef486646953db5c692d6fd7b24ebb4dc9dd98f4f278f9f51e69bfed4edacd75",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest; identical to the deleted hand-authored file except the eight instance translations 0.102000000 -> 0.132500000 (the re-authored half is 234 mm wide)",
       "referenceSHA256": "1549ef478ec19152b8d5340187aee0f0fb8581b1c3312575d62cc1395577832a",
       "assetSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
@@ -467,11 +467,11 @@
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: authored outlines for rail, pockets, ledge, medium-crimp strip and wing; front-view hulls for the crimp bands and teeth",
       "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "trango-rock-prodigy-training-center": {
       "source": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
-      "sourceSHA256": "6b4f6030fe4aa5a1b101b2923198662aa84b655046bb56134e249d20b36d742d",
+      "sourceSHA256": "c2e88a8b2472c7d78913b03067edfb7e9de56a7ff8f8e68f2416cb7f22a853ad",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the removed hand-authored board.json",
       "referenceSHA256": "9b9fbeda3846f72bd671fdb0733f2ce39c69342c033933ce75653a67a060f105",
       "assetSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
@@ -483,11 +483,11 @@
       "assetCoverage": "Locked as descriptor + FCStd; board.json is generated at build time and the USDZ is hash-bound by the descriptor.",
       "holdOutline": "CAD-authored HangTenHoldOutline from each explicitly classified contact shell front-view hull.",
       "nativeAppValidation": "Prior export: iPhone 17 Pro isolated simulator (iOS 26.5), signed Debug build, board-detail route rendered the model and highlighted the left deep middle-ring pocket. Final bore-removal export: signed Debug build succeeded but simctl launch stalled before the app process started, so no final-revision screenshot was obtained. Each owned simulator was deleted.",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "frictitious-doormount-pro-7": {
       "source": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
-      "sourceSHA256": "b9251b99ead344742a4d5252e3644d5b3e3660664d907de7ac328967a64e1638",
+      "sourceSHA256": "82a27ae8dae37228c30918873cb39bfc03e14ae2d3b2897f84a0ce5ded852b72",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file; 13 contact IDs and 14 node IDs with unchanged pairing",
       "referenceSHA256": "089f8989ca05e0339e46cc1c6334c21a12409cc2c07c450529934101d664d89b",
       "assetSHA256": "eac54ae185cc0d62db3f421ca0c3bb39fdac50d76fc24824a8b24720f3042777",
@@ -499,11 +499,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline for each analytic cavity mouth and the full-width top jug front band",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "escape-unlimited": {
       "source": "Hangboards/escape-unlimited/escape-unlimited.FCStd",
-      "sourceSHA256": "a09aae96cc6b1c3d8f1e08d48305f37e7f52806216a72f985737cae68cd846d5",
+      "sourceSHA256": "f9ee95e5a53230d579a97a3c69613003d1526ae7028b8f7a573ea430e5dba2ff",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 7 stable contact IDs and node IDs preserved; only the model presentation aspectRatio changed (3.2884058722385614 -> 3.275862299100252, the new modelBounds x/y ratio)",
       "referenceSHA256": "4d0fde630f301c41d8b3ef8e209a5c3b520df70edc0543afc90d960a44f28d7f",
       "assetSHA256": "3eb450c3a42648c8d6c4522bc3220471b298d8cb0f2cf944453ea1ac0f1e4e82",
@@ -515,11 +515,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored slot lip pills for the six edges; front-plane band of the quarter-round for the top sloper",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-climbers-edge": {
       "source": "Hangboards/metolius-climbers-edge/metolius-climbers-edge.FCStd",
-      "sourceSHA256": "9e77801c86b1da83a9a404895995ce56e386caa393da4cbd456193ad5b3e9f9c",
+      "sourceSHA256": "183559334d57680c01268973d7af4f29257d209c1055ed81062f4b9c659f0ece",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest (the model presentation aspectRatio stays 3.75, which equals the new 600 x 160 mm modelBounds ratio); all 15 contact IDs and 16 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "19c0d57881561f8c5a8a28af79148253137bc9135828f9e8ac1308a6c3ea4b32",
       "assetSHA256": "4de00eb9e9d60dd70fbcbd0f1e9cd141c09b74470dbb72755847ac1a333fd341",
@@ -531,11 +531,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 10 edge-segment windows (ledge round-over up to the scoop's front edge), jug top bands, flat-sloper front bands, round-sloper front band with shoulders",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "tension-grindstone-pro": {
       "source": "Hangboards/tension-grindstone-pro/tension-grindstone-pro.FCStd",
-      "sourceSHA256": "a149d313c01b152ca5e2721ccbb9d0b359fb509f2be88f63c92b5c5876d32e0a",
+      "sourceSHA256": "84b1e281a13c2a65f7b7efcf949a3fc22ad009c5d86a5f7a301d9a7d0665ffcf",
       "boardMetadata": "board.json generated at build time from the embedded HangTenBoardManifest; phone-slot has no depth metadata and retains user-approved utility-contact identity",
       "referenceSHA256": "929108c3f712a7186711543f705c4855eb95a0cc3dcf11be5c6d545e568c5407; 39a55492120d84fd6a35780116c6b1a21853e2440d9ace6796b559293f22bea9",
       "assetSHA256": "63cd2673a47c38fa1bcf63e40c7ca16eb4e0a873b5062611a09e4ba6ed5628e2",
@@ -547,11 +547,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + FCStd source; the USDZ hash is bound by the descriptor and board.json is generated at build time",
       "holdOutline": "CAD-authored rounded mouth outlines; lofted bowl sections preserve the exact published depth extents and the 7 mm incut retains its 15-degree profile",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-foundry": {
       "source": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
-      "sourceSHA256": "6df596da2accbe9dbb11fffa920b51b179fa1222059cf3760721332e9fb08da8",
+      "sourceSHA256": "5a9c9ca29975ef7e9369b0b6c4456dc5b8316457adcae74e6d5d40782a34823d",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; all 18 contact IDs, 19 node IDs and their pairing unchanged; front presentation aspectRatio changed from the image-era value 2.6588197894316767 to the published 578 / 216 envelope ratio 2.675925925925926, and the already-published 53 mm sloper dimension is now an exact structured depth range",
       "referenceSHA256": "ea9c293327bc2d5125792b35d3c61fc01b8d6ed15d345440ad8afc0a51e41998",
       "assetSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
@@ -563,11 +563,11 @@
       "provenanceSidecar": "docs/2026-09-28-metolius-foundry-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline for the 13 recessed pocket/edge contacts, including the mirrored side-pocket angles; broad sloper, jug and pinch frames derive from their exported contact meshes",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "frictitious-megalith": {
       "source": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
-      "sourceSHA256": "1b53ba22948e840a13d8e36db2f4cb45868668578b9b70511d94d8b2969b64a3",
+      "sourceSHA256": "75d4def0edafe8bfc95004d9928f029520e2d4240941c52761563188f609b9e5",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; every parsed field, key order and number spelling equals the deleted hand-authored file (only the escaping of the multiplication sign in dimensions differs); all 20 contact IDs and 21 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "f88f4c9cf989af88230b8c0937bfb37ef656e0d3df142b7377e11638363d904f",
       "assetSHA256": "23a2e9078d2351710006cab3752dc57cfa33538499343e09d9d29a1887dbb4f9",
@@ -579,11 +579,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: 14 edge-segment windows (ledge round-over up to the groove roof), the 40 mm windows notched around the two-finger pocket windows, mono chamfer ellipses, center hold front face, jug top band",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "metolius-project": {
       "source": "Hangboards/metolius-project/metolius-project.FCStd",
-      "sourceSHA256": "4c68fee1ebd4bdb8014b1c102e5dcfe8313efa6974aec32d8bc74e6bdb81c048",
+      "sourceSHA256": "85914eac2bd23cf99fdaf3dfea39345377f94318da0bcd502e72b2a2aa269999",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed fields, key order and numeric values match the deleted file; all 17 contact IDs, 18 node IDs and their pairing unchanged",
       "referenceSHA256": "ce5cdbaaf6fa6cea29d9a5634b7c8a579ca99d3b3c1189dbd4e19148aa1108bb",
       "assetSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
@@ -595,11 +595,11 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline for the 12 recessed pockets and edges",
-      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     },
     "crimptonite-helium-mobile": {
       "source": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
-      "sourceSHA256": "d29186c3198dbf7dc6cb4415df54a733ce2800dee0b041a4a4c0063be11b62c8",
+      "sourceSHA256": "95885d03bebd378a25c91230d8cace2b2d904a8412fe0396342a7b1e6e56fb2c",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest plus suspension.json; all 6 contact IDs and their 7 contact nodes unchanged; the two former cord-mouth attachment nodes are gone because the cord now binds to the body's through-bores (9 nodes)",
       "referenceSHA256": "745f92fdafcfa26f3ff5fe77f1f993d5de68bf0a199173b6f7a43167eb56ba94",
       "assetSHA256": "c4106a959aa9265717a6c20f928a9b018f048912a66b1ee56e46a6f114be22d1",
@@ -612,7 +612,7 @@
       "holdOutline": "CAD-authored HangTenHoldOutline: upper-slot stadiums for edge-22 and center-edge-18, mouth-minus-slot outlines for edge-14 and center-edge-10",
       "suspensionSHA256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
       "suspension": "twoBranchCord with internalLoop in suspension.json (the standard CAD cord method): owner-confirmed single cord loop through both end holes; LeftCordChannel / RightCordChannel Part::Cylinder through-bores measured at 24 mm by measure_channel_spines.py; routes and hanging height solved by solve_threaded_rope.py with ropeSolver.sectionPlane anchor; >= 2.074 mm centerline clearance to the CAD solid for a 2 mm cord; 0.45 m per end (~0.9 m loop) is a display estimate from the resting loop in DSCF6544/6545; replaces the hand-authored pairedLeadCord",
-      "runtimeAppearance": "Package-owned display.woodNodeIDs added via set_board_manifest.py; only the manifest property in Document.xml changed; shape archive members and USDZ/descriptor bytes unchanged. See docs/CAD_WOOD_APPEARANCE.md."
+      "runtimeAppearance": "Board-wide display.surfaceFinish replaces exhaustive per-mesh selectors. All body/contact meshes inherit the finish; attachment nodes remain neutral. Only the embedded display metadata changed, with shape archive members and USDZ/descriptor unchanged. See docs/CAD_WOOD_APPEARANCE.md and docs/CAD_PLASTIC_APPEARANCE.md."
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -659,5 +659,6 @@
   "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
   "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest.",
   "cadWoodAppearanceNote": "2026-09-29: 24 wooden/mixed-material CAD package manifests gained explicit display.woodNodeIDs for runtime-only matte wood grain; geometry, USDZs, descriptors, suspension metadata and contact facts are unchanged. The prior metadata digest is retained in supersededSha256Manifest.",
-  "cadPlasticAppearanceNote": "2026-09-29: eleven native plastic/resin CAD manifests declare body/contact plasticNodeIDs for the user-selected runtime mint finish. Mint is an app styling choice, not a manufacturer color assertion. USDZ remains material-free, geometry and source facts unchanged. Both validators require known, unique, nonattachment selectors disjoint from woodNodeIDs. See docs/CAD_PLASTIC_APPEARANCE.md."
+  "cadPlasticAppearanceNote": "2026-09-29: eleven native plastic/resin CAD manifests declare body/contact plasticNodeIDs for the user-selected runtime mint finish. Mint is an app styling choice, not a manufacturer color assertion. USDZ remains material-free, geometry and source facts unchanged. Both validators require known, unique, nonattachment selectors disjoint from woodNodeIDs. See docs/CAD_PLASTIC_APPEARANCE.md.",
+  "cadBoardFinishNote": "2026-09-29: 35 native CAD packages (24 wood, 11 plastic) select one board-wide runtime finish covering 477 body/contact meshes. Removed Stoak's estimated neutral bands and the runtime/schema band mechanism. No geometry, contact facts, materials or textures were added to USDZ files."
 }

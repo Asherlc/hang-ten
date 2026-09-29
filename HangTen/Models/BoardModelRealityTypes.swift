@@ -174,8 +174,7 @@ final class BoardModelRealityScene {
     private(set) var transientCordEntity: Entity?
     private var contactIDByEntity: [Entity: String] = [:]
     private var baselineMaterials: [Entity: any RealityKit.Material] = [:]
-    private enum SurfaceFinish { case neutral, wood, plastic }
-    private let finishByNodeID: [String: SurfaceFinish]
+    private let finishByNodeID: [String: BoardSurfaceFinish]
 
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
@@ -223,8 +222,9 @@ final class BoardModelRealityScene {
         let woodNodes = Set(display.woodNodeIDs)
         let plasticNodes = Set(display.plasticNodeIDs)
         self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
-            ($0.nodeID, woodNodes.contains($0.nodeID) ? .wood
-                : plasticNodes.contains($0.nodeID) ? .plastic : .neutral)
+            ($0.nodeID, $0.role == .attachment ? .neutral
+                : woodNodes.contains($0.nodeID) ? .wood
+                : plasticNodes.contains($0.nodeID) ? .plastic : display.surfaceFinish)
         })
     }
 
@@ -246,7 +246,7 @@ final class BoardModelRealityScene {
 
         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
         // each finish before highlighting so deselection restores the authored finish.
-        applyBoardMaterials(to: root)
+        applyBoardMaterials(to: root, inheritedFinish: display.surfaceFinish)
 
         // Build contact entity mapping from descriptor
         // Highlight baselines were captured by applyBoardMaterials().
@@ -272,24 +272,14 @@ final class BoardModelRealityScene {
         }
     }
 
-    private func applyBoardMaterials(to entity: Entity, inheritedFinish: SurfaceFinish = .neutral,
-                                     inheritedBand: BoardWoodNeutralBand? = nil) {
+    private func applyBoardMaterials(to entity: Entity, inheritedFinish: BoardSurfaceFinish) {
         // CAD descriptor names identify the authored surfaces. Carry the finish
         // through any unnamed mesh children inserted by the USDZ importer.
         let finish = finishByNodeID[entity.name] ?? inheritedFinish
-        let band = finishByNodeID[entity.name] != nil
-            ? display.woodNeutralBands.first(where: { $0.nodeID == entity.name }) : inheritedBand
         if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
             let material: any RealityKit.Material
             switch finish {
-            case .wood:
-                if let band, var wood = Self.woodMaterial as? CustomMaterial {
-                    wood.custom.value = SIMD4<Float>(Float(band.xRange[0]), Float(band.xRange[1]),
-                                                    Float(band.maxZ), 1)
-                    material = wood
-                } else {
-                    material = Self.woodMaterial
-                }
+            case .wood: material = Self.woodMaterial
             case .plastic: material = Self.plasticMaterial
             case .neutral: material = Self.neutralMaterial()
             }
@@ -297,7 +287,7 @@ final class BoardModelRealityScene {
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyBoardMaterials(to: child, inheritedFinish: finish, inheritedBand: band)
+            applyBoardMaterials(to: child, inheritedFinish: finish)
         }
     }
 

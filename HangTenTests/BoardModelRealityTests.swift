@@ -201,15 +201,13 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testMixedOakBoardColorsWoodInteriorsAndRestoresGraniteBands() async throws {
+    func testStoakWholeBoardWoodFinishRestoresEveryContact() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stoak-board-iii"))
         let scene = try await BoardModelRealityLoader.load(board: board,
                                                           presentation: board.defaultPresentation)
-        let expectedBands: [String: SIMD4<Float>] = [
-            "lower-composite-left": SIMD4(-0.3, -0.18, 0.029, 1),
-            "lower-composite-right": SIMD4(0.18, 0.3, 0.029, 1),
-            "lower-composite-center": SIMD4(-0.06, 0.06, 0.042, 1)
-        ]
+        XCTAssertEqual(scene.displayForTesting.surfaceFinish, .wood)
+        XCTAssertTrue(scene.displayForTesting.woodNodeIDs.isEmpty,
+                      "Wood coverage must not depend on enumerating each mesh")
         for id in ["edge-22-center", "gradient-edge-left", "gradient-edge-right", "top-jug",
                    "lower-composite-left", "lower-composite-right", "lower-composite-center"] {
             let entities = try XCTUnwrap(scene.contactEntities[id])
@@ -217,7 +215,7 @@ final class BoardModelRealityTests: XCTestCase {
             for entity in entities {
                 let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
                                              "Wood interiors must not remain gray: \(id)")
-                XCTAssertEqual(material.custom.value, expectedBands[id] ?? .zero)
+                XCTAssertEqual(material.custom.value, .zero)
             }
             for mode: BoardHighlightMode in [.active, .preview] {
                 scene.highlight([id], mode: mode)
@@ -227,8 +225,48 @@ final class BoardModelRealityTests: XCTestCase {
                 scene.highlight([], mode: mode)
                 for entity in entities {
                     let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
-                    XCTAssertEqual(restored.custom.value, expectedBands[id] ?? .zero)
+                    XCTAssertEqual(restored.custom.value, .zero)
                 }
+            }
+        }
+    }
+
+    @MainActor
+    func testBoardFinishCoversUnlistedMeshWhileAttachmentsStayNeutral() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model required") }
+        let bodyNode = try XCTUnwrap(media.descriptor.nodes.first(where: { $0.role == .body }))
+        let loadedSource = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: media.descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live
+        )
+        let source = try XCTUnwrap(loadedSource)
+        for attachment in [false, true] {
+            var nodes = media.descriptor.nodes.filter { $0.nodeID != bodyNode.nodeID }
+            if attachment {
+                nodes.append(BoardModelNodeDescriptor(nodeID: bodyNode.nodeID, role: .attachment, contactID: nil))
+            }
+            let descriptor = BoardModelDescriptor(
+                schemaVersion: media.descriptor.schemaVersion,
+                coordinateFrame: media.descriptor.coordinateFrame,
+                modelSHA256: media.descriptor.modelSHA256, modelBounds: media.descriptor.modelBounds,
+                nodes: nodes, contacts: media.descriptor.contacts
+            )
+            let scene = BoardModelRealityScene(
+                descriptor: descriptor, display: BoardModelDisplay(camera: media.display.camera, surfaceFinish: .wood),
+                suspension: nil, orientation: nil, allowedPositionIDs: [], resourceLease: source.resourceLease
+            )
+            try await scene.load(usdzURL: source.resourceLease.url)
+            let entity = try XCTUnwrap(scene.root.findEntity(named: bodyNode.nodeID) as? ModelEntity)
+            if attachment {
+                XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial,
+                              "Attachments must override the board finish")
+            } else {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "A newly imported mesh must inherit wood without another node selection")
             }
         }
     }
@@ -265,6 +303,49 @@ final class BoardModelRealityTests: XCTestCase {
                 XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
             }
         }
+    }
+
+    @MainActor
+    func testCatalogBoardFinishesCoverEveryImportedBodyAndHoldMesh() async throws {
+        var boardsChecked = 0
+        var meshesChecked = 0
+        for board in BoardCatalog.packageStore.boards {
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media,
+                      media.display.surfaceFinish != .neutral else { continue }
+                let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+                let attachmentIDs = Set(media.descriptor.nodes.filter { $0.role == .attachment }.map(\.nodeID))
+                let surfaceIDs = Set(media.descriptor.nodes.filter { $0.role != .attachment }.map(\.nodeID))
+                func check(_ entity: Entity, attachment: Bool = false) throws {
+                    let isAttachment = attachmentIDs.contains(entity.name) ? true
+                        : surfaceIDs.contains(entity.name) ? false : attachment
+                    if let model = (entity as? ModelEntity)?.model {
+                        if isAttachment {
+                            XCTAssertTrue(model.materials.first is PhysicallyBasedMaterial, board.id)
+                        } else {
+                            let material = try XCTUnwrap(model.materials.first as? CustomMaterial,
+                                                         "Unfinished mesh: \(board.id)/\(entity.name)")
+                            let tint = UIColor(cgColor: material.baseColor.__tint)
+                            var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+                            XCTAssertTrue(tint.getRed(&r, green: &g, blue: &b, alpha: &a))
+                            if media.display.surfaceFinish == .wood {
+                                XCTAssertGreaterThan(r, g, board.id)
+                                XCTAssertGreaterThan(g, b, board.id)
+                            } else {
+                                XCTAssertGreaterThan(g, r, board.id)
+                                XCTAssertGreaterThan(b, r, board.id)
+                            }
+                            meshesChecked += 1
+                        }
+                    }
+                    for child in entity.children { try check(child, attachment: isAttachment) }
+                }
+                try check(scene.root)
+                boardsChecked += 1
+            }
+        }
+        XCTAssertGreaterThan(boardsChecked, 0)
+        XCTAssertGreaterThan(meshesChecked, boardsChecked)
     }
 
     @MainActor

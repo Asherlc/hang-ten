@@ -930,18 +930,6 @@ struct BoardPackageStore {
                         reason: "display.woodNodeIDs and plasticNodeIDs must be disjoint"
                     )
                 }
-                let bandNodes = displayDocument.woodNeutralBands.map(\.nodeID)
-                guard Set(bandNodes).count == bandNodes.count,
-                      Set(bandNodes).isSubset(of: woodNodes),
-                      displayDocument.woodNeutralBands.allSatisfy({
-                          $0.xRange.count == 2 && $0.xRange.allSatisfy(\.isFinite)
-                              && $0.xRange[0] < $0.xRange[1] && $0.maxZ.isFinite
-                              && $0.xRange.allSatisfy({ Float($0).isFinite }) && Float($0.maxZ).isFinite
-                      }) else {
-                    throw BoardPackageStoreError.invalidPackage(
-                        boardID: document.id, reason: "display.woodNeutralBands must name unique wood nodes with finite increasing bounds"
-                    )
-                }
                 let suspension = try suspensionDocument.map {
                     try makeModelSuspension(
                         $0,
@@ -972,9 +960,9 @@ struct BoardPackageStore {
                                 distanceMultiplier: camera.distanceMultiplier,
                                 boundsExpansionFactor: camera.boundsExpansionFactor
                             ),
+                            surfaceFinish: displayDocument.surfaceFinish,
                             woodNodeIDs: displayDocument.woodNodeIDs,
-                            plasticNodeIDs: displayDocument.plasticNodeIDs,
-                            woodNeutralBands: displayDocument.woodNeutralBands
+                            plasticNodeIDs: displayDocument.plasticNodeIDs
                         ),
                         suspension: suspension,
                         orientation: orientation,
@@ -3338,36 +3326,24 @@ struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
     }
 }
 
-extension BoardWoodNeutralBand: Decodable {
-    private enum CodingKeys: String, CodingKey { case nodeID, xRange, maxZ }
-
-    init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["nodeID", "xRange", "maxZ"])
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        nodeID = try container.decode(String.self, forKey: .nodeID)
-        xRange = try container.decode([Double].self, forKey: .xRange)
-        maxZ = try container.decode(Double.self, forKey: .maxZ)
-    }
-}
-
 struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
+    let surfaceFinish: BoardSurfaceFinish
     let woodNodeIDs: [String]
     let plasticNodeIDs: [String]
-    let woodNeutralBands: [BoardWoodNeutralBand]
 
-    private enum CodingKeys: String, CodingKey { case camera, woodNodeIDs, plasticNodeIDs, woodNeutralBands }
+    private enum CodingKeys: String, CodingKey { case camera, surfaceFinish, woodNodeIDs, plasticNodeIDs }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["camera", "woodNodeIDs", "plasticNodeIDs", "woodNeutralBands"])
+        try decoder.rejectUnknownKeys(["camera", "surfaceFinish", "woodNodeIDs", "plasticNodeIDs"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         camera = try container.decode(BoardPackageModelCameraDocument.self, forKey: .camera)
+        surfaceFinish = container.contains(.surfaceFinish)
+            ? try container.decode(BoardSurfaceFinish.self, forKey: .surfaceFinish) : .neutral
         woodNodeIDs = container.contains(.woodNodeIDs)
             ? try container.decode([String].self, forKey: .woodNodeIDs) : []
         plasticNodeIDs = container.contains(.plasticNodeIDs)
             ? try container.decode([String].self, forKey: .plasticNodeIDs) : []
-        woodNeutralBands = container.contains(.woodNeutralBands)
-            ? try container.decode([BoardWoodNeutralBand].self, forKey: .woodNeutralBands) : []
     }
 }
 

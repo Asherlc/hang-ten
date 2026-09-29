@@ -5,13 +5,15 @@ lilac and yellow visual concepts. Mint is an artistic app display color, not
 a claim about a manufacturer colorway. The molded-surface cue is a subtle
 non-directional procedural stipple; it has no wood bands or image texture.
 
-The native manifests select exact body/contact descriptor nodes through
-`media.display.plasticNodeIDs`. Attachments, cords and unselected stone surfaces
-retain their existing appearance. `woodNodeIDs` and `plasticNodeIDs` must be
-unique, known, nonattachment and disjoint. Missing selectors retain neutral PBR.
-The renderer contains no product IDs. Both selectors propagate through unnamed
-imported mesh children and the full baseline is restored after active or preview
-highlighting. A mint matte PBR fallback handles unavailable custom shaders.
+Each native manifest chooses `media.display.surfaceFinish: "plastic"` once for
+the whole board. Every body/hold mesh, including complete recesses and new
+importer children, inherits the mint finish. Attachments and cords retain their
+independent appearance. Legacy whole-node selectors remain supported for
+explicit overrides, but native packages no longer enumerate every mesh.
+Missing board finishes retain the legacy neutral default; all native catalog
+sources now author a choice. The renderer contains no product IDs or per-pocket
+coordinate cutoffs. Clearing active or preview highlights restores the complete
+baseline. A mint matte PBR fallback handles unavailable custom shaders.
 
 USDZs remain unbound and material-free. Only the embedded manifest property
 changes in each FCStd; all other archive members, geometry, descriptor and cord
@@ -23,8 +25,7 @@ metadata remain unchanged. Native metadata is updated with
 Reviewed 2026-09-29. The following existing package identities and retained
 manufacturer evidence govern material grouping. The sources support the
 manufactured plastic/resin category, not the chosen mint color or exact physical
-surface roughness. Exact nodes come from each package's current CAD descriptor;
-all body/contact nodes receive the finish, attachment-role nodes are excluded.
+surface roughness. The board-level finish covers all body/contact nodes; attachment-role nodes are excluded.
 
 | CAD package | Manufacturer evidence | Retained material grouping |
 | --- | --- | --- |
@@ -48,7 +49,8 @@ manufactured-surface classification; no specific polymer chemistry is asserted.
 
 ## Validation
 
-Package tests cover explicit selectors, invalid values and conflicting finishes.
-iOS tests cover package decoding, selector rejection, plastic highlight/restore,
-wood highlight/restore and mixed wood/granite surfaces. Review app-rendered mint
-boards at detail and thumbnail size on a workspace-owned simulator.
+Package tests cover board-level finish decoding, invalid values, legacy selector
+conflicts and finish coverage across every native CAD source. iOS tests load all
+opted-in catalog models and check every imported body/hold mesh. Review actual
+mint boards at detail and thumbnail size before checking highlight restoration;
+material-type assertions alone do not establish visual correctness.

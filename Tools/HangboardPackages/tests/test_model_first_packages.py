@@ -1395,33 +1395,45 @@ def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> N
         load_board_package(package)
 
 
-def test_model_display_preserves_neutral_bands_inside_wood_contacts(tmp_path: Path) -> None:
-    package = write_v3_model_package(tmp_path / "mixed-contact", contacts=("edge",), body_nodes=("body",))
+def test_model_display_surface_finish_applies_without_node_inventory(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "board-finish", contacts=("edge",), body_nodes=("body", "new-body"))
     document = json.loads((package / "board.json").read_text())
     display = document["presentations"][0]["media"]["display"]
-    display["woodNodeIDs"] = ["edge-node"]
-    display["woodNeutralBands"] = [{"nodeID": "edge-node", "xRange": [-0.3, -0.18], "maxZ": 0.029}]
+    display["surfaceFinish"] = "wood"
     (package / "board.json").write_text(json.dumps(document))
     board = load_board_package(package).board
-    band = board.presentations[0].media.display["woodNeutralBands"][0]
-    assert band["nodeID"] == "edge-node"
-    assert band["xRange"] == (-0.3, -0.18)
-    assert band["maxZ"] == 0.029
+    assert board.presentations[0].media.display["surfaceFinish"] == "wood"
 
 
-@pytest.mark.parametrize("bands", [None, {},
-    [{"nodeID": "body", "xRange": [0, 1], "maxZ": 0.02}],
-    [{"nodeID": "edge-node", "xRange": [1, 0], "maxZ": 0.02}],
-    [{"nodeID": "edge-node", "xRange": [0], "maxZ": 0.02}],
-    [{"nodeID": "edge-node", "xRange": [0, 1], "maxZ": float("inf")}],
-    [{"nodeID": "edge-node", "xRange": [0, 1], "maxZ": 0.02}] * 2,
-])
-def test_model_display_rejects_invalid_neutral_bands(tmp_path: Path, bands) -> None:
-    package = write_v3_model_package(tmp_path / "mixed-contact", contacts=("edge",), body_nodes=("body",))
+@pytest.mark.parametrize("finish", [None, "unknown", "", 1, [], {}])
+def test_model_display_rejects_invalid_board_finish(tmp_path: Path, finish) -> None:
+    package = write_v3_model_package(tmp_path / "board-finish", contacts=("edge",), body_nodes=("body",))
     document = json.loads((package / "board.json").read_text())
-    display = document["presentations"][0]["media"]["display"]
-    display["woodNodeIDs"] = ["edge-node"]
-    display["woodNeutralBands"] = bands
+    document["presentations"][0]["media"]["display"]["surfaceFinish"] = finish
     (package / "board.json").write_text(json.dumps(document))
-    with pytest.raises(ValueError, match="woodNeutralBands"):
+    with pytest.raises(ValueError, match="surfaceFinish"):
+        load_board_package(package)
+
+
+def test_every_native_cad_board_authors_a_complete_board_finish() -> None:
+    from hangboard_packages import cad_source
+    root = Path(__file__).resolve().parents[3] / "Hangboards"
+    sources = sorted(root.glob("*/*.FCStd"))
+    assert sources
+    for source in sources:
+        board = cad_source.load_board(source)
+        for presentation in board["presentations"]:
+            display = presentation["media"]["display"]
+            assert display.get("surfaceFinish") in {"wood", "plastic", "neutral"}, source
+            assert "woodNeutralBands" not in display, source
+
+
+def test_model_display_rejects_invented_per_surface_bands(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "unsupported-cut", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["woodNeutralBands"] = [
+        {"nodeID": "edge-node", "xRange": [-0.3, -0.18], "maxZ": 0.029}
+    ]
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="unknown keys"):
         load_board_package(package)
