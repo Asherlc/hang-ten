@@ -196,7 +196,7 @@
 		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
 		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
 		JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
-		D10000000000000000000031 /* yy-verticalboard-first Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000031 /* yy-verticalboard-first Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-first", ); }; };
+		D10000000000000000000034 /* yy-verticalboard-first Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000034 /* yy-verticalboard-first Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-first", ); }; };
 		D10000000000000000000032 /* yy-verticalboard-light Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000032 /* yy-verticalboard-light Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-light", ); }; };
 		D10000000000000000000033 /* yy-verticalboard-one Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000033 /* yy-verticalboard-one Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-one", ); }; };
 /* End PBXBuildFile section */
@@ -410,7 +410,7 @@
 		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
 		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTen/Models/DeepLinkManager.swift; sourceTree = "<group>"; };
 		JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
-		D20000000000000000000031 /* yy-verticalboard-first Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-first Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-first/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000034 /* yy-verticalboard-first Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-first Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-first/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000032 /* yy-verticalboard-light Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-light Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-light/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000033 /* yy-verticalboard-one Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-one Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-one/Hangboards"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -488,7 +488,7 @@
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
 				D20000000000000000000033 /* yy-verticalboard-one Hangboards */,
 				D20000000000000000000032 /* yy-verticalboard-light Hangboards */,
-				D20000000000000000000031 /* yy-verticalboard-first Hangboards */,
+				D20000000000000000000034 /* yy-verticalboard-first Hangboards */,
 				D20000000000000000000022 /* zlagboard-evo Hangboards */,
 				JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */,
 				D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */,
@@ -845,7 +845,7 @@
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
 				D10000000000000000000033 /* yy-verticalboard-one Hangboards in Resources */,
 				D10000000000000000000032 /* yy-verticalboard-light Hangboards in Resources */,
-				D10000000000000000000031 /* yy-verticalboard-first Hangboards in Resources */,
+				D10000000000000000000034 /* yy-verticalboard-first Hangboards in Resources */,
 				D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */,
 				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */,

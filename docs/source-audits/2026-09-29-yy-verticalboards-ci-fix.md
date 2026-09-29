@@ -59,3 +59,16 @@ successfully with exit zero. Logs and result bundles are retained as
 `.context/supreme-zebra-cad-validation/main-integration-*`.
 The isolated simulator was deleted, ownership manifests consumed, and
 DerivedData removed; deletion was verified.
+
+## Distinct ODR project registrations
+
+Post-merge review identified that Whetstone and VerticalBoard First both used
+the `D100...31` build-file and `D200...31` file-reference identifiers. First now
+uses the unused `...34` pair consistently in both definitions, its group entry,
+and its Resources phase entry; Whetstone retains `...31`.
+
+The existing ODR inventory test now rejects duplicate project object
+definitions. It failed against the colliding identifiers before the fix.
+All 29 package-staging tests passed after the fix. `plutil` validation and
+`xcodebuild -list` passed; the parsed project confirms distinct file references,
+resource-phase membership, paths, and ODR tags for both packages.

@@ -8,6 +8,7 @@ import re
 import shutil
 import stat
 import sys
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -736,6 +737,16 @@ def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
     project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )
+    # Duplicate definitions are silently collapsed by plist readers, even when
+    # every ODR tag appears in the source text. Each resource needs its own object.
+    object_ids = re.findall(
+        r"^\t\t([A-Z0-9]{24})(?: /\*.*?\*/)? = \{", project, re.MULTILINE
+    )
+    assert object_ids
+    duplicate_ids = sorted(
+        identifier for identifier, count in Counter(object_ids).items() if count > 1
+    )
+    assert not duplicate_ids, f"Duplicate Xcode object identifiers: {duplicate_ids}"
     parser_module = load_staging_module().load_board_package_module(REPO_ROOT)
     inventory = parser_module.discover_board_packages(
         REPO_ROOT / "Hangboards",
