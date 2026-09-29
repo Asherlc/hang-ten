@@ -13,12 +13,20 @@ board. The runtime's convex-section fallback and hand-authored
 `pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
 packages; migrate a board's cord to this method when the board moves to CAD.
 
-Two boards use it:
+The following boards use it:
 
 | Board | Channel | Section plane | Notes |
 | --- | --- | --- | --- |
 | Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
 | Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
+| Clavellium Training Block | owner-confirmed straight rectangular `Part::Box` passages | `mouth-x`, `channelProfile=rectangular` | one central-channel loop; round-cord adaptation of a flat sling; grip-to-channel mapping unknown |
+
+One sling through one channel uses the same `twoBranchCord` wire type with
+one branch, its two mouths in `passages.left`, and an empty `passages.right`.
+This one-loop form is valid only with `internalLoop` and a complete generated
+route cache for every pose. It must not duplicate the physical sling to satisfy
+the older two-loop inventory. Existing exterior and uncached topologies still
+require two branches and four mouths.
 
 If a board's cord does not fit the solver's assumptions (below), extend the
 solver with evidence and tests rather than falling back to hand-authored
@@ -189,9 +197,16 @@ The current solver applies when all of these hold:
 
 **Channels.** A channel is either a curved `PartDesign::SubtractivePipe`
 (its Sketcher spine is measured) or a straight `Part::Cylinder` through-bore
-(its axis is measured). A through-bore's two mouths lie in the same section,
+(its axis is measured). A straight rectangular sling passage can be an editable
+`Part::Box` with an operator-selected `HangTenChannelAxis` of `x`, `y`, or `z`;
+the tool measures the transformed centerline between the actual mouths, not
+the cutter's overhang. A through-bore's two mouths lie in the same section,
 which the bore cuts in two; the solver bridges that gap to recover the
 exterior outline and reopens only the notch at the mouth it is solving.
+For a wide rectangular passage, explicitly select
+`ropeSolver.channelProfile=rectangular` with `mouth-x`: the solver joins matching
+parallel depth rims across the slot instead of circular morphological closing.
+Tapered, overlapping, or multiple section pieces are rejected for that method.
 
 **Section planes.** The sidecar's optional, authoring-only
 `ropeSolver.sectionPlane` chooses each mouth's plane. It is never merged into

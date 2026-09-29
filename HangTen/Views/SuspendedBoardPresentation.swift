@@ -661,7 +661,12 @@ enum SuspendedBoardPresentation {
         let transform = try modelTransform ?? boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
 
-        guard suspension.branches.count == 2,
+        let singleLoop = suspension.internalLoopClearance != nil && suspension.meshWrapClearance == nil && suspension.passages.right.isEmpty
+        let branchCount = singleLoop ? 1 : 2
+        guard suspension.branches.count == branchCount,
+              suspension.passages.left.count == 2,
+              singleLoop || suspension.passages.right.count == 2,
+              !singleLoop || pose.cordContactPoints != nil,
               suspension.anchor.visibility == "invisible",
               suspension.anchor.position.count == 3,
               suspension.anchor.position.allSatisfy(\.isFinite) else {
@@ -684,7 +689,7 @@ enum SuspendedBoardPresentation {
         guard pose.wrappedRoutes == nil || allPassages.allSatisfy({ !$0.isThroughBore }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        guard allPassages.count == 4,
+        guard allPassages.count == branchCount * 2,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
                   $0.entryPointInModel.count == 3 &&
@@ -720,8 +725,9 @@ enum SuspendedBoardPresentation {
         var branches: [SuspendedBranchSolution] = []
         var radii: [Float] = []
         let declaredPassageIDs = suspension.branches.flatMap(\.passageIDs)
-        guard declaredPassageIDs.count == 4,
+        guard declaredPassageIDs.count == branchCount * 2,
               Set(declaredPassageIDs).count == declaredPassageIDs.count,
+              Set(declaredPassageIDs) == Set(allPassages.map(\.id)),
               Set(suspension.branches.map(\.id)).count == suspension.branches.count else {
             throw SuspendedPresentationError.invalidSuspension
         }

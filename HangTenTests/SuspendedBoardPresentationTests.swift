@@ -4,6 +4,31 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
+    func testSingleCachedThreadedLoopHasTwoSpansWithoutADuplicateLoop() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .twoBranchCord(let original) = media.suspension else {
+            return XCTFail("expected connected-loop fixture")
+        }
+        var pose = try XCTUnwrap(original.canonicalPoses["edge-20"])
+        let ids = Set(original.passages.left.map(\.id))
+        pose.cordContactPoints = pose.cordContactPoints?.filter { ids.contains($0.key) }
+        let profile = BoardModelTwoBranchSuspension(
+            passages: .init(left: original.passages.left, right: []),
+            branches: [original.branches[0]], anchor: original.anchor,
+            canonicalPoses: ["edge-20": pose],
+            internalLoopClearance: original.internalLoopClearance,
+            internalLoopWindingByPassageID: original.internalLoopWindingByPassageID?.filter { ids.contains($0.key) },
+            internalLoopChannelLengthByBranchID: original.internalLoopChannelLengthByBranchID?.filter { $0.key == original.branches[0].id })
+        let solved = try SuspendedBoardPresentation.solve(
+            pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
+        XCTAssertEqual(solved.branches.count, 1)
+        XCTAssertEqual(solved.branches[0].spans.count, 2)
+        pose.cordContactPoints = nil
+        XCTAssertThrowsError(try SuspendedBoardPresentation.solve(
+            pose: pose, suspension: profile, bounds: media.descriptor.modelBounds))
+    }
+
     func testMiniBarInternalLoopSolvesFourLeadsForEveryGripPose() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
         guard case .model(let media) = board.defaultPresentation.media,

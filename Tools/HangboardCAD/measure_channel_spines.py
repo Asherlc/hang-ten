@@ -57,6 +57,21 @@ def cylinder_axis_samples(feature):
     return [start.add(end.sub(start).multiply(i / (count - 1))) for i in range(count)]
 
 
+def box_axis_samples(feature):
+    """Operator-selected axis of a straight rectangular sling passage."""
+    axis = getattr(feature, "HangTenChannelAxis", "")
+    if axis not in ("x", "y", "z"):
+        raise ValueError(f"{feature.Name} must declare HangTenChannelAxis x, y or z")
+    dimensions = [float(feature.Length), float(feature.Width), float(feature.Height)]
+    first = [length / 2 for length in dimensions]
+    second = first.copy()
+    index = "xyz".index(axis)
+    first[index] = 0
+    second[index] = dimensions[index]
+    return [feature.Placement.multVec(App.Vector(*first)),
+            feature.Placement.multVec(App.Vector(*second))]
+
+
 def channel_samples(feature, name):
     if feature is None:
         raise ValueError(f"{name} is missing")
@@ -64,7 +79,9 @@ def channel_samples(feature, name):
         return spine_samples(feature.Spine[0])
     if feature.TypeId == "Part::Cylinder":
         return cylinder_axis_samples(feature)
-    raise ValueError(f"{name} is neither a SubtractivePipe nor a Part::Cylinder channel")
+    if feature.TypeId == "Part::Box":
+        return box_axis_samples(feature)
+    raise ValueError(f"{name} is not a pipe, cylinder or axis-tagged rectangular channel")
 
 
 def station_on_spine(point, samples):

@@ -2038,9 +2038,11 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
+        let singleLoop = document.internalLoop != nil && document.meshWrap == nil && document.passages.right.isEmpty
+        let passagePairs = singleLoop ? [document.passages.left] : [document.passages.left, document.passages.right]
         guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
               document.passages.left.count == 2,
-              document.passages.right.count == 2 else {
+              singleLoop || document.passages.right.count == 2 else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
         }
         let passages = document.passages.left + document.passages.right
@@ -2071,12 +2073,12 @@ struct BoardPackageStore {
                   }),
                   [0, document.canonicalPoses.count].contains(
                       document.canonicalPoses.values.filter { $0.cordContactPoints != nil }.count),
+                  !singleLoop || (!document.canonicalPoses.isEmpty && document.canonicalPoses.values.allSatisfy({ $0.cordContactPoints != nil })),
                   document.canonicalPoses.values.allSatisfy({ pose in
                       pose.wrappedRoutes == nil && (pose.cordContactPoints == nil ||
                           Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
                   }),
-                  document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
-                  document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
+                  passagePairs.allSatisfy({ $0[0].entryPointInModel != $0[1].entryPointInModel }) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
             }
         }
@@ -2105,10 +2107,9 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage must declare a non-zero through-bore")
             }
         }
-        guard document.branches.count == 2,
+        guard document.branches.count == passagePairs.count,
               document.branches.allSatisfy({ $0.id.isBoardPackageIdentifier }),
-              document.branches[0].passageIDs == document.passages.left.map(\.id),
-              document.branches[1].passageIDs == document.passages.right.map(\.id),
+              zip(document.branches, passagePairs).allSatisfy({ $0.0.passageIDs == $0.1.map(\.id) }),
               Set(document.branches.map(\.id)).count == document.branches.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
         }

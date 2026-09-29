@@ -373,9 +373,11 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
     # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
     # never merged into board.json.
     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
-    if not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
-            or solver["sectionPlane"] not in ("mouth-x", "anchor"):
-        raise ManifestError("suspension.json ropeSolver must be {\"sectionPlane\": \"mouth-x\" | \"anchor\"}")
+    if not isinstance(solver, dict) or "sectionPlane" not in solver \
+            or set(solver) - {"sectionPlane", "channelProfile"} \
+            or solver["sectionPlane"] not in ("mouth-x", "anchor") \
+            or ("channelProfile" in solver and (solver["channelProfile"] != "rectangular" or solver["sectionPlane"] != "mouth-x")):
+        raise ManifestError("suspension.json ropeSolver requires mouth-x or anchor; rectangular channelProfile requires mouth-x")
     presentation_id = document["presentationID"]
     model_hash = document["modelSHA256"]
     if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \

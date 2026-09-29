@@ -598,6 +598,26 @@ final class BoardPackageStoreTests: XCTestCase {
         })
     }
 
+    func testStoreRejectsSingleLoopWithConflictingMeshWrapBeforeIndexingPassages() throws {
+        let root: [Any] = ["presentations", 0, "media", "suspension"]
+        let fixture = try makeSharedModelParserParityFixtureBundle([
+            "base": "twoBranchModel",
+            "mutations": [
+                ["target": "board", "op": "replace", "path": root + ["passages", "right"], "value": []],
+                ["target": "board", "op": "replace", "path": root + ["meshWrap"], "value": ["clearance": 0.001]],
+                ["target": "board", "op": "replace", "path": root + ["internalLoop"], "value": [
+                    "clearance": 0.001, "windingByPassageID": [:], "channelLengthByBranchID": [:]
+                ]]
+            ]
+        ])
+        defer { fixture.remove() }
+        XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle)) { error in
+            guard case .invalidPackage = error as? BoardPackageStoreError else {
+                return XCTFail("expected invalidPackage, got \(error)")
+            }
+        }
+    }
+
     func testSharedFixtureBuilderUsesDeclaredBaseDocument() throws {
         let fixture = try makeSharedModelParserParityFixtureBundle([
             "base": "twoBranchModel",
@@ -4297,7 +4317,7 @@ final class BoardPackageStoreTests: XCTestCase {
 
     private func serializedTwoBranchSuspension(
         _ suspension: [String: Any],
-        memberOrder: [String] = ["type", "passages", "branches", "anchor", "canonicalPoses"]
+        memberOrder: [String] = ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
     ) throws -> Data {
         var serializedValues: [String: Data] = [:]
         if let passages = suspension["passages"] as? [String: Any] {

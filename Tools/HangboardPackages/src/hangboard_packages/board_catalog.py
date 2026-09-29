@@ -630,7 +630,7 @@ class BoardModelPassage:
 @dataclass(frozen=True)
 class BoardModelPassagePairs:
     left: tuple[BoardModelPassage, BoardModelPassage]
-    right: tuple[BoardModelPassage, BoardModelPassage]
+    right: tuple[BoardModelPassage, ...]
 
 
 @dataclass(frozen=True)
@@ -649,7 +649,7 @@ class BoardModelCordBranch:
 @dataclass(frozen=True)
 class BoardModelTwoBranchSuspension:
     passages: BoardModelPassagePairs
-    branches: tuple[BoardModelCordBranch, BoardModelCordBranch]
+    branches: tuple[BoardModelCordBranch, ...]
     anchor: BoardModelInvisibleAnchor
     canonical_poses: Mapping[str, BoardModelCanonicalPose]
     mesh_wrap_clearance: float | None = None
@@ -811,11 +811,18 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         passages_payload = _mapping(payload["passages"], passages_source)
         _closed(passages_payload, {"left", "right"}, passages_source)
         _canonical_member_order(passages_payload, ("left", "right"), passages_source)
-        parsed_pairs: dict[str, tuple[BoardModelPassage, BoardModelPassage]] = {}
+        # One sling through one CAD channel has two visible legs, not two
+        # separate loops. Retain the wire type and restrict its one-loop form
+        # to connected mouths with a complete native-solid route cache.
+        single_loop = "internalLoop" in payload and passages_payload["right"] == []
+        parsed_pairs: dict[str, tuple[BoardModelPassage, ...]] = {}
         all_passage_ids: set[str] = set()
         for side in ("left", "right"):
             side_source = f"{passages_source}.{side}"
             raw_passages = passages_payload[side]
+            if side == "right" and single_loop:
+                parsed_pairs[side] = ()
+                continue
             if not isinstance(raw_passages, list) or len(raw_passages) != 2:
                 raise ValueError(f"{side_source} must contain exactly two passages")
             passages: list[BoardModelPassage] = []
@@ -896,8 +903,9 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
         branches_source = f"{source}.branches"
         raw_branches = payload["branches"]
-        if not isinstance(raw_branches, list) or len(raw_branches) != 2:
-            raise ValueError(f"{branches_source} must contain exactly two branches")
+        if not isinstance(raw_branches, list) or len(raw_branches) != (1 if single_loop else 2):
+            required = "exactly one branch" if single_loop else "exactly two branches"
+            raise ValueError(f"{branches_source} must contain {required}")
         branches: list[BoardModelCordBranch] = []
         expected_pairs = (
             tuple(passage.id for passage in passage_pairs.left),
@@ -966,14 +974,14 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
         )
         if internal_loop_clearance is not None:
             cached_count = sum(pose.cord_contact_points is not None for pose in poses.values())
-            if cached_count not in (0, len(poses)) or any(
+            if (single_loop and (not poses or cached_count != len(poses))) or cached_count not in (0, len(poses)) or any(
                 pose.cord_contact_points is not None and set(pose.cord_contact_points) != all_passage_ids
                 for pose in poses.values()
             ):
                 raise ValueError("internalLoop derived routes must cover every passage and pose")
         return BoardModelTwoBranchSuspension(
             passage_pairs,
-            (branches[0], branches[1]),
+            tuple(branches),
             _load_model_anchor(anchor_payload, anchor_source),
             poses,
             mesh_wrap_clearance,
@@ -2101,8 +2109,9 @@ def _validate_model_suspension(
             for side in (suspension.passages.left, suspension.passages.right)
             for passage in side
         )
-        if len(passages) != 4 or len({passage.id for passage in passages}) != 4:
-            raise ValueError("twoBranchCord suspension requires four distinct passages")
+        expected_count = 2 * len(suspension.branches)
+        if len(passages) != expected_count or len({passage.id for passage in passages}) != expected_count:
+            raise ValueError("twoBranchCord suspension requires distinct paired passages")
         if suspension.mesh_wrap_clearance is not None and any(
             side[0].point_in_model[0] == side[1].point_in_model[0]
             for side in (suspension.passages.left, suspension.passages.right)
@@ -2181,10 +2190,7 @@ def _validate_model_suspension(
                 ((attachment,), suspension.cord) for attachment in suspension.attachments
             )
             if isinstance(suspension, BoardModelPairedLeadCord)
-            else (
-                (suspension.passages.left, suspension.branches[0]),
-                (suspension.passages.right, suspension.branches[1]),
-            )
+            else tuple(zip((suspension.passages.left, suspension.passages.right), suspension.branches))
         )
         for branch_endpoints, branch_data in endpoints_by_branch:
             if isinstance(branch_data, BoardModelCord):
