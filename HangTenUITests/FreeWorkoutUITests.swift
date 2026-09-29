@@ -273,6 +273,14 @@ final class FreeWorkoutUITests: XCTestCase {
                 anyElement(app, "freeWorkout.guidedHang").waitForExistence(timeout: 10),
                 "Start Set should present guided hang"
             )
+            let pause = firstMatching(
+                in: app,
+                identifiers: ["freeWorkout.guidedHang.pause"],
+                labels: ["Pause"]
+            )
+            XCTAssertTrue(pause.waitForExistence(timeout: 5), "Guided hang should expose Pause")
+            pause.tap()
+
             let completeEarly = firstMatching(
                 in: app,
                 identifiers: ["freeWorkout.guidedHang.completeEarly"],
