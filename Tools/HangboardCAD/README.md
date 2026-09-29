@@ -387,6 +387,19 @@ spine; one loop of cord runs through both, and its routes are solved with
 It was re-authored from Crimptonite's product photographs; its provenance is
 in the delivery lock's `migratedPackages` entry.
 
+The Metolius Foundry is a native measured-profile source with a deliberately
+drawn, exactly symmetric front boundary and continuous side/top depth profiles.
+Ordered sections from the superseded display asset were only a qualitative
+station guide for the operator-authored macro profile; Metolius's front and
+depth images govern the topology and correct the reference's center-crown
+conflict. Its fully constrained Sketcher profiles feed native lofts, booleans
+and live semantic binders. The 578 x 216 mm published envelope, numbered hold
+inventory, and published 15 / 16 / 21 / 22 / 23 / 30 / 32 / 53 mm grip
+dimensions are frozen in the source manifest and semantic regions. Unpublished
+shell relief, aperture sizes, and jug/pinch display depths remain documented
+estimates. See
+[`docs/2026-09-28-metolius-foundry-cad-provenance.md`](../../docs/2026-09-28-metolius-foundry-cad-provenance.md).
+
 ## Surface normals
 
 By default the compiler clusters each vertex's incident triangles by crease
@@ -401,7 +414,8 @@ then shades smoothly, a tangent seam is continuous, and every edge that is not
 tangent stays crisp. The sign follows the triangle winding. It is opt-in so
 existing sources keep reproducing their committed bytes. `metolius-light-rail-2`,
 `moon-armstrong`, `nature-stoak-board-iii`, `dewoodstok-woodbord`,
-`the-hangboard` and `frictitious-megalith` set it.
+`the-hangboard`, `metolius-climbers-edge`, `frictitious-megalith` and
+`metolius-foundry` set it.
 
 ## Published depth deeper than the board
 
