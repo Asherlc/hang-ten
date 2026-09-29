@@ -1,5 +1,6 @@
 import XCTest
 import RealityKit
+import UIKit
 import simd
 @testable import HangTen
 
@@ -75,7 +76,7 @@ final class BoardModelRealityTests: XCTestCase {
 
     @MainActor
     func testPBRNeutralMaterialsApplied() async throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let presentation = board.defaultPresentation
         guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
@@ -223,6 +224,40 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testPlasticContactsHighlightAndRestoreMintMaterial() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let scene = try await BoardModelRealityLoader.load(board: board,
+                                                          presentation: board.defaultPresentation)
+        let contactID = try XCTUnwrap(scene.contactEntities.keys.sorted().first)
+        let entities = try XCTUnwrap(scene.contactEntities[contactID])
+        XCTAssertFalse(entities.isEmpty)
+        var baselineTints: [Entity: UIColor] = [:]
+        for entity in entities {
+            let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+                                         "Plastic contacts must receive the mint resin finish")
+            let tint = UIColor(cgColor: material.baseColor.__tint)
+            var red: CGFloat = 0, green: CGFloat = 0, blue: CGFloat = 0, alpha: CGFloat = 0
+            XCTAssertTrue(tint.getRed(&red, green: &green, blue: &blue, alpha: &alpha))
+            XCTAssertGreaterThan(green, red, "Plastic must use mint rather than the wood finish")
+            XCTAssertGreaterThan(blue, red)
+            baselineTints[entity] = tint
+        }
+        for mode: BoardHighlightMode in [.active, .preview] {
+            scene.highlight([contactID], mode: mode)
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial,
+                              "Selected plastic grips must use the solid highlight")
+            }
+            scene.highlight([], mode: mode)
+            for entity in entities {
+                let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+                                             "Clearing selection must restore the mint resin finish")
+                XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
+            }
+        }
+    }
+
+    @MainActor
     func testWoodContactsHighlightAndRestoreGrainMaterial() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "beastmaker-1000"))
         let scene = try await BoardModelRealityLoader.load(board: board,
@@ -252,7 +287,7 @@ final class BoardModelRealityTests: XCTestCase {
 
     @MainActor
     func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
         let scene = try await BoardModelRealityLoader.load(board: board,
                                                           presentation: board.defaultPresentation)
         let contactID = try XCTUnwrap(scene.contactEntities.keys.first)

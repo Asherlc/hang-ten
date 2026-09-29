@@ -912,12 +912,22 @@ struct BoardPackageStore {
                 )
                 let descriptor = loadedDescriptor.descriptor
                 let woodNodes = Set(displayDocument.woodNodeIDs)
+                let plasticNodes = Set(displayDocument.plasticNodeIDs)
                 let eligibleNodes = Set(descriptor.nodes.filter { $0.role != .attachment }.map(\.nodeID))
-                guard woodNodes.count == displayDocument.woodNodeIDs.count,
-                      woodNodes.isSubset(of: eligibleNodes) else {
+                for (field, nodes) in [("woodNodeIDs", displayDocument.woodNodeIDs),
+                                       ("plasticNodeIDs", displayDocument.plasticNodeIDs)] {
+                    guard Set(nodes).count == nodes.count,
+                          Set(nodes).isSubset(of: eligibleNodes) else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "display.\(field) must name unique body or contact descriptor nodes"
+                        )
+                    }
+                }
+                guard woodNodes.isDisjoint(with: plasticNodes) else {
                     throw BoardPackageStoreError.invalidPackage(
                         boardID: document.id,
-                        reason: "display.woodNodeIDs must name unique body or contact descriptor nodes"
+                        reason: "display.woodNodeIDs and plasticNodeIDs must be disjoint"
                     )
                 }
                 let suspension = try suspensionDocument.map {
@@ -950,7 +960,8 @@ struct BoardPackageStore {
                                 distanceMultiplier: camera.distanceMultiplier,
                                 boundsExpansionFactor: camera.boundsExpansionFactor
                             ),
-                            woodNodeIDs: displayDocument.woodNodeIDs
+                            woodNodeIDs: displayDocument.woodNodeIDs,
+                            plasticNodeIDs: displayDocument.plasticNodeIDs
                         ),
                         suspension: suspension,
                         orientation: orientation,
@@ -3317,15 +3328,18 @@ struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
 struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
     let woodNodeIDs: [String]
+    let plasticNodeIDs: [String]
 
-    private enum CodingKeys: String, CodingKey { case camera, woodNodeIDs }
+    private enum CodingKeys: String, CodingKey { case camera, woodNodeIDs, plasticNodeIDs }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["camera", "woodNodeIDs"])
+        try decoder.rejectUnknownKeys(["camera", "woodNodeIDs", "plasticNodeIDs"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         camera = try container.decode(BoardPackageModelCameraDocument.self, forKey: .camera)
         woodNodeIDs = container.contains(.woodNodeIDs)
             ? try container.decode([String].self, forKey: .woodNodeIDs) : []
+        plasticNodeIDs = container.contains(.plasticNodeIDs)
+            ? try container.decode([String].self, forKey: .plasticNodeIDs) : []
     }
 }
 

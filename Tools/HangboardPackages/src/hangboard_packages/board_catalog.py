@@ -1133,7 +1133,7 @@ def _load_model_suspension(value: Any, source: str) -> BoardModelSuspension:
 
 def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
     payload = _mapping(value, source)
-    _closed(payload, {"camera"}, source, optional={"woodNodeIDs"})
+    _closed(payload, {"camera"}, source, optional={"woodNodeIDs", "plasticNodeIDs"})
     camera_source = f"{source}.camera"
     camera = _mapping(payload["camera"], camera_source)
     _closed(camera, {"type", "viewDirection", "up", "fitPadding"}, camera_source)
@@ -1150,14 +1150,17 @@ def _load_model_display(value: Any, source: str) -> Mapping[str, Any]:
             "fitPadding": fit_padding,
         })
     }
-    if "woodNodeIDs" in payload:
-        raw_nodes = payload["woodNodeIDs"]
-        if not isinstance(raw_nodes, list):
-            raise ValueError(f"{source}.woodNodeIDs must be an array")
-        nodes = tuple(_string(node, f"{source}.woodNodeIDs") for node in raw_nodes)
-        if len(set(nodes)) != len(nodes):
-            raise ValueError(f"{source}.woodNodeIDs must contain unique node IDs")
-        result["woodNodeIDs"] = nodes
+    for field in ("woodNodeIDs", "plasticNodeIDs"):
+        if field in payload:
+            raw_nodes = payload[field]
+            if not isinstance(raw_nodes, list):
+                raise ValueError(f"{source}.{field} must be an array")
+            nodes = tuple(_string(node, f"{source}.{field}") for node in raw_nodes)
+            if len(set(nodes)) != len(nodes):
+                raise ValueError(f"{source}.{field} must contain unique node IDs")
+            result[field] = nodes
+    if set(result.get("woodNodeIDs", ())) & set(result.get("plasticNodeIDs", ())):
+        raise ValueError(f"{source} woodNodeIDs and plasticNodeIDs must be disjoint")
     return MappingProxyType(result)
 
 
@@ -2730,13 +2733,14 @@ def _validate_finished_shape(
             contacts=board.contacts,
             equipment_objects=frozenset(board.equipment_objects),
         )
-        wood_nodes = presentation.media.display.get("woodNodeIDs", ())
-        if wood_nodes:
-            descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")
-            eligible_nodes = {node["nodeID"] for node in descriptor["nodes"]
-                              if node["role"] in {"body", "contact"}}
-            if not set(wood_nodes) <= eligible_nodes:
-                raise ValueError("display.woodNodeIDs must name body or contact descriptor nodes")
+        for field in ("woodNodeIDs", "plasticNodeIDs"):
+            surface_nodes = presentation.media.display.get(field, ())
+            if surface_nodes:
+                descriptor = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+                eligible_nodes = {node["nodeID"] for node in descriptor["nodes"]
+                                  if node["role"] in {"body", "contact"}}
+                if not set(surface_nodes) <= eligible_nodes:
+                    raise ValueError(f"display.{field} must name body or contact descriptor nodes")
         _validate_model_orientation(
             presentation.media.orientation,
             board.positions,

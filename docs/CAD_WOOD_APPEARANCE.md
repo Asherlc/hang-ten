@@ -68,12 +68,12 @@ to `body_board_001`, `left_tapered_wood_edge_001`,
 `right_granite_edge_001` retain neutral PBR. Material selection follows these
 explicit authored node IDs, never contact names or pixel appearance.
 
-Packages without `display.woodNodeIDs` retain neutral PBR, including the molded Metolius boards,
-So iLL boards, Evolv Kilter, Escape Beta, Trango resin boards, and Clavellium's
-PETG block. New or revised products need explicit evidence-backed node selections in their
-package metadata. The renderer contains no board IDs or product-specific node
-mappings. Both package validators reject duplicate, unknown, or attachment node
-IDs; missing metadata defaults to the neutral finish.
+Packages may also declare `display.plasticNodeIDs` for the runtime mint plastic
+finish; see [CAD plastic appearance](CAD_PLASTIC_APPEARANCE.md). Nodes without
+either selector retain neutral PBR. The two lists must be disjoint. New or revised
+products need explicit evidence-backed node selections in their package metadata.
+The renderer contains no board IDs or product-specific node mappings. Both package
+validators reject duplicate, unknown, or attachment node IDs.
 
 ## Highlighting
 

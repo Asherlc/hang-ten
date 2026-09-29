@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "c09e40c7442970296f6f692800439f79b7408649bf83b07f8e4f6eabe059c4e8",
+  "sha256Manifest": "f222f9cd90203206149503fd1f61f6f471422f3decd64d35a7c1c2bce3574677",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "f9eda767ae652c0bf7d4a89ba8e175a69b77ad89afd79b25a03d84b16574d381",
+  "supersededSha256Manifest": "c09e40c7442970296f6f692800439f79b7408649bf83b07f8e4f6eabe059c4e8",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -108,7 +108,7 @@
     },
     "clavellium-training-block": {
       "source": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
-      "sourceSHA256": "071a3514b00625796f160a8d967500562c11328ba06b3d67a9d1c525c6563198",
+      "sourceSHA256": "c9cbd968d8d833071d0ea32b14bab15b89c96ca0f4dbde2a838c49e3d413e24a",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file",
       "referenceSHA256": "3516382e00321d5c831695e454e78b3185092f147ec46b1dbd2ac57b61413f5c",
       "assetSHA256": "f9061d9f9791f5c83d3ce82be67b1d2b4f9025799ba76b99acb7426d87569213",
@@ -118,7 +118,8 @@
       "nativeAppValidation": "pending isolated iOS Simulator review",
       "comparison": "native measured approximation; see provenance for two-way mesh comparison and front/side/top previews",
       "provenanceSidecar": "removed audit record",
-      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256"
+      "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "dewoodstok-woodbord": {
       "source": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",
@@ -138,7 +139,7 @@
     },
     "escape-beta-22": {
       "source": "Hangboards/escape-beta-22/escape-beta-22.FCStd",
-      "sourceSHA256": "2d3c4755a1868a83cde82c25f9b4a2965086f3a24ed5e613e66c802fd054912c",
+      "sourceSHA256": "d22d9f18f3d82625fe1cd7396b9044f18ac4adebace52f5409751508a4b57123",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; 22 stable contact IDs preserved; camera view direction adjusted 20 degrees downward",
       "referenceSHA256": "95c41baa291c134358fa47eb8a9981acabd35bfb2231e14fd7951a9d9a0b0be4",
       "assetSHA256": "014497a1d2a399d4aec12e7d0b97dcec22c0c6cf4cf43aa5d6cfba28cc407c23",
@@ -149,18 +150,20 @@
       "comparison": "reviewed against superseded asset in front, side and top views; deliberate native display approximation retains 22 contacts, open slots and end-wing taper but simplifies molded blends and front bands",
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "descriptor + FCStd locked; compiled USDZ pinned by descriptor modelSHA256",
-      "holdOutline": "CAD-authored mouth rectangles and upper/lower end-wing bands; left/right central crown and upper sloper partitioned at x=0"
+      "holdOutline": "CAD-authored mouth rectangles and upper/lower end-wing bands; left/right central crown and upper sloper partitioned at x=0",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "evolv-kilter-basic-long": {
       "source": "Hangboards/evolv-kilter-basic-long/evolv-kilter-basic-long.FCStd",
-      "sourceSHA256": "4f7565bd11a4ecf75080011958ba8679fc32093d16f2859fadf23a156ac109fc",
+      "sourceSHA256": "d0af66c18528220c2efc3facf796ea7a91cbe2f53ac11d6721abb89f41fe0723",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); the FCStd owns geometry and metadata",
       "sourceKind": "native-parametric-measured-profile",
       "nativeValidation": "compile reopen + published-depth gate passed (20 / 15 / 10 mm); verify_reproducible rebuilds byte-identically (asset 5727cb40d8f4f19f)",
       "comparison": "authored 2026-09-25 from the approved display asset: the vector (y,z) cross-section is extracted from the committed mesh and authored as a fully constrained Sketcher profile, with a contiguous edge run per hold capped at its published grip depth; holds/depths faithful, the sculpted reference surface simplified",
       "provenanceSidecar": "removed audit record",
       "assetSHA256": "5727cb40d8f4f19fdd28e02c07592010399ead07a8aa3f311911c241ef16d920",
-      "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641"
+      "descriptorSHA256": "68d4853393c8c4c39af33a082f78b65fa55848773f242cd4cdea53b0d3bb5641",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "j-bryant-ftg-32": {
       "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
@@ -277,7 +280,7 @@
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "ff17919c504af68c6cddfa4acb8d9d8d90d6646d26eba73fc4c94a54bc5f2417",
+      "sourceSHA256": "9f9a44cfa4f1eb00c06e6d9a28ef43e2355bc3b4f7b8446912d82883f620f7c3",
       "supersededSourceSHA256": "4603f9f27c5bc46a4ee8d1fc3204475d4c785a1943efe97c9c49bc386ab3ada6",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); manifest re-embedded unchanged after the 2026-09-25 vector re-authoring (generated board.json byte-identical)",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
@@ -288,7 +291,8 @@
       "nativeAppValidation": "not re-run for the 2026-09-25 vector source; the previous source passed (iPhone 17 Pro simulator, 8/8 contacts by deep link). Node IDs, slot IDs, modelBounds and the jug facePlaneAABB are unchanged; pocket facePlaneAABB moved by <= 0.0016 normalized",
       "comparison": "accepted deviation (2026-09-25 vector source): compare_exports two-way worst 20.999 mm (candidate->reference) / 10.000 mm (reference->candidate) vs 0.5 mm limit, from the deliberate jug change (photographed crown hump instead of the reference scoop). Tunnels <= 0.15 mm, pockets <= 0.91 mm (smooth loft between exact stations); every measured station fits the reference to 0.012 mm. See removed audit record",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contactSlot outline/facePlaneAABB/center",
-      "provenance": "removed audit record"
+      "provenance": "removed audit record",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "metolius-wood-grips-compact-ii": {
       "source": "Hangboards/metolius-wood-grips-compact-ii/metolius-wood-grips-compact-ii.FCStd",
@@ -357,7 +361,7 @@
     },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
-      "sourceSHA256": "662a6520907f6fbb080acb26182c325c0b5980477504ef2d1eaacd31b3abd453",
+      "sourceSHA256": "2cf155e6d02bc5c413bb98222b99f00611e6fd8aba61459d4c0e84f1b5eae106",
       "sourceKind": "faceted-import (HangTenSourceKind; compiled with --allow-faceted-import)",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source)",
       "assetSHA256": "87380f8cdccff35bffab093d8b9808abe7cc0f9cad95e3c5c1530ef3c79d3db1",
@@ -365,11 +369,12 @@
       "compiler": "Tools/HangboardCAD/compile_board.py",
       "provenanceSidecar": "authoring script committed at Tools/HangboardCAD/migration/author_soill_iron_palm_2.py (PR #478, last source change 54b4621)",
       "lockEntryNote": "2026-09-25: entry added when merging main 88c6f04 into the metolius-prime-rib branch; PR #478 committed this source without a migratedPackages entry. Hashes are read from the committed files; no native or app validation is claimed here.",
-      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256"
+      "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "soill-split-palm": {
       "source": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
-      "sourceSHA256": "6c9e3e425186bd139dc9efcd04a79239cc29ed53e0c5750d1c24b358215bdf3c",
+      "sourceSHA256": "a065dc8629dd8c7f25979c809772ce042c270f114bf393b7dbd460ae9800ad52",
       "sourceKind": "faceted-import (authored parametric/faceted hybrid; compiled with --allow-faceted-import)",
       "boardMetadata": "schema-v3 board.json generated at build time from HangTenBoardManifest; its model presentation uses the schema-v2 descriptor to instantiate one canonical right-half source twice, reflecting the left instance at runtime; all 14 contact IDs, names, kinds, factual depths, and product metadata are preserved, while left/right equipment ownership is made explicit for runtime instancing; instance translations use exact nine-decimal lexemes",
       "referenceSHA256": "36a8877dddbaeebf86f99c96592184075bd314d85f23b65417dc19c092c57bed (prior committed USDZ used only for before/after display and never as geometry input)",
@@ -381,11 +386,12 @@
       "comparison": "Re-authored directly from So iLL manufacturer evidence: product page https://soill.ca/products/split-palm; straight-on image https://cdn.shopify.com/s/files/1/0424/1145/products/split-palm-so-ill-white-12-01-so-ill-385627.jpg?v=1677258498 (SHA-256 377cf3307178b492aac924b7780d83fa884112165a4342549ab6b1b1254bb0bb); installed oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460618-1800x1200.jpg?v=1658522760 (SHA-256 4a88c665d4b8417ff6a899169b5bd21ab42a4ed60d6bc860faa4e166d7e78b5d); in-use oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460686-1800x1200.jpg?v=1658522760 (SHA-256 fb6f1a7288fea85803447f7917081ee47c5d18f48e72f8e857aeda8f18b07360). Published facts are the 419 x 279.4 x 98.4 mm per-piece envelope and 38.1/25.4/12.7/12.7 mm rail depths. Operator-selected display estimates are every Bezier control point, globe radius and exponent, the 12 mm pinch blend, 50-65.5 mm side fairing, 44 mm jug depth, and local relief/rounding. Three operator-supplied orthographic views (SHA-256 586534473004bf632098bcce5275ad5e32b792a57542539d17ec4bad6b68198f, 42f72675c7d38e1c12a8e44a72b39a84ddb5464fef0a6b874e459faaf59a5499, aa18ba39895ab7475f343329763304e1277000648e6961b7d926c383fe8485ab) were qualitative exact-revision checks. The silhouette was manually reviewed on a 2.3103 px/mm head-on grid at a 1-2 native-pixel control-line target; no registration, detection, fitting, tracing, segmentation, vectorization, or prior-mesh sampling was used. Geometry uses deliberate cubic Bezier/straight planforms and parametric superellipse globes; the small pinch is one continuous smooth procedural block. Fastener holes, screws, wordmark, materials, and textures are intentionally omitted from the display model.",
       "provenanceSidecar": "none (audit archive removed); provenance recorded here and in the PR",
       "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
-      "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes"
+      "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "soill-training-tiles": {
       "source": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
-      "sourceSHA256": "87296ca455240e185fc4486eef6fe2d6e126f55acded1431e354872946981cd7",
+      "sourceSHA256": "2495c02471398ee5c9062c80926d4d63fb401e5732c9fb2295eeac4b67f88236",
       "sourceKind": "faceted-import",
       "boardMetadata": "board.json generated at build time from HangTenBoardManifest; byte-identical to the former committed board.json; all 20 adapted contacts and factual fields unchanged",
       "referenceSHA256": "ba2f62a8c72d2a24f99465e855a21e2b38945969db6d6d2e33c0366608ac53cb",
@@ -396,7 +402,8 @@
       "nativeAppValidation": "passed (isolated iPhone 17 Pro simulator, iOS 26.5; focused native nearest-triangle picking and source-boundary tests, plus DEBUG board-detail screenshot with upper-sloper-outer-left highlighted and selected-hold card matching)",
       "comparison": "Complete triangle-coordinate multiset comparison against the prior committed USDZ and front/side/top previews; see the dated provenance sidecar",
       "provenanceSidecar": "removed audit record (one-off authoring script under .context/)",
-      "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ"
+      "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "target10a-linebreaker-base": {
       "source": "Hangboards/target10a-linebreaker-base/target10a-linebreaker-base.FCStd",
@@ -448,7 +455,7 @@
     },
     "trango-rock-prodigy-pivot": {
       "source": "Hangboards/trango-rock-prodigy-pivot/trango-rock-prodigy-pivot.FCStd",
-      "sourceSHA256": "dc37d005b0ddb19b7ca97b49957fb09e0b3e0aad0d44e011ed0edd47e6c8f651",
+      "sourceSHA256": "600a7b1661c2db5d24bd603ff2059914008d4012ddf194a1b5ad8bed61174c6f",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest; identical to the deleted hand-authored file except the eight instance translations 0.102000000 -> 0.132500000 (the re-authored half is 234 mm wide)",
       "referenceSHA256": "1549ef478ec19152b8d5340187aee0f0fb8581b1c3312575d62cc1395577832a",
       "assetSHA256": "027c17024235b0340e6513fbda000d081bc7d0d81e618ee75d9f3e5516cae746",
@@ -459,11 +466,12 @@
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: authored outlines for rail, pockets, ledge, medium-crimp strip and wing; front-view hulls for the crimp bands and teeth",
-      "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised"
+      "nativeAppValidation": "passed on the first revision, before the round-over and wing-face pass (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; upper-sloped-crimp-left (default), three-finger-pocket-left (deep link) and variable-edge-right (hold map, reflected half) confirmed via boardDetail.selectedHold.<contactID>); positions p2/p3/p5 not exercised",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "trango-rock-prodigy-training-center": {
       "source": "Hangboards/trango-rock-prodigy-training-center/trango-rock-prodigy-training-center.FCStd",
-      "sourceSHA256": "10b634a6f3ac880bfb1414605c36eec3a696e55ea339bd626a796ffa6fbf24d5",
+      "sourceSHA256": "6b4f6030fe4aa5a1b101b2923198662aa84b655046bb56134e249d20b36d742d",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; byte-identical to the removed hand-authored board.json",
       "referenceSHA256": "9b9fbeda3846f72bd671fdb0733f2ce39c69342c033933ce75653a67a060f105",
       "assetSHA256": "112adc6e53df504500b887b58ff1281c79984e32001cac6fe731b9ce031d754b",
@@ -474,7 +482,8 @@
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "Locked as descriptor + FCStd; board.json is generated at build time and the USDZ is hash-bound by the descriptor.",
       "holdOutline": "CAD-authored HangTenHoldOutline from each explicitly classified contact shell front-view hull.",
-      "nativeAppValidation": "Prior export: iPhone 17 Pro isolated simulator (iOS 26.5), signed Debug build, board-detail route rendered the model and highlighted the left deep middle-ring pocket. Final bore-removal export: signed Debug build succeeded but simctl launch stalled before the app process started, so no final-revision screenshot was obtained. Each owned simulator was deleted."
+      "nativeAppValidation": "Prior export: iPhone 17 Pro isolated simulator (iOS 26.5), signed Debug build, board-detail route rendered the model and highlighted the left deep middle-ring pocket. Final bore-removal export: signed Debug build succeeded but simctl launch stalled before the app process started, so no final-revision screenshot was obtained. Each owned simulator was deleted.",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "frictitious-doormount-pro-7": {
       "source": "Hangboards/frictitious-doormount-pro-7/frictitious-doormount-pro-7.FCStd",
@@ -542,7 +551,7 @@
     },
     "metolius-foundry": {
       "source": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
-      "sourceSHA256": "d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6",
+      "sourceSHA256": "6df596da2accbe9dbb11fffa920b51b179fa1222059cf3760721332e9fb08da8",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; all 18 contact IDs, 19 node IDs and their pairing unchanged; front presentation aspectRatio changed from the image-era value 2.6588197894316767 to the published 578 / 216 envelope ratio 2.675925925925926, and the already-published 53 mm sloper dimension is now an exact structured depth range",
       "referenceSHA256": "ea9c293327bc2d5125792b35d3c61fc01b8d6ed15d345440ad8afc0a51e41998",
       "assetSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
@@ -553,7 +562,8 @@
       "comparison": "operator-approved Metolius product photograph and numbered depth diagram govern identity, topology and the corrected twin-jug crown; one commerce oblique supports qualitative relief. Ordered cross-sections from the pre-migration display USDZ were only a qualitative station guide for a deliberately redrawn macro profile normalized to the published 578 x 216 mm envelope. The corrective passes manually reviewed opening centers on a 40 x 16 normalized grid, angled the side-pocket fan, and replaced the lumpy horizontal rail stack with one uninterrupted arched band whose narrow nose, two gentle shoulders and two steeper rear bevels run through the full height while remaining outside every cutter; front/side/top/oblique comparisons and the fine-grid audit are retained in docs/pr-screenshots/metolius-foundry. No quantitative fit/deviation claim, reference triangles or pixel-derived geometry are retained",
       "provenanceSidecar": "docs/2026-09-28-metolius-foundry-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
-      "holdOutline": "CAD-authored HangTenHoldOutline for the 13 recessed pocket/edge contacts, including the mirrored side-pocket angles; broad sloper, jug and pinch frames derive from their exported contact meshes"
+      "holdOutline": "CAD-authored HangTenHoldOutline for the 13 recessed pocket/edge contacts, including the mirrored side-pocket angles; broad sloper, jug and pinch frames derive from their exported contact meshes",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "frictitious-megalith": {
       "source": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
@@ -573,7 +583,7 @@
     },
     "metolius-project": {
       "source": "Hangboards/metolius-project/metolius-project.FCStd",
-      "sourceSHA256": "1d09434aebccc9e2facad80824fa8632fbfe14b92c0dce938a1812e263c6d72f",
+      "sourceSHA256": "4c68fee1ebd4bdb8014b1c102e5dcfe8313efa6974aec32d8bc74e6bdb81c048",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed fields, key order and numeric values match the deleted file; all 17 contact IDs, 18 node IDs and their pairing unchanged",
       "referenceSHA256": "ce5cdbaaf6fa6cea29d9a5634b7c8a579ca99d3b3c1189dbd4e19148aa1108bb",
       "assetSHA256": "060ba08fd0ea183f59166c34387004efbef8de247956f6e60ba72550ff11cec7",
@@ -584,7 +594,8 @@
       "comparison": "re-authored from the operator-approved Metolius product photo and numbered depth diagram; simplified analytic display geometry with unpublished section, thickness, radii and mouth chamfers labeled as display estimates; previous mesh used only for side-by-side visual review",
       "provenanceSidecar": "removed audit record",
       "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
-      "holdOutline": "CAD-authored HangTenHoldOutline for the 12 recessed pockets and edges"
+      "holdOutline": "CAD-authored HangTenHoldOutline for the 12 recessed pockets and edges",
+      "runtimeAppearance": "Package-authored display.plasticNodeIDs selects runtime mint matte plastic; geometry, USDZ, descriptor and other source metadata unchanged."
     },
     "crimptonite-helium-mobile": {
       "source": "Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd",
@@ -647,5 +658,6 @@
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
   "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
   "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest.",
-  "cadWoodAppearanceNote": "2026-09-29: 24 wooden/mixed-material CAD package manifests gained explicit display.woodNodeIDs for runtime-only matte wood grain; geometry, USDZs, descriptors, suspension metadata and contact facts are unchanged. The prior metadata digest is retained in supersededSha256Manifest."
+  "cadWoodAppearanceNote": "2026-09-29: 24 wooden/mixed-material CAD package manifests gained explicit display.woodNodeIDs for runtime-only matte wood grain; geometry, USDZs, descriptors, suspension metadata and contact facts are unchanged. The prior metadata digest is retained in supersededSha256Manifest.",
+  "cadPlasticAppearanceNote": "2026-09-29: eleven native plastic/resin CAD manifests declare body/contact plasticNodeIDs for the user-selected runtime mint finish. Mint is an app styling choice, not a manufacturer color assertion. USDZ remains material-free, geometry and source facts unchanged. Both validators require known, unique, nonattachment selectors disjoint from woodNodeIDs. See docs/CAD_PLASTIC_APPEARANCE.md."
 }

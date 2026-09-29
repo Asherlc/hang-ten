@@ -1363,3 +1363,33 @@ def test_model_display_rejects_invalid_wood_surface_selection(tmp_path: Path, no
     (package / "board.json").write_text(json.dumps(document))
     with pytest.raises(ValueError, match="woodNodeIDs"):
         load_board_package(package)
+
+
+def test_model_display_plastic_nodes_preserves_explicit_surface_selection(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "plastic-display", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["plasticNodeIDs"] = ["body", "edge-node"]
+    (package / "board.json").write_text(json.dumps(document))
+    board = load_board_package(package).board
+    assert board.presentations[0].media.display["plasticNodeIDs"] == ("body", "edge-node")
+
+
+@pytest.mark.parametrize("nodes", [["missing"], ["body", "body"], [""], "body", None])
+def test_model_display_rejects_invalid_plastic_surface_selection(tmp_path: Path, nodes) -> None:
+    package = write_v3_model_package(tmp_path / "plastic-display", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    document["presentations"][0]["media"]["display"]["plasticNodeIDs"] = nodes
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="plasticNodeIDs"):
+        load_board_package(package)
+
+
+def test_model_display_rejects_conflicting_surface_finishes(tmp_path: Path) -> None:
+    package = write_v3_model_package(tmp_path / "mixed-display", contacts=("edge",), body_nodes=("body",))
+    document = json.loads((package / "board.json").read_text())
+    display = document["presentations"][0]["media"]["display"]
+    display["woodNodeIDs"] = ["body"]
+    display["plasticNodeIDs"] = ["body", "edge-node"]
+    (package / "board.json").write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="disjoint"):
+        load_board_package(package)

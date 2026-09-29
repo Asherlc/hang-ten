@@ -174,7 +174,8 @@ final class BoardModelRealityScene {
     private(set) var transientCordEntity: Entity?
     private var contactIDByEntity: [Entity: String] = [:]
     private var baselineMaterials: [Entity: any RealityKit.Material] = [:]
-    private let woodByNodeID: [String: Bool]
+    private enum SurfaceFinish { case neutral, wood, plastic }
+    private let finishByNodeID: [String: SurfaceFinish]
 
     // Suspension/camera state
     private var suspension: BoardModelSuspension?
@@ -220,8 +221,10 @@ final class BoardModelRealityScene {
         self.instances = instances
         self.resourceLease = resourceLease
         let woodNodes = Set(display.woodNodeIDs)
-        self.woodByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
-            ($0.nodeID, woodNodes.contains($0.nodeID))
+        let plasticNodes = Set(display.plasticNodeIDs)
+        self.finishByNodeID = Dictionary(uniqueKeysWithValues: descriptor.nodes.map {
+            ($0.nodeID, woodNodes.contains($0.nodeID) ? .wood
+                : plasticNodes.contains($0.nodeID) ? .plastic : .neutral)
         })
     }
 
@@ -242,7 +245,7 @@ final class BoardModelRealityScene {
         }
 
         // Appearance is runtime-only; the bundled USDZ stays unbound. Capture
-        // each finish before highlighting so deselection restores wood grain.
+        // each finish before highlighting so deselection restores the authored finish.
         applyBoardMaterials(to: root)
 
         // Build contact entity mapping from descriptor
@@ -269,17 +272,22 @@ final class BoardModelRealityScene {
         }
     }
 
-    private func applyBoardMaterials(to entity: Entity, inheritedWood: Bool = false) {
+    private func applyBoardMaterials(to entity: Entity, inheritedFinish: SurfaceFinish = .neutral) {
         // CAD descriptor names identify the authored surfaces. Carry the finish
         // through any unnamed mesh children inserted by the USDZ importer.
-        let isWood = woodByNodeID[entity.name] ?? inheritedWood
+        let finish = finishByNodeID[entity.name] ?? inheritedFinish
         if let modelEntity = entity as? ModelEntity, modelEntity.model != nil {
-            let material: any RealityKit.Material = isWood ? Self.woodMaterial : Self.neutralMaterial()
+            let material: any RealityKit.Material
+            switch finish {
+            case .wood: material = Self.woodMaterial
+            case .plastic: material = Self.plasticMaterial
+            case .neutral: material = Self.neutralMaterial()
+            }
             modelEntity.model?.materials = [material]
             baselineMaterials[modelEntity] = material
         }
         for child in entity.children {
-            applyBoardMaterials(to: child, inheritedWood: isWood)
+            applyBoardMaterials(to: child, inheritedFinish: finish)
         }
     }
 
@@ -298,6 +306,26 @@ final class BoardModelRealityScene {
             print("[BoardModelRealityScene] Wood shader unavailable: \(error)")
             #endif
             // A warm matte fallback still identifies wood on unsupported devices.
+            return base
+        }
+    }()
+
+    private static let plasticMaterial: any RealityKit.Material = {
+        var base = PhysicallyBasedMaterial()
+        // Seafoam mint is the app's display palette, not a product color fact.
+        base.baseColor = .init(tint: UIColor(red: 123.0 / 255, green: 203.0 / 255,
+                                            blue: 178.0 / 255, alpha: 1))
+        base.roughness = .init(floatLiteral: 0.78)
+        base.metallic = .init(floatLiteral: 0)
+        guard let device = MTLCreateSystemDefaultDevice(),
+              let library = device.makeDefaultLibrary() else { return base }
+        do {
+            let shader = CustomMaterial.SurfaceShader(named: "boardPlasticSurfaceShader", in: library)
+            return try CustomMaterial(from: base, surfaceShader: shader)
+        } catch {
+            #if DEBUG
+            print("[BoardModelRealityScene] Plastic shader unavailable: \(error)")
+            #endif
             return base
         }
     }()

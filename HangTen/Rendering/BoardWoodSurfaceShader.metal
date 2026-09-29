@@ -26,3 +26,18 @@ void boardWoodSurfaceShader(realitykit::surface_parameters params) {
     params.surface().set_roughness(0.82h);
     params.surface().set_metallic(0.0h);
 }
+
+[[visible]]
+void boardPlasticSurfaceShader(realitykit::surface_parameters params) {
+    // Fine, non-directional molded-surface stippling in shared board space.
+    // Fade it below pixel size; the mint stays clean at thumbnail scale.
+    float3 phase = params.geometry().model_position() * 2500.0f;
+    float filter = 1.0f - smoothstep(0.5f, 3.0f, length(fwidth(phase)));
+    float stipple = sin(phase.x + sin(phase.y))
+                  * sin(phase.y + sin(phase.z))
+                  * sin(phase.z + sin(phase.x)) * filter;
+    half3 tint = half3(params.material_constants().base_color_tint());
+    params.surface().set_base_color(tint * half(1.0f + 0.008f * stipple));
+    params.surface().set_roughness(half(0.78f + 0.015f * stipple));
+    params.surface().set_metallic(0.0h);
+}
