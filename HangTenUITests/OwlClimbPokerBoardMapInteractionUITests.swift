@@ -296,8 +296,14 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let initialContactFrame = contact.frame
         let allContacts = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "boardModel.contact."))
         let canonicalFrames = contactFrames(allContacts)
-        map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
-            .press(forDuration: 0.1, thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
+        // DoorMount's short, wide model leaves an empty gap at the map's
+        // center. Begin its orbit on the surface point that was just picked,
+        // so RealityView receives the drag instead of the empty background.
+        let orbitStart = boardID == "frictitious.doormount-pro-7"
+            ? initialPoint
+            : map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
+        orbitStart.press(forDuration: 0.1,
+                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
         XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
