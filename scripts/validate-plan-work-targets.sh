@@ -25,6 +25,10 @@ validator = Draft202012Validator(schema)
 count = 0
 for block in catalog["blocks"]:
     for step in block["steps"]:
+        if step.get("phase") == "hang" and not any(
+            segment["kind"] == "work" for segment in step.get("segments", [])
+        ):
+            raise SystemExit(f"{block['id']}/{step['id']}: hang has no explicit work target")
         for index, segment in enumerate(step.get("segments", [])):
             if segment["kind"] != "work":
                 continue

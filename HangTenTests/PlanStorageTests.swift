@@ -3,6 +3,46 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testSourceExplicitOneArmPlansAndRPTCChoiceKeepTheirHandCounts() throws {
+        for planID in ["research.force-feedback-f100", "hoopers-beta.introductory-home-hangboard"] {
+            let plan = try XCTUnwrap(LegacyPlanSeedCatalog.all.first { $0.id == planID })
+            let singleArmSteps = plan.steps.filter {
+                planID == "research.force-feedback-f100"
+                    ? $0.id.hasPrefix("f100-set-")
+                    : $0.id.hasPrefix("hoopers-intro-round-2-set-") && $0.id.contains("-rep-")
+            }
+            XCTAssertEqual(singleArmSteps.count, planID == "research.force-feedback-f100" ? 24 : 30)
+            for step in singleArmSteps {
+                let task = try XCTUnwrap(step.segments.first?.target?.planTasks?.only)
+                XCTAssertEqual(task.count, 1, step.id)
+                XCTAssertEqual(task[0].side, step.id.hasSuffix("-left") ? .left : .right, step.id)
+            }
+        }
+
+        let rptc = try XCTUnwrap(
+            LegacyPlanSeedCatalog.all.first { $0.id == "rptc.seven-three-repeaters" }
+        )
+        for step in rptc.steps.prefix(7) {
+            let task = try XCTUnwrap(step.segments.first?.target?.planTasks?.only)
+            XCTAssertEqual(task.count, 2, step.id)
+            XCTAssertTrue(task.allSatisfy { $0.target == nil }, step.id)
+        }
+    }
+
+    func testMethodOffsetPullUpsUseJugAndSmallEdgeSimultaneously() throws {
+        let plan = try XCTUnwrap(
+            LegacyPlanSeedCatalog.all.first { $0.id == "method.intermediate-hangboarding.emom" }
+        )
+        let step = try XCTUnwrap(plan.steps.first { $0.id == "method-emom-minute-7" })
+        let work = step.segments.filter { $0.kind == .work }
+        XCTAssertEqual(work.count, 1)
+        let task = try XCTUnwrap(work.first?.target?.planTasks?.only)
+        XCTAssertEqual(task.count, 2)
+        XCTAssertEqual(task.map { $0.target?.kind }, [.jug, .edge])
+        XCTAssertEqual(work.first?.duration, 15)
+        XCTAssertEqual(step.segments.first { $0.kind == .rest }?.duration, 45)
+    }
+
     private func semanticTargets(_ step: WorkoutStep) -> [ContactRequirement] {
         let predicates = step.segments
             .filter { $0.kind == .work }

@@ -2097,7 +2097,8 @@ enum PlanTaskMigration {
         "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
         "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
         "metolius.simulator-3d.advanced.minute-9",
-        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8"
+        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8",
+        "method-emom-minute-7"
     ]
 
     private static let reversedOffsetSteps: Set<String> = [

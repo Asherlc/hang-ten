@@ -5670,14 +5670,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-1",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 1 of 7"
         }
       ],
@@ -5691,14 +5710,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-2",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 2 of 7"
         },
         {
@@ -5706,14 +5744,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-3",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 3 of 7"
         },
         {
@@ -5721,14 +5778,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-4",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 4 of 7"
         },
         {
@@ -5736,14 +5812,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-5",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 5 of 7"
         },
         {
@@ -5751,14 +5846,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 10,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-6",
           "instruction" : "Complete a 7-second two-handed dead hang on the grip you selected, then rest 3 seconds.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 3,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 6 of 7"
         },
         {
@@ -5766,14 +5880,33 @@
           "action" : "hang",
           "activeDuration" : 7,
           "duration" : 180,
-          "handUse" : "double",
           "id" : "rptc-repeaters-set-rep-7",
           "instruction" : "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout.",
           "phase" : "hang",
           "segments" : [
-
+            {
+              "duration" : 7,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : "any"
+                    },
+                    {
+                      "target" : "any"
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 173,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
           ],
-          "side" : "both",
           "title" : "RPTC repeater set · rep 7 of 7"
         },
         {
@@ -7793,15 +7926,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -7840,15 +7965,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -7886,15 +8003,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -7927,15 +8036,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -7973,15 +8074,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8014,15 +8107,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8060,15 +8145,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8101,15 +8178,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8147,15 +8216,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8188,15 +8249,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8234,15 +8287,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8275,15 +8320,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8321,15 +8358,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8362,15 +8391,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8408,15 +8429,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8449,15 +8462,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8495,15 +8500,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8536,15 +8533,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8582,15 +8571,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8623,15 +8604,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8669,15 +8642,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8710,15 +8675,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8756,15 +8713,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -8797,15 +8746,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 12,
-                          "minMM" : 12
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "maxMM" : 12,
@@ -17900,14 +17841,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -17940,14 +17874,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -17980,14 +17907,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18020,14 +17940,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18060,14 +17973,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18100,14 +18006,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18140,14 +18039,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18180,14 +18072,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18220,14 +18105,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18260,14 +18138,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18314,14 +18185,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18354,14 +18218,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18394,14 +18251,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18434,14 +18284,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18474,14 +18317,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18514,14 +18350,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18554,14 +18383,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18594,14 +18416,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18634,14 +18449,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18674,14 +18482,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18728,14 +18529,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18768,14 +18562,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18808,14 +18595,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18848,14 +18628,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18888,14 +18661,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18928,14 +18694,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -18968,14 +18727,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -19008,14 +18760,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -19048,14 +18793,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "left",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -19088,14 +18826,7 @@
                 "tasks" : [
                   [
                     {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
+                      "side" : "right",
                       "target" : {
                         "depth" : {
                           "category" : "small"
@@ -21319,30 +21050,6 @@
                     },
                     {
                       "target" : {
-                        "kind" : "jug"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "category" : "small"
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
                         "depth" : {
                           "category" : "small"
                         },
@@ -21355,7 +21062,7 @@
               "timing" : "fixed"
             },
             {
-              "duration" : 30,
+              "duration" : 45,
               "kind" : "rest",
               "timing" : "fixed"
             }

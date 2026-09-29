@@ -2883,7 +2883,8 @@ enum LegacyPlanSeedCatalog {
         targets: [ContactRequirement],
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
-        handUse: WorkoutHandUse = .double
+        handUse: WorkoutHandUse = .double,
+        side: WorkoutSide = .both
     ) -> WorkoutStep {
         WorkoutStep(
             id: id,
@@ -2904,6 +2905,7 @@ enum LegacyPlanSeedCatalog {
             gripType: gripType,
             fingerConfiguration: fingerConfiguration,
             handUse: handUse,
+            side: side,
             timedWorkDuration: active
         )
     }
@@ -3158,7 +3160,9 @@ enum LegacyPlanSeedCatalog {
                             active: 6,
                             rest: 0,
                             targets: [forceFeedback12mmEdgeTarget],
-                            gripType: nil
+                            gripType: nil,
+                            handUse: .single,
+                            side: .right
                         )
                     )
                     steps.append(
@@ -3170,7 +3174,9 @@ enum LegacyPlanSeedCatalog {
                             active: 6,
                             rest: round == 6 ? (set == 1 ? 300 : 0) : 168,
                             targets: [forceFeedback12mmEdgeTarget],
-                            gripType: nil
+                            gripType: nil,
+                            handUse: .single,
+                            side: .left
                         )
                     )
                 }
@@ -3349,9 +3355,8 @@ enum LegacyPlanSeedCatalog {
     )
 
     /// The Rock Prodigy instructions leave grip identity, grip order, and set
-    /// count to the athlete. This one-set template deliberately has no board
-    /// target: selecting one would turn a manufacturer choice into an app
-    /// prescription. Repeat the template manually for the source's 1–3 sets
+    /// count to the athlete. This one-set template records two athlete-chosen
+    /// hand targets without inventing a hold prescription. Repeat it for 1–3 sets
     /// on each of approximately 5–10 chosen grips.
     static let rptcRepeaters = TrainingPlan(
         id: "rptc.seven-three-repeaters",
@@ -3365,9 +3370,8 @@ enum LegacyPlanSeedCatalog {
         steps: numbered({
             return (1...7).map { rep in
                 let finalRep = rep == 7
-                return WorkoutStep(
+                return hangStep(
                     id: "rptc-repeaters-set-rep-\(rep)",
-                    number: 0,
                     title: "RPTC repeater set · rep \(rep) of 7",
                     instruction: finalRep
                         ? "Complete the seventh 7-second two-handed dead hang on the grip you selected, then use the table's 2:53 recovery to reach 4:00 from the first hang. The source separately prescribes the following 3-minute rest period between sets; do not treat the table recovery as that rest. Do not pull up or lock off. Use a load that reaches near failure on the final set; change 10 lb between sets and 5 lb for the same set from workout to workout."
@@ -3375,9 +3379,9 @@ enum LegacyPlanSeedCatalog {
                     accessory: finalRep
                         ? "7s two-handed deadhang · 2m 53s rest to 4:00"
                         : "7s two-handed deadhang · 3s rest",
-                    duration: finalRep ? 180 : 10,
-                    phase: .hang,
-                    timedWorkDuration: 7
+                    active: 7,
+                    rest: finalRep ? 173 : 3,
+                    targets: []
                 )
             } + [
                 WorkoutStep(
@@ -3718,8 +3722,8 @@ enum LegacyPlanSeedCatalog {
             for set in 1...3 {
                 for rep in 1...5 {
                     steps.append(contentsOf: [
-                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-left", title: "Round 2 · single-arm recruitment pull", instruction: "With the feet on the ground and elbow slightly bent, pull the hangboard down rather than lifting off. Build toward near-max over a 5-second hold on the left hand.", accessory: "5s left · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp),
-                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-right", title: "Round 2 · single-arm recruitment pull", instruction: "Repeat the 5-second single-arm recruitment pull on the right hand. Do not lift off the ground.", accessory: "5s right · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp)
+                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-left", title: "Round 2 · single-arm recruitment pull", instruction: "With the feet on the ground and elbow slightly bent, pull the hangboard down rather than lifting off. Build toward near-max over a 5-second hold on the left hand.", accessory: "5s left · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp, handUse: .single, side: .left),
+                        hangStep(id: "hoopers-intro-round-2-set-\(set)-rep-\(rep)-right", title: "Round 2 · single-arm recruitment pull", instruction: "Repeat the 5-second single-arm recruitment pull on the right hand. Do not lift off the ground.", accessory: "5s right · rep \(rep) of 5", active: 5, rest: 0, targets: [hoopersSmallEdgeTarget], gripType: .halfCrimp, handUse: .single, side: .right)
                     ])
                 }
                 steps.append(conditioningTask(id: "hoopers-intro-round-2-set-\(set)-kicks", title: "Round 2 · flutter and scissor kicks", instruction: "Perform 20–30 flutter kicks and 20–30 scissor kicks. Protect your lower back and neck.", accessory: "20–30 each", duration: 90))
@@ -3799,7 +3803,7 @@ enum LegacyPlanSeedCatalog {
             emomMinute(id: "method-emom-minute-4", title: "Minute 4 · bent-arm 15mm hang", instruction: "Hold a bent-arm hang for 15 seconds on 15mm, then rest for the remainder.", work: [(15, .hang, .halfCrimp, [method15mmEdgeTarget])], rest: 45),
             emomMinute(id: "method-emom-minute-5", title: "Minute 5 · sloper hang + jug pull-ups", instruction: "Hang for 10 seconds on a sloper, then do 3 pull-ups on jugs.", work: [(10, .hang, .openHand, [methodSloperTarget]), (15, .pull, nil, [methodJugTarget])], rest: 35),
             emomMinute(id: "method-emom-minute-6", title: "Minute 6 · medium three-finger pocket", instruction: "Hang for 10 seconds on medium three-finger pockets, then rest for the remainder.", work: [(10, .hang, .openHand, [methodMediumThreeFingerPocketTarget])], rest: 50),
-            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(15, .pull, nil, [methodJugTarget]), (15, .pull, nil, [methodSmallEdgeTarget])], rest: 30),
+            emomMinute(id: "method-emom-minute-7", title: "Minute 7 · offset pull-ups", instruction: "Do 3 offset pull-ups with one hand on a jug and the other on a small edge.", work: [(15, .pull, nil, [methodJugTarget, methodSmallEdgeTarget])], rest: 45),
             emomMinute(id: "method-emom-minute-8", title: "Minute 8 · 15mm hang", instruction: "Hang for 25 seconds on a 15mm edge, then rest for the remainder.", work: [(25, .hang, .halfCrimp, [method15mmEdgeTarget])], rest: 35),
             emomMinute(id: "method-emom-minute-9", title: "Minute 9 · 20mm hang + jug knee raises", instruction: "Hang for 20 seconds on 20mm, then do 10 knee raises on jugs.", work: [(20, .hang, .halfCrimp, [method20mmEdgeTarget]), (10, .pull, nil, [methodJugTarget])], rest: 30),
             guidedTask(id: "method-emom-minute-10", title: "Minute 10 · max sloper", instruction: "Take a max hang on a sloper.", accessory: "Max effort · stopwatch", phase: .hang, targets: [methodSloperTarget], duration: 60, timing: .stopwatch, gripType: .openHand)
