@@ -67,37 +67,35 @@ final class FreeWorkoutUITests: XCTestCase {
     }
 
     /// Empty → Add Hang → Start Set → Cancel guided → set stays unchecked (no rest bar).
-    func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() throws {
+    func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() {
         let app = launchResetFreeWorkout()
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
-        let startSet = firstMatching(
-            in: app,
-            identifiers: ["freeWorkout.startSet"],
-            labels: ["Start Set"]
-        )
-        guard startSet.waitForExistence(timeout: 15), startSet.isHittable else {
-            throw XCTSkip("Start Set not hittable; guided hang cancel path unavailable in this layout")
+        let startSet = app.buttons["freeWorkout.startSet"]
+        XCTAssertTrue(startSet.waitForExistence(timeout: 15), "Added hang should expose Start Set")
+        let logScrollView = app.scrollViews.firstMatch
+        for _ in 0..<3 where !startSet.isHittable {
+            XCTAssertTrue(logScrollView.exists, "Free-workout log should be scrollable to Start Set")
+            logScrollView.swipeUp()
         }
-        startSet.tap()
+        tapHittable(startSet, timeout: 15)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
-        guard guided.waitForExistence(timeout: 15) else {
-            throw XCTSkip("Guided hang overlay did not appear after Start Set")
-        }
+        XCTAssertTrue(guided.waitForExistence(timeout: 15), "Start Set should open guided hang")
 
         let cancel = firstMatching(
             in: app,
             identifiers: ["freeWorkout.guidedHang.cancel"],
             labels: ["Cancel"]
         )
-        if cancel.waitForExistence(timeout: 10), cancel.isHittable {
-            cancel.tap()
-        } else if app.alerts.buttons["Cancel"].waitForExistence(timeout: 3) {
-            app.alerts.buttons["Cancel"].tap()
+        if cancel.waitForExistence(timeout: 10) {
+            tapHittable(cancel, timeout: 10)
+        } else if app.alerts.buttons["Cancel"].exists {
+            tapHittable(app.alerts.buttons["Cancel"], timeout: 3)
         } else {
-            throw XCTSkip("Guided hang Cancel control not found (alert or identifier)")
+            XCTFail("Guided hang should expose Cancel as a control or confirmation alert")
+            return
         }
 
         // Overlay gone; set still unchecked — Start Set / checkbox remain; rest bar must not appear.
@@ -356,9 +354,24 @@ final class FreeWorkoutUITests: XCTestCase {
     }
 
     private func tapHittable(_ element: XCUIElement, timeout: TimeInterval = 10) {
-        let predicate = NSPredicate(format: "exists == true AND isHittable == true")
+        let predicate = NSPredicate { evaluatedElement, _ in
+            guard let element = evaluatedElement as? XCUIElement else { return false }
+            let frame = element.frame
+            return element.exists
+                && element.isHittable
+                && frame.origin.x.isFinite
+                && frame.origin.y.isFinite
+                && frame.width.isFinite
+                && frame.height.isFinite
+                && frame.width > 0
+                && frame.height > 0
+        }
         let wait = expectation(for: predicate, evaluatedWith: element)
-        XCTAssertEqual(XCTWaiter.wait(for: [wait], timeout: timeout), .completed)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [wait], timeout: timeout),
+            .completed,
+            "Element must have a finite, nonzero hittable frame before tapping: \(element)"
+        )
         element.tap()
     }
 
