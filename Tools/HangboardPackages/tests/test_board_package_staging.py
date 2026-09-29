@@ -317,13 +317,27 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 
 @pytest.mark.parametrize(
     "slug",
-    ("frictitious-doormount-pro-7", "trango-rock-prodigy-natural"),
+    (
+        "frictitious-doormount-pro-7",
+        "frictitious-megalith",
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-natural",
+        "zlagboard-evo",
+        "zlagboard-pro",
+    ),
 )
 def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
 ) -> None:
     repository_root = tmp_path / "repository"
-    for model_slug in ("frictitious-doormount-pro-7", "trango-rock-prodigy-natural"):
+    for model_slug in (
+        "frictitious-doormount-pro-7",
+        "frictitious-megalith",
+        "trango-rock-prodigy-forge",
+        "trango-rock-prodigy-natural",
+        "zlagboard-evo",
+        "zlagboard-pro",
+    ):
         package = make_v3_model_package(repository_root / "Hangboards" / model_slug)
         board_path = package / "board.json"
         board = json.loads(board_path.read_text())

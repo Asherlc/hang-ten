@@ -149,7 +149,13 @@ run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"
 
 if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
   app_resources="$XCTEST_DERIVED_DATA/Build/Products/Debug-iphonesimulator/HangTen.app/HangTenDebugSimulatorModels"
-  for model in frictitious-doormount-pro-7 trango-rock-prodigy-natural; do
+  for model in \
+    frictitious-doormount-pro-7 \
+    frictitious-megalith \
+    trango-rock-prodigy-forge \
+    trango-rock-prodigy-natural \
+    zlagboard-evo \
+    zlagboard-pro; do
     asset="$app_resources/$model/assets/primary.usdz"
     if [[ ! -f "$asset" ]]; then
       echo "CI Debug simulator model asset was not staged: $asset" >&2

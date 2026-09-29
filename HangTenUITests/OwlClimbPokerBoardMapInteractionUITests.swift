@@ -372,15 +372,19 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         }
         let frame = model.frame
+        // Ignore the rounded card edge. A blank ODR placeholder can otherwise
+        // satisfy this check from its border even though RealityKit has no mesh.
+        let bodyFrame = frame.insetBy(dx: frame.width * 0.12, dy: frame.height * 0.12)
         let scale = CGFloat(width) / XCUIApplication().frame.width
         // RealityKit preserves the physical mesh aspect ratio within its card.
-        // Scan inside the viewport so letterbox margins don't have to contain wood.
+        // Scan the inner viewport so the card border and letterbox margins do not
+        // count as visible board geometry.
         var visibleBodySamples = 0
         let sampleCount = 16
         for row in 0..<sampleCount {
             for column in 0..<sampleCount {
-                let x = frame.minX + (CGFloat(column) + 0.5) * frame.width / CGFloat(sampleCount)
-                let y = frame.minY + (CGFloat(row) + 0.5) * frame.height / CGFloat(sampleCount)
+                let x = bodyFrame.minX + (CGFloat(column) + 0.5) * bodyFrame.width / CGFloat(sampleCount)
+                let y = bodyFrame.minY + (CGFloat(row) + 0.5) * bodyFrame.height / CGFloat(sampleCount)
                 let offset = (Int(y * scale) * width + Int(x * scale)) * 4
                 if pixels[offset + 2] < 235 { visibleBodySamples += 1 }
             }
