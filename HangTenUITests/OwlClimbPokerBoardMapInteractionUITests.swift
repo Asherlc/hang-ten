@@ -294,6 +294,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
+        let initialMapImage = map.screenshot().image
         // Some models have empty gaps around the projected center. Begin the
         // orbit on the verified surface point when the test needed one to pick.
         let orbitStart = surfacePoint != nil
@@ -307,6 +308,11 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         XCTAssertEqual(XCTWaiter.wait(for: [orbitFinished], timeout: 15), .completed,
                        "Orbit must change the projected contact")
+        let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            map.screenshot().image.pngData() != initialMapImage.pngData()
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [visibleOrbit], timeout: 15), .completed,
+                       "Orbit must change the rendered board, not only its accessibility projection")
         capture("\(boardID)-portrait-orbit")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.

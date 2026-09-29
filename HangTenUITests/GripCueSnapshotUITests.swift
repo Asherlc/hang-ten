@@ -167,9 +167,10 @@ final class InitialWeightSetupUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // Switch.tap() targets the center of the whole track. On iOS 26 that point is
-        // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        // CI recordings show the 50 ms tap lands on the thumb but goes unhandled.
+        // Hold briefly so the native control receives a complete press under load.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5))
+            .press(forDuration: 0.2)
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -357,7 +358,8 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         // valid button frame, but its zero-sized UICollectionView container
         // makes XCTest report isHittable=false. Tap the visible row's center
         // and verify the selected hand below.
-        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            .press(forDuration: 0.2)
 
         // Wait a moment for the UI to update after the tap
         Thread.sleep(forTimeInterval: 1.0)

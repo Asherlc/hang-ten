@@ -176,6 +176,7 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
+                content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
