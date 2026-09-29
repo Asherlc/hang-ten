@@ -14,10 +14,10 @@
 
 - Bundled plans default to two hands unless their source explicitly specifies one hand.
 - Preserve source-backed task order, timing, grip descriptions, repetitions, and provenance; record source URLs and per-step audit mappings.
-- `tasks` contains ordered arrays of one or two hand targets; no `Task` wrapper, `hands`, `allowSwap`, or selection policy.
+- `tasks` contains ordered nonempty arrays of one or two hand targets; `target: "any"` means the source lets the athlete choose that hand's hold; no `Task` wrapper, `hands`, `allowSwap`, or selection policy.
 - `Depth` is a `$defs` reference: category or `{minMM,maxMM}`, with equal bounds for an exact measurement.
 - On a one-hand board, a two-hand task requires two boards and never silently alternates.
-- Keep legacy custom-routine decoding and historical activity decoding intact.
+- Keep legacy custom-routine exact contact pins and historical activity decoding intact; the catalog schema does not encode contact IDs.
 - Generated output stays in `.context`; own and clean up isolated simulator resources.
 
 ## Review Focus
@@ -55,17 +55,17 @@
 
 **Files:** Modify `HangTen/Models/PlanStorage.swift`, `HangTen/Models/CustomRoutineDraft.swift`, `HangTen/Models/CustomRoutineStore.swift`, `HangTen/Models/TrainingModels.swift`; test in `HangTenTests/PlanStorageTests.swift`, `HangTenTests/CustomRoutineStoreTests.swift`, `HangTenTests/WorkoutSegmentTargetTests.swift`.
 
-**Interfaces:** Bundled definitions encode `target.tasks`; legacy `target.kind/requirements`, `selection`, step `handUse/side`, and custom routine files decode and translate to task assignments. New custom writes use `tasks`; historical activity data retains its decoder.
+**Interfaces:** Bundled definitions encode `target.tasks` and omit step `handUse/side`; legacy `target.kind/requirements`, `selection`, step `handUse/side`, custom routine files, and historical activity data remain readable. Custom writes retain exact contact pins in their existing format.
 
 - [ ] Write failing fixture tests for old single, bilateral, mixed-target, and self-selected plans; persisted custom routines; exact contact pins; and new-format round trips.
-- [ ] Implement translation with explicit handling for ambiguous legacy multi-requirement work; do not guess whether requirements were simultaneous or sequential in bundled content.
+- [ ] Derive catalog hand metadata from task arrays and preserve legacy custom encoding; do not guess whether old bundled multi-requirement work was simultaneous or sequential.
 - [ ] Run persistence and validation tests; commit.
 
 ### Task 4: Source audit and bundled-plan export
 
 **Files:** Modify `HangTen/Models/TrainingModels.swift`, `HangTen/Models/PlanStorage.swift`, `HangTen/Resources/PlanLibrary.json`, `docs/ADDING_A_ROUTINE.md`; create `docs/plan-audits/2026-09-28-per-hand-plan-migration.md`; test in `HangTenTests/BoardTargetSubstitutionTests.swift`, `HangTenTests/PlanStorageTests.swift`.
 
-**Interfaces:** Every work segment in the 26 built-in plans exports `tasks`, including empty `tasks` only for audited self-selected exceptions. No bundled segment exports `selection`, `handUse`, or `side` as hand-count substitutes.
+**Interfaces:** Every work segment in the 26 built-in plans exports nonempty `tasks`; source-prescribed athlete choice uses `target: "any"` per hand. No bundled segment exports `selection`, `handUse`, or `side` as hand-count substitutes.
 
 - [ ] Audit each source against its steps: record URL, one/two-hand basis, simultaneous versus sequential target grouping, and any unresolved contact mapping. Cover known one-arm instructions and the Metolius hold ladder explicitly.
 - [ ] Write failing catalog tests for all work targets using the new format, sourced one-hand cases, the 7/3 two-hold cue, and resolution on every offered board.

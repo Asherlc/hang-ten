@@ -439,7 +439,7 @@ enum ContactResolver {
         let candidates = task.map { hand in
             board.contacts.filter { contact in
                 positionContactIDs.contains(contact.id)
-                    && matches(hand.target.legacyRequirement, contact: contact)
+                    && matches(hand.target?.legacyRequirement ?? ContactRequirement(), contact: contact)
                     && matches(stepGripType: step.gripType, contact: contact)
             }
         }

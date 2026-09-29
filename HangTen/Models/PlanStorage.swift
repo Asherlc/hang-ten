@@ -300,10 +300,11 @@ struct PlanContactPredicate: Codable, Hashable {
 }
 
 struct PlanHandTarget: Codable, Hashable {
-    let target: PlanContactPredicate
+    /// Nil means the source lets the athlete choose any hold for this hand.
+    let target: PlanContactPredicate?
     let side: WorkoutSide?
 
-    init(target: PlanContactPredicate, side: WorkoutSide? = nil) {
+    init(target: PlanContactPredicate? = nil, side: WorkoutSide? = nil) {
         precondition(side != .both)
         self.target = target
         self.side = side
@@ -323,7 +324,17 @@ struct PlanHandTarget: Codable, Hashable {
             )
         }
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        target = try container.decode(PlanContactPredicate.self, forKey: .target)
+        if let token = try? container.decode(String.self, forKey: .target) {
+            guard token == "any" else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .target, in: container,
+                    debugDescription: "The only named hand target is 'any'."
+                )
+            }
+            target = nil
+        } else {
+            target = try container.decode(PlanContactPredicate.self, forKey: .target)
+        }
         side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
         guard side != .both else {
             throw DecodingError.dataCorruptedError(
@@ -331,6 +342,16 @@ struct PlanHandTarget: Codable, Hashable {
                 debugDescription: "A hand target side must be left or right."
             )
         }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if let target {
+            try container.encode(target, forKey: .target)
+        } else {
+            try container.encode("any", forKey: .target)
+        }
+        try container.encodeIfPresent(side, forKey: .side)
     }
 }
 
@@ -671,6 +692,18 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case externalLoadKGF
     }
 
+    private static func derivedHandUse(
+        from segments: [WorkoutSegmentDefinition]
+    ) -> (WorkoutHandUse, WorkoutSide)? {
+        let tasks = segments.flatMap { $0.target?.planTasks ?? [] }
+        guard !tasks.isEmpty else { return nil }
+        guard tasks.allSatisfy({ $0.count == 1 }) else { return (.double, .both) }
+        let sides = tasks.compactMap { $0.first?.side }
+        if sides.count == tasks.count, Set(sides) == [.left] { return (.single, .left) }
+        if sides.count == tasks.count, Set(sides) == [.right] { return (.single, .right) }
+        return (.either, .both)
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -721,8 +754,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
             TimeInterval.self,
             forKey: .activeDuration
         )
-        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse) ?? .double
-        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side) ?? .both
+        let derived = Self.derivedHandUse(from: decodedSegments)
+        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse)
+            ?? derived?.0 ?? .double
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
+            ?? derived?.1 ?? .both
         action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
@@ -740,8 +776,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encodeIfPresent(gripType, forKey: .gripType)
         try container.encodeIfPresent(fingerConfiguration, forKey: .fingerConfiguration)
         try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
-        try container.encode(handUse, forKey: .handUse)
-        try container.encode(side, forKey: .side)
+        let workSegments = segments.filter { $0.kind == .work }
+        if workSegments.isEmpty || !workSegments.allSatisfy({ $0.target?.planTasks != nil }) {
+            try container.encode(handUse, forKey: .handUse)
+            try container.encode(side, forKey: .side)
+        }
         try container.encode(action, forKey: .action)
         try container.encodeIfPresent(repetitions, forKey: .repetitions)
         try container.encodeIfPresent(externalLoadKGF, forKey: .externalLoadKGF)

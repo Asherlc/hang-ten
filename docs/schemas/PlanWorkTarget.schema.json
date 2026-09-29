@@ -7,6 +7,7 @@
   "properties": {
     "tasks": {
       "type": "array",
+      "minItems": 1,
       "items": {
         "type": "array",
         "minItems": 1,
@@ -21,7 +22,12 @@
       "required": ["target"],
       "additionalProperties": false,
       "properties": {
-        "target": { "$ref": "#/$defs/ContactPredicate" },
+        "target": {
+          "oneOf": [
+            { "const": "any" },
+            { "$ref": "#/$defs/ContactPredicate" }
+          ]
+        },
         "side": { "enum": ["left", "right"] }
       }
     },

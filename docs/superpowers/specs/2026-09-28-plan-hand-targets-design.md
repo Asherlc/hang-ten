@@ -12,6 +12,10 @@ A work target has an ordered `tasks` array. Each task is directly an array of on
 {
   "tasks": [
     [
+      { "target": "any" },
+      { "target": "any" }
+    ],
+    [
       { "target": { "kind": "edge", "depth": { "minMM": 20, "maxMM": 20 } } },
       { "target": { "kind": "edge", "depth": { "minMM": 20, "maxMM": 20 } } }
     ],
@@ -23,9 +27,9 @@ A work target has an ordered `tasks` array. Each task is directly an array of on
 }
 ```
 
-The JSON Schema for this object uses `$defs/Depth`. Categorical depth is `{ "category": "tiny" | "small" | "medium" | "large" }`. Measured depth is `{ "minMM": number, "maxMM": number }`, including exact values with equal bounds. Both forms reject extra properties. The app validates finite nonnegative bounds and `minMM <= maxMM`. `kind` and `shape` are enums matching `HoldKind` and `HoldShape`. A contact predicate needs at least one property. `fingerCapacity` is 1–4. The schema has no `if`/`else`, `hands`, `allowSwap`, or contact-selection field.
+The JSON Schema for this object uses `$defs/Depth`. Categorical depth is `{ "category": "tiny" | "small" | "medium" | "large" }`. Measured depth is `{ "minMM": number, "maxMM": number }`, including exact values with equal bounds. Both forms reject extra properties. The app validates finite nonnegative bounds and `minMM <= maxMM`. `kind` and `shape` are enums matching `HoldKind` and `HoldShape`. A contact predicate needs at least one property. `fingerCapacity` is 1–4. A hand's `target` is either a contact predicate or the string `"any"` when the source lets the athlete choose its hold. The schema has no `if`/`else`, `hands`, `allowSwap`, or contact-selection field.
 
-An empty `tasks` array means the athlete chooses holds, preserving the existing self-selected catalog exceptions. Rest segments have no target. The target schema should be stored as a versioned repository file and checked against every exported built-in work target.
+The `tasks` array and every hand array are nonempty. An athlete-chosen two-hand task is `[{ "target": "any" }, { "target": "any" }]`, preserving hand count and order alongside prescribed tasks. Rest segments have no target. The target schema should be stored as a versioned repository file and checked against every exported built-in work target.
 
 ## Resolution
 
@@ -37,11 +41,11 @@ Compatibility, plan preview, live highlight, hold cues, and recording consume th
 
 ## Migration boundary
 
-The bundled library moves to `tasks` for every work segment. Migrate at the seed catalog and regenerate `PlanLibrary.json`; keep source order, durations, repetition counts, instructions, and provenance intact. Audit each bundled work segment against its primary source before choosing one or two hands and before splitting multiple old requirements into simultaneous or sequential tasks. In particular, source-prescribed single-arm steps must be one-entry tasks even where today's step metadata says `double`.
+The bundled library moves to `tasks` for every work segment. Migrate at the seed catalog and regenerate `PlanLibrary.json`; keep source order, durations, repetition counts, and provenance intact, and correct instruction text when the primary source exposes an existing mismatch. Audit each bundled work segment against its primary source before choosing one or two hands and before splitting multiple old requirements into simultaneous or sequential tasks. In particular, source-prescribed single-arm steps must be one-entry tasks even where today's step metadata says `double`.
 
-Existing custom routines and saved workouts may still contain legacy `handUse`, `side`, and `ContactRequirement.selection`. Decode them without data loss and translate them at the persistence boundary. New bundled data must not encode those redundant fields. Editing or duplicating a legacy routine writes the new target form only after the translation preserves its behavior. Do not change historical activity payloads in place.
+Existing custom routines and saved workouts may still contain legacy `handUse`, `side`, `ContactRequirement.selection`, and exact board contact IDs. Decode and preserve them without data loss. The catalog schema deliberately has no contact ID, so custom routines retain their exact-contact format; editing or duplicating them must keep their selected holds. New bundled data must not encode redundant hand-count or selection fields. Do not change historical activity payloads in place.
 
-The runtime derives hand count from each task. Step-level hand preference remains only where the source permits a genuine athlete choice; it cannot override a source-prescribed two-hand task. The plan editor can author one or two hand targets and ordered tasks without exposing selection policy.
+The catalog runtime derives hand count from each task. Step-level hand preference remains only where the source permits a genuine athlete choice; it cannot override a source-prescribed two-hand task. The custom plan editor keeps its exact-contact workflow until a separate custom-target model can preserve that choice with the same fidelity.
 
 ## Validation
 

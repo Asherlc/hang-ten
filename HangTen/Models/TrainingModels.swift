@@ -1381,7 +1381,7 @@ enum WorkoutSegmentTarget: Codable, Hashable {
         case .requirements(let requirements):
             requirements
         case .tasks(let tasks):
-            tasks.flatMap { $0.map { $0.target.legacyRequirement } }
+            tasks.flatMap { $0.map { $0.target?.legacyRequirement ?? ContactRequirement() } }
         }
     }
 
@@ -1392,8 +1392,12 @@ enum WorkoutSegmentTarget: Codable, Hashable {
 
     var isSelfSelected: Bool {
         switch self {
-        case .selfSelected, .tasks([]): true
-        case .requirements, .tasks: false
+        case .selfSelected: true
+        case .requirements: false
+        case .tasks(let tasks):
+            !tasks.isEmpty && tasks.allSatisfy { task in
+                task.allSatisfy { $0.target == nil }
+            }
         }
     }
 
@@ -1437,7 +1441,7 @@ enum WorkoutSegmentTarget: Codable, Hashable {
                 )
             }
             let tasks = try container.decode([[PlanHandTarget]].self, forKey: .tasks)
-            guard tasks.allSatisfy({ (1...2).contains($0.count) }) else {
+            guard !tasks.isEmpty, tasks.allSatisfy({ (1...2).contains($0.count) }) else {
                 throw DecodingError.dataCorruptedError(
                     forKey: .tasks, in: container,
                     debugDescription: "Each task must contain one or two hand targets."
@@ -1487,7 +1491,7 @@ enum WorkoutSegmentTarget: Codable, Hashable {
             try container.encode(Kind.requirements, forKey: .kind)
             try container.encode(requirements, forKey: .requirements)
         case .tasks(let tasks):
-            guard tasks.allSatisfy({ (1...2).contains($0.count) }) else {
+            guard !tasks.isEmpty, tasks.allSatisfy({ (1...2).contains($0.count) }) else {
                 throw EncodingError.invalidValue(
                     tasks,
                     EncodingError.Context(
