@@ -1938,11 +1938,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
 
             let resolvesAPair = compatibleBoards.contains { board in
                 plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
-                    ((try? ContactResolver.resolve(
-                        step.workRequirements,
-                        step: step,
-                        board: board
-                    )) ?? []).count == 2
+                    step.segments.filter { $0.kind == .work }.allSatisfy { segment in
+                        guard let tasks = segment.target?.planTasks, !tasks.isEmpty else { return false }
+                        return tasks.allSatisfy { task in
+                            ((try? ContactResolver.resolve(task, step: step, board: board)) ?? []).count == 2
+                        }
+                    }
                 }
             }
             XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")

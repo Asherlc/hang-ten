@@ -3872,11 +3872,11 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(steps.map(\.duration), [10, 20, 30])
         XCTAssertEqual(
             steps[0].workRequirements,
-            [ContactRequirement(kind: .sloper, shape: .round)]
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
         )
         XCTAssertEqual(
             steps[1].workRequirements,
-            [ContactRequirement.edge(depth: .category(.medium))]
+            Array(repeating: ContactRequirement.edge(depth: .category(.medium)), count: 2)
         )
         XCTAssertEqual(steps[2].phase, .rest)
     }
@@ -3910,10 +3910,14 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(work.kind, .work)
         XCTAssertEqual(work.timing, .stopwatch)
         XCTAssertNil(work.duration)
-        guard case let .requirements(requirements)? = work.target else {
-            return XCTFail("Expected stopwatch work to keep round-sloper requirements")
+        guard case let .tasks(tasks)? = work.target else {
+            return XCTFail("Expected stopwatch work to keep its two-hand round-sloper task")
         }
-        XCTAssertEqual(requirements, [ContactRequirement(kind: .sloper, shape: .round)])
+        XCTAssertEqual(tasks.count, 1)
+        XCTAssertEqual(
+            tasks.first?.map { $0.target?.legacyRequirement ?? ContactRequirement() } ?? [],
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
+        )
     }
 
     func testAdvancedMinuteFourLeavesTwentySecondsToRest() {
@@ -3953,11 +3957,11 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(entryMinuteSix.map(\.duration), [10, 5, 45])
         XCTAssertEqual(
             entryMinuteSix[0].workRequirements,
-            [ContactRequirement(kind: .sloper, shape: .round)]
+            Array(repeating: ContactRequirement(kind: .sloper, shape: .round), count: 2)
         )
         XCTAssertEqual(
             entryMinuteSix[1].workRequirements,
-            [ContactRequirement.kind(.pocket)]
+            Array(repeating: ContactRequirement.kind(.pocket), count: 2)
         )
 
         let advancedMinuteEight = advanced.filter { $0.id.hasPrefix("advanced.minute-8.") }

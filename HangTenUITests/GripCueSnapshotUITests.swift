@@ -371,8 +371,8 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         app.launch()
     }
 
-    /// Tests that a user can select a hand for a one-handed board.
-    func testInlineHandChoiceOnOneHandedBoard() throws {
+    /// A two-hand source task on a one-hand board requires two boards.
+    func testTwoHandTaskOnOneHandedBoardRequiresTwoBoards() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
             "DEBUG plan-detail review route should open Max Hangs on the one-handed Dual board."
@@ -381,54 +381,13 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         selectManualWeightSourceIfNeeded()
         tapStartRoutine()
 
-        let handPicker = app.buttons["workout.handPicker"]
         XCTAssertTrue(
-            handPicker.waitForExistence(timeout: 20),
-            "The pre-start workout page must expose the inline hand picker when a choice is needed."
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
         )
-        XCTAssertTrue(
-            handPicker.label.contains("Alternate hands"),
-            "A capacity-1 board must default to Alternate hands, got: \(handPicker.label)"
-        )
-
-        handPicker.tap()
-
-        let both = app.buttons["handSide.both"]
-        XCTAssertTrue(both.waitForExistence(timeout: 10), "The Both menu item must be present.")
-        XCTAssertEqual(both.label, "Both hands (two boards)")
-        XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
-
-        let left = app.buttons["handSide.left"]
-        XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // On iOS 26 the native SwiftUI Menu exposes its visible row with a
-        // valid button frame, but its zero-sized UICollectionView container
-        // makes XCTest report isHittable=false. Tap the visible row's center
-        // and verify the selected hand below.
-        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-
-        // Wait a moment for the UI to update after the tap
-        Thread.sleep(forTimeInterval: 1.0)
-
-        let updated = app.buttons["workout.handPicker"]
-        let labelUpdated = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
-            object: updated
-        )
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
-            .completed,
-            "Choosing a hand must update the picker label, got: \(updated.label)"
-        )
-
-        let start = app.buttons["Start"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
-        start.tap()
+        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
 
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
-        XCTAssertFalse(
-            app.buttons["workout.handPicker"].isEnabled,
-            "The hand picker must be disabled once the routine is running."
-        )
+        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
     }
 
     private func selectManualWeightSourceIfNeeded() {
