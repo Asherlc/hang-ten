@@ -266,8 +266,8 @@
     },
     "metolius-rock-rings-3d": {
       "source": "Hangboards/metolius-rock-rings-3d/metolius-rock-rings-3d.FCStd",
-      "sourceSHA256": "4603f9f27c5bc46a4ee8d1fc3204475d4c785a1943efe97c9c49bc386ab3ada6",
-      "supersededSourceSHA256": "f503582e8ff9c590507ace5b108293f7c70c5c72960cb0c0a840026e1ede0329",
+      "sourceSHA256": "ff17919c504af68c6cddfa4acb8d9d8d90d6646d26eba73fc4c94a54bc5f2417",
+      "supersededSourceSHA256": "4603f9f27c5bc46a4ee8d1fc3204475d4c785a1943efe97c9c49bc386ab3ada6",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); manifest re-embedded unchanged after the 2026-09-25 vector re-authoring (generated board.json byte-identical)",
       "referenceSHA256": "4af718e4c5f1177dce1e440372af6975c0da0c3263e8cc3ea275b9173e956218",
       "assetSHA256": "34af665b8a966e8a694e9ffc0c4e0136c0f536eb484d283dded472be5ad3c5cc",

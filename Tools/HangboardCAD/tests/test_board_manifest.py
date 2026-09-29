@@ -178,7 +178,7 @@ def test_v2_reusable_slot_board_round_trips():
         offset = instance["suspension"]["anchor"]["offsetFromBoardBounds"]
         resolved_y = model_bounds["max"][1] + offset[1]
         assert resolved_y == pytest.approx(0.19), (
-            f"{instance['equipmentObjectID']} anchor resolves too high for its 202 mm leads: "
+            f"{instance['equipmentObjectID']} anchor resolves to an incorrect height for its 202 mm leads: "
             f"{resolved_y:.3f} m"
         )
 
