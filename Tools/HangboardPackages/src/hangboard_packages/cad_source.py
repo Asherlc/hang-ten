@@ -8,7 +8,8 @@ metadata inside the FCStd, in two document-level string properties:
   the key order ``board.json`` is emitted in, with every number spelled as
   authored.
 
-``board.json`` for such a package is generated from the FCStd at build time and
+``board.json`` for such a package is generated from the FCStd and an optional
+adjacent ``suspension.json`` authoring sidecar at build time and
 is never committed: the package validator (``board_catalog``), the iOS and
 Android staging (``scripts/stage-board-packages.py``), and every tool that needs
 the board document call :func:`generate_board_json`. An on-disk ``board.json``
@@ -25,6 +26,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path, PurePosixPath
+import re
 import stat
 import unicodedata
 import xml.etree.ElementTree as ET
@@ -355,8 +357,80 @@ def load_board(source: Path) -> dict:
     return manifest_to_board(manifest, board_id)
 
 
+def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
+    """Overlay authoring-only suspension data onto a CAD-generated board."""
+    path = Path(package_root) / "suspension.json"
+    if path.is_symlink() or not path.is_file() or path.stat().st_size > 1024 * 1024:
+        raise ManifestError("suspension.json must be a regular file of at most 1 MiB")
+    try:
+        document = loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ManifestError(f"suspension.json is unreadable or invalid: {error}") from error
+    required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
+    if not isinstance(document, dict) or not required <= set(document) \
+            or set(document) - required - {"ropeSolver"} or document["schemaVersion"] != 1:
+        raise ManifestError("suspension.json has invalid schema or members")
+    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+    # never merged into board.json.
+    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
+            or solver["sectionPlane"] not in ("mouth-x", "anchor"):
+        raise ManifestError("suspension.json ropeSolver must be {\"sectionPlane\": \"mouth-x\" | \"anchor\"}")
+    presentation_id = document["presentationID"]
+    model_hash = document["modelSHA256"]
+    if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \
+            or not re.fullmatch(r"[0-9a-f]{64}", model_hash) \
+            or not isinstance(document["suspension"], dict):
+        raise ManifestError("suspension.json has invalid presentationID, modelSHA256, or suspension")
+    presentations = board.get("presentations")
+    if not isinstance(presentations, list):
+        raise ManifestError("CAD board has no presentations for suspension.json")
+    selected = [item for item in presentations if isinstance(item, dict) and item.get("id") == presentation_id]
+    if len(selected) != 1:
+        raise ManifestError("suspension.json presentationID must identify one CAD presentation")
+    media = selected[0].get("media")
+    if not isinstance(media, dict) or media.get("type") != "model" or "suspension" in media:
+        raise ManifestError("suspension.json requires a model presentation without embedded suspension")
+    descriptor_path = media.get("descriptorPath")
+    if not isinstance(descriptor_path, str) or safe_member(descriptor_path) != descriptor_path \
+            or not descriptor_path.startswith("assets/"):
+        raise ManifestError("suspension.json presentation has an invalid descriptorPath")
+    descriptor_file = Path(package_root) / descriptor_path
+    if descriptor_file.is_symlink() or not descriptor_file.is_file():
+        raise ManifestError("suspension.json descriptor must be a regular file")
+    try:
+        descriptor = loads(descriptor_file.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError) as error:
+        raise ManifestError(f"suspension.json descriptor is unreadable or invalid: {error}") from error
+    if not isinstance(descriptor, dict) or descriptor.get("modelSHA256") != model_hash:
+        raise ManifestError("suspension.json modelSHA256 does not match its descriptor")
+    merged = dict(board)
+    merged_presentations = []
+    for presentation in presentations:
+        if presentation is selected[0]:
+            updated = dict(presentation)
+            updated_media = {}
+            for key, value in media.items():
+                if key == "orientation":
+                    updated_media["suspension"] = document["suspension"]
+                updated_media[key] = value
+            if "suspension" not in updated_media:
+                updated_media["suspension"] = document["suspension"]
+            updated["media"] = updated_media
+            merged_presentations.append(updated)
+        else:
+            merged_presentations.append(presentation)
+    merged["presentations"] = merged_presentations
+    return merged
+
+
 def generate_board_json(source: Path) -> bytes:
-    return render_board(load_board(source))
+    source = Path(source)
+    board = load_board(source)
+    sidecar = source.parent / "suspension.json"
+    if sidecar.exists() or sidecar.is_symlink():
+        board = merge_suspension_sidecar(board, source.parent)
+    return render_board(board)
 
 
 # --- packages ---------------------------------------------------------------

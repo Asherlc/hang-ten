@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "5f6744d3aeede10cc2b3c5f6f9dc19df1bb985c94991192ec8f2044c32932c46",
+  "suspension": {
+    "type": "twoBranchCord",
+    "passages": {
+      "left": [
+        {
+          "id": "left-in",
+          "nodeID": "mini_bar_body",
+          "pointInModel": [
+            -0.073,
+            0.056,
+            0.007
+          ],
+          "provenance": "Lattice Mini Bar Web-1, Web-2, Web-9: exterior end wrap; x is a display-estimated strand position, and y/z are representative body points for the point-passage contract"
+        },
+        {
+          "id": "left-out",
+          "nodeID": "mini_bar_body",
+          "pointInModel": [
+            -0.061,
+            0.046,
+            0.051
+          ],
+          "provenance": "Lattice Mini Bar Web-1, Web-2, Web-9: exterior end wrap; x is a display-estimated strand position, and y/z are representative body points for the point-passage contract"
+        }
+      ],
+      "right": [
+        {
+          "id": "right-in",
+          "nodeID": "mini_bar_body",
+          "pointInModel": [
+            0.073,
+            0.056,
+            0.007
+          ],
+          "provenance": "Lattice Mini Bar Web-1, Web-2, Web-9: exterior end wrap; x is a display-estimated strand position, and y/z are representative body points for the point-passage contract"
+        },
+        {
+          "id": "right-out",
+          "nodeID": "mini_bar_body",
+          "pointInModel": [
+            0.061,
+            0.046,
+            0.051
+          ],
+          "provenance": "Lattice Mini Bar Web-1, Web-2, Web-9: exterior end wrap; x is a display-estimated strand position, and y/z are representative body points for the point-passage contract"
+        }
+      ]
+    },
+    "branches": [
+      {
+        "id": "left-loop",
+        "passageIDs": [
+          "left-in",
+          "left-out"
+        ],
+        "restLength": 0.75,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Lattice Mini Bar Web-1, Web-2, Web-7 through Web-11 show an exterior loop at each end. 0.75 m per loop, 2 mm radius, strand positions, and clearance are display estimates; the 1.5 m total cord is reported by Mini Bar retailers, not a measured per-loop length."
+      },
+      {
+        "id": "right-loop",
+        "passageIDs": [
+          "right-in",
+          "right-out"
+        ],
+        "restLength": 0.75,
+        "radius": 0.002,
+        "material": "matteCord",
+        "provenance": "Lattice Mini Bar Web-1, Web-2, Web-7 through Web-11 show an exterior loop at each end. 0.75 m per loop, 2 mm radius, strand positions, and clearance are display estimates; the 1.5 m total cord is reported by Mini Bar retailers, not a measured per-loop length."
+      }
+    ],
+    "meshWrap": {
+      "clearance": 0.005
+    },
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.18,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "Display estimate of a shared overhead convergence point from Lattice Mini Bar hanging gallery"
+    },
+    "canonicalPoses": {
+      "edge-10": {
+        "rotation": [
+          0.258819045,
+          0,
+          0,
+          0.965925826
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.5,
+            0.866025404
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "edge-20": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.5,
+            0.866025404
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "ergonomic-jug": {
+        "rotation": [
+          -0.707106781,
+          0,
+          0,
+          0.707106781
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.5,
+            0.866025404
+          ],
+          "fitPadding": 0.12
+        }
+      },
+      "mini-pinch": {
+        "rotation": [
+          0.707106781,
+          0,
+          0,
+          0.707106781
+        ],
+        "translation": [
+          0,
+          0,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0.8,
+            0,
+            0.6
+          ],
+          "fitPadding": 0.12
+        }
+      }
+    }
+  }
+}

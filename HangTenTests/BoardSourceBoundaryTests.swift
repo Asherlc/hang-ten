@@ -307,6 +307,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "evolv-kilter-basic-long",
             "j-bryant.ftg-32",
             "lattice-triple-rung",
+            "lattice.mini-bar",
             "lattice.mxedge-lift-large",
             "lattice.mxedge-lift-small",
             "mammut.diamond-finger",
@@ -323,6 +324,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "owl-climb.poker",
             "tension.flash-board",
             "tension.grindstone",
+            "tension.grindstone-pro",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
             "metolius.contact",
@@ -360,15 +362,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            // A package that carries its own CAD authoring source has exactly one
-            // extra entry, named after its own directory. Anything else is still
-            // an unexpected package entry. Mirrors the board_catalog allowlist.
-            // Its board.json is generated from that source at build time, so a
-            // CAD-backed package must not also carry one.
+            // A CAD package may also carry an authoring-only suspension sidecar.
+            // Both sources generate board.json; neither is staged at runtime.
             let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
-                extraEntries.isEmpty || extraEntries == [authoringSource],
+                extraEntries.isEmpty || extraEntries == [authoringSource]
+                    || extraEntries == [authoringSource, "suspension.json"],
                 "unexpected package entries: \(extraEntries.sorted())"
             )
             if packageEntries.contains(authoringSource) {

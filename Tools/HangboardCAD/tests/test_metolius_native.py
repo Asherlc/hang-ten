@@ -107,4 +107,4 @@ def test_compiler_check_mode_reports_a_v2_package(tmp_path):
 # stations (up to 0.9 mm from the reference's facets), and the jug is the
 # photographed crown hump rather than the reference's scoop (up to 21 mm). The
 # comparison is run manually and reported; see
-# docs/source-audits/2026-09-25-metolius-rock-rings-3d-vector-provenance.md.
+# removed audit record

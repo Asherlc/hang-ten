@@ -4,6 +4,8 @@ This guide is the diagnosis, authoring, and verification reference for cords on
 Hang Ten model-media boards. Use the repository skill
 `audit-3d-hangboard-suspension` when a 3D board is missing an expected cord or
 when an Apple offline/On-Demand Resources cache is suspected.
+For connected internal passages and mesh-derived exterior bearing, read
+[CAD cord authoring](HANGBOARD_CORD_AUTHORING.md) before editing a package.
 
 ## The shipping boundary
 
@@ -13,14 +15,14 @@ A model presentation crosses two different delivery paths:
 | --- | --- | --- | --- |
 | Board identity, positions, `media.suspension`, and display configuration | `board.json` | Main app bundle | Parsed into `BoardModelMedia`; selects and solves transient cord geometry |
 | Model descriptor and its expected `modelSHA256` | `assets/*.model.json` | Main app bundle | Validates model identity, bounds, nodes, attachments, and physical-contact bindings |
-| Board mesh and embedded materials | `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by SceneKit after access and SHA-256 validation |
+| Material-free board mesh | `assets/*.usdz` | Apple On-Demand Resources (ODR) in production | Decoded by RealityKit after access and SHA-256 validation |
 
 `scripts/stage-board-packages.py` copies each validated regular-file package
-tree into the app resources while excluding only each model presentation's
-`assetPath` (and a CAD package's `<slug>.FCStd` authoring source, which is never
-bundled). It stages those excluded USDZ files for ODR separately. For a CAD
+tree into the app resources while excluding each model presentation's
+`assetPath` and CAD authoring sources (`<slug>.FCStd` and optional
+`suspension.json`). It stages excluded USDZ files for ODR separately. For a CAD
 package it writes the `board.json` generated from the FCStd's
-`HangTenBoardManifest` into the staged package, since none is committed.
+`HangTenBoardManifest` and any suspension sidecar into the staged package.
 Therefore `board.json` and the descriptor remain ordinary bundled metadata; the
 cord is not part of the downloaded model asset. Android stages with the same
 script (`--target android`), which keeps the USDZ inline instead of splitting it
@@ -35,24 +37,25 @@ the nested asset pack with the ODR service.
 
 The model cache is an in-flight load coalescer keyed by board ID, presentation
 ID, and descriptor `modelSHA256`; it is not a persistent scene cache.
-`BoardModelResourceLease` retains successful ODR access through SceneKit decode
+`BoardModelResourceLease` retains successful ODR access through model loading
 and scene use, then balances it with `endAccessingResources()` on deinit.
-`BoardModelAsset` accepts only a regular file whose exact SHA-256 matches the
-bundled descriptor before decoding it as an `SCNScene`.
+`BoardModelRealityCache` verifies the resource file's exact SHA-256 against the
+bundled descriptor before `BoardModelRealityLoader` loads it through ModelIO
+into the RealityKit scene.
 
 The practical conclusion is firm: if the expected board mesh loads but a cord
 does not render, invalidating or redownloading Apple's offline ODR asset cannot
 repair it. Inspect the bundled `board.json`, selected position, parser result,
 and transient suspension-renderer path. ODR is a plausible boundary only when
 the model is unavailable, its resource URL cannot be resolved, its bytes do not
-match the descriptor, or SceneKit cannot decode it.
+match the descriptor, or RealityKit cannot decode it.
 
 ## Diagnose by symptom
 
 | Symptom | First boundary to inspect | Do not use as a shortcut |
 | --- | --- | --- |
 | Correct model loads, expected cord absent | Bundled `media.suspension`, selected `positionID`, parser dispatch, transient scene layer | ODR cache purge or USDZ replacement |
-| Model is explicitly unavailable | ODR acquisition/debug packaged URL, resource lease, regular-file check, SHA-256, SceneKit decode | Raster fallback or a guessed model path |
+| Model is explicitly unavailable | ODR acquisition/debug packaged URL, resource lease, regular-file check, SHA-256, ModelIO/RealityKit load | Raster fallback or a guessed model path |
 | Wrong or stale mesh appears | Installed app/build provenance, ODR tag and descriptor hash, staging output | A screenshot from an unproven prebuilt app |
 | Cord moves incorrectly for one contact/face | Position-to-pose mapping, attachment override, solved destination state | Independent animation or camera changes that hide the defect |
 | Cord is selectable or blocks a contact | Native picking and scene-category configuration | Moving the cord visually without proving clearance |
@@ -66,9 +69,8 @@ even if its USDZ hashes happen to match.
 
 Discover model packages at execution time; never copy a historical package
 count into a decision. The closed manifest is
-`docs/source-audits/2026-09-13-model-hangboard-cord-audit.json`, with its human
-review at `docs/source-audits/2026-09-13-model-hangboard-cord-audit.md` and
-retained snapshots beneath `docs/source-audits/2026-09-13-model-cord-snapshots/`.
+The historical cord-evidence archive was removed; current suspension metadata
+is validated directly from each package's `suspension.json`.
 The validator requires exact equality between discovered model packages and
 audit records.
 
@@ -99,11 +101,17 @@ otherwise.
 
 ## Select the narrowest truthful topology
 
+For a CAD board this choice is already made: its cord follows the standard
+method in [CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), a
+`twoBranchCord` with `internalLoop` whose routes are solved against the CAD
+solid. The table below governs older non-CAD packages; when one of them moves
+to CAD, migrate its cord to the standard method with it.
+
 | Type | Package meaning | Evidence and geometry boundary |
 | --- | --- | --- |
 | `singleCord` | One attachment and one branch to a shared invisible display anchor | Use only when one physical attachment is established. The attachment binds to an importer-visible body/attachment node, never a selectable contact node. |
 | `pairedLeadCord` | Two independent exterior leads from two distinct attachment points to one invisible anchor | Represents visible leads without inventing a lead-to-lead or hidden interior route. Optional ordered `contactPointsInModel` may preserve an evidenced exterior over-lip route before the terminal attachment; per-pose attachment-point overrides must retain both lead IDs and remain distinct and in bounds. |
-| `twoBranchCord` | Two branch routes through four uniquely identified passages arranged as two ordered pairs | Use directed entry/exit bore routes only when the complete through-route is evidenced. Never fabricate a hidden bore from a visible mouth. |
+| `twoBranchCord` | Two branch routes through four uniquely identified passages arranged as two ordered pairs | Use directed entry/exit bore routes only when the complete through-route is evidenced. For `internalLoop`, each pair is two point mouths connected by a CAD channel and requires a winding choice for each mouth. Never fabricate a hidden bore from a visible mouth. |
 
 Attachments and passages bind against importer-visible IDs in the hash-bound
 descriptor. Preserve contact IDs as selectable contacts, not suspension
@@ -116,8 +124,9 @@ exterior routes keyed by both paired-lead IDs or all four directed-passage IDs.
 For a branch, the first passage's override runs from the anchor toward the
 entry mouth, and the second runs from its entry mouth back toward the anchor.
 These override the branch's entry/exit contacts only; the bore and the fixed
-route between bore exits remain unchanged. Single cords and point-only
-passages cannot use these overrides. Parsers validate the resolved route,
+route between bore exits remain unchanged. Connected `internalLoop` point
+mouths may hold generated settled-route caches; other point-only passages
+and single cords cannot use these overrides. Parsers validate the resolved route,
 including full length and distinct adjacent points.
 
 Captain pose-specific `attachmentPoints` delimit the visible cord at the
@@ -159,6 +168,20 @@ selected position. Do not bake cord, hook, nail, stand, mounting environment,
 cached geometry, or a raster fallback into the USDZ. Do not add a visible
 attachment just to explain the presentation.
 
+For exterior point-passage branches, `meshWrap.clearance` selects the shared
+mesh-driven route solver. The Mini Bar uses `internalLoop` instead: two
+connected U-shaped channels in its FCStd, each with two mouth points in
+`suspension.json`. The user confirmed one continuous loop per end, including
+the visible lower curve in Lattice's end photo. `windingByPassageID` records
+which side of the ovoid each lead follows. This one-time threading choice is
+necessary because mouth and anchor coordinates alone admit two exterior
+paths. The CAD-section solver computes settled bearing points for every grip
+pose from the native solid and caches them in `suspension.json`; the renderer
+uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
+positions, channel and cord diameters, anchor offset,
+and clearance are labeled display estimates. A sidecar's `modelSHA256` must
+match its descriptor, and the delivery lock pins its bytes.
+
 ## Make an evidence-backed correction
 
 1. Reproduce the failure with the exact board, presentation, and position.
@@ -174,10 +197,11 @@ attachment just to explain the presentation.
    bindings are unchanged, edit `board.json` suspension metadata only and
    preserve the USDZ and descriptor bytes. For a package with a native
    `<slug>.FCStd` source, there is no committed `board.json`; it is generated
-   from the FCStd at build time. Change the suspension in the FCStd's
+   from the FCStd and optional adjacent `suspension.json` at build time. Edit
+   the sidecar when present; otherwise change suspension in the FCStd's
    `HangTenBoardManifest` with `Tools/HangboardCAD/set_board_manifest.py`
-   (which leaves every geometry member byte-identical); inspect the result
-   with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
+   (which leaves every geometry member byte-identical). Inspect the generated
+   result with `Tools/HangboardCAD/board_manifest.py --package <slug>`. Runtime changes belong in
    `BoardPackageStore`, `SuspendedBoardPresentation`, or `BoardModelView` only
    when a focused regression demonstrates a runtime defect.
 5. Re-run the focused test, package/audit validation, relevant native tests,
@@ -207,12 +231,10 @@ change.
 Repository commands from the checkout root:
 
 ```sh
-rtk proxy ruby Tools/HangboardModels/check_production_cord_clearance.rb
 rtk scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
 rtk scripts/hangboard-packages.sh audit-cords --root Hangboards \
-  --manifest docs/source-audits/2026-09-13-model-hangboard-cord-audit.json
+  --manifest <package suspension manifest>
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardPackages/tests/test_cord_audit.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
   Tools/HangboardPackages/tests -q
 rtk proxy env PYTHONPATH=Tools/HangboardModels \
@@ -222,19 +244,17 @@ rtk proxy env PYTHONPATH=Tools/HangboardModels \
   Tools/HangboardModels/test_import_contact_model_source.py \
   Tools/HangboardModels/test_verify_yy_baguette_evo.py -q
 rtk .context/hangboard-packages-venv/bin/python -m pytest \
-  Tools/HangboardPackages/tests/test_hard_cut_audit.py -q
 rtk python3 -m compileall -q Tools/HangboardPackages/src
 rtk git diff --check
 ```
 
-The macOS clearance regression extracts the checked-out production model
-types, solver, and verbatim `BoardModelView.hasClearance` gate and helpers. It
-decodes every triangle from the four real, hash-checked USDZs and fails if any
-of their 17 poses is rejected. It also checks that Captain visible terminals
-stay in the selected upper channel and that each pose projects its anchor and
-at least 10% of board width of every branch above the entire board silhouette
-(with an eight-radius minimum). This is mesh/solver evidence; it does not
-replace current-source iOS selection, picking, or screenshot review.
+`Tools/HangboardModels/check_production_cord_clearance.rb` is a retained
+SceneKit-era regression and still expects old renderer source signatures. It
+does not validate the current RealityKit `internalLoop` path. For connected
+passages, use the native solid-intersection and all-pose review described in
+[CAD cord authoring](HANGBOARD_CORD_AUTHORING.md), alongside current package
+and iOS tests. A convex-hull-only clearance check cannot establish that the
+mouth transition avoids the wooden solid.
 
 Also parse each edited JSON document directly and run the focused XCTest
 selectors for `SuspendedBoardPresentationTests`, `BoardModelTests`, and

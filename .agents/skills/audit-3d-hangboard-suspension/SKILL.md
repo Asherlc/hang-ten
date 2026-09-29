@@ -5,13 +5,16 @@ description: Use when a Hang Ten 3D board is missing an expected cord, Apple On-
 
 # Audit 3D hangboard suspension
 
-Treat suspension as bundled package metadata rendered as transient SceneKit
+Treat suspension as bundled package metadata rendered as transient RealityKit
 geometry. The USDZ is the only On-Demand Resource (ODR); clearing Apple's ODR
 cache cannot make a metadata-driven cord appear.
 
 Read [3D suspension and ODR](../../../docs/3D_SUSPENSION_AND_ODR.md) before
 diagnosis or edits. Also read the current cord audit manifest and its retained
 evidence rather than relying on an older design note.
+For a cord entering two connected mouths, read
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md) before choosing
+`internalLoop` or changing a winding direction.
 
 ## Work from the failing boundary
 
@@ -23,11 +26,12 @@ evidence rather than relying on an older design note.
   includes the suspension renderer and current bundled metadata.
 
 For a package with a native `<slug>.FCStd`, there is no committed `board.json`:
-it is generated from the FCStd's `HangTenBoardManifest` at build time (read it
-with `python3 Tools/HangboardCAD/board_manifest.py --package <slug>`, or the
-staged app bundle). Make suspension metadata edits in the manifest with
-`Tools/HangboardCAD/set_board_manifest.py`; never create a `board.json` in the
-package (the validator rejects it).
+it is generated from the FCStd's `HangTenBoardManifest` and any adjacent
+`suspension.json` at build time (read it with
+`python3 Tools/HangboardCAD/board_manifest.py --package <slug>`). Edit the
+sidecar when present; otherwise edit suspension in the manifest with
+`Tools/HangboardCAD/set_board_manifest.py`. The sidecar must match the model
+descriptor's SHA-256. Never create a `board.json` in the package.
 
 Do not bake a cord, anchor, or fallback into the USDZ. Do not infer a hidden
 route, through-bore, knot, supplied accessory, or safety property.
@@ -40,9 +44,19 @@ a ruling, and human approval. Current validated evidence outranks superseded
 assumptions; in particular, `yy.baguette-evo` intentionally retains its
 source-backed `twoBranchCord` alongside orientation metadata.
 
-Choose the narrowest supported topology: `singleCord` for one attachment,
-`pairedLeadCord` for two independent exterior leads, or `twoBranchCord` only
-for two evidenced ordered passage routes. Keep sourced facts distinct from
+For a CAD board (a package with `<slug>.FCStd`), use the standard method in
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md): the cord
+passage is a CAD void, the topology is `twoBranchCord` with `internalLoop` in
+`suspension.json`, and `solve_threaded_rope.py` solves the routes. Replace a
+hand-authored `pairedLeadCord` when its board moves to CAD, and extend the
+solver instead of hand-placing routes when a board does not fit it.
+
+For older non-CAD packages, choose the narrowest supported topology: `singleCord` for one attachment,
+`pairedLeadCord` for two independent exterior leads, or `twoBranchCord` for
+two evidenced ordered passage routes or connected internal mouth pairs.
+`internalLoop` additionally requires each branch's two mouths to connect in
+the CAD solid and an evidence-backed winding choice at every mouth. Keep
+sourced facts distinct from
 `displayEstimate` values. A published total rope length is not a per-lead
 `restLength`; record any derivation explicitly. A user-approved shorter visual
 cord remains a display estimate: adjust its anchor geometry and rest length

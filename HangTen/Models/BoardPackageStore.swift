@@ -1726,7 +1726,7 @@ struct BoardPackageStore {
         positionIDs: Set<String>,
         boardID: String
     ) throws -> BoardModelSuspension {
-        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil && $0.cordContactPoints == nil }),
+        guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil && $0.cordContactPoints == nil && $0.wrappedRoutes == nil }),
               document.attachment.nodeID.isEmpty == false,
               document.attachment.pointInModel.count == 3,
               document.attachment.pointInModel.allSatisfy(\.isFinite),
@@ -1907,6 +1907,9 @@ struct BoardPackageStore {
         }
         var poses: [String: BoardModelCanonicalPose] = [:]
         for (positionID, pose) in document.canonicalPoses {
+            guard pose.wrappedRoutes == nil else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "wrappedRoutes requires twoBranchCord exterior point passages")
+            }
             try validateCordContactPoints(pose.cordContactPoints, ids: Set(document.attachments.map(\.id)), boardID: boardID)
             if let points = pose.attachmentPoints {
                 guard Set(points.keys) == Set(document.attachments.map(\.id)),
@@ -2030,9 +2033,40 @@ struct BoardPackageStore {
         }
         let passages = document.passages.left + document.passages.right
         let throughBore = passages[0].isThroughBore
-        guard passages.allSatisfy({ $0.isThroughBore == throughBore }),
-              throughBore || Set(passages.map(\.nodeID)).count == passages.count else {
+        guard passages.allSatisfy({ $0.isThroughBore == throughBore }) else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord requires one route representation and distinct point-passage node IDs")
+        }
+        if let wrap = document.meshWrap {
+            guard !throughBore, wrap.clearance.isFinite, wrap.clearance > 0,
+                  Float(wrap.clearance).isFinite, Float(wrap.clearance) > 0,
+                  document.canonicalPoses.values.allSatisfy({ $0.wrappedRoutes == nil }),
+                  document.passages.left.allSatisfy({ $0.entryPointInModel.count == 3 }),
+                  document.passages.right.allSatisfy({ $0.entryPointInModel.count == 3 }),
+                  document.passages.left[0].entryPointInModel[0] != document.passages.left[1].entryPointInModel[0],
+                  document.passages.right[0].entryPointInModel[0] != document.passages.right[1].entryPointInModel[0] else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "meshWrap requires distinct exterior strands and no authored routes")
+            }
+        }
+        if let loop = document.internalLoop {
+            guard !throughBore, document.meshWrap == nil,
+                  loop.clearance.isFinite, loop.clearance > 0,
+                  Float(loop.clearance).isFinite, Float(loop.clearance) > 0,
+                  Set(loop.channelLengthByBranchID.keys) == Set(document.branches.map(\.id)),
+                  loop.channelLengthByBranchID.values.allSatisfy({ $0.isFinite && $0 > 0 }),
+                  Set(loop.windingByPassageID.keys) == Set(passages.map(\.id)),
+                  loop.windingByPassageID.values.allSatisfy({
+                      BoardModelLoopWinding(rawValue: $0) != nil
+                  }),
+                  [0, document.canonicalPoses.count].contains(
+                      document.canonicalPoses.values.filter { $0.cordContactPoints != nil }.count),
+                  document.canonicalPoses.values.allSatisfy({ pose in
+                      pose.wrappedRoutes == nil && (pose.cordContactPoints == nil ||
+                          Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
+                  }),
+                  document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
+                  document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
+            }
         }
         guard passages.allSatisfy({ $0.id.isBoardPackageIdentifier }),
               Set(passages.map(\.id)).count == passages.count else {
@@ -2096,8 +2130,29 @@ struct BoardPackageStore {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord anchor must be finite")
         }
         for (positionID, pose) in document.canonicalPoses {
-            if pose.cordContactPoints != nil && !throughBore {
+            if pose.cordContactPoints != nil && !throughBore && document.internalLoop == nil {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "cordContactPoints requires directed passages")
+            }
+            if pose.wrappedRoutes != nil && throughBore {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "wrappedRoutes requires exterior point passages")
+            }
+            if let routes = pose.wrappedRoutes {
+                guard Set(routes.keys) == Set(document.branches.map(\.id)) else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "wrappedRoutes must give both branches distinct finite exterior points")
+                }
+                for route in routes.values {
+                    guard route.count >= 3, route.allSatisfy({ $0.count == 3 && $0.allSatisfy(\.isFinite) }) else {
+                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "wrappedRoutes must give both branches distinct finite exterior points")
+                    }
+                    for index in 1..<route.count {
+                        let distanceSquared = zip(route[index - 1], route[index]).reduce(0.0) { result, pair in
+                            result + (pair.0 - pair.1) * (pair.0 - pair.1)
+                        }
+                        guard distanceSquared > 1e-14 else {
+                            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "wrappedRoutes must give both branches distinct finite exterior points")
+                        }
+                    }
+                }
             }
             try validateCordContactPoints(pose.cordContactPoints, ids: Set(passages.map(\.id)), boardID: boardID)
             guard pose.rotation.count == 4, pose.rotation.allSatisfy(\.isFinite),
@@ -2115,7 +2170,9 @@ struct BoardPackageStore {
                 let side = branchIndex == 0 ? document.passages.left : document.passages.right
                 let entryContacts = pose.cordContactPoints?[side[0].id] ?? branch.entryContactPoints
                 let exitContacts = pose.cordContactPoints?[side[1].id] ?? branch.exitContactPoints
-                let modelRoute = !throughBore ? side.map(\.entryPointInModel) : entryContacts + [
+                let modelRoute = document.internalLoop != nil && pose.cordContactPoints != nil
+                    ? entryContacts + exitContacts
+                    : !throughBore ? (pose.wrappedRoutes?[branch.id] ?? side.map(\.entryPointInModel)) : entryContacts + [
                     side[0].entryPointInModel,
                     side[0].exitPointInModel,
                 ] + branch.exteriorContactPoints + [
@@ -2144,10 +2201,23 @@ struct BoardPackageStore {
                         throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord pose \(positionID) branch \(branch.id) endpoint distance must be finite")
                     }
                 }
-                let rigidLength = zip(transformedEndpoints, transformedEndpoints.dropFirst())
+                let visibleRigidLength = zip(transformedEndpoints, transformedEndpoints.dropFirst())
                     .reduce(0) { partial, pair in
                         partial + zip(pair.0, pair.1).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                     }
+                let rigidLength: Double
+                if let hiddenLength = document.internalLoop?.channelLengthByBranchID[branch.id] {
+                    let firstMouth = entryContacts.last ?? side[0].entryPointInModel
+                    let secondMouth = exitContacts.first ?? side[1].entryPointInModel
+                    let mouthChord = zip(firstMouth, secondMouth)
+                        .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                    guard hiddenLength >= mouthChord else {
+                        throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop channel is shorter than its mouth chord")
+                    }
+                    rigidLength = visibleRigidLength + hiddenLength - mouthChord
+                } else {
+                    rigidLength = visibleRigidLength
+                }
                 let firstDistance = zip(transformedEndpoints[0], anchorPosition)
                     .reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
                 let lastDistance = zip(transformedEndpoints.last!, anchorPosition)
@@ -2160,7 +2230,7 @@ struct BoardPackageStore {
             }
         }
         let poseValues = document.canonicalPoses.mapValues {
-            BoardModelCanonicalPose(rotation: $0.rotation, translation: $0.translation, camera: BoardModelCanonicalCamera(viewDirection: $0.camera.viewDirection, fitPadding: $0.camera.fitPadding), cordContactPoints: $0.cordContactPoints)
+            BoardModelCanonicalPose(rotation: $0.rotation, translation: $0.translation, camera: BoardModelCanonicalCamera(viewDirection: $0.camera.viewDirection, fitPadding: $0.camera.fitPadding), cordContactPoints: $0.cordContactPoints, wrappedRoutes: $0.wrappedRoutes)
         }
         return .twoBranchCord(BoardModelTwoBranchSuspension(
             passages: BoardModelPassagePairs(
@@ -2169,7 +2239,13 @@ struct BoardPackageStore {
             ),
             branches: document.branches.map { BoardModelCordBranch(id: $0.id, passageIDs: $0.passageIDs, entryContactPoints: $0.entryContactPoints, exteriorContactPoints: $0.exteriorContactPoints, exitContactPoints: $0.exitContactPoints, restLength: $0.restLength, radius: $0.radius, material: $0.material, provenance: $0.provenance) },
             anchor: BoardModelInvisibleAnchor(offsetFromBoardBounds: document.anchor.offsetFromBoardBounds, visibility: document.anchor.visibility, provenance: document.anchor.provenance, position: anchorPosition),
-            canonicalPoses: poseValues
+            canonicalPoses: poseValues,
+            meshWrapClearance: document.meshWrap?.clearance,
+            internalLoopClearance: document.internalLoop?.clearance,
+            internalLoopWindingByPassageID: document.internalLoop.map {
+                $0.windingByPassageID.mapValues { BoardModelLoopWinding(rawValue: $0)! }
+            },
+            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID
         ))
 
 }
@@ -2341,7 +2417,9 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                 continue
             }
             guard suspensionType == "twoBranchCord" else { continue }
-            try suspensionMembers.requireCanonicalOrder(["type", "passages", "branches", "anchor", "canonicalPoses"])
+            try suspensionMembers.requireCanonicalOrder(
+                ["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"]
+                    .filter { suspensionMembers.value(named: $0) != nil })
             guard case .object(let passagesMembers)? = suspensionMembers.value(named: "passages"),
                   case .array(let leftPassages)? = passagesMembers.value(named: "left"),
                   case .array(let rightPassages)? = passagesMembers.value(named: "right"),
@@ -2370,7 +2448,7 @@ private indirect enum BoardPackageRawJSONValue: Equatable {
                     throw BoardPackageRawJSONError.invalid
                 }
                 try poseObject.requireCanonicalOrder(
-                    ["rotation", "translation", "camera", "cordContactPoints"]
+                    ["rotation", "translation", "camera", "cordContactPoints", "wrappedRoutes"]
                         .filter { poseObject.value(named: $0) != nil })
                 try camera.requireCanonicalOrder(["viewDirection", "fitPadding"])
             }
@@ -3085,18 +3163,48 @@ struct BoardPackageCordBranchDocument: Decodable, Equatable {
 struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
+    let meshWrap: BoardPackageMeshWrapDocument?
+    let internalLoop: BoardPackageInternalLoopDocument?
     let anchor: BoardPackageAnchorDocument
     let canonicalPoses: [String: BoardPackageCanonicalPoseDocument]
 
-    private enum CodingKeys: String, CodingKey { case type, passages, branches, anchor, canonicalPoses }
+    private enum CodingKeys: String, CodingKey { case type, passages, branches, meshWrap, internalLoop, anchor, canonicalPoses }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["type", "passages", "branches", "anchor", "canonicalPoses"])
+        try decoder.rejectUnknownKeys(["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         _ = try container.decode(String.self, forKey: .type)
         passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
         branches = try container.decode([BoardPackageCordBranchDocument].self, forKey: .branches)
+        meshWrap = try container.decodeIfPresent(BoardPackageMeshWrapDocument.self, forKey: .meshWrap)
+        internalLoop = try container.decodeIfPresent(BoardPackageInternalLoopDocument.self, forKey: .internalLoop)
         anchor = try container.decode(BoardPackageAnchorDocument.self, forKey: .anchor)
         canonicalPoses = try container.decode([String: BoardPackageCanonicalPoseDocument].self, forKey: .canonicalPoses)
+    }
+}
+
+struct BoardPackageMeshWrapDocument: Decodable, Equatable {
+    let clearance: Double
+
+    private enum CodingKeys: String, CodingKey { case clearance }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["clearance"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        clearance = try container.decode(Double.self, forKey: .clearance)
+    }
+}
+
+struct BoardPackageInternalLoopDocument: Decodable, Equatable {
+    let clearance: Double
+    let windingByPassageID: [String: String]
+    let channelLengthByBranchID: [String: Double]
+
+    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID }
+    init(from decoder: Decoder) throws {
+        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        clearance = try container.decode(Double.self, forKey: .clearance)
+        windingByPassageID = try container.decode([String: String].self, forKey: .windingByPassageID)
+        channelLengthByBranchID = try container.decode([String: Double].self, forKey: .channelLengthByBranchID)
     }
 }
 
@@ -3154,9 +3262,10 @@ struct BoardPackageCanonicalPoseDocument: Decodable, Equatable {
 
     let attachmentPoints: [String: [Double]]?
     let cordContactPoints: [String: [[Double]]]?
-    private enum CodingKeys: String, CodingKey { case rotation, translation, camera, attachmentPoints, cordContactPoints }
+    let wrappedRoutes: [String: [[Double]]]?
+    private enum CodingKeys: String, CodingKey { case rotation, translation, camera, attachmentPoints, cordContactPoints, wrappedRoutes }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints"])
+        try decoder.rejectUnknownKeys(["rotation", "translation", "camera", "attachmentPoints", "cordContactPoints", "wrappedRoutes"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         rotation = try container.decode([Double].self, forKey: .rotation)
         translation = try container.decode([Double].self, forKey: .translation)
@@ -3165,6 +3274,8 @@ struct BoardPackageCanonicalPoseDocument: Decodable, Equatable {
             ? try container.decode([String: [Double]].self, forKey: .attachmentPoints) : nil
         cordContactPoints = container.contains(.cordContactPoints)
             ? try container.decode([String: [[Double]]].self, forKey: .cordContactPoints) : nil
+        wrappedRoutes = container.contains(.wrappedRoutes)
+            ? try container.decode([String: [[Double]]].self, forKey: .wrappedRoutes) : nil
     }
 }
 

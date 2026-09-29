@@ -42,6 +42,7 @@ __pycache__/
 /Hangboards/lattice-mxedge-lift-small/board.json
 /Hangboards/lattice-triple-rung/board.json
 /Hangboards/metolius-foundry/board.json
+/Hangboards/lattice-mini-bar/board.json
 /Hangboards/metolius-prime-rib/board.json
 /Hangboards/metolius-rock-rings-3d/board.json
 /Hangboards/metolius-wood-grips-compact-ii/board.json
@@ -51,6 +52,7 @@ __pycache__/
 /Hangboards/trango-rock-prodigy-pivot/board.json
 /Hangboards/trango-rock-prodigy-training-center/board.json
 /Hangboards/tension-grindstone/board.json
+/Hangboards/tension-grindstone-pro/board.json
 /Hangboards/clavellium-training-block/board.json
 /Hangboards/escape-beta-22/board.json
 /Hangboards/frictitious-doormount-pro-7/board.json
@@ -63,3 +65,4 @@ __pycache__/
 /Hangboards/metolius-climbers-edge/board.json
 /Hangboards/metolius-project/board.json
 /Hangboards/frictitious-megalith/board.json
+/Hangboards/crimptonite-helium-mobile/board.json
