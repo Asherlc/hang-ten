@@ -3,7 +3,10 @@
 Status: approved by the user on 2026-09-29, including live settling on
 Clavellium first, followed by the other corded boards.
 
-The user additionally requested three times the current rope thickness.
+The user initially requested three times the current rope thickness. During
+implementation they corrected Clavellium and Mini Bar to a real cord diameter
+of **7 mm**, explicitly confirming both boards. That later instruction governs
+those boards.
 
 ## Intended behavior
 
@@ -14,11 +17,12 @@ the cord must remain threaded; its center is not a fixed rope attachment.
 Authors specify the connection graph, physical attachment facts, dimensions,
 and display estimates. They do not specify bearing points for each pose.
 
-Use three times each existing rope's diameter throughout the rollout. Apply
-the same increased radius to the rendered tube and the physics collider.
-For Clavellium, the current 2 mm radius becomes 6 mm: 12 mm diameter instead
-of 4 mm. This is a user-requested display adaptation, not a measurement of
-the supplied sling. Do not use a thin invisible collider beneath a thick
+Use a 7 mm diameter (3.5 mm radius) for Clavellium and Mini Bar, as confirmed
+by the operator. Preserve the prior threefold display request on other boards
+unless superseded by their source facts or operator instructions. Apply the
+same selected radius to the rendered tube and the physics collider. The
+retained 2 mm baseline radius uses scale 1.75 on these two boards. Clavellium
+still uses the explicitly documented round-cord adaptation of its flat sling. Do not use a thin invisible collider beneath a thick
 rendered rope. A passage too small for the new diameter is a fit failure
 to report and resolve, not permission to enlarge the physical board or
 permit penetration. Keep real source dimensions unchanged.
@@ -243,7 +247,7 @@ Every canonical pose and every paired instance must pass the same topology,
 strain, collision, convergence, lifecycle, and native visual gates. Refresh
 the cord audit and delivery lock for promoted packages. No simulated cord
 is marketed as a load-rating or safety analysis of the physical hangboard.
-Include a per-board fit check for the threefold thickness increase, and retain
+Include a per-board fit check for the selected diameter, and retain
 the baseline radius used to derive it so repeated builds do not multiply it
 again. Any fit conflicts remain explicit rollout gaps.
 

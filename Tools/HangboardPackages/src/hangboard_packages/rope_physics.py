@@ -184,8 +184,8 @@ def validate_rope_physics(document: dict, model_sha256: str) -> dict:
         for rope in ropes.values():
             _closed(rope, {"id", "baselineRadius", "thicknessScale", "radius", "restLength", "lengthProvenance", "linearMass", "nodes", "edges"})
             derived = derive_radius(rope["baselineRadius"], rope["thicknessScale"])
-            if rope["thicknessScale"] != 3 or abs(_number(rope["radius"], "radius", True) - derived) > 1e-12:
-                raise ValueError("rope radius must match threefold baseline")
+            if abs(_number(rope["radius"], "radius", True) - derived) > 1e-12:
+                raise ValueError("rope radius must match selected baseline scale")
             _number(rope["restLength"], "rope length", True)
             _provenance(rope["lengthProvenance"])
             _estimate(rope["linearMass"])

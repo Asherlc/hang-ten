@@ -76698,8 +76698,8 @@
         {
           "id": "sling",
           "baselineRadius": 0.002,
-          "thicknessScale": 3,
-          "radius": 0.006,
+          "thicknessScale": 1.75,
+          "radius": 0.0035,
           "restLength": 0.55,
           "lengthProvenance": "Display estimate retained from suspension.json: one continuous 550 mm loop, including the 90 mm hidden passage exactly once; no manufacturer rope length claimed.",
           "linearMass": {

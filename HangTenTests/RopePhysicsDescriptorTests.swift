@@ -43,6 +43,15 @@ final class RopePhysicsDescriptorTests: XCTestCase {
         XCTAssertNil(input.profiles[0].ropes[0].nodes[1].point)
     }
 
+    func testOperatorSelectedSevenMillimeterDiameter() throws {
+        let raw=String(decoding:Self.fixture,as:UTF8.self)
+        let changed=raw.replacingOccurrences(of:"\"thicknessScale\":3",with:"\"thicknessScale\":1.75")
+            .replacingOccurrences(of:"\"radius\":0.006",with:"\"radius\":0.0035")
+        XCTAssertNotEqual(changed,raw)
+        let input=try RopePhysicsDescriptor.decode(Data(changed.utf8)).validated(modelSHA256:Self.modelSHA)
+        XCTAssertEqual(2*input.profiles[0].ropes[0].radius,0.007,accuracy:1e-12)
+    }
+
     func testStaleHashAndUnknownMembers() throws {
         let descriptor = try RopePhysicsDescriptor.decode(Self.fixture)
         XCTAssertThrowsError(try descriptor.validated(modelSHA256: String(repeating:"c", count:64)))

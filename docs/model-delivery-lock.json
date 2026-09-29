@@ -53,7 +53,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "e408fbe3da93ee4e93614fab8cd84838d53b69bef5d2418677665c2e90f70e10",
+  "sha256Manifest": "d4a50daf99b7f35d26cffe06f2d91a6a7ab770b30c9887d977cc351fc2c962fd",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -117,8 +117,8 @@
       "provenanceSidecar": "docs/source-audits/2026-09-29-clavellium-suspension-and-accuracy.md",
       "assetCoverage": "Descriptor + native source + suspension and rope-physics authoring sidecars + generated physics metadata; compiled USDZ pinned by descriptor modelSHA256.",
       "suspensionSHA256": "18f667239041c0f059df804e88295355e8b393438835b167fccd6d2c9d506e5a",
-      "physicsSHA256": "8c2b3eb17b5c607674d065c51adfda3bfc3fce9b13b1e53056b3da27fe6466b6",
-      "physicsAuthoringSHA256": "64e631a376aaf07da15716e91c4253c16874e124bb2d9523253b2a52d769444d"
+      "physicsSHA256": "9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f",
+      "physicsAuthoringSHA256": "f61f74d80079172a3273b18b9bad47aaffb88aa99d66120f6364b91bc1792b8f"
     },
     "dewoodstok-woodbord": {
       "source": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",

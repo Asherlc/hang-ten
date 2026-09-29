@@ -2,7 +2,11 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Deliver live geometry-derived cord settling, first on Clavellium and then every represented corded board, with three times the existing rope diameter.
+**Goal:** Deliver live geometry-derived cord settling, first on Clavellium and then every represented corded board, with operator-selected cord diameters.
+
+**User correction during execution:** Clavellium and Mini Bar use 7 mm diameter
+(3.5 mm radius), replacing the earlier threefold target for those boards. Keep
+render and collision radii identical; retain baseline scale 1.75.
 
 **Architecture:** A pure Swift chain solver consumes a hash-bound collision and topology descriptor. It computes sliding contacts and the board's vertical motion; a scene controller publishes valid snapshots to a reusable RealityKit tube mesh. Package adapters preserve each board's evidenced threading graph.
 
@@ -13,7 +17,7 @@
 ## Global Constraints
 
 - Preserve the project's iOS 18 minimum and existing model identity/ODR contract.
-- Use three times each existing rope's diameter throughout the rollout. Apply the same increased radius to the rendered tube and the physics collider.
+- Use 7 mm diameter on Clavellium and Mini Bar; retain the prior threefold request on other boards unless superseded. Apply the same selected radius to the rendered tube and the physics collider.
 - Do not use a thin invisible collider beneath a thick rendered rope. Keep real source dimensions unchanged.
 - A passage identifies an opening through which the cord must remain threaded; its center is not a fixed rope attachment.
 - The current Clavellium 8 mm presentation remains as accepted by the user. Unknown grip-to-channel mappings are not invented.
@@ -25,7 +29,7 @@
 
 ## Review Focus
 
-- A hole admits the original diameter but not the threefold diameter: reject fit without changing wood or silently using a smaller collider (Tasks 1, 3, 8).
+- A hole admits the original diameter but not the selected diameter: reject fit without changing wood or silently using a smaller collider (Tasks 1, 3, 8).
 - A segment crosses wood although its two particles clear it: segment and swept collision must reject the move (Tasks 2, 4).
 - Rapid position changes arrive during solving: cancel superseded work and never apply a snapshot from an older scene/pose generation (Task 5).
 - Two instances reference one model: immutable geometry may be shared; particles, velocities, supports, and lifecycle remain independent (Tasks 5, 8).
@@ -90,10 +94,10 @@ with pytest.raises(ValueError, match="fit"):
 
 **Interfaces:** `RopeThreadedSeed.make(input: RopePhysicsInput, profileID: String, orientation: simd_quatd, collider: RopeTriangleCollider) throws -> RopeSimulationState`. State contains board height/vertical velocity and per-rope particle positions, previous positions/velocities, immutable link rest lengths, support-index constraints, and channel traversal membership. Start with at most 2 mm link spacing; refine near rims as necessary without changing total rest length. No mouth-center pinned particles.
 
-- [ ] Test the central Clavellium loop: one chain from support through both portals/hidden channel back to support; total rest length 0.55 m; radius 0.006 m; each internal segment stays in the chosen channel; every finite-radius segment clears wood. Assert impossible length or eroded portal throws. Assert source opening centers may remain unchanged while seed bearing coordinates differ. Ignore `cordContactPoints` when generating the seed.
+- [ ] Test the central Clavellium loop: one chain from support through both portals/hidden channel back to support; total rest length 0.55 m; radius 0.0035 m; each internal segment stays in the chosen channel; every finite-radius segment clears wood. Assert impossible length or eroded portal throws. Assert source opening centers may remain unchanged while seed bearing coordinates differ. Ignore `cordContactPoints` when generating the seed.
 - [ ] Run `RopeThreadedSeedTests` and the package exporter test to establish failure.
 - [ ] Implement an automatically derived collision-free seed within the connection/winding class and solve initial board height for feasible loop length. Retained offline pathfinding can inform the algorithm; copied cached pose contacts cannot become fixed constraints. Use annotated display estimates of board mass 1 kg and rope linear mass 0.01 kg/m only if primary measurements are absent; initial gravity is `(0,-9.81,0)` m/s². These estimates must appear in descriptor provenance.
-- [ ] Regenerate Clavellium metadata/physics and run seed, fit, package and source-hash tests. Verify the threefold radius derives from a retained baseline, not from already enlarged metadata.
+- [ ] Regenerate Clavellium metadata/physics and run seed, fit, package and source-hash tests. Verify the selected radius derives from a retained baseline, not from already enlarged metadata.
 - [ ] Commit and push initialization and the source-bound physics inputs, without enabling unproven live rendering.
 
 ## Task 4: Coupled live dynamics and numerical acceptance
@@ -102,12 +106,12 @@ with pytest.raises(ValueError, match="fit"):
 
 **Interfaces:** `RopeDynamicsSolver.init(input: RopePhysicsInput, state: RopeSimulationState, collider: RopeTriangleCollider)`; `mutating step(dt: Double, targetOrientation: simd_quatd) throws -> RopeFrameSnapshot`; `mutating settled(targetOrientation: simd_quatd, maxDuration: Double) throws -> RopeFrameSnapshot`. Snapshot contains board transform, rope positions/radii, settled flag and `RopeSimulationMetrics` (total-length error, max local strain, minimum segment clearance, topology validity, maximum speed, and board displacement history).
 
-- [ ] Write deterministic chain, contact and coupled-board tests, then actual Clavellium tests for upright/90°/180° physical rotations, repeated reversals, initial perturbation, time-step halving, impossible input, and nonfinite state. Upright expected bearing lies within 0.0003 m of the wood beyond the 0.006 m radius; require automatic portal sliding rather than pin movement in authoring data.
+- [ ] Write deterministic chain, contact and coupled-board tests, then actual Clavellium tests for upright/90°/180° physical rotations, repeated reversals, initial perturbation, time-step halving, impossible input, and nonfinite state. Upright expected bearing lies within 0.0003 m of the wood beyond the 0.0035 m radius; require automatic portal sliding rather than pin movement in authoring data.
 
 ```swift
 XCTAssertLessThanOrEqual(metrics.totalLengthError, 0.0005)
 XCTAssertLessThanOrEqual(metrics.maximumLocalStrain, 0.005)
-XCTAssertGreaterThanOrEqual(metrics.minimumSegmentClearance, 0.00595)
+XCTAssertGreaterThanOrEqual(metrics.minimumSegmentClearance, 0.00345)
 XCTAssertTrue(metrics.topologyValid)
 // After <= 5 simulated seconds, require speed < .001 m/s and
 // board displacement < .0001 m over the final .5 s.
@@ -137,7 +141,7 @@ XCTAssertTrue(metrics.topologyValid)
 
 **Interfaces:** `LiveRopeMesh.init(capacity: Int, radialSegments: Int, radius: Float) throws`; `update(snapshot: RopeFrameSnapshot) throws`; reusable mesh/entity buffers, radius derived from Task 1. Render hidden chain segments through normal depth occlusion. Main-thread entity updates consume immutable snapshots.
 
-- [ ] Test tube radius 0.006 m, finite normals for straight/near-collinear chain spans, stable buffer/entity identity over 1,000 updates, and capacity growth without dangling buffers. Assert no collision/picking component or cord accessibility element. Assert camera framing contains board and rope during transitions and after sleep.
+- [ ] Test tube radius 0.0035 m, finite normals for straight/near-collinear chain spans, stable buffer/entity identity over 1,000 updates, and capacity growth without dangling buffers. Assert no collision/picking component or cord accessibility element. Assert camera framing contains board and rope during transitions and after sleep.
 - [ ] Run mesh and scene accessibility tests before implementation.
 - [ ] Implement reusable `LowLevelMesh` updates without per-frame entity trees. Respect Reduce Motion by computing a validated settled snapshot on the worker and applying it without visible dynamics. Give display-only picker cards a settled snapshot rather than keeping every offscreen card ticking. Keep camera stable during motion and refit once settled.
 - [ ] Run mesh, picking, framing and Reduce Motion tests; verify retained ODR lease and board contact highlight identity. Validate geometry before publishing a frame.
@@ -149,7 +153,7 @@ XCTAssertTrue(metrics.topologyValid)
 
 **Interfaces:** The public package enables physics only after Tasks 1–6 gates pass. Retain physics/source/model hashes, exact test results and screenshot/recording provenance in its audit.
 
-- [ ] Build/test current source on an isolated owned iOS Simulator using `validate-hang-ten-ios`; run the full `HangTenTests` suite. Test actual portrait/landscape selection, workout-driven position, orbit/reset, clear/reappear, pause/resume, accessibility and Reduce Motion. Review a recording of upright/DEBUG90°/DEBUG180° settling at threefold thickness.
+- [ ] Build/test current source on an isolated owned iOS Simulator using `validate-hang-ten-ios`; run the full `HangTenTests` suite. Test actual portrait/landscape selection, workout-driven position, orbit/reset, clear/reappear, pause/resume, accessibility and Reduce Motion. Review a recording of upright/DEBUG90°/DEBUG180° settling at the confirmed 7 mm diameter.
 - [ ] Render front/side/top before/after comparisons against the prior committed model and present native screenshots plus the settling recording. Compare actual mouth bearing with the source-approved channel; never assign unknown grip/channel mappings. Confirm the corrected 80 mm pinch faces remain visible and pickable.
 - [ ] Run all model/package Python tests, final inventory validation, deterministic CAD/physics rebuild, staging parity and `rtk proxy python3 scripts/verify-model-delivery.py`. Refresh the delivery lock only from final promoted bytes and final validation evidence. Resolve the unfinished static helper regression from Task 4 before the broad suite.
 - [ ] Profile on an available physical iPhone, record model/OS and p95 simulation-plus-mesh cost, targeting <4 ms and 60 fps. If no device is accessible, deliver the numerical/Simulator evidence and explicitly retain the device-performance gate as unverified; do not claim it passed or mark all required work complete.
@@ -161,7 +165,7 @@ XCTAssertTrue(metrics.topologyValid)
 
 **Interfaces:** The same Task 1 graph and Task 4 solver handle fixed attachment leads, sliding through-passages and exterior wraps. Each paired instance receives its own profile/support/state. `CatalogRopePhysicsTests` discovers enabled profiles at execution time rather than hard-coding the current count.
 
-- [ ] Write inventory tests that discover native manifests and sidecars alongside legacy board documents, initially finding 15 corded boards/17 setups. Assert each represented setup has a reviewed graph, retained baseline radius, threefold rendered/collision radius, fit verdict, and per-canonical-pose numerical/visual coverage. A board omitted from promotion remains a failing coverage item with an explicit reason.
+- [ ] Write inventory tests that discover native manifests and sidecars alongside legacy board documents, initially finding 15 corded boards/17 setups. Assert each represented setup has a reviewed graph, retained baseline radius, selected matching rendered/collision radius, fit verdict, and per-canonical-pose numerical/visual coverage. A board omitted from promotion remains a failing coverage item with an explicit reason.
 - [ ] Run catalog coverage to establish the unpromoted-board failures.
 - [ ] Promote Mini Bar curved channels and Helium Mobile rounded ends first; run the full numerical gate for every canonical pose and both loops. Then audit and adapt the remaining exterior leads/wraps and paired Rock Rings/Penta instances. Preserve sourced Captain Fingerfood lip-to-recess paths without inventing bores. Refuse ambiguous rope-length conversion. Obtain missing evidence only where the existing retained source cannot establish topology; do not invent it.
 - [ ] For every thick rope, erode its actual passage by the increased radius and verify a connected feasible region. Report genuine fit conflicts; changing source dimensions or using a thinner collider requires a changed user requirement and is outside this plan. Improve collision/source geometry only from approved primary evidence, with front/side/top before/after review.

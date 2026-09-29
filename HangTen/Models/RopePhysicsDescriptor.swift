@@ -139,8 +139,9 @@ struct RopePhysicsDescriptor: Decodable, Sendable {
             let ropes = try p["ropes"]!.indexed().map { value -> RopePhysicsRope in
                 let r = try value.object(["id", "baselineRadius", "thicknessScale", "radius", "restLength", "lengthProvenance", "linearMass", "nodes", "edges"])
                 let baseline = try r["baselineRadius"]!.positive(), radius = try r["radius"]!.positive()
-                guard try r["thicknessScale"]!.number() == 3, abs(radius - baseline * 3) <= 1e-12 else {
-                    throw RopePhysicsError.invalid("Radius must equal threefold baseline")
+                let scale=try r["thicknessScale"]!.positive()
+                guard abs(radius - baseline * scale) <= 1e-12 else {
+                    throw RopePhysicsError.invalid("Radius must equal selected baseline scale")
                 }
                 _ = try r["lengthProvenance"]!.provenance()
                 let nodes = try r["nodes"]!.indexed().map { value -> RopeGraphNode in

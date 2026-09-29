@@ -177,3 +177,16 @@ The upright seed automatically bears on the upper passage wall while the
 source aperture centers remain unchanged. Initialization is tested separately
 from live dynamics; the existing renderer remains in use until the numerical
 and scene integration gates pass.
+
+## Confirmed diameter correction
+
+After the input milestone, the operator corrected the target from 12 mm to
+**7 mm diameter** and confirmed this for Clavellium and Mini Bar. Clavellium's
+physics input now uses radius 3.5 mm and retained baseline radius 2 mm with
+scale 1.75. The owner's statement supplies the diameter; the round-cord
+adaptation of the photographed flat sling remains explicit. The generated
+physics hash is `9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f`.
+The native board and USDZ hashes are unchanged. Matching Python validation,
+Swift descriptor, collider and seed tests pass; live settling/rendering is
+still pending its numerical gate. This input correction does not claim that
+the existing static renderer already uses the new diameter.

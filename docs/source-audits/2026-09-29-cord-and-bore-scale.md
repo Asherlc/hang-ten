@@ -31,3 +31,14 @@ cord meshes: one test, zero failures. The test checks metre-scale body widths,
 4 mm segment diameters on both radial axes, and unit cord/segment scales. The
 live 12 mm rope is not yet enabled in the app; the numerical settling gates are
 still in progress. This audit makes no live-physics completion claim.
+
+## Operator correction after the initial audit
+
+The operator subsequently rejected the 12 mm target, supplied **7 mm** as the
+real cord diameter, and explicitly confirmed this for both Clavellium and
+Mini Bar. The new target is **3.5 mm radius** for rendering and collision,
+replacing the earlier threefold target on those boards. The retained 2 mm
+baseline uses scale 1.75. This operator statement is the source for the updated
+diameter; it does not verify the estimated CAD bore. The Mini Bar's 5.4 mm
+throat estimate remains inconsistent even with 7 mm and requires evidence
+review. Clavellium's documented round-cord adaptation of a flat sling remains.

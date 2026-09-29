@@ -27,3 +27,20 @@ def test_rectangular_bridge_rejects_tapered_or_overlapping_sections():
         bearing_section([box(-.05, -.045, -.01, .045),
                          box(.015, -.04, .05, .04)],
                         [.0025, .045], .0021, channel_profile="rectangular")
+
+
+@pytest.mark.parametrize("portal_id", ["central-front", "central-back"])
+def test_live_mouth_is_a_sliding_region_without_an_authored_bearing(portal_id):
+    # Numerical wall seating is covered by ClavelliumRopePhysicsTests. This
+    # package regression prevents restoring the defect as a fixed center pin.
+    import json
+    root = Path(__file__).resolve().parents[3]
+    data = json.loads((root / "Hangboards/clavellium-training-block/assets/primary.physics.json").read_text())
+    portal = next(p for p in data["portals"] if p["id"] == portal_id)
+    assert portal["center"][1] == 0.0025
+    assert max(p[1] for p in portal["boundary"]) == 0.0155
+    rope = data["profiles"][0]["ropes"][0]
+    assert rope["radius"] == 1.75 * rope["baselineRadius"] == 0.0035
+    node = next(n for n in rope["nodes"] if n.get("portalID") == portal_id)
+    assert "point" not in node
+    assert "cordContactPoints" not in data

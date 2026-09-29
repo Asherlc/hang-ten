@@ -20,7 +20,7 @@ final class RopeThreadedSeedTests: XCTestCase {
                                              orientation: simd_quatd(angle: 0, axis: SIMD3(1,0,0)), collider: collider)
         XCTAssertEqual(state.ropes.count, 1)
         let rope = state.ropes[0]
-        XCTAssertEqual(rope.radius, 0.006, accuracy: 1e-12)
+        XCTAssertEqual(rope.radius, 0.0035, accuracy: 1e-12)
         XCTAssertEqual(rope.restLengths.reduce(0,+), 0.55, accuracy: 1e-9)
         XCTAssertLessThanOrEqual(rope.restLengths.max()!, 0.002000001)
         XCTAssertEqual(rope.positions.first, rope.positions.last)
@@ -32,7 +32,7 @@ final class RopeThreadedSeedTests: XCTestCase {
             XCTAssertNil(collider.segmentContact(from:a, to:b, radius:rope.radius + 0.00009))
             XCTAssertEqual(simd_distance(rope.positions[i],rope.positions[i+1]),rope.restLengths[i],accuracy:1e-9)
             if rope.channelSegments[i] != nil {
-                XCTAssertLessThanOrEqual(abs(a.x), 0.006)
+                XCTAssertLessThanOrEqual(abs(a.x), 0.012-rope.radius-RopeRegionGeometry.clearance+1e-9)
                 XCTAssertLessThanOrEqual(abs(a.z), 0.045000001)
             }
         }
@@ -55,7 +55,7 @@ final class RopeThreadedSeedTests: XCTestCase {
                                     portals:input.portals,channels:input.channels,profiles:[profile])
         }
         let upright=simd_quatd(angle:0,axis:SIMD3(1,0,0))
-        XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.006,length:0.02),profileID:"front",orientation:upright,collider:collider))
+        XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.0035,length:0.02),profileID:"front",orientation:upright,collider:collider))
         XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.02,length:0.55),profileID:"front",orientation:upright,collider:collider))
     }
 }

@@ -45,6 +45,14 @@ def test_valid_continuous_loop_and_repeatable_thickness():
     assert derive_radius(.002, 3) == derive_radius(.002, 3)
 
 
+def test_operator_selected_seven_mm_diameter_is_not_forced_to_threefold():
+    document = physics_fixture()
+    rope = document["profiles"][0]["ropes"][0]
+    rope.update(thicknessScale=1.75, radius=.0035)
+    assert validate_rope_physics(document, MODEL_SHA) == document
+    assert 2 * derive_radius(.002, 1.75) == .007
+
+
 @pytest.mark.parametrize("baseline,scale", [(0, 3), (-1, 3), (.002, 0), (True, 3), (float("nan"), 3), (.002, float("inf"))])
 def test_invalid_thickness(baseline, scale):
     with pytest.raises(ValueError):
