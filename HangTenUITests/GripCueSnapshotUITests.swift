@@ -41,7 +41,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
-        XCTAssertTrue(app.switches["workout.initialWeight.addBodyweight"].exists)
+        XCTAssertTrue(app.buttons["workout.initialWeight.addBodyweight"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Inline manual weight setup in landscape"
         attachment.lifetime = .keepAlways
@@ -161,21 +161,19 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(source.buttons["Skip"].isSelected)
         source.buttons["Manual"].tap()
 
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let bodyweight = app.buttons["workout.initialWeight.addBodyweight"]
         let bodyweightReady = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "exists == true AND hittable == true"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // The iOS 26 accessibility frame extends slightly left of the visible switch.
-        // Offset 0.45 lands on the center of the off-state thumb.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.45, dy: 0.5)).tap()
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
+            predicate: NSPredicate(format: "value == %@", "On"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
-                       "Manual tracking must add bodyweight when its switch is enabled")
+                       "Manual tracking must add bodyweight when its control is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
@@ -194,7 +192,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
-        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+        XCTAssertEqual(app.buttons["workout.initialWeight.addBodyweight"].value as? String, "On")
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {

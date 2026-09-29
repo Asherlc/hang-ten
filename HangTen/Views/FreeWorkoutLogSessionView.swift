@@ -97,6 +97,7 @@ struct FreeWorkoutLogSessionView: View {
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                 }
+                .scrollDismissesKeyboard(.immediately)
             }
             .background(Color.hangBackground)
             .onChange(of: now) { _, date in
