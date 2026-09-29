@@ -171,7 +171,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
         bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
+            predicate: NSPredicate(format: "value == %@", "On"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
@@ -194,7 +194,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
-        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "On")
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {

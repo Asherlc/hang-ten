@@ -955,6 +955,7 @@ struct PlanDetailView: View {
                     .fixedSize()
                     .accessibilityIdentifier("workout.initialWeight.addBodyweight")
                     .accessibilityLabel("Add bodyweight")
+                    .accessibilityValue(manualWeightIncludesBodyweight ? "On" : "Off")
             }
 
             Text("Off records a standalone weight. On records this as added load on top of bodyweight.")

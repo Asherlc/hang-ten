@@ -139,7 +139,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         // Tap the off-state thumb; tapping the track center can miss it on iOS 26.
         bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
+            predicate: NSPredicate(format: "value == %@", "On"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
