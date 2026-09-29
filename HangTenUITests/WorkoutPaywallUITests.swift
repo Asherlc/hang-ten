@@ -106,8 +106,14 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "999"
+        // Match the weight-setup fixture; this case exercises the weight snapshot.
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.grindstone-original"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         app.launch()
 
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
@@ -120,6 +126,7 @@ final class WorkoutPaywallUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertEqual(bodyweight.value as? String, "0")
         tapVisibleControl(
             bodyweight,
             normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
