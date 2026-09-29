@@ -10,6 +10,9 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_FREE_WORKOUTS_USED": "0",
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
+            // Keep this integration test independent from the board persisted
+            // by earlier cases; this raster fixture needs no ODR download.
+            "HANGTEN_REVIEW_BOARD_ID": "frictitious.nug",
         ]
         app.launch()
     }
@@ -159,10 +162,13 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        // The accessibility frame spans the row. Tap the off thumb's center;
-        // the far-right track edge can miss the native switch on iPhone 17 Pro.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.86, dy: 0.5)).tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        bodyweight.tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Manual tracking must add bodyweight when its switch is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
