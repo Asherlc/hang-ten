@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc",
+  "sha256Manifest": "d6266cbc49cd4c146051303c58c084e322f21e4f4870db180875188bc5cf4e9c",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c",
+  "supersededSha256Manifest": "487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -354,19 +354,20 @@
     },
     "soill-split-palm": {
       "source": "Hangboards/soill-split-palm/soill-split-palm.FCStd",
-      "sourceSHA256": "6c9e3e425186bd139dc9efcd04a79239cc29ed53e0c5750d1c24b358215bdf3c",
+      "sourceSHA256": "1d58cb453ab9a6455690569c634f8f87e0a86ef15008095116a383370784c1e9",
       "sourceKind": "faceted-import (authored parametric/faceted hybrid; compiled with --allow-faceted-import)",
       "boardMetadata": "schema-v3 board.json generated at build time from HangTenBoardManifest; its model presentation uses the schema-v2 descriptor to instantiate one canonical right-half source twice, reflecting the left instance at runtime; all 14 contact IDs, names, kinds, factual depths, and product metadata are preserved, while left/right equipment ownership is made explicit for runtime instancing; instance translations use exact nine-decimal lexemes",
       "referenceSHA256": "36a8877dddbaeebf86f99c96592184075bd314d85f23b65417dc19c092c57bed (prior committed USDZ used only for before/after display and never as geometry input)",
-      "assetSHA256": "6efb970ca86f280db52e174dcd862e15a33bf28fb8ffd938140f224838eba32f",
-      "descriptorSHA256": "dd97b633165e1add83cff26c422f816c94a357c2e681400eae944f6aa990eb85",
+      "assetSHA256": "f5f5a89398d6efa1581ba42d692b038a05676757823707186a02a72201ff2455",
+      "descriptorSHA256": "42c0bde7b2b7da3210d59e40de3fa938bb5cce8284379d7ab1ce58f2dbcaf70b",
       "compiler": "Tools/HangboardCAD/compile_board.py --allow-faceted-import; unbound meshes",
       "nativeValidation": "FreeCAD reopen and recompute, explicit seven-slot bindings on one canonical half, compile check, package validation, Android staging parity, and authored-geometry tests passed; verify_reproducible rebuilt the 1,635,072-byte USDZ and descriptor byte-identically with the pinned macOS FreeCAD toolchain",
       "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro simulator, iOS 26.5, signed Debug board-detail route; right-small-sloper-pinch selected at launch and left-small-sloper-pinch selected through the production board deep link, each confirmed via boardDetail.selectedHold.<contactID> and screenshot; the same canonical mesh appears reflected and each pinch highlights as one continuous contact)",
       "comparison": "Re-authored directly from So iLL manufacturer evidence: product page https://soill.ca/products/split-palm; straight-on image https://cdn.shopify.com/s/files/1/0424/1145/products/split-palm-so-ill-white-12-01-so-ill-385627.jpg?v=1677258498 (SHA-256 377cf3307178b492aac924b7780d83fa884112165a4342549ab6b1b1254bb0bb); installed oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460618-1800x1200.jpg?v=1658522760 (SHA-256 4a88c665d4b8417ff6a899169b5bd21ab42a4ed60d6bc860faa4e166d7e78b5d); in-use oblique image https://cdn.shopify.com/s/files/1/0424/1145/files/Split-Palm-Lifestyle_S1460686-1800x1200.jpg?v=1658522760 (SHA-256 fb6f1a7288fea85803447f7917081ee47c5d18f48e72f8e857aeda8f18b07360). Published facts are the 419 x 279.4 x 98.4 mm per-piece envelope and 38.1/25.4/12.7/12.7 mm rail depths. Operator-selected display estimates are every Bezier control point, globe radius and exponent, the 12 mm pinch blend, 50-65.5 mm side fairing, 44 mm jug depth, and local relief/rounding. Three operator-supplied orthographic views (SHA-256 586534473004bf632098bcce5275ad5e32b792a57542539d17ec4bad6b68198f, 42f72675c7d38e1c12a8e44a72b39a84ddb5464fef0a6b874e459faaf59a5499, aa18ba39895ab7475f343329763304e1277000648e6961b7d926c383fe8485ab) were qualitative exact-revision checks. The silhouette was manually reviewed on a 2.3103 px/mm head-on grid at a 1-2 native-pixel control-line target; no registration, detection, fitting, tracing, segmentation, vectorization, or prior-mesh sampling was used. Geometry uses deliberate cubic Bezier/straight planforms and parametric superellipse globes; the small pinch is one continuous smooth procedural block. Fastener holes, screws, wordmark, materials, and textures are intentionally omitted from the display model.",
       "provenanceSidecar": "none (audit archive removed); provenance recorded here and in the PR",
       "assetCoverage": "locked as descriptor + FCStd source; board.json is generated from the source; descriptor modelSHA256 pins the compiled USDZ",
-      "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes"
+      "holdOutline": "CAD-authored front planforms; no pixel-derived contours; descriptor contact-slot regions come from the CAD meshes",
+      "refinementNote": "2026-09-29 smooth geometry refinement; see docs/2026-09-29-split-palm-foundry-smoothing.md and its front/side/top/oblique comparisons."
     },
     "soill-training-tiles": {
       "source": "Hangboards/soill-training-tiles/soill-training-tiles.FCStd",
@@ -520,18 +521,19 @@
     },
     "metolius-foundry": {
       "source": "Hangboards/metolius-foundry/metolius-foundry.FCStd",
-      "sourceSHA256": "d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6",
+      "sourceSHA256": "dd16d0e446e1ffe8992d9360cee734ca36b32295b2b7e38866755049f32f8cf8",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; all 18 contact IDs, 19 node IDs and their pairing unchanged; front presentation aspectRatio changed from the image-era value 2.6588197894316767 to the published 578 / 216 envelope ratio 2.675925925925926, and the already-published 53 mm sloper dimension is now an exact structured depth range",
       "referenceSHA256": "ea9c293327bc2d5125792b35d3c61fc01b8d6ed15d345440ad8afc0a51e41998",
-      "assetSHA256": "201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05",
-      "descriptorSHA256": "39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d",
+      "assetSHA256": "6fd19aaa5d28b8fbd0b76ee0195f5b2f877b30c3f1746bf9bf057b8e0255a251",
+      "descriptorSHA256": "11c745e4a015de265d2e47bc233f8a3cd7d643d3ce608bb6a1055b6ef926d4e1",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes, no materials or textures)",
       "nativeValidation": "passed: fresh compile reopen with 18 stable contacts and 19 nodes; one valid solid; 39 fully constrained Sketcher profiles; live final-body subshape binders; a Pocket3Depth 32 -> 34 mm edit reached the body and both mirrored contact surfaces while unrelated spans stayed fixed; exact published-depth gate for the mirrored 32 / 22 / 30 / 15 / 21 mm pockets, 16 / 30 / 23 mm center edges and 53 mm flat sloper; manually reviewed 40 x 16 envelope grid centers and the mirrored 3 / 6 / 6 / 7 / 6 degree side-pocket fan are gated from the actual cutter sketches; each rail is one ruled longitudinal loft through three full-height profiles and its actual B-rep has the reviewed shallow five-facet convex crown at four heights with no horizontal stations; an output gate sections the B-rep at 81 heights from Z 10 through 210 mm, requires the same five facets and bounded longitudinal depth/angle change throughout, and rejects valid deliberately flat and lumpy controls on every run; both rails pass OCCT BOP self-intersection checking and have exactly zero common volume with all ten side-pocket cutters; paired contact areas are exactly equal; no contact mesh contains a mounting-plane triangle; the 65.535 mm accessible jug and 70 mm pinch spans remain documented display estimates; verify_reproducible rebuilt the 19,310-triangle USDZ and descriptor byte-identically on the pinned macOS toolchain; package validation and Android staging passed; explicit USD inspection found no materials, shaders, bindings or textures",
       "nativeAppValidation": "passed: workspace-owned iPhone 17 Pro simulator (iOS 26.4), signed Debug board-detail route, exact crowned-rail package. pinch-1-left, pocket-3-left and pocket-6-right highlights were visually inspected; AX exposed boardDetail.screen, all tested boardModel.contact identities and matching boardDetail.selectedHold identities; a raw physical coordinate tap at (150, 296) on the rendered #3 opening asserted pocket-3-left independently of the hold map. Installed ODR USDZ and bundled descriptor were byte-identical to validated package hashes 201e0126... and 39c4ff35...; signed HealthKit entitlement and both non-empty usage descriptions verified; exact owned simulator EB912790-8CB2-44A7-B0B8-79D9A3592CD2 was deleted and ownership manifests consumed after review",
       "comparison": "operator-approved Metolius product photograph and numbered depth diagram govern identity, topology and the corrected twin-jug crown; one commerce oblique supports qualitative relief. Ordered cross-sections from the pre-migration display USDZ were only a qualitative station guide for a deliberately redrawn macro profile normalized to the published 578 x 216 mm envelope. The corrective passes manually reviewed opening centers on a 40 x 16 normalized grid, angled the side-pocket fan, and replaced the lumpy horizontal rail stack with one uninterrupted arched band whose narrow nose, two gentle shoulders and two steeper rear bevels run through the full height while remaining outside every cutter; front/side/top/oblique comparisons and the fine-grid audit are retained in docs/pr-screenshots/metolius-foundry. No quantitative fit/deviation claim, reference triangles or pixel-derived geometry are retained",
       "provenanceSidecar": "docs/2026-09-28-metolius-foundry-cad-provenance.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from source at build time); USDZ pinned by descriptor modelSHA256",
-      "holdOutline": "CAD-authored HangTenHoldOutline for the 13 recessed pocket/edge contacts, including the mirrored side-pocket angles; broad sloper, jug and pinch frames derive from their exported contact meshes"
+      "holdOutline": "CAD-authored HangTenHoldOutline for the 13 recessed pocket/edge contacts, including the mirrored side-pocket angles; broad sloper, jug and pinch frames derive from their exported contact meshes",
+      "refinementNote": "2026-09-29 smooth geometry refinement; see docs/2026-09-29-split-palm-foundry-smoothing.md and its front/side/top/oblique comparisons."
     },
     "frictitious-megalith": {
       "source": "Hangboards/frictitious-megalith/frictitious-megalith.FCStd",
