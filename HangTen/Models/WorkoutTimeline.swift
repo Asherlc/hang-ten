@@ -384,6 +384,23 @@ enum WorkoutHoldCuePolicy {
               step.gripType != nil || step.fingerConfiguration != nil else {
             return nil
         }
+        if let task = step.segments.lazy.compactMap({ $0.target?.planTasks }).first?.first {
+            guard let hold else {
+                return WorkoutHoldCue(
+                    gripType: step.gripType,
+                    fingerConfiguration: step.fingerConfiguration
+                )
+            }
+            guard (try? ContactResolver.resolve(task, step: step, board: board))?
+                .contains(where: { $0.id == hold.id }) == true else {
+                return nil
+            }
+            return WorkoutHoldCue(
+                hold: hold,
+                gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration
+            )
+        }
         let requirements = step.workRequirements
         if requirements.isEmpty {
             return WorkoutHoldCue(

@@ -329,15 +329,20 @@ final class AppStore: ObservableObject {
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let candidates = handResolutionCandidates(for: step, on: board)
         return Set(candidates.flatMap { candidate in
-            // Plan previews have no athlete-selected side yet. Show the hold
-            // that either hand could use for an unsided one-arm task.
-            [WorkoutSide.left, .right].flatMap {
-                WorkoutHighlightResolver.contactIDs(
-                    for: candidate,
-                    on: board,
-                    selectedHandSide: $0
-                )
+            let tasks = candidate.segments.lazy.compactMap { $0.target?.planTasks }.first
+            let firstHand = tasks?.first?.first
+            if tasks?.first?.count == 1, firstHand?.side == nil {
+                // Plan previews have no athlete-selected side yet. Show the
+                // hold that either hand could use for an unsided one-arm task.
+                return [WorkoutSide.left, .right].flatMap { side in
+                    WorkoutHighlightResolver.contactIDs(
+                        for: candidate,
+                        on: board,
+                        selectedHandSide: side
+                    )
+                }
             }
+            return WorkoutHighlightResolver.contactIDs(for: candidate, on: board)
         })
     }
 
