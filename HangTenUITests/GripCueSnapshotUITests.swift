@@ -160,8 +160,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        // Tap the switch itself, rather than the center of its full-width Form row.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        bodyweight.tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
