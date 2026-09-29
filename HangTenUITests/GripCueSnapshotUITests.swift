@@ -14,6 +14,66 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launch()
     }
 
+    func testContactOffsetTaskCanAdvanceWithoutSkippingMinute() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
+        if app.buttons["Start"].waitForExistence(timeout: 5) {
+            app.buttons["Start"].tap()
+        }
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        let next = app.buttons["workout.nextHold"]
+        XCTAssertTrue(next.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        next.tap()
+        XCTAssertTrue(app.staticTexts["Hold 2 of 3"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Pause"].exists)
+
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Contact offset task two, same running minute"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testTwoHandTaskOnMiniBarExplainsTwoBoards() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "lattice.mini-bar"
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "2"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(workoutDeepLink)
+        XCTAssertTrue(
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
+        )
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Two hands on one-hand Mini Bar require two boards"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testOneArmTaskLetsAthleteChooseSide() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
+        let rightHand = app.buttons["workout.taskHand.right"]
+        XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
+        rightHand.tap()
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        XCTAssertTrue(app.staticTexts["Hang • Right hand"].exists)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "One arm Contact sloper on chosen right side"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts() throws {
         openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
         XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)

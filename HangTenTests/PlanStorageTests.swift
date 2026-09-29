@@ -3,6 +3,23 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    private func semanticTargets(_ step: WorkoutStep) -> [ContactRequirement] {
+        let predicates = step.segments
+            .filter { $0.kind == .work }
+            .flatMap { $0.target?.planTasks ?? [] }
+            .flatMap { $0.map { $0.target?.legacyRequirement ?? ContactRequirement() } }
+        return Array(predicates.reduce(into: [ContactRequirement]()) { result, predicate in
+            if !result.contains(predicate) { result.append(predicate) }
+        })
+    }
+
+    private func semanticTargets(_ requirements: [ContactRequirement]) -> [ContactRequirement] {
+        requirements.map {
+            ContactRequirement(kind: $0.kind, shape: $0.shape, depth: $0.depth,
+                               fingerCapacity: $0.fingerCapacity)
+        }
+    }
+
     func testBoardSpecificPlanRejectsTwoHandTaskWithOnlyOneCapacityOneContact() {
         let board = BoardRevision(
             id: "fixture.one-contact", revisionID: "test", manufacturer: "Fixture",
@@ -590,9 +607,14 @@ final class PlanStorageTests: XCTestCase {
             .filter { !$0.isRestStep && $0.handUse == .either }
             .map(\.id)
         XCTAssertEqual(
-            eitherStepIDs,
-            [],
-            "No built-in plan opts into either-hand materialization after the Lattice two-handed recode."
+            Set(eitherStepIDs),
+            [
+                "advanced.minute-5.task-1", "advanced.minute-5.task-2",
+                "metolius.contact.advanced.minute-6",
+                "metolius.simulator-3d.intermediate.minute-9",
+                "metolius.simulator-3d.advanced.minute-6"
+            ],
+            "Only source-prescribed one-arm steps may leave the athlete to choose a side."
         )
 
         XCTAssertTrue(
@@ -1932,8 +1954,9 @@ final class PlanStorageTests: XCTestCase {
             XCTAssertFalse(workSteps.isEmpty, "\(planID) should retain work steps.")
             XCTAssertTrue(
                 workSteps.allSatisfy {
-                    $0.workRequirements.isEmpty
-                        && ($0.segments.isEmpty || $0.segments.allSatisfy { $0.contactRequirements.isEmpty })
+                    $0.segments.filter { $0.kind == .work }.allSatisfy {
+                        $0.target?.isSelfSelected == true
+                    }
                 },
                 "\(planID) should keep athlete-chosen / unprescribed work as self-selected."
             )
@@ -2016,20 +2039,20 @@ final class PlanStorageTests: XCTestCase {
             selection: .bilateralPair
         )
 
-        XCTAssertEqual(entry.steps[1].workRequirements, [outerJugs])
+        XCTAssertEqual(semanticTargets(entry.steps[1]), semanticTargets([outerJugs]))
         XCTAssertEqual(
-            entry.steps[2].workRequirements,
-            [
+            semanticTargets(entry.steps[2]),
+            semanticTargets([
                 centerJug,
                 ContactRequirement(
                     kind: .pocket,
                     depth: .range(.init(minimum: 30, maximum: 30)),
                     fingerCapacity: 3
                 )
-            ]
+            ])
         )
-        XCTAssertEqual(entry.steps[4].workRequirements, [flatSlopers, outerJugs])
-        XCTAssertEqual(entry.steps[6].workRequirements, [outerJugs])
+        XCTAssertEqual(semanticTargets(entry.steps[4]), semanticTargets([flatSlopers, outerJugs]))
+        XCTAssertEqual(semanticTargets(entry.steps[6]), semanticTargets([outerJugs]))
     }
 
     func testSimulator3DOuterJugRequirementResolvesExactlyTheNumberOnePair() throws {
@@ -2137,8 +2160,8 @@ final class PlanStorageTests: XCTestCase {
             )
 
             XCTAssertEqual(
-                step.workRequirements,
-                expected.targets,
+                semanticTargets(step),
+                semanticTargets(expected.targets),
                 "\(expected.id) must retain every manufacturer-prescribed semantic target."
             )
             let workSegments = step.segments.filter { $0.kind == .work }
@@ -2147,12 +2170,14 @@ final class PlanStorageTests: XCTestCase {
                 "\(expected.id) must retain exactly one work segment."
             )
             XCTAssertEqual(
-                workSegment.contactRequirements,
-                expected.targets,
+                semanticTargets(step),
+                semanticTargets(expected.targets),
                 "\(expected.id) work must retain every manufacturer-prescribed semantic target."
             )
             XCTAssertFalse(
-                try ContactResolver.resolve(step.workRequirements, step: step, board: board).isEmpty,
+                try ContactResolver.resolve(
+                    XCTUnwrap(workSegment.target?.planTasks), step: step, board: board
+                ).isEmpty,
                 "\(expected.id) must resolve its semantic requirements on the board."
             )
         }
@@ -2425,23 +2450,34 @@ final class PlanStorageTests: XCTestCase {
             let step = try XCTUnwrap(PlanCatalog.all.lazy.flatMap(\.steps).first { $0.id == expected.id })
             let plan = try XCTUnwrap(PlanCatalog.all.first { expected.id.hasPrefix($0.id) })
             let board = try XCTUnwrap(BoardCatalog.all.first { $0.id == plan.boardID })
-            XCTAssertEqual(
-                step.workRequirements,
-                expected.targets,
-                "\(expected.id) must retain every source-prescribed semantic target."
-            )
             let workSegment = try XCTUnwrap(
                 step.segments.filter { $0.kind == .work }.only,
                 "\(expected.id) must retain exactly one work segment."
             )
+            let tasks = try XCTUnwrap(workSegment.target?.planTasks)
+            let actualPredicates = tasks.flatMap { task in
+                task.map { $0.target?.legacyRequirement ?? ContactRequirement() }
+            }
+            var orderedDistinctPredicates: [ContactRequirement] = []
+            for predicate in actualPredicates {
+                if !orderedDistinctPredicates.contains(predicate) {
+                    orderedDistinctPredicates.append(predicate)
+                }
+            }
+            let expectedPredicates = expected.targets.map { target in
+                ContactRequirement(
+                    kind: target.kind, shape: target.shape, depth: target.depth,
+                    fingerCapacity: target.fingerCapacity
+                )
+            }
             XCTAssertEqual(
-                workSegment.contactRequirements,
-                expected.targets,
-                "\(expected.id) work must retain every source-prescribed semantic target."
+                orderedDistinctPredicates,
+                expectedPredicates,
+                "\(expected.id) must retain every source-prescribed semantic target in order."
             )
             XCTAssertFalse(
-                try ContactResolver.resolve(step.workRequirements, step: step, board: board).isEmpty,
-                "\(expected.id) must resolve its semantic requirements on its documented board."
+                try ContactResolver.resolve(tasks, step: step, board: board).isEmpty,
+                "\(expected.id) must resolve each hand task on its documented board."
             )
         }
     }

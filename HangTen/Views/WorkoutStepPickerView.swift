@@ -33,8 +33,14 @@ enum WorkoutStepFormatting {
         return "+\(number) \(unitLabel)"
     }
 
-    static func labels(for step: WorkoutStep) -> [String] {
-        WorkoutTimeline.labels(for: step) + (step.externalLoadKGF.map {
+    static func labels(
+        for step: WorkoutStep,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [String] {
+        WorkoutTimeline.labels(
+            for: step, taskIndex: taskIndex, selectedHandSide: selectedHandSide
+        ) + (step.externalLoadKGF.map {
             [externalLoadText($0, unit: .kilograms)]
         } ?? [])
     }

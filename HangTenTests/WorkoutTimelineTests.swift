@@ -63,6 +63,82 @@ final class WorkoutSpeechVoiceSelectorTests: XCTestCase {
 }
 
 final class WorkoutTimelineTests: XCTestCase {
+    func testAnyHoldTaskDoesNotHighlightAnInventedContact() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.entry"))
+        let step = try XCTUnwrap(plan.steps.first { $0.id == "metolius.contact.entry.minute-4" })
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), [])
+        XCTAssertEqual(
+            Set(WorkoutHighlightResolver.contactIDs(for: step, on: board, taskIndex: 1)),
+            ["pocket-11-left", "pocket-11-right"]
+        )
+    }
+
+    func testTwoHandTaskOnOneHandBoardExplainsTwoBoards() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.max-hangs"))
+        let step = try XCTUnwrap(plan.steps.first { $0.segments.contains { $0.target?.planTasks != nil } })
+        XCTAssertTrue(board.isOneHanded)
+        XCTAssertTrue(WorkoutTaskPresentationPolicy.requiresTwoBoards(
+            for: step, on: board, taskIndex: 0
+        ))
+    }
+
+    func testUnsidedOneArmTasksNeedAnAthleteSideChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.intermediate"))
+        let step = try XCTUnwrap(plan.steps.first { $0.id == "metolius.contact.intermediate.minute-9" })
+        var cursor = WorkoutTaskCursor()
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(for: step, on: board), [])
+        XCTAssertEqual(WorkoutTimeline.labels(for: step), ["Hang", "Choose a hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: step))
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: step))
+        cursor.choose(.right, in: step)
+        XCTAssertEqual(WorkoutTimeline.labels(
+            for: step, selectedHandSide: cursor.selectedSide(for: step)
+        ), ["Hang", "Right hand"])
+        XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(
+            for: .left, step: step, selectedHandSide: cursor.selectedSide(for: step)
+        ))
+        XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(
+            for: .right, step: step, selectedHandSide: cursor.selectedSide(for: step)
+        ))
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(
+            for: step, on: board, selectedHandSide: cursor.selectedSide(for: step)
+        ), ["round-sloper-3-right"])
+        XCTAssertTrue(cursor.advance(in: step))
+        XCTAssertNil(cursor.selectedSide(for: step))
+        cursor.choose(.left, in: step)
+        XCTAssertEqual(WorkoutHighlightResolver.contactIDs(
+            for: step, on: board, taskIndex: 1,
+            selectedHandSide: cursor.selectedSide(for: step)
+        ), ["round-sloper-3-left"])
+    }
+
+    func testManualTaskCursorChangesHoldWithoutChangingStepClock() throws {
+        let step = WorkoutStep(
+            id: "ladder", number: 1, title: "Ladder", instruction: "Move holds.",
+            accessory: "", duration: 40, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))],
+                    [.init(target: .init(kind: .jug)), .init(target: .init(kind: .jug))]
+                ]), timing: .fixed, duration: 40
+            )], timedWorkDuration: 40
+        )
+        let timeline = WorkoutTimeline(steps: [step])
+        var cursor = WorkoutTaskCursor()
+        XCTAssertEqual(cursor.index(for: step), 0)
+        XCTAssertEqual(timeline.elapsedInStep(at: 12), 12)
+        XCTAssertTrue(cursor.advance(in: step))
+        XCTAssertEqual(cursor.index(for: step), 1)
+        XCTAssertEqual(timeline.elapsedInStep(at: 12), 12)
+        XCTAssertFalse(cursor.advance(in: step))
+        XCTAssertTrue(cursor.retreat(in: step))
+        XCTAssertEqual(cursor.performedIndices(for: step), [0, 1])
+    }
+
     func testLivePresentationMaterializesEitherHandForLabelsAndPreservesUnresolvedStep() {
         let eitherHand = WorkoutStep(
             id: "either", number: 1, title: "Either hand", instruction: "Hang.",

@@ -1895,6 +1895,7 @@ struct WorkoutView: View {
 	    @State private var handPreference: WorkoutSessionHandPreference?
 	    /// Preference-expanded steps; source of truth for timeline once set.
 	    @State private var sessionSteps: [WorkoutStep]?
+	    @State private var taskCursor = WorkoutTaskCursor()
 	    @State private var bothHandsResolvable = true
 
     private var board: BoardRevision {
@@ -1945,7 +1946,13 @@ struct WorkoutView: View {
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
 				let resolvedHighlightedStep = highlightedStep
-				let previewHoldIDs = resolvedHighlightedStep.map { WorkoutHighlightResolver.contactIDs(for: $0, on: board) } ?? []
+				let previewHoldIDs = resolvedHighlightedStep.map {
+					WorkoutHighlightResolver.contactIDs(
+						for: $0, on: board,
+						taskIndex: $0.id == step.id ? taskCursor.index(for: $0) : 0,
+						selectedHandSide: $0.id == step.id ? taskCursor.selectedSide(for: $0) : nil
+					)
+				} ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
@@ -2254,6 +2261,7 @@ struct WorkoutView: View {
 					activeHoldID: holdCue?.hold?.id
 				)
 					.padding(.horizontal, 2)
+				taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
 				if let holdCue, WorkoutHoldCueVisibilityPolicy.showsCue(
 					holdCue: holdCue,
 					countdown: countdown,
@@ -2294,9 +2302,67 @@ struct WorkoutView: View {
 	}
 
 	@ViewBuilder
+	private func taskControls(
+		for step: WorkoutStep,
+		cueStep: WorkoutStep?,
+		countdown: Int,
+		isResting: Bool
+	) -> some View {
+		if let cueStep {
+			let taskCount = taskCursor.count(for: cueStep)
+			let taskIndex = cueStep.id == step.id ? taskCursor.index(for: cueStep) : 0
+			let tasks = cueStep.segments.lazy.compactMap { $0.target?.planTasks }.first
+			if WorkoutTaskPresentationPolicy.requiresTwoBoards(
+				for: cueStep, on: board, taskIndex: taskIndex
+			) {
+				Text("Use two boards, one hand on each.")
+					.font(.system(size: 13, weight: .medium, design: .rounded))
+					.foregroundStyle(Color.hangInk)
+			}
+			if cueStep.id == step.id, !isResting, countdown == 0,
+			   let tasks, tasks.indices.contains(taskIndex),
+			   tasks[taskIndex].count == 1, tasks[taskIndex][0].side == nil {
+				HStack(spacing: 10) {
+					Text("Choose a hand")
+						.font(.system(size: 13, weight: .semibold, design: .rounded))
+					ForEach([WorkoutSide.left, .right], id: \.self) { side in
+						Button(side == .left ? "Left" : "Right") {
+							taskCursor.choose(side, in: step)
+						}
+						.accessibilityIdentifier("workout.taskHand.\(side.rawValue)")
+							.buttonStyle(.bordered)
+							.tint(taskCursor.selectedSide(for: step) == side ? Color.hangGreenDark : Color.hangMuted)
+					}
+				}
+			}
+			if cueStep.id == step.id, !isResting, countdown == 0, taskCount > 1 {
+				HStack(spacing: 12) {
+					Button("Previous hold") { taskCursor.retreat(in: step) }
+						.disabled(taskIndex == 0)
+						.accessibilityIdentifier("workout.previousHold")
+					Spacer(minLength: 4)
+					Text("Hold \(taskIndex + 1) of \(taskCount)")
+						.font(.system(size: 13, weight: .semibold, design: .rounded))
+					Spacer(minLength: 4)
+					Button("Next hold") { taskCursor.advance(in: step) }
+						.disabled(taskIndex + 1 == taskCount)
+						.accessibilityIdentifier("workout.nextHold")
+				}
+				.buttonStyle(.bordered)
+			}
+		}
+	}
+
+	@ViewBuilder
 	private func portraitHandCueCards(holdCue: WorkoutHoldCue, cueStep: WorkoutStep?) -> some View {
-		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: cueStep)
-		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: cueStep)
+		let taskIndex = cueStep.map { taskCursor.index(for: $0) } ?? 0
+		let selectedSide = cueStep.flatMap { taskCursor.selectedSide(for: $0) }
+		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(
+			for: .left, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedSide
+		)
+		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(
+			for: .right, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedSide
+		)
 		if showsLeft && showsRight {
 			GripHandPairCueCards(posture: holdCue.gripType,
 								fingerConfiguration: holdCue.fingerConfiguration)
@@ -2332,12 +2398,16 @@ struct WorkoutView: View {
 	) -> some View {
 		let showsPairedHandCue: Bool = {
 			guard let holdCue else { return false }
+			let taskIndex = cueStep.map { taskCursor.index(for: $0) } ?? 0
+			let selectedSide = cueStep.flatMap { taskCursor.selectedSide(for: $0) }
 			return WorkoutLandscapeHandCuePolicy.showsHandCue(
 				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
-				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
+				taskIndex: taskIndex, selectedHandSide: selectedSide
 			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
 				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
-				isComplete: isComplete, isSkipCountdown: isSkipCountdown
+				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
+				taskIndex: taskIndex, selectedHandSide: selectedSide
 			)
 		}()
 		return VStack(spacing: 9) {
@@ -2384,6 +2454,7 @@ struct WorkoutView: View {
 					)
 						.frame(maxWidth: .infinity)
 						.frame(maxHeight: LandscapeLayout.boardMaxHeight)
+					taskControls(for: step, cueStep: cueStep, countdown: countdown, isResting: isResting)
 				}
 				.frame(maxWidth: .infinity)
 
@@ -2458,7 +2529,9 @@ struct WorkoutView: View {
 				cueStep: cueStep,
 				countdown: countdown,
 				isComplete: isComplete,
-				isSkipCountdown: isSkipCountdown
+				isSkipCountdown: isSkipCountdown,
+				taskIndex: cueStep.map { taskCursor.index(for: $0) } ?? 0,
+				selectedHandSide: cueStep.flatMap { taskCursor.selectedSide(for: $0) }
 			) {
 				GripHandCueCard(
 					posture: holdCue.gripType,
@@ -2653,7 +2726,11 @@ struct WorkoutView: View {
 				.foregroundStyle(Color.hangInk)
 
 			if !step.isRestStep {
-				Text(WorkoutStepFormatting.labels(for: step).joined(separator: " • "))
+				Text(WorkoutStepFormatting.labels(
+					for: step,
+					taskIndex: taskCursor.index(for: step),
+					selectedHandSide: taskCursor.selectedSide(for: step)
+				).joined(separator: " • "))
 					.font(.system(size: 13, weight: .bold, design: .rounded))
 					.foregroundStyle(step.phase.textTint)
 			}
@@ -3020,6 +3097,9 @@ struct WorkoutView: View {
 	}
 
 	private func resolvedHandSide(for step: WorkoutStep) -> WorkoutSide? {
+		if let selectedTaskSide = taskCursor.selectedSide(for: step) {
+			return selectedTaskSide
+		}
 		if step.side == .left || step.side == .right {
 			return step.side
 		}
@@ -3344,6 +3424,8 @@ struct WorkoutView: View {
 			endDate: session.endDate,
 			handPreference: planNeedsHandChoice ? handPreference : nil,
 			sessionSteps: planNeedsHandChoice ? sessionSteps : nil,
+			performedTaskIndicesByStepID: taskCursor.performedTaskIndicesByStepID,
+			selectedTaskSidesByStepID: taskCursor.selectedTaskSidesByStepID,
 			session: session
 		)
 		summarySession = nil

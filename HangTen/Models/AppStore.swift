@@ -442,6 +442,8 @@ final class AppStore: ObservableObject {
         selectedHandSide: WorkoutSide? = nil,
         handPreference: WorkoutSessionHandPreference? = nil,
         sessionSteps: [WorkoutStep]? = nil,
+        performedTaskIndicesByStepID: [String: Set<Int>]? = nil,
+        selectedTaskSidesByStepID: [String: [Int: WorkoutSide]]? = nil,
         session: WorkoutSessionRecord? = nil
     ) {
         if let session {
@@ -470,6 +472,8 @@ final class AppStore: ObservableObject {
                 selectedHandSide: selectedHandSide,
                 handPreference: handPreference,
                 sessionSteps: sessionSteps,
+                performedTaskIndicesByStepID: performedTaskIndicesByStepID,
+                selectedTaskSidesByStepID: selectedTaskSidesByStepID,
                 stepMeasurements: session?.steps ?? []
             )
             activityContext = PendingWorkoutActivityContext(
