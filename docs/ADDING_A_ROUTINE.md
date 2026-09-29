@@ -157,7 +157,10 @@ generic plan's Small Edge tasks: 8–15 mm comes from Hang Ten's existing Small
 category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
 This is specific to those tasks; the shared Small category remains 8–15 mm for
 other plans and saved routines. The band overlaps Medium Edge on a board with
-only two edge depths. It is not a manufacturer-prescribed numeric range and
+only two edge depths. On Simulator 3D, Hang Ten's center-nearest resolver
+currently highlights the same #6 19 mm edge for both generic Small Edge and
+Medium Edge tasks; that overlap is an app mapping, not a manufacturer-published
+equivalence. It is not a manufacturer-prescribed numeric range and
 does not change any contact's factual depth. Because numeric `HoldDepth.matches`
 allows 1 mm of tolerance on each end, the serialized requirement uses 9–18 mm
 to match point-depth contacts from 8 through 19 mm, excluding 7.5 and 20 mm.
