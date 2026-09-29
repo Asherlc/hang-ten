@@ -131,7 +131,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         field.typeText("12.5")
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.tap()
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight

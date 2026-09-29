@@ -12,7 +12,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_LANDSCAPE": "1",
             // Keep this integration test independent from the board persisted
             // by earlier cases; this raster fixture needs no ODR download.
-            "HANGTEN_REVIEW_BOARD_ID": "frictitious.nug",
+            "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
         app.launch()
     }
@@ -162,7 +162,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.tap()
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.95, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
