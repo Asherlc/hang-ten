@@ -210,7 +210,7 @@ The final unbound USDZ has 19,310 triangles. Reproducible build verification
 produced byte-identical USDZ and descriptor files. Package validation passed,
 Android staging regenerated the same manifest and copied the same asset and
 descriptor bytes while excluding the FCStd, and delivery-lock verification
-passed for 47 models, 110 locked files and 31 source-backed packages. Explicit
+passed for 49 models, 115 locked files and 34 source-backed packages. Explicit
 USD inspection found no material prims, shader prims, material bindings or
 texture archive entries; the archive contains only `stage.usdc`.
 
@@ -298,4 +298,4 @@ Final SHA-256 values are:
 - FCStd: `d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6`
 - USDZ: `201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05`
 - Descriptor: `39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d`
-- Delivery manifest: `a9d630ebd1b2b70b4754ac03914cd5849742d1850954eca322fe243b5eb0a20e`
+- Delivery manifest: `d2a0e85862156a32c78b6ea84cb9216666ed584fc4d0e9f29a76eb48c6d8fc2b`
