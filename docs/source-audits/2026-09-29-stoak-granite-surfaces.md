@@ -19,7 +19,7 @@ names cannot establish material placement.
 Native CAD measurements establish side insert x spans -262..-180 mm and
 180..262 mm, floor z=23 mm, and depth 20 mm; the center spans x=-52..52 mm,
 floor z=36 mm, and depth 30 mm. These are measurements of the existing authored
-CAD, not additional manufacturer dimension claims. A 6 mm front strip height
+CAD, not additional manufacturer dimension claims. A 12 mm front-face height
 is deliberately selected as a display estimate from the approved configuration;
 the manufacturer does not publish that thickness. Boolean tolerance is 0.001 mm
 at front/floor boundaries to retain coincident faces, not additional geometry.
@@ -33,7 +33,7 @@ original wood-shell outlines/contact IDs. No new hold, depth, grip cue or traini
 authored. Each original contact remains selectable as one identity across all
 of its material pieces. The stone front-lip area previously belonged to the
 nonselectable body; it now highlights/picks with its insert contact (about
-332.75 mm² per side and 425.50 mm² at center). Logical contact inventory and
+824.75 mm² per side and 1049.50 mm² at center). Logical contact inventory and
 metadata stay unchanged, while complete insert surfaces become selectable.
 
 The parametric `Body` solid is retained unchanged. `DisplayBody` is a static
@@ -45,8 +45,8 @@ the retained solid is unchanged; shell area conservation checks ensure complete
 surface coverage. The pinned compiler separately validates triangle coverage,
 contact depths, normals, bindings and unbound USDZ export.
 
-Authoring script: throwaway `.context/author-stoak-granite.py`; generated
-measurements: `.context/stoak-granite-partition-audit.json`. Runtime appearance
+Authoring script: throwaway `.context/author-stoak-granite-depth.py`; generated
+measurements: `.context/stoak-granite-depth-partition-audit.json`. Runtime appearance
 uses a matte charcoal base, derivative-filtered procedural mineral cells and
 roughness variation. This is an artistic approximation of dark granite, not
 an image texture or measured reflectance.
@@ -58,3 +58,16 @@ committed asset are under `.context/stoak-granite-*-comparison.png`. Actual app
 screenshots and the full test results are recorded in
 `.context/stoak-granite-validation.md`. Completion requires both geometry
 comparison review and unhighlighted/selected/restored material review.
+
+## Front-face refinement
+
+The user requested visible front-facing depth after the initial 6 mm display
+strip read too thin. The approved oblique and close-up references establish
+a substantial stone front face below each floor. All three front faces now
+extend 12 mm below their existing floor, an operator-selected display estimate
+rather than a published insert measurement. This doubles the front height
+without pushing the inserts forward, changing pocket depths, or changing the
+retained solid. Existing rounded mouth surfaces continue from floor to front.
+Comparisons against committed a1dc9e5 are retained under
+`.context/stoak-granite-depth-*-comparison.png`; runtime and validation evidence
+are in `.context/stoak-granite-depth-validation.md`.

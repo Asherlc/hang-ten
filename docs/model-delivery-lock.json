@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "1a08c378eaef114b3921d9ab101691dc1018b51b5d20c84970e19b4bc9d232fb",
+  "sha256Manifest": "aea7bd43da1e48bf151f7a48c45e47847d151076c436851a2c71d79a82a88130",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "598cac49d5abb3283c747d59c00695464fb66e89cc9880d0a6923ca5a82495a7",
+  "supersededSha256Manifest": "1a08c378eaef114b3921d9ab101691dc1018b51b5d20c84970e19b4bc9d232fb",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -345,23 +345,23 @@
     },
     "nature-stoak-board-iii": {
       "source": "Hangboards/nature-stoak-board-iii/nature-stoak-board-iii.FCStd",
-      "sourceSHA256": "3dbc44f0a502fe75c7d3d7dff7052c67c567289f6a0c7ac14deac94706c9614b",
+      "sourceSHA256": "8755cf56a180400b8641ae24dd6a39d1b884af64c775a1837e4f283f871bfeee",
       "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed-identical to the deleted hand-authored file except the model presentation aspectRatio, now the descriptor modelBounds x/y ratio (4.750000052083334, was 4.718998795731431 from the superseded mesh bounds); all 7 contact IDs and 8 node IDs and their contact-to-node pairing unchanged",
       "referenceSHA256": "fc48bd058d8404047ffedb5f6ca1f00ed733caf61cd879ba3e7374651dadffe0",
-      "assetSHA256": "73bb4904b1652fdf72eb60218332721da2be7a21e0c5f8e86573ccf963452e18",
-      "descriptorSHA256": "1750b4bbcc4671bfebb4518fe74e2ef4a495214dfd340cddce770bfede57bf2e",
+      "assetSHA256": "03f28c204e52ecfb623635c047b82f2a66971d8fe469f6a79f4e6d9db833ade2",
+      "descriptorSHA256": "2463629f60efb6ad6e6d904ce125cd4a654eb7e9395a517bea7ea338c174773e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes)",
       "nativeValidation": "Pinned compile reopen, stale-state, depth, triangle coverage and unbound export gates passed; persisted retained-solid comparison and surface area conservation passed. Static contact/material shells require deliberate reauthoring after solid edits. Fresh-process verify_reproducible passed: USDZ byte-identical and descriptor equal from the final saved source.",
-      "nativeAppValidation": "Passed: isolated iPhone 17 Pro iOS 26.4 simulator; unselected board, lower-left and lower-center mixed contacts, small upper-center wood contact, and normal appearance after selections. Full iOS suite 1247 executed, 3 skipped, zero failures. Front/side/top comparison reviewed against prior committed model.",
+      "nativeAppValidation": "Front-face refinement: signed simulator app compiled/staged and signature verified. Actual runtime review and current full iOS tests blocked before execution by startup CoreLocation migration on two isolated fresh iPhone 17 Pro simulators (iOS 26.4 and 26.5); timed install failed. Prior 6 mm version passed 1247 iOS tests (3 skipped) and mixed-contact appearance review. Current front/side/top USDZ comparisons independently reviewed against a1dc9e5.",
       "comparison": "re-authored from Nature Climbing's own photographs and annotated contact map at 2.637 px/mm, not traced from the superseded display mesh, which bound edge-22-center to the lower centre granite slot, lower-composite-center to the upper centre pocket, the gradient edges to the lower wood slot sections, and had no upper channel; compare_exports not used as evidence",
       "provenanceSidecar": "docs/source-audits/2026-09-29-stoak-granite-surfaces.md",
       "assetCoverage": "locked as descriptor + source (board.json generated from the source at build time); USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: top-rail band, gradient channel bands to the board ends, 22 mm stadium, lower slot and centre slot mouths",
       "runtimeAppearance": "Wood board-wide default with three CAD-authored granite_insert_* surface overrides. Larger lower-center insert and outer lower side inserts have charcoal procedural granite; wooden walls and small upper-center pocket retain wood. Runtime-only materials; USDZ unbound. See docs/source-audits/2026-09-29-stoak-granite-surfaces.md.",
-      "supersededSourceSHA256": "2742a0885ed285b7a166d8f04b10607c86b4f927d263d3cec75eca44e623f835",
-      "supersededAssetSHA256": "808e8a7f058c8b62b5cf0e9180b86df68861022670598decf8db25f75d3c3274",
-      "supersededDescriptorSHA256": "225a2c5282e5dfdac09c20ac96abc5a976f71ce8644283114199f0a414b5e142",
-      "materialPartition": "Retained Body parametric solid unchanged by two-way Boolean check; DisplayBody and three existing contact shells are split along explicitly authored insert boxes. Three granite nodes bind to existing lower-composite contacts. Stone front-lip surfaces previously belonging to body now pick/highlight with the same contact. Original wood-shell outlines and physical metadata unchanged."
+      "supersededSourceSHA256": "3dbc44f0a502fe75c7d3d7dff7052c67c567289f6a0c7ac14deac94706c9614b",
+      "supersededAssetSHA256": "73bb4904b1652fdf72eb60218332721da2be7a21e0c5f8e86573ccf963452e18",
+      "supersededDescriptorSHA256": "1750b4bbcc4671bfebb4518fe74e2ef4a495214dfd340cddce770bfede57bf2e",
+      "materialPartition": "Retained Body parametric solid unchanged by two-way Boolean check; DisplayBody and three existing contact shells are split along explicitly authored insert boxes. Three granite nodes bind to existing lower-composite contacts. Stone front-lip surfaces previously belonging to body now pick/highlight with the same contact. Original wood-shell outlines and physical metadata unchanged. All three front faces extend 12 mm below their existing floors (display estimate refined from 6 mm after user review); no forward projection or pocket depth change."
     },
     "soill-iron-palm-2": {
       "source": "Hangboards/soill-iron-palm-2/soill-iron-palm-2.FCStd",
