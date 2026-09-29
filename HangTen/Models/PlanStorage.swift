@@ -2079,6 +2079,137 @@ enum BuiltInPlanLibraryDefinition {
 
 }
 
+// MARK: - Source-audited task migration
+
+/// The seed catalog retains the manufacturer's wording and old semantic hold
+/// list. This mapping records which listed holds occur at the same time. All
+/// unlisted work defaults to two hands, as prescribed for the catalog.
+enum PlanTaskMigration {
+    private static let offsetSteps: Set<String> = [
+        "intermediate.minute-6.task-1", "intermediate.minute-6.task-2",
+        "advanced.minute-6.task-1", "advanced.minute-6.task-2",
+        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
+        "metolius.contact.entry.minute-9",
+        "metolius.contact.intermediate.minute-3", "metolius.contact.intermediate.minute-5",
+        "metolius.contact.intermediate.minute-6",
+        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
+        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
+        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
+        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
+        "metolius.simulator-3d.advanced.minute-9",
+        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8"
+    ]
+
+    private static let reversedOffsetSteps: Set<String> = [
+        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
+        "metolius.contact.entry.minute-9", "metolius.contact.intermediate.minute-3",
+        "metolius.contact.intermediate.minute-5", "metolius.contact.intermediate.minute-6",
+        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
+        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
+        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
+        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
+        "metolius.simulator-3d.advanced.minute-9",
+        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8"
+    ]
+
+    private static let alternatingOneArmSteps: Set<String> = [
+        "metolius.contact.intermediate.minute-9", "metolius.contact.advanced.minute-6",
+        "metolius.simulator-3d.intermediate.minute-9", "metolius.simulator-3d.advanced.minute-6"
+    ]
+
+    static func migrate(_ plan: TrainingPlan) -> TrainingPlan {
+        TrainingPlan(
+            id: plan.id, title: plan.title, subtitle: plan.subtitle,
+            level: plan.level, sourceLabel: plan.sourceLabel,
+            sourceURL: plan.sourceURL, provenance: plan.provenance,
+            boardID: plan.boardID, steps: plan.steps.map(migrate)
+        )
+    }
+
+    private static func migrate(_ step: WorkoutStep) -> WorkoutStep {
+        let segments = step.segments.map { segment -> WorkoutSegment in
+            guard segment.kind == .work, let target = segment.target else { return segment }
+            if case .selfSelected = target {
+                return WorkoutSegment(
+                    kind: .work,
+                    target: .tasks([[PlanHandTarget(), PlanHandTarget()]]),
+                    timing: segment.timing, duration: segment.duration
+                )
+            }
+            guard case .requirements(let requirements) = target else { return segment }
+            let hands = requirements.map(hand)
+            let tasks: [[PlanHandTarget]]
+            if offsetSteps.contains(step.id), hands.count >= 2 {
+                let pair = Array(hands.prefix(2))
+                tasks = [pair]
+                    + (reversedOffsetSteps.contains(step.id) ? [Array(pair.reversed())] : [])
+                    + hands.dropFirst(2).map { [$0, $0] }
+            } else if alternatingOneArmSteps.contains(step.id), let first = hands.first {
+                tasks = [[first], [first]] + hands.dropFirst().map { [$0, $0] }
+            } else if step.handUse == .single, let first = hands.first {
+                tasks = [[PlanHandTarget(target: first.target, side: step.side)]]
+            } else if step.id == "advanced.minute-5.task-1"
+                        || step.id == "advanced.minute-5.task-2" {
+                tasks = hands.map { [$0] }
+            } else {
+                tasks = hands.map { [$0, $0] }
+            }
+            return WorkoutSegment(
+                kind: segment.kind, target: .tasks(tasks),
+                timing: segment.timing, duration: segment.duration
+            )
+        }
+        let allTasks = segments.flatMap { $0.target?.planTasks ?? [] }
+        let handUse: WorkoutHandUse
+        let side: WorkoutSide
+        if !allTasks.isEmpty, allTasks.allSatisfy({ $0.count == 1 }) {
+            let sides = allTasks.compactMap { $0.first?.side }
+            if sides.count == allTasks.count, Set(sides) == [.left] {
+                handUse = .single
+                side = .left
+            } else if sides.count == allTasks.count, Set(sides) == [.right] {
+                handUse = .single
+                side = .right
+            } else {
+                handUse = .either
+                side = .both
+            }
+        } else if !allTasks.isEmpty {
+            handUse = .double
+            side = .both
+        } else {
+            handUse = step.handUse
+            side = step.side
+        }
+        return WorkoutStep(
+            id: step.id, number: step.number, title: step.title,
+            instruction: step.instruction, accessory: step.accessory,
+            duration: step.duration, phase: step.phase, segments: segments,
+            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+            handUse: handUse, side: side, action: step.action,
+            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
+    }
+
+    private static func hand(_ requirement: ContactRequirement) -> PlanHandTarget {
+        let depth: PlanDepth?
+        switch requirement.depth {
+        case .category(let size): depth = .category(size)
+        case .range(let range): depth = .measured(range)
+        case nil: depth = nil
+        }
+        guard requirement.kind != nil || requirement.shape != nil
+                || depth != nil || requirement.fingerCapacity != nil else {
+            return PlanHandTarget(target: nil)
+        }
+        return PlanHandTarget(target: PlanContactPredicate(
+            kind: requirement.kind, shape: requirement.shape,
+            depth: depth, fingerCapacity: requirement.fingerCapacity
+        ))
+    }
+}
+
 // MARK: - Compatibility facade
 
 #if DEBUG

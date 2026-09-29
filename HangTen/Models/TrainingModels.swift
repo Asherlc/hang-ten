@@ -3952,6 +3952,6 @@ enum LegacyPlanSeedCatalog {
         }
         #endif
 
-        return metoliusPlans + officialPlans + adaptedPlans
+        return (metoliusPlans + officialPlans + adaptedPlans).map(PlanTaskMigration.migrate)
     }()
 }

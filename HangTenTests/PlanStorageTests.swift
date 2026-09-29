@@ -429,7 +429,7 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(metadata["version"])
     }
 
-    func testBundledPlanLibraryContainsOnlyContactRequirements() throws {
+    func testBundledPlanLibraryUsesOrderedHandTasks() throws {
         let data = try bundledPlanLibraryData()
         let document = try XCTUnwrap(
             JSONSerialization.jsonObject(with: data) as? [String: Any]
@@ -439,12 +439,43 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertNil(document["schemaVersion"])
         XCTAssertNil(metadata["version"])
         XCTAssertEqual(legacyPlanTargetKeys(in: document), [])
+        let blocks = try XCTUnwrap(document["blocks"] as? [[String: Any]])
+        let workTargets = blocks.flatMap { block -> [[String: Any]] in
+            let steps = block["steps"] as? [[String: Any]] ?? []
+            return steps.flatMap { step -> [[String: Any]] in
+                let segments = step["segments"] as? [[String: Any]] ?? []
+                return segments.compactMap { segment in
+                    guard segment["kind"] as? String == "work" else { return nil }
+                    return segment["target"] as? [String: Any]
+                }
+            }
+        }
+        XCTAssertFalse(workTargets.isEmpty)
+        XCTAssertTrue(workTargets.allSatisfy { $0["tasks"] is [[[String: Any]]] })
         XCTAssertNoThrow(
             try PlanLibraryStore(
                 builtInData: data,
                 packageStore: BoardCatalog.packageStore
             )
         )
+    }
+
+    func testMetoliusAnyHoldAndOffsetTasksPreserveSourceOrder() throws {
+        let entry = try XCTUnwrap(PlanCatalog.plan(id: "metolius.contact.entry"))
+        let anyStep = try XCTUnwrap(entry.steps.first { $0.id == "metolius.contact.entry.minute-4" })
+        let anyTasks = try XCTUnwrap(anyStep.segments.first?.target?.planTasks)
+        XCTAssertEqual(anyTasks.map(\.count), [2, 2])
+        XCTAssertTrue(anyTasks[0].allSatisfy { $0.target == nil })
+        XCTAssertEqual(anyTasks[1].compactMap { $0.target?.fingerCapacity }, [2, 2])
+
+        let offset = try XCTUnwrap(entry.steps.first { $0.id == "metolius.contact.entry.minute-9" })
+        let offsetTasks = try XCTUnwrap(offset.segments.first?.target?.planTasks)
+        XCTAssertEqual(offsetTasks.map(\.count), [2, 2, 2])
+        XCTAssertEqual(offsetTasks[0][0].target?.kind, .pinch)
+        XCTAssertEqual(offsetTasks[0][1].target?.kind, .pocket)
+        XCTAssertEqual(offsetTasks[1][0].target?.kind, .pocket)
+        XCTAssertEqual(offsetTasks[1][1].target?.kind, .pinch)
+        XCTAssertEqual(offsetTasks[2].map { $0.target?.kind }, [.sloper, .sloper])
     }
 
     func testBundledPlanLibraryValidatesAgainstPackagedBoards() throws {

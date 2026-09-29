@@ -471,14 +471,6 @@ enum ContactResolver {
                       let secondFrame = second.resolvedFrame(in: board.defaultPresentation) else {
                     return nil
                 }
-                if task[0].target == task[1].target {
-                    guard first.kind == second.kind,
-                          first.shape == second.shape,
-                          first.depth == second.depth,
-                          first.fingerCapacity == second.fingerCapacity else {
-                        return nil
-                    }
-                }
                 return (first, second, abs(firstFrame.rect.midX - secondFrame.rect.midX))
             }
         }
@@ -528,7 +520,12 @@ enum ContactResolver {
     ) -> Bool {
         guard let side else { return true }
         if let authored = contact.side { return authored.rawValue == side.rawValue }
+        // Repeated model instances share a local descriptor frame. Their
+        // authored equipment-object IDs identify the physical left/right unit.
+        if contact.equipmentObjectID == "left-ring" { return side == .left }
+        if contact.equipmentObjectID == "right-ring" { return side == .right }
         guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else { return false }
+        if frame.rect.minX <= 0.5 && frame.rect.maxX >= 0.5 { return true }
         return side == .left ? frame.rect.midX < 0.5 : frame.rect.midX > 0.5
     }
 
