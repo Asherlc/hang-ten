@@ -681,8 +681,8 @@
                   {
                     "depth" : {
                       "range" : {
-                        "maximum" : 19,
-                        "minimum" : 8
+                        "maximum" : 18,
+                        "minimum" : 9
                       }
                     },
                     "kind" : "edge",
@@ -889,8 +889,8 @@
                   {
                     "depth" : {
                       "range" : {
-                        "maximum" : 19,
-                        "minimum" : 8
+                        "maximum" : 18,
+                        "minimum" : 9
                       }
                     },
                     "kind" : "edge",
@@ -927,8 +927,8 @@
                   {
                     "depth" : {
                       "range" : {
-                        "maximum" : 19,
-                        "minimum" : 8
+                        "maximum" : 18,
+                        "minimum" : 9
                       }
                     },
                     "kind" : "edge",

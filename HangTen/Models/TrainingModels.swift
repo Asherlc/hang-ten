@@ -2327,9 +2327,10 @@ enum LegacyPlanSeedCatalog {
     private static let largeEdgeTarget = ContactRequirement.edge(
         depth: .category(.large)
     )
-    // Inferred Metolius-only Small Edge resolution band; the generic size category stays unchanged.
+    // Inferred Metolius-only 8–19 mm Small Edge band for point depths.
+    // Account for HoldDepth's 1 mm numeric tolerance; leave the generic size category unchanged.
     private static let smallEdgeTarget = ContactRequirement.edge(
-        depth: .range(.init(minimum: 8, maximum: 19))
+        depth: .range(.init(minimum: 9, maximum: 18))
     )
     private static let largeSlopeTarget = ContactRequirement(
         kind: .sloper,

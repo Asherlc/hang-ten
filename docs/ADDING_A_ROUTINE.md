@@ -133,7 +133,7 @@ board whose only smaller edges are 19 mm. Keep the source term in the task,
 make the board metadata truthful, and disclose the equivalence in review. Never
 rename a pocket as a sloper or omit a required target silently.
 
-### Metolius edge-name cross-reference (checked September 28, 2026)
+### Metolius edge-name cross-reference (checked September 29, 2026)
 
 The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
 uses Large, Medium, and Small Edge without millimeter measurements. The separate
@@ -158,7 +158,11 @@ category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
 This is specific to those tasks; the shared Small category remains 8–15 mm for
 other plans and saved routines. The band overlaps Medium Edge on a board with
 only two edge depths. It is not a manufacturer-prescribed numeric range and
-does not change any contact's factual depth. The Intermediate generic guide's
+does not change any contact's factual depth. Because numeric `HoldDepth.matches`
+allows 1 mm of tolerance on each end, the serialized requirement uses 9–18 mm
+to match point-depth contacts from 8 through 19 mm, excluding 7.5 and 20 mm.
+Contacts with measured depth ranges still match when their range intersects
+that band. The Intermediate generic guide's
 minute 9 says only “Slope,” so its target is an unqualified sloper. Its
 Advanced section explicitly says “Large Slope,” and that target remains
 size-qualified.

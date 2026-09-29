@@ -35,6 +35,20 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertFalse(small.matches(twenty))
     }
 
+    func testMetoliusIntermediateSmallEdgeExcludesExactDepthsOutsideInferredBand() throws {
+        let step = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusIntermediate.steps.first {
+                $0.id == "intermediate.minute-3.task-1"
+            }
+        )
+        let depth = try XCTUnwrap(step.workRequirements.first?.depth)
+
+        XCTAssertFalse(depth.matches(.range(.init(minimum: 7.5, maximum: 7.5))))
+        XCTAssertTrue(depth.matches(.range(.init(minimum: 8, maximum: 8))))
+        XCTAssertTrue(depth.matches(.range(.init(minimum: 19, maximum: 19))))
+        XCTAssertFalse(depth.matches(.range(.init(minimum: 20, maximum: 20))))
+    }
+
     func testHoldDepthEncodesAndDecodesTaggedCategoryAndRange() throws {
         let categoryData = try JSONEncoder().encode(HoldDepth.category(.large))
         XCTAssertEqual(
@@ -1934,7 +1948,7 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             try XCTUnwrap(intermediate.steps.first { $0.id == "intermediate.minute-3.task-1" }).workRequirements,
-            [ContactRequirement.edge(depth: .range(.init(minimum: 8, maximum: 19)))]
+            [ContactRequirement.edge(depth: .range(.init(minimum: 9, maximum: 18)))]
         )
         XCTAssertEqual(
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-1" }).workRequirements,
