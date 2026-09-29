@@ -3,6 +3,43 @@ import XCTest
 
 final class PlanStorageTests: XCTestCase {
 
+    func testBoardSpecificPlanRejectsTwoHandTaskWithOnlyOneCapacityOneContact() {
+        let board = BoardRevision(
+            id: "fixture.one-contact", revisionID: "test", manufacturer: "Fixture",
+            name: "One contact", subtitle: "", dimensions: nil, aspectRatio: 1,
+            contacts: [PhysicalContact(
+                id: "edge", name: "Edge", kind: .edge, handCapacity: 1
+            )],
+            productURL: URL(string: "https://example.com/board")!, photoAssetName: nil
+        )
+        let hand = PlanHandTarget(target: .init(kind: .edge))
+        let step = WorkoutStepDefinition(
+            id: "hang", title: "Hang", instruction: "", accessory: "",
+            duration: 7, phase: .hang,
+            segments: [WorkoutSegmentDefinition(
+                kind: .work, target: .tasks([[hand, hand]]),
+                timing: .fixed, duration: 7
+            )]
+        )
+        let library = PlanLibraryDefinition(
+            metadata: PlanLibraryMetadata(
+                id: "fixture.library", title: "Fixture", generatedAt: "2026-09-28"
+            ),
+            blocks: [WorkoutBlockDefinition(id: "block", steps: [step])],
+            plans: [PlanDefinition(
+                id: "fixture.plan",
+                metadata: PlanMetadata(
+                    title: "Fixture", subtitle: "", level: "", sourceLabel: "Fixture",
+                    sourceURL: URL(string: "https://example.com/plan"), provenance: .adapted
+                ),
+                boardID: board.id, blocks: [WorkoutBlockReference(blockID: "block")]
+            )]
+        )
+        XCTAssertTrue(library.validationIssues(availableBoards: [board]).contains {
+            $0.path.hasSuffix("target.tasks[0]")
+        })
+    }
+
     func testHoldDepthMatchesOnlySupportedEvidencePairs() {
         let large = HoldDepth.category(.large)
         let medium = HoldDepth.category(.medium)

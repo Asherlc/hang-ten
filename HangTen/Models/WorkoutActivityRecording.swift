@@ -426,6 +426,112 @@ enum ContactResolutionError: LocalizedError, Equatable {
 }
 
 enum ContactResolver {
+    /// Assigns one contact to each hand in a simultaneous plan task. Repeated
+    /// IDs mean two hands share a capacity-two contact, or use the same contact
+    /// on separate copies of a one-hand board.
+    static func resolve(
+        _ task: [PlanHandTarget],
+        step: WorkoutStep,
+        board: BoardRevision
+    ) throws -> [PhysicalContact] {
+        guard (1...2).contains(task.count) else { throw ContactResolutionError.noMatches }
+        let positionContactIDs = contactIDsForDefaultPosition(on: board)
+        let candidates = task.map { hand in
+            board.contacts.filter { contact in
+                positionContactIDs.contains(contact.id)
+                    && matches(hand.target.legacyRequirement, contact: contact)
+                    && matches(stepGripType: step.gripType, contact: contact)
+            }
+        }
+        guard candidates.allSatisfy({ !$0.isEmpty }) else { throw ContactResolutionError.noMatches }
+
+        if task.count == 1 {
+            let narrowed = board.isOneHanded ? candidates[0] : candidates[0].filter {
+                contact($0, fits: task[0].side, on: board)
+            }
+            return try singleCandidate(from: narrowed, on: board)
+        }
+
+        let firstSide = task[0].side ?? (task[1].side == .left ? .right : .left)
+        let secondSide = task[1].side ?? (firstSide == .left ? .right : .left)
+        guard firstSide != secondSide else {
+            throw ContactResolutionError.invalidBilateralPair(candidateCount: 0)
+        }
+
+        if board.isOneHanded {
+            return try candidates.map { try singleCandidate(from: $0, on: board)[0] }
+        }
+
+        let firstCandidates = candidates[0].filter { contact($0, fits: firstSide, on: board) }
+        let secondCandidates = candidates[1].filter { contact($0, fits: secondSide, on: board) }
+        let pairs = firstCandidates.flatMap { first in
+            secondCandidates.compactMap { second -> (PhysicalContact, PhysicalContact, CGFloat)? in
+                guard first.id != second.id,
+                      let firstFrame = first.resolvedFrame(in: board.defaultPresentation),
+                      let secondFrame = second.resolvedFrame(in: board.defaultPresentation) else {
+                    return nil
+                }
+                if task[0].target == task[1].target {
+                    guard first.kind == second.kind,
+                          first.shape == second.shape,
+                          first.depth == second.depth,
+                          first.fingerCapacity == second.fingerCapacity else {
+                        return nil
+                    }
+                }
+                return (first, second, abs(firstFrame.rect.midX - secondFrame.rect.midX))
+            }
+        }
+        if let best = pairs.sorted(by: { lhs, rhs in
+            if lhs.2 != rhs.2 { return lhs.2 > rhs.2 }
+            if lhs.0.id != rhs.0.id { return lhs.0.id < rhs.0.id }
+            return lhs.1.id < rhs.1.id
+        }).first {
+            return [best.0, best.1]
+        }
+
+        let shared = candidates[0].filter { first in
+            first.handCapacity == 2 && candidates[1].contains(where: { $0.id == first.id })
+        }
+        if let selected = try? singleCandidate(from: shared, on: board).first {
+            return [selected, selected]
+        }
+        throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates[0].count + candidates[1].count)
+    }
+
+    static func resolve(
+        _ tasks: [[PlanHandTarget]],
+        step: WorkoutStep,
+        board: BoardRevision
+    ) throws -> [[PhysicalContact]] {
+        try tasks.map { try resolve($0, step: step, board: board) }
+    }
+
+    static func resolve(
+        _ target: WorkoutSegmentTarget,
+        step: WorkoutStep,
+        board: BoardRevision
+    ) throws -> [[PhysicalContact]] {
+        switch target {
+        case .selfSelected: []
+        case .requirements(let requirements):
+            try requirements.map { try resolve($0, step: step, board: board) }
+        case .tasks(let tasks):
+            try resolve(tasks, step: step, board: board)
+        }
+    }
+
+    private static func contact(
+        _ contact: PhysicalContact,
+        fits side: WorkoutSide?,
+        on board: BoardRevision
+    ) -> Bool {
+        guard let side else { return true }
+        if let authored = contact.side { return authored.rawValue == side.rawValue }
+        guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else { return false }
+        return side == .left ? frame.rect.midX < 0.5 : frame.rect.midX > 0.5
+    }
+
     static func resolve(
         _ requirement: ContactRequirement,
         step: WorkoutStep,

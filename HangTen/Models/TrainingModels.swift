@@ -1385,6 +1385,11 @@ enum WorkoutSegmentTarget: Codable, Hashable {
         }
     }
 
+    var planTasks: [[PlanHandTarget]]? {
+        if case .tasks(let tasks) = self { return tasks }
+        return nil
+    }
+
     var isSelfSelected: Bool {
         switch self {
         case .selfSelected, .tasks([]): true

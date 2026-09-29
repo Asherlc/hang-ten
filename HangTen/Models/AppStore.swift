@@ -328,9 +328,7 @@ final class AppStore: ObservableObject {
 
     func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> Set<String> {
         let candidates = handResolutionCandidates(for: step, on: board)
-        return Set(candidates.flatMap {
-            (try? ContactResolver.resolve($0.workRequirements, step: $0, board: board).map(\.id)) ?? []
-        })
+        return Set(candidates.flatMap { WorkoutHighlightResolver.contactIDs(for: $0, on: board) })
     }
 
     func isIncompatible(_ plan: TrainingPlan, on board: BoardRevision) -> Bool {
@@ -366,8 +364,18 @@ final class AppStore: ObservableObject {
                 )) ?? []).isEmpty
                 return !(sidesResolve || bothResolves)
             }
-            return step.workRequirements.contains { target in
-                (try? ContactResolver.resolve(target, step: step, board: board)) == nil
+            return step.segments.contains { segment in
+                guard segment.kind == .work, let target = segment.target else { return false }
+                switch target {
+                case .selfSelected:
+                    return false
+                case .requirements(let requirements):
+                    return requirements.contains {
+                        (try? ContactResolver.resolve($0, step: step, board: board)) == nil
+                    }
+                case .tasks(let tasks):
+                    return (try? ContactResolver.resolve(tasks, step: step, board: board)) == nil
+                }
             }
         }
     }

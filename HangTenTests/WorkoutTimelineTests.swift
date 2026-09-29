@@ -1624,6 +1624,83 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(pinnedPair.bilateralSelection.selection, .single)
     }
 
+    func testPerHandResolverAssignsAsymmetricContactsAndRejectsMissingSecondHold() throws {
+        let board = handTargetBoard([
+            PhysicalContact(id: "left-edge", name: "Left edge", kind: .edge, side: .left),
+            PhysicalContact(id: "right-sloper", name: "Right sloper", kind: .sloper, side: .right)
+        ])
+        let step = handTargetStep()
+        let task = [
+            PlanHandTarget(target: .init(kind: .edge), side: .left),
+            PlanHandTarget(target: .init(kind: .sloper), side: .right)
+        ]
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: board).map(\.id), ["left-edge", "right-sloper"])
+        XCTAssertEqual(try ContactResolver.resolve([task, task], step: step, board: board).map { $0.map(\.id) }, [
+            ["left-edge", "right-sloper"], ["left-edge", "right-sloper"]
+        ])
+        XCTAssertThrowsError(try ContactResolver.resolve([
+            .init(target: .init(kind: .edge)),
+            .init(target: .init(kind: .edge))
+        ], step: step, board: board))
+        XCTAssertThrowsError(try ContactResolver.resolve([task, [
+            .init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))
+        ]], step: step, board: board))
+    }
+
+    func testPerHandResolverUsesPairOrSharedContactAccordingToBoardCapacity() throws {
+        let task = [
+            PlanHandTarget(target: .init(kind: .edge)),
+            PlanHandTarget(target: .init(kind: .edge))
+        ]
+        let step = handTargetStep()
+        let pair = handTargetBoard([
+            PhysicalContact(id: "left-edge", name: "Left", kind: .edge, side: .left),
+            PhysicalContact(id: "right-edge", name: "Right", kind: .edge, side: .right)
+        ])
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: pair).map(\.id), ["left-edge", "right-edge"])
+
+        let shared = handTargetBoard([
+            PhysicalContact(id: "shared-edge", name: "Shared", kind: .edge, handCapacity: 2)
+        ])
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: shared).map(\.id), ["shared-edge", "shared-edge"])
+
+        let oneHand = handTargetBoard([
+            PhysicalContact(id: "portable-edge", name: "Portable", kind: .edge, handCapacity: 1)
+        ], handCapacity: 1)
+        XCTAssertEqual(try ContactResolver.resolve(task, step: step, board: oneHand).map(\.id), ["portable-edge", "portable-edge"])
+        XCTAssertThrowsError(try ContactResolver.resolve(task, step: step, board: handTargetBoard([
+            PhysicalContact(id: "single-edge", name: "Single", kind: .edge, handCapacity: 1)
+        ])))
+    }
+
+    private func handTargetStep() -> WorkoutStep {
+        WorkoutStep(
+            id: "per-hand", number: 1, title: "Per-hand", instruction: "",
+            accessory: "", duration: 7, phase: .hang, handUse: .double
+        )
+    }
+
+    private func handTargetBoard(_ contacts: [PhysicalContact], handCapacity: Int = 2) -> BoardRevision {
+        let geometry = Dictionary(uniqueKeysWithValues: contacts.enumerated().map { index, contact in
+            (contact.id, [BoardContactPiece(
+                id: "\(contact.id)-piece", contactID: contact.id,
+                frame: CGRect(x: contacts.count == 1 ? 0.45 : (index == 0 ? 0.1 : 0.8),
+                              y: 0, width: 0.1, height: 0.1),
+                shape: .roundedRect(cornerRadiusFraction: 0), treatment: .surface
+            )])
+        })
+        return BoardRevision(
+            id: "fixture.per-hand", revisionID: "test", manufacturer: "Fixture",
+            name: "Per-hand", subtitle: "", dimensions: nil,
+            aspectRatio: 1, handCapacity: handCapacity, contacts: contacts,
+            productURL: URL(string: "https://example.com/board")!, photoAssetName: nil,
+            presentations: [BoardPresentation(
+                id: "front", name: "Front", aspectRatio: 1, isDefault: true,
+                media: .raster(BoardRasterMedia(assetPath: "", contactGeometry: geometry))
+            )]
+        )
+    }
+
     func testDefaultHandPreferenceFollowsBoardCapacity() {
         XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 2), .both)
         XCTAssertEqual(WorkoutSessionHandPreference.defaultPreference(boardHandCapacity: 1), .alternate)

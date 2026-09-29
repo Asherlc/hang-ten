@@ -1349,6 +1349,17 @@ enum PlanLibraryValidator {
                         }
                     }
                     for (segmentIndex, segment) in step.segments.enumerated() {
+                        if case .tasks(let tasks) = segment.target {
+                            validateTasks(
+                                tasks,
+                                planBoardID: plan.boardID,
+                                stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
+                                boardByID: boardByID,
+                                gripType: step.gripType,
+                                issues: &issues
+                            )
+                            continue
+                        }
                         let requirements = segment.contactRequirements
                         guard !requirements.isEmpty else { continue }
                         validateTargets(
@@ -1520,6 +1531,33 @@ enum PlanLibraryValidator {
                         message: "The contact requirement cannot resolve on declared board \"\(planBoardID)\"."
                     )
                 )
+            }
+        }
+    }
+
+    private static func validateTasks(
+        _ tasks: [[PlanHandTarget]],
+        planBoardID: String?,
+        stepPath: String,
+        boardByID: [String: [BoardRevision]],
+        gripType: GripType?,
+        issues: inout [PlanValidationIssue]
+    ) {
+        guard let planBoardID, !tasks.isEmpty else { return }
+        let boards = boardByID[planBoardID] ?? []
+        let step = WorkoutStep(
+            id: "validation", number: 0, title: "Validation",
+            instruction: "", accessory: "", duration: 1, phase: .hang,
+            gripType: gripType
+        )
+        for (index, task) in tasks.enumerated() {
+            if boards.isEmpty || boards.contains(where: {
+                (try? ContactResolver.resolve(task, step: step, board: $0)) == nil
+            }) {
+                issues.append(PlanValidationIssue(
+                    path: "\(stepPath).target.tasks[\(index)]",
+                    message: "The hand targets cannot resolve together on declared board \"\(planBoardID)\"."
+                ))
             }
         }
     }

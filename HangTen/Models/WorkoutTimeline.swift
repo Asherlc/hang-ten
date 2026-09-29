@@ -42,6 +42,12 @@ enum WorkoutSessionHandResolver {
     /// Rest steps default to `.double` and must never force a hand choice.
     static func stepNeedsHandResolution(_ step: WorkoutStep, boardIsOneHanded: Bool) -> Bool {
         guard !step.isRestStep else { return false }
+        if step.segments.contains(where: { segment in
+            guard let tasks = segment.target?.planTasks else { return false }
+            return !tasks.isEmpty
+        }) {
+            return false
+        }
         return step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
     }
 
@@ -719,7 +725,11 @@ enum WorkoutLiftCompletionPolicy {
 
 enum WorkoutHighlightResolver {
     static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
-        (try? ContactResolver.resolve(
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           let first = tasks.first {
+            return (try? ContactResolver.resolve(first, step: step, board: board).map(\.id)) ?? []
+        }
+        return (try? ContactResolver.resolve(
             step.workRequirements,
             step: step,
             board: board
