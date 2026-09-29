@@ -1110,6 +1110,32 @@ def test_cad_suspension_sidecar_merges_without_entering_the_source(tmp_path: Pat
     assert generated["presentations"][0]["media"]["suspension"] == suspension
 
 
+def test_cad_suspension_sidecar_rope_solver_setting_stays_out_of_board(tmp_path: Path) -> None:
+    module = load_board_catalog_module()
+    package_root = tmp_path / "cad-model"
+    (package_root / "assets").mkdir(parents=True)
+    (package_root / "assets/primary.model.json").write_text(json.dumps({"modelSHA256": "a" * 64}))
+    board = {"presentations": [{"id": "primary", "media": {
+        "type": "model", "descriptorPath": "assets/primary.model.json"}}]}
+    document = {
+        "schemaVersion": 1,
+        "presentationID": "primary",
+        "modelSHA256": "a" * 64,
+        "ropeSolver": {"sectionPlane": "anchor"},
+        "suspension": {"type": "twoBranchCord"},
+    }
+    (package_root / "suspension.json").write_text(json.dumps(document))
+
+    generated = module.cad_source.merge_suspension_sidecar(board, package_root)
+    assert "ropeSolver" not in json.dumps(generated)
+
+    for invalid in ({"sectionPlane": "diagonal"}, {"sectionPlane": "anchor", "extra": 1}, "anchor"):
+        document["ropeSolver"] = invalid
+        (package_root / "suspension.json").write_text(json.dumps(document))
+        with pytest.raises(module.cad_source.ManifestError, match="ropeSolver"):
+            module.cad_source.merge_suspension_sidecar(board, package_root)
+
+
 def test_cad_suspension_sidecar_rejects_mismatched_asset(tmp_path: Path) -> None:
     module = load_board_catalog_module()
     package_root = tmp_path / "cad-model"

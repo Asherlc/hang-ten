@@ -33,6 +33,7 @@ __pycache__/
 # package validator rejects an on-disk copy. List each CAD package explicitly
 # (a pattern could hide a hand-authored package's board.json).
 /Hangboards/soill-iron-palm-2/board.json
+/Hangboards/soill-split-palm/board.json
 /Hangboards/soill-training-tiles/board.json
 /Hangboards/beastmaker-1000/board.json
 /Hangboards/beastmaker-2000/board.json
@@ -41,6 +42,7 @@ __pycache__/
 /Hangboards/lattice-mxedge-lift-large/board.json
 /Hangboards/lattice-mxedge-lift-small/board.json
 /Hangboards/lattice-triple-rung/board.json
+/Hangboards/metolius-foundry/board.json
 /Hangboards/lattice-mini-bar/board.json
 /Hangboards/metolius-prime-rib/board.json
 /Hangboards/metolius-rock-rings-3d/board.json
@@ -64,3 +66,4 @@ __pycache__/
 /Hangboards/metolius-climbers-edge/board.json
 /Hangboards/metolius-project/board.json
 /Hangboards/frictitious-megalith/board.json
+/Hangboards/crimptonite-helium-mobile/board.json

@@ -1,7 +1,30 @@
 # Authoring cords on CAD hangboards
 
-This is the reusable authoring contract learned from the Lattice Mini Bar
-migration. Read the [suspension and ODR guide](3D_SUSPENSION_AND_ODR.md) for
+## The standard method
+
+Every corded CAD board uses this method: the cord's hidden passage is a void
+in the native FreeCAD solid, the topology lives in `suspension.json` as a
+`twoBranchCord` with `internalLoop`, the channel length is measured from CAD
+with `Tools/HangboardCAD/measure_channel_spines.py`, and the visible routes
+and hanging height are solved against the exported CAD solid with
+`Tools/HangboardCAD/solve_threaded_rope.py`. Do not hand-place cord contact
+points, anchors that stand in for a solve, or `pairedLeadCord` leads on a CAD
+board. The runtime's convex-section fallback and hand-authored
+`pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
+packages; migrate a board's cord to this method when the board moves to CAD.
+
+Two boards use it:
+
+| Board | Channel | Section plane | Notes |
+| --- | --- | --- | --- |
+| Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
+| Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
+
+If a board's cord does not fit the solver's assumptions (below), extend the
+solver with evidence and tests rather than falling back to hand-authored
+routes.
+
+This contract was first learned from the Lattice Mini Bar migration. Read the [suspension and ODR guide](3D_SUSPENSION_AND_ODR.md) for
 package delivery and the approved Mini Bar cord passage metadata
 for the product-specific evidence. The approved [Lattice end view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-2.jpg)
 and [loaded view](https://latticetraining.com/app/uploads/2021/05/Mini-Bar-Web-1.jpg)
@@ -150,27 +173,45 @@ section. The winding choice records how the physical cord was threaded. It
 is a discrete topology input, not a manually placed contact point. The
 solver can calculate bearing only after that ambiguity is resolved.
 
-## When to reuse `internalLoop`
+## Solver assumptions and section planes
 
-Use the current method only when all of these hold:
+The current solver applies when all of these hold:
 
 1. Source evidence supports two connected mouths per loop and a continuous
    cord returning to the same support.
 2. The CAD source contains the connected void, and mouth coordinates refer
    to that void in the descriptor/importer coordinate basis.
-3. Each mouth's actual CAD Y/Z section is representative of the bearing
+3. Each mouth's section plane (below) is representative of the bearing
    surface along that leg. The native solid is watertight for collision checks.
 4. The model has two branches, four distinct point mouths, and one winding
    choice for each mouth. Each branch's `passageIDs` lists its paired mouths
    in traversal order.
 
-For a tapered, twisted, or locally different section, one planar path may
-miss a shorter 3D route even when its sampled points clear the solid. For an
-external wrap without connected internal mouths, use the
-appropriate exterior topology; do not label it `internalLoop`. For a
-different connection graph or moving anchor, extend the schema and solver
-with evidence and tests. No solver choice can recover hidden threading from
-the mesh alone.
+**Channels.** A channel is either a curved `PartDesign::SubtractivePipe`
+(its Sketcher spine is measured) or a straight `Part::Cylinder` through-bore
+(its axis is measured). A through-bore's two mouths lie in the same section,
+which the bore cuts in two; the solver bridges that gap to recover the
+exterior outline and reopens only the notch at the mouth it is solving.
+
+**Section planes.** The sidecar's optional, authoring-only
+`ropeSolver.sectionPlane` chooses each mouth's plane. It is never merged into
+`board.json`, and `--check` reads it so the cache stays reproducible.
+
+- `mouth-x` (the default) cuts at the mouth's x. It suits mouths on a
+  constant-section bar, like the Mini Bar.
+- `anchor` cuts the plane through the mouth that contains the model depth
+  axis and the overhead anchor, which is the plane a taut leg actually hangs
+  in. The plane follows the solved board height until it converges. Use it
+  when the section changes along x near a mouth: the Helium Mobile's mouths
+  sit in its rounded ends, and a `mouth-x` solve there let the leg clip the
+  taller face it crosses on its way to the central hook.
+
+For a tapered, twisted, or locally different section that neither plane
+represents, one planar path may miss a shorter 3D route even when its sampled
+points clear the solid; extend the solver toward a full 3D route. For an
+external wrap without connected internal mouths, a different connection
+graph, or a moving anchor, extend the schema and solver with evidence and
+tests. No solver choice can recover hidden threading from the mesh alone.
 
 ## Authoring sequence for another board
 
@@ -185,7 +226,7 @@ the mesh alone.
 3. Put suspension in the adjacent `suspension.json` for a CAD package. Bind
    all mouths to the body node, pair each loop, supply the overhead anchor,
    and choose each winding from the evidence. Measure the paired-mouth length
-   from each `SubtractivePipe` spine with
+   from each channel's spine (pipe spine or bore axis) with
    `Tools/HangboardCAD/measure_channel_spines.py`; record it in
    `internalLoop.channelLengthByBranchID` and rerun the tool with
    `HANGTEN_CHANNEL_VERIFY=1` to catch sidecar drift. For every canonical grip,
@@ -196,8 +237,15 @@ the mesh alone.
    outward contact normal to show that region. A nearly end-on camera can hide the rail
    and make a cord opening look like the selected hold. A bar that flips
    between grips needs its pose rotation changed before the cord is solved.
-   Then export the final native
+   Choose `ropeSolver.sectionPlane` (see above). The anchor's
+   `offsetFromBoardBounds` is only the solver's starting point: set it low
+   enough that the loop is longer than the route at the base pose (the solver
+   then lowers the board until the loop is taut), so the settled hang depends
+   on the loop length, not on that offset. Then export the final native
    solid, run `solve_threaded_rope.py --apply`, then rerun with `--check`.
+   When a winding is in doubt, compare each mouth's route length and turn for
+   both directions; the physical one is normally the short route over the
+   nearest edge.
    Generated pose routes are a cache in the sidecar, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;
    never commit that generated file.

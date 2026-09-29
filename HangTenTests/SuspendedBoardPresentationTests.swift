@@ -39,6 +39,34 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         }
     }
 
+    func testHeliumThroughBoreLoopSolvesWhenChannelEqualsMouthChord() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "crimptonite.helium-mobile"))
+        guard case .model(let media) = board.defaultPresentation.media,
+              case .twoBranchCord(let profile) = media.suspension else {
+            return XCTFail("expected Helium Mobile internal loop suspension")
+        }
+        XCTAssertNotNil(profile.internalLoopClearance)
+        let channelLengths = try XCTUnwrap(profile.internalLoopChannelLengthByBranchID)
+        let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
+        for (positionID, pose) in profile.canonicalPoses {
+            let routes = try XCTUnwrap(pose.cordContactPoints, positionID)
+            for branch in profile.branches {
+                // Each straight bore's hidden length is exactly its mouth chord.
+                let first = try XCTUnwrap(routes[branch.passageIDs[0]]?.last)
+                let second = try XCTUnwrap(routes[branch.passageIDs[1]]?.first)
+                let chord = zip(first, second).reduce(0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                XCTAssertEqual(try XCTUnwrap(channelLengths[branch.id]), chord, accuracy: 1e-9, positionID)
+            }
+            let solved = try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
+            XCTAssertEqual(solved.branches.count, 2, positionID)
+            for branch in solved.branches {
+                XCTAssertEqual(branch.spans.first?.first, anchor, positionID)
+                XCTAssertEqual(branch.spans.last?.last, anchor, positionID)
+            }
+        }
+    }
+
     func testMiniBarSettledLoopKeepsItsLengthAndLowersBoard() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
         guard case .model(let media) = board.defaultPresentation.media,

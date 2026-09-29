@@ -22,6 +22,7 @@ struct FreeWorkoutLogSessionView: View {
     @State private var showsFinishConfirm = false
     @State private var showsDiscardAlert = false
     @State private var showsTemplatePrompt = false
+    @State private var showsTemplateNamePrompt = false
     @State private var templateName = ""
     @State private var finishedForTemplate: FreeWorkoutLog?
     @State private var didFinish = false
@@ -165,6 +166,17 @@ struct FreeWorkoutLogSessionView: View {
             Text("Finish needs at least one completed set. Discard this workout without saving history?")
         }
         .alert("Save as Template?", isPresented: $showsTemplatePrompt) {
+            Button("Save as Template") {
+                showsTemplateNamePrompt = true
+            }
+            Button("Skip", role: .cancel) {
+                dismissAfterFinish()
+            }
+            .accessibilityIdentifier("freeWorkout.template.skip")
+        } message: {
+            Text("Save completed sets as a reusable unchecked template.")
+        }
+        .alert("Name Template", isPresented: $showsTemplateNamePrompt) {
             TextField("Template name", text: $templateName)
             Button("Save") {
                 saveTemplateAndDismiss()
@@ -174,9 +186,7 @@ struct FreeWorkoutLogSessionView: View {
             Button("Skip", role: .cancel) {
                 dismissAfterFinish()
             }
-            .accessibilityIdentifier("freeWorkout.template.skip")
-        } message: {
-            Text("Save completed sets as a reusable unchecked template.")
+            .accessibilityIdentifier("freeWorkout.template.name.skip")
         }
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.log")

@@ -3,7 +3,7 @@ import SwiftUI
 /// Entry for free-workout log mode: resume/discard an active log, or start Empty / Last / Template.
 struct FreeWorkoutStartSheet: View {
     @EnvironmentObject private var store: AppStore
-    @Environment(\.dismiss) private var dismiss
+    @Binding var isPresented: Bool
 
     @State private var activeLog: FreeWorkoutLog?
     @State private var latest: FreeWorkoutLog?
@@ -22,7 +22,7 @@ struct FreeWorkoutStartSheet: View {
             .background(Color.hangBackground)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button("Cancel") { isPresented = false }
                 }
             }
             .navigationTitle("Free workout")
@@ -31,7 +31,7 @@ struct FreeWorkoutStartSheet: View {
                 switch route {
                 case .session:
                     FreeWorkoutLogSessionView(
-                        onFinished: { dismiss() },
+                        onFinished: { isPresented = false },
                         onClose: {
                             path.removeAll()
                             activeLog = ActiveFreeWorkoutStore.load()
