@@ -294,16 +294,19 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
-        // DoorMount's short, wide model leaves an empty gap at the map's
-        // center. Begin its orbit on the surface point that was just picked,
-        // so RealityView receives the drag instead of the empty background.
-        let orbitStart = boardID == "frictitious.doormount-pro-7"
+        // Some models have empty gaps around the projected center. Begin the
+        // orbit on the verified surface point when the test needed one to pick.
+        let orbitStart = surfacePoint != nil
             ? initialPoint
             : map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
         orbitStart.press(forDuration: 0.1,
                          thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
-        XCTAssertNotEqual(contact.frame, initialContactFrame, "Orbit must change the projected contact")
+        let orbitFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            contact.frame != initialContactFrame
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [orbitFinished], timeout: 15), .completed,
+                       "Orbit must change the projected contact")
         capture("\(boardID)-portrait-orbit")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
@@ -312,8 +315,10 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertTrue(selected.exists)
         let resetFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             let frame = contact.frame
-            return abs(frame.midX - initialContactFrame.midX) <= 0.5
-                && abs(frame.midY - initialContactFrame.midY) <= 0.5
+            // XCUI frames are pixel-rounded. Exact camera/framing reset is
+            // covered for every contact by BoardModelRealityTests.
+            return abs(frame.midX - initialContactFrame.midX) <= 3
+                && abs(frame.midY - initialContactFrame.midY) <= 3
         }, object: nil)
         let resetResult = XCTWaiter.wait(for: [resetFinished], timeout: 30)
         if resetResult != .completed {
