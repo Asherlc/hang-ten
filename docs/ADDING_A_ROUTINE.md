@@ -115,7 +115,8 @@ contain board contact IDs or visual-frame references:
   “incut,” or “slot”;
 - `depth: .category(...)` for a source size word (for example “medium edge”)
   when the source gives no measurement, or `depth: .range(...)` for a stated
-  measurement;
+  measurement or an explicitly documented inferred band in an adapted plan;
+  never present an inferred band as a manufacturer prescription;
 - `fingerCapacity` or `handCapacity` only when the source specifies it;
 - `.bilateralPair` when the source prescribes both hands together or names a
   pair; otherwise `.single` resolves one stable geometry-selected contact.
@@ -131,6 +132,43 @@ size available—for example both “Medium Edge” and “Small Edge” can res
 board whose only smaller edges are 19 mm. Keep the source term in the task,
 make the board metadata truthful, and disclose the equivalence in review. Never
 rename a pocket as a sloper or omit a required target silently.
+
+### Metolius edge-name cross-reference (checked September 29, 2026)
+
+The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+uses Large, Medium, and Small Edge without millimeter measurements. The separate
+[Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
+uses numbered deep, medium, shallow, and extra-shallow edges. Metolius's
+[numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619)
+provides the following measurements. Matching the generic names across the
+two guides is an inference, not a manufacturer-published conversion table.
+
+| Generic guide term | Simulator 3D term | Number | Depth |
+| --- | --- | ---: | ---: |
+| Large Edge | Deep edge | 7 | 36 mm |
+| Medium Edge | Medium edge | 5 | 25 mm |
+| Small Edge | Shallow edge | 6 | 19 mm |
+| No generic counterpart | Extra-shallow edge | 11 | 14 mm |
+
+The Simulator matrix calls #5 “shallow” once in its Entry minute 6, despite
+calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. The
+cross-reference supports an inferred 8–19 mm resolution band for the Metolius
+generic plan's Small Edge tasks: 8–15 mm comes from Hang Ten's existing Small
+category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
+This is specific to those tasks; the shared Small category remains 8–15 mm for
+other plans and saved routines. The band overlaps Medium Edge on a board with
+only two edge depths. On Simulator 3D, Hang Ten's center-nearest resolver
+currently highlights the same #6 19 mm edge for both generic Small Edge and
+Medium Edge tasks; that overlap is an app mapping, not a manufacturer-published
+equivalence. It is not a manufacturer-prescribed numeric range and
+does not change any contact's factual depth. Because numeric `HoldDepth.matches`
+allows 1 mm of tolerance on each end, the serialized requirement uses 9–18 mm
+to match point-depth contacts from 8 through 19 mm, excluding 7.5 and 20 mm.
+Contacts with measured depth ranges still match when their range intersects
+that band. The Intermediate generic guide's
+minute 9 says only “Slope,” so its target is an unqualified sloper. Its
+Advanced section explicitly says “Large Slope,” and that target remains
+size-qualified.
 
 ## 6. Audit the implementation line by line
 
