@@ -60,13 +60,32 @@ An empty array has the same neutral behavior as omission.
 
 ## Mixed oak/granite mapping
 
-For `nature.stoak-board-iii`, the current CAD descriptor assigns the oak finish
-to `body_board_001`, `left_tapered_wood_edge_001`,
-`right_tapered_wood_edge_001`, `top_jug_001`, and
-`upper_centre_wood_edge_001`. The three granite nodes
-`centre_granite_edge_001`, `left_granite_edge_001`, and
-`right_granite_edge_001` retain neutral PBR. Material selection follows these
-explicit authored node IDs, never contact names or pixel appearance.
+For `nature.stoak-board-iii`, all eight descriptor meshes include wood. The
+legacy names `centre_granite_edge_001` and `upper_centre_wood_edge_001` no longer
+describe their physical regions after the CAD migration: the former is the upper
+wood pocket and the latter is the lower mixed centre slot. Selecting finishes by
+those names alone incorrectly left wood interiors gray.
+
+All eight nodes now explicitly receive the wood finish. Optional
+`display.woodNeutralBands` retains a neutral strip within the three mixed lower
+contacts. Each entry contains a unique wood `nodeID`, an increasing two-number
+`xRange`, and `maxZ`; pixels inside that x interval and at or below that z station
+receive the existing neutral PBR color/roughness. Coordinates are local USD mesh
+metres before its root transform, not app coordinates. Both validators reject
+unknown fields, non-wood nodes, duplicate nodes, invalid intervals, and nonfinite
+or nonrepresentable shader bounds. Missing bands preserve full wood behavior.
+Highlighting covers the entire contact and clearing it restores the banded finish.
+
+Material evidence was reviewed on 2026-09-29 against Nature Climbing’s
+[product page](https://natureclimbing.com/products/stoak-board-iii) and its
+[official close-up](https://natureclimbing.com/cdn/shop/files/FullSizeRender_222c441c-2a78-4132-81e1-79cc4c9033ce_1600x.jpg?v=1764017405).
+The photo shows wooden recess walls and granite ledges in the three lower slots.
+The retained CAD already distinguishes the side slots’ outer 20 mm and inner
+30 mm sections; its `LowerWoodL/R` sketches terminate at x = ±180 mm. The
+neutral side intervals end at those exact CAD stations. Strip heights (29 mm on
+the sides, 42 mm in the centre, each 8 mm above the CAD slot minimum) are
+operator-selected display estimates, not manufacturer dimensions. The existing
+geometry, seven contact IDs, physical facts, and unbound USDZ remain unchanged.
 
 Packages may also declare `display.plasticNodeIDs` for the runtime mint plastic
 finish; see [CAD plastic appearance](CAD_PLASTIC_APPEARANCE.md). Nodes without

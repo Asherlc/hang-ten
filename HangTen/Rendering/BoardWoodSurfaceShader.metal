@@ -21,6 +21,15 @@ void boardWoodSurfaceShader(realitykit::surface_parameters params) {
     float variation = 0.035f * broad
                     + 0.025f * sin(phase) * bandFilter
                     + 0.008f * sin(fibrePhase) * fibreFilter;
+    // A package can deliberately retain a granite strip in a mixed contact.
+    // Bounds use local USD metres; ordinary wood has the enable flag cleared.
+    float4 band = params.uniforms().custom_parameter();
+    if (band.w > 0.5f && p.x >= band.x && p.x <= band.y && p.z <= band.z) {
+        params.surface().set_base_color(half3(0.82h, 0.80h, 0.77h));
+        params.surface().set_roughness(0.5h);
+        params.surface().set_metallic(0.0h);
+        return;
+    }
     half3 tint = half3(params.material_constants().base_color_tint());
     params.surface().set_base_color(tint * half(1.0f + variation));
     params.surface().set_roughness(0.82h);

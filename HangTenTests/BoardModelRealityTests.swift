@@ -201,24 +201,34 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testMixedOakBoardKeepsGraniteContactsNeutral() async throws {
+    func testMixedOakBoardColorsWoodInteriorsAndRestoresGraniteBands() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stoak-board-iii"))
         let scene = try await BoardModelRealityLoader.load(board: board,
                                                           presentation: board.defaultPresentation)
-        for id in ["edge-22-center", "lower-composite-left", "lower-composite-right"] {
+        let expectedBands: [String: SIMD4<Float>] = [
+            "lower-composite-left": SIMD4(-0.3, -0.18, 0.029, 1),
+            "lower-composite-right": SIMD4(0.18, 0.3, 0.029, 1),
+            "lower-composite-center": SIMD4(-0.06, 0.06, 0.042, 1)
+        ]
+        for id in ["edge-22-center", "gradient-edge-left", "gradient-edge-right", "top-jug",
+                   "lower-composite-left", "lower-composite-right", "lower-composite-center"] {
             let entities = try XCTUnwrap(scene.contactEntities[id])
             XCTAssertFalse(entities.isEmpty)
             for entity in entities {
-                XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial,
-                              "Granite must not receive a wood shader")
+                let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+                                             "Wood interiors must not remain gray: \(id)")
+                XCTAssertEqual(material.custom.value, expectedBands[id] ?? .zero)
             }
-        }
-        for id in ["gradient-edge-left", "gradient-edge-right", "top-jug", "lower-composite-center"] {
-            let entities = try XCTUnwrap(scene.contactEntities[id])
-            XCTAssertFalse(entities.isEmpty)
-            for entity in entities {
-                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
-                              "Wood contacts on the mixed board must receive grain")
+            for mode: BoardHighlightMode in [.active, .preview] {
+                scene.highlight([id], mode: mode)
+                for entity in entities {
+                    XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial)
+                }
+                scene.highlight([], mode: mode)
+                for entity in entities {
+                    let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+                    XCTAssertEqual(restored.custom.value, expectedBands[id] ?? .zero)
+                }
             }
         }
     }

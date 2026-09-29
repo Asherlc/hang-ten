@@ -382,12 +382,22 @@ struct BoardModelDisplay: Hashable {
     /// Package-authored surface selection; USDZ meshes remain material-free.
     let woodNodeIDs: [String]
     let plasticNodeIDs: [String]
+    let woodNeutralBands: [BoardWoodNeutralBand]
 
-    init(camera: BoardModelCamera, woodNodeIDs: [String] = [], plasticNodeIDs: [String] = []) {
+    init(camera: BoardModelCamera, woodNodeIDs: [String] = [], plasticNodeIDs: [String] = [], woodNeutralBands: [BoardWoodNeutralBand] = []) {
         self.camera = camera
         self.woodNodeIDs = woodNodeIDs
         self.plasticNodeIDs = plasticNodeIDs
+        self.woodNeutralBands = woodNeutralBands
     }
+}
+
+/// Operator-authored neutral stone strip inside an otherwise wooden mesh.
+/// Coordinates are the USD mesh's local metres, before the root transform.
+struct BoardWoodNeutralBand: Hashable {
+    let nodeID: String
+    let xRange: [Double]
+    let maxZ: Double
 }
 
 struct BoardModelOrientation: Hashable {
