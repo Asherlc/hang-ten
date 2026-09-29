@@ -320,6 +320,7 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     (
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
+        "tension-whetstone",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
         "zlagboard-evo",
@@ -333,6 +334,7 @@ def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
     for model_slug in (
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
+        "tension-whetstone",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
         "zlagboard-evo",
