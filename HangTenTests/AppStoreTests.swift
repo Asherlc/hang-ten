@@ -1704,6 +1704,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             purchaseManager: PurchaseManager(client: FakeStoreKitClient())
         )
         let record = workoutSessionRecord()
+        let persistenceFailed = expectation(description: "persistence failure recorded")
+        let observation = store.$sessionPersistenceError.dropFirst().sink { error in
+            guard error != nil else { return }
+            persistenceFailed.fulfill()
+        }
+
         store.markSessionComplete(
             PlanCatalog.metoliusTenMinute,
             startDate: record.startDate,
@@ -1711,15 +1717,10 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             session: record
         )
         sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
-
-        // Await the published result itself instead of racing the main-actor
-        // callback against a one-second XCTest expectation timeout.
-        let persistenceError = await store.$sessionPersistenceError.values.first {
-            $0 != nil
-        }
-        XCTAssertNotNil(persistenceError)
+        await fulfillment(of: [persistenceFailed], timeout: 2)
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+        withExtendedLifetime(observation) {}
     }
 
     func testLoadingHistoricSessionsDoesNotConsumeCredits() {
@@ -2219,7 +2220,9 @@ private final class ControllableAppendWorkoutSessionStore: WorkoutSessionStoring
     func completeAppend(_ result: Result<Void, Error>) {
         let completion = appendCompletion
         appendCompletion = nil
-        completion?(result)
+        DispatchQueue.main.async {
+            completion?(result)
+        }
     }
 }
 
