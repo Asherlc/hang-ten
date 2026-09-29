@@ -159,10 +159,10 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(source.buttons["Skip"].isSelected)
         source.buttons["Manual"].tap()
 
-        let bodyweight = app.buttons["workout.initialWeight.addBodyweight"]
-        XCTAssertEqual(bodyweight.value as? String, "Off")
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        XCTAssertEqual(bodyweight.value as? String, "0")
         bodyweight.tap()
-        XCTAssertEqual(bodyweight.value as? String, "On")
+        XCTAssertEqual(bodyweight.value as? String, "1")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
@@ -181,7 +181,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
-        XCTAssertEqual(app.buttons["workout.initialWeight.addBodyweight"].value as? String, "On")
+        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
