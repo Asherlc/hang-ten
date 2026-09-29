@@ -12,7 +12,7 @@ stalled; that red invocation did not exit normally.
 
 An initial short drag also failed on repetition: XCTest used its default
 500-pixel-per-second velocity with a 0.1-second press and no endpoint hold.
-The two tests that turn on this switch now drag its thumb from normalized
+The interim fix in `d176de308` made both tests drag the thumb from normalized
 `(0.3, 0.5)` to `(0.8, 0.5)` with a 0.5-second press, explicit slow velocity,
 and a 0.2-second endpoint hold. The existing switch-value assertion, manual-draft
 persistence checks, and purchased-workout weight-summary checks remain intact.
@@ -39,3 +39,23 @@ Validation on the combined branch:
 
 Local CI logs and result bundles are retained under
 `.context/supreme-zebra-cad-validation/ci-fix-*`.
+
+## Subsequent main integration
+
+Main commit `d0e4e9519` updated the same tests with a fixed Original Grindstone
+raster fixture and explicit fixture assertions, an initial off-state assertion,
+a narrow switch-frame assertion, and a separate visible-label interaction test.
+It also added a tap handler to the visible label. The merge retains those main
+changes, including the normal `bodyweight.tap()` interaction, in place of the
+interim drag. Both UI test files match main exactly; none of its assertions are
+removed. Board geometry and the delivery lock are unchanged.
+
+The merged build passed. All four weight-setup tests and the manual-weight
+purchase-summary test passed twice each (ten executions, zero failures).
+The full Swift unit suite passed 1,241 tests, three skipped, zero failures.
+The exact post-test `simctl diagnose` collectors stalled after successful
+testcase completion and were stopped; both xcodebuild invocations finalized
+successfully with exit zero. Logs and result bundles are retained as
+`.context/supreme-zebra-cad-validation/main-integration-*`.
+The isolated simulator was deleted, ownership manifests consumed, and
+DerivedData removed; deletion was verified.
