@@ -136,8 +136,10 @@ final class WorkoutPaywallUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // Tap the off-state thumb; tapping the track center can miss it on iOS 26.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        // Exercise the native switch gesture; iOS 26.5 can ignore short thumb taps.
+        let offThumb = bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5))
+        let onThumb = bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+        offThumb.press(forDuration: 0.5, thenDragTo: onThumb, withVelocity: .slow, thenHoldForDuration: 0.2)
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight

@@ -325,6 +325,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "tension.flash-board",
             "tension.grindstone",
             "tension.grindstone-pro",
+            "tension.whetstone",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
             "metolius.contact",
