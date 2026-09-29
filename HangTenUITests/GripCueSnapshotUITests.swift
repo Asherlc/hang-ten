@@ -160,7 +160,9 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.tap()
+        // The switch's accessibility frame spans the label and control. Tap the
+        // off-state thumb, rather than the label or the far end of its track.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.87, dy: 0.5)).tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
