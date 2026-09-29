@@ -4,6 +4,25 @@ import simd
 @testable import HangTen
 
 final class BoardModelRealityTests: XCTestCase {
+    @MainActor
+    func testCordAndCADModelShareMeterScale() async throws {
+        for (id,width) in [("clavellium-training-block",Float(0.08)),("lattice.mini-bar",Float(0.155))] {
+            let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:id))
+            let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+            let body=try XCTUnwrap(scene.modelEntity)
+            let bounds=body.visualBounds(relativeTo:scene.root)
+            XCTAssertEqual(bounds.max.x-bounds.min.x,width,accuracy:0.00001,id)
+            XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+            let cord=try XCTUnwrap(scene.transientCordEntity)
+            let segment=try XCTUnwrap(cord.children.first as? ModelEntity)
+            let tube=segment.visualBounds(relativeTo:segment)
+            XCTAssertEqual(tube.max.x-tube.min.x,0.004,accuracy:0.00001,id)
+            XCTAssertEqual(tube.max.z-tube.min.z,0.004,accuracy:0.00001,id)
+            XCTAssertEqual(segment.scale,SIMD3<Float>(repeating:1))
+            XCTAssertEqual(cord.scale,SIMD3<Float>(repeating:1))
+        }
+    }
+
     func testRealityTypesCompile() {
         let _ = BoardModelRealityScene.self
         let _ = BoardModelRealityLoader.self
