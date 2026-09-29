@@ -23,8 +23,6 @@ cad:
   - 'Hangboards/**/assets/primary.usdz'
   - 'Hangboards/**/assets/primary.model.json'
   - 'scripts/hangboard-packages.sh'
-  - 'scripts/verify-model-delivery.py'
-  - 'docs/model-delivery-lock.json'
 metadata:
   - 'metadata/**'
   - 'scripts/validate-app-store-metadata.sh'

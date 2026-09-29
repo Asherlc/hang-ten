@@ -89,6 +89,6 @@ staging passed; Android staging generated `board.json`, excluded the FCStd,
 and copied the exact compiled asset and descriptor bytes. The retained Python
 tool suites passed with 445 tests and 11 skips using the pinned meshoptimizer
 v1.0 native library built in workspace scratch.
-`verify_reproducible.py --package trango-rock-prodigy-natural` rebuilt the
-USDZ and descriptor byte-identically on the pinned macOS FreeCAD toolchain
+An independent rebuild produced the USDZ and descriptor byte-identically on
+the pinned macOS FreeCAD toolchain
 (USDZ SHA-256 `7d45a021e670877c5fe00f79b036df3e1bb7cfd5ac784f3e4132b968278e9355`).

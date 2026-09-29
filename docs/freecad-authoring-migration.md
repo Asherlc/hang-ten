@@ -54,12 +54,12 @@ imports FreeCAD at all, which is what lets the exporter be tested without it.
 1.1.3 from conda-forge (`micromamba create -c conda-forge freecad=1.1.3
 python=3.11`) runs every tool here via `--freecad <prefix>/bin/freecadcmd`, but
 it links OCCT 7.9.3, not 7.8.1: rebuilding the five sources migrated before
-`metolius-prime-rib` on it gave five `verify_reproducible` MISMATCHes (same
+`metolius-prime-rib` on it gave five byte mismatches (same
 node and triangle counts, different vertex bytes). A USDZ compiled there is
 valid and hash-bound, but it may not reproduce byte-for-byte on the pinned
-macOS toolchain. Rebuild and compare assets with
-`Tools/HangboardCAD/verify_reproducible.py --keep-rebuild <dir>` using pinned
-FreeCAD 1.1.3 on macOS before committing generated assets.
+macOS toolchain. Rebuild with `Tools/HangboardCAD/prepare_assets.py` on pinned
+FreeCAD 1.1.3 before committing generated assets; it requires the rebuilt
+descriptor and model hash to match the committed pair.
 
 Two launcher quirks cost real time. Both are worked around in the existing
 scripts, so reuse them rather than re-deriving:
@@ -149,9 +149,8 @@ an **open surface** (a shell), not a solid:
 - a cord aperture is an extrusion with `Solid = False`;
 - a jug band, a sub-region of a larger body face, is a shallow recess cut from
   the body like a pocket, so the partition claims the cut and the region's own
-  surface matches it (see the `main()` notes preserved from the retired
-  authoring script in
-  `the delivery lock`); a
+  surface matches it (see the retired authoring script's `main()` notes in Git
+  history); a
   `Part::Common` of the body and a bounding solid is superseded — it leaves a
   ragged hole;
 - a hold that is a run of the profile (a rail) is an extrusion of those sketch
@@ -220,8 +219,8 @@ decided explicitly on the first `metolius-rock-rings-3d` source (worst deviation
 and changed no delivered behaviour. (That board was later re-authored as vector
 primitives, which fit the reference to 0.012 mm everywhere except the jug. There
 the reference's scoop is deliberately replaced by the photographed hump; see
-`the delivery lock`.) Record the accepted deviation in the delivery lock's
-`migratedPackages` entry so a future agent does not re-litigate it.
+the archived migration notes in Git history.) Record the accepted deviation in
+a dated board provenance record so a future agent does not re-litigate it.
 
 ## Procedure
 
@@ -342,12 +341,10 @@ scratch drops the property, so embed again afterwards.
 
 The authoring script itself is a throwaway: keep it under `.context/` and do not
 commit it. The six boards migrated so far were authored by committed
-`Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired; their provenance
-(published versus measured values, tolerances, reference SHAs, stated
-deviations) is preserved in
-`the delivery lock`, and each record names
-the commit to `git show` the script from. Record a new board's provenance the
-same way, in a dated `the delivery locks/` file, before discarding its script.
+`Tools/HangboardCAD/migration/author_*.py` scripts that have since been retired.
+Their provenance (published versus measured values, tolerances, reference SHAs,
+stated deviations) is recoverable from Git history. Record a new board's
+provenance in a dated board record before discarding its script.
 
 ### 4. Write the native checks before trusting anything
 
@@ -388,20 +385,12 @@ Also compare the descriptors region by region. Two-way region agreement of
 matches the reference numerically is the strongest cheap signal that the contact
 identity survived.
 
-### 7. Refresh the delivery lock
+### 7. Validate the source-backed package
 
-`the delivery lock` pins the committed
-bytes. Refresh it **only after** verifying the changed bytes, and keep the
-previous value in `supersededSha256Manifest`:
-
-```bash
-```
-
-A source-backed board is locked as descriptor + source (the FCStd pins the
-build-time `board.json` too), not as a compiled asset; `verify-model-delivery.py`
-reports which boards those are and fails if one has an on-disk `board.json`. A
-metadata-only change (a new `HangTenBoardManifest`) changes the FCStd, so it
-needs a lock refresh too.
+Run the package validator after any source or metadata edit. It generates
+`board.json` from the FCStd and rejects a stale on-disk copy. Rebuild with
+`prepare_assets.py` on the pinned macOS toolchain to check that the compiled
+asset matches the committed descriptor and model hash.
 
 ### 8. Verify in the app, with the hold selected
 
@@ -515,7 +504,7 @@ which is the part a CPU render cannot check.
 9. **CI does not run every suite.** The pytest job's
    `defaults.run.working-directory` is `Tools/HangboardPackages`, so
    `pytest tests` never reaches `Tools/HangboardModels/tests`. That is how the
-   delivery lock sat stale while six boards were added. Check which suite a test
+   model coverage sat stale while six boards were added. Check which suite a test
    actually belongs to before assuming CI protects it.
 
 10. **The v2 path and the attachment role were not exercised by the pilot.**
@@ -627,7 +616,7 @@ write-up. The durable points:
   ruled loft of four capsule sketches (chamfered mouth and floor) cut from it.
   When classifying faces, measure distance to a cutter's `Shells[0]`, not the
   solid: `distToShape` to a solid is 0 for any point inside it. See
-  `the delivery lock`.
+  the archived migration notes in Git history.
 - **target10a Linebreaker BASE** (23 contacts) came from a retained
   signed-distance generator, not a Blender script. Search `.context/migration*`
   history, not only `Tools/HangboardModels`, for a `geometry-config.json`.
@@ -635,7 +624,7 @@ write-up. The durable points:
   and state which blends are omitted. Check each cavity's mouth against every
   crease *before* authoring. A mouth that crosses a tier crease makes the
   region's depth extent miss the published depth. See lessons §18 and
-  `the delivery lock`.
+  the archived migration notes in Git history.
 
 - **Beastmaker 2000** has no generator in Git, so every number was measured from
   the display mesh with slices and circle/line fits. It is five extruded section
@@ -646,7 +635,7 @@ write-up. The durable points:
   about 4 mm shallower than published. A nested hold (a deep hole in a pocket
   floor) passes the gate only if its region reaches the face. Give it the
   parent pocket's end-cap faces on the hole side. See
-  `the delivery lock`.
+  the archived migration notes in Git history.
 - **Rock Prodigy Pivot**: the approved display mesh was wrong. It was about
   20 % undersized, had the wrong topology, and reversed two published depth
   gradients. Before measuring it, check the reference against the
@@ -659,7 +648,7 @@ write-up. The durable points:
   the published depth. The reading and review aids (1 mm-gridded crops and
   the model-over-photo overlay, `Tools/HangboardCAD/photo_grid.py`) and the
   full method are in `freecad-authoring-lessons.md` §18. See
-  `the delivery lock`.
+  the archived migration notes in Git history.
 - **Metolius Light Rail 2.0**: the reference was an analytic Blender mesh.
   Grouping its vertices by coordinate recovered every station exactly (lessons
   §20). Check a reference's round-over against what a router can cut: a true
@@ -667,7 +656,7 @@ write-up. The durable points:
   manufacturer photo supports. Two compiler additions came out of it: a region
   whose published depth exceeds the board's thickness must span the full depth,
   and `HangTenSurfaceNormals` shades triangles with analytic B-rep normals. See
-  `the delivery lock`.
+  the archived migration notes in Git history.
 - **Moon Armstrong**: re-authored from Moon's photos, like the Pivot. Two
   techniques carried it:
   - *Perspective check from repeated blocks.* Left-side blocks read ~9 mm
@@ -681,7 +670,7 @@ write-up. The durable points:
   Rounded mouths and edges are ruled lofts through four quarter-round stations.
   A station at a depth splits a through bore there, so a mono's contact can be
   its front 22 mm. See
-  `the delivery lock`.
+  the archived migration notes in Git history.
 
 ## Fast loop and definition of done
 
@@ -694,7 +683,7 @@ anything:
   holds are extruded runs of the profile. Reproduces closely. Before
   reducing the section to a polyline, fit circles and cubic Beziers to its runs;
   when they fit (as on `metolius-prime-rib`), author those primitives instead
-  (see `the delivery lock`).
+  (see the archived migration notes in Git history).
 - **Genuinely sculpted shell (rounded lip, scooped pockets)? → pick the bar up
   front.** Either a native *measured approximation* (declare the accepted
   deviation; `compare_exports` is evidence, not a gate) or a *faceted import*.
@@ -757,14 +746,14 @@ cords).
 - `Tools/HangboardCAD/tests/native_source_checks.py` (or the board's variant)
   passes: reopen, published depths, region-on-surface, edit propagation, and the
   slot/instance relationship;
-- both pytest suites pass and the delivery lock is refreshed.
+- both pytest suites and package validation pass.
 
 ## Reproducibility and the USDZ as a build output
 
-`Tools/HangboardCAD/verify_reproducible.py` recompiles each source-backed board
-in a fresh process and requires the bytes to match the committed USDZ and the
-derived descriptor to equal the committed one. `prepare_assets.py` compiles into
-a directory with the same check, for builds that consume a compiled asset.
+`prepare_assets.py` recompiles each source-backed board in a fresh process and
+requires the derived descriptor to equal the committed one and its model hash
+to match the rebuilt USDZ. It writes the checked pair into a staging directory
+for builds that consume a compiled asset.
 
 This matters because the app enforces it at runtime: `BoardPackageStore` rejects
 a package whose delivered bytes do not hash to the descriptor's `modelSHA256`. A
@@ -833,9 +822,6 @@ scripts/run-supported-python.sh scripts/stage-board-packages.py --target android
 
 # package validation across the catalogue
 scripts/hangboard-packages.sh validate --root Hangboards --final-inventory
-
-# reproducibility of committed assets against their sources
-python3 Tools/HangboardCAD/verify_reproducible.py --extra-python-path "$PXRPATH"
 
 # compile into a directory instead of the packages
 python3 Tools/HangboardCAD/prepare_assets.py --out <dir> --extra-python-path "$PXRPATH"
