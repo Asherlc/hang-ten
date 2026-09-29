@@ -821,8 +821,11 @@ enum SuspendedBoardPresentation {
             let mouthChord = simd_length(entryContacts.last! - exitContacts.first!)
             let hiddenLength: Float
             if usesInternalLoop {
+                // A straight through-bore's channel equals its mouth chord;
+                // allow the Float rounding of the transformed mouths.
                 guard let declared = suspension.internalLoopChannelLengthByBranchID?[branch.id],
-                      declared.isFinite, declared >= Double(mouthChord) else {
+                      declared.isFinite,
+                      declared >= Double(mouthChord) - Double(SuspendedCordSolver.tautTolerance) else {
                     throw SuspendedPresentationError.invalidCord
                 }
                 hiddenLength = Float(declared)

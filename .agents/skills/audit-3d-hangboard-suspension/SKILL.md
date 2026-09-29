@@ -44,7 +44,14 @@ a ruling, and human approval. Current validated evidence outranks superseded
 assumptions; in particular, `yy.baguette-evo` intentionally retains its
 source-backed `twoBranchCord` alongside orientation metadata.
 
-Choose the narrowest supported topology: `singleCord` for one attachment,
+For a CAD board (a package with `<slug>.FCStd`), use the standard method in
+[CAD cord authoring](../../../docs/HANGBOARD_CORD_AUTHORING.md): the cord
+passage is a CAD void, the topology is `twoBranchCord` with `internalLoop` in
+`suspension.json`, and `solve_threaded_rope.py` solves the routes. Replace a
+hand-authored `pairedLeadCord` when its board moves to CAD, and extend the
+solver instead of hand-placing routes when a board does not fit it.
+
+For older non-CAD packages, choose the narrowest supported topology: `singleCord` for one attachment,
 `pairedLeadCord` for two independent exterior leads, or `twoBranchCord` for
 two evidenced ordered passage routes or connected internal mouth pairs.
 `internalLoop` additionally requires each branch's two mouths to connect in

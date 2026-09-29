@@ -366,10 +366,16 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         document = loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ManifestError(f"suspension.json is unreadable or invalid: {error}") from error
-    if not isinstance(document, dict) or set(document) != {
-        "schemaVersion", "presentationID", "modelSHA256", "suspension"
-    } or document["schemaVersion"] != 1:
+    required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
+    if not isinstance(document, dict) or not required <= set(document) \
+            or set(document) - required - {"ropeSolver"} or document["schemaVersion"] != 1:
         raise ManifestError("suspension.json has invalid schema or members")
+    # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
+    # never merged into board.json.
+    solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
+    if not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
+            or solver["sectionPlane"] not in ("mouth-x", "anchor"):
+        raise ManifestError("suspension.json ropeSolver must be {\"sectionPlane\": \"mouth-x\" | \"anchor\"}")
     presentation_id = document["presentationID"]
     model_hash = document["modelSHA256"]
     if not isinstance(presentation_id, str) or not isinstance(model_hash, str) \

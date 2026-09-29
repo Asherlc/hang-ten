@@ -80,7 +80,24 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
-        let startSet = app.buttons["freeWorkout.startSet"]
+        // Start Set is available for a timed hang. Give the simulator a concrete duration
+        // so the guided interaction has a valid active set to start.
+        let logSet = app.buttons["freeWorkout.logSet"]
+        XCTAssertTrue(logSet.waitForExistence(timeout: 10), "Added hang should expose Log Set")
+        tapHittable(logSet, timeout: 10)
+        let duration = app.textFields["freeWorkout.logSet.duration"]
+        XCTAssertTrue(duration.waitForExistence(timeout: 10), "Log Set should request a duration")
+        tapHittable(duration, timeout: 10)
+        duration.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: 2) + "600")
+        let saveSet = app.buttons["freeWorkout.logSet.save"]
+        XCTAssertTrue(saveSet.waitForExistence(timeout: 10), "Timed hang should be saveable")
+        tapHittable(saveSet, timeout: 10)
+
+        let startSet = firstMatching(
+            in: app,
+            identifiers: ["freeWorkout.startSet"],
+            labels: ["Start Set"]
+        )
         XCTAssertTrue(startSet.waitForExistence(timeout: 15), "Added hang should expose Start Set")
         let logScrollView = app.scrollViews.firstMatch
         for _ in 0..<3 where !startSet.isHittable {

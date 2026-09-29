@@ -158,9 +158,12 @@ the commit from which the script can still be read with `git show`.
 
 From then on every build and validation generates `board.json` from the FCStd.
 
+Every corded CAD board uses this channel-and-solver method (see
+[`docs/HANGBOARD_CORD_AUTHORING.md`](../../docs/HANGBOARD_CORD_AUTHORING.md)).
 For a cord routed through connected `PartDesign::SubtractivePipe` channels,
 measure the hidden length from each pipe's Sketcher spine between the two
-declared mouth points. The result is channel geometry, not a cord mesh. For
+declared mouth points; a straight `Part::Cylinder` through-bore is measured
+along its axis. The result is channel geometry, not a cord mesh. For
 the Mini Bar, run:
 
 ```sh
@@ -371,6 +374,18 @@ cylinders, and each of its 14 edge segments and 2 pocket spans is its own
 section cutter. It was re-authored from Frictitious's front and end-grain
 photographs. See
 `docs/2026-09-28-frictitious-megalith-cad-provenance.md`.
+
+`crimptonite-helium-mobile` sets both options too: its ends and round-overs
+are cylinders and tori, and its cavity mouths are ruled stadium chamfers
+(planes and cones). Each cavity is a shallow mouth at the lower-lip depth with
+a deeper slot sharing its top wall at the upper-lip depth, so both published
+lips of a cavity are exact. Each cord hole is a `Part::Cylinder` through-bore
+(`LeftCordChannel`, `RightCordChannel`) whose axis is the measured channel
+spine; one loop of cord runs through both, and its routes are solved with
+`ropeSolver.sectionPlane: "anchor"` (see
+[`docs/HANGBOARD_CORD_AUTHORING.md`](../../docs/HANGBOARD_CORD_AUTHORING.md)).
+It was re-authored from Crimptonite's product photographs; its provenance is
+in the delivery lock's `migratedPackages` entry.
 
 ## Surface normals
 
