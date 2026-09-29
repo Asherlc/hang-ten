@@ -2,6 +2,38 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSegmentTargetTests: XCTestCase {
+    func testPerHandTasksRoundTripWithExactAndCategoricalDepth() throws {
+        let json = Data(#"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":20}}},{"target":{"kind":"sloper","shape":"round","depth":{"category":"large"}},"side":"right"}],[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":35}}}]]}"#.utf8)
+        let target = try JSONDecoder().decode(WorkoutSegmentTarget.self, from: json)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let tasks = try XCTUnwrap(object["tasks"] as? [[[String: Any]]])
+        XCTAssertEqual(tasks.map(\.count), [2, 1])
+        let exact = try XCTUnwrap((tasks[0][0]["target"] as? [String: Any])?["depth"] as? [String: Double])
+        XCTAssertEqual(exact, ["minMM": 20, "maxMM": 20])
+        let category = try XCTUnwrap((tasks[0][1]["target"] as? [String: Any])?["depth"] as? [String: String])
+        XCTAssertEqual(category, ["category": "large"])
+        XCTAssertEqual(tasks[0][1]["side"] as? String, "right")
+        XCTAssertEqual(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: encoded), target)
+    }
+
+    func testPerHandTasksRejectMalformedShapes() {
+        let invalid = [
+            #"{"tasks":[[]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge"}},{"target":{"kind":"edge"}},{"target":{"kind":"edge"}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":35,"maxMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":-1,"maxMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"category":"medium","minMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":20,"unit":"mm"}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge"},"side":"both"}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","unknown":true}}]]}"#,
+            #"{"tasks":[[{"target":{}}]]}"#
+        ]
+        for input in invalid {
+            XCTAssertThrowsError(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: Data(input.utf8)), input)
+        }
+    }
+
     func testRequirementsRejectsEmptyArrayOnDecode() throws {
         let json = Data(#"{"kind":"requirements","requirements":[]}"#.utf8)
         XCTAssertThrowsError(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: json))

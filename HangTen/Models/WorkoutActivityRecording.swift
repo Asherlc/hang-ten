@@ -666,7 +666,8 @@ struct WorkoutActivityRecorder {
                             side: recordedStep.side
                         )
                     )
-                case .requirements(let requirements):
+                case .requirements, .tasks:
+                    let requirements = segmentTarget.contactRequirements
                     do {
                         var resolvedSegments: [RecordedActivitySegment] = []
                         for requirement in requirements {

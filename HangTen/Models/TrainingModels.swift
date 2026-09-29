@@ -1358,6 +1358,7 @@ enum WorkoutSegmentTiming: String, CaseIterable, Codable, Hashable, Identifiable
 enum WorkoutSegmentTarget: Codable, Hashable {
     case selfSelected
     case requirements([ContactRequirement])
+    case tasks([[PlanHandTarget]])
 
     /// Maps a legacy empty-array self-selected prescription or a non-empty
     /// requirement list. Empty arrays become `.selfSelected`; callers that
@@ -1379,12 +1380,16 @@ enum WorkoutSegmentTarget: Codable, Hashable {
             []
         case .requirements(let requirements):
             requirements
+        case .tasks(let tasks):
+            tasks.flatMap { $0.map { $0.target.legacyRequirement } }
         }
     }
 
     var isSelfSelected: Bool {
-        if case .selfSelected = self { return true }
-        return false
+        switch self {
+        case .selfSelected, .tasks([]): true
+        case .requirements, .tasks: false
+        }
     }
 
     private enum Kind: String, Codable {
@@ -1395,6 +1400,7 @@ enum WorkoutSegmentTarget: Codable, Hashable {
     private enum CodingKeys: String, CodingKey, CaseIterable {
         case kind
         case requirements
+        case tasks
     }
 
     private struct DynamicCodingKey: CodingKey {
@@ -1418,6 +1424,23 @@ enum WorkoutSegmentTarget: Codable, Hashable {
         }
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.tasks) {
+            guard !container.contains(.kind), !container.contains(.requirements) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .tasks, in: container,
+                    debugDescription: "Task targets cannot contain legacy target fields."
+                )
+            }
+            let tasks = try container.decode([[PlanHandTarget]].self, forKey: .tasks)
+            guard tasks.allSatisfy({ (1...2).contains($0.count) }) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .tasks, in: container,
+                    debugDescription: "Each task must contain one or two hand targets."
+                )
+            }
+            self = .tasks(tasks)
+            return
+        }
         switch try container.decode(Kind.self, forKey: .kind) {
         case .selfSelected:
             guard !container.contains(.requirements) else {
@@ -1458,6 +1481,17 @@ enum WorkoutSegmentTarget: Codable, Hashable {
             }
             try container.encode(Kind.requirements, forKey: .kind)
             try container.encode(requirements, forKey: .requirements)
+        case .tasks(let tasks):
+            guard tasks.allSatisfy({ (1...2).contains($0.count) }) else {
+                throw EncodingError.invalidValue(
+                    tasks,
+                    EncodingError.Context(
+                        codingPath: container.codingPath + [CodingKeys.tasks],
+                        debugDescription: "Each task must contain one or two hand targets."
+                    )
+                )
+            }
+            try container.encode(tasks, forKey: .tasks)
         }
     }
 }
@@ -1513,6 +1547,8 @@ struct WorkoutSegment: Hashable {
                 timing: timing,
                 duration: duration
             )
+        case .tasks:
+            return self
         }
     }
 }

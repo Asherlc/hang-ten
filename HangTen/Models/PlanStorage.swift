@@ -179,6 +179,161 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
     case bilateralPair
 }
 
+/// Plan-only depth wire format. Board metadata continues to use HoldDepth's
+/// existing category/range encoding.
+enum PlanDepth: Codable, Hashable {
+    case category(HoldSize)
+    case measured(MillimeterRange)
+
+    var holdDepth: HoldDepth {
+        switch self {
+        case .category(let size): .category(size)
+        case .measured(let range): .range(range)
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case category, minMM, maxMM
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported plan depth field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.category) {
+            guard !container.contains(.minMM), !container.contains(.maxMM) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .category, in: container,
+                    debugDescription: "A plan depth cannot mix a category and millimeters."
+                )
+            }
+            self = .category(try container.decode(HoldSize.self, forKey: .category))
+        } else {
+            let minimum = try container.decode(Double.self, forKey: .minMM)
+            let maximum = try container.decode(Double.self, forKey: .maxMM)
+            guard minimum.isFinite, maximum.isFinite,
+                  minimum >= 0, minimum <= maximum else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .maxMM, in: container,
+                    debugDescription: "Millimeter bounds must be finite, nonnegative, and ordered."
+                )
+            }
+            self = .measured(MillimeterRange(minimum: minimum, maximum: maximum))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .category(let size):
+            try container.encode(size, forKey: .category)
+        case .measured(let range):
+            try container.encode(range.minimum, forKey: .minMM)
+            try container.encode(range.maximum, forKey: .maxMM)
+        }
+    }
+}
+
+struct PlanContactPredicate: Codable, Hashable {
+    let kind: HoldKind?
+    let shape: HoldShape?
+    let depth: PlanDepth?
+    let fingerCapacity: Int?
+
+    init(kind: HoldKind? = nil, shape: HoldShape? = nil,
+         depth: PlanDepth? = nil, fingerCapacity: Int? = nil) {
+        precondition(kind != nil || shape != nil || depth != nil || fingerCapacity != nil)
+        if let fingerCapacity {
+            precondition(PhysicalContact.validFingerCapacityRange.contains(fingerCapacity))
+        }
+        self.kind = kind
+        self.shape = shape
+        self.depth = depth
+        self.fingerCapacity = fingerCapacity
+    }
+
+    var legacyRequirement: ContactRequirement {
+        ContactRequirement(
+            kind: kind, shape: shape, depth: depth?.holdDepth,
+            fingerCapacity: fingerCapacity
+        )
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind, shape, depth, fingerCapacity
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported plan contact field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
+        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
+        depth = try container.decodeIfPresent(PlanDepth.self, forKey: .depth)
+        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        guard kind != nil || shape != nil || depth != nil || fingerCapacity != nil else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .kind, in: container,
+                debugDescription: "A plan contact needs at least one predicate."
+            )
+        }
+        if let fingerCapacity,
+           !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .fingerCapacity, in: container,
+                debugDescription: "Finger capacity must be 1 through 4."
+            )
+        }
+    }
+}
+
+struct PlanHandTarget: Codable, Hashable {
+    let target: PlanContactPredicate
+    let side: WorkoutSide?
+
+    init(target: PlanContactPredicate, side: WorkoutSide? = nil) {
+        precondition(side != .both)
+        self.target = target
+        self.side = side
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case target, side
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported hand target field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        target = try container.decode(PlanContactPredicate.self, forKey: .target)
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
+        guard side != .both else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .side, in: container,
+                debugDescription: "A hand target side must be left or right."
+            )
+        }
+    }
+}
+
 struct ContactRequirement: Codable, Hashable {
     /// An exact board contact selected by an athlete in a board-specific
     /// custom routine. Catalog requirements intentionally leave this nil so
@@ -661,6 +816,8 @@ extension WorkoutStepDefinition {
                     strippedTarget = .fromLegacyTargets(
                         requirements.map { $0.strippingExactContactID() }
                     )
+                case .tasks(let tasks):
+                    strippedTarget = .tasks(tasks)
                 case nil:
                     strippedTarget = nil
                 }
@@ -1017,6 +1174,15 @@ enum PlanLibraryValidator {
                     }
                 case .requirements:
                     break
+                case .tasks(let tasks):
+                    if tasks.isEmpty && !allowsUntargetedStep {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: targetPath,
+                                message: "Work segments require a target."
+                            )
+                        )
+                    }
                 }
             }
             if segment.kind == .rest && segment.target != nil {

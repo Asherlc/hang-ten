@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Plan work target",
+  "type": "object",
+  "required": ["tasks"],
+  "additionalProperties": false,
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 2,
+        "items": { "$ref": "#/$defs/HandTarget" }
+      }
+    }
+  },
+  "$defs": {
+    "HandTarget": {
+      "type": "object",
+      "required": ["target"],
+      "additionalProperties": false,
+      "properties": {
+        "target": { "$ref": "#/$defs/ContactPredicate" },
+        "side": { "enum": ["left", "right"] }
+      }
+    },
+    "ContactPredicate": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "enum": ["jug", "edge", "pocket", "pinch", "sloper", "gaston"] },
+        "shape": { "enum": ["flat", "round", "incut", "slot"] },
+        "depth": { "$ref": "#/$defs/Depth" },
+        "fingerCapacity": { "type": "integer", "minimum": 1, "maximum": 4 }
+      }
+    },
+    "Depth": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["category"],
+          "additionalProperties": false,
+          "properties": {
+            "category": { "enum": ["tiny", "small", "medium", "large"] }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["minMM", "maxMM"],
+          "additionalProperties": false,
+          "properties": {
+            "minMM": { "type": "number", "minimum": 0 },
+            "maxMM": { "type": "number", "minimum": 0 }
+          }
+        }
+      ]
+    }
+  }
+}

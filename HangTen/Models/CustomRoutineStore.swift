@@ -234,7 +234,12 @@ enum CustomRoutineValidator {
                     switch segment.target {
                     case .none, .selfSelected:
                         issues.append(.missingWorkSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
-                    case .requirements(let requirements):
+                    case .requirements, .tasks:
+                        let requirements = segment.contactRequirements
+                        if requirements.isEmpty {
+                            issues.append(.missingWorkSegmentTargets(stepIndex: stepIndex, segmentIndex: segmentIndex))
+                            continue
+                        }
                         validate(
                             targets: requirements,
                             stepIndex: stepIndex,
