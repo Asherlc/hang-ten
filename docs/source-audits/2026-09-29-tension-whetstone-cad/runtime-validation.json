@@ -1,0 +1,31 @@
+{
+  "owner": "rugged-chipmunk",
+  "iOS": "26.5",
+  "device": "iPhone 17 Pro",
+  "unitTests": {
+    "executed": 1234,
+    "skipped": 3,
+    "failures": 0
+  },
+  "selectedHolds": {
+    "jug": "top-ergo-jug",
+    "center": "edge-40-center",
+    "landscape": "edge-20-right",
+    "pocket-40-right": "pocket-40-right",
+    "edge-40-right": "edge-40-right",
+    "edge-30-right": "edge-30-right",
+    "edge-25-right": "edge-25-right",
+    "edge-20-right": "edge-20-right",
+    "pocket-40-left": "pocket-40-left"
+  },
+  "modelCoordinateTaps": [
+    "center",
+    "pocket-40-right",
+    "edge-40-right",
+    "edge-30-right",
+    "edge-25-right",
+    "edge-20-right",
+    "pocket-40-left"
+  ],
+  "inactiveNeutralAppearanceReviewed": true
+}
