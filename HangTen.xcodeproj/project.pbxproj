@@ -197,8 +197,11 @@
 		JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
 		F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000001 /* RopePhysicsDescriptor.swift */; };
 		F12900000000000000000003 /* RopeTriangleCollider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000003 /* RopeTriangleCollider.swift */; };
+		F12900000000000000000005 /* RopeSimulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000005 /* RopeSimulationState.swift */; };
+		F12900000000000000000006 /* RopeThreadedSeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000006 /* RopeThreadedSeed.swift */; };
 		F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */; };
 		F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000004 /* RopeTriangleColliderTests.swift */; };
+		F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000007 /* RopeThreadedSeedTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -411,8 +414,11 @@
 		JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
 		F22900000000000000000001 /* RopePhysicsDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptor.swift; sourceTree = "<group>"; };
 		F22900000000000000000003 /* RopeTriangleCollider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeTriangleCollider.swift; sourceTree = "<group>"; };
+		F22900000000000000000005 /* RopeSimulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeSimulationState.swift; sourceTree = "<group>"; };
+		F22900000000000000000006 /* RopeThreadedSeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeThreadedSeed.swift; sourceTree = "<group>"; };
 		F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptorTests.swift; sourceTree = "<group>"; };
 		F22900000000000000000004 /* RopeTriangleColliderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeTriangleColliderTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000007 /* RopeThreadedSeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeThreadedSeedTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -580,6 +586,8 @@
 				E32000000000000000000005 /* SuspensionProfiles.swift */,
 				F22900000000000000000001 /* RopePhysicsDescriptor.swift */,
 				F22900000000000000000003 /* RopeTriangleCollider.swift */,
+				F22900000000000000000005 /* RopeSimulationState.swift */,
+				F22900000000000000000006 /* RopeThreadedSeed.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -683,6 +691,7 @@
 				64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */,
 				F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */,
 				F22900000000000000000004 /* RopeTriangleColliderTests.swift */,
+				F22900000000000000000007 /* RopeThreadedSeedTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -952,6 +961,8 @@
 				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
 				F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */,
 				F12900000000000000000003 /* RopeTriangleCollider.swift in Sources */,
+				F12900000000000000000005 /* RopeSimulationState.swift in Sources */,
+				F12900000000000000000006 /* RopeThreadedSeed.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
@@ -1064,6 +1075,7 @@
 				EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */,
 				F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */,
 				F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */,
+				F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,

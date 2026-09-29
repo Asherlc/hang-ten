@@ -43,7 +43,32 @@ print("connected passages and contact inventory verified")
     assert "connected passages and contact inventory verified" in result.stdout
 
 
-def test_cached_single_loop_matches_the_native_solid_solve(tmp_path, monkeypatch):
+def test_all_pinch_contact_faces_point_outward(tmp_path):
+    script = tmp_path / "pinch_normals.py"
+    script.write_text('''import FreeCAD as App
+from pathlib import Path
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+for name, expected in {
+    "Pinch80Left": (-1, 0, 0), "Pinch80Right": (1, 0, 0),
+    "Pinch90Front": (0, -1, 0), "Pinch90Back": (0, 1, 0),
+    "Pinch100Top": (0, 0, 1), "Pinch100Bottom": (0, 0, -1),
+}.items():
+    points, triangles = d.getObject(name).Shape.tessellate(0.12)
+    assert triangles, name
+    outward = App.Vector(*expected)
+    for a, b, c in triangles:
+        normal = (points[b] - points[a]).cross(points[c] - points[a])
+        assert normal.dot(outward) > 0, name + " is back-facing"
+App.closeDocument(d.Name)
+print("all six pinch contact faces point outward")
+''')
+    result = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+                            cwd=ROOT, capture_output=True, text=True, timeout=60)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "all six pinch contact faces point outward" in result.stdout
+
+
+def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     pytest.importorskip("trimesh")
     pytest.importorskip("shapely")
     import trimesh

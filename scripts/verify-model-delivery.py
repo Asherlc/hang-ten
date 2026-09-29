@@ -27,11 +27,17 @@ def is_source_backed(root: Path, package: str) -> bool:
 
 
 def package_suffixes(root: Path, package: str) -> tuple[str, ...]:
+    directory = root / "Hangboards" / package
+    # Physics is bundled metadata, independently pinned alongside its native
+    # authoring graph. Symlinks are included here so checksum_manifest rejects
+    # them rather than silently dropping a changed input from coverage.
+    physics = tuple(path for path in ("rope-physics.json", "assets/primary.physics.json")
+                    if (directory / path).exists() or (directory / path).is_symlink())
     if is_source_backed(root, package):
         sidecar = root / "Hangboards" / package / "suspension.json"
         authored_suspension = ("suspension.json",) if sidecar.exists() or sidecar.is_symlink() else ()
-        return COMPILED_SUFFIXES + (f"{package}.FCStd",) + authored_suspension
-    return SUFFIXES
+        return COMPILED_SUFFIXES + (f"{package}.FCStd",) + authored_suspension + physics
+    return SUFFIXES + physics
 
 
 def checksum_manifest(root: Path, packages: list[str]) -> str:

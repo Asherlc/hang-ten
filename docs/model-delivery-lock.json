@@ -53,7 +53,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "e59a130d88f8ec8bf82a95c3f14a60ac3e1472662097667bf2dca370442adcff",
+  "sha256Manifest": "e408fbe3da93ee4e93614fab8cd84838d53b69bef5d2418677665c2e90f70e10",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -105,18 +105,20 @@
     },
     "clavellium-training-block": {
       "source": "Hangboards/clavellium-training-block/clavellium-training-block.FCStd",
-      "sourceSHA256": "5ddb56a203bf08a698b6ce18024c03d7a2cad87da36e265485988ef6ce65b48c",
+      "sourceSHA256": "ff1b9cd7fd3376737af511bb09d419e309f9e8121126cc49967febb530b75562",
       "boardMetadata": "Generated from FCStd plus hash-bound suspension.json; source geometry now has three owner-confirmed straight through-channels.",
       "referenceSHA256": "3516382e00321d5c831695e454e78b3185092f147ec46b1dbd2ac57b61413f5c",
-      "assetSHA256": "091a49212b37210dc7bede6f32b19af490d78c6c06f2ce6915e9217cab6566a4",
-      "descriptorSHA256": "bb1bda2709a947f650a850db711e16e3c66fb1153d7413890181d45e4bd2edaf",
+      "assetSHA256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d",
+      "descriptorSHA256": "0e344ccdc6529eccb4b94e1c05ba835388f1a6fe1e9394d47e637ee55ab9818e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenDepthAxis=x on four side crimps; unbound meshes)",
       "nativeValidation": "compile reopen and published-depth gate passed (8/10/15/20 mm on X, exact); full validation noted in provenance",
-      "nativeAppValidation": "passed (workspace-owned iPhone 17 Pro / iOS 26.5; final 1,235 HangTenTests, 3 skipped, no failures; physical model tap selected cd-crimp-8mm; cord tap preserved selection; orbit, pinch selection, relaunch and portrait/landscape captures reviewed)",
+      "nativeAppValidation": "Input/init milestone: descriptor/loader 154 tests, collider 5 tests, threaded seed 2 tests passed on owned iPhone 17 Pro / iOS 26.4 Simulator. Live rendering/numerical/device gates remain pending.",
       "comparison": "native measured approximation; see provenance for two-way mesh comparison and front/side/top previews",
       "provenanceSidecar": "docs/source-audits/2026-09-29-clavellium-suspension-and-accuracy.md",
-      "assetCoverage": "Descriptor + native source + suspension sidecar; compiled USDZ pinned by descriptor modelSHA256.",
-      "suspensionSHA256": "f68c7c4302f21abc448a1f18123948c357652b534ada8e058ec206ed4835e10e"
+      "assetCoverage": "Descriptor + native source + suspension and rope-physics authoring sidecars + generated physics metadata; compiled USDZ pinned by descriptor modelSHA256.",
+      "suspensionSHA256": "18f667239041c0f059df804e88295355e8b393438835b167fccd6d2c9d506e5a",
+      "physicsSHA256": "8c2b3eb17b5c607674d065c51adfda3bfc3fce9b13b1e53056b3da27fe6466b6",
+      "physicsAuthoringSHA256": "64e631a376aaf07da15716e91c4253c16874e124bb2d9523253b2a52d769444d"
     },
     "dewoodstok-woodbord": {
       "source": "Hangboards/dewoodstok-woodbord/dewoodstok-woodbord.FCStd",

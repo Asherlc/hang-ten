@@ -134,3 +134,46 @@ Retained visual review (prior asset above, corrected asset below):
 Python and native iOS results and current-source captures are recorded in the
 workspace validation artifacts. Grip-specific channel choice remains unknown;
 this change does not fill that gap with invented prescriptions.
+
+## Follow-up: missing 80 mm pinch surfaces
+
+The owner identified the bright C-shaped area near the bottom in the iOS
+screenshots above. That was background visible through an incorrectly culled
+contact surface, not a physical cutout. The first visual audit missed it.
+`Pinch80Left` and `Pinch80Right` had inward-facing triangle winding; the body
+partition removes the corresponding body faces, so those back-facing contact
+meshes left a visible gap in a single-sided renderer.
+
+The two FreeCAD contact shapes were reversed directly in the FCStd. No mesh
+repair, double-sided material, or renderer workaround was added. Every mesh's
+point set, body geometry, contact identity and dimensions are unchanged. All
+six exported pinch surfaces now have outward winding and normals. The cord
+routes and board pose are unchanged; only the sidecar's model hash changed.
+
+The new native outward-winding regression failed on the preceding source and
+passed after correction. Ten focused Python checks, the CAD-solid cord check,
+package inventory validation, and the Clavellium byte-identical rebuild passed.
+The corrected model remains material-free.
+
+
+## Live-cord input and initialization milestone
+
+The bundled `assets/primary.physics.json` is generated from the final wood
+solid and the central native Box cutter. Its portal polygons meet the actual
+90 mm body faces; the cutter's overhanging ends are not rope attachments.
+The descriptor binds the exact CAD source and model hashes. The authoring
+sidecar identifies source features and the continuous threading graph only.
+
+The requested threefold thickness uses a retained 2 mm baseline radius to
+derive a 6 mm collision and display radius. One 550 mm continuous rope includes
+the hidden passage once. Board mass (1 kg), linear rope mass (0.01 kg/m), loop
+length and overhead support are explicitly display estimates. The round rope
+remains an adaptation of the photographed flat sling.
+
+Pure Swift initialization searches against the exact collision triangles,
+recomputes routes while solving hanging height, and subdivides the resulting
+chain into links at most 2 mm long. It does not read cached contact points.
+The upright seed automatically bears on the upper passage wall while the
+source aperture centers remain unchanged. Initialization is tested separately
+from live dynamics; the existing renderer remains in use until the numerical
+and scene integration gates pass.
