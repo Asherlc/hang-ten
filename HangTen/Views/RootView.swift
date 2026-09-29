@@ -1952,18 +1952,30 @@ struct WorkoutView: View {
 				let isResting = boardCue.isResting
 				let highlightedStep = boardCue.step
 				let resolvedHighlightedStep = highlightedStep
+				let highlightedTaskIndex = resolvedHighlightedStep.map {
+					$0.id == step.id ? taskCursor.index(for: $0) : 0
+				} ?? 0
+				let highlightedSelectedHandSide = resolvedHighlightedStep.flatMap {
+					$0.id == step.id ? taskCursor.selectedSide(for: $0) : nil
+				}
 				let previewHoldIDs = resolvedHighlightedStep.map {
 					WorkoutHighlightResolver.contactIDs(
 						for: $0, on: board,
-						taskIndex: $0.id == step.id ? taskCursor.index(for: $0) : 0,
-						selectedHandSide: $0.id == step.id ? taskCursor.selectedSide(for: $0) : nil
+						taskIndex: highlightedTaskIndex,
+						selectedHandSide: highlightedSelectedHandSide
 					)
 				} ?? []
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
 				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
-				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
+				let holdCue = WorkoutHoldCuePolicy.resolve(
+					step: resolvedHighlightedStep,
+					hold: activeHold,
+					on: board,
+					taskIndex: highlightedTaskIndex,
+					selectedHandSide: highlightedSelectedHandSide
+				)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
 					step: step,

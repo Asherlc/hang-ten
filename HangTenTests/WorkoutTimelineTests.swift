@@ -1102,6 +1102,55 @@ final class WorkoutTimelineTests: XCTestCase {
         XCTAssertEqual(cue?.hold, hold)
     }
 
+    func testTaskHoldCueUsesActiveTaskAndChosenOneHandSide() {
+        let rightSloper = PhysicalContact(
+            id: "right-sloper", name: "Right sloper", kind: .sloper, side: .right
+        )
+        let leftSloper = PhysicalContact(
+            id: "left-sloper", name: "Left sloper", kind: .sloper, side: .left
+        )
+        let leftEdge = PhysicalContact(
+            id: "left-edge", name: "Left edge", kind: .edge, side: .left
+        )
+        let rightEdge = PhysicalContact(
+            id: "right-edge", name: "Right edge", kind: .edge, side: .right
+        )
+        let leftJug = PhysicalContact(
+            id: "left-jug", name: "Left jug", kind: .jug, side: .left
+        )
+        let rightJug = PhysicalContact(
+            id: "right-jug", name: "Right jug", kind: .jug, side: .right
+        )
+        let board = handTargetBoard([
+            leftSloper, rightSloper, leftEdge, rightEdge, leftJug, rightJug
+        ])
+        let step = WorkoutStep(
+            id: "task-cues", number: 1, title: "Task cues", instruction: "Hang.",
+            accessory: "", duration: 30, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([
+                    [.init(target: .init(kind: .sloper))],
+                    [.init(target: .init(kind: .edge)), .init(target: .init(kind: .edge))],
+                    [.init(target: .init(kind: .jug)), .init(target: .init(kind: .jug))]
+                ]),
+                timing: .fixed, duration: 30
+            )],
+            gripType: .halfCrimp,
+            fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle])
+        )
+
+        let oneHandCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: rightSloper, on: board, selectedHandSide: .right
+        )
+        let laterTaskCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: rightJug, on: board, taskIndex: 2
+        )
+
+        XCTAssertEqual(oneHandCue?.hold, rightSloper)
+        XCTAssertEqual(laterTaskCue?.hold, rightJug)
+    }
+
     func testHoldCueIsUnavailableForMultiTargetSteps() {
         let hold = PhysicalContact(
             id: "cue-edge",

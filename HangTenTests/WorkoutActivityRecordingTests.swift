@@ -62,6 +62,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         XCTAssertEqual(records.count, 1)
         XCTAssertEqual(records[0].target, .selfSelected)
         XCTAssertEqual(records[0].handUse, .double)
+        XCTAssertEqual(records[0].durationSeconds, 10)
     }
 
     func testOneArmTaskRecordsChosenSideAndContact() throws {

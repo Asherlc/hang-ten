@@ -378,21 +378,38 @@ enum WorkoutHoldCuePolicy {
     static func resolve(
         step: WorkoutStep?,
         hold: PhysicalContact?,
-        on board: BoardRevision
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
     ) -> WorkoutHoldCue? {
         guard let step,
               step.gripType != nil || step.fingerConfiguration != nil else {
             return nil
         }
-        if let task = step.segments.lazy.compactMap({ $0.target?.planTasks }).first?.first {
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           tasks.indices.contains(taskIndex) {
+            let task = tasks[taskIndex].map { hand in
+                PlanHandTarget(target: hand.target, side: hand.side ?? selectedHandSide)
+            }
             guard let hold else {
                 return WorkoutHoldCue(
                     gripType: step.gripType,
                     fingerConfiguration: step.fingerConfiguration
                 )
             }
-            guard (try? ContactResolver.resolve(task, step: step, board: board))?
-                .contains(where: { $0.id == hold.id }) == true else {
+            let taskCandidates: [[PlanHandTarget]]
+            if task.count == 1, task[0].side == nil {
+                taskCandidates = [WorkoutSide.left, .right].map { side in
+                    [PlanHandTarget(target: task[0].target, side: side)]
+                }
+            } else {
+                taskCandidates = [task]
+            }
+            let holdMatchesTask = taskCandidates.contains { candidate in
+                (try? ContactResolver.resolve(candidate, step: step, board: board))?
+                    .contains(where: { $0.id == hold.id }) == true
+            }
+            guard holdMatchesTask else {
                 return nil
             }
             return WorkoutHoldCue(
