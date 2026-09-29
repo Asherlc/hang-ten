@@ -3211,7 +3211,7 @@ enum LegacyPlanSeedCatalog {
                                 accessory: "7s hang · 3s rest · 7 reps",
                                 active: 7,
                                 rest: rep < 7 ? 3 : 0,
-                                targets: grip.targets,
+                                targets: grip.targets.map(\.bilateralSelection),
                                 gripType: grip.grip,
                                 fingerConfiguration: grip.fingerConfiguration
                             )
