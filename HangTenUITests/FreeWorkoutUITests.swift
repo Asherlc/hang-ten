@@ -132,11 +132,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let close = app.buttons["freeWorkout.close"]
         XCTAssertTrue(close.waitForExistence(timeout: 10))
-        close.tap()
+        tapHittable(close, timeout: 10)
 
         let resume = app.buttons["freeWorkout.resume"]
         XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
-        resume.tap()
+        tapHittable(resume, timeout: 10)
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
@@ -147,7 +147,7 @@ final class FreeWorkoutUITests: XCTestCase {
         // Finish with zero completed sets → discard; history stays empty.
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
         confirmEndWorkoutDialog(in: app)
         let discardAlert = app.alerts["No completed sets"]
         XCTAssertTrue(discardAlert.waitForExistence(timeout: 8))
@@ -296,7 +296,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
 
         confirmEndWorkoutDialog(in: app)
         skipTemplatePrompt(in: app)
@@ -371,6 +371,7 @@ final class FreeWorkoutUITests: XCTestCase {
             guard let element = evaluatedElement as? XCUIElement else { return false }
             let frame = element.frame
             return element.exists
+                && element.isEnabled
                 && element.isHittable
                 && frame.origin.x.isFinite
                 && frame.origin.y.isFinite
