@@ -259,9 +259,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     private func review(boardID: String, target: String, surfacePoint: CGVector? = nil,
                         resetContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5)) throws {
         let app = XCUIApplication()
+        XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
-            "HANGTEN_REVIEW_PORTRAIT": "1",
         ]
         app.launch()
         let model = app.otherElements.matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch

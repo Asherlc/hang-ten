@@ -683,6 +683,7 @@ jobs:
           ANALYTICS_API_KEY: ${{ secrets.ANALYTICS_API_KEY }}
           XCTEST_RUN_TIMEOUT_SECONDS: "2400"
           XCTEST_LABEL: HangTenUITests-map-${{ matrix.shard }}
+          CI: "true"
           XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           XCTEST_LOG_ROOT: ${{ runner.temp }}/hang-ten-ui-test-logs
           XCTEST_RESULT_ROOT: ${{ runner.temp }}

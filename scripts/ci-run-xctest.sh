@@ -146,4 +146,17 @@ deadline=$((SECONDS + XCTEST_RUN_TIMEOUT_SECONDS))
 result_bundle="$XCTEST_RESULT_ROOT/${XCTEST_LABEL}-run.xcresult"
 
 run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"
+
+if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
+  app_resources="$XCTEST_DERIVED_DATA/Build/Products/Debug-iphonesimulator/HangTen.app/HangTenDebugSimulatorModels"
+  for model in frictitious-doormount-pro-7 trango-rock-prodigy-natural; do
+    asset="$app_resources/$model/assets/primary.usdz"
+    if [[ ! -f "$asset" ]]; then
+      echo "CI Debug simulator model asset was not staged: $asset" >&2
+      exit 1
+    fi
+    echo "Verified CI Debug simulator model asset: $asset"
+  done
+fi
+
 run_xcodebuild_with_watchdog "test-without-building" "test-without-building" "$result_bundle"
