@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 
 final class OwlClimbPokerBoardMapInteractionUITests: XCTestCase {
     override func tearDown() {
@@ -294,7 +295,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
-        let initialMapImage = map.screenshot().image
+        let initialMapFrame = map.frame
+        let initialMapImage = try mapSnapshot(in: initialMapFrame, appFrame: app.frame)
         // Some models have empty gaps around the projected center. Begin the
         // orbit on the verified surface point when the test needed one to pick.
         let orbitStart = surfacePoint != nil
@@ -309,11 +311,15 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [orbitFinished], timeout: 15), .completed,
                        "Orbit must change the projected contact")
         let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            map.screenshot().image.pngData() != initialMapImage.pngData()
+            guard let image = try? self.mapSnapshot(in: initialMapFrame, appFrame: app.frame) else {
+                return false
+            }
+            return image != initialMapImage
         }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [visibleOrbit], timeout: 15), .completed,
-                       "Orbit must change the rendered board, not only its accessibility projection")
+        let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
+        XCTAssertEqual(visibleOrbitResult, .completed,
+                       "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
         // the visible surface once the camera has moved.
         let resetPoint = surfaceCoordinate(for: contact, in: map, offset: resetContactOffset)
@@ -352,6 +358,20 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             dx: (frame.minX + frame.width * offset.dx - viewport.minX) / viewport.width,
             dy: (frame.minY + frame.height * offset.dy - viewport.minY) / viewport.height
         ))
+    }
+
+    private func mapSnapshot(in frame: CGRect, appFrame: CGRect) throws -> Data {
+        // RealityView's accessibility element can remain queryable while XCTest
+        // cannot snapshot its hosted view. Crop the screen at the saved viewport
+        // instead, so the assertion observes pixels without that snapshot API.
+        let image = try XCTUnwrap(XCUIScreen.main.screenshot().image.cgImage)
+        let scale = CGFloat(image.width) / appFrame.width
+        let region = CGRect(x: (frame.minX - appFrame.minX) * scale,
+                            y: (frame.minY - appFrame.minY) * scale,
+                            width: frame.width * scale,
+                            height: frame.height * scale).integral
+        let cropped = try XCTUnwrap(image.cropping(to: region))
+        return try XCTUnwrap(UIImage(cgImage: cropped).pngData())
     }
 
     private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
