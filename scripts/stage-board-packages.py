@@ -108,6 +108,9 @@ CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
     "frictitious-megalith",
     "trango-rock-prodigy-forge",
     "trango-rock-prodigy-natural",
+    "yy-verticalboard-evo",
+    "tension-honestone",
+    "tension-grindstone-original",
     "zlagboard-evo",
     "zlagboard-pro",
 })
