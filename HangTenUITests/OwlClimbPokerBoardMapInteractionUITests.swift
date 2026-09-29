@@ -265,25 +265,24 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_ID": boardID,
         ]
         app.launch()
-        let model = app.otherElements.matching(NSPredicate(format: "label ENDSWITH %@", "hangboard")).firstMatch
-        // A cold simulator can spend over two minutes importing the Forge USDZ
-        // into RealityKit. Wait for the real model instead of treating an active
-        // load as a failed interaction; this returns as soon as it is ready.
-        XCTAssertTrue(model.waitForExistence(timeout: 120))
-        if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
-            try assertModelBodyIsVisible(model)
-        }
-        capture("\(boardID)-portrait-neutral")
-        // Navigate through the app so the second assertion uses the same
-        // process and warmed model resources, avoiding another cold launch.
+        // The Train card's noninteractive preview starts loading this same model
+        // before the map test begins. Navigate straight to Hold specs instead
+        // of waiting for that preview to finish and importing the USDZ again in
+        // the interactive map. The contact query below is the readiness check
+        // for the model this test actually exercises.
         app.buttons["View hold specs"].tap()
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
-        XCTAssertTrue(contact.waitForExistence(timeout: 60))
+        XCTAssertTrue(contact.waitForExistence(timeout: 120))
+        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
+        XCTAssertTrue(map.waitForExistence(timeout: 10))
+        if boardID == "zlagboard.evo" || boardID == "zlagboard.pro" {
+            try assertModelBodyIsVisible(in: map)
+        }
+        capture("\(boardID)-portrait-neutral")
         let selected = app.otherElements["boardDetail.selectedHold.\(target)"]
         XCTAssertFalse(selected.exists, "The tap must change the initial default contact")
         capture("\(boardID)-portrait-initial")
-        let map = app.descendants(matching: .any).matching(identifier: "boardDetail.map").firstMatch
         XCTAssertTrue(map.exists)
         // The contact's accessibility frame is projected from its live RealityKit
         // bounds. Tap that screen location through the RealityView so this checks
@@ -349,17 +348,17 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         ))
     }
 
-    private func assertModelBodyIsVisible(_ model: XCUIElement) throws {
+    private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
         let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            ((try? self.modelBodySampleCount(model)) ?? 0) > 8
+            ((try? self.modelBodySampleCount(in: viewport)) ?? 0) > 8
         }, object: nil)
         // On-Demand Resources can still be downloading when the card's accessibility
         // element appears. Wait for the rendered body itself before checking it.
         XCTAssertEqual(XCTWaiter.wait(for: [rendered], timeout: 90), .completed,
-                       "Native board body must finish loading inside its rounded card")
+                       "Native board body must finish loading inside its map viewport")
     }
 
-    private func modelBodySampleCount(_ model: XCUIElement) throws -> Int {
+    private func modelBodySampleCount(in viewport: XCUIElement) throws -> Int {
         let screenshot = XCUIScreen.main.screenshot().image
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
@@ -372,7 +371,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         }
-        let frame = model.frame
+        let frame = viewport.frame
         // Ignore the rounded card edge. A blank ODR placeholder can otherwise
         // satisfy this check from its border even though RealityKit has no mesh.
         let bodyFrame = frame.insetBy(dx: frame.width * 0.12, dy: frame.height * 0.12)
