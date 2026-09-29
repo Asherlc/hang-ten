@@ -949,6 +949,10 @@ struct PlanDetailView: View {
 
             HStack {
                 Text("Add bodyweight")
+                    .onTapGesture {
+                        manualWeightIncludesBodyweight.toggle()
+                    }
+                    .accessibilityHidden(true)
                 Spacer(minLength: 12)
                 Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
                     .labelsHidden()

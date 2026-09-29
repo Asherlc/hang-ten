@@ -40,6 +40,28 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testWhetstoneNativeModelLoadsAllPickableContacts() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.whetstone"))
+        let presentation = board.defaultPresentation
+        guard case .model = presentation.media else { return XCTFail("Whetstone requires model media") }
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        XCTAssertEqual(board.contacts.count, 12)
+        XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+        for (contactID, entities) in scene.contactEntities {
+            XCTAssertFalse(entities.isEmpty, contactID)
+            for entity in entities {
+                XCTAssertNotNil(entity.collision, contactID)
+                XCTAssertNotNil(entity.components[InputTargetComponent.self], contactID)
+            }
+        }
+        var checkedEntities = 0
+        for entity in scene.instanceEntities {
+            checkNeutralMaterial(on: entity, checkedCount: &checkedEntities)
+        }
+        XCTAssertGreaterThan(checkedEntities, 0)
+    }
+
+    @MainActor
     func testUSDZLoadsAndBindsDescriptor() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let presentation = board.defaultPresentation

@@ -106,6 +106,7 @@ DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY = "HangTenDebugSimulatorModels"
 CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
     "frictitious-doormount-pro-7",
     "frictitious-megalith",
+    "tension-whetstone",
     "trango-rock-prodigy-forge",
     "trango-rock-prodigy-natural",
     "yy-verticalboard-evo",
