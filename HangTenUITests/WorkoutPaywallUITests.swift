@@ -131,12 +131,16 @@ final class WorkoutPaywallUITests: XCTestCase {
         field.typeText("12.5")
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightControl = app.switches.element(boundBy: 1)
-        XCTAssertTrue(bodyweightControl.waitForExistence(timeout: 2))
-        bodyweightControl.tap()
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        // Tap the off-state thumb; tapping the track center can miss it on iOS 26.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
-            object: bodyweightControl
+            object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
                        "Add bodyweight must be on before purchasing")
