@@ -160,8 +160,13 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        // Tap the switch itself, rather than the center of its full-width Form row.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        XCTAssertLessThan(
+            bodyweight.frame.width,
+            app.frame.width / 3,
+            "The switch accessibility target should not span the full weight-tracking row."
+        )
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        bodyweight.tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
@@ -182,6 +187,20 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+    }
+
+    func testManualWeightLabelTogglesTheSameSwitch() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
+
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let setup = app.otherElements["plan.initialWeight.setup"]
+        XCTAssertEqual(bodyweight.value as? String, "0")
+
+        // The visible label is outside the switch's accessibility frame.
+        let label = app.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            .withOffset(CGVector(dx: setup.frame.minX + 40, dy: bodyweight.frame.midY))
+        label.tap()
+        XCTAssertEqual(bodyweight.value as? String, "1")
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {

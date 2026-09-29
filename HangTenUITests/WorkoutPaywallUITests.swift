@@ -125,7 +125,8 @@ final class WorkoutPaywallUITests: XCTestCase {
         field.typeText("12.5")
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        bodyweight.tap()
         XCTAssertEqual(bodyweight.value as? String, "1")
 
         let start = app.buttons["plan.startRoutine"]
