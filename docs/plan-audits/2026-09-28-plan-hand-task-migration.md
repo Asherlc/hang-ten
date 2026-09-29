@@ -61,6 +61,22 @@ All other bundled work steps use the approved two-hand default. The bundled JSON
 
 The [Contact guide](https://www.metoliusclimbing.com/pages/contact-training-guide) prescribes ordinary dead hangs or pull-ups on center edge #17 (Entry 1 and 10, Intermediate 7 and 9), medium center edge #18 (Advanced 3), and the flat center sloper #15 (Entry 5, Intermediate 10, Advanced 10), while identifying one-arm hangs explicitly elsewhere. Under the approved two-hand default, these tasks need one shared center contact with capacity two. `Hangboards/metolius-contact/board.json` now records that capacity on those three contact records. The [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) similarly prescribes ordinary two-hand hangs on its center round sloper #3 (Entry 8, Intermediate 4 and 10, Advanced 10), so its corresponding contact records capacity two. These are hold metadata edits only; no geometry or model asset changed.
 
-## Source discrepancy retained for follow-up
+## Contact guide and numbered-diagram conflicts
 
-The currently published Contact guide describes its #11 hold as a **pinch** in Entry minute 4, whereas the checked-in board inventory labels #11 a two-finger pocket and the older source-audited plan text uses that label. This migration retains the existing predicate and wording pending a separate manufacturer revision audit, rather than silently changing the exercise or board inventory.
+Checked September 28, 2026 against the [current Contact routine table](https://www.metoliusclimbing.com/pages/contact-training-guide) and the [numbered hold diagram embedded in that same guide](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/con-num-dep.jpg?v=1759520708). The manufacturer publishes conflicting descriptions for these numbered holds. The board inventory follows the numbered diagram. The plan text and predicates generally keep the routine's printed hold *number* and use the diagram's physical hold type; those are explicit source reconciliations, not independent grip prescriptions.
+
+| Routine minute(s) | Routine table description | Numbered diagram | Current plan mapping |
+| --- | --- | --- | --- |
+| Entry 2 | #4 four-finger edge | #4 30 mm four-finger pocket | #4 pocket |
+| Entry 4, Intermediate 4, Advanced 4 | #11 pinch | #11 25 mm two-finger pocket | #11 pocket |
+| Entry 8 and Entry 9 final hang | #3 four-finger hold | #3 63 mm round sloper | #3 round sloper |
+| Entry 9 offset | #1 jug and #11 pinch | #1 variable pinch and #11 two-finger pocket | #1 pinch and #11 pocket |
+| Intermediate 2; Advanced 1, 2, and 3 | #2 round sloper | #2 outer jug | #2 jug |
+| Intermediate 8 | #7 two-finger pocket | #7 30 mm three-finger pocket | #7 three-finger pocket |
+| Intermediate 9 | #3 jug | #3 round sloper | #3 round sloper |
+| Advanced 1, 3, and 7 | #4 two-finger pocket | #4 30 mm four-finger pocket | #4 four-finger pocket |
+| Advanced 5 | #2 round sloper | #2 outer jug; #3 round sloper | #3 round sloper |
+| Advanced 7 | #1 jug | #1 variable pinch | #1 pinch |
+| Advanced 10 first hold | #3 flat sloper | #3 round sloper; #15 flat sloper | #15 flat sloper |
+
+Advanced minutes 5 and 10 are different from the number-preserving cases: the current plan follows the table's *hold type* and changes its printed number. Neither source explains whether the name or number is the typo. These two mappings remain unresolved manufacturer-source ambiguities; do not treat #3 or #15 as a verified correction to the table. The [product manual](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/Training-Board-instructions.pdf?v=1759261826) contains general training and installation instructions, but no alternate numbered routine that settles them. No board geometry or hold metadata was changed by this audit.
