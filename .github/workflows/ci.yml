@@ -364,6 +364,11 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    env:
+      # Xcode 26.6 is the image default but its runner-image entry doesn't
+      # install simulator runtimes. Use the preinstalled 26.5 runtime for
+      # simulator tests; keep the release build on the image default.
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
     # Allow headroom for result-bundle upload; XCTest runs once per shard.
     timeout-minutes: 70
 
@@ -406,6 +411,8 @@ jobs:
           sw_vers
           xcodebuild -version
           xcodebuild -showsdks
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Validate App Store metadata
         if: >-
@@ -504,6 +511,8 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -566,6 +575,8 @@ jobs:
           sw_vers
           xcodebuild -version
           xcodebuild -showsdks
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Run XCTest suite
         id: xctest
@@ -618,6 +629,8 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -676,6 +689,8 @@ jobs:
           sw_vers
           xcodebuild -version
           xcodebuild -showsdks
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Run XCTest suite
         id: xctest
@@ -729,6 +744,8 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
     timeout-minutes: 70
 
     steps:
@@ -768,6 +785,8 @@ jobs:
           sw_vers
           xcodebuild -version
           xcodebuild -showsdks
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Run XCTest suite
         id: xctest
@@ -825,6 +844,8 @@ jobs:
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
     runs-on: macos-26
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -882,6 +903,8 @@ jobs:
           sw_vers
           xcodebuild -version
           xcodebuild -showsdks
+          xcrun simctl list runtimes
+          xcrun simctl list devices available
 
       - name: Run XCTest suite
         id: xctest
