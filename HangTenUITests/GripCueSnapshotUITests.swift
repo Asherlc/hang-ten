@@ -148,12 +148,18 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            // Weight-flow tests use a fixed raster board instead of a persisted
+            // selection with unrelated asynchronous model-preview work.
+            "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
         XCTAssertTrue(
             app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
             "The plan review route should take precedence over fixture-only review flags."
         )
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -173,9 +179,7 @@ final class InitialWeightSetupUITests: XCTestCase {
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        // Switch.tap() targets the center of the whole track. On iOS 26 that point is
-        // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
