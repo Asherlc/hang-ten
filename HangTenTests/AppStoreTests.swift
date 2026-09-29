@@ -1717,7 +1717,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             session: record
         )
         sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
-        await fulfillment(of: [persistenceFailed], timeout: 1)
+        await fulfillment(of: [persistenceFailed], timeout: 2)
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
         withExtendedLifetime(observation) {}
@@ -2220,7 +2220,9 @@ private final class ControllableAppendWorkoutSessionStore: WorkoutSessionStoring
     func completeAppend(_ result: Result<Void, Error>) {
         let completion = appendCompletion
         appendCompletion = nil
-        completion?(result)
+        DispatchQueue.main.async {
+            completion?(result)
+        }
     }
 }
 

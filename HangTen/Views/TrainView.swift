@@ -126,7 +126,7 @@ struct TrainView: View {
                 deepLinkManager.clearPending()
             }
             .sheet(isPresented: $showsFreeWorkout) {
-                FreeWorkoutStartSheet()
+                FreeWorkoutStartSheet(isPresented: $showsFreeWorkout)
                     .environmentObject(store)
             }
         }

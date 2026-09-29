@@ -7,6 +7,9 @@ Two targets share one loader (``board_catalog.discover_board_packages``):
   destination must be the Xcode resource ``Hangboards`` directory, and each
   package's model asset (``assets/primary.usdz``) is split out into the
   On-Demand Resource staging directory under ``DERIVED_FILE_DIR``.
+  CI Debug simulator builds also bundle model assets used by 3D interaction
+  tests in a separate simulator-only directory so they do not depend on the
+  simulator's ODR service.
 * ``--target android`` (the Gradle ``stageCanonicalAssets`` task): no Xcode
   environment and no ODR split; model assets stay inline in the package, as the
   Android app bundles them.
@@ -99,6 +102,15 @@ def _xcode_odr_staging_root() -> Path:
 TARGET_XCODE = "xcode"
 TARGET_ANDROID = "android"
 TARGETS = (TARGET_XCODE, TARGET_ANDROID)
+DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY = "HangTenDebugSimulatorModels"
+CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
+    "frictitious-doormount-pro-7",
+    "frictitious-megalith",
+    "trango-rock-prodigy-forge",
+    "trango-rock-prodigy-natural",
+    "zlagboard-evo",
+    "zlagboard-pro",
+})
 
 
 def _validate_destination(repository_root: Path, destination: Path, target: str) -> None:
@@ -249,11 +261,23 @@ def stage_board_packages(
     destination: Path,
     compiled_assets: Path | None = None,
     target: str = TARGET_XCODE,
+    debug_simulator_model_slugs: frozenset[str] | set[str] | None = None,
 ) -> tuple[Path, ...]:
     """Copy every validated direct-child package tree into *destination*."""
     if target not in TARGETS:
         raise ValueError(f"unknown staging target: {target!r}")
     split_model_assets = target == TARGET_XCODE
+    if debug_simulator_model_slugs is None:
+        debug_simulator_model_slugs = (
+            CI_DEBUG_SIMULATOR_MODEL_SLUGS
+            if os.environ.get("CI", "").lower() == "true"
+            and os.environ.get("CONFIGURATION") == "Debug"
+            and os.environ.get("PLATFORM_NAME") == "iphonesimulator"
+            else frozenset()
+        )
+    debug_simulator_model_slugs = frozenset(debug_simulator_model_slugs)
+    if debug_simulator_model_slugs and not split_model_assets:
+        raise ValueError("debug simulator model assets require the Xcode target")
     repository_root = _absolute_lexical(Path(repository_root))
     destination = _absolute_lexical(Path(destination))
     _reject_symlinked_ancestors(repository_root, "repository root")
@@ -275,6 +299,20 @@ def stage_board_packages(
         hangboards_root
     )
     package_sources = tuple(package.root for package in inventory.packages)
+    available_model_slugs = {
+        package.root.name
+        for package in inventory.packages
+        if any(
+            isinstance(presentation.media, package_module.PresentationMediaModel)
+            for presentation in package.board.presentations
+        )
+    }
+    unknown_debug_slugs = debug_simulator_model_slugs - available_model_slugs
+    if unknown_debug_slugs:
+        raise ValueError(
+            "debug simulator model package is not an available model: "
+            + ", ".join(sorted(unknown_debug_slugs))
+        )
     for package_source in package_sources:
         if not _is_within(package_source, hangboards_root):
             raise ValueError(f"package must remain beneath Hangboards: {package_source}")
@@ -301,15 +339,24 @@ def stage_board_packages(
     destination.parent.mkdir(parents=True, exist_ok=True)
     staging = destination.with_name(f".{destination.name}.staging-{uuid.uuid4().hex}")
     odr_staging: Path | None = None
+    debug_model_destination = destination.parent / DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY
+    debug_model_staging: Path | None = None
     if odr_destination is not None:
         odr_destination.parent.mkdir(parents=True, exist_ok=True)
         odr_staging = odr_destination.with_name(
             f".{odr_destination.name}.staging-{uuid.uuid4().hex}"
         )
+        _reject_symlinked_ancestors(debug_model_destination, "debug simulator model destination")
+        debug_model_destination.parent.mkdir(parents=True, exist_ok=True)
+        debug_model_staging = debug_model_destination.with_name(
+            f".{debug_model_destination.name}.staging-{uuid.uuid4().hex}"
+        )
     try:
         staging.mkdir()
         if odr_staging is not None:
             odr_staging.mkdir()
+        if debug_model_staging is not None:
+            debug_model_staging.mkdir()
         staged_paths: list[Path] = []
         for package, package_source in zip(inventory.packages, package_sources, strict=True):
             package_destination = staging / package.root.name
@@ -325,6 +372,12 @@ def stage_board_packages(
             if package.generated_board_json is not None:
                 _write_generated_board_json(package_destination, package.generated_board_json)
             for model_asset_path in sorted(model_asset_paths):
+                model_source = _resolve_model_asset(
+                    package_source,
+                    model_asset_path,
+                    compiled_assets,
+                    package.root.name,
+                )
                 if odr_staging is not None:
                     model_destination = (
                         odr_staging
@@ -336,25 +389,30 @@ def stage_board_packages(
                 else:
                     model_destination = package_destination / model_asset_path
                 model_destination.parent.mkdir(parents=True, exist_ok=True)
-                _copy_regular_file(
-                    _resolve_model_asset(
-                        package_source,
-                        model_asset_path,
-                        compiled_assets,
-                        package.root.name,
-                    ),
-                    model_destination,
-                )
+                _copy_regular_file(model_source, model_destination)
+                if (
+                    debug_model_staging is not None
+                    and package.root.name in debug_simulator_model_slugs
+                ):
+                    debug_model_copy = (
+                        debug_model_staging / package.root.name / model_asset_path
+                    )
+                    debug_model_copy.parent.mkdir(parents=True, exist_ok=True)
+                    _copy_regular_file(model_source, debug_model_copy)
             staged_paths.append(destination / package.root.name)
         _replace_destination(staging, destination)
         if odr_staging is not None and odr_destination is not None:
             _replace_destination(odr_staging, odr_destination)
+        if debug_model_staging is not None:
+            _replace_destination(debug_model_staging, debug_model_destination)
         return tuple(staged_paths)
     except BaseException:
         if staging.exists():
             shutil.rmtree(staging)
         if odr_staging is not None and odr_staging.exists():
             shutil.rmtree(odr_staging)
+        if debug_model_staging is not None and debug_model_staging.exists():
+            shutil.rmtree(debug_model_staging)
         raise
 
 
