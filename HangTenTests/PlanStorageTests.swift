@@ -20,6 +20,17 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertFalse(twentyToThirty.matches(nil))
     }
 
+    func testSmallEdgeCategoryIncludesMetoliusNineteenMillimeterEdge() {
+        let small = HoldDepth.category(.small)
+        let medium = HoldDepth.category(.medium)
+        let nineteen = HoldDepth.range(MillimeterRange(minimum: 19, maximum: 19))
+        let twenty = HoldDepth.range(MillimeterRange(minimum: 20, maximum: 20))
+
+        XCTAssertTrue(small.matches(nineteen))
+        XCTAssertTrue(medium.matches(nineteen))
+        XCTAssertFalse(small.matches(twenty))
+    }
+
     func testHoldDepthEncodesAndDecodesTaggedCategoryAndRange() throws {
         let categoryData = try JSONEncoder().encode(HoldDepth.category(.large))
         XCTAssertEqual(
@@ -1929,6 +1940,41 @@ final class PlanStorageTests: XCTestCase {
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-2" }).workRequirements,
             [fourFingerFlat]
         )
+    }
+
+    func testMetoliusIntermediateSmallEdgeResolvesCompactNineteenMillimeterEdge() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        for stepID in ["intermediate.minute-3.task-1", "intermediate.minute-6.task-1"] {
+            let step = try XCTUnwrap(
+                LegacyPlanSeedCatalog.metoliusIntermediate.steps.first { $0.id == stepID }
+            )
+
+            let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
+
+            XCTAssertEqual(contacts.count, stepID == "intermediate.minute-3.task-1" ? 1 : 2, stepID)
+            XCTAssertEqual(
+                contacts.last?.depth,
+                .range(MillimeterRange(minimum: 19, maximum: 19)),
+                stepID
+            )
+            if stepID == "intermediate.minute-6.task-1" {
+                XCTAssertEqual(contacts.first?.kind, .jug)
+            }
+        }
+    }
+
+    func testMetoliusIntermediateUnqualifiedSlopeResolvesCompactSloper() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let step = try XCTUnwrap(
+            LegacyPlanSeedCatalog.metoliusIntermediate.steps.first {
+                $0.id == "intermediate.minute-9.task-1"
+            }
+        )
+
+        let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
+
+        XCTAssertEqual(contacts.count, 1)
+        XCTAssertEqual(contacts.first?.kind, .sloper)
     }
 
     func testSimulator3DPlansUseSemanticFlatAndRoundSloperTargets() throws {

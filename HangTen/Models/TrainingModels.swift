@@ -631,7 +631,7 @@ enum HoldSize: String, Codable, Hashable, CaseIterable, Identifiable {
     var depthRange: ClosedRange<Double> {
         switch self {
         case .tiny: 0...8
-        case .small: 8...15
+        case .small: 8...19
         case .medium: 15...25
         case .large: 25...50
         }
@@ -2642,7 +2642,7 @@ enum LegacyPlanSeedCatalog {
             ],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [mediumEdgeTarget])],
             [
-                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [largeSlopeTarget]),
+                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.kind(.sloper)]),
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.kind(.jug)])
             ],
             [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [roundSloperTarget])]

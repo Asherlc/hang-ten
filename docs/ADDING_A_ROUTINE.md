@@ -132,6 +132,32 @@ board whose only smaller edges are 19 mm. Keep the source term in the task,
 make the board metadata truthful, and disclose the equivalence in review. Never
 rename a pocket as a sloper or omit a required target silently.
 
+### Metolius edge-name cross-reference (checked September 28, 2026)
+
+The [10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide)
+uses Large, Medium, and Small Edge without millimeter measurements. The separate
+[Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide)
+uses numbered deep, medium, shallow, and extra-shallow edges. Metolius's
+[numbered depth diagram](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/sim-num-dep.jpg?v=1759460619)
+provides the following measurements. Matching the generic names across the
+two guides is an inference, not a manufacturer-published conversion table.
+
+| Generic guide term | Simulator 3D term | Number | Depth |
+| --- | --- | ---: | ---: |
+| Large Edge | Deep edge | 7 | 36 mm |
+| Medium Edge | Medium edge | 5 | 25 mm |
+| Small Edge | Shallow edge | 6 | 19 mm |
+| No generic counterpart | Extra-shallow edge | 11 | 14 mm |
+
+The Simulator matrix calls #5 “shallow” once in its Entry minute 6, despite
+calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. The
+cross-reference supports including 19 mm in Hang Ten's Small Edge category,
+which overlaps Medium Edge on a board with only two edge depths. It does not
+impose a numeric prescription on the generic routine or change any contact's
+factual depth. The Intermediate generic guide's minute 9 says only “Slope,” so
+its target is an unqualified sloper. Its Advanced guide explicitly says “Large
+Slope,” and that target remains size-qualified.
+
 ## 6. Audit the implementation line by line
 
 Build a source comparison before considering the import complete. For every

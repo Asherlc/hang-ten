@@ -1094,9 +1094,6 @@
                 "kind" : "requirements",
                 "requirements" : [
                   {
-                    "depth" : {
-                      "category" : "large"
-                    },
                     "kind" : "sloper",
                     "selection" : "single"
                   }
