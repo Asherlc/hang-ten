@@ -1,6 +1,6 @@
 # Live settling for hangboard cords
 
-Status: proposed implementation design; the user approved live settling on
+Status: approved by the user on 2026-09-29, including live settling on
 Clavellium first, followed by the other corded boards.
 
 The user additionally requested three times the current rope thickness.
