@@ -508,7 +508,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - shard: entry
+          # Keep all purchase and restore flows on one runner to reduce the
+          # number of macOS jobs competing for the simulator queue.
+          - shard: purchase-and-recovery-flows
             only_testing: >-
               HangTenUITests/WorkoutPaywallUITests/testThirdWorkoutLaunchShowsPaywallInsteadOfSession
               HangTenUITests/WorkoutPaywallUITests/testDismissingPaywallDoesNotStartWorkout
@@ -518,8 +520,6 @@ jobs:
               HangTenUITests/WorkoutPaywallUITests/testFailedPurchaseShowsApprovedStatusCopy
               HangTenUITests/WorkoutPaywallUITests/testRetryAfterTransientProductLoadFailureMakesBuyAvailable
               HangTenUITests/WorkoutPaywallUITests/testRestoreWithoutEntitlementShowsNothingToRestoreFeedback
-          - shard: recovery
-            only_testing: >-
               HangTenUITests/WorkoutPaywallUITests/testVerifiedFakeRestoreContinuesIntoSession
               HangTenUITests/WorkoutPaywallUITests/testVerifiedPurchaseCarriesScaleSnapshotIntoSensorPreparation
               HangTenUITests/WorkoutPaywallUITests/testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary
@@ -557,8 +557,8 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-paywall-${{ matrix.shard }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-
 
       - name: Show Apple toolchain
         run: |
@@ -667,8 +667,8 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-map-${{ matrix.shard }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-
 
       - name: Show Apple toolchain
         run: |
@@ -758,8 +758,8 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-picker-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-cues-and-highlights-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-grip-cues-and-highlights-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-
 
       - name: Show Apple toolchain
         run: |
@@ -828,16 +828,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Keep these method selectors updated when adding FreeWorkout tests.
-          # The long finish flow remains separate from the resume flow.
-          - shard: settings-and-resume
+          # Keep these method selectors updated when adding settings or
+          # FreeWorkout tests. Group the two misc shards to avoid queueing a
+          # separate macOS runner for each short workflow.
+          - shard: settings-and-workout-flows
             only_testing: >-
               HangTenUITests/SettingsUITests
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptySessionShowsLogControls
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutEmptyStartsMinimalLogSession
               HangTenUITests/FreeWorkoutUITests/testFreeWorkoutResumeAfterCloseAndLastAfterFinish
-          - shard: free-workout-finish
-            only_testing: "HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout"
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutGuidedHangCancelLeavesSetUnchecked
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutStartSheetOpensFromTrain
+              HangTenUITests/FreeWorkoutUITests/testFreeWorkoutHangCompleteRestFinishUnlocksLastWorkout
     timeout-minutes: 70
 
     steps:
@@ -868,8 +870,8 @@ jobs:
           path: ${{ runner.temp }}/hang-ten-ui-test-derived-data
           key: deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-${{ hashFiles('HangTen.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ matrix.shard }}-${{ hashFiles('.context/ci-xcode-version.txt') }}-
-            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-${{ matrix.shard }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-${{ hashFiles('.context/ci-xcode-version.txt') }}-
+            deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-
             deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-free-workout-resume-${{ hashFiles('.context/ci-xcode-version.txt') }}-
             deriveddata-${{ runner.os }}-${{ runner.arch }}-HangTenUITests-misc-free-workout-resume-
 
