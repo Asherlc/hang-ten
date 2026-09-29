@@ -401,6 +401,60 @@ final class GripHandOrbitTests: XCTestCase {
                           try XCTUnwrap(rightX.min()))
     }
 
+    func testMirroredMeshBuffersReflectEveryVertexAndReverseEveryTriangle() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let source = try XCTUnwrap(asset.poses["HalfCrimp"])
+        let mirrored = try GripHandRealityMeshBuilder.geometry(
+            asset: asset, action: "HalfCrimp", mirrored: true
+        )
+        let expectedPositions = stride(from: 0, to: source.positions.count, by: 3).map { i in
+            SIMD3(-source.positions[i], source.positions[i + 1], source.positions[i + 2])
+        }
+        let expectedNormals = stride(from: 0, to: source.normals.count, by: 3).map { i in
+            SIMD3(-source.normals[i], source.normals[i + 1], source.normals[i + 2])
+        }
+        let expectedIndices = stride(from: 0, to: asset.indices.count, by: 3).flatMap { i in
+            [asset.indices[i], asset.indices[i + 2], asset.indices[i + 1]]
+        }
+        XCTAssertEqual(mirrored.positions, expectedPositions)
+        XCTAssertEqual(mirrored.normals, expectedNormals)
+        XCTAssertEqual(mirrored.indices, expectedIndices)
+    }
+
+    @MainActor
+    func testPairKeepsConfiguredGapForEveryBundledPose() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let scene = GripHandRealityPairScene(assetResult: .success(asset))
+        let poses: [GripHandPose] = [
+            GripHandPose(posture: nil, fingerConfiguration: nil),
+            GripHandPose(posture: .openHand, fingerConfiguration: nil),
+            GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+            GripHandPose(posture: .fullCrimp, fingerConfiguration: nil),
+            GripHandPose(posture: .sloper, fingerConfiguration: nil)
+        ] + (0..<16).map { mask in
+            let fingers = Set(FingerSlot.allCases.enumerated().compactMap { index, finger in
+                mask & (1 << index) == 0 ? nil : finger
+            })
+            return GripHandPose(posture: .twoFingerPocket,
+                                fingerConfiguration: FingerConfiguration(engagedFingers: fingers))
+        }
+        XCTAssertEqual(Set(poses.map { $0.action() }), Set(asset.poses.keys))
+
+        for pose in poses {
+            scene.update(pose: pose, viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+            let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+            let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+            let leftEdge = try XCTUnwrap(left.map {
+                (scene.leftHand.transform.matrix * SIMD4<Float>($0, 1)).x
+            }.max())
+            let rightEdge = try XCTUnwrap(right.map {
+                (scene.rightHand.transform.matrix * SIMD4<Float>($0, 1)).x
+            }.min())
+            XCTAssertGreaterThanOrEqual(rightEdge - leftEdge, 0.549,
+                                        "\(pose.action()) must keep the configured gap")
+        }
+    }
+
     @MainActor
     func testPairHalfCrimpFingertipsCurlTowardCenter() throws {
         let asset = try GripHandAsset.bundled.get()

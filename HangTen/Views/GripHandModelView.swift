@@ -230,6 +230,30 @@ struct GripHandRealityMeshBuilder {
     private static let baseColor = SIMD4<Float>(0.687, 0.392, 0.242, 1)
     private static let highlightColor = SIMD4<Float>(0.966, 0.0615, 0.0108, 1)
 
+    struct Geometry {
+        let positions: [SIMD3<Float>]
+        let normals: [SIMD3<Float>]
+        let indices: [UInt32]
+    }
+
+    static func geometry(asset: GripHandAsset, action: String, mirrored: Bool) throws -> Geometry {
+        guard let source = asset.poses[action] else { throw GripHandAsset.AssetError.invalidMesh }
+        let positions = stride(from: 0, to: source.positions.count, by: 3).map { offset in
+            SIMD3(mirrored ? -source.positions[offset] : source.positions[offset],
+                  source.positions[offset + 1], source.positions[offset + 2])
+        }
+        let normals = stride(from: 0, to: source.normals.count, by: 3).map { offset in
+            SIMD3(mirrored ? -source.normals[offset] : source.normals[offset],
+                  source.normals[offset + 1], source.normals[offset + 2])
+        }
+        let indices = mirrored
+            ? stride(from: 0, to: asset.indices.count, by: 3).flatMap { offset in
+                [asset.indices[offset], asset.indices[offset + 2], asset.indices[offset + 1]]
+            }
+            : asset.indices
+        return Geometry(positions: positions, normals: normals, indices: indices)
+    }
+
     static func vertexColors(
         asset: GripHandAsset,
         action: GripHandPose,
@@ -344,15 +368,15 @@ final class GripHandRealitySurface {
     }
 
     private func makeMesh(for key: MeshKey, pose: GripHandPose) throws -> BuiltMesh {
-        let source = asset.poses[key.action]!
+        let geometry = try GripHandRealityMeshBuilder.geometry(
+            asset: asset, action: key.action, mirrored: key.mirrored
+        )
         let colors = try GripHandRealityMeshBuilder.vertexColors(
             asset: asset, action: pose, selectedFingers: key.fingers
         )
         let vertices = (0..<asset.vertexCount).map { i in
-            Vertex(position: SIMD3(key.mirrored ? -source.positions[i * 3] : source.positions[i * 3],
-                                   source.positions[i * 3 + 1], source.positions[i * 3 + 2]),
-                   normal: SIMD3(key.mirrored ? -source.normals[i * 3] : source.normals[i * 3],
-                                 source.normals[i * 3 + 1], source.normals[i * 3 + 2]),
+            Vertex(position: geometry.positions[i],
+                   normal: geometry.normals[i],
                    color: colors[i])
         }
         let bounds = vertices.reduce(BoundingBox.empty) { box, vertex in
@@ -366,21 +390,16 @@ final class GripHandRealitySurface {
                 .init(semantic: .color, format: .float4, offset: MemoryLayout<Vertex>.offset(of: \.color)!)
             ],
             vertexLayouts: [.init(bufferIndex: 0, bufferStride: MemoryLayout<Vertex>.stride)],
-            indexCapacity: asset.indices.count
+            indexCapacity: geometry.indices.count
         )
         let lowLevelMesh = try LowLevelMesh(descriptor: descriptor)
         lowLevelMesh.withUnsafeMutableBytes(bufferIndex: 0) { destination in
             vertices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
-        let indices = key.mirrored
-            ? stride(from: 0, to: asset.indices.count, by: 3).flatMap {
-                [asset.indices[$0], asset.indices[$0 + 2], asset.indices[$0 + 1]]
-            }
-            : asset.indices
         lowLevelMesh.withUnsafeMutableIndices { destination in
-            indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
+            geometry.indices.withUnsafeBytes { source in destination.copyBytes(from: source) }
         }
-        lowLevelMesh.parts.append(.init(indexCount: asset.indices.count, bounds: bounds))
+        lowLevelMesh.parts.append(.init(indexCount: geometry.indices.count, bounds: bounds))
         return BuiltMesh(resource: try MeshResource(from: lowLevelMesh), vertexColors: colors)
     }
 }
