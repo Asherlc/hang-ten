@@ -1,0 +1,125 @@
+"""Physics geometry comes from the watertight CAD solid and editable channel."""
+import json
+import subprocess
+import sys
+from pathlib import Path
+import pytest
+
+ROOT = Path(__file__).resolve().parents[3]
+TOOLS = ROOT / "Tools/HangboardCAD"
+pytestmark = pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(), reason="FreeCAD unavailable")
+
+
+def test_clavellium_collision_and_portals_are_native_and_repeatable(tmp_path):
+    output = tmp_path / "physics-geometry.json"
+    script = tmp_path / "export.py"
+    script.write_text(f'''import FreeCAD as App
+import json, sys
+from pathlib import Path
+sys.path.insert(0, str(Path("Tools/HangboardCAD").resolve()))
+from export_rope_physics import export_rope_physics
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+first = export_rope_physics(d, "Pinch100BottomReliefCut", {{"central": "CenterChannelTool"}})
+second = export_rope_physics(d, "Pinch100BottomReliefCut", {{"central": "CenterChannelTool"}})
+assert json.dumps(first) == json.dumps(second)
+assert [p["center"] for p in first["portals"]] == [[0.0,0.0025,0.045],[0.0,0.0025,-0.045]]
+assert first["channels"][0]["spine"] == [[0.0,0.0025,0.045],[0.0,0.0025,-0.045]]
+for p in first["portals"]:
+    assert max(v[1] for v in p["boundary"]) == 0.0155
+    assert min(v[1] for v in p["boundary"]) == -0.0105
+    assert max(v[0] for v in p["boundary"]) == 0.012
+    assert min(v[0] for v in p["boundary"]) == -0.012
+assert "cordContactPoints" not in json.dumps(first)
+Path({str(output)!r}).write_text(json.dumps(first))
+import Part
+shape = d.getObject("Pinch100BottomReliefCut").Shape
+samples = []
+for x in [-9, 0, 9]:
+    for z in [-8, 2.5, 12, 20]:
+        for y in [-30, 0, 30]:
+            p = App.Vector(x, y, z)
+            samples.append({{"point":[x/1000,z/1000,-y/1000],
+                            "inside":shape.isInside(p, 1e-7, True),
+                            "distance":shape.distToShape(Part.Vertex(p))[0]/1000}})
+Path({str(output.with_suffix('.samples.json'))!r}).write_text(json.dumps(samples))
+App.closeDocument(d.Name)
+''')
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+                         cwd=ROOT, capture_output=True, text=True, timeout=60)
+    assert run.returncode == 0, run.stdout + run.stderr
+    import trimesh
+    data = json.loads(output.read_text())
+    for geometry in [data["collision"], *data["channels"]]:
+        mesh = trimesh.Trimesh(vertices=geometry["vertices"], faces=geometry["triangles"], process=False)
+        assert mesh.is_watertight and mesh.is_winding_consistent and mesh.volume > 0
+    wood = trimesh.Trimesh(vertices=data["collision"]["vertices"], faces=data["collision"]["triangles"], process=False)
+    # Native model void: central passage is empty and its upper rail remains wood.
+    assert not wood.contains([[0, .0025, 0]])[0]
+    assert wood.contains([[0, .02, 0]])[0]
+    import numpy as np
+    samples = json.loads(output.with_suffix('.samples.json').read_text())
+    points = np.asarray([sample['point'] for sample in samples])
+    assert wood.contains(points).tolist() == [sample['inside'] for sample in samples]
+    distances = trimesh.proximity.closest_point(wood, points)[1]
+    # Flat channel boundaries have no tessellation approximation error.
+    np.testing.assert_allclose(distances, [sample['distance'] for sample in samples], atol=1e-8)
+
+
+def test_export_rejects_missing_body_and_channel_axis(tmp_path):
+    script = tmp_path / "reject.py"
+    script.write_text('''import FreeCAD as App
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path("Tools/HangboardCAD").resolve()))
+from export_rope_physics import export_rope_physics
+d = App.openDocument(str(Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()))
+for body, channels in [("Missing", {}), ("Pinch100BottomReliefCut", {"central":"Missing"})]:
+    try: export_rope_physics(d, body, channels)
+    except ValueError: pass
+    else: raise AssertionError("must reject missing source feature")
+d.getObject("CenterChannelTool").HangTenChannelAxis = ""
+try: export_rope_physics(d, "Pinch100BottomReliefCut", {"central":"CenterChannelTool"})
+except ValueError: pass
+else: raise AssertionError("must require operator-selected axis")
+App.closeDocument(d.Name)
+''')
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+                         cwd=ROOT, capture_output=True, text=True, timeout=60)
+    assert run.returncode == 0, run.stdout + run.stderr
+
+
+def test_generated_descriptor_is_hash_bound_and_validated(tmp_path):
+    import importlib.util
+    sys.path.insert(0, str(ROOT / "Tools/HangboardPackages/src"))
+    spec = importlib.util.spec_from_file_location("rope_fixture", ROOT / "Tools/HangboardPackages/tests/test_rope_physics.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    fixture_json = json.dumps(module.physics_fixture())
+    script = tmp_path / "descriptor.py"
+    script.write_text('''import FreeCAD as App
+import sys, json
+from pathlib import Path
+sys.path[:0] = [str(Path("Tools/HangboardCAD").resolve()),
+               str(Path("Tools/HangboardPackages/src").resolve()),
+               str(Path("Tools/HangboardPackages/tests").resolve())]
+from export_rope_physics import build_physics_descriptor
+source = Path("Hangboards/clavellium-training-block/clavellium-training-block.FCStd").resolve()
+d = App.openDocument(str(source))
+fixture = json.loads(FIXTURE_JSON)
+profile = fixture["profiles"][0]
+profile["ropes"][0]["nodes"][1]["portalID"] = "central-front"
+profile["ropes"][0]["nodes"][2]["portalID"] = "central-back"
+config = {"bodyFeature":"Pinch100BottomReliefCut", "channelFeatures":{"central":"CenterChannelTool"}, "profiles":[profile]}
+first = build_physics_descriptor(d, source, "a"*64, config)
+assert json.dumps(first) == json.dumps(build_physics_descriptor(d, source, "a"*64, config))
+assert first["modelSHA256"] == "a"*64
+assert len(first["sourceSHA256"]) == 64
+config["profiles"][0]["ropes"][0]["radius"] = .020
+try: build_physics_descriptor(d, source, "a"*64, config)
+except ValueError: pass
+else: raise AssertionError("invalid enlarged rope must be rejected")
+App.closeDocument(d.Name)
+'''.replace('FIXTURE_JSON', repr(fixture_json)))
+    run = subprocess.run([sys.executable, str(TOOLS / "run_freecad.py"), str(script)],
+                         cwd=ROOT, capture_output=True, text=True, timeout=60)
+    assert run.returncode == 0, run.stdout + run.stderr

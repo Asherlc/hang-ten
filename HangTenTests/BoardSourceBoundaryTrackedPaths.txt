@@ -36,6 +36,8 @@ HangTen/Models/PlanFilters.swift
 HangTen/Models/PlanStorage.swift
 HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
+HangTen/Models/RopePhysicsDescriptor.swift
+HangTen/Models/RopeTriangleCollider.swift
 HangTen/Models/SentryDiagnostics.swift
 HangTen/Models/SentryUserReports.swift
 HangTen/Models/SimulatedMotherboardTransport.swift
