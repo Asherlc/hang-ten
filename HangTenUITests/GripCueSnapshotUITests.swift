@@ -159,11 +159,10 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(source.buttons["Skip"].isSelected)
         source.buttons["Manual"].tap()
 
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        // The switch's accessibility frame spans the label and control. Tap the
-        // off-state thumb, rather than the label or the far end of its track.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.87, dy: 0.5)).tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        let bodyweight = app.buttons["workout.initialWeight.addBodyweight"]
+        XCTAssertEqual(bodyweight.value as? String, "Off")
+        bodyweight.tap()
+        XCTAssertEqual(bodyweight.value as? String, "On")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
@@ -182,7 +181,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
-        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+        XCTAssertEqual(app.buttons["workout.initialWeight.addBodyweight"].value as? String, "On")
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
