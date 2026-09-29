@@ -315,6 +315,35 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     assert odr_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
 
 
+def test_ci_simulator_staging_bundles_the_natural_model_for_ui_interactions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = make_v3_model_package(
+        tmp_path / "repository" / "Hangboards" / "trango-rock-prodigy-natural"
+    )
+    repository_root = source.parents[1]
+    shutil.copytree(
+        REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+        repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
+    )
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    monkeypatch.setenv("CONFIGURATION", "Debug")
+    monkeypatch.setenv("PLATFORM_NAME", "iphonesimulator")
+    monkeypatch.setenv("CI", "true")
+
+    load_staging_module().stage_board_packages(repository_root, destination)
+
+    bundled_model = (
+        destination.parent
+        / "HangTenDebugSimulatorModels"
+        / "trango-rock-prodigy-natural"
+        / "assets"
+        / "primary.usdz"
+    )
+    assert bundled_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
+
+
 def test_staging_resolves_the_compiled_asset_for_a_source_backed_package(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -273,6 +273,29 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(resource.debugSimulatorPackagedURL(in: fixture.bundle))
         #endif
     }
+
+    func testDebugSimulatorPackagedURLFindsCIModelAssetBundledBesideODR() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true)
+        defer { fixture.remove() }
+        let resource = BoardModelResource(
+            packageSlug: "fixture-model",
+            assetPath: "assets/primary.usdz"
+        )
+        let bundledURL = fixture.rootURL.appendingPathComponent(
+            "HangTenDebugSimulatorModels/fixture-model/assets/primary.usdz"
+        )
+        try FileManager.default.createDirectory(
+            at: bundledURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try Data("debug-model".utf8).write(to: bundledURL)
+
+        #if DEBUG
+        XCTAssertEqual(resource.debugSimulatorPackagedURL(in: fixture.bundle), bundledURL)
+        #else
+        XCTAssertNil(resource.debugSimulatorPackagedURL(in: fixture.bundle))
+        #endif
+    }
     @MainActor
     func testModelLoaderFailsClosedWhenValidatedPackageModelIsMissingOrCorrupt() async throws {
         let mutations: [(name: String, mutate: (URL) throws -> Void)] = [

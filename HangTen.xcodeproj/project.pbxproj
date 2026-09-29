@@ -888,6 +888,7 @@
 			outputPaths = (
 				"${DERIVED_FILE_DIR}/HangTenModelODR",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Hangboards",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/HangTenDebugSimulatorModels",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
