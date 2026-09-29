@@ -115,7 +115,8 @@ contain board contact IDs or visual-frame references:
   “incut,” or “slot”;
 - `depth: .category(...)` for a source size word (for example “medium edge”)
   when the source gives no measurement, or `depth: .range(...)` for a stated
-  measurement;
+  measurement or an explicitly documented inferred band in an adapted plan;
+  never present an inferred band as a manufacturer prescription;
 - `fingerCapacity` or `handCapacity` only when the source specifies it;
 - `.bilateralPair` when the source prescribes both hands together or names a
   pair; otherwise `.single` resolves one stable geometry-selected contact.
@@ -151,12 +152,16 @@ two guides is an inference, not a manufacturer-published conversion table.
 
 The Simulator matrix calls #5 “shallow” once in its Entry minute 6, despite
 calling it “medium” elsewhere; the diagram still measures #5 at 25 mm. The
-cross-reference supports including 19 mm in Hang Ten's Small Edge category,
-which overlaps Medium Edge on a board with only two edge depths. It does not
-impose a numeric prescription on the generic routine or change any contact's
-factual depth. The Intermediate generic guide's minute 9 says only “Slope,” so
-its target is an unqualified sloper. Its Advanced guide explicitly says “Large
-Slope,” and that target remains size-qualified.
+cross-reference supports an inferred 8–19 mm resolution band for the Metolius
+generic plan's Small Edge tasks: 8–15 mm comes from Hang Ten's existing Small
+category, and the inferred 19 mm upper bound admits Metolius's shallow edge.
+This is specific to those tasks; the shared Small category remains 8–15 mm for
+other plans and saved routines. The band overlaps Medium Edge on a board with
+only two edge depths. It is not a manufacturer-prescribed numeric range and
+does not change any contact's factual depth. The Intermediate generic guide's
+minute 9 says only “Slope,” so its target is an unqualified sloper. Its
+Advanced section explicitly says “Large Slope,” and that target remains
+size-qualified.
 
 ## 6. Audit the implementation line by line
 

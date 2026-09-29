@@ -20,13 +20,17 @@ final class PlanStorageTests: XCTestCase {
         XCTAssertFalse(twentyToThirty.matches(nil))
     }
 
-    func testSmallEdgeCategoryIncludesMetoliusNineteenMillimeterEdge() {
+    func testGenericSmallEdgeCategoryDoesNotRetargetNineteenMillimeterEdges() {
         let small = HoldDepth.category(.small)
         let medium = HoldDepth.category(.medium)
+        let fourteen = HoldDepth.range(MillimeterRange(minimum: 14, maximum: 14))
+        let fifteen = HoldDepth.range(MillimeterRange(minimum: 15, maximum: 15))
         let nineteen = HoldDepth.range(MillimeterRange(minimum: 19, maximum: 19))
         let twenty = HoldDepth.range(MillimeterRange(minimum: 20, maximum: 20))
 
-        XCTAssertTrue(small.matches(nineteen))
+        XCTAssertTrue(small.matches(fourteen))
+        XCTAssertTrue(small.matches(fifteen))
+        XCTAssertFalse(small.matches(nineteen))
         XCTAssertTrue(medium.matches(nineteen))
         XCTAssertFalse(small.matches(twenty))
     }
@@ -1930,7 +1934,7 @@ final class PlanStorageTests: XCTestCase {
         )
         XCTAssertEqual(
             try XCTUnwrap(intermediate.steps.first { $0.id == "intermediate.minute-3.task-1" }).workRequirements,
-            [ContactRequirement.edge(depth: .category(.small))]
+            [ContactRequirement.edge(depth: .range(.init(minimum: 8, maximum: 19)))]
         )
         XCTAssertEqual(
             try XCTUnwrap(advanced.steps.first { $0.id == "advanced.minute-1.task-1" }).workRequirements,
@@ -1961,6 +1965,20 @@ final class PlanStorageTests: XCTestCase {
                 XCTAssertEqual(contacts.first?.kind, .jug)
             }
         }
+    }
+
+    func testHoopersMinimalEdgeStillResolvesSimulatorFourteenMillimeterEdge() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.simulator-3d"))
+        let step = try XCTUnwrap(
+            LegacyPlanSeedCatalog.hoopersBetaIntroductory.steps.first {
+                $0.id == "hoopers-intro-round-4-set-1-hang"
+            }
+        )
+
+        let contacts = try ContactResolver.resolve(step.workRequirements, step: step, board: board)
+
+        XCTAssertEqual(contacts.count, 1)
+        XCTAssertEqual(contacts.first?.depth, .range(MillimeterRange(minimum: 14, maximum: 14)))
     }
 
     func testMetoliusIntermediateUnqualifiedSlopeResolvesCompactSloper() throws {

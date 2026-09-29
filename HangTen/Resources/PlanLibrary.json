@@ -680,7 +680,10 @@
                 "requirements" : [
                   {
                     "depth" : {
-                      "category" : "small"
+                      "range" : {
+                        "maximum" : 19,
+                        "minimum" : 8
+                      }
                     },
                     "kind" : "edge",
                     "selection" : "single"
@@ -885,7 +888,10 @@
                   },
                   {
                     "depth" : {
-                      "category" : "small"
+                      "range" : {
+                        "maximum" : 19,
+                        "minimum" : 8
+                      }
                     },
                     "kind" : "edge",
                     "selection" : "single"
@@ -920,7 +926,10 @@
                   },
                   {
                     "depth" : {
-                      "category" : "small"
+                      "range" : {
+                        "maximum" : 19,
+                        "minimum" : 8
+                      }
                     },
                     "kind" : "edge",
                     "selection" : "single"

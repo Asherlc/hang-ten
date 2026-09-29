@@ -3736,7 +3736,7 @@ final class MetoliusCatalogExpansionTests: XCTestCase {
         XCTAssertEqual(steps.map(\.duration), [15, 15, 30])
         let offsetTargets = [
             ContactRequirement.kind(.jug),
-            ContactRequirement.edge(depth: .category(.small))
+            ContactRequirement.edge(depth: .range(.init(minimum: 8, maximum: 19)))
         ]
         XCTAssertEqual(steps[0].workRequirements, offsetTargets)
         XCTAssertEqual(steps[1].workRequirements, offsetTargets)

@@ -631,7 +631,7 @@ enum HoldSize: String, Codable, Hashable, CaseIterable, Identifiable {
     var depthRange: ClosedRange<Double> {
         switch self {
         case .tiny: 0...8
-        case .small: 8...19
+        case .small: 8...15
         case .medium: 15...25
         case .large: 25...50
         }
@@ -2327,8 +2327,9 @@ enum LegacyPlanSeedCatalog {
     private static let largeEdgeTarget = ContactRequirement.edge(
         depth: .category(.large)
     )
+    // Inferred Metolius-only Small Edge resolution band; the generic size category stays unchanged.
     private static let smallEdgeTarget = ContactRequirement.edge(
-        depth: .category(.small)
+        depth: .range(.init(minimum: 8, maximum: 19))
     )
     private static let largeSlopeTarget = ContactRequirement(
         kind: .sloper,
