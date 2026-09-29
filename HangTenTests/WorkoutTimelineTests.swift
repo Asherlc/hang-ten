@@ -1143,11 +1143,15 @@ final class WorkoutTimelineTests: XCTestCase {
         let oneHandCue = WorkoutHoldCuePolicy.resolve(
             step: step, hold: rightSloper, on: board, selectedHandSide: .right
         )
+        let mismatchedSideCue = WorkoutHoldCuePolicy.resolve(
+            step: step, hold: leftSloper, on: board, selectedHandSide: .right
+        )
         let laterTaskCue = WorkoutHoldCuePolicy.resolve(
             step: step, hold: rightJug, on: board, taskIndex: 2
         )
 
         XCTAssertEqual(oneHandCue?.hold, rightSloper)
+        XCTAssertNil(mismatchedSideCue)
         XCTAssertEqual(laterTaskCue?.hold, rightJug)
     }
 
