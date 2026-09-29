@@ -80,12 +80,36 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
+        // Cancellation must not race the default 10-second hang on a slow runner.
+        // Configure the real set through the UI before starting its countdown.
+        // SwiftUI exposes the row identifier on both inline text fields, so use
+        // the seconds placeholder to distinguish duration from weight.
+        let duration = app.textFields.matching(
+            NSPredicate(format: "placeholderValue == %@", "sec")
+        ).firstMatch
+        XCTAssertTrue(duration.waitForExistence(timeout: 10))
+        tapHittable(duration)
+        duration.typeText(
+            String(repeating: XCUIKeyboardKey.delete.rawValue, count: (duration.value as? String)?.count ?? 0)
+                + "120"
+        )
+        XCTAssertEqual(duration.value as? String, "120")
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
             labels: ["Start Set"]
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
+        // The numeric keyboard covers the bottom of this scroll view. Start
+        // the drag in its exposed upper portion, rather than swiping the keyboard.
+        let logScroll = anyElement(app, "freeWorkout.log").scrollViews.firstMatch
+        for _ in 0..<3 where !startSet.isHittable {
+            logScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4))
+                .press(
+                    forDuration: 0.1,
+                    thenDragTo: logScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.05))
+                )
+        }
         tapHittable(startSet, timeout: 15)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
@@ -114,6 +138,7 @@ final class FreeWorkoutUITests: XCTestCase {
             "Guided hang should dismiss after Cancel"
         )
 
+        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(
             focusedSetActionAvailable(in: app, timeout: 15),
             "After Cancel, unchecked hang should still expose Start Set / Mark set complete"
@@ -122,6 +147,10 @@ final class FreeWorkoutUITests: XCTestCase {
             anyElement(app, "freeWorkout.restBar").exists,
             "Cancel must not start rest or mark the set complete"
         )
+        let cancelledState = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        cancelledState.name = "Guided hang cancelled with set unchecked"
+        cancelledState.lifetime = .keepAlways
+        add(cancelledState)
     }
 
     /// Close mid-session → Resume; Finish-discard keeps Last locked; real finish unlocks Last.
