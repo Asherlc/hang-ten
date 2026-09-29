@@ -57,19 +57,6 @@ GRID_AUDITED_CENTERS_MM = {
     "edge-10-center": (0.0, 112.0),
     "edge-11-center": (0.0, 65.0),
 }
-FACETED_RAIL_ROOT_BANDS_MM = {
-    # The rear root may flare inward behind the pockets; a separate front
-    # clearance facet (and the solid-overlap checks below) protects the holds.
-    15: (219.0, 221.0),
-    40: (209.0, 211.0),
-    60: (194.0, 196.0),
-    80: (179.0, 181.0),
-    100: (164.0, 166.0),
-    120: (144.0, 146.0),
-    140: (129.0, 131.0),
-    155: (124.0, 126.0),
-    170: (126.0, 130.0),
-}
 GRID_AUDITED_ANGLES_DEG = {
     "pocket-3-left": 3.0,
     "pocket-3-right": -3.0,
@@ -186,6 +173,227 @@ def manifest(document) -> dict:
     return json.loads(document.HangTenBoardManifest)
 
 
+def rail_section_pieces(rail_shape, z: float) -> list[dict]:
+    """Return collinear-merged facets from a physical transverse section."""
+    plane = Part.makePlane(
+        400,
+        200,
+        App.Vector(0, -100, z),
+        App.Vector(0, 0, 1),
+    )
+
+    def piece(start, end) -> dict:
+        angle = math.degrees(math.atan2(end.y - start.y, end.x - start.x))
+        return {
+            "x0": start.x,
+            "y0": start.y,
+            "x1": end.x,
+            "y1": end.y,
+            "mid_y": (start.y + end.y) / 2.0,
+            "angle": angle,
+            "span": end.x - start.x,
+        }
+
+    raw = []
+    for edge in rail_shape.section(plane).Edges:
+        points = [vertex.Point for vertex in edge.Vertexes]
+        if len(points) != 2:
+            continue
+        start, end = sorted(points, key=lambda point: point.x)
+        if max(abs(start.y), abs(end.y)) < 1e-6:
+            continue
+        raw.append(piece(start, end))
+    raw.sort(key=lambda item: (item["x0"] + item["x1"]) / 2.0)
+
+    # OCCT may split one physical facet where a loft profile crosses an arch
+    # vertex. Merge only connected segments with the same physical normal so
+    # the output metric does not depend on that incidental edge split.
+    merged = []
+    for item in raw:
+        if merged:
+            previous = merged[-1]
+            connected = math.hypot(
+                previous["x1"] - item["x0"],
+                previous["y1"] - item["y0"],
+            ) < 1e-4
+            if connected and abs(previous["angle"] - item["angle"]) < 1.0:
+                start = App.Vector(previous["x0"], previous["y0"], z)
+                end = App.Vector(item["x1"], item["y1"], z)
+                merged[-1] = piece(start, end)
+                continue
+        merged.append(item)
+    return merged
+
+
+def rail_crown_sections(rail_shape) -> list[dict]:
+    """Measure the rail's real five-facet transverse crown at four heights."""
+    results = []
+    for z in (35.0, 80.0, 125.0, 170.0):
+        pieces = rail_section_pieces(rail_shape, z)
+        if not pieces:
+            results.append({"z": z, "passed": False, "detail": "no crown edges"})
+            continue
+        width = max(piece["x1"] for piece in pieces) - min(
+            piece["x0"] for piece in pieces
+        )
+        nose_index = min(
+            range(len(pieces)),
+            key=lambda index: pieces[index]["mid_y"],
+        )
+        angles = [piece["angle"] for piece in pieces]
+        turns = [end - start for start, end in zip(angles, angles[1:])]
+        shoulders = (
+            [abs(angles[nose_index - 1]), abs(angles[nose_index + 1])]
+            if 0 < nose_index < len(pieces) - 1
+            else []
+        )
+        nose_fraction = pieces[nose_index]["span"] / width
+        passed = (
+            len(pieces) == 5
+            and len(turns) == 4
+            and all(turn > 5.0 for turn in turns)
+            and 0.12 <= nose_fraction <= 0.30
+            and len(shoulders) == 2
+            and all(8.0 <= angle <= 35.0 for angle in shoulders)
+            and abs(angles[0]) > shoulders[0] + 12.0
+            and abs(angles[-1]) > shoulders[1] + 12.0
+        )
+        results.append(
+            {
+                "z": z,
+                "passed": passed,
+                "nose_fraction": nose_fraction,
+                "angles": angles,
+            }
+        )
+    return results
+
+
+def rail_longitudinal_continuity(rail_shape) -> dict:
+    """Measure crown stability every 2.5 mm through the visible rail height."""
+    sampled = []
+    for index in range(81):
+        z = 10.0 + index * 2.5
+        pieces = rail_section_pieces(rail_shape, z)
+        section = {"z": z, "count": len(pieces)}
+        if len(pieces) == 5:
+            points = [(pieces[0]["x0"], pieces[0]["y0"])] + [
+                (piece["x1"], piece["y1"]) for piece in pieces
+            ]
+            width = points[-1][0] - points[0][0]
+            depth = min(point[1] for point in points)
+            if width > 1e-6 and depth < -1e-6:
+                section.update(
+                    {
+                        "x": [(point[0] - points[0][0]) / width for point in points],
+                        "depth": [point[1] / depth for point in points],
+                        "angles": [piece["angle"] for piece in pieces],
+                    }
+                )
+        sampled.append(section)
+
+    complete = all("x" in section for section in sampled)
+    counts = sorted({section["count"] for section in sampled})
+    if not complete:
+        return {
+            "passed": False,
+            "detail": f"samples={len(sampled)} facet-counts={counts}",
+        }
+
+    pairs = list(zip(sampled, sampled[1:]))
+
+    def change_metrics(key: str, noise: float) -> tuple[float, float, int]:
+        steps = []
+        accelerations = []
+        most_reversals = 0
+        for feature in range(len(sampled[0][key])):
+            deltas = [
+                right[key][feature] - left[key][feature]
+                for left, right in pairs
+            ]
+            steps.extend(abs(delta) for delta in deltas)
+            accelerations.extend(
+                abs(after - before)
+                for before, after in zip(deltas, deltas[1:])
+            )
+            most_reversals = max(
+                most_reversals,
+                sum(
+                    before * after < 0
+                    and abs(before) > noise
+                    and abs(after) > noise
+                    for before, after in zip(deltas, deltas[1:])
+                ),
+            )
+        return max(steps), max(accelerations), most_reversals
+
+    x_step, x_acceleration, x_reversals = change_metrics("x", 1e-5)
+    depth_step, depth_acceleration, depth_reversals = change_metrics(
+        "depth", 1e-5
+    )
+    angle_step, angle_acceleration, angle_reversals = change_metrics(
+        "angles", 1e-3
+    )
+    passed = (
+        x_step < 0.025
+        and depth_step < 0.005
+        and angle_step < 2.0
+        and x_reversals <= 2
+        and depth_acceleration < 0.0002
+        and depth_reversals == 0
+        and angle_reversals <= 2
+    )
+    return {
+        "passed": passed,
+        "detail": (
+            f"samples={len(sampled)} facet-counts={counts} "
+            f"steps(x/depth/angle)={x_step:.5f}/{depth_step:.5f}/{angle_step:.3f} "
+            f"accel(x/depth/angle)={x_acceleration:.5f}/"
+            f"{depth_acceleration:.5f}/{angle_acceleration:.3f} "
+            f"reversals(x/depth/angle)={x_reversals}/"
+            f"{depth_reversals}/{angle_reversals}"
+        ),
+    }
+
+
+def flat_rail_control():
+    """A valid five-facet prism whose center facet is intentionally too wide."""
+    points = [
+        App.Vector(0, 0, 0),
+        App.Vector(8, -25, 0),
+        App.Vector(18, -30, 0),
+        App.Vector(82, -30, 0),
+        App.Vector(92, -25, 0),
+        App.Vector(100, 0, 0),
+    ]
+    wire = Part.makePolygon(points + [points[0]])
+    return Part.Face(wire).extrude(App.Vector(0, 0, 220))
+
+
+def lumpy_rail_control():
+    """A valid five-facet loft with repeated depth and direction reversals."""
+    wires = []
+    for z, shoulder, nose, skew in (
+        (0.0, -32.0, -38.0, 0.0),
+        (40.0, -42.0, -48.0, 4.0),
+        (80.0, -34.0, -40.0, -3.0),
+        (120.0, -45.0, -51.0, 4.0),
+        (160.0, -35.0, -41.0, -3.0),
+        (200.0, -43.0, -49.0, 3.0),
+        (220.0, -32.0, -38.0, 0.0),
+    ):
+        points = [
+            App.Vector(0.0, 0.0, z),
+            App.Vector(18.0 + skew, shoulder, z),
+            App.Vector(38.0 + skew, nose, z),
+            App.Vector(62.0 + skew, nose, z),
+            App.Vector(82.0 + skew, shoulder, z),
+            App.Vector(100.0, 0.0, z),
+        ]
+        wires.append(Part.makePolygon(points + [points[0]]))
+    return Part.makeLoft(wires, True, False)
+
+
 def main() -> int:
     source = Path(sys.argv[1]).resolve()
     original_digest = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -270,72 +478,120 @@ def main() -> int:
             f"actual={actual_angle} expected={expected_angle}",
         )
 
-    shoulder = document.getObject("RightContinuousShoulder")
-    shoulder_sections = sorted(
+    right_rail = document.getObject("RightContinuousShoulder")
+    left_rail = document.getObject("LeftContinuousShoulder")
+    rail_profiles = sorted(
         (
             obj
             for obj in document.Objects
-            if obj.Name.startswith("RightContinuousShoulderSection")
+            if obj.Name.startswith("RightLongitudinalRailProfile")
         ),
-        key=lambda obj: obj.Shape.BoundBox.ZMin,
+        key=lambda obj: obj.Name,
     )
     check(
-        "side rail uses the exact deliberately authored loft section set",
-        shoulder is not None and len(shoulder_sections) == 25,
-        f"sections={len(shoulder_sections)}",
+        "side rail uses three deliberately authored full-height profiles",
+        len(rail_profiles) == 3
+        and all(profile.Shape.BoundBox.ZLength > 190.0 for profile in rail_profiles),
+        f"profiles={len(rail_profiles)} "
+        f"heights={[round(profile.Shape.BoundBox.ZLength, 3) for profile in rail_profiles]}",
     )
     check(
-        "side rail is a longitudinal loft of explicit polygonal facets",
-        shoulder is not None
-        and not bool(shoulder.Ruled)
-        and int(shoulder.MaxDegree) == 2
-        and all(
-            len(section.Geometry) == 7
-            and all(
-                type(geometry).__name__ == "LineSegment"
-                for geometry in section.Geometry
-            )
-            for section in shoulder_sections
+        "side rail is one ruled longitudinal loft without horizontal stations",
+        right_rail is not None
+        and right_rail.TypeId == "Part::Loft"
+        and bool(right_rail.Ruled)
+        and list(right_rail.Sections) == rail_profiles
+        and not any(
+            obj.Name.startswith("RightContinuousShoulderSection")
+            for obj in document.Objects
         ),
-        f"ruled={bool(shoulder.Ruled) if shoulder is not None else None} "
-        f"maxDegree={int(shoulder.MaxDegree) if shoulder is not None else None} "
-        f"edges={sorted({len(section.Geometry) for section in shoulder_sections})}",
+        f"type={right_rail.TypeId if right_rail is not None else None} "
+        f"ruled={bool(right_rail.Ruled) if right_rail is not None else None}",
     )
-    shoulder_bop_error = None
-    if shoulder is not None:
+
+    crown_sections = (
+        rail_crown_sections(right_rail.Shape) if right_rail is not None else []
+    )
+    check(
+        "side rail has the reviewed shallow five-facet convex crown",
+        len(crown_sections) == 4
+        and all(section["passed"] for section in crown_sections),
+        "; ".join(
+            f"z={section['z']:.0f} "
+            f"nose={section.get('nose_fraction', float('nan')):.3f} "
+            f"angles={[round(angle, 2) for angle in section.get('angles', [])]}"
+            for section in crown_sections
+        ),
+    )
+
+    continuity = (
+        rail_longitudinal_continuity(right_rail.Shape)
+        if right_rail is not None
+        else {"passed": False, "detail": "missing rail"}
+    )
+    check(
+        "side rail crown stays continuous without longitudinal lumps",
+        continuity["passed"],
+        continuity["detail"],
+    )
+
+    flat_control = flat_rail_control()
+    flat_sections = rail_crown_sections(flat_control)
+    check(
+        "crown gate rejects a valid deliberately flat control",
+        flat_control.isValid()
+        and len(flat_sections) == 4
+        and not all(section["passed"] for section in flat_sections),
+        "; ".join(
+            f"z={section['z']:.0f} nose="
+            f"{section.get('nose_fraction', float('nan')):.3f}"
+            for section in flat_sections
+        ),
+    )
+
+    lumpy_control = lumpy_rail_control()
+    lumpy_continuity = rail_longitudinal_continuity(lumpy_control)
+    check(
+        "continuity gate rejects a valid deliberately lumpy control",
+        lumpy_control.isValid() and not lumpy_continuity["passed"],
+        lumpy_continuity["detail"],
+    )
+
+    rail_bop_errors = []
+    for rail in (left_rail, right_rail):
+        if rail is None:
+            rail_bop_errors.append("missing rail")
+            continue
         try:
-            shoulder.Shape.check(True)
+            rail.Shape.check(True)
         except ValueError as error:
-            shoulder_bop_error = str(error)
+            rail_bop_errors.append(f"{rail.Name}: {error}")
     check(
         "side rail facets have no B-rep self-intersections",
-        shoulder is not None and shoulder_bop_error is None,
-        shoulder_bop_error or "",
+        not rail_bop_errors,
+        "; ".join(rail_bop_errors),
     )
-    station_inner_x = {
-        round(section.Shape.BoundBox.ZMin): section.Shape.BoundBox.XMin
-        for section in shoulder_sections
-    }
-    for z, band in sorted(FACETED_RAIL_ROOT_BANDS_MM.items()):
-        actual = station_inner_x.get(z)
-        check(
-            f"right rail root follows its reviewed clearance curve at Z={z} mm",
-            actual is not None and band[0] <= actual <= band[1],
-            f"inner X={actual} expected={band}",
-        )
+    check(
+        "left side rail is the native mirror of the authored right rail",
+        left_rail is not None
+        and right_rail is not None
+        and left_rail.TypeId == "Part::Mirroring"
+        and left_rail.Source == right_rail,
+    )
 
-    for pocket_number in range(3, 8):
-        cutter = document.getObject(f"Cutter_pocket_{pocket_number}_right")
-        overlap = (
-            cutter.Shape.common(shoulder.Shape).Volume
-            if cutter is not None and shoulder is not None
-            else None
-        )
-        check(
-            f"pocket-{pocket_number} cutters do not cut into the side rails",
-            overlap is not None and overlap < 1e-5,
-            f"right overlap={overlap} mm^3",
-        )
+    for side, rail in (("left", left_rail), ("right", right_rail)):
+        for pocket_number in range(3, 8):
+            cutter = document.getObject(f"Cutter_pocket_{pocket_number}_{side}")
+            overlap = (
+                cutter.Shape.common(rail.Shape).Volume
+                if cutter is not None and rail is not None
+                else None
+            )
+            check(
+                f"pocket-{pocket_number}-{side} cutter does not cut into its side rail",
+                overlap is not None and overlap < 1e-5,
+                f"overlap={overlap} mm^3",
+            )
 
     if body is not None:
         for contact_id, obj in sorted(bound.items()):

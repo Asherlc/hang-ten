@@ -60,7 +60,7 @@ gate it. No contact inventory, label, ordering, or training metadata changed.
 The one-off authoring program is workspace scratch at
 `.context/hanging-fly-metolius-foundry-cad/author_metolius_foundry.py`; it is
 not a build input. The committed FCStd stands alone and is the package's only
-canonical source. It contains 61 fully constrained Sketcher profiles feeding
+canonical source. It contains 39 fully constrained Sketcher profiles feeding
 native lofts, extrusions, mirrors and booleans. Final-body
 `PartDesign::SubShapeBinder` surfaces define the right and center semantic
 regions; native mirrors define their left mates. `HangTenCurvedRegionPartition`
@@ -106,41 +106,39 @@ A three-section broad-arch loft uses Y/X-scale stations `(0, 0.98)`,
 solid whose key Y/Z stations are `(0,0)`, `(0,208)`, `(-12,208)`,
 `(-65,191)`, `(-69,180)`, `(-46,102)`, `(-33,36)`, and `(-15,0)`.
 
-Each outer rail and jug is one continuous quadratic longitudinal loft through
-25 explicitly authored polygon sections. Every section has seven straight
-edges: a mounting-plane root, an outer rear edge, two outer/front facets, the
-front crest, an inner/front facet, and a separate pocket-facing guard. This
-makes the molded-looking facets run along the rail instead of stacking rounded
-cross-sections into visible horizontal lumps. The rear root may turn inward
-behind a pocket, while the guard remains outside its cutter. The source audit
-requires each right-side cutter/rail common volume to equal zero; native
-mirroring provides the identical left-side clearance. The quadratic degree is
-also checked with OCCT's BOP self-intersection test; a cubic trial was rejected
-because it overshot between the close clearance stations.
+Each outer rail and jug is one uninterrupted ruled longitudinal loft through
+three deliberately authored, fully constrained, full-height profiles. All
+three profiles use the same eight-span X/Z arch boundary. Their depth-wise
+parameters `(width scale, height scale, front offset, depth slope)` are
+`(1.00, 1.00, 0, 0)` at the rear/root, `(0.68, 0.99, 32.5, 0.20)` at the
+shoulder and `(0.22, 0.97, 36, 0.20)` at the nose. The nose is therefore
+3.5 mm proud of the shoulders. The resulting physical section has a narrow
+nose, two gentle shoulders and two steeper rear bevels. Every facet seam runs
+through the complete arch: there are no horizontal stations or hold-height
+controls that could create local lobes.
 
-The right-side stations, written as `(Z, rear-root X, guard X, center X,
-center Y, outer-X radius, Y radius)`, are:
+The saved B-rep is intersected at Z 35 / 80 / 125 / 170 mm by the native-source
+regression. Every section has five distinct facet normals and four positive
+convex turns. The nose occupies 22.0–22.4% of the projected section, shoulder
+angles are 8.84–32.51 degrees, and the rear bevels are at least 12 degrees
+steeper than their adjacent shoulders.
 
-```text
-(0,230,240,256,-18,12,12)    (8,225,235,261,-20,16,15)
-(15,220,232,263,-22,20,18)   (25,215,228,262,-24,24,20)
-(40,210,221,260,-27,28,23)   (50,202,221,258,-28,30,24)
-(60,195,221,256,-29,31,25)   (70,188,221,253,-30,32,26)
-(77,183,220,251,-31,33,27)   (80,180,218,250,-31,34,27)
-(90,173,218,248,-32,35,28)   (100,165,218,246,-33,37,29)
-(110,158,218,244,-34,39,30)  (112,156,196,238,-34,40,30)
-(113,155,190,232,-34,40,30)  (120,145,189,225,-35,41,31)
-(130,136,189,222,-36,42,32)  (140,130,189,220,-38,43,33)
-(148,126,188,213,-40,45,34)  (155,125,170,202,-41,46,34)
-(170,128,140,190,-43,46,34)  (180,129,138,188,-44,45,35)
-(190,131,138,187,-44,44,36)  (203,134,145,184,-40,36,29)
-(216,146,158,184,-32,24,16)
-```
+A second output gate intersects the physical B-rep at 81 heights, every 2.5 mm
+from Z 10 through 210 mm. After merging only incidental collinear OCCT edge
+splits, all 81 sections retain exactly five facets. The largest adjacent change
+is 0.01679 of normalized width, 0.00120 of normalized depth and 1.181 degrees;
+the gate also limits second differences and repeated direction reversals. A
+valid deliberately flat five-facet control, whose nose occupies 64% of its
+section, fails the crown gate. A valid deliberately lumpy five-facet loft fails
+the continuity gate. Both negative controls are rebuilt and rejected on every
+native-source test run.
 
-The left rail is the native mirror. Live final-body subshape binders define the
-right and center semantic contact regions; native mirrors define the left
-regions. The binders deliberately omit the inaccessible Y = 0 mounting-plane
-faces.
+The right rail passes OCCT BOP self-intersection checking. Its left mate is a
+native mirror. The source audit requires all ten left/right side-pocket
+cutter/rail common volumes to equal zero. Live final-body subshape binders
+define the right and center semantic contact regions; native mirrors define
+the left regions. The binders deliberately omit the inaccessible Y = 0
+mounting-plane faces.
 
 The recessed openings were manually reviewed against a 40 × 16 normalized
 grid over the published 578 × 216 mm envelope (minor cells 14.45 × 13.5 mm;
@@ -164,9 +162,9 @@ Only the 578 × 216 mm envelope, symmetry, inventory and numbered dimensions
 above are published. Every remaining dimension is an **operator-selected
 display estimate**:
 
-- Maximum compiled body projection is 80.011 mm. After excluding inaccessible
-  mounting-plane faces, the exported jug regions span 70.3 mm; the lower
-  variable-pinch regions span 77 mm. Both are display estimates, not
+- Maximum compiled body projection is 79.198 mm. After excluding inaccessible
+  mounting-plane faces, the exported jug regions span 65.535 mm; the lower
+  variable-pinch regions span 70 mm. Both are display estimates, not
   manufacturer-published grip dimensions.
 - The #8 center surface is bounded to X ±110 mm. Its front edge is
   Y -65/Z 191 and its rear edge is Y -12/Z 208, preserving the published
@@ -199,16 +197,16 @@ are retained in the FCStd.
 ## Verification and visual review
 
 `compile_board.py` reopened and recomputed the FCStd, found all 18 contacts and
-19 nodes. It measured the accessible paired jug regions at 70.3 mm and the
-paired pinches at 77 mm, and the remaining authored regions at the exact
+19 nodes. It measured the accessible paired jug regions at 65.535 mm and the
+paired pinches at 70 mm, and the remaining authored regions at the exact
 published 32 / 22 / 30 / 15 / 21 / 53 / 16 / 30 / 23 mm values. The saved
 source audit additionally read the actual cutter sketches and confirmed every
-manual grid center, every mirrored side-pocket angle, 25 seven-edge sections
-per rail, no B-rep self-intersection, and `0.0 mm³` common volume between each
-right rail and pocket cutters #3 through #7. Native mirroring provides the
-same left-side clearance.
+manual grid center, every mirrored side-pocket angle, three constrained
+full-height rail profiles, the five-facet convex crown at four heights, no
+B-rep self-intersection, and `0.0 mm³` common volume between all ten left/right
+rail and side-pocket cutter pairs.
 
-The final unbound USDZ has 28,161 triangles. Reproducible build verification
+The final unbound USDZ has 19,310 triangles. Reproducible build verification
 produced byte-identical USDZ and descriptor files. Package validation passed,
 Android staging regenerated the same manifest and copied the same asset and
 descriptor bytes while excluding the FCStd, and delivery-lock verification
@@ -218,19 +216,17 @@ texture archive entries; the archive contains only `stage.usdc`.
 
 The retained automated results were:
 
-- `Tools/HangboardModels/tests` plus `Tools/HangboardPackages/tests`: 744
-  passed and 1 skipped on the pre-refresh run; its only failure was the
-  intentionally stale delivery-lock checksum. After refreshing that checksum,
-  the focused delivery-lock module passed all 8 checks.
-- `Tools/HangboardCAD/tests`: 66 passed, 10 toolchain-gated skips; the
-  Foundry native integration module separately passed both checks with the
-  pinned FreeCAD environment enabled.
+- `Tools/HangboardModels/tests` plus `Tools/HangboardPackages/tests`: 745
+  passed and 1 skipped with the retained, checksum-pinned meshoptimizer v1.0
+  library selected explicitly.
+- `Tools/HangboardCAD/tests`: 76 passed with the pinned FreeCAD environment;
+  the Foundry native integration module accounted for both of its checks.
 - Delivery alignment, hard-cut audit and approved-package inventory: 59
   passed.
 
 Signed native-app acceptance passed on a workspace-owned iPhone 17 Pro
-simulator `68FA5F07-FDC1-4864-873A-E57124370138` running iOS 26.4. The signed
-Debug build opened the exact faceted-rail package on the board-detail route.
+simulator `EB912790-8CB2-44A7-B0B8-79D9A3592CD2` running iOS 26.4. The signed
+Debug build opened the exact crowned-rail package on the board-detail route.
 The default variable-pinch highlight and hold-map selections of the 32 mm deep
 left pocket and 15 mm shallow right pocket remained confined to their intended
 surfaces. Accessibility exposed `boardDetail.screen`, the tested
@@ -240,7 +236,7 @@ rendered #3 opening asserted `boardDetail.selectedHold.pocket-3-left`,
 exercising RealityKit picking independently of the hold map.
 
 The installed ODR USDZ and bundled descriptor were byte-identical to the
-validated package outputs, with SHA-256 values `ce7a54ef...` and `c910f0e7...`.
+validated package outputs, with SHA-256 values `201e0126...` and `39c4ff35...`.
 The signed build carried `com.apple.developer.healthkit = true` and both
 non-empty HealthKit usage descriptions. The exact owned simulator was deleted,
 its pending/owned records were consumed, and the workspace-local Derived Data
@@ -256,27 +252,28 @@ same service deadlock. The unchanged build rendered and completed all checks
 above on iOS 26.4, isolating the blank launch to the iOS 26.5 simulator service
 stack rather than the board package.
 
-| Review view | Prior committed asset | Native CAD | Side-by-side |
+| Review view | Superseded display asset | Native CAD | Side-by-side |
 | --- | --- | --- | --- |
 | Front | [previous](../pr-screenshots/metolius-foundry/previous-front.png) | [CAD](../pr-screenshots/metolius-foundry/cad-front.png) | [comparison](../pr-screenshots/metolius-foundry/comparison-front.png) |
 | Side | [previous](../pr-screenshots/metolius-foundry/previous-side.png) | [CAD](../pr-screenshots/metolius-foundry/cad-side.png) | [comparison](../pr-screenshots/metolius-foundry/comparison-side.png) |
 | Top | [previous](../pr-screenshots/metolius-foundry/previous-top.png) | [CAD](../pr-screenshots/metolius-foundry/cad-top.png) | [comparison](../pr-screenshots/metolius-foundry/comparison-top.png) |
 | Oblique | [previous](../pr-screenshots/metolius-foundry/previous-oblique.png) | [CAD](../pr-screenshots/metolius-foundry/cad-oblique.png) | [comparison](../pr-screenshots/metolius-foundry/comparison-oblique.png) |
 
-These are orthographic renders of the exact prior and candidate USDZ bytes.
-The review renderer mildly tints recessed planar floors by camera depth so
-their boundaries remain legible; it does not change geometry. The CAD is an
-intentionally cleaner analytic approximation than the prior sculpted mesh.
+These are orthographic renders of the exact superseded display and current CAD
+USDZ bytes. The review renderer applies the same neutral directional lighting
+and shadow map to both; it does not change geometry. The CAD is an intentionally
+cleaner analytic approximation than the prior sculpted mesh.
 
-The faceted-rail correction was separately rendered against the prior committed
-CAD in every required view:
+The crowned-rail correction was separately rendered against the prior committed
+CAD in every required view. Those panels read the exact prior `ce7a54ef...`
+and current `201e0126...` USDZ bytes with the same camera and lighting:
 
 | Corrective review | Side-by-side |
 | --- | --- |
-| Front | [faceted comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-front.png) |
-| Side | [faceted comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-side.png) |
-| Top | [faceted comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-top.png) |
-| Oblique | [faceted comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-oblique.png) |
+| Front | [crowned comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-front.png) |
+| Side | [crowned comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-side.png) |
+| Top | [crowned comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-top.png) |
+| Oblique | [crowned comparison](../pr-screenshots/metolius-foundry/rail-refinement-comparison-oblique.png) |
 
 The [fine alignment grid](../pr-screenshots/metolius-foundry/alignment-grid-fine.png)
 shows the manufacturer diagram and current orthographic CAD in separate panels,
@@ -291,14 +288,14 @@ Representative signed-app captures are the [variable pinch](../pr-screenshots/me
 [direct model tap](../pr-screenshots/metolius-foundry/app-tap-deep-pocket.png).
 The corrective pass also retains the
 [orbited raw jug pick](../pr-screenshots/metolius-foundry/app-jug-oblique.png).
-The final faceted package adds the [inactive/default pinch](../pr-screenshots/metolius-foundry/app-faceted-default.png),
+The final crowned package adds the [inactive/default pinch](../pr-screenshots/metolius-foundry/app-faceted-default.png),
 [raw-picked 32 mm pocket](../pr-screenshots/metolius-foundry/app-faceted-deep-pocket.png),
 and [15 mm pocket](../pr-screenshots/metolius-foundry/app-faceted-shallow-pocket.png)
 captures from the exact installed build.
 
 Final SHA-256 values are:
 
-- FCStd: `156d6045c6a9c945efcab96ce21079977f50e47afbd9e775feb74ca2e39065e6`
-- USDZ: `ce7a54ef2a5861fc6d29da3dde911de5d01eee1ba9b2417a3df1037113497576`
-- Descriptor: `c910f0e78bf137a73bf5a321a570b919d657a65ff746fb784b6545ccbd0e754b`
-- Delivery manifest: `809c5b8024edd1c5382bc5a1dd35fe06b9a6fb887e5743792abc343587ee6851`
+- FCStd: `d20c657c4a004a88556dc32f89d4fda3ca2c34f23e049c58219991f93bab96d6`
+- USDZ: `201e01266d9b95e8305b428e681a64ba39d95c02693aeb1330d40789ec11ce05`
+- Descriptor: `39c4ff3594ff8ab05fccf9746f455ed5666d4aa0932bd330e5591fce7e79be1d`
+- Delivery manifest: `a9d630ebd1b2b70b4754ac03914cd5849742d1850954eca322fe243b5eb0a20e`
