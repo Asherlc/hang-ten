@@ -264,6 +264,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
+            "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
         app.launch()
         // The Train card's noninteractive preview starts loading this same model
@@ -295,6 +296,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         capture("\(boardID)-portrait-active")
 
         let initialContactFrame = contact.frame
+        captureRendererDiagnostic(app: app, name: "\(boardID)-before-orbit")
         let initialMapFrame = map.frame
         let initialMapImage = try mapSnapshot(in: initialMapFrame, appFrame: app.frame)
         // Some models have empty gaps around the projected center. Begin the
@@ -318,6 +320,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
+        captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
         XCTAssertEqual(visibleOrbitResult, .completed,
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
@@ -358,6 +361,15 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             dx: (frame.minX + frame.width * offset.dx - viewport.minX) / viewport.width,
             dy: (frame.minY + frame.height * offset.dy - viewport.minY) / viewport.height
         ))
+    }
+
+    private func captureRendererDiagnostic(app: XCUIApplication, name: String) {
+        let element = app.descendants(matching: .any)
+            .matching(identifier: "boardModel.renderDiagnostic").firstMatch
+        let attachment = XCTAttachment(string: element.exists ? element.debugDescription : "Renderer diagnostic missing")
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func mapSnapshot(in frame: CGRect, appFrame: CGRect) throws -> Data {

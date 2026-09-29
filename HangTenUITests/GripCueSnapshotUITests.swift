@@ -148,12 +148,18 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            // Weight-flow tests use a fixed raster board instead of a persisted
+            // selection with unrelated asynchronous model-preview work.
+            "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
         XCTAssertTrue(
             app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
             "The plan review route should take precedence over fixture-only review flags."
         )
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -167,10 +173,13 @@ final class InitialWeightSetupUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // CI recordings show the 50 ms tap lands on the thumb but goes unhandled.
-        // Hold briefly so the native control receives a complete press under load.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5))
-            .press(forDuration: 0.2)
+        XCTAssertLessThan(
+            bodyweight.frame.width,
+            app.frame.width / 3,
+            "The switch accessibility target should not span the full weight-tracking row."
+        )
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        bodyweight.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -196,6 +205,39 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+    }
+
+    func testManualWeightLabelTogglesTheSameSwitch() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
+
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let setup = app.otherElements["plan.initialWeight.setup"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        XCTAssertEqual(bodyweight.label, "Add bodyweight")
+
+        // The visible label is outside the switch's accessibility frame.
+        let labelPoint = CGPoint(
+            x: setup.frame.minX + setup.frame.width * 0.1,
+            y: bodyweight.frame.midY
+        )
+        XCTAssertTrue(setup.frame.contains(labelPoint))
+        XCTAssertLessThan(labelPoint.x, bodyweight.frame.minX)
+        let label = setup.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            .withOffset(CGVector(
+                dx: labelPoint.x - setup.frame.minX,
+                dy: labelPoint.y - setup.frame.minY
+            ))
+        label.tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
