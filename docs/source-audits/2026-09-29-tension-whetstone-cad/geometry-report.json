@@ -1,0 +1,252 @@
+{
+  "owner": "rugged-chipmunk",
+  "nativeBodyValid": true,
+  "bodySolids": 1,
+  "bounds": [
+    635.0000002000005,
+    50.80000020000006,
+    152.40014223619545
+  ],
+  "contacts": [
+    {
+      "id": "edge-40-left",
+      "areaMm2": 10159.133276776716,
+      "depthMm": 40.00000000000001,
+      "faces": 12,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-30-left",
+      "areaMm2": 8010.611273008873,
+      "depthMm": 30.000000000000004,
+      "faces": 11,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-25-left",
+      "areaMm2": 7103.744719849488,
+      "depthMm": 25.00000000000001,
+      "faces": 12,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-20-left",
+      "areaMm2": 6032.167415922274,
+      "depthMm": 20.00000000000001,
+      "faces": 11,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-40-right",
+      "areaMm2": 10159.133276776716,
+      "depthMm": 40.00000000000001,
+      "faces": 12,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-30-right",
+      "areaMm2": 8010.611273008873,
+      "depthMm": 30.000000000000004,
+      "faces": 11,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-25-right",
+      "areaMm2": 7096.428508155759,
+      "depthMm": 25.00000000000001,
+      "faces": 12,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-20-right",
+      "areaMm2": 6039.483717965566,
+      "depthMm": 20.00000000000001,
+      "faces": 11,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "edge-40-center",
+      "areaMm2": 14761.375436693103,
+      "depthMm": 40.0,
+      "faces": 17,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "pocket-40-left",
+      "areaMm2": 8023.731098183483,
+      "depthMm": 40.000000000000014,
+      "faces": 17,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "pocket-40-right",
+      "areaMm2": 8023.731098183482,
+      "depthMm": 40.000000000000014,
+      "faces": 17,
+      "offBodyAreaMm2": 0.0
+    },
+    {
+      "id": "top-ergo-jug",
+      "areaMm2": 41443.02984044971,
+      "depthMm": 50.800000000000004,
+      "faces": 16,
+      "offBodyAreaMm2": 0.0
+    }
+  ],
+  "geometryEstimates": [
+    {
+      "contactID": "edge-40-left",
+      "depthMm": 40,
+      "x": [
+        -248,
+        -164.0
+      ],
+      "z": [
+        88,
+        120
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-30-left",
+      "depthMm": 30,
+      "x": [
+        -164.0,
+        -80
+      ],
+      "z": [
+        88,
+        120
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-25-left",
+      "depthMm": 25,
+      "x": [
+        -248,
+        -164.0
+      ],
+      "z": [
+        14,
+        45
+      ],
+      "frontY": -42.0,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-20-left",
+      "depthMm": 20,
+      "x": [
+        -164.0,
+        -80
+      ],
+      "z": [
+        14,
+        45
+      ],
+      "frontY": -42.0,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-40-right",
+      "depthMm": 40,
+      "x": [
+        80,
+        164.0
+      ],
+      "z": [
+        88,
+        120
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-30-right",
+      "depthMm": 30,
+      "x": [
+        164.0,
+        248
+      ],
+      "z": [
+        88,
+        120
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-25-right",
+      "depthMm": 25,
+      "x": [
+        80,
+        164.0
+      ],
+      "z": [
+        14,
+        45
+      ],
+      "frontY": -42.0,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-20-right",
+      "depthMm": 20,
+      "x": [
+        164.0,
+        248
+      ],
+      "z": [
+        14,
+        45
+      ],
+      "frontY": -42.0,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "edge-40-center",
+      "depthMm": 40,
+      "x": [
+        -58,
+        58
+      ],
+      "z": [
+        54,
+        86
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 10
+    },
+    {
+      "contactID": "pocket-40-left",
+      "depthMm": 40,
+      "x": [
+        -307,
+        -265
+      ],
+      "z": [
+        64,
+        119
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    },
+    {
+      "contactID": "pocket-40-right",
+      "depthMm": 40,
+      "x": [
+        265,
+        307
+      ],
+      "z": [
+        64,
+        119
+      ],
+      "frontY": -50.8,
+      "incutDegrees": 0
+    }
+  ]
+}
