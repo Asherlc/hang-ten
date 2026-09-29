@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-split-palm, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, and crimptonite-helium-mobile native FreeCAD migrations; copy these bytes, never regenerate a delivery",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-split-palm, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, crimptonite-helium-mobile, and trango-rock-prodigy-natural native FreeCAD migrations; copy these bytes, never regenerate a delivery",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc",
+  "sha256Manifest": "200ebdd9bd2b0c515933c8be6871a1fe9ac8d29d8c72c0194c11f34b6bbd7521",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c",
+  "supersededSha256Manifest": "487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -578,6 +578,21 @@
       "holdOutline": "CAD-authored HangTenHoldOutline: upper-slot stadiums for edge-22 and center-edge-18, mouth-minus-slot outlines for edge-14 and center-edge-10",
       "suspensionSHA256": "e37139047d86f44e5c5987c97e6b940874471e008a10b1bf16f9505fe6b8aa56",
       "suspension": "twoBranchCord with internalLoop in suspension.json (the standard CAD cord method): owner-confirmed single cord loop through both end holes; LeftCordChannel / RightCordChannel Part::Cylinder through-bores measured at 24 mm by measure_channel_spines.py; routes and hanging height solved by solve_threaded_rope.py with ropeSolver.sectionPlane anchor; >= 2.074 mm centerline clearance to the CAD solid for a 2 mm cord; 0.45 m per end (~0.9 m loop) is a display estimate from the resting loop in DSCF6544/6545; replaces the hand-authored pairedLeadCord"
+    },
+    "trango-rock-prodigy-natural": {
+      "source": "Hangboards/trango-rock-prodigy-natural/trango-rock-prodigy-natural.FCStd",
+      "sourceSHA256": "39d2b6f9db9ef5f341e9e38bb0f0f9860d60486a658d9a72af888d0c9565c36b",
+      "boardMetadata": "board.json generated at build time from the FCStd HangTenBoardManifest; parsed values and all 14 contact IDs identical to the deleted committed board.json",
+      "referenceSHA256": "f913ecd901834c9e000ecc660144625c70e453856e150de9dd119b5bf6a0f17e",
+      "assetSHA256": "7d45a021e670877c5fe00f79b036df3e1bb7cfd5ac784f3e4132b968278e9355",
+      "descriptorSHA256": "d8df852ace098e126bc3f4b883d2cad3ea8828f80057d5c6fec8e31d0a5ebc54",
+      "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes with no materials or textures)",
+      "nativeValidation": "saved FCStd reopened and compiled with 14 contact regions and 15 nodes; compiler published-depth and surface-partition gates passed; verify_reproducible rebuilt the USDZ and descriptor byte-identically on the pinned macOS toolchain; package validation and Android staging passed; 445 Python tests passed with 11 skips; contact face-copy regions are static, so sketch edit propagation is not claimed",
+      "comparison": "front geometry re-authored from Trango top-down, side, rail, and pocket photographs; front/side/top previews compared with the pre-migration asset and the left half overlaid on the manufacturer photo; tier projection remains unresolved and uses the prior flush-front display estimate",
+      "assetCoverage": "locked as descriptor + source (board.json generated at build time and not committed); descriptor modelSHA256 pins the compiled USDZ",
+      "holdOutline": "operator-authored HangTenHoldOutline on all 14 contact regions",
+      "nativeAppValidation": "iPhone 17 Pro simulator, iOS 26.5, signed Debug board-detail route: compiled board rendered and top-jug-left highlighted; screenshots inspected; exact workspace-owned simulator deleted after capture",
+      "provenance": "docs/2026-09-29-trango-rock-prodigy-natural-cad-provenance.md"
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -622,5 +637,6 @@
   "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
   "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
-  "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest."
+  "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest.",
+  "naturalMigrationNote": "2026-09-29: trango-rock-prodigy-natural became a source-backed FreeCAD package. Manufacturer-photo geometry and published depths govern the source; the former display model is a qualitative comparison. The prior 487a815fcebb77c2d318165b8dff48aaa760d40842efd4d406b004ea6c5386dc manifest moved to supersededSha256Manifest."
 }

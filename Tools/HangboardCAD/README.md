@@ -331,6 +331,14 @@ pre-migration mesh: the front view comes from Trango's top-down photograph
 contrast-stretched photo crops and the model-over-photo overlay. It is a
 diagnostic, never a build input (lessons §18).
 
+`trango-rock-prodigy-natural` follows the same manufacturer-photo approach.
+Its two halves are exact mirrors, with rounded rail and pocket mouths, sloped
+rail floors, and a side-profiled jug. The 14 contact node IDs are retained; the
+two prior body nodes and bottom-edge body patches are consolidated into one
+body node. See
+[`docs/2026-09-29-trango-rock-prodigy-natural-cad-provenance.md`](../../docs/2026-09-29-trango-rock-prodigy-natural-cad-provenance.md)
+for the photo hashes, display estimates, and the unresolved front-tier step.
+
 `tension-grindstone` sets it too: its top slots have stadium ends. It is the
 first CAD board with no prior 3D asset (it was raster-only), so there is no
 reference mesh. See
