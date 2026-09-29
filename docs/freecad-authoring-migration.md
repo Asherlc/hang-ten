@@ -598,7 +598,7 @@ write-up. The durable points:
   (lessons §17).
 - **MXEdge Large** confirmed the Small trough pattern and added measurement
   traps (descriptor bounds, depth-map sampling, per-trough published depth,
-  mono circle fit, cord mouths, source-backed lock). See lessons §12.
+  mono circle fit, cord mouths, source-backed manifest). See lessons §12.
 - **Compact II** reused the deleted Blender authoring script from Git as its
   dimension source. It also showed that a sculpted body gets exact contact
   partitions only when every face is planar: station-stacked quads and
@@ -724,8 +724,8 @@ with normal shading (and the reference side by side), prints the node inventory
 and bounds, and reports the largest up-facing top facet under the same metric on
 both assets. Flat tops and rounded crests both produce up-facing facets — compare
 to the reference and the front render, not against zero. Read the front render;
-then build the app and screenshot a deep-linked hold. Only run the suites and
-refresh the lock once the shape is right.
+then build the app and screenshot a deep-linked hold. Run the suites and
+validate the package once the shape is right.
 
 **Off-the-shelf Hydra render (`usdrecord`).** After compile, also render the
 committed USDZ with the OpenUSD `usdrecord` CLI (Hydra Storm — not FreeCAD, not
@@ -805,7 +805,7 @@ python3 Tools/HangboardCAD/run_freecad.py --extra-python-path "$PXRPATH" \
 # CAD contract, exporter, and native integration suites
 python3 -m pytest Tools/HangboardCAD/tests -q
 
-# model, package, and delivery-lock suites
+# model and package suites
 python3 -m pytest Tools/HangboardModels Tools/HangboardPackages -q
 
 # generate board.json for every CAD-backed package (no FreeCAD; build-time only)
