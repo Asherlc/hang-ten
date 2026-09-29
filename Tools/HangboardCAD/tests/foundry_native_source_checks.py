@@ -6,6 +6,7 @@ including a real published-depth edit, rather than inspecting its XML.
 
 from __future__ import annotations
 
+from bisect import bisect_left, bisect_right
 import hashlib
 import json
 import math
@@ -214,15 +215,25 @@ def crown_metrics(polyline: list[tuple[float, float]]) -> dict:
         turn = (turn + 180.0) % 360.0 - 180.0
         turns.append(turn)
     absolute_turns = [abs(turn) for turn in turns]
-    # A smooth crown shares its turning across adjacent 1 mm samples. A
-    # polygon concentrates nearly all local turning at one sampled vertex.
-    turn_concentrations = [
-        value / max(
-            1e-9,
-            sum(absolute_turns[max(0, index - 5) : min(len(turns), index + 6)]),
+    sample_distances = [0.0]
+    for before, after in zip(polyline, polyline[1:]):
+        sample_distances.append(
+            sample_distances[-1] + math.hypot(after[0] - before[0], after[1] - before[1])
         )
-        for index, value in enumerate(absolute_turns)
-    ]
+    turn_distances = sample_distances[1:-1]
+    # Measure concentration over a physical arc length so changing the section
+    # discretization cannot hide several nearby polygon creases in one window.
+    turn_window_half_width_mm = 5.0
+    turn_concentrations = []
+    for index, value in enumerate(absolute_turns):
+        window_start = bisect_left(
+            turn_distances, turn_distances[index] - turn_window_half_width_mm
+        )
+        window_end = bisect_right(
+            turn_distances, turn_distances[index] + turn_window_half_width_mm
+        )
+        local_turn = sum(absolute_turns[window_start:window_end])
+        turn_concentrations.append(value / max(1e-9, local_turn))
     nose_depth = min(point[1] for point in polyline)
     return {
         "max_turn": max((abs(turn) for turn in turns), default=float("nan")),
@@ -245,7 +256,7 @@ def rail_crown_sections(rail_shape) -> list[dict]:
         metrics = crown_metrics(polyline)
         passed = (
             metrics["max_turn"] < 20.0
-            and metrics["max_turn_concentration"] < 0.65
+            and metrics["max_turn_concentration"] < 0.45
             and metrics["max_concave_turn"] < 3.0
             and metrics["total_turn"] > 90.0
             and metrics["nose_depth"] < -20.0
@@ -319,6 +330,20 @@ def shallow_faceted_rail_control():
         App.Vector(50 + 50 * math.cos(math.pi + index * math.pi / 12),
                    50 * math.sin(math.pi + index * math.pi / 12), 0)
         for index in range(13)
+    ]
+    wire = Part.makePolygon(points + [points[0]])
+    return Part.Face(wire).extrude(App.Vector(0, 0, 220))
+
+
+def closely_faceted_rail_control():
+    """A 32-facet, 130 mm arc crown with shallow, closely spaced creases."""
+    points = [
+        App.Vector(
+            42 + 42 * math.cos(math.pi + index * math.pi / 32),
+            42 * math.sin(math.pi + index * math.pi / 32),
+            0,
+        )
+        for index in range(33)
     ]
     wire = Part.makePolygon(points + [points[0]])
     return Part.Face(wire).extrude(App.Vector(0, 0, 220))
@@ -450,7 +475,9 @@ def main() -> int:
         and all(section["passed"] for section in crown_sections),
         "; ".join(
             f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
-            f"concave={section.get('concave_turns')} nose={section.get('nose_depth', float('nan')):.1f}"
+            f"concentration={section.get('max_turn_concentration', float('nan')):.2f} "
+            f"concave={section.get('concave_turns')} "
+            f"nose={section.get('nose_depth', float('nan')):.1f}"
             for section in crown_sections
         ),
     )
@@ -490,6 +517,20 @@ def main() -> int:
             f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
             f"concentration={section.get('max_turn_concentration', float('nan')):.2f}"
             for section in shallow_faceted_sections
+        ),
+    )
+
+    closely_faceted_control = closely_faceted_rail_control()
+    closely_faceted_sections = rail_crown_sections(closely_faceted_control)
+    check(
+        "crown gate rejects closely spaced shallow creases",
+        closely_faceted_control.isValid()
+        and len(closely_faceted_sections) == 4
+        and not any(section["passed"] for section in closely_faceted_sections),
+        "; ".join(
+            f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
+            f"concentration={section.get('max_turn_concentration', float('nan')):.2f}"
+            for section in closely_faceted_sections
         ),
     )
 
