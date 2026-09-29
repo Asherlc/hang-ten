@@ -228,6 +228,61 @@ final class BoardPackageStoreTests: XCTestCase {
         XCTAssertNil(board.unilateralHandResolution)
     }
 
+    func testLiveRopePhysicsLoadsWithoutTheOnDemandModel() throws {
+        let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+            try self.addPhysicsFixture(to: packageURL)
+            try FileManager.default.removeItem(at: packageURL.appendingPathComponent("assets/primary.usdz"))
+        }
+        defer { fixture.remove() }
+        let store = try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand)
+        let board = try XCTUnwrap(store.boards.first)
+        guard case .model(let media) = try XCTUnwrap(board.presentations.first).media else { return XCTFail("Expected model") }
+        XCTAssertEqual(media.physicsDescriptorPath, "assets/primary.physics.json")
+        XCTAssertEqual(try XCTUnwrap(media.physics).profiles.first?.ropes.first?.radius, 0.006)
+    }
+
+    func testDeclaredRopePhysicsFailsClosed() throws {
+        for failure in ["missing", "stale", "symlink", "wrong-profile"] {
+            let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
+                try self.addPhysicsFixture(to: packageURL)
+                let url = packageURL.appendingPathComponent("assets/primary.physics.json")
+                switch failure {
+                case "missing": try FileManager.default.removeItem(at: url)
+                case "stale": try self.mutateJSONObject(at: url) { $0["modelSHA256"] = String(repeating:"c", count:64) }
+                case "wrong-profile": try self.mutateJSONObject(at: url) { object in
+                    var profiles = try XCTUnwrap(object["profiles"] as? [[String:Any]])
+                    profiles[0]["presentationID"] = "unrelated"
+                    object["profiles"] = profiles
+                }
+                default:
+                    let target = packageURL.appendingPathComponent("assets/link-target.json")
+                    try FileManager.default.moveItem(at: url, to: target)
+                    try FileManager.default.createSymbolicLink(at: url, withDestinationURL: target)
+                }
+            }
+            defer { fixture.remove() }
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand), failure)
+        }
+    }
+
+    private func addPhysicsFixture(to packageURL: URL) throws {
+        let modelData = try Data(contentsOf: packageURL.appendingPathComponent("assets/primary.model.json"))
+        let model = try XCTUnwrap(JSONSerialization.jsonObject(with: modelData) as? [String:Any])
+        var physics = try XCTUnwrap(JSONSerialization.jsonObject(with: RopePhysicsDescriptorTests.fixture) as? [String:Any])
+        physics["modelSHA256"] = model["modelSHA256"]
+        try mutateJSONObject(at: packageURL.appendingPathComponent("board.json")) { board in
+            var presentations = try XCTUnwrap(board["presentations"] as? [[String:Any]])
+            var media = try XCTUnwrap(presentations[0]["media"] as? [String:Any])
+            media["physicsDescriptorPath"] = "assets/primary.physics.json"
+            presentations[0]["media"] = media
+            var profiles = try XCTUnwrap(physics["profiles"] as? [[String:Any]])
+            profiles[0]["presentationID"] = presentations[0]["id"]
+            physics["profiles"] = profiles
+            board["presentations"] = presentations
+        }
+        try JSONSerialization.data(withJSONObject: physics).write(to: packageURL.appendingPathComponent("assets/primary.physics.json"))
+    }
+
     func testOnDemandModelTagIsDeterministicAndSafeForValidatedPackageSlug() {
         let resource = BoardModelResource(
             packageSlug: "metolius-wood-grips-compact-ii",

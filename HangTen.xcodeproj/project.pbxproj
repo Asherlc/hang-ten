@@ -195,6 +195,8 @@
 		E31000000000000000000005 /* SuspensionProfiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000005 /* SuspensionProfiles.swift */; };
 		E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E32000000000000000000006 /* OrbitPanGestureDelegate.swift */; };
 		JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-j-bryant-ftg-32", ); }; };
+		F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000001 /* RopePhysicsDescriptor.swift */; };
+		F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -405,6 +407,8 @@
 		E32000000000000000000006 /* OrbitPanGestureDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitPanGestureDelegate.swift; sourceTree = "<group>"; };
 		E5C810A83CBE426896962023 /* DeepLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HangTen/Models/DeepLinkManager.swift; sourceTree = "<group>"; };
 		JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "j-bryant-ftg-32 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/j-bryant-ftg-32/Hangboards"; sourceTree = "<absolute>"; };
+		F22900000000000000000001 /* RopePhysicsDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptor.swift; sourceTree = "<group>"; };
+		F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -570,6 +574,7 @@
 				BB0000000000000000000071 /* BoardStorage.swift */,
 				BB0000000000000000000086 /* BoardPackageStore.swift */,
 				E32000000000000000000005 /* SuspensionProfiles.swift */,
+				F22900000000000000000001 /* RopePhysicsDescriptor.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -671,6 +676,7 @@
 				BB0000000000000000000088 /* BoardSourceBoundaryTests.swift */,
 				E32000000000000000000003 /* BoardModelTests.swift */,
 				64167E2C3DD944D794B61EBF /* BoardModelRealityTests.swift */,
+				F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -938,6 +944,7 @@
 				5107F3BB9E9E4481B0F91D12 /* BoardModelRealityTypes.swift in Sources */,
 				E31000000000000000000002 /* SuspendedBoardPresentation.swift in Sources */,
 				E31000000000000000000005 /* SuspensionProfiles.swift in Sources */,
+				F12900000000000000000001 /* RopePhysicsDescriptor.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
@@ -1048,6 +1055,7 @@
 				AA0000000000000000000088 /* BoardSourceBoundaryTests.swift in Sources */,
 				E31000000000000000000003 /* BoardModelTests.swift in Sources */,
 				EEC6A92B0E7E4CDD9C965B84 /* BoardModelRealityTests.swift in Sources */,
+				F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,

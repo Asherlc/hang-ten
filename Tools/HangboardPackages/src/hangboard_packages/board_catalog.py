@@ -43,6 +43,15 @@ except ImportError:  # pragma: no cover - exercised by direct module consumers
     sys.modules[_cad_spec.name] = cad_source
     _cad_spec.loader.exec_module(cad_source)
 
+try:
+    from .rope_physics import load_rope_physics
+except ImportError:  # direct-file staging consumers
+    _physics_spec = importlib.util.spec_from_file_location("hangboard_rope_physics", Path(__file__).with_name("rope_physics.py"))
+    assert _physics_spec and _physics_spec.loader
+    _physics_module = importlib.util.module_from_spec(_physics_spec)
+    _physics_spec.loader.exec_module(_physics_module)
+    load_rope_physics = _physics_module.load_rope_physics
+
 
 _IDENTIFIER = re.compile(r"^[a-z0-9]+(?:[a-z0-9._-]*[a-z0-9])?$")
 _PACKAGE_SLUG = re.compile(r"^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$")
@@ -528,6 +537,7 @@ class PresentationMediaModel:
     suspension: "BoardModelSuspension | None" = None
     orientation: "BoardModelOrientation | None" = None
     instances: "tuple[BoardModelInstance, BoardModelInstance] | None" = None
+    physics_descriptor_path: str | None = None
 
 
 PresentationMedia = PresentationMediaRaster | PresentationMediaModel
@@ -1283,7 +1293,7 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             payload,
             {"type", "assetPath", "descriptorPath", "display"},
             source,
-            optional={"suspension", "orientation", "instances"},
+            optional={"suspension", "orientation", "instances", "physicsDescriptorPath"},
         )
         has_instances = "instances" in payload
         raw_instances = payload.get("instances")
@@ -1317,6 +1327,8 @@ def _load_media(value: Any, source: str) -> PresentationMedia:
             )
             if has_instances
             else None,
+            _typed_asset_path(payload["physicsDescriptorPath"], f"{source}.physicsDescriptorPath", ".physics.json", "a physics descriptor")
+            if "physicsDescriptorPath" in payload else None,
         )
     raise ValueError(f"{source}.type must be raster or model")
 
@@ -2653,6 +2665,8 @@ def _validate_finished_shape(
     allowed = set(required | {cad_source_name})
     if cad_source.is_cad_package(root) and "suspension.json" in entries:
         allowed.add("suspension.json")
+    if any(isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path for p in board.presentations):
+        allowed.add("rope-physics.json")
     unknown = entries - allowed
     missing = required - entries
     if unknown:
@@ -2670,6 +2684,8 @@ def _validate_finished_shape(
         expected_assets.add(presentation.asset_path)
         if isinstance(presentation.media, PresentationMediaModel):
             expected_assets.add(presentation.media.descriptor_path)
+            if presentation.media.physics_descriptor_path:
+                expected_assets.add(presentation.media.physics_descriptor_path)
     actual_assets = {
         item.relative_to(root).as_posix() for item in assets.rglob("*") if item.is_file()
     }
@@ -2720,6 +2736,17 @@ def _validate_finished_shape(
     for presentation in board.presentations:
         if not isinstance(presentation.media, PresentationMediaModel):
             continue
+        if presentation.media.physics_descriptor_path:
+            model_document = _load_json(root / presentation.media.descriptor_path, "model descriptor")
+            physics = load_rope_physics(root / presentation.media.physics_descriptor_path, model_document["modelSHA256"])
+            selected_profiles = [p for p in physics["profiles"] if p["presentationID"] == presentation.id]
+            expected_instances = ({i.equipment_object_id for i in presentation.media.instances}
+                                  if presentation.media.instances else {None})
+            if {p.get("instanceID") for p in selected_profiles} != expected_instances:
+                raise ValueError("physics profiles must cover the presentation instances exactly")
+            if cad_source.is_cad_package(root):
+                if physics["sourceSHA256"] != hashlib.sha256(cad_source.package_source_path(root).read_bytes()).hexdigest():
+                    raise ValueError("rope physics CAD source hash mismatch")
         frames = _load_model_descriptor(
             root / presentation.media.descriptor_path,
             root / presentation.media.asset_path,

@@ -181,6 +181,42 @@ def stage_with_xcode_environment(
     return staged[0]
 
 
+def test_live_physics_is_bundled_metadata_and_authoring_is_excluded(tmp_path, monkeypatch):
+    from test_rope_physics import physics_fixture
+    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    media["physicsDescriptorPath"] = "assets/primary.physics.json"
+    descriptor = json.loads((source / media["descriptorPath"]).read_text())
+    physics = physics_fixture()
+    physics["modelSHA256"] = descriptor["modelSHA256"]
+    physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
+    (source / "board.json").write_text(json.dumps(board))
+    (source / "assets/primary.physics.json").write_text(json.dumps(physics))
+    (source / "rope-physics.json").write_text("{}")
+    staged = stage_with_xcode_environment(source, monkeypatch)
+    assert (staged / "assets/primary.physics.json").read_bytes() == (source / "assets/primary.physics.json").read_bytes()
+    assert not (staged / "assets/primary.usdz").exists()
+    assert not (staged / "rope-physics.json").exists()
+
+
+def test_declared_missing_or_stale_physics_fails_staging(tmp_path, monkeypatch):
+    from test_rope_physics import physics_fixture
+    source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    board["presentations"][0]["media"]["physicsDescriptorPath"] = "assets/primary.physics.json"
+    (source / "board.json").write_text(json.dumps(board))
+    with pytest.raises(ValueError, match="missing"):
+        stage_with_xcode_environment(source, monkeypatch)
+    # The staging helper copies tooling only once; invoke the same loaded module
+    # for the second attempt after supplying a deliberately stale descriptor.
+    (source / "assets/primary.physics.json").write_text(json.dumps(physics_fixture()))
+    destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
+    configure_xcode_destination(monkeypatch, destination)
+    with pytest.raises(ValueError, match="hash"):
+        load_staging_module().stage_board_packages(source.parents[1], destination)
+
+
 def stage_live_model_packages(
     root: Path, monkeypatch: pytest.MonkeyPatch
 ) -> tuple[Path, Path, Path]:

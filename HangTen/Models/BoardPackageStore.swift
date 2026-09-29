@@ -735,7 +735,7 @@ struct BoardPackageStore {
                 hasRaster = true
                 try validateAssetPath(assetPath, suffix: ".png", boardID: document.id, packageURL: packageURL)
                 declaredAssetPaths.insert(assetPath)
-            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances):
+            case .model(let assetPath, let descriptorPath, let display, let suspension, let orientation, let instances, let physicsDescriptorPath):
                 hasModel = true
                 guard case .original = presentation.derivation else {
                     throw BoardPackageStoreError.invalidPackage(
@@ -759,6 +759,10 @@ struct BoardPackageStore {
                     )
                 }
                 declaredAssetPaths.formUnion([assetPath, descriptorPath])
+                if let physicsDescriptorPath {
+                    try validateAssetPath(physicsDescriptorPath, suffix: ".physics.json", boardID: document.id, packageURL: packageURL)
+                    declaredAssetPaths.insert(physicsDescriptorPath)
+                }
                 if modelAssetMode == .onDemand {
                     onDemandModelAssetPaths.insert(assetPath)
                 }
@@ -896,7 +900,7 @@ struct BoardPackageStore {
                     )
                 }
                 media = .raster(BoardRasterMedia(assetPath: assetPath, contactGeometry: contactGeometry))
-            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments):
+            case .model(let assetPath, let descriptorPath, let displayDocument, let suspensionDocument, let orientationDocument, let instanceDocuments, let physicsDescriptorPath):
                 let loadedDescriptor = try loadModelDescriptor(
                     at: packageURL.appendingPathComponent(descriptorPath),
                     modelURL: modelAssetMode == .bundled
@@ -911,6 +915,21 @@ struct BoardPackageStore {
                     instanceDocuments: instanceDocuments
                 )
                 let descriptor = loadedDescriptor.descriptor
+                let physics = try physicsDescriptorPath.map { path -> RopePhysicsInput in
+                    let url = packageURL.appendingPathComponent(path)
+                    let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+                    guard values.isRegularFile == true, values.isSymbolicLink != true,
+                          let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+                        throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+                    }
+                    let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: descriptor.modelSHA256)
+                    let profiles = input.profiles.filter { $0.presentationID == presentation.id }
+                    let expectedInstances: Set<String?> = loadedDescriptor.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+                    guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+                        throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+                    }
+                    return input
+                }
                 let suspension = try suspensionDocument.map {
                     try makeModelSuspension(
                         $0,
@@ -944,7 +963,9 @@ struct BoardPackageStore {
                         ),
                         suspension: suspension,
                         orientation: orientation,
-                        instances: loadedDescriptor.instances
+                        instances: loadedDescriptor.instances,
+                        physicsDescriptorPath: physicsDescriptorPath,
+                        physics: physics
                     )
                 )
                 descriptorURLs[presentation.id] = packageURL.appendingPathComponent(descriptorPath)
@@ -2885,11 +2906,12 @@ private enum BoardPackageMediaDocument: Decodable {
         display: BoardPackageModelDisplayDocument,
         suspension: BoardPackageSuspensionDocument?,
         orientation: BoardPackageModelOrientationDocument?,
-        instances: [BoardPackageModelInstanceDocument]?
+        instances: [BoardPackageModelInstanceDocument]?,
+        physicsDescriptorPath: String?
     )
 
     private enum CodingKeys: String, CodingKey {
-        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances
+        case type, assetPath, contactGeometry, descriptorPath, display, suspension, orientation, instances, physicsDescriptorPath
     }
 
     init(from decoder: Decoder) throws {
@@ -2906,7 +2928,7 @@ private enum BoardPackageMediaDocument: Decodable {
                 )
             )
         case "model":
-            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances"])
+            try decoder.rejectUnknownKeys(["type", "assetPath", "descriptorPath", "display", "suspension", "orientation", "instances", "physicsDescriptorPath"])
             self = .model(
                 assetPath: try container.decode(String.self, forKey: .assetPath),
                 descriptorPath: try container.decode(String.self, forKey: .descriptorPath),
@@ -2919,6 +2941,9 @@ private enum BoardPackageMediaDocument: Decodable {
                     : nil,
                 instances: container.contains(.instances)
                     ? try container.decode([BoardPackageModelInstanceDocument].self, forKey: .instances)
+                    : nil,
+                physicsDescriptorPath: container.contains(.physicsDescriptorPath)
+                    ? try container.decode(String.self, forKey: .physicsDescriptorPath)
                     : nil
             )
         default:
@@ -2932,7 +2957,7 @@ private enum BoardPackageMediaDocument: Decodable {
 
     var assetPath: String {
         switch self {
-        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _): assetPath
+        case .raster(let assetPath, _), .model(let assetPath, _, _, _, _, _, _): assetPath
         }
     }
 }
