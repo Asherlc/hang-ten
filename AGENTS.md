@@ -91,6 +91,15 @@ the only Apple On-Demand Resource; suspension is bundled package metadata and
 renders as transient, non-pickable geometry. Current retained source facts and
 evidence govern representation decisions, not superseded design assumptions.
 
+A corded CAD board's cord uses the standard method in
+[`docs/HANGBOARD_CORD_AUTHORING.md`](docs/HANGBOARD_CORD_AUTHORING.md): the
+hidden passage is a void in the FCStd, the topology is a `twoBranchCord` with
+`internalLoop` in `suspension.json`, the channel length comes from
+`measure_channel_spines.py`, and the routes and hanging height are solved
+against the CAD solid with `solve_threaded_rope.py`. Do not hand-author cord
+routes or keep a `pairedLeadCord` on a board that moves to CAD; extend the
+solver with evidence and tests when a board does not fit it.
+
 ## CodeGraph
 
 When `.codegraph/` exists, use CodeGraph before grep/find to understand or

@@ -67,6 +67,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_MOTHERBOARD"] = "1"
+        app.launchEnvironment["HANGTEN_REVIEW_SENSOR_DISCONNECTED"] = "1"
         app.launch()
 
         if app.navigationBars["Settings"].waitForExistence(timeout: 5) {
@@ -75,6 +76,18 @@ final class WorkoutPaywallUITests: XCTestCase {
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Scale"].tap()
+        let connect = app.buttons["plan.initialWeight.connect"]
+        XCTAssertTrue(connect.waitForExistence(timeout: 10))
+        connect.tap()
+        let scaleStatus = app.staticTexts["plan.initialWeight.scaleStatus"]
+        let connected = XCTNSPredicateExpectation(
+            predicate: NSPredicate(
+                format: "label == %@",
+                "Your supported scale is connected and ready."
+            ),
+            object: scaleStatus
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [connected], timeout: 10), .completed)
         app.buttons["plan.startRoutine"].tap()
         XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 2))
 
@@ -107,15 +120,8 @@ final class WorkoutPaywallUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [fieldHittable], timeout: 10), .completed)
         let unit = app.staticTexts["lb"].exists ? "lb" : "kg"
         let keyboard = app.keyboards.firstMatch
-        var keyboardPresented = false
-        for _ in 0..<3 {
-            field.tap()
-            if keyboard.waitForExistence(timeout: 2) {
-                keyboardPresented = true
-                break
-            }
-        }
-        XCTAssertTrue(keyboardPresented, "Tapping the manual weight field must present its keyboard")
+        field.tap()
+        XCTAssertTrue(keyboard.waitForExistence(timeout: 5), "Tapping the manual weight field must present its keyboard")
         field.typeText(
             String(
                 repeating: XCUIKeyboardKey.delete.rawValue,
@@ -125,8 +131,19 @@ final class WorkoutPaywallUITests: XCTestCase {
         field.typeText("12.5")
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
-        XCTAssertEqual(bodyweight.value as? String, "1")
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        // Tap the off-state thumb; tapping the track center can miss it on iOS 26.
+        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Add bodyweight must be on before purchasing")
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))
@@ -240,8 +257,17 @@ final class WorkoutPaywallUITests: XCTestCase {
         app.launchEnvironment["HANGTEN_REVIEW_PRODUCT_LOAD_FAILURES"] = "1"
         app.launch()
 
-        app.buttons["plan.startRoutine"].tap()
-        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 2))
+        let start = app.buttons["plan.startRoutine"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        let startReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: start
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [startReady], timeout: 10), .completed)
+        start.tap()
+
+        XCTAssertTrue(app.otherElements["paywall.lifetimeUnlock"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["paywall.retryProduct"].waitForExistence(timeout: 10))
 
         app.buttons["paywall.restore"].tap()
 
