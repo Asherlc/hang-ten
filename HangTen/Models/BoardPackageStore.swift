@@ -107,7 +107,7 @@ struct BoardModelResource: Equatable {
               !expectedSuffix.contains(where: { $0.isEmpty || $0 == "." || $0 == ".." }) else {
             return nil
         }
-        // The CI simulator's ODR request for this acceptance-test model can
+        // The CI simulator's ODR request for these acceptance-test models can
         // remain pending. Staging the same USDZ beside the ODR pack keeps the
         // interaction test local while Release builds still use ODR only.
         let ciSimulatorAsset = resourceRoot

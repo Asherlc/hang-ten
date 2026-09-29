@@ -315,13 +315,21 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
     assert odr_model.read_bytes() == (source / "assets" / "primary.usdz").read_bytes()
 
 
-def test_ci_simulator_staging_bundles_the_natural_model_for_ui_interactions(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+@pytest.mark.parametrize(
+    "slug",
+    ("frictitious-doormount-pro-7", "trango-rock-prodigy-natural"),
+)
+def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
 ) -> None:
-    source = make_v3_model_package(
-        tmp_path / "repository" / "Hangboards" / "trango-rock-prodigy-natural"
-    )
-    repository_root = source.parents[1]
+    repository_root = tmp_path / "repository"
+    for model_slug in ("frictitious-doormount-pro-7", "trango-rock-prodigy-natural"):
+        package = make_v3_model_package(repository_root / "Hangboards" / model_slug)
+        board_path = package / "board.json"
+        board = json.loads(board_path.read_text())
+        board["id"] = f"fixture.{model_slug}"
+        board_path.write_text(json.dumps(board, indent=2) + "\n")
+    source = repository_root / "Hangboards" / slug
     shutil.copytree(
         REPO_ROOT / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
         repository_root / "Tools" / "HangboardPackages" / "src" / "hangboard_packages",
@@ -337,7 +345,7 @@ def test_ci_simulator_staging_bundles_the_natural_model_for_ui_interactions(
     bundled_model = (
         destination.parent
         / "HangTenDebugSimulatorModels"
-        / "trango-rock-prodigy-natural"
+        / slug
         / "assets"
         / "primary.usdz"
     )

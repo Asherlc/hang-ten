@@ -7,8 +7,8 @@ Two targets share one loader (``board_catalog.discover_board_packages``):
   destination must be the Xcode resource ``Hangboards`` directory, and each
   package's model asset (``assets/primary.usdz``) is split out into the
   On-Demand Resource staging directory under ``DERIVED_FILE_DIR``.
-  CI Debug simulator builds also bundle the Natural model in a separate
-  simulator-only directory so its 3D interaction test does not depend on the
+  CI Debug simulator builds also bundle model assets used by 3D interaction
+  tests in a separate simulator-only directory so they do not depend on the
   simulator's ODR service.
 * ``--target android`` (the Gradle ``stageCanonicalAssets`` task): no Xcode
   environment and no ODR split; model assets stay inline in the package, as the
@@ -103,7 +103,10 @@ TARGET_XCODE = "xcode"
 TARGET_ANDROID = "android"
 TARGETS = (TARGET_XCODE, TARGET_ANDROID)
 DEBUG_SIMULATOR_MODEL_ASSET_DIRECTORY = "HangTenDebugSimulatorModels"
-CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({"trango-rock-prodigy-natural"})
+CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
+    "frictitious-doormount-pro-7",
+    "trango-rock-prodigy-natural",
+})
 
 
 def _validate_destination(repository_root: Path, destination: Path, target: str) -> None:
