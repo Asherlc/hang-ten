@@ -401,3 +401,16 @@ one frame does not establish convergence, and multiplier bounds must account
 for the merit's aggregated maximum penetration terms. Closest-only merit,
 endpoint certificates, bounded verification and bulk contact activation also
 showed no useful complete-step improvement and remain workspace experiments.
+
+
+Full current-source app and UI validation subsequently passed: 1,355 tests
+passed, three skipped, zero failures (1,358 total). The two live StoreKit tests
+require their explicitly enabled environment; the existing plan cue coverage
+test skips because historical source-audit records were removed. The result
+retains Xcode QoS priority-inversion warnings, including diagnostics in
+WorkoutSessionStoreTests; it establishes no device throughput claim. Its
+summary is retained at
+`.context/strong-owl-live-cords/mini-dynamics-probe/contact-system-full-native-summary.json`.
+After staging the new source membership and refreshing the strict tracked-path
+manifest, all 18 BoardSourceBoundaryTests also passed in a fresh native run.
+Mini Bar jug/return diagnostics and the all-board rollout remain unfinished.
