@@ -51,8 +51,8 @@ is never committed and an on-disk copy is rejected. Change the CAD metadata
 with `Tools/HangboardCAD/set_board_manifest.py`. A CAD package may keep its
 cord setup in a separate `suspension.json`; generation merges that authoring
 file into `board.json`, and both app platforms stage only the generated file.
-The sidecar must match the descriptor's model SHA-256 and is covered by the
-delivery lock. See `Tools/HangboardCAD/README.md`. Building or validating
+The sidecar must match the descriptor's model SHA-256 and is checked by package
+validation. See `Tools/HangboardCAD/README.md`. Building or validating
 packages needs the FCStd Git LFS objects, not pointers.
 
 Do not use image-driven hold detection, segmentation, generated masks or

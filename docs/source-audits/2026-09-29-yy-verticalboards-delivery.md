@@ -6,6 +6,8 @@ The operator approved six retained manufacturer photographs before authoring. Bo
 
 ## Verification
 
+The results below record the original migration acceptance. Main commit `65efe7b77` subsequently retired the delivery lock and reproducible-export command; these historical checks are retained as evidence, not current release requirements. Current package validation checks descriptor/model integrity and generated CAD metadata. See the CI audit for later integration and renderer verification.
+
 - Pinned FreeCAD 1.1.3 / OpenUSD 26.08 `verify_reproducible.py --package yy-verticalboard-first --package yy-verticalboard-light --package yy-verticalboard-one`: all three sources rebuild the USDZ and descriptor byte-identically. Receipt: `.context/supreme-zebra-cad-validation/reproducibility.log`.
 - Retained `test_verticalboards_native.py`: 3 passed with the native toolchain enabled. Tests reopen/recompute native sources, check constrained sketches, envelopes and actual depths, reject capped mouths and frozen geometry, and save/reopen a real depth edit while checking unrelated contacts remain fixed.
 - Complete Python suites under `Tools/HangboardCAD/tests`, `Tools/HangboardModels`, and `Tools/HangboardPackages`: 489 passed, 14 skipped, 24 subtests. Native tests skipped by this invocation were run separately above.

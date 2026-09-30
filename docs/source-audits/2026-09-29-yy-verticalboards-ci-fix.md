@@ -486,3 +486,11 @@ SHA256 1c8912a1485ac4da85352192289dcb74335c5b2f9383246f2532f34b6b9b668a.
 Main's materials are runtime-only; no material or texture is added to the three
 YY USDZ files. Existing non-AR host comparison and strong rendered assertions
 are retained. Build/Python integration checks and fresh CI govern delivery.
+
+## Natural migration integration and delivery-lock retirement
+
+Main `65efe7b77` delivers Trango Natural native CAD and deliberately removes the delivery lock, its verifier and the reproducible-export command. Accept those removals rather than recreating the retired release gate. Historical digest and rebuild results above remain evidence from their stated commits. No YY geometry, model asset, manifest metadata or contact inventory changes in this integration.
+
+Resolve `.gitignore` by retaining all three YY generated manifests and Natural’s generated manifest. Preserve the original rapid Train → Hold specs interaction route instead of adopting main’s direct-detail test launch; the departing preview remains part of the renderer acceptance scenario. Main’s published-history waits, guided-cancellation timing correction and app-owned raster hand-choice fixture are retained.
+
+Integrated arm64 Simulator build-for-testing passed. Exact workspace-owned DerivedData was trap-deleted and absence verified in `natural-integration-cleanup.json`; no simulator was created. All 467 integrated package/manifest/contract tests passed; results are retained in `natural-integration-python.log`. This build is not a local UI pass.
