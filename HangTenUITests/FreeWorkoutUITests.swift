@@ -131,6 +131,7 @@ final class FreeWorkoutUITests: XCTestCase {
             "Guided hang should dismiss after Cancel"
         )
 
+        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(
             focusedSetActionAvailable(in: app, timeout: 15),
             "After Cancel, unchecked hang should still expose Start Set / Mark set complete"
@@ -139,6 +140,10 @@ final class FreeWorkoutUITests: XCTestCase {
             anyElement(app, "freeWorkout.restBar").exists,
             "Cancel must not start rest or mark the set complete"
         )
+        let cancelledState = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        cancelledState.name = "Guided hang cancelled with set unchecked"
+        cancelledState.lifetime = .keepAlways
+        add(cancelledState)
     }
 
     /// Close mid-session → Resume; Finish-discard keeps Last locked; real finish unlocks Last.

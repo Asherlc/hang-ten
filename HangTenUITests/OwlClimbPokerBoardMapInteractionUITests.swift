@@ -265,15 +265,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
+            "HANGTEN_REVIEW_BOARD_DETAIL": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
         app.launch()
-        // The Train card's noninteractive preview starts loading this same model
-        // before the map test begins. Navigate straight to Hold specs instead
-        // of waiting for that preview to finish and importing the USDZ again in
-        // the interactive map. The contact query below is the readiness check
-        // for the model this test actually exercises.
-        app.buttons["View hold specs"].tap()
+        // Open Hold specs directly so the Train card does not first load a
+        // second RealityView of the same model. The contact query below checks
+        // readiness of the interactive model this test actually exercises.
         XCTAssertTrue(app.navigationBars["Hold specs"].waitForExistence(timeout: 30))
         let contact = app.buttons["boardModel.contact.\(target)"]
         XCTAssertTrue(contact.waitForExistence(timeout: 120))
