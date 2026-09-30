@@ -30,35 +30,23 @@ extension Color {
 
 struct HangCardModifier: ViewModifier {
     var padding: CGFloat = 18
-    var clipsContent = true
 
     func body(content: Content) -> some View {
-        cardSurface(content: content)
+        content
+            .padding(padding)
+            .background(Color.hangCream)
+            .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .overlay {
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
                     .allowsHitTesting(false)
             }
     }
-
-    @ViewBuilder
-    private func cardSurface(content: Content) -> some View {
-        if clipsContent {
-            content
-                .padding(padding)
-                .background(Color.hangCream)
-                .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
-        } else {
-            content
-                .padding(padding)
-                .background(Color.hangCream, in: RoundedRectangle(cornerRadius: 24, style: .continuous))
-        }
-    }
 }
 
 extension View {
-    func hangCard(padding: CGFloat = 18, clipsContent: Bool = true) -> some View {
-        modifier(HangCardModifier(padding: padding, clipsContent: clipsContent))
+    func hangCard(padding: CGFloat = 18) -> some View {
+        modifier(HangCardModifier(padding: padding))
     }
 }
 

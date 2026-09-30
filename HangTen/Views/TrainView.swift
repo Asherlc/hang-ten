@@ -304,7 +304,7 @@ struct BoardDetailView: View {
                     maximumMapHeight: compactMaximumMapHeight,
                     selectedHoldContent: selectedHold.map { AnyView(selectedHoldCard($0)) }
                 )
-                .hangCard(padding: isCompactHeight ? compactCardPadding : 14, clipsContent: false)
+                .hangCard(padding: isCompactHeight ? compactCardPadding : 14)
             }
             .padding(.horizontal, isCompactHeight ? 12 : 20)
             .padding(.vertical, isCompactHeight ? compactVerticalPadding : 18)

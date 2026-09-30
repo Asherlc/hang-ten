@@ -430,3 +430,37 @@ layout, Train-to-Hold-specs navigation, camera configuration, native gestures,
 rendered selection/orbit/reset and landscape assertions are retained. Other
 cards keep their default clipping. This is an experimental presentation change,
 not a demonstrated rendering fix; fresh trace-free CI must establish its result.
+
+
+### Non-AR host comparison after clipping failed
+
+The clipping comparison 4059b0214 failed six board cases in CI36716897566.
+Two additional attempts were explicitly requested by the user; they repeated
+rendered orbit/reset failures. Attempt3 also encountered the intermittent hand
+menu label failure. Logs are retained as ci-4059-board-failure.log,
+ci-4059-retry-board-failure.log and ci-4059-attempt3-board-failure.log. The
+ineffective content-clipping change is removed; the original rounded card clip
+and design-system API are restored.
+
+The next controlled comparison uses a stable UIViewRepresentable/non-AR ARView
+for interactive maps while retaining RealityView for the Train and picker
+previews. It reuses each independently loaded BoardModelRealityScene, root,
+camera, manifest contacts, collider mapping, framing math and highlighting.
+An identity world anchor owns only that host's root/camera and is detached on
+dismantle. Actual UIKit bounds govern framing. Native entity(at:) supplies the
+single physical tap, and orbit/pinch update the existing normalized camera
+state; the existing accessibility contact overlay remains non-pickable.
+Navigation, physical selection, rendered selected baseline, visible orbit,
+canonical rendered reset and actual landscape assertions remain unchanged.
+The host's default rendering appearance may differ; each test compares against
+its own canonical baseline.
+
+This is an architectural host experiment, not proof of RealityView's internal
+fault or a claimed production fix. All required CI must pass before retention
+or merge. No temporary probe, trace subscription, altered test route, repeated
+interaction or weakened assertion is introduced.
+
+API references: Apple ARView non-AR camera mode and native picking:
+https://developer.apple.com/documentation/realitykit/arview/cameramode-swift.enum/nonar
+https://developer.apple.com/documentation/realitykit/arview/entity(at:)
+https://developer.apple.com/documentation/swiftui/uiviewrepresentable
