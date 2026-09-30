@@ -1375,10 +1375,18 @@ final class AppStoreTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(1)
-        while !condition(), Date() < deadline {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+        guard !condition() else { return }
+        let conditionMet = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in condition() },
+            object: nil
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [conditionMet], timeout: 10),
+            .completed,
+            "Asynchronous AppStore condition was not satisfied",
+            file: file,
+            line: line
+        )
         XCTAssertTrue(condition(), file: file, line: line)
     }
 private enum FakeHealthError: Error {
