@@ -27,6 +27,16 @@ final class AppStoreTests: XCTestCase {
         ])
     }
 
+    func testMetoliusIntermediateIsCompatibleWithWoodGripsCompactII() throws {
+        let store = AppStore(defaults: makeDefaults())
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(
+            store.plans.first { $0.id == "metolius.generic-ten-minute.intermediate" }
+        )
+
+        XCTAssertFalse(store.isIncompatible(plan, on: board))
+    }
+
     func testSelectedBoardPersistsAndRestoresByStableID() throws {
         let defaults = makeDefaults()
         let board = try XCTUnwrap(

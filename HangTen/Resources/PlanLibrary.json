@@ -780,7 +780,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "category" : "small"
+                          "maxMM" : 18,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -788,7 +789,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "category" : "small"
+                          "maxMM" : 18,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -1018,7 +1020,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "category" : "small"
+                          "maxMM" : 18,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -1054,7 +1057,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "category" : "small"
+                          "maxMM" : 18,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -1249,17 +1253,11 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "category" : "large"
-                        },
                         "kind" : "sloper"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "category" : "large"
-                        },
                         "kind" : "sloper"
                       }
                     }
