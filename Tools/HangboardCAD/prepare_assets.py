@@ -29,12 +29,17 @@ import sys
 import tempfile
 from pathlib import Path
 
-from verify_reproducible import faceted_import_acknowledged
-
 REPOSITORY = Path(__file__).resolve().parents[2]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
 DEFAULT_FREECAD = Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd")
 SOURCE_SUFFIX = ".FCStd"
+# These audited sources intentionally contain faceted imported geometry. New
+# faceted sources must be reviewed and added explicitly before publication.
+FACETED_IMPORT_PACKAGES = frozenset({
+    "soill-iron-palm-2",
+    "soill-split-palm",
+    "soill-training-tiles",
+})
 
 
 def source_backed_packages() -> list[str]:
@@ -58,7 +63,7 @@ def _run_build(package: str, destination: Path, freecad: Path, extra_path: str) 
         "--source", str(REPOSITORY / "Hangboards" / package / f"{package}{SOURCE_SUFFIX}"),
         "--assets", str(destination),
     ]
-    if faceted_import_acknowledged(package):
+    if package in FACETED_IMPORT_PACKAGES:
         arguments.append("--allow-faceted-import")
     wrapper.write_text(
         "import sys, traceback\n"

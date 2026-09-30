@@ -352,7 +352,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         /// Sets up the test environment for one-handed board hand choice tests.
         continueAfterFailure = false
         app.launchEnvironment = [
-            "HANGTEN_REVIEW_BOARD_ID": "captain-fingerfood.dual",
+            // Use a real capacity-1 raster board with a 20 mm edge. This
+            // hand-choice test does not need asynchronous 3D preview rendering.
+            "HANGTEN_REVIEW_BOARD_ID": "frictitious.nug",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PORTRAIT": "1",
@@ -365,8 +367,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
     func testInlineHandChoiceOnOneHandedBoard() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
-            "DEBUG plan-detail review route should open Max Hangs on the one-handed Dual board."
+            "DEBUG plan-detail review route should open Max Hangs on the one-handed Nug board."
         )
+        XCTAssertTrue(app.staticTexts["The NUG"].exists, "The hand-choice fixture must resolve to the Nug board.")
 
         selectManualWeightSourceIfNeeded()
         tapStartRoutine()
