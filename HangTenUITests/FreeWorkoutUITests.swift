@@ -80,6 +80,17 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
+        // XCTest can wait for the default 10-second hang to finish before
+        // returning from Start Set. Give this cancellation test time to act
+        // by configuring a longer hang through the normal duration field.
+        let duration = app.textFields.matching(
+            NSPredicate(format: "placeholderValue == %@", "sec")
+        ).firstMatch
+        tapHittable(duration, timeout: 10)
+        duration.typeText("120")
+        XCTAssertEqual(duration.value as? String, "120")
+        anyElement(app, "freeWorkout.log").scrollViews.firstMatch.swipeUp()
+
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
