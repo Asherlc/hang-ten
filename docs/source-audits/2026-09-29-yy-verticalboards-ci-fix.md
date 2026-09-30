@@ -346,3 +346,43 @@ assertions. The previous immediate-camera behavior is restored; temporary
 presentation tracing remains removed. The prepared persistence-test wait
 correction is delivered separately. Rendering investigation remains open,
 and auto merge remains disabled.
+
+Two fresh read-only rendering-host reviewers agreed to a one-variable
+post-failure diagnostic before another camera or hosting change. The first
+proposal used root translation; the counter-review initially proposed a
+material probe plus clipping A/B. They converged on root translation first,
+leaving clipping and ARView comparisons dependent on the observed result.
+Both exact owned reviewer agents were archived and verified.
+
+The temporary Pro-only DEBUG probe changes the existing root's X position
+once by six percent of its current model width, after the original rendered
+orbit wait times out. It does not change camera state, cameraRevision,
+SwiftUI state, or subscriptions. The original timeout remains the result
+asserted by the acceptance test. A fixed five-second diagnostic capture
+window avoids treating the Probe button's press appearance as movement.
+Sparse mode/synchronization logs record any intervening camera writes, and
+existing attachment logs identify host recreation. Extra camera/host/layout
+activity makes attribution inconclusive. Geometry and viewpoint must be
+judged separately, excluding the temporary control from pixel comparisons.
+
+Visible displacement with a canonical viewpoint supports a camera-specific
+path; displacement revealing the pending orbit supports camera-only render
+invalidation. Neither movement leaves rendering versus presentation open
+and selects a clip-only comparison. Failure to reproduce is inconclusive.
+This is an interim investigation change, not a rendering fix. All temporary
+probe state, methods, overlays, logs, launch environment and test branch must
+be removed before delivery; this diagnostic head must not merge even if its
+checks pass. No local UI pass is claimed.
+
+The trace-free baseline run `36703970064` on `9e18e68b3` passed all 1,245
+unit tests with three skips; the successful-session persistence test passed
+in 0.021 seconds. Python and purchase/settings/workout UI passed. The board
+shard ran 21 cases with six failures: DoorMount, Evo, and Natural reached
+rendered orbit but failed canonical reset; Forge, Megalith, and Pro failed
+rendered orbit. This preserves a fresh Pro freeze for comparison with the
+post-failure root-translation probe. The baseline logs are retained, and the
+diagnostic must not be interpreted as a passing acceptance run.
+
+The final probe arm64 Simulator build-for-testing and 22 CI-contract tests
+passed. Its exact DerivedData was deleted by the exit trap and deletion
+verified. No local Simulator or UI execution was attempted.

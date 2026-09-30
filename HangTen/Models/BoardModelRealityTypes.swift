@@ -167,6 +167,21 @@ final class BoardModelRealityScene {
     let root = Entity()
     let camera = PerspectiveCamera()
 
+    #if DEBUG
+    // Temporary post-failure presentation probe; remove before delivery.
+    private(set) var didTranslatePresentationProbe = false
+
+    func translateRootForPresentationProbe() {
+        guard !didTranslatePresentationProbe else { return }
+        let displacement = root.visualBounds(relativeTo: root).extents.x * 0.06
+        guard displacement.isFinite, displacement > 0 else { return }
+        print("[BoardPresentationProbe] before scene=\(ObjectIdentifier(self)) root=\(root.transform.matrix) camera=\(camera.transform.matrix) displacement=\(displacement)")
+        didTranslatePresentationProbe = true
+        root.position.x += displacement
+        print("[BoardPresentationProbe] translated scene=\(ObjectIdentifier(self)) root=\(root.transform.matrix) camera=\(camera.transform.matrix)")
+    }
+    #endif
+
     var modelEntity: Entity?
     var instanceEntities: [Entity] = []
     var contactEntities: [String: [ModelEntity]] = [:]

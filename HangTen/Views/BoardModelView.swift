@@ -211,6 +211,11 @@ struct BoardModelRealityView: View {
                 // Observe orbit invalidation in the RealityView update itself,
                 // as well as the projected SwiftUI accessibility overlay.
                 let revision = cameraRevision
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_PROBE"] == "1" {
+                    print("[BoardPresentationProbe] before-mode scene=\(ObjectIdentifier(model)) translated=\(model.didTranslatePresentationProbe) revision=\(revision) size=\(size) camera=\(model.camera.transform.matrix)")
+                }
+                #endif
                 content.camera = .virtual
                 applySync(size: size)
                 #if DEBUG
@@ -241,6 +246,17 @@ struct BoardModelRealityView: View {
                 }
             }
             #endif
+            #if DEBUG
+            .overlay(alignment: .bottomTrailing) {
+                if !isDisplayOnly,
+                   ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_PROBE"] == "1" {
+                    Button("Probe") { model.translateRootForPresentationProbe() }
+                        .font(.caption2)
+                        .frame(width: 44, height: 20)
+                        .accessibilityIdentifier("boardModel.presentationProbe")
+                }
+            }
+            #endif
             .allowsHitTesting(!isDisplayOnly)
             // A different scene needs a fresh RealityView make closure so its
             // root and camera replace the prior scene's entities.
@@ -255,6 +271,11 @@ struct BoardModelRealityView: View {
     }
 
     private func applySync(size: CGSize) {
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_PROBE"] == "1" {
+            print("[BoardPresentationProbe] sync-begin scene=\(ObjectIdentifier(model)) translated=\(model.didTranslatePresentationProbe) camera=\(model.camera.transform.matrix)")
+        }
+        #endif
         let priorCameraTransform = model.camera.transform.matrix
         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
@@ -266,6 +287,11 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        #if DEBUG
+        if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_PRESENTATION_PROBE"] == "1" {
+            print("[BoardPresentationProbe] sync-end scene=\(ObjectIdentifier(model)) translated=\(model.didTranslatePresentationProbe) camera=\(model.camera.transform.matrix)")
+        }
+        #endif
         // RealityView synchronizes after SwiftUI evaluates the accessibility
         // overlay. Reproject once when framing or a board pose actually changes.
         // The unchanged follow-up update must not schedule another invalidation.

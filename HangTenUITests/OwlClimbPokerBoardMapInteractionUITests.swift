@@ -271,6 +271,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
         ]
+        if boardID == "zlagboard.pro" {
+            app.launchEnvironment["HANGTEN_REVIEW_PRESENTATION_PROBE"] = "1"
+        }
         app.launch()
         // The Train card's noninteractive preview starts loading this same model
         // before the map test begins. Navigate straight to Hold specs instead
@@ -342,6 +345,26 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
         captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
+        // Temporary diagnostic runs only after the original orbit result is
+        // saved. Its scene displacement must never turn that failure into a pass.
+        if visibleOrbitResult != .completed, boardID == "zlagboard.pro" {
+            let frozenImage = try mapSnapshot(in: initialMapFrame, screenFrame: screenFrame)
+            let probe = app.buttons["boardModel.presentationProbe"]
+            if probe.exists {
+                probe.tap()
+                // Observe a fixed five-second window, rather than ending on a
+                // button highlight or any other incidental pixel difference.
+                let observationWindow = XCTestExpectation(description: "post-translation capture window")
+                _ = XCTWaiter.wait(for: [observationWindow], timeout: 5)
+                let probeImage = try mapSnapshot(in: initialMapFrame, screenFrame: screenFrame)
+                capture("\(boardID)-after-root-translation-probe")
+                captureRendererDiagnostic(app: app, name: "\(boardID)-after-root-translation-probe")
+                let attachment = XCTAttachment(string: "originalOrbit=\(visibleOrbitResult);captureWindowSeconds=5;mapPixelsChanged=\(probeImage != frozenImage);judgeGeometryExcludingProbeControl=true")
+                attachment.name = "\(boardID)-presentation-probe-result"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+            }
+        }
         XCTAssertEqual(visibleOrbitResult, .completed,
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
