@@ -60,7 +60,7 @@ winding when simplifying its route. No cord contact coordinates are authored.
 - The Mini Bar diagnostic accepts its candidate after 70 initialization
   corrections: maximum local strain 0.00002310, minimum wood clearance
   3.600085 mm, radius 3.5 mm and both full 0.82 m material budgets. Starting
-  nonlocal candidates inactive reaches the same acceptance with 1,420 linear
+  nonlocal candidates inactive reaches the same acceptance with 1,499 linear
   solves instead of 6,137 in the initially active diagnostic.
 
 Diagnostic logs are workspace artifacts under
