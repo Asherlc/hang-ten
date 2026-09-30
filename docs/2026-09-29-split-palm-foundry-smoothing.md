@@ -1,11 +1,11 @@
 # Split Palm and Foundry surface refinement
 
-The exact product revisions and retained evidence are documented in
-[`docs/model-delivery-lock.json`](model-delivery-lock.json) for So iLL Split Palm
-and [`2026-09-28-metolius-foundry-cad-provenance.md`](2026-09-28-metolius-foundry-cad-provenance.md)
-for the Metolius Foundry. This pass changes display geometry only. Contact
-identity, published dimensions, grip depths, and training metadata are carried
-from those source audits without revision.
+The So iLL Split Palm evidence is linked below; the Metolius Foundry product
+revision and retained evidence are documented in its
+[`CAD provenance audit`](2026-09-28-metolius-foundry-cad-provenance.md). This
+pass changes display geometry only. Contact identity, published dimensions,
+grip depths, and training metadata are carried from those sources without
+revision.
 
 ## So iLL Split Palm
 

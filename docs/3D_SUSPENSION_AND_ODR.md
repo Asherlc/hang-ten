@@ -180,7 +180,7 @@ pose from the native solid and caches them in `suspension.json`; the renderer
 uses that cache as transient geometry. No cord is baked into the USDZ. Mouth
 positions, channel and cord diameters, anchor offset,
 and clearance are labeled display estimates. A sidecar's `modelSHA256` must
-match its descriptor, and the delivery lock pins its bytes.
+match its descriptor; package validation checks that binding.
 
 ## Make an evidence-backed correction
 

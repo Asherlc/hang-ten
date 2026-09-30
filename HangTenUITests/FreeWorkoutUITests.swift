@@ -82,12 +82,19 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
-        // XCTest can wait for the app to idle until a short guided hang has
-        // already completed. Give this cancellation test enough time to find
-        // and tap Cancel without racing the default ten-second countdown.
-        let duration = app.textFields.matching(NSPredicate(format: "placeholderValue == %@", "sec")).firstMatch
-        tapHittable(duration, timeout: 10)
-        duration.typeText("120")
+        // Cancellation must not race the default 10-second hang on a slow runner.
+        // Configure the real set through the UI before starting its countdown.
+        // SwiftUI exposes the row identifier on both inline text fields, so use
+        // the seconds placeholder to distinguish duration from weight.
+        let duration = app.textFields.matching(
+            NSPredicate(format: "placeholderValue == %@", "sec")
+        ).firstMatch
+        XCTAssertTrue(duration.waitForExistence(timeout: 10))
+        tapHittable(duration)
+        duration.typeText(
+            String(repeating: XCUIKeyboardKey.delete.rawValue, count: (duration.value as? String)?.count ?? 0)
+                + "120"
+        )
         XCTAssertEqual(duration.value as? String, "120")
         tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
 
@@ -128,6 +135,7 @@ final class FreeWorkoutUITests: XCTestCase {
             "Guided hang should dismiss after Cancel"
         )
 
+        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(
             focusedSetActionAvailable(in: app, timeout: 15),
             "After Cancel, unchecked hang should still expose Start Set / Mark set complete"
@@ -136,6 +144,10 @@ final class FreeWorkoutUITests: XCTestCase {
             anyElement(app, "freeWorkout.restBar").exists,
             "Cancel must not start rest or mark the set complete"
         )
+        let cancelledState = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        cancelledState.name = "Guided hang cancelled with set unchecked"
+        cancelledState.lifetime = .keepAlways
+        add(cancelledState)
     }
 
     /// Close mid-session → Resume; Finish-discard keeps Last locked; real finish unlocks Last.
