@@ -81,6 +81,7 @@ for id in eq {
  let initial=try factor.solve(rhs:rhs,borderRHS:[boardRHS])
  var trace:[[String:Any]]=[]
  let result=try StreamedContactAdmission.solve(factor:factor,base:initial.base,border:initial.border,contacts:contacts,
+  packSource:ProcessInfo.processInfo.environment["HANGTEN_PACKED_CONTACT_SOURCE"]=="1",
   observe:{iteration,selected,added in trace.append(["admission":iteration,"selected":selected,"added":added])})
  return (result,trace)
 }

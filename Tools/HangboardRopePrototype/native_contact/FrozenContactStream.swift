@@ -9,7 +9,7 @@ struct FrozenContactStream {
 
 enum StreamedContactAdmission {
     static func solve(factor: PrimalPrepared, base: [Double], border: [Double], contacts: FrozenContactStream,
-                      initialMultipliers: [Int: Double] = [:], maxIterations: Int = 50, maxAdmissions: Int = 20,
+                      initialMultipliers: [Int: Double] = [:], packSource: Bool = false, maxIterations: Int = 50, maxAdmissions: Int = 20,
                       observe: ((Int, Int, Int) -> Void)? = nil) throws -> RopeContactSystem.Solution {
         let size = base.count, count = contacts.count, equalities = Set(factor.equalities)
         guard size == factor.baseCount, border.count == factor.borderCount, size > 0, size+border.count <= 50_256,
@@ -18,7 +18,11 @@ enum StreamedContactAdmission {
                   (0..<count).contains($0.key) && $0.value.isFinite && $0.value <= 0
               }) else { throw RopePhysicsError.invalid("Invalid streamed contact input") }
 
+        let packed = packSource ? try PackedFrozenRows(source:contacts,size:size,
+            borderCount:border.count,equalities:equalities) : nil
+
         func discover(_ vector: [Double], _ height: [Double], _ multipliers: [Double], _ included: Set<Int>) throws -> [Int] {
+            if let packed { return try packed.discover(vector,height,multipliers,included) }
             var worst: [[Int]: (id: Int, gap: Double)] = [:]
             for id in 0..<count {
                 let row = try contacts.row(id)
@@ -51,7 +55,10 @@ enum StreamedContactAdmission {
             // Preserve the existing working-QP contact budget. A source larger
             // than it is scanned, never materialized as an oversized QP input.
             guard included.count <= 100_000 else { throw RopePhysicsError.invalid("Excessive admitted contact set") }
-            let ids = included.sorted(), subset = try ids.map { try contacts.row($0) }
+            let ids = included.sorted(), subset = try ids.map { id in
+                if let packed { return packed.row(id) }
+                return try contacts.row(id)
+            }
             let warm = Dictionary(uniqueKeysWithValues: ids.enumerated().compactMap { offset, id in
                 dual[id].map { (offset, min(0, $0)) }
             })

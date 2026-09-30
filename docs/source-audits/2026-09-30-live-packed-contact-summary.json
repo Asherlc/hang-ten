@@ -1,0 +1,136 @@
+{
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/FrozenContactStream-red.swift": "64d343d0b0b1c6369f21276c22cf4956c0d9b466b416b5244df9eb86f17f0477",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/FrozenContactStream.swift": "e174acdd3c9f214c5e4034a0eee90d2504edb07f7af953b21c2cee8991a2554f",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/PackedFrozenRows.swift": "b8be727e6ad26428ba775e8c7e2e1c3b30cf180122447c80afa261bbb039ea83",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/green.provenance.json": "7339316756541fea2e91374611d30b8281e79017d0a49310224374ca5f7d7369",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/green.run.log": "fe3e85b2e74247e6a38552d8c5ba68c7835861c8623db5e71eae4a4b0e54e8e7",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/hard.provenance.json": "1e04ae8c34b54831ab93c8c3e44fe8424126b297300ee64cf1bb0d2845878d40",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/hard.report.json": "4f9f067fa40ec5e8a0d0610ecb12d8e890bf6a7a332e245d312d4d6eefc170f7",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/hard/main.swift": "b150f9b8740aa6376f2235c25765a88a77757ab9d4589cf8e8d05b2c426de5ac",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/main.swift": "2c8e3af81c15e3c88d699e4471a8cea5281c98e71e1627b4f868838c14afa07c",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/red-main.swift": "206d4cc3877b31398523d41fe0123c9d0e62987ed5548fbf9c82789053a4d903",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/red.provenance.json": "acd5611bd2180b65ca6b200ce6247b15af39617642f9f60a3ffab333a6fb94e4",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/red.run.log": "c568983ceae8f9783b511ea680fd409b4addc209fdfc4b08a730950117bbe6fd",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/retained-resource-snapshots/driver-resources.log": "accba260a2f68ba807a33f2a561a110ac601d8cf331c9417b0a9087e030fc272",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/retained-resource-snapshots/lifecycle-resources.jsonl": "23519307e5a8b16ee4f61df68b10797dd326e8f0b59a7b43735cd99655760d84",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/retained-resource-snapshots/probe-resources.log": "a1c03f2a6e7c5d76a1f30a2fafa9c32104d1ff46a1317bb73fb470d6247f3834",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/retained-resource-snapshots/prototype-resources.jsonl": "253a60a05840ec19de1b7087554e78be78a641f0c1c4e61091ffffb7d248142b",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/retained-resource-snapshots/tool-resources.jsonl": "60e3287f5cd5964c9d13712cfa31826294da842eeb1336872a5132a8f077b496",
+    ".context/strong-owl-live-physics-execution/packed-frozen-rows/run.py": "da1c7b3f129b531e73cb77abef325cac553316ce8c0bae2f402a0eac26e519cc",
+    ".context/strong-owl-live-physics-native-contact/fixtures-packed-fixtures/BandSnapshot.swift": "56d9bbd1b8dff77da0cc258a38d767e3b31a8ceb8a4d33934c3f032977e1fba2",
+    ".context/strong-owl-live-physics-native-contact/fixtures-packed-fixtures/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-native-contact/fixtures-packed-fixtures/main.swift": "d94a75a68f70f1a49c6936c77cd8e531434ed3a2625bce495d796918b60fc94a",
+    ".context/strong-owl-live-physics-native-contact/fixtures-packed-fixtures/provenance.json": "f66f7f3557729dd46473d69fcd0334e507d38cdcd697d4b73d68528ad5600bb5",
+    ".context/strong-owl-live-physics-native-contact/fixtures-packed-fixtures/run.log": "ec85b2d19fcbd96dd8ffd895792d8e806b2ac826939774d183ca55bb4da434ce",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/BandSnapshot.swift": "56d9bbd1b8dff77da0cc258a38d767e3b31a8ceb8a4d33934c3f032977e1fba2",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/main.swift": "dbef44a0afb1c215af8adb69830ed7316efc17d35582904ee069a453a296ec1f",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/provenance.json": "f6bc9f6f4b9a0386bc6be9021f8ebe03994a25797465dae7dfdd4c7533c2355d",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/replay.json": "84bc714a41b96c58dfdc1866ec5884dccb6eccdaa5e0a2b151eec908dc9c961a",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/run.log": "7768d0d25eaa869a5f2bc503f10890f4be1f4be13124bd05ce408c5de9513a02",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-hard-reviewed/validation.json": "6a5e4a2ebae7eb4d732eb65089e2f5692f733c4d21d7ac8b4247e4c09d984b13",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/BandSnapshot.swift": "56d9bbd1b8dff77da0cc258a38d767e3b31a8ceb8a4d33934c3f032977e1fba2",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/main.swift": "dbef44a0afb1c215af8adb69830ed7316efc17d35582904ee069a453a296ec1f",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/provenance.json": "b5e3e9ec6232598b31a81c6485cc76830dfe10c58d82bb18032716ae5c6c2d44",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/replay.json": "5a3d2e1bf1636d4f5bf6e8f4c1f43aa396d9b4ac376c168cc5dec60bd360b7c3",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/run.log": "e47019806c60a2aa4dc2509a64d9541894c4f8e27cb52ee3fa3f03fd5fca0706",
+    ".context/strong-owl-live-physics-native-contact/replay-packed-mini-production-reviewed/validation.json": "5400e3a956722d6cc673a394ad05e9e1b8f2ed31370f2f21a5a58aeab5a782b3"
+  },
+  "hard": {
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 50,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": 0.22527150000678375,
+    "packedSource": true,
+    "primalDifference": 8.658601469581312e-07,
+    "residuals": {
+      "allRowFeasibility": 1.0661466826565602e-13,
+      "dualViolation": 0.0,
+      "objective": 1.7329992273733188e-09,
+      "regularizedComplementarity": 2.8970390559297717e-16,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 2.9221689711447895e-19,
+      "slackViolation": 0.0,
+      "stationarity": 3.59314526144664e-11
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": null,
+    "trace": [
+      {
+        "added": 67,
+        "admission": 1,
+        "selected": 127
+      },
+      {
+        "added": 66,
+        "admission": 2,
+        "selected": 194
+      },
+      {
+        "added": 55,
+        "admission": 3,
+        "selected": 260
+      },
+      {
+        "added": 43,
+        "admission": 4,
+        "selected": 315
+      },
+      {
+        "added": 29,
+        "admission": 5,
+        "selected": 358
+      },
+      {
+        "added": 9,
+        "admission": 6,
+        "selected": 387
+      },
+      {
+        "added": 6,
+        "admission": 7,
+        "selected": 396
+      },
+      {
+        "added": 0,
+        "admission": 8,
+        "selected": 402
+      }
+    ]
+  },
+  "owner": "strong-owl-live-physics",
+  "productionFirst": {
+    "coldQPPerformanceAccepted": false,
+    "coldRuns": 1,
+    "numericalAccepted": true,
+    "owner": "strong-owl-live-physics",
+    "p95Seconds": null,
+    "packedSource": true,
+    "primalDifference": null,
+    "residuals": {
+      "allRowFeasibility": 6.061228226966506e-16,
+      "dualViolation": 0.0,
+      "objective": 5.897722787087974e-10,
+      "regularizedComplementarity": 4.25351091443115e-15,
+      "regularizedContact": 0.0,
+      "regularizedEquality": 1.550443652405203e-19,
+      "slackViolation": 0.0,
+      "stationarity": 1.4991440373978665e-11
+    },
+    "runtimeAdoption": false,
+    "scope": "cold equality matrix/factor plus streamed row construction/discovery/solve/full affine certification; frozen input decoding/references, geometry and mesh excluded",
+    "singleRunSeconds": 0.1519072083174251,
+    "trace": [
+      {
+        "added": 0,
+        "admission": 1,
+        "selected": 158
+      }
+    ]
+  },
+  "runtimeAdoption": false
+}

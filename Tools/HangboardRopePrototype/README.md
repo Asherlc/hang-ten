@@ -28,6 +28,13 @@ cold runs never report p95 or satisfy that performance gate. Input decoding is
 outside the clock; equality assembly/factorization, streamed row construction,
 admission, refactors, solves and full affine certification are inside it.
 
+Add `--packed` to replay to capture and validate each original row once into
+immutable arrays, then scan those arrays after every coupled candidate. Packing
+is inside the cold clock; only admitted rows are realized as working-QP inputs.
+The [packed-source audit](../../docs/source-audits/2026-09-30-live-packed-contact.md)
+records passing numerical checks and a failed performance gate. This remains an
+experimental tool option, with no app adoption.
+
 The separate [sparse contact screen](sparse_contact_screen.py) targets the
 current coupled live solver's frozen triangle-contact QP. Its
 [30 September audit](../../docs/source-audits/2026-09-30-live-sparse-primal-contact.md)

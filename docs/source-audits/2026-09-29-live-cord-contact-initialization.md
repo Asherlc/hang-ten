@@ -691,3 +691,5 @@ whole-geometry 50x speedup, complete-step or live-rollout claim.
 ## 2026-09-30 — streamed affine source and production Mini checkpoint
 
 [The reviewed streamed replay](2026-09-30-live-streamed-contact.md) retains the working-QP guard while checking all 119,953 production Mini inequalities. The experimental full solver passes initialization at two 715-particle loops; its motion run is a stopped partial prefix. Numerical replays pass, performance gates fail, and no backend/profile is adopted.
+
+[Its packed-source successor](2026-09-30-live-packed-contact.md) captures each frozen row once and retains full affine checks. Fifteen numerical fixtures and four lifecycle tests pass; fixed replay performance still fails, with no app adoption.

@@ -136,6 +136,21 @@ final class PrimalTests:XCTestCase {
   XCTAssertGreaterThanOrEqual(answer.base[0],4.9e-9)
  }
 
+ func testPackedSourceCapturesEveryRowExactlyOnce() throws {
+  var system=try RopeBandedSystem(size:2,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:1)
+  try system.addSymmetric(row:1,column:1,value:1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  var visits=[0,0]
+  let rows=[RopeLinearContact(indices:[0,1],coefficients:[1,0],border:[],residual:-0.0004),
+   RopeLinearContact(indices:[0,1],coefficients:[-1,1],border:[],residual:0.0003)]
+  let source=FrozenContactStream(count:2,row:{visits[$0]+=1;return rows[$0]})
+  let answer=try StreamedContactAdmission.solve(factor:factor,base:[0,0],border:[],contacts:source,packSource:true)
+  XCTAssertEqual(answer.base[0],0.0004,accuracy:1e-10)
+  XCTAssertEqual(answer.base[1],0.0001,accuracy:1e-10)
+  XCTAssertEqual(visits,[1,1])
+ }
+
  func testStreamRetainsIndependentLoopsAndBoardHeight() throws {
   var system=try RopeBandedSystem(size:2,bandwidth:0)
   try system.addSymmetric(row:0,column:0,value:2)
@@ -168,4 +183,4 @@ final class PrimalTests:XCTestCase {
 
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
-guard let result=suite.testRun,result.executionCount==14,result.totalFailureCount==0 else {exit(1)}
+guard let result=suite.testRun,result.executionCount==15,result.totalFailureCount==0 else {exit(1)}

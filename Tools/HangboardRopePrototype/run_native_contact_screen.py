@@ -164,6 +164,8 @@ def main():
     parser.add_argument("--oracle", type=Path)
     parser.add_argument("--runs", type=int, default=50)
     parser.add_argument("--label", default="screen")
+    parser.add_argument("--packed", action="store_true",
+                        help="capture/validate each frozen row once inside the clock, then scan packed arrays")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -199,7 +201,7 @@ def main():
     (output / "BandSnapshot.swift").write_text(band.read_text() + "\n" + (SOURCE / "BandSnapshot.swift").read_text())
     (output / "main.swift").write_text(files["main.swift"].read_text())
     core = [REPO / "HangTen/Models/RopePhysicsDescriptor.swift", REPO / "HangTen/Models/RopeContactSystem.swift"]
-    native = [SOURCE / name for name in ["ContactInteriorPoint.swift", "SparseNewtonPattern.swift", "FrozenContactStream.swift"]]
+    native = [SOURCE / name for name in ["ContactInteriorPoint.swift", "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift"]]
     sources = [*core, output / "BandSnapshot.swift", *native, output / "main.swift"]
     binary = output / f"{owner}-native-contact-probe"
     compile_command = ["xcrun", "swiftc", "-O", "-whole-module-optimization", "-Xcc", "-DACCELERATE_NEW_LAPACK",
@@ -212,9 +214,10 @@ def main():
                             "-Xlinker", "-rpath", "-Xlinker", str(libraries), "-lXCTestSwiftSupport"]
     compile_command += [*[str(p) for p in sources], "-o", str(binary)]
     environment = dict(os.environ, CLANG_MODULE_CACHE_PATH=str(output / "module-cache"),
-                       PYTHONPYCACHEPREFIX=str(root / "pycache"))
+                       PYTHONPYCACHEPREFIX=str(root / "pycache"),
+                       HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed else "0")
     provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": {str(p.relative_to(REPO)): digest(p) for p in sources},
-                  "compileCommand": compile_command, "mode": args.mode}
+                  "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed}
     if args.frozen:
         args.frozen = args.frozen.resolve()
         provenance["frozenSHA256"] = digest(args.frozen)
@@ -265,6 +268,7 @@ def main():
         times = raw["times"]
         p95 = float(np.quantile(times, .95, method="higher")) if len(times) == 50 else None
         result = {"owner": owner, "runtimeAdoption": False, "coldRuns": len(times), "numericalAccepted": bool(numerical),
+                  "packedSource": args.packed,
                   "residuals": measured, "primalDifference": difference, "p95Seconds": p95,
                   "singleRunSeconds": times[0] if len(times) == 1 else None,
                   "coldQPPerformanceAccepted": numerical and p95 is not None and p95 <= .002,
