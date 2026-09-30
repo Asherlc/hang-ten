@@ -1,6 +1,6 @@
 """Derive sliding aperture regions from explicitly selected native CAD features.
 
-The initial adapter supports straight, axis-aligned Box channels. Unsupported
+Adapters support straight axis-aligned Box channels and circular native pipes. Unsupported
 feature types fail explicitly; their apertures must never be guessed from an
 overlay mesh or from a cached rope route.
 """
@@ -14,6 +14,7 @@ import FreeCAD as App
 import Part
 
 from export_rope_collision_solid import model_point, native_mesh
+from measure_channel_spines import spine_samples
 
 
 def _feature(document, name):
@@ -45,6 +46,66 @@ def _portal(face, identifier):
             "boundary": boundary}
 
 
+def _circle_boundary(center, normal, radius):
+    reference=normal.cross(App.Vector(0,0,1))
+    if reference.Length < 1e-8:
+        reference=normal.cross(App.Vector(1,0,0))
+    reference.normalize()
+    tangent=normal.cross(reference)
+    return [center+reference*(radius*math.cos(i*math.tau/64))
+            +tangent*(radius*math.sin(i*math.tau/64)) for i in range(64)]
+
+
+def _pipe_regions(feature, body, identifier):
+    """Keep the actual curved-mouth void; use interior sections for topology.
+
+    A curved wood surface has no planar mouth cap. A complete CAD-derived
+    circular section just inside each exit tracks material crossings without
+    approximating that contact surface. Exact wood triangles govern the rim.
+    """
+    profile=feature.Profile[0]
+    if len(profile.Geometry)!=1 or not isinstance(profile.Geometry[0],Part.Circle):
+        raise ValueError(f"{feature.Name}: circular pipe profile required")
+    samples=spine_samples(feature.Spine[0])
+    radius=profile.Geometry[0].Radius
+    tool=feature.AddSubShape.copy()
+    tool.Placement=feature.Placement.multiply(tool.Placement)
+    before=feature.BaseFeature.Shape
+    region=tool.common(before)
+    if region.common(body).Volume>1e-6:
+        raise ValueError(f"{feature.Name}: native pipe void intersects wood")
+    indices=[]
+    records=[]
+    for reverse,suffix in [(False,"front"),(True,"back")]:
+        candidates=range(len(samples)-2,0,-1) if reverse else range(1,len(samples)-1)
+        for i in candidates:
+            normal=samples[i+1]-samples[i-1]
+            normal.normalize()
+            if not reverse:normal=-normal
+            boundary=_circle_boundary(samples[i],normal,radius)
+            if all(before.isInside(p,1e-7,True) for p in boundary):
+                # A virtual section must remain on the actual native void,
+                # including its entire circular boundary.
+                if any(region.distToShape(Part.Vertex(p))[0]>1e-5 for p in boundary):
+                    continue
+                indices.append(i)
+                points=[model_point(p) for p in boundary]
+                start=min(range(len(points)),key=lambda j:points[j])
+                points=points[start:]+points[:start]
+                records.append({"id":f"{identifier}-{suffix}","center":model_point(samples[i]),
+                    "normal":[round(normal.x,9),round(normal.z,9),round(-normal.y,9)],
+                    "boundary":points})
+                break
+        else:
+            raise ValueError(f"{feature.Name}: no complete interior crossing section")
+    if indices[0]>=indices[1]:
+        raise ValueError(f"{feature.Name}: crossing sections do not bracket a channel")
+    channel={"id":identifier,"portalIDs":[p["id"] for p in records],
+             "spine":[model_point(p) for p in samples[indices[0]:indices[1]+1]],
+             **native_mesh(region)}
+    return records,channel
+
+
 def export_rope_physics(document, body_feature: str, channel_features: dict) -> dict:
     body = _feature(document, body_feature).Shape
     box = body.BoundBox
@@ -53,6 +114,11 @@ def export_rope_physics(document, body_feature: str, channel_features: dict) -> 
     portals, channels = [], []
     for identifier, feature_name in sorted(channel_features.items()):
         feature = _feature(document, feature_name)
+        if feature.TypeId == "PartDesign::SubtractivePipe":
+            records,channel=_pipe_regions(feature,body,identifier)
+            portals.extend(records)
+            channels.append(channel)
+            continue
         axis_name = getattr(feature, "HangTenChannelAxis", "")
         if axis_name not in {"x", "y", "z"}:
             raise ValueError(f"{feature_name} needs an operator-selected HangTenChannelAxis")

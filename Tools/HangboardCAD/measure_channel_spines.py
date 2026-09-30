@@ -23,10 +23,6 @@ import FreeCAD as App
 
 
 ROOT = Path(__file__).resolve().parents[2]
-PACKAGE = os.environ["HANGTEN_CHANNEL_PACKAGE"]
-FEATURES = json.loads(os.environ["HANGTEN_CHANNEL_FEATURES_JSON"])
-SOURCE = ROOT / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
-SIDECAR = SOURCE.with_name("suspension.json")
 
 
 def model_to_native(point):
@@ -131,6 +127,10 @@ def native_to_model(point):
 
 
 def main():
+    PACKAGE = os.environ["HANGTEN_CHANNEL_PACKAGE"]
+    FEATURES = json.loads(os.environ["HANGTEN_CHANNEL_FEATURES_JSON"])
+    SOURCE = ROOT / "Hangboards" / PACKAGE / f"{PACKAGE}.FCStd"
+    SIDECAR = SOURCE.with_name("suspension.json")
     document = App.openDocument(str(SOURCE))
     suspension = json.loads(SIDECAR.read_text())["suspension"]
     passages_by_id = {
@@ -163,4 +163,5 @@ def main():
         Path(destination).write_text(json.dumps(paths, sort_keys=True) + "\n")
 
 
-main()
+if __name__ == "__main__":
+    main()

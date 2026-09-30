@@ -274,7 +274,19 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    picking and accessibility, that selection and orbit still work, and that
    clearing/reselecting a pose removes/recreates the transient cord.
 
-The Mini Bar's generated routes found at least 2.097 mm exterior
-centerline-to-wood clearance with a 2 mm estimated rope radius. Those numbers
-are specific to its display model; they are not a general rope or safety
-specification.
+The original Mini Bar routes used a 2 mm estimated radius. The owner has since
+confirmed a 7 mm cord diameter for both the Mini Bar and Clavellium. The current
+Mini Bar's generated routes have at least 3.586 mm sampled centerline-to-wood
+clearance with a 3.5 mm radius. Its 7.4 mm CAD bores remain display estimates;
+see [the cord and bore audit](source-audits/2026-09-29-cord-and-bore-scale.md).
+
+For live physics, `export_rope_physics.py` supports native circular
+`PartDesign::SubtractivePipe` channels as well as the straight Box adapter.
+The pipe adapter intersects the native subtractive tool with the pre-cut wood
+to retain the actual channel void. Curved wood mouths have no planar cap:
+complete circular sections just inside the exits track sliding material
+crossings, while the full wood collision mesh determines physical rim contact.
+These sections do not replace the curved mouth geometry. The source spine
+between those sections supplies the initial channel traversal. Export support
+alone does not enable live physics for a package; it still needs an accepted
+initial state, numerical transition checks and visual review.

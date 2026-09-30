@@ -10,6 +10,36 @@ TOOLS = ROOT / "Tools/HangboardCAD"
 pytestmark = pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(), reason="FreeCAD unavailable")
 
 
+def test_curved_pipe_exports_native_void_and_safe_planar_crossings(tmp_path):
+    script=tmp_path/"curved-export.py"
+    script.write_text('''import FreeCAD as App
+import json,sys
+from pathlib import Path
+sys.path[:0]=[str(Path("Tools/HangboardCAD").resolve()),str(Path("Tools/HangboardPackages/src").resolve())]
+from export_rope_physics import export_rope_physics
+from hangboard_packages.rope_physics import _mesh,portal_clearance_radius
+d=App.openDocument(str(Path("Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd").resolve()))
+mapping={"left-loop":"LeftCordChannel","right-loop":"RightCordChannel"}
+a=export_rope_physics(d,"RightCordChannel",mapping)
+b=export_rope_physics(d,"RightCordChannel",mapping)
+assert json.dumps(a)==json.dumps(b)
+assert len(a["channels"])==2 and len(a["portals"])==4
+for channel in a["channels"]:
+ assert len(channel["spine"])>3
+ _mesh({k:channel[k] for k in ["vertices","triangles"]})
+ portals=[next(p for p in a["portals"] if p["id"]==i) for i in channel["portalIDs"]]
+ assert channel["spine"][0]==portals[0]["center"]
+ assert channel["spine"][-1]==portals[-1]["center"]
+ assert all(portal_clearance_radius(p)>.0036 for p in portals)
+ # Safe topological sections lie inside the curved CAD mouths; exact wood
+ # collision, rather than a fictitious planar mouth, controls entry contact.
+ assert all(.060 < p["center"][2] < .067183 for p in portals)
+App.closeDocument(d.Name)
+''')
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    assert run.returncode == 0,run.stdout+run.stderr
+
+
 def test_clavellium_collision_and_portals_are_native_and_repeatable(tmp_path):
     output = tmp_path / "physics-geometry.json"
     script = tmp_path / "export.py"
