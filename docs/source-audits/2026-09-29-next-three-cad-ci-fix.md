@@ -13,3 +13,11 @@ Local validation: Python CAD/model/package suites passed 492 tests, 11 optional 
 Run [36645711814](https://github.com/Asherlc/hang-ten/actions/runs/36645711814) reproduced the switch failure after the normal tap. Its event attachment records `(333.5, 437)`, with the named switch still off and the parent window snapshot reporting zero/nonfinite bounds. Recording frames before and after the interaction show an unobstructed, unchanged switch. The tap synthesis took 18 seconds. The independent visible-label interaction passed.
 
 Both weight-flow tests now use a sustained native switch drag: 0.5-second press, explicit slow velocity from normalized `(0.3, 0.5)` to `(0.8, 0.5)`, and 0.2-second endpoint hold. This is the gesture previously validated in the parent batch before main replaced it with the shorter tap. The initial off-state, enabled-state, manual draft persistence, purchase summary and separate label interaction assertions remain intact. No production or CAD geometry changes are included.
+
+## Merge main and correct keyboard-active purchase setup
+
+Integrated main commit `8687bd6b2` (PR522). CI run `36651684102` passed the grip-and-picker suite, but the manual-weight purchase test failed after trying to drag the bodyweight switch while the decimal keyboard was active. The later summary failure follows from the switch remaining off.
+
+Resolved both UI test conflicts by retaining main’s tested control-targeting implementation. It enables bodyweight before focusing the decimal field, verifies the on-state after input, and uses a SpringBoard screen coordinate computed from finite, visible control bounds. This avoids the invalid parent-window bounds seen in the earlier CI attachment. Fixture comments continue to describe the Original Grindstone native model correctly. All three migrated CAD packages and contact-picking regressions are unchanged. Main’s consolidated CI jobs and contract tests are included. PR525 remains open; merging this branch into main is outside this request.
+
+CI runner contracts and package staging: 51 tests passed after the merge. All nine source/model/descriptor hashes remain unchanged.

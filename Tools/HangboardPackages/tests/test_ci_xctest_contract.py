@@ -81,6 +81,43 @@ def test_xctest_runner_does_not_retry() -> None:
     assert 'run_xcodebuild_with_watchdog "test-without-building" "test-without-building"' in runner
 
 
+@pytest.mark.parametrize("reverse", [False, True])
+@pytest.mark.parametrize(
+    ("required", "first", "second", "expected"),
+    [
+        ("true", "success", "success", 0),
+        ("true", "success", "failure", 1),
+        ("true", "cancelled", "failure", 1),
+        ("true", "success", "skipped", 1),
+        ("true", "success", "cancelled", 0),
+        ("false", "skipped", "skipped", 0),
+        ("false", "skipped", "failure", 1),
+        ("false", "skipped", "success", 1),
+        ("false", "skipped", "cancelled", 1),
+    ],
+)
+def test_ui_required_gate_reports_both_groups(
+    reverse: bool, required: str, first: str, second: str, expected: int
+) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = workflow["jobs"]["test-ui"]["steps"][0]
+    results = [second, first] if reverse else [first, second]
+    result = subprocess.run(
+        ["bash", "-c", step["run"]],
+        env={
+            **os.environ,
+            "CHANGES_RESULT": "success",
+            "BUILD_REQUIRED": required,
+            "PAYWALL_RESULT": results[0],
+            "MAP_RESULT": results[1],
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == expected, result.stdout + result.stderr
+
+
 @pytest.mark.parametrize(
     ("failed_phase", "expected_calls"),
     [
