@@ -1,0 +1,43 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "6FAA9427-B37E-4D91-9198-591C975F77EB",
+        "deviceName": "Hang Ten Paseo slim-sheep Review",
+        "modelName": "iPhone 17 Pro",
+        "osBuildNumber": "23F77",
+        "osVersion": "26.5",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 36,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "HangTen \u00b7 Built with macOS 27.0",
+  "expectedFailures": 0,
+  "failedTests": 0,
+  "finishTime": 1790775810.272,
+  "passedTests": 36,
+  "result": "Passed",
+  "runtimeWarnings": [],
+  "skippedTests": 0,
+  "startTime": 1790775371.041,
+  "statistics": [],
+  "testFailures": [],
+  "title": "Test - HangTen",
+  "topInsights": [
+    {
+      "category": "Longest Test Runs",
+      "impact": "61% of duration",
+      "text": "1 longest test run with outlier durations exceeding 6.99s (three standard deviations)"
+    }
+  ],
+  "totalTestCount": 36
+}

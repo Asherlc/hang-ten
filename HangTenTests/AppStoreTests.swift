@@ -950,7 +950,7 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout() {
+    func testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout() async {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -972,6 +972,13 @@ final class AppStoreTests: XCTestCase {
             segmentIndex: stopwatchIndex
         )
 
+        let historyRecorded = expectation(description: "local history published after recording failure")
+        let historyObservation = appStore.$workoutHistory
+            .filter { $0.sessionCount == 1 }
+            .prefix(1)
+            .sink { _ in historyRecorded.fulfill() }
+        defer { historyObservation.cancel() }
+
         appStore.markSessionComplete(
             plan,
             board: appStore.board(for: plan),
@@ -979,7 +986,7 @@ final class AppStoreTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitForHistory(in: appStore)
+        await fulfillment(of: [historyRecorded], timeout: 5)
 
         XCTAssertEqual(appStore.workoutHistory.sessionCount, 1)
         XCTAssertEqual(historyStore.load().count, 1)
