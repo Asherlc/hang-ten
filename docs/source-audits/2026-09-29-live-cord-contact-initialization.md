@@ -434,3 +434,23 @@ All 64 host physics tests passed in 130.539 seconds; all 36 focused Simulator
 collider, dynamics and inter-cord tests passed with zero failures or skips.
 Their retained summary is `mini-dynamics-probe/edge-array-native-summary.json`
 under the same workspace context directory.
+
+### Paired-board live placement
+
+Scene review found that profile array order determined the live instance, while
+frame delivery replaced the authored instance transform. Both boards and cords
+could therefore overlap at the origin. Live preparation now matches profiles by
+instance ID, composes base placement with the physical board transform, places
+cords in that same world, and includes every instance's rotation envelope in
+camera framing. Selection validates each instance's suspension pose before
+updating any controller, including presentations without top-level suspension.
+
+The local solver's gravity remains vertical: a base placement that changes this
+direction is rejected until a physics coordinate adapter exists. No catalog
+profiles were enabled by this repair. A synthetic two-instance regression first
+reproduced reversed-profile/placement failures and then the instance-only pose
+failure. It now passes across deselection and reselection, verifying board
+positions, rope ownership and world-space tube radius. All 31 focused native
+scene/controller/mesh tests passed; independent review found no important issues.
+The retained result summary is
+`.context/strong-owl-live-cords/mini-dynamics-probe/paired-placement-native-summary.json`.

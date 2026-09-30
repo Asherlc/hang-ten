@@ -187,6 +187,7 @@ final class BoardModelRealityScene {
     private var liveControllers: [LiveRopeController] = []
     private var liveMeshes: [[LiveRopeMesh]] = []
     private var liveFrames: [RopeFrameSnapshot] = []
+    private var liveBaseTransforms: [simd_float4x4] = []
     private var liveSubscription: EventSubscription?
     private var liveFailure: Error?
     private var liveActivity = true
@@ -480,13 +481,18 @@ final class BoardModelRealityScene {
         if liveFailure != nil { return false }
         if activePositionID == positionID { return true }
         if hasLiveRopes {
-            guard let suspension, let pose = suspension.canonicalPoses[positionID], pose.rotation.count == 4 else { return false }
-            let q = simd_quatd(ix:pose.rotation[0],iy:pose.rotation[1],iz:pose.rotation[2],r:pose.rotation[3])
-            guard q.vector.x.isFinite,q.vector.y.isFinite,q.vector.z.isFinite,q.vector.w.isFinite,
-                  abs(simd_length(q.vector)-1)<1e-6 else { return false }
+            var targets:[simd_quatd]=[]
+            for index in liveControllers.indices {
+                let setup=instances.flatMap{$0.indices.contains(index) ? $0[index].suspension:nil} ?? suspension
+                guard let pose=setup?.canonicalPoses[positionID],pose.rotation.count == 4 else {return false}
+                let q=simd_quatd(ix:pose.rotation[0],iy:pose.rotation[1],iz:pose.rotation[2],r:pose.rotation[3])
+                guard q.vector.x.isFinite,q.vector.y.isFinite,q.vector.z.isFinite,q.vector.w.isFinite,
+                      abs(simd_length(q.vector)-1)<1e-6 else {return false}
+                targets.append(simd_normalize(q))
+            }
             liveGeneration &+= 1
-            for controller in liveControllers {
-                controller.setTarget(orientation:simd_normalize(q),generation:liveGeneration)
+            for (controller,target) in zip(liveControllers,targets) {
+                controller.setTarget(orientation:target,generation:liveGeneration)
                 if liveActivity { controller.resume() } else { controller.pause() }
             }
             if transientCordEntity == nil {
@@ -667,8 +673,30 @@ final class BoardModelRealityScene {
 
     private func prepareLiveRopes() async throws {
         guard let physics else { return }
-        let profiles=physics.profiles.filter { presentationID == nil || $0.presentationID == presentationID }
-        guard profiles.count == instanceEntities.count else { throw BoardModelRealityError.invalidSuspension }
+        let candidates=physics.profiles.filter { presentationID == nil || $0.presentationID == presentationID }
+        guard candidates.count == instanceEntities.count else { throw BoardModelRealityError.invalidSuspension }
+        let profiles:[RopePhysicsProfile]
+        if let instances,!instances.isEmpty {
+            guard instances.count == instanceEntities.count,
+                  Set(instances.map(\.equipmentObjectID)).count == instances.count else {throw BoardModelRealityError.invalidSuspension}
+            profiles=try instances.map {instance in
+                let matching=candidates.filter{$0.instanceID == instance.equipmentObjectID}
+                guard matching.count == 1 else {throw BoardModelRealityError.invalidSuspension}
+                return matching[0]
+            }
+            liveBaseTransforms=instances.map {Self.instanceMatrix(instance:$0,positionID:nil,
+                center:Self.boundsCenter(descriptor.modelBounds))}
+        } else {
+            guard candidates.count == 1,candidates[0].instanceID == nil else {throw BoardModelRealityError.invalidSuspension}
+            profiles=candidates;liveBaseTransforms=[matrix_identity_float4x4]
+        }
+        // Each independent solver uses vertical gravity in its local world.
+        // A display placement must preserve that direction; tilted worlds need
+        // a physics coordinate adapter before their profiles can be enabled.
+        guard liveBaseTransforms.allSatisfy({base in
+            let up=base*SIMD4<Float>(0,1,0,0)
+            return simd_length(up-SIMD4<Float>(0,1,0,0))<1e-6
+        }) else {throw BoardModelRealityError.invalidSuspension}
         for (index,profile) in profiles.enumerated() {
             let prepared = try await Task.detached(priority:.userInitiated) {
                 let collider=try RopeTriangleCollider(input:physics)
@@ -703,16 +731,20 @@ final class BoardModelRealityScene {
     }
 
     private func applyLiveFrame(_ frame:RopeFrameSnapshot,instance:Int) throws {
-        guard frame.metrics.geometryAccepted,liveMeshes[instance].count == frame.ropes.count else { throw BoardModelRealityError.invalidSuspension }
+        guard liveMeshes.indices.contains(instance),liveBaseTransforms.indices.contains(instance),
+              frame.metrics.geometryAccepted,liveMeshes[instance].count == frame.ropes.count else { throw BoardModelRealityError.invalidSuspension }
+        let base=liveBaseTransforms[instance]
         for (mesh,rope) in zip(liveMeshes[instance],frame.ropes) {
             guard abs(Double(mesh.radius)-rope.radius)<1e-8 else { throw BoardModelRealityError.invalidSuspension }
             try mesh.update(positions:rope.positions)
+            mesh.entity.transform=Transform(matrix:base)
         }
         liveFrames[instance]=frame
         let q=frame.orientation.vector
-        instanceEntities[instance].transform=Transform(scale:SIMD3(repeating:1),
+        let physical=Transform(scale:SIMD3(repeating:1),
             rotation:simd_quatf(ix:Float(q.x),iy:Float(q.y),iz:Float(q.z),r:Float(q.w)),
             translation:SIMD3(0,Float(frame.boardHeight),0))
+        instanceEntities[instance].transform=Transform(matrix:base*physical.matrix)
         if frame.settled {
             updateLiveFraming()
             #if DEBUG
@@ -732,8 +764,9 @@ final class BoardModelRealityScene {
             points += Self.boundsCorners(BoardModelBounds(minimum:[Double(bounds.min.x),Double(bounds.min.y),Double(bounds.min.z)],
                 maximum:[Double(bounds.max.x),Double(bounds.max.y),Double(bounds.max.z)]))
         }
-        for frame in liveFrames { for rope in frame.ropes { for point in rope.positions {
-            let p=SIMD3<Float>(Float(point.x),Float(point.y),Float(point.z)),r=Float(rope.radius)
+        for (index,frame) in liveFrames.enumerated() { for rope in frame.ropes { for point in rope.positions {
+            let world=liveBaseTransforms[index]*SIMD4<Float>(Float(point.x),Float(point.y),Float(point.z),1)
+            let p=SIMD3<Float>(world.x,world.y,world.z),r=Float(rope.radius)
             points += [p-SIMD3(repeating:r),p+SIMD3(repeating:r)]
         } } }
         guard !points.isEmpty else { return }
@@ -742,9 +775,13 @@ final class BoardModelRealityScene {
         // A conservative body rotation envelope keeps the camera stationary
         // while the board moves; refitting happens only at accepted rest.
         let radius=Self.boundsCorners(descriptor.modelBounds).map(simd_length).max() ?? 0
-        let center=SIMD3<Float>(0,Float(liveFrames.first?.boardHeight ?? 0),0)
-        let low=simd_min(minimum,center-SIMD3(repeating:radius))
-        let high=simd_max(maximum,center+SIMD3(repeating:radius))
+        var low=minimum,high=maximum
+        for (index,frame) in liveFrames.enumerated() {
+            let world=liveBaseTransforms[index]*SIMD4<Float>(0,Float(frame.boardHeight),0,1)
+            let center=SIMD3<Float>(world.x,world.y,world.z)
+            low=simd_min(low,center-SIMD3(repeating:radius))
+            high=simd_max(high,center+SIMD3(repeating:radius))
+        }
         currentFraming=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
             maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display)
         updateCameraTransform()

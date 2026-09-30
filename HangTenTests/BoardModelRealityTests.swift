@@ -62,6 +62,61 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testPairedLiveBoardsMatchInstanceIDsAndPreservePlacement() async throws {
+        let store=BoardCatalog.packageStore
+        let board=try XCTUnwrap(store.board(id:"clavellium-training-block"))
+        guard case .model(let media)=board.defaultPresentation.media else {return XCTFail("Model required")}
+        let input=try XCTUnwrap(media.physics),source=try XCTUnwrap(input.profiles.first)
+        let instances=[("left",-0.15),("right",0.15)].map {id,x in
+            BoardModelInstance(equipmentObjectID:id,
+                baseTransform:BoardModelTransform(translation:[x,0.02,0],rotation:SIMD4(0,0,0,1),reflection:nil),
+                contactIDsBySlotID:Dictionary(uniqueKeysWithValues:media.descriptor.contacts.keys.map{($0,$0)}),
+                suspension:media.suspension,positionTransforms:nil)
+        }
+        let profiles=["right","left"].map {id in
+            RopePhysicsProfile(id:id,presentationID:source.presentationID,instanceID:id,boardMass:source.boardMass,
+                ropes:source.ropes.map {rope in
+                    RopePhysicsRope(id:id+"-"+rope.id,baselineRadius:rope.baselineRadius,radius:rope.radius,
+                        restLength:rope.restLength,linearMass:rope.linearMass,nodes:rope.nodes,edges:rope.edges)
+                })
+        }
+        let paired=RopePhysicsInput(modelSHA256:input.modelSHA256,sourceSHA256:input.sourceSHA256,
+            collision:input.collision,portals:input.portals,channels:input.channels,profiles:profiles)
+        let url=try XCTUnwrap(store.presentationAssetURL(for:board) ??
+            store.modelResource(for:board)?.debugSimulatorPackagedURL(in:store.resourceBundle))
+        let scene=BoardModelRealityScene(descriptor:media.descriptor,display:media.display,
+            suspension:nil,orientation:media.orientation,allowedPositionIDs:Set(board.positions.map(\.id)),
+            instances:instances,physics:paired,presentationID:source.presentationID,
+            resourceLease:BoardModelRealityResourceLease(url:url))
+        defer {scene.stopLiveRopes()}
+        try await scene.load(usdzURL:url)
+        scene.setLiveActivity(false)
+        let position=try XCTUnwrap(board.positions.first?.id)
+        for _ in 0..<2 {
+            XCTAssertTrue(scene.select(positionID:position))
+            let group=try XCTUnwrap(scene.transientCordEntity)
+            for (index,instance) in instances.enumerated() {
+                let frame=scene.liveFramesForTesting[index]
+                XCTAssertTrue(frame.ropes.allSatisfy{$0.id.hasPrefix(instance.equipmentObjectID+"-")})
+                XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]),accuracy:1e-7)
+                XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardHeight+0.02),accuracy:1e-7)
+                let tube=try XCTUnwrap(group.children[index] as? ModelEntity)
+                let mesh=try XCTUnwrap(tube.model?.mesh.lowLevelMesh)
+                let point=try XCTUnwrap(frame.ropes.first?.positions.first)
+                let center=SIMD3<Float>(Float(point.x+instance.baseTransform.translation[0]),Float(point.y+0.02),Float(point.z))
+                mesh.withUnsafeBytes(bufferIndex:0) {bytes in
+                    let vertices=bytes.bindMemory(to:RopeTubeVertex.self)
+                    for i in 0..<8 {
+                        let world=tube.transformMatrix(relativeTo:scene.root)*SIMD4(vertices[i].position,1)
+                        XCTAssertEqual(simd_distance(SIMD3(world.x,world.y,world.z),center),Float(frame.ropes[0].radius),accuracy:1e-7)
+                    }
+                }
+            }
+            XCTAssertFalse(scene.select(positionID:nil))
+        }
+    }
+
+    @MainActor
     func testLiveScenePausesThenPublishesAcceptedSettledFrame() async throws {
         let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
         let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
