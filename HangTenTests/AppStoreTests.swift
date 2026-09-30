@@ -1381,10 +1381,19 @@ final class AppStoreTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(1)
-        while appStore.workoutHistory.sessionCount == 0, Date() < deadline {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+        let historyPublished = XCTestExpectation(description: "Completed session published to workout history")
+        let subscription = appStore.$workoutHistory
+            .first { $0.sessionCount == 1 }
+            .sink { _ in historyPublished.fulfill() }
+        defer { subscription.cancel() }
+
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [historyPublished], timeout: 10),
+            .completed,
+            "Workout history did not publish the completed session",
+            file: file,
+            line: line
+        )
         XCTAssertEqual(appStore.workoutHistory.sessionCount, 1, file: file, line: line)
     }
 
@@ -1393,10 +1402,18 @@ final class AppStoreTests: XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(1)
-        while !condition(), Date() < deadline {
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
+        guard !condition() else { return }
+        let conditionMet = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in condition() },
+            object: nil
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [conditionMet], timeout: 10),
+            .completed,
+            "Asynchronous AppStore condition was not satisfied",
+            file: file,
+            line: line
+        )
         XCTAssertTrue(condition(), file: file, line: line)
     }
 private enum FakeHealthError: Error {
