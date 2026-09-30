@@ -114,7 +114,7 @@ inspection found no materials or shaders. Exported bounds are exactly the
 estimated 650 × 190 × 60 mm envelope. All twelve measured contact depths
 equal their retained nominal facts. Native persisted-edit checks passed.
 The FCStd hash after metadata embedding is
-`9c7a839a37a00c273a88ed32fc017b7ef13ea818e3276051c271d2c585126c00`.
+`a89689c11f0dee7e8ddabc785e418245d809a2f7b5bbc5842511ab00b8d922a5`.
 
 Both `preview.py` and independent `/usr/bin/usdrecord` renders were inspected.
 Hydra front/side/top/three-quarter images show coherent tier geometry, visible

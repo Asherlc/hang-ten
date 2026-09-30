@@ -110,7 +110,7 @@ The result contains 16 nodes, 111,740 triangles, and a 2,361,159-byte USDZ.
 Native fillets account for much of this tessellation; the compiler transports
 the authored geometry without simplifying the ⅛-inch bearing surfaces.
 
-- FCStd SHA-256: `4cb15a467efa982c06147f454f34e1b0017d980fadc6d035441e1876304a577a`
+- FCStd SHA-256: `dbd47347305a57dd394b58566d0b521f54f5655a52a1ca0b5827edc90beb3e1c`
 - USDZ SHA-256: `321a039d39299aca7213cb351bec05043a71493f5f48129717874f3f8e9f86c5`
 - The reopened USDZ has zero Material/Shader prims and zero material bindings;
   its bytes match the descriptor hash.
