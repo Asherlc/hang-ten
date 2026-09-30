@@ -296,10 +296,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let initialContactFrame = contact.frame
         captureRendererDiagnostic(app: app, name: "\(boardID)-before-orbit")
         let initialMapFrame = map.frame
-        // Use the same screen anchor as tapVisibleControl. App accessibility
-        // containers can report invalid bounds on iOS 26.
-        let screenFrame = XCUIApplication(bundleIdentifier: "com.apple.springboard").frame
-        let initialMapImage = try mapSnapshot(in: initialMapFrame, screenFrame: screenFrame)
+        let initialMapImage = try mapSnapshot(in: initialMapFrame)
         // Some models have empty gaps around the projected center. Begin the
         // orbit on the verified surface point when the test needed one to pick.
         let orbitStart = surfacePoint != nil
@@ -314,7 +311,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [orbitFinished], timeout: 15), .completed,
                        "Orbit must change the projected contact")
         let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            guard let image = try? self.mapSnapshot(in: initialMapFrame, screenFrame: screenFrame) else {
+            guard let image = try? self.mapSnapshot(in: initialMapFrame) else {
                 return false
             }
             return image != initialMapImage
@@ -378,20 +375,23 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         add(attachment)
     }
 
-    private func mapSnapshot(in frame: CGRect, screenFrame: CGRect) throws -> Data {
+    private func mapSnapshot(in frame: CGRect) throws -> Data {
         // RealityView's accessibility element can remain queryable while XCTest
         // cannot snapshot its hosted view. Crop the screen at the saved viewport
         // instead, so the assertion observes pixels without that snapshot API.
         let screenshot = normalizedScreenImage()
         let image = try XCTUnwrap(screenshot.cgImage)
-        let scale = CGFloat(image.width) / screenFrame.width
-        let region = CGRect(x: (frame.minX - screenFrame.minX) * scale,
-                            y: (frame.minY - screenFrame.minY) * scale,
+        // SpringBoard can retain its landscape frame after the app returns to
+        // portrait. Use the normalized screenshot’s own point-to-pixel scale
+        // so the crop always observes the board rather than a stale header area.
+        let scale = screenshot.scale
+        let region = CGRect(x: frame.minX * scale,
+                            y: frame.minY * scale,
                             width: frame.width * scale,
                             height: frame.height * scale).integral
         let bounds = CGRect(x: 0, y: 0, width: image.width, height: image.height)
         XCTAssertTrue(region.width > 0 && region.height > 0 && bounds.contains(region),
-                      "Map crop \(region) must fit normalized screenshot \(bounds); map=\(frame), screen=\(screenFrame)")
+                      "Map crop \(region) must fit normalized screenshot \(bounds); map=\(frame), imageSize=\(screenshot.size), scale=\(scale)")
         let cropped = try XCTUnwrap(image.cropping(to: region))
         return try XCTUnwrap(UIImage(cgImage: cropped).pngData())
     }

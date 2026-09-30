@@ -188,6 +188,8 @@ jobs:
           ../HangboardCAD/tests/test_board_manifest.py
           ../HangboardCAD/tests/test_contract.py
           ../HangboardCAD/tests/test_whetstone_package.py
+          ../HangboardCAD/tests/test_transgression_packages.py
+          -k "not test_native_edits_keep_all_contacts_on_the_body"
           -q
           --junitxml=pytest-cad-results.xml
 
@@ -201,6 +203,74 @@ jobs:
             Tools/HangboardPackages/pytest-results.xml
             Tools/HangboardPackages/pytest-cad-results.xml
           if-no-files-found: ignore
+
+  transgression-native:
+    name: Test (Transgression native CAD)
+    needs:
+      - changes
+    if: >-
+      github.event_name != 'pull_request' ||
+      needs.changes.outputs.cad == 'true' ||
+      needs.changes.outputs.workflow == 'true'
+    runs-on: macos-26
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+          lfs: true
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+
+      - name: Install pinned FreeCAD 1.1.3
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          cad_root="$PWD/.context/$owner-transgression-native-ci"
+          mkdir -p "$cad_root/mount"
+          cleanup_mount() {
+            if mount | grep -Fq " on $cad_root/mount "; then
+              hdiutil detach "$cad_root/mount"
+            fi
+            if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
+          }
+          trap cleanup_mount EXIT
+          case "$(uname -m)" in
+            arm64) digest=f5c0ece7cd7c932466d6effadc0fc6e179b0538a9d9a6a77a6769eae3af2667c ;;
+            x86_64) digest=8434bd6ad32f597605d184e5b996f496e9cbc7e6d8ffb6db4dbd6e2ce6d1612b ;;
+            *) exit 1 ;;
+          esac
+          curl --fail --location --retry 3 \
+            "https://github.com/FreeCAD/FreeCAD/releases/download/1.1.3/FreeCAD_1.1.3-macOS-$(uname -m)-py311.dmg" \
+            --output "$cad_root/FreeCAD.dmg"
+          echo "$digest  $cad_root/FreeCAD.dmg" | shasum -a 256 -c -
+          # Record ownership before mounting; the trap deletes only this mount.
+          echo "$cad_root/mount" > "$cad_root/owned-mount"
+          hdiutil attach "$cad_root/FreeCAD.dmg" -nobrowse -readonly -mountpoint "$cad_root/mount"
+          ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
+          echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
+
+      - name: Run all five Transgression package and native-edit cases
+        run: |
+          python -m pip install -e 'Tools/HangboardPackages[dev]'
+          python -m pytest Tools/HangboardCAD/tests/test_transgression_packages.py -q
+
+      - name: Delete owned CAD toolchain
+        if: always()
+        run: |
+          set -euo pipefail
+          owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
+          cad_root="$PWD/.context/$owner-transgression-native-ci"
+          if mount | grep -Fq " on $cad_root/mount "; then
+            hdiutil detach "$cad_root/mount"
+          fi
+          if mount | grep -Fq " on $cad_root/mount "; then exit 1; fi
+          rm -rf "$cad_root"
+          test ! -e "$cad_root"
 
   workflow-lint:
     name: Lint GitHub Actions workflows
@@ -235,12 +305,15 @@ jobs:
       - changes
       - test-unit
       - test-ui
+      - transgression-native
     if: always() && github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Report required build status
         env:
           CHANGES_RESULT: ${{ needs.changes.result }}
+          NATIVE_CAD_RESULT: ${{ needs.transgression-native.result }}
+          NATIVE_CAD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.cad == 'true' || needs.changes.outputs.workflow == 'true' }}
           UNIT_TEST_RESULT: ${{ needs.test-unit.result }}
           UI_TEST_RESULT: ${{ needs.test-ui.result }}
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
@@ -248,6 +321,10 @@ jobs:
           set -euo pipefail
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
+            exit 1
+          fi
+          if [[ "$NATIVE_CAD_REQUIRED" == "true" && "$NATIVE_CAD_RESULT" != "success" ]]; then
+            echo "Required native CAD tests did not succeed: $NATIVE_CAD_RESULT" >&2
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
