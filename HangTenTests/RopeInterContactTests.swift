@@ -12,6 +12,76 @@ final class RopeInterContactTests:XCTestCase {
             supports:supports,attachments:[:],portals:[:],channelSegments:[:])
     }
 
+    // Nine simultaneous unilateral contact planes, with a known feasible
+    // witness. Releasing the greatest tensile multiplier cycles between
+    // working sets; a dual-feasible blocking step reaches the projection.
+    func testSimultaneousContactProjectionDoesNotCycle() throws {
+        let baseGradients:[[Double]]=[
+            [0.23417230188986185, -0.9113047611325361, -0.27170006889895276, -0.20215350089740997],
+            [-0.5562543431302027, 0.3978371423832167, 0.10620831731926461, -0.7218216588752053],
+            [-0.8678931152763595, -0.21789206068464254, 0.015317569667208484, -0.44615015679251546],
+            [-0.7516506573002164, 0.07513644379647937, -0.5653747796588384, -0.33125090599044554],
+            [0.6457370379875231, -0.4478467395336529, 0.3021393606550425, 0.5396005767260988],
+            [0.9302070160629295, 0.0036088191095783933, 0.20729741649775618, -0.30286905554264015],
+            [-0.40871833984744654, 0.799841473952132, -0.16735691537929545, 0.4064413833422422],
+            [0.38999698992902165, -0.6071516265439675, 0.38472513184901047, 0.5755482804726973],
+            [0.07877792738909307, -0.7292609659152083, -0.5103842254439367, -0.44886570838803114]
+        ]
+        let baseOffsets: [Double]=[1.4336093285463596, -0.6957574859673138, 0.09456007144250711, 0.39264982796391645, 0.46158804190285174, 0.047236273064659474, -0.5456594263614699, 0.6071278304165902, 1.357207251942219]
+        let prediction: [Double]=[0.34320245362986124, 1.2538185483667008, -3.1790366658133844, 0.6999056305262005]
+        let witness: [Double]=[-0.216053172994632, 1.0440528763494636, 0.9530748947380221, -0.12075568490079783]
+        func dot(_ a:[Double],_ b:[Double])->Double {zip(a,b).reduce(0){$0+$1.0*$1.1}}
+        // Both equality signs exercise unrestricted multipliers; a duplicate
+        // active contact exercises the same numerical rank regularization.
+        for equalitySign in [0.0,1.0,-1.0] {
+            var gradients=baseGradients,offsets=baseOffsets
+            let mixed=equalitySign != 0
+            let metric=mixed ? [0.25,2,1.5,0.6]:[1,1,1,1]
+            if mixed {
+                gradients.insert([0,equalitySign,0,0],at:0)
+                offsets.insert(-equalitySign*witness[1],at:0)
+                gradients.append(baseGradients[1]);offsets.append(baseOffsets[1])
+            }
+            func contact(_ id:Int)->Bool {!mixed || id != 0}
+            for i in gradients.indices {
+                let residual=offsets[i]+dot(gradients[i],witness)
+                if contact(i) {XCTAssertGreaterThan(residual,0)}
+                else {XCTAssertEqual(residual,0,accuracy:1e-12)}
+            }
+            var working=RopeContactWorkingSet(activeIDs:mixed ? [0]:[]),converged=false
+            var point=prediction
+            for _ in 0..<32 {
+                let active=working.activeIDs
+                var lambda:[Double]=[]
+                if !active.isEmpty {
+                    var matrix=try RopeBandedSystem(size:active.count,bandwidth:active.count-1)
+                    for i in active.indices {for k in 0...i {
+                        try matrix.addSymmetric(row:i,column:k,value:dot(gradients[active[i]],zip(gradients[active[k]],metric).map{$0*$1})+(i == k ? 1e-8:0))
+                    }}
+                    lambda=try matrix.solve(rhs:active.map{offsets[$0]+dot(gradients[$0],prediction)},
+                        borderColumns:[],borderMatrix:[],borderRHS:[]).base
+                }
+                if working.releaseTensileContact(multipliers:lambda,contacts:active.map{contact($0)}) {continue}
+                point=prediction
+                for i in active.indices {for axis in point.indices {point[axis] -= metric[axis]*gradients[active[i]][axis]*lambda[i]}}
+                let residual=gradients.indices.map{offsets[$0]+dot(gradients[$0],point)}
+                if let violated=gradients.indices.filter({contact($0) && !active.contains($0) && residual[$0] < -1e-8}).min(by:{residual[$0]<residual[$1]}) {
+                    working.insert(violated);continue
+                }
+                for i in gradients.indices {
+                    if let selected=active.firstIndex(of:i) {
+                        XCTAssertEqual(residual[i],1e-8*lambda[selected],accuracy:1e-12)
+                        if contact(i) {XCTAssertLessThanOrEqual(lambda[selected],1e-12)}
+                    } else {XCTAssertGreaterThanOrEqual(residual[i],-1e-8)}
+                }
+                converged=true;break
+            }
+            XCTAssertTrue(converged,"Contact projection cycled despite a feasible solution")
+            let expected=mixed ? [0.02417904275,1.04405286523,0.55050822355,-0.32608552715]:[0.05525928,1.00895621,0.51794086,-0.37417238]
+            for axis in point.indices {XCTAssertEqual(point[axis],expected[axis],accuracy:1e-6)}
+        }
+    }
+
     func testSeparateRopesHaveFiniteRadiusContact() {
         let first=Self.chain("a",[SIMD3(-0.05,1,0),SIMD3(0.05,1,0)])
         let second=Self.chain("b",[SIMD3(-0.05,1,0.004),SIMD3(0.05,1,0.004)])

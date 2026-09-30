@@ -126,3 +126,48 @@ RopeCordContacts.swift entry restored the exact git-tracked source list.
 Mini Bar live simulation remains pending: a diagnostic dual-feasible contact
 selection passed its previously cycling third frame, but sustained settling
 and acceptable runtime performance have not been demonstrated.
+
+## Dual-feasible contact selection
+
+The Mini Bar diagnostic identified a cycling inequality working set: the
+same contact rows were added and released more than 40,000 times within one
+correction. A separate nine-plane, four-dimensional feasible contact fixture
+reproduced the greatest-tensile-multiplier release algorithm's cycle. Its
+regression failed with the old rule and passed with first-zero dual blocking.
+
+The solver now retains dual-feasible multipliers within a linearized solve,
+interpolates only to the first contact multiplier reaching zero, releases
+that row, and solves again. Equality multipliers remain unrestricted. Wood
+contacts begin inactive, like other inequalities; every violated candidate
+is reconsidered. Each working-set solve is bounded to at most 2,048 iterations
+and still fails transactionally if it does not converge. This bound does not
+prove convergence for every feasible configuration.
+
+The first full regression run exposed a Clavellium return-to-upright failure:
+line search rejected 19–112 nm corrections despite negligible strain. A
+controlled diagnostic matched the contact merit's deadzone to the existing
+10 nm inactive-contact feasibility threshold and then passed all six
+orientation transitions. Distance penalties, immutable rest lengths, physical
+clearance/strain acceptance and continuous collision checks are unchanged.
+The existing 1e-8 linear-system rank regularization still allows active-row
+residuals proportional to their multipliers; exact geometry acceptance remains
+mandatory and is not replaced by the merit tolerance.
+
+Verification of the production fix: all 43 host physics tests passed in
+243.296 seconds; 28 native iOS Simulator tests, including the four Clavellium
+settling/determinism/rotation tests, passed. Independent read-only review found
+no Critical or Important issues. Its two Minor test suggestions were addressed:
+the projection fixture additionally exercises both signs of an unrestricted
+equality multiplier, unequal mass metrics, redundant active contacts, inactive
+10 nm feasibility, and active regularization residuals. These strengthened
+eight-test inter-contact suites passed on both host and native Simulator after
+the full-suite run; production code was unchanged during the strengthening.
+
+Mini Bar remains a diagnostic candidate. A CAD-certified coarser seed reduced
+its loops from 715 to 210 particles each, preserving 820 mm per loop and full
+radius capsule clearance. The cold working-set candidate settled upright at
+frame 130 (0.546 simulated seconds, 1,046.7 wall seconds); a scratch cache keyed
+by native contact features reached the same frame/height within 0.04 micrometres
+in 520.9 wall seconds. Jug rotation and return remain under investigation.
+These timings are far too slow for live use; neither scratch seed/cache nor
+the Mini Bar live profile is enabled in the app.

@@ -3,6 +3,9 @@ import simd
 /// Inextensible chain with a coupled mass-metric nonlinear projection. The scalar
 /// board-height degree of freedom participates in the same solve as the rope.
 struct RopeDynamicsSolver: Sendable {
+    // Match inactive-contact feasibility and merit at 10 nm. Physical
+    // acceptance separately retains its exact radius/clearance limits.
+    private static let contactLinearTolerance=1e-8
     let input:RopePhysicsInput
     let collider:RopeTriangleCollider
     private(set) var state:RopeSimulationState
@@ -303,31 +306,24 @@ struct RopeDynamicsSolver: Sendable {
                 }
             }
         }
-        // Separated candidate facets are inequalities, not initial equalities.
-        // Starting them active needlessly factors/releases hundreds of rows.
-        // Start nonlocal contacts inactive too: overlapping capsules supply
-        // redundant candidate witnesses. The active-set solve inserts every
-        // violated inequality as needed before accepting a correction.
-        var activeIDs=rows.indices.filter{!rows[$0].contact || (rows[$0].particles.count<=2 && rows[$0].residual<=1e-9)}
-        var selected=activeIDs.map{rows[$0]}
-        for _ in 0..<(rows.count*2+10) {
+        // Begin at the equality-only dual optimum. Candidate wood and cord
+        // contacts are inequalities, including already touching facets.
+        var working=RopeContactWorkingSet(activeIDs:rows.indices.filter{!rows[$0].contact})
+        for _ in 0..<min(2048,rows.count*2+10) {
+            let activeIDs=working.activeIDs,selected=activeIDs.map{rows[$0]}
             let solved=try coupledCorrection(rows:selected,weights:weights,prediction:prediction)
             let lambda=solved.multipliers,heightCorrection=solved.height,corrections=solved.particles
-            if let released=selected.indices.filter({selected[$0].contact && lambda[$0]>1e-12}).max(by:{lambda[$0]<lambda[$1]}) {
-                activeIDs.remove(at:released)
-                selected=activeIDs.map{rows[$0]}
-                continue
-            }
+            if working.releaseTensileContact(multipliers:lambda,contacts:selected.map{$0.contact}) {continue}
             let active=Set(activeIDs)
             var worst:(Int,Double)?
             for index in rows.indices where rows[index].contact && !active.contains(index) {
                 let row=rows[index]
                 var residual=row.residual+row.boardGradient*heightCorrection
                 for j in row.particles.indices {residual += simd_dot(row.gradients[j],corrections[row.ropeIndex(j)][row.particles[j]])}
-                if residual < -1e-8 && residual < (worst?.1 ?? 0) {worst=(index,residual)}
+                if residual < -Self.contactLinearTolerance && residual < (worst?.1 ?? 0) {worst=(index,residual)}
             }
             if let index=worst?.0 {
-                activeIDs.append(index);activeIDs.sort();selected=activeIDs.map{rows[$0]};continue
+                working.insert(index);continue
             }
             let before=state
             let maximum=corrections.flatMap{$0}.map{simd_length($0)}.max() ?? 0
@@ -487,11 +483,11 @@ struct RopeDynamicsSolver: Sendable {
                 violation += abs(simd_distance(rope.positions[i],rope.positions[i+1])-rope.restLengths[i])
                 let hits=collider.segmentContacts(from:candidate.boardPoint(rope.positions[i]),to:candidate.boardPoint(rope.positions[i+1]),
                     radius:rope.radius+RopeRegionGeometry.clearance)
-                violation += hits.map{$0.penetrationDepth}.max() ?? 0
+                violation += max(0,(hits.map{$0.penetrationDepth}.max() ?? 0)-Self.contactLinearTolerance)
             }
             for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
                 let points=RopeTriangleCollider.segmentPair(rope.positions[pair.x],rope.positions[pair.x+1],rope.positions[pair.y],rope.positions[pair.y+1])
-                violation += max(0,2*rope.radius+0.00005-simd_distance(points.0,points.1))
+                violation += max(0,2*rope.radius+0.00005-simd_distance(points.0,points.1)-Self.contactLinearTolerance)
             }
             for (id,crossing) in rope.portalCrossings {
                 guard let portal=portalMap[id] else{throw RopePhysicsError.invalid("Missing merit portal")}
@@ -502,7 +498,7 @@ struct RopeDynamicsSolver: Sendable {
         for first in candidate.ropes.indices {
             for second in candidate.ropes.indices where second>first {
                 for contact in RopeCordContacts.between(candidate.ropes[first],candidate.ropes[second],margin:0.0001) {
-                    violation += max(0,contact.targetDistance-contact.distance)
+                    violation += max(0,contact.targetDistance-contact.distance-Self.contactLinearTolerance)
                 }
             }
         }
@@ -568,4 +564,37 @@ enum RopeMotionSweep {
 
 private extension SIMD4 where Scalar == Double {
     var xyz:SIMD3<Double>{SIMD3(x,y,z)}
+}
+
+/// Working set for unilateral contacts; multipliers are compressive at <= 0.
+/// Full working-set solutions may have tensile multipliers. Move from the
+/// retained dual-feasible point only to the first zero multiplier, release
+/// that blocking row, and solve again. Dropping the greatest tensile row
+/// without this blocking step can repeatedly revisit the same working sets.
+struct RopeContactWorkingSet {
+    var activeIDs:[Int]
+    private var feasibleMultipliers:[Int:Double]=[:]
+
+    init(activeIDs:[Int]) {self.activeIDs=activeIDs}
+    mutating func insert(_ id:Int) {activeIDs.append(id);activeIDs.sort()}
+
+    mutating func releaseTensileContact(multipliers:[Double],contacts:[Bool])->Bool {
+        var blocking:(index:Int,fraction:Double)?
+        for j in activeIDs.indices where contacts[j] && multipliers[j]>1e-12 {
+            let previous=min(0,feasibleMultipliers[activeIDs[j]] ?? 0)
+            let fraction=max(0,min(1,-previous/(multipliers[j]-previous)))
+            if fraction<(blocking?.fraction ?? 2) {blocking=(j,fraction)}
+        }
+        if let blocking {
+            for j in activeIDs.indices {
+                let id=activeIDs[j],previous=feasibleMultipliers[id] ?? 0
+                feasibleMultipliers[id]=previous+blocking.fraction*(multipliers[j]-previous)
+            }
+            feasibleMultipliers.removeValue(forKey:activeIDs[blocking.index])
+            activeIDs.remove(at:blocking.index)
+            return true
+        }
+        for j in activeIDs.indices {feasibleMultipliers[activeIDs[j]]=multipliers[j]}
+        return false
+    }
 }
