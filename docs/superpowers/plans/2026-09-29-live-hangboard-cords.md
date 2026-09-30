@@ -17,7 +17,7 @@ render and collision radii identical; retain baseline scale 1.75.
 ## Global Constraints
 
 - Preserve the project's iOS 18 minimum and existing model identity/ODR contract.
-- Use 7 mm diameter on Clavellium and Mini Bar; retain the prior threefold request on other boards unless superseded. Apply the same selected radius to the rendered tube and the physics collider.
+- Use 7 mm diameter on Clavellium and Mini Bar; use documented real diameters on other boards and label unknown sizes as estimates. Apply the same selected radius to the rendered tube and the physics collider.
 - Do not use a thin invisible collider beneath a thick rendered rope. Keep real source dimensions unchanged.
 - A passage identifies an opening through which the cord must remain threaded; its center is not a fixed rope attachment.
 - The current Clavellium 8 mm presentation remains as accepted by the user. Unknown grip-to-channel mappings are not invented.
@@ -54,7 +54,7 @@ For native checks use `scripts/ci-run-xctest.sh`, configuring its required `XCTE
 **Interfaces:**
 - Python: `validate_rope_physics(document: dict, model_sha256: str) -> dict`; `derive_radius(baseline_radius: float, scale: float) -> float`.
 - JSON file: `assets/primary.physics.json`, schema version 1; top-level model/source SHA-256, `coordinateSystem="hang-ten-board-v1"`, collision vertices/triangles, portals, channel regions, and profiles. `media.physicsDescriptorPath` selects it; profiles use `presentationID` and optional existing `instanceID` to identify their suspension setup.
-- Each profile contains board-mass estimate/provenance and ropes. Each rope contains ID, baseline radius, thickness scale 3, derived radius, immutable total rest length, linear-mass estimate/provenance, support endpoints, ordered connection graph, and exterior winding where relevant. Node kinds are `support`, `attachment`, `portal`; edges are `free` or `channel`. Channel edges reference channel regions. A support is fixed in world space; an attachment in board space; a portal constrains a region rather than a point.
+- Each profile contains board-mass estimate/provenance and ropes. Each rope contains ID, baseline radius, source- or estimate-derived thickness scale, derived radius, immutable total rest length, linear-mass estimate/provenance, support endpoints, ordered connection graph, and exterior winding where relevant. Node kinds are `support`, `attachment`, `portal`; edges are `free` or `channel`. Channel edges reference channel regions. A support is fixed in world space; an attachment in board space; a portal constrains a region rather than a point.
 - Swift: `RopePhysicsDescriptor: Decodable, Sendable`, validated `RopePhysicsInput` with collision/portal/channel/profile data; `RopePhysicsDescriptor.validated(modelSHA256: String) throws -> RopePhysicsInput`. Positions/radii/lengths use metres and `Double`. Graph IDs are distinct strings. Profile rest lengths retain physical-rope rather than old display-branch semantics.
 - Missing physics descriptor retains existing legacy behavior. Declared-but-invalid physics fails closed.
 

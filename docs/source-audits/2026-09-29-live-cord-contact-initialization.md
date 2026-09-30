@@ -101,3 +101,28 @@ contact included: maximum local strain 0.00003142 and minimum wood clearance
 3.600084 mm. The measured initialization took about 70 wall seconds in the host
 diagnostic. This is numerical evidence for the candidate, not a real-time
 performance result or authorization to promote an unverified live profile.
+
+## Collision-query traversal and diameter policy follow-up
+
+The operator confirmed that Clavellium and Mini Bar use 7 mm cord and that
+other boards must use documented real cord diameters where available; unknown
+sizes must be labeled as estimates. This supersedes the earlier threefold
+thickness request throughout the remaining catalog rollout.
+
+Nearest-first traversal now visits the closer BVH child before the farther
+child in point and segment closest-surface queries. Triangle geometry and
+contact acceptance are unchanged. A controlled benchmark using 97 Mini Bar
+channel/exterior samples repeated ten times measured identical point/segment
+distances (maximum difference zero), 0.07631 seconds for prior traversal and
+0.05164 seconds for nearest-first traversal, about 1.48 times faster. This is
+a query benchmark, not a frame-rate or device-performance measurement.
+
+Verification after this change: 42 host physics tests passed (160.99 seconds),
+and 22 selected native iOS Simulator tests passed (iOS 26.4, workspace-owned
+strong-owl review device). The inter-cord initialization regression now also
+checks five subsequent gravity steps. The native build initially rejected a
+stale tracked-source boundary manifest; adding the already committed
+RopeCordContacts.swift entry restored the exact git-tracked source list.
+Mini Bar live simulation remains pending: a diagnostic dual-feasible contact
+selection passed its previously cycling third frame, but sustained settling
+and acceptable runtime performance have not been demonstrated.

@@ -39,6 +39,7 @@ HangTen/Models/PlanStorage.swift
 HangTen/Models/ProgressorProtocol.swift
 HangTen/Models/PurchaseManager.swift
 HangTen/Models/RopeBandedSystem.swift
+HangTen/Models/RopeCordContacts.swift
 HangTen/Models/RopeDynamicsSolver.swift
 HangTen/Models/RopePhysicsDescriptor.swift
 HangTen/Models/RopeSimulationMetrics.swift

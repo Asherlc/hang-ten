@@ -88,6 +88,13 @@ final class RopeInterContactTests:XCTestCase {
             XCTAssertEqual(original.restLengths,result.restLengths)
             for (index,point) in original.supports {XCTAssertEqual(result.positions[index],point)}
         }
+        // Keep checking after the collars separate: a contact that is just
+        // clear must still constrain the next gravity correction.
+        for _ in 0..<5 {
+            let next=try solver.step(dt:1.0/240,targetOrientation:state.orientation)
+            XCTAssertTrue(next.metrics.geometryAccepted)
+            XCTAssertTrue(RopeCordContacts.between(solver.state.ropes[0],solver.state.ropes[1]).isEmpty)
+        }
     }
 
     func testInitializationRejectsCrossingBetweenRopesTransactionally() throws {

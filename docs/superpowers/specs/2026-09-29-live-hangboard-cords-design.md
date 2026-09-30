@@ -6,7 +6,9 @@ Clavellium first, followed by the other corded boards.
 The user initially requested three times the current rope thickness. During
 implementation they corrected Clavellium and Mini Bar to a real cord diameter
 of **7 mm**, explicitly confirming both boards. That later instruction governs
-those boards.
+those boards. The operator subsequently confirmed that all other boards use
+documented real diameters where available, with unknown sizes explicitly
+labeled as estimates; this supersedes the earlier threefold display request.
 
 ## Intended behavior
 
@@ -18,8 +20,8 @@ Authors specify the connection graph, physical attachment facts, dimensions,
 and display estimates. They do not specify bearing points for each pose.
 
 Use a 7 mm diameter (3.5 mm radius) for Clavellium and Mini Bar, as confirmed
-by the operator. Preserve the prior threefold display request on other boards
-unless superseded by their source facts or operator instructions. Apply the
+by the operator. Use documented real cord diameters for the other boards and
+explicitly label any unknown size as a display estimate. Apply the
 same selected radius to the rendered tube and the physics collider. The
 retained 2 mm baseline radius uses scale 1.75 on these two boards. Clavellium
 still uses the explicitly documented round-cord adaptation of its flat sling. Do not use a thin invisible collider beneath a thick

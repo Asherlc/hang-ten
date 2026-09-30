@@ -83,7 +83,13 @@ struct RopeTriangleCollider: Sendable {
         while let index=stack.popLast() {
             let node=tree[index]
             if Self.boxDistanceSquared(point, node.minimum, node.maximum) > best { continue }
-            if node.left >= 0 { stack.append(node.left); stack.append(node.right); continue }
+            if node.left >= 0 {
+                let left=tree[node.left],right=tree[node.right]
+                if Self.boxDistanceSquared(point,left.minimum,left.maximum)<Self.boxDistanceSquared(point,right.minimum,right.maximum) {
+                    stack.append(node.right);stack.append(node.left)
+                } else {stack.append(node.left);stack.append(node.right)}
+                continue
+            }
             for i in node.faces {
                 let f=mesh.triangles[i], a=mesh.vertices[f.x], b=mesh.vertices[f.y], c=mesh.vertices[f.z]
                 let q=Self.triangleClosest(point,a,b,c), distance=simd_length_squared(point-q)
@@ -224,7 +230,17 @@ struct RopeTriangleCollider: Sendable {
         while let index=stack.popLast() {
             let node=tree[index], separation=simd_max(simd_max(node.minimum-high,low-node.maximum),SIMD3(repeating:0))
             if simd_length_squared(separation) > best { continue }
-            if node.left >= 0 { stack.append(node.left); stack.append(node.right); continue }
+            if node.left >= 0 {
+                func lowerBound(_ child:Int)->Double {
+                    let bounds=tree[child]
+                    let gap=simd_max(simd_max(bounds.minimum-high,low-bounds.maximum),SIMD3(repeating:0))
+                    return simd_length_squared(gap)
+                }
+                if lowerBound(node.left)<lowerBound(node.right) {
+                    stack.append(node.right);stack.append(node.left)
+                } else {stack.append(node.left);stack.append(node.right)}
+                continue
+            }
             for i in node.faces {
                 let f=mesh.triangles[i], a=mesh.vertices[f.x], b=mesh.vertices[f.y], c=mesh.vertices[f.z]
                 let normal=simd_normalize(simd_cross(b-a,c-a))
