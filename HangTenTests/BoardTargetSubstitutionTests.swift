@@ -2,6 +2,45 @@ import XCTest
 @testable import HangTen
 
 final class ContactResolverTests: XCTestCase {
+    func testCatalogSevenThreeCueUsesTwoHandsOnCompactBoard() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii"))
+        let plan = try XCTUnwrap(PlanCatalog.plan(id: "research.seven-three-repeaters"))
+        let step = try XCTUnwrap(plan.steps.first { $0.phase == .hang && $0.title.contains("29 mm") })
+        let tasks = try XCTUnwrap(step.segments.first?.target?.planTasks)
+        XCTAssertEqual(tasks.first?.count, 2)
+        XCTAssertEqual(
+            Set(try ContactResolver.resolve(tasks[0], step: step, board: board).map(\.id)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
+    func testEveryBoardSpecificCatalogTaskResolves() throws {
+        for plan in PlanCatalog.all where plan.boardID != nil {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: plan.boardID!))
+            for step in plan.steps {
+                for segment in step.segments where segment.kind == .work {
+                    guard let tasks = segment.target?.planTasks else { continue }
+                    XCTAssertNoThrow(
+                        try ContactResolver.resolve(tasks, step: step, board: board),
+                        "\(plan.id) / \(step.id)"
+                    )
+                }
+            }
+        }
+    }
+
+    func testRepeatersFirstCueHighlightsBothCompactTwentyNineMillimeterEdges() throws {
+        let board = try XCTUnwrap(
+            BoardCatalog.packageStore.board(id: "metolius.wood-grips-compact-ii")
+        )
+        let step = try XCTUnwrap(LegacyPlanSeedCatalog.repeaters.steps.first)
+
+        XCTAssertEqual(
+            Set(WorkoutHighlightResolver.contactIDs(for: step, on: board)),
+            ["edge-29-left", "edge-29-right"]
+        )
+    }
+
     func testResolutionFailuresDescribeSelectionOrGeometricPairingFailures() {
         XCTAssertEqual(
             ContactResolutionError.noMatches.errorDescription,

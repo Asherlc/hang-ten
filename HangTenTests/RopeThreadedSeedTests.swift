@@ -6,6 +6,31 @@ import simd
 #endif
 
 final class RopeThreadedSeedTests: XCTestCase {
+    func testUnboundedCollisionCoordinatesFailWithoutIntegerOverflow() throws {
+        let source = try Self.clavellium()
+        for magnitude in [1e16, 3e15, 1e6] {
+            let mesh = RopeCollisionMesh(
+                // Unreferenced finite vertices pass mesh validation but still
+                // contribute to the exterior search's projected bounds.
+                vertices: source.collision.vertices + [SIMD3<Double>(0, magnitude, 0)],
+                triangles: source.collision.triangles)
+            let input = RopePhysicsInput(
+                modelSHA256: source.modelSHA256, sourceSHA256: source.sourceSHA256,
+                collision: mesh, portals: source.portals, channels: source.channels,
+                profiles: source.profiles)
+            let collider = try RopeTriangleCollider(input: input)
+            XCTAssertThrowsError(try RopeThreadedSeed.make(
+                input: input, profileID: "front",
+                orientation: simd_quatd(angle: 0, axis: SIMD3<Double>(0, 0, 1)),
+                collider: collider)) { error in
+                guard case .invalid(let reason) = error as? RopePhysicsError else {
+                    return XCTFail("Expected invalid physics, got \(error)")
+                }
+                XCTAssertEqual(reason, "Seed search exceeds bounded workspace")
+            }
+        }
+    }
+
     static func clavellium() throws -> RopePhysicsInput {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let url = root.appendingPathComponent("Hangboards/clavellium-training-block/assets/primary.physics.json")

@@ -327,6 +327,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "tension.flash-board",
             "tension.grindstone",
             "tension.grindstone-pro",
+            "tension.grindstone-original",
+            "tension.honestone",
             "tension.whetstone",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
@@ -341,6 +343,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "trango.rock-prodigy-training-center",
             "target10a.linebreaker-base",
             "yy.baguette-evo",
+            "yy.verticalboard-evo",
             "yy.penta-evo"
         ]
 

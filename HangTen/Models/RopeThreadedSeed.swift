@@ -218,13 +218,23 @@ enum RopeThreadedSeed {
         let projections=collider.mesh.vertices.map{SIMD2(simd_dot($0-mouth,u),simd_dot($0-mouth,v))}
         let anchorUV=SIMD2(simd_dot(anchor-mouth,u),simd_dot(anchor-mouth,v))
         let top=projections.map{$0.x}.max()!+offset+spacing
-        let minU=Int(floor(min(projections.map{$0.x}.min()!,0)/spacing))-20
-        let maxU=Int(ceil(max(anchorUV.x,top)/spacing))+20
-        let minV=Int(floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing))-20
-        let maxV=Int(ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing))+20
-        let width=maxV-minV+1,count=(maxU-minU+1)*width
-        let states=wrapBelow ? count*3:count
-        guard count>0,states<500_000 else{throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")}
+        // Bound the complete workspace before any integer conversion or
+        // multiplication. Finite descriptor coordinates can still exceed Int.
+        let lowerU=floor(min(projections.map{$0.x}.min()!,0)/spacing)-20
+        let upperU=ceil(max(anchorUV.x,top)/spacing)+20
+        let lowerV=floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing)-20
+        let upperV=ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing)+20
+        let gridWidth=upperV-lowerV+1,gridHeight=upperU-lowerU+1
+        let cellCount=gridHeight*gridWidth,stateCount=cellCount*(wrapBelow ? 3:1)
+        guard [lowerU,upperU,lowerV,upperV,gridWidth,gridHeight,cellCount,stateCount].allSatisfy(\.isFinite),
+              lowerU<=0,upperU>=0,lowerV<=0,upperV>=0,
+              gridWidth>0,gridHeight>0,stateCount>0,stateCount<500_000,
+              let minU=Int(exactly:lowerU),let maxU=Int(exactly:upperU),
+              let minV=Int(exactly:lowerV),let maxV=Int(exactly:upperV),
+              let width=Int(exactly:gridWidth),let count=Int(exactly:cellCount),
+              let states=Int(exactly:stateCount) else {
+            throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")
+        }
         func index(_ a:Int,_ b:Int)->Int{(a-minU)*width+b-minV}
         func point(_ i:Int)->SIMD3<Double>{let j=i%count;return mouth+u*(Double(j/width+minU)*spacing)+v*(Double(j%width+minV)*spacing)}
         let centerU=(projections.map{$0.x}.min()!+projections.map{$0.x}.max()!)/2

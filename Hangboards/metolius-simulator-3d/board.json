@@ -68,6 +68,7 @@
       "name": "Center #3 65 mm round sloper",
       "kind": "sloper",
       "shape": "round",
+      "handCapacity": 2,
       "gripTypes": []
     },
     {

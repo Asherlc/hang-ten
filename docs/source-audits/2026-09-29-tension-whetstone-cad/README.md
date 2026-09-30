@@ -49,7 +49,7 @@ Regression checks retain the photographed non-mirrored depth order, full logical
 
 The package, CAD, and model Python suites passed: 458 tests, 11 skipped legacy native checks. The Whetstone native check ran and passed, including center-depth and jug-section edits, contact boundary normals, and unchanged saved source bytes. Recompiling with pinned FreeCAD 1.1.3 and OpenUSD 26.08 produced byte-identical USDZ and descriptor files.
 
-[Staging validation](staging-validation.json) confirms identical generated board metadata on Android and iOS, exclusion of the FCStd source from both bundles, the Android inline model hash, and the same iOS ODR model hash. [Delivery validation](delivery-verification.json) records the catalog delivery lock check. [Material validation](material-validation.json) records the absence of material/shader prims, bindings, and texture files.
+[Staging validation](staging-validation.json) confirms identical generated board metadata on Android and iOS, exclusion of the FCStd source from both bundles, the Android inline model hash, and the same iOS ODR model hash. [Delivery validation](delivery-verification.json) records the package inventory and checksum results. [Material validation](material-validation.json) records the absence of material/shader prims, bindings, and texture files.
 
 The iOS unit suite passed on an isolated workspace-owned iPhone 17 Pro, iOS 26.5 simulator: 1,234 tests, three skipped, zero failures. This includes the Whetstone RealityKit load test, all 12 contacts' collision/input targets, neutral renderer materials, the typed media boundary, and catalog/source-boundary checks.
 

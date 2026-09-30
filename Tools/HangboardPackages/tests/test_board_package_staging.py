@@ -33,6 +33,9 @@ LIVE_MODEL_PACKAGE_SLUGS = (
     "j-bryant-ftg-32",
     "metolius-wood-grips-compact-ii",
     "tension-flash-board",
+    "yy-verticalboard-evo",
+    "tension-honestone",
+    "tension-grindstone-original",
 )
 
 
@@ -232,7 +235,7 @@ def test_declared_missing_or_stale_physics_fails_staging(tmp_path, monkeypatch):
     (source / "assets/primary.physics.json").write_text(json.dumps(physics_fixture()))
     destination = tmp_path / "Build" / "HangTen.app" / "Hangboards"
     configure_xcode_destination(monkeypatch, destination)
-    with pytest.raises(ValueError, match="hash"):
+    with pytest.raises(ValueError, match="rope physics model hash mismatch"):
         load_staging_module().stage_board_packages(source.parents[1], destination)
 
 
@@ -382,6 +385,9 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
         "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ),
@@ -400,6 +406,9 @@ def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
         "surfaces-for-climbing-transgression-2013",
         "trango-rock-prodigy-forge",
         "trango-rock-prodigy-natural",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ):

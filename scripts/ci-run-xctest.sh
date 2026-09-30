@@ -232,6 +232,12 @@ if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
   for model in \
     frictitious-doormount-pro-7 \
     frictitious-megalith \
+    tension-whetstone \
+    surfaces-for-climbing-transgression-2011 \
+    surfaces-for-climbing-transgression-2013 \
+    yy-verticalboard-evo \
+    tension-honestone \
+    tension-grindstone-original \
     trango-rock-prodigy-forge \
     trango-rock-prodigy-natural \
     zlagboard-evo \

@@ -28,13 +28,15 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         for boardID in boardIDs {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID), boardID)
             guard case .model(let media) = board.defaultPresentation.media else {
-                return XCTFail("expected model for \(boardID)")
+                XCTFail("expected model for \(boardID)")
+                continue
             }
             let profiles = media.instances?.compactMap(\.suspension) ?? [media.suspension].compactMap { $0 }
             XCTAssertFalse(profiles.isEmpty, boardID)
             for suspension in profiles {
                 guard case .pairedLeadCord(let profile) = suspension else {
-                    return XCTFail("expected exterior leads for \(boardID)")
+                    XCTFail("expected exterior leads for \(boardID)")
+                    continue
                 }
                 for (positionID, pose) in profile.canonicalPoses {
                     let routes = try XCTUnwrap(pose.cordContactPoints, "\(boardID)/\(positionID)")

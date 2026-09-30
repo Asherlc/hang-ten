@@ -220,6 +220,9 @@
 		F12900000000000000000011 /* LiveRopeMeshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000011 /* LiveRopeMeshTests.swift */; };
 		F12900000000000000000012 /* RopeCordContacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000012 /* RopeCordContacts.swift */; };
 		F12900000000000000000013 /* RopeInterContactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000013 /* RopeInterContactTests.swift */; };
+		D10000000000000000000034 /* yy-verticalboard-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000034 /* yy-verticalboard-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-verticalboard-evo", ); }; };
+		D10000000000000000000035 /* tension-honestone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000035 /* tension-honestone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-honestone", ); }; };
+		D10000000000000000000036 /* tension-grindstone-original Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000036 /* tension-grindstone-original Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-original", ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -455,6 +458,9 @@
 		F22900000000000000000011 /* LiveRopeMeshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeMeshTests.swift; sourceTree = "<group>"; };
 		F22900000000000000000012 /* RopeCordContacts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeCordContacts.swift; sourceTree = "<group>"; };
 		F22900000000000000000013 /* RopeInterContactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeInterContactTests.swift; sourceTree = "<group>"; };
+		D20000000000000000000034 /* yy-verticalboard-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-verticalboard-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-verticalboard-evo/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000035 /* tension-honestone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-honestone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-honestone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000036 /* tension-grindstone-original Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-original Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-original/Hangboards"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -530,6 +536,9 @@
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
 				D20000000000000000000015 /* clavellium-training-block Hangboards */,
 				D2000000000000000000000E /* yy-baguette-evo Hangboards */,
+				D20000000000000000000036 /* tension-grindstone-original Hangboards */,
+				D20000000000000000000035 /* tension-honestone Hangboards */,
+				D20000000000000000000034 /* yy-verticalboard-evo Hangboards */,
 				D20000000000000000000022 /* zlagboard-evo Hangboards */,
 				JB0000000000000000000002 /* j-bryant-ftg-32 Hangboards */,
 				D20000000000000000000028 /* crimptonite-helium-mobile Hangboards */,
@@ -908,6 +917,9 @@
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
 				D10000000000000000000015 /* clavellium-training-block Hangboards in Resources */,
 				D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */,
+				D10000000000000000000036 /* tension-grindstone-original Hangboards in Resources */,
+				D10000000000000000000035 /* tension-honestone Hangboards in Resources */,
+				D10000000000000000000034 /* yy-verticalboard-evo Hangboards in Resources */,
 				D10000000000000000000021 /* dewoodstok-woodbord Hangboards in Resources */,
 				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				JB0000000000000000000001 /* j-bryant-ftg-32 Hangboards in Resources */,

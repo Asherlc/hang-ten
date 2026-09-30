@@ -29,6 +29,8 @@ struct RopeChannelRegion: Hashable, Sendable {
 struct RopeGraphNode: Hashable, Sendable {
     let id: String
     let kind: String
+    /// Supports are fixed world-space anchors; attachments are board-local.
+    /// A support is intentionally allowed outside the board's model bounds.
     let point: SIMD3<Double>?
     let portalID: String?
 }
