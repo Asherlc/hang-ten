@@ -89,7 +89,8 @@ def test_xctest_runner_does_not_retry() -> None:
         ("true", "success", "failure", 1),
         ("true", "cancelled", "failure", 1),
         ("true", "success", "skipped", 1),
-        ("true", "success", "cancelled", 0),
+        ("true", "success", "cancelled", 1),
+        ("true", "cancelled", "cancelled", 1),
         ("false", "skipped", "skipped", 0),
         ("false", "skipped", "failure", 1),
         ("false", "skipped", "success", 1),
@@ -110,6 +111,72 @@ def test_ui_required_gate_reports_both_groups(
             "BUILD_REQUIRED": required,
             "PAYWALL_RESULT": results[0],
             "MAP_RESULT": results[1],
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == expected, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("job", ["build-required", "test-ui"])
+@pytest.mark.parametrize("changes", ["cancelled", "failure", "skipped"])
+@pytest.mark.parametrize("required", ["true", "false"])
+def test_required_gates_reject_incomplete_change_classification(
+    job: str, changes: str, required: str
+) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = workflow["jobs"][job]["steps"][0]
+    result = subprocess.run(
+        ["bash", "-c", step["run"]],
+        env={
+            **os.environ,
+            "CHANGES_RESULT": changes,
+            "BUILD_REQUIRED": required,
+            "UNIT_TEST_RESULT": "success",
+            "UI_TEST_RESULT": "success",
+            "PAYWALL_RESULT": "success",
+            "MAP_RESULT": "success",
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize(
+    ("required", "unit", "ui", "expected"),
+    [
+        ("true", "success", "success", 0),
+        ("true", "success", "failure", 1),
+        ("true", "failure", "success", 1),
+        ("true", "success", "cancelled", 1),
+        ("true", "cancelled", "success", 1),
+        ("true", "cancelled", "cancelled", 1),
+        ("true", "cancelled", "failure", 1),
+        ("true", "success", "skipped", 1),
+        ("true", "skipped", "success", 1),
+        ("false", "skipped", "success", 0),
+        ("false", "success", "success", 1),
+        ("false", "skipped", "failure", 1),
+        ("false", "skipped", "skipped", 1),
+        ("false", "skipped", "cancelled", 1),
+    ],
+)
+def test_build_required_gate_rejects_missing_required_validation(
+    required: str, unit: str, ui: str, expected: int
+) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = workflow["jobs"]["build-required"]["steps"][0]
+    result = subprocess.run(
+        ["bash", "-c", step["run"]],
+        env={
+            **os.environ,
+            "CHANGES_RESULT": "success",
+            "BUILD_REQUIRED": required,
+            "UNIT_TEST_RESULT": unit,
+            "UI_TEST_RESULT": ui,
         },
         capture_output=True,
         text=True,

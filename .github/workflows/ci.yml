@@ -21,7 +21,10 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Preserve running main builds so completed CI can promote tested commits.
+  # GitHub retains only the newest pending run in each concurrency group.
+  # Superseded PR revisions can stop their own checks without affecting main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
@@ -243,25 +246,11 @@ jobs:
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
-          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
-            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
-            exit 0
-          fi
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
-            # Prefer failure over cancelled so a failed shard is not masked when
-            # a sibling is cancelled mid-run.
-            if [[ "$UNIT_TEST_RESULT" == "failure" || "$UI_TEST_RESULT" == "failure" ]]; then
-              echo "Required iOS test failed: HangTenTests=$UNIT_TEST_RESULT HangTenUITests=$UI_TEST_RESULT" >&2
-              exit 1
-            fi
-            if [[ "$UNIT_TEST_RESULT" == "cancelled" || "$UI_TEST_RESULT" == "cancelled" ]]; then
-              echo "Required iOS test was cancelled for this attempt; evaluating only non-cancelled runs."
-              exit 0
-            fi
             if [[ "$UNIT_TEST_RESULT" != "success" ]] || [[ "$UI_TEST_RESULT" != "success" ]]; then
               echo "Required iOS test did not succeed: HangTenTests=$UNIT_TEST_RESULT HangTenUITests=$UI_TEST_RESULT" >&2
               exit 1
@@ -274,14 +263,6 @@ jobs:
             if [[ "$UNIT_TEST_RESULT" != "skipped" ]]; then
               echo "Non-required HangTenTests had unexpected result: $UNIT_TEST_RESULT" >&2
               exit 1
-            fi
-            if [[ "$UI_TEST_RESULT" == "failure" ]]; then
-              echo "Non-required UI test aggregator failed: HangTenUITests=$UI_TEST_RESULT" >&2
-              exit 1
-            fi
-            if [[ "$UI_TEST_RESULT" == "cancelled" ]]; then
-              echo "UI test aggregator was cancelled for this attempt; evaluating only non-cancelled runs."
-              exit 0
             fi
             if [[ "$UI_TEST_RESULT" != "success" ]]; then
               echo "Non-required UI test aggregator did not succeed: HangTenUITests=$UI_TEST_RESULT" >&2
@@ -761,25 +742,11 @@ jobs:
           BUILD_REQUIRED: ${{ github.event_name != 'pull_request' || needs.changes.outputs.ios == 'true' || needs.changes.outputs.workflow == 'true' }}
         run: |
           set -euo pipefail
-          if [[ "$CHANGES_RESULT" == "cancelled" ]]; then
-            echo "Change classification was cancelled for this attempt; evaluating only non-cancelled runs."
-            exit 0
-          fi
           if [[ "$CHANGES_RESULT" != "success" ]]; then
             echo "Change classification did not succeed: $CHANGES_RESULT" >&2
             exit 1
           fi
           if [[ "$BUILD_REQUIRED" == "true" ]]; then
-            # Prefer failure over cancelled so a failed shard is not masked when
-            # a sibling is cancelled mid-run.
-            if [[ "$PAYWALL_RESULT" == "failure" || "$MAP_RESULT" == "failure" ]]; then
-              echo "Required UI test shard failed: paywall=$PAYWALL_RESULT map=$MAP_RESULT" >&2
-              exit 1
-            fi
-            if [[ "$PAYWALL_RESULT" == "cancelled" || "$MAP_RESULT" == "cancelled" ]]; then
-              echo "Required UI test shard was cancelled for this attempt; evaluating only non-cancelled runs."
-              exit 0
-            fi
             if [[ "$PAYWALL_RESULT" != "success" ]] || [[ "$MAP_RESULT" != "success" ]]; then
               echo "Required UI test shards did not succeed: paywall=$PAYWALL_RESULT map=$MAP_RESULT" >&2
               exit 1
