@@ -386,3 +386,22 @@ diagnostic must not be interpreted as a passing acceptance run.
 The final probe arm64 Simulator build-for-testing and 22 CI-contract tests
 passed. Its exact DerivedData was deleted by the exit trap and deletion
 verified. No local Simulator or UI execution was attempted.
+
+Run `36708033330` on `e031e83bd` passed units, Python and
+purchase/settings/workout UI, but the board shard retained six failures.
+Pro rendered its orbit and then failed canonical rendered reset, so the
+orbit-only diagnostic did not execute. Exported app stdout contains 40
+probe-related synchronization lines and zero root translations. The camera
+returns to canonical in the synchronization logs; Pro's orbit and reset map
+crops are RGB-identical, while active-to-orbit geometry visibly changes.
+No conclusion about root displacement or camera-only invalidation follows
+from this unexecuted probe.
+
+The same one-shot diagnostic is now invoked after the first saved rendered
+Pro failure, either orbit or reset. Its helper and five-second observation
+are unchanged, and the original stage/result are recorded before mutation
+and asserted afterward. Root motion, camera configuration, navigation,
+physical picking and acceptance assertions are unchanged. This adjusts
+diagnostic coverage to the observed failed stage; it is not an unchanged CI
+retry or a rendering fix. All temporary probe wiring still requires removal
+before final trace-free validation and merge.

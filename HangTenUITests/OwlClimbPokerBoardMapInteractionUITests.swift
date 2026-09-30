@@ -345,26 +345,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
         captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
-        // Temporary diagnostic runs only after the original orbit result is
-        // saved. Its scene displacement must never turn that failure into a pass.
-        if visibleOrbitResult != .completed, boardID == "zlagboard.pro" {
-            let frozenImage = try mapSnapshot(in: initialMapFrame, screenFrame: screenFrame)
-            let probe = app.buttons["boardModel.presentationProbe"]
-            if probe.exists {
-                probe.tap()
-                // Observe a fixed five-second window, rather than ending on a
-                // button highlight or any other incidental pixel difference.
-                let observationWindow = XCTestExpectation(description: "post-translation capture window")
-                _ = XCTWaiter.wait(for: [observationWindow], timeout: 5)
-                let probeImage = try mapSnapshot(in: initialMapFrame, screenFrame: screenFrame)
-                capture("\(boardID)-after-root-translation-probe")
-                captureRendererDiagnostic(app: app, name: "\(boardID)-after-root-translation-probe")
-                let attachment = XCTAttachment(string: "originalOrbit=\(visibleOrbitResult);captureWindowSeconds=5;mapPixelsChanged=\(probeImage != frozenImage);judgeGeometryExcludingProbeControl=true")
-                attachment.name = "\(boardID)-presentation-probe-result"
-                attachment.lifetime = .keepAlways
-                add(attachment)
-            }
-        }
+        try probeFailedPresentation(app: app, boardID: boardID, stage: "orbit",
+                                    originalResult: visibleOrbitResult,
+                                    mapFrame: initialMapFrame, screenFrame: screenFrame)
         XCTAssertEqual(visibleOrbitResult, .completed,
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
@@ -394,6 +377,9 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         let renderedResetResult = XCTWaiter.wait(for: [renderedReset], timeout: 30)
         capture("\(boardID)-portrait-reset")
+        try probeFailedPresentation(app: app, boardID: boardID, stage: "reset",
+                                    originalResult: renderedResetResult,
+                                    mapFrame: initialMapFrame, screenFrame: screenFrame)
         XCTAssertEqual(renderedResetResult, .completed,
                        "Camera reset must restore the rendered board, not only its accessibility projection")
 
@@ -416,6 +402,29 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             dx: (frame.minX + frame.width * offset.dx - viewport.minX) / viewport.width,
             dy: (frame.minY + frame.height * offset.dy - viewport.minY) / viewport.height
         ))
+    }
+
+    // Temporary diagnostic runs only after a saved rendered failure. Neither
+    // its displacement nor its changed pixels can turn that failure into a pass.
+    private func probeFailedPresentation(app: XCUIApplication, boardID: String, stage: String,
+                                         originalResult: XCTWaiter.Result,
+                                         mapFrame: CGRect, screenFrame: CGRect) throws {
+        guard originalResult != .completed, boardID == "zlagboard.pro" else { return }
+        let frozenImage = try mapSnapshot(in: mapFrame, screenFrame: screenFrame)
+        let probe = app.buttons["boardModel.presentationProbe"]
+        guard probe.exists else { return }
+        probe.tap()
+        // Observe a fixed five-second window, rather than ending on a button
+        // highlight or any other incidental pixel difference.
+        let observationWindow = XCTestExpectation(description: "post-translation capture window")
+        _ = XCTWaiter.wait(for: [observationWindow], timeout: 5)
+        let probeImage = try mapSnapshot(in: mapFrame, screenFrame: screenFrame)
+        capture("\(boardID)-after-\(stage)-root-translation-probe")
+        captureRendererDiagnostic(app: app, name: "\(boardID)-after-\(stage)-root-translation-probe")
+        let attachment = XCTAttachment(string: "stage=\(stage);originalResult=\(originalResult);captureWindowSeconds=5;mapPixelsChanged=\(probeImage != frozenImage);judgeGeometryExcludingProbeControl=true")
+        attachment.name = "\(boardID)-presentation-probe-result"
+        attachment.lifetime = .keepAlways
+        add(attachment)
     }
 
     private func captureRendererDiagnostic(app: XCUIApplication, name: String) {
