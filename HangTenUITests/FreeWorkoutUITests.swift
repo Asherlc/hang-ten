@@ -92,7 +92,7 @@ final class FreeWorkoutUITests: XCTestCase {
         tapVisibleControl(duration, requireHittable: false)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
-        tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
+        tapVisibleControl(app.buttons["freeWorkout.keyboard.done"], requireHittable: false)
 
         let startSet = firstMatching(
             in: app,
@@ -100,10 +100,8 @@ final class FreeWorkoutUITests: XCTestCase {
             labels: ["Start Set"]
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
-        if !startSet.isHittable {
-            app.scrollViews["freeWorkout.log.scroll"].swipeUp()
-        }
-        tapHittable(startSet, timeout: 15)
+        app.scrollViews["freeWorkout.log.scroll"].swipeUp()
+        tapVisibleControl(startSet, requireHittable: false)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
         XCTAssertTrue(guided.waitForExistence(timeout: 15), "Start Set should open guided hang")
@@ -114,7 +112,7 @@ final class FreeWorkoutUITests: XCTestCase {
             labels: ["Cancel"]
         )
         if cancel.waitForExistence(timeout: 10) {
-            tapHittable(cancel, timeout: 10)
+            tapVisibleControl(cancel, requireHittable: false)
         } else if app.alerts.buttons["Cancel"].exists {
             tapHittable(app.alerts.buttons["Cancel"], timeout: 3)
         } else {

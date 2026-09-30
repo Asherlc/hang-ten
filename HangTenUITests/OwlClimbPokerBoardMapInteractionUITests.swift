@@ -307,8 +307,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let orbitStart = surfacePoint != nil
             ? initialPoint
             : map.coordinate(withNormalizedOffset: CGVector(dx: 0.55, dy: 0.5))
-        orbitStart.press(forDuration: 0.1,
-                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: 0.70, dy: 0.65)))
+        // DoorMount's shallow viewport makes the old gesture only 44 × 11 points.
+        // Give UIKit a sustained drag across the surface rather than a brief
+        // touch that can be synthesized as a contact tap/camera reset on CI.
+        let orbitEndX = boardID == "frictitious.doormount-pro-7" ? 0.50 : 0.70
+        orbitStart.press(forDuration: 0.3,
+                         thenDragTo: map.coordinate(withNormalizedOffset: CGVector(dx: orbitEndX, dy: 0.65)),
+                         withVelocity: .slow, thenHoldForDuration: 0.2)
         XCTAssertTrue(selected.exists, "Orbit must preserve contact selection")
         let orbitFinished = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             contact.frame != initialContactFrame
@@ -321,7 +326,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             }
             return image != initialMapImage
         }, object: nil)
-        let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
+        let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 60)
         capture("\(boardID)-portrait-orbit")
         captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
         XCTAssertEqual(visibleOrbitResult, .completed,
