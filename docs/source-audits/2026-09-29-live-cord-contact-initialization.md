@@ -535,3 +535,51 @@ reached the 500-CG-iteration bound, and failed complementarity line search. It
 returned no accepted correction and was not adopted. This rejects that simple
 preconditioner/initialization experiment, not matrix-free methods generally.
 Evidence is `strong-owl-matrix-free-screen.report.json`.
+
+### Bounded toroidal patch screening: not adopted
+
+Astra and Sol reconciled the next screening into two stages: geometry correctness
+first, then one bounded coupled contact-kernel attempt; geometry performance does
+not gate that second attempt, but correctness does. Joint continuation targets
+are 50x complete geometry improvement, verification p95 at most 1 ms, and cold
+QP p95 at most 2 ms. These are experiment targets, not device readiness claims.
+The independent reports and final consensus are retained under the workspace
+probe's `committee/strong-owl-*-post-backbone-*.md` paths. All three owned committee
+resources, including the failed privacy-restricted Muse attempt, were archived
+by their owner exit trap and their archived statuses verified.
+
+The supported triangle-to-untrimmed-reference envelopes use directed 80-digit
+Decimal arithmetic, adjacent correctly-rounded square-root results and upward
+binary64 conversion. Independent mathematical review confirmed the Hessian
+bounds and the barycentric interpolation constant Mh-squared/6. Ring-torus
+radius and unsupported-patch uniqueness guards were added and the proof rerun.
+Maximum toroidal envelopes are 18.902 and 20.583 micrometres. These are one-sided
+bounds against the actual triangles, not reverse CAD, trim, solid-side or global
+CAD-to-mesh certificates. Evidence is `strong-owl-mini-patch-envelopes.json`.
+
+A single healthy-step replay retained 6,167 top-level geometry requests with
+complete mesh snapshots and stage tags, SHA-256
+`1e5b25f15d18d6af215fa7942dad13addd644267741336856f8838409eee1f14`:
+2,514 assembly manifold queries, 2,926 merit manifold queries, 418 wood-clearance
+queries and 309 channel signed-distance queries. It is retained as
+`strong-owl-healthy-query-corpus.json`.
+
+The workspace adapter applied outward binary64 whole-segment torus lower bounds
+to immutable node masks, retaining triangle witnesses, containment and complete
+unsupported traversal. All 6,323 corpus and actual-torus penetration/crossing/
+sweep comparisons were bit-identical to the reference. However, independent
+review identified a missing numerical bridge between mathematical distance
+bounds and ordinary floating triangle-kernel comparisons near ties. Corpus
+equivalence does not prove general floating-output preservation, so the Stage A
+correctness gate remains incomplete.
+
+Fifty alternating complete corpus replays measured reference mean 304.377 ms
+and candidate mean 305.702 ms, a 0.9957x speedup. After 20 warmups, 100 alternating
+complete cached verification replays measured candidate p95 30.127 ms versus
+reference 31.791 ms. Both performance targets failed. The report was explicitly
+qualified after review as corpus-tested output equivalence, not a general
+output-preservation certificate. This screening ends without adoption or a
+Stage B attempt because the correctness prerequisite remains unresolved. No
+production collider, acceptance threshold, cord geometry or catalog profile was
+changed. Evidence is `strong-owl-certified-patch-screen.report.json`; the exact
+owned probe exited and process absence was verified.
