@@ -174,8 +174,10 @@ def manifest(document) -> dict:
     return json.loads(document.HangTenBoardManifest)
 
 
-def rail_section_polyline(rail_shape, z: float, step: float = 1.0) -> list[tuple[float, float]]:
-    """Return the rail's physical transverse section at Z as an ordered X/Y polyline.
+def rail_section_polyline(
+    rail_shape, z: float, step: float = 1.0
+) -> tuple[list[tuple[float, float]], list]:
+    """Return the ordered X/Y section polyline and its native edges at Z.
 
     The inaccessible mounting-plane chord (Y = 0) is dropped, so the polyline
     runs from the inner rear corner over the crown to the outer rear corner.
@@ -188,7 +190,7 @@ def rail_section_polyline(rail_shape, z: float, step: float = 1.0) -> list[tuple
         or abs(edge.valueAt((edge.FirstParameter + edge.LastParameter) / 2.0).y) > 1e-6
     ]
     if not edges:
-        return []
+        return [], []
     wire_edges = Part.__sortEdges__(edges)
     points = []
     for edge in wire_edges:
@@ -199,7 +201,42 @@ def rail_section_polyline(rail_shape, z: float, step: float = 1.0) -> list[tuple
         points.extend(sampled if not points else sampled[1:])
     if points[0].x > points[-1].x:
         points.reverse()
-    return [(point.x, point.y) for point in points]
+    return [(point.x, point.y) for point in points], wire_edges
+
+
+def section_tangent_breaks(wire_edges, straight_only=False) -> list[float]:
+    """Measure native tangent jumps at joins, regardless of edge orientation.
+
+    Use the closest endpoints to orient each tangent along the open section;
+    CAD edge parameter directions need not agree with the sorted wire order.
+    With straight_only, measure only joins between polygonal facets.
+    """
+    def ends(edge):
+        first, last = edge.FirstParameter, edge.LastParameter
+        return (
+            edge.valueAt(first), edge.tangentAt(first),
+            edge.valueAt(last), edge.tangentAt(last),
+        )
+
+    def is_straight(edge):
+        chord = (edge.valueAt(edge.LastParameter) - edge.valueAt(edge.FirstParameter)).Length
+        return abs(edge.Length - chord) <= 1e-7 * edge.Length
+
+    breaks = []
+    for a, b in zip(wire_edges, wire_edges[1:]):
+        if straight_only and not (is_straight(a) and is_straight(b)):
+            continue
+        a_start, a_leave, a_end, a_arrive = ends(a)
+        b_start, b_leave, b_end, b_arrive = ends(b)
+        candidates = [
+            ((a_end - b_start).Length, a_arrive, b_leave),
+            ((a_end - b_end).Length, a_arrive, -b_arrive),
+            ((a_start - b_start).Length, -a_leave, b_leave),
+            ((a_start - b_end).Length, -a_leave, -b_arrive),
+        ]
+        _, incoming, outgoing = min(candidates, key=lambda item: item[0])
+        breaks.append(math.degrees(incoming.getAngle(outgoing)))
+    return breaks
 
 
 def crown_metrics(polyline: list[tuple[float, float]]) -> dict:
@@ -246,16 +283,24 @@ def crown_metrics(polyline: list[tuple[float, float]]) -> dict:
 
 
 def rail_crown_sections(rail_shape) -> list[dict]:
-    """The crown is one smooth convex arch at four heights, with no creases."""
+    """The crown is a convex arch at four heights, without polygonal faceting."""
     results = []
     for z in (35.0, 80.0, 125.0, 170.0):
-        polyline = rail_section_polyline(rail_shape, z)
+        polyline, edges = rail_section_polyline(rail_shape, z)
         if len(polyline) < 10:
             results.append({"z": z, "passed": False, "max_turn": float("nan")})
             continue
         metrics = crown_metrics(polyline)
+        metrics["max_tangent_break"] = max(section_tangent_breaks(edges), default=0.0)
+        # The authored curved shoulders meet a flat nose with retained tangent
+        # jumps. Reject polygonal crowns by testing joins between straight
+        # facets directly, independently of facet spacing or sampled turns.
+        metrics["max_facet_break"] = max(
+            section_tangent_breaks(edges, straight_only=True), default=0.0
+        )
         passed = (
             metrics["max_turn"] < 20.0
+            and metrics["max_facet_break"] < 0.001
             and metrics["max_turn_concentration"] < 0.45
             and metrics["max_concave_turn"] < 3.0
             and metrics["total_turn"] > 90.0
@@ -271,7 +316,7 @@ def rail_longitudinal_continuity(rail_shape) -> dict:
     sampled = []
     for index in range(81):
         z = 10.0 + index * 2.5
-        polyline = rail_section_polyline(rail_shape, z)
+        polyline, _ = rail_section_polyline(rail_shape, z)
         if len(polyline) < 10:
             sampled.append(None)
             continue
@@ -335,15 +380,15 @@ def shallow_faceted_rail_control():
     return Part.Face(wire).extrude(App.Vector(0, 0, 220))
 
 
-def closely_faceted_rail_control():
-    """A 32-facet, 130 mm arc crown with shallow, closely spaced creases."""
+def closely_faceted_rail_control(facets=32):
+    """A 130 mm arc crown with shallow, closely spaced creases."""
     points = [
         App.Vector(
-            42 + 42 * math.cos(math.pi + index * math.pi / 32),
-            42 * math.sin(math.pi + index * math.pi / 32),
+            42 + 42 * math.cos(math.pi + index * math.pi / facets),
+            42 * math.sin(math.pi + index * math.pi / facets),
             0,
         )
-        for index in range(33)
+        for index in range(facets + 1)
     ]
     wire = Part.makePolygon(points + [points[0]])
     return Part.Face(wire).extrude(App.Vector(0, 0, 220))
@@ -470,12 +515,13 @@ def main() -> int:
         rail_crown_sections(right_rail.Shape) if right_rail is not None else []
     )
     check(
-        "side rail has a smooth convex crown without creases",
+        "side rail has a convex curved crown without polygonal facets",
         len(crown_sections) == 4
         and all(section["passed"] for section in crown_sections),
         "; ".join(
             f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
             f"concentration={section.get('max_turn_concentration', float('nan')):.2f} "
+            f"tangent-break={section.get('max_tangent_break', float('nan')):.2f} "
             f"concave={section.get('concave_turns')} "
             f"nose={section.get('nose_depth', float('nan')):.1f}"
             for section in crown_sections
@@ -520,19 +566,21 @@ def main() -> int:
         ),
     )
 
-    closely_faceted_control = closely_faceted_rail_control()
-    closely_faceted_sections = rail_crown_sections(closely_faceted_control)
-    check(
-        "crown gate rejects closely spaced shallow creases",
-        closely_faceted_control.isValid()
-        and len(closely_faceted_sections) == 4
-        and not any(section["passed"] for section in closely_faceted_sections),
-        "; ".join(
-            f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
-            f"concentration={section.get('max_turn_concentration', float('nan')):.2f}"
-            for section in closely_faceted_sections
-        ),
-    )
+    for facets in (32, 64):
+        closely_faceted_control = closely_faceted_rail_control(facets)
+        closely_faceted_sections = rail_crown_sections(closely_faceted_control)
+        check(
+            f"crown gate rejects closely spaced shallow creases ({facets} facets)",
+            closely_faceted_control.isValid()
+            and len(closely_faceted_sections) == 4
+            and not any(section["passed"] for section in closely_faceted_sections),
+            "; ".join(
+                f"z={section['z']:.0f} max-turn={section.get('max_turn', float('nan')):.2f} "
+                f"concentration={section.get('max_turn_concentration', float('nan')):.2f} "
+                f"facet-break={section.get('max_facet_break', float('nan')):.2f}"
+                for section in closely_faceted_sections
+            ),
+        )
 
     lumpy_control = lumpy_rail_control()
     lumpy_continuity = rail_longitudinal_continuity(lumpy_control)
