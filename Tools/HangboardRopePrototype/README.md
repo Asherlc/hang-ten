@@ -1,5 +1,11 @@
 # Mini Bar Bullet rope contact experiment
 
+The separate [sparse contact screen](sparse_contact_screen.py) targets the
+current coupled live solver's frozen triangle-contact QP. Its
+[30 September audit](../../docs/source-audits/2026-09-30-live-sparse-primal-contact.md)
+records a numerical pass and a performance rejection. It uses the corrected
+CAD/channel workload and does not reuse the surrogate below.
+
 **Historical experiment (2026-09-27):** These runs used the earlier USDZ
 whose body had no local holes; the prototype pinned inferred exterior guide
 points. The current CAD body has two connected channels, one per end, and

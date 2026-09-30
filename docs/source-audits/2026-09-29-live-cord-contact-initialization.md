@@ -1,5 +1,10 @@
 # Live cord initialization: simultaneous contact audit
 
+The dedicated live workspace's next bounded experiment is recorded in
+[the 30 September sparse-primal contact audit](2026-09-30-live-sparse-primal-contact.md).
+It passes the fixed frozen numerical checkpoint but fails the unchanged
+performance screen and remains unadopted.
+
 This is an intermediate solver audit. The Mini Bar remains on its reviewed
 static 7 mm cord routes; this change does not enable its live profile or finish
 the all-board rollout.

@@ -1,0 +1,53 @@
+{
+  "owner": "strong-owl-live-physics",
+  "scope": "host frozen QP only; no geometry/complete-step/device claim",
+  "inputSHA256": "93d9f142cf8c8b6d42d7e540838665505beba1b076e85c6d6ec035308dfc0be7",
+  "oracleSHA256": "f1eeb72eaeedb93dde3d3ca7e1a1c09b5fe3930845174f2811f5d39fdcf3618c",
+  "sourceSHA256": "5ff4b789c6efa326ca786678e44f41d6ab7d7992e9d4bc5fd0dfd831886bdbc0",
+  "numpy": "2.2.6",
+  "scipy": "1.16.2",
+  "host": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "excludedCosts": [
+    "frozen input reconstruction (reported separately)",
+    "triangle witness/normal discovery",
+    "nonlinear step",
+    "mesh update"
+  ],
+  "numericallyAccepted": true,
+  "runtimeAdoption": false,
+  "loadSeconds": 0.209617790998891,
+  "variables": 1249,
+  "equalityRows": 418,
+  "contactRows": 22641,
+  "contactNonzeros": 137974,
+  "hessianNonzeros": 11197,
+  "regularization": 1e-08,
+  "coldMaximumSeconds": 0.3860689160064794,
+  "coldP95Seconds": 0.3713321208022535,
+  "kernel2msGate": false,
+  "outcome": "closed-without-adoption",
+  "runCount": 50,
+  "iterations": [
+    36
+  ],
+  "testsPassed": 24,
+  "meanTimingsSeconds": {
+    "validation": 0.0004223125195130706,
+    "equalitySetup": 0.002012415799545124,
+    "aggregation": 0.09233474796987139,
+    "factor": 0.13359226261032744,
+    "directions": 0.05535490533104166,
+    "residuals": 0.017358352814335377,
+    "total": 0.31701824253657834
+  },
+  "maximumResiduals": {
+    "primalDifference": 6.008388429112782e-07,
+    "stationarity": 8.883332592008976e-11,
+    "allRowFeasibility": 1.0661415326962409e-13,
+    "regularizedEquality": 1.877086159649665e-19,
+    "regularizedContact": 1.6581232425319465e-16,
+    "regularizedComplementarity": 1.1611076974315948e-15,
+    "dualViolation": 0.0,
+    "slackViolation": 0.0
+  }
+}
