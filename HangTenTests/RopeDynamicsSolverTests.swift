@@ -5,6 +5,54 @@ import simd
 #endif
 
 final class RopeDynamicsSolverTests: XCTestCase {
+    private func trustChain(_ lengths:[Double],supports:[Int:SIMD3<Double>]=[:],attachments:[Int:SIMD3<Double>]=[:])->RopeChainState {
+        let positions=[SIMD3<Double>.zero]+lengths.indices.map {SIMD3<Double>(lengths[...$0].reduce(0,+),0,0)}
+        return RopeChainState(id:"trust",radius:0.0035,linearMass:0.01,restLengths:lengths,positions:positions,
+            previousPositions:positions,velocities:positions.map{_ in .zero},supports:supports,attachments:attachments,
+            portals:[:],channelSegments:[:])
+    }
+
+    func testTrustAllowsRigidTranslation() {
+        let chain=trustChain([0.001,0.002])
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[SIMD3(1,2,3),SIMD3(1,2,3),SIMD3(1,2,3)]],heightCorrection:2),1)
+    }
+
+    func testTrustBoundsRelativeMotionOfEachMaterialLink() {
+        let chain=trustChain([0.01,0.02])
+        // First link changes by 4 mm, second by 2 mm: the first sets alpha to 1/4.
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[SIMD3(1,0,0),SIMD3(1.004,0,0),SIMD3(1.006,0,0)]],heightCorrection:0),0.25,accuracy:1e-12)
+    }
+
+    func testTrustBoundsDiagonalAndTransverseMotion() {
+        let chain=trustChain([0.01])
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[.zero,SIMD3(0.003,0.004,0)]],heightCorrection:0),0.2,accuracy:1e-12)
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[.zero,SIMD3(0,0,0.005)]],heightCorrection:0),0.2,accuracy:1e-12)
+    }
+
+    func testTrustUsesActualFixedSupportDisplacement() {
+        let chain=trustChain([0.01],supports:[0:.zero])
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[SIMD3(1,0,0),SIMD3(0.004,0,0)]],heightCorrection:0),0.25,accuracy:1e-12)
+    }
+
+    func testTrustUsesActualBoardAttachmentDisplacement() {
+        let chain=trustChain([0.01],attachments:[1:SIMD3(0.01,0,0)])
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[SIMD3(0,0.02,0),.zero]],heightCorrection:0.02),1)
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[chain],
+            corrections:[[.zero,.zero]],heightCorrection:0.004),0.25,accuracy:1e-12)
+    }
+
+    func testTrustDoesNotUseUnrelatedShortestLink() {
+        let tiny=trustChain([0.00001]),moving=trustChain([0.01])
+        XCTAssertEqual(RopeDynamicsSolver.correctionFraction(ropes:[tiny,moving],
+            corrections:[[.zero,.zero],[.zero,SIMD3(0.004,0,0)]],heightCorrection:0),0.25,accuracy:1e-12)
+    }
+
     func testRejectsNonfiniteStateAndInvalidTimeStep() throws {
         let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
         let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))

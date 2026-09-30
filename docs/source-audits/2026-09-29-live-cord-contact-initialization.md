@@ -679,3 +679,7 @@ probe context. Source, binary and input SHA-256 snapshots are retained in
 successfully. The upright verification result does not address the independently
 measured contact-row assembly, nonlinear merit or QP costs, and supplies no
 whole-geometry 50x speedup, complete-step or live-rollout claim.
+
+## 2026-09-30: production relative-displacement trust
+
+[The production trust correction and full-resolution evidence](2026-09-30-live-relative-trust.md) retain all physical and accuracy gates. Host tests/rotations pass; device performance and catalog promotion remain unestablished.

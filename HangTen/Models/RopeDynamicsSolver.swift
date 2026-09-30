@@ -340,8 +340,7 @@ struct RopeDynamicsSolver: Sendable {
         let heightCorrection=solved.height,corrections=solved.particles
         let before=state
         let maximum=corrections.flatMap{$0}.map{simd_length($0)}.max() ?? 0
-        let shortest=state.ropes.flatMap{$0.restLengths}.min()!
-        var alpha=min(1,0.1*shortest/max(1e-12,max(maximum,abs(heightCorrection))))
+        var alpha=Self.correctionFraction(ropes:state.ropes,corrections:corrections,heightCorrection:heightCorrection)
         let penalty=max(1,2*(lambda.map{abs($0)}.max() ?? 0))
         let score=try merit(state,prediction:prediction,weights:weights,penalty:penalty)
         for _ in 0..<16 {
@@ -367,6 +366,27 @@ struct RopeDynamicsSolver: Sendable {
         }
         state=before
         throw StepFailure.nonlinearConvergence
+    }
+
+    /// Bound the relative displacement of each immutable material link. Common
+    /// translation preserves link lengths; attached endpoints instead move by
+    /// the solved board height, and fixed supports do not move. Global merit,
+    /// exact geometry, and continuous collision checks still accept the trial.
+    static func correctionFraction(ropes:[RopeChainState],corrections:[[SIMD3<Double>]],heightCorrection:Double)->Double {
+        var fraction=1.0
+        for r in ropes.indices {
+            let rope=ropes[r]
+            func displacement(_ particle:Int)->SIMD3<Double> {
+                if rope.supports[particle] != nil {return .zero}
+                if rope.attachments[particle] != nil {return SIMD3(0,heightCorrection,0)}
+                return corrections[r][particle]
+            }
+            for link in rope.restLengths.indices {
+                let relative=simd_length(displacement(link+1)-displacement(link))
+                if relative>0 {fraction=min(fraction,0.1*rope.restLengths[link]/relative)}
+            }
+        }
+        return fraction
     }
 
     private func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws

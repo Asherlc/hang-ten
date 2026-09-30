@@ -1,0 +1,196 @@
+{
+  "baseCommit": "7a01535f7",
+  "baseline": {
+    "failure": null,
+    "owner": "strong-owl-live-physics",
+    "particles": [
+      280
+    ],
+    "runs": [
+      {
+        "angle": 0,
+        "maxStepSeconds": 0.8136576249962673,
+        "maximumLengthError": 7.07353509099562e-10,
+        "maximumStrain": 2.8331950119309113e-09,
+        "minimumClearance": 0.003599995054713326,
+        "p95StepSeconds": 0.4082851249841042,
+        "phase": 0,
+        "settled": true,
+        "steps": 123,
+        "totalSeconds": 16.44934137520613
+      },
+      {
+        "angle": 1.5707963267948966,
+        "maxStepSeconds": 1.9800744166132063,
+        "maximumLengthError": 5.496233002055817e-08,
+        "maximumStrain": 5.813413026523051e-07,
+        "minimumClearance": 0.0035999999197842162,
+        "p95StepSeconds": 0.477606916683726,
+        "phase": 1,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 42.67770708340686
+      },
+      {
+        "angle": 3.141592653589793,
+        "maxStepSeconds": 1.9028944166493602,
+        "maximumLengthError": 3.015967475761272e-10,
+        "maximumStrain": 6.811015529351039e-09,
+        "minimumClearance": 0.0035999966874761635,
+        "p95StepSeconds": 0.47388712503015995,
+        "phase": 2,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 45.37800962507026
+      },
+      {
+        "angle": 0,
+        "maxStepSeconds": 1.7918683333555236,
+        "maximumLengthError": 2.991991099321467e-10,
+        "maximumStrain": 1.1502651053874047e-08,
+        "minimumClearance": 0.003599995855054071,
+        "p95StepSeconds": 0.2167064166860655,
+        "phase": 3,
+        "settled": true,
+        "steps": 476,
+        "totalSeconds": 44.178725667705294
+      },
+      {
+        "angle": 1.5707963267948966,
+        "maxStepSeconds": 1.8096747916424647,
+        "maximumLengthError": 5.496233046464738e-08,
+        "maximumStrain": 5.813413026523051e-07,
+        "minimumClearance": 0.0035999999197842713,
+        "p95StepSeconds": 0.18260629166616127,
+        "phase": 4,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 23.208041874342598
+      },
+      {
+        "angle": 0,
+        "maxStepSeconds": 0.5635959582868963,
+        "maximumLengthError": 2.4445545587781226e-10,
+        "maximumStrain": 1.6464094532153695e-09,
+        "minimumClearance": 0.0035999999966447377,
+        "p95StepSeconds": 0.1919096250203438,
+        "phase": 5,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 22.368286874552723
+      }
+    ],
+    "scope": "current-source full-resolution Clav host solver; no device/mesh update claim",
+    "setupSeconds": 1.8882987083052285
+  },
+  "candidate": {
+    "failure": null,
+    "owner": "strong-owl-live-physics",
+    "particles": [
+      280
+    ],
+    "runs": [
+      {
+        "angle": 0,
+        "maxStepSeconds": 0.45006562501657754,
+        "maximumLengthError": 7.066698337609978e-10,
+        "maximumStrain": 2.6078135206830666e-09,
+        "minimumClearance": 0.0035999950546638376,
+        "p95StepSeconds": 0.156135416647885,
+        "phase": 0,
+        "settled": true,
+        "steps": 123,
+        "totalSeconds": 7.606780208298005
+      },
+      {
+        "angle": 1.5707963267948966,
+        "maxStepSeconds": 0.923830249987077,
+        "maximumLengthError": 8.05015367699724e-08,
+        "maximumStrain": 1.905230206045161e-06,
+        "minimumClearance": 0.0035999998831694733,
+        "p95StepSeconds": 0.13542916666483507,
+        "phase": 1,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 20.324847291456535
+      },
+      {
+        "angle": 3.141592653589793,
+        "maxStepSeconds": 1.1588525000261143,
+        "maximumLengthError": 3.140411264368481e-10,
+        "maximumStrain": 8.047348787343367e-09,
+        "minimumClearance": 0.0035999945431055298,
+        "p95StepSeconds": 0.19182537496089935,
+        "phase": 2,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 25.839946000138298
+      },
+      {
+        "angle": 0,
+        "maxStepSeconds": 1.1459164166590199,
+        "maximumLengthError": 1.4029620254429886e-07,
+        "maximumStrain": 5.097321093439078e-06,
+        "minimumClearance": 0.0035999958951241306,
+        "p95StepSeconds": 0.22973579168319702,
+        "phase": 3,
+        "settled": true,
+        "steps": 476,
+        "totalSeconds": 56.98402554105269
+      },
+      {
+        "angle": 1.5707963267948966,
+        "maxStepSeconds": 1.9569337083376013,
+        "maximumLengthError": 8.05015366589501e-08,
+        "maximumStrain": 1.9052302149269451e-06,
+        "minimumClearance": 0.003599999883169488,
+        "p95StepSeconds": 0.3399183750152588,
+        "phase": 4,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 48.79836937552318
+      },
+      {
+        "angle": 0,
+        "maxStepSeconds": 7.227871000010055,
+        "maximumLengthError": 2.447982927478165e-10,
+        "maximumStrain": 1.3366325823938041e-09,
+        "minimumClearance": 0.003599999997777063,
+        "p95StepSeconds": 0.9691605000407435,
+        "phase": 5,
+        "settled": true,
+        "steps": 297,
+        "totalSeconds": 89.44093024980975
+      }
+    ],
+    "scope": "current-source full-resolution Clav host solver; no device/mesh update claim",
+    "setupSeconds": 0.7086150416289456
+  },
+  "catalogPromotion": false,
+  "devicePerformanceEstablished": false,
+  "hashes": {
+    ".context/strong-owl-live-physics-execution/all-tests.log": "95e77d3eb917ca24c008bac53626a2a368bb9b62287fd77d8a8b860957bbac59",
+    ".context/strong-owl-live-physics-execution/clav-benchmark/main.swift": "aa076a05bffe7d57350cb37bfd746a224933ea537db573a77ce2da4757b199a9",
+    ".context/strong-owl-live-physics-execution/clav-production-host.frames.json": "efefbf47535746d436d43dd0e5e587b54770533f05c282b87e3b820aabc91233",
+    ".context/strong-owl-live-physics-execution/clav-production-host.report.json": "0ef8f4aa81526226e55eda9e6bf56fd4a8399f512581b2d4396d02a70c0b372e",
+    ".context/strong-owl-live-physics-execution/clav-relative-host.frames.json": "6af4380b0033a7e91a4416ee3132f74b9a0ed77a26c7d704dbcb9b1862bf5fd5",
+    ".context/strong-owl-live-physics-execution/clav-relative-host.report.json": "7e0346ccd275395d0676ebc3353330e1b826e4dee5a803d8ac2731a0a3be18d1",
+    ".context/strong-owl-live-physics-execution/clav-relative/main.swift": "9f42744fe3dcbb3d55b73c3c017f2046372f8b281c21fdd574b1f433355d8510",
+    ".context/strong-owl-live-physics-execution/trust-green-six.log": "478c95e9aa5b1cd23f876f2004fb4a2914f4cbb5bafb9397c900f21c243df6c7",
+    ".context/strong-owl-live-physics-execution/trust-red.log": "403ca3dd41947d3ea583c143184739173a584e3e6147a25fb2188875d73e1f16",
+    "HangTen/Models/RopeDynamicsSolver.swift": "b1eec3408f674e2545bff041105e1cef1c25d98725cf583c672478f988ea2493",
+    "HangTenTests/RopeDynamicsSolverTests.swift": "c562e7674aec34d74ab053ac2477a327795afad5947fa642fc15b23530575d9d"
+  },
+  "hostFullSuite": {
+    "failures": 0,
+    "tests": 71
+  },
+  "latestFocusedSuite": {
+    "addsOneDiagonalAndTransverseTest": true,
+    "failures": 0,
+    "tests": 6
+  },
+  "owner": "strong-owl-live-physics",
+  "review": "focused reviewer found no must-fix issues; suggested diagonal/transverse test added and passed",
+  "runtimeChange": "per-link relative applied endpoint trust, coefficient 0.1 retained"
+}
