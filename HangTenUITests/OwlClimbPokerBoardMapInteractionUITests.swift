@@ -472,13 +472,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
 
     /// Counts selected-highlight pixels near the tapped surface within the finite viewport crop.
     private func highlightedSurfaceSampleCount(at point: CGPoint, in viewport: CGRect) throws -> Int {
-        guard let image = normalizedScreenImage().cgImage else { return 0 }
-        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard").frame
-        let scale = CGFloat(image.width) / screen.width
+        let screenshot = normalizedScreenImage()
+        guard let image = screenshot.cgImage else { return 0 }
+        let scale = screenshot.scale
         let region = CGRect(x: point.x - 22, y: point.y - 12, width: 44, height: 24)
             .intersection(viewport)
-        let crop = CGRect(x: (region.minX - screen.minX) * scale,
-                          y: (region.minY - screen.minY) * scale,
+        let crop = CGRect(x: region.minX * scale,
+                          y: region.minY * scale,
                           width: region.width * scale, height: region.height * scale).integral
         let bounds = CGRect(x: 0, y: 0, width: image.width, height: image.height)
         guard crop.minX.isFinite, crop.minY.isFinite,

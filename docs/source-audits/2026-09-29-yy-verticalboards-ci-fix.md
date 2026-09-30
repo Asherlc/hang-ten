@@ -518,3 +518,5 @@ Remove stale backdrop seeds for One and the already model-only Beastmaker1000/Tr
 ## Per-hand plan main integration
 
 Main781e64636 arrived immediately after the prior integration push. Resolve the GripCueSnapshotUITests conflict in favor of main's new sourced per-hand task model: explicit two-hand Max Hangs on the one-hand Nug requires two boards and no separate session hand picker. The obsolete Alternate/Left menu path no longer applies to that explicit task. Retain main's absence-of-picker and running-workout assertions. This integration does not change Batch05 physical coordinates, rapid navigation, camera/gesture behavior, rendering assertions or the temporary boundary capture. All 59 CI contract tests and the Swift test parser passed; fresh combined CI remains required.
+
+The selected-highlight sampler now uses the normalized screenshot scale and direct screen-point coordinates, matching the map crop. It no longer subtracts a potentially stale SpringBoard frame origin or derives scale from that frame. Rendered selection thresholds and interaction assertions remain unchanged.
