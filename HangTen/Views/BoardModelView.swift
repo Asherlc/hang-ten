@@ -157,6 +157,8 @@ struct BoardModelRealityView: View {
     let onUnavailable: (() -> Void)?
     var isDisplayOnly = false
 
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var cameraRevision = 0
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
@@ -178,6 +180,12 @@ struct BoardModelRealityView: View {
             RealityView { content in
                 content.add(model.root)
                 content.add(model.camera)
+                if model.hasLiveRopes {
+                    model.installLiveUpdateSubscription(content.subscribe(to:SceneEvents.Update.self) { [weak model] event in
+                        let elapsed=event.deltaTime
+                        Task { @MainActor [weak model] in model?.advanceLiveRopes(elapsed:elapsed) }
+                    })
+                }
                 applySync(size: size)
             } update: { content in
                 applySync(size: size)
@@ -194,12 +202,19 @@ struct BoardModelRealityView: View {
         // A display-only card is one element (its host Button owns the tap). An
         // interactive board exposes its contact elements instead, so the
         // container must not collapse them into a single element.
+        .onAppear { model.setLiveActivity(scenePhase == .active) }
+        .onDisappear { model.setLiveActivity(false) }
+        .onChange(of:scenePhase) { _,phase in model.setLiveActivity(phase == .active) }
+        .onChange(of:reduceMotion) { _,value in model.configureLiveMotion(reduceMotion:value,displayOnly:isDisplayOnly) }
         .modifier(BoardModelAccessibilityContainer(
             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
             value: onContactTap == nil ? accessibilityValue : nil))
     }
 
     private func applySync(size: CGSize) {
+        model.configureLiveMotion(reduceMotion:reduceMotion,displayOnly:isDisplayOnly)
+        let unavailableCallback = onUnavailable
+        model.onLiveFailure = { unavailableCallback?() }
         var camera = model.camera.camera
         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
         camera.fieldOfViewOrientation = .vertical
@@ -209,6 +224,9 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        #if DEBUG
+        model.applyReviewCamera()
+        #endif
         if let positionID, !didSelect {
             Task { @MainActor in
                 guard !didReportUnavailable else { return }

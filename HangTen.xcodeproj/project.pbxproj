@@ -208,6 +208,10 @@
 		F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000B /* RopeDynamicsSolverTests.swift */; };
 		F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */; };
 		F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000D /* RopeBandedSystemTests.swift */; };
+		F1290000000000000000000E /* LiveRopeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000E /* LiveRopeController.swift */; };
+		F1290000000000000000000F /* LiveRopeControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000F /* LiveRopeControllerTests.swift */; };
+		F12900000000000000000010 /* LiveRopeMesh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000010 /* LiveRopeMesh.swift */; };
+		F12900000000000000000011 /* LiveRopeMeshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000011 /* LiveRopeMeshTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -431,6 +435,10 @@
 		F2290000000000000000000B /* RopeDynamicsSolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeDynamicsSolverTests.swift; sourceTree = "<group>"; };
 		F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClavelliumRopePhysicsTests.swift; sourceTree = "<group>"; };
 		F2290000000000000000000D /* RopeBandedSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeBandedSystemTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000E /* LiveRopeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeController.swift; sourceTree = "<group>"; };
+		F2290000000000000000000F /* LiveRopeControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeControllerTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000010 /* LiveRopeMesh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeMesh.swift; sourceTree = "<group>"; };
+		F22900000000000000000011 /* LiveRopeMeshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveRopeMeshTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -603,6 +611,8 @@
 				F2290000000000000000000A /* RopeBandedSystem.swift */,
 				F22900000000000000000009 /* RopeSimulationMetrics.swift */,
 				F22900000000000000000008 /* RopeDynamicsSolver.swift */,
+				F22900000000000000000010 /* LiveRopeMesh.swift */,
+				F2290000000000000000000E /* LiveRopeController.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -710,6 +720,8 @@
 				F2290000000000000000000D /* RopeBandedSystemTests.swift */,
 				F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */,
 				F2290000000000000000000B /* RopeDynamicsSolverTests.swift */,
+				F22900000000000000000011 /* LiveRopeMeshTests.swift */,
+				F2290000000000000000000F /* LiveRopeControllerTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -984,6 +996,8 @@
 				F1290000000000000000000A /* RopeBandedSystem.swift in Sources */,
 				F12900000000000000000009 /* RopeSimulationMetrics.swift in Sources */,
 				F12900000000000000000008 /* RopeDynamicsSolver.swift in Sources */,
+				F12900000000000000000010 /* LiveRopeMesh.swift in Sources */,
+				F1290000000000000000000E /* LiveRopeController.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
@@ -1100,6 +1114,8 @@
 				F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */,
 				F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */,
 				F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */,
+				F12900000000000000000011 /* LiveRopeMeshTests.swift in Sources */,
+				F1290000000000000000000F /* LiveRopeControllerTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,

@@ -25,6 +25,8 @@ HangTen/Models/FreeWorkoutLog.swift
 HangTen/Models/FreeWorkoutLogStore.swift
 HangTen/Models/FreeWorkoutRestTimer.swift
 HangTen/Models/HealthKitService.swift
+HangTen/Models/LiveRopeController.swift
+HangTen/Models/LiveRopeMesh.swift
 HangTen/Models/LocalWorkoutHistoryStore.swift
 HangTen/Models/MotherboardBluetoothService.swift
 HangTen/Models/MotherboardModels.swift

@@ -214,3 +214,39 @@ mapping or flat-sling internal route has been inferred.
 Verification logs: `.context/strong-owl-live-cords/task4-native.log`,
 `task4-native-feed.log`, the plan's `task-4-tests.log`, and
 `task4-package-suite.log` (411 Python tests passed).
+
+## Native live scene and 7 mm display
+
+The scene now consumes the validated physics descriptor. Clavellium's rendered
+and collision radius are both 3.5 mm. A serial actor retains each physical
+chain across pose changes, with bounded display steps, generation checks,
+pause/stop/deallocation handling and sleep at accepted rest. A single transient
+LowLevelMesh entity per rope keeps its buffers between frames. Cords have no
+collision/picking components or accessibility elements; the source-bound board
+contacts and resource lease remain intact. Camera orbit changes only the view.
+Reduce Motion and picker cards request one accepted settled snapshot.
+
+Signed iOS Simulator validation passed 29 scene/controller/mesh tests, including
+actual independent worker states, release during pending work, clear/reselect,
+matched radius, picking exclusion, stable buffers over 1,000 updates, paused
+time, Reduce Motion and settled camera containment. Logs are retained in
+`.context/strong-owl-live-cords/live-final-integration.log`. The signed current
+source review build passed; this is not a physical-device performance result.
+
+The following comparisons were shown and reviewed before completion of the
+rendering change. The body USDZ is unchanged; the comparison reconstructs the
+prior committed cached 4 mm exterior cord and the current validated 7 mm
+settled chain, including its occluded passage.
+
+![Prior and live front/side/top](2026-09-29-clavellium-evidence/strong-owl-live-cord-front-side-top.png)
+
+Native screenshots: [front](2026-09-29-clavellium-evidence/strong-owl-live-ios-front.png),
+[side](2026-09-29-clavellium-evidence/strong-owl-live-ios-side.png),
+[top](2026-09-29-clavellium-evidence/strong-owl-live-ios-top.png).
+The black pill outside the board viewport in the side capture is the simulated
+iPhone's display cutout; it is not part of the model or cord.
+[Capture provenance](2026-09-29-clavellium-evidence/strong-owl-live-ios-provenance.json)
+records the isolated simulator, build flags, unchanged model hash and DEBUG
+camera controls. Physical 90°/180° review rotations are not manufacturer grip
+assignments. The accepted 8 mm pose remains unchanged. Catalog adaptation and
+physical-device profiling remain separate, unfinished gates.
