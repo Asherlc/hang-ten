@@ -40,6 +40,22 @@ final class RopeTriangleColliderTests: XCTestCase {
             start:SIMD3(-0.5,-2,0), end:SIMD3(0.5,-2,0), radius:0.006))
     }
 
+    func testInsideEndpointsReportDeepestPenetrationInEitherDirection() throws {
+        let collider=try RopeTriangleCollider(mesh:Self.box())
+        let shallow=SIMD3<Double>(0.9,0,0),deep=SIMD3<Double>(0.2,0.4,0.3)
+        for (start,end,fraction) in [(shallow,deep,1.0),(deep,shallow,0.0)] {
+            let hit=try XCTUnwrap(collider.segmentContact(from:start,to:end,radius:0.006))
+            XCTAssertEqual(hit.penetrationDepth,0.606,accuracy:1e-12)
+            XCTAssertEqual(hit.centerlinePoint,deep)
+            XCTAssertLessThan(simd_distance(hit.surfacePoint,SIMD3(0.2,1,0.3)),1e-12)
+            XCTAssertLessThan(simd_distance(hit.normal,SIMD3(0,1,0)),1e-12)
+            XCTAssertEqual(hit.fraction,fraction)
+            let manifold=try XCTUnwrap(collider.segmentContacts(from:start,to:end,radius:0.006).first)
+            XCTAssertEqual(manifold.penetrationDepth,hit.penetrationDepth)
+            XCTAssertEqual(manifold.centerlinePoint,deep)
+        }
+    }
+
     func testVoidStaysOpenAndTransformDoesNotFillIt() throws {
         // Four independent closed rails make a square through-passage. A hull
         // would incorrectly fill it; exact triangles must keep it empty.

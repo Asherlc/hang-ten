@@ -113,17 +113,18 @@ struct RopeTriangleCollider: Sendable {
 
     func segmentContact(from start: SIMD3<Double>, to end: SIMD3<Double>, radius: Double) -> RopeSegmentContact? {
         let closest=closestSegment(start,end)
-        var contact=closest.contact
+        let contact=closest.contact
         let startSurface=closestSurface(at:start), endSurface=closestSurface(at:end)
+        var insideContact:RopeSegmentContact?
         for (p,surface,fraction) in [(start,startSurface,0.0),(end,endSurface,1.0)] where contains(p) {
             let penetration=radius+surface.distance
-            if penetration > radius-closest.distance {
+            if penetration > (insideContact?.penetrationDepth ?? -Double.infinity) {
                 let delta=surface.point-p
                 let normal=surface.distance > 1e-10 ? delta/surface.distance : surface.normal
-                contact=RopeSegmentContact(centerlinePoint:p,surfacePoint:surface.point,normal:normal,fraction:fraction,penetrationDepth:penetration)
-                return contact
+                insideContact=RopeSegmentContact(centerlinePoint:p,surfacePoint:surface.point,normal:normal,fraction:fraction,penetrationDepth:penetration)
             }
         }
+        if let insideContact {return insideContact}
         guard closest.distance < radius else { return nil }
         return RopeSegmentContact(centerlinePoint:contact.centerlinePoint,surfacePoint:contact.surfacePoint,normal:contact.normal,
                                   fraction:contact.fraction,penetrationDepth:radius-closest.distance)

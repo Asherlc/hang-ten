@@ -413,7 +413,8 @@ summary is retained at
 `.context/strong-owl-live-cords/mini-dynamics-probe/contact-system-full-native-summary.json`.
 After staging the new source membership and refreshing the strict tracked-path
 manifest, all 18 BoardSourceBoundaryTests also passed in a fresh native run.
-Mini Bar jug/return diagnostics and the all-board rollout remain unfinished.
+At this validation checkpoint Mini Bar jug/return diagnostics and the all-board
+rollout remained unfinished; the later diagnostic result is recorded below.
 
 ### Per-triangle allocation removal
 
@@ -454,3 +455,49 @@ positions, rope ownership and world-space tube radius. All 31 focused native
 scene/controller/mesh tests passed; independent review found no important issues.
 The retained result summary is
 `.context/strong-owl-live-cords/mini-dynamics-probe/paired-placement-native-summary.json`.
+
+### Inside-endpoint penetration witness
+
+When both capsule endpoints were inside wood, segment contact returned the first
+endpoint's penetration even when the other endpoint was deeper. It now examines
+both and returns the deeper endpoint with its matching surface, normal and
+material fraction. The regression reproduces 0.106 m versus 0.606 m penetration
+in a synthetic box and checks both segment directions and manifold delegation.
+This repairs endpoint selection; it does not establish maximum penetration over
+the whole segment. Existing exact acceptance and CCD gates remain required.
+
+Independent scoped review found no important issues. All 37 focused native
+collider/dynamics/inter-cord tests passed, and all 65 host physics tests passed in
+128.462 seconds with the refreshed suite-count guard. The first host invocation
+passed its tests but failed its stale 64-test runner guard; it is not counted as
+a successful command. Retained evidence is `inside-endpoints-native-summary.json`
+and `inside-endpoints-full-host-refreshed.log` under
+`.context/strong-owl-live-cords/mini-dynamics-probe/`.
+
+### Completed coarse Mini jug and return diagnostic
+
+The production contact helper, inside the retained coarse-seed and relative-trust
+diagnostic, completed the jug rotation and upright return. Each of two independent
+0.82 m material loops used 210 particles; this is not the production seed or full
+production configuration. Rest lengths were checked on every accepted frame, and
+wood, self-contact, inter-cord, CCD and transactional acceptance gates remained.
+Across 757 retained accepted frames, maximum local strain was 0.000302662 and
+minimum mesh clearance was 3.599369 mm for a 3.5 mm radius. Jug and return reached
+the diagnostic settling criterion at frames 491 and 492, about 2.05 simulated
+seconds per transition, with speeds 0.1314 and 0.1134 mm/s respectively.
+
+The final upright return checkpoint was retained with SHA-256
+`922f7992fa0dddf6b37d02b15b7ff751eba854e5fa6be0c489e20457982577be`.
+An exact native CAD check of all 418 segments found minimum clearances of
+3.595383 and 3.593076 mm, with no endpoints inside wood. That establishes
+clearance for this frozen state only. It does not establish a global 50 micrometre
+mesh-to-CAD bound or the shared designated-bearing acceptance gate. The final jug
+checkpoint was overwritten by the return and has no equivalent retained native
+CAD check.
+
+Performance remains unsuitable for live use: the final return step took 0.6724
+host seconds, and the largest accepted step took 103.256 seconds including CCD
+retries. No device throughput or Mini live-profile readiness is claimed. Evidence
+is retained in `mini-jug-return-summary.json`, `mini-return-settled-checkpoint.json`
+and `native-return-settled-clearance.json` under the same workspace context path.
+Catalog rollout remains unfinished.
