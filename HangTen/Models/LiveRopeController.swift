@@ -31,6 +31,11 @@ struct LiveRopeDeliveryIdentity {
     private var generation: UInt64 = 0
     private var paused = false
     private var stopped = false
+
+    init(sceneID: UUID) {
+        self.sceneID = sceneID
+    }
+
     mutating func select(generation: UInt64) {
         if generation != self.generation { token &+= 1; self.generation = generation }
     }
