@@ -175,6 +175,8 @@ def test_build_required_gate_rejects_missing_required_validation(
             **os.environ,
             "CHANGES_RESULT": "success",
             "BUILD_REQUIRED": required,
+            "NATIVE_CAD_REQUIRED": "false",
+            "NATIVE_CAD_RESULT": "skipped",
             "UNIT_TEST_RESULT": unit,
             "UI_TEST_RESULT": ui,
         },

@@ -75,3 +75,11 @@ Run [36758350103](https://github.com/Asherlc/hang-ten/actions/runs/36758350103) 
 The shared helper now accepts a caller-selected timeout while retaining its ten-second default. Only the three free-workout toolbar calls choose 30 seconds, allowing the four remote accessibility queries to complete. Enabled state, finite/nonzero frames, visible target bounds and all downstream state/history assertions are unchanged. Failure diagnostics now retain the control frame, screen frame and computed target without additional accessibility queries. No production or CAD data changes.
 
 Validation: simulator build-for-testing succeeded and the installed binary matched this workspace build. Runtime execution stalled before the first test; a bounded screenshot request also timed out, so no local case pass is claimed for this budget change. Stopped only the exact workspace-owned xcodebuild process, allowing the exit trap to delete its simulator and DerivedData; deletion verified. The prior version of both history cases passed locally, and hosted CI passed the completed-set Finish case. Hosted confirmation of the updated Close readiness budget remains required.
+
+## Integrate main’s complete-check gate and Transgression batch
+
+Main advanced to `7fe13f454` (PR528 and PR527) while hosted validation ran. Its new contact-picking test conflicted with this batch’s test insertion, preventing GitHub from creating a run for the next commit. Merged main and retained both complete test methods; GitHub then reported the branch mergeable. This also brings main’s native Transgression CI job and complete required-check gate.
+
+The post-merge package suite exposed two fixture failures: PR528’s iOS gate matrix did not provide the native-CAD environment variables added to the actual gate by PR527, so the shell failed on an unbound variable before testing the expected successful iOS paths. The iOS matrix now explicitly supplies native checks as not required/skipped. The separate native-gate matrix continues to check required success, failure, skipped and cancelled results; no workflow gate or requirement is weakened.
+
+The merged simulator test build succeeded, including both contact-picking methods, and its trap removed DerivedData (verified). The corrected post-merge package/CLI-guard suite passed all 465 tests. No simulator was created for this compile-only check.
