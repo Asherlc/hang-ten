@@ -185,6 +185,7 @@ jobs:
           ../HangboardCAD/tests/test_board_manifest.py
           ../HangboardCAD/tests/test_contract.py
           ../HangboardCAD/tests/test_whetstone_package.py
+          ../HangboardCAD/tests/test_transgression_packages.py
           -q
           --junitxml=pytest-cad-results.xml
 

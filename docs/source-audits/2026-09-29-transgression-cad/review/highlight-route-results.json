@@ -1,0 +1,128 @@
+[
+  {
+    "year": 2011,
+    "contact": "jug-top",
+    "selectedID": "boardDetail.selectedHold.jug-top",
+    "modelLoaded": true,
+    "screenshot": "2011-app-jug-top.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-18",
+    "selectedID": "boardDetail.selectedHold.edge-18",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-18.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-14",
+    "selectedID": "boardDetail.selectedHold.edge-14",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-14.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-12",
+    "selectedID": "boardDetail.selectedHold.edge-12",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-12.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-10",
+    "selectedID": "boardDetail.selectedHold.edge-10",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-10.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-9",
+    "selectedID": "boardDetail.selectedHold.edge-9",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-9.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-8",
+    "selectedID": "boardDetail.selectedHold.edge-8",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-8.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-7",
+    "selectedID": "boardDetail.selectedHold.edge-7",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-7.png"
+  },
+  {
+    "year": 2011,
+    "contact": "edge-6",
+    "selectedID": "boardDetail.selectedHold.edge-6",
+    "modelLoaded": true,
+    "screenshot": "2011-app-edge-6.png"
+  },
+  {
+    "year": 2013,
+    "contact": "jug-top",
+    "selectedID": "boardDetail.selectedHold.jug-top",
+    "modelLoaded": true,
+    "screenshot": "2013-app-jug-top.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-18",
+    "selectedID": "boardDetail.selectedHold.edge-18",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-18.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-14",
+    "selectedID": "boardDetail.selectedHold.edge-14",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-14.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-12",
+    "selectedID": "boardDetail.selectedHold.edge-12",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-12.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-10",
+    "selectedID": "boardDetail.selectedHold.edge-10",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-10.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-9",
+    "selectedID": "boardDetail.selectedHold.edge-9",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-9.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-8",
+    "selectedID": "boardDetail.selectedHold.edge-8",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-8.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-7",
+    "selectedID": "boardDetail.selectedHold.edge-7",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-7.png"
+  },
+  {
+    "year": 2013,
+    "contact": "edge-6",
+    "selectedID": "boardDetail.selectedHold.edge-6",
+    "modelLoaded": true,
+    "screenshot": "2013-app-edge-6.png"
+  }
+]

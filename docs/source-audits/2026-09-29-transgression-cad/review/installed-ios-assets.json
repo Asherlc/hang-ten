@@ -1,0 +1,16 @@
+{
+  "simulatorUUID": "52DBE53C-3DCC-41BF-AA8D-EF3B5E1B3E27",
+  "appContainer": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/52DBE53C-3DCC-41BF-AA8D-EF3B5E1B3E27/data/Containers/Bundle/Application/7A08650B-1E48-4CDF-A081-E1063FEF8EDD/HangTen.app",
+  "packages": {
+    "surfaces-for-climbing-transgression-2011": {
+      "installedDescriptorExact": true,
+      "installedDebugFixtureExact": true,
+      "usdzSHA256": "5bc89aaee14f81bcd100d1f8d056f6d097e3a44623b0f77d8c281bda06c81b30"
+    },
+    "surfaces-for-climbing-transgression-2013": {
+      "installedDescriptorExact": true,
+      "installedDebugFixtureExact": true,
+      "usdzSHA256": "e7d127e72145a93d1ba9eadf2fde53fa2348f2c8afbba2faa69ec0c5ab33f078"
+    }
+  }
+}

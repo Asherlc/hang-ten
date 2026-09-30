@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "assetCommit": "bf8adac866787e79ecd071edda57bfe310518a6b",
-  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-split-palm, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, and crimptonite-helium-mobile native FreeCAD migrations; copy these bytes, never regenerate a delivery; Tension Whetstone native FreeCAD migration from approved manufacturer evidence",
+  "authoritativeSource": "Committed simplification pilot exports plus the lattice-mini-bar, lattice-triple-rung, metolius-rock-rings-3d, captain-fingerfood-pocket, lattice-mxedge-lift-large, lattice-mxedge-lift-small, metolius-prime-rib, metolius-wood-grips-compact-ii, metolius-wood-grips-deluxe-ii, beastmaker-1000, beastmaker-2000, soill-split-palm, soill-training-tiles, target10a-linebreaker-base, trango-rock-prodigy-pivot, tension-grindstone, metolius-light-rail-2, escape-beta-22, trango-rock-prodigy-training-center, nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, frictitious-doormount-pro-7, escape-unlimited, metolius-climbers-edge, frictitious-megalith, metolius-project, metolius-foundry, and crimptonite-helium-mobile native FreeCAD migrations; copy these bytes, never regenerate a delivery; Tension Whetstone native FreeCAD migration from approved manufacturer evidence; two new Transgression native FreeCAD revision packages from approved retained evidence",
   "modelPackages": [
     "beastmaker-1000",
     "beastmaker-2000",
@@ -39,6 +39,8 @@
     "soill-iron-palm-2",
     "soill-split-palm",
     "soill-training-tiles",
+    "surfaces-for-climbing-transgression-2011",
+    "surfaces-for-climbing-transgression-2013",
     "target10a-linebreaker-base",
     "tension-flash-board",
     "tension-grindstone",
@@ -54,11 +56,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "9cdd2e08e1d459ace5d2f427cd209a23410b4a7839cbaacabb048e27d5c305b3",
+  "sha256Manifest": "630cfc2b140bc541604be1f9aa75a7ad6a0fe072dd4f5c2fba7e1e6b5319f922",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "f9eda767ae652c0bf7d4a89ba8e175a69b77ad89afd79b25a03d84b16574d381",
+  "supersededSha256Manifest": "9cdd2e08e1d459ace5d2f427cd209a23410b4a7839cbaacabb048e27d5c305b3",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -99,7 +101,7 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -240,7 +242,7 @@
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
       "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -289,7 +291,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in removed audit record (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -394,7 +396,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -593,6 +595,34 @@
       "provenance": "docs/source-audits/2026-09-29-tension-whetstone-cad/README.md",
       "geometryStatus": "Direct native authoring from user-approved manufacturer front and two oblique views; unpublished geometry is documented as display estimates. Corrects legacy right-side depth mapping to manufacturer labels.",
       "nativeAppValidation": "Passed on workspace-owned iPhone 17 Pro iOS 26.5 simulator: 1,234 unit tests, three skipped, zero failures; inactive neutral board, jug, center incut, both pockets, four right stepped-slot regions visually reviewed; seven model taps confirmed selected IDs, plus portrait and landscape review routes."
+    },
+    "surfaces-for-climbing-transgression-2011": {
+      "source": "Hangboards/surfaces-for-climbing-transgression-2011/surfaces-for-climbing-transgression-2011.FCStd",
+      "sourceSHA256": "3804f07602c23bd37ca7269471206600aaa0d2d985bc3a5110c4404c61a326d5",
+      "boardMetadata": "Generated at build time from HangTenBoardManifest; separate physical revision identity, eight sourced nominal edge depths and continuous top jug; unsupported dimensions and grip prescriptions omitted.",
+      "referenceKind": "New catalog package: no prior committed asset exists. User-approved designer photographs (2011) and labeled secondary review photographs (2013) govern deliberately authored analytic geometry.",
+      "assetSHA256": "5bc89aaee14f81bcd100d1f8d056f6d097e3a44623b0f77d8c281bda06c81b30",
+      "descriptorSHA256": "0a88a427dbf6fc69815b674892f56bbff6c7efdb533dbd133f4c7d26d3ab480a",
+      "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 / OCCT 7.8.1; curved surface partition and analytic normals; unbound meshes.",
+      "nativeValidation": "Reopen/recompute, fully constrained profile and valid shell solid, all eight sourced depths, analytic region-on-solid sampling and outward normal agreement; native width edit updates all nine contacts; 18 to 20 mm depth edit affects only that contact and preserves source bytes. Both changed packages rebuild byte-identical USDZ and descriptor with the pinned compiler.",
+      "nativeAppValidation": "Passed on workspace-owned iPhone 17 Pro / iOS 26.5 simulator: 1,241 unit tests, three skipped, zero failures; neutral board and all nine highlights visually reviewed; jug, 18 mm rail and 6 mm rail selected by physical coordinate taps and confirmed by selected IDs; portrait and landscape reviewed. Visual review used the existing CI Debug simulator fixtures, verified byte-identical to validated USDZ; packaged ODR split verified separately, not a production network download. Exact owned simulator and DerivedData deleted. Evidence: docs/source-audits/2026-09-29-transgression-cad/validation.md.",
+      "provenance": "docs/2026-09-29-transgression-cad-provenance.md",
+      "geometryStatus": "Direct analytic native profile with live semantic binders. Shared 540 x 400 x 150 mm envelope and 1/2 mm lip radii are explicitly display estimates, not manufacturing dimensions. No mounting holes, hardware, materials or textures.",
+      "assetCoverage": "Descriptor and FCStd locked; generated board.json is not committed; compiled USDZ bound by descriptor modelSHA256."
+    },
+    "surfaces-for-climbing-transgression-2013": {
+      "source": "Hangboards/surfaces-for-climbing-transgression-2013/surfaces-for-climbing-transgression-2013.FCStd",
+      "sourceSHA256": "6deab7d8296058d9dabb846f0f1e5c9baf232267ceaf44c81e561b60154ff9dc",
+      "boardMetadata": "Generated at build time from HangTenBoardManifest; separate physical revision identity, eight sourced nominal edge depths and continuous top jug; unsupported dimensions and grip prescriptions omitted.",
+      "referenceKind": "New catalog package: no prior committed asset exists. User-approved designer photographs (2011) and labeled secondary review photographs (2013) govern deliberately authored analytic geometry.",
+      "assetSHA256": "e7d127e72145a93d1ba9eadf2fde53fa2348f2c8afbba2faa69ec0c5ab33f078",
+      "descriptorSHA256": "3099e966644924baaf59ca29ceb9757f67730aa245358a4fad0cec25ffbecb2d",
+      "compiler": "Tools/HangboardCAD/compile_board.py; pinned FreeCAD 1.1.3 / OCCT 7.8.1; curved surface partition and analytic normals; unbound meshes.",
+      "nativeValidation": "Reopen/recompute, fully constrained profile and valid shell solid, all eight sourced depths, analytic region-on-solid sampling and outward normal agreement; native width edit updates all nine contacts; 18 to 20 mm depth edit affects only that contact and preserves source bytes. Both changed packages rebuild byte-identical USDZ and descriptor with the pinned compiler.",
+      "nativeAppValidation": "Passed on workspace-owned iPhone 17 Pro / iOS 26.5 simulator: 1,241 unit tests, three skipped, zero failures; neutral board and all nine highlights visually reviewed; jug, 18 mm rail and 6 mm rail selected by physical coordinate taps and confirmed by selected IDs; portrait and landscape reviewed. Visual review used the existing CI Debug simulator fixtures, verified byte-identical to validated USDZ; packaged ODR split verified separately, not a production network download. Exact owned simulator and DerivedData deleted. Evidence: docs/source-audits/2026-09-29-transgression-cad/validation.md.",
+      "provenance": "docs/2026-09-29-transgression-cad-provenance.md",
+      "geometryStatus": "Direct analytic native profile with live semantic binders. Shared 540 x 400 x 150 mm envelope and 1/2 mm lip radii are explicitly display estimates, not manufacturing dimensions. No mounting holes, hardware, materials or textures.",
+      "assetCoverage": "Descriptor and FCStd locked; generated board.json is not committed; compiled USDZ bound by descriptor modelSHA256."
     }
   },
   "boardManifestNote": "2026-09-24: each migrated source now embeds its board.json (minus id) as the document-level HangTenBoardManifest property; only Document.xml changed in each FCStd. board.json is regenerated from it in canonical layout (token-identical to the hand-authored file: same values, key order, and number spellings; only whitespace and string escaping changed, for captain-fingerfood-pocket and both lattice-mxedge-lift packages). lattice-mxedge-lift-small's previous sourceSHA256 (df02a018...) was already stale against the committed source before this change.",
@@ -627,15 +657,16 @@
   "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
   "miniBarGripFlipCorrectionNote": "2026-09-27: Lattice grip photos and CAD contact normals showed the two edge rails and pinch facing down in their canonical poses; corrected pose half-turns place the selected grip upward, the pinch camera now faces its highlighted long rail, and all cord routes were re-solved against the unchanged CAD solid.",
   "frictitiousDoorMountPro7MigrationNote": "2026-09-27: source-backed native FreeCAD DoorMount Pro 7 with generated board.json and 13 preserved contact/14 node IDs. sha256Manifest supersedes the main delivery manifest recorded in supersededSha256Manifest. See dated provenance for sources and review renders.",
-  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main’s d72bc116... manifest and also incorporates the Mini Bar branch’s 88073991... manifest.",
+  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main\u2019s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main\u2019s d72bc116... manifest and also incorporates the Mini Bar branch\u2019s 88073991... manifest.",
   "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest.",
-  "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s Escape Unlimited migration. The digest covers both packages and supersedes main’s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest.",
+  "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main\u2019s Escape Unlimited migration. The digest covers both packages and supersedes main\u2019s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest.",
   "metoliusClimbersEdgeMigrationNote": "2026-09-27: metolius-climbers-edge became a source-backed native FreeCAD package re-authored from Metolius's spec drawing and end-grain photograph (stepped-scoop edges at the published 20/15/10 and 17.5/12.5/7.5 mm depths, 20-degree flat slopers, 40 mm-radius round sloper) with generated board.json. sha256Manifest dfd32f63... supersedes 52ec1c9f..., recorded in supersededSha256Manifest.",
-  "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main’s Metolius Climber’s Edge migration. The digest covers both and supersedes main’s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
+  "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main\u2019s Metolius Climber\u2019s Edge migration. The digest covers both and supersedes main\u2019s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
   "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source and refined after visual review with estimated lofted cavity lips, bowl profiles and rounded tier edges; source-backed depths and contact IDs remain exact, and phone-slot remains a no-depth utility contact.",
   "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
   "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
   "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
-  "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest."
+  "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest.",
+  "transgressionAdditionNote": "2026-09-29: added separate 2011 polyester and 2013 polyurethane Transgression CAD packages. All eight edge depths come from the designer; unsourced display geometry estimates and newer rear-shell adaptation are explicitly documented."
 }

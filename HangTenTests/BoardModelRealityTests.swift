@@ -10,6 +10,30 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testBothTransgressionRevisionsLoadNinePickableContacts() async throws {
+        for year in [2011, 2013] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(
+                id: "surfaces-for-climbing-transgression-\(year)"
+            ))
+            let presentation = board.defaultPresentation
+            guard case .model = presentation.media else {
+                return XCTFail("Transgression requires its native model")
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+            XCTAssertEqual(scene.contactEntities.count, 9)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+            for (contactID, entities) in scene.contactEntities {
+                XCTAssertFalse(entities.isEmpty, contactID)
+                for entity in entities {
+                    XCTAssertNotNil(entity.collision, contactID)
+                    XCTAssertNotNil(entity.components[InputTargetComponent.self], contactID)
+                    XCTAssertEqual(scene.contactID(for: entity), contactID)
+                }
+            }
+        }
+    }
+
+    @MainActor
     func testWhetstoneNativeModelLoadsAllPickableContacts() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "tension.whetstone"))
         let presentation = board.defaultPresentation
