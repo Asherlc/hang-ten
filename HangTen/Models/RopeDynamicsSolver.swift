@@ -325,63 +325,118 @@ struct RopeDynamicsSolver: Sendable {
                 }
             }
         }
-        // Begin at the equality-only dual optimum. Candidate wood and cord
-        // contacts are inequalities, including already touching facets.
+        let solved=try contactCorrection(rows:rows,weights:weights,prediction:prediction)
+        let selected=solved.ids.map{rows[$0]},lambda=solved.multipliers
+        let heightCorrection=solved.height,corrections=solved.particles
+        let before=state
+        let maximum=corrections.flatMap{$0}.map{simd_length($0)}.max() ?? 0
+        let shortest=state.ropes.flatMap{$0.restLengths}.min()!
+        var alpha=min(1,0.1*shortest/max(1e-12,max(maximum,abs(heightCorrection))))
+        let penalty=max(1,2*(lambda.map{abs($0)}.max() ?? 0))
+        let score=try merit(state,prediction:prediction,weights:weights,penalty:penalty)
+        for _ in 0..<16 {
+            state=before
+            state.boardHeight += heightCorrection*alpha
+            for r in state.ropes.indices {
+                for i in state.ropes[r].positions.indices {state.ropes[r].positions[i] += corrections[r][i]*alpha}
+                for (index,local) in state.ropes[r].attachments {state.ropes[r].positions[index]=state.worldPoint(local)}
+            }
+            do {
+                try RopePassageTopology.refresh(state:&state,input:input)
+                if try merit(state,prediction:prediction,weights:weights,penalty:penalty)<=score+1e-18 {
+                    for (index,row) in selected.enumerated() {
+                        if let link=row.lengthSegment {
+                            let old=distanceTension[row.rope][link]
+                            distanceTension[row.rope][link]=max(0,(1-alpha)*old+alpha*lambda[index])
+                        }
+                    }
+                    return alpha*max(maximum,abs(heightCorrection))
+                }
+            } catch RopePhysicsError.invalid { }
+            alpha *= 0.5
+        }
+        state=before
+        throw StepFailure.nonlinearConvergence
+    }
+
+    private func contactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+        -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double],ids:[Int]) {
+        let equalityIDs=rows.indices.filter{!rows[$0].contact}
+        let contactIDs=rows.indices.filter{rows[$0].contact}
+        let backbone=try constraintBackbone(rows:equalityIDs.map{rows[$0]},weights:weights,prediction:prediction)
+        let variables=backbone.variables
+        let contacts=contactIDs.map {id -> RopeLinearContact in
+            let row=rows[id]
+            var indices:[Int]=[],coefficients:[Double]=[]
+            for k in row.particles.indices {for axis in 0..<3 {
+                let variable=variables[row.ropeIndex(k)][row.particles[k]][axis]
+                if variable>=0 {indices.append(variable);coefficients.append(row.gradients[k][axis])}
+            }}
+            return RopeLinearContact(indices:indices,coefficients:coefficients,border:[row.boardGradient],residual:row.residual)
+        }
+        let solved:RopeContactSystem.Solution
+        do {
+            solved=try RopeContactSystem.solve(factor:backbone.factor,base:backbone.base,border:backbone.border,
+                contacts:contacts,maxIterations:min(2048,rows.count*2+10),fallback:{
+                    let direct=try fullContactCorrection(rows:rows,weights:weights,prediction:prediction)
+                    var base=backbone.base
+                    for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
+                        let v=variables[r][i]
+                        for axis in 0..<3 {base[v[axis]]=direct.particles[r][i][axis]}
+                    }}
+                    var allMultipliers=Array(repeating:0.0,count:rows.count)
+                    for (index,id) in direct.ids.enumerated() {allMultipliers[id]=direct.multipliers[index]}
+                    for (index,id) in equalityIDs.enumerated() {base[backbone.rowVariables[index]!]=allMultipliers[id]}
+                    let active=Set(direct.ids)
+                    return RopeContactSystem.Solution(base:base,border:[direct.height],
+                        multipliers:contactIDs.map{allMultipliers[$0]},activeIDs:contactIDs.indices.filter{active.contains(contactIDs[$0])})
+                })
+        } catch RopeContactSystem.Failure.iterationLimit {throw StepFailure.nonlinearConvergence}
+        var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
+        for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
+            let v=variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
+        }}
+        var multipliers=Array(repeating:0.0,count:rows.count)
+        for (index,id) in equalityIDs.enumerated() {multipliers[id]=solved.base[backbone.rowVariables[index]!]}
+        for index in contactIDs.indices {multipliers[contactIDs[index]]=solved.multipliers[index]}
+        let ids=(equalityIDs+solved.activeIDs.map{contactIDs[$0]}).sorted()
+        return (particles,solved.border[0],ids.map{multipliers[$0]},ids)
+    }
+
+    /// Preserve the explicitly regularized KKT path for contact Schur
+    /// conditioning failures. Complete inactive separation remains mandatory.
+    private func fullContactCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+        -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double],ids:[Int]) {
         var working=RopeContactWorkingSet(activeIDs:rows.indices.filter{!rows[$0].contact})
         for _ in 0..<min(2048,rows.count*2+10) {
-            let activeIDs=working.activeIDs,selected=activeIDs.map{rows[$0]}
-            let solved=try coupledCorrection(rows:selected,weights:weights,prediction:prediction)
-            let lambda=solved.multipliers,heightCorrection=solved.height,corrections=solved.particles
+            let ids=working.activeIDs,selected=ids.map{rows[$0]}
+            let solved=try constraintBackbone(rows:selected,weights:weights,prediction:prediction)
+            let lambda=solved.multipliers
             if working.releaseTensileContact(multipliers:lambda,contacts:selected.map{$0.contact}) {continue}
+            var particles=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
+            for r in weights.indices {for i in weights[r].indices where weights[r][i]>0 {
+                let v=solved.variables[r][i];particles[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
+            }}
+            let height=solved.border[0]
             var active=Array(repeating:false,count:rows.count)
-            for id in activeIDs {active[id]=true}
+            for id in ids {active[id]=true}
             var worst:(Int,Double)?
             for index in rows.indices where rows[index].contact && !active[index] {
                 let row=rows[index]
-                var residual=row.residual+row.boardGradient*heightCorrection
-                for j in row.particles.indices {residual += simd_dot(row.gradients[j],corrections[row.ropeIndex(j)][row.particles[j]])}
-                if residual < -Self.contactLinearTolerance && residual < (worst?.1 ?? 0) {worst=(index,residual)}
+                var residual=row.residual+row.boardGradient*height
+                for k in row.particles.indices {residual += simd_dot(row.gradients[k],particles[row.ropeIndex(k)][row.particles[k]])}
+                if residual < -Self.contactLinearTolerance && residual<(worst?.1 ?? 0) {worst=(index,residual)}
             }
-            if let index=worst?.0 {
-                working.insert(index);continue
-            }
-            let before=state
-            let maximum=corrections.flatMap{$0}.map{simd_length($0)}.max() ?? 0
-            let shortest=state.ropes.flatMap{$0.restLengths}.min()!
-            var alpha=min(1,0.1*shortest/max(1e-12,max(maximum,abs(heightCorrection))))
-            let penalty=max(1,2*(lambda.map{abs($0)}.max() ?? 0))
-            let score=try merit(state,prediction:prediction,weights:weights,penalty:penalty)
-            for _ in 0..<16 {
-                state=before
-                state.boardHeight += heightCorrection*alpha
-                for r in state.ropes.indices {
-                    for i in state.ropes[r].positions.indices {state.ropes[r].positions[i] += corrections[r][i]*alpha}
-                    for (index,local) in state.ropes[r].attachments {state.ropes[r].positions[index]=state.worldPoint(local)}
-                }
-                do {
-                    try RopePassageTopology.refresh(state:&state,input:input)
-                    if try merit(state,prediction:prediction,weights:weights,penalty:penalty)<=score+1e-18 {
-                        for (index,row) in selected.enumerated() {
-                            if let link=row.lengthSegment {
-                                let old=distanceTension[row.rope][link]
-                                distanceTension[row.rope][link]=max(0,(1-alpha)*old+alpha*lambda[index])
-                            }
-                        }
-                        return alpha*max(maximum,abs(heightCorrection))
-                    }
-                } catch RopePhysicsError.invalid { }
-                alpha *= 0.5
-            }
-            state=before
-            throw StepFailure.nonlinearConvergence
+            if let index=worst?.0 {working.insert(index);continue}
+            return (particles,height,lambda,ids)
         }
         throw StepFailure.nonlinearConvergence
     }
 
     /// Primal KKT system: particle inertia plus tension curvature, local
     /// length/contact rows, and borders for height/nonlocal self-contact.
-    private func coupledCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
-        -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double]) {
+    private func constraintBackbone(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
+        -> (factor:RopeBandedFactorization,variables:[[SIMD3<Int>]],rowVariables:[Int:Int],base:[Double],border:[Double],multipliers:[Double]) {
         let borderRows=rows.indices.filter{rows[$0].secondRope != nil || rows[$0].particles.max()!-rows[$0].particles.min()!>1}
         let borderSet=Set(borderRows),local=rows.indices.filter{!borderSet.contains($0)}
         var grouped:[SIMD2<Int>:[Int]]=[:]
@@ -479,18 +534,12 @@ struct RopeDynamicsSolver: Sendable {
                 }
             }
         }
-        let solved=try system.solve(rhs:rhs,borderColumns:columns,borderMatrix:border,borderRHS:borderRHS)
-        var corrections=state.ropes.map{Array(repeating:SIMD3<Double>.zero,count:$0.positions.count)}
-        for r in state.ropes.indices {
-            for i in state.ropes[r].positions.indices where weights[r][i]>0 {
-                let v=variables[r][i]
-                corrections[r][i]=SIMD3(solved.base[v.x],solved.base[v.y],solved.base[v.z])
-            }
-        }
+        let factor=try system.factorized(borderColumns:columns,borderMatrix:border)
+        let solved=try factor.solve(rhs:rhs,borderRHS:borderRHS)
         var multipliers=Array(repeating:0.0,count:rows.count)
         for index in local {multipliers[index]=solved.base[rowVariables[index]!]}
         for (offset,index) in borderRows.enumerated() {multipliers[index]=solved.border[offset+1]}
-        return (corrections,solved.border[0],multipliers)
+        return (factor,variables,rowVariables,solved.base,solved.border,multipliers)
     }
 
     private func merit(_ candidate:RopeSimulationState,prediction:RopeSimulationState,weights:[[Double]],penalty:Double) throws -> Double {

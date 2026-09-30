@@ -88,6 +88,9 @@ struct RopeBandedFactorization: Sendable {
     private let schur:[Double]
     private let schurPivots:[__LAPACK_int]
 
+    var baseCount: Int {size}
+    var borderCount: Int {columns.count}
+
     fileprivate init(size:Int,bandwidth:Int,matrix:[Double],borderColumns:[[Double]],borderMatrix:[[Double]]) throws {
         let count=borderColumns.count,leadingDimension=3*bandwidth+1
         guard count<=256,size*(count+1)<=8_000_000,

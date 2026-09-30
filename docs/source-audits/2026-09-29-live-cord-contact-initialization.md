@@ -344,3 +344,60 @@ reduces this frozen problem's cost. It does not establish full-step speed or
 real-time performance: the Swift warm replay alone is over eleven times the
 4 ms complete-step budget. Geometry/globalization/CCD costs and nonlinear
 iteration count remain. Neither prototype is enabled in production.
+
+
+## Production equality-factor reuse — September 30
+
+The frozen-QP experiment above supports replacing repeated full KKT
+factorizations during contact discovery. `RopeContactSystem` now factors the
+joint equality/inertial/board-height system once per nonlinear correction,
+computes contact response columns lazily, and updates a contact-space Cholesky
+factor on insertion or release. Runtime starts equality-only. Factors and
+responses never survive a change of linearization. Separate cords share the
+same board-height solve, and inter-cord constraints participate jointly.
+Every inactive candidate inequality is checked before accepting the result;
+no manifold is reduced by assuming dependent inequalities are redundant.
+Prediction, tension curvature, numerical regularization, nonlinear merit,
+trust bound, geometry acceptance, CCD and transactional rollback are unchanged.
+
+Independent review identified a scaled-row conditioning failure: for mass
+0.005 and contact gradients 2000 and 1000, the contact Schur diagonals are
+8e8 and 2e8. Adding 1e-8 rounds away, and a dependent insertion can have zero
+Cholesky pivot despite feasible inequalities. The new regression reproduces
+this case. Only contact-factor conditioning failures fall back to the original
+explicitly regularized full KKT working set, retaining dual-feasible releases
+and complete inactive separation. Invalid inputs, computational limits and
+nonconvergence do not become successful fallback results. Review found no
+remaining Important issues after this repair.
+
+Six analytic/direct-KKT tests cover joint board/cord inertia, dependent and
+omitted stronger inequalities, stale contact release, changed coefficients,
+equality coupling, scaled-row fallback and fail-closed inputs. The refreshed
+complete host physics suite passes 64 tests in 139.950 seconds. The focused
+iOS Simulator run passes 49 tests on the owned strong-owl iPhone 17 Pro,
+iOS 26.4. Full app validation is recorded separately after it finishes.
+
+The production helper replayed the same retained Mini Bar QP with
+oracle/warm/equality starts in 11.353/42.644/72.896 ms, including contact
+response construction. Warm/oracle primal differences from the independent
+Python oracle were below 4.8e-16 m; cold differed by 0.2496 micrometres under
+the existing inactive-row tolerance. Maximum feasibility error was 7.494 nm.
+The earlier cold replay took 938.461 ms. These are host frozen-problem
+measurements, not complete-step or device performance.
+
+A scratch complete-step replay using this production helper, the retained
+coarse seed and previous diagnostic globalization accepts Mini jug frame227.
+Immutable rest lengths match exactly; maximum particle difference from the
+original accepted frame is 0.294 micrometres and height difference is below
+0.0001 micrometres. It still needs 36 nonlinear corrections and took 9.478
+wall seconds while other validation ran. The Mini Bar remains unpromoted;
+this does not demonstrate rotation settling, live throughput or completion of
+the catalog rollout.
+
+An independent scratch experiment reduced the hard merit penalty floor to a
+multiplier-scaled value. It used 28 corrections and 5.661 seconds for the same
+frame but still required repeated short line-search steps. It is not adopted:
+one frame does not establish convergence, and multiplier bounds must account
+for the merit's aggregated maximum penetration terms. Closest-only merit,
+endpoint certificates, bounded verification and bulk contact activation also
+showed no useful complete-step improvement and remain workspace experiments.
