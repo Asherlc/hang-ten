@@ -76,7 +76,9 @@ final class FreeWorkoutUITests: XCTestCase {
 
     /// Empty → Add Hang → Start Set → Cancel guided → set stays unchecked (no rest bar).
     func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() {
-        let app = launchResetFreeWorkout()
+        // Exercise cancellation without requiring the simulator's audio device.
+        // Hosted runners can abort inside AudioToolbox during engine prewarm.
+        let app = launchResetFreeWorkout(audioCuesEnabled: false)
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
@@ -199,8 +201,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func launchResetFreeWorkout() -> XCUIApplication {
+    private func launchResetFreeWorkout(audioCuesEnabled: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
+        if !audioCuesEnabled {
+            app.launchArguments += ["-workoutAudioCuesEnabled", "NO"]
+        }
         app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         // Free Workout does not depend on a 3D board; avoid model loading while
         // locating the Train entry point on a fresh simulator.
