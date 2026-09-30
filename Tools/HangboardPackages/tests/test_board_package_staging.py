@@ -334,6 +334,7 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, slug: str
 ) -> None:
+    """Verify that CI Simulator staging embeds each model fixture needed for native interaction tests."""
     repository_root = tmp_path / "repository"
     for model_slug in (
         "frictitious-doormount-pro-7",
@@ -734,6 +735,7 @@ def test_xcode_staging_phase_intentionally_runs_for_every_build() -> None:
 
 
 def test_xcode_assigns_each_live_model_to_its_own_safe_odr_tag() -> None:
+    """Require unique Xcode objects and one safe, distinct ODR resource registration for every live model."""
     project = (REPO_ROOT / "HangTen.xcodeproj" / "project.pbxproj").read_text(
         encoding="utf-8"
     )

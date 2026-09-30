@@ -76,12 +76,14 @@ TOLERANCE_MM = 1e-3
 
 
 def check(label: str, condition: bool, detail="") -> None:
+    """Print a labeled native validation result and fail immediately when its condition is false."""
     print(f"{'PASS' if condition else 'FAIL'} {label}: {detail}", flush=True)
     if not condition:
         raise AssertionError(label)
 
 
 def inventory(document):
+    """Return the single exported body and uniquely bound contact surfaces from the document."""
     bodies = [o for o in document.Objects if getattr(o, "NodeRole", "") == "body"]
     regions = [o for o in document.Objects if getattr(o, "NodeRole", "") == "contact"]
     check("one exported body", len(bodies) == 1)
@@ -91,6 +93,7 @@ def inventory(document):
 
 
 def graph_is_valid(document, body):
+    """Require a fully recomputed feature graph and one valid, closed body solid."""
     stale = [(o.Name, list(o.State)) for o in document.Objects
              if set(o.State) & {"Invalid", "Error", "Touched", "Recompute"}]
     check("all native objects recompute", not stale, stale)
@@ -99,10 +102,12 @@ def graph_is_valid(document, body):
 
 
 def depths(contacts):
+    """Measure each contact surface’s front-to-back extent in native millimetres."""
     return {cid: obj.Shape.optimalBoundingBox().YLength for cid, obj in contacts.items()}
 
 
 def check_boundary_and_cavity(cid, obj, shell, depth):
+    """Verify body-bound contact surfaces and, when specified, the physical recessed cavity depth."""
     shape = obj.Shape
     check(f"{cid} is an open contact surface", shape.isValid()
           and bool(shape.Faces) and not shape.Solids)
@@ -130,6 +135,7 @@ def check_boundary_and_cavity(cid, obj, shell, depth):
 
 
 def verify_edit(document, before, edited_ids, new_depth):
+    """Verify edited depths, unchanged contact inventory and bindings after recompute or saved reopen."""
     body, contacts = inventory(document)
     graph_is_valid(document, body)
     after = depths(contacts)
@@ -146,6 +152,7 @@ def verify_edit(document, before, edited_ids, new_depth):
 
 
 def main() -> int:
+    """Validate the pinned native source, edit a scratch copy, reopen it and preserve original source bytes."""
     source = Path(sys.argv[1]).resolve()
     scratch = Path(sys.argv[2]).resolve()
     spec = EXPECTED[source.stem]

@@ -266,6 +266,7 @@ struct BoardModelRealityView: View {
             value: onContactTap == nil ? accessibilityValue : nil))
     }
 
+    /// Publishes scene membership and submitted camera revision for opt-in DEBUG review diagnostics.
     private func updateRendererDiagnostic(revision: Int) {
         #if DEBUG
         if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
@@ -382,19 +383,23 @@ private struct BoardModelARHost: UIViewRepresentable {
     let onEntityTap: (Entity) -> Void
     let onCameraChange: () -> Void
 
+    /// Creates the coordinator that owns this host’s anchor and gesture state.
     func makeCoordinator() -> Coordinator { Coordinator(parent: self) }
 
+    /// Creates the non-AR renderer container and attaches this independently loaded scene.
     func makeUIView(context: Context) -> BoardModelARContainer {
         let view = BoardModelARContainer(frame: .zero)
         context.coordinator.attach(to: view)
         return view
     }
 
+    /// Refreshes callbacks and synchronizes framing against the renderer’s current bounds.
     func updateUIView(_ view: BoardModelARContainer, context: Context) {
         context.coordinator.parent = self
         context.coordinator.synchronize(view)
     }
 
+    /// Detaches this host’s scene and recognizers when SwiftUI removes its container.
     static func dismantleUIView(_ view: BoardModelARContainer, coordinator: Coordinator) {
         coordinator.detach(from: view)
     }
@@ -407,8 +412,10 @@ private struct BoardModelARHost: UIViewRepresentable {
         private var lastTranslation: CGPoint = .zero
         private var lastScale: CGFloat = 1
 
+        /// Retains the current host configuration for scene attachment and input callbacks.
         init(parent: BoardModelARHost) { self.parent = parent }
 
+        /// Attaches the scene beneath an identity anchor and installs native tap, orbit and pinch input.
         func attach(to view: BoardModelARContainer) {
             anchor.addChild(parent.model.root)
             anchor.addChild(parent.model.camera)
@@ -425,6 +432,7 @@ private struct BoardModelARHost: UIViewRepresentable {
             view.renderer.addGestureRecognizer(pinch)
         }
 
+        /// Applies framing and selection only when UIKit reports a finite, positive viewport.
         func synchronize(_ view: BoardModelARContainer) {
             let size = view.renderer.bounds.size
             guard size.width.isFinite, size.height.isFinite,
@@ -432,6 +440,7 @@ private struct BoardModelARHost: UIViewRepresentable {
             parent.synchronize(size)
         }
 
+        /// Releases layout callbacks, input recognizers and the entities attached by this host.
         func detach(from view: BoardModelARContainer) {
             view.onLayout = nil
             for gesture in view.renderer.gestureRecognizers ?? [] {
@@ -442,12 +451,14 @@ private struct BoardModelARHost: UIViewRepresentable {
             parent.model.camera.removeFromParent()
         }
 
+        /// Resolves a completed native collision hit before forwarding physical contact selection.
         @objc private func tap(_ gesture: UITapGestureRecognizer) {
             guard gesture.state == .ended, let view = gesture.view as? ARView,
                   let entity = view.entity(at: gesture.location(in: view)) else { return }
             parent.onEntityTap(entity)
         }
 
+        /// Applies incremental pan deltas using the existing viewport-normalized camera orbit math.
         @objc private func orbit(_ gesture: UIPanGestureRecognizer) {
             guard let view = gesture.view else { return }
             switch gesture.state {
@@ -466,6 +477,7 @@ private struct BoardModelARHost: UIViewRepresentable {
             }
         }
 
+        /// Applies incremental pinch ratios to zoom and resets gesture bookkeeping at termination.
         @objc private func magnify(_ gesture: UIPinchGestureRecognizer) {
             switch gesture.state {
             case .began, .changed:
@@ -487,6 +499,7 @@ private final class BoardModelARContainer: UIView {
     let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
     var onLayout: ((BoardModelARContainer) -> Void)?
 
+    /// Builds a transparent non-AR renderer without starting an automatically configured AR session.
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
@@ -496,9 +509,11 @@ private final class BoardModelARContainer: UIView {
         addSubview(renderer)
     }
 
+    /// Rejects storyboard decoding because this container is created programmatically.
     @available(*, unavailable)
     required init?(coder: NSCoder) { fatalError("init(coder:) is unavailable") }
 
+    /// Sizes the renderer to actual container bounds before synchronizing camera framing.
     override func layoutSubviews() {
         super.layoutSubviews()
         renderer.frame = bounds

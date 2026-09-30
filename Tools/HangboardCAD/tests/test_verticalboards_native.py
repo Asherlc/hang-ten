@@ -38,6 +38,7 @@ requires_native_toolchain = pytest.mark.skipif(
     "yy-verticalboard-one",
 ])
 def test_verticalboard_native_source_and_persisted_edit(slug):
+    """Run native recompute and persisted depth-edit checks in disposable workspace-owned scratch."""
     source = REPOSITORY / "Hangboards" / slug / f"{slug}.FCStd"
     context = REPOSITORY / ".context"
     context.mkdir(exist_ok=True)

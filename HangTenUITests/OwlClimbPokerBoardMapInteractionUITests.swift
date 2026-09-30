@@ -253,6 +253,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         try review(boardID: "zlagboard.evo", target: "edge-35-center")
     }
 
+    /// Exercises Pro picking at its live contact center while preserving the original orbit trajectory.
     func testPro() throws {
         // The default viewing angle can move this narrow pocket away from its
         // old normalized tap fixture. Pick its live center, while retaining the
@@ -261,6 +262,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                    orbitStartPoint: CGVector(dx: 0.44776505, dy: 0.3821585))
     }
 
+    /// Checks rapid detail navigation, physical selection, rendered orbit/reset and visible landscape geometry.
     private func review(boardID: String, target: String, surfacePoint: CGVector? = nil,
                         orbitStartPoint: CGVector? = nil,
                         resetContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5)) throws {
@@ -427,6 +429,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         return try XCTUnwrap(UIImage(cgImage: cropped).pngData())
     }
 
+    /// Counts selected-highlight pixels near the tapped surface within the finite viewport crop.
     private func highlightedSurfaceSampleCount(at point: CGPoint, in viewport: CGRect) throws -> Int {
         guard let image = normalizedScreenImage().cgImage else { return 0 }
         let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard").frame
@@ -468,6 +471,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }
     }
 
+    /// Waits for rendered board samples and captures diagnostics if the visibility deadline expires.
     private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
         var lastSampleCount = 0
         let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -485,6 +489,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                        "Native board body must finish loading inside its map viewport")
     }
 
+    /// Counts board-body samples from a finite, in-bounds screenshot crop rather than accessibility alone.
     private func modelBodySampleCount(in viewport: XCUIElement) throws -> Int {
         guard viewport.exists else { return 0 }
         let frame = viewport.frame

@@ -1696,6 +1696,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(store.workoutLaunchDecision, .allowed)
     }
 
+    /// Verifies that a successful append consumes a free-workout credit only after persistence completes.
     func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
@@ -1723,6 +1724,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 1)
     }
 
+    /// Verifies that a failed append reports its error without consuming a free-workout credit.
     func testFailedSessionPersistenceDoesNotConsumeCredit() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
@@ -1749,6 +1751,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
     }
 
+    /// Suspends main-actor polling for up to one second so the persistence completion task can run.
     private func waitForSessionPersistence(
         _ condition: @escaping () -> Bool,
         file: StaticString = #filePath,

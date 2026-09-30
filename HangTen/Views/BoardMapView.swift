@@ -478,6 +478,7 @@ private struct BoardDetailMapSizeModifier: ViewModifier {
     let aspectRatio: CGFloat
     let maximumHeight: CGFloat?
 
+    /// Fits the map through one modifier chain so compact-height changes preserve its renderer identity.
     func body(content: Content) -> some View {
         // Preserve the model surface's identity when compact-height metrics
         // become available or rotation changes the optional height limit.

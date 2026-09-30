@@ -58,6 +58,7 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
     "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-verticalboard-first", "yy-verticalboard-light", "yy-verticalboard-one")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
+    """Require migrated model packages to ship descriptors and USDZ without raster backdrop inputs."""
     assets = HANGBOARDS_ROOT / package / "assets"
 
     assert (assets / "primary.usdz").is_file()

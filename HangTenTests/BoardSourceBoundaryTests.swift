@@ -283,6 +283,7 @@ final class BoardSourceBoundaryTests: XCTestCase {
         }
     }
 
+    /// Checks each catalog package against the declared raster or model-only asset boundary.
     func testEveryCatalogPackageMatchesTypedMediaBoundary() throws {
         let repositoryRoot = repositoryRootURL()
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)

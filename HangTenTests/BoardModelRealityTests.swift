@@ -10,6 +10,7 @@ final class BoardModelRealityTests: XCTestCase {
         let _ = BoardModelRealityLoader.self
     }
 
+    /// Loads all three YY CAD packages and checks every preserved contact’s render, collision and input binding.
     @MainActor
     func testVerticalBoardCADModelsLoadEveryPhysicalContactForPicking() async throws {
         let expectedCounts = [
