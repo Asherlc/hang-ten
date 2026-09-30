@@ -12,12 +12,14 @@ struct RopeDynamicsSolver: Sendable {
     private var time=0.0
     private var history:[(Double,Double)]=[]
     private var acceptedMinimumClearance:Double?
+    private let channelColliderCache:RopeChannelColliderCache
     private let portalMap:[String:RopePortalRegion]
     private var distanceTension:[[Double]]
     private var lastStepDuration=1.0/240
 
     init(input:RopePhysicsInput,state:RopeSimulationState,collider:RopeTriangleCollider) throws {
         self.input=input;self.state=state;self.collider=collider
+        channelColliderCache=try RopeChannelColliderCache(channels:input.channels)
         portalMap=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         guard let profile=input.profiles.first(where:{$0.id == state.profileID}),
               profile.ropes.count == state.ropes.count,state.boardMass == profile.boardMass,
@@ -55,7 +57,7 @@ struct RopeDynamicsSolver: Sendable {
         guard maxIterations>0,maxIterations<=2000 else {throw RopePhysicsError.invalid("Invalid initialization bound")}
         var candidate=self
         let preflight=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
-            boardHistory:[state.boardHeight],includeSelfContact:false)
+            boardHistory:[state.boardHeight],includeSelfContact:false,channelCache:channelColliderCache)
         guard preflight.geometryAccepted else {throw RopePhysicsError.invalid("Invalid initial wood geometry or threading")}
         for rope in state.ropes {
             guard RopeSimulationMetrics.selfContactPair(positions:rope.positions,radius:rope.radius,
@@ -75,7 +77,7 @@ struct RopeDynamicsSolver: Sendable {
         let prediction=state
         for iteration in 0...maxIterations {
             let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,
-                boardHistory:[candidate.state.boardHeight])
+                boardHistory:[candidate.state.boardHeight],channelCache:candidate.channelColliderCache)
             if metrics.geometryAccepted {
                 if iteration>0 {
                     candidate.history=[(0,candidate.state.boardHeight)]
@@ -194,7 +196,7 @@ struct RopeDynamicsSolver: Sendable {
         }
         time += dt;history.append((time,state.boardHeight))
         history.removeAll{$0.0<time-0.5-dt/2}
-        let metrics=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:history.map{$0.1})
+        let metrics=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,boardHistory:history.map{$0.1},channelCache:channelColliderCache)
         guard metrics.geometryAccepted else {
             state=old;throw StepFailure.geometry(metrics)
         }

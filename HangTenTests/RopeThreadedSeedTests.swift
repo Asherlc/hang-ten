@@ -14,6 +14,47 @@ final class RopeThreadedSeedTests: XCTestCase {
         return try RopePhysicsDescriptor.decode(data).validated(modelSHA256: raw["modelSHA256"] as! String)
     }
 
+    func testCachedChannelMetricsMatchUncachedGeometry() throws {
+        let input=try Self.clavellium(),collider=try RopeTriangleCollider(input:input)
+        let cache=try RopeChannelColliderCache(channels:input.channels)
+        let original=try RopeThreadedSeed.make(input:input,profileID:"front",
+            orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),collider:collider)
+        var outside=original
+        let span=try XCTUnwrap(outside.ropes[0].channelSpans.values.first)
+        let middle=Int((span.start.materialCoordinate+span.end.materialCoordinate)/2)
+        outside.ropes[0].positions[middle].x += 0.1
+        for (index,state) in [original,outside].enumerated() {
+            let uncached=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+                boardHistory:[state.boardHeight],includeSelfContact:false)
+            let cached=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+                boardHistory:[state.boardHeight],includeSelfContact:false,channelCache:cache)
+            XCTAssertEqual([cached.totalLengthError,cached.maximumLocalStrain,cached.minimumSegmentClearance,
+                cached.minimumClearanceMargin,cached.maximumSpeed,cached.boardDisplacement],
+                [uncached.totalLengthError,uncached.maximumLocalStrain,uncached.minimumSegmentClearance,
+                 uncached.minimumClearanceMargin,uncached.maximumSpeed,uncached.boardDisplacement])
+            XCTAssertEqual(cached.topologyValid,uncached.topologyValid)
+            XCTAssertEqual(cached.topologyFailure,uncached.topologyFailure)
+            XCTAssertEqual(cached.geometryAccepted,index==0)
+        }
+    }
+
+    func testChannelColliderCacheRejectsDifferentGeometry() throws {
+        let source=try Self.clavellium(),collider=try RopeTriangleCollider(input:source)
+        let cache=try RopeChannelColliderCache(channels:source.channels)
+        let channels=source.channels.map {region in
+            RopeChannelRegion(id:region.id,portalIDs:region.portalIDs,spine:region.spine,
+                solid:RopeCollisionMesh(vertices:region.solid.vertices.map{$0+SIMD3<Double>(0.1,0,0)},triangles:region.solid.triangles))
+        }
+        let input=RopePhysicsInput(modelSHA256:source.modelSHA256,sourceSHA256:source.sourceSHA256,
+            collision:source.collision,portals:source.portals,channels:channels,profiles:source.profiles)
+        let state=try RopeThreadedSeed.make(input:source,profileID:"front",
+            orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),collider:collider)
+        XCTAssertFalse(try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+            boardHistory:[state.boardHeight],includeSelfContact:false).geometryAccepted)
+        XCTAssertThrowsError(try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+            boardHistory:[state.boardHeight],includeSelfContact:false,channelCache:cache))
+    }
+
     func testCentralLoopIsContinuousCollisionFreeAndFullLength() throws {
         let input = try Self.clavellium(), collider = try RopeTriangleCollider(input: input)
         let state = try RopeThreadedSeed.make(input: input, profileID: "front",

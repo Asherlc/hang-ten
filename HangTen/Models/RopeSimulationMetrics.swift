@@ -14,6 +14,27 @@ struct RopeFrameSnapshot: Sendable {
     let metrics: RopeSimulationMetrics
 }
 
+/// Immutable native-channel BVHs, bound to all authored region geometry.
+/// Sharing this value across transactional solver copies does not rebuild or
+/// mutate the collision structures. A different region set is rejected.
+struct RopeChannelColliderCache: Sendable {
+    private let channels:[RopeChannelRegion]
+    private let colliders:[String:RopeTriangleCollider]
+
+    init(channels:[RopeChannelRegion]) throws {
+        guard Set(channels.map{$0.id}).count==channels.count else {
+            throw RopePhysicsError.invalid("Duplicate channel collider ID")
+        }
+        self.channels=channels
+        colliders=Dictionary(uniqueKeysWithValues:try channels.map{($0.id,try RopeTriangleCollider(mesh:$0.solid))})
+    }
+
+    func matchingColliders(for channels:[RopeChannelRegion]) throws -> [String:RopeTriangleCollider] {
+        guard self.channels==channels else {throw RopePhysicsError.invalid("Channel collider cache geometry mismatch")}
+        return colliders
+    }
+}
+
 struct RopeSimulationMetrics: Sendable {
     let totalLengthError: Double
     let maximumLocalStrain: Double
@@ -87,13 +108,13 @@ struct RopeSimulationMetrics: Sendable {
     }
 
     static func measure(state:RopeSimulationState,input:RopePhysicsInput,collider:RopeTriangleCollider,
-                        boardHistory:[Double],includeSelfContact:Bool=true) throws -> Self {
+                        boardHistory:[Double],includeSelfContact:Bool=true,channelCache:RopeChannelColliderCache?=nil) throws -> Self {
         var totalError=0.0,strain=0.0,clearance=Double.infinity,topology=true,speed=abs(state.boardVerticalVelocity)
         var failure:String?
         var margin=Double.infinity
         let portals=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
         let channels=Dictionary(uniqueKeysWithValues:input.channels.map{($0.id,$0)})
-        let channelColliders=Dictionary(uniqueKeysWithValues:try input.channels.map{($0.id,try RopeTriangleCollider(mesh:$0.solid))})
+        let channelColliders=try (channelCache ?? RopeChannelColliderCache(channels:input.channels)).matchingColliders(for:input.channels)
         for rope in state.ropes {
             var length=0.0
             for i in rope.restLengths.indices {

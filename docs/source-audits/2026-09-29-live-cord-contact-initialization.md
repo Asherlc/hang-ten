@@ -255,3 +255,61 @@ passed in 227.268 seconds and 37 selected native tests passed. Independent
 review found no issues. Mini Bar's scratch candidate now advances past the
 previously rejected frame 158; full rotation settling and performance remain
 pending.
+
+## Immutable channel-collider cache and frozen-step cost experiment
+
+The solver now constructs channel BVHs once and shares the immutable cache
+across transactional copies. Metrics bind the cache to the complete channel
+region values, including portal IDs, spines, vertices, and triangle indices;
+a mismatch throws before a collider is reused. Callers without a cache keep
+the same cold construction behavior. Acceptance calculations and thresholds
+are unchanged.
+
+Two tests compare cached and uncached metrics for both a valid seed and an
+invalid channel state, and reject shifted channel solids with unchanged IDs.
+All 55 host physics tests passed in 319.063 seconds; all 39 selected native
+tests passed on the owned iPhone 17 Pro Simulator. Independent scoped review
+found no issues. Five isolated Mini Bar measurements were identical, with
+mean cold verification 98.333 ms versus cached 35.918 ms (2.738×). An earlier
+concurrent-test run measured 398.243/171.486 ms (2.322×). These are host
+verification timings, not device or complete-step performance claims.
+
+The read-only performance committee agreed to retain immutable material
+chains, sliding crossings, jointly coupled board height and separate cords,
+global merit, final geometry gates, and swept collision checks. Its next
+discriminating experiment was one frozen Mini Bar jug step and replay of
+one identical linearized constraint problem with equality-only, warm, and
+diagnostic oracle contact starts. The scratch candidate contains a certified
+coarse seed and experimental contact warm-starting; this is not a production
+runtime benchmark.
+
+At frame 227, the profiled step used 36 nonlinear corrections and 1,279
+runtime linear solves, with 677 contact insertions and 566 releases. Runtime
+linear assembly/band/Schur times were 0.410/1.229/3.268 seconds. Constraint
+assembly took 1.711 seconds; 192 merit evaluations took 4.938 seconds. The
+whole profiled step, including diagnostic QP replays, took 14.775 seconds.
+The accepted physical checkpoint matches the baseline exactly after sorting
+the serialized contact-cache entries; profiling does not alter its state.
+
+For the captured problem, the oracle final set required one solve (3.390 ms),
+the warm start 156 solves (677.206 ms), and equality-only 303 solves
+(938.461 ms). Warm and oracle primal solutions and objectives were identical;
+the equality start differed by at most 0.2513 µm, with the same objective to
+4.9e-18. All three had zero positive contact multipliers; maximum linearized
+feasibility error was 7.494 nm and complementarity error below 6.6e-19.
+The final active sets differ by one row under the 10 nm inactive-row tolerance.
+
+The captured problem contains 418 length equalities and 22,641 candidate
+contact inequalities, including 22,521 wood witnesses. None are exact
+duplicate rows when particle references, gradients, board gradients, and
+residuals are compared. Linear dependence does not justify dropping these
+inequalities. The evidence favors reusing a chain/equality factorization and
+updating contact selection, with complete separation checks for omitted
+candidates. It also shows that contact discovery is only part of the cost:
+geometry, globalization, and verification remain far above the step budget.
+
+Retained logs, frozen checkpoint, reconstructible QP coefficients, toolchain
+and source hashes, and committee reports are under the workspace-owned
+`.context/strong-owl-live-cords/mini-dynamics-probe/`. Full Mini Bar rotation
+and return settling, catalog rollout, the CAD-to-mesh error budget, shared
+settled-bearing checks, and actual-device throughput remain pending.
