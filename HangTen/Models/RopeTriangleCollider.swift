@@ -250,10 +250,12 @@ struct RopeTriangleCollider: Sendable {
                 }
                 consider(start,Self.triangleClosest(start,a,b,c),0,normal)
                 consider(end,Self.triangleClosest(end,a,b,c),1,normal)
-                for (u,v) in [(a,b),(b,c),(c,a)] {
-                    let pair=Self.segmentPair(start,end,u,v)
-                    consider(pair.0,pair.1,pair.2,normal)
-                }
+                let first=Self.segmentPair(start,end,a,b)
+                consider(first.0,first.1,first.2,normal)
+                let second=Self.segmentPair(start,end,b,c)
+                consider(second.0,second.1,second.2,normal)
+                let third=Self.segmentPair(start,end,c,a)
+                consider(third.0,third.1,third.2,normal)
             }
         }
         return (sqrt(best),contact)

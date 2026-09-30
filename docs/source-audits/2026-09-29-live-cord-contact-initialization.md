@@ -414,3 +414,23 @@ summary is retained at
 After staging the new source membership and refreshing the strict tracked-path
 manifest, all 18 BoardSourceBoundaryTests also passed in a fresh native run.
 Mini Bar jug/return diagnostics and the all-board rollout remain unfinished.
+
+### Per-triangle allocation removal
+
+Steady-state sampling after collider initialization attributed 2,539 of 2,639
+verification samples to wood segment clearance. Its closest-segment leaf loop
+allocated a three-edge array for every triangle. Three explicit edge calls now
+preserve the same arithmetic, ordering and tie handling without that allocation.
+Independent review found no issues with this scoped change.
+
+An alternating same-state comparison used accepted Mini return frame 79, 300
+complete cached verification calls per variant, and 1,254 exact segment/contact
+witness comparisons. All metric fields and witnesses were identical. Mean
+verification time fell from 37.825 to 27.445 ms (1.378x) on the host while the
+transition diagnostic also ran. This is neither complete-step nor device timing,
+and remains above the 4 ms step target. Evidence is retained in
+`.context/strong-owl-live-cords/mini-dynamics-probe/no-edge-array-comparison.report.json`.
+All 64 host physics tests passed in 130.539 seconds; all 36 focused Simulator
+collider, dynamics and inter-cord tests passed with zero failures or skips.
+Their retained summary is `mini-dynamics-probe/edge-array-native-summary.json`
+under the same workspace context directory.
