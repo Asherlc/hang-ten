@@ -314,9 +314,10 @@ struct RopeDynamicsSolver: Sendable {
             let solved=try coupledCorrection(rows:selected,weights:weights,prediction:prediction)
             let lambda=solved.multipliers,heightCorrection=solved.height,corrections=solved.particles
             if working.releaseTensileContact(multipliers:lambda,contacts:selected.map{$0.contact}) {continue}
-            let active=Set(activeIDs)
+            var active=Array(repeating:false,count:rows.count)
+            for id in activeIDs {active[id]=true}
             var worst:(Int,Double)?
-            for index in rows.indices where rows[index].contact && !active.contains(index) {
+            for index in rows.indices where rows[index].contact && !active[index] {
                 let row=rows[index]
                 var residual=row.residual+row.boardGradient*heightCorrection
                 for j in row.particles.indices {residual += simd_dot(row.gradients[j],corrections[row.ropeIndex(j)][row.particles[j]])}

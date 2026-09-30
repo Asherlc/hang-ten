@@ -171,3 +171,9 @@ by native contact features reached the same frame/height within 0.04 micrometres
 in 520.9 wall seconds. Jug rotation and return remain under investigation.
 These timings are far too slow for live use; neither scratch seed/cache nor
 the Mini Bar live profile is enabled in the app.
+
+The contact-membership lookup now uses indexed Boolean flags instead of a
+hash set. A 124-frame replay of the same Mini Bar checkpoint produced exactly
+matching heights and strains. All 43 host physics tests passed in 257.138
+seconds and all 24 selected native Simulator tests passed. This optimization
+does not enable Mini Bar live settling or establish real-time performance.
