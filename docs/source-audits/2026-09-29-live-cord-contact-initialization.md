@@ -501,3 +501,37 @@ retries. No device throughput or Mini live-profile readiness is claimed. Evidenc
 is retained in `mini-jug-return-summary.json`, `mini-return-settled-checkpoint.json`
 and `native-return-settled-clearance.json` under the same workspace context path.
 Catalog rollout remains unfinished.
+
+### Post-backbone settled-step profile
+
+One frozen upright return step (492 to 493) used the current contact helper,
+geometry-bound channel cache, allocation-free triangle edge queries and corrected
+inside-endpoint selection inside the retained coarse/relative-trust diagnostic.
+It took 502.704 host milliseconds: three QPs used 182.132 ms, row assembly
+120.387 ms, seven merit calls 160.895 ms, cached final metrics 26.880 ms, and CCD
+plus velocity update 1.143 ms. There were 60,804 cumulative rows over three
+corrections and no full-KKT fallback. Both contact solving and geometry therefore
+independently exceed the complete 4 ms step budget. Uncached metrics took
+86.775 ms; the cached and uncached physical state, metrics and contact cache
+were identical after normalizing dictionary serialization order. This is one
+host screening sample, not a p95 or production/device measurement.
+
+The report and code/checkpoint SHA manifest are retained as
+`strong-owl-settled-profile-checkpoint.json.report.json` and
+`strong-owl-settled-profile-inputs.json` in the same workspace probe directory.
+
+Read-only native inspection uniquely partitioned all 42,796 approved Mini wood
+triangles into 15 CAD faces. Two toroidal channel patches account for 39,254
+triangles (91.7%). The partition retains the exact mesh and provides no permission
+to substitute untrimmed analytic surfaces for collision geometry. Native guidance
+and exploratory triangle-to-support-surface bounds are recorded in
+`strong-owl-mini-native-patches.json`; outward-rounded bounds, trims, reverse
+CAD-to-mesh coverage and solid-side certification are not yet established.
+
+A bounded Python/SciPy matrix-free complementarity screening retained the frozen
+inertial objective, joint equality/height system and explicit regularization.
+With a mass-diagonal preconditioner, its cold start activated 7,288 candidates,
+reached the 500-CG-iteration bound, and failed complementarity line search. It
+returned no accepted correction and was not adopted. This rejects that simple
+preconditioner/initialization experiment, not matrix-free methods generally.
+Evidence is `strong-owl-matrix-free-screen.report.json`.
