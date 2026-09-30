@@ -47,3 +47,9 @@ Status: approved by user 2026-09-29. Native CAD is authored; see geometry-review
 
 
 Native CAD review artifacts: [geometry comparison](geometry-review.html), [authoring notes](geometry-authoring-notes.md), [metadata preservation](metadata-preservation.json), [native edit validation](native-validation.json). Final app review is coordinated separately.
+
+## Current individual review
+
+UNLEVEL is review #3. Its [current cord correction](front-entry-review/review.md), [four-pose comparisons](front-entry-review/index.html), [fresh app captures](front-entry-review/app-review/index.html), and [native/runtime validation](front-entry-review/runtime-validation.json) cover sidecar `83d4fae…`. All four poses regenerate exactly; 31 package tests and 1,258 iOS tests passed, with 3 iOS skips. The owned simulator and derived build output were deleted and verified. [Individual acceptance](human-review.json) is pending.
+
+The root native-cord and app reports are historical records for sidecar `d689a72…`. The CAD source, USDZ and descriptor remain unchanged; [current closure](final-hash-closure.json) links the new cord proof separately from the retained body compile proof.

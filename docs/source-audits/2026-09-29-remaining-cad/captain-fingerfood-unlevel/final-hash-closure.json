@@ -18,5 +18,16 @@
     "primary.model.json": "740d634ad1301d51ebc5cc35f9778ef664be3987161f4a41b951169ef81b8a89"
   },
   "elapsedSeconds": 17.746,
-  "closure": "passed"
+  "closure": "passed",
+  "priorNativeCordReportsAreHistorical": true,
+  "nativeSolidUnchangedDuringFrontEntryCorrection": true,
+  "continuousCordCertificateSHA256": "e540aad4b2a10fb1e98410a847bdd16371ea0b89148f7037b0e87ddf88924936",
+  "continuousCordCertificate": "front-entry-review/continuous-cord-clearance.json",
+  "sidecarSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "generatedManifestSHA256": "34678d8121b0795267fe0468fd8ef6337c469fdb46d2e216b080a71f4ef3db07",
+  "cordSolverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "cordReview": "front-entry-review/review.md",
+  "nativeRouteCheckSHA256": "136f3256918b5b283a8871352a6dfe569021e4868a2b909d25e3763845d9e82c",
+  "currentCordVerification": "front-entry-review/verification.json",
+  "currentCordRuntimeVerification": "front-entry-review/runtime-validation.json"
 }

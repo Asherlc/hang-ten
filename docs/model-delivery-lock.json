@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11",
+  "sha256Manifest": "57c0654a52e3c8b4cb4c3dd6e610dced580daf8ccfb71dbd2f1d4028c4ad66be",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -670,10 +670,12 @@
       "comparison": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/geometry-review.html",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/app-review/validation.json",
+      "geometryAcceptance": "pending one-by-one user review",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "d689a72a606c7e429ff3050da9f4daa3d57ba02c55f9a100c56d71f019ddde18"
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "reviewRevision": "2026-09-30: UNLEVEL cord front entry corrected in every pose with existing native 3D tightening; individual user review pending.",
+      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/verification.json"
     },
     "frictitious-nug": {
       "source": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
@@ -1140,7 +1142,8 @@
   "sha256ManifestHistory": [
     "4991d2dca213f7f0846c79781a32123f10116323740d498f0323d8738fcc0420",
     "02da0c3ff36aff1de73d9ba87ef187d38fdb4a5a3c9ff97be2ab32f8d03921f0",
-    "0e7edf5616f828a3588275d8249e698bfe0cabc64d5b3b322e3d384b1c9fb365"
+    "0e7edf5616f828a3588275d8249e698bfe0cabc64d5b3b322e3d384b1c9fb365",
+    "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11"
   ],
   "individualReviewRevisions": [
     {
@@ -1172,6 +1175,16 @@
       "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/review.md",
       "geometryAcceptance": "accepted shown revised 90 degree cord routing with lgtm",
       "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "date": "2026-09-30",
+      "revision": "front-entry",
+      "request": "Manufacturer reference audit: visible leads must approach the front floor holes; the prior route entered from the rear in three poses.",
+      "scope": "Source-backed front mouth axes plus existing native local 3D tightening and hanging height; fixed actual mouths/support, CAD source/model/descriptor, cord dimensions and pose rotations/cameras preserved.",
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/review.md",
+      "geometryAcceptance": "pending revised user review"
     }
   ]
 }

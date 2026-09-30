@@ -1,0 +1,22 @@
+{
+  "package": "captain-fingerfood-unlevel",
+  "reviewNumber": 3,
+  "status": "pending",
+  "sourceApproval": "Manufacturer evidence approved earlier; individual geometry acceptance remains pending.",
+  "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
+  "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+  "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
+  "currentRevision": "front-entry-review/review.md",
+  "shownImages": {
+    "front-entry-review/app-review/edge20-front-front.png": "0f9ffc9a68879e4ee54bc2d046527f7b7eea1a4ffef027785d65da4bb67055e4",
+    "front-entry-review/app-review/edge25-inverted-front.png": "12fe54551188b90e704586656c57cf7da8fb3ac83247515411b4f5c9d751be4e",
+    "front-entry-review/app-review/pocket-right-end-front.png": "9c58da485615a24ea39d058e79f935bc593baa55846a019cbd6a155352040a2e",
+    "front-entry-review/app-review/jug-reverse-front.png": "bdcbff9e54f38a72511612a6d740b903d015b23711d04acf1731dc4a07df8623",
+    "front-entry-review/edge20-front-front-detail.png": "48342afa40b8351994d514778cd991aa958a99c29bb1a8756d10b7a3bc79ee22",
+    "front-entry-review/edge20-front-side-detail.png": "364ea578f839677c70d99c109342aaee68602ffb08b52328ba92e1899fbfae60",
+    "front-entry-review/edge20-front-top-detail.png": "ec6ee70a9edad3d34d17ce61d09d93023618b7609a2f66a8f9113d7298255c8b",
+    "front-entry-review/pocket-right-end-front-detail.png": "cae5c2ae675d476127300191649442acb92e80bdcc6d7f4601001e19003fad1c"
+  },
+  "requestedReview": "UNLEVEL body geometry and revised displayed cords, including the 90 degree pocket pose.",
+  "history": []
+}

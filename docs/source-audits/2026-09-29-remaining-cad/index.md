@@ -10,7 +10,7 @@ Each packet includes manufacturer evidence and prior/current geometry views. For
 | --- | --- | --- | --- | --- |
 | 1 | Aelith Equipment Cyclops #011 Blue x Black | [Review](aelith-cyclops-011/review/index.html) | [Audit](aelith-cyclops-011/native-authoring.md) | [App views](aelith-cyclops-011/app-review/index.html) |
 | 2 | Captain Fingerfood DUAL | [Current cord review](captain-fingerfood-dual/vertical-tightening-review/index.html), [CAD body](captain-fingerfood-dual/geometry-review.html) | [Audit](captain-fingerfood-dual/README.md) | [App views](captain-fingerfood-dual/vertical-tightening-review/app-review/index.html) |
-| 3 | Captain Fingerfood UNLEVEL | [Review](captain-fingerfood-unlevel/geometry-review.html) | [Audit](captain-fingerfood-unlevel/README.md) | [App views](captain-fingerfood-unlevel/app-review/index.html) |
+| 3 | Captain Fingerfood UNLEVEL | [Current cord review](captain-fingerfood-unlevel/front-entry-review/index.html), [CAD body](captain-fingerfood-unlevel/geometry-review.html) | [Audit](captain-fingerfood-unlevel/README.md) | [App views](captain-fingerfood-unlevel/front-entry-review/app-review/index.html) |
 | 4 | Frictitious Climbing The NUG | [Review](frictitious-nug/review/index.html) | [Audit](frictitious-nug/native-authoring.md) | [App views](frictitious-nug/app-review/index.html) |
 | 5 | Frictitious Climbing Port-A-Board | [Review](frictitious-port-a-board/review/index.html) | [Audit](frictitious-port-a-board/native-authoring.md) | [App views](frictitious-port-a-board/app-review/index.html) |
 | 6 | Mammut Diamond Finger Hangboard | [Review](mammut-diamond-finger/source-audit.md) | [Audit](mammut-diamond-finger/source-audit.md) | [App views](mammut-diamond-finger/app-review/index.html) |
@@ -38,4 +38,4 @@ Seven active migrations were left unchanged: `tension-grindstone-original`, `ten
 
 [Final validation](batch-validation.json). [Independent review](final-independent-review.json). [Historical report notes](validation-notes.md).
 
-DUAL’s general front-hole entry was accepted with “y”; its revised 90° lower-cord routing was then accepted with “lgtm” after inline front/side/top comparisons. [Recorded approval](captain-fingerfood-dual/human-review.json). Review is now on Captain Fingerfood UNLEVEL (#3); its front-entry cord correction is being prepared before presentation.
+DUAL’s general front-hole entry was accepted with “y”; its revised 90° lower-cord routing was then accepted with “lgtm” after inline front/side/top comparisons. [Recorded approval](captain-fingerfood-dual/human-review.json). Review is now on Captain Fingerfood UNLEVEL (#3); its corrected front-entry cords are verified and awaiting individual review. [Current UNLEVEL packet](captain-fingerfood-unlevel/front-entry-review/review.md).

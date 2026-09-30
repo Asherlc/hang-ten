@@ -85,6 +85,17 @@
       "physicalUIOrbit": "unverified",
       "geometryAcceptance": "accepted shown revised 90 degree cord routing with lgtm",
       "humanReviewRecord": "captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-unlevel",
+      "date": "2026-09-30",
+      "revision": "front-entry",
+      "feedback": "Manufacturer reference audit: visible leads must approach the front floor holes; the prior routes entered from the rear in three poses.",
+      "report": "captain-fingerfood-unlevel/front-entry-review/runtime-validation.json",
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending revised user review"
     }
   ]
 }
