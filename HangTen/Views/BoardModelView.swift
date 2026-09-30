@@ -41,7 +41,9 @@ struct BoardModelSurface: View {
     }
 
     var body: some View {
-        Group {
+        // Keep loading and disappearance scoped to this surface. Group forwards
+        // lifecycle modifiers to its changing placeholder/model children.
+        ZStack {
             if case .ready(let model) = result {
                 let realityView = BoardModelRealityView(
                     model: model,

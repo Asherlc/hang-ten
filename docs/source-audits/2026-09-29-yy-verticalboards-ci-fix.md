@@ -107,3 +107,32 @@ picking, orbit, canonical-reset, and landscape assertions with explicit
 virtual mode. Full shard and repeated Pro checks continue in the retained
 `map-virtual-*` logs and result bundles under the workspace-owned validation
 directory; these additional runs are not claimed complete here.
+
+## Stable surface lifecycle
+
+The virtual-camera variant reproduced the blank Pro map locally. Its
+`map-virtual-pro-app.log` records scene attachment followed by repeated
+load/disappear events; selecting virtual mode alone did not resolve the fault.
+The container was `Group`, so its `.task` and `.onDisappear` modifiers apply
+to the changing placeholder/model children. Replacing the placeholder can
+therefore cancel the load or run the disappearance handler that clears the
+just-loaded scene. Apple explicitly documents this modifier distribution:
+https://developer.apple.com/documentation/swiftui/group
+
+The surface now uses a persistent `ZStack`; lifecycle modifiers belong to the
+surface container across loading/ready/unavailable state changes. Actual
+navigation disappearance still clears the model.
+
+The long failed visual wait also exposed a sampler crash when XCTest returned
+nonfinite or empty frames: the retained runner crash report identifies a
+NaN-to-Int conversion in `modelBodySampleCount`. Sampling now rejects missing,
+nonfinite, empty, and out-of-screenshot viewports as zero visible-body samples.
+This preserves the visibility threshold and timeout while preventing a stale
+accessibility snapshot from crashing the test runner.
+
+The stable-container build and all eight map UI cases passed, including
+Pro and Evo rendered-body checks, physical picking, orbit and canonical reset,
+and the four Owl map/layout cases. The xcodebuild invocation finalized with
+exit zero. Results are retained in `map-lifecycle-shard.xcresult` and its log.
+Additional picker and three independent Pro repetitions are recorded in
+`map-lifecycle-picker` and `map-lifecycle-repeat-*` artifacts as they complete.

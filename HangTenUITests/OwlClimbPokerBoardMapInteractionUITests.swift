@@ -367,6 +367,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     private func modelBodySampleCount(in viewport: XCUIElement) throws -> Int {
+        guard viewport.exists else { return 0 }
+        let frame = viewport.frame
+        let appFrame = XCUIApplication().frame
+        guard frame.minX.isFinite, frame.minY.isFinite,
+              frame.width.isFinite, frame.height.isFinite,
+              frame.width > 0, frame.height > 0,
+              appFrame.width.isFinite, appFrame.width > 0 else { return 0 }
         let screenshot = XCUIScreen.main.screenshot().image
         let cgImage = try XCTUnwrap(screenshot.cgImage)
         let width = cgImage.width
@@ -379,11 +386,13 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue))
             context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
         }
-        let frame = viewport.frame
         // Ignore the rounded card edge. A blank ODR placeholder can otherwise
         // satisfy this check from its border even though RealityKit has no mesh.
         let bodyFrame = frame.insetBy(dx: frame.width * 0.12, dy: frame.height * 0.12)
-        let scale = CGFloat(width) / XCUIApplication().frame.width
+        let scale = CGFloat(width) / appFrame.width
+        guard bodyFrame.minX >= 0, bodyFrame.minY >= 0,
+              bodyFrame.maxX * scale <= CGFloat(width),
+              bodyFrame.maxY * scale <= CGFloat(height) else { return 0 }
         // RealityKit preserves the physical mesh aspect ratio within its card.
         // Scan the inner viewport so the card border and letterbox margins do not
         // count as visible board geometry.
