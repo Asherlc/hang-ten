@@ -584,6 +584,29 @@ production collider, acceptance threshold, cord geometry or catalog profile was
 changed. Evidence is `strong-owl-certified-patch-screen.report.json`; the exact
 owned probe exited and process absence was verified.
 
+### Additional architecture cost screens (no adoption)
+
+An exploratory chord-cover count on the retained healthy query corpus reduced
+418 segment-clearance queries to 236 at a 1 micrometre deviation allowance, or
+160 at 5 micrometres. These ordinary-float counts establish neither certified
+pruning nor performance; the modest reduction does not address the independent
+contact-solving cost. Evidence is `strong-owl-span-query-screen.json`.
+
+A separate flat GPU broadphase screen used outward quantization onto a
+1 micrometre integer lattice and exact UInt64 squared AABB gaps. On the host
+Apple M1 Max, all 1,121,244 output words matched the CPU integer reference for
+838 frozen assembly queries against 42,796 triangles. It returned 149,113
+candidate bits in a 4,484,976-byte bitmap. After 10 warmups, 50 repeats measured
+5.355 ms wall p95 including input copy, command submission/wait and output read;
+GPU command p95 was 4.396 ms. Neither timing includes contact distances,
+witnesses, normals, manifold construction, containment, CCD, affine separation
+or complete verification. The naive CPU reference is not the production BVH
+baseline. This screen supplies no complete-geometry speedup or device claim,
+and the flat broadphase alone already exceeds the complete 4 ms step target.
+No runtime Metal code was adopted. The finite probe exited successfully.
+Evidence is `strong-owl-gpu-broadphase-screen.report.json` and its retained
+`gpu-broadphase-entry/main.swift` under the live-cord probe context.
+
 ### Scene display initialization now uses the guarded projection
 
 The scene previously constructed a solver but measured and published its raw
