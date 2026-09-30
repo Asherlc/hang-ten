@@ -17,7 +17,7 @@ The batch preserves the existing source-backed attachment/entry-side evidence,
 all hold/contact inventories, every USDZ, native geometry, cord diameter and
 length provenance, and each instance identity. Unknown diameters remain labeled
 estimates: 3.6 mm for J. Bryant and 4 mm for the other four products. The owner's
-7 mm live Clavellium profile, 7 mm Mini Bar profile and documented 4 mm Helium value are unchanged. Clavellium still has an older 4 mm static fallback; correcting that cache to the confirmed 7 mm is outstanding and is not covered by this batch.
+7 mm live Clavellium profile, 7 mm Mini Bar profile and documented 4 mm Helium value are unchanged. At the first-batch commit Clavellium still had an older 4 mm static fallback; the follow-up below corrects it to the confirmed 7 mm.
 See `2026-09-29-catalog-cord-diameters.md` for source mappings. None of these
 exterior caches invents an interior connection, a knot or a material-length split.
 
@@ -87,9 +87,7 @@ embedded endpoints, and independently overlapping leads.
 Captain Pocket has one endpoint that cannot fit its estimated diameter.
 MXEdge Large/Small lack the source-shown through-height passages in their CAD.
 Rock Rings needs native-solid queries at its tessellation seams; Stone Hanger
-has missing interior surface coverage; Baguette has open mesh seams. Tension's
-existing full wrapped routing and Clavellium's static fallback also need their
-own route/diameter audits. Their caches are not replaced by this batch.
+has missing interior surface coverage; Baguette has open mesh seams. Tension's existing full wrapped routing also needs its own route/diameter audit. Their caches are not replaced by this batch.
 
 Lattice's primary setup guide establishes one continuous cord threaded through
 both end passages, with an exterior bridge below the board. A correction must
@@ -107,3 +105,23 @@ and the unverified device target remain recorded in their existing audits.
 91 native tests passed with zero failures or skips, including the production-asset Penta scene regression. All 13 exterior-authoring regressions passed. Package validation and the delivery lock passed for all 49 models and 117 locked files. All 32 exterior leads passed adaptive whole-segment clearance; all 16 within-setup pairs and both Penta cross-unit poses passed segment-pair clearance. Native CAD checks independently passed all eight J. Bryant/Light Rail leads.
 
 All 24 matched prior/current simulator views were visually reviewed, covering every canonical pose and representative front/side/top views of each product. Penta’s prior views show the pre-existing unavailable-model failure; current views show both loaded units. Retained final evidence: `integration-final.log`, `integration-summary.json`, `authoring-final.log`, `packages-final.log`, `delivery.json`, `paired-cord-clearance.json`, `native-geometry-identity.json`, and `inputs.json` under the workspace evidence directory.
+
+## Clavellium static fallback follow-up
+
+The static `suspension.json` loop now uses the owner's confirmed 7 mm diameter,
+matching the existing live profile. Its 550 mm material length remains explicitly
+estimated. The native-source-bound threaded solver regenerated the routes and
+hanging height (-154.096353 mm), and `--check` reproduced the cache. Every visible
+segment independently passed `Part.distToShape` against the unchanged native
+wood, with minimum centerline clearance 3.598915 mm for a 3.5 mm radius.
+
+Three native FreeCAD regressions passed, including all three straight-through
+channels, outward pinch normals and exact route regeneration with an explicit
+7 mm assertion. Matched front/side/top previews render the native mesh and
+actual computed round tubes, prior 4 mm versus current 7 mm, under
+`clavellium-static-*-comparison.png`. These are offline static-cache previews,
+not a live-simulation screenshot. Neither CAD geometry nor USDZ changed.
+Evidence also includes `clavellium-static-native.json`,
+`clavellium-static-check.log` and `clavellium-static-tests.log`.
+
+The follow-up also passed all 91 relevant iOS tests, package inventory validation and the refreshed delivery lock. Final iOS evidence: `clavellium-static-ios-summary.json`.

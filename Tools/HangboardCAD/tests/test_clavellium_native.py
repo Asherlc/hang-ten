@@ -87,6 +87,7 @@ def test_cached_single_loop_matches_the_native_solid_solve(tmp_path):
     mesh = trimesh.Trimesh(vertices=source["vertices"], faces=source["triangles"], process=False)
     package = ROOT / "Hangboards/clavellium-training-block"
     sidecar = json.loads((package / "suspension.json").read_text())
+    assert sidecar["suspension"]["branches"][0]["radius"] == 0.0035, "owner-confirmed 7 mm diameter"
     descriptor = json.loads((package / "assets/primary.model.json").read_text())
     solved = solve_package("clavellium-training-block", mesh, sidecar, descriptor)["front"]
     pose = sidecar["suspension"]["canonicalPoses"]["front"]
