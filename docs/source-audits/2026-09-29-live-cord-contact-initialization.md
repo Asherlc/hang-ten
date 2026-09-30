@@ -177,3 +177,30 @@ hash set. A 124-frame replay of the same Mini Bar checkpoint produced exactly
 matching heights and strains. All 43 host physics tests passed in 257.138
 seconds and all 24 selected native Simulator tests passed. This optimization
 does not enable Mini Bar live settling or establish real-time performance.
+
+Sliding portal boundaries now participate in the coupled correction. A
+frozen Mini Bar jug transition failed with 1–3 micrometres of aperture merit
+after the other constraints had converged: the merit checked conservative
+planar sections that wood-only rows could not enforce. Each boundary's
+derivative includes the changing geometric intersection fraction, so it
+permits material feed and does not pin a material particle. World-space
+gradients include board-height and board-fixed endpoint motion. Portal merit
+uses the existing 10 nm linear feasibility deadzone; physical acceptance and
+CCD remain unchanged.
+
+An integration regression reduces Clavellium's planar aperture by 0.1 percent
+while retaining its original certified seed. Before the correction, the step
+accepted a crossing approximately 13 micrometres outside the requested
+erosion; the new regression fails twice on that implementation and passes
+with the new rows. Independent finite differences cover all endpoint axes,
+three rotations, four attachment combinations, and material transfer across
+segments. All 45 host physics tests passed in 250.854 seconds and 29 native
+Simulator tests passed. After review-requested test strengthening, four
+focused host tests and two native tests passed; production was unchanged.
+Read-only review found no Critical or Important issues and its Minor coverage
+request was addressed.
+
+The scratch Mini Bar candidate passes the previously failing jug frame 46
+and advances to frame 134, then rejects frame 135 at its swept self-contact
+gate. This is diagnostic progress, not complete jug settling, a live profile
+enablement, or real-time performance proof.

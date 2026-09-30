@@ -42,6 +42,91 @@ final class RopeDynamicsSolverTests: XCTestCase {
         }
     }
 
+    func testSlidingPortalBoundaryGradientsFollowMovingIntersection() throws {
+        for angle in [0.0,0.7,2.1] {
+            let q=simd_quatd(angle:angle,axis:simd_normalize(SIMD3<Double>(1,2,3)))
+            let portal=RopePortalRegion(id:"mouth",center:q.act(SIMD3(0,0,0.01)),normal:q.act(SIMD3(0,0,1)),
+                boundary:[SIMD3<Double>(-0.02,-0.02,0.01),SIMD3(0.02,-0.02,0.01),SIMD3(0.02,0.02,0.01),SIMD3(-0.02,0.02,0.01)].map{q.act($0)},
+                clearanceRadius:0.02)
+            let a=q.act(SIMD3<Double>(-0.004,0.003,-0.008)),b=q.act(SIMD3<Double>(0.009,0.012,0.022))
+            let rows=try RopePassageTopology.boundaryConstraints(from:a,to:b,portal:portal,radius:0.0035)
+            XCTAssertEqual(rows.count,4)
+            // Recompute the actual plane intersection, not a fixed material
+            // fraction. Omitting its derivative changes the finite differences.
+            func residual(_ a:SIMD3<Double>,_ b:SIMD3<Double>,edge:Int)->Double {
+                let delta=b-a,f=simd_dot(portal.center-a,portal.normal)/simd_dot(delta,portal.normal)
+                let start=portal.boundary[edge],end=portal.boundary[(edge+1)%portal.boundary.count]
+                var inward=simd_normalize(simd_cross(portal.normal,end-start))
+                if simd_dot(inward,portal.center-start)<0 {inward = -inward}
+                return simd_dot(a+f*delta-start,inward)-0.0035-RopeRegionGeometry.clearance
+            }
+            for edge in rows.indices {
+                XCTAssertEqual(rows[edge].residual,residual(a,b,edge:edge),accuracy:1e-12)
+                for axis in 0..<3 {
+                    var epsilon=SIMD3<Double>.zero;epsilon[axis]=1e-7
+                    XCTAssertEqual(rows[edge].firstGradient[axis],
+                        (residual(a+epsilon,b,edge:edge)-residual(a-epsilon,b,edge:edge))/2e-7,accuracy:1e-7)
+                    XCTAssertEqual(rows[edge].secondGradient[axis],
+                        (residual(a,b+epsilon,edge:edge)-residual(a,b-epsilon,edge:edge))/2e-7,accuracy:1e-7)
+                }
+                let delta=b-a
+                XCTAssertEqual(simd_dot(rows[edge].firstGradient,delta),0,accuracy:1e-12)
+                XCTAssertEqual(simd_dot(rows[edge].secondGradient,delta),0,accuracy:1e-12)
+            }
+            XCTAssertThrowsError(try RopePassageTopology.boundaryConstraints(from:a,to:a,portal:portal,radius:0.0035))
+        }
+    }
+
+    func testSlidingPortalGradientsIncludeBoardHeightAndAttachments() throws {
+        let q=simd_quatd(angle:0.7,axis:simd_normalize(SIMD3<Double>(1,2,3)))
+        let portal=RopePortalRegion(id:"mouth",center:SIMD3(0,0,0.01),normal:SIMD3(0,0,1),
+            boundary:[SIMD3<Double>(-0.02,-0.02,0.01),SIMD3(0.02,-0.02,0.01),SIMD3(0.02,0.02,0.01),SIMD3(-0.02,0.02,0.01)],clearanceRadius:0.02)
+        let a=SIMD3<Double>(-0.004,0.003,-0.008),b=SIMD3<Double>(0.009,0.012,0.022)
+        let rows=try RopePassageTopology.boundaryConstraints(from:a,to:b,portal:portal,radius:0.0035)
+        let localUp=q.inverse.act(SIMD3<Double>(0,1,0)),epsilon=1e-7
+        for firstAttached in [false,true] {
+            for secondAttached in [false,true] {
+                // A board-fixed endpoint moves with board height; an exterior
+                // endpoint stays in world space and moves in board coordinates.
+                let da=firstAttached ? SIMD3<Double>.zero:-localUp
+                let db=secondAttached ? SIMD3<Double>.zero:-localUp
+                let plus=try RopePassageTopology.boundaryConstraints(from:a+da*epsilon,to:b+db*epsilon,portal:portal,radius:0.0035)
+                let minus=try RopePassageTopology.boundaryConstraints(from:a-da*epsilon,to:b-db*epsilon,portal:portal,radius:0.0035)
+                for edge in rows.indices {
+                    let firstWorld=q.act(rows[edge].firstGradient),secondWorld=q.act(rows[edge].secondGradient)
+                    let derivative = -firstWorld.y-secondWorld.y+(firstAttached ? firstWorld.y:0)+(secondAttached ? secondWorld.y:0)
+                    XCTAssertEqual(derivative,(plus[edge].residual-minus[edge].residual)/(2*epsilon),accuracy:1e-7)
+                }
+            }
+        }
+    }
+
+    func testSlidingCrossingCorrectionEnforcesConservativeAperture() throws {
+        let source=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:source)
+        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+        // A conservative planar mouth can be slightly inside the CAD rim.
+        // Wood-only corrections cannot enforce this distinct topology boundary.
+        let portals=source.portals.map {p in
+            RopePortalRegion(id:p.id,center:p.center,normal:p.normal,
+                boundary:p.boundary.map{p.center+($0-p.center)*0.999},clearanceRadius:p.clearanceRadius)
+        }
+        let input=RopePhysicsInput(modelSHA256:source.modelSHA256,sourceSHA256:source.sourceSHA256,
+            collision:source.collision,portals:portals,channels:source.channels,profiles:source.profiles)
+        let initial=try RopeThreadedSeed.make(input:source,profileID:"front",orientation:q,collider:collider)
+        XCTAssertTrue(try RopeSimulationMetrics.measure(state:initial,input:input,collider:collider,
+            boardHistory:[initial.boardHeight]).geometryAccepted)
+        var solver=try RopeDynamicsSolver(input:input,state:initial,collider:collider)
+        let frame=try solver.step(dt:1.0/240,targetOrientation:q)
+        XCTAssertTrue(frame.metrics.geometryAccepted)
+        XCTAssertEqual(solver.state.ropes[0].restLengths,initial.ropes[0].restLengths)
+        for (id,crossing) in solver.state.ropes[0].portalCrossings {
+            let portal=try XCTUnwrap(portals.first{$0.id==id})
+            let point=solver.state.boardPoint(crossing.point(in:solver.state.ropes[0].positions))
+            XCTAssertGreaterThanOrEqual(RopePassageTopology.boundaryMargin(point,portal:portal),
+                solver.state.ropes[0].radius+RopeRegionGeometry.clearance-1e-8)
+        }
+    }
+
     func testPortalCrossingsMoveThroughMaterialWithoutChangingRestLengths() throws {
         let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
         let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
@@ -55,6 +140,7 @@ final class RopeDynamicsSolverTests: XCTestCase {
         XCTAssertEqual(state.ropes[0].portalCrossings.count,2)
         for (id,crossing) in state.ropes[0].portalCrossings {
             XCTAssertGreaterThan(crossing.materialCoordinate,try XCTUnwrap(before[id]).materialCoordinate+0.5)
+            XCTAssertGreaterThan(crossing.segment,try XCTUnwrap(before[id]).segment)
             let portal=try XCTUnwrap(input.portals.first{$0.id == id})
             let point=state.boardPoint(crossing.point(in:state.ropes[0].positions))
             XCTAssertEqual(simd_dot(point-portal.center,portal.normal),0,accuracy:1e-10)

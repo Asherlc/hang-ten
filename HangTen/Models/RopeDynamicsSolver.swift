@@ -236,8 +236,8 @@ struct RopeDynamicsSolver: Sendable {
     }
 
     /// Distance and exact capsule contact share a sparse coupled solve.
-    /// CAD wood constrains the aperture; crossings identify topology without
-    /// pinning material. Unilateral tensile contacts are released, with inactive
+    /// CAD wood and eroded portal boundaries constrain sliding crossings
+    /// without pinning material. Unilateral tensile contacts are released, with inactive
     /// inequalities reconsidered before accepting a correction.
     private mutating func correctConstraints(prediction:RopeSimulationState) throws -> Double {
         var rows:[ConstraintRow]=[]
@@ -273,6 +273,23 @@ struct RopeDynamicsSolver: Sendable {
                     let boardGradient = -normal.y+simd_dot(gradients[0],attachedA)+simd_dot(gradients[1],attachedB)
                     rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:gradients,boardGradient:boardGradient,
                         residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))
+                }
+            }
+            // Conservative planar sections can lie inside a curved CAD rim.
+            // Enforce their aperture separately while keeping material sliding.
+            for id in rope.portalCrossings.keys.sorted() {
+                guard let crossing=rope.portalCrossings[id],let portal=portalMap[id] else {
+                    throw RopePhysicsError.invalid("Missing correction portal")
+                }
+                let i=crossing.segment
+                let boundaries=try RopePassageTopology.boundaryConstraints(from:state.boardPoint(rope.positions[i]),
+                    to:state.boardPoint(rope.positions[i+1]),portal:portal,radius:rope.radius)
+                for boundary in boundaries where boundary.residual<0.00005 {
+                    let gradients=[state.orientation.act(boundary.firstGradient),state.orientation.act(boundary.secondGradient)]
+                    let boardGradient = -gradients[0].y-gradients[1].y +
+                        (rope.attachments[i] == nil ? 0:gradients[0].y)+(rope.attachments[i+1] == nil ? 0:gradients[1].y)
+                    rows.append(ConstraintRow(rope:r,particles:[i,i+1],gradients:gradients,boardGradient:boardGradient,
+                        residual:boundary.residual,contact:true,lengthSegment:nil))
                 }
             }
             for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
@@ -493,7 +510,7 @@ struct RopeDynamicsSolver: Sendable {
             for (id,crossing) in rope.portalCrossings {
                 guard let portal=portalMap[id] else{throw RopePhysicsError.invalid("Missing merit portal")}
                 let margin=RopePassageTopology.boundaryMargin(candidate.boardPoint(crossing.point(in:rope.positions)),portal:portal)
-                violation += max(0,rope.radius+RopeRegionGeometry.clearance-margin)
+                violation += max(0,rope.radius+RopeRegionGeometry.clearance-margin-Self.contactLinearTolerance)
             }
         }
         for first in candidate.ropes.indices {

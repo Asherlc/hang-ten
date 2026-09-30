@@ -48,6 +48,12 @@ struct RopeSimulationState: Sendable {
     }
 }
 
+struct RopePortalBoundaryConstraint: Sendable {
+    let residual: Double
+    let firstGradient: SIMD3<Double>
+    let secondGradient: SIMD3<Double>
+}
+
 enum RopePassageTopology {
     /// Finds the ordered crossings of the evidenced graph. A crossing can
     /// move through consecutive links while material rest lengths stay fixed.
@@ -95,6 +101,26 @@ enum RopePassageTopology {
             }
             state.ropes[r].portalCrossings=crossings
             state.ropes[r].channelSpans=spans
+        }
+    }
+
+    /// Derivatives of an eroded aperture half-space at the geometric plane
+    /// intersection. Its fraction changes with the endpoints, so material can
+    /// feed through the passage without pinning either endpoint to the mouth.
+    static func boundaryConstraints(from a:SIMD3<Double>,to b:SIMD3<Double>,
+                                    portal:RopePortalRegion,radius:Double) throws -> [RopePortalBoundaryConstraint] {
+        let delta=b-a,denominator=simd_dot(delta,portal.normal)
+        guard abs(denominator)>1e-12 else {throw RopePhysicsError.invalid("Tangent portal crossing")}
+        let fraction=simd_dot(portal.center-a,portal.normal)/denominator
+        guard fraction>=(-1e-8),fraction<=1+1e-8 else {throw RopePhysicsError.invalid("Missing portal crossing")}
+        let f=min(1,max(0,fraction)),point=a+f*delta
+        return portal.boundary.indices.map {i in
+            let start=portal.boundary[i],end=portal.boundary[(i+1)%portal.boundary.count]
+            var inward=simd_normalize(simd_cross(portal.normal,end-start))
+            if simd_dot(inward,portal.center-start)<0 {inward = -inward}
+            let gradient=inward-portal.normal*(simd_dot(inward,delta)/denominator)
+            return RopePortalBoundaryConstraint(residual:simd_dot(point-start,inward)-radius-RopeRegionGeometry.clearance,
+                firstGradient:gradient*(1-f),secondGradient:gradient*f)
         }
     }
 
