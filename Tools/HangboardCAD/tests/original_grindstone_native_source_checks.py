@@ -77,5 +77,6 @@ def main(work):
 if __name__ == '__main__':
     if len(sys.argv) > 1:
         raise SystemExit(main(Path(sys.argv[1])))
+    (ROOT / '.context').mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=ROOT.name + '-grindstone-native-', dir=ROOT / '.context') as scratch:
         raise SystemExit(main(Path(scratch)))
