@@ -155,7 +155,8 @@ final class FreeWorkoutUITests: XCTestCase {
         let close = app.buttons["freeWorkout.close"]
         XCTAssertTrue(close.waitForExistence(timeout: 10))
         // Navigation toolbar snapshots can report invalid activation points on CI.
-        tapVisibleControl(close, requireHittable: false)
+        // Four accessibility queries can exceed ten seconds on hosted runners.
+        tapVisibleControl(close, requireHittable: false, timeout: 30)
 
         let resume = app.buttons["freeWorkout.resume"]
         XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
@@ -170,7 +171,7 @@ final class FreeWorkoutUITests: XCTestCase {
         // Finish with zero completed sets → discard; history stays empty.
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        tapVisibleControl(finish, requireHittable: false)
+        tapVisibleControl(finish, requireHittable: false, timeout: 30)
         confirmEndWorkoutDialog(in: app)
         let discardAlert = app.alerts["No completed sets"]
         XCTAssertTrue(discardAlert.waitForExistence(timeout: 8))
@@ -322,7 +323,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        tapVisibleControl(finish, requireHittable: false)
+        tapVisibleControl(finish, requireHittable: false, timeout: 30)
 
         confirmEndWorkoutDialog(in: app)
         skipTemplatePrompt(in: app)

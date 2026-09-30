@@ -445,17 +445,22 @@ extension XCTestCase {
         _ element: XCUIElement,
         normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
         requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         var offset: CGVector?
+        var lastFrame: CGRect?
+        var lastViewport: CGRect?
         let ready = XCTNSPredicateExpectation(
             predicate: NSPredicate { _, _ in
                 guard element.exists, element.isEnabled,
                       !requireHittable || element.isHittable else { return false }
                 let frame = element.frame
                 let viewport = screen.frame
+                lastFrame = frame
+                lastViewport = viewport
                 guard frame.minX.isFinite, frame.minY.isFinite,
                       frame.width.isFinite, frame.height.isFinite,
                       frame.width > 0, frame.height > 0,
@@ -472,9 +477,9 @@ extension XCTestCase {
             },
             object: element
         )
-        guard XCTWaiter.wait(for: [ready], timeout: 10) == .completed,
+        guard XCTWaiter.wait(for: [ready], timeout: timeout) == .completed,
               let offset else {
-            XCTFail("Control must have a finite, visible frame before tapping", file: file, line: line)
+            XCTFail("Control must have a finite, visible frame before tapping; control=\(String(describing: lastFrame)), screen=\(String(describing: lastViewport)), target=\(String(describing: offset))", file: file, line: line)
             return
         }
         let root = screen.coordinate(withNormalizedOffset: .zero)
