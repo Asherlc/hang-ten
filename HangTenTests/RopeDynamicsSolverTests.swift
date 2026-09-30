@@ -194,6 +194,49 @@ final class RopeDynamicsSolverTests: XCTestCase {
         }
     }
 
+    func testSharedSupportSeparationBoundIsConservativeAcrossMotion() {
+        for index in 0..<32 {
+            let phase=Double(index)*0.71
+            let u=SIMD3<Double>(0.03*sin(phase),-0.1,0.02*cos(phase))
+            let v=SIMD3<Double>(0.05*cos(phase),-0.08,0.03*sin(phase))
+            let nextU=u+SIMD3<Double>(0.025*cos(phase),0.01*sin(phase),-0.015)
+            let nextV=v+SIMD3<Double>(-0.04,0.015*cos(phase),0.02*sin(phase))
+            let firstFraction=0.001+Double(index%4)*0.02,secondFraction=0.002+Double(index%3)*0.03
+            let bound=RopeMotionSweep.sharedSupportSeparationBound(previousFirst:u,first:nextU,
+                previousSecond:v,second:nextV,firstFraction:firstFraction,secondFraction:secondFraction)
+            XCTAssertGreaterThanOrEqual(bound,0)
+            for sample in 0...64 {
+                let t=Double(sample)/64,a=u+(nextU-u)*t,b=v+(nextV-v)*t
+                let pair=RopeTriangleCollider.segmentPair(a*firstFraction,a,b*secondFraction,b)
+                XCTAssertLessThanOrEqual(bound,simd_distance(pair.0,pair.1)+1e-12)
+            }
+        }
+        let u=SIMD3<Double>(0.01,-0.1,0),v=SIMD3<Double>(0.03,-0.1,0)
+        XCTAssertEqual(RopeMotionSweep.sharedSupportSeparationBound(previousFirst:u,first:v,
+            previousSecond:v,second:u,firstFraction:0.01,secondFraction:0.01),0)
+    }
+
+    func testSharedSupportRaysRotateWithoutFalseSweepExhaustion() {
+        let support=SIMD3<Double>.zero
+        let before=[support,SIMD3(0.01,-0.1,0),SIMD3(0.03,-0.1,0),support]
+        let q=simd_quatd(angle:0.003,axis:SIMD3<Double>(0,0,1))
+        let after=before.map{q.act($0)}
+        let rest=zip(before,before.dropFirst()).map{simd_distance($0,$1)}
+        // Swept boxes overlap; the unchanged angle between these rays keeps
+        // their trimmed centerlines separated throughout the motion.
+        XCTAssertTrue(RopeMotionSweep.selfContactValid(previous:before,positions:after,
+            radius:0.0035,supports:[0:support,3:support],restLengths:rest))
+    }
+
+    func testSharedSupportRaysCannotSwapThroughEachOther() {
+        let support=SIMD3<Double>.zero
+        let before=[support,SIMD3(0.01,-0.1,0),SIMD3(0.03,-0.1,0),support]
+        let after=[support,before[2],before[1],support]
+        let rest=zip(before,before.dropFirst()).map{simd_distance($0,$1)}
+        XCTAssertFalse(RopeMotionSweep.selfContactValid(previous:before,positions:after,
+            radius:0.0035,supports:[0:support,3:support],restLengths:rest))
+    }
+
     func testSelfSweepCertifiesEndReachedOnLastIteration() {
         let before:[SIMD3<Double>]=[SIMD3(-1,0,0),SIMD3(1,0,0),SIMD3(1,0.001,0),SIMD3(-1,0.001,0)]
         let after=before.map{$0+SIMD3<Double>(0,0.0511,0)}

@@ -526,6 +526,35 @@ struct RopeDynamicsSolver: Sendable {
 }
 
 enum RopeMotionSweep {
+    /// A lower bound for the separation of two truncated rays leaving the
+    /// same fixed support throughout linear endpoint motion. Bound sin(theta)
+    /// by the cross-product norm, and each ray's radius by its chord minimum.
+    static func sharedSupportSeparationBound(previousFirst:SIMD3<Double>,first:SIMD3<Double>,
+        previousSecond:SIMD3<Double>,second:SIMD3<Double>,firstFraction:Double,secondFraction:Double)->Double {
+        guard firstFraction>0,firstFraction<=1,secondFraction>0,secondFraction<=1 else {return 0}
+        let du=first-previousFirst,dv=second-previousSecond
+        func minimumNorm(_ origin:SIMD3<Double>,_ delta:SIMD3<Double>)->Double {
+            let square=simd_length_squared(delta)
+            let t=square>1e-30 ? min(1,max(0,-simd_dot(origin,delta)/square)):0
+            return simd_length(origin+delta*t)
+        }
+        let minimumFirst=firstFraction*minimumNorm(previousFirst,du)
+        let minimumSecond=secondFraction*minimumNorm(previousSecond,dv)
+        let maxFirst=max(simd_length(previousFirst),simd_length(first))
+        let maxSecond=max(simd_length(previousSecond),simd_length(second))
+        guard maxFirst.isFinite,maxSecond.isFinite,maxFirst>1e-12,maxSecond>1e-12 else {return 0}
+        let midpointFirst=(previousFirst+first)/2,midpointSecond=(previousSecond+second)/2
+        let midpointCross=simd_length(simd_cross(midpointFirst,midpointSecond))
+        // The cross-product derivative is affine, so its norm is bounded
+        // by its two endpoints across the complete unit interval.
+        let derivative=max(simd_length(simd_cross(du,previousSecond)+simd_cross(previousFirst,dv)),
+            simd_length(simd_cross(du,second)+simd_cross(first,dv)))
+        let crossLower=max(0,midpointCross-derivative/2)
+        let sineLower=min(1,crossLower/(maxFirst*maxSecond))
+        return max(0,max(minimumFirst,minimumSecond)*sineLower-1e-12)
+    }
+
+
     /// Under slerp, |p''(t)| <= angle² max|r(t)| + 2 angle |r'(t)|
     /// for p(t)=q(t)^-1 r(t). Linear-interpolation error is at most |p''|/8.
     /// Inflate the chord sweep by this bound to cover the true rotating path.
@@ -550,6 +579,13 @@ enum RopeMotionSweep {
                 let distanceThreshold=connected || knot ? 1e-8:2*radius-0.00005
                 var a=previous[i],b=previous[i+1],c=previous[j],d=previous[j+1]
                 var nextA=positions[i],nextB=positions[i+1],nextC=positions[j],nextD=positions[j+1]
+                if knot,i==0,j==links-1,let support=common,
+                   a==support,d==support,nextA==support,nextD==support {
+                    let bound=sharedSupportSeparationBound(previousFirst:b-support,first:nextB-support,
+                        previousSecond:c-support,second:nextC-support,
+                        firstFraction:min(1,1e-6/restLengths[i]),secondFraction:min(1,1e-6/restLengths[j]))
+                    if bound>distanceThreshold+1e-9 {continue}
+                }
                 if knot {
                     if i == 0 {
                         let f=min(1,1e-6/restLengths[i])

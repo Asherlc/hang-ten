@@ -218,3 +218,27 @@ found no issues.
 The Mini Bar checkpoint replay then identifies further uncertain sweeps near
 the common knot: some reach only t=0.90 before the bounded iteration limit.
 The endpoint fix does not claim to resolve those separate cases.
+
+Self-contact CCD also has a conservative separation certificate for the first
+and last legs leaving an exactly shared, fixed support. The generic sweep
+can otherwise exhaust because trimmed endpoints remain about a micrometre
+from the support while far-end velocity bounds are hundreds of micrometres.
+The certificate bounds the minimum chord radii and cross-product angle
+throughout the linear sweep. Its midpoint cross-product bound uses the
+endpoint maximum of the affine derivative. It applies only when all four
+old/new support endpoints exactly equal the same support and only accepts
+a lower bound above the existing threshold plus 1 nm. Uncertified motion
+retains the full sweep. No knot exemption or trim length changed.
+
+A rigidly rotating same-quadrant ray fixture falsely rejects on the earlier
+source and passes with the certificate. Swapping the rays remains rejected.
+A further 32 motion paths sampled at 65 times confirm the computed lower
+bound never exceeds exact truncated-segment distance. Independent mathematical
+review found no issues. All 51 host physics tests passed in 250.059 seconds
+and the selected native suite passed.
+
+Mini Bar's scratch replay advances through frame 157 and then rejects
+independent-cord CCD at frame 158. Its diagnostic identifies the same
+conservative-bound exhaustion between two legs of separate loops leaving
+the shared support; no crossing was reported. This does not establish full
+rotation settling or runtime readiness.
