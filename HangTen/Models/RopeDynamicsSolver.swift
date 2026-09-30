@@ -60,6 +60,15 @@ struct RopeDynamicsSolver: Sendable {
                 throw RopePhysicsError.invalid("Initial rope centerline crosses itself")
             }
         }
+        for first in state.ropes.indices {
+            for second in state.ropes.indices where second>first {
+                let radius=state.ropes[first].radius+state.ropes[second].radius
+                guard RopeCordContacts.between(state.ropes[first],state.ropes[second],
+                    margin: -radius+0.00005+1e-8).isEmpty else {
+                    throw RopePhysicsError.invalid("Initial rope centerlines cross each other")
+                }
+            }
+        }
         let prediction=state
         for iteration in 0...maxIterations {
             let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,
@@ -162,6 +171,14 @@ struct RopeDynamicsSolver: Sendable {
                 throw StepFailure.sweptSelfTraversal
             }
         }
+        for first in state.ropes.indices {
+            for second in state.ropes.indices where second>first {
+                guard RopeCordContacts.sweepValid(previousFirst:old.ropes[first],first:state.ropes[first],
+                    previousSecond:old.ropes[second],second:state.ropes[second]) else {
+                    throw StepFailure.sweptSelfTraversal
+                }
+            }
+        }
         for r in state.ropes.indices {
             state.ropes[r].previousPositions=old.ropes[r].positions
             for i in state.ropes[r].positions.indices {
@@ -211,6 +228,8 @@ struct RopeDynamicsSolver: Sendable {
         let residual:Double
         let contact:Bool
         let lengthSegment:Int?
+        var secondRope:Int?=nil
+        func ropeIndex(_ gradient:Int)->Int {gradient>=2 ? (secondRope ?? rope):rope}
     }
 
     /// Distance and exact capsule contact share a sparse coupled solve.
@@ -269,6 +288,21 @@ struct RopeDynamicsSolver: Sendable {
                     residual:distance-2*rope.radius-0.00005,contact:true,lengthSegment:nil))
             }
         }
+        for first in state.ropes.indices {
+            for second in state.ropes.indices where second>first {
+                for hit in RopeCordContacts.between(state.ropes[first],state.ropes[second],margin:0.0001) {
+                    let i=hit.firstSegment,j=hit.secondSegment,f=hit.firstFraction,g=hit.secondFraction,n=hit.normal
+                    let particles=[i,i+1,j,j+1],gradients=[n*(1-f),n*f,-n*(1-g),-n*g]
+                    let references=[first,first,second,second]
+                    let boardGradient=particles.indices.reduce(0.0) {value,k in
+                        value+(state.ropes[references[k]].attachments[particles[k]] == nil ? 0:gradients[k].y)
+                    }
+                    rows.append(ConstraintRow(rope:first,particles:particles,gradients:gradients,
+                        boardGradient:boardGradient,residual:hit.distance-hit.targetDistance,
+                        contact:true,lengthSegment:nil,secondRope:second))
+                }
+            }
+        }
         // Separated candidate facets are inequalities, not initial equalities.
         // Starting them active needlessly factors/releases hundreds of rows.
         // Start nonlocal contacts inactive too: overlapping capsules supply
@@ -289,7 +323,7 @@ struct RopeDynamicsSolver: Sendable {
             for index in rows.indices where rows[index].contact && !active.contains(index) {
                 let row=rows[index]
                 var residual=row.residual+row.boardGradient*heightCorrection
-                for j in row.particles.indices {residual += simd_dot(row.gradients[j],corrections[row.rope][row.particles[j]])}
+                for j in row.particles.indices {residual += simd_dot(row.gradients[j],corrections[row.ropeIndex(j)][row.particles[j]])}
                 if residual < -1e-8 && residual < (worst?.1 ?? 0) {worst=(index,residual)}
             }
             if let index=worst?.0 {
@@ -332,7 +366,7 @@ struct RopeDynamicsSolver: Sendable {
     /// length/contact rows, and borders for height/nonlocal self-contact.
     private func coupledCorrection(rows:[ConstraintRow],weights:[[Double]],prediction:RopeSimulationState) throws
         -> (particles:[[SIMD3<Double>]],height:Double,multipliers:[Double]) {
-        let borderRows=rows.indices.filter{rows[$0].particles.max()!-rows[$0].particles.min()!>1}
+        let borderRows=rows.indices.filter{rows[$0].secondRope != nil || rows[$0].particles.max()!-rows[$0].particles.min()!>1}
         let borderSet=Set(borderRows),local=rows.indices.filter{!borderSet.contains($0)}
         var grouped:[SIMD2<Int>:[Int]]=[:]
         for index in local {
@@ -413,8 +447,8 @@ struct RopeDynamicsSolver: Sendable {
             try system.addSymmetric(row:variable,column:variable,value:-1e-8)
             columns[0][variable]=row.boardGradient
             for j in row.particles.indices {
-                for axis in 0..<3 where variables[row.rope][row.particles[j]][axis]>=0 {
-                    try system.addSymmetric(row:variable,column:variables[row.rope][row.particles[j]][axis],value:row.gradients[j][axis])
+                for axis in 0..<3 where variables[row.ropeIndex(j)][row.particles[j]][axis]>=0 {
+                    try system.addSymmetric(row:variable,column:variables[row.ropeIndex(j)][row.particles[j]][axis],value:row.gradients[j][axis])
                 }
             }
         }
@@ -424,8 +458,8 @@ struct RopeDynamicsSolver: Sendable {
             border[0][variable]=row.boardGradient;border[variable][0]=row.boardGradient
             borderRHS[variable] = -row.residual
             for j in row.particles.indices {
-                for axis in 0..<3 where variables[row.rope][row.particles[j]][axis]>=0 {
-                    columns[variable][variables[row.rope][row.particles[j]][axis]] += row.gradients[j][axis]
+                for axis in 0..<3 where variables[row.ropeIndex(j)][row.particles[j]][axis]>=0 {
+                    columns[variable][variables[row.ropeIndex(j)][row.particles[j]][axis]] += row.gradients[j][axis]
                 }
             }
         }
@@ -463,6 +497,13 @@ struct RopeDynamicsSolver: Sendable {
                 guard let portal=portalMap[id] else{throw RopePhysicsError.invalid("Missing merit portal")}
                 let margin=RopePassageTopology.boundaryMargin(candidate.boardPoint(crossing.point(in:rope.positions)),portal:portal)
                 violation += max(0,rope.radius+RopeRegionGeometry.clearance-margin)
+            }
+        }
+        for first in candidate.ropes.indices {
+            for second in candidate.ropes.indices where second>first {
+                for contact in RopeCordContacts.between(candidate.ropes[first],candidate.ropes[second],margin:0.0001) {
+                    violation += max(0,contact.targetDistance-contact.distance)
+                }
             }
         }
         return objective+penalty*violation

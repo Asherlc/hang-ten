@@ -68,9 +68,36 @@ Diagnostic logs are workspace artifacts under
 
 ## Remaining gates
 
-This diagnostic measures self-contact within each loop. Contact and swept
-collision **between** separate loops still need implementation before a
-two-loop live profile can be promoted. Mini Bar grip transitions and live app
-screenshots remain required. The other catalog profiles and the physical-device
-performance gate are also unfinished; simulator acceptance does not establish
-60 fps or a device worker budget.
+The first diagnostic above measures self-contact within each loop. The
+subsequent change below adds contact between separate loops. Mini Bar settling,
+grip transitions and live app screenshots remain required. The other catalog
+profiles and the physical-device performance gate are also unfinished;
+simulator acceptance does not establish 60 fps or a device worker budget.
+
+## Separate material chains
+
+`RopeCordContacts` now supplies contact witnesses between distinct cords and
+conservative swept collision checks between frames. The coupled correction
+tracks which rope owns each particle gradient; contacts between two ropes are
+always border rows, even when their local segment indices happen to match.
+Both the nonlinear merit and final acceptance include these contacts.
+
+A shared support denotes an idealized joined knot. Links are split at its
+material neighborhood boundary (four radii from the support), so a long link
+cannot hide exterior overlap. Within that neighborhood, finite tube collars
+may overlap, but proper or coincident centerline crossings remain invalid.
+Only the coincident mathematical support endpoint is trimmed by one micrometre.
+Initialization rejects crossings between cords transactionally.
+
+Seven new regression tests cover finite-radius contact, shared-support bounds,
+proper and coincident crossings near a knot, swept crossing between clear
+endpoint frames, coupled initialization, exact material budgets and immutable
+supports. All **42 host physics tests** pass in 218.415 seconds, including the
+existing Clavellium rotation, reversal and numerical agreement tests. All
+**26 focused iOS Simulator tests** pass on the same owned iOS 26.4 simulator.
+
+The current Mini Bar candidate also passes initialization with cross-cord
+contact included: maximum local strain 0.00003142 and minimum wood clearance
+3.600084 mm. The measured initialization took about 70 wall seconds in the host
+diagnostic. This is numerical evidence for the candidate, not a real-time
+performance result or authorization to promote an unverified live profile.

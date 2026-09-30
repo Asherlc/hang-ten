@@ -127,6 +127,15 @@ struct RopeSimulationMetrics: Sendable {
             if includeSelfContact,let pair=selfContactPair(positions:rope.positions,radius:rope.radius,supports:rope.supports,restLengths:rope.restLengths) {topology=false;failure="Self contact \(pair) at \(rope.positions[pair.x]), \(rope.positions[pair.y])"}
             for velocity in rope.velocities {speed=max(speed,simd_length(velocity))}
         }
+        if includeSelfContact {
+            for first in state.ropes.indices {
+                for second in state.ropes.indices where second>first {
+                    if !RopeCordContacts.between(state.ropes[first],state.ropes[second]).isEmpty {
+                        topology=false;failure="Contact between ropes \(state.ropes[first].id) and \(state.ropes[second].id)"
+                    }
+                }
+            }
+        }
         let displacement=(boardHistory.max() ?? state.boardHeight)-(boardHistory.min() ?? state.boardHeight)
         return Self(totalLengthError:totalError,maximumLocalStrain:strain,minimumSegmentClearance:clearance,minimumClearanceMargin:margin,
                     topologyValid:topology,topologyFailure:failure,maximumSpeed:speed,boardDisplacement:displacement)
