@@ -83,8 +83,13 @@ final class FreeWorkoutUITests: XCTestCase {
         // XCTest can wait for the app to idle until a short guided hang has
         // already completed. Give this cancellation test enough time to find
         // and tap Cancel without racing the default ten-second countdown.
-        let duration = app.textFields.matching(NSPredicate(format: "placeholderValue == %@", "sec")).firstMatch
-        tapHittable(duration, timeout: 10)
+        let duration = app.textFields.matching(
+            NSPredicate(format: "identifier BEGINSWITH %@", "freeWorkout.set.duration.")
+        ).firstMatch
+        XCTAssertTrue(duration.waitForExistence(timeout: 10))
+        // The screen-coordinate helper validates visible bounds without asking
+        // XCTest for the invalid activation points seen on CI text-field snapshots.
+        tapVisibleControl(duration, requireHittable: false)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
         tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
