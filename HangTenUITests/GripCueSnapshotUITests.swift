@@ -17,6 +17,66 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         app.launch()
     }
 
+    func testContactOffsetTaskCanAdvanceWithoutSkippingMinute() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.entry/workout")!)
+        if app.buttons["Start"].waitForExistence(timeout: 5) {
+            app.buttons["Start"].tap()
+        }
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        let next = app.buttons["workout.nextHold"]
+        XCTAssertTrue(next.waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        next.tap()
+        XCTAssertTrue(app.staticTexts["Hold 2 of 3"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Pause"].exists)
+
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Contact offset task two, same running minute"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testTwoHandTaskOnMiniBarExplainsTwoBoards() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "lattice.mini-bar"
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "2"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(workoutDeepLink)
+        XCTAssertTrue(
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
+        )
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "Two hands on one-hand Mini Bar require two boards"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
+    func testOneArmTaskLetsAthleteChooseSide() throws {
+        app.terminate()
+        app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "9"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "metolius.contact.intermediate"
+        app.launchEnvironment.removeValue(forKey: "HANGTEN_REVIEW_LANDSCAPE")
+        app.launch()
+        waitForTrainShellReady(timeout: 20)
+        app.open(URL(string: "hangten://plan/metolius.contact.intermediate/workout")!)
+        let rightHand = app.buttons["workout.taskHand.right"]
+        XCTAssertTrue(rightHand.waitForExistence(timeout: 20))
+        rightHand.tap()
+        XCTAssertTrue(app.staticTexts["Hold 1 of 3"].exists)
+        XCTAssertTrue(app.staticTexts["Hang • Right hand"].exists)
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = "One arm Contact sloper on chosen right side"
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
+
     func testMaxHangsDeepLinkDefaultsToUntrackedAndAutoStarts() throws {
         openWorkoutDeepLinkAndChooseLeftHandIfNeeded()
         XCTAssertFalse(app.segmentedControls["workout.initialWeight.sourcePicker"].exists)
@@ -363,8 +423,8 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         app.launch()
     }
 
-    /// Tests that a user can select a hand for a one-handed board.
-    func testInlineHandChoiceOnOneHandedBoard() throws {
+    /// A two-hand source task on a one-hand board requires two boards.
+    func testTwoHandTaskOnOneHandedBoardRequiresTwoBoards() throws {
         XCTAssertTrue(
             app.navigationBars["Plan"].waitForExistence(timeout: 20),
             "DEBUG plan-detail review route should open Max Hangs on the one-handed Nug board."
@@ -374,49 +434,15 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         selectManualWeightSourceIfNeeded()
         tapStartRoutine()
 
-        let handPicker = app.buttons["workout.handPicker"]
         XCTAssertTrue(
-            handPicker.waitForExistence(timeout: 20),
-            "The pre-start workout page must expose the inline hand picker when a choice is needed."
+            app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
         )
-        XCTAssertTrue(
-            handPicker.label.contains("Alternate hands"),
-            "A capacity-1 board must default to Alternate hands, got: \(handPicker.label)"
-        )
-
-        handPicker.tap()
-
-        let both = app.buttons["handSide.both"]
-        XCTAssertTrue(both.waitForExistence(timeout: 10), "The Both menu item must be present.")
-        XCTAssertEqual(both.label, "Both hands (two boards)")
-        XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
-
-        let left = app.buttons["handSide.left"]
-        XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // The menu's accessibility container can have an invalid frame on iOS
-        // 26. Capture the visible row's finite frame and tap from the screen anchor.
-        tapVisibleControl(left, requireHittable: false)
-
-        let updated = app.buttons["workout.handPicker"]
-        let labelUpdated = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
-            object: updated
-        )
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
-            .completed,
-            "Choosing a hand must update the picker label, got: \(updated.label)"
-        )
-
-        let start = app.buttons["Start"]
-        XCTAssertTrue(start.waitForExistence(timeout: 10))
-        start.tap()
-
-        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertFalse(
-            app.buttons["workout.handPicker"].isEnabled,
-            "The hand picker must be disabled once the routine is running."
+            app.buttons["workout.handPicker"].exists,
+            "Explicit two-hand task targets do not need a separate session hand choice."
         )
+        XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
+        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
     }
 
     private func selectManualWeightSourceIfNeeded() {

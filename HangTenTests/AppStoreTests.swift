@@ -34,7 +34,18 @@ final class AppStoreTests: XCTestCase {
             store.plans.first { $0.id == "metolius.generic-ten-minute.intermediate" }
         )
 
-        XCTAssertFalse(store.isIncompatible(plan, on: board))
+        let unresolvedSteps = plan.steps.compactMap { step -> String? in
+            let hasUnresolvedTask = step.segments.contains { segment in
+                guard segment.kind == .work,
+                      case let .tasks(tasks)? = segment.target else { return false }
+                return (try? ContactResolver.resolve(tasks, step: step, board: board)) == nil
+            }
+            return hasUnresolvedTask ? step.id : nil
+        }
+        XCTAssertFalse(
+            store.isIncompatible(plan, on: board),
+            "Unresolved task steps: \(unresolvedSteps); one-handed board: \(board.isOneHanded)"
+        )
     }
 
     func testSelectedBoardPersistsAndRestoresByStableID() throws {
@@ -57,6 +68,27 @@ final class AppStoreTests: XCTestCase {
         let store = AppStore(defaults: defaults)
 
         XCTAssertEqual(store.selectedBoard.id, BoardCatalog.defaultBoard.id)
+    }
+
+    func testPlanPreviewHighlightsUnspecifiedOneArmTaskBeforeSideChoice() throws {
+        let board = try XCTUnwrap(BoardCatalog.all.first { board in
+            board.contacts.contains { $0.handCapacity == 1 }
+        })
+        let hold = try XCTUnwrap(board.contacts.first { $0.handCapacity == 1 })
+        let step = WorkoutStep(
+            id: "preview-one-arm", number: 1, title: "One arm", instruction: "Hang.",
+            accessory: "", duration: 10, phase: .hang,
+            segments: [WorkoutSegment(
+                kind: .work,
+                target: .tasks([[
+                    PlanHandTarget(target: PlanContactPredicate(kind: hold.kind))
+                ]]),
+                timing: .fixed, duration: 10
+            )]
+        )
+        let store = AppStore(defaults: makeDefaults())
+
+        XCTAssertFalse(store.contactIDs(for: step, on: board).isEmpty)
     }
 
     func testMostRecentSavedLoadAdjustmentUsesLatestLocalSessionRegardlessOfPlan() {
@@ -1988,11 +2020,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
 
             let resolvesAPair = compatibleBoards.contains { board in
                 plan.steps.filter { !$0.isRestStep }.allSatisfy { step in
-                    ((try? ContactResolver.resolve(
-                        step.workRequirements,
-                        step: step,
-                        board: board
-                    )) ?? []).count == 2
+                    step.segments.filter { $0.kind == .work }.allSatisfy { segment in
+                        guard let tasks = segment.target?.planTasks, !tasks.isEmpty else { return false }
+                        return tasks.allSatisfy { task in
+                            ((try? ContactResolver.resolve(task, step: step, board: board)) ?? []).count == 2
+                        }
+                    }
                 }
             }
             XCTAssertTrue(resolvesAPair, "\(planID) should resolve a two-hold pair on a compatible board")

@@ -179,6 +179,182 @@ enum ContactSelectionPolicy: String, Codable, Hashable {
     case bilateralPair
 }
 
+/// Plan-only depth wire format. Board metadata continues to use HoldDepth's
+/// existing category/range encoding.
+enum PlanDepth: Codable, Hashable {
+    case category(HoldSize)
+    case measured(MillimeterRange)
+
+    var holdDepth: HoldDepth {
+        switch self {
+        case .category(let size): .category(size)
+        case .measured(let range): .range(range)
+        }
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case category, minMM, maxMM
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported plan depth field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if container.contains(.category) {
+            guard !container.contains(.minMM), !container.contains(.maxMM) else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .category, in: container,
+                    debugDescription: "A plan depth cannot mix a category and millimeters."
+                )
+            }
+            self = .category(try container.decode(HoldSize.self, forKey: .category))
+        } else {
+            let minimum = try container.decode(Double.self, forKey: .minMM)
+            let maximum = try container.decode(Double.self, forKey: .maxMM)
+            guard minimum.isFinite, maximum.isFinite,
+                  minimum >= 0, minimum <= maximum else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .maxMM, in: container,
+                    debugDescription: "Millimeter bounds must be finite, nonnegative, and ordered."
+                )
+            }
+            self = .measured(MillimeterRange(minimum: minimum, maximum: maximum))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        switch self {
+        case .category(let size):
+            try container.encode(size, forKey: .category)
+        case .measured(let range):
+            try container.encode(range.minimum, forKey: .minMM)
+            try container.encode(range.maximum, forKey: .maxMM)
+        }
+    }
+}
+
+struct PlanContactPredicate: Codable, Hashable {
+    let kind: HoldKind?
+    let shape: HoldShape?
+    let depth: PlanDepth?
+    let fingerCapacity: Int?
+
+    init(kind: HoldKind? = nil, shape: HoldShape? = nil,
+         depth: PlanDepth? = nil, fingerCapacity: Int? = nil) {
+        precondition(kind != nil || shape != nil || depth != nil || fingerCapacity != nil)
+        if let fingerCapacity {
+            precondition(PhysicalContact.validFingerCapacityRange.contains(fingerCapacity))
+        }
+        self.kind = kind
+        self.shape = shape
+        self.depth = depth
+        self.fingerCapacity = fingerCapacity
+    }
+
+    var legacyRequirement: ContactRequirement {
+        ContactRequirement(
+            kind: kind, shape: shape, depth: depth?.holdDepth,
+            fingerCapacity: fingerCapacity
+        )
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case kind, shape, depth, fingerCapacity
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported plan contact field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        kind = try container.decodeIfPresent(HoldKind.self, forKey: .kind)
+        shape = try container.decodeIfPresent(HoldShape.self, forKey: .shape)
+        depth = try container.decodeIfPresent(PlanDepth.self, forKey: .depth)
+        fingerCapacity = try container.decodeIfPresent(Int.self, forKey: .fingerCapacity)
+        guard kind != nil || shape != nil || depth != nil || fingerCapacity != nil else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .kind, in: container,
+                debugDescription: "A plan contact needs at least one predicate."
+            )
+        }
+        if let fingerCapacity,
+           !PhysicalContact.validFingerCapacityRange.contains(fingerCapacity) {
+            throw DecodingError.dataCorruptedError(
+                forKey: .fingerCapacity, in: container,
+                debugDescription: "Finger capacity must be 1 through 4."
+            )
+        }
+    }
+}
+
+struct PlanHandTarget: Codable, Hashable {
+    /// Nil means the source lets the athlete choose any hold for this hand.
+    let target: PlanContactPredicate?
+    let side: WorkoutSide?
+
+    init(target: PlanContactPredicate? = nil, side: WorkoutSide? = nil) {
+        precondition(side != .both)
+        self.target = target
+        self.side = side
+    }
+
+    private enum CodingKeys: String, CodingKey, CaseIterable {
+        case target, side
+    }
+
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.container(keyedBy: PlanLibraryCodingKey.self)
+        let allowed = Set(CodingKeys.allCases.map(\.rawValue))
+        if let unknown = raw.allKeys.first(where: { !allowed.contains($0.stringValue) }) {
+            throw DecodingError.dataCorruptedError(
+                forKey: unknown, in: raw,
+                debugDescription: "Unsupported hand target field \(unknown.stringValue)."
+            )
+        }
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        if let token = try? container.decode(String.self, forKey: .target) {
+            guard token == "any" else {
+                throw DecodingError.dataCorruptedError(
+                    forKey: .target, in: container,
+                    debugDescription: "The only named hand target is 'any'."
+                )
+            }
+            target = nil
+        } else {
+            target = try container.decode(PlanContactPredicate.self, forKey: .target)
+        }
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
+        guard side != .both else {
+            throw DecodingError.dataCorruptedError(
+                forKey: .side, in: container,
+                debugDescription: "A hand target side must be left or right."
+            )
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        if let target {
+            try container.encode(target, forKey: .target)
+        } else {
+            try container.encode("any", forKey: .target)
+        }
+        try container.encodeIfPresent(side, forKey: .side)
+    }
+}
+
 struct ContactRequirement: Codable, Hashable {
     /// An exact board contact selected by an athlete in a board-specific
     /// custom routine. Catalog requirements intentionally leave this nil so
@@ -516,6 +692,18 @@ struct WorkoutStepDefinition: Codable, Hashable {
         case externalLoadKGF
     }
 
+    private static func derivedHandUse(
+        from segments: [WorkoutSegmentDefinition]
+    ) -> (WorkoutHandUse, WorkoutSide)? {
+        let tasks = segments.flatMap { $0.target?.planTasks ?? [] }
+        guard !tasks.isEmpty else { return nil }
+        guard tasks.allSatisfy({ $0.count == 1 }) else { return (.double, .both) }
+        let sides = tasks.compactMap { $0.first?.side }
+        if sides.count == tasks.count, Set(sides) == [.left] { return (.single, .left) }
+        if sides.count == tasks.count, Set(sides) == [.right] { return (.single, .right) }
+        return (.either, .both)
+    }
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(String.self, forKey: .id)
@@ -566,8 +754,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
             TimeInterval.self,
             forKey: .activeDuration
         )
-        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse) ?? .double
-        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side) ?? .both
+        let derived = Self.derivedHandUse(from: decodedSegments)
+        handUse = try container.decodeIfPresent(WorkoutHandUse.self, forKey: .handUse)
+            ?? derived?.0 ?? .double
+        side = try container.decodeIfPresent(WorkoutSide.self, forKey: .side)
+            ?? derived?.1 ?? .both
         action = try container.decodeIfPresent(WorkoutAction.self, forKey: .action) ?? .hang
         repetitions = try container.decodeIfPresent(Int.self, forKey: .repetitions)
         externalLoadKGF = try container.decodeIfPresent(Double.self, forKey: .externalLoadKGF)
@@ -585,8 +776,11 @@ struct WorkoutStepDefinition: Codable, Hashable {
         try container.encodeIfPresent(gripType, forKey: .gripType)
         try container.encodeIfPresent(fingerConfiguration, forKey: .fingerConfiguration)
         try container.encodeIfPresent(activeDuration, forKey: .activeDuration)
-        try container.encode(handUse, forKey: .handUse)
-        try container.encode(side, forKey: .side)
+        let workSegments = segments.filter { $0.kind == .work }
+        if workSegments.isEmpty || !workSegments.allSatisfy({ $0.target?.planTasks != nil }) {
+            try container.encode(handUse, forKey: .handUse)
+            try container.encode(side, forKey: .side)
+        }
         try container.encode(action, forKey: .action)
         try container.encodeIfPresent(repetitions, forKey: .repetitions)
         try container.encodeIfPresent(externalLoadKGF, forKey: .externalLoadKGF)
@@ -661,6 +855,8 @@ extension WorkoutStepDefinition {
                     strippedTarget = .fromLegacyTargets(
                         requirements.map { $0.strippingExactContactID() }
                     )
+                case .tasks(let tasks):
+                    strippedTarget = .tasks(tasks)
                 case nil:
                     strippedTarget = nil
                 }
@@ -1017,6 +1213,15 @@ enum PlanLibraryValidator {
                     }
                 case .requirements:
                     break
+                case .tasks(let tasks):
+                    if tasks.isEmpty && !allowsUntargetedStep {
+                        issues.append(
+                            PlanValidationIssue(
+                                path: targetPath,
+                                message: "Work segments require a target."
+                            )
+                        )
+                    }
                 }
             }
             if segment.kind == .rest && segment.target != nil {
@@ -1183,6 +1388,17 @@ enum PlanLibraryValidator {
                         }
                     }
                     for (segmentIndex, segment) in step.segments.enumerated() {
+                        if case .tasks(let tasks) = segment.target {
+                            validateTasks(
+                                tasks,
+                                planBoardID: plan.boardID,
+                                stepPath: "\(referencePath).steps[\(stepIndex)].segments[\(segmentIndex)]",
+                                boardByID: boardByID,
+                                gripType: step.gripType,
+                                issues: &issues
+                            )
+                            continue
+                        }
                         let requirements = segment.contactRequirements
                         guard !requirements.isEmpty else { continue }
                         validateTargets(
@@ -1354,6 +1570,33 @@ enum PlanLibraryValidator {
                         message: "The contact requirement cannot resolve on declared board \"\(planBoardID)\"."
                     )
                 )
+            }
+        }
+    }
+
+    private static func validateTasks(
+        _ tasks: [[PlanHandTarget]],
+        planBoardID: String?,
+        stepPath: String,
+        boardByID: [String: [BoardRevision]],
+        gripType: GripType?,
+        issues: inout [PlanValidationIssue]
+    ) {
+        guard let planBoardID, !tasks.isEmpty else { return }
+        let boards = boardByID[planBoardID] ?? []
+        let step = WorkoutStep(
+            id: "validation", number: 0, title: "Validation",
+            instruction: "", accessory: "", duration: 1, phase: .hang,
+            gripType: gripType
+        )
+        for (index, task) in tasks.enumerated() {
+            if boards.isEmpty || boards.contains(where: {
+                (try? ContactResolver.resolve(task, step: step, board: $0)) == nil
+            }) {
+                issues.append(PlanValidationIssue(
+                    path: "\(stepPath).target.tasks[\(index)]",
+                    message: "The hand targets cannot resolve together on declared board \"\(planBoardID)\"."
+                ))
             }
         }
     }
@@ -1834,6 +2077,138 @@ enum BuiltInPlanLibraryDefinition {
         )
     }
 
+}
+
+// MARK: - Source-audited task migration
+
+/// The seed catalog retains the manufacturer's wording and old semantic hold
+/// list. This mapping records which listed holds occur at the same time. All
+/// unlisted work defaults to two hands, as prescribed for the catalog.
+enum PlanTaskMigration {
+    private static let offsetSteps: Set<String> = [
+        "intermediate.minute-6.task-1", "intermediate.minute-6.task-2",
+        "advanced.minute-6.task-1", "advanced.minute-6.task-2",
+        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
+        "metolius.contact.entry.minute-9",
+        "metolius.contact.intermediate.minute-3", "metolius.contact.intermediate.minute-5",
+        "metolius.contact.intermediate.minute-6",
+        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
+        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
+        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
+        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
+        "metolius.simulator-3d.advanced.minute-9",
+        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8",
+        "method-emom-minute-7"
+    ]
+
+    private static let reversedOffsetSteps: Set<String> = [
+        "metolius.contact.entry.minute-3", "metolius.contact.entry.minute-6",
+        "metolius.contact.entry.minute-9", "metolius.contact.intermediate.minute-3",
+        "metolius.contact.intermediate.minute-5", "metolius.contact.intermediate.minute-6",
+        "metolius.contact.advanced.minute-3", "metolius.contact.advanced.minute-8",
+        "metolius.simulator-3d.entry.minute-3", "metolius.simulator-3d.entry.minute-6",
+        "metolius.simulator-3d.intermediate.minute-5", "metolius.simulator-3d.intermediate.minute-6",
+        "metolius.simulator-3d.advanced.minute-2", "metolius.simulator-3d.advanced.minute-4",
+        "metolius.simulator-3d.advanced.minute-9",
+        "metolius.rock-rings.ten-minute.minute-3", "metolius.rock-rings.ten-minute.minute-8"
+    ]
+
+    private static let alternatingOneArmSteps: Set<String> = [
+        "metolius.contact.intermediate.minute-9", "metolius.contact.advanced.minute-6",
+        "metolius.simulator-3d.intermediate.minute-9", "metolius.simulator-3d.advanced.minute-6"
+    ]
+
+    static func migrate(_ plan: TrainingPlan) -> TrainingPlan {
+        TrainingPlan(
+            id: plan.id, title: plan.title, subtitle: plan.subtitle,
+            level: plan.level, sourceLabel: plan.sourceLabel,
+            sourceURL: plan.sourceURL, provenance: plan.provenance,
+            boardID: plan.boardID, steps: plan.steps.map(migrate)
+        )
+    }
+
+    private static func migrate(_ step: WorkoutStep) -> WorkoutStep {
+        let segments = step.segments.map { segment -> WorkoutSegment in
+            guard segment.kind == .work, let target = segment.target else { return segment }
+            if case .selfSelected = target {
+                return WorkoutSegment(
+                    kind: .work,
+                    target: .tasks([[PlanHandTarget(), PlanHandTarget()]]),
+                    timing: segment.timing, duration: segment.duration
+                )
+            }
+            guard case .requirements(let requirements) = target else { return segment }
+            let hands = requirements.map(hand)
+            let tasks: [[PlanHandTarget]]
+            if offsetSteps.contains(step.id), hands.count >= 2 {
+                let pair = Array(hands.prefix(2))
+                tasks = [pair]
+                    + (reversedOffsetSteps.contains(step.id) ? [Array(pair.reversed())] : [])
+                    + hands.dropFirst(2).map { [$0, $0] }
+            } else if alternatingOneArmSteps.contains(step.id), let first = hands.first {
+                tasks = [[first], [first]] + hands.dropFirst().map { [$0, $0] }
+            } else if step.handUse == .single, let first = hands.first {
+                tasks = [[PlanHandTarget(target: first.target, side: step.side)]]
+            } else if step.id == "advanced.minute-5.task-1"
+                        || step.id == "advanced.minute-5.task-2" {
+                tasks = hands.map { [$0] }
+            } else {
+                tasks = hands.map { [$0, $0] }
+            }
+            return WorkoutSegment(
+                kind: segment.kind, target: .tasks(tasks),
+                timing: segment.timing, duration: segment.duration
+            )
+        }
+        let allTasks = segments.flatMap { $0.target?.planTasks ?? [] }
+        let handUse: WorkoutHandUse
+        let side: WorkoutSide
+        if !allTasks.isEmpty, allTasks.allSatisfy({ $0.count == 1 }) {
+            let sides = allTasks.compactMap { $0.first?.side }
+            if sides.count == allTasks.count, Set(sides) == [.left] {
+                handUse = .single
+                side = .left
+            } else if sides.count == allTasks.count, Set(sides) == [.right] {
+                handUse = .single
+                side = .right
+            } else {
+                handUse = .either
+                side = .both
+            }
+        } else if !allTasks.isEmpty {
+            handUse = .double
+            side = .both
+        } else {
+            handUse = step.handUse
+            side = step.side
+        }
+        return WorkoutStep(
+            id: step.id, number: step.number, title: step.title,
+            instruction: step.instruction, accessory: step.accessory,
+            duration: step.duration, phase: step.phase, segments: segments,
+            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+            handUse: handUse, side: side, action: step.action,
+            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
+    }
+
+    private static func hand(_ requirement: ContactRequirement) -> PlanHandTarget {
+        let depth: PlanDepth?
+        switch requirement.depth {
+        case .category(let size): depth = .category(size)
+        case .range(let range): depth = .measured(range)
+        case nil: depth = nil
+        }
+        guard requirement.kind != nil || requirement.shape != nil
+                || depth != nil || requirement.fingerCapacity != nil else {
+            return PlanHandTarget(target: nil)
+        }
+        return PlanHandTarget(target: PlanContactPredicate(
+            kind: requirement.kind, shape: requirement.shape,
+            depth: depth, fingerCapacity: requirement.fingerCapacity
+        ))
+    }
 }
 
 // MARK: - Compatibility facade

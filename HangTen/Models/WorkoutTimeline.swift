@@ -42,6 +42,12 @@ enum WorkoutSessionHandResolver {
     /// Rest steps default to `.double` and must never force a hand choice.
     static func stepNeedsHandResolution(_ step: WorkoutStep, boardIsOneHanded: Bool) -> Bool {
         guard !step.isRestStep else { return false }
+        if step.segments.contains(where: { segment in
+            guard let tasks = segment.target?.planTasks else { return false }
+            return !tasks.isEmpty
+        }) {
+            return false
+        }
         return step.handUse == .either || (step.handUse == .double && boardIsOneHanded)
     }
 
@@ -327,10 +333,18 @@ enum WorkoutHoldCueVisibilityPolicy {
 
     static func showsCue(
         for cueSide: WorkoutSide,
-        step: WorkoutStep?
+        step: WorkoutStep?,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
     ) -> Bool {
-        guard let step, step.handUse == .single else { return true }
-        return step.side == cueSide
+        guard let step else { return true }
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           tasks.indices.contains(taskIndex) {
+            let task = tasks[taskIndex]
+            guard task.count == 1 else { return true }
+            return (task[0].side ?? selectedHandSide) == cueSide
+        }
+        return step.handUse != .single || step.side == cueSide
     }
 }
 
@@ -344,14 +358,19 @@ enum WorkoutLandscapeHandCuePolicy {
         cueStep: WorkoutStep?,
         countdown: Int,
         isComplete: Bool,
-        isSkipCountdown: Bool
+        isSkipCountdown: Bool,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
     ) -> Bool {
         WorkoutHoldCueVisibilityPolicy.showsCue(
             holdCue: holdCue,
             countdown: countdown,
             isComplete: isComplete,
             isSkipCountdown: isSkipCountdown
-        ) && WorkoutHoldCueVisibilityPolicy.showsCue(for: cueSide, step: cueStep)
+        ) && WorkoutHoldCueVisibilityPolicy.showsCue(
+            for: cueSide, step: cueStep,
+            taskIndex: taskIndex, selectedHandSide: selectedHandSide
+        )
     }
 }
 
@@ -359,11 +378,45 @@ enum WorkoutHoldCuePolicy {
     static func resolve(
         step: WorkoutStep?,
         hold: PhysicalContact?,
-        on board: BoardRevision
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
     ) -> WorkoutHoldCue? {
         guard let step,
               step.gripType != nil || step.fingerConfiguration != nil else {
             return nil
+        }
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           tasks.indices.contains(taskIndex) {
+            let task = tasks[taskIndex].map { hand in
+                PlanHandTarget(target: hand.target, side: hand.side ?? selectedHandSide)
+            }
+            guard let hold else {
+                return WorkoutHoldCue(
+                    gripType: step.gripType,
+                    fingerConfiguration: step.fingerConfiguration
+                )
+            }
+            let taskCandidates: [[PlanHandTarget]]
+            if task.count == 1, task[0].side == nil {
+                taskCandidates = [WorkoutSide.left, .right].map { side in
+                    [PlanHandTarget(target: task[0].target, side: side)]
+                }
+            } else {
+                taskCandidates = [task]
+            }
+            let holdMatchesTask = taskCandidates.contains { candidate in
+                (try? ContactResolver.resolve(candidate, step: step, board: board))?
+                    .contains(where: { $0.id == hold.id }) == true
+            }
+            guard holdMatchesTask else {
+                return nil
+            }
+            return WorkoutHoldCue(
+                hold: hold,
+                gripType: step.gripType,
+                fingerConfiguration: step.fingerConfiguration
+            )
         }
         let requirements = step.workRequirements
         if requirements.isEmpty {
@@ -510,7 +563,11 @@ struct WorkoutTimeline {
         }
     }
 
-    static func labels(for step: WorkoutStep) -> [String] {
+    static func labels(
+        for step: WorkoutStep,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [String] {
         guard !step.isRestStep else { return ["Rest"] }
         let actionLabel: String
         switch step.action {
@@ -519,10 +576,24 @@ struct WorkoutTimeline {
         case .loadedLift: actionLabel = "Loaded lift"
         }
         var labels = [actionLabel]
-        switch step.side {
-        case .left: labels.append("Left hand")
-        case .right: labels.append("Right hand")
-        case .both: labels.append("Both hands")
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           tasks.indices.contains(taskIndex) {
+            let task = tasks[taskIndex]
+            if task.count == 2 {
+                labels.append("Both hands")
+            } else {
+                switch task[0].side ?? selectedHandSide {
+                case .left: labels.append("Left hand")
+                case .right: labels.append("Right hand")
+                case .both, .none: labels.append("Choose a hand")
+                }
+            }
+        } else {
+            switch step.side {
+            case .left: labels.append("Left hand")
+            case .right: labels.append("Right hand")
+            case .both: labels.append("Both hands")
+            }
         }
         if let repetitions = step.repetitions {
             labels.append("\(repetitions) \(repetitions == 1 ? "lift" : "lifts")")
@@ -718,11 +789,94 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
-    static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
-        (try? ContactResolver.resolve(
+    static func contactIDs(
+        for step: WorkoutStep,
+        on board: BoardRevision,
+        taskIndex: Int = 0,
+        selectedHandSide: WorkoutSide? = nil
+    ) -> [String] {
+        if let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+           tasks.indices.contains(taskIndex) {
+            let authoredTask = tasks[taskIndex]
+            if authoredTask.count == 1, authoredTask[0].side == nil,
+               selectedHandSide == nil { return [] }
+            let task = authoredTask.map { hand in
+                PlanHandTarget(target: hand.target, side: hand.side ?? selectedHandSide)
+            }
+            guard let contacts = try? ContactResolver.resolve(task, step: step, board: board) else {
+                return []
+            }
+            return zip(task, contacts).compactMap { hand, contact in
+                hand.target == nil ? nil : contact.id
+            }
+        }
+        return (try? ContactResolver.resolve(
             step.workRequirements,
             step: step,
             board: board
         ).map(\.id)) ?? []
+    }
+}
+
+/// Manual position within a source-ordered work segment. Moving the cursor
+/// changes only the cue; the enclosing step's clock remains the source timer.
+struct WorkoutTaskCursor: Equatable {
+    private var indices: [String: Int] = [:]
+    private(set) var performedTaskIndicesByStepID: [String: Set<Int>] = [:]
+    private(set) var selectedTaskSidesByStepID: [String: [Int: WorkoutSide]] = [:]
+
+    func count(for step: WorkoutStep) -> Int {
+        step.segments.lazy.compactMap { $0.target?.planTasks }.first?.count ?? 0
+    }
+
+    func index(for step: WorkoutStep) -> Int {
+        min(indices[step.id] ?? 0, max(0, count(for: step) - 1))
+    }
+
+    func performedIndices(for step: WorkoutStep) -> Set<Int> {
+        performedTaskIndicesByStepID[step.id] ?? (count(for: step) > 0 ? [0] : [])
+    }
+
+    func selectedSide(for step: WorkoutStep) -> WorkoutSide? {
+        selectedTaskSidesByStepID[step.id]?[index(for: step)]
+    }
+
+    mutating func choose(_ side: WorkoutSide, in step: WorkoutStep) {
+        guard side == .left || side == .right,
+              let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+              tasks.indices.contains(index(for: step)) else { return }
+        let task = tasks[index(for: step)]
+        guard task.count == 1, task[0].side == nil else { return }
+        selectedTaskSidesByStepID[step.id, default: [:]][index(for: step)] = side
+        performedTaskIndicesByStepID[step.id, default: []].insert(index(for: step))
+    }
+
+    @discardableResult
+    mutating func advance(in step: WorkoutStep) -> Bool {
+        let current = index(for: step)
+        guard current + 1 < count(for: step) else { return false }
+        indices[step.id] = current + 1
+        performedTaskIndicesByStepID[step.id, default: [0]].insert(current + 1)
+        return true
+    }
+
+    @discardableResult
+    mutating func retreat(in step: WorkoutStep) -> Bool {
+        let current = index(for: step)
+        guard current > 0 else { return false }
+        indices[step.id] = current - 1
+        performedTaskIndicesByStepID[step.id, default: [0]].insert(current - 1)
+        return true
+    }
+}
+
+enum WorkoutTaskPresentationPolicy {
+    static func requiresTwoBoards(
+        for step: WorkoutStep, on board: BoardRevision, taskIndex: Int
+    ) -> Bool {
+        guard board.isOneHanded,
+              let tasks = step.segments.lazy.compactMap({ $0.target?.planTasks }).first,
+              tasks.indices.contains(taskIndex) else { return false }
+        return tasks[taskIndex].count == 2
     }
 }
