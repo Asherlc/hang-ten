@@ -113,10 +113,20 @@ Review and explicitly commit the generated files before they can ship.
 
 ## Continuous integration and delivery
 
-GitHub Actions runs the simulator Debug build and device Release build for
-every pull request targeting `main` and every push to `main`. A successful
-`main` run automatically archives the exact tested commit, signs it, and
-uploads the IPA to App Store Connect/TestFlight.
+GitHub Actions classifies pull-request changes and runs the required simulator
+Debug build, unit tests, and UI tests for affected components. Main CI also
+builds Release for an iOS device. The Main ruleset requires pull requests to be
+up to date with `main` before merging, so another merge requires fresh checks
+against the new base.
+
+Required-check summaries reject cancelled or unexpectedly skipped prerequisites;
+they report success only after all required validation has completed.
+
+Running main CI jobs finish when newer commits arrive; only the pending run is
+replaced by the newest commit. Superseded revisions cancel their own PR checks
+in a separate concurrency group. A successful `main` run automatically archives
+the exact tested commit, signs it, and uploads the IPA to App Store
+Connect/TestFlight.
 
 The release workflow uses a GitHub environment named `app-store-connect`.
 Configure that environment with no required reviewers for zero-touch delivery,
