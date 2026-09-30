@@ -2,6 +2,99 @@ import XCTest
 @testable import HangTen
 
 final class WorkoutSegmentTargetTests: XCTestCase {
+    func testPerHandTasksRoundTripWithExactAndCategoricalDepth() throws {
+        let json = Data(#"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":20}}},{"target":{"kind":"sloper","shape":"round","depth":{"category":"large"}},"side":"right"}],[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":35}}}]]}"#.utf8)
+        let target = try JSONDecoder().decode(WorkoutSegmentTarget.self, from: json)
+        let encoded = try JSONEncoder().encode(target)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        let tasks = try XCTUnwrap(object["tasks"] as? [[[String: Any]]])
+        XCTAssertEqual(tasks.map(\.count), [2, 1])
+        let exact = try XCTUnwrap((tasks[0][0]["target"] as? [String: Any])?["depth"] as? [String: Double])
+        XCTAssertEqual(exact, ["minMM": 20, "maxMM": 20])
+        let category = try XCTUnwrap((tasks[0][1]["target"] as? [String: Any])?["depth"] as? [String: String])
+        XCTAssertEqual(category, ["category": "large"])
+        XCTAssertEqual(tasks[0][1]["side"] as? String, "right")
+        XCTAssertEqual(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: encoded), target)
+    }
+
+    func testAnyTargetKeepsTheHandCountExplicit() throws {
+        let mixed = try JSONDecoder().decode(
+            WorkoutSegmentTarget.self,
+            from: Data(#"{"tasks":[[{"target":"any"},{"target":"any"}],[{"target":{"kind":"edge"}},{"target":{"kind":"edge"}}]]}"#.utf8)
+        )
+        XCTAssertEqual(mixed.planTasks?.map(\.count), [2, 2])
+        XCTAssertNil(mixed.planTasks?[0][0].target)
+        XCTAssertFalse(mixed.isSelfSelected)
+        let chosenOnly = try JSONDecoder().decode(
+            WorkoutSegmentTarget.self,
+            from: Data(#"{"tasks":[[{"target":"any"},{"target":"any"}]]}"#.utf8)
+        )
+        XCTAssertTrue(chosenOnly.isSelfSelected)
+        XCTAssertThrowsError(try JSONDecoder().decode(
+            WorkoutSegmentTarget.self, from: Data(#"{"tasks":[]}"#.utf8)
+        ))
+    }
+
+    func testPerHandTasksRejectMalformedShapes() {
+        let invalid = [
+            #"{"tasks":[]}"#,
+            #"{"tasks":[[{"target":"all"}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge"}},{"target":{"kind":"edge"}},{"target":{"kind":"edge"}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":35,"maxMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":-1,"maxMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"category":"medium","minMM":20}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","depth":{"minMM":20,"maxMM":20,"unit":"mm"}}}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge"},"side":"both"}]]}"#,
+            #"{"tasks":[[{"target":{"kind":"edge","unknown":true}}]]}"#,
+            #"{"tasks":[[{"target":{}}]]}"#
+        ]
+        for input in invalid {
+            XCTAssertThrowsError(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: Data(input.utf8)), input)
+        }
+    }
+
+    func testPerHandStepDerivesHandUseWithoutEncodingRedundantFields() throws {
+        let target = WorkoutSegmentTarget.tasks([[
+            PlanHandTarget(target: .init(kind: .edge), side: .left)
+        ]])
+        let step = WorkoutStepDefinition(
+            id: "left-hang", title: "Left hang", instruction: "", accessory: "",
+            duration: 7, phase: .hang,
+            segments: [WorkoutSegmentDefinition(
+                kind: .work, target: target, timing: .fixed, duration: 7
+            )],
+            handUse: .single, side: .left
+        )
+        let encoded = try JSONEncoder().encode(step)
+        let object = try XCTUnwrap(JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+        XCTAssertNil(object["handUse"])
+        XCTAssertNil(object["side"])
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: encoded)
+        XCTAssertEqual(decoded.handUse, .single)
+        XCTAssertEqual(decoded.side, .left)
+        XCTAssertEqual(decoded.segments[0].target, target)
+    }
+
+    func testLegacyCustomTargetKeepsItsExactContactPin() throws {
+        let pinned = ContactRequirement(
+            contactID: "my-board-left-edge", kind: .edge, selection: .single
+        )
+        let step = WorkoutStepDefinition(
+            id: "custom", title: "Custom", instruction: "", accessory: "",
+            duration: 7, phase: .hang,
+            segments: [WorkoutSegmentDefinition(
+                kind: .work, target: .requirements([pinned]),
+                timing: .fixed, duration: 7
+            )],
+            handUse: .single, side: .left
+        )
+        let encoded = try JSONEncoder().encode(step)
+        let decoded = try JSONDecoder().decode(WorkoutStepDefinition.self, from: encoded)
+        XCTAssertEqual(decoded.segments[0].target, .requirements([pinned]))
+        XCTAssertEqual(decoded.handUse, .single)
+        XCTAssertEqual(decoded.side, .left)
+    }
+
     func testRequirementsRejectsEmptyArrayOnDecode() throws {
         let json = Data(#"{"kind":"requirements","requirements":[]}"#.utf8)
         XCTAssertThrowsError(try JSONDecoder().decode(WorkoutSegmentTarget.self, from: json))

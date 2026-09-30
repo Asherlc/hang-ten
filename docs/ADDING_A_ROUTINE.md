@@ -107,19 +107,26 @@ manufacturer—not the app—defines when the task is complete.
 
 ## 5. Resolve holds semantically
 
-Choose the narrowest truthful `ContactRequirement` predicate. Routines never
-contain board contact IDs or visual-frame references:
+Choose the narrowest truthful `PlanContactPredicate` for each hand. Bundled
+routines use ordered `tasks`; each task contains one or two simultaneous hand
+targets. Routines never contain board contact IDs or visual-frame references:
 
 - `kind` for a source term such as “jug,” “edge,” or “pocket”;
 - `shape` only for a documented physical qualifier such as “flat,” “round,”
   “incut,” or “slot”;
-- `depth: .category(...)` for a source size word (for example “medium edge”)
-  when the source gives no measurement, or `depth: .range(...)` for a stated
-  measurement or an explicitly documented inferred band in an adapted plan;
-  never present an inferred band as a manufacturer prescription;
-- `fingerCapacity` or `handCapacity` only when the source specifies it;
-- `.bilateralPair` when the source prescribes both hands together or names a
-  pair; otherwise `.single` resolves one stable geometry-selected contact.
+- `depth: {"category":"medium"}` for a source size word, or
+  `depth: {"minMM":20,"maxMM":35}` for a stated measurement or an explicitly
+  documented inferred band in an adapted plan. Never present an inferred band
+  as a manufacturer prescription; use equal bounds for one exact measurement;
+- `fingerCapacity` when the source specifies it, and `handCapacity` only when
+  source evidence supports multiple hands sharing one contact;
+- `target: "any"` when the source explicitly lets the athlete choose a hold.
+
+Default to two hand entries unless the source prescribes one arm. Put different
+holds used together in the same task, and put successive holds in successive
+tasks. Use `side: "left"` or `"right"` only when the source names a side. The
+number of entries in a task is the hand count; do not add a separate `hands`
+field. See [`PlanWorkTarget.schema.json`](schemas/PlanWorkTarget.schema.json).
 
 The resolver matches those predicates against factual board metadata. Do not
 hard-code a contact ID or visual frame into a routine. If the source names a
@@ -208,8 +215,9 @@ Preview representative steps with the DEBUG routes documented in
 - Step order, repetitions, times, and qualifiers match line by line.
 - No unrequested timed work/rest, warm-up, cooldown, or exercise added.
 - `official` or `adapted` provenance is honest.
-- Every target resolves to at least one factual hold on each compatible board.
+- Every simultaneous task resolves to factual hold contacts on each compatible board.
 - Board-specific plans are hidden from other boards.
 - Source link is visible in the app.
 - `PlanLibrary.json` was regenerated and passes the exporter's `--check` mode.
+- `scripts/validate-plan-work-targets.sh` validates every bundled work target.
 - Representative timer, audio, text, and highlight states reviewed.

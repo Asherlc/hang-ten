@@ -9,8 +9,8 @@ complete coverage.
 
 USDZ packages remain unbound and texture-free. Only the native display metadata
 changes through `set_board_manifest.py`; every other FCStd archive member and
-all USDZ/descriptor bytes are verified unchanged. The delivery lock records the
-new source hashes. Geometry and physical contact facts are unchanged.
+all USDZ/descriptor bytes are verified unchanged. Geometry and physical contact
+facts are unchanged.
 
 The color and grain are a deliberately subtle visual adaptation, not a
 manufacturer-exact reproduction of a wood species, stain, veneer, or plywood
