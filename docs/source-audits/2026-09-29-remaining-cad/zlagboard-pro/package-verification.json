@@ -1,0 +1,31 @@
+{
+  "slug": "zlagboard-pro",
+  "triangleCount": 28370,
+  "nodeCount": 29,
+  "modelBoundsNativeMm": {
+    "min": [
+      -352.49999165534973,
+      -41.99999943375589,
+      -75.99999755620958
+    ],
+    "max": [
+      352.49999165534973,
+      1.6875389431671898e-14,
+      75.99999755620956
+    ]
+  },
+  "materialCount": 0,
+  "shaderCount": 0,
+  "contactCount": 28,
+  "hashes": {
+    "zlagboard-pro.FCStd": "b92e0e87e54df04bcb77ac6855236bc31cc818f3cc77594a7a9c72e4f491b6df",
+    "primary.usdz": "25361d69970eac21000df9336f7d9e1a5a0ce87305b82850bfdb4d57ab74ccf7",
+    "primary.model.json": "5e3ea9a135173ec6730b0d5e145cc098a8b2e6a54f1cf50bc9df982248711b82"
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top"
+  ],
+  "reviewRenderer": "Tools/HangboardCAD/preview.py::_render, same 1100x650 size and neutral Lambert shading for both assets"
+}

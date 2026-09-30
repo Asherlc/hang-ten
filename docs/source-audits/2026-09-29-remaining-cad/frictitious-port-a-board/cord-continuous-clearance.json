@@ -1,0 +1,213 @@
+{
+  "package": "frictitious-port-a-board",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "sidecarSHA256": "f60160880dbd515b0f5c1b59c762e47fb0f961206be58a772ccc51b7fa890305",
+  "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
+  "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
+  "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
+  "numericalToleranceMM": 0.01,
+  "runtimeSupportReconstructed": true,
+  "presentations": {
+    "primary": {
+      "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+      "collisionFixtureSHA256": "4fb0c5f1cb2c47d3f75920ad7f97a6f27c0eaacbbf3b497c2982d8ea70fd7f0f",
+      "poses": {
+        "front-upright": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875292,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361993,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            }
+          }
+        },
+        "front-inverted": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.490452601562494,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            }
+          }
+        },
+        "reverse-upright": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875292,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361993,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            }
+          }
+        },
+        "reverse-inverted": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.490452601562494,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            }
+          }
+        },
+        "outer-upper": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875292,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361993,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            }
+          }
+        },
+        "pinch-side": {
+          "strands": {
+            "left-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875305,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.0000009736214,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 15
+            },
+            "left-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875223,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097362033,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-front": {
+              "certifiedMinimumClearanceMM": 1.5062360717875292,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361993,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 14
+            },
+            "right-rear": {
+              "certifiedMinimumClearanceMM": 1.5062360717875245,
+              "radiusMM": 1.5,
+              "runtimeRouteLengthMM": 300.00000097361936,
+              "restLengthMM": 300.0,
+              "vertexCountWithSupport": 16
+            }
+          }
+        }
+      }
+    }
+  },
+  "minimumCertifiedClearanceMM": 1.490452601562494,
+  "certifiedSidecarSHA256": "16810c102bda8932b0d378adeb87dd551ef5080193e2f33f6a4b759ecaa83da6",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

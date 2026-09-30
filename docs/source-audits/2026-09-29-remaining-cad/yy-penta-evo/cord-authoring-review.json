@@ -1,0 +1,91 @@
+{
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+  "entries": [
+    {
+      "presentationID": "front-pair",
+      "equipmentObjectID": "left-penta",
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "upper-band-loop",
+          "kind": "loop",
+          "restLength": 0.6,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible loop only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0,
+              0.06,
+              0.0172
+            ],
+            [
+              0,
+              0.06,
+              -0.0172
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "clearanceMeters": 0.0002,
+      "poses": [
+        "primary",
+        "reverse"
+      ],
+      "routeCachePresent": true
+    },
+    {
+      "presentationID": "front-pair",
+      "equipmentObjectID": "right-penta",
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "upper-band-loop",
+          "kind": "loop",
+          "restLength": 0.6,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible loop only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "terminalsByStrandID": {
+        "upper-band-loop": {
+          "points": [
+            [
+              0,
+              0.06,
+              0.0172
+            ],
+            [
+              0,
+              0.06,
+              -0.0172
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "clearanceMeters": 0.0002,
+      "poses": [
+        "primary",
+        "reverse"
+      ],
+      "routeCachePresent": true
+    }
+  ],
+  "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification."
+}

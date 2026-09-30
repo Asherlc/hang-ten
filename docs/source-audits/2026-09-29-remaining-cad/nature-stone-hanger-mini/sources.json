@@ -1,0 +1,95 @@
+{
+  "approvalRecord": "docs/superpowers/specs/2026-09-20-hangboards-batch-03-3d-migration-design.md#appendix-a-approved-exact-revision-manufacturer-evidence",
+  "sources": [
+    {
+      "ref": "NS-1",
+      "publisher": "Nature Climbing \u2014 Stone Hanger Mini Oak product page",
+      "url": "https://natureclimbing.com/products/stone-hanger-mini-oak",
+      "snapshotSHA256": "782f39e5a7e4a04c61e812e28f581094c95b1d6cbbda7eb9b0bb3a82cca16369",
+      "supportClaim": "Exact Oak identity and four uses: 15 mm granite edge, 15 mm incut wood edge, 60 mm pinch, and smooth pull-up jug.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini/product-page.html",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini/product-page.html",
+      "actualSHA256": "ca6e311904f1777aa26fa685acc664af2010e852b5258fd92a094bf011cccae1",
+      "approvedHashMatches": false,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/product-page-current.html",
+      "humanApproval": {
+        "approved": false,
+        "researchAuthorized": true,
+        "authorizationDate": "2026-09-29",
+        "notes": "Exact September20 HTML bytes were unavailable; this current primary HTML snapshot differs from the approved historical SHA. User expressly authorized additional primary research on September29. Approval of the exact unchanged visual sources is separate."
+      }
+    },
+    {
+      "ref": "NS-2",
+      "publisher": "Nature Climbing \u2014 front visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger1.jpg?v=1774539696",
+      "snapshotSHA256": "3aae064c37d7eef11e7874acaabbaca0194a1caa357e2bff1bbfb83faf093ff7",
+      "supportClaim": "Exact front geometry, stone insert, wooden recess/jug cavity, 15 mm marking, and side cord exits.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini/front-original.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini/front-original.jpg",
+      "actualSHA256": "3aae064c37d7eef11e7874acaabbaca0194a1caa357e2bff1bbfb83faf093ff7",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/front-original.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NS-3",
+      "publisher": "Nature Climbing \u2014 reverse visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger2.jpg?v=1774539697",
+      "snapshotSHA256": "09a4926269b291354b171fdac6e20365a6c9c66528bb4275b8cb56b20b8f1eae",
+      "supportClaim": "Solid reverse, exact branding/revision, rounded outer body, and both cord exits.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini/reverse-original.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini/reverse-original.jpg",
+      "actualSHA256": "09a4926269b291354b171fdac6e20365a6c9c66528bb4275b8cb56b20b8f1eae",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/reverse-original.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NS-4",
+      "publisher": "Nature Climbing \u2014 oblique/side visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/Oakminihanger3.jpg?v=1774539696",
+      "snapshotSHA256": "383cdd3665f1e30a0dc8443959d7442e65780dbd27b71bc597efc9a1b924f685",
+      "supportClaim": "Board thickness and open side-groove routing for paired cord leads.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini/oblique-original.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini/oblique-original.jpg",
+      "actualSHA256": "383cdd3665f1e30a0dc8443959d7442e65780dbd27b71bc597efc9a1b924f685",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/oblique-original.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    },
+    {
+      "ref": "NS-5",
+      "publisher": "Nature Climbing \u2014 in-use/context visual",
+      "url": "https://natureclimbing.com/cdn/shop/files/MiniHanger-environment-11.jpg?v=1774539799",
+      "snapshotSHA256": "f17ceb9007a1f00ad19859c6fdf4bbd0c8a48b5f8d1cdbf169c6de46ffeb076e",
+      "supportClaim": "Front/recess geometry from a distinct oblique view and portable cord context.",
+      "originalPath": "docs/source-audits/2026-09-20-hangboards-batch-03-evidence/nature-stone-hanger-mini/in-use-original.jpg",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/nature-stone-hanger-mini/in-use-original.jpg",
+      "actualSHA256": "f17ceb9007a1f00ad19859c6fdf4bbd0c8a48b5f8d1cdbf169c6de46ffeb076e",
+      "approvedHashMatches": true,
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/nature-stone-hanger-mini/evidence/in-use-original.jpg",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human operator recorded by approved 2026-09-20 batch03 design",
+        "reviewedAt": "2026-09-20",
+        "notes": "Exact SHA matches approved Appendix A visual source."
+      }
+    }
+  ]
+}

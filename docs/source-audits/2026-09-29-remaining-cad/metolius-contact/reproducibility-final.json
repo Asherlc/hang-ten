@@ -1,0 +1,31 @@
+{
+  "assetMatches": true,
+  "bytes": 959761,
+  "committedAssetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+  "descriptorBindsCommittedAsset": true,
+  "descriptorMatches": true,
+  "package": "metolius-contact",
+  "presentations": [
+    {
+      "assetMatches": true,
+      "bytes": 959761,
+      "committedAssetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+      "descriptorBindsCommittedAsset": true,
+      "descriptorMatches": true,
+      "presentationID": "primary",
+      "rebuiltAssetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+      "committedDescriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+      "rebuiltDescriptorSHA256": "2c2d03300eb074d2482de0f2a7d75c94ed2a355b5c02d4352ae802a060b402d7",
+      "descriptorBytesMatch": true
+    }
+  ],
+  "rebuiltAssetSHA256": "1566638c1803af415150cd06913061bf958711453b317753732c9a616ed903eb",
+  "checkedAt": "2026-09-30T02:15:51.456832+00:00",
+  "sourceSHA256Before": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "sourceSHA256After": "c4130f8b0be770883257bdc4266a04f70077a81d18e512fe83de3bc539c95c62",
+  "sourceUnchanged": true,
+  "verifier": "Tools/HangboardCAD/verify_reproducible.py",
+  "freecad": "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd",
+  "sourceMutationAllowed": false,
+  "method": "Fresh FreeCAD process, source-native build, byte-exact USDZ comparison and complete descriptor equality."
+}

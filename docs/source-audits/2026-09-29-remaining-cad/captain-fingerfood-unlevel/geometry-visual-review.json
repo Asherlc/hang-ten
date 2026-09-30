@@ -1,0 +1,17 @@
+{
+  "reviewer": "CAD authoring agent",
+  "reviewDate": "2026-09-29",
+  "views": [
+    "front",
+    "side",
+    "top"
+  ],
+  "artifact": "geometry-review.html",
+  "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "observations": [
+    "Same outer bounds and opposing hourglass lip inventory.",
+    "The floor depth transition is an explicit native piecewise slope; prior smooth mesh shading is not retained as a faceted surface.",
+    "Two separate daylight bores remain present; no rear rope linkage inferred."
+  ],
+  "humanFinalAppReview": "pending root coordination"
+}

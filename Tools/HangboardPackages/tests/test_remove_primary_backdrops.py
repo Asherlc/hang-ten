@@ -31,8 +31,6 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [
-        ("yy-travelboard", (190, 625), (768, 512)),
-        ("yy-travelboard", (1348, 625), (768, 512)),
         ("yy-verticalboard-evo", (887, 500), (887, 443)),
         ("yy-verticalboard-one", (887, 500), (887, 443)),
     ],
@@ -56,7 +54,7 @@ def test_known_enclosed_background_fixtures_clear_only_the_named_through_holes(
 
 
 @pytest.mark.parametrize(
-    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot")
+    "package", ("beastmaker-1000", "metolius-wood-grips-compact-ii", "soill-training-tiles", "yy-penta-evo", "trango-rock-prodigy-pivot", "yy-travelboard")
 )
 def test_model_only_packages_exclude_raster_backdrop_inputs(package: str) -> None:
     assets = HANGBOARDS_ROOT / package / "assets"

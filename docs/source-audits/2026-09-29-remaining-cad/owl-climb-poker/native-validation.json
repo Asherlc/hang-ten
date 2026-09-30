@@ -1,0 +1,9 @@
+{
+  "reopenRecompute": "passed",
+  "singleValidSolid": true,
+  "contacts": 34,
+  "fullyConstrainedSketches": true,
+  "meaningfulEdit": "PocketDepthScale 1 -> 1.04 reduces volume and increases all seven face-A depths by 4%; restoring recovers original volume",
+  "sourceBytesUnchanged": true,
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1"
+}

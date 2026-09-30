@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+  "modelBounds": {
+    "min": [
+      -0.050000001,
+      -0.039999999,
+      -0.003
+    ],
+    "max": [
+      0.050000001,
+      0.039999999,
+      0.020997202
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "plateau_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "plateau_edge_18",
+      "role": "contact",
+      "contactID": "edge-18"
+    }
+  ],
+  "contacts": {
+    "edge-18": {
+      "nodeIDs": [
+        "plateau_edge_18"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0,
+          0.75
+        ],
+        "max": [
+          1.0,
+          0.787500007
+        ]
+      },
+      "center": [
+        0.5,
+        0.768750004
+      ]
+    }
+  }
+}

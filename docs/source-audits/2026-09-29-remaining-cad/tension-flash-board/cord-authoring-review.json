@@ -1,0 +1,166 @@
+{
+  "sourceSHA256": "9ef05cdc781d98954d243e234cf49852839f3179c1e5c0df813de6809bc90d86",
+  "entries": [
+    {
+      "presentationID": "primary",
+      "equipmentObjectID": null,
+      "type": "cadRoutedCord",
+      "strands": [
+        {
+          "id": "mouth-1-lead",
+          "kind": "lead",
+          "restLength": 0.6916787888808,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "mouth-2-lead",
+          "kind": "lead",
+          "restLength": 0.6916787888808,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "mouth-3-lead",
+          "kind": "lead",
+          "restLength": 0.6916787888808,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "mouth-4-lead",
+          "kind": "lead",
+          "restLength": 0.6916787888808,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "left-rear-return",
+          "kind": "segment",
+          "restLength": 0.03,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        },
+        {
+          "id": "right-rear-return",
+          "kind": "segment",
+          "restLength": 0.03,
+          "radius": 0.002,
+          "material": "matteCord",
+          "provenance": "Retained manufacturer source register: visible segment only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred."
+        }
+      ],
+      "terminalsByStrandID": {
+        "mouth-1-lead": {
+          "points": [
+            [
+              0.017,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-2-lead": {
+          "points": [
+            [
+              0.031,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-3-lead": {
+          "points": [
+            [
+              0.469,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "mouth-4-lead": {
+          "points": [
+            [
+              0.483,
+              0.048,
+              0.0746606055596
+            ]
+          ],
+          "planeNormal": [
+            1,
+            0,
+            0
+          ]
+        },
+        "left-rear-return": {
+          "points": [
+            [
+              0.017,
+              0.048,
+              0.0013393944404
+            ],
+            [
+              0.031,
+              0.048,
+              0.0013393944404
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        },
+        "right-rear-return": {
+          "points": [
+            [
+              0.469,
+              0.048,
+              0.0013393944404
+            ],
+            [
+              0.483,
+              0.048,
+              0.0013393944404
+            ]
+          ],
+          "planeNormal": [
+            0,
+            1,
+            0
+          ]
+        }
+      },
+      "clearanceMeters": 0.0002,
+      "poses": [
+        "three-edge-upright",
+        "three-edge-inverted",
+        "two-edge-upright",
+        "two-edge-inverted"
+      ],
+      "routeCachePresent": true
+    }
+  ],
+  "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification."
+}

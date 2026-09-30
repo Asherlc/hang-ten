@@ -1,0 +1,358 @@
+{
+  "slug": "zlagboard-evo",
+  "boardID": "zlagboard.evo",
+  "preMigrationBoardSHA256": "b083be4185475e8c11936fc1625ed625a71ea2c148fea9b5b1f4006baa61120d",
+  "contactCount": 21,
+  "contacts": [
+    {
+      "contactID": "top-jug-left",
+      "name": "Left top jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "name": "Left 32-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "name": "Left 20-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "name": "Center top sloper jug",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "name": "Right 20-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "name": "Right 32-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "top-jug-right",
+      "name": "Right top jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-left",
+      "name": "Left 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "name": "Left 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "name": "Left 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-35-center",
+      "name": "Center 35 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "name": "Right 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "name": "Right 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-right",
+      "name": "Right 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-20-left",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "name": "Lower left 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "name": "Inner left 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "name": "Center 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "name": "Inner right 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "name": "Lower right 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    },
+    {
+      "contactID": "edge-20-right",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-evo-holds-014x2x-00d8566361fdbbb0740896a8a7805e652d20e09b2fbe54eb2d36b4b7ecb66d10.png"
+      ]
+    }
+  ],
+  "metadataPolicy": "Identity, revision, contact order, names, capacities, grip types, dimensions, aspect ratios and model camera retained verbatim. Existing unsupported facts are neither added nor expanded. No training content changes.",
+  "sourceLimitations": "Current compact lime-wood Evo revision: two seven-pocket rows below seven top surfaces. Manufacturer photo gives cavity and top profile form; materially distinct annotated hold chart gives 20/32 degree top surfaces and 20/25/30/35 mm rows. Preserve all 21 contact IDs. Phone/mounting plate/hardware omitted. Overall dimensions are absent from current package and must remain estimated unless supported separately.",
+  "embeddedManifestRoundtripExact": true,
+  "generatedBoardJsonRemoved": true
+}

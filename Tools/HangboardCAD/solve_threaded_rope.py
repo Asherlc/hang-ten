@@ -352,6 +352,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--package", required=True)
     parser.add_argument("--solid", type=Path, required=True)
+    parser.add_argument("--presentation", help="select a schema-2 sidecar entry")
+    parser.add_argument("--equipment-object", help="select a reusable unit's sidecar entry")
+    parser.add_argument("--report", type=Path, help="retain generated length and native-clearance results")
     action = parser.add_mutually_exclusive_group(required=True)
     action.add_argument(
         "--apply", action="store_true", help="update generated poses in suspension.json"
@@ -364,7 +367,6 @@ def main():
     arguments = parser.parse_args()
     package = ROOT / "Hangboards" / arguments.package
     sidecar = package / "suspension.json"
-    descriptor = package / "assets" / "primary.model.json"
     source = json.loads(arguments.solid.read_text())
     if source.get("sourcePackage") != arguments.package:
         raise ValueError("collision solid belongs to another package")
@@ -374,27 +376,49 @@ def main():
         != hashlib.sha256(cad_source.read_bytes()).hexdigest()
     ):
         raise ValueError("collision solid is stale relative to the native CAD source")
-    data = json.loads(sidecar.read_text())
+    document = json.loads(sidecar.read_text())
+    if document.get("schemaVersion") == 2:
+        selected = [entry for entry in document["entries"] if entry["presentationID"] == arguments.presentation
+                    and entry.get("equipmentObjectID") == arguments.equipment_object]
+        if len(selected) != 1:
+            raise ValueError("select exactly one sidecar entry with --presentation and optional --equipment-object")
+        data = selected[0]
+    else:
+        data = document
+    import use_hangboard_packages
+    from hangboard_packages import cad_source as source_metadata
+    board = source_metadata.load_board(cad_source)
+    presentation = next(item for item in board["presentations"] if item["id"] == data["presentationID"])
+    descriptor = package / presentation["media"]["descriptorPath"]
     model = json.loads(descriptor.read_text())
     if data["modelSHA256"] != model["modelSHA256"]:
         raise ValueError("suspension and model hashes differ")
     mesh = trimesh.Trimesh(
         vertices=source["vertices"], faces=source["triangles"], process=False
     )
-    solved = solve_package(arguments.package, mesh, data, model)
+    native = data.get("ropeSolver", {}).get("method") == "nativeRoutes"
+    if native:
+        from native_cord_routes import solve_native_routes
+        solved = solve_native_routes(mesh, data, model)
+    else:
+        solved = solve_package(arguments.package, mesh, data, model)
     for pose_id, result in solved.items():
         pose = data["suspension"]["canonicalPoses"][pose_id]
         if arguments.check:
             if (
                 abs(pose["translation"][1] - result["height"]) > 1e-8
-                or pose.get("cordContactPoints") != result["contacts"]
+                or pose.get("wrappedRoutes" if native else "cordContactPoints") != result["routes" if native else "contacts"]
             ):
                 raise ValueError(f"{pose_id}: generated route cache is stale")
         else:
             pose["translation"][1] = result["height"]
-            pose["cordContactPoints"] = result["contacts"]
+            pose["wrappedRoutes" if native else "cordContactPoints"] = result["routes" if native else "contacts"]
+    if arguments.report:
+        arguments.report.parent.mkdir(parents=True, exist_ok=True)
+        arguments.report.write_text(json.dumps({"package": arguments.package, "presentationID": data["presentationID"],
+            "modelSHA256": model["modelSHA256"], "sourceSHA256": source["sourceSHA256"], "method": "nativeRoutes" if native else "internalLoop", "poses": solved}, indent=2)+"\n")
     if arguments.apply:
-        formatted = json.dumps(data, indent=2)
+        formatted = json.dumps(document, indent=2)
         number = r"-?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?"
         triplet = re.compile(
             rf"\[\n\s+({number}),\n\s+({number}),\n\s+({number})\n\s+\]"
@@ -402,7 +426,7 @@ def main():
         formatted = triplet.sub(
             lambda match: f"[{match[1]}, {match[2]}, {match[3]}]", formatted
         )
-        if json.loads(formatted) != data:
+        if json.loads(formatted) != document:
             raise AssertionError("route formatting changed the JSON data")
         sidecar.write_text(formatted + "\n")
 

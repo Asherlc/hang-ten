@@ -1,0 +1,55 @@
+{
+  "owner": "placid-badger",
+  "passed": true,
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "migratedPackages": 21,
+  "migratedPresentationAssets": 23,
+  "nativeCADPackages": 57,
+  "catalogPackages": 64,
+  "unchangedPackageTrees": 43,
+  "skippedActiveMigrations": 7,
+  "python": {
+    "passed": 590,
+    "subtestsPassed": 24,
+    "deselected": 2,
+    "command": "pytest Tools/HangboardPackages/tests Tools/HangboardCAD/tests Tools/HangboardModels -q -k \"not test_committed_asset_rebuilds_byte_identically and not test_exported_cd_relief_has_correct_ownership_and_no_geometric_ridge\"",
+    "separateChecks": "All 21 new packages have current-source independent fresh native rebuild proofs; Poker production and verifier regressions separately passed all six tests.",
+    "reports": [
+      "test-results/python.log",
+      "test-results/python-junit.xml",
+      "test-results/poker.log"
+    ]
+  },
+  "iOS": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "total": 1261,
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "command": "xcodebuild -project HangTen.xcodeproj -scheme HangTen -configuration Debug -destination \"platform=iOS Simulator,id=D7168911-6A46-4FED-9019-968CCEFEB9DB\" -derivedDataPath .context/DerivedData -parallel-testing-enabled NO -only-testing:HangTenTests test",
+    "reports": [
+      "test-results/ios-summary.json",
+      "test-results/ios-tests.log"
+    ]
+  },
+  "sourceAndExportContracts": "native-source-contracts.json",
+  "unboundUSDZContracts": "export-contracts.json",
+  "deliveryValidation": "delivery-validation.json",
+  "installedPackageValidation": "installed-delivery-validation.json",
+  "independentReview": "final-independent-review.json",
+  "exclusionsProof": "exclusions-proof.json",
+  "metadataAudit": "metadata-audit.json",
+  "historicalReportNotes": "validation-notes.md",
+  "appCaptures": "All 21 current-source packages; representative DEBUG contact review routes, plus physical selector taps for all three Plateau depths. RealityKit tests cover all authored presentation positions and transient non-pickable cords.",
+  "geometryAcceptance": "pending requested one-by-one user review",
+  "testArtifactSHA256": {
+    "test-results/ios-summary.json": "6d38d38ec0659f98565df7ec135a99648db9f4964945c9fb58bdbda699a3febe",
+    "test-results/ios-tests.log": "47c5b2b6d584d6df47cbf8e84e5bf2391f4ff3b4c82aa2fe6f8ad883f877e681",
+    "test-results/poker.log": "8ba7f0f48d09ad9030a1a969ecb50b7e6d2225ffa6857eb381c611e962c557dc",
+    "test-results/python-junit.xml": "61ff06f867591250470e2a4b0f6d8202055bcd5afaa8204652c03cec6852012c",
+    "test-results/python.log": "618eea0c484017ff9e1b2a47cb28140d0d6910d1a97338c7130ff4e92c013ac9"
+  },
+  "resourceCleanup": "resource-cleanup.json",
+  "authoredDiffValidation": "authored-diff-validation.json"
+}

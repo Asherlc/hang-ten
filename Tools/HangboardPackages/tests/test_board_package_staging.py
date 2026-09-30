@@ -32,6 +32,7 @@ LIVE_MODEL_PACKAGE_SLUGS = (
     "beastmaker-1000",
     "j-bryant-ftg-32",
     "metolius-wood-grips-compact-ii",
+    "plateau-lifting-edge",
     "tension-flash-board",
 )
 
@@ -509,9 +510,9 @@ def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(
             for presentation in package.board.presentations
             if isinstance(presentation.media, parser_module.PresentationMediaModel)
         ]
-        assert len(model_presentations) == 1
-        media = model_presentations[0].media
-        declared_assets = {media.asset_path, media.descriptor_path}
+        assert len(model_presentations) == (3 if slug == "plateau-lifting-edge" else 1)
+        declared_assets = {path for presentation in model_presentations
+                           for path in (presentation.media.asset_path, presentation.media.descriptor_path)}
         source_assets = {
             path.relative_to(source_package).as_posix()
             for path in source_package.rglob("*")
@@ -523,26 +524,14 @@ def test_staging_preserves_live_descriptors_and_odr_model_hash_bindings(
             if path.is_file() and not path.is_symlink() and path.relative_to(staged_package).parts[:1] == ("assets",)
         }
         assert source_assets == declared_assets
-        assert staged_assets == {media.descriptor_path}
-        assert (staged_package / media.descriptor_path).read_bytes() == (
-            source_package / media.descriptor_path
-        ).read_bytes()
-
-        odr_model = (
-            odr_staging_root(destination)
-            / slug
-            / "Hangboards"
-            / slug
-            / media.asset_path
-        )
-        assert odr_model.read_bytes() == (source_package / media.asset_path).read_bytes()
-
-        descriptor = json.loads(
-            (staged_package / media.descriptor_path).read_text(encoding="utf-8")
-        )
-        assert descriptor["modelSHA256"] == hashlib.sha256(
-            odr_model.read_bytes()
-        ).hexdigest()
+        assert staged_assets == {presentation.media.descriptor_path for presentation in model_presentations}
+        for presentation in model_presentations:
+            media = presentation.media
+            assert (staged_package / media.descriptor_path).read_bytes() == (source_package / media.descriptor_path).read_bytes()
+            odr_model = odr_staging_root(destination) / slug / "Hangboards" / slug / media.asset_path
+            assert odr_model.read_bytes() == (source_package / media.asset_path).read_bytes()
+            descriptor = json.loads((staged_package / media.descriptor_path).read_text(encoding="utf-8"))
+            assert descriptor["modelSHA256"] == hashlib.sha256(odr_model.read_bytes()).hexdigest()
 
 
 def test_staging_splits_every_live_model_package_without_duplication(
@@ -573,7 +562,8 @@ def test_staging_splits_every_live_model_package_without_duplication(
         expected_base_files = {
             relative: contents
             for relative, contents in source_files.items()
-            if relative != "assets/primary.usdz" and relative != f"{slug}.FCStd"
+            if not relative.endswith(".usdz") and relative != f"{slug}.FCStd"
+                and (relative != "suspension.json" or f"{slug}.FCStd" not in source_files)
         }
         if f"{slug}.FCStd" in source_files:
             assert "board.json" not in source_files
@@ -582,7 +572,7 @@ def test_staging_splits_every_live_model_package_without_duplication(
             ).encode("utf-8")
         assert staged_base_files == expected_base_files
         assert staged_odr_files == {
-            "assets/primary.usdz": source_files["assets/primary.usdz"]
+            relative: contents for relative, contents in source_files.items() if relative.endswith(".usdz")
         }
 
 

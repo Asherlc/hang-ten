@@ -1,0 +1,155 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "b252d25772ae38e66ef0786a8f34b1ba016671addc96f0d6cf6ddcd39af76204",
+  "boardFieldChanges": {},
+  "changedContacts": {
+    "face-c-left-shallow-half-round": {
+      "depth": {
+        "after": null,
+        "before": {
+          "range": {
+            "maximum": 100,
+            "minimum": 100
+          }
+        }
+      }
+    },
+    "face-c-right-shallow-half-round": {
+      "depth": {
+        "after": null,
+        "before": {
+          "range": {
+            "maximum": 100,
+            "minimum": 100
+          }
+        }
+      }
+    }
+  },
+  "humanAcceptance": "pending one-by-one review",
+  "package": "owl-climb-poker",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "face-a-left-outer-slot",
+        "face-a-left-single-pocket",
+        "face-a-left-dual-pocket",
+        "face-a-center-pull-up-slot",
+        "face-a-right-dual-pocket",
+        "face-a-right-single-pocket",
+        "face-a-right-outer-slot"
+      ],
+      "id": "face-a",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-b-left-outer-slot",
+        "face-b-left-single-pocket",
+        "face-b-left-dual-pocket",
+        "face-b-left-deep-sloper",
+        "face-b-center-pull-up-slot",
+        "face-b-right-deep-sloper",
+        "face-b-right-dual-pocket",
+        "face-b-right-single-pocket",
+        "face-b-right-outer-slot"
+      ],
+      "id": "face-b",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-c-left-outer-slot",
+        "face-c-left-single-pocket",
+        "face-c-left-dual-pocket",
+        "face-c-left-shallow-half-round",
+        "face-c-center-pull-up-slot",
+        "face-c-right-shallow-half-round",
+        "face-c-right-dual-pocket",
+        "face-c-right-single-pocket",
+        "face-c-right-outer-slot"
+      ],
+      "id": "face-c",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-d-left-outer-slot",
+        "face-d-left-single-pocket",
+        "face-d-left-dual-pocket",
+        "face-d-left-deep-rounded-recess",
+        "face-d-center-pull-up-slot",
+        "face-d-right-deep-rounded-recess",
+        "face-d-right-dual-pocket",
+        "face-d-right-single-pocket",
+        "face-d-right-outer-slot"
+      ],
+      "id": "face-d",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "face-a-left-outer-slot",
+        "face-a-left-single-pocket",
+        "face-a-left-dual-pocket",
+        "face-a-center-pull-up-slot",
+        "face-a-right-dual-pocket",
+        "face-a-right-single-pocket",
+        "face-a-right-outer-slot"
+      ],
+      "id": "face-a",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-b-left-outer-slot",
+        "face-b-left-single-pocket",
+        "face-b-left-dual-pocket",
+        "face-b-left-deep-sloper",
+        "face-b-center-pull-up-slot",
+        "face-b-right-deep-sloper",
+        "face-b-right-dual-pocket",
+        "face-b-right-single-pocket",
+        "face-b-right-outer-slot"
+      ],
+      "id": "face-b",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-c-left-outer-slot",
+        "face-c-left-single-pocket",
+        "face-c-left-dual-pocket",
+        "face-c-left-shallow-half-round",
+        "face-c-center-pull-up-slot",
+        "face-c-right-shallow-half-round",
+        "face-c-right-dual-pocket",
+        "face-c-right-single-pocket",
+        "face-c-right-outer-slot"
+      ],
+      "id": "face-c",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "face-d-left-outer-slot",
+        "face-d-left-single-pocket",
+        "face-d-left-dual-pocket",
+        "face-d-left-deep-rounded-recess",
+        "face-d-center-pull-up-slot",
+        "face-d-right-deep-rounded-recess",
+        "face-d-right-dual-pocket",
+        "face-d-right-single-pocket",
+        "face-d-right-outer-slot"
+      ],
+      "id": "face-d",
+      "presentationID": "primary"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "owl-climb-poker/README.md",
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1"
+}

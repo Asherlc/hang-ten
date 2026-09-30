@@ -1,0 +1,56 @@
+{
+  "addedContacts": [],
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "baselineManifestSHA256": "5d521f0717d9b54733dc236f374810c106a0f766f86642043f311b23b990c679",
+  "boardFieldChanges": {},
+  "changedContacts": {},
+  "humanAcceptance": "pending one-by-one review",
+  "package": "nature-stone-hanger",
+  "positionsAfter": [
+    {
+      "contactIDs": [
+        "edge-front-15mm-incut",
+        "edge-front-15mm-flat",
+        "edge-front-20mm-wood-flat",
+        "edge-front-20mm-granite"
+      ],
+      "id": "front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-reverse-10mm-incut",
+        "edge-reverse-10mm-flat",
+        "edge-reverse-06mm-flat",
+        "edge-reverse-06mm-incut"
+      ],
+      "id": "reverse",
+      "presentationID": "primary"
+    }
+  ],
+  "positionsBefore": [
+    {
+      "contactIDs": [
+        "edge-front-15mm-incut",
+        "edge-front-15mm-flat",
+        "edge-front-20mm-wood-flat",
+        "edge-front-20mm-granite"
+      ],
+      "id": "front",
+      "presentationID": "primary"
+    },
+    {
+      "contactIDs": [
+        "edge-reverse-10mm-incut",
+        "edge-reverse-10mm-flat",
+        "edge-reverse-06mm-flat",
+        "edge-reverse-06mm-incut"
+      ],
+      "id": "reverse",
+      "presentationID": "primary"
+    }
+  ],
+  "removedContacts": [],
+  "sourceAudit": "nature-stone-hanger/README.md",
+  "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666"
+}

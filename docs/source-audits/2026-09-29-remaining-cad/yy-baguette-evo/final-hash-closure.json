@@ -1,0 +1,22 @@
+{
+  "package": "yy-baguette-evo",
+  "independentFreshCompileCheck": true,
+  "sourceSHA256": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+  "actualAssetSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+  "descriptorModelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+  "compilerReturnedModelSHA256": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+  "compilerReport": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette-evo/compile-final-check.json",
+  "compilerReportSHA256": "6df79c8bd4992357f51aaa0b612659d2a1f4ffeaf3cd62287d4c61019aada43b",
+  "sourceAssetDescriptorBefore": {
+    "yy-baguette-evo.FCStd": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+    "primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+  },
+  "sourceAssetDescriptorAfter": {
+    "yy-baguette-evo.FCStd": "55569bc41f857b5642074b0b2df6b73b40543cd503ad40521b7f11330caed3e8",
+    "primary.usdz": "5532e902fb8b08fed6f7a6e1bafd2545e7bcd9ecd04347431e6430a9572efcf3",
+    "primary.model.json": "6d2ebee364902217e14714444991f43654a52a8734c4d32076d27ba333137921"
+  },
+  "elapsedSeconds": 6.702,
+  "closure": "passed"
+}

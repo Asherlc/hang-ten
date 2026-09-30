@@ -25,6 +25,7 @@ FreeCAD's ``freecadcmd``.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path, PurePosixPath
 import re
 import stat
@@ -366,14 +367,76 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
         document = loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeError, json.JSONDecodeError) as error:
         raise ManifestError(f"suspension.json is unreadable or invalid: {error}") from error
+    if isinstance(document, dict) and document.get("schemaVersion") == 2:
+        if set(document) != {"schemaVersion", "entries"} or not isinstance(document["entries"], list) or not document["entries"]:
+            raise ManifestError("suspension.json schema 2 requires a nonempty entries array")
+        seen = set()
+        for entry in document["entries"]:
+            if not isinstance(entry, dict) or "schemaVersion" in entry \
+                    or not isinstance(entry.get("presentationID"), str) \
+                    or not entry["presentationID"] \
+                    or ("equipmentObjectID" in entry and (
+                        not isinstance(entry["equipmentObjectID"], str) or not entry["equipmentObjectID"])):
+                raise ManifestError("suspension.json entries require presentation/instance identifiers and no schemaVersion")
+            identity = (entry.get("presentationID"), entry.get("equipmentObjectID"))
+            if identity in seen:
+                raise ManifestError("suspension.json has duplicate presentation/instance entries")
+            seen.add(identity)
+            board = _merge_suspension_entry(board, package_root, {"schemaVersion": 1, **entry})
+        return board
+    return _merge_suspension_entry(board, package_root, document)
+
+
+def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> dict:
     required = {"schemaVersion", "presentationID", "modelSHA256", "suspension"}
     if not isinstance(document, dict) or not required <= set(document) \
-            or set(document) - required - {"ropeSolver"} or document["schemaVersion"] != 1:
+            or set(document) - required - {"ropeSolver", "equipmentObjectID"} or document["schemaVersion"] != 1:
         raise ManifestError("suspension.json has invalid schema or members")
     # Authoring-only settings for Tools/HangboardCAD/solve_threaded_rope.py;
     # never merged into board.json.
     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
-    if not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
+    if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
+        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+                or isinstance(solver["clearance"], bool) \
+                or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
+                or not 0 < solver["clearance"] <= .01 \
+                or not isinstance(solver["terminalsByStrandID"], dict) or not solver["terminalsByStrandID"] \
+                or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
+                or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
+            raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+        for entry in solver["terminalsByStrandID"].values():
+            if not isinstance(entry, dict) or not {"points", "planeNormal"} <= set(entry) \
+                    or set(entry) - {"points", "planeNormal", "planeAxis", "mouthAxis"}:
+                raise ManifestError("nativeRoutes requires terminal stations and section normals")
+            def finite_vector(value):
+                return isinstance(value, list) and len(value) == 3 and all(
+                    isinstance(component, (int, float)) and not isinstance(component, bool)
+                    and math.isfinite(component) for component in value)
+            if not isinstance(entry["points"], list) or len(entry["points"]) not in (1, 2) \
+                    or not all(finite_vector(point) for point in entry["points"]) \
+                    or not finite_vector(entry["planeNormal"]) \
+                    or math.hypot(*entry["planeNormal"]) <= 1e-12 \
+                    or ("planeAxis" in entry and (not finite_vector(entry["planeAxis"])
+                        or math.hypot(*entry["planeAxis"]) <= 1e-12)) \
+                    or ("mouthAxis" in entry and (not finite_vector(entry["mouthAxis"])
+                        or math.hypot(*entry["mouthAxis"]) <= 1e-12)):
+                raise ManifestError("nativeRoutes stations and nonzero plane normals must be finite 3D vectors")
+        suspension = document.get("suspension")
+        strands = suspension.get("strands") if isinstance(suspension, dict) else None
+        if not isinstance(suspension, dict) or suspension.get("type") != "cadRoutedCord" \
+                or not isinstance(strands, list) or not strands \
+                or any(not isinstance(strand, dict) or not isinstance(strand.get("id"), str)
+                    or not strand["id"] or strand.get("kind") not in ("lead", "loop", "segment") for strand in strands) \
+                or len({strand["id"] for strand in strands}) != len(strands) \
+                or set(solver["terminalsByStrandID"]) != {strand["id"] for strand in strands}:
+            raise ManifestError("nativeRoutes terminals must exactly match cadRoutedCord strands")
+        if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
+               for strand in strands):
+            raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
+        if any("mouthAxis" in solver["terminalsByStrandID"][strand["id"]]
+               and (strand["kind"] != "lead" or solver.get("sectionPlane", "fixed") != "anchor") for strand in strands):
+            raise ManifestError("nativeRoutes mouthAxis requires a lead in an anchor section plane")
+    elif not isinstance(solver, dict) or set(solver) != {"sectionPlane"} \
             or solver["sectionPlane"] not in ("mouth-x", "anchor"):
         raise ManifestError("suspension.json ropeSolver must be {\"sectionPlane\": \"mouth-x\" | \"anchor\"}")
     presentation_id = document["presentationID"]
@@ -389,8 +452,18 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
     if len(selected) != 1:
         raise ManifestError("suspension.json presentationID must identify one CAD presentation")
     media = selected[0].get("media")
-    if not isinstance(media, dict) or media.get("type") != "model" or "suspension" in media:
+    if not isinstance(media, dict) or media.get("type") != "model" :
         raise ManifestError("suspension.json requires a model presentation without embedded suspension")
+    equipment_id = document.get("equipmentObjectID")
+    instance = None
+    if equipment_id is not None:
+        matches = [item for item in media.get("instances", []) if item.get("equipmentObjectID") == equipment_id]
+        if len(matches) != 1:
+            raise ManifestError("suspension.json equipmentObjectID must identify one model instance")
+        instance = matches[0]
+    target = instance if instance is not None else media
+    if "suspension" in target:
+        raise ManifestError("suspension.json requires a target without embedded suspension")
     descriptor_path = media.get("descriptorPath")
     if not isinstance(descriptor_path, str) or safe_member(descriptor_path) != descriptor_path \
             or not descriptor_path.startswith("assets/"):
@@ -411,10 +484,14 @@ def merge_suspension_sidecar(board: dict, package_root: Path) -> dict:
             updated = dict(presentation)
             updated_media = {}
             for key, value in media.items():
-                if key == "orientation":
+                if key == "instances" and instance is not None:
+                    updated_media[key] = [dict(item, suspension=document["suspension"]) if item is instance else item for item in value]
+                elif key == "orientation" and instance is None:
                     updated_media["suspension"] = document["suspension"]
-                updated_media[key] = value
-            if "suspension" not in updated_media:
+                    updated_media[key] = value
+                else:
+                    updated_media[key] = value
+            if instance is None and "suspension" not in updated_media:
                 updated_media["suspension"] = document["suspension"]
             updated["media"] = updated_media
             merged_presentations.append(updated)

@@ -5,15 +5,19 @@ import simd
 final class BoardModelTests: XCTestCase {
 
     @MainActor
-    func testOrientationContainerAspectRatioTracksSelectedPositionProjection() throws {
+    func testNativeCordMapAspectRatioIncludesCordAndSelectedPosition() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
         let content = BoardMapPresentationContent(board: board, selectedPresentationID: nil)
-        let cases: [(positionID: String, contactID: String, aspectRatio: CGFloat)] = [
-            ("paired-25-20-15-10", "edge-20-left", 10.4),
-            ("paired-12-8-6", "edge-12-left", 10.4),
-            ("central-30-25", "edge-central-30", 10.4),
-            ("central-20-6", "edge-central-20", 7.6133276),
-            ("rounded-tray", "rounded-tray", 10.4)
+        guard case .model(let media) = content.presentation.media,
+              case .cadRoutedCord(let suspension) = media.suspension else {
+            return XCTFail("Baguette Evo must use its native cord graph")
+        }
+        let cases: [(positionID: String, contactID: String)] = [
+            ("paired-25-20-15-10", "edge-20-left"),
+            ("paired-12-8-6", "edge-12-left"),
+            ("central-30-25", "edge-central-30"),
+            ("central-20-6", "edge-central-20"),
+            ("rounded-tray", "rounded-tray")
         ]
         XCTAssertEqual(board.positions.map(\.id), cases.map(\.positionID))
         for fixture in cases {
@@ -23,7 +27,42 @@ final class BoardModelTests: XCTestCase {
                 activeHoldID: fixture.contactID
             )
             XCTAssertEqual(positionID, fixture.positionID)
-            XCTAssertEqual(content.presentation.aspectRatio(for: positionID), fixture.aspectRatio, accuracy: 0.000_01, fixture.positionID)
+            let pose = try XCTUnwrap(suspension.canonicalPoses[fixture.positionID])
+            let framing = try SuspendedBoardPresentation.solve(
+                pose: pose, suspension: suspension, bounds: media.descriptor.modelBounds
+            ).cameraFraming
+            let ratio = content.presentation.aspectRatio(for: positionID)
+            XCTAssertEqual(ratio, max(1, CGFloat(framing.width / framing.height)), accuracy: 0.000_01, fixture.positionID)
+            XCTAssertGreaterThan(334 / ratio, 100, "A 32-point body-only map hides the suspended board")
+        }
+    }
+
+    @MainActor
+    func testTallNativeCordMapUsesBoundedPortraitHeight() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "aelith.cyclops-011"))
+        let position = try XCTUnwrap(board.positions.first)
+        XCTAssertEqual(board.defaultPresentation.aspectRatio(for: position.id), 1)
+    }
+
+    @MainActor
+    func testMapAspectRatioRetainsOrientationAndMissingPositionFallbacks() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.baguette-evo"))
+        let original = board.defaultPresentation
+        guard case .model(let media) = original.media else { return XCTFail("Expected model") }
+        let orientationOnly = BoardPresentation(
+            id: original.id, name: original.name, aspectRatio: original.aspectRatio,
+            isDefault: original.isDefault,
+            media: .model(BoardModelMedia(
+                assetPath: media.assetPath, descriptorPath: media.descriptorPath,
+                descriptor: media.descriptor, display: media.display,
+                orientation: media.orientation
+            ))
+        )
+        XCTAssertEqual(orientationOnly.aspectRatio(for: "paired-25-20-15-10"), 10.4, accuracy: 0.000_01)
+        XCTAssertEqual(orientationOnly.aspectRatio(for: "central-20-6"), 7.6133276, accuracy: 0.000_01)
+        for presentation in [original, orientationOnly] {
+            XCTAssertEqual(presentation.aspectRatio(for: nil), presentation.aspectRatio)
+            XCTAssertEqual(presentation.aspectRatio(for: "missing-position"), presentation.aspectRatio)
         }
     }
 

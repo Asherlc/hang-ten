@@ -1456,6 +1456,103 @@ final class WorkoutTimelineTests: XCTestCase {
             phase: .rest)
     ]
 
+    private func configuredPlateauStep(segments: [WorkoutSegment]? = nil) -> WorkoutStep {
+        WorkoutStep(
+            id: "configured-sequence", number: 2, title: "Configured edge",
+            instruction: "Existing instruction", accessory: "Existing accessory",
+            duration: 15, phase: .hang,
+            segments: segments ?? [
+                WorkoutSegment(kind: .work, target: .requirements([
+                    .edge(depth: .range(.init(minimum: 18, maximum: 18)))
+                ]), timing: .fixed, duration: 6),
+                WorkoutSegment(kind: .work, target: .requirements([
+                    .edge(depth: .range(.init(minimum: 10, maximum: 10)))
+                ]), timing: .fixed, duration: 9)
+            ],
+            handUse: .single, side: .right, timedWorkDuration: 15
+        )
+    }
+
+    func testSequentialConfiguredCueUsesCurrentSegmentWithoutChangingRecordedStep() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let step = configuredPlateauStep()
+        let timeline = WorkoutTimeline(steps: [step])
+
+        for (elapsed, segmentIndex, presentationID) in [
+            (0.0, 0, "depth-18mm"), (5.99, 0, "depth-18mm"),
+            (6.0, 1, "depth-10mm"), (14.0, 1, "depth-10mm")
+        ] {
+            let cue = timeline.boardCue(at: elapsed, countdown: 0, isComplete: false)
+            let preview = try XCTUnwrap(cue.step)
+            XCTAssertEqual(preview.segments, [step.segments[segmentIndex]])
+            XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: preview, on: board), presentationID)
+            XCTAssertEqual(cue.mode, .active)
+            XCTAssertFalse(cue.isResting)
+            XCTAssertEqual(preview.id, step.id)
+            XCTAssertEqual(preview.title, step.title)
+            XCTAssertEqual(preview.instruction, step.instruction)
+            XCTAssertEqual(preview.accessory, step.accessory)
+            XCTAssertEqual(preview.duration, step.duration)
+            XCTAssertEqual(preview.timedWorkDuration, step.timedWorkDuration)
+            XCTAssertEqual(preview.handUse, step.handUse)
+            XCTAssertEqual(preview.side, step.side)
+            XCTAssertTrue(WorkoutHoldCueVisibilityPolicy.showsCue(for: .right, step: preview))
+            XCTAssertFalse(WorkoutHoldCueVisibilityPolicy.showsCue(for: .left, step: preview))
+        }
+        XCTAssertEqual(timeline.currentSteps, [step])
+        XCTAssertEqual(timeline.step(at: 7), step)
+    }
+
+    func testConfiguredNextWorkPreviewUsesFirstSegmentDuringRestAndSkipCountdown() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let rest = WorkoutStep(id: "rest", number: 1, title: "Rest", instruction: "",
+                               accessory: "", duration: 5, phase: .rest)
+        let work = configuredPlateauStep()
+        let timeline = WorkoutTimeline(steps: [rest, work])
+        let restCue = timeline.boardCue(at: 2, countdown: 0, isComplete: false)
+        let skipCue = timeline.boardCue(currentStep: work, stepElapsed: 0, countdown: 3,
+                                       isComplete: false, isSkipCountdown: true)
+        for cue in [restCue, skipCue] {
+            let preview = try XCTUnwrap(cue.step)
+            XCTAssertEqual(preview.segments, [work.segments[0]])
+            XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: preview, on: board), "depth-18mm")
+            XCTAssertEqual(cue.mode, .preview)
+            XCTAssertEqual(preview.side, .right)
+        }
+        XCTAssertTrue(restCue.isResting)
+        XCTAssertFalse(skipCue.isResting)
+        XCTAssertEqual(timeline.nextWorkStep(after: rest.id), work)
+    }
+
+    func testConfiguredCueKeepsSimultaneousRequirementsTogether() throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "plateau.lifting-edge"))
+        let sequential = configuredPlateauStep()
+        let simultaneous = WorkoutSegment(kind: .work,
+            target: .requirements(sequential.workRequirements), timing: .fixed, duration: 15)
+        let step = configuredPlateauStep(segments: [simultaneous])
+        let timeline = WorkoutTimeline(steps: [step])
+        let preview = try XCTUnwrap(timeline.holdPreviewStep(at: 7))
+
+        XCTAssertEqual(preview.workRequirements, sequential.workRequirements)
+        XCTAssertNil(WorkoutHighlightResolver.presentationID(for: preview, on: board))
+    }
+
+    func testSegmentCueDoesNotInferAnUntimedBoundaryOrReusePreviousTargetForSelfSelectedWork() throws {
+        let fixed = configuredPlateauStep().segments
+        for timing: WorkoutSegmentTiming in [.undefined, .stopwatch] {
+            let untimed = WorkoutSegment(kind: .work, target: fixed[0].target,
+                                        timing: timing, duration: nil)
+            let timeline = WorkoutTimeline(steps: [configuredPlateauStep(segments: [untimed, fixed[1]])])
+            XCTAssertEqual(timeline.holdPreviewStep(at: 14)?.segments, [untimed])
+        }
+        let selfSelected = WorkoutSegment(kind: .work, target: .selfSelected,
+                                          timing: .fixed, duration: 9)
+        let timeline = WorkoutTimeline(steps: [configuredPlateauStep(segments: [fixed[0], selfSelected])])
+        let preview = try XCTUnwrap(timeline.holdPreviewStep(at: 6))
+        XCTAssertEqual(preview.segments, [selfSelected])
+        XCTAssertTrue(preview.workRequirements.isEmpty)
+    }
+
     func testNextWorkStepSkipsConsecutiveRestSteps() {
         let timeline = WorkoutTimeline(steps: restPreviewSteps)
 

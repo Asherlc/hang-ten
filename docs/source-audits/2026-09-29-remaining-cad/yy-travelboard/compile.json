@@ -1,0 +1,43 @@
+{
+  "asset": ".context/placid-badger/cad-raster-boards/yy-travelboard/candidate-assets/primary.usdz",
+  "assetBytes": 1432139,
+  "assetSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "board": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-travelboard.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-10",
+    "edge-15",
+    "edge-25",
+    "mono-left",
+    "mono-right",
+    "tray"
+  ],
+  "descriptor": ".context/placid-badger/cad-raster-boards/yy-travelboard/candidate-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-10": 10.0,
+    "edge-15": 15.0,
+    "edge-25": 25.0,
+    "mono-left": 30.0,
+    "mono-right": 30.0,
+    "tray": 30.0
+  },
+  "modelSHA256": "ab1df81dcae0c191f18eac7eead8181d3be425289ec338ef182345d4d5aea95f",
+  "nodes": [
+    "yy_body",
+    "yy_edge_10",
+    "yy_edge_15",
+    "yy_edge_25",
+    "yy_mono_left",
+    "yy_mono_right",
+    "yy_tray"
+  ],
+  "package": "yy-travelboard",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/cad-raster-boards/yy-travelboard/yy-travelboard.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "25e2fbf9a280e1e9aec5024cce5715f7a0237b60691f2497ed55e672c9fc3b5a",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 80692
+}

@@ -1,0 +1,18 @@
+{
+  "package": "nature-stone-hanger-mini",
+  "sourceSHA256": "2e59e13c209308ef9e86288dcfde3a466823a818b57c998e6963c37374f27371",
+  "editedFeature": "IncutFloorOutline",
+  "reopenRecompute": true,
+  "fullyConstrainedSketches": true,
+  "validBoundShapes": true,
+  "contactVerticesOnActualBodySurface": true,
+  "dimensionalEditChangesSolid": true,
+  "dimensionalEditChangesContacts": [
+    "nature_wood",
+    "nature_jug"
+  ],
+  "bodyVolumeBeforeMM3": 115359.17775233676,
+  "bodyVolumeAfterMM3": 112528.64878581466,
+  "sourceBytesUnchanged": true,
+  "note": "Native source acceptance only. Suspension and app acceptance remain separate."
+}

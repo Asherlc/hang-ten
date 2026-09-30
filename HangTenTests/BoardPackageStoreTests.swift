@@ -371,7 +371,7 @@ final class BoardPackageStoreTests: XCTestCase {
                 "nonpositive-cord-values", "nonpositive-rest-length",
                 "missing-attachment-node", "hold-attachment-node",
                 "attachment-point-outside-bounds", "shorter-than-endpoint-distance",
-                "raster-sibling", "second-model", "baked-cord-role", "baked-anchor-role",
+                "raster-sibling", "model-with-wrong-pose-position", "baked-cord-role", "baked-anchor-role",
                 "model-inversion", "two-branch-unknown-member", "two-branch-wrong-discriminator",
                 "two-branch-missing-passage", "two-branch-extra-passage", "two-branch-duplicate-passage-id",
                 "two-branch-unknown-passage-node", "two-branch-hold-passage-node",
@@ -729,18 +729,19 @@ final class BoardPackageStoreTests: XCTestCase {
             XCTAssertEqual(position.presentationID, "primary")
         }
 
-        // The approved ODR model uses the tested two-branch suspension.
+        // Four native through-bores retain the visible front leads and rear returns.
         let presentation = try XCTUnwrap(board.presentations.first)
         guard case .model(let media) = presentation.media,
-              case .twoBranchCord(let suspension) = media.suspension else {
+              case .cadRoutedCord(let suspension) = media.suspension else {
             XCTFail("Expected model media"); return
         }
         XCTAssertNil(media.orientation)
         XCTAssertEqual(
             media.descriptor.modelSHA256,
-            "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac"
+            "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97"
         )
-        XCTAssertEqual(suspension.branches.count, 2)
+        XCTAssertEqual(suspension.strands.filter { $0.kind == "lead" }.count, 4)
+        XCTAssertEqual(suspension.strands.filter { $0.kind == "segment" }.count, 2)
         XCTAssertEqual(Set(suspension.canonicalPoses.keys), Set(expectedHoldIDsByPosition.keys))
     }
 

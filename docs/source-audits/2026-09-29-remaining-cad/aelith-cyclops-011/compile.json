@@ -1,0 +1,28 @@
+{
+  "asset": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/candidate-assets/primary.usdz",
+  "assetBytes": 212839,
+  "assetSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+  "board": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/aelith-cyclops-011.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "mono-20"
+  ],
+  "descriptor": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/candidate-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "mono-20": 20.0
+  },
+  "modelSHA256": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d",
+  "nodes": [
+    "cyclops_body",
+    "cyclops_mono"
+  ],
+  "package": "aelith-cyclops-011",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/cad-raster-boards/aelith-cyclops-011/aelith-cyclops-011.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 9408
+}

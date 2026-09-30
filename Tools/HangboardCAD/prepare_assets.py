@@ -30,6 +30,7 @@ import tempfile
 from pathlib import Path
 
 from verify_reproducible import faceted_import_acknowledged
+from presentation_targets import source_targets
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
@@ -45,7 +46,7 @@ def source_backed_packages() -> list[str]:
     )
 
 
-def _run_build(package: str, destination: Path, freecad: Path, extra_path: str) -> None:
+def _run_build(package: str, destination: Path, freecad: Path, extra_path: str, presentation_id: str | None = None) -> None:
     """Run one board's build into a scratch directory, in a fresh process.
 
     FreeCAD's launcher consumes unrecognised options before the script ever sees
@@ -58,6 +59,8 @@ def _run_build(package: str, destination: Path, freecad: Path, extra_path: str) 
         "--source", str(REPOSITORY / "Hangboards" / package / f"{package}{SOURCE_SUFFIX}"),
         "--assets", str(destination),
     ]
+    if presentation_id is not None:
+        arguments.extend(["--presentation", presentation_id])
     if faceted_import_acknowledged(package):
         arguments.append("--allow-faceted-import")
     wrapper.write_text(
@@ -95,44 +98,38 @@ def sha256(path: Path) -> str:
 
 
 def prepare(package: str, out: Path, freecad: Path, extra_path: str) -> dict:
-    committed_descriptor = (
-        REPOSITORY / "Hangboards" / package / "assets" / "primary.model.json"
-    )
-    if not committed_descriptor.is_file():
-        raise RuntimeError(f"{package} has no committed descriptor to compile against")
-    committed = json.loads(committed_descriptor.read_text())
-
+    package_root = REPOSITORY / "Hangboards" / package
+    targets = source_targets(package_root / f"{package}{SOURCE_SUFFIX}")
+    reports = []
     with tempfile.TemporaryDirectory(prefix=f"hangten-prepare-{package}-") as scratch:
         staging = Path(scratch) / "assets"
-        _run_build(package, staging, freecad, extra_path)
-        built_asset = staging / "primary.usdz"
-        built_descriptor = staging / "primary.model.json"
-        if not built_asset.is_file() or not built_descriptor.is_file():
-            raise RuntimeError(f"{package}: the build produced no asset/descriptor pair")
-        derived = json.loads(built_descriptor.read_text())
-        if derived != committed:
-            raise RuntimeError(
-                f"{package}: the compiled descriptor does not match the committed one; "
-                "the source and the descriptor have diverged, or this platform does not "
-                "reproduce the committed bytes"
-            )
-        digest = sha256(built_asset)
-        if derived.get("modelSHA256") != digest:
-            raise RuntimeError(
-                f"{package}: the compiled asset does not hash to the descriptor's "
-                "modelSHA256, so the app would reject it"
-            )
-
+        for presentation_id, (asset_name, descriptor_name) in targets.items():
+            committed_descriptor = package_root / "assets" / descriptor_name
+            if not committed_descriptor.is_file():
+                raise RuntimeError(f"{package}/{presentation_id} has no committed descriptor")
+            committed = json.loads(committed_descriptor.read_text())
+            _run_build(package, staging, freecad, extra_path, presentation_id if len(targets) > 1 else None)
+            built_asset, built_descriptor = staging / asset_name, staging / descriptor_name
+            if not built_asset.is_file() or not built_descriptor.is_file():
+                raise RuntimeError(f"{package}/{presentation_id}: the build produced no asset/descriptor pair")
+            derived = json.loads(built_descriptor.read_text())
+            if derived != committed:
+                raise RuntimeError(f"{package}/{presentation_id}: the compiled descriptor does not match the committed one; the source and descriptor have diverged")
+            digest = sha256(built_asset)
+            if derived.get("modelSHA256") != digest:
+                raise RuntimeError(f"{package}/{presentation_id}: the compiled asset does not hash to the descriptor")
+            reports.append((presentation_id, built_asset, built_descriptor, digest))
+        # Validate all configurations before copying any of the delivered pairs.
         target = out / package / "assets"
         target.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(built_asset, target / "primary.usdz")
-        shutil.copyfile(built_descriptor, target / "primary.model.json")
-        return {
-            "package": package,
-            "assetSHA256": digest,
-            "bytes": (target / "primary.usdz").stat().st_size,
-            "out": str((target / "primary.usdz").relative_to(out)),
-        }
+        for _, asset, descriptor, _ in reports:
+            shutil.copyfile(asset, target / asset.name)
+            shutil.copyfile(descriptor, target / descriptor.name)
+        return {"package": package, "assetSHA256": reports[0][3],
+                "bytes": sum(asset.stat().st_size for _, asset, _, _ in reports),
+                "out": str((target / reports[0][1].name).relative_to(out)),
+                "presentations": [{"id": identifier, "assetSHA256": digest, "asset": asset.name}
+                                  for identifier, asset, _, digest in reports]}
 
 
 def main(argv: list[str] | None = None) -> int:

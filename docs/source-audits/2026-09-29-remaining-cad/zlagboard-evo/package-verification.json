@@ -1,0 +1,31 @@
+{
+  "slug": "zlagboard-evo",
+  "triangleCount": 20332,
+  "nodeCount": 22,
+  "modelBoundsNativeMm": {
+    "min": [
+      -349.9999940395355,
+      -41.99999943375589,
+      -59.9999986588955
+    ],
+    "max": [
+      349.9999940395355,
+      1.3322675997716858e-14,
+      59.99999865889549
+    ]
+  },
+  "materialCount": 0,
+  "shaderCount": 0,
+  "contactCount": 21,
+  "hashes": {
+    "zlagboard-evo.FCStd": "8a8e4957b044d01c76c49ee1b0c07f88f388bac05cff36b31d655c0e6d4ae8fb",
+    "primary.usdz": "92e0e754d888a5ab6976f22197b11f9f55353309ef6648a9307c45c404d4dabe",
+    "primary.model.json": "54a24c155967b3349be34fb3918e1c22be8acc8f7117772a15b347e251d99383"
+  },
+  "reviewViews": [
+    "front",
+    "side",
+    "top"
+  ],
+  "reviewRenderer": "Tools/HangboardCAD/preview.py::_render, same 1100x650 size and neutral Lambert shading for both assets"
+}

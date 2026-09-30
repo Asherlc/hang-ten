@@ -1,751 +1,745 @@
 {
-  "contacts": {
-    "edge-11-left": {
-      "center": [
-        0.22866926,
-        0.136096469
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.294714867,
-          0.232978953
-        ],
-        "min": [
-          0.162623654,
-          0.039213985
-        ]
-      },
-      "nodeIDs": [
-        "hold_11_left_001"
-      ]
-    },
-    "edge-11-right": {
-      "center": [
-        0.771636552,
-        0.136143455
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.837979546,
-          0.23299607
-        ],
-        "min": [
-          0.705293558,
-          0.039290839
-        ]
-      },
-      "nodeIDs": [
-        "hold_11_right_001"
-      ]
-    },
-    "edge-5-left": {
-      "center": [
-        0.122753608,
-        0.462148835
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.19051948,
-          0.58254909
-        ],
-        "min": [
-          0.054987735,
-          0.341748581
-        ]
-      },
-      "nodeIDs": [
-        "hold_05_left_001"
-      ]
-    },
-    "edge-5-right": {
-      "center": [
-        0.877060189,
-        0.462270482
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.944756113,
-          0.582825711
-        ],
-        "min": [
-          0.809364264,
-          0.341715253
-        ]
-      },
-      "nodeIDs": [
-        "hold_05_right_001"
-      ]
-    },
-    "edge-6-left": {
-      "center": [
-        0.249791162,
-        0.523196716
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.314394608,
-          0.627085441
-        ],
-        "min": [
-          0.185187715,
-          0.419307991
-        ]
-      },
-      "nodeIDs": [
-        "hold_06_left_001"
-      ]
-    },
-    "edge-6-right": {
-      "center": [
-        0.750301118,
-        0.523204754
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.814768985,
-          0.626975759
-        ],
-        "min": [
-          0.685833251,
-          0.419433749
-        ]
-      },
-      "nodeIDs": [
-        "hold_06_right_001"
-      ]
-    },
-    "edge-7-left": {
-      "center": [
-        0.372813205,
-        0.567151028
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.437210781,
-          0.664045206
-        ],
-        "min": [
-          0.30841563,
-          0.470256849
-        ]
-      },
-      "nodeIDs": [
-        "hold_07_left_001"
-      ]
-    },
-    "edge-7-right": {
-      "center": [
-        0.627058418,
-        0.567136713
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.691342219,
-          0.663972846
-        ],
-        "min": [
-          0.562774616,
-          0.470300581
-        ]
-      },
-      "nodeIDs": [
-        "hold_07_right_001"
-      ]
-    },
-    "flat-sloper-2-left": {
-      "center": [
-        0.217445001,
-        0.774137429
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.288286501,
-          0.840580757
-        ],
-        "min": [
-          0.146603501,
-          0.7076941
-        ]
-      },
-      "nodeIDs": [
-        "hold_02_left_001"
-      ]
-    },
-    "flat-sloper-2-right": {
-      "center": [
-        0.782864416,
-        0.773904975
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.85369922,
-          0.840675135
-        ],
-        "min": [
-          0.712029612,
-          0.707134815
-        ]
-      },
-      "nodeIDs": [
-        "hold_02_right_001"
-      ]
-    },
-    "jug-1-left": {
-      "center": [
-        0.079553815,
-        0.733732009
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.137673556,
-          0.789571687
-        ],
-        "min": [
-          0.021434074,
-          0.677892331
-        ]
-      },
-      "nodeIDs": [
-        "hold_01_left_001"
-      ]
-    },
-    "jug-1-right": {
-      "center": [
-        0.920348666,
-        0.733936304
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.978515877,
-          0.789569741
-        ],
-        "min": [
-          0.862181455,
-          0.678302867
-        ]
-      },
-      "nodeIDs": [
-        "hold_01_right_001"
-      ]
-    },
-    "jug-14-center": {
-      "center": [
-        0.500153409,
-        0.911279098
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.564667207,
-          1.0
-        ],
-        "min": [
-          0.435639612,
-          0.822558196
-        ]
-      },
-      "nodeIDs": [
-        "hold_14_center_001"
-      ]
-    },
-    "pocket-10-left": {
-      "center": [
-        0.387021585,
-        0.371881091
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.441459742,
-          0.453396556
-        ],
-        "min": [
-          0.332583429,
-          0.290365625
-        ]
-      },
-      "nodeIDs": [
-        "hold_10_left_001"
-      ]
-    },
-    "pocket-10-right": {
-      "center": [
-        0.61292003,
-        0.372013662
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.667299593,
-          0.45365794
-        ],
-        "min": [
-          0.558540468,
-          0.290369384
-        ]
-      },
-      "nodeIDs": [
-        "hold_10_right_001"
-      ]
-    },
-    "pocket-12-left": {
-      "center": [
-        0.331660646,
-        0.183607093
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.369891859,
-          0.263514817
-        ],
-        "min": [
-          0.293429433,
-          0.103699369
-        ]
-      },
-      "nodeIDs": [
-        "hold_12_left_001"
-      ]
-    },
-    "pocket-12-right": {
-      "center": [
-        0.66821198,
-        0.183800434
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.706347655,
-          0.263513172
-        ],
-        "min": [
-          0.630076305,
-          0.104087695
-        ]
-      },
-      "nodeIDs": [
-        "hold_12_right_001"
-      ]
-    },
-    "pocket-13-left": {
-      "center": [
-        0.413403486,
-        0.21744608
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.449049511,
-          0.291236302
-        ],
-        "min": [
-          0.37775746,
-          0.143655858
-        ]
-      },
-      "nodeIDs": [
-        "hold_13_left_001"
-      ]
-    },
-    "pocket-13-right": {
-      "center": [
-        0.586713517,
-        0.217149371
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.622597584,
-          0.29065933
-        ],
-        "min": [
-          0.55082945,
-          0.143639412
-        ]
-      },
-      "nodeIDs": [
-        "hold_13_right_001"
-      ]
-    },
-    "pocket-15-center": {
-      "center": [
-        0.4999771,
-        0.74002886
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.554976219,
-          0.821140653
-        ],
-        "min": [
-          0.444977982,
-          0.658917067
-        ]
-      },
-      "nodeIDs": [
-        "hold_15_center_001"
-      ]
-    },
-    "pocket-16-center": {
-      "center": [
-        0.4999264,
-        0.530173744
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.552130792,
-          0.613620459
-        ],
-        "min": [
-          0.447722008,
-          0.446727028
-        ]
-      },
-      "nodeIDs": [
-        "hold_16_center_001"
-      ]
-    },
-    "pocket-17-center": {
-      "center": [
-        0.499905869,
-        0.357377325
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.549038193,
-          0.435026758
-        ],
-        "min": [
-          0.450773544,
-          0.279727892
-        ]
-      },
-      "nodeIDs": [
-        "hold_17_center_001"
-      ]
-    },
-    "pocket-18-center": {
-      "center": [
-        0.499913942,
-        0.180342894
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.538613613,
-          0.256992158
-        ],
-        "min": [
-          0.46121427,
-          0.10369363
-        ]
-      },
-      "nodeIDs": [
-        "hold_18_center_001"
-      ]
-    },
-    "pocket-4-left": {
-      "center": [
-        0.080526971,
-        0.61067579
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.131403593,
-          0.708119
-        ],
-        "min": [
-          0.029650349,
-          0.513232581
-        ]
-      },
-      "nodeIDs": [
-        "hold_04_left_001"
-      ]
-    },
-    "pocket-4-right": {
-      "center": [
-        0.919620555,
-        0.610606871
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.970888111,
-          0.708075772
-        ],
-        "min": [
-          0.868352998,
-          0.513137969
-        ]
-      },
-      "nodeIDs": [
-        "hold_04_right_001"
-      ]
-    },
-    "pocket-8-left": {
-      "center": [
-        0.158565156,
-        0.280807605
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.212520371,
-          0.379539251
-        ],
-        "min": [
-          0.104609941,
-          0.182075958
-        ]
-      },
-      "nodeIDs": [
-        "hold_08_left_001"
-      ]
-    },
-    "pocket-8-right": {
-      "center": [
-        0.841194327,
-        0.28081383
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.895165721,
-          0.379552206
-        ],
-        "min": [
-          0.787222932,
-          0.182075454
-        ]
-      },
-      "nodeIDs": [
-        "hold_08_right_001"
-      ]
-    },
-    "pocket-9-left": {
-      "center": [
-        0.275183458,
-        0.346394185
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.329645612,
-          0.436096058
-        ],
-        "min": [
-          0.220721304,
-          0.256692311
-        ]
-      },
-      "nodeIDs": [
-        "hold_09_left_001"
-      ]
-    },
-    "pocket-9-right": {
-      "center": [
-        0.724632544,
-        0.34639499
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.779026023,
-          0.436070752
-        ],
-        "min": [
-          0.670239065,
-          0.256719228
-        ]
-      },
-      "nodeIDs": [
-        "hold_09_right_001"
-      ]
-    },
-    "round-sloper-3-center": {
-      "center": [
-        0.500198643,
-        0.831205123
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.706020769,
-          0.878230834
-        ],
-        "min": [
-          0.294376516,
-          0.784179411
-        ]
-      },
-      "nodeIDs": [
-        "hold_03_left_001",
-        "hold_03_right_001"
-      ]
-    }
-  },
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "a1d2a2a5e0cc4cc955ecf9b25c47b049bd71d8c70b3b2269fa167b9defbe6d16",
   "modelBounds": {
-    "max": [
-      0.355496258,
-      0.222000003,
-      0.096268073
-    ],
     "min": [
-      -0.355495363,
-      8.381e-06,
-      -2.835e-06
+      -0.355500013,
+      -0.0,
+      -0.0
+    ],
+    "max": [
+      0.355500013,
+      0.222000003,
+      0.093999997
     ]
   },
-  "modelSHA256": "009a01ee856ea496cdf3b3e8fd182db034ccac15f864e80d51f1c34791d89106",
   "nodes": [
     {
-      "nodeID": "board_body_001",
+      "nodeID": "body_board_001",
       "role": "body"
     },
     {
-      "contactID": "jug-1-left",
-      "nodeID": "hold_01_left_001",
-      "role": "contact"
+      "nodeID": "contact_edge_11_left",
+      "role": "contact",
+      "contactID": "edge-11-left"
     },
     {
-      "contactID": "jug-1-right",
-      "nodeID": "hold_01_right_001",
-      "role": "contact"
+      "nodeID": "contact_edge_11_right",
+      "role": "contact",
+      "contactID": "edge-11-right"
     },
     {
-      "contactID": "flat-sloper-2-left",
-      "nodeID": "hold_02_left_001",
-      "role": "contact"
+      "nodeID": "contact_edge_5_left",
+      "role": "contact",
+      "contactID": "edge-5-left"
     },
     {
-      "contactID": "flat-sloper-2-right",
-      "nodeID": "hold_02_right_001",
-      "role": "contact"
+      "nodeID": "contact_edge_5_right",
+      "role": "contact",
+      "contactID": "edge-5-right"
     },
     {
-      "contactID": "round-sloper-3-center",
-      "nodeID": "hold_03_left_001",
-      "role": "contact"
+      "nodeID": "contact_edge_6_left",
+      "role": "contact",
+      "contactID": "edge-6-left"
     },
     {
-      "contactID": "round-sloper-3-center",
-      "nodeID": "hold_03_right_001",
-      "role": "contact"
+      "nodeID": "contact_edge_6_right",
+      "role": "contact",
+      "contactID": "edge-6-right"
     },
     {
-      "contactID": "pocket-4-left",
-      "nodeID": "hold_04_left_001",
-      "role": "contact"
+      "nodeID": "contact_edge_7_left",
+      "role": "contact",
+      "contactID": "edge-7-left"
     },
     {
-      "contactID": "pocket-4-right",
-      "nodeID": "hold_04_right_001",
-      "role": "contact"
+      "nodeID": "contact_edge_7_right",
+      "role": "contact",
+      "contactID": "edge-7-right"
     },
     {
-      "contactID": "edge-5-left",
-      "nodeID": "hold_05_left_001",
-      "role": "contact"
+      "nodeID": "contact_flat_sloper_2_left",
+      "role": "contact",
+      "contactID": "flat-sloper-2-left"
     },
     {
-      "contactID": "edge-5-right",
-      "nodeID": "hold_05_right_001",
-      "role": "contact"
+      "nodeID": "contact_flat_sloper_2_right",
+      "role": "contact",
+      "contactID": "flat-sloper-2-right"
     },
     {
-      "contactID": "edge-6-left",
-      "nodeID": "hold_06_left_001",
-      "role": "contact"
+      "nodeID": "contact_jug_14_center",
+      "role": "contact",
+      "contactID": "jug-14-center"
     },
     {
-      "contactID": "edge-6-right",
-      "nodeID": "hold_06_right_001",
-      "role": "contact"
+      "nodeID": "contact_jug_1_left",
+      "role": "contact",
+      "contactID": "jug-1-left"
     },
     {
-      "contactID": "edge-7-left",
-      "nodeID": "hold_07_left_001",
-      "role": "contact"
+      "nodeID": "contact_jug_1_right",
+      "role": "contact",
+      "contactID": "jug-1-right"
     },
     {
-      "contactID": "edge-7-right",
-      "nodeID": "hold_07_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_10_left",
+      "role": "contact",
+      "contactID": "pocket-10-left"
     },
     {
-      "contactID": "pocket-8-left",
-      "nodeID": "hold_08_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_10_right",
+      "role": "contact",
+      "contactID": "pocket-10-right"
     },
     {
-      "contactID": "pocket-8-right",
-      "nodeID": "hold_08_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_12_left",
+      "role": "contact",
+      "contactID": "pocket-12-left"
     },
     {
-      "contactID": "pocket-9-left",
-      "nodeID": "hold_09_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_12_right",
+      "role": "contact",
+      "contactID": "pocket-12-right"
     },
     {
-      "contactID": "pocket-9-right",
-      "nodeID": "hold_09_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_13_left",
+      "role": "contact",
+      "contactID": "pocket-13-left"
     },
     {
-      "contactID": "pocket-10-left",
-      "nodeID": "hold_10_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_13_right",
+      "role": "contact",
+      "contactID": "pocket-13-right"
     },
     {
-      "contactID": "pocket-10-right",
-      "nodeID": "hold_10_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_15_center",
+      "role": "contact",
+      "contactID": "pocket-15-center"
     },
     {
-      "contactID": "edge-11-left",
-      "nodeID": "hold_11_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_16_center",
+      "role": "contact",
+      "contactID": "pocket-16-center"
     },
     {
-      "contactID": "edge-11-right",
-      "nodeID": "hold_11_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_17_center",
+      "role": "contact",
+      "contactID": "pocket-17-center"
     },
     {
-      "contactID": "pocket-12-left",
-      "nodeID": "hold_12_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_18_center",
+      "role": "contact",
+      "contactID": "pocket-18-center"
     },
     {
-      "contactID": "pocket-12-right",
-      "nodeID": "hold_12_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_4_left",
+      "role": "contact",
+      "contactID": "pocket-4-left"
     },
     {
-      "contactID": "pocket-13-left",
-      "nodeID": "hold_13_left_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_4_right",
+      "role": "contact",
+      "contactID": "pocket-4-right"
     },
     {
-      "contactID": "pocket-13-right",
-      "nodeID": "hold_13_right_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_8_left",
+      "role": "contact",
+      "contactID": "pocket-8-left"
     },
     {
-      "contactID": "jug-14-center",
-      "nodeID": "hold_14_center_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_8_right",
+      "role": "contact",
+      "contactID": "pocket-8-right"
     },
     {
-      "contactID": "pocket-15-center",
-      "nodeID": "hold_15_center_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_9_left",
+      "role": "contact",
+      "contactID": "pocket-9-left"
     },
     {
-      "contactID": "pocket-16-center",
-      "nodeID": "hold_16_center_001",
-      "role": "contact"
+      "nodeID": "contact_pocket_9_right",
+      "role": "contact",
+      "contactID": "pocket-9-right"
     },
     {
-      "contactID": "pocket-17-center",
-      "nodeID": "hold_17_center_001",
-      "role": "contact"
-    },
-    {
-      "contactID": "pocket-18-center",
-      "nodeID": "hold_18_center_001",
-      "role": "contact"
+      "nodeID": "contact_round_sloper_3_center",
+      "role": "contact",
+      "contactID": "round-sloper-3-center"
     }
   ],
-  "schemaVersion": 1
+  "contacts": {
+    "edge-11-left": {
+      "nodeIDs": [
+        "contact_edge_11_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.180538879,
+          0.057718657
+        ],
+        "max": [
+          0.276563656,
+          0.185525932
+        ]
+      },
+      "center": [
+        0.228551267,
+        0.121622295
+      ]
+    },
+    "edge-11-right": {
+      "nodeIDs": [
+        "contact_edge_11_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.723436638,
+          0.057718296
+        ],
+        "max": [
+          0.819460681,
+          0.185524589
+        ]
+      },
+      "center": [
+        0.77144866,
+        0.121621442
+      ]
+    },
+    "edge-5-left": {
+      "nodeIDs": [
+        "contact_edge_5_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.064524289,
+          0.359329785
+        ],
+        "max": [
+          0.175982079,
+          0.534233572
+        ]
+      },
+      "center": [
+        0.120253184,
+        0.446781679
+      ]
+    },
+    "edge-5-right": {
+      "nodeIDs": [
+        "contact_edge_5_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.824017921,
+          0.359329785
+        ],
+        "max": [
+          0.935475711,
+          0.534233572
+        ]
+      },
+      "center": [
+        0.879746816,
+        0.446781679
+      ]
+    },
+    "edge-6-left": {
+      "nodeIDs": [
+        "contact_edge_6_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.195073421,
+          0.432876277
+        ],
+        "max": [
+          0.304221174,
+          0.585136978
+        ]
+      },
+      "center": [
+        0.249647297,
+        0.509006628
+      ]
+    },
+    "edge-6-right": {
+      "nodeIDs": [
+        "contact_edge_6_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.695776563,
+          0.432875975
+        ],
+        "max": [
+          0.804925888,
+          0.585141609
+        ]
+      },
+      "center": [
+        0.750351225,
+        0.509008792
+      ]
+    },
+    "edge-7-left": {
+      "nodeIDs": [
+        "contact_edge_7_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.319549355,
+          0.487767624
+        ],
+        "max": [
+          0.427286229,
+          0.621336194
+        ]
+      },
+      "center": [
+        0.373417792,
+        0.554551909
+      ]
+    },
+    "edge-7-right": {
+      "nodeIDs": [
+        "contact_edge_7_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.572713913,
+          0.487767657
+        ],
+        "max": [
+          0.680450645,
+          0.621335992
+        ]
+      },
+      "center": [
+        0.626582279,
+        0.554551825
+      ]
+    },
+    "flat-sloper-2-left": {
+      "nodeIDs": [
+        "contact_flat_sloper_2_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.137130834,
+          0.691441458
+        ],
+        "max": [
+          0.29184248,
+          0.801801805
+        ]
+      },
+      "center": [
+        0.214486657,
+        0.746621632
+      ]
+    },
+    "flat-sloper-2-right": {
+      "nodeIDs": [
+        "contact_flat_sloper_2_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.70815752,
+          0.691441458
+        ],
+        "max": [
+          0.862869166,
+          0.801801805
+        ]
+      },
+      "center": [
+        0.785513343,
+        0.746621632
+      ]
+    },
+    "jug-1-left": {
+      "nodeIDs": [
+        "contact_jug_1_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.0019566,
+          0.617117084
+        ],
+        "max": [
+          0.137130834,
+          0.813185823
+        ]
+      },
+      "center": [
+        0.069543717,
+        0.715151453
+      ]
+    },
+    "jug-1-right": {
+      "nodeIDs": [
+        "contact_jug_1_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.862869166,
+          0.617117084
+        ],
+        "max": [
+          0.9980434,
+          0.813184077
+        ]
+      },
+      "center": [
+        0.930456283,
+        0.715150581
+      ]
+    },
+    "jug-14-center": {
+      "nodeIDs": [
+        "contact_jug_14_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.433895926,
+          0.84234236
+        ],
+        "max": [
+          0.566104074,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.92117118
+      ]
+    },
+    "pocket-10-left": {
+      "nodeIDs": [
+        "contact_pocket_10_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.344407299,
+          0.324981367
+        ],
+        "max": [
+          0.422119388,
+          0.432506366
+        ]
+      },
+      "center": [
+        0.383263344,
+        0.378743867
+      ]
+    },
+    "pocket-10-right": {
+      "nodeIDs": [
+        "contact_pocket_10_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.577882394,
+          0.324982508
+        ],
+        "max": [
+          0.655592565,
+          0.432507507
+        ]
+      },
+      "center": [
+        0.61673748,
+        0.378745008
+      ]
+    },
+    "pocket-12-left": {
+      "nodeIDs": [
+        "contact_pocket_12_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.297892812,
+          0.123026074
+        ],
+        "max": [
+          0.35330282,
+          0.229305996
+        ]
+      },
+      "center": [
+        0.325597816,
+        0.176166035
+      ]
+    },
+    "pocket-12-right": {
+      "nodeIDs": [
+        "contact_pocket_12_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.646697389,
+          0.123026074
+        ],
+        "max": [
+          0.702107104,
+          0.229308362
+        ]
+      },
+      "center": [
+        0.674402246,
+        0.176167218
+      ]
+    },
+    "pocket-13-left": {
+      "nodeIDs": [
+        "contact_pocket_13_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.377474379,
+          0.148323304
+        ],
+        "max": [
+          0.431245788,
+          0.254657855
+        ]
+      },
+      "center": [
+        0.404360084,
+        0.201490579
+      ]
+    },
+    "pocket-13-right": {
+      "nodeIDs": [
+        "contact_pocket_13_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.568754254,
+          0.148323304
+        ],
+        "max": [
+          0.622525621,
+          0.254659264
+        ]
+      },
+      "center": [
+        0.595639937,
+        0.201491284
+      ]
+    },
+    "pocket-15-center": {
+      "nodeIDs": [
+        "contact_pocket_15_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.457102673,
+          0.709459445
+        ],
+        "max": [
+          0.542897327,
+          0.813063056
+        ]
+      },
+      "center": [
+        0.5,
+        0.761261251
+      ]
+    },
+    "pocket-16-center": {
+      "nodeIDs": [
+        "contact_pocket_16_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.460618847,
+          0.49324323
+        ],
+        "max": [
+          0.539381153,
+          0.597776854
+        ]
+      },
+      "center": [
+        0.5,
+        0.545510042
+      ]
+    },
+    "pocket-17-center": {
+      "nodeIDs": [
+        "contact_pocket_17_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.462728553,
+          0.306306319
+        ],
+        "max": [
+          0.537271447,
+          0.407923377
+        ]
+      },
+      "center": [
+        0.5,
+        0.357114848
+      ]
+    },
+    "pocket-18-center": {
+      "nodeIDs": [
+        "contact_pocket_18_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.466244727,
+          0.123873872
+        ],
+        "max": [
+          0.533755273,
+          0.2196583
+        ]
+      },
+      "center": [
+        0.5,
+        0.171766086
+      ]
+    },
+    "pocket-4-left": {
+      "nodeIDs": [
+        "contact_pocket_4_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.04565636,
+          0.558472055
+        ],
+        "max": [
+          0.130153318,
+          0.693779732
+        ]
+      },
+      "center": [
+        0.087904839,
+        0.626125894
+      ]
+    },
+    "pocket-4-right": {
+      "nodeIDs": [
+        "contact_pocket_4_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.869847436,
+          0.558474136
+        ],
+        "max": [
+          0.954344395,
+          0.693778121
+        ]
+      },
+      "center": [
+        0.912095916,
+        0.626126128
+      ]
+    },
+    "pocket-8-left": {
+      "nodeIDs": [
+        "contact_pocket_8_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.118848975,
+          0.191960146
+        ],
+        "max": [
+          0.203232194,
+          0.330561751
+        ]
+      },
+      "center": [
+        0.161040585,
+        0.261260949
+      ]
+    },
+    "pocket-8-right": {
+      "nodeIDs": [
+        "contact_pocket_8_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.796767366,
+          0.191960397
+        ],
+        "max": [
+          0.881151193,
+          0.330562187
+        ]
+      },
+      "center": [
+        0.83895928,
+        0.261261292
+      ]
+    },
+    "pocket-9-left": {
+      "nodeIDs": [
+        "contact_pocket_9_left"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.230466297,
+          0.268163693
+        ],
+        "max": [
+          0.313837515,
+          0.393873764
+        ]
+      },
+      "center": [
+        0.272151906,
+        0.331018729
+      ]
+    },
+    "pocket-9-right": {
+      "nodeIDs": [
+        "contact_pocket_9_right"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.68616217,
+          0.268162653
+        ],
+        "max": [
+          0.769534017,
+          0.393871951
+        ]
+      },
+      "center": [
+        0.727848094,
+        0.331017302
+      ]
+    },
+    "round-sloper-3-center": {
+      "nodeIDs": [
+        "contact_round_sloper_3_center"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.29184248,
+          0.725225209
+        ],
+        "max": [
+          0.70815752,
+          0.846846807
+        ]
+      },
+      "center": [
+        0.5,
+        0.786036008
+      ]
+    }
+  }
 }

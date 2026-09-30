@@ -1,0 +1,169 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2",
+  "modelBounds": {
+    "min": [
+      -0.234999999,
+      -0.02,
+      -0.02
+    ],
+    "max": [
+      0.234999999,
+      0.02,
+      0.02
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "yy_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "yy_edge_10",
+      "role": "contact",
+      "contactID": "edge-10"
+    },
+    {
+      "nodeID": "yy_edge_15",
+      "role": "contact",
+      "contactID": "edge-15"
+    },
+    {
+      "nodeID": "yy_edge_20",
+      "role": "contact",
+      "contactID": "edge-20"
+    },
+    {
+      "nodeID": "yy_edge_25",
+      "role": "contact",
+      "contactID": "edge-25"
+    },
+    {
+      "nodeID": "yy_edge_30",
+      "role": "contact",
+      "contactID": "edge-30"
+    },
+    {
+      "nodeID": "yy_tray",
+      "role": "contact",
+      "contactID": "tray"
+    }
+  ],
+  "contacts": {
+    "edge-10": {
+      "nodeIDs": [
+        "yy_edge_10"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.082978733,
+          0.199999991
+        ],
+        "max": [
+          0.917021267,
+          0.800000009
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "edge-15": {
+      "nodeIDs": [
+        "yy_edge_15"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.253191496,
+          0.199999991
+        ],
+        "max": [
+          0.746808504,
+          0.800000009
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "edge-20": {
+      "nodeIDs": [
+        "yy_edge_20"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.234042553,
+          0.199999991
+        ],
+        "max": [
+          0.765957447,
+          0.800000009
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "edge-25": {
+      "nodeIDs": [
+        "yy_edge_25"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.065957454,
+          0.199999991
+        ],
+        "max": [
+          0.934042546,
+          0.800000009
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "edge-30": {
+      "nodeIDs": [
+        "yy_edge_30"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.424468082,
+          0.199999991
+        ],
+        "max": [
+          0.575531918,
+          0.800000009
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "tray": {
+      "nodeIDs": [
+        "yy_tray"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.027659567,
+          0.949999991
+        ],
+        "max": [
+          0.972340433,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.974999995
+      ]
+    }
+  }
+}

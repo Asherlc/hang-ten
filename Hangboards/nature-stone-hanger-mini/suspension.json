@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "nature_body",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.2,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      },
+      {
+        "id": "left-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.2,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows one exposed vertical lead seated in this end groove. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      },
+      {
+        "id": "right-cross-return",
+        "kind": "segment",
+        "restLength": 0.04,
+        "radius": 0.001,
+        "material": "matteCord",
+        "provenance": "Retained side view shows the transverse exterior return between the two cross-groove intersections. The route stops there; no concealed connection is asserted. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [
+        0,
+        0.1,
+        0
+      ],
+      "visibility": "invisible",
+      "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+    },
+    "canonicalPoses": {
+      "front-upright": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          -0.062643076,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [
+              -0.049468897,
+              0.027199461,
+              0.00625
+            ],
+            [
+              -0.049499199,
+              0.026931528,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.0
+            ],
+            [
+              -0.05,
+              0.0,
+              -0.00625
+            ]
+          ],
+          "right-lead": [
+            [
+              0.04946894,
+              0.027199425,
+              0.00625
+            ],
+            [
+              0.049499245,
+              0.026931479,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.0
+            ],
+            [
+              0.05,
+              0.0,
+              -0.00625
+            ]
+          ]
+        }
+      },
+      "wood-inverted": {
+        "rotation": [
+          0,
+          0,
+          1,
+          0
+        ],
+        "translation": [
+          0,
+          -0.062642874,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [
+              -0.049468897,
+              -0.027199461,
+              0.00625
+            ],
+            [
+              -0.049499199,
+              -0.026931528,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.0
+            ],
+            [
+              -0.05,
+              0.0,
+              -0.00625
+            ]
+          ],
+          "right-lead": [
+            [
+              0.049469838,
+              -0.027198305,
+              0.00625
+            ],
+            [
+              0.04950014,
+              -0.026930332,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.0
+            ],
+            [
+              0.05,
+              0.0,
+              -0.00625
+            ]
+          ]
+        }
+      },
+      "pinch-side": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [
+          0,
+          -0.062643076,
+          0
+        ],
+        "camera": {
+          "viewDirection": [
+            0,
+            -0.3,
+            -1
+          ],
+          "fitPadding": 0.12
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [
+              -0.049468897,
+              0.027199461,
+              0.00625
+            ],
+            [
+              -0.049499199,
+              0.026931528,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "left-cross-return": [
+            [
+              -0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              -0.05,
+              0.0,
+              0.0
+            ],
+            [
+              -0.05,
+              0.0,
+              -0.00625
+            ]
+          ],
+          "right-lead": [
+            [
+              0.04946894,
+              0.027199425,
+              0.00625
+            ],
+            [
+              0.049499245,
+              0.026931479,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.00625
+            ]
+          ],
+          "right-cross-return": [
+            [
+              0.05,
+              0.0,
+              0.00625
+            ],
+            [
+              0.05,
+              0.0,
+              0.0
+            ],
+            [
+              0.05,
+              0.0,
+              -0.00625
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "left-cross-return": {
+        "points": [
+          [
+            -0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            -0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      },
+      "right-lead": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          0,
+          1
+        ]
+      },
+      "right-cross-return": {
+        "points": [
+          [
+            0.05,
+            0.0,
+            0.00625
+          ],
+          [
+            0.05,
+            0.0,
+            -0.00625
+          ]
+        ],
+        "planeNormal": [
+          0,
+          1,
+          0
+        ]
+      }
+    },
+    "supportDirection": 1
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "nativeSource": "Hangboards/yy-baguette/yy-baguette.FCStd",
+  "nativeFrame": "mm; x right, y depth (front negative), z up",
+  "runtimeFrame": "metres; x=native x/1000, y=native z/1000, z=-native y/1000",
+  "solidFeature": "RightBottomGrooveCut",
+  "attachmentNodeID": "yy_body",
+  "evidencedGraph": "External cord wraps around both end groove bands; observed front/rear leads. No internal bores.",
+  "nativeFeatures": {
+    "endGrooveBands": [
+      {
+        "centerX": -220,
+        "widthMM": 4,
+        "nominalOuterY": [
+          -20,
+          20
+        ],
+        "nominalOuterZ": [
+          -20,
+          20
+        ],
+        "grooveDepthMM": 1.5
+      },
+      {
+        "centerX": 220,
+        "widthMM": 4,
+        "nominalOuterY": [
+          -20,
+          20
+        ],
+        "nominalOuterZ": [
+          -20,
+          20
+        ],
+        "grooveDepthMM": 1.5
+      }
+    ],
+    "nativeGrooveNames": [
+      "LeftFrontGrooveCut",
+      "LeftBackGrooveCut",
+      "LeftTopGrooveCut",
+      "LeftBottomGrooveCut",
+      "RightFrontGrooveCut",
+      "RightBackGrooveCut",
+      "RightTopGrooveCut",
+      "RightBottomGrooveCut"
+    ]
+  },
+  "positions": [
+    {
+      "id": "front-20-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "reverse-10-15-30",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-15",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "tray"
+      ]
+    }
+  ],
+  "notes": "Front20/25 versus reverse10/15/30. Tray outer top. All fixed cord returns remain exterior; sample native end section rather than a rectangular route through wood.",
+  "sourceRegister": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/sources.json",
+  "sourceSHA256": "10aa957bda4790fff4dc119b1eddf2178eb78a4f33daf71fd0a488fdae76eb57",
+  "modelSHA256ByPresentation": {
+    "primary": "04163ebf2f9bebc354f340d893c1c2c285269d7a8b0e3bae834d97fc6acee5a2"
+  }
+}

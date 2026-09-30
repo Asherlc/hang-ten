@@ -1,0 +1,380 @@
+{
+  "schemaVersion": 2,
+  "entries": [
+    {
+      "presentationID": "depth-18mm",
+      "modelSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [
+            0,
+            -0.15,
+            0
+          ],
+          "visibility": "invisible",
+          "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+        },
+        "canonicalPoses": {
+          "depth-18mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [
+              0,
+              0.068968462,
+              0
+            ],
+            "camera": {
+              "viewDirection": [
+                0,
+                0.3,
+                -1
+              ],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [
+                  -0.052032535,
+                  -0.040841904,
+                  0.012
+                ],
+                [
+                  -0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  -0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  -0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  0.052032535,
+                  -0.040841904,
+                  0.012
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [
+                -0.0525,
+                -0.031,
+                0.012
+              ],
+              [
+                0.0525,
+                -0.031,
+                0.012
+              ]
+            ],
+            "planeNormal": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "supportDirection": -1
+      }
+    },
+    {
+      "presentationID": "depth-15mm",
+      "modelSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [
+            0,
+            -0.15,
+            0
+          ],
+          "visibility": "invisible",
+          "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+        },
+        "canonicalPoses": {
+          "depth-15mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [
+              0,
+              0.068968462,
+              0
+            ],
+            "camera": {
+              "viewDirection": [
+                0,
+                0.3,
+                -1
+              ],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [
+                  -0.052032535,
+                  -0.040841904,
+                  0.012
+                ],
+                [
+                  -0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  -0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  -0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  0.052032535,
+                  -0.040841904,
+                  0.012
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [
+                -0.0525,
+                -0.031,
+                0.012
+              ],
+              [
+                0.0525,
+                -0.031,
+                0.012
+              ]
+            ],
+            "planeNormal": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "supportDirection": -1
+      }
+    },
+    {
+      "presentationID": "depth-10mm",
+      "modelSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "suspension": {
+        "type": "cadRoutedCord",
+        "bodyNodeID": "plateau_body",
+        "strands": [
+          {
+            "id": "curl-loop",
+            "kind": "loop",
+            "restLength": 0.42,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Retained front and oblique views show one loop through the exposed ends of the open C curl and an exterior return below the board. Length and radius are display estimates; route and settled height come from native CAD collision solving."
+          }
+        ],
+        "anchor": {
+          "offsetFromBoardBounds": [
+            0,
+            -0.15,
+            0
+          ],
+          "visibility": "invisible",
+          "provenance": "Display support location only. Source-visible route graph retained; native solver derives clearance and settled height."
+        },
+        "canonicalPoses": {
+          "depth-10mm": {
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "translation": [
+              0,
+              0.068968462,
+              0
+            ],
+            "camera": {
+              "viewDirection": [
+                0,
+                0.3,
+                -1
+              ],
+              "fitPadding": 0.12
+            },
+            "wrappedRoutes": {
+              "curl-loop": [
+                [
+                  -0.052032535,
+                  -0.040841904,
+                  0.012
+                ],
+                [
+                  -0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  -0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  -0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0525,
+                  -0.031,
+                  0.012
+                ],
+                [
+                  0.0522,
+                  -0.04,
+                  0.012
+                ],
+                [
+                  0.052157728,
+                  -0.040429199,
+                  0.012
+                ],
+                [
+                  0.052032535,
+                  -0.040841904,
+                  0.012
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "ropeSolver": {
+        "method": "nativeRoutes",
+        "clearance": 0.0002,
+        "terminalsByStrandID": {
+          "curl-loop": {
+            "points": [
+              [
+                -0.0525,
+                -0.031,
+                0.012
+              ],
+              [
+                0.0525,
+                -0.031,
+                0.012
+              ]
+            ],
+            "planeNormal": [
+              0,
+              0,
+              1
+            ]
+          }
+        },
+        "supportDirection": -1
+      }
+    }
+  ]
+}

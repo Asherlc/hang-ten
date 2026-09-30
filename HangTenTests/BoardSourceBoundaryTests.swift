@@ -288,6 +288,14 @@ final class BoardSourceBoundaryTests: XCTestCase {
         let packagePaths = try discoveredPackagePaths(at: repositoryRoot)
         let hangboardsURL = repositoryRoot.appendingPathComponent("Hangboards", isDirectory: true)
         let migratedModelBoardIDs: Set<String> = [
+            "aelith.cyclops-011",
+            "frictitious.nug",
+            "frictitious.port-a-board",
+            "nature.stone-hanger-mini",
+            "nature.stone-hanger-mini-karma8a",
+            "plateau.lifting-edge",
+            "yy.baguette",
+            "yy.travelboard",
             "frictitious.doormount-pro-7",
             "frictitious.megalith",
             "trango.rock-prodigy-forge",
@@ -450,12 +458,16 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     logicalHoldIDs,
                     "Original raster media must cover every logical hold exactly once."
                 )
-            case .model(let media):
+            case .model:
                 XCTAssertTrue(
                     migratedModelBoardIDs.contains(board.id),
                     "Only migrated boards may use model media."
                 )
-                XCTAssertEqual(assetPaths, Set([media.assetPath, media.descriptorPath]))
+                let modelAssets = Set(board.presentations.flatMap { presentation -> [String] in
+                    guard case .model(let model) = presentation.media else { return [] }
+                    return [model.assetPath, model.descriptorPath]
+                })
+                XCTAssertEqual(assetPaths, modelAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {
@@ -468,9 +480,11 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 XCTAssertTrue(holds.allSatisfy {
                     $0["geometry"] == nil && $0["presentationID"] == nil
                 })
-                XCTAssertEqual(Set(media.descriptor.contacts.keys), Set(holds.compactMap {
-                    $0["id"] as? String
-                }))
+                for presentation in board.presentations {
+                    guard case .model(let media) = presentation.media else { continue }
+                    XCTAssertEqual(Set(media.descriptor.contacts.keys),
+                                   Set(board.contacts(in: presentation).map(\.id)), presentation.id)
+                }
             }
         }
     }

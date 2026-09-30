@@ -508,6 +508,28 @@ performance. Those remain open.
 
 ## Tests
 
+Native packages can declare several model presentations when a real accessory
+changes the solid. Tag each bound feature with `HangTenPresentationID`, keep
+each presentation's asset/descriptor names unique in the embedded manifest,
+and compile it with `--presentation <id>`. Untagged legacy features belong to
+the document's default presentation. `prepare_assets.py` and
+`verify_reproducible.py` cover every declared asset pair. Plateau uses this for
+its 18/15/10 mm spacer configurations while retaining one physical contact ID;
+position `effectiveDepths` records each actual configured depth.
+
+For a stepped lip where an axis-aligned region extent is not grip depth, a
+contact feature may carry both native-millimetre vector properties
+`HangTenGripDepthStart` and `HangTenGripDepthEnd`. Both must lie on its native
+contact shape within 0.25 mm; their distance is the depth witness. Audit the
+specific lip and floor used, and bind the witnesses to native dimensions when
+they can change. An incomplete pair fails compilation.
+
+`HangTenUseBodyTriangles = true` is available only on a native
+`PartDesign::SubShapeBinder` contact. It exports that contact's already-validated
+assigned body triangles to share an exact seam, rather than independently
+tessellating the same curved face. It does not bypass native source, depth,
+face-membership, contact-partition or material validation.
+
     python -m pytest Tools/HangboardCAD/tests -q   # in a venv with Tools/HangboardPackages[dev], numpy, usd-core==26.8
 
 * `test_contract.py` — archive preflight (`cad_source.inspect_archive`):

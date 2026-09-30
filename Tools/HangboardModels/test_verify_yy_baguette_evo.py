@@ -19,7 +19,8 @@ class VerifyYYBaguetteEvoTests(unittest.TestCase):
     def test_expected_inventory_is_the_current_ordered_contact_inventory(self) -> None:
         verifier = self.module()
         root = Path(__file__).resolve().parents[2]
-        board = json.loads((root / "Hangboards/yy-baguette-evo/board.json").read_text())
+        from hangboard_packages.cad_source import load_board
+        board = load_board(root / "Hangboards/yy-baguette-evo/yy-baguette-evo.FCStd")
         self.assertEqual(
             verifier.EXPECTED_CONTACT_IDS,
             tuple(item["id"] for item in board["contacts"]),

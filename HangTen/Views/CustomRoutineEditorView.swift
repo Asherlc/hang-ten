@@ -387,6 +387,7 @@ private struct CustomRoutineStepEditor: View {
                 BoardMapView(
                     board: board,
                     highlightedHoldIDs: selectedHoldIDs,
+                    selectedPresentationID: CustomRoutineBoardPreview.presentationID(for: step, on: board),
                     activeHoldID: activeHoldID,
                     onHoldTap: toggleHold
                 )
@@ -563,33 +564,7 @@ private struct CustomRoutineStepEditor: View {
 
     private func toggleHold(_ hold: PhysicalContact) {
         activeHoldID = hold.id
-        var holdIDs = selectedHoldIDs
-        if !holdIDs.insert(hold.id).inserted {
-            holdIDs.remove(hold.id)
-        }
-        guard !holdIDs.isEmpty else {
-            step.targets = []
-            return
-        }
-        let selectedContacts = board.contacts.filter { holdIDs.contains($0.id) }
-        guard let contact = selectedContacts.first else {
-            step.targets = []
-            return
-        }
-        let selection: ContactSelectionPolicy = step.handUse == .double
-            ? .bilateralPair
-            : .single
-        step.targets = [
-            ContactRequirement(
-                contactID: step.handUse == .single ? contact.id : nil,
-                kind: contact.kind,
-                shape: contact.shape,
-                depth: contact.depth,
-                fingerCapacity: contact.fingerCapacity,
-                handCapacity: contact.handCapacity,
-                selection: selection
-            )
-        ]
+        CustomRoutineBoardPreview.toggle(hold, in: &step, on: board)
     }
 }
 

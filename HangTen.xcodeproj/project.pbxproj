@@ -154,6 +154,14 @@
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
 		D1000000000000000000002E /* tension-grindstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002E /* tension-grindstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone", ); }; };
 		D10000000000000000000031 /* tension-whetstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000031 /* tension-whetstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-whetstone", ); }; };
+		D10000000000000000000039 /* yy-travelboard Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000039 /* yy-travelboard Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-travelboard", ); }; };
+		D10000000000000000000038 /* yy-baguette Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000038 /* yy-baguette Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette", ); }; };
+		D10000000000000000000037 /* plateau-lifting-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000037 /* plateau-lifting-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-plateau-lifting-edge", ); }; };
+		D10000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger-mini-karma8a", ); }; };
+		D10000000000000000000035 /* nature-stone-hanger-mini Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger-mini", ); }; };
+		D10000000000000000000034 /* frictitious-port-a-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000034 /* frictitious-port-a-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-port-a-board", ); }; };
+		D10000000000000000000033 /* frictitious-nug Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000033 /* frictitious-nug Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-frictitious-nug", ); }; };
+		D10000000000000000000032 /* aelith-cyclops-011 Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000032 /* aelith-cyclops-011 Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-aelith-cyclops-011", ); }; };
 		D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002F /* tension-grindstone-pro Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-pro", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
@@ -365,6 +373,14 @@
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002E /* tension-grindstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone/Hangboards"; sourceTree = "<absolute>"; };
 		D20000000000000000000031 /* tension-whetstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-whetstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-whetstone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000039 /* yy-travelboard Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-travelboard Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-travelboard/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000038 /* yy-baguette Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000037 /* plateau-lifting-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "plateau-lifting-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/plateau-lifting-edge/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger-mini-karma8a Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger-mini-karma8a/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger-mini Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger-mini/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000034 /* frictitious-port-a-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-port-a-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-port-a-board/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000033 /* frictitious-nug Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "frictitious-nug Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/frictitious-nug/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000032 /* aelith-cyclops-011 Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "aelith-cyclops-011 Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/aelith-cyclops-011/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002F /* tension-grindstone-pro Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-pro Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-pro/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
@@ -475,6 +491,14 @@
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
 				D2000000000000000000002E /* tension-grindstone Hangboards */,
 				D20000000000000000000031 /* tension-whetstone Hangboards */,
+				D20000000000000000000039 /* yy-travelboard Hangboards */,
+				D20000000000000000000038 /* yy-baguette Hangboards */,
+				D20000000000000000000037 /* plateau-lifting-edge Hangboards */,
+				D20000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards */,
+				D20000000000000000000035 /* nature-stone-hanger-mini Hangboards */,
+				D20000000000000000000034 /* frictitious-port-a-board Hangboards */,
+				D20000000000000000000033 /* frictitious-nug Hangboards */,
+				D20000000000000000000032 /* aelith-cyclops-011 Hangboards */,
 				D2000000000000000000002F /* tension-grindstone-pro Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
@@ -829,6 +853,14 @@
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
 				D1000000000000000000002E /* tension-grindstone Hangboards in Resources */,
 				D10000000000000000000031 /* tension-whetstone Hangboards in Resources */,
+				D10000000000000000000039 /* yy-travelboard Hangboards in Resources */,
+				D10000000000000000000038 /* yy-baguette Hangboards in Resources */,
+				D10000000000000000000037 /* plateau-lifting-edge Hangboards in Resources */,
+				D10000000000000000000036 /* nature-stone-hanger-mini-karma8a Hangboards in Resources */,
+				D10000000000000000000035 /* nature-stone-hanger-mini Hangboards in Resources */,
+				D10000000000000000000034 /* frictitious-port-a-board Hangboards in Resources */,
+				D10000000000000000000033 /* frictitious-nug Hangboards in Resources */,
+				D10000000000000000000032 /* aelith-cyclops-011 Hangboards in Resources */,
 				D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
@@ -853,7 +885,6 @@
 				D10000000000000000000025 /* frictitious-megalith Hangboards in Resources */,
 				D10000000000000000000027 /* trango-rock-prodigy-natural Hangboards in Resources */,
 				D10000000000000000000026 /* trango-rock-prodigy-forge Hangboards in Resources */,
-				D10000000000000000000022 /* zlagboard-evo Hangboards in Resources */,
 				D10000000000000000000028 /* crimptonite-helium-mobile Hangboards in Resources */,
 				D10000000000000000000029 /* metolius-light-rail-2 Hangboards in Resources */,
 				D1000000000000000000002A /* metolius-rock-rings-3d Hangboards in Resources */,

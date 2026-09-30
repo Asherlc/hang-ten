@@ -122,11 +122,13 @@ def _document_properties(document) -> dict:
     return {name: document.getPropertyByName(name) for name in DOCUMENT_PROPERTIES}
 
 
-def _bound_objects(document) -> list:
+def _bound_objects(document, presentation_id: str | None = None) -> list:
     return [
         obj
         for obj in document.Objects
         if "NodeID" in obj.PropertiesList and getattr(obj, "NodeID", "")
+        and (presentation_id is None or
+             (getattr(obj, "HangTenPresentationID", "") or document.HangTenPresentationID) == presentation_id)
     ]
 
 
@@ -544,7 +546,7 @@ def _validate_partition(body_points, body_facets, triangles_by_node, region_surf
             )
 
 
-def _declared_depths(board, version: int) -> dict:
+def _declared_depths(board, version: int, presentation_id: str | None = None) -> dict:
     """Published grip depth keyed by region identity (contact id or slot id).
 
     v1 names a physical contact directly; v2 names a reusable slot that each
@@ -553,18 +555,29 @@ def _declared_depths(board, version: int) -> dict:
     must fail rather than silently pick one.
     """
     declared: dict[str, float] = {}
+    effective = {}
+    if presentation_id is not None:
+        for position in board.get("positions", []):
+            if position.get("presentationID") != presentation_id:
+                continue
+            for contact_id, depth in position.get("effectiveDepths", {}).items():
+                if contact_id in effective and effective[contact_id] != depth:
+                    raise BuildError(f"contact {contact_id} declares conflicting configured depths")
+                effective[contact_id] = depth
     if version == 1:
         for contact in board.get("contacts", []):
-            span = ((contact.get("depth") or {}).get("range") or {})
+            span = ((effective.get(contact["id"], contact.get("depth")) or {}).get("range") or {})
             low, high = span.get("minimum"), span.get("maximum")
             if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
                 declared[contact["id"]] = float(low)
         return declared
     by_id = {contact["id"]: contact for contact in board.get("contacts", [])}
     for presentation in board.get("presentations", []):
+        if presentation_id is not None and presentation.get("id") != presentation_id:
+            continue
         for instance in presentation.get("media", {}).get("instances", []):
             for slot, contact_id in instance.get("contactIDsBySlotID", {}).items():
-                span = ((by_id.get(contact_id) or {}).get("depth") or {}).get("range") or {}
+                span = (effective.get(contact_id, (by_id.get(contact_id) or {}).get("depth")) or {}).get("range") or {}
                 low, high = span.get("minimum"), span.get("maximum")
                 if isinstance(low, (int, float)) and isinstance(high, (int, float)) and low == high:
                     if slot in declared and abs(declared[slot] - low) > 1e-6:
@@ -594,7 +607,20 @@ def _validate_published_depths(
         axis = str(getattr(obj, "HangTenDepthAxis", "y")).lower()
         if axis not in {"x", "y", "z"}:
             raise BuildError(f"{key} has invalid HangTenDepthAxis {axis!r}")
-        measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
+        witness_names = {"HangTenGripDepthStart", "HangTenGripDepthEnd"}
+        authored_witnesses = witness_names & set(obj.PropertiesList)
+        if authored_witnesses:
+            if authored_witnesses != witness_names:
+                raise BuildError(f"{key} grip-depth witness requires both native lip and floor points")
+            import Part
+            points = [getattr(obj, name) for name in sorted(witness_names)]
+            if any(not math.isfinite(value) for point in points for value in (point.x, point.y, point.z)):
+                raise BuildError(f"{key} grip-depth witness must be finite")
+            if any(obj.Shape.distToShape(Part.Vertex(point))[0] > 0.25 for point in points):
+                raise BuildError(f"{key} grip-depth witness must lie on the native contact surface")
+            measured[key] = round(float((points[1] - points[0]).Length), 3)
+        else:
+            measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
@@ -644,6 +670,7 @@ def build(
     out_dir: Path,
     publish: bool,
     allow_faceted_import: bool = False,
+    presentation_id: str | None = None,
 ) -> dict:
     board, board_origin = load_board(source, board_path)
     if not isinstance(board, dict) or board.get("schemaVersion") != 3:
@@ -683,6 +710,15 @@ def build(
         raise BuildError("source HangTenBoardID does not match board.json id")
     if properties["HangTenPresentationID"] not in presentations:
         raise BuildError("source HangTenPresentationID is not a declared presentation")
+    presentation_id = presentation_id or properties["HangTenPresentationID"]
+    from presentation_targets import model_targets
+    try:
+        targets = model_targets(board)
+    except ValueError as error:
+        raise BuildError(str(error)) from error
+    if presentation_id not in targets:
+        raise BuildError("selected presentation is not a declared model presentation")
+    asset_name, descriptor_name = targets[presentation_id]
     if properties["HangTenCoordinateFrame"] != "freecad-mm-z-up-front-negative-y":
         raise BuildError("source declares an unexpected coordinate frame")
     if properties["HangTenSourceKind"] not in {SOURCE_KIND_NATIVE, SOURCE_KIND_FACETED}:
@@ -698,7 +734,7 @@ def build(
         raise BuildError("source tessellation deflection is out of range")
 
     print("[3/10] extracting bound components and semantic regions")
-    objects = _bound_objects(document)
+    objects = _bound_objects(document, presentation_id)
     if not objects:
         raise BuildError("source declares no bound nodes")
     version = int(properties["HangTenSchemaVersion"])
@@ -784,11 +820,22 @@ def build(
         print(f"      {body_object.NodeID}: {len(body_indices)} triangles, role={body_object.NodeRole}")
 
         region_surface_areas = {}
-        for obj in region_objects:
+        for region_index, obj in enumerate(region_objects):
             # Each region object's own CAD surface is its exported mesh — the CAD is
             # the source of truth for hold geometry. The body was partitioned around
             # the same surface, so the two never overlap.
-            if faceted and obj.NodeID in source_meshes:
+            if bool(getattr(obj, "HangTenUseBodyTriangles", False)):
+                if faceted or obj.TypeId != "PartDesign::SubShapeBinder":
+                    raise BuildError("HangTenUseBodyTriangles requires a native face SubShapeBinder")
+                # A binder owns exact final-body faces. Meshing that face again
+                # may pick a different triangulation from its body's OCCT mesh.
+                # Export the already classified body triangles, so both sides
+                # of the semantic seam share the same vertices and edges.
+                indices = [i for i, owner in assignment.items() if owner == region_index]
+                if not indices:
+                    raise BuildError(f"{obj.NodeID}: native face binder owns no body triangles")
+                points, facets = _subset_mesh(body_points, body_facets, indices)
+            elif faceted and obj.NodeID in source_meshes:
                 points, facets = source_meshes[obj.NodeID]
             else:
                 points, facets = obj.Shape.tessellate(deflection)
@@ -842,7 +889,7 @@ def build(
         else:
             measured_depths = _validate_published_depths(
                 contact_objects,
-                _declared_depths(board, version),
+                _declared_depths(board, version, presentation_id),
                 version,
                 deflection,
                 board_depth={axis: float(getattr(body_object.Shape.BoundBox, axis.upper() + "Length"))
@@ -901,6 +948,7 @@ def build(
 
         result = {
             "package": package,
+            "presentationID": presentation_id,
             "source": _display(source),
             "board": board_origin,
             "sourceSHA256": source_digest,
@@ -925,8 +973,8 @@ def build(
         print("[10/10] publishing the asset and descriptor set")
         assets = out_dir
         assets.mkdir(parents=True, exist_ok=True)
-        asset_target = assets / "primary.usdz"
-        descriptor_target = assets / "primary.model.json"
+        asset_target = assets / asset_name
+        descriptor_target = assets / descriptor_name
         descriptor_temp = assets / f".{descriptor_target.name}.staged"
         asset_temp = assets / f".{asset_target.name}.staged"
         shutil.copyfile(descriptor_path, descriptor_temp)
@@ -964,6 +1012,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--assets", help="defaults to Hangboards/<package>/assets")
     parser.add_argument("--check", action="store_true", help="validate and stage only")
+    parser.add_argument("--presentation", help="select an authored model configuration; defaults to the document presentation")
     parser.add_argument(
         "--allow-faceted-import",
         action="store_true",
@@ -1001,6 +1050,7 @@ def main(argv: list[str] | None = None) -> int:
         assets,
         publish=not arguments.check,
         allow_faceted_import=arguments.allow_faceted_import,
+        presentation_id=arguments.presentation,
     )
     print(json.dumps(result, indent=2, sort_keys=True))
     if arguments.report:

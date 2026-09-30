@@ -1,0 +1,35 @@
+{
+  "package": "yy-penta-evo",
+  "sourceSHA256": "503fba35220687251ff272ebded2449b4fed7c24e55f86a6bcfb2d19e3f986c9",
+  "modelSHA256": "98a1f57c446ae93f5c6caf79487e443fdd2511c394ad5c6fc356997e5437b787",
+  "sidecarSHA256": "e419f73232d56bdf29b609f94316cf8b6fc1db215c0423a6348841ddd9714c8f",
+  "validatorSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "method": "continuous-distance certificate on exact rounded runtime cache, including world support endpoints",
+  "fullPathSelfAndInterstrandTubeGate": "passed",
+  "entries": [
+    {
+      "presentationID": "front-pair",
+      "equipmentObjectID": "left-penta",
+      "poses": {
+        "primary": {
+          "upper-band-loop": 0.001998650414062485
+        },
+        "reverse": {
+          "upper-band-loop": 0.001998650414062485
+        }
+      }
+    },
+    {
+      "presentationID": "front-pair",
+      "equipmentObjectID": "right-penta",
+      "poses": {
+        "primary": {
+          "upper-band-loop": 0.001998650414062485
+        },
+        "reverse": {
+          "upper-band-loop": 0.001998650414062485
+        }
+      }
+    }
+  ]
+}

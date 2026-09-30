@@ -142,3 +142,11 @@ def test_a_published_depth_deeper_than_the_board_needs_the_full_board_depth() ->
     # Without a board depth the published value is still the only target.
     with pytest.raises(compile_board.BuildError, match="disagrees with the published depth"):
         compile_board._validate_published_depths([_Region("jug-40", 38.0)], declared, 1, 0.05)
+
+
+def test_native_lip_floor_witness_must_be_a_complete_pair():
+    region = _Region("stepped-6", 17.4)
+    region.PropertiesList.append("HangTenGripDepthStart")
+    region.HangTenGripDepthStart = SimpleNamespace(x=0, y=-1, z=24.98)
+    with pytest.raises(compile_board.BuildError, match="witness"):
+        compile_board._validate_published_depths([region], {"stepped-6": 6}, 1, .05)

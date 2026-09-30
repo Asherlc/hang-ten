@@ -1,0 +1,152 @@
+{
+  "c": {
+    "deliberateMeasuredStations": [
+      [
+        50,
+        5.3558
+      ],
+      [
+        45.5,
+        -3.25
+      ],
+      [
+        41.0312,
+        -12.1562
+      ],
+      [
+        39,
+        -22
+      ],
+      [
+        40.8984,
+        -32.125
+      ],
+      [
+        43.668,
+        -37.9062
+      ],
+      [
+        44.7422,
+        -41.25
+      ],
+      [
+        45,
+        -44
+      ],
+      [
+        44.6309,
+        -46.2324
+      ],
+      [
+        43.6049,
+        -47.5607
+      ],
+      [
+        42.5823,
+        -47.9537
+      ],
+      [
+        42.2022,
+        -47.9948
+      ],
+      [
+        42,
+        -48
+      ]
+    ],
+    "endTangent": [
+      -1.0,
+      -8.044850323421959e-14,
+      0.0
+    ],
+    "sharedEndpoint": [
+      42,
+      -48
+    ]
+  },
+  "d": {
+    "deliberateMeasuredStations": [
+      [
+        -20.6295,
+        -50
+      ],
+      [
+        -15.9375,
+        -47.625
+      ],
+      [
+        -9.3984,
+        -43.1406
+      ],
+      [
+        -3,
+        -38
+      ],
+      [
+        3.3984,
+        -32.8594
+      ],
+      [
+        9.9375,
+        -28.375
+      ],
+      [
+        17.1975,
+        -25.0674
+      ],
+      [
+        24,
+        -24
+      ],
+      [
+        28.3497,
+        -25.2903
+      ],
+      [
+        32.3554,
+        -30.0562
+      ],
+      [
+        34.875,
+        -36
+      ],
+      [
+        37.9219,
+        -44.25
+      ],
+      [
+        39.2246,
+        -46.4253
+      ],
+      [
+        40.4958,
+        -47.5834
+      ],
+      [
+        41.3665,
+        -47.9312
+      ],
+      [
+        42,
+        -48
+      ]
+    ],
+    "endTangent": [
+      1.0,
+      -8.308342362367835e-18,
+      0.0
+    ],
+    "sharedEndpoint": [
+      42,
+      -48
+    ]
+  },
+  "nativeTriangleProbe": {
+    "priorDegrees": 88.2413,
+    "correctedDegrees": 2.7535131419110126,
+    "thresholdDegrees": 5,
+    "note": "Final descriptor-owned USDZ regression also passes at2.752845684 degrees on both sides.",
+    "localRefinement": "Split the unchanged analytic C spline at its measured (42.2022,-47.9948) station to preserve terminal curvature in native tessellation."
+  },
+  "finalAssetRegression": "cd-native-final-regression.json"
+}

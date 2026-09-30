@@ -255,32 +255,51 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testNativePairedLeadAndTwoBranchModelsCreateNonPickableCordSegments() async throws {
+    func testNativeCADModelsCreateNonPickableCordSegmentsInEveryPosition() async throws {
         let store = BoardCatalog.packageStore
-        let cases = [try XCTUnwrap(store.board(id: "nature.stone-hanger")),
-                     try XCTUnwrap(store.board(id: "tension.flash-board"))]
+        let boardIDs = [
+            "aelith.cyclops-011", "captain-fingerfood.dual", "captain-fingerfood.unlevel",
+            "frictitious.nug", "frictitious.port-a-board", "mammut.diamond-finger",
+            "metolius.contact", "metolius.simulator-3d", "nature.stone-hanger",
+            "nature.stone-hanger-mini", "nature.stone-hanger-mini-karma8a", "owl-climb.poker",
+            "plateau.lifting-edge", "tension.flash-board", "trango.rock-prodigy-forge",
+            "yy.baguette", "yy.baguette-evo", "yy.penta-evo", "yy.travelboard",
+            "zlagboard.evo", "zlagboard.pro"
+        ]
 
-        for board in cases {
-            let presentation = board.defaultPresentation
-            guard case .model(let media) = presentation.media,
-                  let suspension = media.suspension else {
-                return XCTFail("\(board.id) must have a model suspension")
-            }
-            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation,
-                                                               store: store)
-            let positionID = try XCTUnwrap(board.positions.first {
-                $0.presentationID == presentation.id
-            }?.id, board.id)
-            XCTAssertTrue(scene.select(positionID: positionID), board.id)
-            let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
-            XCTAssertFalse(cord.children.isEmpty, board.id)
-            XCTAssertTrue(cord.children.allSatisfy { scene.contactID(for: $0) == nil }, board.id)
-            XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil }, board.id)
-
-            switch (board.id, suspension) {
-            case ("nature.stone-hanger", .pairedLeadCord): break
-            case ("tension.flash-board", .twoBranchCord): break
-            default: XCTFail("Unexpected suspension family for \(board.id)")
+        for boardID in boardIDs {
+            let board = try XCTUnwrap(store.board(id: boardID), boardID)
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media else {
+                    return XCTFail("\(board.id)/\(presentation.id) must have model media")
+                }
+                let scene = try await BoardModelRealityLoader.load(
+                    board: board, presentation: presentation, store: store)
+                XCTAssertEqual(Set(scene.contactEntities.keys),
+                               Set(board.contacts(in: presentation).map(\.id)), board.id)
+                for (contactID, entities) in scene.contactEntities {
+                    XCTAssertFalse(entities.isEmpty, "\(board.id)/\(contactID)")
+                    for entity in entities {
+                        XCTAssertEqual(scene.contactID(for: entity), contactID, board.id)
+                        XCTAssertNotNil(entity.collision, board.id)
+                        XCTAssertNotNil(entity.components[InputTargetComponent.self], board.id)
+                    }
+                }
+                let hasCord = media.suspension != nil || media.instances?.contains(where: {
+                    $0.suspension != nil
+                }) == true
+                for position in board.positions where position.presentationID == presentation.id {
+                    XCTAssertTrue(scene.select(positionID: position.id), "\(board.id)/\(position.id)")
+                    scene.highlight(Set(position.contactIDs), mode: .active)
+                    if hasCord {
+                        let cord = try XCTUnwrap(scene.transientCordEntity, board.id)
+                        XCTAssertFalse(cord.children.isEmpty, board.id)
+                        XCTAssertTrue(cord.children.allSatisfy { scene.contactID(for: $0) == nil }, board.id)
+                        XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil }, board.id)
+                    } else {
+                        XCTAssertNil(scene.transientCordEntity, board.id)
+                    }
+                }
             }
         }
     }

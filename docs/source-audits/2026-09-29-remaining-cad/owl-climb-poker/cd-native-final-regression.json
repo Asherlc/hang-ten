@@ -1,0 +1,176 @@
+{
+  "cRays": [
+    {
+      "x": -0.132,
+      "v": 0.002,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.04611024752673035
+    },
+    {
+      "x": -0.132,
+      "v": 0.015,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.04017886724758521
+    },
+    {
+      "x": -0.132,
+      "v": 0.02,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.03923296448428387
+    },
+    {
+      "x": -0.132,
+      "v": 0.025,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.03913308855968756
+    },
+    {
+      "x": -0.132,
+      "v": 0.03,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.040159316642142284
+    },
+    {
+      "x": -0.132,
+      "v": 0.035,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.04227880954173713
+    },
+    {
+      "x": -0.132,
+      "v": 0.04,
+      "owner": "face-c-left-shallow-half-round",
+      "frontZ": 0.04434941133671269
+    },
+    {
+      "x": 0.132,
+      "v": 0.002,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.046110247526730375
+    },
+    {
+      "x": 0.132,
+      "v": 0.015,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.04017886724758521
+    },
+    {
+      "x": 0.132,
+      "v": 0.02,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.03923296448428387
+    },
+    {
+      "x": 0.132,
+      "v": 0.025,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.03913308855968756
+    },
+    {
+      "x": 0.132,
+      "v": 0.03,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.040159316642142284
+    },
+    {
+      "x": 0.132,
+      "v": 0.035,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.04227880954173713
+    },
+    {
+      "x": 0.132,
+      "v": 0.04,
+      "owner": "face-c-right-shallow-half-round",
+      "frontZ": 0.04434941133671266
+    }
+  ],
+  "dRays": [
+    {
+      "x": -0.132,
+      "v": -0.02,
+      "owner": "face-d-left-deep-rounded-recess",
+      "frontZ": 0.02434441518738084
+    },
+    {
+      "x": -0.132,
+      "v": -0.01,
+      "owner": "face-d-left-deep-rounded-recess",
+      "frontZ": 0.028342442659393174
+    },
+    {
+      "x": -0.132,
+      "v": 0.0,
+      "owner": "face-d-left-deep-rounded-recess",
+      "frontZ": 0.03558974153658473
+    },
+    {
+      "x": -0.132,
+      "v": 0.015,
+      "owner": "face-d-left-deep-rounded-recess",
+      "frontZ": 0.04698208064338741
+    },
+    {
+      "x": 0.132,
+      "v": -0.02,
+      "owner": "face-d-right-deep-rounded-recess",
+      "frontZ": 0.024344415187380897
+    },
+    {
+      "x": 0.132,
+      "v": -0.01,
+      "owner": "face-d-right-deep-rounded-recess",
+      "frontZ": 0.028342442659393174
+    },
+    {
+      "x": 0.132,
+      "v": 0.0,
+      "owner": "face-d-right-deep-rounded-recess",
+      "frontZ": 0.03558974153658473
+    },
+    {
+      "x": 0.132,
+      "v": 0.015,
+      "owner": "face-d-right-deep-rounded-recess",
+      "frontZ": 0.04698208064338741
+    }
+  ],
+  "seams": [
+    {
+      "side": "left",
+      "edge": [
+        [
+          -0.198,
+          -0.048,
+          -0.042
+        ],
+        [
+          -0.066,
+          -0.048,
+          -0.042
+        ]
+      ],
+      "angleDegrees": 2.7528456839127657
+    },
+    {
+      "side": "right",
+      "edge": [
+        [
+          0.066,
+          -0.048,
+          -0.042
+        ],
+        [
+          0.198,
+          -0.048,
+          -0.042
+        ]
+      ],
+      "angleDegrees": 2.7528456839127657
+    }
+  ],
+  "modelSHA256": "5c471299a7172349ecd1f21fd2d11695a25867ef101aecf0f6c4397054d13874",
+  "sourceSHA256": "b6c53624e8684fb032026b0932c42987e803fdf5a472940a376678bbceeaecd1",
+  "verifier": "Tools/HangboardModels/verify_owl_climb_poker.py",
+  "result": "PASS unchanged contact ownership, relief depth and maximum 5-degree C/D ridge gates"
+}

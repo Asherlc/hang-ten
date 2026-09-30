@@ -1959,7 +1959,7 @@ struct WorkoutView: View {
 				let highlightedHoldIDs = boardCue.isSuppressed ? [] : Set(previewHoldIDs)
 				let highlightMode = boardCue.mode
 				let showsHoldPreview = highlightMode == .preview && !highlightedHoldIDs.isEmpty
-				let activeHold = board.contacts.first { highlightedHoldIDs.contains($0.id) }
+				let activeHold = resolvedHighlightedStep.flatMap { WorkoutHighlightResolver.contacts(for: $0, on: board).first }
 				let holdCue = WorkoutHoldCuePolicy.resolve(step: resolvedHighlightedStep, hold: activeHold, on: board)
 				let isLandscape = geometry.size.width > geometry.size.height
 				let audioMoment = audioMoment(
@@ -2261,6 +2261,7 @@ struct WorkoutView: View {
 					board: board,
 					highlightedHoldIDs: highlightedHoldIDs,
 					highlightMode: highlightMode,
+					selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
 					activeHoldID: holdCue?.hold?.id
 				)
 					.padding(.horizontal, 2)
@@ -2390,6 +2391,7 @@ struct WorkoutView: View {
 						board: board,
 						highlightedHoldIDs: highlightedHoldIDs,
 						highlightMode: highlightMode,
+						selectedPresentationID: WorkoutHighlightResolver.presentationID(for: cueStep, on: board),
 						activeHoldID: holdCue?.hold?.id
 					)
 						.frame(maxWidth: .infinity)

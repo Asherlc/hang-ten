@@ -1,0 +1,18 @@
+{
+  "reviewer": "CAD authoring agent",
+  "reviewDate": "2026-09-29",
+  "views": [
+    "front",
+    "side",
+    "top"
+  ],
+  "artifact": "geometry-review.html",
+  "referenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "observations": [
+    "Same 105\u00d7105\u00d735 envelope and grip positions.",
+    "Rounded stone insert is visible geometry without material contrast.",
+    "Three lateral adjustment grooves retained.",
+    "Unsupported full hidden passage replaced by evidenced short mouth recess; side-view daylight from prior model intentionally absent."
+  ],
+  "humanFinalAppReview": "pending root coordination"
+}

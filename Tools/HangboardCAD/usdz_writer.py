@@ -283,7 +283,7 @@ def _texture_asset(shader: UsdShade.Shader) -> str | None:
     return str(value)
 
 
-def _normal_to_world(matrix: Gf.Matrix4d, normal: Sequence[float]) -> tuple[float, float, float]:
+def _normal_to_world(matrix: Gf.Matrix4d, normal: Sequence[float], inverse=None) -> tuple[float, float, float]:
     """Transform a normal by the inverse-transpose of the linear part, normalized.
 
     Points use the row-vector ``Transform``, so the matching normal operator is
@@ -291,12 +291,13 @@ def _normal_to_world(matrix: Gf.Matrix4d, normal: Sequence[float]) -> tuple[floa
     ``TransformDir`` would instead apply any non-uniform scale directly, giving
     the wrong normal length and direction. The result is renormalized.
     """
-    linear = Gf.Matrix3d(
-        matrix[0][0], matrix[0][1], matrix[0][2],
-        matrix[1][0], matrix[1][1], matrix[1][2],
-        matrix[2][0], matrix[2][1], matrix[2][2],
-    )
-    transformed = linear.GetInverse() * Gf.Vec3d(*normal)
+    if inverse is None:
+        inverse = Gf.Matrix3d(
+            matrix[0][0], matrix[0][1], matrix[0][2],
+            matrix[1][0], matrix[1][1], matrix[1][2],
+            matrix[2][0], matrix[2][1], matrix[2][2],
+        ).GetInverse()
+    transformed = inverse * Gf.Vec3d(normal[0], normal[1], normal[2])
     length = transformed.GetLength()
     if length == 0.0:
         return (0.0, 0.0, 0.0)
@@ -351,15 +352,24 @@ def read_usdz(path: Path) -> dict:
         bound_result = UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial()
         bound = bound_result[0] if bound_result else None
         local_to_world = cache.GetLocalToWorldTransform(prim)
+        normal_inverse = Gf.Matrix3d(
+            local_to_world[0][0], local_to_world[0][1], local_to_world[0][2],
+            local_to_world[1][0], local_to_world[1][1], local_to_world[1][2],
+            local_to_world[2][0], local_to_world[2][1], local_to_world[2][2],
+        ).GetInverse()
+        points = []
+        for point in (mesh.GetPointsAttr().Get() or []):
+            world = local_to_world.Transform(point)
+            # Gf's sequence iteration probes an invalid final index. Avoid
+            # Boost.Python exception construction for every vertex.
+            points.append((world[0], world[1], world[2]))
         nodes[prim.GetName()] = {
             "path": str(prim.GetPath()),
-            "points_m": [
-                tuple(local_to_world.Transform(point)) for point in (mesh.GetPointsAttr().Get() or [])
-            ],
+            "points_m": points,
             "triangles": triangles,
             "material": bound.GetPrim().GetName() if bound else None,
             "normals": [
-                tuple(_normal_to_world(local_to_world, vector))
+                _normal_to_world(local_to_world, vector, normal_inverse)
                 for vector in (mesh.GetNormalsAttr().Get() or [])
             ],
             "uvs": (

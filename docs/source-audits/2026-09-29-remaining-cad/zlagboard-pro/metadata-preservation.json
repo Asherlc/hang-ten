@@ -1,0 +1,477 @@
+{
+  "slug": "zlagboard-pro",
+  "boardID": "zlagboard.pro",
+  "preMigrationBoardSHA256": "ee8f779269fe40604f56fb4068066ab3f18e7c5cd217d5e9ca2e8178a77907aa",
+  "contactCount": 28,
+  "contacts": [
+    {
+      "contactID": "top-jug-left",
+      "name": "Left top jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-jug-right",
+      "name": "Right top jug",
+      "kind": "jug",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-left",
+      "name": "Left 32-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-32-right",
+      "name": "Right 32-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-left",
+      "name": "Left 20-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-20-right",
+      "name": "Right 20-degree top sloper",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "top-sloper-jug-center",
+      "name": "Center top sloper jug",
+      "kind": "sloper",
+      "publishedDepth": null,
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-left",
+      "name": "Left 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-left",
+      "name": "Left 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-left",
+      "name": "Left 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-35-center",
+      "name": "Center 35 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 35,
+          "maximum": 35
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-right",
+      "name": "Right 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-right",
+      "name": "Right 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-right",
+      "name": "Right 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-20-left",
+      "name": "Left 20 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-left",
+      "name": "Lower left 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-left",
+      "name": "Inner left 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-30-center",
+      "name": "Center 30 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-30-inner-right",
+      "name": "Inner right 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "sloper-edge-25-lower-right",
+      "name": "Lower right 25 mm sloper edge",
+      "kind": "sloper",
+      "publishedDepth": {
+        "range": {
+          "minimum": 25,
+          "maximum": 25
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [
+        "sloper"
+      ],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-20-right",
+      "name": "Right 20 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 20,
+          "maximum": 20
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-incut-15-left",
+      "name": "Left incut 15 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-15-left",
+      "name": "Left 15 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-incut-30-left",
+      "name": "Inner left incut 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-incut-10-center",
+      "name": "Center incut 10 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 10,
+          "maximum": 10
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-incut-30-right",
+      "name": "Inner right incut 30 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 30,
+          "maximum": 30
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-15-right",
+      "name": "Right 15 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    },
+    {
+      "contactID": "edge-incut-15-right",
+      "name": "Right incut 15 mm edge",
+      "kind": "edge",
+      "publishedDepth": {
+        "range": {
+          "minimum": 15,
+          "maximum": 15
+        }
+      },
+      "fingerCapacity": null,
+      "gripTypes": [],
+      "policy": "preserve unchanged",
+      "sourceURLs": [
+        "https://zlagboard.com/assets/web/zlagboard-pro2-holds-014x2x-af05a1450fd55d0cdba84c0bcd43206f2798cf426cb31f5bf762d33acb66d34d.png"
+      ]
+    }
+  ],
+  "metadataPolicy": "Identity, revision, contact order, names, capacities, grip types, dimensions, aspect ratios and model camera retained verbatim. Existing unsupported facts are neither added nor expanded. No training content changes.",
+  "sourceLimitations": "Current Pro 2.0 revision (not older 24-hold Pro 1.0): three seven-pocket rows below seven top surfaces. Manufacturer photo and independent annotated chart cover matching 28-contact layout, including bottom incut row. Preserve all 28 contact IDs. Phone/mounting plate/hardware omitted. Overall dimensions are absent from current package and must remain estimated unless supported separately.",
+  "embeddedManifestRoundtripExact": true,
+  "generatedBoardJsonRemoved": true
+}

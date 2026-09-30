@@ -1,0 +1,17 @@
+{
+  "package": "aelith-cyclops-011",
+  "currentSourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "nativeReopenEditSourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
+  "modelSHA256ByPresentation": {
+    "primary": "ef730caa32f5ee27b3d586e1edad751e2bf2145eeea38c398d8d339157cc264d"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.1999982165904688,
+  "metadataOnlyCompileRebindings": [],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 1.0481449992370062,
+  "continuousClearanceReport": "cord-continuous-clearance.json"
+}

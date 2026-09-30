@@ -653,9 +653,40 @@ struct WorkoutTimeline {
         let isResting = currentStep.phase == .rest
             || (currentStep.hasRestInterval && stepElapsed >= currentStep.activeDuration)
 
-        return isResting
-            ? nextWorkStep(after: currentStep.id)
-            : currentStep
+        if isResting {
+            return nextWorkStep(after: currentStep.id).map {
+                Self.workSegmentPreview($0, elapsed: 0)
+            }
+        }
+        return Self.workSegmentPreview(currentStep, elapsed: stepElapsed)
+    }
+
+    /// A cue describes one work segment. Requirements within that segment stay
+    /// together, while the original timeline step remains intact for recording.
+    private static func workSegmentPreview(_ step: WorkoutStep, elapsed: TimeInterval) -> WorkoutStep {
+        guard var selected = step.segments.first(where: { $0.kind == .work }) else {
+            return step
+        }
+        var remaining = max(0, elapsed)
+        for segment in step.segments {
+            if segment.kind == .work {
+                selected = segment
+            }
+            // Stopwatch/undefined work has no elapsed-time boundary to infer.
+            guard segment.timing == .fixed, let duration = segment.duration,
+                  duration.isFinite, duration >= 0 else { break }
+            if remaining < duration { break }
+            remaining -= duration
+        }
+        return WorkoutStep(
+            id: step.id, number: step.number, title: step.title,
+            instruction: step.instruction, accessory: step.accessory,
+            duration: step.duration, phase: step.phase, segments: [selected],
+            gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+            handUse: step.handUse, side: step.side, action: step.action,
+            repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+            timedWorkDuration: step.timedWorkDuration
+        )
     }
 
     private func clampedElapsed(_ elapsed: TimeInterval) -> TimeInterval {
@@ -718,11 +749,16 @@ enum WorkoutLiftCompletionPolicy {
 }
 
 enum WorkoutHighlightResolver {
+    static func presentationID(for step: WorkoutStep?, on board: BoardRevision) -> String? {
+        guard let step, let selection = try? ContactResolver.resolveSelection(step.workRequirements, step: step, board: board),
+              let position = board.position(id: selection.positionID) else { return nil }
+        return position.presentationID
+    }
+
+    static func contacts(for step: WorkoutStep, on board: BoardRevision) -> [PhysicalContact] {
+        (try? ContactResolver.resolve(step.workRequirements, step: step, board: board)) ?? []
+    }
     static func contactIDs(for step: WorkoutStep, on board: BoardRevision) -> [String] {
-        (try? ContactResolver.resolve(
-            step.workRequirements,
-            step: step,
-            board: board
-        ).map(\.id)) ?? []
+        contacts(for: step, on: board).map(\.id)
     }
 }

@@ -1,0 +1,41 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "edge-30",
+    "tray",
+    "edge-20",
+    "edge-25",
+    "edge-15",
+    "edge-10"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "front-20-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20",
+        "edge-25"
+      ]
+    },
+    {
+      "id": "reverse-10-15-30",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-30",
+        "edge-15",
+        "edge-10"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "tray"
+      ]
+    }
+  ],
+  "metadataDecision": "All six contact records unchanged. Primary3D physically locates30mm on the reverse, matching retained manufacturer views; historical raster association was not copied as a geometric fact."
+}

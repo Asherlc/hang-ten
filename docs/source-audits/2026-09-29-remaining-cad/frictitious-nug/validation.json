@@ -1,0 +1,19 @@
+{
+  "package": "frictitious-nug",
+  "currentSourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "nativeReopenEditSourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "modelSHA256ByPresentation": {
+    "primary": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 1.6992452138131569,
+  "metadataOnlyCompileRebindings": [],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 1.5080679843749931,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "sidecarSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "cameraOnlyRebindingProof": "camera-correction-proof.json"
+}

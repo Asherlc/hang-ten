@@ -1,0 +1,52 @@
+{
+  "asset": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/candidate-assets/primary.usdz",
+  "assetBytes": 944430,
+  "assetSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+  "board": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/frictitious-port-a-board.FCStd#HangTenBoardManifest",
+  "contacts": [
+    "edge-10",
+    "edge-12",
+    "edge-15",
+    "edge-20",
+    "edge-25",
+    "edge-30",
+    "edge-8",
+    "jug-outer-rim",
+    "pinch-body"
+  ],
+  "descriptor": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/candidate-assets/primary.model.json",
+  "measuredRegionDepthsMM": {
+    "edge-10": 10.0,
+    "edge-12": 12.0,
+    "edge-15": 15.0,
+    "edge-20": 20.0,
+    "edge-25": 25.0,
+    "edge-30": 30.0,
+    "edge-8": 8.0,
+    "jug-outer-rim": 48.0,
+    "pinch-body": 48.0
+  },
+  "modelSHA256": "7590f965642ce44804a6218db81a610759a642486b0902640621906dd939b273",
+  "nodes": [
+    "pab_body",
+    "pab_edge_10",
+    "pab_edge_12",
+    "pab_edge_15",
+    "pab_edge_20",
+    "pab_edge_25",
+    "pab_edge_30",
+    "pab_edge_8",
+    "pab_jug_outer_rim",
+    "pab_pinch_body"
+  ],
+  "package": "frictitious-port-a-board",
+  "presentationID": "primary",
+  "published": true,
+  "schemaVersion": 1,
+  "source": ".context/placid-badger/cad-raster-boards/frictitious-port-a-board/frictitious-port-a-board.FCStd",
+  "sourceKind": "native-parametric-measured-profile",
+  "sourceSHA256": "89ccc6b604897e5d910279ccd1c0e3fe593e99eb63c390030fe5be31c7a5ac26",
+  "sourceUnchanged": true,
+  "tessellationDeflectionMM": 0.15,
+  "triangles": 47732
+}

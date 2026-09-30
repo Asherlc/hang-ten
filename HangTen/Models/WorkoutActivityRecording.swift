@@ -6,23 +6,26 @@ struct ResolvedContactSnapshot: Codable, Hashable {
     let modelSHA256: String?
     let requirement: ContactRequirement
     let contactIDs: [String]
+    let positionID: String?
 
     init(
         boardID: String,
         revisionID: String,
         modelSHA256: String?,
         requirement: ContactRequirement,
-        contactIDs: [String]
+        contactIDs: [String],
+        positionID: String? = nil
     ) {
         self.boardID = boardID
         self.revisionID = revisionID
         self.modelSHA256 = modelSHA256
         self.requirement = requirement
         self.contactIDs = contactIDs
+        self.positionID = positionID
     }
 
     private enum CodingKeys: String, CodingKey, CaseIterable {
-        case boardID, revisionID, modelSHA256, requirement, contactIDs
+        case boardID, revisionID, modelSHA256, requirement, contactIDs, positionID
     }
 
     init(from decoder: Decoder) throws {
@@ -44,6 +47,7 @@ struct ResolvedContactSnapshot: Codable, Hashable {
         modelSHA256 = try container.decodeIfPresent(String.self, forKey: .modelSHA256)
         requirement = try container.decode(ContactRequirement.self, forKey: .requirement)
         contactIDs = try container.decode([String].self, forKey: .contactIDs)
+        positionID = try container.decodeIfPresent(String.self, forKey: .positionID)
     }
 }
 
@@ -426,15 +430,38 @@ enum ContactResolutionError: LocalizedError, Equatable {
 }
 
 enum ContactResolver {
+    struct Selection {
+        let contacts: [PhysicalContact]
+        let positionID: String?
+    }
+
     static func resolve(
         _ requirement: ContactRequirement,
         step: WorkoutStep,
         board: BoardRevision
     ) throws -> [PhysicalContact] {
-        let positionContactIDs = contactIDsForDefaultPosition(on: board)
-        var candidates = board.contacts.filter { contact in
-            positionContactIDs.contains(contact.id)
-                && matches(requirement, contact: contact)
+        try resolveSelection(requirement, step: step, board: board).contacts
+    }
+
+    static func resolveSelection(_ requirement: ContactRequirement, step: WorkoutStep, board: BoardRevision,
+                                 inPosition positionID: String? = nil) throws -> Selection {
+        if let positionID {
+            guard let position = board.position(id: positionID),
+                  let presentation = board.presentation(id: position.presentationID) else { throw ContactResolutionError.noMatches }
+            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: presentation,
+                contacts: board.contacts(inPosition: positionID)), positionID: positionID)
+        }
+        guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
+            return Selection(contacts: try resolveCandidates(requirement, step: step, presentation: board.defaultPresentation,
+                contacts: board.contacts.filter { contactIDsForDefaultPosition(on: board).contains($0.id) }), positionID: nil)
+        }
+        return try resolveSelection([requirement], step: step, board: board)
+    }
+
+    private static func resolveCandidates(_ requirement: ContactRequirement, step: WorkoutStep,
+                                          presentation: BoardPresentation, contacts: [PhysicalContact]) throws -> [PhysicalContact] {
+        var candidates = contacts.filter { contact in
+            matches(requirement, contact: contact)
                 && matches(stepGripType: step.gripType, contact: contact)
         }
 
@@ -444,14 +471,14 @@ enum ContactResolver {
 
         switch requirement.selection {
         case .single:
-            candidates = try singleCandidate(from: candidates, on: board)
+            candidates = try singleCandidate(from: candidates, in: presentation)
         case .bilateralPair:
             guard step.handUse == .double,
                   step.side == .both else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
             guard candidates.count >= 2,
-                  let pair = outermostPair(from: candidates, on: board) else {
+                  let pair = outermostPair(from: candidates, in: presentation) else {
                 throw ContactResolutionError.invalidBilateralPair(candidateCount: candidates.count)
             }
             candidates = pair
@@ -465,10 +492,35 @@ enum ContactResolver {
         step: WorkoutStep,
         board: BoardRevision
     ) throws -> [PhysicalContact] {
+        if board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) {
+            return try resolveSelection(requirements, step: step, board: board).contacts
+        }
         let resolvedIDs = try requirements.reduce(into: Set<String>()) { result, requirement in
             result.formUnion(try resolve(requirement, step: step, board: board).map(\.id))
         }
         return board.contacts.filter { resolvedIDs.contains($0.id) }
+    }
+
+    static func resolveSelection(_ requirements: [ContactRequirement], step: WorkoutStep, board: BoardRevision) throws -> Selection {
+        guard board.positions.contains(where: { !$0.effectiveDepths.isEmpty }) else {
+            return Selection(contacts: try resolve(requirements, step: step, board: board), positionID: nil)
+        }
+        let preferred = board.positions.filter { $0.presentationID == board.defaultPresentation.id }
+            + board.positions.filter { $0.presentationID != board.defaultPresentation.id }
+        for position in preferred {
+            guard let presentation = board.presentation(id: position.presentationID) else { continue }
+            let available = board.contacts(inPosition: position.id)
+            var selected = Set<String>()
+            var valid = true
+            for requirement in requirements {
+                guard let contacts = try? resolveCandidates(requirement, step: step, presentation: presentation, contacts: available) else {
+                    valid = false; break
+                }
+                selected.formUnion(contacts.map(\.id))
+            }
+            if valid { return Selection(contacts: available.filter { selected.contains($0.id) }, positionID: position.id) }
+        }
+        throw ContactResolutionError.noMatches
     }
 
     /// Every contact shown by the default presentation, including multi-position
@@ -505,7 +557,7 @@ enum ContactResolver {
 
     private static func singleCandidate(
         from candidates: [PhysicalContact],
-        on board: BoardRevision
+        in presentation: BoardPresentation
     ) throws -> [PhysicalContact] {
         guard candidates.count > 1 else {
             guard candidates.count == 1 else {
@@ -515,7 +567,7 @@ enum ContactResolver {
         }
 
         let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
-            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+            guard let frame = contact.resolvedFrame(in: presentation) else {
                 return nil
             }
             return (contact, frame)
@@ -536,10 +588,10 @@ enum ContactResolver {
 
     private static func outermostPair(
         from candidates: [PhysicalContact],
-        on board: BoardRevision
+        in presentation: BoardPresentation
     ) -> [PhysicalContact]? {
         let framedCandidates = candidates.compactMap { contact -> (contact: PhysicalContact, frame: HoldFrame)? in
-            guard let frame = contact.resolvedFrame(in: board.defaultPresentation) else {
+            guard let frame = contact.resolvedFrame(in: presentation) else {
                 return nil
             }
             return (contact, frame)
@@ -669,11 +721,14 @@ struct WorkoutActivityRecorder {
                 case .requirements(let requirements):
                     do {
                         var resolvedSegments: [RecordedActivitySegment] = []
+                        let positionID = try ContactResolver.resolveSelection(requirements,
+                            step: recordedStep, board: board).positionID
                         for requirement in requirements {
-                            let contacts = try ContactResolver.resolve(
+                            let selection = try ContactResolver.resolveSelection(
                                 requirement,
                                 step: recordedStep,
-                                board: board
+                                board: board,
+                                inPosition: positionID
                             )
                             resolvedSegments.append(
                                 RecordedActivitySegment(
@@ -684,9 +739,12 @@ struct WorkoutActivityRecorder {
                                         ResolvedContactSnapshot(
                                             boardID: board.id,
                                             revisionID: board.revisionID,
-                                            modelSHA256: modelSHA256(for: board.defaultPresentation),
+                                            modelSHA256: modelSHA256(for: board.position(id: selection.positionID).flatMap {
+                                                board.presentation(id: $0.presentationID)
+                                            } ?? board.defaultPresentation),
                                             requirement: requirement,
-                                            contactIDs: contacts.map(\.id)
+                                            contactIDs: selection.contacts.map(\.id),
+                                            positionID: selection.positionID
                                         )
                                     ),
                                     durationSeconds: duration,

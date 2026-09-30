@@ -1,0 +1,53 @@
+{
+  "package": "plateau-lifting-edge",
+  "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "nativeReopenEditSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+  "modelSHA256ByPresentation": {
+    "depth-10mm": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+    "depth-15mm": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+    "depth-18mm": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854"
+  },
+  "fullPackageSchemaPassed": true,
+  "nativeCordCacheCheckPassed": true,
+  "minimumNativeCordClearanceMM": 2.1999999999999984,
+  "metadataOnlyCompileRebindings": [
+    {
+      "presentationID": "depth-10mm",
+      "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+      "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "compiledAssetSHA256": "cc2c2a0e15f3082e3cfa747c2e12fb93b1a5023b2a8e0189f0ce288aa5adce41",
+      "changesSinceCompile": [
+        "edge-18 canonical name corrected to Wood edge"
+      ],
+      "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+      "additionalArchiveProof": "name-correction-proof.json"
+    },
+    {
+      "presentationID": "depth-15mm",
+      "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+      "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "compiledAssetSHA256": "a9d09a3a946f74a6864f50c35f0bc9816e74e5861c709e87482c9566f751ec53",
+      "changesSinceCompile": [
+        "edge-18 canonical name corrected to Wood edge"
+      ],
+      "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+      "additionalArchiveProof": "name-correction-proof.json"
+    },
+    {
+      "presentationID": "depth-18mm",
+      "compiledSourceSHA256": "8b538abb1ad3bbdc607d41a06d6deac43ef3bfc437aba8d846b4ab9b3b1e6ef7",
+      "currentSourceSHA256": "ba9ad20a6f34f6d8a07df75b1588f62877f2d79bdeba445aaf99aabc2c75891f",
+      "compiledAssetSHA256": "efec7ac88cb3e1d509bdf8292d285535591369dade59bbb01787dfc3933c1854",
+      "changesSinceCompile": [
+        "edge-18 canonical name corrected to Wood edge"
+      ],
+      "geometryUnchangedEvidence": "Supported set_board_manifest.py changes only the HangTenBoardManifest XML value and asserts all other archive members remain byte-identical. Native body/region features, export flags, placements, tessellation and contact/depth contracts were unchanged. Current source separately passes native reopen/edit validation and full package validation. Raw compile report is retained with its actual executed source hash.",
+      "additionalArchiveProof": "name-correction-proof.json"
+    }
+  ],
+  "humanCADReview": "pending requested one-at-a-time review after whole batch",
+  "externalResourcesCreated": false,
+  "continuousRoundedRuntimeCordClearancePassed": true,
+  "minimumCertifiedRuntimeCordClearanceMM": 2.0023670868258923,
+  "continuousClearanceReport": "cord-continuous-clearance.json"
+}

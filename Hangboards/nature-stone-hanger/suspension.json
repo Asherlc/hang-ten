@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "presentationID": "primary",
+  "modelSHA256": "7f513e931b4049175f8d05188ad0c9ba3e974839f709f5081d9f18dcb26174bf",
+  "suspension": {
+    "type": "cadRoutedCord",
+    "bodyNodeID": "body_oak_mesh_001",
+    "strands": [
+      {
+        "id": "left-lead",
+        "kind": "lead",
+        "restLength": 0.55,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
+      },
+      {
+        "id": "right-lead",
+        "kind": "lead",
+        "restLength": 0.55,
+        "radius": 0.0015,
+        "material": "matteCord",
+        "provenance": "Retained manufacturer source register: visible lead only. Native CAD terminal/wrap geometry; lengths and radius are display estimates unless the per-board audit cites a maker length. No unseen connection is inferred. Cord radius 1.5 mm is an operator display estimate reviewed against retained manufacturer Stone_Hanger_Granite_3.jpg, replacing the previous 2 mm estimate to fit the unchanged native 2 mm radius visible mouth with 0.2 mm clearance. It is not a published rope specification."
+      }
+    ],
+    "anchor": {
+      "offsetFromBoardBounds": [0, 0.3, 0],
+      "visibility": "invisible",
+      "provenance": "displayEstimate; shared overhead convergence"
+    },
+    "canonicalPoses": {
+      "front": {
+        "rotation": [
+          0,
+          0,
+          0,
+          1
+        ],
+        "translation": [0, -0.19139277, 0],
+        "camera": {
+          "viewDirection": [0, 0, -1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.054143878, 0.044590252, 0.0],
+            [-0.054152056, 0.044507214, 0.0],
+            [-0.054184553, 0.044066669, 0.0],
+            [-0.054188647, 0.043983329, 0.0],
+            [-0.054194068, 0.043762525, 0.0],
+            [-0.054199488, 0.04354172, 0.0],
+            [-0.0542, 0.0435, 0.0],
+            [-0.0542, 0.02575, 0.0],
+            [-0.0542, -0.000399646, 0.0],
+            [-0.054167508, -0.000730785, 0.0],
+            [-0.054071137, -0.001049252, 0.0],
+            [-0.05391458, -0.001342848, 0.0],
+            [-0.053703834, -0.001600326, 0.0],
+            [-0.053446972, -0.001811823, 0.0],
+            [-0.0525, -0.0024, 0.0]
+          ],
+          "right-lead": [
+            [0.054143878, 0.044590252, 0.0],
+            [0.054152056, 0.044507214, 0.0],
+            [0.054168305, 0.044286941, 0.0],
+            [0.054184553, 0.044066669, 0.0],
+            [0.054188647, 0.043983329, 0.0],
+            [0.054194068, 0.043762525, 0.0],
+            [0.054199488, 0.04354172, 0.0],
+            [0.0542, 0.0435, 0.0],
+            [0.0542, 0.02225, 0.0],
+            [0.0542, -0.000400579, 0.0],
+            [0.054167331, -0.000732255, 0.0],
+            [0.054070578, -0.001051182, 0.0],
+            [0.053913461, -0.001345104, 0.0],
+            [0.053702018, -0.001602724, 0.0],
+            [0.053444376, -0.00181414, 0.0],
+            [0.0525, -0.0024, 0.0]
+          ]
+        }
+      },
+      "reverse": {
+        "rotation": [
+          0,
+          1,
+          0,
+          0
+        ],
+        "translation": [0, -0.19139277, 0],
+        "camera": {
+          "viewDirection": [0, 0, 1],
+          "fitPadding": 0.1
+        },
+        "wrappedRoutes": {
+          "left-lead": [
+            [-0.054143878, 0.044590252, 0.0],
+            [-0.054152056, 0.044507214, 0.0],
+            [-0.054184553, 0.044066669, 0.0],
+            [-0.054188647, 0.043983329, 0.0],
+            [-0.054194068, 0.043762525, 0.0],
+            [-0.054199488, 0.04354172, 0.0],
+            [-0.0542, 0.0435, 0.0],
+            [-0.0542, 0.02575, 0.0],
+            [-0.0542, -0.000399646, 0.0],
+            [-0.054167508, -0.000730785, 0.0],
+            [-0.054071137, -0.001049252, 0.0],
+            [-0.05391458, -0.001342848, 0.0],
+            [-0.053703834, -0.001600326, 0.0],
+            [-0.053446972, -0.001811823, 0.0],
+            [-0.0525, -0.0024, 0.0]
+          ],
+          "right-lead": [
+            [0.054143878, 0.044590252, 0.0],
+            [0.054152056, 0.044507214, 0.0],
+            [0.054168305, 0.044286941, 0.0],
+            [0.054184553, 0.044066669, 0.0],
+            [0.054188647, 0.043983329, 0.0],
+            [0.054194068, 0.043762525, 0.0],
+            [0.054199488, 0.04354172, 0.0],
+            [0.0542, 0.0435, 0.0],
+            [0.0542, 0.02225, 0.0],
+            [0.0542, -0.000400579, 0.0],
+            [0.054167331, -0.000732255, 0.0],
+            [0.054070578, -0.001051182, 0.0],
+            [0.053913461, -0.001345104, 0.0],
+            [0.053702018, -0.001602724, 0.0],
+            [0.053444376, -0.00181414, 0.0],
+            [0.0525, -0.0024, 0.0]
+          ]
+        }
+      }
+    }
+  },
+  "ropeSolver": {
+    "method": "nativeRoutes",
+    "clearance": 0.0002,
+    "supportDirection": 1,
+    "terminalsByStrandID": {
+      "left-lead": {
+        "points": [
+          [-0.0525, -0.0024, 0]
+        ],
+        "planeNormal": [0, 0, 1]
+      },
+      "right-lead": {
+        "points": [
+          [0.0525, -0.0024, 0]
+        ],
+        "planeNormal": [0, 0, 1]
+      }
+    }
+  }
+}

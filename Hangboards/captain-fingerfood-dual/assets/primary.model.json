@@ -1,18 +1,19 @@
 {
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
   "modelBounds": {
-    "max": [
-      0.059999999,
-      0.035,
-      0.015
-    ],
     "min": [
       -0.059999999,
       -0.035,
       -0.015
+    ],
+    "max": [
+      0.059999999,
+      0.035,
+      0.015
     ]
   },
-  "modelSHA256": "56eabb33f4d86c6c1567b188cc4784536d04e5a5e62c71e385c968657a0c872c",
   "nodes": [
     {
       "nodeID": "DUAL_skin_body_001",
@@ -39,82 +40,81 @@
       "contactID": "straight-edge-20"
     }
   ],
-  "schemaVersion": 1,
   "contacts": {
     "curved-edge-20": {
-      "center": [
-        0.5,
-        0.25535715
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.950000022,
-          0.425000001
-        ],
-        "min": [
-          0.049999978,
-          0.085714299
-        ]
-      },
       "nodeIDs": [
         "DUAL_skin_curved_edge_20_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.036410212,
+          0.083867966
+        ],
+        "max": [
+          0.96359491,
+          0.425000001
+        ]
+      },
+      "center": [
+        0.500002561,
+        0.254433984
       ]
     },
     "outer-jug": {
-      "center": [
-        0.5,
-        0.042857149
+      "nodeIDs": [
+        "DUAL_skin_outer_jug_001"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.873003485,
-          0.085714299
-        ],
         "min": [
-          0.126996515,
+          0.066666648,
+          0.0
+        ],
+        "max": [
+          0.933333352,
           0.0
         ]
       },
-      "nodeIDs": [
-        "DUAL_skin_outer_jug_001"
+      "center": [
+        0.5,
+        0.0
       ]
     },
     "pocket-end-wall-20": {
-      "center": [
-        0.098536476,
-        0.5
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.147072974,
-          0.812499993
-        ],
-        "min": [
-          0.049999978,
-          0.187500007
-        ]
-      },
       "nodeIDs": [
         "DUAL_skin_pocket_end_wall_20_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.049999978,
+          0.398837208
+        ],
+        "max": [
+          0.104166663,
+          0.769767428
+        ]
+      },
+      "center": [
+        0.07708332,
+        0.584302318
       ]
     },
     "straight-edge-20": {
-      "center": [
-        0.5,
-        0.76964285
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.950000022,
-          0.914285701
-        ],
-        "min": [
-          0.049999978,
-          0.625
-        ]
-      },
       "nodeIDs": [
         "DUAL_skin_straight_edge_20_001"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.049999978,
+          0.700000005
+        ],
+        "max": [
+          0.950222732,
+          0.914285701
+        ]
+      },
+      "center": [
+        0.500111355,
+        0.807142853
       ]
     }
   }

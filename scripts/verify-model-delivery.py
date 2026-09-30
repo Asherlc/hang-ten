@@ -6,6 +6,10 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "Tools" / "HangboardPackages" / "src"))
+from hangboard_packages import cad_source
 
 LOCK_PATH = "docs/model-delivery-lock.json"
 SUFFIXES = ("assets/primary.model.json", "assets/primary.usdz", "board.json")
@@ -30,7 +34,11 @@ def package_suffixes(root: Path, package: str) -> tuple[str, ...]:
     if is_source_backed(root, package):
         sidecar = root / "Hangboards" / package / "suspension.json"
         authored_suspension = ("suspension.json",) if sidecar.exists() or sidecar.is_symlink() else ()
-        return COMPILED_SUFFIXES + (f"{package}.FCStd",) + authored_suspension
+        source = root / "Hangboards" / package / f"{package}.FCStd"
+        board = cad_source.load_board(source)
+        descriptors = tuple(sorted({presentation["media"]["descriptorPath"]
+            for presentation in board["presentations"] if presentation.get("media", {}).get("type") == "model"}))
+        return descriptors + (f"{package}.FCStd",) + authored_suspension
     return SUFFIXES
 
 
@@ -54,12 +62,32 @@ def checksum_manifest(root: Path, packages: list[str]) -> str:
     return "".join(lines)
 
 
+def source_backed_model_packages(root: Path) -> set[str]:
+    """Discover CAD models from authored manifests, including uncached assets."""
+    packages = set()
+    for package in sorted((root / "Hangboards").iterdir()):
+        source = package / f"{package.name}.FCStd"
+        if not source.exists() and not source.is_symlink():
+            continue
+        if (not source.is_file() or any(path.is_symlink() for path in (source, *source.parents))
+                or not source.resolve().is_relative_to(root)):
+            raise ValueError(f"expected regular file: {source.relative_to(root)}")
+        board = cad_source.load_board(source)
+        if any(presentation.get("media", {}).get("type") == "model"
+               for presentation in board["presentations"]):
+            packages.add(package.name)
+    return packages
+
+
 def verify(root: Path, lock: dict) -> dict:
     if lock.get("schemaVersion") != 1:
         raise ValueError("unsupported delivery lock")
     packages = lock.get("modelPackages")
     root = root.resolve()
     text = checksum_manifest(root, packages)
+    expected_sources = {package for package in packages if is_source_backed(root, package)}
+    if source_backed_model_packages(root) != expected_sources:
+        raise ValueError("source-backed model inventory differs from delivery lock")
     expected = {
         f"Hangboards/{p}/assets/primary.usdz"
         for p in packages

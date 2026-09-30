@@ -1,0 +1,17 @@
+{
+  "sourceSHA256": "08449707f10971f5a3a05ef31378240d5be4357b27855a8512d67409d5d8e666",
+  "nativeReopenRecompute": "passed",
+  "oneValidSolid": true,
+  "contactNodeCount": 8,
+  "allContactShapesOpenValid": true,
+  "fullyConstrainedSketches": true,
+  "edit": {
+    "parameter": "FrontDepthScale",
+    "from": 1.0,
+    "to": 1.025,
+    "bodyVolumeBeforeMM3": 300696.1765830479,
+    "bodyVolumeEditedMM3": 299035.536350995,
+    "restoredVolumeDeltaMM3": -1.6100239008665085e-06
+  },
+  "sourceBytesUnchanged": true
+}

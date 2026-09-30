@@ -111,9 +111,142 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         )
     }
 
+    func testConfiguredDepthResolvesOneContactAndItsExactPresentation() throws {
+        let contact = PhysicalContact(id: "edge-18", name: "Edge", kind: .edge,
+                                      depth: .range(.init(minimum: 18, maximum: 18)))
+        let presentations = [18, 15, 10].map { depth in
+            modelPresentation(id: "depth-\(depth)mm", isDefault: depth == 18,
+                              bounds: [contact.id: HoldFrame(x: 0, y: 0, width: 1, height: 1)])
+        }
+        let configured = BoardRevision(
+            id: "fixture.configured", revisionID: "native", manufacturer: "Fixture", name: "Edge",
+            subtitle: "", dimensions: "", aspectRatio: 1, contacts: [contact],
+            productURL: URL(string: "https://example.com/board")!, photoAssetName: nil,
+            presentations: presentations,
+            positions: [18, 15, 10].map { depth in
+                BoardPosition(id: "depth-\(depth)mm", presentationID: "depth-\(depth)mm",
+                              contactIDs: [contact.id], effectiveDepths: [contact.id: .range(.init(minimum: Double(depth), maximum: Double(depth)))])
+            }
+        )
+        let step = WorkoutStep(id: "configured", number: 1, title: "Edge", instruction: "",
+                               accessory: "", duration: 10, phase: .hang)
+        let selection = try ContactResolver.resolveSelection(
+            .edge(depth: .range(.init(minimum: 10, maximum: 10))), step: step, board: configured)
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-18"])
+        XCTAssertEqual(selection.contacts.first?.depth, .range(.init(minimum: 10, maximum: 10)))
+        XCTAssertEqual(selection.positionID, "depth-10mm")
+        let detail = BoardMapPresentationContent(board: configured, selectedPresentationID: "depth-10mm")
+        XCTAssertEqual(detail.holds.first?.depth, .range(.init(minimum: 10, maximum: 10)))
+        XCTAssertEqual(configured.contacts.first?.depth, .range(.init(minimum: 18, maximum: 18)))
+        XCTAssertThrowsError(try ContactResolver.resolve(.edge(depth: .range(.init(minimum: 12, maximum: 12))), step: step, board: configured))
+    }
+
+    func testConfiguredSingleAndArrayResolutionPreferDefaultRegardlessOfPositionOrder() throws {
+        let configured = configuredBoard(positionOrder: [10, 18])
+        let requirement = ContactRequirement(contactID: "edge-a")
+        let workoutStep = step(targets: [requirement])
+
+        let single = try ContactResolver.resolveSelection(requirement, step: workoutStep, board: configured)
+        let array = try ContactResolver.resolveSelection([requirement], step: workoutStep, board: configured)
+
+        XCTAssertEqual(single.positionID, "depth-18mm")
+        XCTAssertEqual(array.positionID, single.positionID)
+        XCTAssertEqual(array.contacts, single.contacts)
+        XCTAssertEqual(array.contacts.first?.depth, .range(.init(minimum: 18, maximum: 18)))
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: workoutStep, on: configured), "depth-18mm")
+    }
+
+    func testConfiguredRecordingUsesOnePositionAndModelForGenericAndExactRequirements() throws {
+        let configured = configuredBoard()
+        let requirements = [
+            ContactRequirement(contactID: "edge-a"),
+            ContactRequirement(contactID: "edge-b", depth: .range(.init(minimum: 10, maximum: 10)))
+        ]
+        let workout = plan(targets: requirements, segments: [])
+        let selection = try ContactResolver.resolveSelection(requirements, step: workout.steps[0], board: configured)
+        let records = try WorkoutActivityRecorder().segments(for: workout, on: configured)
+        let snapshots = try records.map { try XCTUnwrap($0.target?.resolvedContactSnapshot) }
+
+        XCTAssertEqual(selection.positionID, "depth-10mm")
+        XCTAssertEqual(selection.contacts.map(\.depth), [
+            .range(.init(minimum: 10, maximum: 10)), .range(.init(minimum: 10, maximum: 10))
+        ])
+        XCTAssertEqual(snapshots.count, 2)
+        XCTAssertEqual(snapshots.map(\.positionID), ["depth-10mm", "depth-10mm"])
+        XCTAssertEqual(snapshots.map(\.modelSHA256), [String(repeating: "b", count: 64), String(repeating: "b", count: 64)])
+        XCTAssertEqual(snapshots.map(\.contactIDs), [["edge-a"], ["edge-b"]])
+        XCTAssertEqual(snapshots.map(\.requirement), requirements)
+        XCTAssertEqual(WorkoutHighlightResolver.presentationID(for: workout.steps[0], on: configured), "depth-10mm")
+    }
+
+    func testConfiguredRecordingRejectsRequirementsWithoutACommonPosition() {
+        let requirements = [
+            ContactRequirement(contactID: "edge-a", depth: .range(.init(minimum: 18, maximum: 18))),
+            ContactRequirement(contactID: "edge-b", depth: .range(.init(minimum: 10, maximum: 10)))
+        ]
+        XCTAssertThrowsError(try WorkoutActivityRecorder().segments(
+            for: plan(targets: requirements, segments: []), on: configuredBoard()
+        )) { error in
+            XCTAssertEqual(error as? WorkoutActivityRecordingError, .unresolvedTarget(stepID: "step", segmentIndex: 0))
+        }
+    }
+
+    func testConfiguredSingleRankingUsesTheSelectedModelGeometry() throws {
+        let configured = configuredBoard(
+            defaultBounds: ["edge-a": HoldFrame(x: 0.45, y: 0, width: 0.1, height: 0.1),
+                            "edge-b": HoldFrame(x: 0.1, y: 0, width: 0.1, height: 0.1)],
+            shallowBounds: ["edge-a": HoldFrame(x: 0.1, y: 0, width: 0.1, height: 0.1),
+                            "edge-b": HoldFrame(x: 0.45, y: 0, width: 0.1, height: 0.1)])
+        let requirement = ContactRequirement.edge(depth: .range(.init(minimum: 10, maximum: 10)))
+        let selection = try ContactResolver.resolveSelection(requirement, step: step(targets: [requirement]), board: configured)
+
+        XCTAssertEqual(selection.positionID, "depth-10mm")
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-b"])
+    }
+
+    func testConfiguredBilateralRankingUsesTheSelectedModelGeometry() throws {
+        let configured = configuredBoard(
+            defaultBounds: ["edge-a": HoldFrame(x: 0.1, y: 0, width: 0.1, height: 0.1),
+                            "edge-b": HoldFrame(x: 0.3, y: 0, width: 0.1, height: 0.1)],
+            shallowBounds: ["edge-a": HoldFrame(x: 0.1, y: 0, width: 0.1, height: 0.1),
+                            "edge-b": HoldFrame(x: 0.8, y: 0, width: 0.1, height: 0.1)])
+        let requirement = ContactRequirement.edge(depth: .range(.init(minimum: 10, maximum: 10)), selection: .bilateralPair)
+        let selection = try ContactResolver.resolveSelection(requirement, step: step(targets: [requirement]), board: configured)
+
+        XCTAssertEqual(selection.positionID, "depth-10mm")
+        XCTAssertEqual(selection.contacts.map(\.id), ["edge-a", "edge-b"])
+    }
+
+    private func configuredBoard(
+        positionOrder: [Int] = [18, 10],
+        defaultBounds: [String: HoldFrame]? = nil,
+        shallowBounds: [String: HoldFrame]? = nil
+    ) -> BoardRevision {
+        let contacts = ["edge-a", "edge-b"].map {
+            PhysicalContact(id: $0, name: $0, kind: .edge, depth: .range(.init(minimum: 18, maximum: 18)))
+        }
+        let bounds = ["edge-a": HoldFrame(x: 0.1, y: 0, width: 0.1, height: 0.1),
+                      "edge-b": HoldFrame(x: 0.8, y: 0, width: 0.1, height: 0.1)]
+        return BoardRevision(
+            id: "fixture.configured", revisionID: "native", manufacturer: "Fixture", name: "Configured edge",
+            subtitle: "", dimensions: "", aspectRatio: 1, contacts: contacts,
+            productURL: URL(string: "https://example.com/configured")!, photoAssetName: nil,
+            presentations: [
+                modelPresentation(id: "depth-18mm", modelSHA256: String(repeating: "a", count: 64), bounds: defaultBounds ?? bounds),
+                modelPresentation(id: "depth-10mm", isDefault: false, modelSHA256: String(repeating: "b", count: 64), bounds: shallowBounds ?? bounds)
+            ],
+            positions: positionOrder.map { depth in
+                BoardPosition(id: "depth-\(depth)mm", presentationID: "depth-\(depth)mm", contactIDs: contacts.map(\.id),
+                              effectiveDepths: Dictionary(uniqueKeysWithValues: contacts.map {
+                                  ($0.id, HoldDepth.range(.init(minimum: Double(depth), maximum: Double(depth))))
+                              }))
+            })
+    }
+
     private func modelPresentation(
         id: String = "model",
         isDefault: Bool = true,
+        modelSHA256: String = "fixture",
         bounds: [String: HoldFrame]
     ) -> BoardPresentation {
         let descriptorHolds = Dictionary(uniqueKeysWithValues: bounds.map { id, frame in
@@ -132,7 +265,7 @@ final class WorkoutActivityRecordingTests: XCTestCase {
         let descriptor = BoardModelDescriptor(
             schemaVersion: 1,
             coordinateFrame: "board-face-normalized-v1",
-            modelSHA256: "fixture",
+            modelSHA256: modelSHA256,
             modelBounds: BoardModelBounds(minimum: [0, 0, 0], maximum: [1, 1, 0.1]),
             nodes: [],
             contacts: descriptorHolds

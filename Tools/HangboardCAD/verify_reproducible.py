@@ -32,6 +32,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
+from presentation_targets import source_targets
 
 REPOSITORY = Path(__file__).resolve().parents[2]
 TOOLS = REPOSITORY / "Tools" / "HangboardCAD"
@@ -62,7 +63,7 @@ def faceted_import_acknowledged(package: str) -> bool:
     return str(entry.get("sourceKind", "")).startswith("faceted-import")
 
 
-def compile_into(package: str, destination: Path, freecad: Path, extra_path: str) -> None:
+def compile_into(package: str, destination: Path, freecad: Path, extra_path: str, presentation_id: str | None = None) -> None:
     """Run one board's build into a scratch directory, in a fresh process.
 
     FreeCAD's launcher consumes unrecognised options before the script sees them,
@@ -75,6 +76,8 @@ def compile_into(package: str, destination: Path, freecad: Path, extra_path: str
         "--source", str(REPOSITORY / "Hangboards" / package / f"{package}.FCStd"),
         "--assets", str(destination),
     ]
+    if presentation_id is not None:
+        expected.extend(["--presentation", presentation_id])
     if faceted_import_acknowledged(package):
         expected.append("--allow-faceted-import")
     wrapper.write_text(
@@ -123,7 +126,9 @@ def keep_conflicts(keep: Path, package: str) -> list[str]:
     committed_dir = (REPOSITORY / "Hangboards" / package / "assets").resolve()
     kept_dir = (keep / package / "assets").resolve()
     conflicts = []
-    for name in ASSET_NAMES:
+    source = REPOSITORY / "Hangboards" / package / f"{package}.FCStd"
+    names = {name for pair in source_targets(source).values() for name in pair} if source.is_file() else ASSET_NAMES
+    for name in names:
         committed = committed_dir / name
         kept = kept_dir / name
         same = kept.resolve() == committed.resolve()
@@ -137,54 +142,52 @@ def keep_conflicts(keep: Path, package: str) -> list[str]:
 def verify(
     package: str, freecad: Path, extra_path: str, keep: Path | None = None
 ) -> dict:
-    committed_dir = REPOSITORY / "Hangboards" / package / "assets"
-    committed_asset = committed_dir / "primary.usdz"
-    committed_descriptor = committed_dir / "primary.model.json"
-    if not committed_asset.is_file():
-        raise RuntimeError(f"{package} has a source but no committed asset to verify against")
-
+    package_root = REPOSITORY / "Hangboards" / package
+    targets = source_targets(package_root / f"{package}.FCStd")
+    if keep is not None:
+        conflicts = keep_conflicts(keep, package)
+        if conflicts:
+            raise RuntimeError(f"--keep-rebuild would overwrite committed asset(s): {', '.join(conflicts)}")
+    reports = []
     with tempfile.TemporaryDirectory(prefix=f"hangten-repro-{package}-") as scratch:
         destination = Path(scratch) / "assets"
-        compile_into(package, destination, freecad, extra_path)
-        rebuilt_asset = destination / "primary.usdz"
-        rebuilt_descriptor = destination / "primary.model.json"
-        if not rebuilt_asset.is_file() or not rebuilt_descriptor.is_file():
-            raise RuntimeError(f"{package}: the rebuild produced no asset/descriptor pair")
-
-        committed_sha = sha256(committed_asset)
-        rebuilt_sha = sha256(rebuilt_asset)
-        asset_matches = committed_sha == rebuilt_sha
-
-        committed_json = json.loads(committed_descriptor.read_text())
-        rebuilt_json = json.loads(rebuilt_descriptor.read_text())
-        descriptor_matches = committed_json == rebuilt_json
-
-        recorded = committed_json.get("modelSHA256")
-        binds_to_committed = recorded == committed_sha
-
-        # Copy only after the committed bytes have been read, and only to a
-        # destination main() has already checked cannot be a committed asset.
-        if keep is not None:
-            conflicts = keep_conflicts(keep, package)
-            if conflicts:
-                raise RuntimeError(
-                    f"--keep-rebuild would overwrite committed asset(s): {', '.join(conflicts)}"
-                )
-            kept = keep / package / "assets"
-            kept.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(rebuilt_asset, kept / "primary.usdz")
-            shutil.copyfile(rebuilt_descriptor, kept / "primary.model.json")
-
-        # The app trusts the descriptor's modelSHA256, so the descriptor must
-        # bind to the bytes that actually ship, independently of the rebuild.
+        for presentation_id, (asset_name, descriptor_name) in targets.items():
+            committed_asset = package_root / "assets" / asset_name
+            committed_descriptor = package_root / "assets" / descriptor_name
+            committed_json = json.loads(committed_descriptor.read_text())
+            compile_into(package, destination, freecad, extra_path,
+                         presentation_id if len(targets) > 1 else None)
+            rebuilt_asset = destination / asset_name
+            rebuilt_descriptor = destination / descriptor_name
+            if not rebuilt_asset.is_file() or not rebuilt_descriptor.is_file():
+                raise RuntimeError(f"{package}/{presentation_id}: the rebuild produced no asset/descriptor pair")
+            recorded = committed_json.get("modelSHA256")
+            committed_sha = sha256(committed_asset) if committed_asset.is_file() else recorded
+            rebuilt_sha = sha256(rebuilt_asset)
+            rebuilt_json = json.loads(rebuilt_descriptor.read_text())
+            if keep is not None:
+                kept = keep / package / "assets"
+                kept.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(rebuilt_asset, kept / asset_name)
+                shutil.copyfile(rebuilt_descriptor, kept / descriptor_name)
+            reports.append({
+                "presentationID": presentation_id,
+                "assetMatches": committed_sha == rebuilt_sha,
+                "descriptorMatches": committed_json == rebuilt_json,
+                "descriptorBindsCommittedAsset": recorded == committed_sha,
+                "committedAssetSHA256": committed_sha,
+                "rebuiltAssetSHA256": rebuilt_sha,
+                "bytes": rebuilt_asset.stat().st_size,
+            })
         return {
             "package": package,
-            "assetMatches": asset_matches,
-            "descriptorMatches": descriptor_matches,
-            "descriptorBindsCommittedAsset": binds_to_committed,
-            "committedAssetSHA256": committed_sha,
-            "rebuiltAssetSHA256": rebuilt_sha,
-            "bytes": committed_asset.stat().st_size,
+            "assetMatches": all(report["assetMatches"] for report in reports),
+            "descriptorMatches": all(report["descriptorMatches"] for report in reports),
+            "descriptorBindsCommittedAsset": all(report["descriptorBindsCommittedAsset"] for report in reports),
+            "committedAssetSHA256": reports[0]["committedAssetSHA256"],
+            "rebuiltAssetSHA256": reports[0]["rebuiltAssetSHA256"],
+            "bytes": sum(report["bytes"] for report in reports),
+            "presentations": reports,
         }
 
 

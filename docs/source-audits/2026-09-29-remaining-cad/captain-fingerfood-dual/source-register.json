@@ -1,0 +1,64 @@
+{
+  "package": "captain-fingerfood-dual",
+  "publisher": "Captain Fingerfood",
+  "status": "Source set approved; native CAD authored. See per-board geometry and validation artifacts for completion gates.",
+  "observations": "Two complementary views show the same DUAL with one curved and one straight opposing lip, continuous cavity, rounded exterior and two daylight floor openings. P1 shows the exterior cord; P2 shows front plus narrow side. The openings support floor-to-back voids, but the complete threading between them is not established. No U channel may be inferred.",
+  "sources": [
+    {
+      "path": "evidence/captain-fingerfood-dual.html",
+      "publisher": "Captain Fingerfood",
+      "sourceURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+      "binaryURL": "https://en.captainfingerfood.rocks/products/dual-hangboard",
+      "sha256": "c93df995f581f2a731e45f38a8504744ee393059d7a714019dc679b702e3ffb2",
+      "bytes": 590737,
+      "supports": "exact-revision product",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-dual.html",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/captain-fingerfood-dual-title.jpg",
+      "publisher": "Captain Fingerfood",
+      "sourceURL": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/DualTitelbild.jpg?v=1739704755",
+      "binaryURL": "https://cdn.shopify.com/s/files/1/0602/4547/5542/files/DualTitelbild.jpg?v=1739704755",
+      "sha256": "f57fb751f63c5258e8cb85a9d0f0ad27f6b9cb5eede94b5e1caccc496ec9468e",
+      "bytes": 197112,
+      "supports": "exact-revision title image",
+      "retention": "git 8f2bfcffd^:docs/source-audits/2026-09-13-model-cord-snapshots/captain-fingerfood-dual-title.jpg",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/DualP1.jpg",
+      "publisher": "Captain Fingerfood",
+      "sourceURL": "https://captainfingerfood.rocks/cdn/shop/files/DualP1.jpg?v=1739704755",
+      "binaryURL": "https://captainfingerfood.rocks/cdn/shop/files/DualP1.jpg?v=1739704755",
+      "sha256": "b67f397ceefa3054f7d6ac038a8459fe8389753713ebb97274acc1a17a6de5c8",
+      "bytes": 250426,
+      "supports": "Two complementary views show the same DUAL with one curved and one straight opposing lip, continuous cavity, rounded exterior and two daylight floor openings. P1 shows the exterior cord; P2 shows front plus narrow side. The openings support floor-to-back voids, but the complete threading between them is not established. No U channel may be inferred.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    },
+    {
+      "path": "evidence/DualP2.jpg",
+      "publisher": "Captain Fingerfood",
+      "sourceURL": "https://captainfingerfood.rocks/cdn/shop/files/DualP2.jpg?v=1739704755",
+      "binaryURL": "https://captainfingerfood.rocks/cdn/shop/files/DualP2.jpg?v=1739704755",
+      "sha256": "5b9f30b16919157e9017f51cebe979bd5aae99f69b4c48827c7b5fdb1145649b",
+      "bytes": 255166,
+      "supports": "Two complementary views show the same DUAL with one curved and one straight opposing lip, continuous cavity, rounded exterior and two daylight floor openings. P1 shows the exterior cord; P2 shows front plus narrow side. The openings support floor-to-back voids, but the complete threading between them is not established. No U channel may be inferred.",
+      "retention": "downloaded 2026-09-29 from exact URL discovered in retained manufacturer page",
+      "approvalStatus": "approved by user 2026-09-29"
+    }
+  ],
+  "approval": {
+    "state": "approved",
+    "reviewer": "user",
+    "date": "2026-09-29",
+    "quote": "those are fine, feel free to use more searches for individual boards as needed",
+    "scope": "Exact retained visual set and further individual manufacturer source research."
+  },
+  "constraints": [
+    "Images are visual evidence only; no tracing, segmentation, alignment, masking, cropping, or pixel-derived geometry.",
+    "CAD remains a display approximation with native analytic feature history.",
+    "Cord connectivity must be supported before geometry or topology is changed."
+  ]
+}

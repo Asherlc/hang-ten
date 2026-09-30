@@ -957,6 +957,8 @@ final class BoardModelRealityScene {
                                 suspension: BoardModelSuspension,
                                 bounds: BoardModelBounds) throws -> BoardModelSolvedSuspension {
         switch suspension {
+        case .cadRoutedCord(let profile):
+            return .twoBranch(try SuspendedBoardPresentation.solve(pose: pose, suspension: profile, bounds: bounds))
         case .singleCord(let profile):
             return .single(try SuspendedBoardPresentation.solve(
                 pose: pose, suspension: .singleCord(profile), bounds: bounds))

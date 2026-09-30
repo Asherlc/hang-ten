@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "d7bcca50d7c2c2e545552efeec963f0fc627366c5793bb839d7419fb5b6c5b30",
+  "modelBounds": {
+    "min": [
+      -0.050000001,
+      -0.029999999,
+      -0.0125
+    ],
+    "max": [
+      0.050000001,
+      0.029999999,
+      0.0125
+    ]
+  },
+  "nodes": [
+    {
+      "nodeID": "nature_body",
+      "role": "body"
+    },
+    {
+      "nodeID": "nature_jug",
+      "role": "contact",
+      "contactID": "pull-up-jug"
+    },
+    {
+      "nodeID": "nature_pinch",
+      "role": "contact",
+      "contactID": "pinch-60"
+    },
+    {
+      "nodeID": "nature_stone",
+      "role": "contact",
+      "contactID": "granite-edge-15"
+    },
+    {
+      "nodeID": "nature_wood",
+      "role": "contact",
+      "contactID": "wood-edge-15-incut"
+    }
+  ],
+  "contacts": {
+    "granite-edge-15": {
+      "nodeIDs": [
+        "nature_stone"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.130000001,
+          0.366666657
+        ],
+        "max": [
+          0.869999999,
+          0.366666657
+        ]
+      },
+      "center": [
+        0.5,
+        0.366666657
+      ]
+    },
+    "pinch-60": {
+      "nodeIDs": [
+        "nature_pinch"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.080000012,
+          0.0
+        ],
+        "max": [
+          0.919999988,
+          1.0
+        ]
+      },
+      "center": [
+        0.5,
+        0.5
+      ]
+    },
+    "pull-up-jug": {
+      "nodeIDs": [
+        "nature_jug"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.109999998,
+          0.333333333
+        ],
+        "max": [
+          0.890000002,
+          0.833333333
+        ]
+      },
+      "center": [
+        0.5,
+        0.583333333
+      ]
+    },
+    "wood-edge-15-incut": {
+      "nodeIDs": [
+        "nature_wood"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.095000005,
+          0.333333333
+        ],
+        "max": [
+          0.904999995,
+          0.833333333
+        ]
+      },
+      "center": [
+        0.5,
+        0.583333333
+      ]
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "LeftFloorBore": {
+    "nativeMouthsMM": [
+      [
+        -26,
+        5,
+        1
+      ],
+      [
+        -26,
+        15,
+        1
+      ]
+    ],
+    "axisLengthMM": 10.0,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  },
+  "RightFloorBore": {
+    "nativeMouthsMM": [
+      [
+        26,
+        5,
+        1
+      ],
+      [
+        26,
+        15,
+        1
+      ]
+    ],
+    "axisLengthMM": 10.0,
+    "method": "measure_channel_spines.py channel_samples + station_on_spine on native Part::Cylinder"
+  }
+}

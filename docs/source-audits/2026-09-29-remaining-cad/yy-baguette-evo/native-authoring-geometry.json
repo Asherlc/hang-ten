@@ -1,0 +1,17 @@
+{
+  "bodyFeature": "Joined_SeamBox_z0",
+  "bodyVolume": 745437.6023551623,
+  "contactNodes": 20,
+  "uniqueContacts": 19,
+  "boreCentersXmm": [
+    -246,
+    -231,
+    231,
+    246
+  ],
+  "boreNativeZmm": 0,
+  "boreMouthNativeYmm": [
+    -25,
+    25
+  ]
+}

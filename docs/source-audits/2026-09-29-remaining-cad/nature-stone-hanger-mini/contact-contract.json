@@ -1,0 +1,37 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "pull-up-jug",
+    "wood-edge-15-incut",
+    "granite-edge-15",
+    "pinch-60"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "front-upright",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pull-up-jug",
+        "granite-edge-15"
+      ]
+    },
+    {
+      "id": "wood-inverted",
+      "presentationID": "primary",
+      "contactIDs": [
+        "wood-edge-15-incut"
+      ]
+    },
+    {
+      "id": "pinch-side",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "metadataDecision": "Stale Beech productURL corrected to approved Oak productURL. All four contact records preserved. Pinch60 is opposition span rather than25mm front cavity depth; broad internal jug is separate from upper wood edge."
+}

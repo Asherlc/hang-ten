@@ -263,3 +263,64 @@ The Mini Bar's generated routes found at least 2.097 mm exterior
 centerline-to-wood clearance with a 2 mm estimated rope radius. Those numbers
 are specific to its display model; they are not a general rope or safety
 specification.
+
+## Evidenced exterior wraps and incomplete passage evidence
+
+The [remaining-board source audits](source-audits/2026-09-29-remaining-cad/)
+include a single eye (Cyclops), an open curl (Plateau), end wraps (Baguette),
+four independent bores with exposed rear returns (Flash Board and Baguette
+Evo), and visible mouths whose interior connection is unknown (Captain,
+Frictitious, Nature, Travelboard). Do not turn these into hidden U channels or
+two independent loops. The connected-channel method above remains the method
+for boards whose evidence supports that topology.
+
+For these other graphs, `cadRoutedCord` declares one to eight visible strands.
+A `lead` runs from the fixed support to one evidenced mouth, a `loop` runs
+from that support through two exterior bearing stations and back, and a
+`segment` joins two evidenced stations. Unknown joins remain unspecified.
+Each strand records its length, radius, material and provenance; estimated
+visible lengths are display estimates, not claims about the unseen full cord.
+
+The authoring-only `ropeSolver` has `method: "nativeRoutes"`, a positive
+`clearance`, and `terminalsByStrandID`. Each entry supplies one terminal for a
+lead or two bearing stations for a loop/segment, plus a `planeNormal` selected
+from the native geometry. These are attachment facts, not drawn routes. The
+solver extracts native-solid sections, retains their holes and separate
+pieces, solves paths around rope-offset boundaries, and settles hanging height.
+`sectionPlane: "anchor"` makes each free lead's section contain its actual
+support and terminal; it iterates with height for tapered or varying sections.
+An optional `planeAxis` selects the native axis that the section must contain.
+For a lead whose bore direction is established by the native solid and retained
+manufacturer evidence, `mouthAxis` keeps the terminal at the real opening and
+derives a short outward exit beyond the solid's support plane. The solver
+certifies the axis segment and includes it in the available-length calculation;
+the operator never draws that collar or the resulting centerline.
+If the rounded-cache certificate finds a collision on a collar lead, the solver
+may retry up to five times, increasing only that lead's section margin by a
+quarter of its unchanged cord radius per attempt. Return segments retain their
+original margin. The selected margin, derived exit and attempt appear in the
+report's `mouthCollars`; they are derived diagnostics rather than authored route
+stations. Every attempt retains the same full-solid and tube-intersection gates.
+
+The default `"fixed"` uses the selected section plane. Both modes certify every
+visible segment against the full closed CAD solid using adaptive signed-distance
+Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.
+Uncertifiable intervals fail. The same check covers the rounded runtime cache,
+its actual terminal and reconstructed fixed support. Self-crossings, retracing
+and nonlocal tube intersections also fail; intentional endpoint joins remain
+valid. A radius that fills a mouth cannot also provide clearance: use an audited
+cord display estimate when warranted, and preserve the evidenced native solid.
+
+Run `solve_threaded_rope.py --apply`, then `--check --report <owned-path>`.
+The cache contains only body-space `wrappedRoutes`; apps transform those points
+and add the fixed world support. They render transient non-pickable tubes and
+do not infer missing topology or solve live physics. The report retains native
+clearance and length ratios for every pose.
+
+For several model assets or reusable equipment instances, sidecar schema 2
+contains an `entries` array. Each entry names `presentationID`, optionally
+`equipmentObjectID`, its exact `modelSHA256`, `suspension`, and optional
+authoring `ropeSolver`. Each target occurs once. Generation validates every
+descriptor hash, preserves manifest number spelling, and stages only the
+merged `board.json`. Pass `--presentation` and/or `--equipment-object` to the
+solver to select the exact entry. Lock the entire sidecar and every descriptor.

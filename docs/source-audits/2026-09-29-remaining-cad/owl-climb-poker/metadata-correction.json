@@ -1,0 +1,30 @@
+{
+  "changes": [
+    {
+      "contactID": "face-c-left-shallow-half-round",
+      "old": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "new": "field omitted",
+      "sourceURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
+      "reason": "100 mm is the manufacturer half-circle diameter, not a grip-depth measurement. Existing source register OP1 explicitly labels diameter100."
+    },
+    {
+      "contactID": "face-c-right-shallow-half-round",
+      "old": {
+        "range": {
+          "minimum": 100,
+          "maximum": 100
+        }
+      },
+      "new": "field omitted",
+      "sourceURL": "https://owlclimb.com/index.php/en/prds-2/poker/",
+      "reason": "100 mm is the manufacturer half-circle diameter, not a grip-depth measurement. Existing source register OP1 explicitly labels diameter100."
+    }
+  ],
+  "authorization": "Root authorized source-fidelity correction in this 2026-09-29 migration session",
+  "preserved": "All contact IDs, names, kinds, finger capacities, grip cues, positions, and remaining metadata unchanged."
+}

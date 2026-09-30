@@ -1,0 +1,128 @@
+{
+  "sources": [
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-3.webp?v=1753695062",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-baguette/yy-vertical-agres-nomades-la-baguette-3.webp",
+      "snapshotSHA256": "1f6742bddbb63d5583952d8ae10bfe7fbca5ac5dc7990c8ccbc1695f4c5c9080",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Front view: rounded narrow body; two front stepped cavities, with engraved 20/25 mm on the right; end-wrapped cord.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-3.webp"
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-2.webp?v=1753695052",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-baguette/yy-vertical-agres-nomades-la-baguette-2.webp",
+      "snapshotSHA256": "ecdd7142686b82cc93b103292cc5fe75a923ab8bb0389dc437d40a75609c8214",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Reverse oblique: five distinct recess regions, engraved 15/10 mm near one end; rounded thickness; cord wraps externally around both grooved ends.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-2.webp"
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/yy-vertical-agres-nomades-la-baguette-1.webp?v=1753695041",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-baguette/yy-vertical-agres-nomades-la-baguette-1.webp",
+      "snapshotSHA256": "ae8a640c88a520246b964bcb67285836ebd2e63eb593efe3e00a7cefe7467676",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "supportClaim": "Front oblique: stepped 20/25 mm cavity floors, rounded end shape and visible external cord loop around end groove. No hidden bore is established.",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/yy-vertical-agres-nomades-la-baguette-1.webp"
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/en/products/la-baguette-poutre-escalade",
+      "snapshotPath": ".context/placid-badger/cad-raster-boards/yy-baguette/product.html",
+      "snapshotSHA256": "a7e4ad58ba8cbefd9fb3d2ef3ebeeeb74c467c3bf61f6bd8583f8ad7c89b7b22",
+      "supportClaim": "Exact product identity, gallery association, dimensions and listed contact depths; no training prescriptions are imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user in 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved the thirteen new exact source packets including YY Baguette and TravelBoard: those are fine, feel free to use more searches for individual boards as needed."
+      },
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/product.html"
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/6_-_YY_-_BAGUETTE.jpg?v=1749649955",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/6_-_YY_-_BAGUETTE.jpg",
+      "snapshotSHA256": "714d3b1d806a647a57e1353cfcfd682f29864efc8cc063617d80a2ff708ef78f",
+      "supportClaim": "Manufacturer loaded-view corroboration of front/rear cavity layout and external end-wrapped suspension; no training prescription is imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved YY source packet and explicitly authorized additional individual-board searches."
+      }
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/4_-_YY_-_BAGUETTE.jpg?v=1749649954",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/4_-_YY_-_BAGUETTE.jpg",
+      "snapshotSHA256": "edf1fe79e9e08e7d0329215ef372a4c0ef174ec4426d3226490d26dc6376d8bf",
+      "supportClaim": "Manufacturer loaded-view corroboration of front/rear cavity layout and external end-wrapped suspension; no training prescription is imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved YY source packet and explicitly authorized additional individual-board searches."
+      }
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/2_-_YY_-_BAGUETTE.jpg?v=1749649950",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/2_-_YY_-_BAGUETTE.jpg",
+      "snapshotSHA256": "3a10846614985d0471b4edc23c6a614649eca322ad0e37c5411829aeb2b9979a",
+      "supportClaim": "Manufacturer loaded-view corroboration of front/rear cavity layout and external end-wrapped suspension; no training prescription is imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved YY source packet and explicitly authorized additional individual-board searches."
+      }
+    },
+    {
+      "package": "yy-baguette",
+      "publisher": "YY Vertical",
+      "sourceTier": "manufacturer",
+      "url": "https://www.yyvertical.com/cdn/shop/files/5_-_YY_-_BAGUETTE.jpg?v=1749649952",
+      "retainedPath": "docs/source-audits/2026-09-29-remaining-cad/yy-baguette/evidence/5_-_YY_-_BAGUETTE.jpg",
+      "snapshotSHA256": "011b024d01d61a3ce22521d39eedf32ec086041c4d6846e719a27a450de894de",
+      "supportClaim": "Manufacturer loaded-view corroboration of front/rear cavity layout and external end-wrapped suspension; no training prescription is imported.",
+      "humanApproval": {
+        "approved": true,
+        "reviewer": "human user 2026-09-29 migration conversation",
+        "reviewedAt": "2026-09-29",
+        "notes": "User approved YY source packet and explicitly authorized additional individual-board searches."
+      }
+    }
+  ]
+}

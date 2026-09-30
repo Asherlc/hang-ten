@@ -97,7 +97,9 @@ def _render(points, normals, view, path, size=(520, 680)):
 
     image = Image.new("RGB", (width, height), (255, 255, 255))
     draw = ImageDraw.Draw(image)
-    order = np.argsort(-depth.mean(axis=1))  # back (larger depth) first
+    # Front looks from negative Y; side and top look from positive X/Z.
+    # Paint far surfaces first in the actual viewing direction.
+    order = np.argsort((-1 if view == "front" else 1) * depth.mean(axis=1))
     for index in order:
         uu = u[index]
         vv = v[index]

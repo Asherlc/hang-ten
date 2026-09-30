@@ -1,18 +1,19 @@
 {
+  "schemaVersion": 1,
   "coordinateFrame": "hang-ten-board-v1",
+  "modelSHA256": "13bece21410eca76f37068a8795d62c37a81436f89b2a2596f0ca3bbb4b67e97",
   "modelBounds": {
+    "min": [
+      0.0,
+      -0.0,
+      2.99e-07
+    ],
     "max": [
       0.5,
       0.075999998,
-      0.075999998
-    ],
-    "min": [
-      0,
-      0,
-      0
+      0.075997628
     ]
   },
-  "modelSHA256": "555191023ddc584c1a01dadba7bfe21ed5a81db570943a0697958df416cfdbac",
   "nodes": [
     {
       "nodeID": "flash_board_body_008",
@@ -54,139 +55,138 @@
       "contactID": "two-edge-right"
     }
   ],
-  "schemaVersion": 1,
   "contacts": {
     "small-crimp-left": {
-      "center": [
-        0.328000009,
-        0.810526313
+      "nodeIDs": [
+        "flash_board_body_009"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.391600013,
-          0.848684193
-        ],
         "min": [
           0.264400005,
           0.772368433
+        ],
+        "max": [
+          0.391600013,
+          0.848684193
         ]
       },
-      "nodeIDs": [
-        "flash_board_body_009"
+      "center": [
+        0.328000009,
+        0.810526313
       ]
     },
     "small-crimp-right": {
-      "center": [
-        0.671999991,
-        0.810526313
+      "nodeIDs": [
+        "flash_board_body_010"
       ],
       "facePlaneAABB": {
-        "max": [
-          0.735599995,
-          0.848684193
-        ],
         "min": [
           0.608399987,
           0.772368433
+        ],
+        "max": [
+          0.735599995,
+          0.848684193
         ]
       },
-      "nodeIDs": [
-        "flash_board_body_010"
+      "center": [
+        0.671999991,
+        0.810526313
       ]
     },
     "three-edge-center": {
-      "center": [
-        0.500000015,
-        0.487840751
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.614400029,
-          0.719736844
-        ],
-        "min": [
-          0.385600001,
-          0.255944657
-        ]
-      },
       "nodeIDs": [
         "flash_board_body_011"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.385600001,
+          0.280867266
+        ],
+        "max": [
+          0.614400029,
+          0.700526942
+        ]
+      },
+      "center": [
+        0.500000015,
+        0.490697104
       ]
     },
     "three-edge-left": {
-      "center": [
-        0.224000003,
-        0.487840751
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.338400006,
-          0.719736844
-        ],
-        "min": [
-          0.1096,
-          0.255944657
-        ]
-      },
       "nodeIDs": [
         "flash_board_body_012"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.1096,
+          0.280867266
+        ],
+        "max": [
+          0.338400006,
+          0.700526942
+        ]
+      },
+      "center": [
+        0.224000003,
+        0.490697104
       ]
     },
     "three-edge-right": {
-      "center": [
-        0.775999993,
-        0.487840738
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.890399992,
-          0.719736844
-        ],
-        "min": [
-          0.661599994,
-          0.255944632
-        ]
-      },
       "nodeIDs": [
         "flash_board_body_013"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.661599994,
+          0.280867266
+        ],
+        "max": [
+          0.890399992,
+          0.700526942
+        ]
+      },
+      "center": [
+        0.775999993,
+        0.490697104
       ]
     },
     "two-edge-left": {
-      "center": [
-        0.254000001,
-        0.44017887
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.375400007,
-          0.667105303
-        ],
-        "min": [
-          0.132599995,
-          0.213252436
-        ]
-      },
       "nodeIDs": [
         "flash_board_body_014"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.132599995,
+          0.239605263
+        ],
+        "max": [
+          0.375400007,
+          0.658651884
+        ]
+      },
+      "center": [
+        0.254000001,
+        0.449128574
       ]
     },
     "two-edge-right": {
-      "center": [
-        0.745999992,
-        0.44017887
-      ],
-      "facePlaneAABB": {
-        "max": [
-          0.867399991,
-          0.667105303
-        ],
-        "min": [
-          0.624599993,
-          0.213252436
-        ]
-      },
       "nodeIDs": [
         "flash_board_body_015"
+      ],
+      "facePlaneAABB": {
+        "min": [
+          0.624599993,
+          0.239605263
+        ],
+        "max": [
+          0.867399991,
+          0.658651884
+        ]
+      },
+      "center": [
+        0.745999992,
+        0.449128574
       ]
     }
   }
