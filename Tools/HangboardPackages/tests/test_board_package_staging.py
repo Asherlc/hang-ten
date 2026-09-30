@@ -373,6 +373,8 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
 @pytest.mark.parametrize(
     "slug",
     (
+        "clavellium-training-block",
+        "lattice-mini-bar",
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
         "tension-whetstone",
@@ -389,6 +391,8 @@ def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
 ) -> None:
     repository_root = tmp_path / "repository"
     for model_slug in (
+        "clavellium-training-block",
+        "lattice-mini-bar",
         "frictitious-doormount-pro-7",
         "frictitious-megalith",
         "tension-whetstone",
