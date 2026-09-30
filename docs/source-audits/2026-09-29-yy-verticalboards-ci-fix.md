@@ -464,3 +464,25 @@ API references: Apple ARView non-AR camera mode and native picking:
 https://developer.apple.com/documentation/realitykit/arview/cameramode-swift.enum/nonar
 https://developer.apple.com/documentation/realitykit/arview/entity(at:)
 https://developer.apple.com/documentation/swiftui/uiviewrepresentable
+
+
+### Main finish integration and conflict resolution
+
+Merged main 6566d8e82 at the user's request to resolve PR524 conflicts. The only
+textual conflict was docs/model-delivery-lock.json. Retain main's runtime finish
+provenance and source hashes alongside the three YY migrations, combine the
+package inventory and regenerate the checksum from the exact merged bytes.
+Main's new complete-finish inventory test failed for VerticalBoard First's
+missing surfaceFinish before the integration correction.
+
+All three YY manifests now explicitly select surfaceFinish=neutral through
+Tools/HangboardCAD/set_board_manifest.py. This preserves the prior runtime
+appearance and authors no manufacturer finish claim. Archive member comparison
+confirms only Document.xml changed; manifests differ only by that display
+field, so all49 contacts and factual metadata remain unchanged. Delivered USDZ
+and descriptor bytes are identical (including comparison with retained LFS
+object hashes). The updated lock pins all53models/122files,
+SHA256 1c8912a1485ac4da85352192289dcb74335c5b2f9383246f2532f34b6b9b668a.
+Main's materials are runtime-only; no material or texture is added to the three
+YY USDZ files. Existing non-AR host comparison and strong rendered assertions
+are retained. Build/Python integration checks and fresh CI govern delivery.
