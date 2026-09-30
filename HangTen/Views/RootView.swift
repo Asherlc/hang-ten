@@ -2013,6 +2013,8 @@ struct WorkoutView: View {
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
 							cueStep: resolvedHighlightedStep,
+							highlightedTaskIndex: highlightedTaskIndex,
+							highlightedSelectedHandSide: highlightedSelectedHandSide,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					} else {
@@ -2030,6 +2032,8 @@ struct WorkoutView: View {
 							showsHoldPreview: showsHoldPreview,
 							holdCue: holdCue,
 							cueStep: resolvedHighlightedStep,
+							highlightedTaskIndex: highlightedTaskIndex,
+							highlightedSelectedHandSide: highlightedSelectedHandSide,
 							isSkipCountdown: sessionState.countdownKind == .skip
 						)
 					}
@@ -2259,6 +2263,8 @@ struct WorkoutView: View {
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
 		cueStep: WorkoutStep?,
+		highlightedTaskIndex: Int,
+		highlightedSelectedHandSide: WorkoutSide?,
 		isSkipCountdown: Bool
 	) -> some View {
 		ScrollView(showsIndicators: false) {
@@ -2298,7 +2304,12 @@ struct WorkoutView: View {
 							resolvedHandSide: resolvedHandSide(for: step)
 						)
 					} else {
-						portraitHandCueCards(holdCue: holdCue, cueStep: cueStep)
+						portraitHandCueCards(
+							holdCue: holdCue,
+							cueStep: cueStep,
+							taskIndex: highlightedTaskIndex,
+							selectedHandSide: highlightedSelectedHandSide
+						)
 					}
 				}
 				if let cueCardRows = WorkoutPresentationContent.cueCardRows(
@@ -2376,14 +2387,17 @@ struct WorkoutView: View {
 	}
 
 	@ViewBuilder
-	private func portraitHandCueCards(holdCue: WorkoutHoldCue, cueStep: WorkoutStep?) -> some View {
-		let taskIndex = cueStep.map { taskCursor.index(for: $0) } ?? 0
-		let selectedSide = cueStep.flatMap { taskCursor.selectedSide(for: $0) }
+	private func portraitHandCueCards(
+		holdCue: WorkoutHoldCue,
+		cueStep: WorkoutStep?,
+		taskIndex: Int,
+		selectedHandSide: WorkoutSide?
+	) -> some View {
 		let showsLeft = WorkoutHoldCueVisibilityPolicy.showsCue(
-			for: .left, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedSide
+			for: .left, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedHandSide
 		)
 		let showsRight = WorkoutHoldCueVisibilityPolicy.showsCue(
-			for: .right, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedSide
+			for: .right, step: cueStep, taskIndex: taskIndex, selectedHandSide: selectedHandSide
 		)
 		if showsLeft && showsRight {
 			GripHandPairCueCards(posture: holdCue.gripType,
@@ -2416,20 +2430,22 @@ struct WorkoutView: View {
 		showsHoldPreview: Bool,
 		holdCue: WorkoutHoldCue?,
 		cueStep: WorkoutStep?,
+		highlightedTaskIndex: Int,
+		highlightedSelectedHandSide: WorkoutSide?,
 		isSkipCountdown: Bool
 	) -> some View {
 		let showsPairedHandCue: Bool = {
 			guard let holdCue else { return false }
-			let taskIndex = cueStep.map { taskCursor.index(for: $0) } ?? 0
-			let selectedSide = cueStep.flatMap { taskCursor.selectedSide(for: $0) }
 			return WorkoutLandscapeHandCuePolicy.showsHandCue(
 				for: .left, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
 				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
-				taskIndex: taskIndex, selectedHandSide: selectedSide
+				taskIndex: highlightedTaskIndex,
+				selectedHandSide: highlightedSelectedHandSide
 			) && WorkoutLandscapeHandCuePolicy.showsHandCue(
 				for: .right, holdCue: holdCue, cueStep: cueStep, countdown: countdown,
 				isComplete: isComplete, isSkipCountdown: isSkipCountdown,
-				taskIndex: taskIndex, selectedHandSide: selectedSide
+				taskIndex: highlightedTaskIndex,
+				selectedHandSide: highlightedSelectedHandSide
 			)
 		}()
 		return VStack(spacing: 9) {
@@ -2459,6 +2475,8 @@ struct WorkoutView: View {
 					countdown: countdown,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
+					taskIndex: highlightedTaskIndex,
+					selectedHandSide: highlightedSelectedHandSide,
 					side: .left,
 					usesSharedPairPreview: showsPairedHandCue
 				)
@@ -2486,6 +2504,8 @@ struct WorkoutView: View {
 					countdown: countdown,
 					isComplete: isComplete,
 					isSkipCountdown: isSkipCountdown,
+					taskIndex: highlightedTaskIndex,
+					selectedHandSide: highlightedSelectedHandSide,
 					side: .right,
 					usesSharedPairPreview: showsPairedHandCue
 				)
@@ -2539,6 +2559,8 @@ struct WorkoutView: View {
 		countdown: Int,
 		isComplete: Bool,
 		isSkipCountdown: Bool,
+		taskIndex: Int,
+		selectedHandSide: WorkoutSide?,
 		side: GripCueSide,
 		usesSharedPairPreview: Bool = false
 	) -> some View {
@@ -2552,8 +2574,8 @@ struct WorkoutView: View {
 				countdown: countdown,
 				isComplete: isComplete,
 				isSkipCountdown: isSkipCountdown,
-				taskIndex: cueStep.map { taskCursor.index(for: $0) } ?? 0,
-				selectedHandSide: cueStep.flatMap { taskCursor.selectedSide(for: $0) }
+				taskIndex: taskIndex,
+				selectedHandSide: selectedHandSide
 			) {
 				GripHandCueCard(
 					posture: holdCue.gripType,
