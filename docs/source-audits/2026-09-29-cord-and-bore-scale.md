@@ -42,3 +42,51 @@ baseline uses scale 1.75. This operator statement is the source for the updated
 diameter; it does not verify the estimated CAD bore. The Mini Bar's 5.4 mm
 throat estimate remains inconsistent even with 7 mm and requires evidence
 review. Clavellium's documented round-cord adaptation of a flat sling remains.
+
+## Mini Bar correction from the confirmed diameter
+
+The two native channel sketch radii are now 3.7 mm, giving a **7.4 mm
+estimated bore diameter**. This uses the operator's 7 mm cord measurement
+plus 0.2 mm radial display clearance. It supersedes the unsupported 5.4 mm
+bore estimate and preserves the manufacturer's 155 mm overall width.
+`DiameterProvenance` on both native sketches records this distinction.
+
+The source audit also found that the original ergonomic-jug contact surface
+continued across the bore openings. A ray through each displayed mouth hit that
+contact overlay, whereas the exact native wood solid admitted the ray into the
+channel. Each contact surface is now a parametric intersection with the final
+wood body, preserving the four grip identities while excluding openings from
+rendering and picking. A failing exported-mesh ray regression captures this
+physical/render discrepancy. The USDZ remains unbound and contains no cord.
+
+The static authoring solver needed a bounded fallback for curved channel
+sections whose closest separation underestimates the wider throat. It increases
+only its temporary closure until there is one bearing outline; all resulting
+routes still undergo signed-distance checks against the original complete CAD
+solid. The existing rectangular-channel behavior is unchanged. The four Mini
+Bar poses regenerate with 3.586–3.588 mm minimum sampled exterior centerline
+clearance at the confirmed 3.5 mm radius. Each loop remains 0.82 m and the
+CAD-measured hidden centerline length remains 87.214214 mm.
+
+Current source/export, native visual proof and package hashes are recorded in
+the delivery evidence after the final contact-surface rebuild. This diameter
+correction does not establish Mini Bar live dynamics; its curved-channel and
+cross-rope adapters remain a separate promotion gate.
+
+### Final diameter-correction validation
+
+The Mini Bar CAD source rebuilds byte-identically to model SHA-256
+`4b4e9950b01fa303f36b27ad2841ea697cc4ed93f5dff61827b11a6f3fcfa2ca`.
+The package tests plus focused diameter/section tests pass (419 tests).
+The corrected package passed the full native suite (1,280 tests, three
+existing skips, zero failures). The screenshot audit then caught clipping
+while orbiting; after fitting the same geometry in the actual camera basis,
+all 20 native scene tests pass, including all four Mini Bar poses at three
+azimuths. User-selected grip rotations are unchanged.
+
+[Front/side/top mesh comparison](2026-09-29-mini-bar-seven-mm-evidence/strong-owl-mini-front-side-top.png)
+and [all four native grip views](2026-09-29-mini-bar-seven-mm-evidence/strong-owl-mini-native-pose-matrix.png)
+were shown during review. The latter uses the complete board-map rectangle
+measured from native accessibility bounds; untouched full-screen originals
+and build/source hashes remain in the same evidence directory. The delivery
+lock verifies 49 models and 117 pinned files.

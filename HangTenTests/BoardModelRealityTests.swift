@@ -28,8 +28,8 @@ final class BoardModelRealityTests: XCTestCase {
                 }
             } else {
                 let tube=segment.visualBounds(relativeTo:segment)
-                XCTAssertEqual(tube.max.x-tube.min.x,0.004,accuracy:0.00001,id)
-                XCTAssertEqual(tube.max.z-tube.min.z,0.004,accuracy:0.00001,id)
+                XCTAssertEqual(tube.max.x-tube.min.x,0.007,accuracy:0.00001,id)
+                XCTAssertEqual(tube.max.z-tube.min.z,0.007,accuracy:0.00001,id)
             }
             XCTAssertEqual(segment.scale,SIMD3<Float>(repeating:1))
             XCTAssertEqual(cord.scale,SIMD3<Float>(repeating:1))
@@ -374,6 +374,35 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertLessThan(try XCTUnwrap(localCenters.map(\.y).min()), 0.008,
                               "The \(position.id) loop must pass around the lower surface")
             XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil })
+        }
+    }
+
+    @MainActor
+    func testMiniBarOrbitKeepsBodyAndEntireCordInsideViewport() async throws {
+        let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"lattice.mini-bar"))
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        let viewport=CGSize(width:540,height:209)
+        scene.frame(in:viewport)
+        for position in board.positions {
+            XCTAssertTrue(scene.select(positionID:position.id))
+            for azimuth in [Float(0),.pi/2,.pi] {
+                scene.orbit(azimuth:azimuth,elevation:0)
+                let view=scene.camera.transform.matrix.inverse
+                let tangent=tan(scene.camera.camera.fieldOfViewInDegrees*Float.pi/360)
+                for entity in scene.instanceEntities+[try XCTUnwrap(scene.transientCordEntity)] {
+                    let bounds=entity.visualBounds(relativeTo:scene.root)
+                    for x in [bounds.min.x,bounds.max.x] {
+                        for y in [bounds.min.y,bounds.max.y] {
+                            for z in [bounds.min.z,bounds.max.z] {
+                                let point=view*SIMD4<Float>(x,y,z,1),depth = -point.z
+                                XCTAssertGreaterThan(depth,0,position.id)
+                                XCTAssertLessThanOrEqual(abs(point.x/depth/tangent/Float(viewport.width/viewport.height)),1,position.id)
+                                XCTAssertLessThanOrEqual(abs(point.y/depth/tangent),1,position.id)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

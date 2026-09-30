@@ -1,0 +1,46 @@
+{
+  "workspace": "strong-owl",
+  "baselineCommit": "7896e7bc2a0ed82a5f4cc1e4503a05b3ba9e8245",
+  "sourceSHA256": "24ac6049a17e55d784b8c0b0859df07800c08f564d473993cf30f1f3fea08d79",
+  "modelSHA256": "4b4e9950b01fa303f36b27ad2841ea697cc4ed93f5dff61827b11a6f3fcfa2ca",
+  "cordDiameterMeters": 0.007,
+  "boreDiameterMeters": 0.0074,
+  "boreRuling": "Display estimate from owner-confirmed7mm cord plus0.2mm radial clearance; no factory measurement claimed.",
+  "priorModelSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
+  "comparison": "Native source-generated meshes rendered with identical orthographic scale and triangle depth buffering; no image-based geometry inference.",
+  "simulatorUUID": "3C51E4D9-C4A2-4043-BF75-2157D5FC1763",
+  "simulatorName": "Hang Ten Paseo strong-owl Review",
+  "runtime": "iOS26.4",
+  "configuration": "Debug SWIFT_OPTIMIZATION_LEVEL=-O, signing enabled",
+  "snapshotParameters": {
+    "HANGTEN_REVIEW_BOARD_ID": "lattice.mini-bar",
+    "HANGTEN_REVIEW_BOARD_DETAIL": "1",
+    "HANGTEN_REVIEW_BOARD_HOLD_ID": [
+      "edge-10",
+      "edge-20",
+      "ergonomic-jug",
+      "mini-pinch"
+    ],
+    "HANGTEN_REVIEW_LANDSCAPE": "1",
+    "HANGTEN_REVIEW_MODEL_VIEW": [
+      "front",
+      "side",
+      "top"
+    ]
+  },
+  "proofNotes": "All full native screenshots are retained untouched. The pose matrix uses the complete board-map rectangle measured from native accessibility bounds (500,494)-(2122,1122), preserving the overhead support. Mesh geometry is sourced from CAD, not inferred from images. Mini live settling is not enabled.",
+  "sceneSourceSHA256": "247b5f3546b14a6b52a59d2a8b1b025f10c6bc7ac8d6d0f602b7037277c7720c",
+  "appExecutableSHA256": "362fbd4f775ff318a5f0c25f38953a0ca8a7ac6f59a61f1cdbd382775a91b7ae",
+  "nativeVerification": {
+    "fullSuiteBeforeCameraFit": {
+      "tests": 1280,
+      "skips": 3,
+      "failures": 0
+    },
+    "currentSceneSuite": {
+      "tests": 20,
+      "failures": 0,
+      "seconds": 15.015
+    }
+  }
+}

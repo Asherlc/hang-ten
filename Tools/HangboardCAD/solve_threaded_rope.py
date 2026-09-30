@@ -74,6 +74,15 @@ def bearing_section(pieces, mouth, offset, channel_profile=None):
         gap = max(a.distance(b) for i, a in enumerate(pieces) for b in pieces[i + 1:])
         bridge = gap / 2 + 1e-5
         closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
+        # A curved exit can have a narrow closest gap but a wider throat.
+        # Keep the existing outline when it succeeds; otherwise increase only
+        # this temporary topological closure, never the actual collision solid.
+        # Every generated route is still checked against the full native wood.
+        for _ in range(3):
+            if closed.geom_type == "Polygon" and not closed.interiors:
+                break
+            bridge *= 2
+            closed = wood.buffer(bridge, quad_segs=12).buffer(-bridge, quad_segs=12)
     if closed.geom_type != "Polygon" or closed.interiors:
         raise ValueError("section channel could not be bridged into one outline")
     channel = closed.buffer(offset, quad_segs=12).difference(grown)

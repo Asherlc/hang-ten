@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "d4a50daf99b7f35d26cffe06f2d91a6a7ab770b30c9887d977cc351fc2c962fd",
+  "sha256Manifest": "ddd8a7f6f0c54681bb1e36248e34d03cb38ce5c2f870cbed10866ddbe51db539",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c",
+  "supersededSha256Manifest": "d4a50daf99b7f35d26cffe06f2d91a6a7ab770b30c9887d977cc351fc2c962fd",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -177,20 +177,20 @@
     },
     "lattice-mini-bar": {
       "source": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
-      "sourceSHA256": "ed1dfe2a5a0fd0b4d9fd92fdd7b370bf288c2624be6aacffa4a7e5a97641ec21",
+      "sourceSHA256": "24ac6049a17e55d784b8c0b0859df07800c08f564d473993cf30f1f3fea08d79",
       "boardMetadata": "board.json generated at build time from the source HangTenBoardManifest; four original raster presentations become one model presentation with four grip positions",
-      "assetSHA256": "19ec12f28f0971383ed5c98017db5f01936f69e0fa542623c64e0b580488e268",
-      "descriptorSHA256": "aa7353ce7ae0e72c2b1cd8b31fedde0bd4e16f05ec24de23eca3f9d5b4533f8e",
+      "assetSHA256": "4b4e9950b01fa303f36b27ad2841ea697cc4ed93f5dff61827b11a6f3fcfa2ca",
+      "descriptorSHA256": "ac71e805e654fa789329c7c4d0511b3bda5823ddb69a460142dce1987bb98c6c",
       "compiler": "Tools/HangboardCAD/compile_board.py (unbound meshes)",
-      "nativeValidation": "One connected U-shaped SubtractivePipe channel per end, four mouths total; FreeCAD recompute and CAD compiler passed. Mouth positions and 5.4 mm channel diameter are display estimates. Native solid intersection check found 2.09 mm minimum exterior centerline clearance across 16 pose/lead routes.",
-      "nativeAppValidation": "Focused and full HangTenTests targets passed on isolated iPhone 17 Pro / iOS 26.5 Simulators; current-source app screenshots captured for all four selected grips. The transient cord uses one loop per end, with mesh-derived bearing points recomputed for each pose.",
-      "comparison": "2026-09-27 front/side/top prior-vs-current preview at .context/frantic-kiwi/internal-cad-preview/front-side-top-before-after.png; approved Lattice gallery pairings at .context/frantic-kiwi/mini-bar-Web-{1,2,7,8,9,10,11}-vs-CAD.png; four-pose end and Web-1 side matrices; current-source app screenshots at .context/frantic-kiwi/mini-bar-app-{ergonomic-jug,edge-10,edge-20,mini-pinch}.png.",
-      "provenanceSidecar": "removed audit record",
+      "nativeValidation": "2026-09-29: owner-confirmed 7 mm cord diameter, estimated 7.4 mm native channel diameter with 0.2 mm radial display clearance, unchanged 155 mm width and four contact IDs. Contact surfaces intersect the final Body parametrically, excluding the cord mouths. Native source recompute and compile pass. Four static pose solutions / 16 exterior leads have minimum sampled CAD centerline clearance 3.586 mm; loop lengths 0.82 m and measured hidden spans 87.214214 mm. Mini Bar live dynamics remains pending curved-channel and cross-rope gates.",
+      "nativeAppValidation": "2026-09-29: corrected 7 mm Mini source passed the full1280 native HangTenTests (3skips,0failures). A subsequent independent orbit regression exposed camera clipping; current full20BoardModelRealityTests pass after fitting the geometry in the actual rotated camera basis. Native front/side/top screenshots retained for all four selected grips, each non-pickable7mm transient cord. Mini live physics remains unpromoted.",
+      "comparison": "Current correction evidence: docs/source-audits/2026-09-29-mini-bar-seven-mm-evidence/strong-owl-mini-front-side-top.png; prior manufacturer/gallery review remains recorded in previous revisions.",
+      "provenanceSidecar": "docs/source-audits/2026-09-29-cord-and-bore-scale.md",
       "assetCoverage": "descriptor + FCStd + suspension sidecar; board.json generated from both authoring sources, USDZ pinned by descriptor modelSHA256",
       "holdOutline": "CAD-authored contact surfaces define picking and highlights; no 2D path inference",
       "suspensionSource": "Hangboards/lattice-mini-bar/suspension.json",
-      "suspensionSourceSHA256": "85c764db5244beb17816f76db032ab8e2b5f60dbd5514f29b8a4078536807348",
-      "supersededSourceSHA256": "3896411d0f15fff3e6cb4159e76650d6c15171fc7763a74308201a9698ca7be3"
+      "suspensionSourceSHA256": "45481d896ccbe73ed2f89c77cea8d56391da3aecc1ed434c7b55aba0739cee14",
+      "supersededSourceSHA256": "ed1dfe2a5a0fd0b4d9fd92fdd7b370bf288c2624be6aacffa4a7e5a97641ec21"
     },
     "lattice-mxedge-lift-large": {
       "source": "Hangboards/lattice-mxedge-lift-large/lattice-mxedge-lift-large.FCStd",

@@ -1032,7 +1032,6 @@ final class BoardModelRealityScene {
                                        fieldOfViewDegrees: fov,
                                        distanceMultiplier: distanceMultiplier)
         } ?? (framing?.distance ?? 1)
-        let zoomedDistance = distance * orbitZoom
         let target = framing?.target ?? SIMD3<Float>(0, 0, 0)
         let up = framing?.up ?? SIMD3<Float>(0, 1, 0)
         let direction = simd_normalize(-(framing?.direction ?? SIMD3<Float>(0, 0, -1)))
@@ -1041,7 +1040,25 @@ final class BoardModelRealityScene {
         let yawedDirection = yaw.act(direction)
         let yawedRight = simd_normalize(yaw.act(right))
         let pitch = simd_quatf(angle: -orbitElevation, axis: yawedRight)
-        camera.position = target + pitch.act(yawedDirection) * zoomedDistance
+        let outward = pitch.act(yawedDirection)
+        var fittedDistance = distance
+        if let framing, !framing.includedPoints.isEmpty, viewportSize.width > 0, viewportSize.height > 0 {
+            // The original projected spans stop describing the bounds after
+            // orbit. Fit the same geometry in the camera's actual basis.
+            let cross = simd_cross(-outward,SIMD3<Float>(0,1,0))
+            let cameraRight = simd_length_squared(cross)>1e-12 ? simd_normalize(cross):yawedRight
+            let cameraUp = simd_cross(cameraRight,-outward)
+            let tangent = tan(fov * .pi/360)
+            let aspect = Float(viewportSize.width/viewportSize.height)
+            let low = framing.includedPoints.reduce(SIMD3<Float>(repeating:.infinity),simd_min)
+            let high = framing.includedPoints.reduce(SIMD3<Float>(repeating:-.infinity),simd_max)
+            for x in [low.x,high.x] { for y in [low.y,high.y] { for z in [low.z,high.z] {
+                let offset = SIMD3(x,y,z)-target
+                let span = max(abs(simd_dot(offset,cameraRight))/aspect,abs(simd_dot(offset,cameraUp)))
+                fittedDistance = max(fittedDistance,simd_dot(offset,outward)+span*framing.fitPadding/tangent)
+            } } }
+        }
+        camera.position = target + outward * (fittedDistance * orbitZoom)
         camera.look(at: target, from: camera.position, relativeTo: nil)
 
         if animated {
