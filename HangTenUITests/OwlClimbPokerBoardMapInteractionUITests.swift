@@ -272,7 +272,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
-            "HANGTEN_REVIEW_HOST_BOUNDARY_TRACE": "1",
         ]
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
@@ -304,7 +303,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         initialPoint.tap()
         let selectionExists = selected.waitForExistence(timeout: 10)
         if !selectionExists {
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: false)
         }
         XCTAssertTrue(selectionExists, "Real coordinate tap must select \(target)")
         let selectionRendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -313,7 +311,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let selectionRenderedResult = XCTWaiter.wait(for: [selectionRendered], timeout: 15)
         if selectionRenderedResult != .completed {
             capture("\(boardID)-rendered-selection-failure")
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: false)
         }
         XCTAssertEqual(selectionRenderedResult, .completed,
                        "Selected hold must be highlighted on the rendered surface before orbit")
@@ -336,9 +333,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             contact.frame != initialContactFrame
         }, object: nil)
         let projectedOrbitResult = XCTWaiter.wait(for: [orbitFinished], timeout: 15)
-        if projectedOrbitResult != .completed {
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: false)
-        }
         XCTAssertEqual(projectedOrbitResult, .completed,
                        "Orbit must change the projected contact")
         let visibleOrbit = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
@@ -350,9 +344,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let visibleOrbitResult = XCTWaiter.wait(for: [visibleOrbit], timeout: 15)
         capture("\(boardID)-portrait-orbit")
         captureRendererDiagnostic(app: app, name: "\(boardID)-after-orbit")
-        if visibleOrbitResult != .completed {
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: true)
-        }
         XCTAssertEqual(visibleOrbitResult, .completed,
                        "Orbit must change the rendered board, not only its accessibility projection")
         // Reproject after orbit; the initial contact offset no longer tracks
@@ -370,7 +361,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         let resetResult = XCTWaiter.wait(for: [resetFinished], timeout: 30)
         if resetResult != .completed {
             print("Camera reset diagnostic: board=\(boardID) contact=\(target) canonical=\(initialContactFrame) actual=\(contact.frame)")
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: false)
         }
         XCTAssertEqual(resetResult, .completed,
                        "A physical surface tap must finish the canonical camera reset")
@@ -383,9 +373,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         }, object: nil)
         let renderedResetResult = XCTWaiter.wait(for: [renderedReset], timeout: 30)
         capture("\(boardID)-portrait-reset")
-        if renderedResetResult != .completed {
-            captureBoundaryFailure(app: app, boardID: boardID, nativeSnapshot: true)
-        }
         XCTAssertEqual(renderedResetResult, .completed,
                        "Camera reset must restore the rendered board, not only its accessibility projection")
 
@@ -398,31 +385,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCTAssertLessThanOrEqual(map.frame.maxY, app.frame.maxY)
         try assertModelBodyIsVisible(in: map)
         capture("\(boardID)-landscape-active")
-    }
-
-    // Temporary post-verdict boundary capture; original result is still asserted
-    // immediately afterward with continueAfterFailure=false. Remove before delivery.
-    private func captureBoundaryFailure(app: XCUIApplication, boardID: String, nativeSnapshot: Bool) {
-        capture("\(boardID)-boundary-screen-before")
-        let identifier = nativeSnapshot ? "boardModel.captureNativeFailure" : "boardModel.flushBoundaryTrace"
-        let control = app.buttons[identifier]
-        guard control.exists else {
-            print("Boundary capture missing control: \(identifier)")
-            return
-        }
-        control.tap()
-        if nativeSnapshot {
-            let completion = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-                let value = control.value as? String
-                return value == "done" || value == "failed"
-            }, object: nil)
-            let result = XCTWaiter.wait(for: [completion], timeout: 15)
-            let attachment = XCTAttachment(string: "nativeSnapshotWait=\(result.rawValue);status=\(String(describing: control.value));original test verdict remains failure")
-            attachment.name = "\(boardID)-native-snapshot-completion"
-            attachment.lifetime = .keepAlways
-            add(attachment)
-            capture("\(boardID)-boundary-screen-after")
-        }
     }
 
     private func surfaceCoordinate(for contact: XCUIElement, in map: XCUIElement,
