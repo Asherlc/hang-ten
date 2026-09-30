@@ -143,7 +143,11 @@ final class WorkoutPaywallUITests: XCTestCase {
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
         XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
+        // iOS 26.5 can drop short synthesized switch taps. Exercise its native
+        // drag gesture with enough time for the thumb to reach the on position.
+        let offThumb = bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5))
+        let onThumb = bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.8, dy: 0.5))
+        offThumb.press(forDuration: 0.5, thenDragTo: onThumb, withVelocity: .slow, thenHoldForDuration: 0.2)
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight

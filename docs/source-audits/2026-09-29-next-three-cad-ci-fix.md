@@ -7,3 +7,9 @@ Integrated origin/main at `d0e4e9519`, including its existing correction for the
 All nine source/model/descriptor hashes for Evo, Honestone and Original Grindstone remain unchanged. Final delivery-lock integration still awaits PR524’s merge; the lock brought in from main covers its existing deliveries.
 
 Local validation: Python CAD/model/package suites passed 492 tests, 11 optional checks skipped, and 24 subtests. Simulator build-for-testing succeeded. The local Xcode 27 / iOS 26.5 simulator attempts stalled before the UI runner launched. Bounded boot-status and screenshot probes also timed out. Both attempts were stopped and their exact workspace-owned simulators deleted by the cleanup traps; no local UI or full merged Swift runtime pass is claimed. GitHub CI uses Xcode 26.5 and will validate the pushed change.
+
+## Follow-up after the tap correction failed in CI
+
+Run [36645711814](https://github.com/Asherlc/hang-ten/actions/runs/36645711814) reproduced the switch failure after the normal tap. Its event attachment records `(333.5, 437)`, with the named switch still off and the parent window snapshot reporting zero/nonfinite bounds. Recording frames before and after the interaction show an unobstructed, unchanged switch. The tap synthesis took 18 seconds. The independent visible-label interaction passed.
+
+Both weight-flow tests now use a sustained native switch drag: 0.5-second press, explicit slow velocity from normalized `(0.3, 0.5)` to `(0.8, 0.5)`, and 0.2-second endpoint hold. This is the gesture previously validated in the parent batch before main replaced it with the shorter tap. The initial off-state, enabled-state, manual draft persistence, purchase summary and separate label interaction assertions remain intact. No production or CAD geometry changes are included.
