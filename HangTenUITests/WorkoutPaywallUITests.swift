@@ -127,10 +127,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
         XCTAssertEqual(bodyweight.value as? String, "0")
-        tapVisibleControl(
-            bodyweight,
-            normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
-        )
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
