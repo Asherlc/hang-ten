@@ -313,3 +313,34 @@ and source hashes, and committee reports are under the workspace-owned
 `.context/strong-owl-live-cords/mini-dynamics-probe/`. Full Mini Bar rotation
 and return settling, catalog rollout, the CAD-to-mesh error budget, shared
 settled-bearing checks, and actual-device throughput remain pending.
+
+## Reusable equality-factorization foundation
+
+`RopeBandedSystem.factorized` now snapshots band and Schur factors for
+changing right-hand sides. Every coefficient and border column is fixed
+for the lifetime of this value; rebuilding a linearization requires a new
+factor. LAPACK DGBTRS/DGETRS read the stored factors and mutate only local
+load buffers. The existing runtime solve remains unchanged.
+
+Three new tests exercise distinct noncollinear loads, a mutated authoring
+matrix after factor creation, immutable factor copies, two coupled borders,
+no-border solves, invalid dimensions/nonfinite values, and singular band or
+border matrices. All seven band-system tests passed on the host and the
+owned native Simulator. Independent scoped review found no issues.
+
+A scratch Python/SciPy contact-space prototype reproduced the captured QP's
+active-set iteration counts, objectives, feasibility, and complementarity
+with one equality-backbone factorization and lazy contact responses. A Swift
+prototype using the new API also checked every omitted contact inequality.
+Its backbone factor took 0.355 ms; oracle/warm/equality runs took
+12.281/46.671/77.877 ms including response construction. The warm start kept
+156 iterations, 78 insertions and 77 releases, matching the original replay;
+its primal solution differed from the Python oracle by at most 4.8e-16 m.
+Maximum feasibility error remained 7.494 nm. Cold-start primal difference
+was 0.2496 micrometers under the same inactive-row tolerance.
+
+The earlier warm replay was 677.206 ms, so factor/response reuse substantially
+reduces this frozen problem's cost. It does not establish full-step speed or
+real-time performance: the Swift warm replay alone is over eleven times the
+4 ms complete-step budget. Geometry/globalization/CCD costs and nonlinear
+iteration count remain. Neither prototype is enabled in production.

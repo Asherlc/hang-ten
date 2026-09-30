@@ -4,6 +4,70 @@ import XCTest
 #endif
 
 final class RopeBandedSystemTests: XCTestCase {
+    func testReusableFactorizationSupportsChangingLoadsAndImmutableCopies() throws {
+        var system=try RopeBandedSystem(size:3,bandwidth:1)
+        try system.addSymmetric(row:0,column:0,value:2)
+        try system.addSymmetric(row:1,column:1,value:3)
+        try system.addSymmetric(row:1,column:0,value:-1)
+        try system.addSymmetric(row:2,column:1,value:1)
+        let factor=try system.factorized(borderColumns:[[0,-2,1]],borderMatrix:[[4]])
+        let copy=factor
+        // Mutating the authoring matrix must not mutate an existing factor.
+        try system.addSymmetric(row:0,column:0,value:100)
+        for expected in [[0.1,0.2,0.3,0.4],[-0.2,0.7,-0.3,0.1],
+                         [1e-6,-2e-6,4e-6,3e-6],[3,-5,2,-7],[0,0,0,0]] {
+            let x=expected[0],y=expected[1],z=expected[2],height=expected[3]
+            let rhs=[2*x-y,-x+3*y+z-2*height,y+height]
+            let borderRHS=[-2*y+z+4*height]
+            let result=try factor.solve(rhs:rhs,borderRHS:borderRHS)
+            for (actual,wanted) in zip(result.base,expected.prefix(3)) {
+                XCTAssertEqual(actual,wanted,accuracy:1e-12)
+            }
+            XCTAssertEqual(result.border[0],height,accuracy:1e-12)
+            let repeatResult=try copy.solve(rhs:rhs,borderRHS:borderRHS)
+            XCTAssertEqual(result.base,repeatResult.base)
+            XCTAssertEqual(result.border,repeatResult.border)
+        }
+    }
+
+    func testReusableFactorizationPreservesTwoCoupledBorders() throws {
+        var system=try RopeBandedSystem(size:3,bandwidth:2)
+        try system.addSymmetric(row:0,column:0,value:0.005)
+        try system.addSymmetric(row:1,column:1,value:0.005)
+        try system.addSymmetric(row:2,column:0,value:-1)
+        try system.addSymmetric(row:2,column:1,value:1)
+        let columns=[[0.0,0,-1],[1,-1,0]],matrix=[[1.0,0],[0,-1e-12]]
+        let factor=try system.factorized(borderColumns:columns,borderMatrix:matrix)
+        for expected in [[0.05,0.025,0.001,-0.003,0.002],[-0.2,0.1,-0.02,0.005,-0.007],
+                         [1e-6,3e-6,-2e-6,4e-6,1e-6]] {
+            let x=expected[0],y=expected[1],lambda=expected[2],height=expected[3],other=expected[4]
+            let rhs=[0.005*x-lambda+other,0.005*y+lambda-other,-x+y-height]
+            let borderRHS=[-lambda+height,x-y-1e-12*other]
+            let cached=try factor.solve(rhs:rhs,borderRHS:borderRHS)
+            let cold=try system.solve(rhs:rhs,borderColumns:columns,borderMatrix:matrix,borderRHS:borderRHS)
+            for (a,b) in zip(cached.base+cached.border,cold.base+cold.border) {
+                XCTAssertEqual(a,b,accuracy:1e-10)
+            }
+            for (a,b) in zip(cached.base+cached.border,expected) {XCTAssertEqual(a,b,accuracy:1e-10)}
+        }
+    }
+
+    func testReusableFactorizationHandlesNoBorderAndFailsClosed() throws {
+        var system=try RopeBandedSystem(size:2,bandwidth:0)
+        try system.addSymmetric(row:0,column:0,value:2)
+        try system.addSymmetric(row:1,column:1,value:3)
+        let factor=try system.factorized(borderColumns:[],borderMatrix:[])
+        XCTAssertEqual(try factor.solve(rhs:[4,-9],borderRHS:[]).base,[2,-3])
+        XCTAssertThrowsError(try factor.solve(rhs:[1],borderRHS:[]))
+        XCTAssertThrowsError(try factor.solve(rhs:[1,.nan],borderRHS:[]))
+        XCTAssertThrowsError(try factor.solve(rhs:[1,2],borderRHS:[1]))
+        XCTAssertThrowsError(try system.factorized(borderColumns:[[0]],borderMatrix:[[1]]))
+        XCTAssertThrowsError(try system.factorized(borderColumns:[[0,0]],borderMatrix:[[.infinity]]))
+        XCTAssertThrowsError(try system.factorized(borderColumns:[[0,0]],borderMatrix:[[0]]))
+        let singular=try RopeBandedSystem(size:2,bandwidth:0)
+        XCTAssertThrowsError(try singular.factorized(borderColumns:[],borderMatrix:[]))
+    }
+
     func testPivotedIndefiniteBandAndBoardBorder() throws {
         var system=try RopeBandedSystem(size:3,bandwidth:1)
         try system.addSymmetric(row:0,column:0,value:2)
