@@ -107,7 +107,7 @@
       "assetSHA256": "ea820299a4c93d0549e09eb41565ab46d2c2d6240f62a463da16b6aa6903c64e",
       "descriptorSHA256": "afdb222a2a076c1cfc7b0569714fcef7acbb3e5b77ea386373b31099a8f446a0",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "passed (compile published depths 15/20; cut-body source \u2014 sketch edit-propagation suite not claimed)",
+      "nativeValidation": "passed (compile published depths 15/20; cut-body source — sketch edit-propagation suite not claimed)",
       "nativeAppValidation": "not run",
       "comparison": "accepted deviation: native measured approximation of a sculpted shell; compare_exports evidence only per docs/freecad-authoring-migration.md; manufacturer Lines photos + Git reference govern 15/20 mm stepped floor, rounded-rect cavity, through cords",
       "holdOutline": "CAD-authored HangTenHoldOutline drives contact outline/facePlaneAABB/center"
@@ -248,7 +248,7 @@
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
       "descriptorSHA256": "70e9e992c8ce12077bc98c3a74646452d53a4fef1bda51a26d930108d455ef8e",
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition and HangTenSurfaceNormals set; unbound meshes per the model material policy)",
-      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (edge-20 20.000 mm, edge-15 15.000 mm; both nominal 40 mm jugs span the full 38.000 mm board depth under the board-thickness cap); every sketch fully constrained; verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
@@ -297,7 +297,7 @@
       "assetSHA256": "155057ea9dba5c984ea79852e8de350b7bf95e95c5a460e4c4a736897c71c44a",
       "descriptorSHA256": "34b6b2d80ee69985cb964c4b1e07dcc1c1196f6843c749163eade2c76899fc8b",
       "compiler": "Tools/HangboardCAD/compile_board.py",
-      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source \u2014 sketch edit-propagation suite not claimed",
+      "nativeValidation": "compile reopen and published-depth gate passed (29 / 19 mm edges and pockets); verify_reproducible byte-identical; cut-body source — sketch edit-propagation suite not claimed",
       "nativeAppValidation": "not run",
       "comparison": "compare_exports two-way sampled worst 0.39 mm (limit 0.5 mm; 65,424 reference vs 17,366 candidate triangles); node IDs and modelBounds identical; facePlaneAABB agree within 0.6 mm; head-on center ray hits all 19 contacts; retained pre-migration authoring estimates govern layout, radii and 64 mm body depth",
       "provenanceSidecar": "author notes preserved in removed audit record (retired script recoverable from eed5c974e6f7843ad242a1ae9eb1091a3b4f1c33)",
@@ -402,7 +402,7 @@
       "compiler": "Tools/HangboardCAD/compile_board.py (HangTenCurvedRegionPartition set; unbound meshes per the model material policy)",
       "nativeValidation": "compile reopen and published-depth gate passed (16/18/20/24/28/30/35/37/45/50 mm, exact); verify_reproducible byte-identical on the pinned macOS toolchain; vector source only: blocked Sketcher polygons and capsule lines/arcs, extrusions, two sequential Part::Fillet rim rounds, ruled capsule lofts cut for the 19 cavities; contact regions are static face copies, so the sketch edit-propagation suite is not claimed",
       "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-left (default), sloper-bar-35-center (deep link), edge-16-left and sloper-32-right (hold map) and pocket-50-right (tap on the model) selected and confirmed via boardDetail.selectedHold.<contactID>)",
-      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45\u00b0 chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
+      "comparison": "accepted deviation: compare_exports two-way sampled worst 10.02 mm (reverse 8.50 mm; limit 0.5 mm; 45,304 reference vs 29,676 candidate triangles) in the shared native frame with no transform; the reference is a 0.8 mm voxel marching-cubes mesh of smooth signed-distance blends decimated to 45k triangles, and the deviation comes from the omitted blends, 45° chamfers standing in for rounds, the raised tier kink, the sloper-bar pivot, and the right sloper angle; cavity facePlaneAABB within 2.4 mm for 15 of the 19 cavities and the sloper bar within 0.3 mm, the rest from the reference's box selectors spilling onto neighbouring holds; all 24 node IDs unchanged",
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
       "holdOutline": "CAD-authored HangTenHoldOutline: cavity mouth capsules grown 2 mm; convex-hull front projections for the top jugs and slopers"
@@ -645,11 +645,12 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/app-review/validation.json",
-      "geometryAcceptance": "General front-hole entry accepted; revised 90 degree lower-cord shape pending user review",
+      "geometryAcceptance": "Shown revised cord routing accepted with lgtm after prior y front-hole approval",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
-      "reviewRevision": "2026-09-30: DUAL 90 degree lower-lead bow tightened by native coupled solve; individual revised review pending.",
-      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/verification.json"
+      "reviewRevision": "2026-09-30: front entry and revised 90 degree lower-lead route accepted as shown; current native/app proofs retained.",
+      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/verification.json",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/human-review.json"
     },
     "captain-fingerfood-unlevel": {
       "source": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
@@ -1124,11 +1125,11 @@
   "theHangboardMigrationNote": "2026-09-27: the-hangboard migrated to a native FreeCAD source re-authored from manufacturer photographs; metadata embedded unchanged except the model presentation aspectRatio (now the new modelBounds ratio). sha256Manifest sha256Manifest 9154697f... supersedes PENDING_..., which moved to supersededSha256Manifest. Combined sha256Manifest 5ce7c637... supersedes main's 0208a876... manifest, recorded in supersededSha256Manifest.",
   "miniBarGripFlipCorrectionNote": "2026-09-27: Lattice grip photos and CAD contact normals showed the two edge rails and pinch facing down in their canonical poses; corrected pose half-turns place the selected grip upward, the pinch camera now faces its highlighted long rail, and all cord routes were re-solved against the unchanged CAD solid.",
   "frictitiousDoorMountPro7MigrationNote": "2026-09-27: source-backed native FreeCAD DoorMount Pro 7 with generated board.json and 13 preserved contact/14 node IDs. sha256Manifest supersedes the main delivery manifest recorded in supersededSha256Manifest. See dated provenance for sources and review renders.",
-  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main\u2019s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main\u2019s d72bc116... manifest and also incorporates the Mini Bar branch\u2019s 88073991... manifest.",
+  "miniBarDoorMountMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s DoorMount Pro 7 migration. The new digest covers both additions; it supersedes main’s d72bc116... manifest and also incorporates the Mini Bar branch’s 88073991... manifest.",
   "escapeUnlimitedMigrationNote": "2026-09-27: escape-unlimited became a source-backed native FreeCAD package (Sketcher side profile and slot pockets at the published 45/20/15 mm depths) with generated board.json. Combined manifest includes nature-stoak-board-iii, dewoodstok-woodbord, the-hangboard, and frictitious-doormount-pro-7; the prior d72bc116d00b... manifest moved to supersededSha256Manifest.",
-  "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main\u2019s Escape Unlimited migration. The digest covers both packages and supersedes main\u2019s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest.",
+  "miniBarEscapeMergeNote": "2026-09-27: combined the Mini Bar source-backed package and grip correction with main’s Escape Unlimited migration. The digest covers both packages and supersedes main’s 52ec1c9f5ff122bbecaa4e44636fdf2ba2569b4dfd951d16effd46e99d07cce8 manifest.",
   "metoliusClimbersEdgeMigrationNote": "2026-09-27: metolius-climbers-edge became a source-backed native FreeCAD package re-authored from Metolius's spec drawing and end-grain photograph (stepped-scoop edges at the published 20/15/10 and 17.5/12.5/7.5 mm depths, 20-degree flat slopers, 40 mm-radius round sloper) with generated board.json. sha256Manifest dfd32f63... supersedes 52ec1c9f..., recorded in supersededSha256Manifest.",
-  "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main\u2019s Metolius Climber\u2019s Edge migration. The digest covers both and supersedes main\u2019s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
+  "miniBarClimbersEdgeMergeNote": "2026-09-28: combined the Mini Bar source-backed package with main’s Metolius Climber’s Edge migration. The digest covers both and supersedes main’s dfd32f63c4b0e56fc61a4e0e992c7ebbd27ed342e07515ed987e85eba280c1a0 manifest.",
   "tensionGrindstoneProMigrationNote": "2026-09-26: Grindstone Pro migrated from raster to native FreeCAD source and refined after visual review with estimated lofted cavity lips, bowl profiles and rounded tier edges; source-backed depths and contact IDs remain exact, and phone-slot remains a no-depth utility contact.",
   "grindstoneProMiniBarStackNote": "2026-09-28: Grindstone Pro was rebased onto the Mini Bar connected-loop migration. The delivery digest covers Mini Bar's descriptor-bound suspension.json sidecar and Grindstone Pro's cordless native CAD package; Grindstone remains excluded from suspension because its approved evidence establishes no cord topology.",
   "miniBarMegalithMergeNote": "2026-09-28: combined the Mini Bar and Tension Grindstone Pro source-backed packages with main's Frictitious Megalith migration. The digest covers all three additions and supersedes main's 8f177381407135e7ab006c8f23ce4950925b26f9711e4adbf7e2f8b85aa188c2 manifest.",
@@ -1154,7 +1155,7 @@
     {
       "package": "captain-fingerfood-dual",
       "date": "2026-09-30",
-      "request": "Cord doesn\u2019t go through holes",
+      "request": "Cord doesn’t go through holes",
       "scope": "Evidence-backed front mouth axes and native-solved, mutually clear leads; unchanged native source/model bytes and cord dimensions.",
       "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
       "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-entry-review.md",
@@ -1169,7 +1170,8 @@
       "scope": "Opt-in native local 3D shortening and hanging height; fixed actual mouths/support, CAD source/model/descriptor, cord dimensions and pose rotations/cameras preserved.",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/review.md",
-      "geometryAcceptance": "pending revised user review"
+      "geometryAcceptance": "accepted shown revised 90 degree cord routing with lgtm",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/human-review.json"
     }
   ]
 }

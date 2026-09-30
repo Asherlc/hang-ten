@@ -83,7 +83,8 @@
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "nativeAndCanonicalAppValidation": "passed",
       "physicalUIOrbit": "unverified",
-      "geometryAcceptance": "pending revised user review"
+      "geometryAcceptance": "accepted shown revised 90 degree cord routing with lgtm",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json"
     }
   ]
 }

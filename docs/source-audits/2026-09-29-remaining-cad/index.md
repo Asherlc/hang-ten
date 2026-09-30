@@ -1,6 +1,6 @@
 # Remaining hangboard CAD review
 
-21 native CAD migrations prepared by three subagents. Cyclops was reviewed first, and the user accepted its shorter display cord on 2026-09-30. The recorded acceptance applies to the revised cord length. Captain Fingerfood DUAL is under review; the remaining 20 boards await one-by-one acceptance.
+21 native CAD migrations prepared by three subagents. Cyclops’s shorter display cord and DUAL’s revised front-entry/90° displayed routing were accepted on 2026-09-30. The recorded scopes apply to the shown revisions. Captain Fingerfood UNLEVEL is review #3; 19 boards await one-by-one acceptance.
 
 [Cyclops review response and exact asset identities](aelith-cyclops-011/human-review.json).
 
@@ -38,4 +38,4 @@ Seven active migrations were left unchanged: `tension-grindstone-original`, `ten
 
 [Final validation](batch-validation.json). [Independent review](final-independent-review.json). [Historical report notes](validation-notes.md).
 
-DUAL remains review #2. Its general front-hole entry was accepted with “y”, followed immediately by feedback about the lower cord's sideways bow at 90°. The current native revision removes the unsupported collar bends and reduces that bow from 11.22 mm to 4.29 mm. [Revision and verification](captain-fingerfood-dual/vertical-tightening-review/review.md); revised human review is pending.
+DUAL’s general front-hole entry was accepted with “y”; its revised 90° lower-cord routing was then accepted with “lgtm” after inline front/side/top comparisons. [Recorded approval](captain-fingerfood-dual/human-review.json). Review is now on Captain Fingerfood UNLEVEL (#3); its front-entry cord correction is being prepared before presentation.

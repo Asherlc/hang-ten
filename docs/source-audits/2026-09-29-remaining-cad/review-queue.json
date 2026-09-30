@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: Cyclops shorter cord accepted; DUAL 90 degree lower lead under review",
+  "reviewState": "one-by-one review in progress: Cyclops shorter cord and DUAL revised displayed routing accepted; Captain Fingerfood UNLEVEL is review #3",
   "boards": [
     {
       "number": 1,
@@ -39,7 +39,7 @@
       "package": "captain-fingerfood-dual",
       "boardID": "captain-fingerfood.dual",
       "name": "Captain Fingerfood DUAL",
-      "humanReview": "front-hole entry accepted; revised 90 degree cord awaiting review",
+      "humanReview": "reviewed; revised displayed cord routing accepted",
       "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
       "reviewPage": "captain-fingerfood-dual/geometry-review.html",
       "sourceAudit": "captain-fingerfood-dual/README.md",
@@ -56,19 +56,22 @@
       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "reviewFeedback": [
-        "Cord doesn\u2019t go through holes",
+        "Cord doesn’t go through holes",
         "the 90 degree position tho, why does the bottom cord jut out to the side?"
       ],
       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
       "runtimeRevision": "captain-fingerfood-dual/vertical-tightening-review/runtime-validation.json",
-      "cordComparisons": "captain-fingerfood-dual/vertical-tightening-review/index.html"
+      "cordComparisons": "captain-fingerfood-dual/vertical-tightening-review/index.html",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json",
+      "acceptedScope": "Revised displayed 90 degree cord routing shown in the inline front, side and top before/after comparisons. General front-hole entry was accepted earlier with y.",
+      "reviewAnswer": "lgtm"
     },
     {
       "number": 3,
       "package": "captain-fingerfood-unlevel",
       "boardID": "captain-fingerfood.unlevel",
       "name": "Captain Fingerfood UNLEVEL",
-      "humanReview": "pending",
+      "humanReview": "in progress; front cord-entry correction being prepared",
       "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
       "reviewPage": "captain-fingerfood-unlevel/geometry-review.html",
       "sourceAudit": "captain-fingerfood-unlevel/README.md",

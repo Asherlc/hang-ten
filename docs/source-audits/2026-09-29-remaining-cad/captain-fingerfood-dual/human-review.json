@@ -5,7 +5,7 @@
   "number": 2,
   "package": "captain-fingerfood-dual",
   "boardID": "captain-fingerfood.dual",
-  "status": "in progress: general front-hole entry accepted; vertical lower-lead shape unresolved",
+  "status": "reviewed; revised displayed cord routing accepted",
   "history": [
     {
       "feedback": "Cord doesn’t go through holes",
@@ -17,10 +17,33 @@
     },
     {
       "feedback": "the 90 degree position tho, why does the bottom cord jut out to the side?",
-      "status": "revised native cord verified; user review pending",
+      "status": "accepted shown revision",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
-      "review": "vertical-tightening-review/review.md"
+      "review": "vertical-tightening-review/review.md",
+      "date": "2026-09-30",
+      "question": "Does the 90° position look right now?",
+      "answer": "lgtm",
+      "revisionCommit": "3c770899547dbe2824db7f0c7e578481a95ecfa5",
+      "acceptedScope": "Revised displayed 90 degree cord routing shown in the inline front, side and top before/after comparisons. General front-hole entry was accepted earlier with y.",
+      "shownViews": [
+        "vertical-tightening-review/left-pocket-vertical-front-detail.png",
+        "vertical-tightening-review/left-pocket-vertical-side-detail.png",
+        "vertical-tightening-review/left-pocket-vertical-top-detail.png"
+      ],
+      "shownViewSHA256": {
+        "vertical-tightening-review/left-pocket-vertical-front-detail.png": "b2e90691345448f4e38c5694299efb28530e8ab16216978eeeb5ecbdcda96278",
+        "vertical-tightening-review/left-pocket-vertical-side-detail.png": "1cb18b54cccb060bcab487693b6bb4f3f7305b5f76a49ebb50dcf86e7cf2d537",
+        "vertical-tightening-review/left-pocket-vertical-top-detail.png": "ec5c70a56b6e4a2522143057a35e6358656302848b371e77ff6a7e09ee3ef4e7"
+      }
     }
   ],
-  "approvalLimit": "The front-entry reply does not approve all poses or establish a complete hidden cord connection, manufacturer cord dimensions, or physical equilibrium."
+  "approvalLimit": "The replies accept the shown front-hole entry and revised 90 degree displayed cord routing; they do not establish manufacturer cord dimensions, a complete hidden connection, full rope equilibrium, or unshown physical details.",
+  "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "presentations": {
+    "primary": {
+      "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
+      "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+    }
+  }
 }
