@@ -41,7 +41,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
         selectManualWeightSourceIfNeeded()
         XCTAssertTrue(app.textFields["workout.initialWeight.manualField"].waitForExistence(timeout: 10))
         XCTAssertFalse(app.textFields["Workout load adjustment"].exists)
-        XCTAssertTrue(app.buttons["workout.initialWeight.addBodyweight"].exists)
+        XCTAssertTrue(app.switches["workout.initialWeight.addBodyweight"].exists)
         let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = "Inline manual weight setup in landscape"
         attachment.lifetime = .keepAlways
@@ -148,12 +148,18 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            // Weight-flow tests use a fixed raster board instead of a persisted
+            // selection with unrelated asynchronous model-preview work.
+            "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
         XCTAssertTrue(
             app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
             "The plan review route should take precedence over fixture-only review flags."
         )
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -161,19 +167,25 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertTrue(source.buttons["Skip"].isSelected)
         source.buttons["Manual"].tap()
 
-        let bodyweight = app.buttons["workout.initialWeight.addBodyweight"]
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
         let bodyweightReady = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "exists == true AND hittable == true"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        bodyweight.tap()
+        XCTAssertLessThan(
+            bodyweight.frame.width,
+            app.frame.width / 3,
+            "The switch accessibility target should not span the full weight-tracking row."
+        )
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "On"),
+            predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
-                       "Manual tracking must add bodyweight when its control is enabled")
+                       "Manual tracking must add bodyweight when its switch is enabled")
         let field = app.textFields["workout.initialWeight.manualField"]
         field.tap()
         field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String)?.count ?? 0))
@@ -192,7 +204,29 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
         XCTAssertTrue(field.waitForExistence(timeout: 10))
         XCTAssertEqual(field.value as? String, enteredValue)
-        XCTAssertEqual(app.buttons["workout.initialWeight.addBodyweight"].value as? String, "On")
+        XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
+    }
+
+    func testManualWeightLabelTogglesTheSameSwitch() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
+
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        XCTAssertEqual(bodyweight.label, "Add bodyweight")
+
+        let label = app.buttons["workout.initialWeight.addBodyweight.label"]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
+        label.tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
     }
 
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {

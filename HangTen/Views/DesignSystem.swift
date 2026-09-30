@@ -39,6 +39,7 @@ struct HangCardModifier: ViewModifier {
             .overlay {
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .stroke(Color.hangLine.opacity(0.8), lineWidth: 1)
+                    .allowsHitTesting(false)
             }
     }
 }

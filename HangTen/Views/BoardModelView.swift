@@ -200,6 +200,8 @@ struct BoardModelRealityView: View {
     }
 
     private func applySync(size: CGSize) {
+        let priorCameraTransform = model.camera.transform.matrix
+        let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
         camera.fieldOfViewOrientation = .vertical
@@ -209,6 +211,13 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        // RealityView synchronizes after SwiftUI evaluates the accessibility
+        // overlay. Reproject once when framing or a board pose actually changes.
+        // The unchanged follow-up update must not schedule another invalidation.
+        if model.camera.transform.matrix != priorCameraTransform
+            || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
+            Task { @MainActor in cameraRevision &+= 1 }
+        }
         if let positionID, !didSelect {
             Task { @MainActor in
                 guard !didReportUnavailable else { return }

@@ -947,26 +947,21 @@ struct PlanDetailView: View {
                     .foregroundStyle(Color.hangMuted)
             }
 
-            Button {
-                manualWeightIncludesBodyweight.toggle()
-            } label: {
-                HStack {
-                    Text("Add bodyweight")
-                    Spacer(minLength: 12)
-                    Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
-                        .labelsHidden()
-                        .fixedSize()
-                        .allowsHitTesting(false)
-                        .accessibilityHidden(true)
+            HStack {
+                Button("Add bodyweight") {
+                    manualWeightIncludesBodyweight.toggle()
                 }
+                .buttonStyle(.plain)
                 .frame(minHeight: 44)
                 .contentShape(Rectangle())
+                .accessibilityIdentifier("workout.initialWeight.addBodyweight.label")
+                Spacer(minLength: 12)
+                Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
+                    .labelsHidden()
+                    .fixedSize()
+                    .accessibilityIdentifier("workout.initialWeight.addBodyweight")
+                    .accessibilityLabel("Add bodyweight")
             }
-            .buttonStyle(.plain)
-            .accessibilityElement(children: .ignore)
-            .accessibilityIdentifier("workout.initialWeight.addBodyweight")
-            .accessibilityLabel("Add bodyweight")
-            .accessibilityValue(manualWeightIncludesBodyweight ? "On" : "Off")
 
             Text("Off records a standalone weight. On records this as added load on top of bodyweight.")
                 .font(.system(size: 12, weight: .medium, design: .rounded))

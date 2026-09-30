@@ -87,6 +87,7 @@ final class FreeWorkoutUITests: XCTestCase {
         tapHittable(duration, timeout: 10)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
+        tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
 
         let startSet = firstMatching(
             in: app,
@@ -95,7 +96,7 @@ final class FreeWorkoutUITests: XCTestCase {
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
         if !startSet.isHittable {
-            app.scrollViews.firstMatch.swipeUp()
+            app.scrollViews["freeWorkout.log.scroll"].swipeUp()
         }
         tapHittable(startSet, timeout: 15)
 
@@ -232,7 +233,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         // Focused actions sit below the board preview on an iPhone. Scroll them into view
         // before querying XCTest, which otherwise cannot see the lazy row controls.
-        let logScrollView = app.scrollViews.firstMatch
+        let logScrollView = app.scrollViews["freeWorkout.log.scroll"]
         XCTAssertTrue(logScrollView.waitForExistence(timeout: 10), "Free-workout log should scroll")
         logScrollView.swipeUp()
 
