@@ -119,6 +119,9 @@ builds Release for an iOS device. The Main ruleset requires pull requests to be
 up to date with `main` before merging, so another merge requires fresh checks
 against the new base.
 
+Required-check summaries reject cancelled or unexpectedly skipped prerequisites;
+they report success only after all required validation has completed.
+
 Running main CI jobs finish when newer commits arrive; only the pending run is
 replaced by the newest commit. Superseded revisions cancel their own PR checks
 in a separate concurrency group. A successful `main` run automatically archives
