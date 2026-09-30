@@ -21,3 +21,11 @@ Integrated main commit `8687bd6b2` (PR522). CI run `36651684102` passed the grip
 Resolved both UI test conflicts by retaining main’s tested control-targeting implementation. It enables bodyweight before focusing the decimal field, verifies the on-state after input, and uses a SpringBoard screen coordinate computed from finite, visible control bounds. This avoids the invalid parent-window bounds seen in the earlier CI attachment. Fixture comments continue to describe the Original Grindstone native model correctly. All three migrated CAD packages and contact-picking regressions are unchanged. Main’s consolidated CI jobs and contract tests are included. PR525 remains open; merging this branch into main is outside this request.
 
 CI runner contracts and package staging: 51 tests passed after the merge. All nine source/model/descriptor hashes remain unchanged.
+
+## Integrate main's validated switch and countdown fixes
+
+Run [36666713400](https://github.com/Asherlc/hang-ten/actions/runs/36666713400) passed Python, Swift unit tests and all purchase/paywall tests, but failed two UI cases. The inline-weight case raised XCTest's invalid activation-point error while the screen-coordinate helper queried switch hittability. The guided-hang cancellation case could no longer find Cancel after the ten-second default hang expired during slow accessibility queries.
+
+Merged main at `06d57f117` (PR520, including PR514). Main already corrects both failures: an accessible Add bodyweight label button toggles the same state while preserving switch-state and draft assertions; the cancellation test enters a 120-second duration and dismisses its keyboard before starting, retaining the unchecked-set and absent-rest assertions. Both UI suites passed on these fixes in [36666589397](https://github.com/Asherlc/hang-ten/actions/runs/36666589397). The merged branch still requires its own CI confirmation.
+
+Local validation after this merge: simulator build-for-testing succeeded; all 51 CI contract and staging tests passed; all nine batch CAD delivery hashes are unchanged. The build cleanup trap removed this workspace's DerivedData. No simulator or external service was created. PR525 remains open, with no outstanding review threads. PR524 remains unmerged, so the final shared delivery-lock refresh is still pending.
