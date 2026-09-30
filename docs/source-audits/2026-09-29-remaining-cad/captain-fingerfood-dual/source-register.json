@@ -60,5 +60,6 @@
     "Images are visual evidence only; no tracing, segmentation, alignment, masking, cropping, or pixel-derived geometry.",
     "CAD remains a display approximation with native analytic feature history.",
     "Cord connectivity must be supported before geometry or topology is changed."
-  ]
+  ],
+  "cordEntryCorrection": "The retained title and DualP1 images establish front-recess entry. mouthAxis [0,0,1] preserves this direction for both native front floor mouths; no unseen rear connection is inferred."
 }

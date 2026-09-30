@@ -47,3 +47,5 @@ Status: approved by user 2026-09-29. Native CAD is authored; see geometry-review
 
 
 Native CAD review artifacts: [geometry comparison](geometry-review.html), [authoring notes](geometry-authoring-notes.md), [metadata preservation](metadata-preservation.json), [native edit validation](native-validation.json). Final app review is coordinated separately.
+
+[Cord-entry correction and verification](cord-entry-review.md) — front/side/top actual-route comparisons are in [front-mouth-review](front-mouth-review/index.html). Current canonical [app views](app-review/index.html) and [runtime proof](cord-entry-runtime-validation.json) are retained; revised human review is pending.

@@ -1,30 +1,70 @@
 {
   "owner": "placid-badger",
-  "simulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+  "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
   "device": "iPhone 17 Pro",
   "runtime": "iOS 26.5",
   "boardID": "captain-fingerfood.dual",
   "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
+  "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
   "presentations": {
     "primary": {
-      "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe",
-      "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
+      "descriptorSHA256": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699",
+      "modelSHA256": "60128e94ae0558cfb79d007cbffdf5a5b0d1f5bb087821147969e88bb34f0bbe"
     }
   },
+  "builtBinarySHA256": "776b2b7e54280d4e3b291ec97cfed7bd9643cf38a012aa5863575c048bb33e24",
   "checks": [
     {
-      "contactID": "straight-edge-20",
-      "selection": "DEBUG initial hold",
-      "image": "default.png",
-      "accessibility": "default-accessibility.json"
+      "positionID": "curved-lip-front",
+      "contactID": "curved-edge-20",
+      "front": "curved-lip-front-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true,
+      "frontAccessibility": "curved-lip-front-front-accessibility.json",
+      "selectionMethod": "DEBUG hold-review launch route"
     },
     {
+      "positionID": "straight-lip-inverted",
+      "contactID": "straight-edge-20",
+      "front": "straight-lip-inverted-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true,
+      "frontAccessibility": "straight-lip-inverted-front-accessibility.json",
+      "selectionMethod": "DEBUG hold-review launch route"
+    },
+    {
+      "positionID": "left-pocket-vertical",
+      "contactID": "pocket-end-wall-20",
+      "front": "left-pocket-vertical-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true,
+      "frontAccessibility": "left-pocket-vertical-front-accessibility.json",
+      "selectionMethod": "DEBUG hold-review launch route"
+    },
+    {
+      "positionID": "exterior-jug-back",
       "contactID": "outer-jug",
-      "selection": "DEBUG contact review route",
-      "image": "contact-selection.png",
-      "accessibility": "contact-selection-accessibility.json"
+      "front": "exterior-jug-back-front.png",
+      "selectionVisible": true,
+      "cordAccessibilityAbsent": true,
+      "frontAccessibility": "exterior-jug-back-front-accessibility.json",
+      "selectionMethod": "DEBUG hold-review launch route"
     }
   ],
-  "humanGeometryAcceptance": "pending one-by-one user review",
-  "limits": "DEBUG hold-review screenshots and accessibility selection checks supplement RealityKit contact/cord tests; they do not certify manufacturer geometric accuracy."
+  "humanGeometryAcceptance": "pending revised DUAL user review",
+  "limits": "Current-source app captures verify the rendered routes and selected contacts. Native continuous clearance and tube certification are separate. Manufacturer fidelity remains subject to individual human review.",
+  "screenshotSHA256": {
+    "curved-lip-front-front.png": "097952f708e0a77d8e8e6c8ef77d33722ba232adb56f2743ceb3f2bd938a6dec",
+    "curved-lip-front-front-accessibility.json": "4b1fa7ade548e7b03781e63471cb1141fce1c38bf98bfe3c18ee7f0c6326ecf1",
+    "straight-lip-inverted-front.png": "8c04fa79a5a8848fc854a72f813434a7d026920afe41de8e36a07b293e25d2f4",
+    "straight-lip-inverted-front-accessibility.json": "db11fbfd45112aa79bb1f9f207569e9c1de00b26ca3502c94a9f7ac8b9786f68",
+    "left-pocket-vertical-front.png": "60d274f91329734597daa7ccee6e7600036f7908ab8d890b3f9555aa116c3cd5",
+    "left-pocket-vertical-front-accessibility.json": "931d627181e01fef906f62df0ad6cf5aae317d904074a6a632dbf074b0821c5f",
+    "exterior-jug-back-front.png": "660de2eb946921a8bfb96ca06195abdad656dda46c9495b5fcd454f7599c85fa",
+    "exterior-jug-back-front-accessibility.json": "fb8d01b273f8afd2021ea3de4840daad55d81e0e20e4976a3511579f36ac4e9c"
+  },
+  "priorAppReview": "../front-mouth-review/before/app-review/validation.json",
+  "orbitCaptureStatus": "Unverified: both the initial swipe and an explicit wood-start drag left contact projections unchanged. Only canonical captures are presented; attempted oblique captures are not represented as orbit proof.",
+  "orbitProbe": "physical-orbit-probes.json",
+  "independentOrbitCaptureReview": "orbit-readonly-diagnosis.json"
 }

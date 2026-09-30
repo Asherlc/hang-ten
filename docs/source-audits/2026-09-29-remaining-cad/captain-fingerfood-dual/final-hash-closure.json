@@ -18,5 +18,12 @@
     "primary.model.json": "49681f28562cc50b41b18736160bebfcd86e536abc8f17a12027359b9eb5c699"
   },
   "elapsedSeconds": 9.932,
-  "closure": "passed"
+  "closure": "passed",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "generatedManifestSHA256": "50f7cf31287e5ca78c22baa3ba312310f15e2f7973295a80c2ccb6861b970793",
+  "cordSolverSHA256": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+  "cordEntryReview": "cord-entry-review.md",
+  "continuousCordCertificateSHA256": "f85f2ad21aa95719e3b660b27127d15281305235b0693944789c255fa4aaf411",
+  "nativeRouteCheckSHA256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
+  "geometryUnchangedDuringCordEntryCorrection": true
 }

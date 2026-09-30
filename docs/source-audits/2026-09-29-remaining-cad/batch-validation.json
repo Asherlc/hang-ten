@@ -58,7 +58,19 @@
       "date": "2026-09-30",
       "feedback": "cord is way too long",
       "report": "aelith-cyclops-011/shorter-cord-runtime-validation.json",
-      "geometryAcceptance": "pending user review"
+      "geometryAcceptance": "pending user review",
+      "acceptedScope": "User accepted revised display cord length on 2026-09-30; broader geometry approval is not implied.",
+      "humanReviewRecord": "aelith-cyclops-011/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "date": "2026-09-30",
+      "feedback": "Cord doesn\u2019t go through holes",
+      "report": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
+      "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending revised user review"
     }
   ]
 }

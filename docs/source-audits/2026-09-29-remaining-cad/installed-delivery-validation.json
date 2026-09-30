@@ -1,7 +1,7 @@
 {
   "passed": true,
   "owner": "placid-badger",
-  "simulator": "5BC58E20-EDC3-4846-818D-94823B3186CA",
+  "simulator": "B50C9F34-769B-4CBD-A642-F109D3867F69",
   "packages": [
     {
       "package": "aelith-cyclops-011",
@@ -46,7 +46,7 @@
       "package": "captain-fingerfood-dual",
       "generatedManifestMatchesCurrentSource": true,
       "generatedBytesMatch": true,
-      "manifestSHA256": "cd943ed9d901c03d97f30900e2beee5cd7359d2a84022ffc22972ca56a87d9ae",
+      "manifestSHA256": "50f7cf31287e5ca78c22baa3ba312310f15e2f7973295a80c2ccb6861b970793",
       "models": [
         {
           "presentationID": "primary",

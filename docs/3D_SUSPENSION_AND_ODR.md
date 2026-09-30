@@ -129,10 +129,20 @@ mouths may hold generated settled-route caches; other point-only passages
 and single cords cannot use these overrides. Parsers validate the resolved route,
 including full length and distinct adjacent points.
 
-Captain pose-specific `attachmentPoints` delimit the visible cord at the
-selected upper channel. They are clipped display endpoints, not evidence for
-additional physical mouths or a hidden interior connection. Keep their ordered
-over-lip routes clear of selectable lips and the white floor apertures.
+Older non-CAD Captain pose-specific `attachmentPoints` delimit the visible
+cord at the selected upper channel. They are clipped display endpoints, not
+evidence for additional physical mouths or a hidden interior connection.
+Native revisions instead follow their current CAD source audit.
+
+For native Captain Fingerfood DUAL, the retained maker title photo shows both
+leads descending into the front cavity's two floor openings. Its existing CAD
+bores and front mouth centers are unchanged by the 2026-09-30 review correction.
+Each native lead declares authoring `mouthAxis: [0, 0, 1]` in the importer basis
+to fix the front entry side before native route generation. A path that reaches
+the front terminal through the rear mouth may pass collision checks while
+contradicting this observed threading. The two leads remain independent visible
+strands; no hidden rear connection is established. See the
+[DUAL source audit](source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/README.md).
 
 Convert retained source coordinates into the descriptor/importer basis before
 using them as model points. Baguette Evo's retained Blender markers are Z-up,

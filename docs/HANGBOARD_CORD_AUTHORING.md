@@ -289,7 +289,10 @@ solver extracts native-solid sections, retains their holes and separate
 pieces, solves paths around rope-offset boundaries, and settles hanging height.
 `sectionPlane: "anchor"` makes each free lead's section contain its actual
 support and terminal; it iterates with height for tapered or varying sections.
-An optional `planeAxis` selects the native axis that the section must contain.
+An optional `planeAxis` selects the native axis that the preferred section
+contains. Certified conflict recovery may rotate the free-span section around
+its support-to-derived-collar chord as described below; it does not rotate the
+actual bore's `mouthAxis`.
 For a lead whose bore direction is established by the native solid and retained
 manufacturer evidence, `mouthAxis` keeps the terminal at the real opening and
 derives a short outward exit beyond the solid's support plane. The solver
@@ -301,6 +304,25 @@ quarter of its unchanged cord radius per attempt. Return segments retain their
 original margin. The selected margin, derived exit and attempt appear in the
 report's `mouthCollars`; they are derived diagnostics rather than authored route
 stations. Every attempt retains the same full-solid and tube-intersection gates.
+
+Multiple collared leads must also clear each other. A shortest path through an
+empty CAD bore can be invalid once another lead occupies that bore. After an
+actual tube conflict, the solver can reserve the other generated collar tubes
+as section obstacles. Parallel capsule sections use their actual distance from
+the plane and a conservative polygon; unsupported oblique reservations fail
+explicitly. Already-valid preferred routes are preserved exactly.
+
+In a rotated grip, independent preferred planes may bring both leads onto the
+same lip. If strict checks still reject those routes, the solver searches a
+bounded, deterministic set of section rotations around each support-to-derived
+collar chord. Each candidate recomputes the native section, settles height and
+passes the complete rounded-route solid and tube checks. The mouths and axial
+entry directions stay fixed. Candidate angles and failures appear in
+`sectionOrientationRecovery`; they are generated diagnostics, not hand-authored
+stations. Exhausted searches fail without updating the package. This is a
+bounded route approximation, not a global minimum or dynamic rope simulation.
+The DUAL front-entry review retains the motivating occupied-bore and lip-contact
+regressions.
 
 The default `"fixed"` uses the selected section plane. Both modes certify every
 visible segment against the full closed CAD solid using adaptive signed-distance

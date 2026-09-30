@@ -1,0 +1,8 @@
+{
+  "owner": "placid-badger",
+  "pid": 53781,
+  "parentPID": 52748,
+  "command": "52748 /Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl diagnose -l -b --timeout=600 --log-option=--last --log-option=2m --output=/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/dual-cord-feedback/placid-badger-dual-cord-tests.xcresult/Staging/1_Test/Diagnostics/simctl_diagnostics --no-archive --udid=B50C9F34-769B-4CBD-A642-F109D3867F69",
+  "signal": "SIGTERM",
+  "reason": "All tests completed successfully; read-only sample showed post-test simctl log collection blocked for over five minutes. Stop only this exact owned diagnostics child so Xcode can finalize the completed result."
+}

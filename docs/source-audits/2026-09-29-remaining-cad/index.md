@@ -1,6 +1,6 @@
 # Remaining hangboard CAD review
 
-21 native CAD migrations prepared by three subagents. Cyclops was reviewed first, and the user accepted its shorter display cord on 2026-09-30. The recorded acceptance applies to the revised cord length. Captain Fingerfood DUAL is next; the remaining 20 boards await one-by-one review.
+21 native CAD migrations prepared by three subagents. Cyclops was reviewed first, and the user accepted its shorter display cord on 2026-09-30. The recorded acceptance applies to the revised cord length. Captain Fingerfood DUAL is under review; the remaining 20 boards await one-by-one acceptance.
 
 [Cyclops review response and exact asset identities](aelith-cyclops-011/human-review.json).
 
@@ -37,3 +37,5 @@ Seven active migrations were left unchanged: `tension-grindstone-original`, `ten
 [Batch provenance and excluded ownership](batch-audit.json). [Exact review queue](review-queue.json).
 
 [Final validation](batch-validation.json). [Independent review](final-independent-review.json). [Historical report notes](validation-notes.md).
+
+DUAL remains review #2. The user requested that its cords pass through the holes; the corrected front-entry routes and current app captures are ready for another review. [Cord-entry revision](captain-fingerfood-dual/cord-entry-review.md).

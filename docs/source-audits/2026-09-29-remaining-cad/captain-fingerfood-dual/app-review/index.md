@@ -1,13 +1,5 @@
-# Captain Fingerfood DUAL: app review
+# Captain Fingerfood DUAL: current app review
 
-Captured in the isolated iPhone 17 Pro simulator on iOS 26.5. Geometry acceptance is pending our one-by-one review.
+DUAL cord-entry revision, 2026-09-30. Both visible leads approach the front floor openings. All four selected grip poses are captured from the current installed app. Human review is pending.
 
-![straight-edge-20](default.png)
-
-straight-edge-20; DEBUG initial hold.
-
-![outer-jug](contact-selection.png)
-
-outer-jug; DEBUG contact review route.
-
-[Exact model hashes and validation](validation.json).
+[Default grip](default.png) · [All app poses](index.html) · [Before-and-after views](../front-mouth-review/index.html) · [Capture provenance](validation.json).

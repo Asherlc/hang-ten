@@ -18,3 +18,5 @@ The original reports are retained unchanged as historical records.
 ## Individual review revisions
 
 The initial independent batch review applies to commit `583a2d08`. Cyclops’s shorter cord supersedes its prior suspension identity; [current cord proof](aelith-cyclops-011/cord-shortening-verification.json) and [runtime validation](aelith-cyclops-011/shorter-cord-runtime-validation.json) cover the change. Its CAD source, USDZ and descriptor remain identical. The current delivery digest covers the revised sidecar.
+
+DUAL’s front-entry correction supersedes its prior suspension routes and app captures. [Current native proof](captain-fingerfood-dual/cord-entry-verification.json), [runtime proof](captain-fingerfood-dual/cord-entry-runtime-validation.json) and [before/after views](captain-fingerfood-dual/front-mouth-review/index.html) bind the revised sidecar. Source, USDZ, descriptor and cord dimensions remain unchanged. Native exact checks, 569 Python tests and 1,258 iOS tests passed; three iOS tests were skipped. Four canonical app poses were captured. Physical orbit capture remains unverified and is not claimed by this revision. Revised human review is pending.

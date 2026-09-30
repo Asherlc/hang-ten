@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: Cyclops shorter cord accepted; Captain Fingerfood DUAL next",
+  "reviewState": "one-by-one review in progress: Cyclops shorter cord accepted; corrected DUAL cord awaiting review",
   "boards": [
     {
       "number": 1,
@@ -39,7 +39,7 @@
       "package": "captain-fingerfood-dual",
       "boardID": "captain-fingerfood.dual",
       "name": "Captain Fingerfood DUAL",
-      "humanReview": "pending",
+      "humanReview": "changes requested; corrected cord awaiting review",
       "sourceSHA256": "80d9b7e89120c47293e590828b0fe012c3379ee6d1e4506c908356f2b261993a",
       "reviewPage": "captain-fingerfood-dual/geometry-review.html",
       "sourceAudit": "captain-fingerfood-dual/README.md",
@@ -53,7 +53,14 @@
         }
       },
       "appReview": "captain-fingerfood-dual/app-review/validation.json",
-      "appReviewPage": "captain-fingerfood-dual/app-review/index.html"
+      "appReviewPage": "captain-fingerfood-dual/app-review/index.html",
+      "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "reviewFeedback": [
+        "Cord doesn\u2019t go through holes"
+      ],
+      "latestRevision": "captain-fingerfood-dual/cord-entry-review.md",
+      "runtimeRevision": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
+      "cordComparisons": "captain-fingerfood-dual/front-mouth-review/index.html"
     },
     {
       "number": 3,

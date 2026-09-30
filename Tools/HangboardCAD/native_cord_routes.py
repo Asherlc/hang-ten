@@ -18,8 +18,8 @@ class _CollarCollision(ValueError):
 
 class NativeSection:
     @classmethod
-    def for_span(cls, mesh, start, finish, preferred_normal, radius, clearance, plane_axis=None):
-        """A section through both endpoints, retaining the selected plane axis."""
+    def for_span(cls, mesh, start, finish, preferred_normal, radius, clearance, plane_axis=None, rotation_degrees=0):
+        """A section through both endpoints, with optional generated chord rotation."""
         span = np.asarray(finish, dtype=float) - np.asarray(start, dtype=float)
         distance = np.linalg.norm(span)
         if not np.isfinite(distance) or distance <= 1e-10:
@@ -33,6 +33,10 @@ class NativeSection:
         if np.linalg.norm(normal) <= 1e-10:
             seed = np.eye(3)[np.argmin(np.abs(axis))]
             normal = np.cross(axis, seed)
+        if rotation_degrees:
+            # Rotate the SECTION, not either endpoint, around their chord.
+            angle = np.radians(rotation_degrees)
+            normal = normal*np.cos(angle) + np.cross(axis, normal)*np.sin(angle)
         return cls(mesh, finish, normal, radius, clearance)
 
     def __init__(self, mesh, origin, normal, radius, clearance):
@@ -54,6 +58,9 @@ class NativeSection:
             # Even/odd boundaries retain real holes rather than filling them.
             wood = wood.symmetric_difference(polygon)
         self.obstacle = wood.buffer(radius + clearance, quad_segs=8)
+        self._rebuild_graph()
+
+    def _rebuild_graph(self):
         self.points = []
         pieces = [self.obstacle] if self.obstacle.geom_type == "Polygon" else list(self.obstacle.geoms)
         for piece in pieces:
@@ -61,6 +68,31 @@ class NativeSection:
                 self.points.extend(np.asarray(ring.coords)[:-1])
         self.points = np.asarray(self.points)
         self.adj = {}
+
+    def reserve_tube(self, start, finish, exclusion_radius):
+        """Reserve another generated collar, including this cord's radius.
+
+        A capsule parallel to this plane, at distance d, intersects it in a
+        capsule of radius sqrt(R²-d²). Oblique capsules have different sections;
+        reject them explicitly rather than silently projecting their volume.
+        """
+        start, finish = np.asarray(start, dtype=float), np.asarray(finish, dtype=float)
+        span = finish - start
+        if start.shape != (3,) or finish.shape != (3,) or not np.isfinite([start, finish]).all() \
+                or not np.isfinite(exclusion_radius) or exclusion_radius <= 0 or np.linalg.norm(span) <= 1e-10:
+            raise ValueError("native occupied collar requires finite distinct endpoints and a positive radius")
+        if abs(float(span @ self.normal)) / np.linalg.norm(span) > 1e-8:
+            raise ValueError("native occupied collar must be parallel to the routing section; oblique reservation is unsupported")
+        distance = abs(float((start - self.origin) @ self.normal))
+        if distance >= exclusion_radius:
+            return
+        planar_radius = float(np.sqrt(exclusion_radius**2 - distance**2))
+        # Circumscribe the exact circular section: Shapely's usual inscribed
+        # polygon would underestimate capsule clearance between its vertices.
+        polygon_radius = planar_radius / np.cos(np.pi / 32)
+        capsule = LineString(self.to_plane([start, finish])).buffer(polygon_radius, quad_segs=8)
+        self.obstacle = self.obstacle.union(capsule)
+        self._rebuild_graph()
 
     def neighbors(self, index):
         if index not in self.adj:
@@ -193,6 +225,67 @@ def native_mouth_collar(mesh, mouth, mouth_axis, radius, clearance):
 
 
 def solve_native_routes(mesh, data, descriptor):
+    """Preserve valid preferred routes; recover collared-lead conflicts only.
+
+    Recovery is a bounded deterministic search of native section orientations,
+    not a global minimum or a full rope-physics simulation. Actual mouths and
+    bore axes stay fixed; each attempt derives its collar endpoint from the
+    native support plane and clearance margin, then settles and certifies anew.
+    """
+    setup = data["suspension"]
+    if not setup["canonicalPoses"]:
+        return _solve_native_routes(mesh, data, descriptor)
+    collar_ids = sorted(strand["id"] for strand in setup["strands"]
+                        if strand["kind"] == "lead" and "mouthAxis" in
+                        data["ropeSolver"]["terminalsByStrandID"].get(strand["id"], {}))
+    if len(collar_ids) < 2:
+        return _solve_native_routes(mesh, data, descriptor)
+    output = {}
+    for pose_id, pose in setup["canonicalPoses"].items():
+        one = {**data, "suspension": {**setup, "canonicalPoses": {pose_id: pose}}}
+        try:
+            output.update(_solve_native_routes(mesh, one, descriptor))
+            continue
+        except ValueError as error:
+            initial_error = str(error)
+            conflict = initial_error.startswith(("native cord tubes intersect:", "native cord paths intersect:",
+                                                "native cord paths retrace:", "native occupied collar must be parallel"))
+            if len(collar_ids) < 2 or not conflict:
+                raise
+        failures = []
+        solved = False
+        # Ascending maximum deviation, then total deviation, stable strand IDs
+        # and signs. At most 5 * (2N + N(N-1)) candidates for N collared leads.
+        for angle in (5, 10, 20, 35, 50):
+            candidates = [{identifier: sign*angle} for identifier in collar_ids for sign in (-1, 1)]
+            candidates += [{first: sign*angle, second: -sign*angle}
+                           for index, first in enumerate(collar_ids) for second in collar_ids[index+1:]
+                           for sign in (-1, 1)]
+            for rotations in candidates:
+                try:
+                    # An oblique section cannot use the parallel capsule helper.
+                    # Try its actual native route without that helper and require
+                    # the complete 3D collar/path tube certificate unchanged.
+                    result = _solve_native_routes(mesh, one, descriptor, rotations, False)[pose_id]
+                except ValueError as error:
+                    failures.append({"rotationsDegrees": rotations, "error": str(error)})
+                    continue
+                result["sectionOrientationRecovery"] = {
+                    "initialConflict": initial_error, "rotationsDegrees": rotations,
+                    "rejectedCandidates": failures,
+                    "policy": "First certified candidate in bounded ascending maximum/total section deviation order; no global optimum claim."}
+                output[pose_id] = result
+                solved = True
+                break
+            if solved:
+                break
+        if not solved:
+            raise ValueError(f"{pose_id}: bounded native section orientation search exhausted after {len(failures)} candidates; "
+                             f"initial conflict: {initial_error}; final failure: {failures[-1]['error']}")
+    return output
+
+
+def _solve_native_routes(mesh, data, descriptor, section_rotations=None, allow_collar_reservation=True):
     from solve_threaded_rope import rotate_inverse
     if not mesh.is_watertight or not mesh.is_winding_consistent:
         raise ValueError("native CAD collision solid must be closed and consistently wound")
@@ -223,6 +316,7 @@ def solve_native_routes(mesh, data, descriptor):
         translation=np.asarray(pose["translation"],dtype=float).copy()
         margins = {strand["id"]: clearance for strand in strands}
         lead_ends = {}
+        reserve_collars = False
         def build_sections(height):
             translation[1] = height
             local = rotate_inverse(pose["rotation"], anchor - translation)
@@ -241,7 +335,14 @@ def solve_native_routes(mesh, data, descriptor):
                 first, last = fixed, fixed
                 if plane_mode == "anchor" and strand["kind"] != "segment":
                     first = NativeSection.for_span(mesh, local, first_point, entry["planeNormal"], strand["radius"], margins[strand["id"]],
-                                                   plane_axis=entry.get("planeAxis"))
+                                                   plane_axis=entry.get("planeAxis"),
+                                                   rotation_degrees=(section_rotations or {}).get(strand["id"], 0))
+                    if reserve_collars:
+                        for other in strands:
+                            other_id = other["id"]
+                            if other_id in collar_ids and other_id != strand["id"]:
+                                first.reserve_tube(geometry[other_id]["points"][0], lead_ends[other_id],
+                                                   strand["radius"] + other["radius"] + margins[strand["id"]])
                     if strand["kind"] == "loop":
                         last = NativeSection.for_span(mesh, points[1], local, entry["planeNormal"], strand["radius"], clearance,
                                                       plane_axis=entry.get("planeAxis"))
@@ -314,11 +415,15 @@ def solve_native_routes(mesh, data, descriptor):
         # Only a generated bore-axis collar permits expanding that section
         # without swallowing the actual mouth. Retry deterministically; every
         # result still requires the unchanged continuous 3D and tube gates.
-        for attempt in range(5):
+        margin_attempt = 0
+        # Keep already-valid caches exact. Reserve occupied collars only after
+        # the unchanged full-path gate detects a genuine interstrand overlap.
+        # Five solid-clearance margins plus at most one occupied-collar retry.
+        for _ in range(6):
             for strand in strands:
                 identifier = strand["id"]
                 if identifier in collar_ids:
-                    margins[identifier] = clearance + attempt * strand["radius"] / 4
+                    margins[identifier] = clearance + margin_attempt * strand["radius"] / 4
                     entry = geometry[identifier]
                     lead_ends[identifier] = native_mouth_collar(mesh, entry["points"][0],
                         entry["mouthAxis"], strand["radius"], margins[identifier])
@@ -337,14 +442,22 @@ def solve_native_routes(mesh, data, descriptor):
             try:
                 paths,ratios,minimums=evaluate(height,True)
             except _CollarCollision:
-                if attempt == 4:
+                if margin_attempt == 4:
                     raise
+                margin_attempt += 1
                 continue
+            except ValueError as error:
+                if allow_collar_reservation and not reserve_collars and len(collar_ids) > 1 and str(error).startswith("native cord tubes intersect:"):
+                    reserve_collars = True
+                    continue
+                raise
             output[pose_id]={"height":round(height,9),"routes":paths,"lengthRatios":ratios,"minimumClearance":minimums}
             if collar_ids:
                 output[pose_id]["mouthCollars"] = {identifier: {
                     "sectionClearance": margins[identifier],
                     "derivedExteriorPoint": lead_ends[identifier].tolist(),
-                    "attempt": attempt + 1} for identifier in sorted(collar_ids)}
+                    "attempt": margin_attempt + 1} for identifier in sorted(collar_ids)}
+            if reserve_collars:
+                output[pose_id]["occupiedCollarsReserved"] = True
             break
     return output

@@ -41,6 +41,11 @@
             0,
             0,
             1
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
           ]
         },
         "right-lead": {
@@ -60,6 +65,11 @@
             0,
             0,
             1
+          ],
+          "mouthAxis": [
+            0,
+            0,
+            1
           ]
         }
       },
@@ -75,5 +85,62 @@
     }
   ],
   "authoringRule": "Terminal stations are deliberately selected actual native mouth/bearing points. Routes and hanging height are generated, never authored by hand. Hidden connectivity is omitted unless retained evidence supports it. Measured cylindrical void lengths are separately retained in native-channel-measurements.json where applicable.",
-  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification."
+  "lengthPolicy": "Penta retains the manufacturer 60 cm loop; other lengths/radii are carried display estimates and do not imply a manufacturer load or installation specification.",
+  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+  "frontEntryEvidence": "Captain Fingerfood retained title image and DualP1 show the two visible leads descending into the front recess floor openings.",
+  "frontEntryAxes": {
+    "left-lead": [
+      0,
+      0,
+      1
+    ],
+    "right-lead": [
+      0,
+      0,
+      1
+    ]
+  },
+  "entryDirectionByPose": {
+    "curved-lip-front": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "exterior-jug-back": {
+      "left-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": 1.555635,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "left-pocket-vertical": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    },
+    "straight-lip-inverted": {
+      "left-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      },
+      "right-lead": {
+        "beforeApproachZMM": -9.999999999999998,
+        "afterApproachZMM": 22.2
+      }
+    }
+  },
+  "boundedSectionOrientationRecovery": "Only after strict conflict, try bounded native section rotations about the support-to-generated-collar chord; each candidate is settled and certified. No authored route points or hidden connection."
 }
