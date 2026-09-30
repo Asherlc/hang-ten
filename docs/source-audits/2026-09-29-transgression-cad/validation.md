@@ -114,3 +114,19 @@ and BoardSourceBoundaryTests pass with zero skips or failures
 the exact workspace-owned review simulator; its UUID is absent from simctl,
 ownership records are consumed, and `.context/DerivedData` is removed.
 No Transgression geometry changed during this follow-up.
+
+## CAD finish integration merge — 2026-09-30
+
+Merged main's CAD runtime finish support while retaining its complete delivery
+records and both Transgression revisions. Both revisions now explicitly author
+`display.surfaceFinish=neutral` through `set_board_manifest.py`, preserving their
+previous default appearance. This is runtime display metadata, not a manufacturer
+color claim. Archive comparison confirms only `Document.xml` changed and its
+manifest differs only by this field; every native shape member, both USDZs and
+both descriptors remain byte-identical. No geometry changed.
+
+All 237 focused model-package, staging, CI-contract and Transgression native tests
+pass. Whole-catalog final-inventory validation passes. The
+[merged delivery check](review/pr527-finish-merge-delivery-lock-check.json) passes
+for 52 models and 120 locked files with checksum
+`0f8eb82015e3d03defb1ab51de95f8cf10584aee4fe6729fdbc84e2b27f92b66`.
