@@ -241,6 +241,20 @@ final class BoardModelRealityTests: XCTestCase {
 
         scene.resetCamera(animated: false)
         XCTAssertEqual(scene.camera.transform.matrix, initial)
+
+        // A hosted view submits gesture state at its synchronization boundary.
+        scene.orbit(azimuth: 0.35, elevation: 0.2, zoomScale: 0.9,
+                    deferCameraUpdate: true)
+        XCTAssertEqual(scene.camera.transform.matrix, initial,
+                       "Deferred orbit must leave the camera entity untouched")
+        scene.frame(in: viewport)
+        let deferredOrbit = scene.camera.transform.matrix
+        XCTAssertNotEqual(deferredOrbit, initial)
+        scene.resetCamera(animated: false, deferCameraUpdate: true)
+        XCTAssertEqual(scene.camera.transform.matrix, deferredOrbit,
+                       "Deferred reset must wait for the view's synchronization")
+        scene.frame(in: viewport)
+        XCTAssertEqual(scene.camera.transform.matrix, initial)
         for id in contactIDs {
             let canonical = try XCTUnwrap(canonicalCenters[id])
             let reset = try XCTUnwrap(scene.projectedContactCenter(

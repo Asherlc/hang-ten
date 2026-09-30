@@ -618,19 +618,27 @@ final class BoardModelRealityScene {
         updateCameraTransform()
     }
 
-    func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1) {
+    // Hosted views defer the entity write until frame(in:) runs in their
+    // RealityView update closure; unhosted callers keep immediate updates.
+    func orbit(azimuth: Float, elevation: Float, zoomScale: Float = 1,
+               deferCameraUpdate: Bool = false) {
         guard azimuth.isFinite, elevation.isFinite, zoomScale.isFinite, zoomScale > 0 else { return }
         orbitAzimuth = azimuth.truncatingRemainder(dividingBy: .pi * 2)
         orbitElevation = min(max(elevation, -0.55), 0.55)
         orbitZoom = min(max(zoomScale, 0.75), 1.35)
-        updateCameraTransform()
+        if !deferCameraUpdate { updateCameraTransform() }
     }
 
-    func resetCamera(animated: Bool, completion: (() -> Void)? = nil) {
+    func resetCamera(animated: Bool, deferCameraUpdate: Bool = false,
+                     completion: (() -> Void)? = nil) {
         orbitAzimuth = 0
         orbitElevation = 0
         orbitZoom = 1
-        updateCameraTransform(animated: animated, completion: completion)
+        if deferCameraUpdate {
+            completion?()
+        } else {
+            updateCameraTransform(animated: animated, completion: completion)
+        }
     }
 
     func highlight(_ contactIDs: Set<String>, mode: BoardHighlightMode) {

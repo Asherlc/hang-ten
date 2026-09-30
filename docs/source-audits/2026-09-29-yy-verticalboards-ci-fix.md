@@ -282,13 +282,13 @@ The finite-frame helper now takes the owning application explicitly and
 anchors the coordinate in that application; the menu-window workaround and
 single tap remain intact. CI must establish the behavioral result.
 
-Two read-only reviewers independently recommend one diagnostic invocation
+Two read-only reviewers independently recommended one diagnostic invocation
 that compares camera transforms, native projections, and engine-frame
-callbacks. The temporary DEBUG trace is guarded by the existing board-review
-diagnostics environment flag, writes only logs, retains a scene subscription,
-and cancels it on disappearance. It neither changes published diagnostic
-state nor schedules redraws. This is investigation code and must be removed
-before merge; it is not a claimed rendering fix.
+callbacks. The temporary DEBUG trace was guarded by the existing board-review
+diagnostics environment flag and wrote only logs. After retaining CI's result
+bundle, attachments and 363 trace records, its state, subscription, logging,
+projection helper, disappearance cleanup and class definition were removed.
+No trace wiring remains in the delivered application source.
 
 The local picker baseline and subsequent diagnostic invocation were
 interrupted before their interactions because startup blocked in
@@ -299,3 +299,25 @@ not establish a valid comparison. No permission policy, authorization state,
 assertion, or retry loop was changed. CI's SDK 26.5 run must supply the
 remaining evidence. Local compilation and the 22 CI-contract tests passed;
 no successful local UI result is claimed for this investigation.
+
+Run `36696460939` on diagnostic head `2512db816` passed Python and Swift
+units. The application-owned Left-menu tap passed its complete test in
+97.187 seconds. All six Batch05 boards failed rendered orbit checks. Their
+native projections follow the changed camera transforms before and after
+synchronization and in subsequent engine-frame callbacks, while their
+presented geometry remains frozen. This weakens camera-math, missing-update,
+and deterministic mode-rebinding explanations. The diagnostic subscription
+may affect scheduling, so this run does not establish an exact internal
+RealityKit fault or make the observed failure rate comparable to the prior
+trace-free run.
+
+The controlled candidate preserves normalized orbit state in gesture
+callbacks, but defers the camera entity write to `frame(in:)` inside
+`RealityView.update`. This submits the changed transform at the host's
+synchronization boundary and lets the existing before/after detector observe
+it. Unhosted callers retain immediate camera updates. The camera unit test
+also verifies deferred orbit/reset leave the entity transform unchanged
+until framing submits them. Camera calculations, mode configuration, native
+picking, navigation, rendered assertions, and single-tap behavior are
+unchanged. This candidate requires fresh trace-free CI interaction validation;
+no successful rendering fix is claimed before that result.

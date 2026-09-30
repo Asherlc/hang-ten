@@ -180,7 +180,6 @@ struct BoardModelRealityView: View {
     @State private var didReportUnavailable = false
     #if DEBUG
     @State private var synchronizedCameraDiagnostic = "pending"
-    @State private var presentationTrace = BoardPresentationTrace()
     #endif
 
     private var fieldOfViewDegrees: Double {
@@ -204,16 +203,6 @@ struct BoardModelRealityView: View {
                 content.add(model.camera)
                 applySync(size: size)
                 #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    let projectionContent = content
-                    presentationTrace.sample = { traceProjection(content: projectionContent, size: size) }
-                    presentationTrace.subscription = content.subscribe(to: SceneEvents.Update.self) { _ in
-                        Task { @MainActor in presentationTrace.tick() }
-                    }
-                    presentationTrace.record("make", revision: cameraRevision)
-                }
-                #endif
-                #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
                     print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
                 }
@@ -222,21 +211,8 @@ struct BoardModelRealityView: View {
                 // Observe orbit invalidation in the RealityView update itself,
                 // as well as the projected SwiftUI accessibility overlay.
                 let revision = cameraRevision
-                #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    let projectionContent = content
-                    presentationTrace.sample = { traceProjection(content: projectionContent, size: size) }
-                    presentationTrace.record("before-mode", revision: revision)
-                }
-                #endif
                 content.camera = .virtual
                 applySync(size: size)
-                #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    presentationTrace.record("after-sync", revision: revision)
-                    presentationTrace.remainingTicks = 3
-                }
-                #endif
                 #if DEBUG
                 if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
                     let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"
@@ -246,13 +222,6 @@ struct BoardModelRealityView: View {
                         }
                     }
                 }
-                #endif
-            }
-            .onDisappear {
-                #if DEBUG
-                presentationTrace.subscription?.cancel()
-                presentationTrace.subscription = nil
-                presentationTrace.sample = nil
                 #endif
             }
             .gesture(orbitGesture(size: size))
@@ -284,14 +253,6 @@ struct BoardModelRealityView: View {
             label: onContactTap == nil ? "\(boardName) hangboard" : nil,
             value: onContactTap == nil ? accessibilityValue : nil))
     }
-
-    #if DEBUG
-    private func traceProjection(content: RealityViewCameraContent, size: CGSize) -> String {
-        let points: [SIMD3<Float>] = [.zero, SIMD3(0.05, 0, 0), SIMD3(0, 0.02, 0)]
-        let projected = points.map { String(describing: content.project(point: $0, to: .local)) }
-        return "scene=\(ObjectIdentifier(model));size=\(size);orbit=(\(model.orbitAzimuth),\(model.orbitElevation));camera=\(model.camera.transform.matrix);native=\(projected);active=\(model.camera.isActive)"
-    }
-    #endif
 
     private func applySync(size: CGSize) {
         let priorCameraTransform = model.camera.transform.matrix
@@ -327,20 +288,12 @@ struct BoardModelRealityView: View {
         SpatialTapGesture()
             .targetedToAnyEntity()
             .onEnded { value in
-                #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    presentationTrace.record("tap entity=\(value.entity.name) point=\(value.gestureValue.location)", revision: cameraRevision)
-                }
-                #endif
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
-                model.resetCamera(animated: true)
+                // Submit the new pose inside RealityView.update, so the host
+                // receives the camera transform in the same synchronization.
+                model.resetCamera(animated: true, deferCameraUpdate: true)
                 cameraRevision &+= 1
-                #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    presentationTrace.record("reset", revision: cameraRevision)
-                }
-                #endif
                 onContactTap?(contact)
             }
     }
@@ -352,13 +305,9 @@ struct BoardModelRealityView: View {
                 let deltaY = value.translation.height - lastDragTranslation.height
                 lastDragTranslation = value.translation
                 model.orbit(azimuth: model.orbitAzimuth - Float(deltaX / max(size.width, 1)) * 0.9,
-                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65)
+                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65,
+                            deferCameraUpdate: true)
                 cameraRevision &+= 1
-                #if DEBUG
-                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
-                    presentationTrace.record("orbit", revision: cameraRevision)
-                }
-                #endif
             }
             .onEnded { _ in lastDragTranslation = .zero }
     }
@@ -369,7 +318,7 @@ struct BoardModelRealityView: View {
                 let ratio = value / max(lastMagnification, 0.001)
                 lastMagnification = value
                 model.orbit(azimuth: model.orbitAzimuth, elevation: model.orbitElevation,
-                            zoomScale: model.orbitZoom / Float(ratio))
+                            zoomScale: model.orbitZoom / Float(ratio), deferCameraUpdate: true)
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastMagnification = 1 }
@@ -418,22 +367,3 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
-
-#if DEBUG
-@MainActor
-private final class BoardPresentationTrace {
-    var subscription: EventSubscription?
-    var sample: (() -> String)?
-    var remainingTicks = 0
-    var sequence = 0
-    func record(_ stage: String, revision: Int) {
-        NSLog("[BoardPresentationTrace] stage=%@ revision=%d ticks=%d %@", stage, revision, sequence, sample?() ?? "missing")
-    }
-    func tick() {
-        sequence += 1
-        guard remainingTicks > 0 else { return }
-        remainingTicks -= 1
-        record("engine-frame", revision: -1)
-    }
-}
-#endif
