@@ -948,11 +948,13 @@ struct PlanDetailView: View {
             }
 
             HStack {
-                Text("Add bodyweight")
-                    .onTapGesture {
-                        manualWeightIncludesBodyweight.toggle()
-                    }
-                    .accessibilityHidden(true)
+                Button("Add bodyweight") {
+                    manualWeightIncludesBodyweight.toggle()
+                }
+                .buttonStyle(.plain)
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+                .accessibilityIdentifier("workout.initialWeight.addBodyweight.label")
                 Spacer(minLength: 12)
                 Toggle("Add bodyweight", isOn: $manualWeightIncludesBodyweight)
                     .labelsHidden()

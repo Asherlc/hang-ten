@@ -94,21 +94,16 @@ final class FreeWorkoutUITests: XCTestCase {
                 + "120"
         )
         XCTAssertEqual(duration.value as? String, "120")
+        tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
+
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
             labels: ["Start Set"]
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
-        // The numeric keyboard covers the bottom of this scroll view. Start
-        // the drag in its exposed upper portion, rather than swiping the keyboard.
-        let logScroll = anyElement(app, "freeWorkout.log").scrollViews.firstMatch
-        for _ in 0..<3 where !startSet.isHittable {
-            logScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.4))
-                .press(
-                    forDuration: 0.1,
-                    thenDragTo: logScroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.05))
-                )
+        if !startSet.isHittable {
+            app.scrollViews["freeWorkout.log.scroll"].swipeUp()
         }
         tapHittable(startSet, timeout: 15)
 
@@ -250,7 +245,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         // Focused actions sit below the board preview on an iPhone. Scroll them into view
         // before querying XCTest, which otherwise cannot see the lazy row controls.
-        let logScrollView = app.scrollViews.firstMatch
+        let logScrollView = app.scrollViews["freeWorkout.log.scroll"]
         XCTAssertTrue(logScrollView.waitForExistence(timeout: 10), "Free-workout log should scroll")
         logScrollView.swipeUp()
 

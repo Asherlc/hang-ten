@@ -356,6 +356,9 @@ final class BoardModelRealityScene {
         material.baseColor = .init(tint: UIColor(red: 0.82, green: 0.80, blue: 0.77, alpha: 1))
         material.roughness = .init(floatLiteral: 0.5)
         material.metallic = .init(floatLiteral: 0)
+        // A reflected instance reverses triangle winding. Some CAD contacts
+        // are open front surfaces, so culling would hide the mirrored half.
+        material.faceCulling = .none
         return material
     }
 
