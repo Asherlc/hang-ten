@@ -68,15 +68,15 @@ final class OrbitPanArbitrationTests: XCTestCase {
     @MainActor
     func testInteractiveMapAcceptsVerticalAndDiagonalOrbitWithoutChangingPreviewPolicy() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-        let pan = UIPanGestureRecognizer()
+        let pan = StubOrbitPanGestureRecognizer()
         view.addGestureRecognizer(pan)
         let map = OrbitPanGestureDelegate(allowsAllDirections: true)
         let preview = OrbitPanGestureDelegate()
         for translation in [CGPoint(x: 0, y: 12), CGPoint(x: 8, y: 12), CGPoint(x: 12, y: 0)] {
-            pan.setTranslation(translation, in: view)
+            pan.stubTranslation = translation
             XCTAssertTrue(map.gestureRecognizerShouldBegin(pan))
         }
-        pan.setTranslation(CGPoint(x: 0, y: 12), in: view)
+        pan.stubTranslation = CGPoint(x: 0, y: 12)
         XCTAssertFalse(preview.gestureRecognizerShouldBegin(pan))
     }
 
@@ -101,4 +101,11 @@ final class OrbitPanArbitrationTests: XCTestCase {
         XCTAssertFalse(delegate.gestureRecognizer(pan, shouldRecognizeSimultaneouslyWith: pinch))
     }
 
+}
+
+/// Supplies stable input without depending on UIKit's idle recognizer bookkeeping.
+private final class StubOrbitPanGestureRecognizer: UIPanGestureRecognizer {
+    var stubTranslation: CGPoint = .zero
+    override func translation(in view: UIView?) -> CGPoint { stubTranslation }
+    override func velocity(in view: UIView?) -> CGPoint { .zero }
 }
