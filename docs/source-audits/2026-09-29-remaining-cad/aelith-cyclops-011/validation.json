@@ -7,11 +7,14 @@
   },
   "fullPackageSchemaPassed": true,
   "nativeCordCacheCheckPassed": true,
-  "minimumNativeCordClearanceMM": 1.1999982165904688,
+  "minimumNativeCordClearanceMM": 1.0402227502920915,
   "metadataOnlyCompileRebindings": [],
   "humanCADReview": "pending requested one-at-a-time review after whole batch",
   "externalResourcesCreated": false,
   "continuousRoundedRuntimeCordClearancePassed": true,
-  "minimumCertifiedRuntimeCordClearanceMM": 1.0481449992370062,
-  "continuousClearanceReport": "cord-continuous-clearance.json"
+  "minimumCertifiedRuntimeCordClearanceMM": 1.0402227502920915,
+  "continuousClearanceReport": "cord-continuous-clearance.json",
+  "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "cordDisplayRevision": "cord-shortening-verification.json",
+  "tubeSelfIntersectionPassed": true
 }

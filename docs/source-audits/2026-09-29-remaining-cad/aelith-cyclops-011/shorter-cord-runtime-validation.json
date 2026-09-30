@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "nativeCordChecks": "cord-shortening-verification.json",
+  "currentAppReview": "app-review/validation.json",
+  "iOSFinal": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "summary": "shorter-cord-test-results/ios-final-summary.json"
+  },
+  "firstRun": {
+    "failedTests": 1,
+    "test": "AppStoreTests/testActivityRecordingFailureKeepsLocalHistoryAndDoesNotSaveIncompleteHealthWorkout()",
+    "summary": "shorter-cord-test-results/ios-first-summary.json",
+    "notes": "The unchanged history test exceeded its one-second asynchronous UI-snapshot wait on the cold run. Local persisted history, expected recording error, and zero Health saves passed. The full retry passed without app or test code changes."
+  },
+  "geometryAcceptance": "pending user review",
+  "resourceCleanup": "shorter-cord-resource-cleanup.json"
+}

@@ -1,9 +1,9 @@
 {
   "package": "aelith-cyclops-011",
   "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
-  "sidecarSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+  "sidecarSHA256": "19c51a321555a387beeb5ad735987ff0bae6a9a45d2a12f72e0f94432267a53e",
   "algorithm": "Tools/HangboardCAD/native_cord_routes.py",
-  "algorithmSHA256": "309cffb89d3955298aefab71bc1e57098fbc7beb14596aef1b8064cf83b77171",
+  "algorithmSHA256": "98f73d58191ef3f99f612222723c7d1d0e59b886de4ad5a833448d788c2f3de7",
   "method": "adaptive signed-distance 1-Lipschitz lower bound on each complete rounded runtime polyline",
   "numericalToleranceMM": 0.01,
   "runtimeSupportReconstructed": true,
@@ -15,18 +15,16 @@
         "front-cup": {
           "strands": {
             "single-eye-loop": {
-              "certifiedMinimumClearanceMM": 1.0402227502920915,
+              "certifiedMinimumClearanceMM": 1.0481449992370062,
               "radiusMM": 1.0,
-              "runtimeRouteLengthMM": 139.99999844122752,
-              "restLengthMM": 140.0,
-              "vertexCountWithSupport": 12
+              "runtimeRouteLengthMM": 359.99999731736307,
+              "restLengthMM": 360.0,
+              "vertexCountWithSupport": 11
             }
           }
         }
       }
     }
   },
-  "minimumCertifiedClearanceMM": 1.0402227502920915,
-  "tubeSelfIntersectionPassed": true,
-  "displayRevision": "User requested shorter cord on 2026-09-30"
+  "minimumCertifiedClearanceMM": 1.0481449992370062
 }

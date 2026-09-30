@@ -14,3 +14,7 @@ The following initial compile reports are superseded for final source identity. 
 - [plateau-lifting-edge/compile-18.json](plateau-lifting-edge/compile-18.json) → [final proof](plateau-lifting-edge/reproducibility.json).
 
 The original reports are retained unchanged as historical records.
+
+## Individual review revisions
+
+The initial independent batch review applies to commit `583a2d08`. Cyclops’s shorter cord supersedes its prior suspension identity; [current cord proof](aelith-cyclops-011/cord-shortening-verification.json) and [runtime validation](aelith-cyclops-011/shorter-cord-runtime-validation.json) cover the change. Its CAD source, USDZ and descriptor remain identical. The current delivery digest covers the revised sidecar.

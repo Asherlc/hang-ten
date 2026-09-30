@@ -26,7 +26,12 @@
         }
       },
       "appReview": "aelith-cyclops-011/app-review/validation.json",
-      "appReviewPage": "aelith-cyclops-011/app-review/index.html"
+      "appReviewPage": "aelith-cyclops-011/app-review/index.html",
+      "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "reviewFeedback": [
+        "cord is way too long"
+      ],
+      "latestRevision": "aelith-cyclops-011/cord-shortening-review.md"
     },
     {
       "number": 2,

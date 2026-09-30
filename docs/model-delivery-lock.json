@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "4991d2dca213f7f0846c79781a32123f10116323740d498f0323d8738fcc0420",
+  "sha256Manifest": "02da0c3ff36aff1de73d9ba87ef187d38fdb4a5a3c9ff97be2ab32f8d03921f0",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -623,7 +623,8 @@
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/app-review/validation.json",
       "geometryAcceptance": "pending requested one-by-one user review",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "19c51a321555a387beeb5ad735987ff0bae6a9a45d2a12f72e0f94432267a53e"
+      "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "reviewRevision": "2026-09-30: shortened visual cord at user request; native model/source and physical source facts unchanged. Current geometry acceptance pending."
     },
     "captain-fingerfood-dual": {
       "source": "Hangboards/captain-fingerfood-dual/captain-fingerfood-dual.FCStd",
@@ -1132,5 +1133,19 @@
   "miniBarMetoliusProjectMergeNote": "2026-09-28: combined the source-backed package set with main's Metolius Project migration. The digest covers the merged packages and supersedes main's 4dd0490daa88fadfb5025d8937bc2b4dd0c7811c3775c7d995229caea25951db manifest.",
   "crimptoniteHeliumMobileMigrationNote": "2026-09-28: crimptonite-helium-mobile became a source-backed native FreeCAD package with generated board.json; the prior 786c420d0548456670ca7d37bbf4c1f5c1ee946a2ab79907cfb784ecc2ac7491 manifest moved to supersededSha256Manifest; its cord then moved to a solved internalLoop suspension.json sidecar, superseding manifest 99cf8d945a59ae1a646aa88474eb4af41d24f8a784b3018f837d04415792eb5c.",
   "soillSplitPalmMigrationNote": "2026-09-28: soill-split-palm became a source-backed parametric/faceted FreeCAD package authored from manufacturer specifications and photographs. One canonical half is mirrored at runtime; the smooth pinch is a single continuous body; fastener details and materials are omitted. The prior 60058921f4fec437870baee4eb39249b07243542899fffddd729dc0289582e6c manifest moved to supersededSha256Manifest.",
-  "remainingCADMigrationNote": "2026-09-29: 21 remaining unclaimed hangboards migrated to native CAD by three subagents; seven active migrations and all 36 existing CAD packages remain unchanged. The inventory now has 58 model packages, of which 57 are native CAD; Plateau has three descriptor-bound configuration assets. All new geometry remains pending the requested one-by-one user review. The legacy assetCommit identifies the original reference delivery; sha256Manifest pins the current exact source/descriptor/sidecar bytes. See docs/source-audits/2026-09-29-remaining-cad/index.md."
+  "remainingCADMigrationNote": "2026-09-29: 21 remaining unclaimed hangboards migrated to native CAD by three subagents; seven active migrations and all 36 existing CAD packages remain unchanged. The inventory now has 58 model packages, of which 57 are native CAD; Plateau has three descriptor-bound configuration assets. All new geometry remains pending the requested one-by-one user review. The legacy assetCommit identifies the original reference delivery; sha256Manifest pins the current exact source/descriptor/sidecar bytes. See docs/source-audits/2026-09-29-remaining-cad/index.md.",
+  "sha256ManifestHistory": [
+    "4991d2dca213f7f0846c79781a32123f10116323740d498f0323d8738fcc0420"
+  ],
+  "individualReviewRevisions": [
+    {
+      "package": "aelith-cyclops-011",
+      "date": "2026-09-30",
+      "request": "cord is way too long",
+      "scope": "Shorter display-estimated cord and coherently solved support/height; unchanged CAD/model bytes",
+      "suspensionSHA256": "7880c8f17010ba006a6f75f5c3c4fdf77efb23b1341db59cd581a82534b50c4d",
+      "review": "docs/source-audits/2026-09-29-remaining-cad/aelith-cyclops-011/cord-shortening-review.md",
+      "geometryAcceptance": "pending"
+    }
+  ]
 }

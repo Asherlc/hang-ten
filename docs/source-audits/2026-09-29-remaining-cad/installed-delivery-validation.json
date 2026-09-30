@@ -1,13 +1,13 @@
 {
   "passed": true,
   "owner": "placid-badger",
-  "simulator": "D7168911-6A46-4FED-9019-968CCEFEB9DB",
+  "simulator": "5BC58E20-EDC3-4846-818D-94823B3186CA",
   "packages": [
     {
       "package": "aelith-cyclops-011",
       "generatedManifestMatchesCurrentSource": true,
       "generatedBytesMatch": true,
-      "manifestSHA256": "24e27e1e2ddda28ff0bd0033363d3ba7697f5d92ba6d896b669b072a751a8834",
+      "manifestSHA256": "ff0966bd87fb80ab39a08e9c5df60af927a5b97364579704c9d42e11c1fb9c8e",
       "models": [
         {
           "presentationID": "primary",

@@ -51,5 +51,14 @@
     "test-results/python.log": "618eea0c484017ff9e1b2a47cb28140d0d6910d1a97338c7130ff4e92c013ac9"
   },
   "resourceCleanup": "resource-cleanup.json",
-  "authoredDiffValidation": "authored-diff-validation.json"
+  "authoredDiffValidation": "authored-diff-validation.json",
+  "reviewRevisions": [
+    {
+      "package": "aelith-cyclops-011",
+      "date": "2026-09-30",
+      "feedback": "cord is way too long",
+      "report": "aelith-cyclops-011/shorter-cord-runtime-validation.json",
+      "geometryAcceptance": "pending user review"
+    }
+  ]
 }

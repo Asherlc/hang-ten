@@ -6,9 +6,14 @@
   "method": "nativeRoutes",
   "poses": {
     "front-cup": {
-      "height": -0.063473921,
+      "height": -0.027430404,
       "routes": {
         "single-eye-loop": [
+          [
+            0.0,
+            0.026448614,
+            0.013612989
+          ],
           [
             0.0,
             0.026228487,
@@ -51,16 +56,16 @@
           ],
           [
             1.36e-07,
-            0.105760925,
+            0.050239166,
             -0.006843989
           ]
         ]
       },
       "lengthRatios": {
-        "single-eye-loop": 0.9999999933288259
+        "single-eye-loop": 0.9999999883439501
       },
       "minimumClearance": {
-        "single-eye-loop": 0.0011999982165904687
+        "single-eye-loop": 0.0010402227502920916
       }
     }
   }
