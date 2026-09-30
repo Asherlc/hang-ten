@@ -583,3 +583,29 @@ Stage B attempt because the correctness prerequisite remains unresolved. No
 production collider, acceptance threshold, cord geometry or catalog profile was
 changed. Evidence is `strong-owl-certified-patch-screen.report.json`; the exact
 owned probe exited and process absence was verified.
+
+### Scene display initialization now uses the guarded projection
+
+The scene previously constructed a solver but measured and published its raw
+seed directly. Consequently, separable finite-radius cord overlap was rejected
+before `projectInitialization()` could run. `RopeDynamicsSolver.prepareDisplay`
+now returns the corrected solver and its accepted first frame together, and the
+scene calls that preparation on its existing detached worker before allocating
+cord meshes or publishing a frame. Wood penetration, lost threading and proper
+centerline crossings still fail the existing transactional preflight.
+
+The regression uses two distinct overlapping cords with fixed, separated
+supports. The previous display behavior failed with `Invalid initial display
+geometry`; guarded preparation passes with matching solver/frame positions,
+unchanged rest-length arrays and supports, and separated finite-radius cords.
+All 12 host inter-cord tests and all 33 focused native scene/inter-cord tests
+passed. A scoped independent review found no actionable issues. Evidence is
+`display-preparation/behavior-{red,green}.log` and
+`display-preparation-native-summary.json` under the retained live-cord context.
+
+A proposed end-to-end synthetic scene fixture hit unrelated RealityKit/ODR
+asset-loading errors and was removed; those failed runs are not validation of
+the rope fix. Existing native scene tests validate the integration, while the
+new regression targets solver-to-display preparation directly. This change
+does not enable Mini or any new catalog profile, establish real-time performance,
+or close the CAD error and designated-bearing proof gaps.

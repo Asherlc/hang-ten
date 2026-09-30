@@ -17,6 +17,16 @@ struct RopeDynamicsSolver: Sendable {
     private var distanceTension:[[Double]]
     private var lastStepDuration=1.0/240
 
+    /// Return the solver and its first accepted display frame together. Raw
+    /// geometry seeds may have separable finite-radius cord overlap; they are
+    /// never published before the guarded initialization projection succeeds.
+    static func prepareDisplay(input:RopePhysicsInput,state:RopeSimulationState,
+                               collider:RopeTriangleCollider) throws -> (solver:Self,frame:RopeFrameSnapshot) {
+        var solver=try Self(input:input,state:state,collider:collider)
+        let frame=try solver.projectInitialization()
+        return (solver,frame)
+    }
+
     init(input:RopePhysicsInput,state:RopeSimulationState,collider:RopeTriangleCollider) throws {
         self.input=input;self.state=state;self.collider=collider
         channelColliderCache=try RopeChannelColliderCache(channels:input.channels)

@@ -206,6 +206,26 @@ final class RopeInterContactTests:XCTestCase {
         }
     }
 
+    func testDisplayPreparationPublishesProjectedStateAndPreservesMaterial() throws {
+        let (input,state,collider)=try Self.fixture(
+            [SIMD3(-0.1,1,-0.01),SIMD3(0,1.005,0),SIMD3(0.1,1,-0.01)],
+            [SIMD3(-0.1,1,0.014),SIMD3(0,1.005,0.004),SIMD3(0.1,1,0.014)])
+        XCTAssertFalse(try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+            boardHistory:[0]).geometryAccepted)
+        let prepared=try RopeDynamicsSolver.prepareDisplay(input:input,state:state,collider:collider)
+        XCTAssertTrue(prepared.frame.metrics.geometryAccepted)
+        XCTAssertFalse(prepared.frame.settled)
+        XCTAssertEqual(prepared.frame.boardHeight,prepared.solver.state.boardHeight)
+        for ((original,result),frame) in zip(zip(state.ropes,prepared.solver.state.ropes),prepared.frame.ropes) {
+            XCTAssertEqual(result.restLengths,original.restLengths)
+            XCTAssertEqual(frame.id,result.id)
+            XCTAssertEqual(frame.radius,result.radius)
+            XCTAssertEqual(frame.positions,result.positions)
+            for (index,point) in original.supports {XCTAssertEqual(result.positions[index],point)}
+        }
+        XCTAssertTrue(RopeCordContacts.between(prepared.solver.state.ropes[0],prepared.solver.state.ropes[1]).isEmpty)
+    }
+
     func testInitializationRejectsCrossingBetweenRopesTransactionally() throws {
         let (input,state,collider)=try Self.fixture([SIMD3(-0.05,1,0),SIMD3(0.05,1,0)],
                                                   [SIMD3(0,0.95,0),SIMD3(0,1.05,0)])

@@ -702,12 +702,7 @@ final class BoardModelRealityScene {
                 let collider=try RopeTriangleCollider(input:physics)
                 let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
                 let state=try RopeThreadedSeed.make(input:physics,profileID:profile.id,orientation:q,collider:collider)
-                let solver=try RopeDynamicsSolver(input:physics,state:state,collider:collider)
-                let metrics=try RopeSimulationMetrics.measure(state:state,input:physics,collider:collider,boardHistory:[state.boardHeight])
-                guard metrics.geometryAccepted else { throw RopePhysicsError.invalid("Invalid initial display geometry") }
-                let frame=RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
-                    ropes:state.ropes.map { RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions) },settled:false,metrics:metrics)
-                return (solver,frame)
+                return try RopeDynamicsSolver.prepareDisplay(input:physics,state:state,collider:collider)
             }.value
             try Task.checkCancellation()
             let meshes=try prepared.1.ropes.map { try LiveRopeMesh(capacity:$0.positions.count,radialSegments:8,radius:Float($0.radius)) }
