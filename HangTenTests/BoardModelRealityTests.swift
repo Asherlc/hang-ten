@@ -67,6 +67,8 @@ final class BoardModelRealityTests: XCTestCase {
         let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
         XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
         let initial=try XCTUnwrap(scene.liveFramesForTesting.first)
+        var frameNotifications=0
+        scene.onLiveFrame = { frameNotifications += 1 }
         scene.setLiveActivity(false)
         scene.advanceLiveRopes(elapsed:100)
         try await Task.sleep(for:.milliseconds(50))
@@ -78,6 +80,7 @@ final class BoardModelRealityTests: XCTestCase {
         await fulfillment(of:[accepted],timeout:30)
         let final=try XCTUnwrap(scene.liveFramesForTesting.first)
         XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
+        XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")
         var camera=scene.camera.camera
         camera.fieldOfViewInDegrees=30;camera.fieldOfViewOrientation = .vertical
         scene.camera.camera=camera

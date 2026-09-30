@@ -203,7 +203,11 @@ struct BoardModelRealityView: View {
         // interactive board exposes its contact elements instead, so the
         // container must not collapse them into a single element.
         .onAppear { model.setLiveActivity(scenePhase == .active) }
-        .onDisappear { model.setLiveActivity(false) }
+        .onDisappear {
+            model.onLiveFrame=nil
+            model.onLiveFailure=nil
+            model.setLiveActivity(false)
+        }
         .onChange(of:scenePhase) { _,phase in model.setLiveActivity(phase == .active) }
         .onChange(of:reduceMotion) { _,value in model.configureLiveMotion(reduceMotion:value,displayOnly:isDisplayOnly) }
         .modifier(BoardModelAccessibilityContainer(
@@ -215,6 +219,8 @@ struct BoardModelRealityView: View {
         model.configureLiveMotion(reduceMotion:reduceMotion,displayOnly:isDisplayOnly)
         let unavailableCallback = onUnavailable
         model.onLiveFailure = { unavailableCallback?() }
+        let revisionBinding = $cameraRevision
+        model.onLiveFrame = { revisionBinding.wrappedValue &+= 1 }
         var camera = model.camera.camera
         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
         camera.fieldOfViewOrientation = .vertical

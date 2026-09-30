@@ -196,6 +196,7 @@ final class BoardModelRealityScene {
         .split(separator:",").compactMap { Double($0) }.filter(\.isFinite) ?? []
     #endif
     var onLiveFailure: (() -> Void)?
+    var onLiveFrame: (() -> Void)?
     var hasLiveRopes: Bool { !liveControllers.isEmpty }
     var liveFramesForTesting: [RopeFrameSnapshot] { liveFrames }
 
@@ -721,6 +722,7 @@ final class BoardModelRealityScene {
             }
             #endif
         }
+        onLiveFrame?()
     }
 
     private func updateLiveFraming() {
