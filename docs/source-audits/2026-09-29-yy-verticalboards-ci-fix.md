@@ -136,3 +136,130 @@ and the four Owl map/layout cases. The xcodebuild invocation finalized with
 exit zero. Results are retained in `map-lifecycle-shard.xcresult` and its log.
 Additional picker and three independent Pro repetitions are recorded in
 `map-lifecycle-picker` and `map-lifecycle-repeat-*` artifacts as they complete.
+
+## CI follow-up: DoorMount reset tap and unit timeout
+
+Run `36654455929` passed Pro and Evo after the lifecycle change, along with
+the purchase/settings/workout shard and Python checks. The board shard ran
+21 UI cases with one failure: DoorMount's post-orbit physical reset tap.
+The selected contact remained present, but its projected center stayed
+10.33 points to the right of the canonical frame. The screen recording
+also retained the orbit pose after the tap. Selection remaining present
+does not establish that the second physical tap hit anything.
+
+The synthesized event records the reset tap at `(328.413, 261.867)` points.
+The existing `0.82, 0.55` offset biases the tap toward the pocket's right rim.
+The accessibility overlay supplies a fixed 44-point target rather than actual
+pocket bounds, so that offset adds 14.08 horizontal points irrespective of
+the pocket's visible width.
+A projected-center reset was tested as a candidate, but failed in the combined
+11-case run. It was rejected. DoorMount's original initial surface point,
+original drag direction, and `0.82, 0.55` reset offset are retained.
+
+Native diagnostic runs found agreement between manual and RealityKit contact
+projection (under 0.12 points for the measured DoorMount pose) and native hits
+at the projected center. These measurements do not establish hit delivery at
+another screen point. Removing the per-update virtual-camera assignment did
+not fix a callback-free initial tap and was also rejected. The diagnostic
+runs additionally reproduced an Evo initial tap with no targeted callback;
+a later run delivered the expected callback. Source-hull containment alone
+cannot establish the runtime collider or gesture result.
+
+The completed screenshot comparisons exposed an assertion race. Selection
+could change the hold label while the captured model still had its previous
+highlight. That delayed material update could satisfy pixel inequality after
+orbit, and the projected camera could reset before the rendered frame did.
+The test now establishes visible body geometry before selection, waits for
+the selected surface's rendered highlight before recording the canonical
+reference, and requires restoration of that rendered reference after the
+single physical reset tap. Landscape also requires visible body geometry.
+These are bounded waits for visual conditions, with the original physical
+interaction and navigation preserved.
+
+A DoorMount diagnostic run with rendered-selection synchronization showed a
+correct highlight, visible geometric orbit, and an RGB-identical canonical
+reset, with native projected X `270.157 -> 280.286 -> 270.157` and camera
+revisions `2 -> 3 -> 4`. A subsequent run passed with the original initial
+surface point as well. No proposed snapshot-based production invalidation
+change was applied. Final validation removes temporary native projection,
+entity-hit, callback, and parameter tracing. The local SDK remains 27.0
+versus CI's 26.5; CI verification remains necessary.
+
+The sampling helper uses saved screen geometry because asking XCTest for a
+RealityView coordinate's `screenPoint` can fail even while the hosted view is
+queryable. Its sampling window includes the visible pocket rim, and rejects
+invalid crops while polling instead of recording an intermediate assertion
+failure. The corrected sampling run passed Pro/Evo's portrait selection, orbit, and
+rendered canonical reset. Its landscape visibility assertions failed. A live
+simulator screenshot (`live-landscape-sampling.png`) confirmed that Pro's map
+was actually blank after the long wait, independently of the sampler. The
+landscape sampler also required using the normalized screenshot's scale,
+because Springboard's accessibility width can remain in portrait orientation.
+
+The next isolated candidate makes `BoardDetailMapSizeModifier` a single
+modifier chain with an optional width limit. Its previous nil/non-nil height
+branches replaced the content hierarchy when compact-height metrics arrived
+or orientation changed. The candidate preserves the fitted-map accessibility
+node and the compact width limit while keeping the model surface's structural
+identity stable. Camera, model geometry, contact binding, and loader behavior
+are unchanged. The trace-free focused run passed both Evo and Pro, including physical
+selection, rendered highlight, visible orbit, exact rendered canonical reset,
+and visible landscape body. The first complete affected suite passed ten of
+eleven cases, including all five other Batch05 boards and their landscape
+checks. Pro failed its initial physical selection. Its retained synthesized
+event tapped (183.5535, 247.5154), while its live target frame was
+(179, 225.3, 44, 44), with center (201, 247.3). The screenshot places the
+old normalized fixture on the gap beside the narrow center pocket after
+main’s default viewing-angle change. Pro now picks the live contact center;
+a separate orbit-start argument preserves the original drag trajectory.
+This keeps one physical initial tap and one physical reset tap, with no
+retries. The subsequent trace-free complete suite passed nine of eleven cases.
+DoorMount’s physical reset did not return its projected center; Pro’s
+selection succeeded, but reset did not advance camera revision 3 and the
+rendered board remained orbited. The old three-point AX tolerance masked
+that Pro failure; the new exact rendered-reset assertion caught it.
+
+A focused temporary native-query run exposed an instrumentation confound:
+publishing the entire changing hit-query string through SwiftUI changed
+synchronization. A second, logging-only run kept the original short AX
+diagnostic and passed both DoorMount and Pro, with two fresh native callbacks
+per board, rendered canonical restoration, and landscape geometry. Native
+queries also show Pro’s former fixed fixture misses while its live center
+hits. These results establish intermittent native interaction/presentation
+behavior, not a proved camera defect. All temporary hit-query and callback
+tracing was removed before the delivery build. No snapshot invalidation,
+camera-mode experiment, retries, weakened reset checks, or production
+picking changes were retained.
+
+Local builds use SDK 27.0 with Simulator runtime 26.5; CI builds use SDK 26.5.
+The trace-free integrated build and full unit suite passed: 1,245 tests,
+three skipped, zero failures. Python’s integrated suite passed 437 tests;
+the delivery lock validates 53 models and 122 authored files. CI on the
+pushed branch must supply the remaining interaction validation. The local trace-free UI failures are retained and
+are not described as a full-suite pass.
+
+The retained before/after landscape screenshots show the actual blank map
+and the same board rendered with its selected contact:
+
+![Pro landscape before](../pr-screenshots/yy-verticalboards/ci-map-pro-landscape-before.png)
+
+![Pro landscape after](../pr-screenshots/yy-verticalboards/ci-map-pro-landscape-after.png)
+
+The unit shard's sole failure was
+`AppStoreTests.testFailedSessionPersistenceDoesNotConsumeCredit`: a two-second
+expectation expired while the test took 19.658 seconds. Its simulator app log
+shows a HealthKit connection activated at `04:56:32.268` and cancelled at
+`04:56:51.916`, matching the stalled interval. This supports investigating a
+transient simulator stall; the exact blocking call is not established. A
+single targeted rerun was requested after the full workflow completed;
+replacement unit job `109756688319` passed at `06:14:36Z` on the unchanged
+commit. A subsequent local diagnostic launch also stalled in
+`HealthKitService.authorizationState`; its process sample identifies
+`HKHealthStore.authorizationStatusForType` waiting for a synchronous XPC
+reply on the main thread (`AppStore.init`, line 93). That launch never
+reached a board interaction and was cancelled with exact-resource cleanup.
+This corroborates the environment hypothesis without establishing that the
+original unit failure blocked in the same call. No expectation timeout or
+production persistence code was changed. The original logs, result bundle,
+exported diagnostics, screenshots, and synthesized events are retained under
+`.context/supreme-zebra-cad-validation/ci-6296-*`.

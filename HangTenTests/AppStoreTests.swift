@@ -1037,7 +1037,7 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() {
+    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() async {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -1050,16 +1050,36 @@ final class AppStoreTests: XCTestCase {
             defaults: defaults
         )
 
+        // Await published events so the main queue can deliver history callbacks
+        // even while a cold simulator is initializing the app's rendering services.
+        let completionFailed = expectation(description: "completion sync error published")
+        let completionObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Session was saved locally and will retry Apple Health sync." }
+            .prefix(1)
+            .sink { _ in completionFailed.fulfill() }
+        defer { completionObservation.cancel() }
+
         appStore.markSessionComplete(
             activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitUntil { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [completionFailed], timeout: 5)
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session was saved locally and will retry Apple Health sync."
+        )
         healthStore.fetchResult = .failure(FakeHealthError.failed)
 
+        let refreshFailed = expectation(description: "history refresh error published")
+        let refreshObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Apple Health history could not sync. Local history remains available." }
+            .prefix(1)
+            .sink { _ in refreshFailed.fulfill() }
+        defer { refreshObservation.cancel() }
+
         appStore.requestHealthAuthorization()
-        waitUntil { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [refreshFailed], timeout: 5)
 
         XCTAssertEqual(
             appStore.healthAuthorizationError,
@@ -1703,7 +1723,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 1)
     }
 
-    func testFailedSessionPersistenceDoesNotConsumeCredit() async {
+    func testFailedSessionPersistenceDoesNotConsumeCredit() {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
         let sessionStore = ControllableAppendWorkoutSessionStore()
@@ -1714,11 +1734,6 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             purchaseManager: PurchaseManager(client: FakeStoreKitClient())
         )
         let record = workoutSessionRecord()
-        let persistenceFailed = expectation(description: "persistence failure recorded")
-        let observation = store.$sessionPersistenceError.dropFirst().sink { error in
-            guard error != nil else { return }
-            persistenceFailed.fulfill()
-        }
 
         store.markSessionComplete(
             PlanCatalog.metoliusTenMinute,
@@ -1727,10 +1742,11 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
             session: record
         )
         sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
-        await fulfillment(of: [persistenceFailed], timeout: 2)
+        // Match the success-path test: keep the store alive while its weak
+        // main-actor callback publishes the persistence result.
+        waitUntil { store.sessionPersistenceError != nil }
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
-        withExtendedLifetime(observation) {}
     }
 
     func testLoadingHistoricSessionsDoesNotConsumeCredits() {
