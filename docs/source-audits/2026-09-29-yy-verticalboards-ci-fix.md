@@ -321,3 +321,28 @@ until framing submits them. Camera calculations, mode configuration, native
 picking, navigation, rendered assertions, and single-tap behavior are
 unchanged. This candidate requires fresh trace-free CI interaction validation;
 no successful rendering fix is claimed before that result.
+
+The trace-free `dfbf13842` unit shard ran 1,245 tests with three skips. Its
+sole failing case was successful session persistence: the one-second
+condition wait expired before the asynchronously dispatched main-actor
+completion consumed the credit (two failed assertions). The deferred-camera
+unit case passed. Purchase/settings/workout UI also passed; the board shard
+is still pending.
+
+The paired persistence tests previously pumped `RunLoop.main` from a
+synchronous main-actor test while the production append callback scheduled a
+main-actor task. The candidate test correction suspends between condition
+checks, allowing that executor to run normally. It retains the one-second
+deadline, the controlled storage completion, the pre-completion zero-credit
+assertion, and the final success/failure credit assertions. Credit policy and
+application persistence code are unchanged. The exact CI scheduling delay is
+not proved; fresh CI must validate this test correction.
+
+Run `36699899387` completed. All six Batch05 boards failed the rendered orbit
+assertion; the remaining 15 board/grip/picker cases passed. The deferred
+camera-submission candidate therefore did not correct the observed failure
+and was removed, including its optional model API and candidate-only unit
+assertions. The previous immediate-camera behavior is restored; temporary
+presentation tracing remains removed. The prepared persistence-test wait
+correction is delivered separately. Rendering investigation remains open,
+and auto merge remains disabled.

@@ -1696,7 +1696,7 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(store.workoutLaunchDecision, .allowed)
     }
 
-    func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() {
+    func testSuccessfulSessionPersistenceConsumesCreditOnlyAfterCompletion() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
         let sessionStore = ControllableAppendWorkoutSessionStore()
@@ -1718,12 +1718,12 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
 
         sessionStore.completeAppend(.success(()))
-        waitUntil { accessStore.freeWorkoutsUsed == 1 }
+        await waitForSessionPersistence { accessStore.freeWorkoutsUsed == 1 }
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 1)
     }
 
-    func testFailedSessionPersistenceDoesNotConsumeCredit() {
+    func testFailedSessionPersistenceDoesNotConsumeCredit() async {
         let defaults = makeDefaults()
         let accessStore = WorkoutAccessStore(defaults: defaults)
         let sessionStore = ControllableAppendWorkoutSessionStore()
@@ -1744,9 +1744,23 @@ private final class FakeWorkoutHealthStore: WorkoutHealthStore {
         sessionStore.completeAppend(.failure(SessionAppendTestError.failed))
         // Match the success-path test: keep the store alive while its weak
         // main-actor callback publishes the persistence result.
-        waitUntil { store.sessionPersistenceError != nil }
+        await waitForSessionPersistence { store.sessionPersistenceError != nil }
 
         XCTAssertEqual(accessStore.freeWorkoutsUsed, 0)
+    }
+
+    private func waitForSessionPersistence(
+        _ condition: @escaping () -> Bool,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async {
+        let deadline = ContinuousClock.now.advanced(by: .seconds(1))
+        // Append completion schedules a main-actor Task. Suspend this main-actor
+        // test so that task can finish before checking the persisted result.
+        while !condition(), ContinuousClock.now < deadline {
+            try? await Task.sleep(for: .milliseconds(10))
+        }
+        XCTAssertTrue(condition(), file: file, line: line)
     }
 
     func testLoadingHistoricSessionsDoesNotConsumeCredits() {

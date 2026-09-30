@@ -290,9 +290,7 @@ struct BoardModelRealityView: View {
             .onEnded { value in
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
-                // Submit the new pose inside RealityView.update, so the host
-                // receives the camera transform in the same synchronization.
-                model.resetCamera(animated: true, deferCameraUpdate: true)
+                model.resetCamera(animated: true)
                 cameraRevision &+= 1
                 onContactTap?(contact)
             }
@@ -305,8 +303,7 @@ struct BoardModelRealityView: View {
                 let deltaY = value.translation.height - lastDragTranslation.height
                 lastDragTranslation = value.translation
                 model.orbit(azimuth: model.orbitAzimuth - Float(deltaX / max(size.width, 1)) * 0.9,
-                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65,
-                            deferCameraUpdate: true)
+                            elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65)
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastDragTranslation = .zero }
@@ -318,7 +315,7 @@ struct BoardModelRealityView: View {
                 let ratio = value / max(lastMagnification, 0.001)
                 lastMagnification = value
                 model.orbit(azimuth: model.orbitAzimuth, elevation: model.orbitElevation,
-                            zoomScale: model.orbitZoom / Float(ratio), deferCameraUpdate: true)
+                            zoomScale: model.orbitZoom / Float(ratio))
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastMagnification = 1 }
