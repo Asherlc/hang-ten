@@ -1,6 +1,6 @@
 """Derive sliding aperture regions from explicitly selected native CAD features.
 
-Adapters support straight axis-aligned Box channels and circular native pipes. Unsupported
+Adapters support straight Box/Cylinder channels and circular native pipes. Unsupported
 feature types fail explicitly; their apertures must never be guessed from an
 overlay mesh or from a cached rope route.
 """
@@ -31,6 +31,14 @@ def _portal(face, identifier):
     normal = face.normalAt(0, 0)
     normal.normalize()
     points = [vertex.Point for vertex in face.OuterWire.Vertexes]
+    if len(points) < 3:
+        # A native circular cap has one seam vertex, not a polygonal boundary.
+        # Discretize the CAD wire itself; no image or cached cord route enters it.
+        points = list(face.OuterWire.discretize(Number=65))
+        if points[0].distanceToPoint(points[-1]) < 1e-7:
+            points.pop()
+        if len(points) < 3:
+            raise ValueError(f"{identifier}: native cap has no complete boundary")
     # Sort the native planar cap's vertices about its CAD center; no sampled
     # image geometry and no authored contact coordinates enter this record.
     reference = points[0] - center
@@ -106,6 +114,43 @@ def _pipe_regions(feature, body, identifier):
     return records,channel
 
 
+def _cylinder_mesh(region, caps):
+    """Preserve native sides; triangulate convex planar caps repeatably.
+
+    OCCT may choose different interior diagonals on a newly intersected
+    circular cap. Its side seam vertices are stable. Reuse that boundary,
+    leaving the exported solid surface and winding unchanged.
+    """
+    mesh=native_mesh(region)
+    points=[App.Vector(*p) for p in mesh["vertices"]]
+    triangles=[tuple(t) for t in mesh["triangles"]]
+    for face in caps:
+        center=App.Vector(*model_point(face.CenterOfMass))
+        native=face.normalAt(0,0)
+        normal=App.Vector(native.x,native.z,-native.y)
+        selected=[t for t in triangles if all(abs((points[i]-center).dot(normal))<1e-9 for i in t)]
+        selected_set=set(selected)
+        sides=[t for t in triangles if t not in selected_set]
+        boundary=sorted(set(i for t in selected for i in t)&set(i for t in sides for i in t))
+        if len(boundary)<3:
+            raise ValueError("native cylindrical cap has no closed side seam")
+        reference=points[boundary[0]]-center
+        reference.normalize()
+        tangent=normal.cross(reference)
+        boundary.sort(key=lambda i:math.atan2((points[i]-center).dot(tangent),(points[i]-center).dot(reference)))
+        start=boundary.index(min(boundary))
+        boundary=boundary[start:]+boundary[:start]
+        triangles=sides+[(boundary[0],boundary[i],boundary[i+1]) for i in range(1,len(boundary)-1)]
+    used=sorted(set(i for t in triangles for i in t))
+    remap={i:j for j,i in enumerate(used)}
+    canonical=[]
+    for triangle in triangles:
+        t=tuple(remap[i] for i in triangle)
+        first=t.index(min(t))
+        canonical.append(t[first:]+t[:first])
+    return {"vertices":[mesh["vertices"][i] for i in used],"triangles":[list(t) for t in sorted(canonical)]}
+
+
 def export_rope_physics(document, body_feature: str, channel_features: dict) -> dict:
     body = _feature(document, body_feature).Shape
     box = body.BoundBox
@@ -119,15 +164,19 @@ def export_rope_physics(document, body_feature: str, channel_features: dict) -> 
             portals.extend(records)
             channels.append(channel)
             continue
-        axis_name = getattr(feature, "HangTenChannelAxis", "")
-        if axis_name not in {"x", "y", "z"}:
-            raise ValueError(f"{feature_name} needs an operator-selected HangTenChannelAxis")
-        if feature.TypeId != "Part::Box" or feature.Placement.Rotation.Angle > 1e-10:
-            raise ValueError(f"{feature_name}: unsupported channel adapter (expected axis-aligned Box)")
-        axis = {"x": App.Vector(1, 0, 0), "y": App.Vector(0, 1, 0),
-                "z": App.Vector(0, 0, 1)}[axis_name]
+        if feature.TypeId == "Part::Cylinder":
+            # The deliberately authored primitive supplies its own bore axis,
+            # including a non-identity placement such as Helium's through-bores.
+            axis = feature.Placement.Rotation.multVec(App.Vector(0, 0, 1))
+        else:
+            axis_name = getattr(feature, "HangTenChannelAxis", "")
+            if axis_name not in {"x", "y", "z"}:
+                raise ValueError(f"{feature_name} needs an operator-selected HangTenChannelAxis")
+            if feature.TypeId != "Part::Box" or feature.Placement.Rotation.Angle > 1e-10:
+                raise ValueError(f"{feature_name}: unsupported channel adapter (expected axis-aligned Box or native Cylinder)")
+            axis = {"x": App.Vector(1, 0, 0), "y": App.Vector(0, 1, 0),
+                    "z": App.Vector(0, 0, 1)}[axis_name]
         region = feature.Shape.common(envelope)
-        geometry = native_mesh(region)
         if region.common(body).Volume > 1e-6:
             raise ValueError(f"{feature_name}: channel region intersects wood")
         caps = [face for face in region.Faces
@@ -135,6 +184,7 @@ def export_rope_physics(document, body_feature: str, channel_features: dict) -> 
         if len(caps) != 2:
             raise ValueError(f"{feature_name}: expected two planar aperture caps")
         caps.sort(key=lambda face: model_point(face.CenterOfMass), reverse=True)
+        geometry = _cylinder_mesh(region,caps) if feature.TypeId == "Part::Cylinder" else native_mesh(region)
         records = [_portal(face, f"{identifier}-{suffix}")
                    for face, suffix in zip(caps, ("front", "back"))]
         # The cap must coincide with a real mouth, not merely a bounding box

@@ -281,7 +281,12 @@ clearance with a 3.5 mm radius. Its 7.4 mm CAD bores remain display estimates;
 see [the cord and bore audit](source-audits/2026-09-29-cord-and-bore-scale.md).
 
 For live physics, `export_rope_physics.py` supports native circular
-`PartDesign::SubtractivePipe` channels as well as the straight Box adapter.
+`PartDesign::SubtractivePipe` channels as well as straight Box and native
+`Part::Cylinder` adapters. A Cylinder supplies the bore axis from its authored
+placement. Its complete circular cap boundary comes from the CAD wire, rather
+than its single seam vertex. Native side seam vertices are retained while the
+convex planar caps receive deterministic triangulation; OCCT's varying internal
+cap diagonals otherwise change the exported descriptor between identical runs.
 The pipe adapter intersects the native subtractive tool with the pre-cut wood
 to retain the actual channel void. Curved wood mouths have no planar cap:
 complete circular sections just inside the exits track sliding material

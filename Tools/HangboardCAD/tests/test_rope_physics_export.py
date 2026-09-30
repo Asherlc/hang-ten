@@ -10,6 +10,37 @@ TOOLS = ROOT / "Tools/HangboardCAD"
 pytestmark = pytest.mark.skipif(not Path("/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd").is_file(), reason="FreeCAD unavailable")
 
 
+def test_native_cylinder_bores_export_complete_circular_apertures(tmp_path):
+    script=tmp_path/"cylinder-export.py"
+    script.write_text('''import FreeCAD as App
+import json,sys
+from pathlib import Path
+sys.path[:0]=[str(Path("Tools/HangboardCAD").resolve()),str(Path("Tools/HangboardPackages/src").resolve())]
+from export_rope_physics import export_rope_physics
+from hangboard_packages.rope_physics import _mesh,portal_clearance_radius
+d=App.openDocument(str(Path("Hangboards/crimptonite-helium-mobile/crimptonite-helium-mobile.FCStd").resolve()))
+mapping={"left":"LeftCordChannel","right":"RightCordChannel"}
+a=export_rope_physics(d,"BodySolid",mapping)
+b=export_rope_physics(d,"BodySolid",mapping)
+assert json.dumps(a)==json.dumps(b)
+assert len(a["channels"])==2 and len(a["portals"])==4
+for channel in a["channels"]:
+ _mesh({k:channel[k] for k in ["vertices","triangles"]})
+ assert len(channel["spine"])==2
+ for identifier in channel["portalIDs"]:
+  p=next(p for p in a["portals"] if p["id"]==identifier)
+  assert len(p["boundary"])>=64
+  assert abs(abs(p["center"][0])-.186)<1e-9
+  assert abs(p["center"][1])<1e-9
+  assert abs(abs(p["center"][2])-.012)<1e-9
+  assert abs(abs(p["normal"][2])-1)<1e-9
+  assert .00349 < portal_clearance_radius(p) <= .0035
+App.closeDocument(d.Name)
+''')
+    run=subprocess.run([sys.executable,str(TOOLS/"run_freecad.py"),str(script)],cwd=ROOT,capture_output=True,text=True,timeout=60)
+    assert run.returncode == 0,run.stdout+run.stderr
+
+
 def test_curved_pipe_exports_native_void_and_safe_planar_crossings(tmp_path):
     script=tmp_path/"curved-export.py"
     script.write_text('''import FreeCAD as App
