@@ -10,8 +10,9 @@ final class RopeThreadedSeedTests: XCTestCase {
         let root = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
         let url = root.appendingPathComponent("Hangboards/clavellium-training-block/assets/primary.physics.json")
         let data = try Data(contentsOf: url)
-        let raw = try JSONSerialization.jsonObject(with: data) as! [String: Any]
-        return try RopePhysicsDescriptor.decode(data).validated(modelSHA256: raw["modelSHA256"] as! String)
+        let raw = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+        let hash = try XCTUnwrap(raw["modelSHA256"] as? String)
+        return try RopePhysicsDescriptor.decode(data).validated(modelSHA256: hash)
     }
 
     func testCachedChannelMetricsMatchUncachedGeometry() throws {

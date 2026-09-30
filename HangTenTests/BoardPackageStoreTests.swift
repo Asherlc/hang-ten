@@ -242,11 +242,12 @@ final class BoardPackageStoreTests: XCTestCase {
     }
 
     func testDeclaredRopePhysicsFailsClosed() throws {
-        for failure in ["missing", "stale", "symlink", "wrong-profile"] {
+        for failure in ["missing", "stale", "symlink", "wrong-profile", "malformed"] {
             let fixture = try makeModelFixtureBundle(modelSHA256Matches: true) { packageURL in
                 try self.addPhysicsFixture(to: packageURL)
                 let url = packageURL.appendingPathComponent("assets/primary.physics.json")
                 switch failure {
+                case "malformed": try Data("{}".utf8).write(to: url)
                 case "missing": try FileManager.default.removeItem(at: url)
                 case "stale": try self.mutateJSONObject(at: url) { $0["modelSHA256"] = String(repeating:"c", count:64) }
                 case "wrong-profile": try self.mutateJSONObject(at: url) { object in
@@ -261,7 +262,13 @@ final class BoardPackageStoreTests: XCTestCase {
                 }
             }
             defer { fixture.remove() }
-            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand), failure)
+            XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand), failure) { error in
+                guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
+                    return XCTFail("Expected board-specific invalidPackage for \(failure), got \(error)")
+                }
+                XCTAssertEqual(boardID, "fixture.board")
+                XCTAssertFalse(reason.isEmpty)
+            }
         }
     }
 

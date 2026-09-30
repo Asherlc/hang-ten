@@ -55,7 +55,7 @@
     "zlagboard-pro"
   ],
   "sha256Manifest": "9f4acbd9aa77d01d48786d1e3f2ba8a74c266bfc9bb29fe6d17243fe092a95e2",
-  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
+  "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json, rope-physics.json, and assets/primary.physics.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
   "supersededSha256Manifest": "2712b89303954cc3a0174833cb2629d0cc0e4d21587f10531619f7ade631aa2d",

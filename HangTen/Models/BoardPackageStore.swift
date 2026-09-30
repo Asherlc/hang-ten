@@ -916,19 +916,26 @@ struct BoardPackageStore {
                 )
                 let descriptor = loadedDescriptor.descriptor
                 let physics = try physicsDescriptorPath.map { path -> RopePhysicsInput in
-                    let url = packageURL.appendingPathComponent(path)
-                    let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
-                    guard values.isRegularFile == true, values.isSymbolicLink != true,
-                          let size = values.fileSize, size <= 64 * 1024 * 1024 else {
-                        throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+                    do {
+                        let url = packageURL.appendingPathComponent(path)
+                        let values = try url.resourceValues(forKeys: [.isRegularFileKey, .isSymbolicLinkKey, .fileSizeKey])
+                        guard values.isRegularFile == true, values.isSymbolicLink != true,
+                              let size = values.fileSize, size <= 64 * 1024 * 1024 else {
+                            throw RopePhysicsError.invalid("Physics descriptor must be a regular file of at most 64 MiB")
+                        }
+                        let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: descriptor.modelSHA256)
+                        let profiles = input.profiles.filter { $0.presentationID == presentation.id }
+                        let expectedInstances: Set<String?> = loadedDescriptor.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
+                        guard Set(profiles.map(\.instanceID)) == expectedInstances else {
+                            throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
+                        }
+                        return input
+                    } catch {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "Invalid rope physics descriptor: \(error.localizedDescription)"
+                        )
                     }
-                    let input = try RopePhysicsDescriptor.decode(Data(contentsOf: url)).validated(modelSHA256: descriptor.modelSHA256)
-                    let profiles = input.profiles.filter { $0.presentationID == presentation.id }
-                    let expectedInstances: Set<String?> = loadedDescriptor.instances.map { Set($0.map { Optional($0.equipmentObjectID) }) } ?? [nil]
-                    guard Set(profiles.map(\.instanceID)) == expectedInstances else {
-                        throw RopePhysicsError.invalid("Physics profiles must cover presentation instances exactly")
-                    }
-                    return input
                 }
                 let woodNodes = Set(displayDocument.woodNodeIDs)
                 let plasticNodes = Set(displayDocument.plasticNodeIDs)

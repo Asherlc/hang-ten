@@ -41,6 +41,7 @@ struct RopeDynamicsSolver: Sendable {
               state.boardMass>0,state.boardMass.isFinite,state.boardHeight.isFinite,
               state.boardVerticalVelocity.isFinite,!state.ropes.isEmpty,
               state.ropes.allSatisfy({rope in
+                  !rope.restLengths.isEmpty &&
                   rope.positions.count == rope.restLengths.count+1 && rope.positions.count == rope.velocities.count &&
                   rope.positions.count == rope.previousPositions.count && rope.radius>0 && rope.linearMass>0 &&
                   rope.positions.allSatisfy(Self.finite) && rope.previousPositions.allSatisfy(Self.finite) &&
@@ -107,7 +108,7 @@ struct RopeDynamicsSolver: Sendable {
         throw RopePhysicsError.invalid("Initial finite-radius rope contact did not converge")
     }
 
-    private enum StepFailure:Error {case sweptWoodTraversal,sweptSelfTraversal,nonlinearConvergence,geometry(RopeSimulationMetrics)}
+    private enum StepFailure:Error {case sweptWoodTraversal,sweptSelfTraversal,nonlinearConvergence,predictedTopology(String),geometry(RopeSimulationMetrics)}
 
     private mutating func advanceBounded(dt:Double,targetOrientation:simd_quatd,depth:Int) throws -> RopeFrameSnapshot {
         var trial=self
@@ -154,7 +155,11 @@ struct RopeDynamicsSolver: Sendable {
             }
         }
         let prediction=state
-        try RopePassageTopology.refresh(state:&state,input:input)
+        do {
+            try RopePassageTopology.refresh(state:&state,input:input)
+        } catch let error as RopePhysicsError {
+            throw StepFailure.predictedTopology(error.localizedDescription)
+        }
         for _ in 0..<80 {
             let movement=try correctConstraints(prediction:prediction)
             if maximumStrain()<0.0002 && movement<1e-8 {break}

@@ -20,6 +20,35 @@ final class RopeDynamicsSolverTests: XCTestCase {
         XCTAssertThrowsError(try RopeDynamicsSolver(input:input,state:state,collider:collider))
     }
 
+    func testRejectsLinklessRopeBeforeSimulation() throws {
+        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+        let mesh=RopeTriangleColliderTests.box(minimum:SIMD3(-0.01,-0.01,-0.01),maximum:SIMD3(0.01,0.01,0.01))
+        let rope=RopePhysicsRope(id:"lead",baselineRadius:0.002,radius:0.0035,restLength:0,linearMass:0.01,nodes:[],edges:[])
+        let input=RopePhysicsInput(modelSHA256:String(repeating:"a",count:64),sourceSHA256:String(repeating:"b",count:64),
+            collision:mesh,portals:[],channels:[],profiles:[RopePhysicsProfile(id:"front",presentationID:"front",instanceID:nil,boardMass:1,ropes:[rope])])
+        let chain=RopeChainState(id:"lead",radius:0.0035,linearMass:0.01,restLengths:[],positions:[.zero],
+            previousPositions:[.zero],velocities:[.zero],supports:[:],attachments:[:],portals:[:],channelSegments:[:])
+        let state=RopeSimulationState(profileID:"front",boardMass:1,boardHeight:0,boardVerticalVelocity:0,orientation:q,ropes:[chain])
+        XCTAssertThrowsError(try RopeDynamicsSolver(input:input,state:state,collider:RopeTriangleCollider(input:input)))
+    }
+
+    func testLostPredictedCrossingExhaustsBoundedRecoveryAndRollsBack() throws {
+        let input=try RopeThreadedSeedTests.clavellium(),collider=try RopeTriangleCollider(input:input)
+        let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
+        var state=try RopeThreadedSeed.make(input:input,profileID:"front",orientation:q,collider:collider)
+        state.ropes[0].velocities=state.ropes[0].positions.map { _ in SIMD3<Double>(1_000_000,0,0) }
+        var solver=try RopeDynamicsSolver(input:input,state:state,collider:collider)
+        XCTAssertThrowsError(try solver.step(dt:1.0/240,targetOrientation:q)) { error in
+            // An unrecoverable prediction must exhaust subdivision rather
+            // than escape as the first raw topology error.
+            XCTAssertTrue(error.localizedDescription.contains("Bounded solve could not resolve"), "\(error)")
+            XCTAssertTrue(error.localizedDescription.contains("Lost ordered portal crossing"), "\(error)")
+        }
+        XCTAssertEqual(solver.state.ropes[0].positions,state.ropes[0].positions)
+        XCTAssertEqual(solver.state.boardHeight,state.boardHeight)
+        XCTAssertEqual(solver.state.orientation.vector,state.orientation.vector)
+    }
+
     func testTautAttachmentTransfersBoardLoadWithoutStretch() throws {
         let q=simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1))
         let support=SIMD3<Double>(0,0.114,0),attachment=SIMD3<Double>(0,0.014,0)

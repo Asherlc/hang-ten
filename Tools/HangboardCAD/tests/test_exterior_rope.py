@@ -1,9 +1,11 @@
 """Exterior routes must follow the actual surface, without inventing a bore."""
 import importlib.util
 from pathlib import Path
-import numpy as np
 import pytest
-import trimesh
+
+np = pytest.importorskip("numpy")
+trimesh = pytest.importorskip("trimesh")
+pytest.importorskip("shapely")
 
 SPEC=importlib.util.spec_from_file_location('exterior_rope',Path(__file__).parents[1]/'solve_exterior_rope.py')
 

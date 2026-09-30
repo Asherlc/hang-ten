@@ -251,7 +251,7 @@ struct BoardModelRealityView: View {
         let unavailableCallback = onUnavailable
         model.onLiveFailure = { unavailableCallback?() }
         let revisionBinding = $cameraRevision
-        model.onLiveFrame = { revisionBinding.wrappedValue &+= 1 }
+        model.onLiveFrame = { Task { @MainActor in revisionBinding.wrappedValue &+= 1 } }
         let priorCameraTransform = model.camera.transform.matrix
         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera

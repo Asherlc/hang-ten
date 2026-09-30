@@ -863,8 +863,10 @@ final class BoardModelRealityScene {
             low=simd_min(low,center-SIMD3(repeating:radius))
             high=simd_max(high,center+SIMD3(repeating:radius))
         }
-        currentFraming=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
-            maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display)
+        if let framing=Self.framing(bounds:BoardModelBounds(minimum:[Double(low.x),Double(low.y),Double(low.z)],
+            maximum:[Double(high.x),Double(high.y),Double(high.z)]),display:display) {
+            currentFraming=framing
+        }
         updateCameraTransform()
     }
 

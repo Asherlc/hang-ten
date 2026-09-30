@@ -2681,7 +2681,10 @@ def _validate_finished_shape(
     allowed = set(required | {cad_source_name})
     if cad_source.is_cad_package(root) and "suspension.json" in entries:
         allowed.add("suspension.json")
-    if any(isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path for p in board.presentations):
+    if cad_source.is_cad_package(root) and any(
+        isinstance(p.media, PresentationMediaModel) and p.media.physics_descriptor_path
+        for p in board.presentations
+    ):
         allowed.add("rope-physics.json")
     unknown = entries - allowed
     missing = required - entries

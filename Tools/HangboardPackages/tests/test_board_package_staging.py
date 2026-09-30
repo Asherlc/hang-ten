@@ -181,7 +181,7 @@ def stage_with_xcode_environment(
     return staged[0]
 
 
-def test_live_physics_is_bundled_metadata_and_authoring_is_excluded(tmp_path, monkeypatch):
+def test_legacy_model_bundles_live_physics_without_cad_authoring(tmp_path, monkeypatch):
     from test_rope_physics import physics_fixture
     source = make_v3_model_package(tmp_path / "repository" / "Hangboards" / "live-model")
     board = json.loads((source / "board.json").read_text())
@@ -193,11 +193,30 @@ def test_live_physics_is_bundled_metadata_and_authoring_is_excluded(tmp_path, mo
     physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
     (source / "board.json").write_text(json.dumps(board))
     (source / "assets/primary.physics.json").write_text(json.dumps(physics))
-    (source / "rope-physics.json").write_text("{}")
     staged = stage_with_xcode_environment(source, monkeypatch)
     assert (staged / "assets/primary.physics.json").read_bytes() == (source / "assets/primary.physics.json").read_bytes()
     assert not (staged / "assets/primary.usdz").exists()
-    assert not (staged / "rope-physics.json").exists()
+
+
+def test_non_cad_physics_package_rejects_cad_authoring_sidecar(tmp_path):
+    from test_rope_physics import physics_fixture
+    from hangboard_packages.board_catalog import discover_board_packages
+
+    source = make_v3_model_package(tmp_path / "Hangboards" / "live-model")
+    board = json.loads((source / "board.json").read_text())
+    media = board["presentations"][0]["media"]
+    media["physicsDescriptorPath"] = "assets/primary.physics.json"
+    descriptor = json.loads((source / media["descriptorPath"]).read_text())
+    physics = physics_fixture()
+    physics["modelSHA256"] = descriptor["modelSHA256"]
+    physics["profiles"][0]["presentationID"] = board["presentations"][0]["id"]
+    (source / "board.json").write_text(json.dumps(board))
+    (source / "assets/primary.physics.json").write_text(json.dumps(physics))
+    # Bundled physics remains valid on a legacy model; authoring belongs to CAD.
+    assert len(discover_board_packages(source.parent).packages) == 1
+    (source / "rope-physics.json").write_text("{}")
+    with pytest.raises(ValueError, match="unknown package entry: rope-physics.json"):
+        discover_board_packages(source.parent)
 
 
 def test_declared_missing_or_stale_physics_fails_staging(tmp_path, monkeypatch):
