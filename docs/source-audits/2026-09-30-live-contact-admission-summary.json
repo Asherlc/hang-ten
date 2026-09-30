@@ -1,0 +1,374 @@
+{
+  "evidenceSHA256": {
+    ".context/strong-owl-live-physics-execution/clav-relative-host.frames.json": "6af4380b0033a7e91a4416ee3132f74b9a0ed77a26c7d704dbcb9b1862bf5fd5",
+    ".context/strong-owl-live-physics-execution/mini-first-correction.report.json": "12b649e283dd5589da4150e647ea93398b15df913af1dcfa0edc04e0c3701e4f",
+    ".context/strong-owl-live-physics-execution/native-admission/VerifiedContactAdmission.swift": "61378fc2a8c3c4586942ff0fe479bd045b95cd1f2c87b08a87a35a7d60c88921",
+    ".context/strong-owl-live-physics-execution/native-admission/compile-hard.sh": "d4e4399799c47d1c13e03caeed03983af96086fd2dcacf0099ef131fca814ed4",
+    ".context/strong-owl-live-physics-execution/native-admission/hard.report.json": "bba49ed6546b39ba6919a75c30a5f96d1a52830c6f5915c9224f82a527a9dafe",
+    ".context/strong-owl-live-physics-execution/native-admission/hard/main.swift": "72f92ab99ba3cf5a75e578d6907d98605dbffdd108be6427d39ffa930610dbd6",
+    ".context/strong-owl-live-physics-execution/native-admission/validate.py": "4a84f3a4e53200333e3d22865708e5edc104b699545d0801cb9263aafbe6a018",
+    ".context/strong-owl-live-physics-execution/native-admission/validation.report.json": "a43bde3bfd30e800c34632d3ba15e4d31b16f737bd2982fd0590cab7796f2c43",
+    ".context/strong-owl-live-physics-execution/native-cad/face-inventory.json": "b6634cbce2d2d80d452adb110f3ba88604d259885280e66da8c054134ab8ea4d",
+    ".context/strong-owl-live-physics-execution/native-cad/settled.report.json": "6c1d4fbbcec03976c9f38f32a4e20d359dc437178235f9158449bdc7cb9aeb07",
+    ".context/strong-owl-live-physics-execution/native-cad/validate-settled.py": "cb7c06d62449ccc6638a7f07b74f097b37adf890826e03aa8e10c5a39e9af2a5",
+    ".context/strong-owl-live-physics-execution/native-primal-profile/PrimalContactIP.swift": "87828b1dd7228e9bb0178a86050066172891bac30d581972e14a9c839c7e1cd7",
+    ".context/strong-owl-live-physics-execution/native-primal-profile/VerifiedContactAdmission.swift": "c896dfbee9ce062ef8bab848ad44c3d71476867bf041afb87ffb56ee13d2b67e",
+    ".context/strong-owl-live-physics-execution/native-primal-profile/hard.report.json": "74e889e483b5cd6602789b44d0c7dfbe0d4f96284ab4698128d4fb64dac34821",
+    ".context/strong-owl-live-physics-execution/native-primal-profile/hard/main.swift": "7c7287d705c944ca208f60ed3791d9dad48fe038e8cc924e10e31cfd128f2cbc",
+    ".context/strong-owl-live-physics-execution/native-primal-profile/profile-observation.json": "02b11dea40ac7e5c23f7c4fe73c29ccf26f7e453d2bca08ece703e1f14b98bd3",
+    ".context/strong-owl-live-physics-execution/native-primal/PrimalBandedSystem.swift": "8eb4bbe6baae5c633ac19820f9555357089efd2a08d5aee7b04606e8d031f223",
+    ".context/strong-owl-live-physics-execution/native-primal/PrimalContactIP.swift": "cf548d7c29c97f5e233772c27dc67847ae16c2596082cd1940a5a946c16a3cdc",
+    ".context/strong-owl-live-physics-execution/native-primal/VerifiedContactAdmission.swift": "903fb6e4c9af371f573092522a704e15ba69ef8f5e47eefb3abfcbc3193a9c5d",
+    ".context/strong-owl-live-physics-execution/native-primal/compile-hard.sh": "f4003ad3d2ab6412435b80e938b7977d9b7c6b22a8f552d956a7831915b9dd8f",
+    ".context/strong-owl-live-physics-execution/native-primal/hard.report.json": "2df0373330b41fdd0da5463c28b03f598a62d314cb635bf54c04dca0cae43b35",
+    ".context/strong-owl-live-physics-execution/native-primal/hard/main.swift": "f44c1e9487854c703cc1006278d08ec550a726397b5a7960e185bd79c554d142",
+    ".context/strong-owl-live-physics-execution/native-primal/tests/main.swift": "fcc9f86beb9fb317b9883296599f632a250603445bc3709dfebe8d7084af38fd",
+    ".context/strong-owl-live-physics-execution/native-primal/validate.py": "07251ddcb15c9271c0adc51e7a6a5071d4f02f64614d24838329d78e7b2c45f2",
+    ".context/strong-owl-live-physics-execution/native-primal/validation.report.json": "3e0972ba0726990c898d216644373772adf9968d22ed8507033deb235414a7c9",
+    ".context/strong-owl-live-physics-execution/native-sparse/PrimalBandedSystem.swift": "56d9bbd1b8dff77da0cc258a38d767e3b31a8ceb8a4d33934c3f032977e1fba2",
+    ".context/strong-owl-live-physics-execution/native-sparse/PrimalContactIP.swift": "252ed2d464c1538be7ac059175eb28595225909da8ea359808041e62b602f152",
+    ".context/strong-owl-live-physics-execution/native-sparse/SparseNewton.swift": "b01dac0c9b61f52dde0c81bc593c663aee57e0155a88a3a1b4d8c2da7111ff15",
+    ".context/strong-owl-live-physics-execution/native-sparse/VerifiedContactAdmission.swift": "903fb6e4c9af371f573092522a704e15ba69ef8f5e47eefb3abfcbc3193a9c5d",
+    ".context/strong-owl-live-physics-execution/native-sparse/compile-hard.sh": "2b1dbf3bd61585bdb16c4d9aefccfa110cc59f72ac679f36c3ec58ecdabcdcd6",
+    ".context/strong-owl-live-physics-execution/native-sparse/hard.report.json": "568219108f99bc6b4664b4d0e76df4c88ecc3a482ffe67e178f6f899f818cafc",
+    ".context/strong-owl-live-physics-execution/native-sparse/hard/main.swift": "fae5129d52da842d33980662bb7c67942cc33d961bbab5dae4848d189fb20132",
+    ".context/strong-owl-live-physics-execution/native-sparse/tests-green.log": "88041aacafca68dfe3237ddb0dd558ef7146c8d7c3a4bf92eed8333c8b17b42c",
+    ".context/strong-owl-live-physics-execution/native-sparse/tests-red.log": "cbcc94aad376aca545909270d9a911f9b7758db400ccde212aa2d298d82d2ac7",
+    ".context/strong-owl-live-physics-execution/native-sparse/tests/main.swift": "fcc9f86beb9fb317b9883296599f632a250603445bc3709dfebe8d7084af38fd",
+    ".context/strong-owl-live-physics-execution/native-sparse/validate.py": "27146dbb138e8744f6f2b8741b46b220d4df05c69ff313a9ae60594dbd912118",
+    ".context/strong-owl-live-physics-execution/native-sparse/validation.report.json": "a4baf3c4b2f15c48b15295ccc1a7e5b52fbbc26658d1c0079fe72edcfc688b45",
+    "HangTen/Models/RopeBandedSystem.swift": "3b0f638cb415b1c3cc9f171d0cd23d96405295382deeb3d9ab8d090530b6950c",
+    "HangTen/Models/RopeContactSystem.swift": "1257fb7a4fc827b411b30a2713f8fb9ea03e1854024364c0498a35617b8c9793",
+    "HangTen/Models/RopeDynamicsSolver.swift": "b1eec3408f674e2545bff041105e1cef1c25d98725cf583c672478f988ea2493",
+    "Hangboards/clavellium-training-block/assets/primary.physics.json": "9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f",
+    "Hangboards/clavellium-training-block/clavellium-training-block.FCStd": "ff1b9cd7fd3376737af511bb09d419e309f9e8121126cc49967febb530b75562"
+  },
+  "experiments": {
+    "native-admission": {
+      "maxSeconds": 3.162815291667357,
+      "medianSeconds": 0.4040941458370071,
+      "p95Seconds": 1.6781468333210796,
+      "primalDifference": 2.4954694383574585e-07,
+      "residuals": {
+        "allRowFeasibility": 5.088215425033812e-11,
+        "dualViolation": 0.0,
+        "objective": 1.732990611901263e-09,
+        "regularizedComplementarity": 2.840298324299824e-22,
+        "regularizedContact": 5.088215425033812e-11,
+        "regularizedEquality": 4.778035186652783e-18,
+        "slackViolation": 0.0,
+        "stationarity": 1.9015889665859043e-19
+      },
+      "runs": 50,
+      "runtimeAdoption": false,
+      "trace": [
+        {
+          "added": 67,
+          "admission": 1,
+          "selected": 127
+        },
+        {
+          "added": 68,
+          "admission": 2,
+          "selected": 194
+        },
+        {
+          "added": 55,
+          "admission": 3,
+          "selected": 262
+        },
+        {
+          "added": 43,
+          "admission": 4,
+          "selected": 317
+        },
+        {
+          "added": 31,
+          "admission": 5,
+          "selected": 360
+        },
+        {
+          "added": 9,
+          "admission": 6,
+          "selected": 391
+        },
+        {
+          "added": 5,
+          "admission": 7,
+          "selected": 400
+        },
+        {
+          "added": 1,
+          "admission": 8,
+          "selected": 405
+        },
+        {
+          "added": 0,
+          "admission": 9,
+          "selected": 406
+        }
+      ]
+    },
+    "native-primal": {
+      "maxSeconds": 2.555026916670613,
+      "medianSeconds": 1.4382208958268166,
+      "p95Seconds": 2.514229958294891,
+      "primalDifference": 8.658601792956807e-07,
+      "residuals": {
+        "allRowFeasibility": 1.0661466826565602e-13,
+        "dualViolation": 0.0,
+        "objective": 1.7329992273734327e-09,
+        "regularizedComplementarity": 2.897039778800688e-16,
+        "regularizedContact": 0.0,
+        "regularizedEquality": 2.7149557725925166e-19,
+        "slackViolation": 0.0,
+        "stationarity": 3.593142499814829e-11
+      },
+      "runs": 50,
+      "runtimeAdoption": false,
+      "trace": [
+        {
+          "added": 67,
+          "admission": 1,
+          "selected": 127
+        },
+        {
+          "added": 66,
+          "admission": 2,
+          "selected": 194
+        },
+        {
+          "added": 55,
+          "admission": 3,
+          "selected": 260
+        },
+        {
+          "added": 43,
+          "admission": 4,
+          "selected": 315
+        },
+        {
+          "added": 28,
+          "admission": 5,
+          "selected": 358
+        },
+        {
+          "added": 10,
+          "admission": 6,
+          "selected": 386
+        },
+        {
+          "added": 5,
+          "admission": 7,
+          "selected": 396
+        },
+        {
+          "added": 1,
+          "admission": 8,
+          "selected": 401
+        },
+        {
+          "added": 0,
+          "admission": 9,
+          "selected": 402
+        }
+      ]
+    },
+    "native-sparse": {
+      "maxSeconds": 0.31142441666452214,
+      "medianSeconds": 0.29703714582137764,
+      "p95Seconds": 0.30255387496436015,
+      "primalDifference": 8.658601469603944e-07,
+      "residuals": {
+        "allRowFeasibility": 1.0661466826565602e-13,
+        "dualViolation": 0.0,
+        "objective": 1.7329992273733167e-09,
+        "regularizedComplementarity": 2.897039055984426e-16,
+        "regularizedContact": 0.0,
+        "regularizedEquality": 2.794787228469854e-19,
+        "slackViolation": 0.0,
+        "stationarity": 3.593145260917244e-11
+      },
+      "runs": 50,
+      "runtimeAdoption": false,
+      "trace": [
+        {
+          "added": 67,
+          "admission": 1,
+          "selected": 127
+        },
+        {
+          "added": 66,
+          "admission": 2,
+          "selected": 194
+        },
+        {
+          "added": 55,
+          "admission": 3,
+          "selected": 260
+        },
+        {
+          "added": 43,
+          "admission": 4,
+          "selected": 315
+        },
+        {
+          "added": 28,
+          "admission": 5,
+          "selected": 358
+        },
+        {
+          "added": 10,
+          "admission": 6,
+          "selected": 386
+        },
+        {
+          "added": 5,
+          "admission": 7,
+          "selected": 396
+        },
+        {
+          "added": 1,
+          "admission": 8,
+          "selected": 401
+        },
+        {
+          "added": 0,
+          "admission": 9,
+          "selected": 402
+        }
+      ]
+    }
+  },
+  "frozenInputSHA256": "93d9f142cf8c8b6d42d7e540838665505beba1b076e85c6d6ec035308dfc0be7",
+  "fullFeatureComplete": false,
+  "nativeCAD": {
+    "framesSHA256": "6af4380b0033a7e91a4416ee3132f74b9a0ed77a26c7d704dbcb9b1862bf5fd5",
+    "owner": "strong-owl-live-physics",
+    "physicsSHA256": "9ca003c90ffa0ebbce400cbfd0458e1197e80aa6704c2b376cb670b47d0c578f",
+    "records": [
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.703267329674021e-05,
+            "nativeSurfaceDistance": 0.003647032673296739,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.703267329715481e-05,
+            "nativeSurfaceDistance": 0.0036470326732971543,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 9.382472576646705e-10,
+        "minimumWholeSegmentCADClearance": 0.0035997857578929124,
+        "phase": 0,
+        "totalLengthError": 2.300116763720439e-10
+      },
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.7054017276343605e-05,
+            "nativeSurfaceDistance": 0.003647054017276341,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.705401727650667e-05,
+            "nativeSurfaceDistance": 0.0036470540172765043,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 8.684106767020694e-10,
+        "minimumWholeSegmentCADClearance": 0.003599623038801172,
+        "phase": 1,
+        "totalLengthError": 2.2783042119556285e-10
+      },
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.704874052696272e-05,
+            "nativeSurfaceDistance": 0.003647048740526962,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.704874052701043e-05,
+            "nativeSurfaceDistance": 0.0036470487405270095,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 8.375007354288755e-10,
+        "minimumWholeSegmentCADClearance": 0.0035993973883531316,
+        "phase": 2,
+        "totalLengthError": 2.2924773190879932e-10
+      },
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.70284657826895e-05,
+            "nativeSurfaceDistance": 0.0036470284657826894,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.70284657826444e-05,
+            "nativeSurfaceDistance": 0.0036470284657826434,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 9.478708928867263e-10,
+        "minimumWholeSegmentCADClearance": 0.0035997857561126004,
+        "phase": 3,
+        "totalLengthError": 2.3005231053474517e-10
+      },
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.705401727628983e-05,
+            "nativeSurfaceDistance": 0.003647054017276288,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.705401727622911e-05,
+            "nativeSurfaceDistance": 0.003647054017276227,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 8.684144514603531e-10,
+        "minimumWholeSegmentCADClearance": 0.003599623038801176,
+        "phase": 4,
+        "totalLengthError": 2.2783042119556285e-10
+      },
+      {
+        "bearings": [
+          {
+            "expectedUpperOffset": 4.7028484136991955e-05,
+            "nativeSurfaceDistance": 0.0036470284841369906,
+            "portal": "central-front"
+          },
+          {
+            "expectedUpperOffset": 4.702848413706655e-05,
+            "nativeSurfaceDistance": 0.003647028484137065,
+            "portal": "central-back"
+          }
+        ],
+        "maximumStrain": 9.536618161831711e-10,
+        "minimumWholeSegmentCADClearance": 0.0035997857561096457,
+        "phase": 5,
+        "totalLengthError": 2.3006652138946038e-10
+      }
+    ],
+    "scope": "six retained production-resolution settled destinations; exact native CAD segment queries; no transient/whole-mesh Hausdorff/device performance claim",
+    "sourceSHA256": "ff1b9cd7fd3376737af511bb09d419e309f9e8121126cc49967febb530b75562"
+  },
+  "owner": "strong-owl-live-physics",
+  "remaining": [
+    "full production Mini initialization",
+    "complete geometry speed gate",
+    "shared settled bearing certificate",
+    "global 50um CAD mesh error proof",
+    "iPhone 16 Pro simulation-plus-mesh performance",
+    "native visual/lifecycle validation of new change",
+    "16 pending live catalog setups"
+  ],
+  "runtimeAdoption": false,
+  "sourceCommit": "a75faf271"
+}

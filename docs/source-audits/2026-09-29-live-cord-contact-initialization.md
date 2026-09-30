@@ -683,3 +683,7 @@ whole-geometry 50x speedup, complete-step or live-rollout claim.
 ## 2026-09-30: production relative-displacement trust
 
 [The production trust correction and full-resolution evidence](2026-09-30-live-relative-trust.md) retain all physical and accuracy gates. Host tests/rotations pass; device performance and catalog promotion remain unestablished.
+
+## 2026-09-30 — verified admission, native sparse replay and settled CAD checks
+
+[Bounded native contact checkpoints](2026-09-30-live-contact-admission.md) retain three numerically passing but performance-rejected 50-run screens and independent exact native CAD checks of six production Clavellium settled destinations. No app backend or new live profile is adopted. The unchanged production Mini first correction exceeds its contact-row guard; that resource limit remains intact.
