@@ -573,6 +573,12 @@ enum RopeMotionSweep {
                     if motion<1e-12 || t>=1 {certified=true;break}
                     t=min(1,t+0.8*gap/motion)
                 }
+                // The final advancement can reach t=1 on the last allowed
+                // iteration. Test that endpoint before reporting exhaustion.
+                if !certified && t>=1 {
+                    let pair=RopeTriangleCollider.segmentPair(nextA,nextB,nextC,nextD)
+                    certified=simd_distance(pair.0,pair.1)-distanceThreshold>1e-9
+                }
                 if !certified {return false}
             }
         }

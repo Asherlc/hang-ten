@@ -5,11 +5,22 @@ import simd
 #endif
 
 final class RopeInterContactTests:XCTestCase {
-    static func chain(_ id:String,_ points:[SIMD3<Double>],supports:[Int:SIMD3<Double>]=[:])->RopeChainState {
-        RopeChainState(id:id,radius:0.0035,linearMass:0.01,
+    static func chain(_ id:String,_ points:[SIMD3<Double>],supports:[Int:SIMD3<Double>]=[:],radius:Double=0.0035)->RopeChainState {
+        RopeChainState(id:id,radius:radius,linearMass:0.01,
             restLengths:zip(points,points.dropFirst()).map{simd_distance($0,$1)},
             positions:points,previousPositions:points,velocities:points.map{_ in .zero},
             supports:supports,attachments:[:],portals:[:],channelSegments:[:])
+    }
+
+    func testIndependentCordSweepCertifiesEndReachedOnLastIteration() {
+        let first=Self.chain("first",[SIMD3(-1,0,0),SIMD3(1,0,0)],radius:0.000275)
+        let second=Self.chain("second",[SIMD3(-1,0.001,0),SIMD3(1,0.001,0)],radius:0.000275)
+        var nextFirst=first,nextSecond=second
+        nextFirst.positions=first.positions.map{$0+SIMD3<Double>(0,0.0511,0)}
+        nextSecond.positions=second.positions.map{$0+SIMD3<Double>(0,0.0511,0)}
+        XCTAssertTrue(RopeCordContacts.between(first,second).isEmpty)
+        XCTAssertTrue(RopeCordContacts.between(nextFirst,nextSecond).isEmpty)
+        XCTAssertTrue(RopeCordContacts.sweepValid(previousFirst:first,first:nextFirst,previousSecond:second,second:nextSecond))
     }
 
     // Nine simultaneous unilateral contact planes, with a known feasible

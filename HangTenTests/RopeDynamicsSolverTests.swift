@@ -194,6 +194,15 @@ final class RopeDynamicsSolverTests: XCTestCase {
         }
     }
 
+    func testSelfSweepCertifiesEndReachedOnLastIteration() {
+        let before:[SIMD3<Double>]=[SIMD3(-1,0,0),SIMD3(1,0,0),SIMD3(1,0.001,0),SIMD3(-1,0.001,0)]
+        let after=before.map{$0+SIMD3<Double>(0,0.0511,0)}
+        // Constant 0.5 mm clearance: the conservative 80% advancement reaches
+        // t=1 on iteration 256. A rigid translation cannot create contact.
+        XCTAssertTrue(RopeMotionSweep.selfContactValid(previous:before,positions:after,
+            radius:0.000275,supports:[:],restLengths:[2,0.001,2]))
+    }
+
     func testSelfContactDetectsCrossingAwayFromSharedSupport() {
         let points:[SIMD3<Double>]=[SIMD3(0,1,0),SIMD3(-1,0,0),SIMD3(1,0,0),SIMD3(1,1,0),SIMD3(0,-1,0),SIMD3(0,1,0)]
         XCTAssertFalse(RopeSimulationMetrics.selfContactValid(positions:points,radius:0.006,supports:[0:points[0],5:points[5]]))

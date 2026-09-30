@@ -131,6 +131,12 @@ enum RopeCordContacts {
                     if motion<1e-12 || t>=1 {certified=true;break}
                     t=min(1,t+0.8*clearance/motion)
                 }
+                // Reaching the endpoint on the last advancement still needs
+                // the same clearance check as reaching it one iteration sooner.
+                if !certified && t>=1 {
+                    let pair=RopeTriangleCollider.segmentPair(nextA,nextB,nextC,nextD)
+                    certified=simd_distance(pair.0,pair.1)-threshold>1e-9
+                }
                 if !certified {return false}
             }
         }

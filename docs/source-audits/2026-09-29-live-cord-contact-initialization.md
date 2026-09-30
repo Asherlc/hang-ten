@@ -204,3 +204,17 @@ The scratch Mini Bar candidate passes the previously failing jug frame 46
 and advances to frame 134, then rejects frame 135 at its swept self-contact
 gate. This is diagnostic progress, not complete jug settling, a live profile
 enablement, or real-time performance proof.
+
+Both self-contact and independent-cord CCD now check an endpoint reached on
+the final permitted conservative advancement. Previously, reaching t=1 on
+iteration 256 left `certified` false because the loop ended before checking
+that endpoint. Two rigid-translation regressions with constant 0.5 mm
+clearance fail on the prior source and pass with the endpoint check. The
+check uses the same distance threshold plus 1 nm, adds no advancement, and
+still rejects exhaustion before t=1. All 48 host physics tests passed in
+237.757 seconds and the selected native suite passed. Independent review
+found no issues.
+
+The Mini Bar checkpoint replay then identifies further uncertain sweeps near
+the common knot: some reach only t=0.90 before the bounded iteration limit.
+The endpoint fix does not claim to resolve those separate cases.
