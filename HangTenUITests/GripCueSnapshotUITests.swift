@@ -396,14 +396,15 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // On iOS 26 the native SwiftUI Menu exposes its visible row with a
-        // valid button frame, but its zero-sized UICollectionView container
-        // makes XCTest report isHittable=false. Tap the visible row's center
-        // and verify the selected hand below.
-        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-
-        // Wait a moment for the UI to update after the tap
-        Thread.sleep(forTimeInterval: 1.0)
+        // The native menu can expose a valid row frame under zero-sized
+        // accessibility containers. Anchor the tap to the app window so
+        // XCTest does not synthesize it against a zero-sized parent window.
+        let leftFrame = left.frame
+        XCTAssertGreaterThan(leftFrame.width, 0)
+        XCTAssertGreaterThan(leftFrame.height, 0)
+        app.coordinate(withNormalizedOffset: .zero)
+            .withOffset(CGVector(dx: leftFrame.midX, dy: leftFrame.midY))
+            .tap()
 
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
