@@ -89,7 +89,15 @@ final class FreeWorkoutUITests: XCTestCase {
         tapHittable(duration, timeout: 10)
         duration.typeText("120")
         XCTAssertEqual(duration.value as? String, "120")
+
+        // Closing and resuming commits the edit and dismisses the numeric
+        // keyboard, which otherwise covers Start Set on an iPhone.
+        tapHittable(app.buttons["freeWorkout.close"], timeout: 10)
+        tapHittable(app.buttons["freeWorkout.resume"], timeout: 10)
+        XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         anyElement(app, "freeWorkout.log").scrollViews.firstMatch.swipeUp()
+        XCTAssertEqual(duration.value as? String, "120", "Resumed hang should retain its duration")
+        XCTAssertFalse(app.keyboards.firstMatch.exists, "Start Set must not be covered by the keyboard")
 
         let startSet = firstMatching(
             in: app,
