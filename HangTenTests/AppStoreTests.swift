@@ -1052,6 +1052,7 @@ final class AppStoreTests: XCTestCase {
 
         // Await published events so the main queue can deliver history callbacks
         // even while a cold simulator is initializing the app's rendering services.
+        // CI took 10 s here while cold graphics startup delayed the callback.
         let completionFailed = expectation(description: "completion sync error published")
         let completionObservation = appStore.$healthAuthorizationError
             .filter { $0 == "Session was saved locally and will retry Apple Health sync." }
@@ -1064,7 +1065,7 @@ final class AppStoreTests: XCTestCase {
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        await fulfillment(of: [completionFailed], timeout: 5)
+        await fulfillment(of: [completionFailed], timeout: 15)
         XCTAssertEqual(
             appStore.healthAuthorizationError,
             "Session was saved locally and will retry Apple Health sync."

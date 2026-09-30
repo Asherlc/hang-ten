@@ -263,6 +263,14 @@ final class BoardPackageStoreTests: XCTestCase {
             }
             defer { fixture.remove() }
             XCTAssertThrowsError(try BoardPackageStore(bundle: fixture.bundle, modelAssetMode: .onDemand), failure) { error in
+                if failure == "symlink" {
+                    guard case .packagePathEscape(let boardID, let path) = error as? BoardPackageStoreError else {
+                        return XCTFail("Expected packagePathEscape for symlink, got \(error)")
+                    }
+                    XCTAssertEqual(boardID, "fixture-model")
+                    XCTAssertTrue(path.hasSuffix("/assets/primary.physics.json"))
+                    return
+                }
                 guard case .invalidPackage(let boardID, let reason) = error as? BoardPackageStoreError else {
                     return XCTFail("Expected board-specific invalidPackage for \(failure), got \(error)")
                 }
