@@ -45,24 +45,421 @@
         "suspension": {
           "type": "pairedLeadCord",
           "attachments": [
-            {"id": "left-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0067], "contactPointsInModel": [[-0.029, 0.038, 0.02], [-0.029, 0, 0.02]], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"},
-            {"id": "right-lead", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0067], "contactPointsInModel": [[0.029, 0.038, 0.02], [0.029, 0, 0.02]], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+            {
+              "id": "left-lead",
+              "nodeID": "Body_EditableSkin_001",
+              "pointInModel": [
+                -0.029,
+                0,
+                -0.0067
+              ],
+              "contactPointsInModel": [
+                [
+                  -0.029,
+                  0.038,
+                  0.02
+                ],
+                [
+                  -0.029,
+                  0,
+                  0.02
+                ]
+              ],
+              "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+            },
+            {
+              "id": "right-lead",
+              "nodeID": "Body_EditableSkin_001",
+              "pointInModel": [
+                0.029,
+                0,
+                -0.0067
+              ],
+              "contactPointsInModel": [
+                [
+                  0.029,
+                  0.038,
+                  0.02
+                ],
+                [
+                  0.029,
+                  0,
+                  0.02
+                ]
+              ],
+              "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+            }
           ],
           "passages": {
             "left": [
-              {"id": "left-lip-mouth", "nodeID": "Body_EditableSkin_001", "pointInModel": [-0.029, 0, -0.0067], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+              {
+                "id": "left-lip-mouth",
+                "nodeID": "Body_EditableSkin_001",
+                "pointInModel": [
+                  -0.029,
+                  0,
+                  -0.0067
+                ],
+                "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+              }
             ],
             "right": [
-              {"id": "right-lip-mouth", "nodeID": "Body_EditableSkin_001", "pointInModel": [0.029, 0, -0.0067], "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"}
+              {
+                "id": "right-lip-mouth",
+                "nodeID": "Body_EditableSkin_001",
+                "pointInModel": [
+                  0.029,
+                  0,
+                  -0.0067
+                ],
+                "provenance": "Measured from primary.usdz: 6 mm cord bore in Body_EditableSkin_001, centred here and corroborated by the baked cord-passage marker (userProperties:hang_ten_attachments_v1, converted from USD Y-up into hang-ten-board-v1 via the root rotateXYZ(-90,0,0))"
+              }
             ]
           },
-          "anchor": {"offsetFromBoardBounds": [0, 0.15, 0], "visibility": "invisible", "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"},
-          "cord": {"restLength": 0.4, "radius": 0.002, "material": "matteCord", "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; 0.4 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate"},
+          "anchor": {
+            "offsetFromBoardBounds": [
+              0,
+              0.15,
+              0
+            ],
+            "visibility": "invisible",
+            "provenance": "displayEstimate; compact shared overhead convergence shortened 50% after user visual review"
+          },
+          "cord": {
+            "restLength": 0.4,
+            "radius": 0.002,
+            "material": "matteCord",
+            "provenance": "Captain Fingerfood UNLEVEL product page publishes total rope length 1 m; 0.4 m per-lead restLength is the rounded displayEstimate capacity for all clear exterior pose routes, not a measured physical split; the user-approved 50% shorter anchor sets visible height; radius is displayEstimate Automatically computed planar seated exterior pose routes against the current approved surface; documented diameter where available, otherwise labeled display estimate. Interior connections are unchanged/omitted; cached shape is not live settling or a measured material-length split."
+          },
           "canonicalPoses": {
-            "edge20-front": {"rotation": [0.207911694, 0, 0, 0.9781476], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "edge25-inverted": {"rotation": [9e-9, 0.207911694, -0.9781476, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "jug-reverse": {"rotation": [9e-9, 0.9781476, 0.207911694, 4.3e-8], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}},
-            "pocket-right-end": {"rotation": [0.147015774, 0.147015759, -0.691654772, 0.691654831], "translation": [0, 0, 0], "camera": {"viewDirection": [0, 0, -1], "fitPadding": 0.1}}
+            "edge20-front": {
+              "rotation": [
+                0.207911694,
+                0,
+                0,
+                0.9781476
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.023228025787315476,
+                    0.033637853432594456,
+                    0.015625065369805975
+                  ],
+                  [
+                    -0.023285967540926322,
+                    0.0333001810619685,
+                    0.015850753643677124
+                  ],
+                  [
+                    -0.023463963314596267,
+                    0.032262859077200626,
+                    0.016405212813184137
+                  ],
+                  [
+                    -0.023527900111553104,
+                    0.03189024885308402,
+                    0.016559595348886944
+                  ],
+                  [
+                    -0.023721036654955747,
+                    0.030764689642306744,
+                    0.016901029380611866
+                  ],
+                  [
+                    -0.023788599643620807,
+                    0.03037094673451812,
+                    0.016979371176540022
+                  ],
+                  [
+                    -0.029,
+                    7.910133967210344e-20,
+                    0.02
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.02322802578731548,
+                    0.03363785343259445,
+                    0.015625065369805978
+                  ],
+                  [
+                    0.02328596754092632,
+                    0.033300181061968505,
+                    0.01585075364367712
+                  ],
+                  [
+                    0.023463963314596267,
+                    0.032262859077200626,
+                    0.016405212813184137
+                  ],
+                  [
+                    0.0235279001115531,
+                    0.03189024885308403,
+                    0.01655959534888694
+                  ],
+                  [
+                    0.023659466132908195,
+                    0.031123509713237123,
+                    0.016792182700394148
+                  ],
+                  [
+                    0.023721036654955747,
+                    0.030764689642306733,
+                    0.01690102938061187
+                  ],
+                  [
+                    0.02378859964362081,
+                    0.030370946734518102,
+                    0.016979371176540022
+                  ],
+                  [
+                    0.029,
+                    7.910133967210344e-20,
+                    0.02
+                  ]
+                ]
+              }
+            },
+            "edge25-inverted": {
+              "rotation": [
+                9e-09,
+                0.207911694,
+                -0.9781476,
+                4.3e-08
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.023228028740258134,
+                    -0.033637853463274435,
+                    0.01562506536031988
+                  ],
+                  [
+                    -0.02328597046510243,
+                    -0.03330018108723268,
+                    0.015850753637747912
+                  ],
+                  [
+                    -0.023463966147547376,
+                    -0.03226285910246479,
+                    0.01640521280725492
+                  ],
+                  [
+                    -0.023527902913204644,
+                    -0.031890248869788224,
+                    0.016559595346461748
+                  ],
+                  [
+                    -0.023721039357622452,
+                    -0.030764689659010948,
+                    0.01690102937818667
+                  ],
+                  [
+                    -0.023788602313523505,
+                    -0.030370946740366053,
+                    0.016979371176253377
+                  ],
+                  [
+                    -0.029,
+                    -1.784890328797088e-18,
+                    0.020000000000000004
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.023228022831539984,
+                    -0.03363785340188505,
+                    0.01562506537930115
+                  ],
+                  [
+                    0.023285964613944964,
+                    -0.033300181036680115,
+                    0.01585075364961202
+                  ],
+                  [
+                    0.02346396047892743,
+                    -0.032262859051912215,
+                    0.01640521281911904
+                  ],
+                  [
+                    0.02352789730721386,
+                    -0.031890248836363815,
+                    0.016559595351314446
+                  ],
+                  [
+                    0.02372103394969629,
+                    -0.030764689625586553,
+                    0.016901029383039366
+                  ],
+                  [
+                    0.023788596971156796,
+                    -0.030370946728664576,
+                    0.016979371176826928
+                  ],
+                  [
+                    0.029,
+                    -1.6805248108434745e-18,
+                    0.020000000000000004
+                  ]
+                ]
+              }
+            },
+            "jug-reverse": {
+              "rotation": [
+                9e-09,
+                0.9781476,
+                0.207911694,
+                4.3e-08
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.029,
+                    -5.1645582103612943e-20,
+                    0.02
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    0.029,
+                    2.0055531750665163e-18,
+                    0.02
+                  ]
+                ]
+              }
+            },
+            "pocket-right-end": {
+              "rotation": [
+                0.147015774,
+                0.147015759,
+                -0.691654772,
+                0.691654831
+              ],
+              "translation": [
+                0,
+                0,
+                0
+              ],
+              "camera": {
+                "viewDirection": [
+                  0,
+                  0,
+                  -1
+                ],
+                "fitPadding": 0.1
+              },
+              "cordContactPoints": {
+                "left-lead": [
+                  [
+                    -0.055281154664683044,
+                    2.6784958730741495e-09,
+                    0.01666960783251113
+                  ],
+                  [
+                    -0.05505226417042919,
+                    2.6551680455084633e-09,
+                    0.016822549577125208
+                  ],
+                  [
+                    -0.05480536879859719,
+                    2.6300052152230116e-09,
+                    0.016944306346847914
+                  ],
+                  [
+                    -0.054544693084229386,
+                    2.603437934064582e-09,
+                    0.017032794806797258
+                  ],
+                  [
+                    -0.05427469735269304,
+                    2.5759207849174184e-09,
+                    0.017086500863788254
+                  ],
+                  [
+                    -0.029,
+                    2.212658742732709e-25,
+                    0.02
+                  ]
+                ],
+                "right-lead": [
+                  [
+                    -0.05527504365986381,
+                    -0.013285115880857665,
+                    0.016593061480753592
+                  ],
+                  [
+                    -0.055039368473181444,
+                    -0.013304247286978554,
+                    0.016750204849730523
+                  ],
+                  [
+                    -0.054784777734732726,
+                    -0.01331365548069782,
+                    0.016875496048617093
+                  ],
+                  [
+                    -0.05451590476841246,
+                    -0.013313169241298512,
+                    0.016966654889574762
+                  ],
+                  [
+                    -0.05423764282189773,
+                    -0.01330279741790311,
+                    0.01702202236317293
+                  ],
+                  [
+                    -0.053955056013913594,
+                    -0.01328272876842741,
+                    0.01704059083087777
+                  ],
+                  [
+                    0.029552906998369415,
+                    -0.0063077252416572135,
+                    0.018402846298957314
+                  ]
+                ]
+              }
+            }
           }
         },
         "orientation": {

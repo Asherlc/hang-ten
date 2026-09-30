@@ -4,6 +4,57 @@ import simd
 
 final class SuspendedBoardPresentationTests: XCTestCase {
 
+    @MainActor
+    func testSeatedPentaSourceLoadsInTheProductionScene() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "yy.penta-evo"))
+        let scene = try await BoardModelRealityLoader.load(
+            board: board, presentation: board.defaultPresentation)
+        XCTAssertFalse(scene.root.children.isEmpty)
+        for (positionID, xDirection) in [("primary", Float(1)), ("reverse", Float(-1))] {
+            XCTAssertTrue(scene.select(positionID: positionID))
+            XCTAssertEqual(scene.instanceEntities.count, 2)
+            XCTAssertEqual(scene.instanceEntities[0].position.x, -0.15, accuracy: 1e-6)
+            XCTAssertEqual(scene.instanceEntities[1].position.x, 0.15, accuracy: 1e-6)
+            for entity in scene.instanceEntities {
+                XCTAssertEqual(entity.transform.matrix.columns.0.x, xDirection, accuracy: 1e-6)
+            }
+            XCTAssertEqual(scene.camera.position.x, 0, accuracy: 1e-6)
+        }
+    }
+
+    func testSeatedExteriorCatalogRoutesSolveEveryCachedPose() throws {
+        let boardIDs = ["captain-fingerfood.dual", "captain-fingerfood.unlevel",
+                        "j-bryant.ftg-32", "metolius.light-rail-2", "yy.penta-evo"]
+        for boardID in boardIDs {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID), boardID)
+            guard case .model(let media) = board.defaultPresentation.media else {
+                return XCTFail("expected model for \(boardID)")
+            }
+            let profiles = media.instances?.compactMap(\.suspension) ?? [media.suspension].compactMap { $0 }
+            XCTAssertFalse(profiles.isEmpty, boardID)
+            for suspension in profiles {
+                guard case .pairedLeadCord(let profile) = suspension else {
+                    return XCTFail("expected exterior leads for \(boardID)")
+                }
+                for (positionID, pose) in profile.canonicalPoses {
+                    let routes = try XCTUnwrap(pose.cordContactPoints, "\(boardID)/\(positionID)")
+                    XCTAssertEqual(Set(routes.keys), Set(profile.attachments.map(\.id)))
+                    do {
+                        let solved = try SuspendedBoardPresentation.solve(
+                            pose: pose, suspension: profile, bounds: media.descriptor.modelBounds)
+                        XCTAssertEqual(solved.leads.count, 2, "\(boardID)/\(positionID)")
+                        let anchor = SIMD3<Float>(profile.anchor.position.map(Float.init))
+                        for lead in solved.leads {
+                            XCTAssertEqual(lead.samples.first, anchor, "\(boardID)/\(positionID)")
+                        }
+                    } catch {
+                        XCTFail("\(boardID)/\(positionID): \(error)")
+                    }
+                }
+            }
+        }
+    }
+
     func testSingleCachedThreadedLoopHasTwoSpansWithoutADuplicateLoop() throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "lattice.mini-bar"))
         guard case .model(let media) = board.defaultPresentation.media,
@@ -474,6 +525,23 @@ final class SuspendedBoardPresentationTests: XCTestCase {
         XCTAssertThrowsError(try SuspendedBoardPresentation.solve(pose: selectedPose, suspension: profile, bounds: bounds)) {
             XCTAssertEqual($0 as? SuspendedPresentationError, .invalidSuspension)
         }
+    }
+
+    func testCachedSeatedRoutesPreserveTheirSolvedAnchor() throws {
+        let profile = pairedLeadSuspension(
+            left: [-0.6, 0.4, 0], right: [0.6, 0.4, 0],
+            leftContacts: [[-0.6, 0.4, 0.1]],
+            rightContacts: [[0.6, 0.4, 0.1]], restLength: 2.5)
+        var selectedPose = pose()
+        selectedPose.cordContactPoints = [
+            "left": [[-0.6, 0.6, 0.1]],
+            "right": [[0.6, 0.6, 0.1]]
+        ]
+        let solved = try SuspendedBoardPresentation.solve(
+            pose: selectedPose, suspension: profile, bounds: bounds)
+        XCTAssertEqual(solved.fixedAnchor, SIMD3<Float>(0, 2, 0))
+        XCTAssertEqual(solved.leads[0].samples.first, solved.fixedAnchor)
+        XCTAssertEqual(solved.leads[1].samples.first, solved.fixedAnchor)
     }
 
     func testPairedLeadRejectsDistinctLeadsThatAreTooCloseAfterTheirSharedAnchor() {

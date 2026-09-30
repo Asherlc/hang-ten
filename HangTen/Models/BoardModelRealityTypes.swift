@@ -512,7 +512,7 @@ final class BoardModelRealityScene {
 
         if let instances, !instances.isEmpty {
             guard instances.count == instanceEntities.count else { return false }
-            var selectedFraming: SuspendedCameraFraming?
+            var selectedFrames: [SuspendedCameraFraming] = []
             var selectedTransforms: [simd_float4x4] = []
             let cordGroup = Entity()
             for instance in instances {
@@ -524,9 +524,9 @@ final class BoardModelRealityScene {
                                                        center: Self.boundsCenter(descriptor.modelBounds))
                         let solved = try SuspendedBoardPresentation.solveInstance(
                             pose: pose, suspension: suspension, bounds: descriptor.modelBounds,
-                            transform: base)
+                            transform: try SuspendedBoardPresentation.boardTransform(for: pose) * base)
                         transform = solved.boardTransform
-                        selectedFraming = solved.cameraFraming
+                        selectedFrames.append(solved.cameraFraming)
                         cordGroup.addChild(Self.makeCordEntity(for: solved))
                     } catch { return false }
                 } else {
@@ -538,11 +538,18 @@ final class BoardModelRealityScene {
                 }
                 selectedTransforms.append(transform)
             }
+            let combinedFraming: SuspendedCameraFraming?
+            if selectedFrames.isEmpty {
+                combinedFraming = nil
+            } else {
+                guard let combined = try? SuspendedBoardPresentation.combinedCameraFraming(selectedFrames) else { return false }
+                combinedFraming = combined
+            }
             for (entity, transform) in zip(instanceEntities, selectedTransforms) {
                 entity.transform = Transform(matrix: transform)
             }
-            if let selectedFraming {
-                currentFraming = selectedFraming
+            if let combinedFraming {
+                currentFraming = combinedFraming
             } else {
                 setupCameraFraming()
             }

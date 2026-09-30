@@ -394,6 +394,35 @@ enum SuspendedBoardPresentation {
               }) else { throw SuspendedPresentationError.invalidSuspension }
     }
 
+    static func combinedCameraFraming(_ frames: [SuspendedCameraFraming]) throws -> SuspendedCameraFraming {
+        guard let first = frames.first else { throw SuspendedPresentationError.invalidCamera }
+        let points = frames.flatMap(\.includedPoints)
+        guard !points.isEmpty, points.allSatisfy(\.allFinite),
+              frames.allSatisfy({ $0.fitPadding.isFinite && $0.fitPadding >= 1 }) else {
+            throw SuspendedPresentationError.invalidCamera
+        }
+        let horizontal = points.map { simd_dot($0, first.right) }
+        let vertical = points.map { simd_dot($0, first.up) }
+        let depth = points.map { simd_dot($0, first.direction) }
+        let minX = horizontal.min()!, maxX = horizontal.max()!
+        let minY = vertical.min()!, maxY = vertical.max()!
+        let minZ = depth.min()!, maxZ = depth.max()!
+        let width = maxX - minX, height = maxY - minY, depthSpan = maxZ - minZ
+        let padding = frames.map(\.fitPadding).max()!
+        let target = first.right * ((minX + maxX) / 2)
+            + first.up * ((minY + maxY) / 2)
+            + first.direction * ((minZ + maxZ) / 2)
+        let distance = max(width, max(height, depthSpan)) * padding
+        guard target.allFinite, distance.isFinite, width > 0, height > 0, depthSpan > 0 else {
+            throw SuspendedPresentationError.invalidCamera
+        }
+        return SuspendedCameraFraming(
+            target: target, direction: first.direction, viewDirection: first.viewDirection,
+            right: first.right, up: first.up, distance: distance,
+            width: width, height: height, depth: depthSpan, fitPadding: padding,
+            includedPoints: points)
+    }
+
     static let additionalClearance: Float = 0.001
     // Two independent hanging leads need more than the generic model edge
     // padding so the free span stays plainly visible in the detail view.
@@ -504,9 +533,9 @@ enum SuspendedBoardPresentation {
                     - modelPoint(pose.attachmentPoints?[attachment.id] ?? attachment.pointInModel)
             )
         }
-        // Only reusable-instance solving opts out of legacy anchor projection;
-        // explicit transforms on legacy callers retain their existing behavior.
-        if !preserveAuthoredAnchor,
+        // Cached seated routes and reusable-instance solving preserve their authored
+        // anchor. Moving it would invalidate the route solved for that anchor.
+        if !preserveAuthoredAnchor, pose.cordContactPoints == nil,
            boreAxes.count == suspension.attachments.count,
            let leading = boreAxes.first,
            boreAxes.allSatisfy({ simd_dot($0, leading) > 0.9 }),
@@ -946,7 +975,7 @@ enum SuspendedBoardPresentation {
         )
     }
 
-    private static func boardTransform(for pose: BoardModelCanonicalPose) throws -> simd_float4x4 {
+    static func boardTransform(for pose: BoardModelCanonicalPose) throws -> simd_float4x4 {
         guard pose.rotation.count == 4,
               pose.translation.count == 3,
               pose.rotation.allSatisfy(\.isFinite),

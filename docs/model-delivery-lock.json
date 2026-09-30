@@ -53,11 +53,11 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "ddd8a7f6f0c54681bb1e36248e34d03cb38ce5c2f870cbed10866ddbe51db539",
+  "sha256Manifest": "156988958bf0b13618aab27269ce77ce8f9feac5ec5715a624c5fae89f97c41d",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
-  "supersededSha256Manifest": "d4a50daf99b7f35d26cffe06f2d91a6a7ab770b30c9887d977cc351fc2c962fd",
+  "supersededSha256Manifest": "ddd8a7f6f0c54681bb1e36248e34d03cb38ce5c2f870cbed10866ddbe51db539",
   "migratedPackages": {
     "beastmaker-1000": {
       "source": "Hangboards/beastmaker-1000/beastmaker-1000.FCStd",
@@ -163,7 +163,7 @@
     },
     "j-bryant-ftg-32": {
       "source": "Hangboards/j-bryant-ftg-32/j-bryant-ftg-32.FCStd",
-      "sourceSHA256": "bc593d52df87aad48b52a698fd65d8d82da9040419023757ed044829a03a8523",
+      "sourceSHA256": "cc1ccd3c818b049aa6034d13c550e93608010c5534fa26112552f548b067bce7",
       "supersededSourceSHA256": "b2443ff4b48776b6be30a5b83437746ad52d6e6b4919eeb6ddda6e442af6c073",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); geometry archive members byte-identical to the superseded source",
       "referenceSHA256": "5b9c6eac0f5e2381d8d28833bdf0c723a4e512e94d034b000817f5230ac3bc3d",
@@ -173,7 +173,8 @@
       "nativeValidation": "passed (compile published depths 16/25; author cut-body source)",
       "nativeAppValidation": "passed (isolated iPhone 16 Pro / iOS 26.5 Simulator; 7 focused FTG-32 tests and the four affected classes: 152 passed)",
       "comparison": "compare_exports.py vs the retired Blender reference: 0.0377 mm worst sampled deviation, both directions (limit 0.5 mm)",
-      "holdOutline": "not authored; descriptor region derived from the CAD contact surfaces"
+      "holdOutline": "not authored; descriptor region derived from the CAD contact surfaces",
+      "seatedExteriorRoutes": "2026-09-30: generated static exterior pose routes, preserving existing clipped topology and diameter estimates; all non-Document.xml archive members remain byte-identical. Native whole-segment clearance and adaptive actual-mesh clearance retained in the seated-cord source audit."
     },
     "lattice-mini-bar": {
       "source": "Hangboards/lattice-mini-bar/lattice-mini-bar.FCStd",
@@ -236,7 +237,7 @@
     },
     "metolius-light-rail-2": {
       "source": "Hangboards/metolius-light-rail-2/metolius-light-rail-2.FCStd",
-      "sourceSHA256": "46b0fc407b2e6e00acaededd94bc20dbfd9d2bdb777dd7ffbee1971c72ec9a7c",
+      "sourceSHA256": "a31c4e89c09b9c5503b97ca5657a145a1d23bd21a2bcfb533d5dde6f86b6cd87",
       "boardMetadata": "board.json generated at build time (not committed) from the source HangTenBoardManifest (hangboard_packages.cad_source); byte-identical to the previous hand-authored board.json",
       "referenceSHA256": "6fc0c73bfcd0a22d94a733fa7f8b482730a2423d4eec139539d92229ec64a598 (assets/primary.usdz at 94d48974e)",
       "assetSHA256": "9b4e233f87685e2f39faef82f73af2edae3644a5d61bb87d2f3188930242db1d",
@@ -246,7 +247,8 @@
       "comparison": "compare_exports two-way sampled worst 0.554 mm (limit 0.5 mm; 2,492 reference vs 16,586 candidate triangles), confined to the eight corner round-overs: the reference sweeps a constant r6 corner through its round-over, the source is a true r5 round-over of an r6 outline; pocket, lips, jugs and wells agree within 0.5 mm; node IDs and modelBounds identical",
       "provenanceSidecar": "removed audit record (authoring script was a throwaway under .context/, not committed)",
       "assetCoverage": "locked as descriptor + source (board.json is generated from the source at build time and not committed); the compiled USDZ is pinned by the descriptor modelSHA256",
-      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-40-20mm-side (default), edge-20, jug-40-15mm-side and edge-15 selected from the hold map and confirmed via boardDetail.selectedHold.<contactID>; highlights land on the top jug and lower lip upright, and on the flipped jug and lip in the inverted pose)"
+      "nativeAppValidation": "passed (iPhone 17 Pro simulator, iOS 26.5, DEBUG board-detail route; jug-40-20mm-side (default), edge-20, jug-40-15mm-side and edge-15 selected from the hold map and confirmed via boardDetail.selectedHold.<contactID>; highlights land on the top jug and lower lip upright, and on the flipped jug and lip in the inverted pose)",
+      "seatedExteriorRoutes": "2026-09-30: generated static exterior pose routes, preserving existing clipped topology and diameter estimates; all non-Document.xml archive members remain byte-identical. Native whole-segment clearance and adaptive actual-mesh clearance retained in the seated-cord source audit."
     },
     "metolius-prime-rib": {
       "source": "Hangboards/metolius-prime-rib/metolius-prime-rib.FCStd",
