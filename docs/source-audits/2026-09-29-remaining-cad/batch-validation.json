@@ -96,6 +96,16 @@
       "nativeAndCanonicalAppValidation": "passed",
       "physicalUIOrbit": "unverified",
       "geometryAcceptance": "pending revised user review"
+    },
+    {
+      "package": "frictitious-nug",
+      "date": "2026-09-30",
+      "revision": "cord-diameter",
+      "report": "frictitious-nug/cord-diameter-review/runtime-validation.json",
+      "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending review #4"
     }
   ]
 }

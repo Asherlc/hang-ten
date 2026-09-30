@@ -1,0 +1,126 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "package": "frictitious-nug",
+  "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "generatedManifestSHA256": "a92ab8953bc5e793a3eb9c04f46f97d954ceea17665d8bb6554d0935b4a69773",
+  "nativeVerification": "verification.json",
+  "python": {
+    "command": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+      "-q"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.0350099579663947,
+    "fileSHA256": {
+      "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+      "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+      "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+    },
+    "sourceUnchangedDuringRun": true,
+    "summary": "31 passed in 0.71s",
+    "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual The NUG geometry."
+  },
+  "iOS": {
+    "passed": 239,
+    "skipped": 0,
+    "failed": 0,
+    "total": 239,
+    "simulator": "388959CA-8599-413C-8ABE-79CA573F50AD",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "scope": "SuspendedBoardPresentationTests, BoardModelTests, BoardModelRealityTests, BoardPackageStoreTests",
+    "buildCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=388959CA-8599-413C-8ABE-79CA573F50AD",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "build-for-testing"
+    ],
+    "testCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=388959CA-8599-413C-8ABE-79CA573F50AD",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "-parallel-testing-enabled",
+      "NO",
+      "-only-testing:HangTenTests/SuspendedBoardPresentationTests",
+      "-only-testing:HangTenTests/BoardModelTests",
+      "-only-testing:HangTenTests/BoardModelRealityTests",
+      "-only-testing:HangTenTests/BoardPackageStoreTests",
+      "-collect-test-diagnostics",
+      "never",
+      "-resultBundlePath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-review/placid-badger-nug-cord-diameter-tests.xcresult",
+      "test-without-building"
+    ],
+    "xcodebuildExitCode": 0
+  },
+  "app": {
+    "canonicalPoses": 6,
+    "selectedContactsVisible": true,
+    "cordAccessibilityAbsent": true,
+    "physicalOrbitVerified": false,
+    "captureProvenance": "app-review/validation.json"
+  },
+  "installedDelivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "cleanup": {
+    "simulator": "388959CA-8599-413C-8ABE-79CA573F50AD",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "simulatorDeletionVerified": true,
+    "resultBundleRemoved": true,
+    "ownershipManifestsConsumed": true
+  },
+  "humanReview": "Pending The NUG one-by-one review #4",
+  "limits": [
+    "Canonical app captures only; physical UI orbit remains unverified.",
+    "Lead lengths and unlisted body dimensions remain display estimates; hidden threading is unspecified."
+  ],
+  "evidenceSHA256": {
+    "verification.json": "156ac8a830050ff82bdf4c24610c0586165557560d2349e19e71710354050922",
+    "native-route-report.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    "native-route-check.json": "79977e53fccaad059af8ca003b99e0e866fce608f669011e127679100df27194",
+    "continuous-cord-clearance.json": "f5fa3ab21ae361af93ef5d8e921d1485020d411e3306b283118b44f67f50e626",
+    "source-bound-native-solid.json": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+    "package-validation.json": "95b2f58d61b49b2b4fc08f17a44efcdaca5f717461ad3bf67e412bb3f358b2fd",
+    "ios-summary.json": "549158b264dbd737471026c60fb7119f7844c8c39a5fbe31003096bc55571f2f",
+    "ios-tests.log": "4149a160afba866f8d8a1d122cfef33495090481dc2d82e7c963c806f6c3edb0",
+    "resource-cleanup.json": "094a4fac9a3c71bdf73b5526a12109859b396a086e5bf8bd09899a4fbc559b6d",
+    "installed-app-provenance.json": "adbabd8632a0d5a842d5f6d78793ed934485144c96d20711932804b80582a8c4",
+    "installed-delivery-validation.json": "2f574a9f2057ee1c4be6163fadcfd5fb3da2795b92fd39f4041c5df6fef03ad2",
+    "app-review/validation.json": "4734ecbd025eaca61ed7a97a29351c8a2f3a08713e5e0e9deb52be72bd1496fa",
+    "final-independent-review.json": "7a3838b688acefdf9b7287687c780f219686ee9fde7a3f6d3ef1049ad8fc87bb",
+    "independent-app-review.json": "bf7ed213da8efb06cb1cac45a90aae544c584926e72e85a5292cb38bb38cbdd3",
+    "inspection-report.json": "afab937d2a8b8b294bb4da9c3bc5999141d1f9f9491f3f3a6ad316d884015e0c",
+    "render-provenance.json": "53455d43fe75a6489f3751d09d2b90d421a3a7fc50e36c7dc48991e9d7895e6b",
+    "overview-provenance.json": "8a2a93ec184b73e923f3a44d6123a9aa0bc346f526ed29872223221252441dc9",
+    "app-review/overview-provenance.json": "4cf02531c8c6b8de40f6e63a7048a36ef3eda667eeb038dcfb83c5647626ea3d",
+    "fresh-reproducibility-result.json": "255673b33585bf105b7daddd74489356320c8a57bbaf81b7332e8dad98a3dd98"
+  }
+}

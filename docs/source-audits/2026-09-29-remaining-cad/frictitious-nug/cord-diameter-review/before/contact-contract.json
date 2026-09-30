@@ -1,0 +1,59 @@
+{
+  "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
+  "retainedContactFieldsUnchanged": true,
+  "contactFieldCorrections": [],
+  "retainedContactIDs": [
+    "edge-20",
+    "edge-25",
+    "edge-8",
+    "edge-13",
+    "jug-40",
+    "pinch-60"
+  ],
+  "removedContactIDs": [],
+  "positions": [
+    {
+      "id": "front-25",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-25"
+      ]
+    },
+    {
+      "id": "front-inverted-20",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-20"
+      ]
+    },
+    {
+      "id": "reverse-13",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-13"
+      ]
+    },
+    {
+      "id": "reverse-inverted-8",
+      "presentationID": "primary",
+      "contactIDs": [
+        "edge-8"
+      ]
+    },
+    {
+      "id": "outer-upper",
+      "presentationID": "primary",
+      "contactIDs": [
+        "jug-40"
+      ]
+    },
+    {
+      "id": "outer-lower",
+      "presentationID": "primary",
+      "contactIDs": [
+        "pinch-60"
+      ]
+    }
+  ],
+  "metadataDecision": "All six contact records preserved byte-equivalent as structured JSON. Pinch60 describes opposing span along native z; compiler front-depth metric clamps it to40mm and does not reinterpret this as a40mm source fact."
+}

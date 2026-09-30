@@ -1,0 +1,17 @@
+{
+  "package": "frictitious-nug",
+  "date": "2026-09-30",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+  "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+  "sidecarSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "generatedManifestSHA256": "a92ab8953bc5e793a3eb9c04f46f97d954ceea17665d8bb6554d0935b4a69773",
+  "bodySourceAndModelUnchanged": true,
+  "bodyReproduction": "reproducibility.json",
+  "priorCordAndAppReportsAreHistorical": true,
+  "currentCordVerification": "cord-diameter-review/verification.json",
+  "currentCordRuntimeVerification": "cord-diameter-review/runtime-validation.json",
+  "continuousCordCertificate": "cord-diameter-review/continuous-cord-clearance.json",
+  "continuousCordCertificateSHA256": "f5fa3ab21ae361af93ef5d8e921d1485020d411e3306b283118b44f67f50e626",
+  "humanGeometryAcceptance": "pending review #4"
+}

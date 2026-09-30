@@ -1,0 +1,156 @@
+{
+  "passed": true,
+  "date": "2026-09-30",
+  "package": "frictitious-nug",
+  "correction": "Manufacturer-specified 6 mm cord diameter replaces prior 3 mm display diameter.",
+  "manufacturerEvidence": {
+    "url": "https://frictitiousclimbing.com/products/the-nug",
+    "retainedHTML": "../evidence/product-page-current.html",
+    "sha256": "fc5517626285368b665c37139a52657133400bc8cf1ef0b4c54b3d1eac490f78",
+    "diameterMM": 6
+  },
+  "suspensionBeforeSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+  "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "generatedManifestSHA256": "a92ab8953bc5e793a3eb9c04f46f97d954ceea17665d8bb6554d0935b4a69773",
+  "nativeExactRegeneration": "Fresh apply/check are byte-identical for all six poses. Neither uses retained route reports as solve input.",
+  "certification": "All 24 exact rounded full routes pass complete native solid, whole tube, actual mouth entry and settled length checks.",
+  "sourceBoundNativeSolid": {
+    "path": "source-bound-native-solid.json",
+    "sha256": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e"
+  },
+  "poseResults": {
+    "front-25": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003012694925443226,
+        "left-rear": 0.0030080679843749944,
+        "right-front": 0.0030126949254432244,
+        "right-rear": 0.003008067984374991
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.999999999205097,
+        "right-front": 0.999999999205097,
+        "right-rear": 0.999999999205097
+      }
+    },
+    "front-inverted-20": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003008067984374991,
+        "left-rear": 0.0030127898910447906,
+        "right-front": 0.0030080679843749927,
+        "right-rear": 0.0030126949254432283
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.9999999992050967,
+        "right-front": 0.9999999992050967,
+        "right-rear": 0.999999999205097
+      }
+    },
+    "reverse-13": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003012694925443226,
+        "left-rear": 0.0030080679843749944,
+        "right-front": 0.0030126949254432244,
+        "right-rear": 0.003008067984374991
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.999999999205097,
+        "right-front": 0.999999999205097,
+        "right-rear": 0.999999999205097
+      }
+    },
+    "reverse-inverted-8": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003008067984374991,
+        "left-rear": 0.0030127898910447906,
+        "right-front": 0.0030080679843749927,
+        "right-rear": 0.0030126949254432283
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.9999999992050967,
+        "right-front": 0.9999999992050967,
+        "right-rear": 0.999999999205097
+      }
+    },
+    "outer-upper": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003012694925443226,
+        "left-rear": 0.0030080679843749944,
+        "right-front": 0.0030126949254432244,
+        "right-rear": 0.003008067984374991
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.999999999205097,
+        "right-front": 0.999999999205097,
+        "right-rear": 0.999999999205097
+      }
+    },
+    "outer-lower": {
+      "height": -0.162422559,
+      "minimumClearance": {
+        "left-front": 0.003012694925443226,
+        "left-rear": 0.0030080679843749944,
+        "right-front": 0.0030126949254432244,
+        "right-rear": 0.003008067984374991
+      },
+      "lengthRatios": {
+        "left-front": 0.9999999992050967,
+        "left-rear": 0.999999999205097,
+        "right-front": 0.999999999205097,
+        "right-rear": 0.999999999205097
+      }
+    }
+  },
+  "packageChanges": {
+    "changedPackageFiles": [
+      "Hangboards/frictitious-nug/suspension.json"
+    ],
+    "changedLockedFiles": [
+      "Hangboards/frictitious-nug/suspension.json"
+    ],
+    "sha256Manifest": "d1eff0bbf16d58487e273f9a24a12a4ab2c9bc50b960ff68fdaaee000a068244",
+    "beforeSuspensionSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+    "afterSuspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+    "preservedPackageFiles": 205,
+    "permittedChanges": "Four lead radii/provenance and native-generated routes/translation Y. Body, model, descriptor, contacts, anchor, terminals, topology, lengths, rotations, cameras and solver unchanged."
+  },
+  "python": {
+    "command": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py",
+      "Tools/HangboardPackages/tests/test_model_delivery_lock.py",
+      "-q"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.0350099579663947,
+    "fileSHA256": {
+      "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+      "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+      "Hangboards/frictitious-nug/suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+    },
+    "sourceUnchangedDuringRun": true,
+    "summary": "31 passed in 0.71s",
+    "scope": "Sidecar authoring/private-runtime boundary and complete delivery-lock behavior; exact native route reproduction separately validates actual The NUG geometry."
+  },
+  "scopeLimit": "The 300 mm lead lengths and entrance-well dimensions remain display estimates. Hidden connections are unspecified. No whole-rope equilibrium or global optimum claim.",
+  "humanReview": "Pending The NUG one-by-one review #4",
+  "independentReview": "final-independent-review.json",
+  "independentFreshReproduction": "fresh-reproducibility-result.json"
+}

@@ -1,0 +1,57 @@
+{
+  "package": "frictitious-nug",
+  "beforeSidecarSHA256": "a0cd4f331dd2f1c394199598c688ff6ec9a8d495dabd05cc1513c10e9c6b9d61",
+  "afterSidecarSHA256": "c5b9d494d8a7d0de6c955db08f8449051216d474736a1d9b08e81f9665fd4088",
+  "changes": [
+    {
+      "presentationID": "primary",
+      "positionID": "front-inverted-20",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        0.3,
+        -1
+      ]
+    },
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-13",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        -0.3,
+        1
+      ]
+    },
+    {
+      "presentationID": "primary",
+      "positionID": "reverse-inverted-8",
+      "beforeViewDirection": [
+        0,
+        -0.3,
+        -1
+      ],
+      "afterViewDirection": [
+        0,
+        0.3,
+        1
+      ]
+    }
+  ],
+  "allNonCameraSidecarValuesIdentical": true,
+  "immutableNativeAndModelFilesSHA256": {
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d"
+  },
+  "reason": "Canonical camera directions are native-local and rotate with the board. Front/rear mouth selection and underside visibility must be expressed before the pose rotation.",
+  "unchangedNumericRoutesSHA256": "28c71e3633ecb6b26d263dc7027e73e9771227b05726d4a2ea6fea08c544a3ee"
+}
