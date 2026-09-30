@@ -208,10 +208,18 @@ struct BoardModelRealityView: View {
                             guard let id = model.contactID(for: entity),
                                   let contact = contacts.first(where: { $0.id == id }) else { return }
                             model.resetCamera(animated: true)
+                            #if DEBUG
+                            BoardHostBoundaryTrace.record(model, "revision-cause physical-contact-reset")
+                            #endif
                             cameraRevision &+= 1
                             onContactTap?(contact)
                         },
-                        onCameraChange: { cameraRevision &+= 1 }
+                        onCameraChange: {
+                            #if DEBUG
+                            BoardHostBoundaryTrace.record(model, "revision-cause native-orbit-or-pinch")
+                            #endif
+                            cameraRevision &+= 1
+                        }
                     )
                 } else {
                     RealityView { content in
@@ -281,6 +289,9 @@ struct BoardModelRealityView: View {
     }
 
     private func applySync(size: CGSize) {
+        #if DEBUG
+        BoardHostBoundaryTrace.record(model, "sync-entry viewport=\(size) revision=\(cameraRevision)")
+        #endif
         let priorCameraTransform = model.camera.transform.matrix
         let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
@@ -292,12 +303,20 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        #if DEBUG
+        BoardHostBoundaryTrace.record(model, "sync-complete")
+        #endif
         // RealityView synchronizes after SwiftUI evaluates the accessibility
         // overlay. Reproject once when framing or a board pose actually changes.
         // The unchanged follow-up update must not schedule another invalidation.
         if model.camera.transform.matrix != priorCameraTransform
             || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
-            Task { @MainActor in cameraRevision &+= 1 }
+            Task { @MainActor in
+                #if DEBUG
+                BoardHostBoundaryTrace.record(model, "revision-cause framing-followup")
+                #endif
+                cameraRevision &+= 1
+            }
         }
         if let positionID, !didSelect {
             Task { @MainActor in
@@ -411,6 +430,9 @@ private struct BoardModelARHost: UIViewRepresentable {
         let panDelegate = OrbitPanGestureDelegate()
         private var lastTranslation: CGPoint = .zero
         private var lastScale: CGFloat = 1
+        #if DEBUG
+        private var trace: BoardHostBoundaryTrace?
+        #endif
 
         /// Retains the current host configuration for scene attachment and input callbacks.
         init(parent: BoardModelARHost) { self.parent = parent }
@@ -420,9 +442,18 @@ private struct BoardModelARHost: UIViewRepresentable {
             anchor.addChild(parent.model.root)
             anchor.addChild(parent.model.camera)
             view.renderer.scene.addAnchor(anchor)
+            #if DEBUG
+            trace = BoardHostBoundaryTrace.make(model: parent.model, renderer: view.renderer)
+            trace?.append("attach")
+            panDelegate.traceDecision = { [weak self] event in self?.trace?.append(event) }
+            trace?.installControls(in: view)
+            #endif
             view.onLayout = { [weak self] view in self?.synchronize(view) }
             let pan = OrbitPanGestureRecognizer(target: self, action: #selector(orbit(_:)))
             pan.activationDistance = 4
+            #if DEBUG
+            pan.traceTouch = { [weak self] event in self?.trace?.append(event) }
+            #endif
             pan.delegate = panDelegate
             view.renderer.addGestureRecognizer(pan)
             let tap = UITapGestureRecognizer(target: self, action: #selector(tap(_:)))
@@ -442,6 +473,12 @@ private struct BoardModelARHost: UIViewRepresentable {
 
         /// Releases layout callbacks, input recognizers and the entities attached by this host.
         func detach(from view: BoardModelARContainer) {
+            #if DEBUG
+            trace?.append("detach")
+            trace?.removeControls()
+            trace = nil
+            panDelegate.traceDecision = nil
+            #endif
             view.onLayout = nil
             for gesture in view.renderer.gestureRecognizers ?? [] {
                 view.renderer.removeGestureRecognizer(gesture)
@@ -453,14 +490,25 @@ private struct BoardModelARHost: UIViewRepresentable {
 
         /// Resolves a completed native collision hit before forwarding physical contact selection.
         @objc private func tap(_ gesture: UITapGestureRecognizer) {
-            guard gesture.state == .ended, let view = gesture.view as? ARView,
-                  let entity = view.entity(at: gesture.location(in: view)) else { return }
+            guard gesture.state == .ended, let view = gesture.view as? ARView else { return }
+            let entity = view.entity(at: gesture.location(in: view))
+            #if DEBUG
+            trace?.append("tap point=\(gesture.location(in: view)) hit=\(String(describing: entity.map(ObjectIdentifier.init))) contact=\(String(describing: entity.flatMap { parent.model.contactID(for: $0) }))")
+            #endif
+            guard let entity else { return }
             parent.onEntityTap(entity)
+            #if DEBUG
+            trace?.append("tap-complete")
+            #endif
         }
 
         /// Applies incremental pan deltas using the existing viewport-normalized camera orbit math.
         @objc private func orbit(_ gesture: UIPanGestureRecognizer) {
             guard let view = gesture.view else { return }
+            #if DEBUG
+            if gesture.state == .began { trace?.markCanonicalOrbitBaseline() }
+            trace?.append("pan state=\(gesture.state.rawValue) cumulative=\(gesture.translation(in: view)) consumed=\(lastTranslation)")
+            #endif
             switch gesture.state {
             case .began, .changed:
                 let translation = gesture.translation(in: view)
@@ -471,6 +519,9 @@ private struct BoardModelARHost: UIViewRepresentable {
                     azimuth: parent.model.orbitAzimuth - Float(deltaX / max(view.bounds.width, 1)) * 0.9,
                     elevation: parent.model.orbitElevation - Float(deltaY / max(view.bounds.height, 1)) * 0.65)
                 parent.onCameraChange()
+                #if DEBUG
+                trace?.append("pan-applied delta=(\(deltaX),\(deltaY)) consumed=\(lastTranslation)")
+                #endif
             case .ended, .cancelled, .failed:
                 lastTranslation = .zero
             default: break
@@ -494,6 +545,116 @@ private struct BoardModelARHost: UIViewRepresentable {
         }
     }
 }
+
+#if DEBUG
+// Temporary, bounded boundary capture. No observable state or scene mutations;
+// remove this class, registry, controls and all call sites before delivery.
+@MainActor
+private final class BoardHostBoundaryTrace: NSObject {
+    private static var traces: [ObjectIdentifier: BoardHostBoundaryTrace] = [:]
+    private let model: BoardModelRealityScene
+    private weak var renderer: ARView?
+    private var events: [String] = []
+    private var sequence = 0
+    private var captured = false
+    private var canonicalOrbitMatrix: String?
+    private var controls: [UIButton] = []
+    private let boardID = ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_ID"] ?? "unknown"
+
+    private init(model: BoardModelRealityScene, renderer: ARView) {
+        self.model = model
+        self.renderer = renderer
+    }
+
+    static func make(model: BoardModelRealityScene, renderer: ARView) -> BoardHostBoundaryTrace? {
+        guard ProcessInfo.processInfo.environment["HANGTEN_REVIEW_HOST_BOUNDARY_TRACE"] == "1" else {
+            return nil
+        }
+        let trace = BoardHostBoundaryTrace(model: model, renderer: renderer)
+        traces[ObjectIdentifier(model)] = trace
+        return trace
+    }
+
+    static func record(_ model: BoardModelRealityScene, _ event: String) {
+        traces[ObjectIdentifier(model)]?.append(event)
+    }
+
+    func append(_ event: String) {
+        sequence += 1
+        if events.count == 400 { events.remove(at: 30) }
+        let world = model.root.position(relativeTo: nil)
+        events.append("seq=\(sequence) time=\(ProcessInfo.processInfo.systemUptime) event=\(event) scene=\(ObjectIdentifier(model)) renderer=\(String(describing: renderer.map(ObjectIdentifier.init))) camera=\(ObjectIdentifier(model.camera)) bounds=\(String(describing: renderer?.bounds)) orbit=(\(model.orbitAzimuth),\(model.orbitElevation),\(model.orbitZoom)) authored=\(model.camera.transformMatrix(relativeTo: nil)) native=\(String(describing: renderer?.cameraTransform.matrix)) rootProjection=\(String(describing: renderer?.project(world)))")
+    }
+
+    func markCanonicalOrbitBaseline() {
+        guard canonicalOrbitMatrix == nil else { return }
+        canonicalOrbitMatrix = String(describing: model.camera.transformMatrix(relativeTo: nil))
+        append("canonical-before-first-orbit")
+    }
+
+    func installControls(in view: UIView) {
+        for (index, identifier) in ["boardModel.flushBoundaryTrace", "boardModel.captureNativeFailure"].enumerated() {
+            let button = UIButton(type: .custom)
+            // Transparent fixed controls do not affect viewport layout or pixels.
+            button.frame = CGRect(x: index * 16, y: 0, width: 16, height: 16)
+            button.accessibilityIdentifier = identifier
+            button.accessibilityLabel = identifier
+            button.accessibilityValue = "ready"
+            button.addTarget(self, action: index == 0 ? #selector(flushControl(_:)) : #selector(snapshotControl(_:)), for: .touchUpInside)
+            view.addSubview(button)
+            controls.append(button)
+        }
+    }
+
+    func removeControls() {
+        controls.forEach { $0.removeFromSuperview() }
+        controls.removeAll()
+        Self.traces.removeValue(forKey: ObjectIdentifier(model))
+    }
+
+    private func flush() {
+        print("[BoardHostBoundaryTrace] board=\(boardID) canonicalBeforeOrbit=\(canonicalOrbitMatrix ?? "missing")")
+        for event in events { print("[BoardHostBoundaryTrace] board=\(boardID) \(event)") }
+        events.removeAll(keepingCapacity: true)
+        print("[BoardHostBoundaryTrace] board=\(boardID) flushed sequence=\(sequence)")
+    }
+
+    @objc private func flushControl(_ button: UIButton) {
+        append("failure-trace-request")
+        flush()
+        button.accessibilityValue = "done"
+    }
+
+    @objc private func snapshotControl(_ button: UIButton) {
+        guard !captured, let renderer else { return }
+        captured = true
+        append("native-snapshot-request")
+        flush()
+        button.accessibilityValue = "pending"
+        renderer.snapshot(saveToHDR: false) { [weak self, weak button] image in
+            guard let self else { return }
+            self.append("native-snapshot-complete imageSize=\(String(describing: image?.size))")
+            self.flush()
+            if let bytes = image?.pngData() {
+                let encoded = bytes.base64EncodedString()
+                let chunkSize = 12_000
+                let chunks = stride(from: 0, to: encoded.count, by: chunkSize).map { start in
+                    let lower = encoded.index(encoded.startIndex, offsetBy: start)
+                    let upper = encoded.index(lower, offsetBy: min(chunkSize, encoded.count - start))
+                    return String(encoded[lower..<upper])
+                }
+                for (index, chunk) in chunks.enumerated() {
+                    print("[BoardHostNativePNG] board=\(self.boardID) chunk=\(index)/\(chunks.count) data=\(chunk)")
+                }
+                button?.accessibilityValue = "done"
+            } else {
+                print("[BoardHostNativePNG] board=\(self.boardID) image=nil")
+                button?.accessibilityValue = "failed"
+            }
+        }
+    }
+}
+#endif
 
 private final class BoardModelARContainer: UIView {
     let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)

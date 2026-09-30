@@ -34,6 +34,10 @@ enum OrbitPanArbitration {
 final class OrbitPanGestureRecognizer: UIPanGestureRecognizer {
     var activationDistance: CGFloat = OrbitPanArbitration.activationDistance
     private var originInView: CGPoint?
+    #if DEBUG
+    // Temporary boundary trace; remove before delivery.
+    var traceTouch: ((String) -> Void)?
+    #endif
 
     override func reset() {
         originInView = nil
@@ -42,10 +46,16 @@ final class OrbitPanGestureRecognizer: UIPanGestureRecognizer {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         originInView = touches.first?.location(in: view)
+        #if DEBUG
+        traceTouch?("touch-began point=\(String(describing: originInView))")
+        #endif
         super.touchesBegan(touches, with: event)
     }
 
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
+        #if DEBUG
+        traceTouch?("touch-moved state=\(state.rawValue) point=\(String(describing: touches.first?.location(in: view)))")
+        #endif
         if state == .possible {
             guard let origin = originInView,
                   let location = touches.first?.location(in: view),
@@ -59,6 +69,18 @@ final class OrbitPanGestureRecognizer: UIPanGestureRecognizer {
         }
         super.touchesMoved(touches, with: event)
     }
+
+    #if DEBUG
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
+        traceTouch?("touch-ended state=\(state.rawValue) point=\(String(describing: touches.first?.location(in: view)))")
+        super.touchesEnded(touches, with: event)
+    }
+
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent) {
+        traceTouch?("touch-cancelled state=\(state.rawValue)")
+        super.touchesCancelled(touches, with: event)
+    }
+    #endif
 }
 
 /// Lets a 3D model's orbit drag live inside an ancestor vertical ScrollView.
@@ -67,11 +89,18 @@ final class OrbitPanGestureRecognizer: UIPanGestureRecognizer {
 /// scroll view still scrolls — the same arbitration a horizontal carousel
 /// needs when it sits inside a vertical feed.
 final class OrbitPanGestureDelegate: NSObject, UIGestureRecognizerDelegate {
+    #if DEBUG
+    var traceDecision: ((String) -> Void)?
+    #endif
     func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         guard let pan = gestureRecognizer as? UIPanGestureRecognizer, let view = pan.view else { return true }
-        return OrbitPanArbitration.shouldBegin(
+        let decision = OrbitPanArbitration.shouldBegin(
             translation: pan.translation(in: view),
             velocity: pan.velocity(in: view)
         )
+        #if DEBUG
+        traceDecision?("delegate decision=\(decision) translation=\(pan.translation(in: view)) velocity=\(pan.velocity(in: view))")
+        #endif
+        return decision
     }
 }
