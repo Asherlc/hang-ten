@@ -202,6 +202,12 @@
 		F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */; };
 		F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000004 /* RopeTriangleColliderTests.swift */; };
 		F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000007 /* RopeThreadedSeedTests.swift */; };
+		F12900000000000000000008 /* RopeDynamicsSolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000008 /* RopeDynamicsSolver.swift */; };
+		F12900000000000000000009 /* RopeSimulationMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = F22900000000000000000009 /* RopeSimulationMetrics.swift */; };
+		F1290000000000000000000A /* RopeBandedSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000A /* RopeBandedSystem.swift */; };
+		F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000B /* RopeDynamicsSolverTests.swift */; };
+		F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */; };
+		F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2290000000000000000000D /* RopeBandedSystemTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -419,6 +425,12 @@
 		F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopePhysicsDescriptorTests.swift; sourceTree = "<group>"; };
 		F22900000000000000000004 /* RopeTriangleColliderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeTriangleColliderTests.swift; sourceTree = "<group>"; };
 		F22900000000000000000007 /* RopeThreadedSeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeThreadedSeedTests.swift; sourceTree = "<group>"; };
+		F22900000000000000000008 /* RopeDynamicsSolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeDynamicsSolver.swift; sourceTree = "<group>"; };
+		F22900000000000000000009 /* RopeSimulationMetrics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeSimulationMetrics.swift; sourceTree = "<group>"; };
+		F2290000000000000000000A /* RopeBandedSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeBandedSystem.swift; sourceTree = "<group>"; };
+		F2290000000000000000000B /* RopeDynamicsSolverTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeDynamicsSolverTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClavelliumRopePhysicsTests.swift; sourceTree = "<group>"; };
+		F2290000000000000000000D /* RopeBandedSystemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RopeBandedSystemTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -588,6 +600,9 @@
 				F22900000000000000000003 /* RopeTriangleCollider.swift */,
 				F22900000000000000000005 /* RopeSimulationState.swift */,
 				F22900000000000000000006 /* RopeThreadedSeed.swift */,
+				F2290000000000000000000A /* RopeBandedSystem.swift */,
+				F22900000000000000000009 /* RopeSimulationMetrics.swift */,
+				F22900000000000000000008 /* RopeDynamicsSolver.swift */,
 				AC0000000000000000000001 /* Telemetry.swift */,
 				AC0000000000000000000002 /* AmplitudeAnalyticsTelemetry.swift */,
 				AC0000000000000000000003 /* SentryDiagnostics.swift */,
@@ -692,6 +707,9 @@
 				F22900000000000000000002 /* RopePhysicsDescriptorTests.swift */,
 				F22900000000000000000004 /* RopeTriangleColliderTests.swift */,
 				F22900000000000000000007 /* RopeThreadedSeedTests.swift */,
+				F2290000000000000000000D /* RopeBandedSystemTests.swift */,
+				F2290000000000000000000C /* ClavelliumRopePhysicsTests.swift */,
+				F2290000000000000000000B /* RopeDynamicsSolverTests.swift */,
 				BB0000000000000000000089 /* BoardSourceBoundaryAudit.swift */,
 				BB00000000000000000000A1 /* TelemetryTests.swift */,
 				AD0000000000000000000002 /* GripHandCueCardTests.swift */,
@@ -963,6 +981,9 @@
 				F12900000000000000000003 /* RopeTriangleCollider.swift in Sources */,
 				F12900000000000000000005 /* RopeSimulationState.swift in Sources */,
 				F12900000000000000000006 /* RopeThreadedSeed.swift in Sources */,
+				F1290000000000000000000A /* RopeBandedSystem.swift in Sources */,
+				F12900000000000000000009 /* RopeSimulationMetrics.swift in Sources */,
+				F12900000000000000000008 /* RopeDynamicsSolver.swift in Sources */,
 				E31000000000000000000006 /* OrbitPanGestureDelegate.swift in Sources */,
 				AA0000000000000000000006 /* RootView.swift in Sources */,
 				AA0000000000000000000091 /* TrainView.swift in Sources */,
@@ -1076,6 +1097,9 @@
 				F12900000000000000000002 /* RopePhysicsDescriptorTests.swift in Sources */,
 				F12900000000000000000004 /* RopeTriangleColliderTests.swift in Sources */,
 				F12900000000000000000007 /* RopeThreadedSeedTests.swift in Sources */,
+				F1290000000000000000000D /* RopeBandedSystemTests.swift in Sources */,
+				F1290000000000000000000C /* ClavelliumRopePhysicsTests.swift in Sources */,
+				F1290000000000000000000B /* RopeDynamicsSolverTests.swift in Sources */,
 				AA0000000000000000000089 /* BoardSourceBoundaryAudit.swift in Sources */,
 				AA00000000000000000000A1 /* TelemetryTests.swift in Sources */,
 				AA00000000000000000000A2 /* BoardPickerFiltersTests.swift in Sources */,
@@ -1150,6 +1174,7 @@
 		FF0000000000000000000011 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -DACCELERATE_NEW_LAPACK";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -1190,6 +1215,7 @@
 		FF0000000000000000000012 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				OTHER_SWIFT_FLAGS = "$(inherited) -Xcc -DACCELERATE_NEW_LAPACK";
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;

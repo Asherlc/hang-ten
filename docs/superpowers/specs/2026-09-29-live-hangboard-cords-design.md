@@ -173,7 +173,7 @@ validated settled result; it does not return to manually authored contacts.
 
 The following are proposed engineering tolerances, not physical product
 measurements. Measure them with the actual final CAD collision solid and the
-user-requested 6 mm-radius round-cord display adaptation of the photographed
+user-confirmed 3.5 mm-radius round-cord display adaptation of the photographed
 flat sling. Use the increased radius when seeding, solving, and evaluating.
 
 1. The central passage carries exactly one continuous loop. Both support

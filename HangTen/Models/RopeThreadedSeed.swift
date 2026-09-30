@@ -3,6 +3,7 @@ import simd
 /// Computes a feasible threaded chain. Geometry-derived bearing points are
 /// initialization only; the dynamics solver may slide them within each region.
 enum RopeThreadedSeed {
+    enum Placement {case gravityBearing,apertureCenter}
     private struct Route {
         let rope: RopePhysicsRope
         var points: [SIMD3<Double>]
@@ -11,7 +12,7 @@ enum RopeThreadedSeed {
     }
 
     static func make(input: RopePhysicsInput, profileID: String, orientation: simd_quatd,
-                     collider: RopeTriangleCollider) throws -> RopeSimulationState {
+                     collider: RopeTriangleCollider, placement:Placement = .gravityBearing) throws -> RopeSimulationState {
         guard let profile=input.profiles.first(where:{$0.id == profileID}),
               orientation.vector.x.isFinite, orientation.vector.y.isFinite,
               orientation.vector.z.isFinite, orientation.vector.w.isFinite,
@@ -26,7 +27,15 @@ enum RopeThreadedSeed {
             var targets:[SIMD3<Double>]=[]
             for node in rope.nodes {
                 if let id=node.portalID, let portal=portalMap[id] {
-                    targets.append(try RopeRegionGeometry.bearing(portal,radius:rope.radius,up:up))
+                    switch placement {
+                    case .gravityBearing:
+                        targets.append(try RopeRegionGeometry.bearing(portal,radius:rope.radius,up:up))
+                    case .apertureCenter:
+                        // A geometry-derived unseated initialization also lets
+                        // tests establish that dynamics computes the bearing.
+                        let region=try RopeRegionGeometry.erodedBoundary(portal,radius:rope.radius)
+                        targets.append(region.reduce(.zero,+)/Double(region.count))
+                    }
                 } else if let point=node.point {
                     targets.append(node.kind == "support" ? orientation.inverse.act(point-SIMD3(0,height,0)) : point)
                 } else { throw RopePhysicsError.invalid("Missing seed graph target") }
@@ -138,8 +147,10 @@ enum RopeThreadedSeed {
                 restLengths:rest,positions:positions,previousPositions:positions,velocities:Array(repeating:.zero,count:positions.count),
                 supports:supports,attachments:attachments,portals:portals,channelSegments:channels))
         }
-        return RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardHeight:height,
+        var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardHeight:height,
                                    boardVerticalVelocity:0,orientation:orientation,ropes:chains)
+        try RopePassageTopology.refresh(state:&state,input:input)
+        return state
     }
 
     private struct Heap {

@@ -190,3 +190,27 @@ The native board and USDZ hashes are unchanged. Matching Python validation,
 Swift descriptor, collider and seed tests pass; live settling/rendering is
 still pending its numerical gate. This input correction does not claim that
 the existing static renderer already uses the new diameter.
+
+## Live numerical gate, 7 mm cord
+
+The current coupled nonlinear solver passes 30 host tests (224.543 s), with
+29 full iOS Simulator tests plus the updated nine-test dynamics suite passing.
+The suite covers upright/90°/180° rotations, repeated reversals, deterministic
+repetition, half steps, genuine initially unseated aperture geometry, and actual
+material feeding through both mouths while each material link retains its rest
+length. Every accepted frame meets the 0.5% local strain, 0.5 mm total length,
+finite-radius clearance and topology gates. The 90° diagnostic settles in
+1.2375 simulated seconds. This is numerical evidence, not device performance.
+
+The solver uses a simultaneous mass-metric constrained solve with tensile
+geometric stiffness, unilateral multi-face contact, nonlinear descent checks,
+sliding geometric portal crossings, and conservative wood/self-contact sweeps.
+The retained 1 kg board mass, 0.01 kg/m rope mass and 18 s⁻¹ velocity damping
+are display estimates, not manufacturer measurements. Contact positions are
+computed from the native solid; cached sling contact points are not constraints.
+Scene integration and displayed 7 mm cord remain pending. No factory grip/channel
+mapping or flat-sling internal route has been inferred.
+
+Verification logs: `.context/strong-owl-live-cords/task4-native.log`,
+`task4-native-feed.log`, the plan's `task-4-tests.log`, and
+`task4-package-suite.log` (411 Python tests passed).

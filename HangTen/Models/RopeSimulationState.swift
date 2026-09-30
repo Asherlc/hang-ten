@@ -1,5 +1,19 @@
 import simd
 
+struct RopePortalCrossing: Sendable, Equatable {
+    let segment: Int
+    let fraction: Double
+    var materialCoordinate: Double { Double(segment)+fraction }
+    func point(in positions: [SIMD3<Double>]) -> SIMD3<Double> {
+        positions[segment]+(positions[segment+1]-positions[segment])*fraction
+    }
+}
+
+struct RopeChannelSpan: Sendable {
+    let start: RopePortalCrossing
+    let end: RopePortalCrossing
+}
+
 struct RopeChainState: Sendable {
     let id: String
     let radius: Double
@@ -10,8 +24,12 @@ struct RopeChainState: Sendable {
     var velocities: [SIMD3<Double>]
     let supports: [Int: SIMD3<Double>]
     let attachments: [Int: SIMD3<Double>]
+    // Seed labels only. Runtime topology follows geometric crossings and
+    // never constrains these particular material particles to a mouth.
     let portals: [Int: String]
     let channelSegments: [Int: String]
+    var portalCrossings: [String: RopePortalCrossing] = [:]
+    var channelSpans: [String: RopeChannelSpan] = [:]
 }
 
 struct RopeSimulationState: Sendable {
@@ -27,6 +45,66 @@ struct RopeSimulationState: Sendable {
     }
     func worldPoint(_ board: SIMD3<Double>) -> SIMD3<Double> {
         orientation.act(board) + SIMD3(0,boardHeight,0)
+    }
+}
+
+enum RopePassageTopology {
+    /// Finds the ordered crossings of the evidenced graph. A crossing can
+    /// move through consecutive links while material rest lengths stay fixed.
+    static func refresh(state: inout RopeSimulationState, input: RopePhysicsInput) throws {
+        guard let profile=input.profiles.first(where:{$0.id == state.profileID}) else {
+            throw RopePhysicsError.invalid("Missing topology profile")
+        }
+        let portals=Dictionary(uniqueKeysWithValues:input.portals.map{($0.id,$0)})
+        for r in state.ropes.indices {
+            guard let graph=profile.ropes.first(where:{$0.id == state.ropes[r].id}) else {
+                throw RopePhysicsError.invalid("Missing topology graph")
+            }
+            let points=state.ropes[r].positions.map{state.boardPoint($0)}
+            var crossings:[String:RopePortalCrossing]=[:]
+            var previous = -Double.infinity
+            for node in graph.nodes {
+                guard let id=node.portalID,let portal=portals[id] else {continue}
+                var candidates:[RopePortalCrossing]=[]
+                for i in 0..<(points.count-1) {
+                    let a=points[i],delta=points[i+1]-a
+                    let denominator=simd_dot(delta,portal.normal)
+                    guard abs(denominator)>1e-12 else {continue}
+                    let f=simd_dot(portal.center-a,portal.normal)/denominator
+                    guard f >= -1e-8,f <= 1+1e-8 else {continue}
+                    let crossing=RopePortalCrossing(segment:i,fraction:min(1,max(0,f)))
+                    guard crossing.materialCoordinate>previous+1e-7 else {continue}
+                    let point=a+delta*crossing.fraction
+                    // Leave a bounded recovery region for an inertial trial;
+                    // acceptance separately checks the eroded actual aperture.
+                    guard boundaryMargin(point,portal:portal) >= -0.002 else {continue}
+                    candidates.append(crossing)
+                }
+                guard let selected=candidates.min(by:{$0.materialCoordinate<$1.materialCoordinate}) else {
+                    throw RopePhysicsError.invalid("Lost ordered portal crossing \(id)")
+                }
+                crossings[id]=selected;previous=selected.materialCoordinate
+            }
+            var spans:[String:RopeChannelSpan]=[:]
+            for (i,edge) in graph.edges.enumerated() where edge.kind == "channel" {
+                guard let id=edge.channelID,let a=graph.nodes[i].portalID,let b=graph.nodes[i+1].portalID,
+                      let start=crossings[a],let end=crossings[b],start.materialCoordinate<end.materialCoordinate else {
+                    throw RopePhysicsError.invalid("Lost channel traversal")
+                }
+                spans[id]=RopeChannelSpan(start:start,end:end)
+            }
+            state.ropes[r].portalCrossings=crossings
+            state.ropes[r].channelSpans=spans
+        }
+    }
+
+    static func boundaryMargin(_ point: SIMD3<Double>,portal: RopePortalRegion) -> Double {
+        portal.boundary.indices.reduce(Double.infinity) {value,i in
+            let a=portal.boundary[i],b=portal.boundary[(i+1)%portal.boundary.count]
+            var inward=simd_normalize(simd_cross(portal.normal,b-a))
+            if simd_dot(inward,portal.center-a)<0 {inward = -inward}
+            return min(value,simd_dot(point-a,inward))
+        }
     }
 }
 

@@ -70,4 +70,22 @@ final class RopeTriangleColliderTests: XCTestCase {
         faces[0] = SIMD3(faces[0].x, faces[0].z, faces[0].y)
         XCTAssertThrowsError(try RopeTriangleCollider(mesh:RopeCollisionMesh(vertices:mesh.vertices,triangles:faces)))
     }
+
+    func testCornerContactRetainsBothBearingNormals() throws {
+        let walls=[Self.box(minimum:SIMD3(0.012,-0.02,-0.01),maximum:SIMD3(0.02,0.03,0.01)),
+                   Self.box(minimum:SIMD3(-0.012,0.0155,-0.01),maximum:SIMD3(0.012,0.025,0.01))]
+        var vertices:[SIMD3<Double>]=[],triangles:[SIMD3<Int>]=[]
+        for wall in walls {
+            let offset=vertices.count
+            vertices += wall.vertices
+            triangles += wall.triangles.map{$0 &+ SIMD3(repeating:offset)}
+        }
+        let collider=try RopeTriangleCollider(mesh:RopeCollisionMesh(vertices:vertices,triangles:triangles))
+        let point=SIMD3<Double>(0.0084,0.0119,0)
+        let hits=collider.segmentContacts(from:point,to:point,radius:0.00365)
+        XCTAssertTrue(hits.contains{simd_dot($0.normal,SIMD3(-1,0,0))>0.999})
+        XCTAssertTrue(hits.contains{simd_dot($0.normal,SIMD3(0,-1,0))>0.999})
+        for hit in hits {XCTAssertEqual(hit.penetrationDepth,0.00005,accuracy:1e-9)}
+        XCTAssertTrue(collider.segmentContacts(from:SIMD3(0,0,0),to:SIMD3(0,0,0),radius:0.00365).isEmpty)
+    }
 }

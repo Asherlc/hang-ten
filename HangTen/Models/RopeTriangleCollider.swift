@@ -99,6 +99,12 @@ struct RopeTriangleCollider: Sendable {
         return contains(point) ? -distance : distance
     }
 
+    func segmentClearance(from start: SIMD3<Double>, to end: SIMD3<Double>) -> Double {
+        let distance=closestSegment(start,end).distance
+        if distance < 1e-10 { return 0 }
+        return contains(start) || contains(end) ? -distance : distance
+    }
+
     func segmentContact(from start: SIMD3<Double>, to end: SIMD3<Double>, radius: Double) -> RopeSegmentContact? {
         let closest=closestSegment(start,end)
         var contact=closest.contact
@@ -115,6 +121,51 @@ struct RopeTriangleCollider: Sendable {
         guard closest.distance < radius else { return nil }
         return RopeSegmentContact(centerlinePoint:contact.centerlinePoint,surfacePoint:contact.surfacePoint,normal:contact.normal,
                                   fraction:contact.fraction,penetrationDepth:radius-closest.distance)
+    }
+
+    /// Retains independent nearby surface witnesses. A single closest normal
+    /// cannot describe simultaneous contact with both walls of an inner corner.
+    /// Exact triangle distances supply the manifold; coplanar duplicate rows
+    /// are merged without replacing distinct normals or material fractions.
+    func segmentContacts(from start:SIMD3<Double>,to end:SIMD3<Double>,radius:Double)->[RopeSegmentContact] {
+        if contains(start) || (start != end && contains(end)) {
+            return segmentContact(from:start,to:end,radius:radius).map{[$0]} ?? []
+        }
+        let low=simd_min(start,end),high=simd_max(start,end),squareRadius=radius*radius
+        var stack=[0],faces:[Int]=[],result:[RopeSegmentContact]=[]
+        while let index=stack.popLast() {
+            let node=tree[index],separation=simd_max(simd_max(node.minimum-high,low-node.maximum),SIMD3(repeating:0))
+            if simd_length_squared(separation)>=squareRadius {continue}
+            if node.left>=0 {stack.append(node.left);stack.append(node.right)}
+            else {faces += node.faces}
+        }
+        for index in faces.sorted() {
+            let face=mesh.triangles[index],a=mesh.vertices[face.x],b=mesh.vertices[face.y],c=mesh.vertices[face.z]
+            let faceNormal=simd_normalize(simd_cross(b-a,c-a))
+            var best=squareRadius,witness:RopeSegmentContact?
+            func consider(_ p:SIMD3<Double>,_ q:SIMD3<Double>,_ fraction:Double) {
+                let distanceSquared=simd_length_squared(p-q)
+                guard distanceSquared<best else{return}
+                best=distanceSquared
+                let distance=sqrt(distanceSquared)
+                witness=RopeSegmentContact(centerlinePoint:p,surfacePoint:q,
+                    normal:distance>1e-10 ? (p-q)/distance:faceNormal,fraction:fraction,penetrationDepth:radius-distance)
+            }
+            consider(start,Self.triangleClosest(start,a,b,c),0)
+            if start != end {
+                consider(end,Self.triangleClosest(end,a,b,c),1)
+                if let t=Self.rayTriangle(start,end-start,a,b,c),t>=0,t<=1 {
+                    let p=start+(end-start)*t;consider(p,p,t)
+                }
+                let ab=Self.segmentPair(start,end,a,b),bc=Self.segmentPair(start,end,b,c),ca=Self.segmentPair(start,end,c,a)
+                consider(ab.0,ab.1,ab.2);consider(bc.0,bc.1,bc.2);consider(ca.0,ca.1,ca.2)
+            }
+            guard let hit=witness else{continue}
+            if let duplicate=result.firstIndex(where:{abs($0.fraction-hit.fraction)<1e-6 && simd_dot($0.normal,hit.normal)>1-1e-8}) {
+                if hit.penetrationDepth>result[duplicate].penetrationDepth {result[duplicate]=hit}
+            } else {result.append(hit)}
+        }
+        return result
     }
 
     /// Conservative advancement uses the Lipschitz bound on segment motion.
@@ -234,7 +285,7 @@ struct RopeTriangleCollider: Sendable {
         return a+ab*(vb*inverse)+ac*(vc*inverse)
     }
 
-    private static func segmentPair(_ p: SIMD3<Double>, _ q: SIMD3<Double>, _ a: SIMD3<Double>, _ b: SIMD3<Double>) -> (SIMD3<Double>,SIMD3<Double>,Double) {
+    static func segmentPair(_ p: SIMD3<Double>, _ q: SIMD3<Double>, _ a: SIMD3<Double>, _ b: SIMD3<Double>) -> (SIMD3<Double>,SIMD3<Double>,Double) {
         let d1=q-p, d2=b-a, r=p-a, aa=simd_dot(d1,d1), ee=simd_dot(d2,d2), f=simd_dot(d2,r)
         var s=0.0, t=0.0
         if aa <= 1e-24 { t=min(1,max(0,f/ee)) }
