@@ -671,11 +671,12 @@
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
       "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/app-review/validation.json",
-      "geometryAcceptance": "pending one-by-one user review",
+      "geometryAcceptance": "accepted shown native body and revised displayed cords with Y",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
       "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
-      "reviewRevision": "2026-09-30: UNLEVEL cord front entry corrected in every pose with existing native 3D tightening; individual user review pending.",
-      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/verification.json"
+      "reviewRevision": "2026-09-30: source-backed front entry and native routes verified; user accepted the displayed native body and revised cords with Y.",
+      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/verification.json",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/human-review.json"
     },
     "frictitious-nug": {
       "source": "Hangboards/frictitious-nug/frictitious-nug.FCStd",
@@ -1184,7 +1185,8 @@
       "scope": "Source-backed front mouth axes plus existing native local 3D tightening and hanging height; fixed actual mouths/support, CAD source/model/descriptor, cord dimensions and pose rotations/cameras preserved.",
       "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
       "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/front-entry-review/review.md",
-      "geometryAcceptance": "pending revised user review"
+      "geometryAcceptance": "accepted shown native body and revised displayed cords with Y",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-unlevel/human-review.json"
     }
   ]
 }

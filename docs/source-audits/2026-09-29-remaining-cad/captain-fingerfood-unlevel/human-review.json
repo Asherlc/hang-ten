@@ -1,8 +1,8 @@
 {
   "package": "captain-fingerfood-unlevel",
   "reviewNumber": 3,
-  "status": "pending",
-  "sourceApproval": "Manufacturer evidence approved earlier; individual geometry acceptance remains pending.",
+  "status": "reviewed; shown native body and revised displayed cords accepted",
+  "sourceApproval": "Retained manufacturer evidence was approved earlier; this reply accepts the displayed CAD body and cord revision.",
   "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
   "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e",
   "modelSHA256": "ea9ae2ffbd6ca8995bb5779ef1f5220da7166e8c324335718075b530093fbc47",
@@ -15,8 +15,33 @@
     "front-entry-review/edge20-front-front-detail.png": "48342afa40b8351994d514778cd991aa958a99c29bb1a8756d10b7a3bc79ee22",
     "front-entry-review/edge20-front-side-detail.png": "364ea578f839677c70d99c109342aaee68602ffb08b52328ba92e1899fbfae60",
     "front-entry-review/edge20-front-top-detail.png": "ec6ee70a9edad3d34d17ce61d09d93023618b7609a2f66a8f9113d7298255c8b",
-    "front-entry-review/pocket-right-end-front-detail.png": "cae5c2ae675d476127300191649442acb92e80bdcc6d7f4601001e19003fad1c"
+    "front-entry-review/pocket-right-end-front-detail.png": "cae5c2ae675d476127300191649442acb92e80bdcc6d7f4601001e19003fad1c",
+    "comparison-sheet.png": "924563559976a188eadb1ba6cc741aa42d677a01e72f4c6aefb245410f357aa8"
   },
   "requestedReview": "UNLEVEL body geometry and revised displayed cords, including the 90 degree pocket pose.",
-  "history": []
+  "history": [
+    {
+      "date": "2026-09-30",
+      "reviewer": "asherlc",
+      "question": "Does this one look right?",
+      "answer": "Y",
+      "revisionCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+      "acceptedScope": "Displayed native CAD body in the front/side/top comparison and revised display cord entry in the default and 90 degree pocket comparisons.",
+      "shownViewSHA256": {
+        "comparison-sheet.png": "924563559976a188eadb1ba6cc741aa42d677a01e72f4c6aefb245410f357aa8",
+        "front-entry-review/edge20-front-front-detail.png": "48342afa40b8351994d514778cd991aa958a99c29bb1a8756d10b7a3bc79ee22",
+        "front-entry-review/pocket-right-end-front-detail.png": "cae5c2ae675d476127300191649442acb92e80bdcc6d7f4601001e19003fad1c"
+      },
+      "suspensionSHA256": "83d4faec48fab8b6d82c44e1fc0496099c6effe762cbf350b5c8205e432f588e"
+    }
+  ],
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 3,
+  "boardID": "captain-fingerfood.unlevel",
+  "answer": "Y",
+  "acceptedScope": "Displayed native CAD body in the front/side/top comparison and revised display cord entry in the default and 90 degree pocket comparisons.",
+  "revisionCommit": "47d472b57ff86cfbea2dafbe87e40b9e5c3ad4ee",
+  "approvalLimit": "Display geometry acceptance does not establish manufacturer values for estimated dimensions or the unspecified hidden cord connection."
 }

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "one-by-one review in progress: Cyclops shorter cord and DUAL revised routing accepted; UNLEVEL is review #3",
+  "reviewState": "one-by-one review in progress: Cyclops, DUAL and UNLEVEL shown revisions accepted; The NUG is review #4",
   "boards": [
     {
       "number": 1,
@@ -71,7 +71,7 @@
       "package": "captain-fingerfood-unlevel",
       "boardID": "captain-fingerfood.unlevel",
       "name": "Captain Fingerfood UNLEVEL",
-      "humanReview": "current front-entry cord revision verified; awaiting individual review",
+      "humanReview": "reviewed; shown native body and revised displayed cords accepted",
       "sourceSHA256": "9d9790500d6fd79023f9e0cd56701b952bbb93b98caca085ac422a52765138df",
       "reviewPage": "captain-fingerfood-unlevel/geometry-review.html",
       "sourceAudit": "captain-fingerfood-unlevel/README.md",
@@ -93,7 +93,9 @@
       "latestRevision": "captain-fingerfood-unlevel/front-entry-review/review.md",
       "cordComparisons": "captain-fingerfood-unlevel/front-entry-review/index.html",
       "runtimeRevision": "captain-fingerfood-unlevel/front-entry-review/runtime-validation.json",
-      "humanReviewRecord": "captain-fingerfood-unlevel/human-review.json"
+      "humanReviewRecord": "captain-fingerfood-unlevel/human-review.json",
+      "acceptedScope": "Displayed native CAD body in the front/side/top comparison and revised display cord entry in the default and 90 degree pocket comparisons.",
+      "reviewAnswer": "Y"
     },
     {
       "number": 4,

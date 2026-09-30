@@ -1,6 +1,6 @@
 # Remaining hangboard CAD review
 
-21 native CAD migrations prepared by three subagents. Cyclops’s shorter display cord and DUAL’s revised front-entry/90° displayed routing were accepted on 2026-09-30. The recorded scopes apply to the shown revisions. Captain Fingerfood UNLEVEL is review #3; 19 boards await one-by-one acceptance.
+21 native CAD migrations prepared by three subagents. The shown revisions for Cyclops, DUAL and UNLEVEL have been accepted on 2026-09-30; each recorded scope applies to its displayed revision. Frictitious The NUG is review #4; 18 boards await one-by-one acceptance.
 
 [Cyclops review response and exact asset identities](aelith-cyclops-011/human-review.json).
 
@@ -38,4 +38,4 @@ Seven active migrations were left unchanged: `tension-grindstone-original`, `ten
 
 [Final validation](batch-validation.json). [Independent review](final-independent-review.json). [Historical report notes](validation-notes.md).
 
-DUAL’s general front-hole entry was accepted with “y”; its revised 90° lower-cord routing was then accepted with “lgtm” after inline front/side/top comparisons. [Recorded approval](captain-fingerfood-dual/human-review.json). Review is now on Captain Fingerfood UNLEVEL (#3); its corrected front-entry cords are verified and awaiting individual review. [Current UNLEVEL packet](captain-fingerfood-unlevel/front-entry-review/review.md).
+DUAL’s general front-hole entry was accepted with “y”; its revised 90° lower-cord routing was then accepted with “lgtm” after inline front/side/top comparisons. [Recorded approval](captain-fingerfood-dual/human-review.json). UNLEVEL’s shown CAD body and corrected default/90° cords were accepted with “Y”. [Recorded UNLEVEL approval](captain-fingerfood-unlevel/human-review.json). Review is now on Frictitious The NUG (#4); its manufacturer-specified 6 mm cord diameter is being corrected before presentation.
