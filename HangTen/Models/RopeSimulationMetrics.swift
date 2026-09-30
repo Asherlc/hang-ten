@@ -35,8 +35,23 @@ struct RopeSimulationMetrics: Sendable {
 
     static func selfContactPair(positions:[SIMD3<Double>],radius:Double,
                                supports:[Int:SIMD3<Double>],margin:Double=0,restLengths:[Double]?=nil) -> SIMD2<Int>? {
+        contacts(positions:positions,radius:radius,supports:supports,margin:margin,
+                 restLengths:restLengths,stopAfterFirst:true).first
+    }
+
+    /// Enumerate the complete manifold so constraint selection and nonlinear
+    /// merit do not jump between overlapping pairs as the first pair separates.
+    static func selfContactPairs(positions:[SIMD3<Double>],radius:Double,
+                                supports:[Int:SIMD3<Double>],margin:Double=0,restLengths:[Double]?=nil) -> [SIMD2<Int>] {
+        contacts(positions:positions,radius:radius,supports:supports,margin:margin,
+                 restLengths:restLengths,stopAfterFirst:false)
+    }
+
+    private static func contacts(positions:[SIMD3<Double>],radius:Double,
+                               supports:[Int:SIMD3<Double>],margin:Double=0,restLengths:[Double]?,stopAfterFirst:Bool) -> [SIMD2<Int>] {
+        var pairs:[SIMD2<Int>]=[]
         let links=positions.count-1
-        guard links>0 else{return SIMD2(0,0)}
+        guard links>0 else{return [SIMD2(0,0)]}
         var arc=[0.0]
         for i in 0..<links {arc.append(arc.last!+(restLengths?[i] ?? simd_distance(positions[i],positions[i+1])))}
         let commonSupport = supports[0].flatMap { start in
@@ -62,17 +77,17 @@ struct RopeSimulationMetrics: Sendable {
                 // Capsules within one bend share volume along the continuous
                 // tube. A proper centerline crossing remains invalid there.
                 if commonNeighborhood {
-                    if distance<1e-8,let commonSupport,simd_distance(pair.0,commonSupport)>1e-6 {return SIMD2(i,j)}
+                    if distance<1e-8,let commonSupport,simd_distance(pair.0,commonSupport)>1e-6 {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
                 } else if connectedNeighborhood {
-                    if distance<1e-8 && pair.2>1e-6 && pair.2<1-1e-6 {return SIMD2(i,j)}
-                } else if distance < 2*radius-0.00005+margin {return SIMD2(i,j)}
+                    if distance<1e-8 && pair.2>1e-6 && pair.2<1-1e-6 {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
+                } else if distance < 2*radius-0.00005+margin {pairs.append(SIMD2(i,j));if stopAfterFirst{return pairs}}
             }
         }
-        return nil
+        return pairs
     }
 
     static func measure(state:RopeSimulationState,input:RopePhysicsInput,collider:RopeTriangleCollider,
-                        boardHistory:[Double]) throws -> Self {
+                        boardHistory:[Double],includeSelfContact:Bool=true) throws -> Self {
         var totalError=0.0,strain=0.0,clearance=Double.infinity,topology=true,speed=abs(state.boardVerticalVelocity)
         var failure:String?
         var margin=Double.infinity
@@ -109,7 +124,7 @@ struct RopeSimulationMetrics: Sendable {
                     topology=false;failure="Portal \(id) left eroded aperture"
                 }
             }
-            if let pair=selfContactPair(positions:rope.positions,radius:rope.radius,supports:rope.supports,restLengths:rope.restLengths) {topology=false;failure="Self contact \(pair) at \(rope.positions[pair.x]), \(rope.positions[pair.y])"}
+            if includeSelfContact,let pair=selfContactPair(positions:rope.positions,radius:rope.radius,supports:rope.supports,restLengths:rope.restLengths) {topology=false;failure="Self contact \(pair) at \(rope.positions[pair.x]), \(rope.positions[pair.y])"}
             for velocity in rope.velocities {speed=max(speed,simd_length(velocity))}
         }
         let displacement=(boardHistory.max() ?? state.boardHeight)-(boardHistory.min() ?? state.boardHeight)

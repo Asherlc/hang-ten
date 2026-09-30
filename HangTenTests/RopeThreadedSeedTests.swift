@@ -58,4 +58,21 @@ final class RopeThreadedSeedTests: XCTestCase {
         XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.0035,length:0.02),profileID:"front",orientation:upright,collider:collider))
         XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.02,length:0.55),profileID:"front",orientation:upright,collider:collider))
     }
+
+    func testSharedHeightPreservesEachRopesDeclaredMaterialBudget() throws {
+        let original=try Self.clavellium(),source=original.profiles[0].ropes[0]
+        // A small difference in two synthetic loop lengths exercises shared
+        // height initialization without pretending it is a product setup.
+        let other=RopePhysicsRope(id:"second",baselineRadius:source.baselineRadius,radius:source.radius,
+            restLength:source.restLength+0.00001,linearMass:source.linearMass,nodes:source.nodes,edges:source.edges)
+        let profile=RopePhysicsProfile(id:"front",presentationID:"front",instanceID:nil,boardMass:1,ropes:[source,other])
+        let input=RopePhysicsInput(modelSHA256:original.modelSHA256,sourceSHA256:original.sourceSHA256,
+            collision:original.collision,portals:original.portals,channels:original.channels,profiles:[profile])
+        let state=try RopeThreadedSeed.make(input:input,profileID:"front",
+            orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),collider:RopeTriangleCollider(input:input))
+        for (rope,declared) in zip(state.ropes,profile.ropes) {
+            XCTAssertEqual(rope.restLengths.reduce(0,+),declared.restLength,accuracy:1e-10)
+            XCTAssertLessThanOrEqual(rope.restLengths.indices.map {abs(simd_distance(rope.positions[$0],rope.positions[$0+1])/rope.restLengths[$0]-1)}.max()!,0.005)
+        }
+    }
 }

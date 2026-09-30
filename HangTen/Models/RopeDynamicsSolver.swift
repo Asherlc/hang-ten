@@ -45,6 +45,44 @@ struct RopeDynamicsSolver: Sendable {
         return frame
     }
 
+    /// Initialization may separate overlapping finite-radius collars near a
+    /// shared support. It never repairs a wood penetration, lost threading or
+    /// proper centerline crossing. No trial initialization is displayed.
+    mutating func projectInitialization(maxIterations:Int=500) throws -> RopeFrameSnapshot {
+        guard maxIterations>0,maxIterations<=2000 else {throw RopePhysicsError.invalid("Invalid initialization bound")}
+        var candidate=self
+        let preflight=try RopeSimulationMetrics.measure(state:state,input:input,collider:collider,
+            boardHistory:[state.boardHeight],includeSelfContact:false)
+        guard preflight.geometryAccepted else {throw RopePhysicsError.invalid("Invalid initial wood geometry or threading")}
+        for rope in state.ropes {
+            guard RopeSimulationMetrics.selfContactPair(positions:rope.positions,radius:rope.radius,
+                supports:rope.supports,margin: -2*rope.radius+0.00005+1e-8,restLengths:rope.restLengths)==nil else {
+                throw RopePhysicsError.invalid("Initial rope centerline crosses itself")
+            }
+        }
+        let prediction=state
+        for iteration in 0...maxIterations {
+            let metrics=try RopeSimulationMetrics.measure(state:candidate.state,input:input,collider:collider,
+                boardHistory:[candidate.state.boardHeight])
+            if metrics.geometryAccepted {
+                if iteration>0 {
+                    candidate.history=[(0,candidate.state.boardHeight)]
+                    candidate.distanceTension=candidate.state.ropes.map {Array(repeating:0,count:$0.restLengths.count)}
+                    for r in candidate.state.ropes.indices {
+                        candidate.state.ropes[r].previousPositions=candidate.state.ropes[r].positions
+                    }
+                }
+                candidate.acceptedMinimumClearance=metrics.minimumSegmentClearance
+                self=candidate
+                return RopeFrameSnapshot(boardHeight:state.boardHeight,orientation:state.orientation,
+                    ropes:state.ropes.map{RopeChainSnapshot(id:$0.id,radius:$0.radius,positions:$0.positions)},settled:false,metrics:metrics)
+            }
+            guard iteration<maxIterations else {break}
+            _ = try candidate.correctConstraints(prediction:prediction)
+        }
+        throw RopePhysicsError.invalid("Initial finite-radius rope contact did not converge")
+    }
+
     private enum StepFailure:Error {case sweptWoodTraversal,sweptSelfTraversal,nonlinearConvergence,geometry(RopeSimulationMetrics)}
 
     private mutating func advanceBounded(dt:Double,targetOrientation:simd_quatd,depth:Int) throws -> RopeFrameSnapshot {
@@ -215,7 +253,7 @@ struct RopeDynamicsSolver: Sendable {
                         residual:0.00005-hit.penetrationDepth,contact:true,lengthSegment:nil))
                 }
             }
-            if let pair=RopeSimulationMetrics.selfContactPair(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
+            for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
                 let i=pair.x,j=pair.y
                 let witness=RopeTriangleCollider.segmentPair(rope.positions[i],rope.positions[i+1],rope.positions[j],rope.positions[j+1])
                 let delta=witness.0-witness.1,distance=simd_length(delta),f=witness.2
@@ -233,8 +271,10 @@ struct RopeDynamicsSolver: Sendable {
         }
         // Separated candidate facets are inequalities, not initial equalities.
         // Starting them active needlessly factors/releases hundreds of rows.
-        // The loop below still inserts any inactive inequality a solve violates.
-        var activeIDs=rows.indices.filter{!rows[$0].contact || rows[$0].residual<=1e-9}
+        // Start nonlocal contacts inactive too: overlapping capsules supply
+        // redundant candidate witnesses. The active-set solve inserts every
+        // violated inequality as needed before accepting a correction.
+        var activeIDs=rows.indices.filter{!rows[$0].contact || (rows[$0].particles.count<=2 && rows[$0].residual<=1e-9)}
         var selected=activeIDs.map{rows[$0]}
         for _ in 0..<(rows.count*2+10) {
             let solved=try coupledCorrection(rows:selected,weights:weights,prediction:prediction)
@@ -415,7 +455,7 @@ struct RopeDynamicsSolver: Sendable {
                     radius:rope.radius+RopeRegionGeometry.clearance)
                 violation += hits.map{$0.penetrationDepth}.max() ?? 0
             }
-            if let pair=RopeSimulationMetrics.selfContactPair(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
+            for pair in RopeSimulationMetrics.selfContactPairs(positions:rope.positions,radius:rope.radius,supports:rope.supports,margin:0.0001,restLengths:rope.restLengths) {
                 let points=RopeTriangleCollider.segmentPair(rope.positions[pair.x],rope.positions[pair.x+1],rope.positions[pair.y],rope.positions[pair.y+1])
                 violation += max(0,2*rope.radius+0.00005-simd_distance(points.0,points.1))
             }

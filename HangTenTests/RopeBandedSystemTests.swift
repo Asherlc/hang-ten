@@ -33,5 +33,28 @@ final class RopeBandedSystemTests: XCTestCase {
         XCTAssertThrowsError(try system.addSymmetric(row:0,column:2,value:1))
         XCTAssertThrowsError(try system.solve(rhs:[0,0,0],borderColumns:[],borderMatrix:[],borderRHS:[]))
         XCTAssertThrowsError(try RopeBandedSystem(size:0,bandwidth:0))
+        XCTAssertThrowsError(try system.solve(rhs:[0,0,0],
+            borderColumns:Array(repeating:[0,0,0],count:257),
+            borderMatrix:Array(repeating:Array(repeating:0,count:257),count:257),
+            borderRHS:Array(repeating:0,count:257)))
+    }
+
+    func testSimultaneousContactBorderBeyondThirtyTwoRows() throws {
+        var system=try RopeBandedSystem(size:3,bandwidth:0)
+        for i in 0..<3 {try system.addSymmetric(row:i,column:i,value:2)}
+        let count=40,expected=[0.2,-0.3,0.4]
+        let expectedBorder=(0..<count).map{Double($0-20)*0.01}
+        let columns=(0..<count).map{[Double($0+1)*0.001,0.002,-0.001]}
+        var matrix=Array(repeating:Array(repeating:0.0,count:count),count:count)
+        for i in 0..<count {matrix[i][i]=3}
+        let rhs=(0..<3).map {axis in
+            2*expected[axis]+(0..<count).reduce(0.0){$0+columns[$1][axis]*expectedBorder[$1]}
+        }
+        let borderRHS=(0..<count).map {i in
+            zip(columns[i],expected).reduce(0.0){$0+$1.0*$1.1}+3*expectedBorder[i]
+        }
+        let result=try system.solve(rhs:rhs,borderColumns:columns,borderMatrix:matrix,borderRHS:borderRHS)
+        for (actual,wanted) in zip(result.base,expected) {XCTAssertEqual(actual,wanted,accuracy:1e-11)}
+        for (actual,wanted) in zip(result.border,expectedBorder) {XCTAssertEqual(actual,wanted,accuracy:1e-11)}
     }
 }

@@ -30,7 +30,11 @@ struct RopeBandedSystem: Sendable {
     func solve(rhs: [Double],borderColumns: [[Double]],borderMatrix: [[Double]],borderRHS: [Double]) throws
         -> (base: [Double],border: [Double]) {
         let count=borderColumns.count
-        guard rhs.count==size,count<=32,borderRHS.count==count,borderMatrix.count==count,
+        // A thick loop can have many simultaneous nonlocal contact witnesses
+        // near its attachment. Bound both border count and the working array;
+        // a 32-row cap discarded otherwise valid contact manifolds.
+        guard rhs.count==size,count<=256,size*(count+1)<=8_000_000,
+              borderRHS.count==count,borderMatrix.count==count,
               borderColumns.allSatisfy({$0.count==size}),borderMatrix.allSatisfy({$0.count==count}),
               (rhs+borderRHS+borderColumns.flatMap{$0}+borderMatrix.flatMap{$0}+matrix).allSatisfy({$0.isFinite}) else {
             throw RopePhysicsError.invalid("Invalid rope linear solve")

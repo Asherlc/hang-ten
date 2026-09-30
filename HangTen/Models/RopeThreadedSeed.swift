@@ -43,14 +43,40 @@ enum RopeThreadedSeed {
             var route=Route(rope:rope,points:[targets[0]],nodeIndices:[0:0],channelEdges:[:])
             for (index,edge) in rope.edges.enumerated() {
                 let a=targets[index], b=targets[index+1]
+                let edgePortalID=rope.nodes[index].portalID ?? rope.nodes[index+1].portalID
+                let wrapBelow:Bool = {
+                    guard edge.kind != "channel",let id=edgePortalID,let portal=portalMap[id] else{return false}
+                    let sameFace=rope.nodes.compactMap { $0.portalID.flatMap { portalMap[$0] } }
+                        .contains { $0.id != id && simd_dot($0.normal,portal.normal)>0.99 }
+                    let projectedUp=up-portal.normal*simd_dot(up,portal.normal)
+                    let positiveBasis=simd_dot(projectedUp,SIMD3<Double>(0,1,0))*portal.normal.z>0
+                    return sameFace && edge.winding == (positiveBasis ? "counterclockwise":"clockwise")
+                }()
                 let path:[SIMD3<Double>]
                 if edge.kind == "channel" {
-                    guard let channel=input.channels.first(where:{$0.id == edge.channelID}),channel.spine.count == 2,
-                          collider.segmentContact(from:a,to:b,radius:rope.radius+RopeRegionGeometry.clearance-1e-9) == nil else {
-                        throw RopePhysicsError.invalid("Channel requires a feasible straight traversal adapter")
+                    guard let channel=input.channels.first(where:{$0.id == edge.channelID}) else {
+                        throw RopePhysicsError.invalid("Missing channel traversal")
                     }
-                    path=[a,b]
-                } else if collider.segmentContact(from:a,to:b,radius:rope.radius+RopeRegionGeometry.clearance) == nil {
+                    if channel.spine.count == 2 {
+                        path=[a,b]
+                    } else {
+                        let spine=rope.nodes[index].portalID == channel.portalIDs[0]
+                            ? channel.spine:Array(channel.spine.reversed())
+                        var stations=[0.0]
+                        for (first,second) in zip(spine,spine.dropFirst()) {
+                            stations.append(stations.last!+simd_distance(first,second))
+                        }
+                        guard let total=stations.last,total>0 else {throw RopePhysicsError.invalid("Empty curved spine")}
+                        let firstOffset=a-spine[0],lastOffset=b-spine.last!
+                        path=spine.indices.map { i in
+                            let f=stations[i]/total
+                            return spine[i]+firstOffset*(1-f)+lastOffset*f
+                        }
+                    }
+                    guard zip(path,path.dropFirst()).allSatisfy({first,second in
+                        collider.segmentContact(from:first,to:second,radius:rope.radius+RopeRegionGeometry.clearance-1e-9) == nil
+                    }) else {throw RopePhysicsError.invalid("No collision-free traversal of the native channel")}
+                } else if !wrapBelow && collider.segmentContact(from:a,to:b,radius:rope.radius+RopeRegionGeometry.clearance) == nil {
                     path=[a,b]
                 } else {
                     guard let portalID=rope.nodes[index].portalID ?? rope.nodes[index+1].portalID,
@@ -59,7 +85,7 @@ enum RopeThreadedSeed {
                     }
                     let startsAtPortal=rope.nodes[index].kind == "portal"
                     let computed=try exteriorPath(from:startsAtPortal ? a:b,to:startsAtPortal ? b:a,
-                        portal:portal,up:up,radius:rope.radius,collider:collider)
+                        portal:portal,up:up,radius:rope.radius,collider:collider,wrapBelow:wrapBelow)
                     path=startsAtPortal ? computed:Array(computed.reversed())
                 }
                 let first=route.points.count-1
@@ -115,7 +141,7 @@ enum RopeThreadedSeed {
             }
             heights.append((a+b)/2)
         }
-        guard let height=heights.first,heights.allSatisfy({abs($0-height)<0.0001}) else {
+        guard let height=heights.max(),heights.allSatisfy({abs($0-height)<0.0001}) else {
             throw RopePhysicsError.invalid("Ropes do not share a feasible board height")
         }
         var chains:[RopeChainState]=[]
@@ -142,6 +168,13 @@ enum RopeThreadedSeed {
                 if node.kind == "support" { supports[particle]=node.point! }
                 else if node.kind == "attachment" { attachments[particle]=node.point! }
                 else { portals[particle]=node.portalID! }
+            }
+            if routes.count>1 {
+                // The highest compatible board height leaves only the tiny
+                // discretization slack in the other loops. Preserve each
+                // source material budget, rather than adopting its path length.
+                let scale=route.rope.restLength/rest.reduce(0,+)
+                rest=rest.map{$0*scale}
             }
             chains.append(RopeChainState(id:route.rope.id,radius:route.rope.radius,linearMass:route.rope.linearMass,
                 restLengths:rest,positions:positions,previousPositions:positions,velocities:Array(repeating:.zero,count:positions.count),
@@ -175,7 +208,8 @@ enum RopeThreadedSeed {
     }
 
     private static func exteriorPath(from mouth:SIMD3<Double>,to anchor:SIMD3<Double>,
-        portal:RopePortalRegion,up:SIMD3<Double>,radius:Double,collider:RopeTriangleCollider) throws -> [SIMD3<Double>] {
+        portal:RopePortalRegion,up:SIMD3<Double>,radius:Double,collider:RopeTriangleCollider,
+        wrapBelow:Bool=false) throws -> [SIMD3<Double>] {
         let normal=portal.normal, projected=up-normal*simd_dot(up,normal)
         guard simd_length(projected)>1e-6 else {
             throw RopePhysicsError.invalid("Axial hanging direction requires a 3D passage adapter")
@@ -189,11 +223,23 @@ enum RopeThreadedSeed {
         let minV=Int(floor(min(projections.map{$0.y}.min()!,anchorUV.y)/spacing))-20
         let maxV=Int(ceil(max(projections.map{$0.y}.max()!,anchorUV.y)/spacing))+20
         let width=maxV-minV+1,count=(maxU-minU+1)*width
-        guard count>0,count<500_000 else{throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")}
+        let states=wrapBelow ? count*3:count
+        guard count>0,states<500_000 else{throw RopePhysicsError.invalid("Seed search exceeds bounded workspace")}
         func index(_ a:Int,_ b:Int)->Int{(a-minU)*width+b-minV}
-        func point(_ i:Int)->SIMD3<Double>{mouth+u*(Double(i/width+minU)*spacing)+v*(Double(i%width+minV)*spacing)}
-        let start=index(0,0),goal=index(Int(anchorUV.x/spacing),Int(anchorUV.y/spacing))
-        var distances=Array(repeating:Double.infinity,count:count),previous=Array(repeating:-1,count:count)
+        func point(_ i:Int)->SIMD3<Double>{let j=i%count;return mouth+u*(Double(j/width+minU)*spacing)+v*(Double(j%width+minV)*spacing)}
+        let centerU=(projections.map{$0.x}.min()!+projections.map{$0.x}.max()!)/2
+        let centerV=(projections.map{$0.y}.min()!+projections.map{$0.y}.max()!)/2
+        func crossing(_ a:SIMD3<Double>,_ b:SIMD3<Double>)->Int {
+            guard wrapBelow else{return 0}
+            let av=simd_dot(a-mouth,v)-centerV,bv=simd_dot(b-mouth,v)-centerV
+            guard (av>=0) != (bv>=0) else{return 0}
+            let fraction=av/(av-bv),hit=a+(b-a)*fraction
+            guard simd_dot(hit-mouth,u)<centerU else{return 0}
+            return av>=0 ? 1:-1
+        }
+        let start=index(0,0)+(wrapBelow ? count:0)
+        let goal=index(Int(anchorUV.x/spacing),Int(anchorUV.y/spacing))+(wrapBelow ? 2*count:0)
+        var distances=Array(repeating:Double.infinity,count:states),previous=Array(repeating:-1,count:states)
         var clearance=Array(repeating:Double.nan,count:count),heap=Heap()
         distances[start]=0;heap.push((simd_distance(mouth,anchor),start))
         func allowed(_ i:Int) -> Double {
@@ -201,20 +247,23 @@ enum RopeThreadedSeed {
                 let p=point(i)
                 // Stay on this mouth's exterior side until above the wood.
                 // This preserves the selected threading class during search.
-                if simd_dot(p-mouth,v) < -1e-10 && simd_dot(p-mouth,u)<top {clearance[i] = -.infinity}
+                if !wrapBelow && simd_dot(p-mouth,v) < -1e-10 && simd_dot(p-mouth,u)<top {clearance[i] = -.infinity}
                 else{clearance[i]=collider.signedDistance(at:p)}
             }
             return clearance[i]
         }
         while let (_,current)=heap.pop() {
             if current == goal { break }
-            let a=current/width+minU,b=current%width+minV,p=point(current)
+            let cell=current%count,a=cell/width+minU,b=cell%width+minV,p=point(current)
             for du in -1...1 {for dv in -1...1 where du != 0 || dv != 0 {
                 let aa=a+du,bb=b+dv
                 guard aa>=minU,aa<=maxU,bb>=minV,bb<=maxV else{continue}
-                let next=index(aa,bb),q=point(next),length=simd_distance(p,q)
-                guard distances[current]+length < distances[next]-1e-12,allowed(next)>=offset-1e-10 else{continue}
-                if min(allowed(current),allowed(next))<offset+length/2,
+                let nextCell=index(aa,bb),q=point(nextCell),length=simd_distance(p,q)
+                let winding=(wrapBelow ? current/count-1:0)+crossing(p,q)
+                guard !wrapBelow || (-1...1).contains(winding) else{continue}
+                let next=nextCell+(wrapBelow ? (winding+1)*count:0)
+                guard distances[current]+length < distances[next]-1e-12,allowed(nextCell)>=offset-1e-10 else{continue}
+                if min(allowed(cell),allowed(nextCell))<offset+length/2,
                    collider.segmentContact(from:p,to:q,radius:offset-1e-10) != nil {continue}
                 distances[next]=distances[current]+length;previous[next]=current
                 heap.push((distances[next]+simd_distance(q,anchor),next))
@@ -230,7 +279,12 @@ enum RopeThreadedSeed {
         var result=[path[0]],i=0
         while i<path.count-1 {
             var next=path.count-1
-            while next>i+1 && collider.segmentContact(from:path[i],to:path[next],radius:offset-1e-10) != nil {next -= 1}
+            func preservesWinding(_ last:Int)->Bool {
+                guard wrapBelow else{return true}
+                let original=(i..<last).reduce(0){$0+crossing(path[$1],path[$1+1])}
+                return crossing(path[i],path[last]) == original
+            }
+            while next>i+1 && (!preservesWinding(next) || collider.segmentContact(from:path[i],to:path[next],radius:offset-1e-10) != nil) {next -= 1}
             guard collider.segmentContact(from:path[i],to:path[next],radius:offset-1e-10) == nil else{
                 throw RopePhysicsError.invalid("Grid route failed exact segment clearance")
             }
