@@ -148,12 +148,18 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
+            // Weight-flow tests use a fixed raster board instead of a persisted
+            // selection with unrelated asynchronous model-preview work.
+            "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
         XCTAssertTrue(
             app.otherElements["plan.initialWeight.setup"].waitForExistence(timeout: 15),
             "The plan review route should take precedence over fixture-only review flags."
         )
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -167,9 +173,16 @@ final class InitialWeightSetupUITests: XCTestCase {
             object: bodyweight
         )
         XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // Switch.tap() targets the center of the whole track. On iOS 26 that point is
-        // beside the off-state thumb and did not toggle in the simulator; hit the thumb.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
+        XCTAssertLessThan(
+            bodyweight.frame.width,
+            app.frame.width / 3,
+            "The switch accessibility target should not span the full weight-tracking row."
+        )
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        tapVisibleControl(
+            bodyweight,
+            normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
+        )
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -197,6 +210,39 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(app.switches["workout.initialWeight.addBodyweight"].value as? String, "1")
     }
 
+    func testManualWeightLabelTogglesTheSameSwitch() {
+        app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
+
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let setup = app.otherElements["plan.initialWeight.setup"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        XCTAssertEqual(bodyweight.label, "Add bodyweight")
+
+        // The visible label is outside the switch's accessibility frame.
+        let labelPoint = CGPoint(
+            x: setup.frame.minX + setup.frame.width * 0.1,
+            y: bodyweight.frame.midY
+        )
+        XCTAssertTrue(setup.frame.contains(labelPoint))
+        XCTAssertLessThan(labelPoint.x, bodyweight.frame.minX)
+        let label = setup.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
+            .withOffset(CGVector(
+                dx: labelPoint.x - setup.frame.minX,
+                dy: labelPoint.y - setup.frame.minY
+            ))
+        label.tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed)
+    }
+
     func testInlineScaleConnectionStartsWithExistingSensorPreparation() {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Scale"].tap()
         let connect = app.buttons["plan.initialWeight.connect"]
@@ -216,7 +262,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         tapStartRoutine()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
+        // Navigation can retain the plan's accessibility elements behind the
+        // preparation sheet. Its connection control must not be interactive.
+        XCTAssertFalse(
+            connect.isHittable,
+            "The plan's connection button must not be interactive during preparation."
+        )
         skip.tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
@@ -353,14 +404,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // On iOS 26 the native SwiftUI Menu exposes its visible row with a
-        // valid button frame, but its zero-sized UICollectionView container
-        // makes XCTest report isHittable=false. Tap the visible row's center
-        // and verify the selected hand below.
-        left.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
-
-        // Wait a moment for the UI to update after the tap
-        Thread.sleep(forTimeInterval: 1.0)
+        // The menu's accessibility container can have an invalid frame on iOS
+        // 26. Capture the visible row's finite frame and tap from the screen anchor.
+        tapVisibleControl(left, requireHittable: false)
 
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
@@ -398,5 +444,51 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             app.swipeUp()
         }
         start.tap()
+    }
+}
+
+extension XCTestCase {
+    /// Tap a measured screen position without resolving the control's window again.
+    /// SwiftUI menus and switches can expose finite control frames beneath
+    /// invalid window containers on iOS 26. SpringBoard provides the screen anchor
+    /// while the tested app remains foregrounded.
+    func tapVisibleControl(
+        _ element: XCUIElement,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        var offset: CGVector?
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                guard element.exists, element.isEnabled,
+                      !requireHittable || element.isHittable else { return false }
+                let frame = element.frame
+                let viewport = screen.frame
+                guard frame.minX.isFinite, frame.minY.isFinite,
+                      frame.width.isFinite, frame.height.isFinite,
+                      frame.width > 0, frame.height > 0,
+                      viewport.minX.isFinite, viewport.minY.isFinite,
+                      viewport.width.isFinite, viewport.height.isFinite,
+                      viewport.width > 0, viewport.height > 0 else { return false }
+                let point = CGPoint(
+                    x: frame.minX + frame.width * normalizedOffset.dx,
+                    y: frame.minY + frame.height * normalizedOffset.dy
+                )
+                guard viewport.contains(point) else { return false }
+                offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                return true
+            },
+            object: element
+        )
+        guard XCTWaiter.wait(for: [ready], timeout: 10) == .completed,
+              let offset else {
+            XCTFail("Control must have a finite, visible frame before tapping", file: file, line: line)
+            return
+        }
+        let root = screen.coordinate(withNormalizedOffset: .zero)
+        root.withOffset(offset).tap()
     }
 }

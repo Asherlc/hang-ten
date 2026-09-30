@@ -2345,8 +2345,10 @@ enum LegacyPlanSeedCatalog {
     private static let largeEdgeTarget = ContactRequirement.edge(
         depth: .category(.large)
     )
+    // Inferred Metolius-only 8–19 mm Small Edge band for point depths.
+    // Account for HoldDepth's 1 mm numeric tolerance; leave the generic size category unchanged.
     private static let smallEdgeTarget = ContactRequirement.edge(
-        depth: .category(.small)
+        depth: .range(.init(minimum: 9, maximum: 18))
     )
     private static let largeSlopeTarget = ContactRequirement(
         kind: .sloper,
@@ -2660,7 +2662,7 @@ enum LegacyPlanSeedCatalog {
             ],
             [MetoliusCycleBuilder.fixed(title: "Medium-edge hang", instruction: "Hang from a medium edge for 25 seconds.", duration: 25, phase: .hang, targets: [mediumEdgeTarget])],
             [
-                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [largeSlopeTarget]),
+                MetoliusCycleBuilder.fixed(title: "Slope hang", instruction: "Hang from a slope for 15 seconds.", duration: 15, phase: .hang, targets: [.kind(.sloper)]),
                 MetoliusCycleBuilder.pullUps(count: 3, title: "Jug pull-ups", instruction: "Do 3 pull-ups on the jugs.", phase: .pull, targets: [.kind(.jug)])
             ],
             [MetoliusCycleBuilder.maxEffort(title: "Maximum sloper hang", instruction: "Hang from a round sloper for as long as you can.", phase: .hang, targets: [roundSloperTarget])]
