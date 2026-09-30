@@ -391,8 +391,8 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
         // The menu's accessibility container can have an invalid frame on iOS
-        // 26. Capture the visible row's finite frame and tap from the screen anchor.
-        tapVisibleControl(left, requireHittable: false)
+        // 26. Capture the visible row's finite frame and target its owning app.
+        tapVisibleControl(left, in: app, requireHittable: false)
 
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
@@ -436,16 +436,19 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 extension XCTestCase {
     /// Tap a measured screen position without resolving the control's window again.
     /// SwiftUI menus and switches can expose finite control frames beneath
-    /// invalid window containers on iOS 26. SpringBoard provides the screen anchor
-    /// while the tested app remains foregrounded.
+    /// invalid window containers on iOS 26. Use the owning application as the
+    /// coordinate anchor so the event targets that application's process.
     func tapVisibleControl(
         _ element: XCUIElement,
+        in application: XCUIApplication,
         normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
         requireHittable: Bool = true,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        // A screen coordinate rooted in Springboard targets Springboard's
+        // process. Menu rows must receive the event in their owning app.
+        let screen = application
         var offset: CGVector?
         let ready = XCTNSPredicateExpectation(
             predicate: NSPredicate { _, _ in

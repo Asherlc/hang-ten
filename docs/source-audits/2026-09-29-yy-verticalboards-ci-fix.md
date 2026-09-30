@@ -263,3 +263,39 @@ original unit failure blocked in the same call. No expectation timeout or
 production persistence code was changed. The original logs, result bundle,
 exported diagnostics, screenshots, and synthesized events are retained under
 `.context/supreme-zebra-cad-validation/ci-6296-*`.
+
+### SDK 26.5 rendering and menu-event investigation
+
+Run `36689422401` on `119306ca3` passed Python, Swift units, and the
+purchase/settings/workout shard. Its board shard ran 21 tests with five
+failures: Forge retained its orbit after reset; Megalith, Natural, and Pro
+retained their canonical geometry after dragging; the one-handed Left menu
+selection retained Alternate hands. DoorMount and Evo passed their complete
+rendered interaction sequence. Pro's independent recording corroborates the
+frozen canonical pose while RealityView's diagnostic revision advances from
+2 to 11. Megalith advances from 2 to 8. Active root/camera membership and AX
+projection changes therefore do not certify the presented camera pose.
+
+The Left-menu synthesized event targets Springboard PID 4670, while Hang Ten
+is PID 57460. The recording shows the menu remaining open after that event.
+The finite-frame helper now takes the owning application explicitly and
+anchors the coordinate in that application; the menu-window workaround and
+single tap remain intact. CI must establish the behavioral result.
+
+Two read-only reviewers independently recommend one diagnostic invocation
+that compares camera transforms, native projections, and engine-frame
+callbacks. The temporary DEBUG trace is guarded by the existing board-review
+diagnostics environment flag, writes only logs, retains a scene subscription,
+and cancels it on disappearance. It neither changes published diagnostic
+state nor schedules redraws. This is investigation code and must be removed
+before merge; it is not a claimed rendering fix.
+
+The local picker baseline and subsequent diagnostic invocation were
+interrupted before their interactions because startup blocked in
+`HealthKitService.authorizationState`. Owned-process samples identify the
+main-thread synchronous HealthKit XPC wait; the owned daemon sample identifies
+its background-task submission wait. Rebooting the exact owned simulator did
+not establish a valid comparison. No permission policy, authorization state,
+assertion, or retry loop was changed. CI's SDK 26.5 run must supply the
+remaining evidence. Local compilation and the 22 CI-contract tests passed;
+no successful local UI result is claimed for this investigation.
