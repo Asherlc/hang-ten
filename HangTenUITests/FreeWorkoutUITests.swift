@@ -80,12 +80,24 @@ final class FreeWorkoutUITests: XCTestCase {
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
+        // XCTest can wait for the app to idle until a short guided hang has
+        // already completed. Give this cancellation test enough time to find
+        // and tap Cancel without racing the default ten-second countdown.
+        let duration = app.textFields.matching(NSPredicate(format: "placeholderValue == %@", "sec")).firstMatch
+        tapHittable(duration, timeout: 10)
+        duration.typeText("120")
+        XCTAssertEqual(duration.value as? String, "120")
+        tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
+
         let startSet = firstMatching(
             in: app,
             identifiers: ["freeWorkout.startSet"],
             labels: ["Start Set"]
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
+        if !startSet.isHittable {
+            app.scrollViews["freeWorkout.log.scroll"].swipeUp()
+        }
         tapHittable(startSet, timeout: 15)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
@@ -221,7 +233,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         // Focused actions sit below the board preview on an iPhone. Scroll them into view
         // before querying XCTest, which otherwise cannot see the lazy row controls.
-        let logScrollView = app.scrollViews.firstMatch
+        let logScrollView = app.scrollViews["freeWorkout.log.scroll"]
         XCTAssertTrue(logScrollView.waitForExistence(timeout: 10), "Free-workout log should scroll")
         logScrollView.swipeUp()
 
