@@ -21,7 +21,10 @@ permissions:
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
-  cancel-in-progress: true
+  # Preserve running main builds so completed CI can promote tested commits.
+  # GitHub retains only the newest pending run in each concurrency group.
+  # Superseded PR revisions can stop their own checks without affecting main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
