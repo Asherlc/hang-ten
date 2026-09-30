@@ -328,6 +328,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "tension.flash-board",
             "tension.grindstone",
             "tension.grindstone-pro",
+            "tension.grindstone-original",
+            "tension.honestone",
             "tension.whetstone",
             "trango.rock-prodigy-pivot",
             "metolius.climbers-edge",
@@ -345,7 +347,8 @@ final class BoardSourceBoundaryTests: XCTestCase {
             "yy.penta-evo",
             "yy.verticalboard-first",
             "yy.verticalboard-light",
-            "yy.verticalboard-one"
+            "yy.verticalboard-one",
+            "yy.verticalboard-evo"
         ]
 
         XCTAssertFalse(

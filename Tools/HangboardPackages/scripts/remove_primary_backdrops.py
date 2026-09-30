@@ -22,7 +22,6 @@ _SESSION_ARTIFACT = ":memory:.ses"
 _MAX_ENCLOSED_BACKGROUND_PIXELS = 100_000
 _ENCLOSED_BACKGROUND_SEEDS = {
     "yy-travelboard": ((190, 625), (1348, 625)),
-    "yy-verticalboard-evo": ((887, 500),),
 }
 
 

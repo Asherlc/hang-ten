@@ -34,6 +34,9 @@ LIVE_MODEL_PACKAGE_SLUGS = (
     "j-bryant-ftg-32",
     "metolius-wood-grips-compact-ii",
     "tension-flash-board",
+    "yy-verticalboard-evo",
+    "tension-honestone",
+    "tension-grindstone-original",
 )
 
 
@@ -329,6 +332,9 @@ def test_staging_keeps_model_descriptor_in_base_and_moves_usdz_to_odr_layout(
         "yy-verticalboard-first",
         "yy-verticalboard-light",
         "yy-verticalboard-one",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ),
@@ -349,6 +355,9 @@ def test_ci_simulator_staging_bundles_model_fixtures_for_ui_interactions(
         "yy-verticalboard-first",
         "yy-verticalboard-light",
         "yy-verticalboard-one",
+        "yy-verticalboard-evo",
+        "tension-honestone",
+        "tension-grindstone-original",
         "zlagboard-evo",
         "zlagboard-pro",
     ):

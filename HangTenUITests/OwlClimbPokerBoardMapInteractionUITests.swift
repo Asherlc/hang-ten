@@ -302,8 +302,6 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
             ?? surfaceCoordinate(for: contact, in: map)
         initialPoint.tap()
         let selectionExists = selected.waitForExistence(timeout: 10)
-        if !selectionExists {
-        }
         XCTAssertTrue(selectionExists, "Real coordinate tap must select \(target)")
         let selectionRendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
             (try? self.highlightedSurfaceSampleCount(at: initialScreenPoint, in: tapMapFrame)) ?? 0 > 8

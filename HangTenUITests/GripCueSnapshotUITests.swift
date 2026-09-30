@@ -11,7 +11,7 @@ final class GripCueDiagnosticScreenshotUITests: XCTestCase {
             "HANGTEN_REVIEW_STEP": "1",
             "HANGTEN_REVIEW_LANDSCAPE": "1",
             // Keep this integration test independent from the board persisted
-            // by earlier cases; this raster fixture needs no ODR download.
+            // by earlier cases; DEBUG simulator builds bundle this native model.
             "HANGTEN_REVIEW_BOARD_ID": "tension.honestone",
         ]
         app.launch()
@@ -208,8 +208,8 @@ final class InitialWeightSetupUITests: XCTestCase {
             "HANGTEN_REVIEW_SENSOR_DISCONNECTED": "1",
             "HANGTEN_REVIEW_PLAN": "1",
             "HANGTEN_REVIEW_PLAN_ID": "research.max-hangs",
-            // Weight-flow tests use a fixed raster board instead of a persisted
-            // selection with unrelated asynchronous model-preview work.
+            // Pin the board so earlier tests cannot change the weight-flow fixture.
+            // Its native model is bundled in DEBUG simulator builds.
             "HANGTEN_REVIEW_BOARD_ID": "tension.grindstone-original",
         ]
         app.launch()
@@ -219,7 +219,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         )
         XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Grindstone"].exists,
-                      "The weight-flow fixture must resolve to the requested raster board.")
+                      "The weight-flow fixture must resolve to the requested board.")
     }
 
     func testInlineChoicesDefaultToSkipAndKeepManualDraft() {
@@ -228,14 +228,10 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertLessThan(
             bodyweight.frame.width,
-            app.frame.width / 3,
+            XCUIApplication(bundleIdentifier: "com.apple.springboard").frame.width / 3,
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
@@ -271,11 +267,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
@@ -465,48 +457,64 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 extension XCTestCase {
     /// Tap a measured screen position without resolving the control's window again.
     /// SwiftUI menus and switches can expose finite control frames beneath
-    /// invalid window containers on iOS 26. Use the owning application as the
-    /// coordinate anchor so the event targets that application's process.
+    /// invalid window containers on iOS 26. Use the owning application as the screen anchor
+    /// so events target that application’s process.
     func tapVisibleControl(
         _ element: XCUIElement,
         in application: XCUIApplication,
         normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
         requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        // A screen coordinate rooted in Springboard targets Springboard's
-        // process. Menu rows must receive the event in their owning app.
+        visibleControlCoordinate(
+            element, in: application, normalizedOffset: normalizedOffset, requireHittable: requireHittable,
+            timeout: timeout, file: file, line: line
+        )?.tap()
+    }
+
+    /// Validate a complete accessibility snapshot before applying the retry budget.
+    /// A single hosted query can outlast that budget; a valid result is still ready.
+    func visibleControlCoordinate(
+        _ element: XCUIElement,
+        in application: XCUIApplication,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> XCUICoordinate? {
         let screen = application
-        var offset: CGVector?
-        let ready = XCTNSPredicateExpectation(
-            predicate: NSPredicate { _, _ in
-                guard element.exists, element.isEnabled,
-                      !requireHittable || element.isHittable else { return false }
+        let deadline = ProcessInfo.processInfo.systemUptime + timeout
+        var lastFrame: CGRect?
+        var lastViewport: CGRect?
+        repeat {
+            if element.exists, element.isEnabled, !requireHittable || element.isHittable {
                 let frame = element.frame
                 let viewport = screen.frame
-                guard frame.minX.isFinite, frame.minY.isFinite,
-                      frame.width.isFinite, frame.height.isFinite,
-                      frame.width > 0, frame.height > 0,
-                      viewport.minX.isFinite, viewport.minY.isFinite,
-                      viewport.width.isFinite, viewport.height.isFinite,
-                      viewport.width > 0, viewport.height > 0 else { return false }
-                let point = CGPoint(
-                    x: frame.minX + frame.width * normalizedOffset.dx,
-                    y: frame.minY + frame.height * normalizedOffset.dy
-                )
-                guard viewport.contains(point) else { return false }
-                offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
-                return true
-            },
-            object: element
-        )
-        guard XCTWaiter.wait(for: [ready], timeout: 10) == .completed,
-              let offset else {
-            XCTFail("Control must have a finite, visible frame before tapping", file: file, line: line)
-            return
-        }
-        let root = screen.coordinate(withNormalizedOffset: .zero)
-        root.withOffset(offset).tap()
+                lastFrame = frame
+                lastViewport = viewport
+                if frame.minX.isFinite, frame.minY.isFinite,
+                   frame.width.isFinite, frame.height.isFinite,
+                   frame.width > 0, frame.height > 0,
+                   viewport.minX.isFinite, viewport.minY.isFinite,
+                   viewport.width.isFinite, viewport.height.isFinite,
+                   viewport.width > 0, viewport.height > 0 {
+                    let point = CGPoint(
+                        x: frame.minX + frame.width * normalizedOffset.dx,
+                        y: frame.minY + frame.height * normalizedOffset.dy
+                    )
+                    if viewport.contains(point) {
+                        let offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                        return screen.coordinate(withNormalizedOffset: .zero).withOffset(offset)
+                    }
+                }
+            }
+            if ProcessInfo.processInfo.systemUptime >= deadline { break }
+            Thread.sleep(forTimeInterval: 0.1)
+        } while true
+        XCTFail("Control must have a finite, visible frame; control=\(String(describing: lastFrame)), screen=\(String(describing: lastViewport))", file: file, line: line)
+        return nil
     }
 }

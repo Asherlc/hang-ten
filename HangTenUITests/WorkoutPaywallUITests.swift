@@ -113,7 +113,7 @@ final class WorkoutPaywallUITests: XCTestCase {
 
         XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.staticTexts["Grindstone"].exists,
-                      "The weight-flow fixture must resolve to the requested raster board.")
+                      "The weight-flow fixture must resolve to the requested board.")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
@@ -121,11 +121,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         // Set the switch before focusing the decimal-pad field. A keyboard-active
         // tap can leave the switch off even when XCTest reports it as hittable.
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, in: app, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(

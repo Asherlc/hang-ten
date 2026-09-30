@@ -502,6 +502,7 @@ struct FreeWorkoutLogSessionView: View {
         .padding(.vertical, 2)
         .background(isFocused ? Color.hangGreen.opacity(0.12) : Color.clear)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .accessibilityElement(children: .contain)
         .accessibilityIdentifier("freeWorkout.set.\(set.id.uuidString)")
     }
 

@@ -114,6 +114,9 @@ CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
     "yy-verticalboard-first",
     "yy-verticalboard-light",
     "yy-verticalboard-one",
+    "yy-verticalboard-evo",
+    "tension-honestone",
+    "tension-grindstone-original",
     "zlagboard-evo",
     "zlagboard-pro",
 })

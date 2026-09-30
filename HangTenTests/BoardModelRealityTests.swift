@@ -41,6 +41,36 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testEvoHonestoneAndOriginalGrindstoneLoadEveryContactForPicking() async throws {
+        let expectedCounts = [
+            ("yy.verticalboard-evo", 25),
+            ("tension.honestone", 15),
+            ("tension.grindstone-original", 12),
+        ]
+        for (boardID, count) in expectedCounts {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let presentation = board.defaultPresentation
+            guard case .model = presentation.media else {
+                XCTFail("\(boardID) must use its native CAD model")
+                continue
+            }
+            let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+            XCTAssertNotNil(scene.modelEntity, boardID)
+            XCTAssertEqual(scene.contactEntities.count, count, boardID)
+            XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts(in: presentation).map(\.id)), boardID)
+            for (contactID, entities) in scene.contactEntities {
+                XCTAssertFalse(entities.isEmpty, "\(boardID): \(contactID)")
+                for entity in entities {
+                    XCTAssertNotNil(entity.model, "\(boardID): \(contactID) must render")
+                    XCTAssertNotNil(entity.collision, "\(boardID): \(contactID) must be pickable")
+                    XCTAssertNotNil(entity.components[InputTargetComponent.self], "\(boardID): \(contactID)")
+                    XCTAssertEqual(scene.contactID(for: entity), contactID, "\(boardID): picking identity")
+                }
+            }
+        }
+    }
+
+    @MainActor
     func testBothTransgressionRevisionsLoadNinePickableContacts() async throws {
         for year in [2011, 2013] {
             let board = try XCTUnwrap(BoardCatalog.packageStore.board(
