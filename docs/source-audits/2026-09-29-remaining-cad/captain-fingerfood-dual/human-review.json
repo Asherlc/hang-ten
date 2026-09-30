@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-09-30",
+  "reviewer": "asherlc",
+  "number": 2,
+  "package": "captain-fingerfood-dual",
+  "boardID": "captain-fingerfood.dual",
+  "status": "in progress: general front-hole entry accepted; vertical lower-lead shape unresolved",
+  "history": [
+    {
+      "feedback": "Cord doesn’t go through holes",
+      "revisionCommit": "6ebf1fc0ab3b28794b8507e8d41c4af645632fba",
+      "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "question": "Does this routing look right now?",
+      "answer": "y",
+      "acceptedScope": "General front-hole entry correction. The immediate vertical-pose follow-up leaves lower-lead shape unresolved."
+    },
+    {
+      "feedback": "the 90 degree position tho, why does the bottom cord jut out to the side?",
+      "status": "revised native cord verified; user review pending",
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "review": "vertical-tightening-review/review.md"
+    }
+  ],
+  "approvalLimit": "The front-entry reply does not approve all poses or establish a complete hidden cord connection, manufacturer cord dimensions, or physical equilibrium."
+}

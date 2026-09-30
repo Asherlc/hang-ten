@@ -48,4 +48,6 @@ Status: approved by user 2026-09-29. Native CAD is authored; see geometry-review
 
 Native CAD review artifacts: [geometry comparison](geometry-review.html), [authoring notes](geometry-authoring-notes.md), [metadata preservation](metadata-preservation.json), [native edit validation](native-validation.json). Final app review is coordinated separately.
 
-[Cord-entry correction and verification](cord-entry-review.md) — front/side/top actual-route comparisons are in [front-mouth-review](front-mouth-review/index.html). Current canonical [app views](app-review/index.html) and [runtime proof](cord-entry-runtime-validation.json) are retained; revised human review is pending.
+[Current 90° lower-cord revision](vertical-tightening-review/review.md) — [front/side/top comparisons](vertical-tightening-review/index.html), [current app views](vertical-tightening-review/app-review/index.html), and [runtime proof](vertical-tightening-review/runtime-validation.json). The general front-hole entry was accepted with “y”; the immediate 90° follow-up qualified that acceptance. The revised vertical shape awaits the user's review.
+
+The earlier [front-hole correction](cord-entry-review.md), [comparisons](front-mouth-review/index.html), [app captures](app-review/index.html), and [runtime report](cord-entry-runtime-validation.json) are retained as historical evidence for sidecar `0c824dd…`. They do not describe the current tightened routes.

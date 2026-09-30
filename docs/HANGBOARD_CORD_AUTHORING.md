@@ -324,6 +324,20 @@ bounded route approximation, not a global minimum or dynamic rope simulation.
 The DUAL front-entry review retains the motivating occupied-bore and lip-contact
 regressions.
 
+For evidenced front-entry leads in anchor sections, the optional authoring
+setting `tightening: "coupled3D"` releases the seed's exterior collar as a
+mandatory bend. It generates that seed from the native solid and attachment
+facts, then shortens the visible paths together in three dimensions. The actual
+mouth and fixed support remain fixed during each pass; the final segment must
+approach from the positive `mouthAxis` half-space and clear the complete native
+solid. Every accepted move shortens the path and passes the unchanged solid and
+self/interstrand tube checks. The solver re-settles hanging height, repeats
+within bounded iteration limits, and certifies the exact rounded runtime cache.
+It fails on nonconvergence. This is deterministic local shortening, not a proof
+of global minimum or physical equilibrium; no authored route cache seeds the
+solve. The setting is authoring-only, accepts only this value and topology, and
+its omission preserves the existing section solver exactly.
+
 The default `"fixed"` uses the selected section plane. Both modes certify every
 visible segment against the full closed CAD solid using adaptive signed-distance
 Lipschitz bounds, with a 10 micrometre numerical tolerance and bounded work.

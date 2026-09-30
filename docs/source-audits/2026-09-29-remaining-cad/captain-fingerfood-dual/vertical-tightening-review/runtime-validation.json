@@ -1,0 +1,122 @@
+{
+  "passed": true,
+  "owner": "placid-badger",
+  "date": "2026-09-30",
+  "package": "captain-fingerfood-dual",
+  "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "generatedManifestSHA256": "13c588a09f81a5ba2c7529e211fc6fdf610a948e5cdcf01b70a1ee19bd958ef4",
+  "nativeVerification": "verification.json",
+  "python": {
+    "environment": {
+      "MESHOPT_LIBRARY": "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/deps/meshoptimizer-build/libmeshoptimizer.dylib",
+      "meshoptimizerSHA256": "0743a9ce1b521e1eb215964c72016d2a3f1b895f1412bdf2f0e59cefa803b569"
+    },
+    "command": [
+      "rtk",
+      "proxy",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardPackages/tests",
+      "Tools/HangboardModels/tests",
+      "Tools/HangboardCAD/tests",
+      "-q",
+      "-k",
+      "not test_committed_asset_rebuilds_byte_identically"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 175.98521595896455,
+    "fileSHA256": {
+      "Tools/HangboardCAD/native_cord_routes.py": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+      "Tools/HangboardCAD/tests/test_native_cord_tightening.py": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7",
+      "Tools/HangboardPackages/src/hangboard_packages/cad_source.py": "31a4896a3e423f23199907fabd8d63481d1890beca90307394e28c1cfac20661",
+      "Tools/HangboardCAD/tests/test_cad_sidecars.py": "31d1262891ed33ad28fa1cf5fb459015701044b03a9a77ea3344deb29a63a2c7",
+      "Hangboards/captain-fingerfood-dual/suspension.json": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf"
+    },
+    "sourceUnchangedDuringRun": true,
+    "summary": "594 passed, 9 skipped, 1 deselected in 175.49s (0:02:55)",
+    "deselected": "Full-catalog native byte-identical rebuild; CAD sources/model/descriptor unchanged from independently proved batch."
+  },
+  "iOS": {
+    "passed": 1258,
+    "skipped": 3,
+    "failed": 0,
+    "total": 1261,
+    "simulator": "990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+    "device": "iPhone 17 Pro",
+    "runtime": "iOS 26.5",
+    "buildCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "build-for-testing"
+    ],
+    "testCommand": [
+      "xcodebuild",
+      "-project",
+      "HangTen.xcodeproj",
+      "-scheme",
+      "HangTen",
+      "-configuration",
+      "Debug",
+      "-destination",
+      "platform=iOS Simulator,id=990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+      "-derivedDataPath",
+      ".context/DerivedData",
+      "-parallel-testing-enabled",
+      "NO",
+      "-only-testing:HangTenTests",
+      "-collect-test-diagnostics",
+      "never",
+      "-resultBundlePath",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/dual-vertical-review/placid-badger-dual-vertical-tests.xcresult",
+      "test-without-building"
+    ],
+    "xcodebuildExitCode": 0
+  },
+  "app": {
+    "canonicalPoses": 4,
+    "selectedContactsVisible": true,
+    "cordAccessibilityAbsent": true,
+    "physicalOrbitVerified": false,
+    "captureProvenance": "app-review/validation.json"
+  },
+  "installedDelivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60
+  },
+  "cleanup": {
+    "simulator": "990DFC2B-D415-4490-B070-95D4EAD9B5C8",
+    "cleanupStatus": 0,
+    "derivedDataRemoved": true,
+    "simulatorDeletionVerified": true,
+    "resultBundleRemoved": true
+  },
+  "independentReview": "final-independent-review.json",
+  "humanReview": "Front-hole entry accepted; revised vertical lower-lead shape awaiting review.",
+  "limits": [
+    "Only canonical app captures are claimed; physical DUAL UI orbit remains unverified.",
+    "Cord dimensions remain display estimates; complete hidden threading is unspecified."
+  ],
+  "evidenceSHA256": {
+    "verification.json": "437d76967d88e53893479785381f32b4e14e795eb766515be9ff1873359caaf4",
+    "native-route-report.json": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+    "native-route-check.json": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+    "python-validation.json": "75932066918255a096356e7635b871707d4431eec1500f870be949c7402604e8",
+    "ios-summary.json": "ec07db3921d87e3d7c2cd99ff5e4f83943f830ec4237269655220ff0390fe05c",
+    "ios-tests.log": "518a18acea2341af03618d01a7f6ee4719ed463512f749ed323345a1777c0360",
+    "resource-cleanup.json": "649097c0f4a01cee329bb4414ea248642d714987551c3b706c499e30be5f621f",
+    "app-review/validation.json": "ef21518e23ccf898dac2d732db5af22ed5edb096a1758351e89696aa1b0210eb",
+    "final-independent-review.json": "83e7ad0923e17bdeb956d76ccb3e7f9b94774c0dc0f2e722fed8fb73a2625533",
+    "fresh-reproducibility-result.json": "78a86127576203cced503cf46464516426b57389a9fea423afe0979812e4cce0"
+  }
+}

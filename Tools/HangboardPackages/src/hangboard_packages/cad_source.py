@@ -396,7 +396,7 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
     # never merged into board.json.
     solver = document.get("ropeSolver", {"sectionPlane": "mouth-x"})
     if isinstance(solver, dict) and solver.get("method") == "nativeRoutes":
-        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
+        if set(solver) - {"method", "clearance", "terminalsByStrandID", "supportDirection", "sectionPlane", "tightening"} or not {"method", "clearance", "terminalsByStrandID"} <= set(solver) \
                 or isinstance(solver["clearance"], bool) \
                 or not isinstance(solver["clearance"], (int,float)) or not math.isfinite(solver["clearance"]) \
                 or not 0 < solver["clearance"] <= .01 \
@@ -404,6 +404,8 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
                 or isinstance(solver.get("supportDirection", 1), bool) or solver.get("supportDirection", 1) not in (-1,1) \
                 or solver.get("sectionPlane", "fixed") not in ("fixed", "anchor"):
             raise ManifestError("suspension.json nativeRoutes solver settings are invalid")
+        if "tightening" in solver and solver["tightening"] != "coupled3D":
+            raise ManifestError("nativeRoutes tightening must be coupled3D when present")
         for entry in solver["terminalsByStrandID"].values():
             if not isinstance(entry, dict) or not {"points", "planeNormal"} <= set(entry) \
                     or set(entry) - {"points", "planeNormal", "planeAxis", "mouthAxis"}:
@@ -433,6 +435,10 @@ def _merge_suspension_entry(board: dict, package_root: Path, document: dict) -> 
         if any(len(solver["terminalsByStrandID"][strand["id"]]["points"]) != (1 if strand["kind"] == "lead" else 2)
                for strand in strands):
             raise ManifestError("nativeRoutes needs one terminal per lead and two stations per loop or segment")
+        if "tightening" in solver and (solver.get("sectionPlane", "fixed") != "anchor" or any(
+                strand["kind"] != "lead" or "mouthAxis" not in solver["terminalsByStrandID"][strand["id"]]
+                for strand in strands)):
+            raise ManifestError("nativeRoutes tightening requires anchor sections and front-entry leads only")
         if any("mouthAxis" in solver["terminalsByStrandID"][strand["id"]]
                and (strand["kind"] != "lead" or solver.get("sectionPlane", "fixed") != "anchor") for strand in strands):
             raise ManifestError("nativeRoutes mouthAxis requires a lead in an anchor section plane")

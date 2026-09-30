@@ -204,6 +204,232 @@ def length(path):
     return sum(float(np.linalg.norm(b-a)) for a,b in zip(path,path[1:]))
 
 
+def native_slide_steps(mesh, points, displacement, radius):
+    """Generate bounded contact-aware directions; every proposal still certifies.
+
+    Nearby native closest-point normals define outward half-spaces. Projecting
+    toward these half-spaces allows a coupled lift-and-slide on an oblique face
+    when a coordinate-axis move alone would penetrate it. This is a proposal
+    heuristic, not a replacement for complete nonlinear clearance checks.
+    """
+    points = np.asarray(points)
+    nearest,distances,_ = trimesh.proximity.closest_point(mesh,points)
+    normals = [(point-close)/distance for point,close,distance in zip(points,nearest,distances)
+               if 1e-10 < distance <= 2*radius]
+    steps = [displacement,*[np.eye(3)[axis]*displacement[axis] for axis in range(3)]]
+    for step in list(steps):
+        projected = step.copy()
+        for _ in range(16):
+            for normal in normals:
+                projected -= min(0.0,float(projected@normal))*normal
+        steps.append(projected)
+        # First-order tangency alone can graze a curved face or the quantized
+        # offset boundary. Small outward combinations permit a finite slide;
+        # their merit and complete nonlinear clearance remain mandatory.
+        outward = np.sum(normals,axis=0) if normals else np.zeros(3)
+        if np.linalg.norm(outward)>1e-10:
+            outward /= np.linalg.norm(outward)
+            steps.extend(projected+outward*np.linalg.norm(projected)*fraction for fraction in (.01,.1))
+    return steps
+
+
+def tighten_native_paths(mesh, seed_paths, radii, mouth_axes, *, max_sweeps=128, max_vertices=256, max_checks=20000):
+    """Bounded local 3D shortening of certified, generated lead paths.
+
+    Only leads named in mouth_axes move. Their support and actual mouth remain
+    fixed; the final incident segment must stay in the outward mouth half-space.
+    A generated exterior collar is an initial guess, not a physical bearing.
+    Each accepted replacement certifies its complete changed segments against
+    the solid and the whole collection against the unchanged tube gate. This
+    deterministic coordinate descent is not a global optimum or equilibrium.
+    """
+    paths = {key: np.asarray(value, dtype=float).copy() for key, value in sorted(seed_paths.items())}
+    axes = {}
+    if set(radii) != set(paths) or not set(mouth_axes) <= set(paths):
+        raise ValueError("native tightening paths, radii and mouth axes do not match")
+    for key, vector in mouth_axes.items():
+        axis = np.asarray(vector, dtype=float)
+        if axis.shape != (3,) or not np.isfinite(axis).all() or np.linalg.norm(axis) <= 1e-10:
+            raise ValueError("native tightening requires a finite nonzero mouth axis")
+        axes[key] = axis / np.linalg.norm(axis)
+    for budget in (max_sweeps,max_vertices,max_checks):
+        if not isinstance(budget,int) or isinstance(budget,bool) or budget < 1:
+            raise ValueError("native tightening requires positive integer work budgets")
+    if any(len(path)>max_vertices for path in paths.values()):
+        raise ValueError("native tightening seed exceeds its vertex budget")
+    entry_tolerance = 1e-8  # Numerical positive-half-space tolerance, not a station.
+    minimum_gain = 1e-6  # One micrometre of display-route length; not an equilibrium tolerance.
+    # Optimization must not spend the final certificate's numerical tolerance.
+    # These internal proposal margins leave room for 9-decimal cache rounding;
+    # physical radii and all final gates retain their existing exact values.
+    solid_margin = 2e-5
+    def entry_valid(key, path):
+        return key not in axes or float((path[-2]-path[-1]) @ axes[key]) > entry_tolerance
+    for key, path in paths.items():
+        checked_clearance(mesh, path, radii[key])
+        if not entry_valid(key, path):
+            raise ValueError("native tightening seed does not enter the front mouth")
+    validate_cord_paths(paths, radii)
+    initial = {key: length(path) for key, path in paths.items()}
+    accepted = 0
+    checks = 0
+    def accept(key, candidate, changed):
+        nonlocal accepted, checks
+        # Quantize newly changed body vertices BEFORE objective and gate tests.
+        # The support is reconstructed from its world anchor, not stored, and
+        # the sourced mouth stays exact. Unchanged vertices are not perturbed.
+        starts = [index for index in range(len(candidate)-len(changed)+1)
+                  if np.array_equal(candidate[index:index+len(changed)],changed)]
+        if len(starts) != 1:
+            raise ValueError("native tightening changed span is not unique in its candidate")
+        first = starts[0]
+        candidate = candidate.copy()
+        for index in range(first,first+len(changed)):
+            if 0 < index < len(candidate)-1:
+                candidate[index] = np.round(candidate[index],9)
+        changed = candidate[first:first+len(changed)]
+        if length(paths[key])-length(candidate) <= minimum_gain or not entry_valid(key, candidate) \
+                or np.any(np.linalg.norm(np.diff(candidate, axis=0), axis=1) <= 1e-9):
+            return False
+        checks += 1
+        if checks > max_checks:
+            raise ValueError(f"native tightening exhausted its {max_checks} candidate-check budget")
+        trial = {**paths, key: candidate}
+        try:
+            validate_cord_paths(trial,radii)
+            checked_clearance(mesh, changed, radii[key]+solid_margin)
+        except ValueError:
+            return False
+        if len(candidate)>max_vertices:
+            raise ValueError(f"native tightening exhausted its {max_vertices} vertex budget")
+        paths[key] = candidate
+        accepted += 1
+        return True
+    for sweep in range(max_sweeps):
+        before = sum(length(path) for path in paths.values())
+        for key in sorted(axes):
+            # Longest-gap-first shortcuts make the search independent of dense
+            # native tessellation: tiny per-vertex gains can hide a clear bend
+            # whose complete chord yields a material shortening.
+            changed = True
+            while changed:
+                changed = False
+                path = paths[key]
+                for gap in range(len(path)-1, 1, -1):
+                    for first in range(len(path)-gap):
+                        last = first+gap
+                        a, c = path[first], path[last]
+                        if length(path[first:last+1])-float(np.linalg.norm(c-a)) <= minimum_gain:
+                            continue
+                        candidate = np.vstack([path[:first+1],path[last:]])
+                        if accept(key,candidate,np.array([a,c])):
+                            changed = True
+                            break
+                    if changed:
+                        break
+            # Separate short contiguous bearing runs at long free spans. Moving
+            # only the entire interior would couple a rim to a distant aperture
+            # and pin both unnecessarily. These are generated search blocks, not
+            # authored stations or new physical constraints.
+            path = paths[key]
+            groups = [(1,len(path)-2)]
+            first = 1
+            for last in range(1,len(path)-1):
+                if last == len(path)-2 or np.linalg.norm(path[last+1]-path[last]) > 4*radii[key]:
+                    if last>first:
+                        groups.append((first,last))
+                    first=last+1
+            for first,last in sorted(set(groups)):
+                if last<=first:
+                    continue
+                path = paths[key]
+                a,c = path[first-1],path[last+1]
+                chord = c-a
+                center = np.mean(path[first:last+1],axis=0)
+                parameter = np.clip(np.dot(center-a,chord)/np.dot(chord,chord),0,1)
+                displacement = a+parameter*chord-center
+                steps = native_slide_steps(mesh,path[first:last+1],displacement,radii[key])
+                proposals = []
+                current_length = length(path)
+                for step in steps:
+                    for exponent in range(24):
+                        candidate = path.copy();candidate[first:last+1] += step*2.0**-exponent
+                        gain = current_length-length(candidate)
+                        if gain>minimum_gain:
+                            proposals.append((gain,candidate))
+                for _,candidate in sorted(proposals,key=lambda item:-item[0]):
+                    if accept(key,candidate,candidate[first-1:last+2]):
+                        break
+            index = 1
+            while index < len(paths[key])-1:
+                path = paths[key]
+                a, b, c = path[index-1:index+2]
+                old_length = float(np.linalg.norm(b-a)+np.linalg.norm(c-b))
+                direct = float(np.linalg.norm(c-a))
+                if old_length-direct > minimum_gain:
+                    candidate = np.delete(path, index, axis=0)
+                    if accept(key, candidate, np.array([a,c])):
+                        continue
+                    chord = c-a
+                    fraction = float(np.clip(np.dot(b-a,chord)/np.dot(chord,chord), 0, 1))
+                    projection = a + fraction*chord
+                    displacement = projection-b
+                    # Full projection shortens an unsupported knee. Component
+                    # moves let a bearing slide tangentially along a native face
+                    # when the full projection would cut through wood.
+                    steps = [displacement, *[np.eye(3)[axis]*displacement[axis] for axis in range(3)]]
+                    moved = False
+                    for step in steps:
+                        for exponent in range(24):
+                            scale = 2.0**-exponent
+                            point = b + scale*step
+                            if old_length-float(np.linalg.norm(point-a)+np.linalg.norm(c-point)) <= minimum_gain:
+                                continue
+                            candidate = path.copy(); candidate[index] = point
+                            if accept(key, candidate, np.array([a,point,c])):
+                                moved = True
+                                break
+                        if moved:
+                            break
+                index += 1
+            # A single movable bend can stall when its entire outgoing segment
+            # is aperture-constrained, even though the corner itself is in air.
+            # Cut both incident segments locally; the two generated vertices
+            # remain free on later sweeps and can move or vanish like any other.
+            index = 1
+            while index < len(paths[key])-1:
+                path = paths[key]
+                a,b,c = path[index-1:index+2]
+                u,v = b-a,c-b
+                lu,lv = float(np.linalg.norm(u)),float(np.linalg.norm(v))
+                inserted = False
+                for exponent in range(2,26):
+                    trim = min(lu,lv)*2.0**-exponent
+                    first,last = b-u*(trim/lu),b+v*(trim/lv)
+                    gain = 2*trim-float(np.linalg.norm(last-first))
+                    if gain <= minimum_gain:
+                        break
+                    candidate = np.vstack([path[:index],first,last,path[index+1:]])
+                    if accept(key,candidate,np.array([first,last])):
+                        inserted = True
+                        break
+                index += 2 if inserted else 1
+        improvement = before-sum(length(path) for path in paths.values())
+        if improvement <= minimum_gain:
+            for key, path in paths.items():
+                checked_clearance(mesh, path, radii[key])
+            validate_cord_paths(paths, radii)
+            return paths, {"converged": True, "sweeps": sweep+1,
+                "acceptedMoves": accepted, "candidateChecks": checks,
+                "minimumAcceptedGain": minimum_gain,
+                "proposalSolidMargin":solid_margin,
+                "proposalTubeCertification":"Runtime-quantized changed vertices; unchanged whole-path tube gate",
+                "vertexBudget":max_vertices,"candidateCheckBudget":max_checks,
+                "lengthBefore": initial, "lengthAfter": {key:length(path) for key,path in paths.items()},
+                "policy": "Bounded deterministic coupled local shortening; no global optimum or equilibrium claim."}
+    raise ValueError(f"native coupled tightening did not converge within {max_sweeps} sweeps")
+
+
 def native_mouth_collar(mesh, mouth, mouth_axis, radius, clearance):
     """Derive a clear exterior endpoint along an evidenced native bore axis.
 
@@ -225,6 +451,111 @@ def native_mouth_collar(mesh, mouth, mouth_axis, radius, clearance):
 
 
 def solve_native_routes(mesh, data, descriptor):
+    """Generate native seeds, optionally tighten them, then settle and certify.
+
+    The optional method never reads authored wrappedRoutes as an initial guess.
+    With no tightening selection, the existing seed generator is unchanged.
+    """
+    if "tightening" not in data["ropeSolver"]:
+        return _solve_native_seed(mesh, data, descriptor)
+    method = data["ropeSolver"]["tightening"]
+    if not isinstance(method, str) or method != "coupled3D":
+        raise ValueError("native tightening must be coupled3D when present")
+    setup, solver = data["suspension"], data["ropeSolver"]
+    strands = setup["strands"]
+    geometry = solver["terminalsByStrandID"]
+    if not strands or solver.get("sectionPlane") != "anchor" or any(
+            strand["kind"] != "lead" or "mouthAxis" not in geometry.get(strand["id"], {}) for strand in strands):
+        raise ValueError("native coupled tightening currently requires anchor sections and front-entry leads only")
+    seeds = _solve_native_seed(mesh, data, descriptor)
+    return {pose_id: _tighten_native_pose(mesh, data, descriptor, pose_id, seed)
+            for pose_id, seed in seeds.items()}
+
+
+def _tighten_native_pose(mesh, data, descriptor, pose_id, seed):
+    from solve_threaded_rope import rotate_inverse
+    setup, solver = data["suspension"], data["ropeSolver"]
+    pose = setup["canonicalPoses"][pose_id]
+    radii = {strand["id"]:strand["radius"] for strand in setup["strands"]}
+    rests = {strand["id"]:strand["restLength"] for strand in setup["strands"]}
+    axes = {key:solver["terminalsByStrandID"][key]["mouthAxis"] for key in radii}
+    bounds = descriptor["modelBounds"]
+    anchor = (np.asarray(bounds["min"])+np.asarray(bounds["max"]))/2
+    anchor[1] = bounds["max"][1]
+    anchor += np.asarray(setup["anchor"]["offsetFromBoardBounds"])
+    translation = np.asarray(pose["translation"], dtype=float).copy()
+    def support(height):
+        shifted = translation.copy(); shifted[1] = height
+        return rotate_inverse(pose["rotation"], anchor-shifted)
+    height = seed["height"]
+    paths = {key:np.vstack([support(height), route]) for key,route in seed["routes"].items()}
+    reports = []
+    for iteration in range(16):
+        paths, report = tighten_native_paths(mesh, paths, radii, axes)
+        reports.append(report)
+        def ratio_at(candidate):
+            point = support(candidate)
+            return max((float(np.linalg.norm(point-path[1]))+length(path[1:]))/rests[key]
+                       for key,path in paths.items())
+        near, far = 0.0, -float(solver.get("supportDirection",1))*2*max(rests.values())
+        if ratio_at(near) > 1+1e-6 or ratio_at(far) < 1:
+            raise ValueError(f"{pose_id}: cannot bracket tightened hanging height")
+        for _ in range(40):
+            middle = (near+far)/2
+            if ratio_at(middle) > 1:
+                far = middle
+            else:
+                near = middle
+        settled = round(float((near+far)/2),9)
+        paths = {key:np.vstack([support(settled),path[1:]]) for key,path in paths.items()}
+        # Moving the fixed-world support relative to the body changes complete
+        # first segments; certify those before the next local shortening pass.
+        for key,path in paths.items():
+            checked_clearance(mesh,path,radii[key])
+        validate_cord_paths(paths,radii)
+        converged = abs(settled-height) <= 1e-8
+        height = settled
+        if converged:
+            break
+    else:
+        raise ValueError(f"{pose_id}: coupled tightening and hanging height did not converge within 16 iterations")
+    rounded_height = round(float(height),9)
+    routes, full_paths, minimums, ratios = {}, {}, {}, {}
+    for key,path in paths.items():
+        route = path[1:]
+        if len(route) < 3:
+            # Runtime's minimum cache count is representation only: exact
+            # collinear subdivisions add no station or unsupported bend.
+            if len(route) == 1:
+                route = np.array([path[0]+.98*(route[0]-path[0]), path[0]+.99*(route[0]-path[0]), route[0]])
+            else:
+                route = np.array([route[0],(route[0]+route[1])/2,route[1]])
+        routes[key] = np.round(route,9).tolist()
+        full_paths[key] = np.vstack([support(rounded_height),routes[key]])
+        final_segment = full_paths[key][-2]-full_paths[key][-1]
+        if float(final_segment @ (np.asarray(axes[key])/np.linalg.norm(axes[key]))) <= 1e-8:
+            raise ValueError(f"{pose_id}/{key}: rounded tightened route lost front entry")
+        minimums[key] = checked_clearance(mesh,full_paths[key],radii[key])
+        ratios[key] = length(full_paths[key])/rests[key]
+    validate_cord_paths(full_paths,radii)
+    if max(ratios.values()) > 1+1e-6 or abs(max(ratios.values())-1) > 1e-6:
+        raise ValueError(f"{pose_id}: rounded tightened route does not match settled cord length")
+    result = {key:value for key,value in seed.items() if key not in {
+        "height","routes","minimumClearance","lengthRatios","mouthCollars","sectionOrientationRecovery","occupiedCollarsReserved"}}
+    result.update(height=rounded_height,routes=routes,minimumClearance=minimums,lengthRatios=ratios,
+        coupledTightening={"converged":True,"iterations":len(reports),"passes":reports,
+            "initialHeight":seed["height"],"entryConstraint":"actual mouth, positive native-axis half-space, complete tube clearance",
+            "policy":"Generated native seed followed by bounded coupled local shortening and height settling; no equilibrium claim."})
+    if "occupiedCollarsReserved" in seed:
+        result["initialOccupiedCollarsReserved"] = seed["occupiedCollarsReserved"]
+    if "mouthCollars" in seed:
+        result["initialMouthCollars"] = seed["mouthCollars"]
+    if "sectionOrientationRecovery" in seed:
+        result["initialSectionOrientationRecovery"] = seed["sectionOrientationRecovery"]
+    return result
+
+
+def _solve_native_seed(mesh, data, descriptor):
     """Preserve valid preferred routes; recover collared-lead conflicts only.
 
     Recovery is a bounded deterministic search of native section orientations,

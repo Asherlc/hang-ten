@@ -108,3 +108,47 @@ def test_matching_native_authoring_graph_merges_without_runtime_solver_settings(
     merged = merge(tmp_path, board, entries)
     assert merged["presentations"][0]["media"]["instances"][0]["suspension"]["strands"][0]["id"] == "lead"
     assert "ropeSolver" not in cad_source.render_board(merged).decode()
+
+
+def front_entry_authoring(entries):
+    entries[0]["suspension"] = {"type": "cadRoutedCord", "strands": [{"id": "lead", "kind": "lead"}]}
+    entries[0]["ropeSolver"] = {"method": "nativeRoutes", "clearance": .0002,
+        "sectionPlane": "anchor", "tightening": "coupled3D",
+        "terminalsByStrandID": {"lead": {"points": [[0, 0, 0]],
+            "planeNormal": [1, 0, 0], "mouthAxis": [0, 0, 1]}}}
+    return entries[0]["ropeSolver"]
+
+
+def test_native_coupled_tightening_is_authoring_only(tmp_path):
+    board, entries = package(tmp_path)
+    front_entry_authoring(entries)
+    merged = merge(tmp_path, board, entries)
+    assert merged["presentations"][0]["media"]["instances"][0]["suspension"] == entries[0]["suspension"]
+    assert "coupled3D" not in cad_source.render_board(merged).decode()
+    assert "ropeSolver" not in cad_source.render_board(merged).decode()
+
+
+@pytest.mark.parametrize("selector", [None, True, 1, {}, "unknown"])
+def test_native_tightening_rejects_unknown_or_non_string_selectors(tmp_path, selector):
+    board, entries = package(tmp_path)
+    front_entry_authoring(entries)["tightening"] = selector
+    with pytest.raises(cad_source.ManifestError, match="tightening"):
+        merge(tmp_path, board, entries)
+
+
+@pytest.mark.parametrize("unsupported", ["fixed-section", "missing-mouth-axis", "loop", "segment"])
+def test_native_tightening_rejects_unsupported_entry_topologies(tmp_path, unsupported):
+    board, entries = package(tmp_path)
+    solver = front_entry_authoring(entries)
+    terminal = solver["terminalsByStrandID"]["lead"]
+    if unsupported == "fixed-section":
+        solver["sectionPlane"] = "fixed"
+        del terminal["mouthAxis"]
+    elif unsupported == "missing-mouth-axis":
+        del terminal["mouthAxis"]
+    else:
+        entries[0]["suspension"]["strands"][0]["kind"] = unsupported
+        terminal["points"].append([0, 1, 0])
+        del terminal["mouthAxis"]
+    with pytest.raises(cad_source.ManifestError, match="tightening"):
+        merge(tmp_path, board, entries)

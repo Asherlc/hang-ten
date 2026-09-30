@@ -65,9 +65,22 @@
     {
       "package": "captain-fingerfood-dual",
       "date": "2026-09-30",
-      "feedback": "Cord doesn\u2019t go through holes",
+      "feedback": "Cord doesn’t go through holes",
       "report": "captain-fingerfood-dual/cord-entry-runtime-validation.json",
       "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
+      "nativeAndCanonicalAppValidation": "passed",
+      "physicalUIOrbit": "unverified",
+      "geometryAcceptance": "pending revised user review",
+      "acceptedScope": "General front-hole entry accepted with y; immediate vertical-pose follow-up qualified overall acceptance.",
+      "humanReviewRecord": "captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "date": "2026-09-30",
+      "revision": "vertical-tightening",
+      "feedback": "the 90 degree position tho, why does the bottom cord jut out to the side?",
+      "report": "captain-fingerfood-dual/vertical-tightening-review/runtime-validation.json",
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "nativeAndCanonicalAppValidation": "passed",
       "physicalUIOrbit": "unverified",
       "geometryAcceptance": "pending revised user review"

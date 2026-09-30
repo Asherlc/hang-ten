@@ -19,11 +19,17 @@
   },
   "elapsedSeconds": 9.932,
   "closure": "passed",
-  "sidecarSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
-  "generatedManifestSHA256": "50f7cf31287e5ca78c22baa3ba312310f15e2f7973295a80c2ccb6861b970793",
-  "cordSolverSHA256": "40d23e454d8790fd4769a7e6713a831e810a1ae3756c786776203b915cc6ffd1",
+  "sidecarSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "generatedManifestSHA256": "13c588a09f81a5ba2c7529e211fc6fdf610a948e5cdcf01b70a1ee19bd958ef4",
+  "cordSolverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
   "cordEntryReview": "cord-entry-review.md",
-  "continuousCordCertificateSHA256": "f85f2ad21aa95719e3b660b27127d15281305235b0693944789c255fa4aaf411",
-  "nativeRouteCheckSHA256": "552769af7d7d680d6f59c404816cd830b0b7c97ec746a9a7eb5ab82fdba90cb8",
-  "geometryUnchangedDuringCordEntryCorrection": true
+  "continuousCordCertificateSHA256": "d3dba06366bda65ba14f45e18e9b89ce2a34b0985a48add9de879d73c95cd119",
+  "nativeRouteCheckSHA256": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+  "geometryUnchangedDuringCordEntryCorrection": true,
+  "cordEntryReviewIsHistorical": true,
+  "continuousCordCertificate": "vertical-tightening-review/continuous-cord-clearance.json",
+  "cordReview": "vertical-tightening-review/review.md",
+  "currentCordVerification": "vertical-tightening-review/verification.json",
+  "currentCordRuntimeVerification": "vertical-tightening-review/runtime-validation.json",
+  "nativeSolidUnchangedDuringVerticalTightening": true
 }

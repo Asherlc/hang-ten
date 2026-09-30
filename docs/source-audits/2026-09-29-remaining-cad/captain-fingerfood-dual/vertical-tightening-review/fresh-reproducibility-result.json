@@ -1,0 +1,8 @@
+{
+  "status": "passed",
+  "applyAndCheckReportsByteIdentical": true,
+  "reportSHA256": "f345c21d91abebf80c2eb3548d67bb7563daa00fb2f5d7d5405441a2ab8af682",
+  "sidecarSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "testSHA256": "362679227649f45dbfab39a7eda39a7c648de4e928d3904e93750e51f2ab60e7"
+}

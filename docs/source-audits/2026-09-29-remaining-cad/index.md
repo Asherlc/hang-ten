@@ -9,7 +9,7 @@ Each packet includes manufacturer evidence and prior/current geometry views. For
 | # | Board | Geometry and comparisons | Sources | App |
 | --- | --- | --- | --- | --- |
 | 1 | Aelith Equipment Cyclops #011 Blue x Black | [Review](aelith-cyclops-011/review/index.html) | [Audit](aelith-cyclops-011/native-authoring.md) | [App views](aelith-cyclops-011/app-review/index.html) |
-| 2 | Captain Fingerfood DUAL | [Review](captain-fingerfood-dual/geometry-review.html) | [Audit](captain-fingerfood-dual/README.md) | [App views](captain-fingerfood-dual/app-review/index.html) |
+| 2 | Captain Fingerfood DUAL | [Current cord review](captain-fingerfood-dual/vertical-tightening-review/index.html), [CAD body](captain-fingerfood-dual/geometry-review.html) | [Audit](captain-fingerfood-dual/README.md) | [App views](captain-fingerfood-dual/vertical-tightening-review/app-review/index.html) |
 | 3 | Captain Fingerfood UNLEVEL | [Review](captain-fingerfood-unlevel/geometry-review.html) | [Audit](captain-fingerfood-unlevel/README.md) | [App views](captain-fingerfood-unlevel/app-review/index.html) |
 | 4 | Frictitious Climbing The NUG | [Review](frictitious-nug/review/index.html) | [Audit](frictitious-nug/native-authoring.md) | [App views](frictitious-nug/app-review/index.html) |
 | 5 | Frictitious Climbing Port-A-Board | [Review](frictitious-port-a-board/review/index.html) | [Audit](frictitious-port-a-board/native-authoring.md) | [App views](frictitious-port-a-board/app-review/index.html) |
@@ -38,4 +38,4 @@ Seven active migrations were left unchanged: `tension-grindstone-original`, `ten
 
 [Final validation](batch-validation.json). [Independent review](final-independent-review.json). [Historical report notes](validation-notes.md).
 
-DUAL remains review #2. The user requested that its cords pass through the holes; the corrected front-entry routes and current app captures are ready for another review. [Cord-entry revision](captain-fingerfood-dual/cord-entry-review.md).
+DUAL remains review #2. Its general front-hole entry was accepted with “y”, followed immediately by feedback about the lower cord's sideways bow at 90°. The current native revision removes the unsupported collar bends and reduces that bow from 11.22 mm to 4.29 mm. [Revision and verification](captain-fingerfood-dual/vertical-tightening-review/review.md); revised human review is pending.

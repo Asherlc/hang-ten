@@ -1,0 +1,26 @@
+{
+  "exitCode": 0,
+  "preservedExactRawLogsExcluded": [
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/baguette-unchanged-check.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/initial-python-missing-dependency.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/schema-selector-independent-tests.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/subchain-independent-tests.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-aperture-knee-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-dense-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-integration-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-margin-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-null-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-practical-threshold-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-small-step-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-subchain-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-tangent-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-unaffected-pair-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/diagnostics/tightening-unchanged-segment-red.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/full-python.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/ios-tests.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/native-route-apply.log",
+    "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/native-route-check.log"
+  ],
+  "scope": "All staged changes except named byte-exact native/test/historical logs"
+}

@@ -62,7 +62,7 @@
     "zlagboard-evo",
     "zlagboard-pro"
   ],
-  "sha256Manifest": "0e7edf5616f828a3588275d8249e698bfe0cabc64d5b3b322e3d384b1c9fb365",
+  "sha256Manifest": "a3349681809872a6b65205b4da7cb38beaa3b1ed7b246518d4d225bc87702c11",
   "digestFormat": "SHA-256 of UTF-8 lines: <file SHA-256><two spaces><POSIX path><LF>, sorted by path; descriptor, USDZ, and board.json for committed-asset packages; descriptor and FCStd for source-backed packages, plus suspension.json when present; source-backed board.json is generated at build time",
   "supersededArchiveSHA256": "34772bb44c9b977652e399e5ffbd75838ac890ba8537851e62ca04fba5e2fc38",
   "nativeValidationRequired": true,
@@ -644,12 +644,12 @@
       "comparison": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/geometry-review.html",
       "metadataAudit": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/metadata-diff.json",
       "nativeValidation": "Reopen/recompute and meaningful edit/restore checks; published depths, contact bindings, unbound export and independent fresh compiler reproduction verified. Exact hash-bound reports are retained in the packet.",
-      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/app-review/validation.json",
-      "geometryAcceptance": "pending requested one-by-one user review",
+      "nativeAppValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/app-review/validation.json",
+      "geometryAcceptance": "General front-hole entry accepted; revised 90 degree lower-cord shape pending user review",
       "sourceReferenceCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-      "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
-      "reviewRevision": "2026-09-30: front floor-hole entry corrected in every grip; native CAD, USDZ, descriptor and hold metadata unchanged. Individual user review pending.",
-      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-entry-verification.json"
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "reviewRevision": "2026-09-30: DUAL 90 degree lower-lead bow tightened by native coupled solve; individual revised review pending.",
+      "nativeCordValidation": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/verification.json"
     },
     "captain-fingerfood-unlevel": {
       "source": "Hangboards/captain-fingerfood-unlevel/captain-fingerfood-unlevel.FCStd",
@@ -1138,7 +1138,8 @@
   "remainingCADMigrationNote": "2026-09-29: 21 remaining unclaimed hangboards migrated to native CAD by three subagents; seven active migrations and all 36 existing CAD packages remain unchanged. The inventory now has 58 model packages, of which 57 are native CAD; Plateau has three descriptor-bound configuration assets. All new geometry remains pending the requested one-by-one user review. The legacy assetCommit identifies the original reference delivery; sha256Manifest pins the current exact source/descriptor/sidecar bytes. See docs/source-audits/2026-09-29-remaining-cad/index.md.",
   "sha256ManifestHistory": [
     "4991d2dca213f7f0846c79781a32123f10116323740d498f0323d8738fcc0420",
-    "02da0c3ff36aff1de73d9ba87ef187d38fdb4a5a3c9ff97be2ab32f8d03921f0"
+    "02da0c3ff36aff1de73d9ba87ef187d38fdb4a5a3c9ff97be2ab32f8d03921f0",
+    "0e7edf5616f828a3588275d8249e698bfe0cabc64d5b3b322e3d384b1c9fb365"
   ],
   "individualReviewRevisions": [
     {
@@ -1157,6 +1158,17 @@
       "scope": "Evidence-backed front mouth axes and native-solved, mutually clear leads; unchanged native source/model bytes and cord dimensions.",
       "suspensionSHA256": "0c824ddbaee2e007a8f9ea2eec8fc74132b8f8c9f0da03677c99820b836a86a8",
       "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/cord-entry-review.md",
+      "geometryAcceptance": "General front-hole entry accepted with y; immediate vertical-pose follow-up leaves lower-lead shape unresolved.",
+      "humanReviewRecord": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/human-review.json"
+    },
+    {
+      "package": "captain-fingerfood-dual",
+      "date": "2026-09-30",
+      "revision": "vertical-tightening",
+      "request": "the 90 degree position tho, why does the bottom cord jut out to the side?",
+      "scope": "Opt-in native local 3D shortening and hanging height; fixed actual mouths/support, CAD source/model/descriptor, cord dimensions and pose rotations/cameras preserved.",
+      "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
+      "review": "docs/source-audits/2026-09-29-remaining-cad/captain-fingerfood-dual/vertical-tightening-review/review.md",
       "geometryAcceptance": "pending revised user review"
     }
   ]

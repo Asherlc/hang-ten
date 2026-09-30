@@ -1,0 +1,170 @@
+{
+  "reviewedAt": "2026-09-30T17:51:49.366179+00:00",
+  "status": "passed for fresh native generation",
+  "diagnosticOnly": true,
+  "notAnApprovedPublishedCache": true,
+  "sourceReportSHA256": "0b6c457879ed7941e679e69484d4d99c77c32108a592d0b0c9001c18d0a0de44",
+  "solverSHA256": "44f67792d613543da6aab1573e443a0f5b589d8901d0b596ab00fab104cc9f17",
+  "originalWholeTubeGate": "passed",
+  "height": -0.17420943,
+  "heightIterations": 2,
+  "strands": {
+    "left-lead": {
+      "runtimeRouteVertices": 13,
+      "lengthMM": 399.99999973447683,
+      "lengthRatio": 0.999999999336192,
+      "frontEntryDotMM": 1.6312140000000002,
+      "continuousSolidCertificateMM": 1.9901019367640458,
+      "maximumWorldLateralOffsetFromMouthMM": 4.289887990871082,
+      "corners": [
+        {
+          "index": 1,
+          "turnDegrees": 2.920395329255432,
+          "pointWoodDistanceMM": 2.0170238555180102
+        },
+        {
+          "index": 2,
+          "turnDegrees": 6.862217024741101,
+          "pointWoodDistanceMM": 2.025086061861386
+        },
+        {
+          "index": 3,
+          "turnDegrees": 9.196121006871312,
+          "pointWoodDistanceMM": 2.0404876045788862
+        },
+        {
+          "index": 4,
+          "turnDegrees": 8.678950268645966,
+          "pointWoodDistanceMM": 2.0370993392369567
+        },
+        {
+          "index": 5,
+          "turnDegrees": 3.0117155155038633,
+          "pointWoodDistanceMM": 2.0249974317386155
+        },
+        {
+          "index": 6,
+          "turnDegrees": 3.0118418411734904,
+          "pointWoodDistanceMM": 2.235465546435461
+        },
+        {
+          "index": 7,
+          "turnDegrees": 4.314610490971045,
+          "pointWoodDistanceMM": 2.77163958077583
+        },
+        {
+          "index": 8,
+          "turnDegrees": 2.34437138159941,
+          "pointWoodDistanceMM": 3.843350265181266
+        },
+        {
+          "index": 9,
+          "turnDegrees": 2.3443913570312995,
+          "pointWoodDistanceMM": 4.783757389897265
+        },
+        {
+          "index": 10,
+          "turnDegrees": 11.015597013897278,
+          "pointWoodDistanceMM": 2.02350017749275
+        },
+        {
+          "index": 11,
+          "turnDegrees": 8.055515296241696,
+          "pointWoodDistanceMM": 2.023504387808842
+        },
+        {
+          "index": 12,
+          "turnDegrees": 8.055679005647264,
+          "pointWoodDistanceMM": 2.0207743755008294
+        }
+      ]
+    },
+    "right-lead": {
+      "runtimeRouteVertices": 14,
+      "lengthMM": 352.3283822959691,
+      "lengthRatio": 0.8808209557399228,
+      "frontEntryDotMM": 3.607244,
+      "continuousSolidCertificateMM": 1.9904105817682505,
+      "maximumWorldLateralOffsetFromMouthMM": 1.0000000054961737,
+      "corners": [
+        {
+          "index": 1,
+          "turnDegrees": 7.235656399050747,
+          "pointWoodDistanceMM": 2.021098586318063
+        },
+        {
+          "index": 2,
+          "turnDegrees": 5.053000779455757,
+          "pointWoodDistanceMM": 2.0162357546042635
+        },
+        {
+          "index": 3,
+          "turnDegrees": 6.259918874886764,
+          "pointWoodDistanceMM": 2.027891306330541
+        },
+        {
+          "index": 4,
+          "turnDegrees": 8.006149709785577,
+          "pointWoodDistanceMM": 2.030833799512639
+        },
+        {
+          "index": 5,
+          "turnDegrees": 6.6495334552985685,
+          "pointWoodDistanceMM": 2.014881528644304
+        },
+        {
+          "index": 6,
+          "turnDegrees": 6.649285560348696,
+          "pointWoodDistanceMM": 2.0146208441535602
+        },
+        {
+          "index": 7,
+          "turnDegrees": 7.952335371094766,
+          "pointWoodDistanceMM": 2.0197463407331644
+        },
+        {
+          "index": 8,
+          "turnDegrees": 8.052238544893193,
+          "pointWoodDistanceMM": 2.019298682103519
+        },
+        {
+          "index": 9,
+          "turnDegrees": 3.1007672219789852,
+          "pointWoodDistanceMM": 2.0870892000739714
+        },
+        {
+          "index": 10,
+          "turnDegrees": 3.3166888903070233,
+          "pointWoodDistanceMM": 2.083938962906407
+        },
+        {
+          "index": 11,
+          "turnDegrees": 3.573339348695997,
+          "pointWoodDistanceMM": 2.420258705606457
+        },
+        {
+          "index": 12,
+          "turnDegrees": 1.4164781967048239,
+          "pointWoodDistanceMM": 5.944801
+        },
+        {
+          "index": 13,
+          "turnDegrees": 1.416482618547814,
+          "pointWoodDistanceMM": 3.607244
+        }
+      ]
+    }
+  },
+  "nonSupportInterstrandMinimumMM": 4.000338195802653,
+  "certifiedCornerCutsOverOneMicrometre": [],
+  "beforeLowerLateralMM": 11.217132,
+  "scope": "Static replay and independent local proofs only; no second native solve or package edit.",
+  "substantialBendSupport": {
+    "definition": "Interior turns above5degrees",
+    "count": 14,
+    "minimumCenterlineWoodDistanceMM": 2.0146208441535602,
+    "maximumCenterlineWoodDistanceMM": 2.0404876045788862,
+    "cordRadiusMM": 2,
+    "conclusion": "Every substantial remaining turn lies within0.041mm of the rope-radius wood contact surface; none resembles the prior18\u201322mm unsupported knee."
+  }
+}

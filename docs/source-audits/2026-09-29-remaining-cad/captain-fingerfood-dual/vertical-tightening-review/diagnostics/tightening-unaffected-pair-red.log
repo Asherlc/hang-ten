@@ -1,0 +1,24 @@
+Regression replay of prior all-strands proposal-margin behavior in memory; workspace source unchanged.
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___ test_proposal_margin_does_not_freeze_a_remote_bend_due_to_unchanged_pair ___
+
+    def test_proposal_margin_does_not_freeze_a_remote_bend_due_to_unchanged_pair():
+        mesh=trimesh.creation.box(extents=[.02,.02,.02]);mesh.apply_translation([0,0,-.1])
+        routes={"a":np.array([[0,.1,.01],[0,0,0]]),
+                "b":np.array([[.004001,.1,.01],[.004001,0,0]]),
+                "c":np.array([[.1,.1,.01],[.14,.05,.04],[.1,0,0]])}
+        radii={key:.002 for key in routes};axes={key:[0,0,1] for key in routes}
+        validate_cord_paths(routes,radii)
+        paths,_=tighten(mesh,routes,radii,axes)
+>       assert length(paths["c"])==pytest.approx(np.linalg.norm(routes["c"][0]-routes["c"][-1]),abs=1e-8)
+E       assert 0.14620902247136228 == 0.1004987562112089 ± 1.0e-08
+E         
+E         comparison failed
+E         Obtained: 0.14620902247136228
+E         Expected: 0.1004987562112089 ± 1.0e-08
+
+Tools/HangboardCAD/tests/test_native_cord_tightening.py:198: AssertionError
+=========================== short test summary info ============================
+FAILED Tools/HangboardCAD/tests/test_native_cord_tightening.py::test_proposal_margin_does_not_freeze_a_remote_bend_due_to_unchanged_pair
+1 failed, 18 deselected in 0.22s
