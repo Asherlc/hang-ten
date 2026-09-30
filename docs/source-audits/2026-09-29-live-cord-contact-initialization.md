@@ -632,3 +632,45 @@ the rope fix. Existing native scene tests validate the integration, while the
 new regression targets solver-to-display preparation directly. This change
 does not enable Mini or any new catalog profile, establish real-time performance,
 or close the CAD error and designated-bearing proof gaps.
+
+### Conservative distance intervals and fixed-witness reuse (screen closed)
+
+A new workspace-only prototype bounds distance to the approved triangles with
+outward binary64 arithmetic. Any finite separating direction gives a support
+projection lower bound; nested convex interpolation supplies a feasible upper
+bound. Certified AABB pruning covers omitted triangles. Fixed witnesses expand
+by an outward endpoint-motion bound, with enclosed identity-coordinate conversion
+and channel interpolation. Clearance intervals have explicit semantics and never
+replace an exact scalar silently. Initial body/channel classification still
+trusts the existing classifier; this is not a new certified ray classifier,
+CAD-solid error bound, contact normal, affine separation oracle or CCD proof.
+
+On retained upright return 492→493, all 418 body-distance reference values were
+enclosed, including fixed-witness reuse. Eight analytic distance fixtures and
+three rejection fixtures passed. The complete verification prototype preserves
+length/strain/speed/history metrics bit for bit, and retains support, portal,
+self-contact and intercord checks. After 10 warmups, 50 alternating measurements
+reported candidate p95 0.928 ms versus reference 24.409 ms, with no fallback.
+Cold witness setup took 0.924 seconds. The reported clearance lower bound is
+3.5999386 mm, not an exact minimum. These are host results for the retained coarse
+identity-orientation state, not production resolution or device measurements.
+
+Independent review found no actionable flaw on that valid-state path, while
+qualifying legacy sign classification and decisions near floating thresholds.
+The follow-up fixture executable checked 19 analytic signed-threshold/boundary
+cases, rejected mismatched collider geometry, and verified full legacy fallback
+output equality for profile mismatch, uncertifiable motion and retained jug
+226/227. Rotation remains unsupported by the interval cache. Fifty rotation
+fallback measurements after 10 warmups gave p95 23.689 ms. Thus the complete
+fixed corpus misses the 1 ms verification target; this bounded screen ends
+without production adoption. No tolerances, discretization, material, geometry,
+physics gates, contact solver or catalog profiles changed.
+
+Evidence is `strong-owl-dual-bound-screen.report.json`,
+`strong-owl-certified-verification-screen.report.json` and
+`strong-owl-certified-verification-fixtures.report.json` under the live-cord
+probe context. Source, binary and input SHA-256 snapshots are retained in
+`certified-verification-v1/inputs.json`. Both finite executables exited
+successfully. The upright verification result does not address the independently
+measured contact-row assembly, nonlinear merit or QP costs, and supplies no
+whole-geometry 50x speedup, complete-step or live-rollout claim.
