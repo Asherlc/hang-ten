@@ -34,7 +34,18 @@ final class AppStoreTests: XCTestCase {
             store.plans.first { $0.id == "metolius.generic-ten-minute.intermediate" }
         )
 
-        XCTAssertFalse(store.isIncompatible(plan, on: board))
+        let unresolvedSteps = plan.steps.compactMap { step -> String? in
+            let hasUnresolvedTask = step.segments.contains { segment in
+                guard segment.kind == .work,
+                      case let .tasks(tasks)? = segment.target else { return false }
+                return (try? ContactResolver.resolve(tasks, step: step, board: board)) == nil
+            }
+            return hasUnresolvedTask ? step.id : nil
+        }
+        XCTAssertFalse(
+            store.isIncompatible(plan, on: board),
+            "Unresolved task steps: \(unresolvedSteps); one-handed board: \(board.isOneHanded)"
+        )
     }
 
     func testSelectedBoardPersistsAndRestoresByStableID() throws {
@@ -1058,7 +1069,7 @@ final class AppStoreTests: XCTestCase {
         )
     }
 
-    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() {
+    func testAuthorizationRequestResetsCompletionErrorPriorityBeforeRefreshFailure() async {
         let suiteName = "AppStoreTests.\(UUID().uuidString)"
         let defaults = UserDefaults(suiteName: suiteName)!
         defer { defaults.removePersistentDomain(forName: suiteName) }
@@ -1071,16 +1082,36 @@ final class AppStoreTests: XCTestCase {
             defaults: defaults
         )
 
+        // Await published events so the main queue can deliver history callbacks
+        // even while a cold simulator is initializing the app's rendering services.
+        let completionFailed = expectation(description: "completion sync error published")
+        let completionObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Session was saved locally and will retry Apple Health sync." }
+            .prefix(1)
+            .sink { _ in completionFailed.fulfill() }
+        defer { completionObservation.cancel() }
+
         appStore.markSessionComplete(
             activityPlan(requirement: nil),
             startDate: Date(timeIntervalSinceReferenceDate: 1_000),
             endDate: Date(timeIntervalSinceReferenceDate: 1_600)
         )
-        waitUntil(timeout: 20) { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [completionFailed], timeout: 5)
+        XCTAssertEqual(
+            appStore.healthAuthorizationError,
+            "Session was saved locally and will retry Apple Health sync."
+        )
         healthStore.fetchResult = .failure(FakeHealthError.failed)
 
+        let refreshFailed = expectation(description: "history refresh error published")
+        let refreshObservation = appStore.$healthAuthorizationError
+            .filter { $0 == "Apple Health history could not sync. Local history remains available." }
+            .prefix(1)
+            .sink { _ in refreshFailed.fulfill() }
+        defer { refreshObservation.cancel() }
+
         appStore.requestHealthAuthorization()
-        waitUntil(timeout: 20) { appStore.healthAuthorizationError != nil }
+        await fulfillment(of: [refreshFailed], timeout: 5)
 
         XCTAssertEqual(
             appStore.healthAuthorizationError,
@@ -1383,12 +1414,11 @@ final class AppStoreTests: XCTestCase {
     }
 
     private func waitUntil(
-        timeout: TimeInterval = 5,
         _ condition: @escaping () -> Bool,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let deadline = Date().addingTimeInterval(timeout)
+        let deadline = Date().addingTimeInterval(5)
         while !condition(), Date() < deadline {
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }

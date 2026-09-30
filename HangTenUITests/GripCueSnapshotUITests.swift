@@ -239,7 +239,10 @@ final class InitialWeightSetupUITests: XCTestCase {
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
+        tapVisibleControl(
+            bodyweight,
+            normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
+        )
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -319,7 +322,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         tapStartRoutine()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
+        // Navigation can retain the plan's accessibility elements behind the
+        // preparation sheet. Its connection control must not be interactive.
+        XCTAssertFalse(
+            connect.isHittable,
+            "The plan's connection button must not be interactive during preparation."
+        )
         skip.tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
@@ -440,10 +448,49 @@ final class OneHandedHandChoiceUITests: XCTestCase {
         XCTAssertTrue(
             app.staticTexts["Use two boards, one hand on each."].waitForExistence(timeout: 20)
         )
-        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
+        let handPicker = app.buttons["workout.handPicker"]
+        XCTAssertTrue(
+            handPicker.waitForExistence(timeout: 20),
+            "The pre-start workout page must expose the inline hand picker when a choice is needed."
+        )
+        XCTAssertTrue(
+            handPicker.label.contains("Alternate hands"),
+            "A capacity-1 board must default to Alternate hands, got: \(handPicker.label)"
+        )
+
+        handPicker.tap()
+
+        let both = app.buttons["handSide.both"]
+        XCTAssertTrue(both.waitForExistence(timeout: 10), "The Both menu item must be present.")
+        XCTAssertEqual(both.label, "Both hands (two boards)")
+        XCTAssertTrue(app.buttons["handSide.alternate"].exists, "The Alternate menu item must be present.")
+
+        let left = app.buttons["handSide.left"]
+        XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
+        // The menu's accessibility container can have an invalid frame on iOS
+        // 26. Capture the visible row's finite frame and tap from the screen anchor.
+        tapVisibleControl(left, requireHittable: false)
+
+        let updated = app.buttons["workout.handPicker"]
+        let labelUpdated = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "label CONTAINS %@", "Left hand"),
+            object: updated
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [labelUpdated], timeout: 30),
+            .completed,
+            "Choosing a hand must update the picker label, got: \(updated.label)"
+        )
+
+        let start = app.buttons["Start"]
+        XCTAssertTrue(start.waitForExistence(timeout: 10))
+        start.tap()
 
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
-        XCTAssertFalse(app.buttons["workout.handPicker"].exists)
+        XCTAssertFalse(
+            app.buttons["workout.handPicker"].isEnabled,
+            "The hand picker must be disabled once the routine is running."
+        )
     }
 
     private func selectManualWeightSourceIfNeeded() {
@@ -460,5 +507,51 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             app.swipeUp()
         }
         start.tap()
+    }
+}
+
+extension XCTestCase {
+    /// Tap a measured screen position without resolving the control's window again.
+    /// SwiftUI menus and switches can expose finite control frames beneath
+    /// invalid window containers on iOS 26. SpringBoard provides the screen anchor
+    /// while the tested app remains foregrounded.
+    func tapVisibleControl(
+        _ element: XCUIElement,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        var offset: CGVector?
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                guard element.exists, element.isEnabled,
+                      !requireHittable || element.isHittable else { return false }
+                let frame = element.frame
+                let viewport = screen.frame
+                guard frame.minX.isFinite, frame.minY.isFinite,
+                      frame.width.isFinite, frame.height.isFinite,
+                      frame.width > 0, frame.height > 0,
+                      viewport.minX.isFinite, viewport.minY.isFinite,
+                      viewport.width.isFinite, viewport.height.isFinite,
+                      viewport.width > 0, viewport.height > 0 else { return false }
+                let point = CGPoint(
+                    x: frame.minX + frame.width * normalizedOffset.dx,
+                    y: frame.minY + frame.height * normalizedOffset.dy
+                )
+                guard viewport.contains(point) else { return false }
+                offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                return true
+            },
+            object: element
+        )
+        guard XCTWaiter.wait(for: [ready], timeout: 10) == .completed,
+              let offset else {
+            XCTFail("Control must have a finite, visible frame before tapping", file: file, line: line)
+            return
+        }
+        let root = screen.coordinate(withNormalizedOffset: .zero)
+        root.withOffset(offset).tap()
     }
 }
