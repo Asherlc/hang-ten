@@ -76,7 +76,9 @@ final class FreeWorkoutUITests: XCTestCase {
 
     /// Empty → Add Hang → Start Set → Cancel guided → set stays unchecked (no rest bar).
     func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() {
-        let app = launchResetFreeWorkout()
+        // Exercise cancellation without requiring the simulator's audio device.
+        // Hosted runners can abort inside AudioToolbox during engine prewarm.
+        let app = launchResetFreeWorkout(audioCuesEnabled: false)
         openEmptyLog(in: app)
         addHangExercise(in: app)
 
@@ -156,11 +158,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let close = app.buttons["freeWorkout.close"]
         XCTAssertTrue(close.waitForExistence(timeout: 10))
-        close.tap()
+        tapHittable(close, timeout: 10)
 
         let resume = app.buttons["freeWorkout.resume"]
         XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
-        resume.tap()
+        tapHittable(resume, timeout: 10)
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
@@ -171,7 +173,7 @@ final class FreeWorkoutUITests: XCTestCase {
         // Finish with zero completed sets → discard; history stays empty.
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
         confirmEndWorkoutDialog(in: app)
         let discardAlert = app.alerts["No completed sets"]
         XCTAssertTrue(discardAlert.waitForExistence(timeout: 8))
@@ -204,8 +206,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func launchResetFreeWorkout() -> XCUIApplication {
+    private func launchResetFreeWorkout(audioCuesEnabled: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
+        if !audioCuesEnabled {
+            app.launchArguments += ["-workoutAudioCuesEnabled", "NO"]
+        }
         app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         // Free Workout does not depend on a 3D board; avoid model loading while
         // locating the Train entry point on a fresh simulator.
@@ -320,7 +325,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
 
         confirmEndWorkoutDialog(in: app)
         skipTemplatePrompt(in: app)
@@ -395,6 +400,7 @@ final class FreeWorkoutUITests: XCTestCase {
             guard let element = evaluatedElement as? XCUIElement else { return false }
             let frame = element.frame
             return element.exists
+                && element.isEnabled
                 && element.isHittable
                 && frame.origin.x.isFinite
                 && frame.origin.y.isFinite

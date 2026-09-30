@@ -13,6 +13,10 @@ three pockets (27–38 mm), and a 10 mm closed crimp. The following distinct
 manufacturer photographs were retained under workspace scratch for visual
 review. Hashes are of the downloaded original JPEG bytes.
 
+Trango also specifies FSC-certified sustainable beech wood. The manifest's
+`display.surfaceFinish` is therefore `wood`, as required by the shared CAD
+finish metadata policy.
+
 | Photograph | SHA-256 | Evidence used |
 | --- | --- | --- |
 | [Top-down image with markings](https://cdn.shopify.com/s/files/1/0282/7557/2841/products/22850_RockProdigyNatural_MainImage_TopDownMarkings.jpg?v=1755037315) | `5c2d801f7b749a8efa14cf4507c67f37ec2ecd0b14de131938e91f1d53bebd12` | Front silhouette and hold arrangement; printed 20/33, 10/24, 10, 38, 30, 27, and 27 mm marks. |
