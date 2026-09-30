@@ -14,8 +14,10 @@ avoid repeating the same detours.
   with a hash-bound descriptor, so shipping needs the whole pipeline — but only
   **once**, at the end.
 - **Lean inner loop:** edit the throwaway FCStd-authoring script (under
-  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run the pytest suites, package validation, and
-  `compare_exports` as a release gate, not per tweak.
+  `.context/`, never committed) -> compile -> render / screenshot -> decide. Run
+  the pytest suites and package validation as release gates, not per tweak.
+  Use `compare_exports` as an optional diagnostic; authors may skip it when
+  the descriptor and renders agree (§14).
 - Triage the reference **first**: is it a constant cross-section (extruded
   profile -> reproduces exactly) or a genuinely sculpted closed shell (rounded
   lip, scooped pockets -> a solid native model cannot match it)? If sculpted,
