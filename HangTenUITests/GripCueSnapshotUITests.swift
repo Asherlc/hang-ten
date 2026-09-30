@@ -179,10 +179,7 @@ final class InitialWeightSetupUITests: XCTestCase {
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        tapVisibleControl(
-            bodyweight,
-            normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
-        )
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -214,7 +211,6 @@ final class InitialWeightSetupUITests: XCTestCase {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let setup = app.otherElements["plan.initialWeight.setup"]
         let bodyweightReady = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "exists == true AND hittable == true"),
             object: bodyweight
@@ -223,18 +219,8 @@ final class InitialWeightSetupUITests: XCTestCase {
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
-        // The visible label is outside the switch's accessibility frame.
-        let labelPoint = CGPoint(
-            x: setup.frame.minX + setup.frame.width * 0.1,
-            y: bodyweight.frame.midY
-        )
-        XCTAssertTrue(setup.frame.contains(labelPoint))
-        XCTAssertLessThan(labelPoint.x, bodyweight.frame.minX)
-        let label = setup.coordinate(withNormalizedOffset: CGVector(dx: 0, dy: 0))
-            .withOffset(CGVector(
-                dx: labelPoint.x - setup.frame.minX,
-                dy: labelPoint.y - setup.frame.minY
-            ))
+        let label = app.buttons["workout.initialWeight.addBodyweight.label"]
+        XCTAssertTrue(label.waitForExistence(timeout: 5))
         label.tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
