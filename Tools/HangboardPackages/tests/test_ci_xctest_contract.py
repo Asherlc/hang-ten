@@ -175,6 +175,8 @@ def test_build_required_gate_rejects_missing_required_validation(
             **os.environ,
             "CHANGES_RESULT": "success",
             "BUILD_REQUIRED": required,
+            "NATIVE_CAD_REQUIRED": "false",
+            "NATIVE_CAD_RESULT": "skipped",
             "UNIT_TEST_RESULT": unit,
             "UI_TEST_RESULT": ui,
         },
@@ -183,6 +185,28 @@ def test_build_required_gate_rejects_missing_required_validation(
         check=False,
     )
     assert result.returncode == expected, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("native_result", ["success", "failure", "cancelled", "skipped"])
+def test_build_required_gate_requires_successful_native_cad(native_result: str) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    step = workflow["jobs"]["build-required"]["steps"][0]
+    result = subprocess.run(
+        ["bash", "-c", step["run"]],
+        env={
+            **os.environ,
+            "CHANGES_RESULT": "success",
+            "BUILD_REQUIRED": "true",
+            "UNIT_TEST_RESULT": "success",
+            "UI_TEST_RESULT": "success",
+            "NATIVE_CAD_REQUIRED": "true",
+            "NATIVE_CAD_RESULT": native_result,
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == (0 if native_result == "success" else 1), result.stdout + result.stderr
 
 
 @pytest.mark.parametrize(
@@ -274,3 +298,37 @@ def test_xctest_runner_stops_after_first_failed_phase(
     )
     assert sum(event.startswith("xcrun:simctl boot ") for event in event_lines) == 1
     assert "-destination platform=iOS Simulator,id=22452A91-4697-4369-8812-53ADB77EB73B" in event_lines[build_for_testing]
+
+
+@pytest.mark.parametrize(
+    ("required", "native_result", "expected"),
+    [
+        ("true", "success", 0),
+        ("true", "failure", 1),
+        ("true", "skipped", 1),
+        ("true", "cancelled", 1),
+        ("false", "skipped", 0),
+    ],
+)
+def test_required_build_gate_rejects_missing_native_cad_checks(
+    required: str, native_result: str, expected: int
+) -> None:
+    workflow = yaml.safe_load((REPO_ROOT / ".github/workflows/ci.yml").read_text())
+    job = workflow["jobs"]["build-required"]
+    assert "transgression-native" in job["needs"]
+    result = subprocess.run(
+        ["bash", "-c", job["steps"][0]["run"]],
+        env={
+            **os.environ,
+            "CHANGES_RESULT": "success",
+            "BUILD_REQUIRED": "true",
+            "UNIT_TEST_RESULT": "success",
+            "UI_TEST_RESULT": "success",
+            "NATIVE_CAD_REQUIRED": required,
+            "NATIVE_CAD_RESULT": native_result,
+        },
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert result.returncode == expected, result.stdout + result.stderr

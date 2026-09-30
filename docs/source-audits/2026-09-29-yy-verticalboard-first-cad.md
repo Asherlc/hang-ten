@@ -59,3 +59,10 @@ Reproducibility, cross-platform staging and in-app picking validation are perfor
 The primary model display uses an orthographic camera tilted 15° down with 8% fit padding. This is a presentation estimate to make pocket walls and floors visible, not a manufacturer geometry fact.
 
 Final independent delivery results are recorded in [the batch delivery audit](2026-09-29-yy-verticalboards-delivery.md). The pinned rebuild reproduced both the USDZ and descriptor byte-identically.
+
+
+## Current committed source provenance after finish integration
+
+The standalone compile/rebuild evidence above refers to the source before main's runtime finish metadata integration: `b1a2a3f92522200ee328b1a326187a6f55a6fbcc9bf4ebc2ed9d941a4aaf84b2`. The current committed `yy-verticalboard-first.FCStd` SHA-256 (and Git LFS object ID) is `63b257876d9de260afc6557a1dcc3011711d571772fefb6087da2eea0390eeea`.
+
+Merge commit `79373106a` added only `presentations[0].media.display.surfaceFinish = "neutral"` using the supported manifest authoring tool. Comparing both source archives confirms identical member inventories and byte-identical geometry members; only `Document.xml` changed. Parsed manifests differ only by that finish field, with every contact and factual field unchanged. The delivered USDZ and descriptor hashes remain those recorded above. This is metadata provenance reconciliation, not a new geometry build or a claim that the new source hash was the earlier reproducibility input.

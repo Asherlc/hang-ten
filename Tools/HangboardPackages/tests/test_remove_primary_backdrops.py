@@ -28,6 +28,12 @@ def test_iron_palm_is_not_subject_to_seed_based_enclosed_background_clearing() -
     assert "soill-iron-palm-2" not in module._ENCLOSED_BACKGROUND_SEEDS
 
 
+def test_enclosed_background_seeds_have_live_raster_inputs() -> None:
+    module = _load_script()
+    for package in module._ENCLOSED_BACKGROUND_SEEDS:
+        assert (HANGBOARDS_ROOT / package / "assets" / "primary.png").is_file(), package
+
+
 @pytest.mark.parametrize(
     ("package", "hole", "preserved"),
     [

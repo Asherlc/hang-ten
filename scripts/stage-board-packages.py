@@ -107,6 +107,8 @@ CI_DEBUG_SIMULATOR_MODEL_SLUGS = frozenset({
     "frictitious-doormount-pro-7",
     "frictitious-megalith",
     "tension-whetstone",
+    "surfaces-for-climbing-transgression-2011",
+    "surfaces-for-climbing-transgression-2013",
     "trango-rock-prodigy-forge",
     "trango-rock-prodigy-natural",
     "yy-verticalboard-first",

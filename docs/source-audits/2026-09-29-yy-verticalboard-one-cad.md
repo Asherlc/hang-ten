@@ -247,3 +247,10 @@ Workspace reports are `compile-final.json`, `native-check.json` and `final-verif
 The primary model display uses an orthographic camera tilted 15° down with 8% fit padding. This is a presentation estimate to make pocket walls and floors visible, not a manufacturer geometry fact.
 
 Final independent delivery results are recorded in [the batch delivery audit](2026-09-29-yy-verticalboards-delivery.md). The pinned rebuild reproduced both the USDZ and descriptor byte-identically.
+
+
+## Current committed source provenance after finish integration
+
+The standalone compile/rebuild evidence above refers to the source before main's runtime finish metadata integration: `5e6b0ab9d7a0d7a7336e4634f601e5bc4440cef482d5aa47729b1373ab50ad73`. The current committed `yy-verticalboard-one.FCStd` SHA-256 (and Git LFS object ID) is `eee7a5194769cbca5d8f15041b2252f4b6635101ba884a9e089eaac0929bb728`.
+
+Merge commit `79373106a` added only `presentations[0].media.display.surfaceFinish = "neutral"` using the supported manifest authoring tool. Comparing both source archives confirms identical member inventories and byte-identical geometry members; only `Document.xml` changed. Parsed manifests differ only by that finish field, with every contact and factual field unchanged. The delivered USDZ and descriptor hashes remain those recorded above. This is metadata provenance reconciliation, not a new geometry build or a claim that the new source hash was the earlier reproducibility input.
