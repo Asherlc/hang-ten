@@ -405,3 +405,28 @@ physical picking and acceptance assertions are unchanged. This adjusts
 diagnostic coverage to the observed failed stage; it is not an unchanged CI
 retry or a rendering fix. All temporary probe wiring still requires removal
 before final trace-free validation and merge.
+
+
+### Root-translation result and controlled clipping comparison
+
+The fcc9 diagnostic run 36712514869 failed all six rendered map interaction
+cases while units, Python and purchase/settings/workout UI passed. Pro failed
+rendered orbit. Its root translation executed once (0.042299997 model units,
+6% width); the camera matrix remained unchanged, with no later camera-mode or
+synchronization log. The active, failed-orbit and five-second post-translation
+map crops are RGB-identical. The map bounds remain (34, 220, 334, 72), and the
+scene identity and revision 3 remain unchanged. This isolates failure beyond
+scene mutation but does not prove whether renderer output or hosted
+presentation is stale. Evidence is retained in workspace-owned ci-fcc9 logs,
+artifact, exported diagnostics and attachments.
+
+All temporary root-probe state/methods, UI button, sparse logs, launch flag,
+test helper and both helper calls have now been removed. The original saved
+failure assertions remain intact.
+
+The next controlled comparison removes only the ancestor content clipping
+from the Hold specs map card. The rounded cream background, border, padding,
+layout, Train-to-Hold-specs navigation, camera configuration, native gestures,
+rendered selection/orbit/reset and landscape assertions are retained. Other
+cards keep their default clipping. This is an experimental presentation change,
+not a demonstrated rendering fix; fresh trace-free CI must establish its result.
