@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */; };
 		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023 /* DeepLinkManager.swift */; settings = {ATTRIBUTES = (); }; };
 		36C9B0D20A18D7D5A46A4A67 /* FreeWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */; };
 		5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */; };
@@ -153,6 +154,7 @@
 		D1000000000000000000000C /* nature-stone-hanger Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000C /* nature-stone-hanger Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-nature-stone-hanger", ); }; };
 		D1000000000000000000000D /* tension-flash-board Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000D /* tension-flash-board Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-flash-board", ); }; };
 		D1000000000000000000002E /* tension-grindstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002E /* tension-grindstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone", ); }; };
+		D10000000000000000000031 /* tension-whetstone Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D20000000000000000000031 /* tension-whetstone Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-whetstone", ); }; };
 		D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000002F /* tension-grindstone-pro Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-tension-grindstone-pro", ); }; };
 		D1000000000000000000000E /* yy-baguette-evo Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000E /* yy-baguette-evo Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-yy-baguette-evo", ); }; };
 		D1000000000000000000000F /* metolius-climbers-edge Hangboards in Resources */ = {isa = PBXBuildFile; fileRef = D2000000000000000000000F /* metolius-climbers-edge Hangboards */; settings = {ASSET_TAGS = ("hang-ten-model-metolius-climbers-edge", ); }; };
@@ -236,6 +238,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BoardWoodSurfaceShader.metal; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4D /* FreeWorkoutStartSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutStartSheet.swift; path = FreeWorkoutStartSheet.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4F /* FreeWorkoutLogSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutLogSessionView.swift; path = FreeWorkoutLogSessionView.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B51 /* FreeWorkoutAddExerciseSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutAddExerciseSheet.swift; path = FreeWorkoutAddExerciseSheet.swift; sourceTree = "<group>"; };
@@ -384,6 +387,7 @@
 		D2000000000000000000000C /* nature-stone-hanger Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "nature-stone-hanger Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/nature-stone-hanger/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000D /* tension-flash-board Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-flash-board Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-flash-board/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002E /* tension-grindstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone/Hangboards"; sourceTree = "<absolute>"; };
+		D20000000000000000000031 /* tension-whetstone Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-whetstone Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-whetstone/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000002F /* tension-grindstone-pro Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tension-grindstone-pro Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/tension-grindstone-pro/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000E /* yy-baguette-evo Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "yy-baguette-evo Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/yy-baguette-evo/Hangboards"; sourceTree = "<absolute>"; };
 		D2000000000000000000000F /* metolius-climbers-edge Hangboards */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "metolius-climbers-edge Hangboards"; path = "$(DERIVED_FILE_DIR)/HangTenModelODR/metolius-climbers-edge/Hangboards"; sourceTree = "<absolute>"; };
@@ -514,6 +518,7 @@
 				D20000000000000000000012 /* soill-training-tiles Hangboards */,
 				D2000000000000000000000D /* tension-flash-board Hangboards */,
 				D2000000000000000000002E /* tension-grindstone Hangboards */,
+				D20000000000000000000031 /* tension-whetstone Hangboards */,
 				D2000000000000000000002F /* tension-grindstone-pro Hangboards */,
 				D20000000000000000000013 /* the-hangboard Hangboards */,
 				D20000000000000000000014 /* trango-rock-prodigy-training-center Hangboards */,
@@ -570,6 +575,7 @@
 			isa = PBXGroup;
 			children = (
 				A3D000000000000000000006 /* GripHandSurfaceShader.metal */,
+				A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -888,6 +894,7 @@
 				D10000000000000000000012 /* soill-training-tiles Hangboards in Resources */,
 				D1000000000000000000000D /* tension-flash-board Hangboards in Resources */,
 				D1000000000000000000002E /* tension-grindstone Hangboards in Resources */,
+				D10000000000000000000031 /* tension-whetstone Hangboards in Resources */,
 				D1000000000000000000002F /* tension-grindstone-pro Hangboards in Resources */,
 				D10000000000000000000013 /* the-hangboard Hangboards in Resources */,
 				D10000000000000000000014 /* trango-rock-prodigy-training-center Hangboards in Resources */,
@@ -1019,6 +1026,7 @@
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				A3D000000000000000000001 /* GripHandModelView.swift in Sources */,
 				A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */,
+				A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,

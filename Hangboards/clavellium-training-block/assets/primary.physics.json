@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceSHA256": "ff1b9cd7fd3376737af511bb09d419e309f9e8121126cc49967febb530b75562",
+  "sourceSHA256": "62fd932ed815fe02041cc1f798da08348827b0f69a8abbc273213bb2b2d2627b",
   "modelSHA256": "35417e90919ff4bb75c2e4faaffe04547457e67032de8601451d799d789ca64d",
   "coordinateSystem": "hang-ten-board-v1",
   "collision": {

@@ -101,15 +101,39 @@ final class WorkoutPaywallUITests: XCTestCase {
     }
 
     func testVerifiedPurchaseCarriesManualWeightSnapshotIntoSummary() {
+        continueAfterFailure = false
         let app = lockedPlanApp()
         app.launchEnvironment["HANGTEN_REVIEW_STOREKIT"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_VERIFIED_PURCHASE"] = "1"
         app.launchEnvironment["HANGTEN_REVIEW_STEP"] = "999"
+        // Match the weight-setup fixture; this case exercises the weight snapshot.
+        app.launchEnvironment["HANGTEN_REVIEW_BOARD_ID"] = "tension.grindstone-original"
+        app.launchEnvironment["HANGTEN_REVIEW_PLAN_ID"] = "research.max-hangs"
         app.launch()
 
+        XCTAssertTrue(app.staticTexts["Max Hangs"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Grindstone"].exists,
+                      "The weight-flow fixture must resolve to the requested raster board.")
         let source = app.segmentedControls["workout.initialWeight.sourcePicker"]
         XCTAssertTrue(source.waitForExistence(timeout: 10))
         source.buttons["Manual"].tap()
+
+        // Set the switch before focusing the decimal-pad field. A keyboard-active
+        // tap can leave the switch off even when XCTest reports it as hittable.
+        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
+        let bodyweightReady = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND hittable == true"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertEqual(bodyweight.value as? String, "0")
+        app.buttons["workout.initialWeight.addBodyweight.label"].tap()
+        let bodyweightEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "value == %@", "1"),
+            object: bodyweight
+        )
+        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
+                       "Add bodyweight must be on before purchasing")
 
         let field = app.textFields["workout.initialWeight.manualField"]
         XCTAssertTrue(field.waitForExistence(timeout: 10))
@@ -129,21 +153,7 @@ final class WorkoutPaywallUITests: XCTestCase {
             )
         )
         field.typeText("12.5")
-
-        let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
-        // Tap the off-state thumb; tapping the track center can miss it on iOS 26.
-        bodyweight.coordinate(withNormalizedOffset: CGVector(dx: 0.3, dy: 0.5)).tap()
-        let bodyweightEnabled = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "value == %@", "1"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightEnabled], timeout: 5), .completed,
-                       "Add bodyweight must be on before purchasing")
+        XCTAssertEqual(bodyweight.value as? String, "1")
 
         let start = app.buttons["plan.startRoutine"]
         XCTAssertTrue(start.waitForExistence(timeout: 2))

@@ -930,6 +930,29 @@ struct BoardPackageStore {
                     }
                     return input
                 }
+                let woodNodes = Set(displayDocument.woodNodeIDs)
+                let plasticNodes = Set(displayDocument.plasticNodeIDs)
+                let graniteNodes = Set(displayDocument.graniteNodeIDs)
+                let eligibleNodes = Set(descriptor.nodes.filter { $0.role != .attachment }.map(\.nodeID))
+                for (field, nodes) in [("woodNodeIDs", displayDocument.woodNodeIDs),
+                                       ("plasticNodeIDs", displayDocument.plasticNodeIDs),
+                                       ("graniteNodeIDs", displayDocument.graniteNodeIDs)] {
+                    guard Set(nodes).count == nodes.count,
+                          Set(nodes).isSubset(of: eligibleNodes) else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: document.id,
+                            reason: "display.\(field) must name unique body or contact descriptor nodes"
+                        )
+                    }
+                }
+                guard woodNodes.isDisjoint(with: plasticNodes),
+                      woodNodes.isDisjoint(with: graniteNodes),
+                      plasticNodes.isDisjoint(with: graniteNodes) else {
+                    throw BoardPackageStoreError.invalidPackage(
+                        boardID: document.id,
+                        reason: "display woodNodeIDs, plasticNodeIDs and graniteNodeIDs must be disjoint"
+                    )
+                }
                 let suspension = try suspensionDocument.map {
                     try makeModelSuspension(
                         $0,
@@ -959,7 +982,11 @@ struct BoardPackageStore {
                                 fitPadding: camera.fitPadding,
                                 distanceMultiplier: camera.distanceMultiplier,
                                 boundsExpansionFactor: camera.boundsExpansionFactor
-                            )
+                            ),
+                            surfaceFinish: displayDocument.surfaceFinish,
+                            woodNodeIDs: displayDocument.woodNodeIDs,
+                            plasticNodeIDs: displayDocument.plasticNodeIDs,
+                            graniteNodeIDs: displayDocument.graniteNodeIDs
                         ),
                         suspension: suspension,
                         orientation: orientation,
@@ -3332,13 +3359,25 @@ struct BoardPackageCanonicalCameraDocument: Decodable, Equatable {
 
 struct BoardPackageModelDisplayDocument: Decodable, Equatable {
     let camera: BoardPackageModelCameraDocument
+    let surfaceFinish: BoardSurfaceFinish
+    let woodNodeIDs: [String]
+    let plasticNodeIDs: [String]
+    let graniteNodeIDs: [String]
 
-    private enum CodingKeys: String, CodingKey { case camera }
+    private enum CodingKeys: String, CodingKey { case camera, surfaceFinish, woodNodeIDs, plasticNodeIDs, graniteNodeIDs }
 
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["camera"])
-        camera = try decoder.container(keyedBy: CodingKeys.self)
-            .decode(BoardPackageModelCameraDocument.self, forKey: .camera)
+        try decoder.rejectUnknownKeys(["camera", "surfaceFinish", "woodNodeIDs", "plasticNodeIDs", "graniteNodeIDs"])
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        camera = try container.decode(BoardPackageModelCameraDocument.self, forKey: .camera)
+        surfaceFinish = container.contains(.surfaceFinish)
+            ? try container.decode(BoardSurfaceFinish.self, forKey: .surfaceFinish) : .neutral
+        woodNodeIDs = container.contains(.woodNodeIDs)
+            ? try container.decode([String].self, forKey: .woodNodeIDs) : []
+        plasticNodeIDs = container.contains(.plasticNodeIDs)
+            ? try container.decode([String].self, forKey: .plasticNodeIDs) : []
+        graniteNodeIDs = container.contains(.graniteNodeIDs)
+            ? try container.decode([String].self, forKey: .graniteNodeIDs) : []
     }
 }
 

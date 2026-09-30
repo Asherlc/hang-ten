@@ -76,9 +76,20 @@ final class FreeWorkoutUITests: XCTestCase {
 
     /// Empty → Add Hang → Start Set → Cancel guided → set stays unchecked (no rest bar).
     func testFreeWorkoutGuidedHangCancelLeavesSetUnchecked() {
-        let app = launchResetFreeWorkout()
+        // Exercise cancellation without requiring the simulator's audio device.
+        // Hosted runners can abort inside AudioToolbox during engine prewarm.
+        let app = launchResetFreeWorkout(audioCuesEnabled: false)
         openEmptyLog(in: app)
         addHangExercise(in: app)
+
+        // XCTest can wait for the app to idle until a short guided hang has
+        // already completed. Give this cancellation test enough time to find
+        // and tap Cancel without racing the default ten-second countdown.
+        let duration = app.textFields.matching(NSPredicate(format: "placeholderValue == %@", "sec")).firstMatch
+        tapHittable(duration, timeout: 10)
+        duration.typeText("120")
+        XCTAssertEqual(duration.value as? String, "120")
+        tapHittable(app.buttons["freeWorkout.keyboard.done"], timeout: 10)
 
         let startSet = firstMatching(
             in: app,
@@ -86,6 +97,9 @@ final class FreeWorkoutUITests: XCTestCase {
             labels: ["Start Set"]
         )
         XCTAssertTrue(startSet.waitForExistence(timeout: 10), "Added hang should expose Start Set")
+        if !startSet.isHittable {
+            app.scrollViews["freeWorkout.log.scroll"].swipeUp()
+        }
         tapHittable(startSet, timeout: 15)
 
         let guided = anyElement(app, "freeWorkout.guidedHang")
@@ -132,11 +146,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let close = app.buttons["freeWorkout.close"]
         XCTAssertTrue(close.waitForExistence(timeout: 10))
-        close.tap()
+        tapHittable(close, timeout: 10)
 
         let resume = app.buttons["freeWorkout.resume"]
         XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
-        resume.tap()
+        tapHittable(resume, timeout: 10)
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
@@ -147,7 +161,7 @@ final class FreeWorkoutUITests: XCTestCase {
         // Finish with zero completed sets → discard; history stays empty.
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
         confirmEndWorkoutDialog(in: app)
         let discardAlert = app.alerts["No completed sets"]
         XCTAssertTrue(discardAlert.waitForExistence(timeout: 8))
@@ -180,8 +194,11 @@ final class FreeWorkoutUITests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func launchResetFreeWorkout() -> XCUIApplication {
+    private func launchResetFreeWorkout(audioCuesEnabled: Bool = true) -> XCUIApplication {
         let app = XCUIApplication()
+        if !audioCuesEnabled {
+            app.launchArguments += ["-workoutAudioCuesEnabled", "NO"]
+        }
         app.launchEnvironment["HANGTEN_REVIEW_RESET_FREE_WORKOUT"] = "1"
         // Free Workout does not depend on a 3D board; avoid model loading while
         // locating the Train entry point on a fresh simulator.
@@ -221,7 +238,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         // Focused actions sit below the board preview on an iPhone. Scroll them into view
         // before querying XCTest, which otherwise cannot see the lazy row controls.
-        let logScrollView = app.scrollViews.firstMatch
+        let logScrollView = app.scrollViews["freeWorkout.log.scroll"]
         XCTAssertTrue(logScrollView.waitForExistence(timeout: 10), "Free-workout log should scroll")
         logScrollView.swipeUp()
 
@@ -296,7 +313,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let finish = app.buttons["freeWorkout.finish"]
         XCTAssertTrue(finish.waitForExistence(timeout: 10))
-        finish.tap()
+        tapHittable(finish, timeout: 10)
 
         confirmEndWorkoutDialog(in: app)
         skipTemplatePrompt(in: app)
@@ -371,6 +388,7 @@ final class FreeWorkoutUITests: XCTestCase {
             guard let element = evaluatedElement as? XCUIElement else { return false }
             let frame = element.frame
             return element.exists
+                && element.isEnabled
                 && element.isHittable
                 && frame.origin.x.isFinite
                 && frame.origin.y.isFinite

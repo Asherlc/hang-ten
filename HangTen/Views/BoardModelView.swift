@@ -163,6 +163,9 @@ struct BoardModelRealityView: View {
     @State private var lastDragTranslation: CGSize = .zero
     @State private var lastMagnification: CGFloat = 1
     @State private var didReportUnavailable = false
+    #if DEBUG
+    @State private var synchronizedCameraDiagnostic = "pending"
+    #endif
 
     private var fieldOfViewDegrees: Double {
         #if DEBUG
@@ -178,6 +181,7 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
+                content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
                 if model.hasLiveRopes {
@@ -188,12 +192,39 @@ struct BoardModelRealityView: View {
                 }
                 applySync(size: size)
             } update: { content in
+                // Observe orbit invalidation in the RealityView update itself,
+                // as well as the projected SwiftUI accessibility overlay.
+                let revision = cameraRevision
+                content.camera = .virtual
                 applySync(size: size)
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    let diagnostic = "revision=\(revision);rootActive=\(model.root.isActive);cameraActive=\(model.camera.isActive);sameScene=\(model.root.scene != nil && model.root.scene === model.camera.scene)"
+                    Task { @MainActor in
+                        if synchronizedCameraDiagnostic != diagnostic {
+                            synchronizedCameraDiagnostic = diagnostic
+                        }
+                    }
+                }
+                #endif
             }
             .gesture(orbitGesture(size: size))
             .simultaneousGesture(magnifyGesture)
             .gesture(tapGesture)
             .overlay { accessibilityOverlay(size: size) }
+            #if DEBUG
+            .overlay(alignment: .topLeading) {
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_BOARD_DIAGNOSTICS"] == "1" {
+                    Color.clear
+                        .frame(width: 1, height: 1)
+                        .accessibilityElement()
+                        .accessibilityIdentifier("boardModel.renderDiagnostic")
+                        .accessibilityLabel("Board renderer diagnostic")
+                        .accessibilityValue(synchronizedCameraDiagnostic)
+                        .allowsHitTesting(false)
+                }
+            }
+            #endif
             .allowsHitTesting(!isDisplayOnly)
             // A different scene needs a fresh RealityView make closure so its
             // root and camera replace the prior scene's entities.
@@ -221,6 +252,8 @@ struct BoardModelRealityView: View {
         model.onLiveFailure = { unavailableCallback?() }
         let revisionBinding = $cameraRevision
         model.onLiveFrame = { revisionBinding.wrappedValue &+= 1 }
+        let priorCameraTransform = model.camera.transform.matrix
+        let priorInstanceTransforms = model.instanceEntities.map { $0.transform.matrix }
         var camera = model.camera.camera
         camera.fieldOfViewInDegrees = Float(fieldOfViewDegrees)
         camera.fieldOfViewOrientation = .vertical
@@ -233,6 +266,13 @@ struct BoardModelRealityView: View {
         #if DEBUG
         model.applyReviewCamera()
         #endif
+        // RealityView synchronizes after SwiftUI evaluates the accessibility
+        // overlay. Reproject once when framing or a board pose actually changes.
+        // The unchanged follow-up update must not schedule another invalidation.
+        if model.camera.transform.matrix != priorCameraTransform
+            || model.instanceEntities.map({ $0.transform.matrix }) != priorInstanceTransforms {
+            Task { @MainActor in cameraRevision &+= 1 }
+        }
         if let positionID, !didSelect {
             Task { @MainActor in
                 guard !didReportUnavailable else { return }
