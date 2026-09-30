@@ -72,3 +72,38 @@ definitions. It failed against the colliding identifiers before the fix.
 All 29 package-staging tests passed after the fix. `plutil` validation and
 `xcodebuild -list` passed; the parsed project confirms distinct file references,
 resource-phase membership, paths, and ODR tags for both packages.
+
+## Explicit non-AR camera for board maps
+
+CI run `36644927341`, map-batch05-b job `109665698938`, failed the
+Pro rendered-body check after its contact controls appeared. Decoding the
+retained screen recording with FFmpeg confirms persistent blank geometry;
+contact accessibility alone is not evidence that RealityKit renders the mesh.
+The other Forge, Natural, and Owl cases in that shard passed.
+
+The view added its authored `PerspectiveCamera` without requesting virtual
+camera mode. Apple documents AR as the iOS default, with non-AR fallback when
+the device camera or AR is unavailable:
+https://developer.apple.com/documentation/realitykit/realityviewcameracontent
+https://developer.apple.com/documentation/realitykit/realityviewcamera/virtual
+Local diagnostics confirmed `RKARCameraEntity` in that fallback configuration.
+A rapid-navigation baseline also reproduced a physical-picking failure.
+
+RealityView initialization now explicitly selects `.virtual` before adding
+the model and authored camera. This corrects the configuration gap without
+changing the loader, geometry, materials, navigation, or visual thresholds.
+The exact intermittent CI rendering cause is not independently established;
+the new CI result remains the decisive validation. Opt-in DEBUG lifecycle
+logging and a failure screenshot with viewport/sample diagnostics preserve
+evidence if rendering still fails.
+
+Local builds use SDK 27.0 with Simulator runtime 26.5; CI uses SDK 26.5.
+An unrelated local startup deadlock was sampled in HealthKit and its simulator
+background-task service. Only the owned simulator service was stopped to
+allow board validation; no production HealthKit code was changed.
+
+The changed build-for-testing succeeded. Evo passed its rendered-body, physical
+picking, orbit, canonical-reset, and landscape assertions with explicit
+virtual mode. Full shard and repeated Pro checks continue in the retained
+`map-virtual-*` logs and result bundles under the workspace-owned validation
+directory; these additional runs are not claimed complete here.

@@ -94,6 +94,11 @@ struct BoardModelSurface: View {
                 return
             }
             result = .loading
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] load begin \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             do {
                 let model = try await BoardModelRealityLoader.load(
                     board: board,
@@ -101,6 +106,11 @@ struct BoardModelSurface: View {
                     store: BoardCatalog.packageStore
                 )
                 guard !Task.isCancelled else { return }
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelSurface] load ready \(board.id) scene=\(ObjectIdentifier(model)) displayOnly=\(isDisplayOnly)")
+                }
+                #endif
                 result = .ready(model)
             } catch {
                 guard !Task.isCancelled else { return }
@@ -111,6 +121,11 @@ struct BoardModelSurface: View {
             }
         }
         .onDisappear {
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                print("[BoardModelSurface] disappear \(board.id) displayOnly=\(isDisplayOnly)")
+            }
+            #endif
             result = .loading
         }
     }
@@ -176,9 +191,17 @@ struct BoardModelRealityView: View {
         GeometryReader { proxy in
             let size = proxy.size
             RealityView { content in
+                // Board maps use the authored camera, without device tracking
+                // or the AR session's implicit non-AR fallback.
+                content.camera = .virtual
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
+                #if DEBUG
+                if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_MODEL_DIAGNOSTICS"] == "1" {
+                    print("[BoardModelRealityView] attach scene=\(ObjectIdentifier(model)) camera=\(content.camera) size=\(size) transform=\(model.camera.transform.matrix) rootScene=\(String(describing: model.root.scene))")
+                }
+                #endif
             } update: { content in
                 applySync(size: size)
             }

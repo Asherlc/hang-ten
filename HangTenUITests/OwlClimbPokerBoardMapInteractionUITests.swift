@@ -263,6 +263,7 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
+            "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
         ]
         app.launch()
         // The Train card's noninteractive preview starts loading this same model
@@ -349,12 +350,19 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     }
 
     private func assertModelBodyIsVisible(in viewport: XCUIElement) throws {
+        var lastSampleCount = 0
         let rendered = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            ((try? self.modelBodySampleCount(in: viewport)) ?? 0) > 8
+            lastSampleCount = (try? self.modelBodySampleCount(in: viewport)) ?? 0
+            return lastSampleCount > 8
         }, object: nil)
         // On-Demand Resources can still be downloading when the card's accessibility
         // element appears. Wait for the rendered body itself before checking it.
-        XCTAssertEqual(XCTWaiter.wait(for: [rendered], timeout: 90), .completed,
+        let result = XCTWaiter.wait(for: [rendered], timeout: 90)
+        if result != .completed {
+            capture("board-model-body-visibility-failure")
+            print("Model visibility diagnostic: viewport=\(viewport.frame) samples=\(lastSampleCount)")
+        }
+        XCTAssertEqual(result, .completed,
                        "Native board body must finish loading inside its map viewport")
     }
 
