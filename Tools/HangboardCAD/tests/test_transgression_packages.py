@@ -67,8 +67,9 @@ def test_every_continuous_contact_loads_with_its_real_model_binding(slug):
 
 
 @pytest.mark.skipif(
-    not Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd")).is_file(),
-    reason="FreeCAD native interpreter unavailable",
+    not Path(os.environ.get("HANGTEN_FREECAD_CMD", "/Applications/FreeCAD.app/Contents/Resources/bin/freecadcmd")).is_file()
+    and os.environ.get("CI", "").lower() != "true",
+    reason="FreeCAD native interpreter unavailable locally",
 )
 @pytest.mark.parametrize("slug", PACKAGES)
 def test_native_edits_keep_all_contacts_on_the_body(slug):

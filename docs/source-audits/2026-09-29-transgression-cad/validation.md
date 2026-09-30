@@ -15,7 +15,11 @@ No material or texture is authored in either runtime asset.
   semantic nodes and nine independently selectable contacts. Published rail
   depths are reproduced within 0.001 mm in the tessellated descriptor checks.
 - The two packages pass all five `test_transgression_packages.py` checks,
-  including actual native reopen and parameter-edit propagation. The full
+  including two cases that require a local FreeCAD binary for actual native
+  reopen and parameter-edit propagation. Locally those two cases skip if FreeCAD
+  is absent; CI fails if the configured binary is missing. The Linux metadata
+  job selects the three host-only cases explicitly, and the dedicated pinned
+  macOS FreeCAD job runs all five cases. The full
   staging test file passes all 28 cases, including both new simulator fixtures
   and all live Xcode resource tags.
 - Whole-catalog package validation passes with `--final-inventory`.
@@ -83,3 +87,30 @@ The EXIT cleanup trap deleted the exact owned simulator and removed workspace
 `simctl list devices --json` lookup confirms the UUID is absent and ownership
 records are consumed ([cleanup proof](review/resource-cleanup.json)). Shared
 simulators and workspaces were left alone.
+## PR review follow-up — 2026-09-30
+
+Merged the current main branch, preserving its delivery entries and both
+Transgression native sources, models and descriptor hashes. The merged delivery
+checksum is `88d992237a84d5ccdbdd9aaa11bb62488b1961a5a614108849cef472aceb96fd`;
+[verification](review/pr527-delivery-lock-check.json) passes for all 52 models.
+Whole-catalog final-inventory validation also passes.
+
+Review fixes clarify the original 1,241-test total, redact local usernames from
+retained evidence, keep checking the second revision after a missing-model
+failure, and make native CAD coverage explicit and required in CI. The pinned
+FreeCAD macOS job runs all five Transgression cases; the Linux job explicitly
+selects the three host-only cases. Missing FreeCAD fails the two native cases
+in CI and skips them locally.
+
+The focused Python checks pass all 60 cases: five Transgression native/package,
+28 staging and 27 CI contract cases. Additional subprocess checks confirm the
+missing-binary behavior and Linux selection. Workflow lint passes. The five
+new CI gate cases cover required native success, failure, skipped and cancelled
+results, plus an optional skipped result.
+
+The merged iOS app builds successfully. All 36 focused BoardModelRealityTests
+and BoardSourceBoundaryTests pass with zero skips or failures
+([xcresult summary](review/pr527-focused-ios-tests.json)). The EXIT trap deleted
+the exact workspace-owned review simulator; its UUID is absent from simctl,
+ownership records are consumed, and `.context/DerivedData` is removed.
+No Transgression geometry changed during this follow-up.

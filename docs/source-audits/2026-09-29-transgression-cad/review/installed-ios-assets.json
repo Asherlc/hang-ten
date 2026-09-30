@@ -1,6 +1,6 @@
 {
   "simulatorUUID": "52DBE53C-3DCC-41BF-AA8D-EF3B5E1B3E27",
-  "appContainer": "/Users/asherlc/Library/Developer/CoreSimulator/Devices/52DBE53C-3DCC-41BF-AA8D-EF3B5E1B3E27/data/Containers/Bundle/Application/7A08650B-1E48-4CDF-A081-E1063FEF8EDD/HangTen.app",
+  "appContainer": "/Users/REDACTED/Library/Developer/CoreSimulator/Devices/52DBE53C-3DCC-41BF-AA8D-EF3B5E1B3E27/data/Containers/Bundle/Application/7A08650B-1E48-4CDF-A081-E1063FEF8EDD/HangTen.app",
   "packages": {
     "surfaces-for-climbing-transgression-2011": {
       "installedDescriptorExact": true,

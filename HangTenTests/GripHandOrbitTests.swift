@@ -55,7 +55,8 @@ final class GripHandOrbitTests: XCTestCase {
 
         XCTAssertEqual(scene.currentPose?.action(), "HalfCrimp")
         XCTAssertEqual(scene.currentPose?.highlightedFingers, [.index, .ring])
-        XCTAssertEqual(scene.hand.scale.x, -1)
+        XCTAssertEqual(scene.hand.scale.x, 1)
+        XCTAssertTrue(scene.isMirrored)
         let narrowScale = try XCTUnwrap(scene.camera.components[OrthographicCameraComponent.self]).scale
 
         scene.orbit(azimuthDelta: 0.3, elevationDelta: 0)
@@ -263,7 +264,8 @@ final class GripHandOrbitTests: XCTestCase {
         scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
                      side: .left, viewportSize: CGSize(width: 200, height: 260), resetToken: 0)
 
-        XCTAssertEqual(scene.hand.scale.x, -1)
+        XCTAssertEqual(scene.hand.scale.x, 1)
+        XCTAssertTrue(scene.isMirrored)
         XCTAssertEqual(scene.camera.position.x, -rightPosition.x, accuracy: 1e-3)
         XCTAssertEqual(scene.camera.components[OrthographicCameraComponent.self]!.scale,
                        rightScale, accuracy: 1e-3)
@@ -377,6 +379,111 @@ final class GripHandOrbitTests: XCTestCase {
         XCTAssertNotEqual(scene.camera.position, startingCamera)
         XCTAssertLessThan(scene.camera.components[OrthographicCameraComponent.self]!.scale, startingScale)
         XCTAssertTrue(scene.root.children.contains { $0 === scene.camera })
+    }
+
+    @MainActor
+    func testPairUsesMirroredGeometryWithSeparatedObliqueHands() throws {
+        let scene = GripHandRealityPairScene()
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+        let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+        let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+        XCTAssertEqual(left.count, right.count)
+        XCTAssertEqual(left[0].x, -right[0].x, accuracy: 1e-5)
+        XCTAssertGreaterThan(scene.leftHand.scale.x, 0)
+        XCTAssertGreaterThan(scene.rightHand.scale.x, 0)
+        XCTAssertGreaterThan(abs(scene.leftHand.orientation.vector.y), 0.2)
+        XCTAssertGreaterThan(abs(scene.rightHand.orientation.vector.y), 0.2)
+
+        let leftX = left.map { (scene.leftHand.transform.matrix * SIMD4<Float>($0, 1)).x }
+        let rightX = right.map { (scene.rightHand.transform.matrix * SIMD4<Float>($0, 1)).x }
+        XCTAssertLessThan(try XCTUnwrap(leftX.max()) + 0.15,
+                          try XCTUnwrap(rightX.min()))
+    }
+
+    func testMirroredMeshBuffersReflectEveryVertexAndReverseEveryTriangle() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let source = try XCTUnwrap(asset.poses["HalfCrimp"])
+        let mirrored = try GripHandRealityMeshBuilder.geometry(
+            asset: asset, action: "HalfCrimp", mirrored: true
+        )
+        let expectedPositions = stride(from: 0, to: source.positions.count, by: 3).map { i in
+            SIMD3(-source.positions[i], source.positions[i + 1], source.positions[i + 2])
+        }
+        let expectedNormals = stride(from: 0, to: source.normals.count, by: 3).map { i in
+            SIMD3(-source.normals[i], source.normals[i + 1], source.normals[i + 2])
+        }
+        var expectedIndices: [UInt32] = []
+        expectedIndices.reserveCapacity(asset.indices.count)
+        for triangle in stride(from: 0, to: asset.indices.count, by: 3) {
+            expectedIndices.append(asset.indices[triangle])
+            expectedIndices.append(asset.indices[triangle + 2])
+            expectedIndices.append(asset.indices[triangle + 1])
+        }
+        XCTAssertEqual(mirrored.positions, expectedPositions)
+        XCTAssertEqual(mirrored.normals, expectedNormals)
+        XCTAssertEqual(mirrored.indices, expectedIndices)
+    }
+
+    @MainActor
+    func testPairKeepsConfiguredGapForEveryBundledPose() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let scene = GripHandRealityPairScene(assetResult: .success(asset))
+        let poses: [GripHandPose] = [
+            GripHandPose(posture: nil, fingerConfiguration: nil),
+            GripHandPose(posture: .openHand, fingerConfiguration: nil),
+            GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+            GripHandPose(posture: .fullCrimp, fingerConfiguration: nil),
+            GripHandPose(posture: .sloper, fingerConfiguration: nil)
+        ] + (0..<16).map { mask in
+            let fingers = Set(FingerSlot.allCases.enumerated().compactMap { index, finger in
+                mask & (1 << index) == 0 ? nil : finger
+            })
+            return GripHandPose(posture: .twoFingerPocket,
+                                fingerConfiguration: FingerConfiguration(engagedFingers: fingers))
+        }
+        XCTAssertEqual(Set(poses.map { $0.action() }), Set(asset.poses.keys))
+
+        for pose in poses {
+            scene.update(pose: pose, viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+            let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+            let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+            let leftEdge = try XCTUnwrap(left.map {
+                (scene.leftHand.transform.matrix * SIMD4<Float>($0, 1)).x
+            }.max())
+            let rightEdge = try XCTUnwrap(right.map {
+                (scene.rightHand.transform.matrix * SIMD4<Float>($0, 1)).x
+            }.min())
+            XCTAssertGreaterThanOrEqual(rightEdge - leftEdge, 0.549,
+                                        "\(pose.action()) must keep the configured gap")
+        }
+    }
+
+    @MainActor
+    func testPairHalfCrimpFingertipsCurlTowardCenter() throws {
+        let asset = try GripHandAsset.bundled.get()
+        let scene = GripHandRealityPairScene(assetResult: .success(asset))
+        scene.update(pose: GripHandPose(posture: .halfCrimp, fingerConfiguration: nil),
+                     viewportSize: CGSize(width: 360, height: 88), resetToken: 0)
+
+        func tipShift(for hand: Entity, vertices: [SIMD3<Float>]) -> Float {
+            let middleFinger = vertices.indices.filter { asset.digitIndices[$0] == 3 }
+            let bottom = middleFinger.map { vertices[$0].y }.min()!
+            let top = middleFinger.map { vertices[$0].y }.max()!
+            let base = middleFinger.filter { vertices[$0].y < bottom + 0.15 }
+            let tip = middleFinger.filter { vertices[$0].y > top - 0.15 }
+            func averageX(_ indices: [Int]) -> Float {
+                indices.reduce(0) {
+                    $0 + (hand.transform.matrix * SIMD4<Float>(vertices[$1], 1)).x
+                } / Float(indices.count)
+            }
+            return averageX(tip) - averageX(base)
+        }
+
+        let left = try XCTUnwrap(scene.leftSurface).posedVerticesForFraming()
+        let right = try XCTUnwrap(scene.rightSurface).posedVerticesForFraming()
+        XCTAssertGreaterThan(tipShift(for: scene.leftHand, vertices: left), 0.2)
+        XCTAssertLessThan(tipShift(for: scene.rightHand, vertices: right), -0.2)
     }
 
     @MainActor

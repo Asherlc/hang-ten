@@ -17,7 +17,8 @@ final class BoardModelRealityTests: XCTestCase {
             ))
             let presentation = board.defaultPresentation
             guard case .model = presentation.media else {
-                return XCTFail("Transgression requires its native model")
+                XCTFail("Transgression \(year) requires its native model")
+                continue
             }
             let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
             XCTAssertEqual(scene.contactEntities.count, 9)
