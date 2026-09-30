@@ -179,7 +179,10 @@ final class InitialWeightSetupUITests: XCTestCase {
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
-        bodyweight.tap()
+        tapVisibleControl(
+            bodyweight,
+            normalizedOffset: CGVector(dx: 0.3, dy: 0.5)
+        )
         let bodyweightEnabled = XCTNSPredicateExpectation(
             predicate: NSPredicate(format: "value == %@", "1"),
             object: bodyweight
@@ -259,7 +262,12 @@ final class InitialWeightSetupUITests: XCTestCase {
         tapStartRoutine()
         let skip = app.buttons["Skip preparation"]
         XCTAssertTrue(skip.waitForExistence(timeout: 15))
-        XCTAssertFalse(app.buttons["plan.initialWeight.connect"].exists)
+        // Navigation can retain the plan's accessibility elements behind the
+        // preparation sheet. Its connection control must not be interactive.
+        XCTAssertFalse(
+            connect.isHittable,
+            "The plan's connection button must not be interactive during preparation."
+        )
         skip.tap()
         XCTAssertTrue(app.buttons["Pause"].waitForExistence(timeout: 20))
         XCTAssertTrue(app.otherElements["motherboard.forceRocker"].exists)
@@ -396,15 +404,9 @@ final class OneHandedHandChoiceUITests: XCTestCase {
 
         let left = app.buttons["handSide.left"]
         XCTAssertTrue(left.waitForExistence(timeout: 10), "The Left hand menu item must be present.")
-        // The native menu can expose a valid row frame under zero-sized
-        // accessibility containers. Anchor the tap to the app window so
-        // XCTest does not synthesize it against a zero-sized parent window.
-        let leftFrame = left.frame
-        XCTAssertGreaterThan(leftFrame.width, 0)
-        XCTAssertGreaterThan(leftFrame.height, 0)
-        app.coordinate(withNormalizedOffset: .zero)
-            .withOffset(CGVector(dx: leftFrame.midX, dy: leftFrame.midY))
-            .tap()
+        // The menu's accessibility container can have an invalid frame on iOS
+        // 26. Capture the visible row's finite frame and tap from the screen anchor.
+        tapVisibleControl(left, requireHittable: false)
 
         let updated = app.buttons["workout.handPicker"]
         let labelUpdated = XCTNSPredicateExpectation(
@@ -442,5 +444,51 @@ final class OneHandedHandChoiceUITests: XCTestCase {
             app.swipeUp()
         }
         start.tap()
+    }
+}
+
+extension XCTestCase {
+    /// Tap a measured screen position without resolving the control's window again.
+    /// SwiftUI menus and switches can expose finite control frames beneath
+    /// invalid window containers on iOS 26. SpringBoard provides the screen anchor
+    /// while the tested app remains foregrounded.
+    func tapVisibleControl(
+        _ element: XCUIElement,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        var offset: CGVector?
+        let ready = XCTNSPredicateExpectation(
+            predicate: NSPredicate { _, _ in
+                guard element.exists, element.isEnabled,
+                      !requireHittable || element.isHittable else { return false }
+                let frame = element.frame
+                let viewport = screen.frame
+                guard frame.minX.isFinite, frame.minY.isFinite,
+                      frame.width.isFinite, frame.height.isFinite,
+                      frame.width > 0, frame.height > 0,
+                      viewport.minX.isFinite, viewport.minY.isFinite,
+                      viewport.width.isFinite, viewport.height.isFinite,
+                      viewport.width > 0, viewport.height > 0 else { return false }
+                let point = CGPoint(
+                    x: frame.minX + frame.width * normalizedOffset.dx,
+                    y: frame.minY + frame.height * normalizedOffset.dy
+                )
+                guard viewport.contains(point) else { return false }
+                offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                return true
+            },
+            object: element
+        )
+        guard XCTWaiter.wait(for: [ready], timeout: 10) == .completed,
+              let offset else {
+            XCTFail("Control must have a finite, visible frame before tapping", file: file, line: line)
+            return
+        }
+        let root = screen.coordinate(withNormalizedOffset: .zero)
+        root.withOffset(offset).tap()
     }
 }

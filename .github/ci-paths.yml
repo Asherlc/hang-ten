@@ -29,6 +29,7 @@ metadata:
   - 'HangTen.xcodeproj/**'
   - 'HangTen/Resources/Assets.xcassets/AppIcon.appiconset/**'
 workflow:
+  - 'scripts/ci-run-xctest.sh'
   - '.github/workflows/**'
   - '.github/ci-paths.yml'
   - '.github/actions/**'
