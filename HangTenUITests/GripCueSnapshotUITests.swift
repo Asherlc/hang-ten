@@ -168,14 +168,10 @@ final class InitialWeightSetupUITests: XCTestCase {
         source.buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
         XCTAssertLessThan(
             bodyweight.frame.width,
-            app.frame.width / 3,
+            XCUIApplication(bundleIdentifier: "com.apple.springboard").frame.width / 3,
             "The switch accessibility target should not span the full weight-tracking row."
         )
         XCTAssertEqual(bodyweight.value as? String, "0")
@@ -211,11 +207,7 @@ final class InitialWeightSetupUITests: XCTestCase {
         app.segmentedControls["workout.initialWeight.sourcePicker"].buttons["Manual"].tap()
 
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         XCTAssertEqual(bodyweight.label, "Add bodyweight")
 
@@ -449,40 +441,52 @@ extension XCTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        visibleControlCoordinate(
+            element, normalizedOffset: normalizedOffset, requireHittable: requireHittable,
+            timeout: timeout, file: file, line: line
+        )?.tap()
+    }
+
+    /// Validate a complete accessibility snapshot before applying the retry budget.
+    /// A single hosted query can outlast that budget; a valid result is still ready.
+    func visibleControlCoordinate(
+        _ element: XCUIElement,
+        normalizedOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+        requireHittable: Bool = true,
+        timeout: TimeInterval = 10,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) -> XCUICoordinate? {
         let screen = XCUIApplication(bundleIdentifier: "com.apple.springboard")
-        var offset: CGVector?
+        let deadline = ProcessInfo.processInfo.systemUptime + timeout
         var lastFrame: CGRect?
         var lastViewport: CGRect?
-        let ready = XCTNSPredicateExpectation(
-            predicate: NSPredicate { _, _ in
-                guard element.exists, element.isEnabled,
-                      !requireHittable || element.isHittable else { return false }
+        repeat {
+            if element.exists, element.isEnabled, !requireHittable || element.isHittable {
                 let frame = element.frame
                 let viewport = screen.frame
                 lastFrame = frame
                 lastViewport = viewport
-                guard frame.minX.isFinite, frame.minY.isFinite,
-                      frame.width.isFinite, frame.height.isFinite,
-                      frame.width > 0, frame.height > 0,
-                      viewport.minX.isFinite, viewport.minY.isFinite,
-                      viewport.width.isFinite, viewport.height.isFinite,
-                      viewport.width > 0, viewport.height > 0 else { return false }
-                let point = CGPoint(
-                    x: frame.minX + frame.width * normalizedOffset.dx,
-                    y: frame.minY + frame.height * normalizedOffset.dy
-                )
-                guard viewport.contains(point) else { return false }
-                offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
-                return true
-            },
-            object: element
-        )
-        guard XCTWaiter.wait(for: [ready], timeout: timeout) == .completed,
-              let offset else {
-            XCTFail("Control must have a finite, visible frame before tapping; control=\(String(describing: lastFrame)), screen=\(String(describing: lastViewport)), target=\(String(describing: offset))", file: file, line: line)
-            return
-        }
-        let root = screen.coordinate(withNormalizedOffset: .zero)
-        root.withOffset(offset).tap()
+                if frame.minX.isFinite, frame.minY.isFinite,
+                   frame.width.isFinite, frame.height.isFinite,
+                   frame.width > 0, frame.height > 0,
+                   viewport.minX.isFinite, viewport.minY.isFinite,
+                   viewport.width.isFinite, viewport.height.isFinite,
+                   viewport.width > 0, viewport.height > 0 {
+                    let point = CGPoint(
+                        x: frame.minX + frame.width * normalizedOffset.dx,
+                        y: frame.minY + frame.height * normalizedOffset.dy
+                    )
+                    if viewport.contains(point) {
+                        let offset = CGVector(dx: point.x - viewport.minX, dy: point.y - viewport.minY)
+                        return screen.coordinate(withNormalizedOffset: .zero).withOffset(offset)
+                    }
+                }
+            }
+            if ProcessInfo.processInfo.systemUptime >= deadline { break }
+            Thread.sleep(forTimeInterval: 0.1)
+        } while true
+        XCTFail("Control must have a finite, visible frame; control=\(String(describing: lastFrame)), screen=\(String(describing: lastViewport))", file: file, line: line)
+        return nil
     }
 }

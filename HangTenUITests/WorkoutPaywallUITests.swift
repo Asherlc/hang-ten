@@ -121,11 +121,7 @@ final class WorkoutPaywallUITests: XCTestCase {
         // Set the switch before focusing the decimal-pad field. A keyboard-active
         // tap can leave the switch off even when XCTest reports it as hittable.
         let bodyweight = app.switches["workout.initialWeight.addBodyweight"]
-        let bodyweightReady = XCTNSPredicateExpectation(
-            predicate: NSPredicate(format: "exists == true AND hittable == true"),
-            object: bodyweight
-        )
-        XCTAssertEqual(XCTWaiter.wait(for: [bodyweightReady], timeout: 10), .completed)
+        XCTAssertNotNil(visibleControlCoordinate(bodyweight, requireHittable: false, timeout: 30))
         XCTAssertEqual(bodyweight.value as? String, "0")
         app.buttons["workout.initialWeight.addBodyweight.label"].tap()
         let bodyweightEnabled = XCTNSPredicateExpectation(

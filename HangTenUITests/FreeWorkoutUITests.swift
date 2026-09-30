@@ -9,7 +9,7 @@ final class FreeWorkoutUITests: XCTestCase {
     func testFreeWorkoutStartSheetOpensFromTrain() {
         let app = launchResetFreeWorkout()
         let entry = app.buttons["train.freeWorkout"]
-        tapHittable(entry, timeout: 15)
+        tapVisibleButton(entry, timeout: 15)
         XCTAssertTrue(anyElement(app, "freeWorkout.start").waitForExistence(timeout: 10))
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["freeWorkout.empty"].waitForExistence(timeout: 10))
@@ -63,7 +63,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         // Start sheet dismissed after finish; reopen without reset so history remains.
         let entry = app.buttons["train.freeWorkout"]
-        tapHittable(entry, timeout: 15)
+        tapVisibleButton(entry, timeout: 15)
         XCTAssertTrue(app.navigationBars["Free workout"].waitForExistence(timeout: 15))
         let last = app.buttons["freeWorkout.last"]
         XCTAssertTrue(last.waitForExistence(timeout: 15))
@@ -116,7 +116,7 @@ final class FreeWorkoutUITests: XCTestCase {
         if cancel.waitForExistence(timeout: 10) {
             tapVisibleControl(cancel, requireHittable: false)
         } else if app.alerts.buttons["Cancel"].exists {
-            tapHittable(app.alerts.buttons["Cancel"], timeout: 3)
+            tapVisibleButton(app.alerts.buttons["Cancel"], timeout: 3)
         } else {
             XCTFail("Guided hang should expose Cancel as a control or confirmation alert")
             return
@@ -160,7 +160,7 @@ final class FreeWorkoutUITests: XCTestCase {
 
         let resume = app.buttons["freeWorkout.resume"]
         XCTAssertTrue(resume.waitForExistence(timeout: 8), "Active log should surface Resume after Close.")
-        tapHittable(resume, timeout: 10)
+        tapVisibleButton(resume, timeout: 10)
         XCTAssertTrue(anyElement(app, "freeWorkout.log").waitForExistence(timeout: 10))
         XCTAssertTrue(focusedSetActionAvailable(in: app, timeout: 10))
 
@@ -180,7 +180,7 @@ final class FreeWorkoutUITests: XCTestCase {
         discardButtons.element(boundBy: 0).tap()
 
         let entry = app.buttons["train.freeWorkout"]
-        tapHittable(entry, timeout: 10)
+        tapVisibleButton(entry, timeout: 10)
         XCTAssertTrue(app.buttons["freeWorkout.empty"].waitForExistence(timeout: 10))
         XCTAssertFalse(
             app.buttons["freeWorkout.last"].isEnabled,
@@ -196,7 +196,7 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTAssertTrue(anyElement(app, "freeWorkout.restBar").waitForExistence(timeout: 10))
         finishWorkoutSkippingTemplate(in: app)
 
-        tapHittable(entry, timeout: 10)
+        tapVisibleButton(entry, timeout: 10)
         let last = app.buttons["freeWorkout.last"]
         XCTAssertTrue(last.waitForExistence(timeout: 10))
         XCTAssertTrue(last.isEnabled)
@@ -220,7 +220,7 @@ final class FreeWorkoutUITests: XCTestCase {
     private func openEmptyLog(in app: XCUIApplication, alreadyOnStartSheet: Bool = false) {
         if !alreadyOnStartSheet {
             let entry = app.buttons["train.freeWorkout"]
-            tapHittable(entry, timeout: 15)
+            tapVisibleButton(entry, timeout: 15)
         }
         let empty = app.buttons["freeWorkout.empty"]
         XCTAssertTrue(empty.waitForExistence(timeout: 10))
@@ -280,7 +280,7 @@ final class FreeWorkoutUITests: XCTestCase {
             checkbox.waitForExistence(timeout: 15),
             "Hang set needs Mark set complete (or Mark done) to finish without guided hang"
         )
-        tapHittable(checkbox, timeout: 15)
+        tapVisibleButton(checkbox, timeout: 15)
     }
 
     private func focusedSetActionAvailable(in app: XCUIApplication, timeout: TimeInterval) -> Bool {
@@ -393,27 +393,8 @@ final class FreeWorkoutUITests: XCTestCase {
         XCTFail("Expected Save as Template? alert with Skip after finishing a set")
     }
 
-    private func tapHittable(_ element: XCUIElement, timeout: TimeInterval = 10) {
-        let predicate = NSPredicate { evaluatedElement, _ in
-            guard let element = evaluatedElement as? XCUIElement else { return false }
-            let frame = element.frame
-            return element.exists
-                && element.isEnabled
-                && element.isHittable
-                && frame.origin.x.isFinite
-                && frame.origin.y.isFinite
-                && frame.width.isFinite
-                && frame.height.isFinite
-                && frame.width > 0
-                && frame.height > 0
-        }
-        let wait = expectation(for: predicate, evaluatedWith: element)
-        XCTAssertEqual(
-            XCTWaiter.wait(for: [wait], timeout: timeout),
-            .completed,
-            "Element must have a finite, nonzero hittable frame before tapping: \(element)"
-        )
-        element.tap()
+    private func tapVisibleButton(_ element: XCUIElement, timeout: TimeInterval = 10) {
+        tapVisibleControl(element, requireHittable: false, timeout: timeout)
     }
 
     private func anyElement(_ app: XCUIApplication, _ identifier: String) -> XCUIElement {
