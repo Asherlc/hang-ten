@@ -63,6 +63,8 @@ The [Contact guide](https://www.metoliusclimbing.com/pages/contact-training-guid
 
 The [Simulator 3D guide](https://www.metoliusclimbing.com/pages/simulator-3d-training-guide) prescribes ordinary two-hand use of center round sloper #3 in Entry minute 8, Intermediate minute 4, and Advanced minute 10. The package has one center contact for #3, `round-sloper-3-center`, with capacity two. The Simulator 3D board has exactly one capacity-two contact record. These are hold metadata edits only; no geometry or model asset changed.
 
+The [generic 10 Minute Sequences guide](https://www.metoliusclimbing.com/pages/10-minute-sequences-hangboard-training-guide) prescribes round-sloper work in Intermediate minutes 2, 4, and 10. Under the approved two-hand default, the `sloper-round-center` contact on the Wood Grips Compact II must support two hands for those tasks to resolve. Its CAD manifest records `handCapacity: 2`; this changes contact metadata only and leaves the model, descriptor, and geometry unchanged.
+
 ## Contact guide and numbered-diagram conflicts
 
 Checked September 28, 2026 against the [current Contact routine table](https://www.metoliusclimbing.com/pages/contact-training-guide) and the [numbered hold diagram embedded in that same guide](https://cdn.shopify.com/s/files/1/0955/0030/4457/files/con-num-dep.jpg?v=1759520708). The manufacturer publishes conflicting descriptions for these numbered holds. The board inventory follows the numbered diagram. The plan text and predicates generally keep the routine's printed hold *number* and use the diagram's physical hold type; those are explicit source reconciliations, not independent grip prescriptions.
