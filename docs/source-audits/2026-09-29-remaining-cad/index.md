@@ -1,6 +1,8 @@
 # Remaining hangboard CAD review
 
-21 native CAD migrations prepared by three subagents. Every board is pending our requested one-by-one review.
+21 native CAD migrations prepared by three subagents. Cyclops was reviewed first, and the user accepted its shorter display cord on 2026-09-30. The recorded acceptance applies to the revised cord length. Captain Fingerfood DUAL is next; the remaining 20 boards await one-by-one review.
+
+[Cyclops review response and exact asset identities](aelith-cyclops-011/human-review.json).
 
 Each packet includes manufacturer evidence and prior/current geometry views. Former raster boards label the prior raster; their new side and top views have no prior 3D counterpart.
 

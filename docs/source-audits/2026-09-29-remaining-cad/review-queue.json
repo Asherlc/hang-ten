@@ -2,14 +2,14 @@
   "schemaVersion": 1,
   "owner": "placid-badger",
   "baselineCommit": "d0e4e95191e4a76822815bb4eeef3a32caa6fea0",
-  "reviewState": "pending individual review with asherlc after batch validation",
+  "reviewState": "one-by-one review in progress: Cyclops shorter cord accepted; Captain Fingerfood DUAL next",
   "boards": [
     {
       "number": 1,
       "package": "aelith-cyclops-011",
       "boardID": "aelith.cyclops-011",
       "name": "Aelith Equipment Cyclops #011 Blue x Black",
-      "humanReview": "pending",
+      "humanReview": "reviewed; shorter display cord accepted",
       "sourceSHA256": "088dc7b318289e77227713175cdad2037bc789cbc52e153ff79adc8f5627b146",
       "reviewPage": "aelith-cyclops-011/review/index.html",
       "sourceAudit": "aelith-cyclops-011/native-authoring.md",
@@ -31,7 +31,8 @@
       "reviewFeedback": [
         "cord is way too long"
       ],
-      "latestRevision": "aelith-cyclops-011/cord-shortening-review.md"
+      "latestRevision": "aelith-cyclops-011/cord-shortening-review.md",
+      "humanReviewRecord": "aelith-cyclops-011/human-review.json"
     },
     {
       "number": 2,
