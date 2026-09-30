@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */ = {isa = PBXBuildFile; fileRef = A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */; };
 		00EF7326782F40D0B2C91B8B /* DeepLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C810A83CBE426896962023 /* DeepLinkManager.swift */; settings = {ATTRIBUTES = (); }; };
 		36C9B0D20A18D7D5A46A4A67 /* FreeWorkoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A564BC280D6FB491874B17 /* FreeWorkoutTests.swift */; };
 		5F8F1B1E5F16242FFEF5C807 /* FreeWorkoutUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6670079FFE3AE1A4777B8E1A /* FreeWorkoutUITests.swift */; };
@@ -216,6 +217,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = BoardWoodSurfaceShader.metal; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4D /* FreeWorkoutStartSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutStartSheet.swift; path = FreeWorkoutStartSheet.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B4F /* FreeWorkoutLogSessionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutLogSessionView.swift; path = FreeWorkoutLogSessionView.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F708192A3B51 /* FreeWorkoutAddExerciseSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FreeWorkoutAddExerciseSheet.swift; path = FreeWorkoutAddExerciseSheet.swift; sourceTree = "<group>"; };
@@ -531,6 +533,7 @@
 			isa = PBXGroup;
 			children = (
 				A3D000000000000000000006 /* GripHandSurfaceShader.metal */,
+				A4D000000000000000000002 /* BoardWoodSurfaceShader.metal */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -949,6 +952,7 @@
 				AA0000000000000000000008 /* GripDiagramView.swift in Sources */,
 				A3D000000000000000000001 /* GripHandModelView.swift in Sources */,
 				A3D000000000000000000005 /* GripHandSurfaceShader.metal in Sources */,
+				A4D000000000000000000001 /* BoardWoodSurfaceShader.metal in Sources */,
 				AA0000000000000000000009 /* HealthKitService.swift in Sources */,
 				AA0000000000000000000014 /* PlanStorage.swift in Sources */,
 				AA0000000000000000000071 /* BoardStorage.swift in Sources */,
