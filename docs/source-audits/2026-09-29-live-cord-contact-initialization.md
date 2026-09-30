@@ -687,3 +687,7 @@ whole-geometry 50x speedup, complete-step or live-rollout claim.
 ## 2026-09-30 — verified admission, native sparse replay and settled CAD checks
 
 [Bounded native contact checkpoints](2026-09-30-live-contact-admission.md) retain three numerically passing but performance-rejected 50-run screens and independent exact native CAD checks of six production Clavellium settled destinations. No app backend or new live profile is adopted. The unchanged production Mini first correction exceeds its contact-row guard; that resource limit remains intact.
+
+## 2026-09-30 — streamed affine source and production Mini checkpoint
+
+[The reviewed streamed replay](2026-09-30-live-streamed-contact.md) retains the working-QP guard while checking all 119,953 production Mini inequalities. The experimental full solver passes initialization at two 715-particle loops; its motion run is a stopped partial prefix. Numerical replays pass, performance gates fail, and no backend/profile is adopted.

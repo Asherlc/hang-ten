@@ -1,5 +1,33 @@
 # Mini Bar Bullet rope contact experiment
 
+The [native contact screen](run_native_contact_screen.sh) is a separate,
+experimental replay tool for the current coupled solver. It builds against the
+checked-out band/equality source, refactors the same sparse Newton pattern for
+each changed weight, and scans every frozen affine inequality after contact
+admission. Source streams may exceed 100,000 rows; admitted working QPs retain
+their 100,000-row limit. Both material loops and height stay in one solve.
+This tool does not build or modify the app, enable a live profile, or prove CAD,
+motion, mesh-update or device performance gates.
+
+Use macOS with Xcode and a Python environment containing NumPy and SciPy
+(the existing sparse-screen environment works). All generated files, source
+hashes and exact process ownership records go under
+`.context/<workspace-owner>-native-contact/`. The launcher and driver clean up
+only resources created by their current invocation. For example:
+
+```sh
+rtk proxy env HANGTEN_NATIVE_SCREEN_PYTHON=.context/strong-owl-live-physics-sparse-contact/venv/bin/python bash Tools/HangboardRopePrototype/run_native_contact_screen.sh fixtures --label numerical
+rtk proxy env HANGTEN_NATIVE_SCREEN_PYTHON=.context/strong-owl-live-physics-sparse-contact/venv/bin/python bash Tools/HangboardRopePrototype/run_native_contact_screen.sh replay --frozen .context/strong-owl-live-physics-handoff/mini-dynamics-probe/frozen-qp.json --oracle .context/strong-owl-live-physics-handoff/mini-dynamics-probe/persistent-qp-python-primal.json --runs 50 --label hard
+```
+
+Fixtures exit zero when their numerical assertions pass. Replay independently
+checks the original full matrix and strict KKT residuals. Replay exits `3` for
+a numerical pass with a failed or unmeasured 2 ms cold-QP performance gate,
+`1` for numerical rejection, and zero only when both gates pass. Fewer than 50
+cold runs never report p95 or satisfy that performance gate. Input decoding is
+outside the clock; equality assembly/factorization, streamed row construction,
+admission, refactors, solves and full affine certification are inside it.
+
 The separate [sparse contact screen](sparse_contact_screen.py) targets the
 current coupled live solver's frozen triangle-contact QP. Its
 [30 September audit](../../docs/source-audits/2026-09-30-live-sparse-primal-contact.md)
