@@ -12,6 +12,34 @@ final class RopeInterContactTests:XCTestCase {
             supports:supports,attachments:[:],portals:[:],channelSegments:[:])
     }
 
+    func testIndependentKnotRaysRotateWithoutFalseSweepExhaustion() {
+        let support=SIMD3<Double>.zero,u=SIMD3<Double>(0.08,-0.12,0.01),v=SIMD3<Double>(0.12,-0.04,0.07)
+        let q=simd_quatd(angle:0.03,axis:SIMD3<Double>(0,0,1))
+        for firstStart in [true,false] {
+            for secondStart in [true,false] {
+                let first=Self.chain("first",firstStart ? [support,u]:[u,support],supports:[firstStart ? 0:1:support])
+                let second=Self.chain("second",secondStart ? [support,v]:[v,support],supports:[secondStart ? 0:1:support])
+                var nextFirst=first,nextSecond=second
+                nextFirst.positions=first.positions.map{q.act($0)}
+                nextSecond.positions=second.positions.map{q.act($0)}
+                XCTAssertTrue(RopeCordContacts.between(first,second).isEmpty)
+                XCTAssertTrue(RopeCordContacts.between(nextFirst,nextSecond).isEmpty)
+                XCTAssertTrue(RopeCordContacts.sweepValid(previousFirst:first,first:nextFirst,previousSecond:second,second:nextSecond))
+            }
+        }
+    }
+
+    func testIndependentKnotRaysCannotSwapThroughEachOther() {
+        let support=SIMD3<Double>.zero,u=SIMD3<Double>(0.08,-0.12,0.01),v=SIMD3<Double>(0.12,-0.04,0.07)
+        let first=Self.chain("first",[support,u],supports:[0:support])
+        let second=Self.chain("second",[v,support],supports:[1:support])
+        var nextFirst=first,nextSecond=second
+        nextFirst.positions=[support,v];nextSecond.positions=[u,support]
+        XCTAssertTrue(RopeCordContacts.between(first,second).isEmpty)
+        XCTAssertTrue(RopeCordContacts.between(nextFirst,nextSecond).isEmpty)
+        XCTAssertFalse(RopeCordContacts.sweepValid(previousFirst:first,first:nextFirst,previousSecond:second,second:nextSecond))
+    }
+
     func testIndependentCordSweepCertifiesEndReachedOnLastIteration() {
         let first=Self.chain("first",[SIMD3(-1,0,0),SIMD3(1,0,0)],radius:0.000275)
         let second=Self.chain("second",[SIMD3(-1,0.001,0),SIMD3(1,0.001,0)],radius:0.000275)

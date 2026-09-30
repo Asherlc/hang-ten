@@ -101,6 +101,22 @@ enum RopeCordContacts {
         return result
     }
 
+    /// Identifies a piece of a straight material link leaving an exactly
+    /// fixed support, in either traversal direction. Its nearer fraction
+    /// includes the existing knot trim; the farther endpoint need not be used
+    /// because the complete ray provides a conservative separation bound.
+    private static func supportRay(_ piece:Piece,previous:RopeChainState,current:RopeChainState,
+                                   support:SIMD3<Double>)->(previous:SIMD3<Double>,current:SIMD3<Double>,fraction:Double)? {
+        let i=piece.segment
+        if previous.positions[i]==support,current.positions[i]==support {
+            return (previous.positions[i+1]-support,current.positions[i+1]-support,piece.lower)
+        }
+        if previous.positions[i+1]==support,current.positions[i+1]==support {
+            return (previous.positions[i]-support,current.positions[i]-support,1-piece.upper)
+        }
+        return nil
+    }
+
     static func sweepValid(previousFirst:RopeChainState,first:RopeChainState,
                            previousSecond:RopeChainState,second:RopeChainState)->Bool {
         guard previousFirst.restLengths==first.restLengths,previousSecond.restLengths==second.restLengths else{return false}
@@ -118,6 +134,14 @@ enum RopeCordContacts {
                 let a=aPiece.start(previousFirst),b=aPiece.end(previousFirst),c=bPiece.start(previousSecond),d=bPiece.end(previousSecond)
                 let nextA=aPiece.start(first),nextB=aPiece.end(first),nextC=bPiece.start(second),nextD=bPiece.end(second)
                 let threshold=knot ? 1e-8:first.radius+second.radius-0.00005
+                if knot,let support=aPiece.knot,
+                   let firstRay=supportRay(aPiece,previous:previousFirst,current:first,support:support),
+                   let secondRay=supportRay(bPiece,previous:previousSecond,current:second,support:support) {
+                    let bound=RopeMotionSweep.sharedSupportSeparationBound(previousFirst:firstRay.previous,first:firstRay.current,
+                        previousSecond:secondRay.previous,second:secondRay.current,
+                        firstFraction:firstRay.fraction,secondFraction:secondRay.fraction)
+                    if bound>threshold+1e-9 {continue}
+                }
                 let low=simd_min(simd_min(a,b),simd_min(nextA,nextB)),high=simd_max(simd_max(a,b),simd_max(nextA,nextB))
                 let otherLow=simd_min(simd_min(c,d),simd_min(nextC,nextD)),otherHigh=simd_max(simd_max(c,d),simd_max(nextC,nextD))
                 let gap=simd_max(simd_max(low-otherHigh,otherLow-high),SIMD3(repeating:0))

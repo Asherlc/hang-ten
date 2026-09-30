@@ -242,3 +242,16 @@ independent-cord CCD at frame 158. Its diagnostic identifies the same
 conservative-bound exhaustion between two legs of separate loops leaving
 the shared support; no crossing was reported. This does not establish full
 rotation settling or runtime readiness.
+
+The shared-support certificate now also covers independent-cord knot pieces.
+It recognizes the exactly fixed support in either segment direction and uses
+the piece's nearer material fraction after the unchanged support trim.
+Each finite piece is a subset of the certified truncated ray, so its upper
+fraction cannot weaken the lower separation bound. Other pieces and any
+nonexact or moving support retain ordinary CCD. Four safe rigid-rotation
+cases fail on the prior source (all traversal directions) and pass with the
+extension; swapping the rays remains rejected. All 53 host physics tests
+passed in 227.268 seconds and 37 selected native tests passed. Independent
+review found no issues. Mini Bar's scratch candidate now advances past the
+previously rejected frame 158; full rotation settling and performance remain
+pending.
