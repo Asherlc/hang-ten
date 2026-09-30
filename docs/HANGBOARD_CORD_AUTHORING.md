@@ -69,7 +69,7 @@ pairing, one overhead anchor, estimated radius and rest length, canonical
 board poses, a positive clearance, `internalLoop.windingByPassageID`, and
 `internalLoop.channelLengthByBranchID` measured from the CAD pipe spines.
 The passage IDs and pair order are part of the topology. The sidecar is bound
-to the model descriptor's `modelSHA256` and covered by the delivery lock;
+to the model descriptor's `modelSHA256` and checked by package validation;
 `board.json` is generated from the FCStd manifest plus this sidecar.
 
 `Tools/HangboardCAD/export_rope_collision_solid.py` tessellates the final,
@@ -264,7 +264,7 @@ tests. No solver choice can recover hidden threading from the mesh alone.
    Generated pose routes are a cache in the sidecar, not operator-drawn
    contacts. Generate `board.json` through the normal CAD package process;
    never commit that generated file.
-4. Validate the schema, model SHA, delivery lock, package inventory, and
+4. Validate the schema, model SHA, package inventory, and
    byte-for-byte CAD rebuild. Add a focused parser and native solver test for
    every pose and a negative test for malformed topology.
 5. Measure cord-centerline clearance against the **actual FreeCAD solid**,

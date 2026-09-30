@@ -149,13 +149,13 @@ XCTAssertTrue(metrics.topologyValid)
 
 ## Task 7: Clavellium delivery, visual proof, and performance
 
-**Files:** Modify `docs/source-audits/2026-09-29-clavellium-suspension-and-accuracy.md`, its evidence directory, `docs/model-delivery-lock.json`, `docs/HANGBOARD_CORD_AUTHORING.md`, and `docs/3D_SUSPENSION_AND_ODR.md`. Include the existing uncommitted outward-pinch-normal correction and its regression only after its separate validation succeeds; keep the accepted 8 mm pose.
+**Files:** Modify `docs/source-audits/2026-09-29-clavellium-suspension-and-accuracy.md`, its evidence directory, `docs/HANGBOARD_CORD_AUTHORING.md`, and `docs/3D_SUSPENSION_AND_ODR.md`. Include the existing uncommitted outward-pinch-normal correction and its regression only after its separate validation succeeds; keep the accepted 8 mm pose.
 
 **Interfaces:** The public package enables physics only after Tasks 1–6 gates pass. Retain physics/source/model hashes, exact test results and screenshot/recording provenance in its audit.
 
 - [ ] Build/test current source on an isolated owned iOS Simulator using `validate-hang-ten-ios`; run the full `HangTenTests` suite. Test actual portrait/landscape selection, workout-driven position, orbit/reset, clear/reappear, pause/resume, accessibility and Reduce Motion. Review a recording of upright/DEBUG90°/DEBUG180° settling at the confirmed 7 mm diameter.
 - [ ] Render front/side/top before/after comparisons against the prior committed model and present native screenshots plus the settling recording. Compare actual mouth bearing with the source-approved channel; never assign unknown grip/channel mappings. Confirm the corrected 80 mm pinch faces remain visible and pickable.
-- [ ] Run all model/package Python tests, final inventory validation, deterministic CAD/physics rebuild, staging parity and `rtk proxy python3 scripts/verify-model-delivery.py`. Refresh the delivery lock only from final promoted bytes and final validation evidence. Resolve the unfinished static helper regression from Task 4 before the broad suite.
+- [ ] Run all model/package Python tests, final inventory validation, deterministic CAD/physics rebuild, staging parity and native-source/model hash-binding validation. The former delivery lock and its verifier were retired on main; package validation and deterministic rebuild checks now establish the delivered bindings. Resolve the unfinished static helper regression from Task 4 before the broad suite.
 - [ ] Profile on an available physical iPhone, record model/OS and p95 simulation-plus-mesh cost, targeting <4 ms and 60 fps. If no device is accessible, deliver the numerical/Simulator evidence and explicitly retain the device-performance gate as unverified; do not claim it passed or mark all required work complete.
 - [ ] Clean/verify deletion of all exact owned resources, then commit and push final Clavellium assets, audits and evidence. Do not claim catalog rollout complete.
 
