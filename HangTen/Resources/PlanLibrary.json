@@ -5928,10 +5928,10 @@
       "id" : "research.max-hangs.warm-up",
       "steps" : [
         {
-          "accessory" : "7s hang · 3m recovery · half crimp",
+          "accessory" : "10s hang · 3m recovery · half crimp · 3s in reserve",
           "action" : "hang",
-          "activeDuration" : 7,
-          "duration" : 187,
+          "activeDuration" : 10,
+          "duration" : 190,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -5942,11 +5942,11 @@
           },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-1",
-          "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "instruction" : "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 7,
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -5954,8 +5954,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -5963,8 +5963,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -5989,10 +5989,10 @@
       "id" : "research.max-hangs.main",
       "steps" : [
         {
-          "accessory" : "7s hang · 3m recovery · half crimp",
+          "accessory" : "10s hang · 3m recovery · half crimp · 3s in reserve",
           "action" : "hang",
-          "activeDuration" : 7,
-          "duration" : 187,
+          "activeDuration" : 10,
+          "duration" : 190,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -6003,11 +6003,11 @@
           },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-2",
-          "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "instruction" : "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 7,
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -6015,8 +6015,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6024,8 +6024,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6044,10 +6044,10 @@
           "title" : "Max hang · set 2"
         },
         {
-          "accessory" : "7s hang · 3m recovery · half crimp",
+          "accessory" : "10s hang · 3m recovery · half crimp · 3s in reserve",
           "action" : "hang",
-          "activeDuration" : 7,
-          "duration" : 187,
+          "activeDuration" : 10,
+          "duration" : 190,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -6058,11 +6058,11 @@
           },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-3",
-          "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "instruction" : "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 7,
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -6070,8 +6070,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6079,8 +6079,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6099,10 +6099,10 @@
           "title" : "Max hang · set 3"
         },
         {
-          "accessory" : "7s hang · 3m recovery · half crimp",
+          "accessory" : "10s hang · 3m recovery · half crimp · 3s in reserve",
           "action" : "hang",
-          "activeDuration" : 7,
-          "duration" : 187,
+          "activeDuration" : 10,
+          "duration" : 190,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -6113,11 +6113,11 @@
           },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-4",
-          "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "instruction" : "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 7,
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -6125,8 +6125,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6134,8 +6134,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6154,10 +6154,10 @@
           "title" : "Max hang · set 4"
         },
         {
-          "accessory" : "7s hang · half crimp",
+          "accessory" : "10s hang · half crimp · 3s in reserve",
           "action" : "hang",
-          "activeDuration" : 7,
-          "duration" : 7,
+          "activeDuration" : 10,
+          "duration" : 10,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
@@ -6168,11 +6168,11 @@
           },
           "gripType" : "halfCrimp",
           "id" : "max-hangs-5",
-          "instruction" : "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
+          "instruction" : "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 7,
+              "duration" : 10,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -6180,8 +6180,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -6189,8 +6189,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 19,
+                          "minMM" : 9
                         },
                         "kind" : "edge"
                       }
@@ -15411,7 +15411,7 @@
       "id" : "research.abrahangs.warm-up",
       "steps" : [
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
@@ -15423,9 +15423,8 @@
               "pinky"
             ]
           },
-          "gripType" : "halfCrimp",
-          "id" : "abrahangs-grip-1",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-1-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the four-finger crimp · 14 mm edge. Load for 10 seconds, then rest for 50 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15437,8 +15436,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 14,
+                          "minMM" : 14
                         },
                         "kind" : "edge"
                       }
@@ -15446,8 +15445,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
+                          "maxMM" : 14,
+                          "minMM" : 14
                         },
                         "kind" : "edge"
                       }
@@ -15463,16 +15462,124 @@
               "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · Half 4 Hang"
+          "title" : "Abrahang · Four-finger crimp · 14 mm edge · rep 1 of 3"
         }
       ],
-      "title" : "Abrahang · Half 4 Hang"
+      "title" : "Abrahang · Four-finger crimp · 14 mm edge · rep 1 of 3"
     },
     {
       "id" : "research.abrahangs.main",
       "steps" : [
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
+          "action" : "hang",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "id" : "abrahangs-grip-1-rep-2",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the four-finger crimp · 14 mm edge. Load for 10 seconds, then rest for 50 seconds.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 14,
+                          "minMM" : 14
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 14,
+                          "minMM" : 14
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Abrahang · Four-finger crimp · 14 mm edge · rep 2 of 3"
+        },
+        {
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
+          "action" : "hang",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring",
+              "pinky"
+            ]
+          },
+          "id" : "abrahangs-grip-1-rep-3",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the four-finger crimp · 14 mm edge. Load for 10 seconds, then rest for 50 seconds.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 14,
+                          "minMM" : 14
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 14,
+                          "minMM" : 14
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Abrahang · Four-finger crimp · 14 mm edge · rep 3 of 3"
+        },
+        {
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
@@ -15484,8 +15591,8 @@
             ]
           },
           "gripType" : "openHand",
-          "id" : "abrahangs-grip-2",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-2-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the three-finger drag · deep pocket. Load for 10 seconds, then rest for 50 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15496,20 +15603,14 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
                       }
                     }
                   ]
@@ -15523,10 +15624,106 @@
               "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · F3 Open Hang"
+          "title" : "Abrahang · Three-finger drag · deep pocket · rep 1 of 3"
         },
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
+          "action" : "hang",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring"
+            ]
+          },
+          "gripType" : "openHand",
+          "id" : "abrahangs-grip-2-rep-2",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the three-finger drag · deep pocket. Load for 10 seconds, then rest for 50 seconds.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Abrahang · Three-finger drag · deep pocket · rep 2 of 3"
+        },
+        {
+          "accessory" : "Feet supported · 10s work · 50s rest · 70–80%",
+          "action" : "hang",
+          "activeDuration" : 10,
+          "duration" : 60,
+          "fingerConfiguration" : {
+            "engagedFingers" : [
+              "index",
+              "middle",
+              "ring"
+            ]
+          },
+          "gripType" : "openHand",
+          "id" : "abrahangs-grip-2-rep-3",
+          "instruction" : "Keep your feet on the ground. Use 70–80% of the effort needed to lift off on the three-finger drag · deep pocket. Load for 10 seconds, then rest for 50 seconds.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 10,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "fingerCapacity" : 3,
+                        "kind" : "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Abrahang · Three-finger drag · deep pocket · rep 3 of 3"
+        },
+        {
+          "accessory" : "Feet supported · 10s work · 50s rest · 50–60%",
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
@@ -15537,8 +15734,8 @@
             ]
           },
           "gripType" : "openHand",
-          "id" : "abrahangs-grip-3",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-3-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 50–60% of the effort needed to lift off on the middle-two pocket. Load for 10 seconds, then rest for 50 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15549,20 +15746,14 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 2,
+                        "kind" : "pocket"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 2,
+                        "kind" : "pocket"
                       }
                     }
                   ]
@@ -15576,10 +15767,10 @@
               "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · M2 Open Hang"
+          "title" : "Abrahang · Middle-two pocket · rep 1 of 1"
         },
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 50–60%",
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
@@ -15590,8 +15781,8 @@
             ]
           },
           "gripType" : "openHand",
-          "id" : "abrahangs-grip-4",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-4-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 50–60% of the effort needed to lift off on the front-two pocket. Load for 10 seconds, then rest for 50 seconds.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15602,20 +15793,14 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 2,
+                        "kind" : "pocket"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "fingerCapacity" : 2,
+                        "kind" : "pocket"
                       }
                     }
                   ]
@@ -15629,23 +15814,21 @@
               "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · F2 Open Hang"
+          "title" : "Abrahang · Front-two pocket · rep 1 of 1"
         },
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 30–40%",
           "action" : "hang",
           "activeDuration" : 10,
           "duration" : 60,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "middle",
-              "ring",
-              "pinky"
+              "ring"
             ]
           },
-          "gripType" : "halfCrimp",
-          "id" : "abrahangs-grip-5",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-5-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 30–40% of the effort needed to lift off on the middle-two crimp. Load for 10 seconds, then rest for 50 seconds. Stretch your pinky fingers during the rest.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15656,19 +15839,11 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
                         "kind" : "edge"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
                         "kind" : "edge"
                       }
                     }
@@ -15683,23 +15858,21 @@
               "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · B3 Half Hang"
+          "title" : "Abrahang · Middle-two crimp · rep 1 of 1"
         },
         {
-          "accessory" : "Feet supported · 10s hang · 50s rest",
+          "accessory" : "Feet supported · 10s work · 50s rest · 30–40%",
           "action" : "hang",
           "activeDuration" : 10,
-          "duration" : 10,
+          "duration" : 60,
           "fingerConfiguration" : {
             "engagedFingers" : [
               "index",
-              "middle",
-              "ring"
+              "middle"
             ]
           },
-          "gripType" : "halfCrimp",
-          "id" : "abrahangs-grip-6",
-          "instruction" : "Keep both feet supported and the intensity low throughout.",
+          "id" : "abrahangs-grip-6-rep-1",
+          "instruction" : "Keep your feet on the ground. Use 30–40% of the effort needed to lift off on the front-two crimp. Load for 10 seconds, then rest for 50 seconds. Stretch your pinky fingers during the rest.",
           "phase" : "hang",
           "segments" : [
             {
@@ -15710,19 +15883,11 @@
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
                         "kind" : "edge"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 20,
-                          "minMM" : 20
-                        },
                         "kind" : "edge"
                       }
                     }
@@ -15730,9 +15895,14 @@
                 ]
               },
               "timing" : "fixed"
+            },
+            {
+              "duration" : 50,
+              "kind" : "rest",
+              "timing" : "fixed"
             }
           ],
-          "title" : "Abrahang · F3 Half Hang"
+          "title" : "Abrahang · Front-two crimp · rep 1 of 1"
         }
       ],
       "title" : "Abrahangs"
@@ -16203,16 +16373,14 @@
       "id" : "coach.bechtel-three-six-nine.warm-up",
       "steps" : [
         {
-          "accessory" : "3s hang · 30s rest",
+          "accessory" : "3s · 6s · 9s · rest as needed · manual task",
           "action" : "hang",
-          "activeDuration" : 3,
-          "duration" : 33,
-          "id" : "ladders-round-1-3",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
+          "duration" : 60,
+          "id" : "ladders-round-1",
+          "instruction" : "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Pause the session timer while completing this ladder, then skip to the next step when ready.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 3,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -16226,33 +16394,26 @@
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "undefined"
             }
           ],
-          "title" : "Ladder 1 · 3 seconds"
+          "title" : "Ladder 1 · 3–6–9"
         }
       ],
-      "title" : "Ladder 1 · 3 seconds"
+      "title" : "Ladder 1 · 3–6–9"
     },
     {
       "id" : "coach.bechtel-three-six-nine.main",
       "steps" : [
         {
-          "accessory" : "6s hang · 30s rest",
+          "accessory" : "3s · 6s · 9s · rest as needed · manual task",
           "action" : "hang",
-          "activeDuration" : 6,
-          "duration" : 36,
-          "id" : "ladders-round-1-6",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
+          "duration" : 60,
+          "id" : "ladders-round-2",
+          "instruction" : "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Pause the session timer while completing this ladder, then skip to the next step when ready.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 6,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -16266,27 +16427,20 @@
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "undefined"
             }
           ],
-          "title" : "Ladder 1 · 6 seconds"
+          "title" : "Ladder 2 · 3–6–9"
         },
         {
-          "accessory" : "9s hang · 30s rest",
+          "accessory" : "3s · 6s · 9s · rest as needed · manual task",
           "action" : "hang",
-          "activeDuration" : 9,
-          "duration" : 9,
-          "id" : "ladders-round-1-9",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
+          "duration" : 60,
+          "id" : "ladders-round-3",
+          "instruction" : "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Pause the session timer while completing this ladder, then skip to the next step when ready.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 9,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -16300,240 +16454,10 @@
                   ]
                 ]
               },
-              "timing" : "fixed"
+              "timing" : "undefined"
             }
           ],
-          "title" : "Ladder 1 · 9 seconds"
-        },
-        {
-          "accessory" : "3m recovery",
-          "action" : "hang",
-          "duration" : 180,
-          "handUse" : "double",
-          "id" : "ladders-round-1-recovery",
-          "instruction" : "",
-          "phase" : "rest",
-          "segments" : [
-            {
-              "duration" : 180,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "side" : "both",
-          "title" : "Three-minute ladder recovery"
-        },
-        {
-          "accessory" : "3s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 3,
-          "duration" : 33,
-          "id" : "ladders-round-2-3",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 3,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 2 · 3 seconds"
-        },
-        {
-          "accessory" : "6s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 6,
-          "duration" : 36,
-          "id" : "ladders-round-2-6",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 6,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 2 · 6 seconds"
-        },
-        {
-          "accessory" : "9s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 9,
-          "duration" : 9,
-          "id" : "ladders-round-2-9",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 9,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 2 · 9 seconds"
-        },
-        {
-          "accessory" : "3m recovery",
-          "action" : "hang",
-          "duration" : 180,
-          "handUse" : "double",
-          "id" : "ladders-round-2-recovery",
-          "instruction" : "",
-          "phase" : "rest",
-          "segments" : [
-            {
-              "duration" : 180,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "side" : "both",
-          "title" : "Three-minute ladder recovery"
-        },
-        {
-          "accessory" : "3s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 3,
-          "duration" : 33,
-          "id" : "ladders-round-3-3",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 3,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 3 · 3 seconds"
-        },
-        {
-          "accessory" : "6s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 6,
-          "duration" : 36,
-          "id" : "ladders-round-3-6",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 6,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 30,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 3 · 6 seconds"
-        },
-        {
-          "accessory" : "9s hang · 30s rest",
-          "action" : "hang",
-          "activeDuration" : 9,
-          "duration" : 9,
-          "id" : "ladders-round-3-9",
-          "instruction" : "Use a load that allows about 12 seconds at maximum.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 9,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : "any"
-                    },
-                    {
-                      "target" : "any"
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Ladder 3 · 9 seconds"
+          "title" : "Ladder 3 · 3–6–9"
         }
       ],
       "title" : "3–6–9 Ladders"
@@ -16542,150 +16466,49 @@
       "id" : "coach.density-hangs.warm-up",
       "steps" : [
         {
-          "accessory" : "30s hang · 15s rest",
+          "accessory" : "20–40s or failure · stopwatch · two arms",
           "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-1-set-1-rep-1",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "density-grip-1-rep-1",
+          "instruction" : "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 30,
               "kind" : "work",
               "target" : {
                 "tasks" : [
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "kind" : "sloper"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "kind" : "sloper"
                       }
                     }
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
-          "title" : "Density · 20–35 mm large edge, set 1, rep 1"
+          "title" : "Density · Easy sloper · effort 1 of 2"
         }
       ],
-      "title" : "Density · 20–35 mm large edge, set 1, rep 1"
+      "title" : "Density · Easy sloper · effort 1 of 2"
     },
     {
       "id" : "coach.density-hangs.main",
       "steps" : [
         {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-1-set-1-rep-2",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge, set 1, rep 2"
-        },
-        {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 30,
-          "id" : "density-hold-1-set-1-rep-3",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge, set 1, rep 3"
-        },
-        {
-          "accessory" : "3m recovery",
+          "accessory" : "3m recovery · 3–5m between efforts",
           "action" : "hang",
           "duration" : 180,
           "handUse" : "double",
-          "id" : "density-hold-1-set-1-recovery",
+          "id" : "density-grip-1-rep-1-recovery",
           "instruction" : "",
           "phase" : "rest",
           "segments" : [
@@ -16696,147 +16519,46 @@
             }
           ],
           "side" : "both",
-          "title" : "Three-minute set recovery"
+          "title" : "Density · effort recovery"
         },
         {
-          "accessory" : "30s hang · 15s rest",
+          "accessory" : "20–40s or failure · stopwatch · two arms",
           "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-1-set-2-rep-1",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "density-grip-1-rep-2",
+          "instruction" : "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 30,
               "kind" : "work",
               "target" : {
                 "tasks" : [
                   [
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "kind" : "sloper"
                       }
                     },
                     {
                       "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
+                        "kind" : "sloper"
                       }
                     }
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
-          "title" : "Density · 20–35 mm large edge, set 2, rep 1"
+          "title" : "Density · Easy sloper · effort 2 of 2"
         },
         {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-1-set-2-rep-2",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge, set 2, rep 2"
-        },
-        {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 30,
-          "id" : "density-hold-1-set-2-rep-3",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge, set 2, rep 3"
-        },
-        {
-          "accessory" : "3m recovery",
+          "accessory" : "3m recovery · 3–5m between efforts",
           "action" : "hang",
           "duration" : 180,
           "handUse" : "double",
-          "id" : "density-hold-1-recovery",
+          "id" : "density-grip-1-rep-2-recovery",
           "instruction" : "",
           "phase" : "rest",
           "segments" : [
@@ -16847,19 +16569,18 @@
             }
           ],
           "side" : "both",
-          "title" : "Three-minute hold recovery"
+          "title" : "Density · effort recovery"
         },
         {
-          "accessory" : "30s hang · 15s rest",
+          "accessory" : "20–40s or failure · stopwatch · two arms",
           "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-2-set-1-rep-1",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "density-grip-2-rep-1",
+          "instruction" : "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 30,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -16867,8 +16588,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
+                          "maxMM" : 25,
+                          "minMM" : 25
                         },
                         "kind" : "edge"
                       }
@@ -16876,8 +16597,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
+                          "maxMM" : 25,
+                          "minMM" : 25
                         },
                         "kind" : "edge"
                       }
@@ -16885,109 +16606,17 @@
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
-          "title" : "Density · 20–35 mm large edge · set B, set 1, rep 1"
+          "title" : "Density · 25 mm half crimp · effort 1 of 2"
         },
         {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-2-set-1-rep-2",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge · set B, set 1, rep 2"
-        },
-        {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 30,
-          "id" : "density-hold-2-set-1-rep-3",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge · set B, set 1, rep 3"
-        },
-        {
-          "accessory" : "3m recovery",
+          "accessory" : "3m recovery · 3–5m between efforts",
           "action" : "hang",
           "duration" : 180,
           "handUse" : "double",
-          "id" : "density-hold-2-set-1-recovery",
+          "id" : "density-grip-2-rep-1-recovery",
           "instruction" : "",
           "phase" : "rest",
           "segments" : [
@@ -16998,19 +16627,18 @@
             }
           ],
           "side" : "both",
-          "title" : "Three-minute set recovery"
+          "title" : "Density · effort recovery"
         },
         {
-          "accessory" : "30s hang · 15s rest",
+          "accessory" : "20–40s or failure · stopwatch · two arms",
           "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-2-set-2-rep-1",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "density-grip-2-rep-2",
+          "instruction" : "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
           "phase" : "hang",
           "segments" : [
             {
-              "duration" : 30,
               "kind" : "work",
               "target" : {
                 "tasks" : [
@@ -17018,8 +16646,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
+                          "maxMM" : 25,
+                          "minMM" : 25
                         },
                         "kind" : "edge"
                       }
@@ -17027,8 +16655,8 @@
                     {
                       "target" : {
                         "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
+                          "maxMM" : 25,
+                          "minMM" : 25
                         },
                         "kind" : "edge"
                       }
@@ -17036,105 +16664,3199 @@
                   ]
                 ]
               },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
+              "timing" : "stopwatch"
             }
           ],
-          "title" : "Density · 20–35 mm large edge · set B, set 2, rep 1"
-        },
-        {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 45,
-          "id" : "density-hold-2-set-2-rep-2",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            },
-            {
-              "duration" : 15,
-              "kind" : "rest",
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge · set B, set 2, rep 2"
-        },
-        {
-          "accessory" : "30s hang · 15s rest",
-          "action" : "hang",
-          "activeDuration" : 30,
-          "duration" : 30,
-          "id" : "density-hold-2-set-2-rep-3",
-          "instruction" : "Hang for 30 seconds, then rest for 15 seconds.",
-          "phase" : "hang",
-          "segments" : [
-            {
-              "duration" : 30,
-              "kind" : "work",
-              "target" : {
-                "tasks" : [
-                  [
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    },
-                    {
-                      "target" : {
-                        "depth" : {
-                          "maxMM" : 35,
-                          "minMM" : 20
-                        },
-                        "kind" : "edge"
-                      }
-                    }
-                  ]
-                ]
-              },
-              "timing" : "fixed"
-            }
-          ],
-          "title" : "Density · 20–35 mm large edge · set B, set 2, rep 3"
+          "title" : "Density · 25 mm half crimp · effort 2 of 2"
         }
       ],
-      "title" : "Density Hangs"
+      "title" : "Nelson · Density Hangs · Beginner"
+    },
+    {
+      "id" : "coach.nelson-density-hangs.expert.warm-up",
+      "steps" : [
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "density-expert-grip-1-rep-1",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · Hard sloper · effort 1 of 3"
+        }
+      ],
+      "title" : "Density · Hard sloper · effort 1 of 3"
+    },
+    {
+      "id" : "coach.nelson-density-hangs.expert.main",
+      "steps" : [
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-1-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "density-expert-grip-1-rep-2",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · Hard sloper · effort 2 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-1-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "openHand",
+          "id" : "density-expert-grip-1-rep-3",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · Hard sloper · effort 3 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-1-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "density-expert-grip-2-rep-1",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10–15 mm half crimp · effort 1 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-2-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "density-expert-grip-2-rep-2",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10–15 mm half crimp · effort 2 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-2-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "halfCrimp",
+          "id" : "density-expert-grip-2-rep-3",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10–15 mm half crimp · effort 3 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-2-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "fullCrimp",
+          "id" : "density-expert-grip-3-rep-1",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10 mm full crimp · effort 1 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-3-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "fullCrimp",
+          "id" : "density-expert-grip-3-rep-2",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10 mm full crimp · effort 2 of 3"
+        },
+        {
+          "accessory" : "3m recovery · 3–5m between efforts",
+          "action" : "hang",
+          "duration" : 180,
+          "handUse" : "double",
+          "id" : "density-expert-grip-3-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 180,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Density · effort recovery"
+        },
+        {
+          "accessory" : "20–40s or failure · stopwatch · two arms",
+          "action" : "hang",
+          "duration" : 60,
+          "gripType" : "fullCrimp",
+          "id" : "density-expert-grip-3-rep-3",
+          "instruction" : "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 10,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "stopwatch"
+            }
+          ],
+          "title" : "Density · 10 mm full crimp · effort 3 of 3"
+        }
+      ],
+      "title" : "Nelson · Density Hangs · Expert"
+    },
+    {
+      "id" : "coach.nelson-recruitment-pulls.beginner.warm-up",
+      "steps" : [
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-left-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · left · rep 1"
+        }
+      ],
+      "title" : "Recruitment · 20 mm open hand · left · rep 1"
+    },
+    {
+      "id" : "coach.nelson-recruitment-pulls.beginner.main",
+      "steps" : [
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-left-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · left · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-left-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · left · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-right-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · right · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-right-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · right · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-beginner-grip-1-right-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm open hand · right · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-1-right-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-left-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · left · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-2-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-left-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · left · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-2-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-left-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · left · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-2-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-right-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · right · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-2-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-right-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · right · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-beginner-grip-2-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-beginner-grip-2-right-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Perform 3 repetitions for one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 20 mm half crimp · right · rep 3"
+        }
+      ],
+      "title" : "Nelson · Recruitment Pulls · Beginner"
+    },
+    {
+      "id" : "coach.nelson-recruitment-pulls.expert.warm-up",
+      "steps" : [
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-left-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · left · rep 1"
+        }
+      ],
+      "title" : "Recruitment · 15–20 mm open hand · left · rep 1"
+    },
+    {
+      "id" : "coach.nelson-recruitment-pulls.expert.main",
+      "steps" : [
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-left-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · left · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-left-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · left · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-left-rep-4",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · left · rep 4"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-left-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-right-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · right · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-right-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · right · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-right-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · right · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-right-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "openHand",
+          "id" : "recruitment-expert-grip-1-right-rep-4",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 15–20 mm open hand · right · rep 4"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-1-right-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-left-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · left · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-left-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · left · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-left-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · left · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-left-rep-4",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · left · rep 4"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-left-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-right-rep-1",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · right · rep 1"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-right-rep-2",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · right · rep 2"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-right-rep-3",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · right · rep 3"
+        },
+        {
+          "accessory" : "90s recovery · 60–120s between efforts",
+          "action" : "hang",
+          "duration" : 90,
+          "handUse" : "double",
+          "id" : "recruitment-expert-grip-2-right-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 90,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "4s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 4,
+          "duration" : 4,
+          "gripType" : "halfCrimp",
+          "id" : "recruitment-expert-grip-2-right-rep-4",
+          "instruction" : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 4,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 15,
+                          "minMM" : 10
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Recruitment · 10–15 mm half crimp · right · rep 4"
+        }
+      ],
+      "title" : "Nelson · Recruitment Pulls · Expert"
+    },
+    {
+      "id" : "coach.nelson-velocity-pulls.beginner.warm-up",
+      "steps" : [
+        {
+          "accessory" : "2s effort · two arms",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-beginner-grip-1-both-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Perform 2–4 repetitions; this session uses 2 and one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · Easy sloper · both · rep 1"
+        }
+      ],
+      "title" : "Velocity · Easy sloper · both · rep 1"
+    },
+    {
+      "id" : "coach.nelson-velocity-pulls.beginner.main",
+      "steps" : [
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-beginner-grip-1-both-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · two arms",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-beginner-grip-1-both-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Perform 2–4 repetitions; this session uses 2 and one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "kind" : "sloper"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · Easy sloper · both · rep 2"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-beginner-grip-1-both-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · two arms",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "id" : "velocity-beginner-grip-2-both-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Perform 2–4 repetitions; this session uses 2 and one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 35,
+                          "minMM" : 35
+                        },
+                        "kind" : "pocket"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 35,
+                          "minMM" : 35
+                        },
+                        "kind" : "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 35 mm pocket · both · rep 1"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-beginner-grip-2-both-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · two arms",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "id" : "velocity-beginner-grip-2-both-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Perform 2–4 repetitions; this session uses 2 and one set.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 35,
+                          "minMM" : 35
+                        },
+                        "kind" : "pocket"
+                      }
+                    },
+                    {
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 35,
+                          "minMM" : 35
+                        },
+                        "kind" : "pocket"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 35 mm pocket · both · rep 2"
+        }
+      ],
+      "title" : "Nelson · Velocity Pulls · Beginner"
+    },
+    {
+      "id" : "coach.nelson-velocity-pulls.expert.warm-up",
+      "steps" : [
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-left-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · left · rep 1"
+        }
+      ],
+      "title" : "Velocity · 20 mm open hand · left · rep 1"
+    },
+    {
+      "id" : "coach.nelson-velocity-pulls.expert.main",
+      "steps" : [
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-left-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · left · rep 2"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-left-rep-3",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · left · rep 3"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-left-rep-4",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · left · rep 4"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-left-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-left-rep-5",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · left · rep 5"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-left-rep-5-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-right-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · right · rep 1"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-right-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · right · rep 2"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-right-rep-3",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · right · rep 3"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-right-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-right-rep-4",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · right · rep 4"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-right-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "openHand",
+          "id" : "velocity-expert-grip-1-right-rep-5",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 20
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 20 mm open hand · right · rep 5"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-1-right-rep-5-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-left-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · left · rep 1"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-left-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-left-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · left · rep 2"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-left-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-left-rep-3",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · left · rep 3"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-left-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-left-rep-4",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · left · rep 4"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-left-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-left-rep-5",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "left",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · left · rep 5"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-left-rep-5-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-right-rep-1",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · right · rep 1"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-right-rep-1-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-right-rep-2",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · right · rep 2"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-right-rep-2-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-right-rep-3",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · right · rep 3"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-right-rep-3-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-right-rep-4",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · right · rep 4"
+        },
+        {
+          "accessory" : "15s recovery · 10–20s between efforts",
+          "action" : "hang",
+          "duration" : 15,
+          "handUse" : "double",
+          "id" : "velocity-expert-grip-2-right-rep-4-recovery",
+          "instruction" : "",
+          "phase" : "rest",
+          "segments" : [
+            {
+              "duration" : 15,
+              "kind" : "rest",
+              "timing" : "fixed"
+            }
+          ],
+          "side" : "both",
+          "title" : "Effort recovery"
+        },
+        {
+          "accessory" : "2s effort · one arm",
+          "action" : "isometricPull",
+          "activeDuration" : 2,
+          "duration" : 2,
+          "gripType" : "halfCrimp",
+          "id" : "velocity-expert-grip-2-right-rep-5",
+          "instruction" : "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions.",
+          "phase" : "hang",
+          "segments" : [
+            {
+              "duration" : 2,
+              "kind" : "work",
+              "target" : {
+                "tasks" : [
+                  [
+                    {
+                      "side" : "right",
+                      "target" : {
+                        "depth" : {
+                          "maxMM" : 20,
+                          "minMM" : 15
+                        },
+                        "kind" : "edge"
+                      }
+                    }
+                  ]
+                ]
+              },
+              "timing" : "fixed"
+            }
+          ],
+          "title" : "Velocity · 15–20 mm half crimp · right · rep 5"
+        }
+      ],
+      "title" : "Nelson · Velocity Pulls · Expert"
     },
     {
       "id" : "device.zlagboard-sixty-sixty.warm-up",
@@ -22976,12 +25698,14 @@
         "category" : "research",
         "level" : "Advanced",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Adapted from Eva López's author-published MAW guidance: five sets of 10 seconds, a 3-second margin before failure, and 3-minute rests between sets.",
+          "Choose an 8–20 mm edge before starting. Five sets is a fixed session within the source's 3–5-set range; this is not the full 2012 study's periodized program.",
+          "Complete a progressive warm-up before this timed session; see the original study (doi:10.1080\/19346182.2012.716061)."
         ],
         "provenance" : "adapted",
-        "sourceLabel" : "Lattice max hang protocol",
-        "sourceURL" : "https:\/\/latticetraining.com\/workout\/1c4cc25a-ebe8-4930-8541-5b604a831c5f\/half-4-hang-max\/",
-        "subtitle" : "Five near-maximal 7-second half-crimp hangs on a 20 mm edge.",
+        "sourceLabel" : "Eva López · MaxHangs (MAW)",
+        "sourceURL" : "https:\/\/en-eva-lopez.blogspot.com\/2018\/05\/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html",
+        "subtitle" : "Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.",
         "tags" : [
           "built-in",
           "research"
@@ -23122,11 +25846,12 @@
         "category" : "research",
         "level" : "Advanced",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Source: Alexander Megos's own video, How to get Steel Fingers Part 2.",
+          "The app retains six rounds of four 7s\/3s efforts per arm and 2-minute recovery between rounds."
         ],
         "provenance" : "adapted",
-        "sourceLabel" : "Alex Megos finger-training power-endurance protocol (reported by Eric Hörst)",
-        "sourceURL" : "https:\/\/trainingforclimbing.com\/alex-megos-finger-training-power-endurance-protocol\/",
+        "sourceLabel" : "Alexander Megos · How to get Steel Fingers Part 2",
+        "sourceURL" : "https:\/\/www.youtube.com\/watch?v=urTeUObQlsg",
         "subtitle" : "Six sets of four 7\/3 one-arm repeaters per side, with 2m set recovery.",
         "tags" : [
           "built-in",
@@ -23149,12 +25874,14 @@
         "category" : "research",
         "level" : "Supplemental",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "The original video description prescribes 3 four-finger crimps, 3 three-finger drags, then one each of middle-two pocket, front-two pocket, middle-two crimp, and front-two crimp.",
+          "All ten efforts retain 10 seconds of loading and 50 seconds of rest, including the final rest. Effort is relative to lifting off: 70–80%, 50–60%, then 30–40% by grip group.",
+          "Crimp angle is not specified in the description, so the app does not add a half-crimp or full-crimp cue. Deep-pocket depth remains unspecified."
         ],
         "provenance" : "adapted",
-        "sourceLabel" : "Lattice Abrahangs protocol",
-        "sourceURL" : "https:\/\/latticetraining.com\/workout\/1832c13b-14c1-444c-82a2-e72b22a6fb13\/abrahangs-protocol",
-        "subtitle" : "Low-intensity feet-supported hang variations.",
+        "sourceLabel" : "Emil Abrahamsson · Hangboard Training 2 Times Per Day For 30 Days",
+        "sourceURL" : "https:\/\/www.youtube.com\/watch?v=sBTI9qiH4UE",
+        "subtitle" : "Emil Abrahamsson's ten low-intensity, feet-supported hangs with grip-specific effort levels.",
         "tags" : [
           "built-in",
           "research"
@@ -23206,12 +25933,14 @@
         "category" : "coach",
         "level" : "Intermediate+",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Bechtel's own interview at 49:21–52:11 prescribes 3, 6, and 9-second hangs on the same hold and load, with rests as long as the athlete needs. The starting load permits a 15-second hang.",
+          "Three ladders is an app session adaptation; the author progresses volume rather than prescribing three rounds in this interview.",
+          "Each ladder is a manual task with a 60-second app preview, not a prescribed work or rest duration. Pause the session clock to complete the task at your own pace."
         ],
         "provenance" : "adapted",
-        "sourceLabel" : "Steve Bechtel 3–6–9 ladder protocol",
-        "sourceURL" : "https:\/\/strengthclimbing.com\/steve-bechtels-3-6-9-ladders\/",
-        "subtitle" : "3–6–9 ladder sequence.",
+        "sourceLabel" : "Steve Bechtel · Power Company interview, 49:21–52:11",
+        "sourceURL" : "https:\/\/www.powercompanyclimbing.com\/blog\/2016\/01\/episode-2-resistance-training-with.html",
+        "subtitle" : "Three guided ladders on a chosen hold, with athlete-paced rests.",
         "tags" : [
           "built-in",
           "coach"
@@ -23234,19 +25963,171 @@
       "id" : "coach.density-hangs",
       "metadata" : {
         "category" : "coach",
-        "level" : "Intermediate+",
+        "level" : "Beginner",
         "notes" : [
-          "Preserved from the original Hang Ten routine catalog."
+          "Workout 2, Table 2 beginner column: two two-arm grip positions, one set and two repetitions per position; easy open-hand sloper and the chart's 25–25 mm half-crimp edge.",
+          "Slow static hangs continue to muscular failure, approximately 20–40 seconds. Each work step uses a stopwatch; its 60-second app preview is not a prescribed hang duration.",
+          "The app defaults the source's 3–5-minute recovery between efforts to 3 minutes. This session is adapted from the beginner density portion, not the author's full multi-workout training cycle."
         ],
         "provenance" : "adapted",
-        "sourceLabel" : "Tyler Nelson density hang protocol",
-        "sourceURL" : "https:\/\/strengthclimbing.com\/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing\/",
-        "subtitle" : "Density hangs with a 2:1 work-to-rest relationship.",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 2",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "Nelson's beginner density session: two grips, two efforts per grip, to muscular failure.",
         "tags" : [
           "built-in",
           "coach"
         ],
-        "title" : "Density Hangs"
+        "title" : "Nelson · Density Hangs · Beginner"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "coach.nelson-density-hangs.expert.warm-up"
+        },
+        {
+          "blockID" : "coach.nelson-density-hangs.expert.main"
+        }
+      ],
+      "id" : "coach.nelson-density-hangs.expert",
+      "metadata" : {
+        "category" : "coach",
+        "level" : "Expert",
+        "notes" : [
+          "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+          "Adapted timer defaults select values within source ranges: recruitment 4s\/90s, velocity 2s\/15s, density stopwatch\/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+          "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+          "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+        ],
+        "provenance" : "adapted",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 2",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "Three two-arm grip positions, three efforts per grip, to muscular failure; adapted one-set session.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Nelson · Density Hangs · Expert"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "coach.nelson-recruitment-pulls.beginner.warm-up"
+        },
+        {
+          "blockID" : "coach.nelson-recruitment-pulls.beginner.main"
+        }
+      ],
+      "id" : "coach.nelson-recruitment-pulls.beginner",
+      "metadata" : {
+        "category" : "coach",
+        "level" : "Beginner",
+        "notes" : [
+          "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+          "Adapted timer defaults select values within source ranges: recruitment 4s\/90s, velocity 2s\/15s, density stopwatch\/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+          "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+          "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+        ],
+        "provenance" : "adapted",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 1",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "One-arm maximal recruitment efforts on two source-prescribed grips; adapted timer defaults.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Nelson · Recruitment Pulls · Beginner"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "coach.nelson-recruitment-pulls.expert.warm-up"
+        },
+        {
+          "blockID" : "coach.nelson-recruitment-pulls.expert.main"
+        }
+      ],
+      "id" : "coach.nelson-recruitment-pulls.expert",
+      "metadata" : {
+        "category" : "coach",
+        "level" : "Expert",
+        "notes" : [
+          "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+          "Adapted timer defaults select values within source ranges: recruitment 4s\/90s, velocity 2s\/15s, density stopwatch\/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+          "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+          "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+        ],
+        "provenance" : "adapted",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 1",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "One-arm maximal recruitment efforts on two source-prescribed grips; adapted timer defaults.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Nelson · Recruitment Pulls · Expert"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "coach.nelson-velocity-pulls.beginner.warm-up"
+        },
+        {
+          "blockID" : "coach.nelson-velocity-pulls.beginner.main"
+        }
+      ],
+      "id" : "coach.nelson-velocity-pulls.beginner",
+      "metadata" : {
+        "category" : "coach",
+        "level" : "Beginner",
+        "notes" : [
+          "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+          "Adapted timer defaults select values within source ranges: recruitment 4s\/90s, velocity 2s\/15s, density stopwatch\/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+          "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+          "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+        ],
+        "provenance" : "adapted",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 3",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "Two-arm speed-focused efforts on two source-prescribed grips; adapted timer defaults.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Nelson · Velocity Pulls · Beginner"
+      }
+    },
+    {
+      "blocks" : [
+        {
+          "blockID" : "coach.nelson-velocity-pulls.expert.warm-up"
+        },
+        {
+          "blockID" : "coach.nelson-velocity-pulls.expert.main"
+        }
+      ],
+      "id" : "coach.nelson-velocity-pulls.expert",
+      "metadata" : {
+        "category" : "coach",
+        "level" : "Expert",
+        "notes" : [
+          "Imported from Tyler Nelson's original article and Tables 1–3; source grip positions, hand count and effort qualifiers are retained.",
+          "Adapted timer defaults select values within source ranges: recruitment 4s\/90s, velocity 2s\/15s, density stopwatch\/3m. Expert sessions use one of the source's 1–2 sets; repetition ranges use their lower bound.",
+          "For unilateral work, the app groups left-arm efforts before right-arm efforts on each grip; the source tables do not prescribe side order.",
+          "Beginner velocity work is performed only after completing a cycle of recruitment and density training. Expert velocity work follows recruitment pulls. The article's 4–5-week cycle is guidance, not an added timed task."
+        ],
+        "provenance" : "adapted",
+        "sourceLabel" : "Tyler Nelson · The Simplest Finger Training Program, Workout 3",
+        "sourceURL" : "https:\/\/www.trainingbeta.com\/the-simplest-finger-training-program\/",
+        "subtitle" : "One-arm speed-focused efforts on two source-prescribed grips; adapted timer defaults.",
+        "tags" : [
+          "built-in",
+          "coach"
+        ],
+        "title" : "Nelson · Velocity Pulls · Expert"
       }
     },
     {

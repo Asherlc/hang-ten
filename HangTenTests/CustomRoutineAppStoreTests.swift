@@ -160,8 +160,8 @@ final class CustomRoutineAppStoreTests: XCTestCase {
         XCTAssertTrue(duplicate.id.hasPrefix("custom."))
         XCTAssertFalse(duplicate.steps[0].workRequirements.isEmpty)
         XCTAssertEqual(
-            duplicate.steps[0].workRequirements.first?.depth,
-            .range(.init(minimum: 20, maximum: 20))
+            duplicate.steps[0].workRequirements,
+            source.steps[0].workRequirements
         )
     }
 

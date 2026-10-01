@@ -2014,6 +2014,63 @@ struct TrainingPlan: Identifiable, Hashable {
     }
 }
 
+/// Athlete-selected edge size for the adapted López MAW session. The bundled
+/// plan retains a semantic range; the session narrows it without changing the
+/// catalog or recording a different hold from the one shown in the preview.
+enum MaxHangsEdgeSelection {
+    /// Resolve each eligible edge once so plan views can retain these snapshots.
+    static func resolvedPlans(for plan: TrainingPlan, on board: BoardRevision) -> [Double: TrainingPlan] {
+        guard plan.id == "research.max-hangs" else { return [:] }
+        let depths = Set(board.contacts.compactMap { contact -> Double? in
+            guard contact.kind == .edge,
+                  case .range(let depth) = contact.depth,
+                  depth.minimum == depth.maximum,
+                  (8...20).contains(depth.minimum) else { return nil }
+            return depth.minimum
+        })
+        return depths.reduce(into: [:]) { resolved, depth in
+            resolved[depth] = selecting(depth, in: plan, on: board)
+        }
+    }
+
+    static func availableDepths(for plan: TrainingPlan, on board: BoardRevision) -> [Double] {
+        resolvedPlans(for: plan, on: board).keys.sorted(by: >)
+    }
+
+    static func selecting(_ depth: Double, in plan: TrainingPlan, on board: BoardRevision) -> TrainingPlan? {
+        guard plan.id == "research.max-hangs", depth.isFinite, (8...20).contains(depth) else { return nil }
+        let predicate = PlanContactPredicate(kind: .edge, depth: .measured(.init(minimum: depth, maximum: depth)))
+        let target = WorkoutSegmentTarget.tasks([[PlanHandTarget(target: predicate), PlanHandTarget(target: predicate)]])
+        let steps = plan.steps.map { step in
+            WorkoutStep(
+                id: step.id, number: step.number, title: step.title,
+                instruction: step.instruction, accessory: step.accessory,
+                duration: step.duration, phase: step.phase,
+                segments: step.segments.map { segment in
+                    guard segment.kind == .work else { return segment }
+                    return WorkoutSegment(kind: .work, target: target, timing: segment.timing, duration: segment.duration)
+                },
+                gripType: step.gripType, fingerConfiguration: step.fingerConfiguration,
+                handUse: step.handUse, side: step.side, action: step.action,
+                repetitions: step.repetitions, externalLoadKGF: step.externalLoadKGF,
+                timedWorkDuration: step.timedWorkDuration
+            )
+        }
+        // Numeric matching has a tolerance. Offer a size only when its resolved
+        // physical contacts actually have that exact measured point depth.
+        guard steps.filter({ !$0.isRestStep }).allSatisfy({ step in
+            guard let contacts = try? ContactResolver.resolve(target, step: step, board: board).first,
+                  contacts.count == 2 else { return false }
+            return contacts.allSatisfy { $0.depth == .range(.init(minimum: depth, maximum: depth)) }
+        }) else { return nil }
+        return TrainingPlan(
+            id: plan.id, title: plan.title, subtitle: plan.subtitle, level: plan.level,
+            sourceLabel: plan.sourceLabel, sourceURL: plan.sourceURL,
+            provenance: plan.provenance, boardID: plan.boardID, steps: steps
+        )
+    }
+}
+
 enum BoardCatalog {
 
     static let packageStore: BoardPackageStore = {
@@ -2964,7 +3021,8 @@ enum LegacyPlanSeedCatalog {
         gripType: GripType? = nil,
         fingerConfiguration: FingerConfiguration? = nil,
         handUse: WorkoutHandUse = .double,
-        side: WorkoutSide = .both
+        side: WorkoutSide = .both,
+        action: WorkoutAction = .hang
     ) -> WorkoutStep {
         WorkoutStep(
             id: id,
@@ -2986,6 +3044,7 @@ enum LegacyPlanSeedCatalog {
             fingerConfiguration: fingerConfiguration,
             handUse: handUse,
             side: side,
+            action: action,
             timedWorkDuration: active
         )
     }
@@ -3009,11 +3068,11 @@ enum LegacyPlanSeedCatalog {
         }
     }
 
-    /// Lattice max-hang and Abrahangs protocols both name a 20 mm edge and are
-    /// two-handed hangs. `.bilateralPair` resolves the board's paired left/right
-    /// 20 mm holds.
-    private static let lattice20mmEdgePairTarget = ContactRequirement.edge(
-        depth: .range(.init(minimum: 20, maximum: 20)),
+    /// López's MAW guidance permits a chosen 8–20 mm edge. The resolver's
+    /// 1 mm tolerance means 9–19 matches measured point depths from 8–20.
+    /// Selection remains bilateral; the plan page narrows it to the chosen size.
+    private static let lopezMaxHangsEdgePairTarget = ContactRequirement.edge(
+        depth: .range(.init(minimum: 9, maximum: 19)),
         selection: .bilateralPair
     )
 
@@ -3040,12 +3099,6 @@ enum LegacyPlanSeedCatalog {
         kind: .pocket,
         depth: .range(.init(minimum: 20, maximum: 30)),
         fingerCapacity: 2,
-        selection: .single
-    )
-
-    /// Density Hangs tip: relatively large edges (20–35 mm).
-    private static let densityLargeEdgeTarget = ContactRequirement.edge(
-        depth: .range(.init(minimum: 20, maximum: 35)),
         selection: .single
     )
 
@@ -3107,21 +3160,21 @@ enum LegacyPlanSeedCatalog {
     static let maxHangs = TrainingPlan(
         id: "research.max-hangs",
         title: "Max Hangs",
-        subtitle: "Five near-maximal 7-second half-crimp hangs on a 20 mm edge.",
+        subtitle: "Adapted session: five 10-second half-crimp hangs on a chosen 8–20 mm edge, leaving 3 seconds in reserve.",
         level: "Advanced",
-        sourceLabel: "Lattice max hang protocol",
-        sourceURL: URL(string: "https://latticetraining.com/workout/1c4cc25a-ebe8-4930-8541-5b604a831c5f/half-4-hang-max/")!,
+        sourceLabel: "Eva López · MaxHangs (MAW)",
+        sourceURL: URL(string: "https://en-eva-lopez.blogspot.com/2018/05/fingerboard-training-guide-II-Maxhangs-SubHangs-and-Inthangs-methodology.html")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered([
             hangStep(
                 id: "max-hangs-1",
                 title: "Max hang · set 1",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3129,11 +3182,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-2",
                 title: "Max hang · set 2",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3141,11 +3194,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-3",
                 title: "Max hang · set 3",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3153,11 +3206,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-4",
                 title: "Max hang · set 4",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · 3m recovery · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · 3m recovery · half crimp · 3s in reserve",
+                active: 10,
                 rest: 180,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3165,11 +3218,11 @@ enum LegacyPlanSeedCatalog {
             hangStep(
                 id: "max-hangs-5",
                 title: "Max hang · set 5",
-                instruction: "Hang for 7 seconds on a 20 mm edge in a half-crimp, four-finger position at near-maximal intensity.",
-                accessory: "7s hang · half crimp",
-                active: 7,
+                instruction: "Hang for 10 seconds on your chosen 8–20 mm edge in a four-finger half-crimp. Add enough weight that you could hang for 13 seconds, leaving a 3-second margin before failure.",
+                accessory: "10s hang · half crimp · 3s in reserve",
+                active: 10,
                 rest: 0,
-                targets: [lattice20mmEdgePairTarget],
+                targets: [lopezMaxHangsEdgePairTarget],
                 gripType: .halfCrimp,
                 fingerConfiguration: FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky]),
                 handUse: .double
@@ -3382,8 +3435,8 @@ enum LegacyPlanSeedCatalog {
         title: "Megos · One-arm 7/3 Repeaters",
         subtitle: "Six sets of four 7/3 one-arm repeaters per side, with 2m set recovery.",
         level: "Advanced",
-        sourceLabel: "Alex Megos finger-training power-endurance protocol (reported by Eric Hörst)",
-        sourceURL: URL(string: "https://trainingforclimbing.com/alex-megos-finger-training-power-endurance-protocol/")!,
+        sourceLabel: "Alexander Megos · How to get Steel Fingers Part 2",
+        sourceURL: URL(string: "https://www.youtube.com/watch?v=urTeUObQlsg")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered({
@@ -3479,38 +3532,38 @@ enum LegacyPlanSeedCatalog {
     static let abrahangs = TrainingPlan(
         id: "research.abrahangs",
         title: "Abrahangs",
-        subtitle: "Low-intensity feet-supported hang variations.",
+        subtitle: "Emil Abrahamsson's ten low-intensity, feet-supported hangs with grip-specific effort levels.",
         level: "Supplemental",
-        sourceLabel: "Lattice Abrahangs protocol",
-        sourceURL: URL(string: "https://latticetraining.com/workout/1832c13b-14c1-444c-82a2-e72b22a6fb13/abrahangs-protocol")!,
+        sourceLabel: "Emil Abrahamsson · Hangboard Training 2 Times Per Day For 30 Days",
+        sourceURL: URL(string: "https://www.youtube.com/watch?v=sBTI9qiH4UE")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            let grips: [(title: String, targets: [ContactRequirement], grip: GripType, fingerConfiguration: FingerConfiguration?)] = [
-                ("Half 4 Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring, .pinky])),
-                ("F3 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle, .ring])),
-                ("M2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.middle, .ring])),
-                ("F2 Open Hang", [lattice20mmEdgePairTarget], .openHand, FingerConfiguration(engagedFingers: [.index, .middle])),
-                ("B3 Half Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.middle, .ring, .pinky])),
-                ("F3 Half Hang", [lattice20mmEdgePairTarget], .halfCrimp, FingerConfiguration(engagedFingers: [.index, .middle, .ring]))
+            let grips: [(title: String, target: ContactRequirement, fingers: [FingerSlot], reps: Int, effort: String)] = [
+                ("Four-finger crimp · 14 mm edge", .edge(depth: .range(.init(minimum: 14, maximum: 14)), selection: .bilateralPair), [.index, .middle, .ring, .pinky], 3, "70–80%"),
+                ("Three-finger drag · deep pocket", ContactRequirement(kind: .pocket, fingerCapacity: 3, selection: .bilateralPair), [.index, .middle, .ring], 3, "70–80%"),
+                ("Middle-two pocket", ContactRequirement(kind: .pocket, fingerCapacity: 2, selection: .bilateralPair), [.middle, .ring], 1, "50–60%"),
+                ("Front-two pocket", ContactRequirement(kind: .pocket, fingerCapacity: 2, selection: .bilateralPair), [.index, .middle], 1, "50–60%"),
+                ("Middle-two crimp", .edge(selection: .bilateralPair), [.middle, .ring], 1, "30–40%"),
+                ("Front-two crimp", .edge(selection: .bilateralPair), [.index, .middle], 1, "30–40%")
             ]
-
             for (index, grip) in grips.enumerated() {
-                steps.append(
-                    hangStep(
-                        id: "abrahangs-grip-\(index + 1)",
-                        title: "Abrahang · \(grip.title)",
-                        instruction: "Keep both feet supported and the intensity low throughout.",
-                        accessory: "Feet supported · 10s hang · 50s rest",
+                for rep in 1...grip.reps {
+                    let stretch = index >= 4 ? " Stretch your pinky fingers during the rest." : ""
+                    steps.append(hangStep(
+                        id: "abrahangs-grip-\(index + 1)-rep-\(rep)",
+                        title: "Abrahang · \(grip.title) · rep \(rep) of \(grip.reps)",
+                        instruction: "Keep your feet on the ground. Use \(grip.effort) of the effort needed to lift off on the \(grip.title.lowercased()). Load for 10 seconds, then rest for 50 seconds.\(stretch)",
+                        accessory: "Feet supported · 10s work · 50s rest · \(grip.effort)",
                         active: 10,
-                        rest: index < grips.count - 1 ? 50 : 0,
-                        targets: grip.targets,
-                        gripType: grip.grip,
-                        fingerConfiguration: grip.fingerConfiguration,
+                        rest: 50,
+                        targets: [grip.target],
+                        gripType: index == 1 || index == 2 || index == 3 ? .openHand : nil,
+                        fingerConfiguration: FingerConfiguration(engagedFingers: Set(grip.fingers)),
                         handUse: .double
-                    )
-                )
+                    ))
+                }
             }
             return steps
         }())
@@ -3566,96 +3619,178 @@ enum LegacyPlanSeedCatalog {
     static let ladders = TrainingPlan(
         id: "coach.bechtel-three-six-nine",
         title: "3–6–9 Ladders",
-        subtitle: "3–6–9 ladder sequence.",
+        subtitle: "Three guided ladders on a chosen hold, with athlete-paced rests.",
         level: "Intermediate+",
-        sourceLabel: "Steve Bechtel 3–6–9 ladder protocol",
-        sourceURL: URL(string: "https://strengthclimbing.com/steve-bechtels-3-6-9-ladders/")!,
+        sourceLabel: "Steve Bechtel · Power Company interview, 49:21–52:11",
+        sourceURL: URL(string: "https://www.powercompanyclimbing.com/blog/2016/01/episode-2-resistance-training-with.html")!,
+        provenance: .adapted,
+        boardID: nil,
+        steps: numbered((1...3).map { round in
+            guidedTask(
+                id: "ladders-round-\(round)",
+                title: "Ladder \(round) · 3–6–9",
+                instruction: "Choose a hold and load you can hang for 15 seconds. Keep that hold and load for every hang: hang 3 seconds, rest as long as you need, hang 6 seconds, rest as long as you need, then hang 9 seconds. Rest at your own pace before the next ladder. Pause the session timer while completing this ladder, then skip to the next step when ready.",
+                accessory: "3s · 6s · 9s · rest as needed · manual task",
+                phase: .hang
+            )
+        })
+    )
+
+    static let densityHangs = TrainingPlan(
+        id: "coach.density-hangs",
+        title: "Nelson · Density Hangs · Beginner",
+        subtitle: "Nelson's beginner density session: two grips, two efforts per grip, to muscular failure.",
+        level: "Beginner",
+        sourceLabel: "Tyler Nelson · The Simplest Finger Training Program, Workout 2",
+        sourceURL: URL(string: "https://www.trainingbeta.com/the-simplest-finger-training-program/")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered({
             var steps: [WorkoutStep] = []
-            for round in 1...3 {
-                for (index, hangSeconds) in [3, 6, 9].enumerated() {
-                    steps.append(
-                        hangStep(
-                            id: "ladders-round-\(round)-\(hangSeconds)",
-                            title: "Ladder \(round) · \(hangSeconds) seconds",
-                            instruction: "Use a load that allows about 12 seconds at maximum.",
-                            accessory: "\(hangSeconds)s hang · 30s rest",
-                            active: TimeInterval(hangSeconds),
-                            rest: index < 2 ? 30 : 0,
-                            targets: [],
-                            gripType: nil
-                        )
-                    )
-                }
-                if round < 3 {
-                    steps.append(
-                        recoveryStep(
-                            id: "ladders-round-\(round)-recovery",
-                            title: "Three-minute ladder recovery",
+            let grips: [(title: String, target: ContactRequirement, grip: GripType)] = [
+                ("Easy sloper", ContactRequirement(kind: .sloper, selection: .bilateralPair), .openHand),
+                ("25 mm half crimp", .edge(depth: .range(.init(minimum: 25, maximum: 25)), selection: .bilateralPair), .halfCrimp)
+            ]
+            for (index, grip) in grips.enumerated() {
+                for rep in 1...2 {
+                    steps.append(guidedTask(
+                        id: "density-grip-\(index + 1)-rep-\(rep)",
+                        title: "Density · \(grip.title) · effort \(rep) of 2",
+                        instruction: "Hang with both arms using slow, static loading to muscular failure. Choose a difficulty that allows approximately 20–40 seconds; the stopwatch records your actual effort. Pause the session timer while completing the hang, then skip to recovery when finished.",
+                        accessory: "20–40s or failure · stopwatch · two arms",
+                        phase: .hang,
+                        targets: [grip.target],
+                        duration: 60,
+                        timing: .stopwatch,
+                        gripType: grip.grip
+                    ))
+                    if index != grips.count - 1 || rep != 2 {
+                        steps.append(recoveryStep(
+                            id: "density-grip-\(index + 1)-rep-\(rep)-recovery",
+                            title: "Density · effort recovery",
                             duration: 180,
-                            accessory: "3m recovery"
-                        )
-                    )
+                            accessory: "3m recovery · 3–5m between efforts"
+                        ))
+                    }
                 }
             }
             return steps
         }())
     )
 
-    static let densityHangs = TrainingPlan(
-        id: "coach.density-hangs",
-        title: "Density Hangs",
-        subtitle: "Density hangs with a 2:1 work-to-rest relationship.",
-        level: "Intermediate+",
-        sourceLabel: "Tyler Nelson density hang protocol",
-        sourceURL: URL(string: "https://strengthclimbing.com/dr-tyler-nelsons-density-hangs-finger-training-for-rock-climbing/")!,
+    private struct NelsonGrip {
+        let title: String
+        let target: ContactRequirement
+        let grip: GripType?
+    }
+
+    /// Tables 1–3 use ranges. These sessions disclose their selected defaults
+    /// and preserve the full source ranges and qualifiers in instructions.
+    private static func nelsonPulls(expert: Bool, velocity: Bool) -> TrainingPlan {
+        let level = expert ? "Expert" : "Beginner"
+        let method = velocity ? "velocity" : "recruitment"
+        let id = "coach.nelson-\(method)-pulls.\(level.lowercased())"
+        let single = !velocity || expert
+        let selection: ContactSelectionPolicy = single ? .single : .bilateralPair
+        let grips: [NelsonGrip]
+        if velocity && !expert {
+            grips = [
+                NelsonGrip(title: "Easy sloper", target: ContactRequirement(kind: .sloper, selection: selection), grip: .openHand),
+                NelsonGrip(title: "35 mm pocket", target: ContactRequirement(kind: .pocket, depth: .range(.init(minimum: 35, maximum: 35)), selection: selection), grip: nil)
+            ]
+        } else {
+            grips = [
+                NelsonGrip(title: expert && !velocity ? "15–20 mm open hand" : "20 mm open hand", target: .edge(depth: .range(.init(minimum: expert && !velocity ? 15 : 20, maximum: 20)), selection: selection), grip: .openHand),
+                NelsonGrip(title: expert ? (velocity ? "15–20 mm half crimp" : "10–15 mm half crimp") : "20 mm half crimp", target: .edge(depth: .range(.init(minimum: expert ? (velocity ? 15 : 10) : 20, maximum: expert && !velocity ? 15 : 20)), selection: selection), grip: .halfCrimp)
+            ]
+        }
+        let reps = velocity ? (expert ? 5 : 2) : (expert ? 4 : 3)
+        let active: TimeInterval = velocity ? 2 : 4
+        let recovery: TimeInterval = velocity ? 15 : 90
+        let sides: [WorkoutSide] = single ? [.left, .right] : [.both]
+        let totalEfforts = grips.count * sides.count * reps
+        var steps: [WorkoutStep] = []
+        for (index, grip) in grips.enumerated() {
+            for side in sides {
+                for rep in 1...reps {
+                    let instruction = velocity
+                        ? "Begin with 10–20% tension, then apply force as fast as possible for 1–3 seconds at moderate to high intensity. Use 2 seconds per effort and 15 seconds of recovery; recovery can range from 10–20 seconds. " + (expert ? "Complete one set of 5 repetitions, stopping when power drops. Progression allows 1–2 sets of 5–8 repetitions." : "Perform 2–4 repetitions; this session uses 2 and one set.")
+                        : "Build pulling force slowly over 1–2 seconds, then grip as hard as possible for the rest of a 3–5-second effort. Keep the elbow at 120–150 degrees. Pull vertically downward; lifting off is not required. Use 4 seconds per effort and 90 seconds of recovery; recovery can range from 60–120 seconds. " + (expert ? "Complete one set of 4 repetitions. Progression allows 1–2 sets of 4–5 repetitions." : "Perform 3 repetitions for one set.")
+                    steps.append(hangStep(
+                        id: "\(method)-\(level.lowercased())-grip-\(index + 1)-\(side.rawValue)-rep-\(rep)",
+                        title: "\(velocity ? "Velocity" : "Recruitment") · \(grip.title) · \(side.rawValue) · rep \(rep)",
+                        instruction: instruction,
+                        accessory: "\(Int(active))s effort · \(single ? "one arm" : "two arms")",
+                        active: active,
+                        rest: 0,
+                        targets: [grip.target],
+                        gripType: grip.grip,
+                        handUse: single ? .single : .double,
+                        side: side,
+                        action: .isometricPull
+                    ))
+                    if steps.filter({ $0.phase != .rest }).count < totalEfforts {
+                        steps.append(recoveryStep(
+                            id: "\(method)-\(level.lowercased())-grip-\(index + 1)-\(side.rawValue)-rep-\(rep)-recovery",
+                            title: "Effort recovery",
+                            duration: recovery,
+                            accessory: "\(Int(recovery))s recovery · \(velocity ? "10–20s" : "60–120s") between efforts"
+                        ))
+                    }
+                }
+            }
+        }
+        return TrainingPlan(
+            id: id,
+            title: "Nelson · \(velocity ? "Velocity Pulls" : "Recruitment Pulls") · \(level)",
+            subtitle: "\(single ? "One-arm" : "Two-arm") \(velocity ? "speed-focused" : "maximal recruitment") efforts on two source-prescribed grips; adapted timer defaults.",
+            level: level,
+            sourceLabel: "Tyler Nelson · The Simplest Finger Training Program, Workout \(velocity ? 3 : 1)",
+            sourceURL: URL(string: "https://www.trainingbeta.com/the-simplest-finger-training-program/")!,
+            provenance: .adapted,
+            boardID: nil,
+            steps: numbered(steps)
+        )
+    }
+
+    static let nelsonRecruitmentBeginner = nelsonPulls(expert: false, velocity: false)
+    static let nelsonRecruitmentExpert = nelsonPulls(expert: true, velocity: false)
+    static let nelsonVelocityBeginner = nelsonPulls(expert: false, velocity: true)
+    static let nelsonVelocityExpert = nelsonPulls(expert: true, velocity: true)
+
+    static let nelsonDensityExpert = TrainingPlan(
+        id: "coach.nelson-density-hangs.expert",
+        title: "Nelson · Density Hangs · Expert",
+        subtitle: "Three two-arm grip positions, three efforts per grip, to muscular failure; adapted one-set session.",
+        level: "Expert",
+        sourceLabel: "Tyler Nelson · The Simplest Finger Training Program, Workout 2",
+        sourceURL: URL(string: "https://www.trainingbeta.com/the-simplest-finger-training-program/")!,
         provenance: .adapted,
         boardID: nil,
         steps: numbered({
-            var steps: [WorkoutStep] = []
-            let grips: [(title: String, targets: [ContactRequirement], grip: GripType)] = [
-                ("20–35 mm large edge", [densityLargeEdgeTarget], .openHand),
-                ("20–35 mm large edge · set B", [densityLargeEdgeTarget], .openHand)
+            let grips: [NelsonGrip] = [
+                NelsonGrip(title: "Hard sloper", target: ContactRequirement(kind: .sloper, selection: .bilateralPair), grip: .openHand),
+                NelsonGrip(title: "10–15 mm half crimp", target: .edge(depth: .range(.init(minimum: 10, maximum: 15)), selection: .bilateralPair), grip: .halfCrimp),
+                NelsonGrip(title: "10 mm full crimp", target: .edge(depth: .range(.init(minimum: 10, maximum: 10)), selection: .bilateralPair), grip: .fullCrimp)
             ]
-
-            for (holdIndex, grip) in grips.enumerated() {
-                for set in 1...2 {
-                    for rep in 1...3 {
-                        steps.append(
-                        hangStep(
-                            id: "density-hold-\(holdIndex + 1)-set-\(set)-rep-\(rep)",
-                            title: "Density · \(grip.title), set \(set), rep \(rep)",
-                            instruction: "Hang for 30 seconds, then rest for 15 seconds.",
-                            accessory: "30s hang · 15s rest",
-                            active: 30,
-                            rest: rep < 3 ? 15 : 0,
-                            targets: grip.targets,
-                            gripType: nil
-                        )
-                        )
-                    }
-                    if set < 2 {
-                        steps.append(
-                        recoveryStep(
-                            id: "density-hold-\(holdIndex + 1)-set-\(set)-recovery",
-                            title: "Three-minute set recovery",
-                            duration: 180,
-                            accessory: "3m recovery"
-                        )
-                        )
-                    }
-                }
-                if holdIndex < grips.count - 1 {
-                    steps.append(
-                        recoveryStep(
-                            id: "density-hold-\(holdIndex + 1)-recovery",
-                            title: "Three-minute hold recovery",
-                            duration: 180,
-                            accessory: "3m recovery"
-                        )
+            var steps: [WorkoutStep] = []
+            for (index, grip) in grips.enumerated() {
+                for rep in 1...3 {
+                    let step = guidedTask(
+                        id: "density-expert-grip-\(index + 1)-rep-\(rep)",
+                        title: "Density · \(grip.title) · effort \(rep) of 3",
+                        instruction: "Hang with both arms using slow static loading to muscular failure, approximately 20–40 seconds. Complete one set; the full progression allows 1–2 sets. Pause the session timer while completing the hang, then skip to recovery when finished.",
+                        accessory: "20–40s or failure · stopwatch · two arms",
+                        phase: .hang,
+                        targets: [grip.target],
+                        duration: 60,
+                        timing: .stopwatch,
+                        gripType: grip.grip
                     )
+                    steps.append(step)
+                    if index != grips.count - 1 || rep != 3 {
+                        steps.append(recoveryStep(id: "\(step.id)-recovery", title: "Density · effort recovery", duration: 180, accessory: "3m recovery · 3–5m between efforts"))
+                    }
                 }
             }
             return steps
@@ -3949,6 +4084,11 @@ enum LegacyPlanSeedCatalog {
             horst753,
             ladders,
             densityHangs,
+            nelsonDensityExpert,
+            nelsonRecruitmentBeginner,
+            nelsonRecruitmentExpert,
+            nelsonVelocityBeginner,
+            nelsonVelocityExpert,
             zlagboardEndurance,
             hoopersBetaIntroductory,
             methodRepeaters,
