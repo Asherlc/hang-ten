@@ -1,0 +1,15 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "-m",
+    "pytest",
+    "Tools/HangboardPackages/tests",
+    "-q",
+    "--basetemp",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-cord-shortening/placid-badger-package-pytest"
+  ],
+  "exitCode": 0,
+  "elapsedSeconds": 28.605224500002805,
+  "summary": "434 passed in 28.33s"
+}

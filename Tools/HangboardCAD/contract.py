@@ -37,7 +37,10 @@ def validate_bindings(nodes: Sequence[Mapping], board: Mapping, version: int,
         if (not isinstance(name, str) or not NODE_ID.fullmatch(name) or name in names
                 or role not in {"body", "contact", "attachment"}):
             raise ValueError("invalid/duplicate node ID or role")
-        if set(node) - {"id", "role", key}:
+        allowed = {"id", "role", key}
+        if version == 1 and role == "contact":
+            allowed.add("additionalContactIDs")
+        if set(node) - allowed:
             raise ValueError("unexpected node binding fields")
         names.add(name)
         if role == "contact":
@@ -45,6 +48,13 @@ def validate_bindings(nodes: Sequence[Mapping], board: Mapping, version: int,
             if not isinstance(value, str) or not value:
                 raise ValueError("contact node requires its explicit binding")
             bound.add(value)
+            if "additionalContactIDs" in node:
+                extra = node["additionalContactIDs"]
+                if (not isinstance(extra, list) or not extra
+                        or any(not isinstance(item, str) or not item for item in extra)
+                        or extra != sorted(set(extra)) or value in extra):
+                    raise ValueError("additionalContactIDs must be a sorted nonempty unique array excluding primary")
+                bound.update(extra)
         elif key in node:
             raise ValueError("non-contact node cannot carry contact binding")
         bodies += role == "body"

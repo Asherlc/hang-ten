@@ -1,0 +1,80 @@
+{
+  "owner": "placid-badger",
+  "status": "Final shorter-cord preview packet ready; user visual acceptance pending.",
+  "afterSidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "acceptedSourceModelDescriptorSHA256": {
+    "frictitious-nug.FCStd": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "assets/primary.usdz": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+    "assets/primary.model.json": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e"
+  },
+  "beforeCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "retainedBeforeFilesVerified": 18,
+  "pairedImageHashesVerified": 36,
+  "overviewHashVerified": true,
+  "supportToPosedBodyTopGapMM": {
+    "front-25": {
+      "before": 262.422559,
+      "after": 54.185507
+    },
+    "front-inverted-20": {
+      "before": 262.422559,
+      "after": 54.185507
+    },
+    "reverse-13": {
+      "before": 262.422559,
+      "after": 54.185507
+    },
+    "reverse-inverted-8": {
+      "before": 262.422559,
+      "after": 54.185507
+    },
+    "outer-upper": {
+      "before": 262.422559,
+      "after": 54.185507
+    },
+    "outer-lower": {
+      "before": 262.422559,
+      "after": 54.185507
+    }
+  },
+  "physicallyInspected": [
+    {
+      "image": "default-inverted-cord-overview.png",
+      "sha256": "df9bec78c92618f6f5cc467cb9661fabbf4e3cb693eaf5e946741734a2a97856"
+    },
+    {
+      "image": "front-25-front-full.png",
+      "sha256": "21724e2be3d890f72273cf3f4917b295eba48635acd8e2d576ac66db04c4b6f9"
+    },
+    {
+      "image": "front-25-side-detail.png",
+      "sha256": "3ae9352b81e1640c671f12ec0186298b81b40dfd1e0e1830cf11a212e4095c9e"
+    },
+    {
+      "image": "reverse-inverted-8-front-detail.png",
+      "sha256": "b8c4687fabcfd9eede2f8df69d0292a7303c3e7e246ec185bbecd71eb7b04e70"
+    },
+    {
+      "image": "reverse-13-side-full.png",
+      "sha256": "231301cbf6c3f78b8546e0646f91712ae947bffa71e37b860399933916b6a7c6"
+    },
+    {
+      "image": "outer-upper-front-full.png",
+      "sha256": "6530297236b7264228dd00a135976d75dc45057c2d972f65c578211a5b5eea8a"
+    },
+    {
+      "image": "outer-lower-front-full.png",
+      "sha256": "aacbdf969e04c3973b32bcf9f1a68f6425630ac50f5d396f170678c0118e4d95"
+    }
+  ],
+  "observations": [
+    "Full default front view clearly shows reduced overhead span at exactly the same before/after board scale.",
+    "Default/inverted front/side/top composite and representative reverse/inverted/jug/pinch images inspected. All six poses use the new54.185507mm support-to-body-top gap versus262.422559mm before.",
+    "Cord diameter remains6mm. Four strand IDs, exact mouth endpoints, canonical rotations/cameras, native source graph, accepted CAD/USDZ/descriptor and published130x60x40mm dimensions are unchanged.",
+    "Every visible route comes from the native cache plus its repository-defined canonical transform and fixed support. Repository Python parsing/full-route validation passed for both source sidecars.",
+    "Tight segment joints can show small fan-shaped gaps in enlarged technical side views. Cylinders follow repository makeCordEntity segment construction without invented joint spheres or edited route points.",
+    "Top projections collapse height; projected X crossings are not3D collision certificates. Root/native author own exact rounded full-solid/tube/length certificates and final app proof."
+  ],
+  "history": "Accepted pinch packet referenced at ../pinch-contact-review; only committed baseline4files, captured accepted8a sidecar and13prior app capture/AX/validation files copied here. No redundant native/code/test proof copies retained.",
+  "limitations": "Technical previews are not Simulator captures or independent native-clearance reports. Root owns integration proof and user approval."
+}

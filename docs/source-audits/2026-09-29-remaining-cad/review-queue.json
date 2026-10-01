@@ -56,7 +56,7 @@
       "appReviewPage": "captain-fingerfood-dual/vertical-tightening-review/app-review/index.html",
       "suspensionSHA256": "0d90fd3fd8d1a053d5ed0465e568d6c72ef8b960d038d849700d2181bf35a5cf",
       "reviewFeedback": [
-        "Cord doesn’t go through holes",
+        "Cord doesn\u2019t go through holes",
         "the 90 degree position tho, why does the bottom cord jut out to the side?"
       ],
       "latestRevision": "captain-fingerfood-dual/vertical-tightening-review/review.md",
@@ -102,31 +102,29 @@
       "package": "frictitious-nug",
       "boardID": "frictitious.nug",
       "name": "Frictitious Climbing The NUG",
-      "humanReview": "current 6 mm cord revision awaiting review #4",
-      "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+      "humanReview": "pinch highlight accepted; shorter cord awaiting review #4",
+      "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
       "reviewPage": "frictitious-nug/review/index.html",
       "sourceAudit": "frictitious-nug/README.md",
       "comparisons": [
-        "frictitious-nug/review/prior-reverse.png",
-        "frictitious-nug/review/prior-primary.png",
-        "frictitious-nug/review/primary-front.png",
-        "frictitious-nug/review/primary-side.png",
-        "frictitious-nug/review/primary-top.png"
+        "frictitious-nug/cord-shortening-review/default-inverted-cord-overview.png",
+        "frictitious-nug/pinch-contact-review/pinch-60-overview.png"
       ],
       "presentations": {
         "primary": {
-          "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
-          "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f"
+          "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+          "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800"
         }
       },
-      "appReview": "frictitious-nug/cord-diameter-review/app-review/validation.json",
-      "appReviewPage": "frictitious-nug/cord-diameter-review/app-review/index.html",
-      "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
-      "latestRevision": "frictitious-nug/cord-diameter-review/review.md",
-      "cordComparisons": "frictitious-nug/cord-diameter-review/index.html",
-      "runtimeRevision": "frictitious-nug/cord-diameter-review/runtime-validation.json",
+      "appReview": "frictitious-nug/cord-shortening-review/app-review/validation.json",
+      "appReviewPage": "frictitious-nug/cord-shortening-review/app-review/index.html",
+      "suspensionSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+      "latestRevision": "frictitious-nug/cord-shortening-review/review.md",
+      "cordComparisons": "frictitious-nug/cord-shortening-review/index.html",
+      "runtimeRevision": "frictitious-nug/cord-shortening-review/verification.json",
       "reviewFeedback": [
-        "Primary product page specifies 6 mm rated climbing cord; prior sidecar represented a 3 mm diameter."
+        "Upper and lower rims onto front/back",
+        "looks good, cord is too long tho"
       ],
       "humanReviewRecord": "frictitious-nug/human-review.json"
     },

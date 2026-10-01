@@ -222,6 +222,106 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testSharedContactMeshUsesPrimaryPickingAndUnionHighlight() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.contact"))
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else { return XCTFail("model") }
+        XCTAssertEqual(media.descriptor.schemaVersion, 1)
+        XCTAssertNil(media.instances)
+        let ids = media.descriptor.contacts.keys.sorted()
+        let primaryID = try XCTUnwrap(ids.first)
+        let secondaryID = try XCTUnwrap(ids.dropFirst().first)
+        let originalPrimary = try XCTUnwrap(media.descriptor.contacts[primaryID])
+        XCTAssertEqual(originalPrimary.nodeIDs.count, 1)
+        let sharedNode = try XCTUnwrap(originalPrimary.nodeIDs.first)
+        let originalSecondary = try XCTUnwrap(media.descriptor.contacts[secondaryID])
+        let minimum = zip(originalPrimary.facePlaneAABB.minimum, originalSecondary.facePlaneAABB.minimum)
+            .map { min($0, $1) }
+        let maximum = zip(originalPrimary.facePlaneAABB.maximum, originalSecondary.facePlaneAABB.maximum)
+            .map { max($0, $1) }
+        var contacts = media.descriptor.contacts
+        contacts[secondaryID] = BoardModelContactDescriptor(
+            nodeIDs: (originalSecondary.nodeIDs + [sharedNode]).sorted(),
+            facePlaneAABB: BoardModelFacePlaneAABB(minimum: minimum, maximum: maximum),
+            center: zip(minimum, maximum).map { ($0 + $1) / 2 })
+        let nodes = media.descriptor.nodes.map { node in
+            node.nodeID == sharedNode
+                ? BoardModelNodeDescriptor(nodeID: node.nodeID, role: node.role,
+                                           contactID: node.contactID, additionalContactIDs: [secondaryID])
+                : node
+        }
+        let descriptor = BoardModelDescriptor(
+            schemaVersion: media.descriptor.schemaVersion,
+            coordinateFrame: media.descriptor.coordinateFrame,
+            modelSHA256: media.descriptor.modelSHA256, modelBounds: media.descriptor.modelBounds,
+            nodes: nodes, contacts: contacts)
+        let loadedSource = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live)
+        let source = try XCTUnwrap(loadedSource)
+        let scene = BoardModelRealityScene(descriptor: descriptor, display: media.display,
+            suspension: nil, orientation: nil, allowedPositionIDs: [], resourceLease: source.resourceLease)
+        try await scene.load(usdzURL: source.resourceLease.url)
+        let primary = try XCTUnwrap(scene.contactEntities[primaryID])
+        let secondary = try XCTUnwrap(scene.contactEntities[secondaryID])
+        let shared = try XCTUnwrap(primary.first { entity in secondary.contains { $0 === entity } })
+        let secondaryOnly = try XCTUnwrap(secondary.first { entity in !primary.contains { $0 === entity } })
+        XCTAssertEqual(scene.contactID(for: shared), primaryID)
+        XCTAssertEqual(scene.contactID(for: secondaryOnly), secondaryID)
+        XCTAssertNotNil(shared.collision)
+        XCTAssertNotNil(shared.components[InputTargetComponent.self])
+        XCTAssertEqual(Set(secondary.map(ObjectIdentifier.init)).count, secondary.count)
+        func roughness(_ entity: ModelEntity) throws -> Float {
+            try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial).roughness.scale
+        }
+        scene.highlight([secondaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.8, accuracy: 0.0001)
+        scene.highlight([primaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+        scene.highlight([primaryID, secondaryID], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.8, accuracy: 0.0001)
+        scene.highlight([], mode: .active)
+        XCTAssertEqual(try roughness(shared), 0.5, accuracy: 0.0001)
+        XCTAssertEqual(try roughness(secondaryOnly), 0.5, accuracy: 0.0001)
+    }
+
+    @MainActor
+    func testNUGPinchHighlightsBothOpposingSurfacesAndKeepsJugPicking() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "frictitious.nug"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertEqual(Set(scene.contactEntities.keys), Set(board.contacts.map(\.id)))
+        XCTAssertEqual(board.contacts.count, 6)
+        let jug = try XCTUnwrap(scene.contactEntities["jug-40"])
+        let pinch = try XCTUnwrap(scene.contactEntities["pinch-60"])
+        XCTAssertFalse(jug.isEmpty)
+        XCTAssertTrue(jug.allSatisfy { upper in pinch.contains { $0 === upper } })
+        let lower = pinch.filter { item in !jug.contains { $0 === item } }
+        XCTAssertFalse(lower.isEmpty)
+        XCTAssertEqual(Set(pinch.map(ObjectIdentifier.init)).count, pinch.count)
+        for entity in jug { XCTAssertEqual(scene.contactID(for: entity), "jug-40") }
+        for entity in lower { XCTAssertEqual(scene.contactID(for: entity), "pinch-60") }
+        func assertRoughness(_ entities: [ModelEntity], _ expected: Float) throws {
+            for entity in entities {
+                let material = try XCTUnwrap(entity.model?.materials.first as? PhysicallyBasedMaterial)
+                XCTAssertEqual(material.roughness.scale, expected, accuracy: 0.0001)
+            }
+        }
+        scene.highlight(["pinch-60"], mode: .active)
+        try assertRoughness(pinch, 0.8)
+        scene.highlight(["jug-40"], mode: .active)
+        try assertRoughness(jug, 0.8)
+        try assertRoughness(lower, 0.5)
+        scene.highlight(["jug-40", "pinch-60"], mode: .active)
+        try assertRoughness(pinch, 0.8)
+        scene.highlight([], mode: .active)
+        try assertRoughness(pinch, 0.5)
+    }
+
+    @MainActor
     func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let scene = try await BoardModelRealityLoader.load(board: board,
@@ -280,7 +380,15 @@ final class BoardModelRealityTests: XCTestCase {
                 for (contactID, entities) in scene.contactEntities {
                     XCTAssertFalse(entities.isEmpty, "\(board.id)/\(contactID)")
                     for entity in entities {
-                        XCTAssertEqual(scene.contactID(for: entity), contactID, board.id)
+                        let pickedID = try XCTUnwrap(scene.contactID(for: entity), board.id)
+                        if pickedID != contactID {
+                            let node = try XCTUnwrap(media.descriptor.nodes.first {
+                                $0.nodeID == entity.name
+                            }, "Shared mesh must have a descriptor node: \(board.id)/\(entity.name)")
+                            XCTAssertEqual(node.contactID, pickedID, board.id)
+                            XCTAssertTrue(node.additionalContactIDs?.contains(contactID) == true, board.id)
+                            XCTAssertTrue(media.descriptor.contacts[contactID]?.nodeIDs.contains(node.nodeID) == true, board.id)
+                        }
                         XCTAssertNotNil(entity.collision, board.id)
                         XCTAssertNotNil(entity.components[InputTargetComponent.self], board.id)
                     }

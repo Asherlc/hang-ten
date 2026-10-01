@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "beforeSourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "afterSourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "beforeSolidSHA256": "447aaa29326167bbed749643fbc1d454707f84eb8fb29d79b2d6de391986365e",
+  "afterSolidSHA256": "645fd4ec9124c7bcb32d305da42cd56df6eb7d5f660425fa79b9467f28e00780",
+  "verticesByteEquivalent": true,
+  "trianglesByteEquivalent": true,
+  "retainedOriginalWoodGeometryPreserved": true,
+  "collisionFeature": "RightBackEntryCut (retained original wood)",
+  "newExportBodyEquivalenceProof": "native-authoring/seamed-native-proof.json (zero solid and boundary differences)"
+}

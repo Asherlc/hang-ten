@@ -1,0 +1,7 @@
+{
+  "owner": "placid-badger",
+  "candidateSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "liveSidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "sourceModelDescriptorUnchanged": true,
+  "onlyPromotedFile": "Hangboards/frictitious-nug/suspension.json"
+}

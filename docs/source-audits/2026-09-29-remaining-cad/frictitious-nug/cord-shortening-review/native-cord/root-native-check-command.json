@@ -1,0 +1,18 @@
+{
+  "owner": "placid-badger",
+  "command": [
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-review/native-cord/logged_fresh_solve.py",
+    "--package",
+    "frictitious-nug",
+    "--solid",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-cord-shortening/solid-primary.json",
+    "--check",
+    "--report",
+    "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-cord-shortening/root-native-check-report.json"
+  ],
+  "timeoutSeconds": 180,
+  "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "exitCode": 0,
+  "elapsedSeconds": 22.023159291013144
+}

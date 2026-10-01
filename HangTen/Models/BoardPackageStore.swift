@@ -1298,8 +1298,21 @@ struct BoardPackageStore {
                       contactID.isBoardPackageIdentifier else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact node has invalid contactID")
                 }
-                nodeIDsByContact[contactID, default: []].append(node.nodeID)
-                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: contactID))
+                if let additional = node.additionalContactIDs {
+                    guard !additional.isEmpty,
+                          additional == additional.sorted(),
+                          Set(additional).count == additional.count,
+                          !additional.contains(contactID),
+                          additional.allSatisfy({ $0.isBoardPackageIdentifier }) else {
+                        throw BoardPackageStoreError.invalidPackage(
+                            boardID: boardID, reason: "model descriptor additionalContactIDs must be nonempty, unique, sorted identifiers excluding the primary contactID")
+                    }
+                }
+                for member in [contactID] + (node.additionalContactIDs ?? []) {
+                    nodeIDsByContact[member, default: []].append(node.nodeID)
+                }
+                nodes.append(.init(nodeID: node.nodeID, role: .contact, contactID: contactID,
+                                   additionalContactIDs: node.additionalContactIDs))
             case "attachment":
                 guard node.contactID == nil else {
                     throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor attachment node may not declare contactID")
@@ -1334,9 +1347,14 @@ struct BoardPackageStore {
                 reason: "model descriptor contact IDs must be sorted"
             )
         }
+        let sharedContactIDs = Set(document.nodes.flatMap { $0.additionalContactIDs ?? [] })
         var contacts: [String: BoardModelContactDescriptor] = [:]
         for contactID in physicalContactIDs.sorted() {
             guard let contact = document.contacts[contactID] else { continue }
+            guard !sharedContactIDs.contains(contactID) || contact.outline == nil else {
+                throw BoardPackageStoreError.invalidPackage(
+                    boardID: boardID, reason: "model descriptor shared contact may not declare an outline")
+            }
             let expectedNodes = (nodeIDsByContact[contactID] ?? []).sorted()
             guard !contact.nodeIDs.isEmpty, contact.nodeIDs == expectedNodes else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "model descriptor contact nodeIDs do not match bound nodes")
@@ -3591,16 +3609,20 @@ private struct BoardPackageModelNodeDocument: Decodable {
     let nodeID: String
     let role: String
     let contactID: String?
-    private enum CodingKeys: String, CodingKey { case nodeID, role, contactID }
+    let additionalContactIDs: [String]?
+    private enum CodingKeys: String, CodingKey { case nodeID, role, contactID, additionalContactIDs }
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         role = try container.decode(String.self, forKey: .role)
         if role == "contact" {
-            try decoder.rejectUnknownKeys(["nodeID", "role", "contactID"])
+            try decoder.rejectUnknownKeys(["nodeID", "role", "contactID", "additionalContactIDs"])
             contactID = try container.decode(String.self, forKey: .contactID)
+            additionalContactIDs = container.contains(.additionalContactIDs)
+                ? try container.decode([String].self, forKey: .additionalContactIDs) : nil
         } else {
             try decoder.rejectUnknownKeys(["nodeID", "role"])
             contactID = nil
+            additionalContactIDs = nil
         }
         nodeID = try container.decode(String.self, forKey: .nodeID)
     }

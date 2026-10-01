@@ -2613,6 +2613,7 @@ def _load_model_descriptor(
         raise ValueError("model descriptor nodes must be a non-empty array")
     node_ids: set[str] = set()
     node_ids_by_contact: dict[str, list[str]] = {}
+    shared_contact_ids: set[str] = set()
     body_count = 0
     attachment_count = 0
     ordered_node_ids: list[str] = []
@@ -2621,7 +2622,7 @@ def _load_model_descriptor(
         node = _mapping(raw_node, source)
         role = node.get("role")
         expected = {"nodeID", "role", "contactID"} if role == "contact" else {"nodeID", "role"}
-        _closed(node, expected, source)
+        _closed(node, expected, source, optional={"additionalContactIDs"} if role == "contact" else set())
         node_id = _string(node["nodeID"], f"{source}.nodeID")
         if node_id in node_ids:
             raise ValueError(f"model descriptor has duplicate nodeID: {node_id}")
@@ -2632,6 +2633,16 @@ def _load_model_descriptor(
         elif role == "contact":
             contact_id = _identifier(node["contactID"], f"{source}.contactID")
             node_ids_by_contact.setdefault(contact_id, []).append(node_id)
+            if "additionalContactIDs" in node:
+                extra = node["additionalContactIDs"]
+                if not isinstance(extra, list) or not extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be a non-empty array")
+                extra = [_identifier(item, f"{source}.additionalContactIDs") for item in extra]
+                if extra != sorted(set(extra)) or contact_id in extra:
+                    raise ValueError(f"{source}.additionalContactIDs must be sorted, unique and exclude primary")
+                shared_contact_ids.update(extra)
+                for additional_id in extra:
+                    node_ids_by_contact.setdefault(additional_id, []).append(node_id)
         elif role == "attachment":
             attachment_count += 1
             max_attachments = (
@@ -2662,6 +2673,8 @@ def _load_model_descriptor(
     for contact_id, raw_contact in raw_contacts.items():
         source = f"model descriptor contacts[{contact_id}]"
         contact = _mapping(raw_contact, source)
+        if contact_id in shared_contact_ids and "outline" in contact:
+            raise ValueError(f"{source}: shared contact cannot replace member surfaces with an outline")
         _closed(contact, {"nodeIDs", "facePlaneAABB", "center"}, source, optional={"outline"})
         contact_node_ids = contact["nodeIDs"]
         if (

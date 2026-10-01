@@ -92,12 +92,22 @@ struct BoardModelNodeDescriptor: Hashable, Codable {
 
     let nodeID: String
     let role: Role
+    /// Deterministic picking identity, even when the mesh has other memberships.
     let contactID: String?
+    let additionalContactIDs: [String]?
+
+    init(nodeID: String, role: Role, contactID: String?, additionalContactIDs: [String]? = nil) {
+        self.nodeID = nodeID
+        self.role = role
+        self.contactID = contactID
+        self.additionalContactIDs = additionalContactIDs
+    }
 
     enum CodingKeys: String, CodingKey {
         case nodeID
         case role
         case contactID = "contactSlotID"
+        case additionalContactIDs
     }
 }
 

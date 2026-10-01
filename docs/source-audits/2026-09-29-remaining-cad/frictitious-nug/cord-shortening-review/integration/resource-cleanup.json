@@ -1,0 +1,16 @@
+{
+  "owner": "placid-badger",
+  "simulator": "20358DD7-A124-4108-ADEA-E9B07EA3DA09",
+  "simulatorDeletionVerified": true,
+  "ownershipManifestsConsumed": true,
+  "derivedDataRemoved": true,
+  "resultBundlesRemoved": [
+    ".context/placid-badger/nug-pinch-review/placid-badger-nug-pinch-red-tests.xcresult",
+    ".context/placid-badger/nug-pinch-review/first-full-xctest-attempt/placid-badger-nug-pinch-tests.xcresult",
+    ".context/placid-badger/nug-pinch-review/placid-badger-nug-pinch-tests.xcresult",
+    ".context/placid-badger/nug-cord-shortening/placid-badger-nug-short-cord-tests.xcresult"
+  ],
+  "resultBundleDeletionVerified": true,
+  "rawTestSummariesAndLogsRetained": true,
+  "onlyExactOwnedResourcesRemoved": true
+}

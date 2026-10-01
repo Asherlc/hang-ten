@@ -634,13 +634,14 @@ final class BoardModelRealityScene {
         guard contactIDs != lastHighlightedContactIDs || mode != lastHighlightMode else { return }
         lastHighlightedContactIDs = contactIDs
         lastHighlightMode = mode
-        // Apply highlight materials to contact entities
-        for (contactID, entities) in contactEntities {
-            let isHighlighted = contactIDs.contains(contactID)
-            let highlightColor: Color = isHighlighted ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
-            for entity in entities {
-                applyHighlight(to: entity, color: highlightColor, mode: mode)
-            }
+        // A shared mesh is selected when any of its logical contacts is selected.
+        // Update each entity once so an unselected membership cannot clear it.
+        let highlightedEntities = Set(contactIDs.flatMap { contactEntities[$0] ?? [] })
+        let allEntities = Set(contactEntities.values.flatMap { $0 })
+        for entity in allEntities {
+            let highlightColor: Color = highlightedEntities.contains(entity)
+                ? (mode == .active ? Color.holdActive : Color.restBlue) : .clear
+            applyHighlight(to: entity, color: highlightColor, mode: mode)
         }
     }
 
@@ -761,10 +762,17 @@ final class BoardModelRealityScene {
                 try requireDescriptorNodes(nodeIDToSlotID, matched: matchedNodeIDs,
                                            slotIDToContactID: slotIDToContactID)
             } else {
-                // Single instance (schema v1): descriptor.contacts is keyed by physical contact ID == slotID
-                for (physicalContactID, contactDescriptor) in contactDescriptorByPhysicalID {
-                    for nodeID in contactDescriptor.nodeIDs {
-                        nodeIDToSlotID[nodeID] = physicalContactID
+                // V1 picking uses the node's primary identity. Memberships come
+                // from the full contact inventory and may share the same mesh.
+                for node in descriptor.nodes where node.role == .contact {
+                    if let primaryID = node.contactID {
+                        nodeIDToSlotID[node.nodeID] = primaryID
+                    }
+                }
+                var contactIDsByNodeID: [String: [String]] = [:]
+                for contactID in contactDescriptorByPhysicalID.keys.sorted() {
+                    for nodeID in contactDescriptorByPhysicalID[contactID]?.nodeIDs ?? [] {
+                        contactIDsByNodeID[nodeID, default: []].append(contactID)
                     }
                 }
 
@@ -781,7 +789,9 @@ final class BoardModelRealityScene {
                        let slotID = nodeIDToSlotID[nodeID],
                        let contactID = slotIDToContactID[slotID] {
                         matchedNodeIDs.insert(nodeID)
-                        contactEntities[contactID, default: []].append(modelEntity)
+                        for member in contactIDsByNodeID[nodeID] ?? [] {
+                            contactEntities[member, default: []].append(modelEntity)
+                        }
                         contactIDByEntity[modelEntity] = contactID
                         modelEntity.generateCollisionShapes(recursive: false)
                         modelEntity.components.set(InputTargetComponent())

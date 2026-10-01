@@ -1,0 +1,63 @@
+{
+  "status": "passed",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+  "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+  "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "generatedManifestSHA256": "6ad516d15e1ecb839c3e57f3e2476866b83347cfdca18c70a44f79a5416c5303",
+  "shortening": {
+    "leadRestLengthMM": 110,
+    "anchorOffsetMM": 50,
+    "supportToBoardTopGapMM": 54.185507,
+    "beforeGapMM": 262.422559,
+    "allSixTranslationY": -0.004185507,
+    "cordDiameterMM": 6
+  },
+  "iosTests": {
+    "passed": 1264,
+    "failed": 0,
+    "skipped": 3,
+    "total": 1267
+  },
+  "packageTests": {
+    "owner": "placid-badger",
+    "command": [
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/venv/bin/python",
+      "-m",
+      "pytest",
+      "Tools/HangboardPackages/tests",
+      "-q",
+      "--basetemp",
+      "/Users/asherlc/.paseo/worktrees/0h78jp9r/placid-badger/.context/placid-badger/nug-cord-shortening/placid-badger-package-pytest"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 28.605224500002805,
+    "summary": "434 passed in 28.33s"
+  },
+  "nativeCord": {
+    "routesCertified": 24,
+    "poses": 6,
+    "freshPromotedCheck": "passed"
+  },
+  "geometry": {
+    "unchangedFromAcceptedPinch": true,
+    "byteIdenticalReproduction": "../pinch-contact-review/native-cord/fresh-reproduction.log"
+  },
+  "delivery": {
+    "bundledPackages": 64,
+    "modelPackages": 58,
+    "ODRModelAssets": 60,
+    "canonicalAppleAndroidParity": true
+  },
+  "appCanonicalViews": 6,
+  "physicalOrbitVerified": false,
+  "limits": "Cord lengths/support placement remain display estimates; unknown hidden joins remain unspecified. Native tolerances apply; no physical-equilibrium/global-shortest-route claim.",
+  "pinchAcceptance": "looks good",
+  "shortCordAcceptance": "pending review #4",
+  "resourceLifecycle": {
+    "simulatorDeleted": true,
+    "derivedDataRemoved": true,
+    "ownedResultBundlesRemoved": true,
+    "proof": "integration/resource-cleanup.json"
+  }
+}

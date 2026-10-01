@@ -5,17 +5,64 @@
   "number": 4,
   "package": "frictitious-nug",
   "boardID": "frictitious.nug",
-  "status": "awaiting one-by-one review",
-  "question": "Does this one look right?",
-  "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
-  "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
-  "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
-  "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
-  "currentRevision": "cord-diameter-review/review.md",
+  "status": "pinch highlight accepted; shorter cord awaiting review #4",
+  "question": "Does this cord length look right?",
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+  "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+  "suspensionSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472",
+  "currentRevision": "cord-shortening-review/review.md",
   "shownImages": {
-    "cord-diameter-review/body-prior-raster-overview.png": "a2acffc9e3790dda8b50ab46fa64e087fd2853bad9f2a3190f397a5bba23a353",
-    "cord-diameter-review/default-inverted-three-view-overview.png": "1bbdc438840eaeae8153e253361cbc8eadd9171a32e1e0e06e06ea3bfe752d9e",
-    "cord-diameter-review/app-review/six-canonical-app-overview.png": "7f538bdce819e2b373144e633f8d122462eb9b982f3d3d8e34272190d88ba4be"
+    "cord-shortening-review/default-inverted-cord-overview.png": "df9bec78c92618f6f5cc467cb9661fabbf4e3cb693eaf5e946741734a2a97856",
+    "cord-shortening-review/app-review/outer-lower-front.png": "1946e6f0a9467cf8c381aaadfae041c2a393277e3c00feadf74f1976fc8dc9c7"
   },
-  "approvalLimit": "No human acceptance yet. The pending reply will apply to the displayed body and 6 mm cord revision; source dimensions and retained technical proof remain separately documented."
+  "approvalLimit": "The shown pinch highlight was accepted. The newly shortened displayed cord remains pending; estimates do not establish manufacturer cord length.",
+  "history": [
+    {
+      "displayedRevision": {
+        "schemaVersion": 1,
+        "date": "2026-09-30",
+        "reviewer": "asherlc",
+        "number": 4,
+        "package": "frictitious-nug",
+        "boardID": "frictitious.nug",
+        "status": "awaiting one-by-one review",
+        "question": "Does this one look right?",
+        "sourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+        "modelSHA256": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+        "descriptorSHA256": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+        "suspensionSHA256": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3",
+        "currentRevision": "cord-diameter-review/review.md",
+        "shownImages": {
+          "cord-diameter-review/body-prior-raster-overview.png": "a2acffc9e3790dda8b50ab46fa64e087fd2853bad9f2a3190f397a5bba23a353",
+          "cord-diameter-review/default-inverted-three-view-overview.png": "1bbdc438840eaeae8153e253361cbc8eadd9171a32e1e0e06e06ea3bfe752d9e",
+          "cord-diameter-review/app-review/six-canonical-app-overview.png": "7f538bdce819e2b373144e633f8d122462eb9b982f3d3d8e34272190d88ba4be"
+        },
+        "approvalLimit": "No human acceptance yet. The pending reply will apply to the displayed body and 6 mm cord revision; source dimensions and retained technical proof remain separately documented."
+      },
+      "feedback": [
+        "the pinch highlist i dont think is right",
+        "no i mean, thats not actually where you put your fingers to pinch",
+        "it should wrap around",
+        "Upper and lower rims onto front/back"
+      ],
+      "result": "Pinch revised and accepted; original cord shortening requested."
+    },
+    {
+      "revision": "pinch-contact-review/review.md",
+      "answer": "looks good, cord is too long tho",
+      "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+      "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+      "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+      "suspensionSHA256": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc",
+      "acceptedScope": "Upper and lower pinch rims onto front and rear faces shown in final USDZ/app previews.",
+      "shownImages": {
+        "pinch-contact-review/pinch-60-overview.png": "bf118202d8021fbbdc53b6bf42f10d77466e0ccf275b110cd7c30b97ad84152a",
+        "pinch-contact-review/pinch-60-wraparound-overview.png": "dd544b1c4d8e82cf86675c113b4378a5f105e82510bdc910866da218a0d2cbaa",
+        "pinch-contact-review/app-review/outer-lower-front.png": "fe409557f2c72f8da64d1434a0a8d7f9c0f614867083cecda19d364f1502209a",
+        "pinch-contact-review/app-review/outer-upper-front.png": "a83e70c0d3b37cb24a3def670592b12d5986a7236366a63b24aefc7b4490205d"
+      },
+      "remainingRequest": "Shorter display cord."
+    }
+  ]
 }

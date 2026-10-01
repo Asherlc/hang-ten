@@ -1,0 +1,17 @@
+{
+  "status": "passed",
+  "retainedArtifactsVerified": 108,
+  "historicalCordFilesPreserved": 155,
+  "otherPackageFilesPreserved": 202,
+  "changedPackageFiles": 4,
+  "otherReviewRowsUnchanged": true,
+  "deliveryDigest": "b39446d7f609b41d81e3d4ac0f9746be9108611c5bc06dcf11503ebb040efbf1",
+  "identities": {
+    "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "modelSHA256": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+    "descriptorSHA256": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+    "sidecarSHA256": "d34a007dacf5d8718c67e68a605d3496097e26e87539aa804d4903cee3255472"
+  },
+  "cleanupVerified": true,
+  "currentReview": "Shorter cord pending #4; pinch accepted."
+}

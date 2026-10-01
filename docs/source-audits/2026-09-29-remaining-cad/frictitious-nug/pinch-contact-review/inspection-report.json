@@ -1,0 +1,413 @@
+{
+  "owner": "placid-badger",
+  "status": "Final published-USDZ preview packet ready; human visual acceptance remains pending.",
+  "userExtentClarification": "Upper and lower rims onto front/back.",
+  "beforeCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "beforePackageSHA256": {
+    "frictitious-nug.FCStd": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+    "assets/primary.usdz": "1dc1b6c1198a71e62477dc1bbf7b6404d19324d06d438b5a4c60958636bf017f",
+    "assets/primary.model.json": "05bacba8e34bbcef09f202a41f7aaa5e9dc1d3b5782b62917e173cf97ae66b9d",
+    "suspension.json": "4f2971de05766f9d20f6eb8dde0cd311d03d5c0c6845b586725af0d689aa1ef3"
+  },
+  "afterPackageSHA256": {
+    "frictitious-nug.FCStd": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "assets/primary.usdz": "9b24f881059a7d79afd3b676da6324b3d0d65fb0977e2eab100b88bfa5a5e800",
+    "assets/primary.model.json": "c6ecc298e414726f5b543de89d7e22ee6d6180ff56dd71777f71a95624db3a9e",
+    "suspension.json": "8a3fdf291c1ef34588425a4a7a73524fab33abdbb5a561456d571ecdd86642fc"
+  },
+  "retainedBeforeFilesVerified": 20,
+  "pairedImageHashesVerified": 10,
+  "overviewHashesVerified": 3,
+  "physicallyInspected": [
+    {
+      "image": "pinch-60-wraparound-overview.png",
+      "sha256": "dd544b1c4d8e82cf86675c113b4378a5f105e82510bdc910866da218a0d2cbaa"
+    },
+    {
+      "image": "pinch-60-overview.png",
+      "sha256": "bf118202d8021fbbdc53b6bf42f10d77466e0ccf275b110cd7c30b97ad84152a"
+    },
+    {
+      "image": "jug-40-overview.png",
+      "sha256": "ed57f4d5d0e05eda79687888de7c2eeef334e8324792797943d0bc336770a4ef"
+    },
+    {
+      "image": "pinch-60-oblique.png",
+      "sha256": "8accf04eafdc7ad93a10a43056a5d6db6deacb3c61e9968475dc58326d22ae5c"
+    },
+    {
+      "image": "jug-40-rear.png",
+      "sha256": "e092e86765353d4407594abf8c38017ee5e57dd824db2994e40f73692ea3ae08"
+    }
+  ],
+  "geometryEvidence": {
+    "combinedTriangleMultisetsExactlyIdentical": false,
+    "boundsExactlyIdentical": true,
+    "jugNodeExactlyIdentical": true,
+    "beforeNodes": {
+      "nug_body": {
+        "coordinateTriangleNormalSHA256": "63436a3119501d4dcea9d3103162066a47a6f07675b3e8a9932a28c29e43a33e",
+        "triangleCount": 35832,
+        "boundsNativeMM": {
+          "min": [
+            -64.99999761581421,
+            -19.99999955296517,
+            -29.99999932944775
+          ],
+          "max": [
+            64.99999761581421,
+            19.99999955296517,
+            29.99999932944775
+          ]
+        }
+      },
+      "nug_edge_20": {
+        "coordinateTriangleNormalSHA256": "125df1474aed2ea05d1cf22037d4376d9d8d2d091f44f98846f9fb1840397000",
+        "triangleCount": 392,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            -19.999999552965168,
+            -6.4408920908663626e-15
+          ],
+          "max": [
+            46.00000008940697,
+            1.5543124892468478e-15,
+            17.999999225139614
+          ]
+        }
+      },
+      "nug_edge_25": {
+        "coordinateTriangleNormalSHA256": "2d00c66f46bcef799f6a391fd7a08bb47441aa90f0d20638d23cfd41d4702be1",
+        "triangleCount": 528,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            -19.999999552965164,
+            -17.99999922513962
+          ],
+          "max": [
+            46.00000008940697,
+            4.999999888241295,
+            1.1102229998097382e-15
+          ]
+        }
+      },
+      "nug_edge_8": {
+        "coordinateTriangleNormalSHA256": "89c4d7233d49c30440e8d553944a220389f72c52dd246fac971f76cf211745a6",
+        "triangleCount": 392,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            12.000000104308125,
+            1.9968026249695862e-15
+          ],
+          "max": [
+            46.00000008940697,
+            19.999999552965164,
+            17.99999922513962
+          ]
+        }
+      },
+      "nug_edge_13": {
+        "coordinateTriangleNormalSHA256": "e576afaee00bd177b068d3c1f860d8bcc959f339112f1817754e8ad16dc59407",
+        "triangleCount": 528,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            7.000000216066837,
+            -17.999999225139614
+          ],
+          "max": [
+            46.00000008940697,
+            19.999999552965168,
+            6.4408920908663626e-15
+          ]
+        }
+      },
+      "nug_jug_40": {
+        "coordinateTriangleNormalSHA256": "ce04bfe251d557cfa46baacce8ea0d76ab79e5f03b9d06fcb6639c4eb96686ce",
+        "triangleCount": 130,
+        "boundsNativeMM": {
+          "min": [
+            -46.99999839067459,
+            -19.99999955296517,
+            27.000000700354573
+          ],
+          "max": [
+            46.99999839067459,
+            19.999999552965157,
+            29.99999932944775
+          ]
+        }
+      },
+      "nug_pinch_60": {
+        "coordinateTriangleNormalSHA256": "e110d682306be5d66973b404c77732cf4da0419fee5b82a506c09ffe3b8cb7da",
+        "triangleCount": 130,
+        "boundsNativeMM": {
+          "min": [
+            -46.99999839067459,
+            -19.999999552965157,
+            -29.99999932944775
+          ],
+          "max": [
+            46.99999839067459,
+            19.99999955296517,
+            -27.000000700354573
+          ]
+        }
+      }
+    },
+    "afterNodes": {
+      "nug_body": {
+        "coordinateTriangleNormalSHA256": "45fe12f2806b8e1a05c22272d5ec3ed4ef2e662b7306b1110d794d40b666a15b",
+        "triangleCount": 35832,
+        "boundsNativeMM": {
+          "min": [
+            -64.99999761581421,
+            -19.99999955296517,
+            -29.99999932944775
+          ],
+          "max": [
+            64.99999761581421,
+            19.99999955296517,
+            29.99999932944775
+          ]
+        }
+      },
+      "nug_edge_20": {
+        "coordinateTriangleNormalSHA256": "125df1474aed2ea05d1cf22037d4376d9d8d2d091f44f98846f9fb1840397000",
+        "triangleCount": 392,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            -19.999999552965168,
+            -6.4408920908663626e-15
+          ],
+          "max": [
+            46.00000008940697,
+            1.5543124892468478e-15,
+            17.999999225139614
+          ]
+        }
+      },
+      "nug_edge_25": {
+        "coordinateTriangleNormalSHA256": "2d00c66f46bcef799f6a391fd7a08bb47441aa90f0d20638d23cfd41d4702be1",
+        "triangleCount": 528,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            -19.999999552965164,
+            -17.99999922513962
+          ],
+          "max": [
+            46.00000008940697,
+            4.999999888241295,
+            1.1102229998097382e-15
+          ]
+        }
+      },
+      "nug_edge_8": {
+        "coordinateTriangleNormalSHA256": "89c4d7233d49c30440e8d553944a220389f72c52dd246fac971f76cf211745a6",
+        "triangleCount": 392,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            12.000000104308125,
+            1.9968026249695862e-15
+          ],
+          "max": [
+            46.00000008940697,
+            19.999999552965164,
+            17.99999922513962
+          ]
+        }
+      },
+      "nug_edge_13": {
+        "coordinateTriangleNormalSHA256": "e576afaee00bd177b068d3c1f860d8bcc959f339112f1817754e8ad16dc59407",
+        "triangleCount": 528,
+        "boundsNativeMM": {
+          "min": [
+            -46.00000008940697,
+            7.000000216066837,
+            -17.999999225139614
+          ],
+          "max": [
+            46.00000008940697,
+            19.999999552965168,
+            6.4408920908663626e-15
+          ]
+        }
+      },
+      "nug_jug_40": {
+        "coordinateTriangleNormalSHA256": "ce04bfe251d557cfa46baacce8ea0d76ab79e5f03b9d06fcb6639c4eb96686ce",
+        "triangleCount": 130,
+        "boundsNativeMM": {
+          "min": [
+            -46.99999839067459,
+            -19.99999955296517,
+            27.000000700354573
+          ],
+          "max": [
+            46.99999839067459,
+            19.999999552965157,
+            29.99999932944775
+          ]
+        }
+      },
+      "nug_pinch_60": {
+        "coordinateTriangleNormalSHA256": "d1906c88193ccce5569a6593779acdf1e98bf5e25bf7a99a8c7f27c91c3c2234",
+        "triangleCount": 146,
+        "boundsNativeMM": {
+          "min": [
+            -46.99999839067459,
+            -19.99999955296517,
+            -29.99999932944775
+          ],
+          "max": [
+            46.99999839067459,
+            19.99999955296517,
+            27.00000070035458
+          ]
+        }
+      }
+    }
+  },
+  "nativeProof": {
+    "path": ".context/placid-badger/nug-pinch-review/native-author-two-bands/seamed-native-proof.json",
+    "sha256": "1a00e07b91d3b1bfcaaacbf332487cc5fe2d01c229a02995417bbae86ca7adfc",
+    "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+    "all39PriorObjectGeometryExactBeforeProbe": true,
+    "exportBody": "PinchPartitionedWood",
+    "solidDifferenceVolumesMM3": {
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "boundaryDifferenceAreasMM2": {
+      "removed": 0.0,
+      "added": 0.0
+    },
+    "boundaryMinimumDistanceMM": 0.0,
+    "bodyPatchSeams": [
+      {
+        "patch": "PinchUpperPlanarReturns.Face1",
+        "bodyFace": 7,
+        "areaMM2": 846.0
+      },
+      {
+        "patch": "PinchUpperPlanarReturns.Face2",
+        "bodyFace": 63,
+        "areaMM2": 846.0
+      },
+      {
+        "patch": "PinchLowerPlanarReturns.Face1",
+        "bodyFace": 2,
+        "areaMM2": 846.0
+      },
+      {
+        "patch": "PinchLowerPlanarReturns.Face2",
+        "bodyFace": 57,
+        "areaMM2": 846.0
+      }
+    ],
+    "wholeBodyTrianglePatchProofs": [
+      {
+        "y": -20,
+        "z": [
+          -27,
+          -18
+        ],
+        "coveredAreaMM2": 846.0,
+        "triangleCount": 4,
+        "straddlingTriangles": 0
+      },
+      {
+        "y": -20,
+        "z": [
+          18,
+          27
+        ],
+        "coveredAreaMM2": 846.0000000000001,
+        "triangleCount": 4,
+        "straddlingTriangles": 0
+      },
+      {
+        "y": 20,
+        "z": [
+          -27,
+          -18
+        ],
+        "coveredAreaMM2": 846.0,
+        "triangleCount": 4,
+        "straddlingTriangles": 0
+      },
+      {
+        "y": 20,
+        "z": [
+          18,
+          27
+        ],
+        "coveredAreaMM2": 846.0,
+        "triangleCount": 4,
+        "straddlingTriangles": 0
+      }
+    ]
+  },
+  "suspensionOnlyModelSHA256Rebound": true,
+  "rawBeforeAfterPanelIdentity": {
+    "pinch-60": {
+      "front": {
+        "pixelIdentical": false,
+        "changedPixelCount": 77352
+      },
+      "side": {
+        "pixelIdentical": true,
+        "changedPixelCount": 0
+      },
+      "top": {
+        "pixelIdentical": false,
+        "changedPixelCount": 137129
+      },
+      "oblique": {
+        "pixelIdentical": false,
+        "changedPixelCount": 103304
+      },
+      "rear": {
+        "pixelIdentical": false,
+        "changedPixelCount": 78460
+      }
+    },
+    "jug-40": {
+      "front": {
+        "pixelIdentical": false,
+        "changedPixelCount": 59066
+      },
+      "side": {
+        "pixelIdentical": true,
+        "changedPixelCount": 0
+      },
+      "top": {
+        "pixelIdentical": true,
+        "changedPixelCount": 0
+      },
+      "oblique": {
+        "pixelIdentical": false,
+        "changedPixelCount": 44777
+      },
+      "rear": {
+        "pixelIdentical": false,
+        "changedPixelCount": 66662
+      }
+    }
+  },
+  "observations": [
+    "Final actual-USDZ front and rear views show two upper/lower return bands joined to the outer top/bottom rollover surfaces.",
+    "Oblique pinch view shows both front return bands clearly. Side/end rims, pocket interiors and cord-well surfaces remain unhighlighted.",
+    "Jug membership and its exported node coordinate/triangle/normal hash are unchanged; only its original upper patch highlights.",
+    "The strict side view does not expose the contact bands because the end face occludes them.",
+    "Before and after share each camera and numeric viewport. Final body triangulation differs after native face seams; equality of raw triangle sets is not claimed.",
+    "The retained original wood and jug BREP bytes remain exact. Native author source-bound solid/boundary boolean differences and distance are zero for actual exported PinchPartitionedWood.",
+    "Every visible highlight is descriptor membership over the actual USDZ mesh. No provisional diagnostic or rejected first-attempt image is substituted."
+  ],
+  "limitations": "Technical contact-only renders omit cords for highlight visibility. App captures and integration checks remain root-owned; final human acceptance is separate."
+}

@@ -177,6 +177,17 @@ def _node_specification(obj, version: int) -> dict:
     if role not in {"body", "contact", "attachment"}:
         raise BuildError(f"{obj.Name} has an invalid NodeRole {role!r}")
     spec = {"id": obj.NodeID, "role": role}
+    if "AdditionalContactIDs" in obj.PropertiesList:
+        if version != 1 or role != "contact":
+            raise BuildError("AdditionalContactIDs requires a v1 contact node")
+        if obj.getTypeIdOfProperty("AdditionalContactIDs") != "App::PropertyStringList":
+            raise BuildError("AdditionalContactIDs requires App::PropertyStringList")
+        extra = obj.AdditionalContactIDs
+        if (not isinstance(extra, list) or not extra
+                or any(not isinstance(item, str) or not item for item in extra)
+                or extra != sorted(set(extra)) or _contact_binding(obj) in extra):
+            raise BuildError("AdditionalContactIDs must be sorted, nonempty, unique and exclude primary")
+        spec["additionalContactIDs"] = list(extra)
     if role == "contact":
         # The binding key is fixed by the schema: v2-or-later sources use
         # "slot", v1 sources use "contact". Resolve it once here so the slot
@@ -586,6 +597,41 @@ def _declared_depths(board, version: int, presentation_id: str | None = None) ->
     return declared
 
 
+def _depth_regions(contact_objects, version):
+    """Keep legacy per-node checks; explicitly shared grips measure all members."""
+    if not any("AdditionalContactIDs" in obj.PropertiesList for obj in contact_objects):
+        return [(obj, [obj]) for obj in contact_objects]
+    groups, primaries, shared_ids = {}, {}, set()
+    for obj in contact_objects:
+        spec = _node_specification(obj, version)
+        key = _contact_binding(obj)
+        primaries.setdefault(key, []).append(obj)
+        shared_ids.update(spec.get("additionalContactIDs", []))
+        for member_id in (key, *spec.get("additionalContactIDs", [])):
+            groups.setdefault(member_id, []).append(obj)
+
+    def metadata(obj):
+        witnesses = tuple(
+            (name, tuple(float(getattr(getattr(obj, name), axis)) for axis in "xyz"))
+            for name in ("HangTenGripDepthStart", "HangTenGripDepthEnd")
+            if name in obj.PropertiesList
+        )
+        return str(getattr(obj, "HangTenDepthAxis", "y")).lower(), witnesses
+
+    result = []
+    for key, members in groups.items():
+        if key not in shared_ids:
+            result.extend((obj, [obj]) for obj in members)
+            continue
+        owners = primaries.get(key, [])
+        if not owners:
+            raise BuildError(f"{key} shared depth requires a primary contact object")
+        if any(metadata(obj) != metadata(owners[0]) for obj in owners[1:]):
+            raise BuildError(f"{key} has conflicting primary grip-depth metadata")
+        result.append((owners[0], members))
+    return result
+
+
 def _validate_published_depths(
     contact_objects, declared, version: int, deflection,
     board_depth: float | dict[str, float] | None = None,
@@ -602,7 +648,7 @@ def _validate_published_depths(
     a 38 mm rail), the region must instead span the body's full extent.
     """
     measured = {}
-    for obj in contact_objects:
+    for obj, members in _depth_regions(contact_objects, version):
         key = _contact_binding(obj)
         axis = str(getattr(obj, "HangTenDepthAxis", "y")).lower()
         if axis not in {"x", "y", "z"}:
@@ -616,11 +662,16 @@ def _validate_published_depths(
             points = [getattr(obj, name) for name in sorted(witness_names)]
             if any(not math.isfinite(value) for point in points for value in (point.x, point.y, point.z)):
                 raise BuildError(f"{key} grip-depth witness must be finite")
-            if any(obj.Shape.distToShape(Part.Vertex(point))[0] > 0.25 for point in points):
+            if any(min(member.Shape.distToShape(Part.Vertex(point))[0] for member in members) > 0.25
+                   for point in points):
                 raise BuildError(f"{key} grip-depth witness must lie on the native contact surface")
             measured[key] = round(float((points[1] - points[0]).Length), 3)
-        else:
+        elif len(members) == 1:
             measured[key] = round(float(getattr(obj.Shape.BoundBox, axis.upper() + "Length")), 3)
+        else:
+            low = min(float(getattr(member.Shape.BoundBox, axis.upper() + "Min")) for member in members)
+            high = max(float(getattr(member.Shape.BoundBox, axis.upper() + "Max")) for member in members)
+            measured[key] = round(high - low, 3)
         if key not in declared:
             continue
         tolerance = max(0.25, 3.0 * deflection)
@@ -929,7 +980,8 @@ def build(
             descriptor = compile_descriptor(
                 model_bytes,
                 [
-                    NodeBinding(spec["id"], spec["role"], spec.get("contact"))
+                    NodeBinding(spec["id"], spec["role"], spec.get("contact"),
+                                tuple(spec.get("additionalContactIDs", [])))
                     for spec in specifications
                 ],
                 {node_id: reopened["nodes"][node_id]["points_m"] for node_id in reopened["nodes"]},

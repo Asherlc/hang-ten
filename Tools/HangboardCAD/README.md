@@ -274,6 +274,18 @@ For a contact that declares `HangTenGripDepthMm`, optional string property
 Omitting it retains the original Y-axis behavior. The compiler validates the
 declared depth against that axis's exported contact bounds.
 
+A schema-v1 contact mesh may also declare `AdditionalContactIDs` as a nonempty,
+sorted, unique `App::PropertyStringList` of other logical contacts that use that
+same physical surface. The primary `ContactID` remains the picking identity;
+the descriptor includes the mesh in every declared contact's `nodeIDs`, and the
+app highlights it when any membership is selected. The surface is exported once.
+Secondary IDs must belong to the board and must not repeat the primary ID.
+Shared contacts derive their bounds from all member meshes and cannot supply an
+outline. Their published depth is measured across those members using the
+primary contact object's axis or witness pair; unrelated contacts retain their
+individual depth checks. For example, The NUG's upper jug surface also belongs
+to its 60 mm pinch, measured between the upper and lower surfaces along native Z.
+
 Coordinate conversion is applied exactly once: native millimetres
 (+X right, +Z up, front -Y) to runtime metres (+X right, +Y up, front +Z) as
 `(x, y, z) -> (x/1000, z/1000, -y/1000)`.

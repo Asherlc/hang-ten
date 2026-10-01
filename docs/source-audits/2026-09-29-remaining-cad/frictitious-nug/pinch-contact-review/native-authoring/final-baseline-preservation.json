@@ -1,0 +1,107 @@
+{
+  "sourceSHA256": "03ae5ecea7a1836b7c3aa695d1bd9618c0f5e36af3d05bba1cc62bebf45e7208",
+  "baselineCommit": "b3b5fe2b588c74bcb3ddd2d7b43478308f5a5ffb",
+  "baselineSourceSHA256": "0c05f67841bc31ac0871053f8e917c54e6940c52a1c2b3228c350d16f071f851",
+  "originalShapeAndMapMembersByteIdenticalExcludingReauthoredPinch": [
+    "BodyOutline.InternalShape.brp",
+    "BodyOutline.Shape.brp",
+    "BodyOutline.Shape.Map.txt",
+    "BodyExtrusion.Shape.brp",
+    "BodyExtrusion.Shape.Map.txt",
+    "OuterRimRound.Shape.brp",
+    "OuterRimRound.Shape.Map.txt",
+    "FrontOpening.InternalShape.brp",
+    "FrontOpening.Shape.brp",
+    "FrontOpening.Shape.Map.txt",
+    "FrontShallowCavity.Shape.brp",
+    "FrontShallowCavity.Shape.Map.txt",
+    "FrontShallowPocket.Shape.brp",
+    "FrontShallowPocket.Shape.Map.txt",
+    "FrontDeepCavity.Shape.brp",
+    "FrontDeepCavity.Shape.Map.txt",
+    "FrontLowerHalf.Shape.brp",
+    "FrontLowerCutter.Shape.brp",
+    "FrontLowerCutter.Shape.Map.txt",
+    "FrontSteppedPocket.Shape.brp",
+    "FrontSteppedPocket.Shape.Map.txt",
+    "BackOpening.InternalShape.brp",
+    "BackOpening.Shape.brp",
+    "BackOpening.Shape.Map.txt",
+    "BackShallowCavity.Shape.brp",
+    "BackShallowCavity.Shape.Map.txt",
+    "BackShallowPocket.Shape.brp",
+    "BackShallowPocket.Shape.Map.txt",
+    "BackDeepCavity.Shape.brp",
+    "BackDeepCavity.Shape.Map.txt",
+    "BackLowerHalf.Shape.brp",
+    "BackLowerCutter.Shape.brp",
+    "BackLowerCutter.Shape.Map.txt",
+    "BackSteppedPocket.Shape.brp",
+    "BackSteppedPocket.Shape.Map.txt",
+    "CavityMouthRounds.Shape.brp",
+    "CavityMouthRounds.Shape.Map.txt",
+    "LeftFrontCordEntryWell.Shape.brp",
+    "LeftFrontEntryCut.Shape.brp",
+    "LeftFrontEntryCut.Shape.Map.txt",
+    "LeftBackCordEntryWell.Shape.brp",
+    "LeftBackEntryCut.Shape.brp",
+    "LeftBackEntryCut.Shape.Map.txt",
+    "RightFrontCordEntryWell.Shape.brp",
+    "RightFrontEntryCut.Shape.brp",
+    "RightFrontEntryCut.Shape.Map.txt",
+    "RightBackCordEntryWell.Shape.brp",
+    "RightBackEntryCut.Shape.brp",
+    "RightBackEntryCut.Shape.Map.txt",
+    "edge_20.Shape.brp",
+    "edge_20.Shape.Map.txt",
+    "edge_25.Shape.brp",
+    "edge_25.Shape.Map.txt",
+    "edge_8.Shape.brp",
+    "edge_8.Shape.Map.txt",
+    "edge_13.Shape.brp",
+    "edge_13.Shape.Map.txt",
+    "jug_40.Shape.brp",
+    "jug_40.Shape.Map.txt"
+  ],
+  "originalPhysicalSolidBREPSHA256": "a20953b5516264521389ad9efef083e2045e9b097b0be1aed5607f482d1ea668",
+  "embeddedManifestByteIdentical": true,
+  "finalContactRepresentation": {
+    "pinchPrimary": "originallowerfaces2/22/42 plus fournativeplanarreturnpatches",
+    "jugPrimarySharedWithPinch": [
+      "Face9",
+      "Face29",
+      "Face49"
+    ],
+    "returnDimensionsMM": {
+      "x": [
+        -47,
+        47
+      ],
+      "upperZ": [
+        18,
+        27
+      ],
+      "lowerZ": [
+        -27,
+        -18
+      ],
+      "frontRearY": [
+        -20,
+        20
+      ]
+    },
+    "excluded": [
+      "side/endrim",
+      "outercorners",
+      "cavitysurfaces",
+      "cordwellwalls/floors"
+    ]
+  },
+  "constructionCountAdded": 11,
+  "sourceURLs": [
+    "https://frictitiousclimbing.com/products/the-nug",
+    "https://frictitiousclimbing.com/cdn/shop/files/NUG-Front-1.jpg?v=1780420316&width=3840",
+    "https://frictitiousclimbing.com/cdn/shop/files/NUG-Front_3aac9546-2dcb-447e-bb5a-4dea686e2818.jpg?v=1780420315&width=3840"
+  ],
+  "displayRegionAuthority": "Explicit user clarification: Upper and lower rims onto front/back. Operator selected existing straightgripwidth\u00b147,outertangentZ\u00b127,andcavitymouthlimitZ\u00b118;these areCADdisplayboundaries,notmanufacturersourcedanatomicalprescriptions."
+}
