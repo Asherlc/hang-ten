@@ -11,6 +11,10 @@ final class AppStoreTests: XCTestCase {
 
     deinit {}
 
+    func testUnitTestHostSkipsApplicationRendering() {
+        XCTAssertTrue(HangTenApp.isUnitTestHost)
+    }
+
     func testSelectingBoardUpdatesSelectionAndEmitsOnlyBoardFamily() {
         let telemetry = RecordingTelemetry()
         let store = AppStore(
