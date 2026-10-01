@@ -2067,8 +2067,37 @@ struct BoardPackageStore {
     ) throws -> BoardModelSuspension {
         guard document.canonicalPoses.values.allSatisfy({ $0.attachmentPoints == nil }),
               document.passages.left.count == 2,
-              document.passages.right.count == 2 else {
+              document.passages.right.count == (document.type == "threadedLoopCord" ? 0 : 2) else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord suspension requires exactly two passages per side")
+        }
+        if document.type == "threadedLoopCord" {
+            guard document.meshWrap == nil, let loop = document.internalLoop,
+                  let routes = loop.channelPointsByBranchID,
+                  Set(routes.keys) == Set(document.branches.map(\.id)),
+                  document.canonicalPoses.values.allSatisfy({ $0.cordContactPoints != nil }) else {
+                throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "threadedLoopCord requires a measured connected channel and solved exterior routes")
+            }
+            for branch in document.branches {
+                guard let points = routes[branch.id], points.count >= 2,
+                      points.allSatisfy({ point in
+                          point.count == 3 && point.allSatisfy(\.isFinite)
+                              && zip(point, descriptor.modelBounds.minimum).allSatisfy({ $0 >= $1 })
+                              && zip(point, descriptor.modelBounds.maximum).allSatisfy({ $0 <= $1 })
+                      }),
+                      zip(points, points.dropFirst()).allSatisfy({ $0 != $1 }),
+                      points.first == document.passages.left.first?.entryPointInModel,
+                      points.last == document.passages.left.last?.entryPointInModel else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "connected channel must join its two mouths")
+                }
+                let length = zip(points, points.dropFirst()).reduce(0.0) { total, pair in
+                    total + zip(pair.0, pair.1).reduce(0.0) { $0 + ($1.0 - $1.1) * ($1.0 - $1.1) }.squareRoot()
+                }
+                guard let declared = loop.channelLengthByBranchID[branch.id], abs(length - declared) < 1e-6 else {
+                    throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "connected channel length must match its CAD spine")
+                }
+            }
+        } else if document.internalLoop?.channelPointsByBranchID != nil {
+            throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "channel points require threadedLoopCord")
         }
         let passages = document.passages.left + document.passages.right
         let throughBore = passages[0].isThroughBore
@@ -2103,7 +2132,7 @@ struct BoardPackageStore {
                           Set(pose.cordContactPoints!.keys) == Set(passages.map(\.id)))
                   }),
                   document.passages.left[0].entryPointInModel != document.passages.left[1].entryPointInModel,
-                  document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel else {
+                  (document.passages.right.isEmpty || document.passages.right[0].entryPointInModel != document.passages.right[1].entryPointInModel) else {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "internalLoop requires two distinct point mouths per side and complete derived routes when cached")
             }
         }
@@ -2132,10 +2161,10 @@ struct BoardPackageStore {
                 throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord passage must declare a non-zero through-bore")
             }
         }
-        guard document.branches.count == 2,
+        guard document.branches.count == (document.type == "threadedLoopCord" ? 1 : 2),
               document.branches.allSatisfy({ $0.id.isBoardPackageIdentifier }),
               document.branches[0].passageIDs == document.passages.left.map(\.id),
-              document.branches[1].passageIDs == document.passages.right.map(\.id),
+              (document.passages.right.isEmpty || document.branches[1].passageIDs == document.passages.right.map(\.id)),
               Set(document.branches.map(\.id)).count == document.branches.count else {
             throw BoardPackageStoreError.invalidPackage(boardID: boardID, reason: "twoBranchCord branches must be two distinct ordered passage pairs")
         }
@@ -2284,7 +2313,8 @@ struct BoardPackageStore {
             internalLoopWindingByPassageID: document.internalLoop.map {
                 $0.windingByPassageID.mapValues { BoardModelLoopWinding(rawValue: $0)! }
             },
-            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID
+            internalLoopChannelLengthByBranchID: document.internalLoop?.channelLengthByBranchID,
+            internalLoopChannelPointsByBranchID: document.internalLoop?.channelPointsByBranchID
         ))
 
 }
@@ -3050,7 +3080,7 @@ enum BoardPackageSuspensionDocument: Decodable, Equatable {
             } else {
                 self = .pairedLeadCord(try BoardPackagePairedLeadCordSuspensionDocument(from: decoder))
             }
-        case "twoBranchCord":
+        case "twoBranchCord", "threadedLoopCord":
             if container.allKeys.contains(where: {
                 ["attachment", "attachments", "cord"].contains($0.stringValue)
             }) {
@@ -3200,6 +3230,7 @@ struct BoardPackageCordBranchDocument: Decodable, Equatable {
 }
 
 struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
+    let type: String
     let passages: BoardPackagePassagePairsDocument
     let branches: [BoardPackageCordBranchDocument]
     let meshWrap: BoardPackageMeshWrapDocument?
@@ -3211,7 +3242,7 @@ struct BoardPackageTwoBranchSuspensionDocument: Decodable, Equatable {
     init(from decoder: Decoder) throws {
         try decoder.rejectUnknownKeys(["type", "passages", "branches", "meshWrap", "internalLoop", "anchor", "canonicalPoses"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        _ = try container.decode(String.self, forKey: .type)
+        type = try container.decode(String.self, forKey: .type)
         passages = try container.decode(BoardPackagePassagePairsDocument.self, forKey: .passages)
         branches = try container.decode([BoardPackageCordBranchDocument].self, forKey: .branches)
         meshWrap = try container.decodeIfPresent(BoardPackageMeshWrapDocument.self, forKey: .meshWrap)
@@ -3236,14 +3267,16 @@ struct BoardPackageInternalLoopDocument: Decodable, Equatable {
     let clearance: Double
     let windingByPassageID: [String: String]
     let channelLengthByBranchID: [String: Double]
+    let channelPointsByBranchID: [String: [[Double]]]?
 
-    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID }
+    private enum CodingKeys: String, CodingKey { case clearance, windingByPassageID, channelLengthByBranchID, channelPointsByBranchID }
     init(from decoder: Decoder) throws {
-        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID"])
+        try decoder.rejectUnknownKeys(["clearance", "windingByPassageID", "channelLengthByBranchID", "channelPointsByBranchID"])
         let container = try decoder.container(keyedBy: CodingKeys.self)
         clearance = try container.decode(Double.self, forKey: .clearance)
         windingByPassageID = try container.decode([String: String].self, forKey: .windingByPassageID)
         channelLengthByBranchID = try container.decode([String: Double].self, forKey: .channelLengthByBranchID)
+        channelPointsByBranchID = try container.decodeIfPresent([String: [[Double]]].self, forKey: .channelPointsByBranchID)
     }
 }
 

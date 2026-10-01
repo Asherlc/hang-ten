@@ -4,7 +4,7 @@
 
 Every corded CAD board uses this method: the cord's hidden passage is a void
 in the native FreeCAD solid, the topology lives in `suspension.json` as a
-`twoBranchCord` with `internalLoop`, the channel length is measured from CAD
+`twoBranchCord` (or the single-loop `threadedLoopCord`) with `internalLoop`, the channel length is measured from CAD
 with `Tools/HangboardCAD/measure_channel_spines.py`, and the visible routes
 and hanging height are solved against the exported CAD solid with
 `Tools/HangboardCAD/solve_threaded_rope.py`. Do not hand-place cord contact
@@ -13,12 +13,22 @@ board. The runtime's convex-section fallback and hand-authored
 `pairedLeadCord` / `singleCord` metadata remain only for older non-CAD
 packages; migrate a board's cord to this method when the board moves to CAD.
 
-Two boards use it:
+These boards use it:
 
 | Board | Channel | Section plane | Notes |
 | --- | --- | --- | --- |
 | Lattice Mini Bar | curved `PartDesign::SubtractivePipe`, two mouths on one face per end | `mouth-x` (default) | constant-section bar; four grip poses |
 | Crimptonite Helium Mobile | straight `Part::Cylinder` through-bore, front and back mouths per end | `anchor` | mouths sit in the rounded ends; one loop of cord through both holes |
+| Metolius Rock Rings | connected `Part::MultiFuse` void with linked ordered spine | direct rising legs | one continuous loop per displayed ring; exact native-solid clearance |
+
+Rock Rings extend the topology to one branch with two mouths and retain the
+whole measured channel centerline in `internalLoop.channelPointsByBranchID`.
+The solver settles the board from total cord length and checks both free legs
+and the interior path against the native solid in FreeCAD Python. The spine is
+rendered as transient cord geometry, hidden by the body except at its openings.
+Schema-2 sidecars attach this setup to each independent instance of the same
+model. See the [retained threading audit](source-audits/2026-09-30-rock-ring-threading.md)
+for the owner-confirmed hidden connection and estimated channel dimensions.
 
 If a board's cord does not fit the solver's assumptions (below), extend the
 solver with evidence and tests rather than falling back to hand-authored

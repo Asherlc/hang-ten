@@ -537,7 +537,7 @@ final class BoardModelRealityScene {
 
         if let instances, !instances.isEmpty {
             guard instances.count == instanceEntities.count else { return false }
-            var selectedFraming: SuspendedCameraFraming?
+            var selectedFramings: [SuspendedCameraFraming] = []
             var selectedTransforms: [simd_float4x4] = []
             let cordGroup = Entity()
             for instance in instances {
@@ -551,7 +551,7 @@ final class BoardModelRealityScene {
                             pose: pose, suspension: suspension, bounds: descriptor.modelBounds,
                             transform: base)
                         transform = solved.boardTransform
-                        selectedFraming = solved.cameraFraming
+                        selectedFramings.append(solved.cameraFraming)
                         cordGroup.addChild(Self.makeCordEntity(for: solved))
                     } catch { return false }
                 } else {
@@ -563,14 +563,20 @@ final class BoardModelRealityScene {
                 }
                 selectedTransforms.append(transform)
             }
+            var combinedFraming: SuspendedCameraFraming?
+            if !selectedFramings.isEmpty {
+                guard let pose = instances.first?.suspension?.canonicalPoses[positionID],
+                      let framing = try? SuspendedBoardPresentation.makeCameraFraming(
+                        pose: pose, transform: selectedTransforms[0],
+                        minimumFitPadding: selectedFramings.map(\.fitPadding).max() ?? 1,
+                        points: selectedFramings.flatMap(\.includedPoints)) else { return false }
+                combinedFraming = framing
+            }
             for (entity, transform) in zip(instanceEntities, selectedTransforms) {
                 entity.transform = Transform(matrix: transform)
             }
-            if let selectedFraming {
-                currentFraming = selectedFraming
-            } else {
-                setupCameraFraming()
-            }
+            if let combinedFraming { currentFraming = combinedFraming }
+            else { setupCameraFraming() }
             transientCordEntity?.removeFromParent()
             if !cordGroup.children.isEmpty {
                 transientCordEntity = cordGroup

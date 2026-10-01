@@ -64,7 +64,13 @@ def channel_samples(feature, name):
         return spine_samples(feature.Spine[0])
     if feature.TypeId == "Part::Cylinder":
         return cylinder_axis_samples(feature)
-    raise ValueError(f"{name} is neither a SubtractivePipe nor a Part::Cylinder channel")
+    if feature.TypeId == "Part::MultiFuse" and "Spine" in feature.PropertiesList:
+        samples = []
+        for edge in feature.Spine.Shape.OrderedEdges:
+            points = edge.discretize(Number=max(2, math.ceil(edge.Length / 0.25) + 1))
+            samples.extend(points if not samples else points[1:])
+        return samples
+    raise ValueError(f"{name} has no supported native channel spine")
 
 
 def station_on_spine(point, samples):
@@ -115,7 +121,8 @@ def native_to_model(point):
 
 def main():
     document = App.openDocument(str(SOURCE))
-    suspension = json.loads(SIDECAR.read_text())["suspension"]
+    data = json.loads(SIDECAR.read_text())
+    suspension = data["instanceSuspensions"][os.environ["HANGTEN_CHANNEL_EQUIPMENT_OBJECT_ID"]] if "instanceSuspensions" in data else data["suspension"]
     passages_by_id = {
         passage["id"]: passage for side in suspension["passages"].values()
         for passage in side

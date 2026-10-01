@@ -242,6 +242,26 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testRockRingsStaySeparatedAndBothFitAfterSelectionAndClear() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        XCTAssertEqual(scene.instanceEntities.count, 2)
+        XCTAssertNil(scene.modelEntity?.parent)
+        let viewport = CGSize(width: 390, height: 240)
+        for positionID: String? in [nil, "primary", nil, "primary"] {
+            _ = scene.select(positionID: positionID)
+            scene.frame(in: viewport)
+            let left = scene.instanceEntities[0].visualBounds(relativeTo: scene.root)
+            let right = scene.instanceEntities[1].visualBounds(relativeTo: scene.root)
+            XCTAssertLessThan(left.max.x, right.min.x)
+            for contactID in scene.contactEntities.keys {
+                let point = try XCTUnwrap(scene.projectedContactCenter(contactID, viewport: viewport, fieldOfViewDegrees: 40))
+                XCTAssertTrue(CGRect(origin: .zero, size: viewport).contains(point), contactID)
+            }
+        }
+    }
+
+    @MainActor
     func testCameraOrbitAndResetUpdateRealityKitCamera() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "trango.rock-prodigy-pivot"))
         let scene = try await BoardModelRealityLoader.load(board: board,

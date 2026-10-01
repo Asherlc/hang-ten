@@ -360,7 +360,16 @@ enum SuspendedBoardPresentation {
             return .pairedLead(try solve(pose: pose, suspension: profile, bounds: bounds,
                 modelTransform: transform, preserveAuthoredAnchor: true))
         case .twoBranchCord(let profile):
-            return .twoBranch(try solve(pose: pose, suspension: profile, bounds: bounds, modelTransform: transform))
+            var placed = profile
+            if profile.internalLoopChannelPointsByBranchID != nil {
+                let anchor = transformPoint(transform, SIMD3<Float>(profile.anchor.position.map(Float.init)))
+                placed.anchor = BoardModelInvisibleAnchor(
+                    offsetFromBoardBounds: profile.anchor.offsetFromBoardBounds,
+                    visibility: profile.anchor.visibility, provenance: profile.anchor.provenance,
+                    position: [Double(anchor.x), Double(anchor.y), Double(anchor.z)])
+            }
+            return .twoBranch(try solve(pose: pose, suspension: placed, bounds: bounds,
+                modelTransform: transform * boardTransform(for: pose)))
         case .singleCord(let profile):
             guard profile.attachment.pointInModel.count == 3,
                   profile.attachment.pointInModel.allSatisfy(\.isFinite) else {
@@ -661,7 +670,7 @@ enum SuspendedBoardPresentation {
         let transform = try modelTransform ?? boardTransform(for: pose)
         let (minimum, maximum) = try validatedBounds(bounds)
 
-        guard suspension.branches.count == 2,
+        guard suspension.branches.count == (suspension.internalLoopChannelPointsByBranchID == nil ? 2 : 1),
               suspension.anchor.visibility == "invisible",
               suspension.anchor.position.count == 3,
               suspension.anchor.position.allSatisfy(\.isFinite) else {
@@ -684,7 +693,7 @@ enum SuspendedBoardPresentation {
         guard pose.wrappedRoutes == nil || allPassages.allSatisfy({ !$0.isThroughBore }) else {
             throw SuspendedPresentationError.invalidSuspension
         }
-        guard allPassages.count == 4,
+        guard allPassages.count == suspension.branches.count * 2,
               Set(allPassages.map(\.id)).count == allPassages.count,
               allPassages.allSatisfy({
                   $0.entryPointInModel.count == 3 &&
@@ -720,7 +729,7 @@ enum SuspendedBoardPresentation {
         var branches: [SuspendedBranchSolution] = []
         var radii: [Float] = []
         let declaredPassageIDs = suspension.branches.flatMap(\.passageIDs)
-        guard declaredPassageIDs.count == 4,
+        guard declaredPassageIDs.count == suspension.branches.count * 2,
               Set(declaredPassageIDs).count == declaredPassageIDs.count,
               Set(suspension.branches.map(\.id)).count == suspension.branches.count else {
             throw SuspendedPresentationError.invalidSuspension
@@ -913,6 +922,9 @@ enum SuspendedBoardPresentation {
                 spans: usesInternalLoop
                     ? [firstSpan.samples + Array(entryContacts.dropFirst()),
                        exitContacts + Array(secondSpan.samples.dropFirst())]
+                        + (suspension.internalLoopChannelPointsByBranchID?[branch.id].map { points in
+                            [points.map { transformPoint(transform, SIMD3<Float>($0.map(Float.init))) }]
+                          } ?? [])
                     : (usesAuthoredRoute || wrappedRoute != nil)
                         ? [firstSpan.samples, rigidRoute, secondSpan.samples]
                         : [firstSpan.samples, secondSpan.samples],
@@ -1362,7 +1374,7 @@ enum SuspendedBoardPresentation {
         }
     }
 
-    private static func makeCameraFraming(
+    static func makeCameraFraming(
         pose: BoardModelCanonicalPose,
         transform: simd_float4x4,
         minimumFitPadding: Float = 1,
