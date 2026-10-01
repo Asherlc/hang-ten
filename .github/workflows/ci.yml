@@ -189,6 +189,7 @@ jobs:
           ../HangboardCAD/tests/test_contract.py
           ../HangboardCAD/tests/test_whetstone_package.py
           ../HangboardCAD/tests/test_transgression_packages.py
+          ../HangboardCAD/tests/test_confirmed_cord_diameter.py
           -k "not test_native_edits_keep_all_contacts_on_the_body"
           -q
           --junitxml=pytest-cad-results.xml
@@ -254,19 +255,27 @@ jobs:
           ditto "$cad_root/mount/FreeCAD.app" "$cad_root/FreeCAD.app"
           echo "HANGTEN_FREECAD_CMD=$cad_root/FreeCAD.app/Contents/Resources/bin/freecadcmd" >> "$GITHUB_ENV"
 
-      - name: Run Transgression and YY package and native-edit cases
+      - name: Run native CAD, cord and YY persisted-edit regressions
         run: |
           set -euo pipefail
           owner=$(basename "${PASEO_WORKTREE_PATH:-$PWD}")
           cad_root="$PWD/.context/$owner-transgression-native-ci"
-          python -m pip install -e 'Tools/HangboardPackages[dev]'
+          # Preserve upstream cord-regression pins alongside owned USD compiler staging.
+          python -m pip install -e 'Tools/HangboardPackages[dev]' \
+            numpy==2.2.6 usd-core==26.8 trimesh==5.1.0 shapely==2.1.2 rtree==1.4.1 scipy==1.16.3 networkx==3.6.1
           python -m pip install --target "$cad_root/usd" 'usd-core==26.8'
           export HANGTEN_CAD_PYTHONPATH="$cad_root/usd"
           # Fail instead of silently skipping the required YY native checks.
           test -f "$HANGTEN_FREECAD_CMD"
+          test -x "$HANGTEN_FREECAD_CMD"
           test -f "$HANGTEN_CAD_PYTHONPATH/pxr/__init__.py"
           python -m pytest \
             Tools/HangboardCAD/tests/test_transgression_packages.py \
+            Tools/HangboardCAD/tests/test_clavellium_native.py \
+            Tools/HangboardCAD/tests/test_confirmed_cord_diameter.py \
+            Tools/HangboardCAD/tests/test_rope_physics_export.py \
+            Tools/HangboardCAD/tests/test_exterior_rope.py \
+            Tools/HangboardCAD/tests/test_rectangular_channel_section.py \
             Tools/HangboardCAD/tests/test_verticalboards_native.py \
             Tools/HangboardCAD/tests/test_verticalboard_validation_reporting.py -q
 
@@ -518,6 +527,11 @@ jobs:
           trap 'rm -f "$telemetry_xcconfig"' EXIT
           umask 077
           printf 'ANALYTICS_API_KEY = %s\n' "$ANALYTICS_API_KEY" > "$telemetry_xcconfig"
+          # Keep DEBUG, testability and Swift assertions, and run numerical physics
+          # suite with optimization; unoptimized settling exhausts the run budget.
+          # Xcode expands the literal $(inherited) from the xcconfig.
+          # shellcheck disable=SC2016
+          printf 'SWIFT_OPTIMIZATION_LEVEL = -O\nOTHER_SWIFT_FLAGS = $(inherited) -assert-config Debug\n' >> "$telemetry_xcconfig"
           chmod 600 "$telemetry_xcconfig"
           unset ANALYTICS_API_KEY
           XCTEST_XCCONFIG="$telemetry_xcconfig" scripts/ci-run-xctest.sh

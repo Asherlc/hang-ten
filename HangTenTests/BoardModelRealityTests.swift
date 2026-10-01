@@ -6,6 +6,156 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    func testCordAndCADModelShareMeterScale() async throws {
+        for (id,width) in [("clavellium-training-block",Float(0.08)),("lattice.mini-bar",Float(0.155))] {
+            let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:id))
+            let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+            let body=try XCTUnwrap(scene.modelEntity)
+            let bounds=body.visualBounds(relativeTo:scene.root)
+            XCTAssertEqual(bounds.max.x-bounds.min.x,width,accuracy:0.00001,id)
+            XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+            let cord=try XCTUnwrap(scene.transientCordEntity)
+            let segment=try XCTUnwrap(cord.children.first as? ModelEntity)
+            if scene.hasLiveRopes {
+                let frame=try XCTUnwrap(scene.liveFramesForTesting.first)
+                let origin=try XCTUnwrap(frame.ropes.first?.positions.first)
+                let mesh=try XCTUnwrap(segment.model?.mesh.lowLevelMesh)
+                mesh.withUnsafeBytes(bufferIndex:0) { bytes in
+                    let vertices=bytes.bindMemory(to:RopeTubeVertex.self)
+                    for i in 0..<8 {
+                        let center=SIMD3<Float>(Float(origin.x),Float(origin.y),Float(origin.z))
+                        XCTAssertEqual(simd_distance(vertices[i].position,center),0.0035,accuracy:1e-7,id)
+                    }
+                }
+            } else {
+                let tube=segment.visualBounds(relativeTo:segment)
+                XCTAssertEqual(tube.max.x-tube.min.x,0.007,accuracy:0.00001,id)
+                XCTAssertEqual(tube.max.z-tube.min.z,0.007,accuracy:0.00001,id)
+            }
+            XCTAssertEqual(segment.scale,SIMD3<Float>(repeating:1))
+            XCTAssertEqual(cord.scale,SIMD3<Float>(repeating:1))
+        }
+    }
+
+    @MainActor
+    func testLiveClavelliumHasMatchedRadiusAndNonPickableCord() async throws {
+        let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        XCTAssertTrue(scene.hasLiveRopes)
+        XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+        let frame=try XCTUnwrap(scene.liveFramesForTesting.first)
+        XCTAssertTrue(frame.metrics.geometryAccepted)
+        XCTAssertEqual(frame.ropes.first?.radius,0.0035)
+        let cord=try XCTUnwrap(scene.transientCordEntity)
+        let tube=try XCTUnwrap(cord.children.first as? ModelEntity)
+        XCTAssertEqual(tube.scale,SIMD3<Float>(repeating:1))
+        XCTAssertNil(tube.components[CollisionComponent.self])
+        XCTAssertNil(tube.components[InputTargetComponent.self])
+        scene.orbit(azimuth:1,elevation:0.3)
+        XCTAssertFalse(scene.select(positionID:nil))
+        XCTAssertNil(scene.transientCordEntity)
+        XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+        XCTAssertNotNil(scene.transientCordEntity)
+        XCTAssertEqual(Double(try XCTUnwrap(scene.instanceEntities.first).position.y),frame.boardHeight,accuracy:1e-7)
+        scene.stopLiveRopes()
+    }
+
+    @MainActor
+    func testPairedLiveBoardsMatchInstanceIDsAndPreservePlacement() async throws {
+        let store=BoardCatalog.packageStore
+        let board=try XCTUnwrap(store.board(id:"clavellium-training-block"))
+        guard case .model(let media)=board.defaultPresentation.media else {return XCTFail("Model required")}
+        let input=try XCTUnwrap(store.presentationPhysicsInput(for: board)),source=try XCTUnwrap(input.profiles.first)
+        let instances=[("left",-0.15),("right",0.15)].map {id,x in
+            BoardModelInstance(equipmentObjectID:id,
+                baseTransform:BoardModelTransform(translation:[x,0.02,0],rotation:SIMD4(0,0,0,1),reflection:nil),
+                contactIDsBySlotID:Dictionary(uniqueKeysWithValues:media.descriptor.contacts.keys.map{($0,$0)}),
+                suspension:media.suspension,positionTransforms:nil)
+        }
+        let profiles=["right","left"].map {id in
+            RopePhysicsProfile(id:id,presentationID:source.presentationID,instanceID:id,boardMass:source.boardMass,
+                ropes:source.ropes.map {rope in
+                    RopePhysicsRope(id:id+"-"+rope.id,baselineRadius:rope.baselineRadius,radius:rope.radius,
+                        restLength:rope.restLength,linearMass:rope.linearMass,nodes:rope.nodes,edges:rope.edges)
+                })
+        }
+        let paired=RopePhysicsInput(modelSHA256:input.modelSHA256,sourceSHA256:input.sourceSHA256,
+            collision:input.collision,portals:input.portals,channels:input.channels,profiles:profiles)
+        let url=try XCTUnwrap(store.presentationAssetURL(for:board) ??
+            store.modelResource(for:board)?.debugSimulatorPackagedURL(in:store.resourceBundle))
+        let scene=BoardModelRealityScene(descriptor:media.descriptor,display:media.display,
+            suspension:nil,orientation:media.orientation,allowedPositionIDs:Set(board.positions.map(\.id)),
+            instances:instances,physics:paired,presentationID:source.presentationID,
+            resourceLease:BoardModelRealityResourceLease(url:url))
+        defer {scene.stopLiveRopes()}
+        try await scene.load(usdzURL:url)
+        scene.setLiveActivity(false)
+        let position=try XCTUnwrap(board.positions.first?.id)
+        for _ in 0..<2 {
+            XCTAssertTrue(scene.select(positionID:position))
+            let group=try XCTUnwrap(scene.transientCordEntity)
+            for (index,instance) in instances.enumerated() {
+                let frame=scene.liveFramesForTesting[index]
+                let expectedProfile = try XCTUnwrap(profiles.first {
+                    $0.instanceID == instance.equipmentObjectID
+                })
+                XCTAssertEqual(Set(frame.ropes.map(\.id)), Set(expectedProfile.ropes.map(\.id)))
+                XCTAssertEqual(scene.instanceEntities[index].position.x,Float(instance.baseTransform.translation[0]),accuracy:1e-7)
+                XCTAssertEqual(scene.instanceEntities[index].position.y,Float(frame.boardHeight+0.02),accuracy:1e-7)
+                let tube=try XCTUnwrap(group.children[index] as? ModelEntity)
+                let mesh=try XCTUnwrap(tube.model?.mesh.lowLevelMesh)
+                let point=try XCTUnwrap(frame.ropes.first?.positions.first)
+                let center=SIMD3<Float>(Float(point.x+instance.baseTransform.translation[0]),Float(point.y+0.02),Float(point.z))
+                mesh.withUnsafeBytes(bufferIndex:0) {bytes in
+                    let vertices=bytes.bindMemory(to:RopeTubeVertex.self)
+                    for i in 0..<8 {
+                        let world=tube.transformMatrix(relativeTo:scene.root)*SIMD4(vertices[i].position,1)
+                        XCTAssertEqual(simd_distance(SIMD3(world.x,world.y,world.z),center),Float(frame.ropes[0].radius),accuracy:1e-7)
+                    }
+                }
+            }
+            XCTAssertFalse(scene.select(positionID:nil))
+        }
+    }
+
+    @MainActor
+    func testLiveScenePausesThenPublishesAcceptedSettledFrame() async throws {
+        let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"clavellium-training-block"))
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        XCTAssertTrue(scene.select(positionID:try XCTUnwrap(board.positions.first?.id)))
+        let initial=try XCTUnwrap(scene.liveFramesForTesting.first)
+        var frameNotifications=0
+        scene.onLiveFrame = { frameNotifications += 1 }
+        scene.setLiveActivity(false)
+        scene.advanceLiveRopes(elapsed:100)
+        try await Task.sleep(for:.milliseconds(50))
+        XCTAssertEqual(scene.liveFramesForTesting.first?.boardHeight,initial.boardHeight)
+        scene.configureLiveMotion(reduceMotion:true,displayOnly:false)
+        scene.setLiveActivity(true)
+        scene.advanceLiveRopes(elapsed:1.0/60)
+        let accepted=expectation(for:NSPredicate { _,_ in scene.liveFramesForTesting.first?.settled == true },evaluatedWith:nil)
+        await fulfillment(of:[accepted],timeout:30)
+        let final=try XCTUnwrap(scene.liveFramesForTesting.first)
+        XCTAssertTrue(final.metrics.geometryAccepted);XCTAssertTrue(final.settled)
+        XCTAssertEqual(frameNotifications,1,"Projected hold controls must refresh with the physical frame")
+        var camera=scene.camera.camera
+        camera.fieldOfViewInDegrees=30;camera.fieldOfViewOrientation = .vertical
+        scene.camera.camera=camera
+        scene.frame(in:CGSize(width:800,height:500))
+        let view=simd_inverse(scene.camera.transform.matrix)
+        var points=final.ropes.flatMap { $0.positions }.map { SIMD3<Float>(Float($0.x),Float($0.y),Float($0.z)) }
+        let bounds=try XCTUnwrap(scene.instanceEntities.first).visualBounds(relativeTo:scene.root)
+        for x in [bounds.min.x,bounds.max.x] {for y in [bounds.min.y,bounds.max.y] {for z in [bounds.min.z,bounds.max.z] {points.append(SIMD3(x,y,z))}}}
+        for point in points {
+            let projected=view*SIMD4(point,1),depth = -projected.z
+            XCTAssertGreaterThan(depth,0)
+            XCTAssertLessThanOrEqual(abs(projected.x/depth/tan(Float.pi/12)/1.6),1)
+            XCTAssertLessThanOrEqual(abs(projected.y/depth/tan(Float.pi/12)),1)
+        }
+        scene.stopLiveRopes()
+    }
+
+    @MainActor
     func testReflectedMeshPreservesInstancePlacementAndSourceBuffers() throws {
         var descriptor = MeshDescriptor(name: "front")
         descriptor.positions = .init([SIMD3<Float>(0, 0, 1), SIMD3<Float>(2, 0, 1), SIMD3<Float>(0, 3, 1)])
@@ -533,6 +683,46 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
+    func testRockRingSelectionAppliesThreadedLoopPoseExactlyOnce() async throws {
+        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
+        guard case .model(let media) = board.defaultPresentation.media else {
+            return XCTFail("expected Rock Rings model")
+        }
+        let instances = try XCTUnwrap(media.instances)
+        let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
+        guard instances.count == scene.instanceEntities.count else {
+            return XCTFail("instance count mismatch")
+        }
+        let initial = scene.instanceEntities.map { $0.transform.matrix }
+        XCTAssertTrue(scene.select(positionID: "primary"))
+        let centerX = Float((media.descriptor.modelBounds.minimum[0] + media.descriptor.modelBounds.maximum[0]) / 2)
+        for (index, instance) in instances.enumerated() {
+            guard case .twoBranchCord(let profile) = instance.suspension else {
+                return XCTFail("expected threaded-loop adapter")
+            }
+            XCTAssertNotNil(profile.internalLoopChannelPointsByBranchID)
+            let pose = try XCTUnwrap(profile.canonicalPoses["primary"])
+            let poseMatrix = try SuspendedBoardPresentation.boardTransform(for: pose)
+            XCTAssertNotEqual(poseMatrix, matrix_identity_float4x4)
+            // Reflection belongs to the mesh. Restore the authored base and
+            // cancel that reflection after composing exactly one canonical pose.
+            var reflection = matrix_identity_float4x4
+            if instance.baseTransform.reflection == .x {
+                reflection.columns.0.x = -1
+                reflection.columns.3.x = 2 * centerX
+            }
+            let expected = initial[index] * reflection * poseMatrix * reflection
+            let actual = scene.instanceEntities[index].transform.matrix
+            for column in 0..<4 {
+                for row in 0..<4 {
+                    XCTAssertEqual(actual[column][row], expected[column][row], accuracy: 1e-6,
+                                   "\(instance.equipmentObjectID) column \(column) row \(row)")
+                }
+            }
+        }
+    }
+
+    @MainActor
     func testRockRingsStaySeparatedAndBothFitAfterSelectionAndClear() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "metolius.rock-rings-3d"))
         let scene = try await BoardModelRealityLoader.load(board: board, presentation: board.defaultPresentation)
@@ -900,6 +1090,35 @@ final class BoardModelRealityTests: XCTestCase {
             XCTAssertLessThan(try XCTUnwrap(localCenters.map(\.y).min()), 0.008,
                               "The \(position.id) loop must pass around the lower surface")
             XCTAssertTrue(cord.children.allSatisfy { ($0 as? ModelEntity)?.collision == nil })
+        }
+    }
+
+    @MainActor
+    func testMiniBarOrbitKeepsBodyAndEntireCordInsideViewport() async throws {
+        let board=try XCTUnwrap(BoardCatalog.packageStore.board(id:"lattice.mini-bar"))
+        let scene=try await BoardModelRealityLoader.load(board:board,presentation:board.defaultPresentation)
+        let viewport=CGSize(width:540,height:209)
+        scene.frame(in:viewport)
+        for position in board.positions {
+            XCTAssertTrue(scene.select(positionID:position.id))
+            for azimuth in [Float(0),.pi/2,.pi] {
+                scene.orbit(azimuth:azimuth,elevation:0)
+                let view=scene.camera.transform.matrix.inverse
+                let tangent=tan(scene.camera.camera.fieldOfViewInDegrees*Float.pi/360)
+                for entity in scene.instanceEntities+[try XCTUnwrap(scene.transientCordEntity)] {
+                    let bounds=entity.visualBounds(relativeTo:scene.root)
+                    for x in [bounds.min.x,bounds.max.x] {
+                        for y in [bounds.min.y,bounds.max.y] {
+                            for z in [bounds.min.z,bounds.max.z] {
+                                let point=view*SIMD4<Float>(x,y,z,1),depth = -point.z
+                                XCTAssertGreaterThan(depth,0,position.id)
+                                XCTAssertLessThanOrEqual(abs(point.x/depth/tangent/Float(viewport.width/viewport.height)),1,position.id)
+                                XCTAssertLessThanOrEqual(abs(point.y/depth/tangent),1,position.id)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

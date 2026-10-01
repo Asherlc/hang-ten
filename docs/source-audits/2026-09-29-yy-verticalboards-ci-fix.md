@@ -681,3 +681,20 @@ Both affected Swift files are restored byte-for-byte to the probe-free `5a3`
 baseline. Original Train navigation, physical gestures, assertions and deadlines
 remain intact. This removes the diagnostic; it is not a rendering correction,
 and no instrumented pass or native frame is accepted as a UI pass.
+
+## Subsequent main integration
+
+Main `d8f23d28c` added Clavellium live-cord simulation and native cord
+regressions after the completed framebuffer comparison. Merge resolution
+preserves that implementation, its compiler dependencies and every upstream
+native suite, together with YY persisted-edit/reporting tests and owned USD
+compiler staging. YY ODR identifiers remain distinct. The simulator model
+asset guard now also covers First, Light and One, matching staging inventory.
+All framebuffer instrumentation remains removed.
+
+Generic arm64 Simulator build-for-testing passed. The full package Python
+suite passed 547 tests, including all 111 affected CI-contract/staging tests.
+Project parse, unique object identifiers, Swift parse, shell syntax and diff
+checks passed; exact owned DerivedData deletion was verified. This integration
+is not a rendering correction. The prior diagnostic findings describe the
+prior tested base; fresh CI must validate the newly integrated main.

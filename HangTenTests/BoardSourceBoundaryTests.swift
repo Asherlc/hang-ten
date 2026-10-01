@@ -374,13 +374,13 @@ final class BoardSourceBoundaryTests: XCTestCase {
             )
             let assetPaths = try packageRelativeAssetPaths(in: packageURL)
 
-            // A CAD package may also carry an authoring-only suspension sidecar.
-            // Both sources generate board.json; neither is staged at runtime.
+            // CAD authoring sidecars are distinct from the declared runtime assets.
             let authoringSource = "\(packagePath).FCStd"
             let extraEntries = packageEntries.subtracting(["assets", "board.json"])
             XCTAssertTrue(
                 extraEntries.isEmpty || extraEntries == [authoringSource]
-                    || extraEntries == [authoringSource, "suspension.json"],
+                    || extraEntries == [authoringSource, "suspension.json"]
+                    || extraEntries == [authoringSource, "suspension.json", "rope-physics.json"],
                 "unexpected package entries: \(extraEntries.sorted())"
             )
             if packageEntries.contains(authoringSource) {
@@ -402,6 +402,9 @@ final class BoardSourceBoundaryTests: XCTestCase {
                 var paths = [assetPath]
                 if let descriptorPath = media["descriptorPath"] as? String {
                     paths.append(descriptorPath)
+                }
+                if let physicsPath = media["physicsDescriptorPath"] as? String {
+                    paths.append(physicsPath)
                 }
                 return paths
             })
@@ -466,7 +469,15 @@ final class BoardSourceBoundaryTests: XCTestCase {
                     migratedModelBoardIDs.contains(board.id),
                     "Only migrated boards may use model media."
                 )
-                XCTAssertEqual(assetPaths, Set([media.assetPath, media.descriptorPath]))
+                var typedAssets = Set([media.assetPath, media.descriptorPath])
+                if let physicsPath = media.physicsDescriptorPath {
+                    typedAssets.insert(physicsPath)
+                    XCTAssertNotNil(try BoardCatalog.packageStore.presentationPhysicsInput(for: board))
+                }
+                if packageEntries.contains("rope-physics.json") {
+                    XCTAssertNotNil(media.physicsDescriptorPath)
+                }
+                XCTAssertEqual(assetPaths, typedAssets)
                 XCTAssertTrue(
                     presentations.allSatisfy { presentation in
                         guard let media = presentation["media"] as? [String: Any] else {

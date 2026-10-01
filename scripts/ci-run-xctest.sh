@@ -230,11 +230,16 @@ run_xcodebuild_with_watchdog "build-for-testing" "build-for-testing"
 if [[ "${CI:-}" == "true" && "$XCTEST_LABEL" == HangTenUITests-map-* ]]; then
   app_resources="$XCTEST_DERIVED_DATA/Build/Products/Debug-iphonesimulator/HangTen.app/HangTenDebugSimulatorModels"
   for model in \
+    clavellium-training-block \
+    lattice-mini-bar \
     frictitious-doormount-pro-7 \
     frictitious-megalith \
     tension-whetstone \
     surfaces-for-climbing-transgression-2011 \
     surfaces-for-climbing-transgression-2013 \
+    yy-verticalboard-first \
+    yy-verticalboard-light \
+    yy-verticalboard-one \
     yy-verticalboard-evo \
     tension-honestone \
     tension-grindstone-original \
