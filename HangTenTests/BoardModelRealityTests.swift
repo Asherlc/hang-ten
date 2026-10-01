@@ -6,6 +6,72 @@ import simd
 
 final class BoardModelRealityTests: XCTestCase {
     @MainActor
+    func testEveryCatalogModelKeepsSurfacesVisibleThroughHighlightAndClear() async throws {
+        var presentationsChecked = 0
+        var mirroredInstancesChecked = 0
+        for board in BoardCatalog.packageStore.boards {
+            for presentation in board.presentations {
+                guard case .model(let media) = presentation.media else { continue }
+                let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+                var meshesChecked = 0
+                func checkSurfaces(_ entity: Entity) {
+                    if let model = (entity as? ModelEntity)?.model {
+                        meshesChecked += 1
+                        XCTAssertFalse(model.materials.isEmpty, "\(board.id)/\(presentation.id)/\(entity.name)")
+                        for material in model.materials {
+                            let culling: MaterialParameterTypes.FaceCulling?
+                            if let material = material as? CustomMaterial {
+                                culling = material.faceCulling
+                            } else if let material = material as? PhysicallyBasedMaterial {
+                                culling = material.faceCulling
+                            } else {
+                                culling = nil
+                            }
+                            XCTAssertEqual(culling, MaterialParameterTypes.FaceCulling.none,
+                                           "\(board.id)/\(presentation.id)/\(entity.name): board surfaces must survive reflected winding")
+                        }
+                    }
+                    for child in entity.children { checkSurfaces(child) }
+                }
+                func checkBoardSurfaces() {
+                    for entity in scene.instanceEntities { checkSurfaces(entity) }
+                }
+                checkBoardSurfaces()
+                XCTAssertGreaterThan(meshesChecked, 0, "\(board.id)/\(presentation.id)")
+                let contactIDs = Set(scene.contactEntities.keys)
+                XCTAssertFalse(contactIDs.isEmpty, "\(board.id)/\(presentation.id)")
+                for mode: BoardHighlightMode in [.active, .preview] {
+                    scene.highlight(contactIDs, mode: mode)
+                    checkBoardSurfaces()
+                    scene.highlight([], mode: mode)
+                    checkBoardSurfaces()
+                }
+                // Check every authored pose of reflected instances as well as
+                // the default and cleared transforms. This discovers new
+                // mirrored boards automatically rather than listing two IDs.
+                if media.instances?.contains(where: { $0.baseTransform.reflection == .x }) == true {
+                    for position in board.positions where position.presentationID == presentation.id {
+                        XCTAssertTrue(scene.select(positionID: position.id), "\(board.id)/\(position.id)")
+                        checkBoardSurfaces()
+                    }
+                    _ = scene.select(positionID: nil)
+                    checkBoardSurfaces()
+                    for (instance, entity) in zip(media.instances ?? [], scene.instanceEntities)
+                    where instance.baseTransform.reflection == .x {
+                        XCTAssertLessThan(simd_determinant(entity.transformMatrix(relativeTo: scene.root)), 0,
+                                          "\(board.id)/\(instance.equipmentObjectID): reflection must survive clearing selection")
+                        mirroredInstancesChecked += 1
+                    }
+                }
+                presentationsChecked += 1
+            }
+        }
+        XCTAssertGreaterThan(presentationsChecked, 0)
+        XCTAssertGreaterThan(mirroredInstancesChecked, 0)
+        print("Validated surface visibility for \(presentationsChecked) model presentations and \(mirroredInstancesChecked) reflected instances")
+    }
+
+    @MainActor
     func testSplitPalmReflectionPreservesTheFrontThroughSelectionAndClear() async throws {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "soill.split-palm"))
         let scene = try await BoardModelRealityLoader.load(board: board,
