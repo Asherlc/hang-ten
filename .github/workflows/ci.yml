@@ -875,6 +875,44 @@ jobs:
             ${{ runner.temp }}/hang-ten-ui-test-logs/
           if-no-files-found: ignore
 
+      # Temporary diagnostic only: never merge this export, even if CI passes.
+      # Preserve actual products after testing; upload authenticated ciphertext only.
+      - name: Encrypt exact board products for native replay
+        id: board_replay_export
+        if: always()
+        env:
+          XCTEST_DERIVED_DATA: ${{ runner.temp }}/hang-ten-ui-test-derived-data
+          XCTEST_ONLY_TESTING: ${{ matrix.only_testing }}
+        run: python3 scripts/ci-export-board-replay.py
+
+      - name: Upload encrypted board replay
+        if: always() && steps.board_replay_export.outcome == 'success'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: hang-ten-board-replay-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            .context/hang-ten-board-replay-export/products.cms
+            .context/hang-ten-board-replay-export/receipt.json
+          if-no-files-found: error
+
+      - name: Delete owned encrypted export after upload
+        if: always()
+        run: |
+          set -euo pipefail
+          owned_export="$GITHUB_WORKSPACE/.context/hang-ten-board-replay-export"
+          test "$(basename "$GITHUB_WORKSPACE")" = hang-ten
+          if test -f "$owned_export/receipt.json"; then
+            python3 - "$owned_export/receipt.json" <<'PY'
+          import json, os, sys
+          receipt = json.load(open(sys.argv[1]))
+          assert receipt["owner"] == "hang-ten"
+          assert receipt["run"] == os.environ["GITHUB_RUN_ID"]
+          assert receipt["attempt"] == os.environ["GITHUB_RUN_ATTEMPT"]
+          PY
+            rm -rf -- "$owned_export"
+            test ! -e "$owned_export"
+          fi
+
       # actions/cache/save v4.2.3
       - name: Save Xcode DerivedData
         if: success()

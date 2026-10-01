@@ -1145,3 +1145,44 @@ bounds (Evo, Forge, Natural and Pro), a separate DoorMount initial-pick failure,
 and a passing Megalith sequence. Full artifact 11187125729, logs, attachments,
 diagnostics and a visually inspected comparison are retained. No unchanged
 retry or weakened assertion is used to validate the corrected selection.
+
+
+## Exact CI products for one native replay
+
+The main PR534 integration baseline e47 completed in run 36925403382:
+25 board cases, five failures. Evo timed out at rendered orbit; Megalith and
+Pro at rendered selection; Forge and Natural at body visibility. DoorMount
+passed its full sequence and the other 19 cases passed. Evo's orbit crop has
+zero changed RGB pixels with stable bounds; the two selection comparisons
+also have zero changes, but lack a post-failure geometry guard. The body
+failure captures are full-size blank map viewports. All other checks passed:
+1,427 unit tests with three skips, 23 purchase cases, 49 native CAD cases,
+Python and lint. Full artifact 11195301773 (154,685,479 bytes), logs,
+attachments, diagnostics and the visually reviewed overview were retained
+before this diagnostic push. The preceding 10c CI synthetic merge already
+included PR534, so integrating it is not a rendering correction.
+
+A workspace-owned iPhone 18 Pro booted and reached launch services on the
+exact CI runtime iOS 27.0/24A434 with local released Xcode 27.0/27A266a.
+Its deletion is verified. Apple's download command initially reported failure
+before the runtime profile became available; image Ready alone was insufficient.
+No app or UI assertion ran during that prerequisite check.
+
+This temporary diagnostic adds only post-test export, upload and deletion
+steps to the board job. It streams the exact Products tree directly into
+RSA-4096 OAEP/SHA-256 authenticated AES-256-GCM CMS encryption. Only ciphertext
+and a nonsensitive ownership/hash receipt are uploaded; the private key stays
+local. File hashes, executable UUIDs, toolchain/runtime/device inventory and
+selectors are inside the encrypted manifest. App, runner, assets and xctestrun
+remain unchanged. Local fixture checks verified exact bytes, executable modes,
+symlinks and rejection of tampered ciphertext; owned scratch was deleted.
+The 72 CI contracts passed, with original workflow steps and selectors intact.
+
+Replay once on the matching native runtime without rebuilding or changing
+configuration, preserving all 25 selectors and original assertions. Record
+any necessary path relocation and validate product hashes before execution.
+A native pass would establish an execution-environment difference, not a GPU
+or framework cause, and would not replace the required CI checks. Incomplete
+products, setup failure or invalid captures are inconclusive. Remove this
+export after the outcome. Never merge this diagnostic head, even if green;
+no rendering correction, unchanged retry or assertion weakening is claimed.
