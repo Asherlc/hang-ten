@@ -1,6 +1,7 @@
 import RealityKit
 import SwiftUI
 import UIKit
+import QuartzCore
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -411,6 +412,9 @@ private struct BoardModelARHost: UIViewRepresentable {
     @MainActor
     final class Coordinator: NSObject {
         var parent: BoardModelARHost
+        #if DEBUG
+        private var presentationProbe: BoardPresentationCommitProbe?
+        #endif
         let anchor = AnchorEntity(world: .zero)
         let panDelegate = OrbitPanGestureDelegate(allowsAllDirections: true)
         private var lastTranslation: CGPoint = .zero
@@ -425,6 +429,11 @@ private struct BoardModelARHost: UIViewRepresentable {
             anchor.addChild(parent.model.camera)
             view.renderer.scene.addAnchor(anchor)
             view.onLayout = { [weak self] view in self?.synchronize(view) }
+            #if DEBUG
+            if ProcessInfo.processInfo.environment["HANGTEN_REVIEW_COMMIT_PROBE"] == "1" {
+                presentationProbe = BoardPresentationCommitProbe(container: view, model: parent.model)
+            }
+            #endif
             let pan = OrbitPanGestureRecognizer(target: self, action: #selector(orbit(_:)))
             pan.activationDistance = 4
             pan.delegate = panDelegate
@@ -445,10 +454,17 @@ private struct BoardModelARHost: UIViewRepresentable {
             guard size.width.isFinite, size.height.isFinite,
                   size.width > 0, size.height > 0 else { return }
             parent.synchronize(size)
+            #if DEBUG
+            presentationProbe?.synchronized()
+            #endif
         }
 
         /// Releases layout callbacks, input recognizers and the entities attached by this host.
         func detach(from view: BoardModelARContainer) {
+            #if DEBUG
+            presentationProbe?.stop()
+            presentationProbe = nil
+            #endif
             view.onLayout = nil
             for gesture in view.renderer.gestureRecognizers ?? [] {
                 view.renderer.removeGestureRecognizer(gesture)
@@ -506,6 +522,13 @@ private struct BoardModelARHost: UIViewRepresentable {
 private final class BoardModelARContainer: UIView {
     let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
     var onLayout: ((BoardModelARContainer) -> Void)?
+    #if DEBUG
+    var onWindowChange: (() -> Void)?
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        onWindowChange?()
+    }
+    #endif
 
     /// Builds a transparent non-AR renderer without starting an automatically configured AR session.
     override init(frame: CGRect) {
@@ -544,3 +567,94 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
+
+#if DEBUG
+/// Temporary, post-failure presentation experiment. Never a delivery candidate.
+@MainActor
+private final class BoardPresentationCommitProbe {
+    private static let notification = CFNotificationName("com.hangten.supreme-zebra.presentation-commit" as CFString)
+    private weak var container: BoardModelARContainer?
+    private let model: BoardModelRealityScene
+    private let marker = UIView(frame: CGRect(x: 8, y: 100, width: 14, height: 14))
+    private var invoked = false
+    private var synchronizationCount = 0
+    private var canonical: String?
+
+    func synchronized() {
+        synchronizationCount += 1
+        if canonical == nil, let container, container.renderer.bounds.width > 0,
+           model.orbitAzimuth == 0, model.orbitElevation == 0 {
+            canonical = "authored=\(model.camera.transform.matrix) native=\(container.renderer.cameraTransform.matrix)"
+            record("canonical")
+        }
+        if invoked { record("intervening-sync") }
+    }
+
+    init(container: BoardModelARContainer, model: BoardModelRealityScene) {
+        self.container = container
+        self.model = model
+        marker.backgroundColor = .magenta
+        marker.isUserInteractionEnabled = false
+        marker.accessibilityIdentifier = "boardModel.commitProbeMarker"
+        marker.isAccessibilityElement = true
+        container.onWindowChange = { [weak self] in self?.attachMarker() }
+        attachMarker()
+        record("creation")
+        CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+            Unmanaged.passUnretained(self).toOpaque(), { _, observer, _, _, _ in
+                guard let observer else { return }
+                let probe = Unmanaged<BoardPresentationCommitProbe>.fromOpaque(observer).takeUnretainedValue()
+                Task { @MainActor [weak probe] in probe?.perform() }
+            }, Self.notification.rawValue, nil, .deliverImmediately)
+    }
+
+    private func attachMarker() {
+        guard let window = container?.window else { return }
+        if marker.superview !== window { window.addSubview(marker) }
+    }
+
+    func stop() {
+        CFNotificationCenterRemoveObserver(CFNotificationCenterGetDarwinNotifyCenter(),
+            Unmanaged.passUnretained(self).toOpaque(), Self.notification, nil)
+        container?.onWindowChange = nil
+        marker.removeFromSuperview()
+    }
+
+    private func perform() {
+        guard !invoked else { return }
+        invoked = true
+        record("before")
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        marker.backgroundColor = .cyan
+        CATransaction.commit()
+        record("after")
+        Task { @MainActor [weak self] in
+            try? await Task.sleep(for: .seconds(2))
+            self?.record("after-two-seconds")
+        }
+    }
+
+    private func record(_ phase: String) {
+        guard let container else { return }
+        let renderer = container.renderer
+        let window = renderer.window
+        var views: [String] = []
+        var current: UIView? = renderer
+        while let view = current {
+            let l = view.layer
+            views.append("\(type(of: view))#\(ObjectIdentifier(view)) frame=\(view.frame) hidden=\(view.isHidden) alpha=\(view.alpha) opaque=\(view.isOpaque) mask=\(String(describing: l.mask)) clips=\(l.masksToBounds) radius=\(l.cornerRadius) raster=\(l.shouldRasterize) groupOpacity=\(l.allowsGroupOpacity)")
+            current = view.superview
+        }
+        func layers(_ layer: CALayer) -> [String] {
+            var values: [String] = []
+            if let metal = layer as? CAMetalLayer {
+                values.append("\(ObjectIdentifier(metal)) bounds=\(metal.bounds) scale=\(metal.contentsScale) drawable=\(metal.drawableSize) opaque=\(metal.isOpaque) opacity=\(metal.opacity) hidden=\(metal.isHidden) transaction=\(metal.presentsWithTransaction) framebufferOnly=\(metal.framebufferOnly) pixelFormat=\(metal.pixelFormat.rawValue) maxDrawables=\(metal.maximumDrawableCount) presentationBounds=\(String(describing:metal.presentation()?.bounds))")
+            }
+            for child in layer.sublayers ?? [] { values += layers(child) }
+            return values
+        }
+        print("[BoardPresentationCommitProbe] phase=\(phase) syncCount=\(synchronizationCount) canonical=\(canonical ?? "not-captured") time=\(ProcessInfo.processInfo.systemUptime) container=\(ObjectIdentifier(container)) renderer=\(ObjectIdentifier(renderer)) model=\(ObjectIdentifier(model)) window=\(String(describing: window.map(ObjectIdentifier.init))) windowBounds=\(renderer.convert(renderer.bounds, to:window)) markerWindow=\(String(describing:marker.window)) markerFrame=\(marker.frame) authored=\(model.camera.transform.matrix) native=\(renderer.cameraTransform.matrix) azimuth=\(model.orbitAzimuth) elevation=\(model.orbitElevation) views=\(views) metal=\(layers(renderer.layer))")
+    }
+}
+#endif
