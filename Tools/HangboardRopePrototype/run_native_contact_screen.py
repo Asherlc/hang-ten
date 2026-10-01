@@ -215,7 +215,21 @@ def main():
     if (root / "resources.jsonl").is_symlink() or (root / "pycache").is_symlink():
         parser.error("owned lifecycle output must not be a symlink")
     band = REPO / files["BandSnapshot.swift"]
-    (output / "BandSnapshot.swift").write_text(band.read_text() + "\n" + (SOURCE / "BandSnapshot.swift").read_text())
+    # Main's contact solver now calls the authoritative blocking-step helper
+    # defined alongside dynamics. Capture that declaration for this pure native
+    # tool; compiling the whole app dynamics file would add unrelated services.
+    working_set_source = REPO / "HangTen/Models/RopeDynamicsSolver.swift"
+    dynamics = working_set_source.read_text()
+    beginning = dynamics.index("struct RopeContactWorkingSet {")
+    cursor, depth = dynamics.index("{", beginning), 0
+    for end in range(cursor, len(dynamics)):
+        depth += (dynamics[end] == "{") - (dynamics[end] == "}")
+        if depth == 0:
+            break
+    else:
+        raise ValueError("Unterminated authoritative contact working-set declaration")
+    working_set = dynamics[beginning:end+1]
+    (output / "BandSnapshot.swift").write_text(band.read_text() + "\n" + (SOURCE / "BandSnapshot.swift").read_text() + "\n" + working_set + "\n")
     (output / "main.swift").write_text(files["main.swift"].read_text())
     core = [REPO / "HangTen/Models/RopePhysicsDescriptor.swift", REPO / "HangTen/Models/RopeContactSystem.swift"]
     backend = "GlobalSchurComplementarity.swift" if args.global_schur else ("ContactComplementarity.swift" if args.complementarity else "ContactInteriorPoint.swift")
@@ -227,7 +241,7 @@ def main():
     captured.mkdir(exist_ok=True)
     source_hashes, source_snapshots, compile_sources = {}, {}, []
     validator = SOURCE.parent / "sparse_contact_screen.py"
-    for source in [*sources, Path(__file__), Path(__file__).with_suffix(".sh"), validator]:
+    for source in [*sources, working_set_source, Path(__file__), Path(__file__).with_suffix(".sh"), validator]:
         snapshot = captured / source.name
         if snapshot.is_symlink():
             parser.error("owned source snapshot must not be a symlink")
