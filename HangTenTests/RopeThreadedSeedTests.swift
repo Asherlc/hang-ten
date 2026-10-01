@@ -22,6 +22,103 @@ final class RopeThreadedSeedTests: XCTestCase {
                 instanceID: nil, boardMass: 1, ropes: ropes)])
     }
 
+    func testAsymmetricLeadsHaveFeasibleTranslatedSeed() throws {
+        try assertAsymmetricSeed(firstLength:0.1,secondLength:0.12)
+    }
+
+    func testFeasibleTranslatedSeedDoesNotRequireAScalarHeightBracket() throws {
+        try assertAsymmetricSeed(firstLength:0.006,secondLength:0.008)
+    }
+
+    private func assertAsymmetricSeed(firstLength:Double,secondLength:Double) throws {
+        let base = attachedBoard(), target = SIMD3<Double>(0,0,0.03)
+        let ropes = base.profiles[0].ropes.enumerated().map { index, source in
+            let length = index == 0 ? firstLength:secondLength, attachment = source.nodes[1].point!
+            let nodes = [RopeGraphNode(id:"support",kind:"support",point:attachment+target+SIMD3(0,length,0),portalID:nil),
+                RopeGraphNode(id:"attachment",kind:"attachment",point:attachment,portalID:nil)]
+            return RopePhysicsRope(id:source.id,baselineRadius:source.baselineRadius,radius:source.radius,
+                restLength:length,linearMass:source.linearMass,nodes:nodes,
+                edges:[RopeGraphEdge(from:"support",to:"attachment",kind:"free",channelID:nil,winding:nil)])
+        }
+        let input = RopePhysicsInput(modelSHA256:base.modelSHA256,sourceSHA256:base.sourceSHA256,
+            collision:base.collision,portals:[],channels:[],profiles:[RopePhysicsProfile(id:"front",presentationID:"front",
+                instanceID:nil,boardMass:1,ropes:ropes)])
+        let collider = try RopeTriangleCollider(input:input)
+        let seed = try RopeThreadedSeed.make(input:input,profileID:"front",orientation:simd_quatd(angle:0,axis:SIMD3<Double>(1,0,0)),collider:collider)
+        let prepared = try RopeDynamicsSolver.prepareDisplay(input:input,state:seed,collider:collider)
+        XCTAssertTrue(prepared.frame.metrics.geometryAccepted)
+        for (chain,source) in zip(seed.ropes,ropes) {
+            XCTAssertEqual(chain.restLengths.reduce(0,+),source.restLength,accuracy:1e-8)
+            XCTAssertEqual(zip(chain.positions,chain.positions.dropFirst()).reduce(0) { $0+simd_distance($1.0,$1.1) },source.restLength,accuracy:1e-8)
+            for (i,point) in chain.supports {XCTAssertEqual(chain.positions[i],point)}
+        }
+    }
+
+    private func shifted(_ input:RopePhysicsInput,by shift:SIMD3<Double>) -> RopePhysicsInput {
+        func mesh(_ source:RopeCollisionMesh) -> RopeCollisionMesh {
+            RopeCollisionMesh(vertices:source.vertices.map {$0+shift},triangles:source.triangles)
+        }
+        let portals = input.portals.map {p in RopePortalRegion(id:p.id,center:p.center+shift,normal:p.normal,
+            boundary:p.boundary.map {$0+shift},clearanceRadius:p.clearanceRadius)}
+        let channels = input.channels.map {c in RopeChannelRegion(id:c.id,portalIDs:c.portalIDs,
+            spine:c.spine.map {$0+shift},solid:mesh(c.solid))}
+        let profiles = input.profiles.map {p in
+            RopePhysicsProfile(id:p.id,presentationID:p.presentationID,instanceID:p.instanceID,boardMass:p.boardMass,
+                ropes:p.ropes.map {r in
+                    RopePhysicsRope(id:r.id,baselineRadius:r.baselineRadius,radius:r.radius,restLength:r.restLength,
+                        linearMass:r.linearMass,nodes:r.nodes.map {n in
+                            RopeGraphNode(id:n.id,kind:n.kind,point:n.point.map {n.kind == "support" ? $0:$0+shift},portalID:n.portalID)
+                        },edges:r.edges)
+                })
+        }
+        return RopePhysicsInput(modelSHA256:input.modelSHA256,sourceSHA256:input.sourceSHA256,
+            collision:mesh(input.collision),portals:portals,channels:channels,profiles:profiles)
+    }
+
+    func testChangingBoardOriginPreservesWorldSimulation() throws {
+        let shifts = [SIMD3<Double>(0.013,-0.009,0.017),SIMD3<Double>(0.25,-0.20,0.30)]
+        for original in [attachedBoard(supportOffset:0.01),try Self.clavellium()] {
+            let originalCollider = try RopeTriangleCollider(input:original)
+            for shift in shifts {
+                let changed = shifted(original,by:shift), changedCollider = try RopeTriangleCollider(input:changed)
+                XCTAssertLessThan(simd_distance(changed.bodyReferencePoint,original.bodyReferencePoint+shift),1e-12)
+                for angle in [0.0,Double.pi/9,-Double.pi/9] {
+                    let q = simd_quatd(angle:angle,axis:SIMD3<Double>(1,0,0))
+                    let a = try RopeThreadedSeed.make(input:original,profileID:"front",orientation:q,collider:originalCollider)
+                    let b = try RopeThreadedSeed.make(input:changed,profileID:"front",orientation:q,collider:changedCollider)
+                    XCTAssertLessThan(simd_distance(a.boardTranslation,b.boardTranslation+q.act(shift)),0.0002)
+                    for (first,second) in zip(a.ropes,b.ropes) {
+                        XCTAssertEqual(first.positions.count,second.positions.count)
+                        guard first.positions.count == second.positions.count else {continue}
+                        for i in first.positions.indices {XCTAssertLessThan(simd_distance(first.positions[i],second.positions[i]),0.0002)}
+                    }
+                }
+                let q = simd_quatd(angle:0,axis:SIMD3<Double>(1,0,0))
+                let a = try RopeThreadedSeed.make(input:original,profileID:"front",orientation:q,collider:originalCollider)
+                let b = try RopeThreadedSeed.make(input:changed,profileID:"front",orientation:q,collider:changedCollider)
+                var first = try RopeDynamicsSolver.prepareDisplay(input:original,state:a,collider:originalCollider).solver
+                var second = try RopeDynamicsSolver.prepareDisplay(input:changed,state:b,collider:changedCollider).solver
+                for angle in [0.0,Double.pi/9,-Double.pi/9] {
+                    let target = simd_quatd(angle:angle,axis:SIMD3<Double>(1,0,0))
+                    let a = try first.settled(targetOrientation:target,maxDuration:5)
+                    let b = try second.settled(targetOrientation:target,maxDuration:5)
+                    XCTAssertTrue(a.metrics.geometryAccepted);XCTAssertTrue(b.metrics.geometryAccepted)
+                    XCTAssertLessThan(simd_distance(a.boardTranslation,b.boardTranslation+target.act(shift)),0.0002)
+                    for (one,two) in zip(first.state.ropes,second.state.ropes) {
+                        for (i,point) in one.supports {XCTAssertEqual(one.positions[i],point);XCTAssertEqual(two.positions[i],point)}
+                        XCTAssertEqual(one.positions.count,two.positions.count)
+                        guard one.positions.count == two.positions.count else {continue}
+                        for i in one.positions.indices {XCTAssertLessThan(simd_distance(one.positions[i],two.positions[i]),0.0002)}
+                        for id in one.portalCrossings.keys {
+                            let a = one.portalCrossings[id]!.point(in:one.positions), b = two.portalCrossings[id]!.point(in:two.positions)
+                            XCTAssertLessThan(simd_distance(a,b),0.0002,"bearing \(id)")
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func testCordSupportSolvesLateralBoardTranslation() throws {
         let input = attachedBoard(supportOffset: 0.01), collider = try RopeTriangleCollider(input: input)
         let upright = simd_quatd(angle: 0, axis: SIMD3<Double>(1, 0, 0))
@@ -281,20 +378,18 @@ final class RopeThreadedSeedTests: XCTestCase {
         XCTAssertThrowsError(try RopeThreadedSeed.make(input:altered(radius:0.02,length:0.55),profileID:"front",orientation:upright,collider:collider))
     }
 
-    func testSharedHeightPreservesEachRopesDeclaredMaterialBudget() throws {
+    func testIncompatibleTautLoopBudgetsRejectUnsupportedSlackSeed() throws {
         let original=try Self.clavellium(),source=original.profiles[0].ropes[0]
-        // A small difference in two synthetic loop lengths exercises shared
-        // height initialization without pretending it is a product setup.
+        // The same taut geometric route cannot satisfy two different budgets.
+        // A physical slack loop needs a separate swept initialization adapter.
         let other=RopePhysicsRope(id:"second",baselineRadius:source.baselineRadius,radius:source.radius,
             restLength:source.restLength+0.00001,linearMass:source.linearMass,nodes:source.nodes,edges:source.edges)
         let profile=RopePhysicsProfile(id:"front",presentationID:"front",instanceID:nil,boardMass:1,ropes:[source,other])
         let input=RopePhysicsInput(modelSHA256:original.modelSHA256,sourceSHA256:original.sourceSHA256,
             collision:original.collision,portals:original.portals,channels:original.channels,profiles:[profile])
-        let state=try RopeThreadedSeed.make(input:input,profileID:"front",
-            orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),collider:RopeTriangleCollider(input:input))
-        for (rope,declared) in zip(state.ropes,profile.ropes) {
-            XCTAssertEqual(rope.restLengths.reduce(0,+),declared.restLength,accuracy:1e-10)
-            XCTAssertLessThanOrEqual(rope.restLengths.indices.map {abs(simd_distance(rope.positions[$0],rope.positions[$0+1])/rope.restLengths[$0]-1)}.max()!,0.005)
+        XCTAssertThrowsError(try RopeThreadedSeed.make(input:input,profileID:"front",
+            orientation:simd_quatd(angle:0,axis:SIMD3<Double>(0,0,1)),collider:RopeTriangleCollider(input:input))) {
+            XCTAssertTrue($0.localizedDescription.contains("slack initialization is unsupported"))
         }
     }
 }

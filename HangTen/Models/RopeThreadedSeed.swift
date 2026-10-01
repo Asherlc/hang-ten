@@ -30,15 +30,15 @@ enum RopeThreadedSeed {
         func translation(_ height: Double) -> SIMD3<Double> {
             worldReference + SIMD3(0, height, 0) - orientation.act(reference)
         }
-        func worldPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
-            orientation.act(point) + translation(height)
+        func worldPoint(_ point: SIMD3<Double>, translation: SIMD3<Double>) -> SIMD3<Double> {
+            orientation.act(point) + translation
         }
-        func boardPoint(_ point: SIMD3<Double>, height: Double) -> SIMD3<Double> {
-            orientation.inverse.act(point - translation(height))
+        func boardPoint(_ point: SIMD3<Double>, translation: SIMD3<Double>) -> SIMD3<Double> {
+            orientation.inverse.act(point - translation)
         }
         let up=orientation.inverse.act(SIMD3<Double>(0,1,0))
         let channelColliders=try RopeChannelColliderCache(channels:input.channels).matchingColliders(for:input.channels)
-        func makeRoutes(height: Double) throws -> [Route] {
+        func makeRoutes(translation: SIMD3<Double>) throws -> [Route] {
         var routes:[Route]=[]
         for rope in profile.ropes {
             var targets:[SIMD3<Double>]=[]
@@ -54,7 +54,7 @@ enum RopeThreadedSeed {
                         targets.append(region.reduce(.zero,+)/Double(region.count))
                     }
                 } else if let point=node.point {
-                    targets.append(node.kind == "support" ? boardPoint(point, height: height) : point)
+                    targets.append(node.kind == "support" ? boardPoint(point, translation: translation) : point)
                 } else { throw RopePhysicsError.invalid("Missing seed graph target") }
             }
             var route=Route(rope:rope,points:[targets[0]],nodeIndices:[0:0],channelEdges:[:])
@@ -129,12 +129,12 @@ enum RopeThreadedSeed {
         }
         return routes
         }
-        func moved(_ route:Route,_ height:Double) -> [SIMD3<Double>] {
+        func moved(_ route:Route,_ translation:SIMD3<Double>) -> [SIMD3<Double>] {
             var points=route.points
             for (nodeIndex,pointIndex) in route.nodeIndices {
                 let node=route.rope.nodes[nodeIndex]
                 if node.kind == "support",let point=node.point {
-                    points[pointIndex]=boardPoint(point, height: height)
+                    points[pointIndex]=boardPoint(point, translation: translation)
                 }
             }
             return points
@@ -143,54 +143,133 @@ enum RopeThreadedSeed {
             zip(points,points.dropFirst()).reduce(0) { $0+simd_distance($1.0,$1.1) }
         }
         let supportHeight=profile.ropes.flatMap{$0.nodes}.filter{$0.kind == "support"}.compactMap{$0.point?.y}.min()!
-        let highestWood=input.collision.vertices.map{worldPoint($0, height: 0).y}.max()!
+        let highestWood=input.collision.vertices.map{worldPoint($0, translation: translation(0)).y}.max()!
         let radius=profile.ropes.map{$0.radius}.max()!
         var low = -max(0.4,profile.ropes.map{$0.restLength}.max()!)
         var high = supportHeight-highestWood-radius-0.003
-        var routes=try makeRoutes(height:low)
+        var routes=try makeRoutes(translation:translation(low))
         guard routes.allSatisfy({length($0.points) >= $0.rope.restLength}) else {
             throw RopePhysicsError.invalid("Rope exceeds bounded seed length workspace")
         }
-        let upperRoutes=try makeRoutes(height:high)
-        guard upperRoutes.allSatisfy({length($0.points) <= $0.rope.restLength}) else {
-            throw RopePhysicsError.invalid("Rope is too short for the threaded board")
-        }
-        // Recompute bearings during this solve: a tangent valid at one height
-        // need not remain clear at another. This is initialization work only.
-        for _ in 0..<17 {
-            let mid=(low+high)/2,candidate=try makeRoutes(height:mid)
-            if candidate.contains(where:{length($0.points)>$0.rope.restLength}) { low=mid;routes=candidate }
-            else {high=mid}
-        }
-        // This final tiny upward endpoint correction removes the bisection
-        // residual without changing the already certified rim segments.
-        var heights:[Double]=[]
-        for route in routes {
-            var a=low,b=high
-            for _ in 0..<50 {
-                let mid=(a+b)/2
-                if length(moved(route,mid))>route.rope.restLength {a=mid}else{b=mid}
+        var height=low
+        // A scalar bracket accelerates common symmetric setups. Its absence
+        // cannot reject a setup that has a feasible lateral placement.
+        if let upperRoutes=try? makeRoutes(translation:translation(high)),
+           upperRoutes.allSatisfy({length($0.points)<=$0.rope.restLength}) {
+            for _ in 0..<17 {
+                let mid=(low+high)/2,candidate=try makeRoutes(translation:translation(mid))
+                if candidate.contains(where:{length($0.points)>$0.rope.restLength}) {low=mid;routes=candidate}
+                else {high=mid}
             }
-            heights.append((a+b)/2)
+            var heights:[Double]=[]
+            for route in routes {
+                var a=low,b=high
+                for _ in 0..<50 {
+                    let mid=(a+b)/2
+                    if length(moved(route,translation(mid)))>route.rope.restLength {a=mid}else{b=mid}
+                }
+                heights.append((a+b)/2)
+            }
+            height=heights.max()!
         }
-        guard let height=heights.max(),heights.allSatisfy({abs($0-height)<0.0001}) else {
-            throw RopePhysicsError.invalid("Ropes do not share a feasible board height")
+        var bodyTranslation=translation(height)
+        var remainingCorrections=64
+        let bodyRadius=input.collision.vertices.map {simd_distance($0,reference)}.max() ?? 0
+        let supportSpread=supports.map {simd_distance($0,supportCenter)}.max() ?? 0
+        let workspaceRadius=max(0.4,profile.ropes.map(\.restLength).max()!)+bodyRadius+supportSpread+0.4
+        func inWorkspace(_ value:SIMD3<Double>) -> Bool {
+            value.x.isFinite && value.y.isFinite && value.z.isFinite &&
+                simd_distance(orientation.act(reference)+value,supportCenter)<=workspaceRadius
         }
+        // Frozen local rim/channel paths have analytic endpoint derivatives.
+        // Re-running the discrete exterior search inside a derivative would
+        // differentiate grid choices rather than rope geometry.
+        func solvePlacement(initial:SIMD3<Double>) throws -> SIMD3<Double> {
+            var value=initial
+            let supportIndices=routes.map {route in Set(route.nodeIndices.compactMap {node,point in
+                route.rope.nodes[node].kind == "support" ? point:nil
+            })}
+            func residuals(_ translation:SIMD3<Double>) -> [Double] {
+                routes.map {length(moved($0,translation))-$0.rope.restLength}
+            }
+            while true {
+                let residual=residuals(value)
+                guard residual.allSatisfy(\.isFinite),inWorkspace(value) else {
+                    throw RopePhysicsError.invalid("Seed placement exceeds bounded workspace")
+                }
+                if residual.allSatisfy({abs($0)<=1e-8}) {return value}
+                guard remainingCorrections>0 else {break}
+                remainingCorrections -= 1
+                var gradients:[SIMD3<Double>]=[]
+                for (index,route) in routes.enumerated() {
+                    let points=moved(route,value),fixed=supportIndices[index]
+                    var gradient=SIMD3<Double>.zero
+                    for i in 0..<(points.count-1) {
+                        let delta=points[i+1]-points[i],distance=simd_length(delta)
+                        guard distance.isFinite,distance>1e-12 else {
+                            throw RopePhysicsError.invalid("Collapsed seed placement segment")
+                        }
+                        let supportDifference=(fixed.contains(i) ? 1.0:0.0)-(fixed.contains(i+1) ? 1.0:0.0)
+                        gradient += orientation.act(delta/distance)*supportDifference
+                    }
+                    gradients.append(gradient)
+                }
+                var system=try RopeBandedSystem(size:3,bandwidth:2),rhs=Array(repeating:0.0,count:3)
+                for a in 0..<3 {
+                    for b in 0...a {
+                        let coefficient=gradients.reduce(0.0) {$0+$1[a]*$1[b]}+(a == b ? 1e-12:0)
+                        try system.addSymmetric(row:a,column:b,value:coefficient)
+                    }
+                    rhs[a] = -zip(gradients,residual).reduce(0.0) {$0+$1.0[a]*$1.1}
+                }
+                let solved=try system.solve(rhs:rhs,borderColumns:[],borderMatrix:[],borderRHS:[]).base
+                var correction=SIMD3(solved[0],solved[1],solved[2])
+                let magnitude=simd_length(correction)
+                guard magnitude.isFinite,magnitude>1e-13 else {break}
+                if magnitude>0.02 {correction *= 0.02/magnitude}
+                let score=residual.reduce(0.0) {$0+$1*$1}
+                var fraction=1.0,accepted=false
+                for _ in 0..<16 {
+                    let candidate=value+fraction*correction
+                    if inWorkspace(candidate) {
+                        let trial=residuals(candidate),next=trial.reduce(0.0) {$0+$1*$1}
+                        if next.isFinite,next<score {value=candidate;accepted=true;break}
+                    }
+                    fraction *= 0.5
+                }
+                if !accepted {break}
+            }
+            throw RopePhysicsError.invalid("No compatible taut-route placement; slack initialization is unsupported")
+        }
+        var fitted=false
+        for _ in 0..<4 {
+            bodyTranslation=try solvePlacement(initial:bodyTranslation)
+            routes=try makeRoutes(translation:bodyTranslation)
+            if routes.allSatisfy({abs(length($0.points)-$0.rope.restLength)<=1e-8}) {
+                fitted=true;break
+            }
+        }
+        guard fitted else {throw RopePhysicsError.invalid("Exact seed route placement did not converge")}
         var chains:[RopeChainState]=[]
         for route in routes {
-            let points=moved(route,height)
-            var positions:[SIMD3<Double>]=[worldPoint(points[0], height: height)]
+            let points=moved(route,bodyTranslation)
+            var positions:[SIMD3<Double>]=[worldPoint(points[0], translation: bodyTranslation)]
             var rest:[Double]=[], originalToParticle:[Int:Int]=[0:0], channels:[Int:String]=[:]
             for index in 0..<(points.count-1) {
                 let a=points[index],b=points[index+1],distance=simd_distance(a,b)
                 guard collider.segmentContact(from:a,to:b,radius:route.rope.radius+RopeRegionGeometry.clearance-1e-9) == nil else {
                     throw RopePhysicsError.invalid("Seed segment penetrates native wood")
                 }
-                let divisions=max(1,Int(ceil(distance/0.002)))
+                // Suppress only floating-point noise at an exact 2 mm
+                // subdivision boundary; coordinate origins cannot add knots.
+                let requested=ceil(distance/0.002-1e-9)
+                guard requested.isFinite,distance>0,let count=Int(exactly:requested),
+                      count<=50_000-rest.count else {throw RopePhysicsError.invalid("Seed resampling exceeds bounded workspace")}
+                let divisions=max(1,count)
                 for step in 1...divisions {
                     if let id=route.channelEdges[index] { channels[rest.count]=id }
                     rest.append(distance/Double(divisions))
-                    positions.append(worldPoint(a+(b-a)*(Double(step)/Double(divisions)), height: height))
+                    positions.append(worldPoint(a+(b-a)*(Double(step)/Double(divisions)), translation: bodyTranslation))
                 }
                 originalToParticle[index+1]=positions.count-1
             }
@@ -204,18 +283,15 @@ enum RopeThreadedSeed {
                 else if node.kind == "attachment" { attachments[particle]=node.point! }
                 else { portals[particle]=node.portalID! }
             }
-            if routes.count>1 {
-                // The highest compatible board height leaves only the tiny
-                // discretization slack in the other loops. Preserve each
-                // source material budget, rather than adopting its path length.
-                let scale=route.rope.restLength/rest.reduce(0,+)
-                rest=rest.map{$0*scale}
-            }
+            // The geometric route already matches within 10 nm. Allocate
+            // the immutable authored budget once; never adopt measured length.
+            let scale=route.rope.restLength/rest.reduce(0,+)
+            rest=rest.map{$0*scale}
             chains.append(RopeChainState(id:route.rope.id,radius:route.rope.radius,linearMass:route.rope.linearMass,
                 restLengths:rest,positions:positions,previousPositions:positions,velocities:Array(repeating:.zero,count:positions.count),
                 supports:supports,attachments:attachments,portals:portals,channelSegments:channels))
         }
-        var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardTranslation:translation(height),
+        var state=RopeSimulationState(profileID:profileID,boardMass:profile.boardMass,boardTranslation:bodyTranslation,
                                    boardLinearVelocity:.zero,orientation:orientation,ropes:chains)
         try RopePassageTopology.refresh(state:&state,input:input)
         return state
