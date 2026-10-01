@@ -14,6 +14,7 @@ from conftest import (
     PRIMARY_PNG_BYTES,
     load_board_catalog_module,
     multi_presentation_board_document,
+    package_roots,
 )
 
 
@@ -1449,12 +1450,11 @@ def test_model_display_rejects_invalid_board_finish(tmp_path: Path, finish) -> N
 
 
 def test_every_catalog_model_authors_a_material_finish() -> None:
+    """Keep every catalog model on the material palette, including future additions."""
     # Missing/neutral assignments silently render real wood and resin gray.
     root = Path(__file__).resolve().parents[3] / "Hangboards"
     model_count = 0
-    for package in sorted(root.iterdir()):
-        if not package.is_dir():
-            continue
+    for package in package_roots(root):
         board = load_board_package(package).board
         for presentation in board.presentations:
             if not isinstance(presentation.media, PresentationMediaModel):
@@ -1462,8 +1462,8 @@ def test_every_catalog_model_authors_a_material_finish() -> None:
             model_count += 1
             display = presentation.media.display
             assert display.get("surfaceFinish") in {"wood", "plastic", "granite"}, package
-            assert "woodNeutralBands" not in display, package
-    assert model_count > 0
+    # Preserve coverage of the 55 model presentations present at this rollout.
+    assert model_count >= 55
 
 
 def test_model_display_rejects_invented_per_surface_bands(tmp_path: Path) -> None:

@@ -110,7 +110,7 @@ The result contains 16 nodes, 111,740 triangles, and a 2,361,159-byte USDZ.
 Native fillets account for much of this tessellation; the compiler transports
 the authored geometry without simplifying the ⅛-inch bearing surfaces.
 
-- FCStd SHA-256: `dbd47347305a57dd394b58566d0b521f54f5655a52a1ca0b5827edc90beb3e1c`
+- FCStd SHA-256: `9b647d84fc3258c3cf3657c1f045519ac0906669f0d17803c9d14c35d7da2c1e`
 - USDZ SHA-256: `321a039d39299aca7213cb351bec05043a71493f5f48129717874f3f8e9f86c5`
 - The reopened USDZ has zero Material/Shader prims and zero material bindings;
   its bytes match the descriptor hash.
@@ -130,3 +130,10 @@ view direction `[0, −0.3420201433, −0.9396926208]`, up `[0,1,0]`, and
 It was embedded with `set_board_manifest.py` after export; that metadata-only
 operation preserved every geometry archive member and the USDZ hash. The
 complete package subsequently passed `board_catalog.load_board_package`.
+
+## Current display metadata — 2026-09-30
+
+The FCStd hash above includes the catalog wood-finish assignment. The
+[finish audit](2026-09-30-catalog-model-finishes.md) records this metadata-only
+update and verifies every non-Document.xml archive member and runtime asset
+unchanged. The geometry and visual review evidence in this audit still apply.

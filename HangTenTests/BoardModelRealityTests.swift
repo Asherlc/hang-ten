@@ -80,11 +80,13 @@ final class BoardModelRealityTests: XCTestCase {
                 XCTAssertNotNil(entity.components[InputTargetComponent.self], contactID)
             }
         }
-        var checkedEntities = 0
-        for entity in scene.instanceEntities {
-            checkNeutralMaterial(on: entity, checkedCount: &checkedEntities)
+        XCTAssertEqual(scene.displayForTesting.surfaceFinish, .wood)
+        for entities in scene.contactEntities.values {
+            for entity in entities {
+                XCTAssertTrue(entity.model?.materials.first is CustomMaterial,
+                              "Whetstone contacts must inherit the procedural wood finish")
+            }
         }
-        XCTAssertGreaterThan(checkedEntities, 0)
     }
 
     @MainActor
@@ -153,10 +155,7 @@ final class BoardModelRealityTests: XCTestCase {
 
     @MainActor
     func testPBRNeutralMaterialsApplied() async throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        let presentation = board.defaultPresentation
-        guard case .model(let media) = presentation.media else { return XCTFail("model media required") }
-        let scene = try await BoardModelRealityLoader.load(board: board, presentation: presentation)
+        let scene = try await neutralFixtureScene()
 
         // Verify all model entities have PhysicallyBasedMaterial with neutral values
         var checkedEntities = 0
@@ -278,48 +277,52 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testStoakMixedFinishesRestoreEveryContact() async throws {
-        let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stoak-board-iii"))
-        let scene = try await BoardModelRealityLoader.load(board: board,
-                                                          presentation: board.defaultPresentation)
-        XCTAssertEqual(scene.displayForTesting.surfaceFinish, .wood)
-        XCTAssertTrue(scene.displayForTesting.woodNodeIDs.isEmpty,
-                      "Wood coverage must not depend on enumerating each mesh")
-        XCTAssertEqual(Set(scene.displayForTesting.graniteNodeIDs),
-                       ["granite_insert_left", "granite_insert_right", "granite_insert_center"])
-        for id in ["edge-22-center", "gradient-edge-left", "gradient-edge-right", "top-jug",
-                   "lower-composite-left", "lower-composite-right", "lower-composite-center"] {
-            let entities = try XCTUnwrap(scene.contactEntities[id])
-            XCTAssertFalse(entities.isEmpty)
-            if id.hasPrefix("lower-composite-") {
-                XCTAssertGreaterThanOrEqual(entities.count, 2, "Mixed contacts must include wood and stone")
-            }
-            var baselineTints: [Entity: UIColor] = [:]
-            let graniteNodes = Set(scene.displayForTesting.graniteNodeIDs)
-            for entity in entities {
-                let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
-                                             "Every wood/stone contact must receive its finish: \(id)")
-                let tint = UIColor(cgColor: material.baseColor.__tint)
-                var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-                XCTAssertTrue(tint.getRed(&r, green: &g, blue: &b, alpha: &a))
-                if graniteNodes.contains(entity.name) {
-                    XCTAssertLessThan(r, 0.4, "Granite must be dark: \(entity.name)")
-                    XCTAssertLessThan(abs(r - b), 0.05)
-                } else {
-                    XCTAssertGreaterThan(r, g, "Wood walls must retain warm grain")
-                    XCTAssertGreaterThan(g, b)
+    func testMixedFinishesRestoreEveryContact() async throws {
+        for (boardID, graniteNodeIDs) in [
+            ("nature.stoak-board-iii", ["granite_insert_left", "granite_insert_right", "granite_insert_center"]),
+            ("nature.stone-hanger", ["edge_front_20mm_granite_mesh_001"])
+        ] {
+            let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: boardID))
+            let scene = try await BoardModelRealityLoader.load(board: board,
+                                                              presentation: board.defaultPresentation)
+            XCTAssertEqual(scene.displayForTesting.surfaceFinish, .wood)
+            XCTAssertTrue(scene.displayForTesting.woodNodeIDs.isEmpty,
+                          "Wood coverage must not depend on enumerating each mesh")
+            XCTAssertEqual(Set(scene.displayForTesting.graniteNodeIDs),
+                           Set(graniteNodeIDs))
+            for id in scene.contactEntities.keys.sorted() {
+                let entities = try XCTUnwrap(scene.contactEntities[id])
+                XCTAssertFalse(entities.isEmpty)
+                if id.hasPrefix("lower-composite-") {
+                    XCTAssertGreaterThanOrEqual(entities.count, 2, "Mixed contacts must include wood and stone")
                 }
-                baselineTints[entity] = tint
-            }
-            for mode: BoardHighlightMode in [.active, .preview] {
-                scene.highlight([id], mode: mode)
+                var baselineTints: [Entity: UIColor] = [:]
+                let graniteNodes = Set(scene.displayForTesting.graniteNodeIDs)
                 for entity in entities {
-                    XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial)
+                    let material = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial,
+                                                 "Every wood/stone contact must receive its finish: \(id)")
+                    let tint = UIColor(cgColor: material.baseColor.__tint)
+                    var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+                    XCTAssertTrue(tint.getRed(&r, green: &g, blue: &b, alpha: &a))
+                    if graniteNodes.contains(entity.name) {
+                        XCTAssertLessThan(r, 0.4, "Granite must be dark: \(entity.name)")
+                        XCTAssertLessThan(abs(r - b), 0.05)
+                    } else {
+                        XCTAssertGreaterThan(r, g, "Wood walls must retain warm grain")
+                        XCTAssertGreaterThan(g, b)
+                    }
+                    baselineTints[entity] = tint
                 }
-                scene.highlight([], mode: mode)
-                for entity in entities {
-                    let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
-                    XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
+                for mode: BoardHighlightMode in [.active, .preview] {
+                    scene.highlight([id], mode: mode)
+                    for entity in entities {
+                        XCTAssertTrue(entity.model?.materials.first is PhysicallyBasedMaterial)
+                    }
+                    scene.highlight([], mode: mode)
+                    for entity in entities {
+                        let restored = try XCTUnwrap(entity.model?.materials.first as? CustomMaterial)
+                        XCTAssertEqual(UIColor(cgColor: restored.baseColor.__tint), baselineTints[entity])
+                    }
                 }
             }
         }
@@ -476,10 +479,33 @@ final class BoardModelRealityTests: XCTestCase {
     }
 
     @MainActor
-    func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
+    private func neutralFixtureScene() async throws -> BoardModelRealityScene {
         let board = try XCTUnwrap(BoardCatalog.packageStore.board(id: "nature.stone-hanger"))
-        let scene = try await BoardModelRealityLoader.load(board: board,
-                                                          presentation: board.defaultPresentation)
+        let presentation = board.defaultPresentation
+        guard case .model(let media) = presentation.media else {
+            XCTFail("model required")
+            throw NSError(domain: "BoardModelRealityTests", code: 1)
+        }
+        let loadedSource = try await BoardModelRealityCache.source(
+            for: BoardModelRealityKey(boardID: board.id, presentationID: presentation.id,
+                                      modelSHA256: media.descriptor.modelSHA256),
+            media: media, board: board, presentationID: presentation.id,
+            store: BoardCatalog.packageStore, resourceAccess: .live
+        )
+        let source = try XCTUnwrap(loadedSource)
+        // Neutral rendering remains supported independently of catalog finish assignments.
+        let scene = BoardModelRealityScene(
+            descriptor: media.descriptor,
+            display: BoardModelDisplay(camera: media.display.camera, surfaceFinish: .neutral),
+            suspension: nil, orientation: nil, allowedPositionIDs: [], resourceLease: source.resourceLease
+        )
+        try await scene.load(usdzURL: source.resourceLease.url)
+        return scene
+    }
+
+    @MainActor
+    func testClearingHighlightRestoresNeutralPBRBaseline() async throws {
+        let scene = try await neutralFixtureScene()
         let contactID = try XCTUnwrap(scene.contactEntities.keys.first)
         scene.highlight([contactID], mode: .active)
         scene.highlight([], mode: .active)
