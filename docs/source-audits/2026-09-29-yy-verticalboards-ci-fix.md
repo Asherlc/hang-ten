@@ -698,3 +698,58 @@ Project parse, unique object identifiers, Swift parse, shell syntax and diff
 checks passed; exact owned DerivedData deletion was verified. This integration
 is not a rendering correction. The prior diagnostic findings describe the
 prior tested base; fresh CI must validate the newly integrated main.
+
+## Prepared selection-animation scope comparison
+
+Offline correlation of retained f21/b668/5a3/5cc/d036 application logs rules
+out late Train-renderer construction in the recorded failures: the preview
+attached before the detail load began. Five failed5a3 cases and all six5cc
+cases recorded two RealityView attachments; passing5a3 Door recorded one,
+after its preview load was cancelled. That is an association, not proof of
+native overlap, teardown, ownership or a leak. The original selectedBoardCard
+is a preview by purpose but uses the default `isDisplayOnly=false`; its hit
+testing and gestures remain enabled. Both comparison arms preserve that behavior.
+
+The next diagnostic is gated on complete retention of ddd9923e2 CI and at
+least three reproduced presentation failures among Door, Evo, Megalith, Natural
+and Pro with two recorded attachments. Otherwise reassess without pushing it.
+The existing 24 board tests remain intact; six additional treatment methods
+interleave with the original six Batch05 controls in one serial CI job and
+one DEBUG binary. Verify the actual execution order from the retained result.
+The original review helper, physical inputs, navigation, assertions and deadlines
+are identical between arms apart from the launch environment selecting scope.
+
+Control leaves the inherited selection animation unchanged. Treatment clears
+the map subtree's transaction animation only when selectedHoldID changes,
+while preserving the parent selected-card/legend animation and unrelated
+navigation transactions. Logs record inherited/effective scope and the model
+transaction. Existing load/attach/disappear logs provide lifecycle comparisons;
+they do not certify native detachment. Model-transaction logging deduplicates
+at most64 entries per process without SwiftUI/AX publications. The original
+targeted tap callback additionally logs the native targeted entity, iOS2D tap
+location, contact lookup and azimuth/elevation before its guard. No additional
+hit query, recognizer, redraw, snapshot, framebuffer effect or camera mutation
+is introduced. An absent callback still does not distinguish collider miss
+from gesture delivery.
+
+Verified stale treatment rejects animation scoping as a sufficient correction.
+At least three comparable stale controls and no comparable stale treatments
+support a correction candidate; different preview attachment exposure, missing
+scope guards, too few relevant assertions or control passes are inconclusive.
+No unchanged retry follows an inconclusive run. Added logging and transaction
+modifiers are diagnostic perturbations, not proof of a framework mechanism.
+This diagnostic must never merge, even if green. After retaining its outcome,
+remove the environment flag, scope helper/logger, callback logs, six treatment
+methods and their workflow selectors. A separate minimal trace-free correction
+requires all original rendered sequences and required CI/reviews to pass.
+
+The completed integrated baseline CI36836348970 met that gate. All24 board
+tests ran; six failed (Door/Evo/Pro rendered orbit, Forge/Megalith/Natural
+rendered reset), while the other18 passed. Door, Evo and Pro each recorded
+two distinct scene attachments and zero changed RGB pixels from active to
+orbit with unchanged map bounds; those three qualify independently of the
+reset cases. Their paired crops were visually inspected. Full logs, result
+bundle, screenshots and diagnostics were retained before this diagnostic push.
+Units1406tests/3skips/0fail, purchase23, native49/0skips, Python547 package
+plus41 CAD tests/4skips/2deselected, and workflow lint passed. The baseline
+remains a rendering failure; no production correction is claimed.

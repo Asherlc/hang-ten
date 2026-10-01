@@ -262,16 +262,48 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
                    orbitStartPoint: CGVector(dx: 0.44776505, dy: 0.3821585))
     }
 
+    func testDoorMountScopeTreatment() throws {
+        try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
+                   surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296),
+                   resetContactOffset: CGVector(dx: 0.82, dy: 0.55), selectionScope: "treatment")
+    }
+    func testEvoScopeTreatment() throws {
+        try review(boardID: "zlagboard.evo", target: "edge-35-center", selectionScope: "treatment")
+    }
+    func testForgeScopeTreatment() throws {
+        // The projected bounds center falls in the gap between the two units.
+        try review(boardID: "trango.rock-prodigy-forge", target: "variable-edge-rail-right",
+                   surfacePoint: CGVector(dx: 0.70, dy: 0.43), selectionScope: "treatment")
+    }
+    func testMegalithScopeTreatment() throws {
+        try review(boardID: "frictitious.megalith", target: "center-edge-25", selectionScope: "treatment")
+    }
+    func testNaturalScopeTreatment() throws {
+        // The projected center of this recessed pocket can fall in empty space
+        // after orbiting; aim at its visible right wall for the reset tap.
+        try review(boardID: "trango.rock-prodigy-natural", target: "upper-pocket-right",
+                   resetContactOffset: CGVector(dx: 0.82, dy: 0.55), selectionScope: "treatment")
+    }
+    func testProScopeTreatment() throws {
+        // The default viewing angle can move this narrow pocket away from its
+        // old normalized tap fixture. Pick its live center, while retaining the
+        // original drag trajectory so selection and orbit stay independent.
+        try review(boardID: "zlagboard.pro", target: "edge-35-center",
+                   orbitStartPoint: CGVector(dx: 0.44776505, dy: 0.3821585), selectionScope: "treatment")
+    }
+
     /// Checks rapid detail navigation, physical selection, rendered orbit/reset and visible landscape geometry.
     private func review(boardID: String, target: String, surfacePoint: CGVector? = nil,
                         orbitStartPoint: CGVector? = nil,
-                        resetContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5)) throws {
+                        resetContactOffset: CGVector = CGVector(dx: 0.5, dy: 0.5),
+                        selectionScope: String = "control") throws {
         let app = XCUIApplication()
         XCUIDevice.shared.orientation = .portrait
         app.launchEnvironment = [
             "HANGTEN_REVIEW_BOARD_ID": boardID,
             "HANGTEN_REVIEW_MODEL_DIAGNOSTICS": "1",
             "HANGTEN_REVIEW_BOARD_DIAGNOSTICS": "1",
+            "HANGTEN_REVIEW_SELECTION_SCOPE": selectionScope,
         ]
         app.launch()
         // Preserve the rapid Train-to-Hold-specs transition, including the
