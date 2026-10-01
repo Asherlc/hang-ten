@@ -782,23 +782,45 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
-      - name: Select latest preinstalled iOS runtime for the board comparison
+      - name: Ensure Metal compiler is available
         run: |
           set -euo pipefail
-          xcrun simctl list devices available --json | python3 -c '
+          if ! xcrun metal -v; then
+            xcodebuild -downloadComponent MetalToolchain
+          fi
+          xcrun metal -v
+
+      - name: Select latest available iOS Pro simulator for the board comparison
+        run: |
+          set -euo pipefail
+          xcodebuild -version
+          xcrun --sdk iphonesimulator --show-sdk-version
+          xcrun simctl list --json | python3 -c '
           import json
           import os
+          import re
           import sys
 
-          runtime = "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
-          candidates = [device for device in json.load(sys.stdin).get("devices", {}).get(runtime, [])
-                        if device.get("name") == "iPhone 18 Pro" and device.get("isAvailable", False)]
-          if len(candidates) != 1:
-              raise SystemExit(f"Expected one available iPhone 18 Pro on {runtime}; found {len(candidates)}")
-          destination = "platform=iOS Simulator,id=" + candidates[0]["udid"]
+          inventory = json.load(sys.stdin)
+          candidates = []
+          for runtime in inventory.get("runtimes", []):
+              if not runtime.get("isAvailable", False) or runtime.get("platform") != "iOS":
+                  continue
+              version = tuple(int(part) for part in runtime["version"].split("."))
+              for device in inventory.get("devices", {}).get(runtime["identifier"], []):
+                  match = re.search(r"\.iPhone-(\d+)-Pro$", device.get("deviceTypeIdentifier", ""))
+                  if device.get("isAvailable", False) and match:
+                      candidates.append((version, int(match[1]), device["udid"], runtime, device))
+          if not candidates:
+              raise SystemExit("No available iOS iPhone Pro simulator in runner inventory")
+          _, _, _, runtime, device = max(candidates, key=lambda candidate: candidate[:3])
+          destination = "platform=iOS Simulator,id=" + device["udid"]
           with open(os.environ["GITHUB_ENV"], "a") as environment:
               environment.write("XCTEST_DESTINATION=" + destination + "\n")
-          print(f"Board runtime comparison: {runtime}; {destination}; toolchain Xcode 27.1; SDK 27.1; runtime 27.0")
+          identifier = runtime["identifier"]
+          runtime_version = runtime["version"]
+          device_name = device["name"]
+          print(f"Board comparison selected: {identifier}; version={runtime_version}; device={device_name}; {destination}")
           '
 
       - name: Run XCTest suite

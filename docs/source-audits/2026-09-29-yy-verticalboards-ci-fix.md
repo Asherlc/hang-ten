@@ -885,17 +885,17 @@ Original required rendering checks remain blocking.
 
 ## Authorized alternate simulator runtime comparison
 
-The user selected alternate CI runtime investigation after probe-free5bf CI
+The user selected alternate CI runtime investigation after probe-free 5bf CI
 completed with six rendered assertion timeouts. Retained runner inventory lists
-iOS26.4.1 (23E254a) and26.5 (23F77); GitHub's macos-26 image inventory confirms
-both runtimes and iPhone17Pro devices:
+iOS 26.4.1 (23E254a) and 26.5 (23F77); GitHub's macos-26 image inventory confirms
+both runtimes and iPhone 17 Pro devices:
 https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md.
 
-The board shard selects the available iPhone17Pro specifically from the iOS26.4
+The board shard selects the available iPhone 17 Pro specifically from the iOS 26.4
 runtime by UUID. Missing or ambiguous selection fails without fallback. Compiler
-and SDK remain Xcode26.5; application and test source, test selectors, assets,
+and SDK remain Xcode 26.5; application and test source, test selectors, assets,
 rapid navigation, gestures, assertions and deadlines remain unchanged. Unit and
-purchase shards continue on26.5. Existing XCTest runner accepts UUID destinations;
+purchase shards continue on 26.5. Existing XCTest runner accepts UUID destinations;
 its SDK-version log describes the SDK, not the selected device's OS. The new
 selection step and toolchain inventory identify the actual comparison runtime.
 
@@ -909,19 +909,43 @@ must be reviewed and pass all original required checks before merge.
 ## User-directed latest-version run
 
 The user superseded the older-runtime comparison with “Run on latest version”.
-The in-progress26.4 comparison was cancelled without treating its partial result
-as a rendering verdict. The board job now uses the xcode-27 runner, Xcode27.1
-(the newest non-beta installed toolchain), and its newest preinstalled iOS27.0
-runtime on iPhone18Pro. Inventory source:
+The in-progress 26.4 comparison was cancelled without treating its partial result
+as a rendering verdict. The board job now uses the xcode-27 runner, Xcode 27.1
+(the newest non-beta installed toolchain), and its newest preinstalled iOS 27.0
+runtime on iPhone 18 Pro. Inventory source:
 https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md.
-Xcode27.2 is listed as beta; iOS27.1/27.2 simulator runtimes are not listed as
-preinstalled. The selection hard-fails if the named27.0 device is unavailable
+Xcode 27.2 is listed as beta; iOS 27.1/27.2 simulator runtimes are not listed as
+preinstalled. At ca92, selection hard-failed if the named 27.0 device was unavailable
 or ambiguous. No runtime download or local simulator is started.
 
 This changes host OS, compiler/SDK, runtime and device together; it is a
 latest-environment validation, not a single-variable runtime experiment. The
-original24 test cases, rapid navigation, gestures, assertions and deadlines
+original 24 test cases, rapid navigation, gestures, assertions and deadlines
 remain unchanged. Other jobs remain on their existing environment. Retain
 board evidence on all outcomes and verify the actual inventory in the run.
 No rendering fix or framework/GPU cause is claimed; this comparison head is
 not merge-ready merely because it passes.
+
+## Latest-environment setup failure and correction
+
+The ca92 board job verified Xcode 27.1, SDK 27.1 and iOS 27.0 (24A434) on
+iPhone 18 Pro, then failed during build because the Metal Toolchain was absent.
+No board test or rendered acceptance sequence ran. Its complete board job log
+and build artifact are retained before the setup correction is pushed. The
+remaining unit and purchase jobs may be superseded by the new workflow; retain
+their available logs separately without treating cancelled jobs as passes. The selected Xcode path resolves through Xcode_27.1_beta.app; the
+runner inventory labels the version 27.1 without a beta qualifier.
+
+The board job now checks the Metal compiler, installs its required component
+only if unavailable, and verifies the compiler before building. Apple documents
+this component installation:
+https://developer.apple.com/documentation/xcode/downloading-and-installing-additional-xcode-components.
+This is a concrete build prerequisite correction, not an unchanged retry or a
+rendering workaround. Installation is confined to the ephemeral CI host.
+
+The selection step ranks available iOS runtimes by numeric version, then
+available numbered iPhone Pro devices by generation, and uses the selected
+UUID. It prints actual runtime/device metadata, Xcode version and SDK version;
+no fixed latest-version output is asserted. Missing compatible inventory fails
+explicitly. Original test selectors, app/test sources, inputs and assertions
+remain unchanged; the comparison is still not merge-ready merely if green.
