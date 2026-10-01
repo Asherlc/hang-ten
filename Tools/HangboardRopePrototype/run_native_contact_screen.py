@@ -166,6 +166,8 @@ def main():
     parser.add_argument("--label", default="screen")
     parser.add_argument("--packed", action="store_true",
                         help="capture/validate each frozen row once inside the clock, then scan packed arrays")
+    parser.add_argument("--complementarity", action="store_true",
+                        help="experimental globalized Fischer-Burmeister solve of the original coupled KKT")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -201,7 +203,8 @@ def main():
     (output / "BandSnapshot.swift").write_text(band.read_text() + "\n" + (SOURCE / "BandSnapshot.swift").read_text())
     (output / "main.swift").write_text(files["main.swift"].read_text())
     core = [REPO / "HangTen/Models/RopePhysicsDescriptor.swift", REPO / "HangTen/Models/RopeContactSystem.swift"]
-    native = [SOURCE / name for name in ["ContactInteriorPoint.swift", "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift"]]
+    backend = "ContactComplementarity.swift" if args.complementarity else "ContactInteriorPoint.swift"
+    native = [SOURCE / name for name in [backend, "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift"]]
     sources = [*core, output / "BandSnapshot.swift", *native, output / "main.swift"]
     binary = output / f"{owner}-native-contact-probe"
     compile_command = ["xcrun", "swiftc", "-O", "-whole-module-optimization", "-Xcc", "-DACCELERATE_NEW_LAPACK",
@@ -217,7 +220,8 @@ def main():
                        PYTHONPYCACHEPREFIX=str(root / "pycache"),
                        HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed else "0")
     provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": {str(p.relative_to(REPO)): digest(p) for p in sources},
-                  "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed}
+                  "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed,
+                  "complementarityBackend": args.complementarity}
     if args.frozen:
         args.frozen = args.frozen.resolve()
         provenance["frozenSHA256"] = digest(args.frozen)
@@ -269,6 +273,7 @@ def main():
         p95 = float(np.quantile(times, .95, method="higher")) if len(times) == 50 else None
         result = {"owner": owner, "runtimeAdoption": False, "coldRuns": len(times), "numericalAccepted": bool(numerical),
                   "packedSource": args.packed,
+                  "complementarityBackend": args.complementarity,
                   "residuals": measured, "primalDifference": difference, "p95Seconds": p95,
                   "singleRunSeconds": times[0] if len(times) == 1 else None,
                   "coldQPPerformanceAccepted": numerical and p95 is not None and p95 <= .002,

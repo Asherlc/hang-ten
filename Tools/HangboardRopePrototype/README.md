@@ -35,11 +35,20 @@ The [packed-source audit](../../docs/source-audits/2026-09-30-live-packed-contac
 records passing numerical checks and a failed performance gate. This remains an
 experimental tool option, with no app adoption.
 
-The 18 native contact fixtures include a coupled corner with a closed-form KKT
+The 19 native contact fixtures include a coupled corner with a closed-form KKT
 solution, 61 dependent inequalities, and 61 initially clear constraints coupled
 through board height. These exposed cycling and serial-admission costs in
 rejected direct mixed-KKT screens; the [audit](../../docs/source-audits/2026-09-30-live-mixed-contact.md)
 retains all four outcomes without changing iteration limits.
+
+Add `--complementarity` to select the alternative globalized Fischer–Burmeister
+backend. It solves simultaneous original material/equality/height/contact KKT
+Newton systems and checks the same original model certificate. Its changing
+contact diagonals are Newton derivatives; the model regularization stays
+`1e-8`. Both backends pass all 19 fixtures. The [complementarity audit](../../docs/source-audits/2026-09-30-live-complementarity-contact.md)
+records a numerical pass on all 50 fixed hard replays and the first full-size
+production QP, with a failed 2 ms performance gate. This option remains
+experimental and does not change the app's solver.
 
 The [native geometry screen](run_native_geometry_screen.sh) traverses the
 original triangle BVH on Metal using outward integer bounds and returns compact

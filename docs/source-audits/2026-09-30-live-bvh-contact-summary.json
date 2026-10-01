@@ -1,6 +1,7 @@
 {
   "evidenceSHA256": {
     ".context/strong-owl-live-physics-execution/geometry-audit-resources/0-strong-owl-live-physics-native-geometry-resources.jsonl": "ffd2fe99dea97c0c700fdd8338f549c3ce5353521a901f8bb0bb1e2ebb42600e",
+    ".context/strong-owl-live-physics-execution/geometry-audit-resources/run_native_contact_screen-at-e854946ce.py": "a354f8fc37577f1fe0e54525c25626dd37633100de583f783fdedf526317ce53",
     ".context/strong-owl-live-physics-handoff/mini-dynamics-probe/strong-owl-healthy-query-corpus.json": "1e5b25f15d18d6af215fa7942dad13addd644267741336856f8838409eee1f14",
     ".context/strong-owl-live-physics-native-geometry/fixtures-final/ColliderSnapshot.swift": "19edb9d3bf46bcc3105b3b35565bb9c4dbcc106238ebf9f1436578879cf909e4",
     ".context/strong-owl-live-physics-native-geometry/fixtures-final/compile.log": "5bc19ad0909c8d24cfe141cf8ae0500b1aed7366b8628683b5c05bb800ec90a8",
@@ -35,7 +36,6 @@
     "Tools/HangboardRopePrototype/native_geometry/ColliderExtension.swift": "e368ec9ea3c75d17f53f411732bbfb231c76ebf6a7a3a9c0d9e64ed429a21682",
     "Tools/HangboardRopePrototype/native_geometry/Fixtures.swift": "5850821915753807c148153f0e233e7c1717680cc33ef54c9daa28a8f07b878b",
     "Tools/HangboardRopePrototype/native_geometry/Replay.swift": "a234d7ce45f3e74a4ff9f9cafd231d925d1bb43371ca5b5d336a3150bf698fa7",
-    "Tools/HangboardRopePrototype/run_native_contact_screen.py": "a354f8fc37577f1fe0e54525c25626dd37633100de583f783fdedf526317ce53",
     "Tools/HangboardRopePrototype/run_native_geometry_screen.py": "655e9cdb9b528897337d4c92a09e18a93ad720d0ffaa76c05aad9f832984f227",
     "Tools/HangboardRopePrototype/run_native_geometry_screen.sh": "d0cf19de7192b0a93e872d5679a313827b47393c9e42fc6202b2a15077e347c8"
   },
@@ -89,5 +89,6 @@
     "strictOutputEqualityPassed": true,
     "warmups": 10
   },
-  "runtimeAdoption": false
+  "runtimeAdoption": false,
+  "sourceSnapshotNote": "The lifecycle driver was retained byte-for-byte at e854946ce before adding the subsequent complementarity backend option."
 }

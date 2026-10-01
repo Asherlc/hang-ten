@@ -4,6 +4,7 @@
     ".context/strong-owl-live-physics-execution/mixed-audit-resources/1-native-mixed-block-resources.jsonl": "7ce66efd3b7071ad2ee9fd53c72429629a34d6f14b4ba1fef76766178f55f118",
     ".context/strong-owl-live-physics-execution/mixed-audit-resources/2-native-mixed-blocking-resources.jsonl": "f2bb830dce81f3d8bf9267b7b9512bad8a74441d95235c90a19640cee504328b",
     ".context/strong-owl-live-physics-execution/mixed-audit-resources/3-native-mixed-feasible-batch-resources.jsonl": "59888750d5225c05c4fafa7c08944d1672c64c78320185cdf4f7e1148f7db82a",
+    ".context/strong-owl-live-physics-execution/mixed-audit-resources/Fixtures-at-e854946ce.swift": "d73f79554df648b9df27079ce712c1a5084c21a402b4a1f79a65aa0622f1a0ab",
     ".context/strong-owl-live-physics-execution/native-mixed-active/MixedContact.swift": "750a3490cf9865fa8dbaab6888b9ed86565fff44cc5a60360ef8963fdee3adf7",
     ".context/strong-owl-live-physics-execution/native-mixed-active/fixtures.compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     ".context/strong-owl-live-physics-execution/native-mixed-active/fixtures.provenance.json": "9c2a34bede671965aa1c62691bd697e27f25ff0004bab67f608dccc836d995e2",
@@ -66,8 +67,7 @@
     ".context/strong-owl-live-physics-native-contact/fixtures-mixed-regressions/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     ".context/strong-owl-live-physics-native-contact/fixtures-mixed-regressions/main.swift": "d73f79554df648b9df27079ce712c1a5084c21a402b4a1f79a65aa0622f1a0ab",
     ".context/strong-owl-live-physics-native-contact/fixtures-mixed-regressions/provenance.json": "775157c339c4263d35954a6a4afbab5058c26555fc28ba98531570547e02ff66",
-    ".context/strong-owl-live-physics-native-contact/fixtures-mixed-regressions/run.log": "47a04dbb3065ef9b7f6d65ac1446148db95df4f289db05ef85834b0abd20c5a2",
-    "Tools/HangboardRopePrototype/native_contact/Fixtures.swift": "d73f79554df648b9df27079ce712c1a5084c21a402b4a1f79a65aa0622f1a0ab"
+    ".context/strong-owl-live-physics-native-contact/fixtures-mixed-regressions/run.log": "47a04dbb3065ef9b7f6d65ac1446148db95df4f289db05ef85834b0abd20c5a2"
   },
   "fixedInputSHA256": "93d9f142cf8c8b6d42d7e540838665505beba1b076e85c6d6ec035308dfc0be7",
   "limits": {
@@ -122,5 +122,6 @@
     }
   ],
   "owner": "strong-owl-live-physics",
-  "runtimeAdoption": false
+  "runtimeAdoption": false,
+  "sourceSnapshotNote": "The tested eighteen-fixture suite was retained before adding the subsequent complementarity cancellation regression."
 }

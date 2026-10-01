@@ -96,6 +96,19 @@ final class PrimalTests:XCTestCase {
    XCTAssertLessThanOrEqual(abs(answer.multipliers[id]*gap),1e-14)
   }
  }
+ func testClearWarmContactRetainsTinyComplementarityResidual() throws {
+  var system=try RopeBandedSystem(size:1,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let row=RopeLinearContact(indices:[0],coefficients:[1],border:[],residual:100)
+  let answer=try PrimalContactIP.solve(factor:factor,base:[0],border:[],contacts:[row],initialMultipliers:[0:-1e-15])
+  let gap=100+answer.base[0]-1e-8*answer.multipliers[0]
+  XCTAssertEqual(answer.base[0],0,accuracy:1e-10)
+  XCTAssertLessThanOrEqual(abs(answer.base[0]+answer.multipliers[0]),1e-10)
+  XCTAssertLessThanOrEqual(abs(answer.multipliers[0]*gap),1e-14)
+  XCTAssertGreaterThanOrEqual(gap,-1e-10)
+  XCTAssertLessThanOrEqual(answer.multipliers[0],1e-12)
+ }
  func testNonlocalContactStaysGloballyCoupled() throws {
   var system=try RopeBandedSystem(size:4,bandwidth:0)
   for i in 0..<4 {try system.addSymmetric(row:i,column:i,value:Double(i+1))}
@@ -237,4 +250,4 @@ final class PrimalTests:XCTestCase {
 
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
-guard let result=suite.testRun,result.executionCount==18,result.totalFailureCount==0 else {exit(1)}
+guard let result=suite.testRun,result.executionCount==19,result.totalFailureCount==0 else {exit(1)}
