@@ -507,15 +507,13 @@ private final class BoardModelARContainer: UIView {
     let renderer = ARView(frame: .zero, cameraMode: .nonAR, automaticallyConfigureSession: false)
     var onLayout: ((BoardModelARContainer) -> Void)?
 
-    /// Builds an opaque non-AR surface using the surrounding card's background.
+    /// Builds a transparent non-AR renderer without starting an automatically configured AR session.
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let surfaceColor = UIColor(Color.hangCream)
-        backgroundColor = surfaceColor
-        isOpaque = true
-        renderer.environment.background = .color(surfaceColor)
-        renderer.backgroundColor = surfaceColor
-        renderer.isOpaque = true
+        backgroundColor = .clear
+        renderer.environment.background = .color(.clear)
+        renderer.backgroundColor = .clear
+        renderer.isOpaque = false
         addSubview(renderer)
     }
 
