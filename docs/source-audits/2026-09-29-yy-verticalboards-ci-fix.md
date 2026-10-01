@@ -905,3 +905,23 @@ before another push; no unchanged retries. A pass supports runtime sensitivity,
 not a specific framework/GPU diagnosis or an application rendering fix. This
 comparison head is not merge-ready even if green; any eventual CI runtime policy
 must be reviewed and pass all original required checks before merge.
+
+## User-directed latest-version run
+
+The user superseded the older-runtime comparison with “Run on latest version”.
+The in-progress26.4 comparison was cancelled without treating its partial result
+as a rendering verdict. The board job now uses the xcode-27 runner, Xcode27.1
+(the newest non-beta installed toolchain), and its newest preinstalled iOS27.0
+runtime on iPhone18Pro. Inventory source:
+https://github.com/actions/runner-images/blob/main/images/macos/xcode-27-arm64-Readme.md.
+Xcode27.2 is listed as beta; iOS27.1/27.2 simulator runtimes are not listed as
+preinstalled. The selection hard-fails if the named27.0 device is unavailable
+or ambiguous. No runtime download or local simulator is started.
+
+This changes host OS, compiler/SDK, runtime and device together; it is a
+latest-environment validation, not a single-variable runtime experiment. The
+original24 test cases, rapid navigation, gestures, assertions and deadlines
+remain unchanged. Other jobs remain on their existing environment. Retain
+board evidence on all outcomes and verify the actual inventory in the run.
+No rendering fix or framework/GPU cause is claimed; this comparison head is
+not merge-ready merely because it passes.

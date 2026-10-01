@@ -717,9 +717,9 @@ jobs:
       github.event_name != 'pull_request' ||
       needs.changes.outputs.ios == 'true' ||
       needs.changes.outputs.workflow == 'true'
-    runs-on: macos-26
+    runs-on: xcode-27
     env:
-      DEVELOPER_DIR: /Applications/Xcode_26.5.app/Contents/Developer
+      DEVELOPER_DIR: /Applications/Xcode_27.1.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -782,7 +782,7 @@ jobs:
           xcrun simctl list runtimes
           xcrun simctl list devices available
 
-      - name: Select iOS 26.4 for the board runtime comparison
+      - name: Select latest preinstalled iOS runtime for the board comparison
         run: |
           set -euo pipefail
           xcrun simctl list devices available --json | python3 -c '
@@ -790,15 +790,15 @@ jobs:
           import os
           import sys
 
-          runtime = "com.apple.CoreSimulator.SimRuntime.iOS-26-4"
+          runtime = "com.apple.CoreSimulator.SimRuntime.iOS-27-0"
           candidates = [device for device in json.load(sys.stdin).get("devices", {}).get(runtime, [])
-                        if device.get("name") == "iPhone 17 Pro" and device.get("isAvailable", False)]
+                        if device.get("name") == "iPhone 18 Pro" and device.get("isAvailable", False)]
           if len(candidates) != 1:
-              raise SystemExit(f"Expected one available iPhone 17 Pro on {runtime}; found {len(candidates)}")
+              raise SystemExit(f"Expected one available iPhone 18 Pro on {runtime}; found {len(candidates)}")
           destination = "platform=iOS Simulator,id=" + candidates[0]["udid"]
           with open(os.environ["GITHUB_ENV"], "a") as environment:
               environment.write("XCTEST_DESTINATION=" + destination + "\n")
-          print(f"Board runtime comparison: {runtime}; {destination}; compiler/SDK remain Xcode 26.5")
+          print(f"Board runtime comparison: {runtime}; {destination}; toolchain Xcode 27.1; SDK 27.1; runtime 27.0")
           '
 
       - name: Run XCTest suite
