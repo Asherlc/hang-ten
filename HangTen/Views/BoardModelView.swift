@@ -1,5 +1,8 @@
 import RealityKit
 import SwiftUI
+#if DEBUG
+import Metal
+#endif
 
 struct BoardModelSurface: View {
     enum ResultState {
@@ -180,6 +183,7 @@ struct BoardModelRealityView: View {
     @State private var didReportUnavailable = false
     #if DEBUG
     @State private var synchronizedCameraDiagnostic = "pending"
+    @State private var framebufferTrace = BoardFramebufferTrace()
     #endif
 
     private var fieldOfViewDegrees: Double {
@@ -199,6 +203,12 @@ struct BoardModelRealityView: View {
                 // Board maps use the authored camera, without device tracking
                 // or the AR session's implicit non-AR fallback.
                 content.camera = .virtual
+                #if DEBUG
+                if onContactTap != nil, framebufferTraceEnabled, #available(iOS 26.0, *) {
+                    content.renderingEffects.customPostProcessing = .effect(
+                        BoardFramebufferEffect(trace: framebufferTrace))
+                }
+                #endif
                 content.add(model.root)
                 content.add(model.camera)
                 applySync(size: size)
@@ -271,6 +281,7 @@ struct BoardModelRealityView: View {
         model.frame(in: size)
         let didSelect = model.select(positionID: positionID)
         model.highlight(highlightedContactIDs, mode: highlightMode)
+        traceFramebufferState(size: size, phase: "sync")
         // RealityView synchronizes after SwiftUI evaluates the accessibility
         // overlay. Reproject once when framing or a board pose actually changes.
         // The unchanged follow-up update must not schedule another invalidation.
@@ -298,6 +309,7 @@ struct BoardModelRealityView: View {
                 guard let id = model.contactID(for: value.entity),
                       let contact = contacts.first(where: { $0.id == id }) else { return }
                 model.resetCamera(animated: true)
+                traceFramebufferState(size: .zero, phase: "reset")
                 cameraRevision &+= 1
                 onContactTap?(contact)
             }
@@ -311,9 +323,13 @@ struct BoardModelRealityView: View {
                 lastDragTranslation = value.translation
                 model.orbit(azimuth: model.orbitAzimuth - Float(deltaX / max(size.width, 1)) * 0.9,
                             elevation: model.orbitElevation - Float(deltaY / max(size.height, 1)) * 0.65)
+                traceFramebufferState(size: size, phase: "orbit")
                 cameraRevision &+= 1
             }
-            .onEnded { _ in lastDragTranslation = .zero }
+            .onEnded { _ in
+                lastDragTranslation = .zero
+                traceFramebufferState(size: size, phase: "orbit-ended")
+            }
     }
 
     private var magnifyGesture: some Gesture {
@@ -326,6 +342,36 @@ struct BoardModelRealityView: View {
                 cameraRevision &+= 1
             }
             .onEnded { _ in lastMagnification = 1 }
+    }
+
+    private var framebufferTraceEnabled: Bool {
+        #if DEBUG
+        return ProcessInfo.processInfo.environment["HANGTEN_REVIEW_FRAMEBUFFER"] == "1"
+        #else
+        return false
+        #endif
+    }
+
+    /// Records submitted state without publishing SwiftUI or accessibility changes.
+    private func traceFramebufferState(size: CGSize, phase: String) {
+        #if DEBUG
+        guard onContactTap != nil, framebufferTraceEnabled else { return }
+        let materials = model.contactEntities.keys.sorted().map { id in
+            let assigned = model.contactEntities[id, default: []].map {
+                String(describing: $0.model?.materials)
+            }.joined(separator: ";")
+            return "\(id)=\(assigned)"
+        }.joined(separator: "|")
+        let projections = highlightedContactIDs.sorted().map { id in
+            "\(id)=\(String(describing: model.projectedContactCenter(id, viewport: size, fieldOfViewDegrees: fieldOfViewDegrees)))"
+        }.joined(separator: "|")
+        framebufferTrace.record(
+            "board=\(boardName);scene=\(ObjectIdentifier(model));root=\(ObjectIdentifier(model.root));"
+            + "camera=\(ObjectIdentifier(model.camera));phase=\(phase);size=\(size);"
+            + "requested=\(highlightedContactIDs.sorted());position=\(positionID ?? "nil");"
+            + "azimuth=\(model.orbitAzimuth);elevation=\(model.orbitElevation);"
+            + "matrix=\(model.camera.transform.matrix);projected=\(projections);materials=\(materials)")
+        #endif
     }
 
     @ViewBuilder
@@ -371,3 +417,147 @@ private struct BoardModelAccessibilityContainer: ViewModifier {
         }
     }
 }
+
+#if DEBUG
+/// Temporary bounded trace. Locks protect callback/main-thread exchange; no view state is published.
+private final class BoardFramebufferTrace: @unchecked Sendable {
+    struct Sample: Sendable {
+        let sequence: Int
+        let state: String
+        let elapsed: Double
+        let includePixels: Bool
+    }
+    private let lock = NSLock()
+    private var state = "pending"
+    private var changedAt = ProcessInfo.processInfo.systemUptime
+    private var nextCheckpoint = 0
+    private var sequence = 0
+    private var inFlight = 0
+    private var payloads = 0
+    private var stateMessages = 0
+    private let checkpoints: [Double] = [0, 0.5, 2, 10, 20]
+
+    func record(_ value: String) {
+        lock.lock()
+        guard value != state else { lock.unlock(); return }
+        state = value
+        changedAt = ProcessInfo.processInfo.systemUptime
+        nextCheckpoint = 0
+        let emit = stateMessages < 64
+        stateMessages += 1
+        lock.unlock()
+        if emit { print("[BoardFramebufferState] \(value)") }
+    }
+
+    func sample() -> Sample? {
+        lock.lock()
+        defer { lock.unlock() }
+        let elapsed = ProcessInfo.processInfo.systemUptime - changedAt
+        guard sequence < 32, inFlight < 2, nextCheckpoint < checkpoints.count,
+              elapsed >= checkpoints[nextCheckpoint] else { return nil }
+        nextCheckpoint += 1
+        sequence += 1
+        inFlight += 1
+        // Keep images for settled checkpoints, rather than consuming the payload
+        // budget on intermediate drag callbacks. Hashes remain available earlier.
+        let includePixels = payloads < 12 && (nextCheckpoint == 3 || nextCheckpoint == 4)
+        if includePixels { payloads += 1 }
+        return Sample(sequence: sequence, state: state, elapsed: elapsed, includePixels: includePixels)
+    }
+
+    func finish(_ sample: Sample, fields: [String: Any]) {
+        lock.lock()
+        inFlight -= 1
+        let completionState = state
+        let remaining = 32 - sequence
+        lock.unlock()
+        var message = fields
+        message["sequence"] = sample.sequence
+        message["stateAtRequest"] = sample.state
+        message["stateAtCompletion"] = completionState
+        message["stateChangedDuringGPUWork"] = completionState != sample.state
+        message["remainingReadbackBudget"] = remaining
+        message["secondsSinceStateChange"] = sample.elapsed
+        message["uptime"] = ProcessInfo.processInfo.systemUptime
+        if let data = try? JSONSerialization.data(withJSONObject: message, options: [.sortedKeys]),
+           let text = String(data: data, encoding: .utf8) {
+            print("[BoardFramebuffer] \(text)")
+        }
+    }
+}
+
+/// Copies the normal rendered source to its required output unchanged, and samples that source.
+@available(iOS 26.0, *)
+private struct BoardFramebufferEffect: PostProcessEffect {
+    let trace: BoardFramebufferTrace
+
+    func postProcess(context: borrowing PostProcessEffectContext<any MTLCommandBuffer>) {
+        guard let encoder = context.commandBuffer.makeBlitCommandEncoder() else {
+            if let sample = trace.sample() {
+                trace.finish(sample, fields: ["error": "blit encoder unavailable; diagnostic output invalid"])
+            }
+            return
+        }
+        encoder.copy(from: context.sourceColorTexture, to: context.targetColorTexture)
+        guard let sample = trace.sample() else { encoder.endEncoding(); return }
+        let source = context.sourceColorTexture
+        let bytesPerPixel: Int
+        switch source.pixelFormat {
+        case .bgra8Unorm, .bgra8Unorm_srgb, .rgba8Unorm, .rgba8Unorm_srgb,
+             .rgb10a2Unorm, .bgr10a2Unorm: bytesPerPixel = 4
+        case .rgba16Float: bytesPerPixel = 8
+        case .rgba32Float: bytesPerPixel = 16
+        default:
+            encoder.endEncoding()
+            trace.finish(sample, fields: ["error": "unsupported source format", "format": source.pixelFormat.rawValue])
+            return
+        }
+        let width = source.width
+        let height = source.height
+        let packedRow = width * bytesPerPixel
+        let row = ((packedRow + 255) / 256) * 256
+        guard row * height <= 16 * 1024 * 1024,
+              let buffer = context.device.makeBuffer(length: row * height, options: .storageModeShared) else {
+            encoder.endEncoding()
+            trace.finish(sample, fields: ["error": "readback allocation bounded or failed"])
+            return
+        }
+        encoder.copy(from: source, sourceSlice: 0, sourceLevel: 0,
+                     sourceOrigin: MTLOrigin(x: 0, y: 0, z: 0),
+                     sourceSize: MTLSize(width: width, height: height, depth: 1),
+                     to: buffer, destinationOffset: 0, destinationBytesPerRow: row,
+                     destinationBytesPerImage: row * height)
+        encoder.endEncoding()
+        let projection = String(describing: context.projection)
+        let format = source.pixelFormat.rawValue
+        let time = context.time
+        let trace = trace
+        context.commandBuffer.addCompletedHandler { command in
+            var fields: [String: Any] = ["width": width, "height": height, "format": format,
+                                         "projection": projection, "frameTime": time,
+                                         "commandStatus": command.status.rawValue]
+            guard command.status == .completed else {
+                fields["error"] = String(describing: command.error)
+                trace.finish(sample, fields: fields)
+                return
+            }
+            var pixels = Data(capacity: packedRow * height)
+            for y in 0..<height {
+                pixels.append(buffer.contents().advanced(by: y * row).assumingMemoryBound(to: UInt8.self),
+                              count: packedRow)
+            }
+            var hash: UInt64 = 14695981039346656037
+            for byte in pixels { hash = (hash ^ UInt64(byte)) &* 1099511628211 }
+            fields["pixelHashFNV1a64"] = String(hash, radix: 16)
+            if sample.includePixels {
+                do {
+                    let compressed = try (pixels as NSData).compressed(using: .zlib)
+                    fields["zlibBase64Pixels"] = compressed.base64EncodedString()
+                    fields["packedBytesPerRow"] = packedRow
+                } catch { fields["payloadError"] = String(describing: error) }
+            }
+            trace.finish(sample, fields: fields)
+        }
+    }
+}
+#endif

@@ -591,3 +591,48 @@ The diagnostic Python failure came from PR530's palette rule rejecting neutral Y
 All preview provenance flags/stand-in branches/logs/counters/liveAX helpers/readbacks/imports and test diagnostic additions are removed. The unvalidated ARView host/container is also removed, restoring the existing interactive RealityView path and its SwiftUI physical tap/orbit/pinch handlers, as requested by PRRT_kwDOTqZRe86nz1pO. No change to original gestures, rendered assertions or deadlines is made. This restores the production path; it does not claim the prior stale presentation is fixed.
 
 The integrated probe-free generic arm64 Simulator build-for-testing passed; Python passed 529 checks with two native-edit cases deselected. Swift parsing/diff checks passed. Exact owned DerivedData and pytest scratch deletion is verified in production-cleanup-verification.json. No simulator was created and no local UI pass is claimed. Fresh CI must validate this cleanup/integration baseline before the original-setup frame-production boundary investigation or final merge.
+# Bounded framebuffer diagnostic after production restoration
+
+The probe-free `5a3bbfc13` baseline (CI 36822255281) ran 24 board tests:
+Door completed selection, orbit, canonical reset and landscape validation;
+Evo, Forge, Megalith, Natural and Pro failed rendered orbit. All five passed
+the original projected-contact orbit gate. Their active/orbit map crops have
+zero changed RGB pixels, stable reported bounds, and advancing submitted
+revisions. Door's orbit changed 127,195 pixels. These observations establish
+stale visible board output but do not establish a GPU or framework cause.
+Full result bundles, screenshots, application diagnostics and pixel comparisons
+are retained in workspace-owned `ci-5a3-*` evidence under `.context`.
+
+The next diagnostic preserves the restored production RealityView, departing
+Train preview, original physical gestures, deadlines, assertions and verdicts.
+A Batch05-only DEBUG environment flag installs an iOS 26 `PostProcessEffect`
+on the interactive RealityView. Its blit copies the normal source framebuffer
+to the required target unchanged. A bounded source readback records completed
+GPU status, source dimensions/format/projection, pixel hashes, and compressed
+settled-frame payloads. State readbacks include actual assigned contact
+materials, requested selection, authored camera, projected selected contacts,
+scene/entity identities and viewport size. Request and completion states are
+both retained so intervening scene changes can be identified.
+
+There are at most 32 readbacks, two in flight, 16 MiB per readback, and twelve
+compressed pixel payloads per interactive trace. Checkpoints are at 0, 0.5,
+2, 10 and 20 seconds after a changed state; full payloads are reserved for
+the settled 2/10-second checkpoints. Captures neither publish SwiftUI or
+accessibility state nor request redraw, layout, native snapshots, camera
+changes, new scenes or retries. The added postprocessing pass and readbacks
+still perturb rendering and scheduling: a passing instrumented run is
+inconclusive, and an exhausted capture budget is not evidence of stopped
+callbacks. Pixel hashes alone cannot prove the expected geometry reached a
+frame; decode and inspect the retained payloads alongside screen crops.
+
+Updated source geometry with stale screen geometry would localize the failure
+after normal framebuffer production. Stale source pixels with coherent updated
+scene state would localize the unresolved scene-to-frame boundary. GPU errors,
+unsupported formats, allocation failures, state changes during GPU work, or a
+missing relevant settled capture make that sample inconclusive. No outcome
+alone proves a framework defect or a production fix.
+
+Execute the normal 24-test board shard once after all baseline results are
+retained. This diagnostic must never be merged, even if green. Remove its
+environment key, trace state/helper, Metal import, postprocessing hook and
+state-readback calls before final production validation and merge.
