@@ -1,5 +1,47 @@
 import XCTest
 final class PrimalTests:XCTestCase {
+ func testBatchedResponsesRetainPivotedBandAndEveryBorder() throws {
+  var pivot=try RopeBandedSystem(size:2,bandwidth:1)
+  try pivot.addSymmetric(row:0,column:1,value:1)
+  let one=try pivot.primalPrepared(borderColumns:[[1,2]],borderMatrix:[[5]])
+  let a=try one.refinedBatch([[3,7],[2,-3]],[[11],[5]])
+  XCTAssertEqual(a.count,2)
+  for (actual,want) in zip(a,[[11.0,5,-2],[-11,-2,4]]) {
+   XCTAssertEqual(actual.base.count+actual.border.count,want.count)
+   for (x,y) in zip(actual.base+actual.border,want) {XCTAssertEqual(x,y,accuracy:1e-12)}
+  }
+  let two=try pivot.primalPrepared(borderColumns:[[1,2],[2,-1]],borderMatrix:[[5,0.5],[0.5,8]])
+  let b=try two.refinedBatch([[-1.3,1.1],[-7,11]],[[-0.3,-1.8],[10,-26.5]])
+  XCTAssertEqual(b.count,2)
+  for (actual,want) in zip(b,[[0.3,-0.7,0.2,-0.4],[1,-2,3,-4]]) {
+   XCTAssertEqual(actual.base.count+actual.border.count,want.count)
+   for (x,y) in zip(actual.base+actual.border,want) {XCTAssertEqual(x,y,accuracy:1e-12)}
+  }
+  var system=try RopeBandedSystem(size:2,bandwidth:1)
+  try system.addSymmetric(row:0,column:0,value:2)
+  try system.addSymmetric(row:1,column:1,value:3)
+  try system.addSymmetric(row:0,column:1,value:-1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let c=try factor.refinedBatch([[1,0],[0,1],[0,0]],[[],[],[]])
+  XCTAssertEqual(c.count,3)
+  for (actual,want) in zip(c,[[0.6,0.2],[0.2,0.4],[0,0]]) {
+   XCTAssertEqual(actual.base.count,want.count)
+   for (x,y) in zip(actual.base,want) {XCTAssertEqual(x,y,accuracy:1e-12)}
+  }
+ }
+ func testBatchedResponsesRejectBadLoadsBeforeSolving() throws {
+  var system=try RopeBandedSystem(size:2,bandwidth:0)
+  for i in 0..<2 {try system.addSymmetric(row:i,column:i,value:1)}
+  let factor=try system.primalPrepared(borderColumns:[[0,0]],borderMatrix:[[1]])
+  XCTAssertThrowsError(try factor.refinedBatch([[1]],[[0]]))
+  XCTAssertThrowsError(try factor.refinedBatch([[1,2]],[]))
+  XCTAssertThrowsError(try factor.refinedBatch([[1,2]],[[]]))
+  XCTAssertThrowsError(try factor.refinedBatch([[1,Double.nan]],[[0]]))
+  XCTAssertThrowsError(try factor.refinedBatch([[1,2]],[[Double.infinity]]))
+  XCTAssertThrowsError(try factor.refinedBatch([],[[0]]))
+  XCTAssertThrowsError(try factor.refinedBatch(Array(repeating:[1,2],count:65),Array(repeating:[0],count:65)))
+  XCTAssertEqual(try factor.refinedBatch([],[]).count,0)
+ }
  func testBLASProductUsesOriginalBandStorageAtEdgesAndZeroBandwidth() throws {
   var system=try RopeBandedSystem(size:5,bandwidth:2)
   for (i,d) in [2.0,3,5,7,11].enumerated() {try system.addSymmetric(row:i,column:i,value:d)}
@@ -14,6 +56,28 @@ final class PrimalTests:XCTestCase {
   XCTAssertEqual(diagonal.blasProduct([0.5,-1,2]),[-1,-3,8])
  }
  #if SCREEN_GLOBAL_SCHUR
+ func testBatchCacheSharesJacobiansWithoutDroppingDifferentResiduals() throws {
+  var system=try RopeBandedSystem(size:1,bandwidth:0)
+  try system.addSymmetric(row:0,column:0,value:1)
+  let factor=try system.primalPrepared(borderColumns:[],borderMatrix:[])
+  let session=GlobalSchurSession(factor:factor)
+  let contacts=[RopeLinearContact(indices:[0],coefficients:[1],border:[],residual:-0.001),
+   RopeLinearContact(indices:[0],coefficients:[1],border:[],residual:-0.002),
+   RopeLinearContact(indices:[0],coefficients:[-1],border:[],residual:0.004)]
+  let answer=try session.solve(base:[0],border:[],contacts:contacts)
+  XCTAssertEqual(answer.base[0],0.002/(1+1e-8),accuracy:1e-10)
+  XCTAssertEqual(session.cachedResponseCount,2)
+  if ProcessInfo.processInfo.environment["HANGTEN_BATCH_CONTACT_RESPONSES"] == "1" {
+   XCTAssertEqual(session.lastStatistics["batchedResponses"],2)
+  }
+  let changed=contacts.map {row in
+   RopeLinearContact(indices:row.indices,coefficients:row.coefficients,border:row.border,residual:row.residual+0.0001)
+  }
+  let second=try session.solve(base:[0],border:[],contacts:changed)
+  XCTAssertEqual(second.base[0],0.0019/(1+1e-8),accuracy:1e-10)
+  XCTAssertEqual(session.cachedResponseCount,2)
+  XCTAssertEqual(session.lastStatistics["newResponses"],0)
+ }
  func testCondensedRecoveryCannotHideOriginalOrderedGap() throws {
   var system=try RopeBandedSystem(size:2,bandwidth:0)
   try system.addSymmetric(row:0,column:0,value:1)
@@ -284,8 +348,8 @@ final class PrimalTests:XCTestCase {
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
 #if SCREEN_GLOBAL_SCHUR
-let expectedTests=21
+let expectedTests=24
 #else
-let expectedTests=20
+let expectedTests=22
 #endif
 guard let result=suite.testRun,result.executionCount==expectedTests,result.totalFailureCount==0 else {exit(1)}

@@ -179,6 +179,8 @@ def main():
                         help="reproduce the rejected condensed Fischer-Burmeister globalization; requires --global-schur")
     parser.add_argument("--blas-product", action="store_true",
                         help="isolated BLAS original-band residual product; default scalar path retained")
+    parser.add_argument("--batch-responses", action="store_true",
+                        help="isolated bounded multi-RHS global contact responses; requires --global-schur")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -192,6 +194,8 @@ def main():
         parser.error("select either --global-schur or --complementarity")
     if args.schur_fb and not args.global_schur:
         parser.error("--schur-fb requires --global-schur")
+    if args.batch_responses and not args.global_schur:
+        parser.error("--batch-responses requires --global-schur")
     workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", REPO)).resolve()
     owner = workspace.name
     if workspace != REPO or os.environ.get("HANGTEN_CONTACT_SCREEN_OWNER") != owner:
@@ -270,12 +274,14 @@ def main():
                        PYTHONPYCACHEPREFIX=str(root / "pycache"),
                        HANGTEN_PACKED_CONTACT_SOURCE="1" if args.packed or args.regions else "0",
                        HANGTEN_BLAS_RESPONSE_PRODUCT="1" if args.blas_product else "0",
+                       HANGTEN_BATCH_CONTACT_RESPONSES="1" if args.batch_responses else "0",
                        HANGTEN_AFFINE_REGION_CERTIFICATES="1" if args.regions else "0",
                        HANGTEN_AFFINE_REGION_CROSS_CHECK="1" if args.region_checks else "0",
                        HANGTEN_SCHUR_METHOD="fischer-burmeister" if args.schur_fb else "interior-point",
                        HANGTEN_SCHUR_FAILURE_OUTPUT=str(output / "schur-failure.json"))
     provenance = {"owner": owner, "runtimeAdoption": False, "sourceSHA256": source_hashes,
                   "blasResponseProduct": args.blas_product,
+                  "batchedContactResponses": args.batch_responses,
                   "sourceSnapshots": source_snapshots,
                   "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed or args.regions,
                   "complementarityBackend": args.complementarity, "affineRegionCertificates": args.regions,

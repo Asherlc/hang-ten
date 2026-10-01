@@ -72,4 +72,93 @@ struct PrimalPrepared {
   }
   return result
  }
+ func refinedBatch(_ rhs:[[Double]],_ borderRHS:[[Double]]) throws -> [(base:[Double],border:[Double])] {
+  let count=rhs.count,n=baseCount,nb=borderCount
+  guard count<=64,count<=500_000/(n+nb),borderRHS.count==count,
+   rhs.allSatisfy({$0.count==n && $0.allSatisfy({$0.isFinite})}),
+   borderRHS.allSatisfy({$0.count==nb && $0.allSatisfy({$0.isFinite})}) else {
+   throw RopePhysicsError.invalid("Invalid bounded response batch")
+  }
+  if count==0 {return []}
+  var result=try factor.solveBatch(rhs:rhs.flatMap{$0},borderRHS:borderRHS.flatMap{$0},count:count)
+  let limits=(0..<count).map {j in
+   1e-12*max(1,(rhs[j]+borderRHS[j]).map{abs($0)}.max()!)
+  }
+  var converged=Array(repeating:false,count:count)
+  for _ in 0..<3 {
+   var error=Array(repeating:0.0,count:n*count),borderError=Array(repeating:0.0,count:nb*count)
+   for j in 0..<count where !converged[j] {
+    let value=product(Array(result.base[j*n..<(j+1)*n]),Array(result.border[j*nb..<(j+1)*nb]))
+    var maximum=0.0
+    for k in 0..<n {
+     let e=rhs[j][k]-value.base[k]
+     guard e.isFinite else {throw RopePhysicsError.invalid("Nonfinite batch refinement residual")}
+     error[j*n+k]=e;maximum=max(maximum,abs(e))
+    }
+    for k in 0..<nb {
+     let e=borderRHS[j][k]-value.border[k]
+     guard e.isFinite else {throw RopePhysicsError.invalid("Nonfinite batch refinement residual")}
+     borderError[j*nb+k]=e;maximum=max(maximum,abs(e))
+    }
+    if maximum<=limits[j] {
+     converged[j]=true
+     for k in 0..<n {error[j*n+k]=0}
+     for k in 0..<nb {borderError[j*nb+k]=0}
+    }
+   }
+   if converged.allSatisfy({$0}) {break}
+   let correction=try factor.solveBatch(rhs:error,borderRHS:borderError,count:count)
+   for j in 0..<count where !converged[j] {
+    for k in 0..<n {result.base[j*n+k] += correction.base[j*n+k]}
+    for k in 0..<nb {result.border[j*nb+k] += correction.border[j*nb+k]}
+   }
+  }
+  guard (result.base+result.border).allSatisfy({$0.isFinite}) else {
+   throw RopePhysicsError.invalid("Nonfinite refined response batch")
+  }
+  return (0..<count).map {j in
+   (Array(result.base[j*n..<(j+1)*n]),Array(result.border[j*nb..<(j+1)*nb]))
+  }
+ }
+}
+
+// This extension compiles in the same captured file as the authoritative
+// factor. It reads immutable factors; only independent RHS columns mutate.
+extension RopeBandedFactorization {
+ func solveBatch(rhs:[Double],borderRHS:[Double],count:Int) throws -> (base:[Double],border:[Double]) {
+  let nb=columns.count
+  guard (1...64).contains(count),count<=500_000/(size+nb),
+   rhs.count==size*count,borderRHS.count==nb*count,
+   (rhs+borderRHS).allSatisfy({$0.isFinite}) else {
+   throw RopePhysicsError.invalid("Invalid reusable rope batch load")
+  }
+  var base=rhs,border=borderRHS
+  var trans:Int8=78,n=__LAPACK_int(size),kl=__LAPACK_int(bandwidth),ku=kl
+  var nrhs=__LAPACK_int(count),ldab=__LAPACK_int(leadingDimension),ldb=n,info:__LAPACK_int=0
+  band.withUnsafeBufferPointer {numeric in
+   pivots.withUnsafeBufferPointer {indices in
+    dgbtrs_(&trans,&n,&kl,&ku,&nrhs,numeric.baseAddress!,&ldab,indices.baseAddress!,&base,&ldb,&info)
+   }
+  }
+  guard info==0 else {throw RopePhysicsError.invalid("Invalid reusable rope batch solve (\(info))")}
+  if nb>0 {
+   for j in 0..<count {for i in 0..<nb {
+    var dot=0.0
+    for k in 0..<size {dot += columns[i][k]*base[j*size+k]}
+    border[j*nb+i] -= dot
+   }}
+   var borderSize=__LAPACK_int(nb),lda=borderSize,borderLeading=borderSize
+   schur.withUnsafeBufferPointer {numeric in
+    schurPivots.withUnsafeBufferPointer {indices in
+     dgetrs_(&trans,&borderSize,&nrhs,numeric.baseAddress!,&lda,indices.baseAddress!,&border,&borderLeading,&info)
+    }
+   }
+   guard info==0 else {throw RopePhysicsError.invalid("Invalid reusable rope batch border solve (\(info))")}
+   for j in 0..<count {for k in 0..<size {for i in 0..<nb {
+    base[j*size+k] -= inverseColumns[i*size+k]*border[j*nb+i]
+   }}}
+  }
+  guard (base+border).allSatisfy({$0.isFinite}) else {throw RopePhysicsError.invalid("Nonfinite reusable rope batch result")}
+  return (base,border)
+ }
 }

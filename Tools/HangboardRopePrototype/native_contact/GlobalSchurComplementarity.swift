@@ -13,11 +13,15 @@ final class GlobalSchurSession {
         let base: [Double], border: [Double]
     }
     private let factor: PrimalPrepared
+    private let batchResponses: Bool
     private var responses: [Key: Response] = [:]
     private var cachedJacobianEntries = 0
     private(set) var lastStatistics: [String: Double] = [:]
     var cachedResponseCount: Int { responses.count }
-    init(factor: PrimalPrepared) { self.factor = factor }
+    init(factor: PrimalPrepared) {
+        self.factor = factor
+        batchResponses = ProcessInfo.processInfo.environment["HANGTEN_BATCH_CONTACT_RESPONSES"] == "1"
+    }
 
     func solve(base: [Double], border: [Double], contacts: [RopeLinearContact],
                initialMultipliers: [Int: Double] = [:], maxIterations: Int = 50) throws -> RopeContactSystem.Solution {
@@ -49,6 +53,37 @@ final class GlobalSchurSession {
         func norm(_ v: [Double]) -> Double { v.map { abs($0) }.max() ?? 0 }
         let started = ProcessInfo.processInfo.systemUptime
         let before = responses.count
+        var responseBatches = 0
+        if batchResponses {
+            var missing: [(Key, RopeLinearContact)] = [], seen = Set<Key>()
+            var pendingEntries = 0
+            for row in contacts {
+                let key = Key(indices: row.indices, coefficients: row.coefficients, border: row.border)
+                if responses[key] != nil || !seen.insert(key).inserted { continue }
+                let keyEntries = row.indices.count+row.coefficients.count+row.border.count
+                guard responses.count+missing.count+1 <= 8_000_000/(n+nb),
+                      keyEntries <= 8_000_000-cachedJacobianEntries-pendingEntries else {
+                    throw RopePhysicsError.invalid("Global Schur response array budget")
+                }
+                pendingEntries += keyEntries
+                missing.append((key,row))
+            }
+            let width = min(64,500_000/(n+nb))
+            for start in stride(from: 0, to: missing.count, by: width) {
+                let chunk = missing[start..<min(start+width,missing.count)]
+                let loads = chunk.map { pair -> [Double] in
+                    var load = Array(repeating: 0.0, count: n)
+                    for k in pair.1.indices.indices { load[pair.1.indices[k]] += pair.1.coefficients[k] }
+                    return load
+                }
+                let solved = try factor.refinedBatch(loads,chunk.map { $0.1.border })
+                responseBatches += 1
+                for (pair,value) in zip(chunk,solved) {
+                    responses[pair.0] = Response(base: value.base, border: value.border)
+                    cachedJacobianEntries += pair.0.indices.count+pair.0.coefficients.count+pair.0.border.count
+                }
+            }
+        }
         let response = try contacts.map { row -> Response in
             let key = Key(indices: row.indices, coefficients: row.coefficients, border: row.border)
             if let cached = responses[key] { return cached }
@@ -196,6 +231,8 @@ final class GlobalSchurSession {
                 "cachedResponses": Double(responses.count), "responseAndComplianceSeconds": constructionSeconds,
                 "responseSolveSeconds": responseSeconds,
                 "complianceAssemblySeconds": constructionSeconds-responseSeconds,
+                "batchedResponses": batchResponses ? Double(responses.count-before) : 0,
+                "responseBatches": Double(responseBatches),
                 "newtonFactorizations": Double(factorizations), "newtonFactorSeconds": factorSeconds,
                 "lineSearchTrials": Double(lineTrials)]
             return RopeContactSystem.Solution(base: solved.base, border: solved.border, multipliers: mu,
