@@ -189,6 +189,8 @@ def main():
                         help="split existing primal CSC solve costs; default primal backend only")
     parser.add_argument("--end-cluster-order", action="store_true",
                         help="isolated interior-first symbolic ordering; requires --primal-parity")
+    parser.add_argument("--sparse-ldl", action="store_true",
+                        help="isolated original-matrix scalar sparse LDL; requires --primal-parity")
     args = parser.parse_args()
     if not args.label or any(c not in "abcdefghijklmnopqrstuvwxyz0123456789-_" for c in args.label):
         parser.error("label must use lowercase letters, numbers, hyphen or underscore")
@@ -212,6 +214,8 @@ def main():
         parser.error("--profile-primal requires the default primal backend")
     if args.end_cluster_order and not args.primal_parity:
         parser.error("--end-cluster-order requires --primal-parity")
+    if args.sparse_ldl and (not args.primal_parity or args.end_cluster_order):
+        parser.error("--sparse-ldl requires --primal-parity and the default symbolic ordering")
     workspace = Path(os.environ.get("PASEO_WORKTREE_PATH", REPO)).resolve()
     owner = workspace.name
     if workspace != REPO or os.environ.get("HANGTEN_CONTACT_SCREEN_OWNER") != owner:
@@ -255,7 +259,7 @@ def main():
     (output / "main.swift").write_text(files["main.swift"].read_text())
     core = [REPO / "HangTen/Models/RopePhysicsDescriptor.swift", REPO / "HangTen/Models/RopeContactSystem.swift"]
     backend = "GlobalSchurComplementarity.swift" if args.global_schur else ("ContactComplementarity.swift" if args.complementarity else "ContactInteriorPoint.swift")
-    native = [SOURCE / name for name in [backend, "SparseNewtonPattern.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift", "AffineRegionCertificate.swift"]]
+    native = [SOURCE / name for name in [backend, "SparseNewtonPattern.swift", "SparseLDL.swift", "FrozenContactStream.swift", "PackedFrozenRows.swift", "AffineRegionCertificate.swift"]]
     sources = [*core, output / "BandSnapshot.swift", *native, output / "main.swift"]
     # Compile exactly the retained bytes rather than mutable repository paths.
     # Later experiments can change the tool without orphaning past provenance.
@@ -295,6 +299,7 @@ def main():
                        HANGTEN_PRIMAL_PARITY="1" if args.primal_parity else "0",
                        HANGTEN_PROFILE_PRIMAL="1" if args.profile_primal else "0",
                        HANGTEN_END_CLUSTER_ORDER="1" if args.end_cluster_order else "0",
+                       HANGTEN_SPARSE_LDL="1" if args.sparse_ldl else "0",
                        HANGTEN_AFFINE_REGION_CERTIFICATES="1" if args.regions else "0",
                        HANGTEN_AFFINE_REGION_CROSS_CHECK="1" if args.region_checks else "0",
                        HANGTEN_SCHUR_METHOD="fischer-burmeister" if args.schur_fb else "interior-point",
@@ -306,6 +311,7 @@ def main():
                   "primalParity": args.primal_parity,
                   "profilePrimal": args.profile_primal,
                   "endClusterOrder": args.end_cluster_order,
+                  "sparseLDL": args.sparse_ldl,
                   "sourceSnapshots": source_snapshots,
                   "compileCommand": compile_command, "mode": args.mode, "packedSource": args.packed or args.regions,
                   "complementarityBackend": args.complementarity, "affineRegionCertificates": args.regions,

@@ -1,5 +1,90 @@
 import XCTest
+import Accelerate
 final class PrimalTests:XCTestCase {
+ func testSparseLDLSDKOrderIsOriginalToPermuted() throws {
+  var starts=[0,1,2,3,4],indices:[Int32]=[0,1,2,3],values=[2.0,3,5,7]
+  var order:[Int32]=[2,0,3,1],labels=[0.0,1,2,3],output=Array(repeating:0.0,count:4)
+  try starts.withUnsafeMutableBufferPointer {s in
+   try indices.withUnsafeMutableBufferPointer {i in
+    try values.withUnsafeMutableBufferPointer {v in
+     try order.withUnsafeMutableBufferPointer {o in
+      var attributes=SparseAttributes_t();attributes.kind=SparseSymmetric;attributes.triangle=SparseLowerTriangle
+      let structure=SparseMatrixStructure(rowCount:4,columnCount:4,columnStarts:s.baseAddress!,rowIndices:i.baseAddress!,attributes:attributes,blockSize:1)
+      var options=_SparseDefaultSymbolicFactorOptions;options.orderMethod=SparseOrderUser;options.order=o.baseAddress!
+      let symbolic=SparseFactor(SparseFactorizationCholesky,structure,options)
+      defer {SparseCleanup(symbolic)}
+      XCTAssertEqual(symbolic.status,SparseStatusOK)
+      let factor=SparseFactor(symbolic,SparseMatrix_Double(structure:structure,data:v.baseAddress!))
+      defer {SparseCleanup(factor)}
+      XCTAssertEqual(factor.status,SparseStatusOK)
+      let permutation=SparseCreateSubfactor(SparseSubfactorP,factor)
+      defer {SparseCleanup(permutation)}
+      labels.withUnsafeMutableBufferPointer {x in output.withUnsafeMutableBufferPointer {y in
+       SparseMultiply(permutation,DenseVector_Double(count:4,data:x.baseAddress!),DenseVector_Double(count:4,data:y.baseAddress!))
+      }}
+     }
+    }
+   }
+  }
+  // P maps permuted coordinates to original coordinates: output[original]
+  // gathers input[order[original]], so our new-to-original gather needs inverse.
+  XCTAssertEqual(output,[2,0,3,1])
+  XCTAssertEqual(try SparseLDL.originalIndices(fromSDKOrder:order),[1,3,0,2])
+  XCTAssertEqual(try SparseLDL.originalIndices(fromSDKOrder:SparseLDL.originalIndices(fromSDKOrder:order)),order)
+  for invalid:[Int32] in [[],[0,0],[1],[0,2],[-1,0]] {
+   XCTAssertThrowsError(try SparseLDL.originalIndices(fromSDKOrder:invalid))
+  }
+ }
+ func testSparseLDLPermutedCoupledMatrixAndChangedValues() throws {
+  // Independent hand-derived K*x loads, including an equality, height and
+  // nonlocal term. The permutation must recover original variable ordering.
+  let factor=try SparseLDL(size:4,starts:[0,4,6,8,9],indices:[0,1,2,3,1,2,2,3,3],
+   permutation:[2,0,3,1],equalities:[2])
+  try factor.refactor([2,-1,1,0.5,3,2,-1,0.25,4])
+  for (actual,want) in zip(try factor.solve([-2.75,-1,8.125,1.75]),[1.0,2,-3,0.5]) {
+   XCTAssertEqual(actual,want,accuracy:1e-12)
+  }
+  try factor.refactor([4,-1,1,0.5,4,2,-1,0.25,6])
+  for (actual,want) in zip(try factor.solve([-8,6,-2.25,-6.75]),[-2.0,0.5,1,-1]) {
+   XCTAssertEqual(actual,want,accuracy:1e-12)
+  }
+ }
+ func testSparseLDLRejectsZeroWrongSignAndNonfiniteNumerics() throws {
+  let factor=try SparseLDL(size:1,starts:[0,1],indices:[0],permutation:[0],equalities:[])
+  XCTAssertThrowsError(try factor.solve([1]))
+  for value in [0.0,-1,Double.nan,Double.infinity] {XCTAssertThrowsError(try factor.refactor([value]))}
+  try factor.refactor([2])
+  XCTAssertEqual(try factor.solve([3]),[1.5])
+  // A numeric failure invalidates prior storage; input-only validation
+  // leaves the last valid factor intact, matching the wrapper contract.
+  for value in [Double.nan,Double.infinity] {
+   XCTAssertThrowsError(try factor.refactor([value]))
+   XCTAssertEqual(try factor.solve([3]),[1.5])
+  }
+  for value in [0.0,-1] {
+   XCTAssertThrowsError(try factor.refactor([value]))
+   XCTAssertThrowsError(try factor.solve([3]))
+   try factor.refactor([2])
+   XCTAssertEqual(try factor.solve([3]),[1.5])
+  }
+  XCTAssertThrowsError(try factor.solve([]))
+  XCTAssertThrowsError(try factor.solve([Double.nan]))
+  let singular=try SparseLDL(size:2,starts:[0,2,3],indices:[0,1,1],permutation:[0,1],equalities:[])
+  try singular.refactor([2,1,2])
+  for x in try singular.solve([3,3]) {XCTAssertEqual(x,1,accuracy:1e-12)}
+  XCTAssertThrowsError(try singular.refactor([1,1,1]))
+  XCTAssertThrowsError(try singular.solve([1,1]))
+  try singular.refactor([2,1,2])
+  for x in try singular.solve([3,3]) {XCTAssertEqual(x,1,accuracy:1e-12)}
+ }
+ func testSparseLDLRejectsMalformedPatternAndPermutation() throws {
+  XCTAssertThrowsError(try SparseLDL(size:0,starts:[0],indices:[],permutation:[],equalities:[]))
+  XCTAssertThrowsError(try SparseLDL(size:2,starts:[0,1],indices:[0],permutation:[0,1],equalities:[]))
+  XCTAssertThrowsError(try SparseLDL(size:2,starts:[0,2,1],indices:[0],permutation:[0,1],equalities:[]))
+  XCTAssertThrowsError(try SparseLDL(size:2,starts:[0,1,2],indices:[0,0],permutation:[0,1],equalities:[]))
+  XCTAssertThrowsError(try SparseLDL(size:2,starts:[0,1,2],indices:[0,1],permutation:[0,0],equalities:[]))
+  XCTAssertThrowsError(try SparseLDL(size:1,starts:[0,1],indices:[0],permutation:[0],equalities:[1]))
+ }
  func testParityConvergenceDoesNotMoveSoftClearCoordinate() throws {
   guard ProcessInfo.processInfo.environment["HANGTEN_PRIMAL_PARITY"] == "1" else {
    throw XCTSkip("Isolated primal convergence/recovery experiment")
@@ -367,8 +452,8 @@ final class PrimalTests:XCTestCase {
 }
 let suite=PrimalTests.defaultTestSuite;suite.run()
 #if SCREEN_GLOBAL_SCHUR
-let expectedTests=25
+let expectedTests=29
 #else
-let expectedTests=24
+let expectedTests=28
 #endif
 guard let result=suite.testRun,result.executionCount==expectedTests,result.totalFailureCount==0 else {exit(1)}

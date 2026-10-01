@@ -14,10 +14,15 @@ final class SparseNewtonPrepared {
     private let profile: ResponseConstructionProfile?
     private let statistics: ResponseConstructionProfile
     private var endClusterOrder: [Int32]?
+    private let useSparseLDL: Bool
+    private let equalities: Set<Int>
+    private var scalar: SparseLDL?
 
     init(factor original: PrimalPrepared, contacts: [RopeLinearContact], diagonal: [Double]) throws {
         profile=original.primalProfile
         statistics=original.primalStatistics
+        useSparseLDL=ProcessInfo.processInfo.environment["HANGTEN_SPARSE_LDL"] == "1"
+        equalities=Set(original.equalities)
         let started=profile?.now() ?? 0
         let n = original.baseCount, nb = original.borderCount, dimension = n + nb
         guard dimension > 0, dimension <= 50_256, contacts.count == diagonal.count,
@@ -79,8 +84,12 @@ final class SparseNewtonPrepared {
         contributions = terms.map { $0.map { (slots[$0.key]!, $0.first, $0.second) } }
         values = baseValues
         factor = nil
-        endClusterOrder=ProcessInfo.processInfo.environment["HANGTEN_END_CLUSTER_ORDER"] == "1" ?
-            ((0..<n).filter{!endVariables.contains($0)}+endVariables.sorted()+Array(n..<dimension)).map{Int32($0)} : nil
+        if ProcessInfo.processInfo.environment["HANGTEN_END_CLUSTER_ORDER"] == "1" {
+            let newToOriginal=((0..<n).filter{!endVariables.contains($0)}+endVariables.sorted()+Array(n..<dimension)).map{Int32($0)}
+            // The SDK takes original-to-new indices. Inversion is involutive;
+            // convert this deliberately authored gather order before passing it.
+            endClusterOrder=try SparseLDL.originalIndices(fromSDKOrder:newToOriginal)
+        } else {endClusterOrder=nil}
         // These are last-working-pattern gauges, not admission totals.
         statistics.seconds["primalNewtonDimension"]=Double(dimension)
         statistics.seconds["primalNewtonNonzeros"]=Double(indices.count)
@@ -111,12 +120,36 @@ final class SparseNewtonPrepared {
         attributes.kind = SparseSymmetric; attributes.triangle = SparseLowerTriangle
         // The pattern arrays remain identical, including numerical zeros. Only
         // the weights change; SparseRefactor performs a new numeric factor.
-        starts.withUnsafeMutableBufferPointer { s in
-            indices.withUnsafeMutableBufferPointer { i in
-                values.withUnsafeMutableBufferPointer { v in
+        try starts.withUnsafeMutableBufferPointer { s in
+            try indices.withUnsafeMutableBufferPointer { i in
+                try values.withUnsafeMutableBufferPointer { v in
                     let structure = SparseMatrixStructure(rowCount: Int32(dimension), columnCount: Int32(dimension),
                         columnStarts: s.baseAddress!, rowIndices: i.baseAddress!, attributes: attributes, blockSize: 1)
                     let matrix = SparseMatrix_Double(structure: structure, data: v.baseAddress!)
+                    if useSparseLDL {
+                        if scalar == nil {
+                            let started=profile?.now() ?? 0
+                            var order=(0..<dimension).map{Int32($0)}
+                            try order.withUnsafeMutableBufferPointer { permutation in
+                                var options=_SparseDefaultSymbolicFactorOptions
+                                options.order=permutation.baseAddress!
+                                let symbolic=SparseFactor(SparseFactorizationLDLTTPP,structure,options)
+                                defer {SparseCleanup(symbolic)}
+                                guard symbolic.status==SparseStatusOK else {
+                                    throw RopePhysicsError.invalid("Sparse LDL symbolic ordering failed")
+                                }
+                            }
+                            scalar=try SparseLDL(size:dimension,starts:s.map{$0},indices:i.map{$0},
+                                permutation:try SparseLDL.originalIndices(fromSDKOrder:order),equalities:equalities)
+                            statistics.seconds["primalScalarFactorNonzeros"]=Double(scalar!.factorNonzeros)
+                            profile?.record("primalLDLPatternSeconds",started)
+                        }
+                        let started=profile?.now() ?? 0
+                        try scalar!.refactor(next)
+                        profile?.record("primalLDLRefactorSeconds",started)
+                        profile?.count("primalLDLRefactorCalls")
+                        return
+                    }
                     if var numeric = factor {
                         let started=profile?.now() ?? 0
                         SparseRefactor(matrix, &numeric)
@@ -147,7 +180,7 @@ final class SparseNewtonPrepared {
                 }
             }
         }
-        guard factor?.status == SparseStatusOK else {
+        guard useSparseLDL || factor?.status == SparseStatusOK else {
             throw RopePhysicsError.invalid("Sparse Newton numeric factorization failed")
         }
     }
@@ -167,6 +200,11 @@ final class SparseNewtonPrepared {
     }
 
     private func solve(_ rhs: [Double]) throws -> [Double] {
+        if let scalar {
+            let started=profile?.now() ?? 0
+            defer {profile?.record("primalLDLSolveSeconds",started);profile?.count("primalLDLSolveCalls")}
+            return try scalar.solve(rhs)
+        }
         guard let factor, factor.status == SparseStatusOK else { throw RopePhysicsError.invalid("Unfactored sparse Newton system") }
         var result = rhs
         result.withUnsafeMutableBufferPointer { x in
