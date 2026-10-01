@@ -284,8 +284,8 @@ final class Batch05BoardModelInteractionUITests: XCTestCase {
     func testDoorMount() throws {
         try review(boardID: "frictitious.doormount-pro-7", target: "edge-35-right",
                    surfacePoint: CGVector(dx: 0.83197737, dy: 0.46294296),
-                   // The larger orbit clips the outer end; tap the visible inner floor.
-                   reselectionContactOffset: CGVector(dx: 0.25, dy: 0.55))
+                   // Aim within the visible floor after the selection pivot and manual orbit.
+                   reselectionContactOffset: CGVector(dx: 0.50, dy: 0.55))
     }
 
     func testMegalith() throws {

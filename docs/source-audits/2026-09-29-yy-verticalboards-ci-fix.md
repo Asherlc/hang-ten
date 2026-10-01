@@ -1030,3 +1030,43 @@ tests, Swift parsing and diff checks passed. The resolved merge index was staged
 before the build's tracked-source manifest check. Exact owned DerivedData and
 temporary configuration deletion were verified in main532-integration-cleanup.json.
 Integrated local UI and CI validation remain pending at this commit.
+
+
+## Integrated local acceptance and DoorMount retap fixture
+
+The 4f4 integration's isolated local run completed eight cases: Evo, Forge,
+Megalith, Natural and Pro passed rendered selection/orbit/preservation and
+landscape; the guided-workout input/cancel and top-sloper animation cases passed.
+DoorMount passed rendered selection and orbit, then failed the successful-native-
+retap gate before camera-preservation and landscape assertions. All result
+bundles, attachments, logs and diagnostics were retained before changing its
+fixture. Exact simulator, DerivedData and temporary configuration deletion was
+verified in main532-ui-receipt.json.
+
+DoorMount's synthesized retap was at (251.3333, 273.2) app points. In the retained
+orbited screen it lies on the red highlighted surface near its left boundary;
+at that screenshot row its margin is approximately 1.7 points. This observation
+does not distinguish a collision-boundary miss from gesture delivery. The
+proposed fixture changes only the reprojected contact's horizontal offset from
+0.25 to 0.50, keeping vertical offset 0.55 and every gesture, native-pick,
+camera/projection, rendered and landscape assertion unchanged.
+
+One isolated validation of that interior point passed DoorMount's full sequence
+in 193.049 seconds. Native tapRevision advanced 1 to 2 and pickedContact was
+edge-35-right. Azimuth 0.29910177 and elevation 0.22775847 exactly matched the
+control's orbited camera and remained unchanged after retap; map bounds also
+matched. Rendered preservation and landscape passed, and the landscape image
+was visually reviewed. This supports the fixture correction; it does not
+establish an underlying collision or presentation mechanism. Exact owned
+resources were deleted and verified in doormount-interior-receipt.json.
+
+Fresh 4f4 CI has passed 1,421 unit tests (three skips, zero failures), all 23
+purchase/settings/workout UI cases, 49 native CAD cases, 547 package Python
+cases and 41 CAD Python cases (four skips, two deselected), and lint. The board
+job completed 25 cases: Evo, Forge, Megalith, Natural and Pro failed rendered
+orbit, while DoorMount and the other 19 cases passed. Each failed orbit crop
+had zero changed RGB pixels with stable map bounds; DoorMount's orbit changed
+84,736 pixels. Full artifact 11177620777 was CRC verified, and logs, attachments
+and diagnostics were exported and retained before this fixture correction.
+The passing CI DoorMount used the original 0.25 offset, so the local miss is
+not universal. No rendering fix or environment-only cause is claimed.
